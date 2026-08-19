@@ -207,8 +207,11 @@ int WCOREDUMP(int status) {
 }
 
 int WIFEXITED(int status) {
-    (void)status;
-    return 0;
+    // waitpid stores the child's exit code directly, kill encodes a signal
+    // death as SIGNAL_EXIT_CODE_BASE+signal, and a never-reaped status is -1
+    // (or an NTSTATUS crash code, negative as int) -- a normal exit is any
+    // non-negative status below the signal range
+    return status >= 0 && !WIFSIGNALED(status);
 }
 
 int WEXITSTATUS(int status) {

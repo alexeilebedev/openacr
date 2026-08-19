@@ -20,4 +20,4 @@ set -o pipefail
 set -e
 job="${1:-normalize}"
 echo "# Running tests: $(acr atfdb.citest.cijob:$job -field citest | tr '\n' ',')"
-(ai && atf_ci -cijob:"${job}") 2>&1 | hilite -e
+(ai && atf_ci -maxerr:1000 -cijob:"${job}") 2>&1 | hilite -e

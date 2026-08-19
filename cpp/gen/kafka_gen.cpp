@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -30,39 +21,39 @@
 //#pragma endinclude
 namespace kafka { // gen:ns_print_proto
     // func:kafka.AclOperations.UNKNOWN.ReadStrptrMaybe
-    inline static bool   UNKNOWN_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   UNKNOWN_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.ANY.ReadStrptrMaybe
-    inline static bool   ANY_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   ANY_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.ALL.ReadStrptrMaybe
-    inline static bool   ALL_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   ALL_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.READ.ReadStrptrMaybe
-    inline static bool   READ_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   READ_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.WRITE.ReadStrptrMaybe
-    inline static bool   WRITE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   WRITE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.CREATE.ReadStrptrMaybe
-    inline static bool   CREATE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   CREATE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.DELETE.ReadStrptrMaybe
-    inline static bool   DELETE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   DELETE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.ALTER.ReadStrptrMaybe
-    inline static bool   ALTER_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   ALTER_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.DESCRIBE.ReadStrptrMaybe
-    inline static bool   DESCRIBE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   DESCRIBE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.CLUSTER_ACTION.ReadStrptrMaybe
-    inline static bool   CLUSTER_ACTION_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   CLUSTER_ACTION_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.DESCRIBE_CONFIGS.ReadStrptrMaybe
-    inline static bool   DESCRIBE_CONFIGS_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   DESCRIBE_CONFIGS_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.ALTER_CONFIGS.ReadStrptrMaybe
-    inline static bool   ALTER_CONFIGS_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   ALTER_CONFIGS_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.IDEMPOTENT_WRITE.ReadStrptrMaybe
-    inline static bool   IDEMPOTENT_WRITE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   IDEMPOTENT_WRITE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.CREATE_TOKENS.ReadStrptrMaybe
-    inline static bool   CREATE_TOKENS_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   CREATE_TOKENS_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.DESCRIBE_TOKENS.ReadStrptrMaybe
-    inline static bool   DESCRIBE_TOKENS_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   DESCRIBE_TOKENS_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.AclOperations.OMITTED.ReadStrptrMaybe
-    inline static bool   OMITTED_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   OMITTED_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka.Record.key.ReadStrptrMaybe
-    inline static bool   key_ReadStrptrMaybe(kafka::Record &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   key_ReadStrptrMaybe(kafka::Record& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:kafka...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
@@ -246,12 +237,12 @@ bool kafka::AclOperationType_ReadStrptrMaybe(kafka::AclOperationType &parent, al
 // --- kafka.AclOperationType..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.AclOperationType.String  printfmt:Raw
-void kafka::AclOperationType_Print(kafka::AclOperationType& row, algo::cstring& str) {
+void kafka::AclOperationType_Print(kafka::AclOperationType row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 
 // --- kafka.AclOperations.UNKNOWN.ReadStrptrMaybe
-inline static bool kafka::UNKNOWN_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::UNKNOWN_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool UNKNOWN_tmp;
     retval = bool_ReadStrptrMaybe(UNKNOWN_tmp, in_str);
@@ -262,7 +253,7 @@ inline static bool kafka::UNKNOWN_ReadStrptrMaybe(kafka::AclOperations &parent, 
 }
 
 // --- kafka.AclOperations.ANY.ReadStrptrMaybe
-inline static bool kafka::ANY_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::ANY_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool ANY_tmp;
     retval = bool_ReadStrptrMaybe(ANY_tmp, in_str);
@@ -273,7 +264,7 @@ inline static bool kafka::ANY_ReadStrptrMaybe(kafka::AclOperations &parent, algo
 }
 
 // --- kafka.AclOperations.ALL.ReadStrptrMaybe
-inline static bool kafka::ALL_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::ALL_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool ALL_tmp;
     retval = bool_ReadStrptrMaybe(ALL_tmp, in_str);
@@ -284,7 +275,7 @@ inline static bool kafka::ALL_ReadStrptrMaybe(kafka::AclOperations &parent, algo
 }
 
 // --- kafka.AclOperations.READ.ReadStrptrMaybe
-inline static bool kafka::READ_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::READ_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool READ_tmp;
     retval = bool_ReadStrptrMaybe(READ_tmp, in_str);
@@ -295,7 +286,7 @@ inline static bool kafka::READ_ReadStrptrMaybe(kafka::AclOperations &parent, alg
 }
 
 // --- kafka.AclOperations.WRITE.ReadStrptrMaybe
-inline static bool kafka::WRITE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::WRITE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool WRITE_tmp;
     retval = bool_ReadStrptrMaybe(WRITE_tmp, in_str);
@@ -306,7 +297,7 @@ inline static bool kafka::WRITE_ReadStrptrMaybe(kafka::AclOperations &parent, al
 }
 
 // --- kafka.AclOperations.CREATE.ReadStrptrMaybe
-inline static bool kafka::CREATE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::CREATE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool CREATE_tmp;
     retval = bool_ReadStrptrMaybe(CREATE_tmp, in_str);
@@ -317,7 +308,7 @@ inline static bool kafka::CREATE_ReadStrptrMaybe(kafka::AclOperations &parent, a
 }
 
 // --- kafka.AclOperations.DELETE.ReadStrptrMaybe
-inline static bool kafka::DELETE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::DELETE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool DELETE_tmp;
     retval = bool_ReadStrptrMaybe(DELETE_tmp, in_str);
@@ -328,7 +319,7 @@ inline static bool kafka::DELETE_ReadStrptrMaybe(kafka::AclOperations &parent, a
 }
 
 // --- kafka.AclOperations.ALTER.ReadStrptrMaybe
-inline static bool kafka::ALTER_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::ALTER_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool ALTER_tmp;
     retval = bool_ReadStrptrMaybe(ALTER_tmp, in_str);
@@ -339,7 +330,7 @@ inline static bool kafka::ALTER_ReadStrptrMaybe(kafka::AclOperations &parent, al
 }
 
 // --- kafka.AclOperations.DESCRIBE.ReadStrptrMaybe
-inline static bool kafka::DESCRIBE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::DESCRIBE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool DESCRIBE_tmp;
     retval = bool_ReadStrptrMaybe(DESCRIBE_tmp, in_str);
@@ -350,7 +341,7 @@ inline static bool kafka::DESCRIBE_ReadStrptrMaybe(kafka::AclOperations &parent,
 }
 
 // --- kafka.AclOperations.CLUSTER_ACTION.ReadStrptrMaybe
-inline static bool kafka::CLUSTER_ACTION_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::CLUSTER_ACTION_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool CLUSTER_ACTION_tmp;
     retval = bool_ReadStrptrMaybe(CLUSTER_ACTION_tmp, in_str);
@@ -361,7 +352,7 @@ inline static bool kafka::CLUSTER_ACTION_ReadStrptrMaybe(kafka::AclOperations &p
 }
 
 // --- kafka.AclOperations.DESCRIBE_CONFIGS.ReadStrptrMaybe
-inline static bool kafka::DESCRIBE_CONFIGS_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::DESCRIBE_CONFIGS_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool DESCRIBE_CONFIGS_tmp;
     retval = bool_ReadStrptrMaybe(DESCRIBE_CONFIGS_tmp, in_str);
@@ -372,7 +363,7 @@ inline static bool kafka::DESCRIBE_CONFIGS_ReadStrptrMaybe(kafka::AclOperations 
 }
 
 // --- kafka.AclOperations.ALTER_CONFIGS.ReadStrptrMaybe
-inline static bool kafka::ALTER_CONFIGS_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::ALTER_CONFIGS_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool ALTER_CONFIGS_tmp;
     retval = bool_ReadStrptrMaybe(ALTER_CONFIGS_tmp, in_str);
@@ -383,7 +374,7 @@ inline static bool kafka::ALTER_CONFIGS_ReadStrptrMaybe(kafka::AclOperations &pa
 }
 
 // --- kafka.AclOperations.IDEMPOTENT_WRITE.ReadStrptrMaybe
-inline static bool kafka::IDEMPOTENT_WRITE_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::IDEMPOTENT_WRITE_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool IDEMPOTENT_WRITE_tmp;
     retval = bool_ReadStrptrMaybe(IDEMPOTENT_WRITE_tmp, in_str);
@@ -394,7 +385,7 @@ inline static bool kafka::IDEMPOTENT_WRITE_ReadStrptrMaybe(kafka::AclOperations 
 }
 
 // --- kafka.AclOperations.CREATE_TOKENS.ReadStrptrMaybe
-inline static bool kafka::CREATE_TOKENS_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::CREATE_TOKENS_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool CREATE_TOKENS_tmp;
     retval = bool_ReadStrptrMaybe(CREATE_TOKENS_tmp, in_str);
@@ -405,7 +396,7 @@ inline static bool kafka::CREATE_TOKENS_ReadStrptrMaybe(kafka::AclOperations &pa
 }
 
 // --- kafka.AclOperations.DESCRIBE_TOKENS.ReadStrptrMaybe
-inline static bool kafka::DESCRIBE_TOKENS_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::DESCRIBE_TOKENS_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool DESCRIBE_TOKENS_tmp;
     retval = bool_ReadStrptrMaybe(DESCRIBE_TOKENS_tmp, in_str);
@@ -416,7 +407,7 @@ inline static bool kafka::DESCRIBE_TOKENS_ReadStrptrMaybe(kafka::AclOperations &
 }
 
 // --- kafka.AclOperations.OMITTED.ReadStrptrMaybe
-inline static bool kafka::OMITTED_ReadStrptrMaybe(kafka::AclOperations &parent, algo::strptr in_str) {
+inline static bool kafka::OMITTED_ReadStrptrMaybe(kafka::AclOperations& parent, algo::strptr in_str) {
     bool retval = true;
     bool OMITTED_tmp;
     retval = bool_ReadStrptrMaybe(OMITTED_tmp, in_str);
@@ -754,7 +745,7 @@ bool kafka::AclPermissionType_ReadStrptrMaybe(kafka::AclPermissionType &parent, 
 // --- kafka.AclPermissionType..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.AclPermissionType.String  printfmt:Raw
-void kafka::AclPermissionType_Print(kafka::AclPermissionType& row, algo::cstring& str) {
+void kafka::AclPermissionType_Print(kafka::AclPermissionType row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 
@@ -862,7 +853,7 @@ bool kafka::CompressionType_ReadStrptrMaybe(kafka::CompressionType &parent, algo
 // --- kafka.CompressionType..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.CompressionType.String  printfmt:Raw
-void kafka::CompressionType_Print(kafka::CompressionType& row, algo::cstring& str) {
+void kafka::CompressionType_Print(kafka::CompressionType row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 
@@ -1008,7 +999,7 @@ bool kafka::ConfigSource_ReadStrptrMaybe(kafka::ConfigSource &parent, algo::strp
 // --- kafka.ConfigSource..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.ConfigSource.String  printfmt:Raw
-void kafka::ConfigSource_Print(kafka::ConfigSource& row, algo::cstring& str) {
+void kafka::ConfigSource_Print(kafka::ConfigSource row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 
@@ -1145,7 +1136,7 @@ bool kafka::ConfigType_ReadStrptrMaybe(kafka::ConfigType &parent, algo::strptr i
 // --- kafka.ConfigType..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.ConfigType.String  printfmt:Raw
-void kafka::ConfigType_Print(kafka::ConfigType& row, algo::cstring& str) {
+void kafka::ConfigType_Print(kafka::ConfigType row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 
@@ -1161,7 +1152,7 @@ bool kafka::Error_ReadStrptrMaybe(kafka::Error &parent, algo::strptr in_str) {
 // --- kafka.Error..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.Error.String  printfmt:Raw
-void kafka::Error_Print(kafka::Error& row, algo::cstring& str) {
+void kafka::Error_Print(kafka::Error row, algo::cstring& str) {
     i16_Print(row.value, str);
 }
 
@@ -1486,7 +1477,7 @@ bool kafka::FieldId_ReadStrptrMaybe(kafka::FieldId &parent, algo::strptr in_str)
 // --- kafka.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.FieldId.String  printfmt:Raw
-void kafka::FieldId_Print(kafka::FieldId& row, algo::cstring& str) {
+void kafka::FieldId_Print(kafka::FieldId row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 
@@ -1896,7 +1887,7 @@ bool kafka::GroupState_ReadStrptrMaybe(kafka::GroupState &parent, algo::strptr i
 // --- kafka.GroupState..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.GroupState.String  printfmt:Raw
-void kafka::GroupState_Print(kafka::GroupState& row, algo::cstring& str) {
+void kafka::GroupState_Print(kafka::GroupState row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 
@@ -2159,12 +2150,12 @@ bool kafka::PatternType_ReadStrptrMaybe(kafka::PatternType &parent, algo::strptr
 // --- kafka.PatternType..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.PatternType.String  printfmt:Raw
-void kafka::PatternType_Print(kafka::PatternType& row, algo::cstring& str) {
+void kafka::PatternType_Print(kafka::PatternType row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 
 // --- kafka.Record.key.ReadStrptrMaybe
-inline static bool kafka::key_ReadStrptrMaybe(kafka::Record &parent, algo::strptr in_str) {
+inline static bool kafka::key_ReadStrptrMaybe(kafka::Record& parent, algo::strptr in_str) {
     bool retval = true;
     algo::cstring key_tmp;
     retval = algo::cstring_ReadStrptrMaybe(key_tmp, in_str);
@@ -2183,10 +2174,10 @@ algo::aryptr<kafka::Header> kafka::headers_Addary(kafka::Record& parent, algo::a
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("kafka.tary_alias  field:kafka.Record.headers  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     headers_Reserve(parent, nnew); // reserve space
-    int at = parent.headers_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.headers_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.headers_elems + at + i) kafka::Header(rhs[i]);
         parent.headers_n++;
     }
@@ -2198,8 +2189,8 @@ algo::aryptr<kafka::Header> kafka::headers_Addary(kafka::Record& parent, algo::a
 // The new element is initialized to a default value
 kafka::Header& kafka::headers_Alloc(kafka::Record& parent) {
     headers_Reserve(parent, 1);
-    int n  = parent.headers_n;
-    int at = n;
+    i64 n  = parent.headers_n;
+    i64 at = n;
     kafka::Header *elems = parent.headers_elems;
     new (elems + at) kafka::Header(); // construct new element, default initializer
     parent.headers_n = n+1;
@@ -2209,9 +2200,9 @@ kafka::Header& kafka::headers_Alloc(kafka::Record& parent) {
 // --- kafka.Record.headers.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-kafka::Header& kafka::headers_AllocAt(kafka::Record& parent, int at) {
+kafka::Header& kafka::headers_AllocAt(kafka::Record& parent, i64 at) {
     headers_Reserve(parent, 1);
-    int n  = parent.headers_n;
+    i64 n  = parent.headers_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("kafka.bad_alloc_at  field:kafka.Record.headers  comment:'index out of range'");
     }
@@ -2224,12 +2215,12 @@ kafka::Header& kafka::headers_AllocAt(kafka::Record& parent, int at) {
 
 // --- kafka.Record.headers.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<kafka::Header> kafka::headers_AllocN(kafka::Record& parent, int n_elems) {
+algo::aryptr<kafka::Header> kafka::headers_AllocN(kafka::Record& parent, i64 n_elems) {
     headers_Reserve(parent, n_elems);
-    int old_n  = parent.headers_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.headers_n;
+    i64 new_n = old_n + n_elems;
     kafka::Header *elems = parent.headers_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) kafka::Header(); // construct new element, default initialize
     }
     parent.headers_n = new_n;
@@ -2240,15 +2231,15 @@ algo::aryptr<kafka::Header> kafka::headers_AllocN(kafka::Record& parent, int n_e
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<kafka::Header> kafka::headers_AllocNAt(kafka::Record& parent, int n_elems, int at) {
+algo::aryptr<kafka::Header> kafka::headers_AllocNAt(kafka::Record& parent, i64 n_elems, i64 at) {
     headers_Reserve(parent, n_elems);
-    int n  = parent.headers_n;
+    i64 n  = parent.headers_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("kafka.bad_alloc_n_at  field:kafka.Record.headers  comment:'index out of range'");
     }
     kafka::Header *elems = parent.headers_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(kafka::Header));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) kafka::Header(); // construct new element, default initialize
     }
     parent.headers_n = n+n_elems;
@@ -2257,8 +2248,8 @@ algo::aryptr<kafka::Header> kafka::headers_AllocNAt(kafka::Record& parent, int n
 
 // --- kafka.Record.headers.Remove
 // Remove item by index. If index outside of range, do nothing.
-void kafka::headers_Remove(kafka::Record& parent, u32 i) {
-    u32 lim = parent.headers_n;
+void kafka::headers_Remove(kafka::Record& parent, u64 i) {
+    u64 lim = parent.headers_n;
     kafka::Header *elems = parent.headers_elems;
     if (i < lim) {
         elems[i].~Header(); // destroy element
@@ -2269,12 +2260,11 @@ void kafka::headers_Remove(kafka::Record& parent, u32 i) {
 
 // --- kafka.Record.headers.RemoveAll
 void kafka::headers_RemoveAll(kafka::Record& parent) {
-    u32 n = parent.headers_n;
-    while (n > 0) {
-        n -= 1;
-        parent.headers_elems[n].~Header();
-        parent.headers_n = n;
+    u64 n = parent.headers_n;
+    for (u64 i=0; i<n; i++) {
+        parent.headers_elems[i].~Header();
     }
+    parent.headers_n = 0;
 }
 
 // --- kafka.Record.headers.RemoveLast
@@ -2290,10 +2280,10 @@ void kafka::headers_RemoveLast(kafka::Record& parent) {
 
 // --- kafka.Record.headers.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void kafka::headers_AbsReserve(kafka::Record& parent, int n) {
-    u32 old_max  = parent.headers_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void kafka::headers_AbsReserve(kafka::Record& parent, i64 n) {
+    u64 old_max  = parent.headers_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.headers_elems, old_max * sizeof(kafka::Header), new_max * sizeof(kafka::Header));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("kafka.tary_nomem  field:kafka.Record.headers  comment:'out of memory'");
@@ -2307,9 +2297,9 @@ void kafka::headers_AbsReserve(kafka::Record& parent, int n) {
 // Copy contents of RHS to PARENT.
 void kafka::headers_Setary(kafka::Record& parent, kafka::Record &rhs) {
     headers_RemoveAll(parent);
-    int nnew = rhs.headers_n;
+    i64 nnew = rhs.headers_n;
     headers_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.headers_elems + i) kafka::Header(headers_qFind(rhs, i));
         parent.headers_n = i + 1;
     }
@@ -2325,12 +2315,12 @@ void kafka::headers_Setary(kafka::Record& parent, const algo::aryptr<kafka::Head
 
 // --- kafka.Record.headers.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<kafka::Header> kafka::headers_AllocNVal(kafka::Record& parent, int n_elems, const kafka::Header& val) {
+algo::aryptr<kafka::Header> kafka::headers_AllocNVal(kafka::Record& parent, i64 n_elems, const kafka::Header& val) {
     headers_Reserve(parent, n_elems);
-    int old_n  = parent.headers_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.headers_n;
+    i64 new_n = old_n + n_elems;
     kafka::Header *elems = parent.headers_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) kafka::Header(val);
     }
     parent.headers_n = new_n;
@@ -2354,25 +2344,43 @@ bool kafka::headers_ReadStrptrMaybe(kafka::Record& parent, algo::strptr in_str) 
 // --- kafka.Record.headers.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void kafka::headers_Insary(kafka::Record& parent, algo::aryptr<kafka::Header> rhs, int at) {
+void kafka::headers_Insary(kafka::Record& parent, algo::aryptr<kafka::Header> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.headers_elems && rhs.elems < parent.headers_elems + parent.headers_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("kafka.tary_alias  field:kafka.Record.headers  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.headers_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.headers_n+1))) {
         FatalErrorExit("kafka.bad_insary  field:kafka.Record.headers  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.headers_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.headers_n - at;
     headers_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.headers_elems + at + nnew + i) kafka::Header(parent.headers_elems[at + i]);
         parent.headers_elems[at + i].~Header(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.headers_elems + at + i) kafka::Header(rhs[i]);
     }
     parent.headers_n += nnew;
+}
+
+// --- kafka.Record.headers.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void kafka::headers_RemRegion(kafka::Record& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.headers_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            parent.headers_elems[i].~Header();
+        }
+        memmove(parent.headers_elems+beg, parent.headers_elems+end, sizeof(kafka::Header) * (parent.headers_n-end));
+        parent.headers_n -= n;
+    }
 }
 
 // --- kafka.Record..ReadFieldMaybe
@@ -2396,7 +2404,7 @@ bool kafka::Record_ReadFieldMaybe(kafka::Record& parent, algo::strptr field, alg
         case kafka_FieldId_key: {
             retval = key_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 0);
+                pmask_qSetBit(parent, 0); // mark presence in pmask
             }
         } break;
         case kafka_FieldId_value: {
@@ -2508,10 +2516,10 @@ algo::aryptr<kafka::Record> kafka::records_Addary(kafka::RecordBatch& parent, al
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("kafka.tary_alias  field:kafka.RecordBatch.records  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     records_Reserve(parent, nnew); // reserve space
-    int at = parent.records_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.records_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.records_elems + at + i) kafka::Record(rhs[i]);
         parent.records_n++;
     }
@@ -2523,8 +2531,8 @@ algo::aryptr<kafka::Record> kafka::records_Addary(kafka::RecordBatch& parent, al
 // The new element is initialized to a default value
 kafka::Record& kafka::records_Alloc(kafka::RecordBatch& parent) {
     records_Reserve(parent, 1);
-    int n  = parent.records_n;
-    int at = n;
+    i64 n  = parent.records_n;
+    i64 at = n;
     kafka::Record *elems = parent.records_elems;
     new (elems + at) kafka::Record(); // construct new element, default initializer
     parent.records_n = n+1;
@@ -2534,9 +2542,9 @@ kafka::Record& kafka::records_Alloc(kafka::RecordBatch& parent) {
 // --- kafka.RecordBatch.records.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-kafka::Record& kafka::records_AllocAt(kafka::RecordBatch& parent, int at) {
+kafka::Record& kafka::records_AllocAt(kafka::RecordBatch& parent, i64 at) {
     records_Reserve(parent, 1);
-    int n  = parent.records_n;
+    i64 n  = parent.records_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("kafka.bad_alloc_at  field:kafka.RecordBatch.records  comment:'index out of range'");
     }
@@ -2549,12 +2557,12 @@ kafka::Record& kafka::records_AllocAt(kafka::RecordBatch& parent, int at) {
 
 // --- kafka.RecordBatch.records.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<kafka::Record> kafka::records_AllocN(kafka::RecordBatch& parent, int n_elems) {
+algo::aryptr<kafka::Record> kafka::records_AllocN(kafka::RecordBatch& parent, i64 n_elems) {
     records_Reserve(parent, n_elems);
-    int old_n  = parent.records_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.records_n;
+    i64 new_n = old_n + n_elems;
     kafka::Record *elems = parent.records_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) kafka::Record(); // construct new element, default initialize
     }
     parent.records_n = new_n;
@@ -2565,15 +2573,15 @@ algo::aryptr<kafka::Record> kafka::records_AllocN(kafka::RecordBatch& parent, in
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<kafka::Record> kafka::records_AllocNAt(kafka::RecordBatch& parent, int n_elems, int at) {
+algo::aryptr<kafka::Record> kafka::records_AllocNAt(kafka::RecordBatch& parent, i64 n_elems, i64 at) {
     records_Reserve(parent, n_elems);
-    int n  = parent.records_n;
+    i64 n  = parent.records_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("kafka.bad_alloc_n_at  field:kafka.RecordBatch.records  comment:'index out of range'");
     }
     kafka::Record *elems = parent.records_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(kafka::Record));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) kafka::Record(); // construct new element, default initialize
     }
     parent.records_n = n+n_elems;
@@ -2582,8 +2590,8 @@ algo::aryptr<kafka::Record> kafka::records_AllocNAt(kafka::RecordBatch& parent, 
 
 // --- kafka.RecordBatch.records.Remove
 // Remove item by index. If index outside of range, do nothing.
-void kafka::records_Remove(kafka::RecordBatch& parent, u32 i) {
-    u32 lim = parent.records_n;
+void kafka::records_Remove(kafka::RecordBatch& parent, u64 i) {
+    u64 lim = parent.records_n;
     kafka::Record *elems = parent.records_elems;
     if (i < lim) {
         elems[i].~Record(); // destroy element
@@ -2594,12 +2602,11 @@ void kafka::records_Remove(kafka::RecordBatch& parent, u32 i) {
 
 // --- kafka.RecordBatch.records.RemoveAll
 void kafka::records_RemoveAll(kafka::RecordBatch& parent) {
-    u32 n = parent.records_n;
-    while (n > 0) {
-        n -= 1;
-        parent.records_elems[n].~Record();
-        parent.records_n = n;
+    u64 n = parent.records_n;
+    for (u64 i=0; i<n; i++) {
+        parent.records_elems[i].~Record();
     }
+    parent.records_n = 0;
 }
 
 // --- kafka.RecordBatch.records.RemoveLast
@@ -2615,10 +2622,10 @@ void kafka::records_RemoveLast(kafka::RecordBatch& parent) {
 
 // --- kafka.RecordBatch.records.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void kafka::records_AbsReserve(kafka::RecordBatch& parent, int n) {
-    u32 old_max  = parent.records_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void kafka::records_AbsReserve(kafka::RecordBatch& parent, i64 n) {
+    u64 old_max  = parent.records_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.records_elems, old_max * sizeof(kafka::Record), new_max * sizeof(kafka::Record));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("kafka.tary_nomem  field:kafka.RecordBatch.records  comment:'out of memory'");
@@ -2632,9 +2639,9 @@ void kafka::records_AbsReserve(kafka::RecordBatch& parent, int n) {
 // Copy contents of RHS to PARENT.
 void kafka::records_Setary(kafka::RecordBatch& parent, kafka::RecordBatch &rhs) {
     records_RemoveAll(parent);
-    int nnew = rhs.records_n;
+    i64 nnew = rhs.records_n;
     records_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.records_elems + i) kafka::Record(records_qFind(rhs, i));
         parent.records_n = i + 1;
     }
@@ -2650,12 +2657,12 @@ void kafka::records_Setary(kafka::RecordBatch& parent, const algo::aryptr<kafka:
 
 // --- kafka.RecordBatch.records.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<kafka::Record> kafka::records_AllocNVal(kafka::RecordBatch& parent, int n_elems, const kafka::Record& val) {
+algo::aryptr<kafka::Record> kafka::records_AllocNVal(kafka::RecordBatch& parent, i64 n_elems, const kafka::Record& val) {
     records_Reserve(parent, n_elems);
-    int old_n  = parent.records_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.records_n;
+    i64 new_n = old_n + n_elems;
     kafka::Record *elems = parent.records_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) kafka::Record(val);
     }
     parent.records_n = new_n;
@@ -2679,25 +2686,43 @@ bool kafka::records_ReadStrptrMaybe(kafka::RecordBatch& parent, algo::strptr in_
 // --- kafka.RecordBatch.records.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void kafka::records_Insary(kafka::RecordBatch& parent, algo::aryptr<kafka::Record> rhs, int at) {
+void kafka::records_Insary(kafka::RecordBatch& parent, algo::aryptr<kafka::Record> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.records_elems && rhs.elems < parent.records_elems + parent.records_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("kafka.tary_alias  field:kafka.RecordBatch.records  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.records_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.records_n+1))) {
         FatalErrorExit("kafka.bad_insary  field:kafka.RecordBatch.records  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.records_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.records_n - at;
     records_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.records_elems + at + nnew + i) kafka::Record(parent.records_elems[at + i]);
         parent.records_elems[at + i].~Record(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.records_elems + at + i) kafka::Record(rhs[i]);
     }
     parent.records_n += nnew;
+}
+
+// --- kafka.RecordBatch.records.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void kafka::records_RemRegion(kafka::RecordBatch& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.records_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            parent.records_elems[i].~Record();
+        }
+        memmove(parent.records_elems+beg, parent.records_elems+end, sizeof(kafka::Record) * (parent.records_n-end));
+        parent.records_n -= n;
+    }
 }
 
 // --- kafka.RecordBatch..ReadFieldMaybe
@@ -3003,7 +3028,7 @@ bool kafka::ResourceType_ReadStrptrMaybe(kafka::ResourceType &parent, algo::strp
 // --- kafka.ResourceType..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.ResourceType.String  printfmt:Raw
-void kafka::ResourceType_Print(kafka::ResourceType& row, algo::cstring& str) {
+void kafka::ResourceType_Print(kafka::ResourceType row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 
@@ -3090,7 +3115,7 @@ bool kafka::TimestampType_ReadStrptrMaybe(kafka::TimestampType &parent, algo::st
 // --- kafka.TimestampType..Print
 // print string representation of ROW to string STR
 // cfmt:kafka.TimestampType.String  printfmt:Raw
-void kafka::TimestampType_Print(kafka::TimestampType& row, algo::cstring& str) {
+void kafka::TimestampType_Print(kafka::TimestampType row, algo::cstring& str) {
     kafka::value_Print(row, str);
 }
 

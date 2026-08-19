@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir hdr && printf \"namespace xx { // update-hdr\\nvoid OldFunc();\\n}\\n\" > hdr/x.h && cp hdr/x.h orig && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/scan_readfail.ssim -updateproto; test $$? = 1 && cmp hdr/x.h orig && echo header_unchanged'"
+# eof bash
+bash -> src_func.file_read  file:missing_dir/x.cpp  err:"No such file or directory"  comment:"source file could not be read"
+bash -> header_unchanged
+# exit bash code:0

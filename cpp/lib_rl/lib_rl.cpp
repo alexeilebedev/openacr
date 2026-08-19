@@ -163,6 +163,14 @@ bool lib_rl::SubstateQ() {
     return RL_ISSTATE(substate_mask);
 }
 
+// Cancel current readline substate (reverse-i-search, completion, etc.)
+void lib_rl::CancelSubstate() {
+    if (ReadlineQ() && SubstateQ()) {
+        rl_stuff_char(CTRL('G'));
+        rl_callback_read_char();
+    }
+}
+
 //------------------------------------------------------------------------------
 
 // whether mode is readline or normal
@@ -175,7 +183,8 @@ bool lib_rl::ReadlineQ() {
 void lib_rl::SetPrompt(algo::strptr prompt) {
     _db.cmdline.prompt=prompt;
     if (ReadlineQ()) {
-        rl_callback_handler_install(Zeroterm(_db.cmdline.prompt),OnLine);
+        rl_set_prompt(Zeroterm(_db.cmdline.prompt));
+        rl_redisplay();
     }
 }
 
@@ -215,15 +224,20 @@ strptr lib_rl::GetLine() {
             _db.eof = feof(rl_instream) || _db.err;
             break;
         }
-        // catch ^D for EOF
+        // catch ^D for EOF.  Enter echoes a newline and ^D does not, so end
+        // the line here; otherwise the teardown clears the row the prompt is
+        // still standing on.  A zero-width prompt has drawn nothing.
         if (_db.isatty && c == CTRL('D') && !rl_point && !rl_end && !SubstateQ()) {
+            if (ch_N(_db.cmdline.prompt)) {
+                rl_crlf();
+            }
             _db.eof = true;
             break;
         }
         if (_db.isatty) {
             rl_stuff_char(c);
             rl_callback_read_char(); // calls lib_rl::OnLine()
-        } else if (c == '\n') {
+        } else if (c == '\n' || (_db.eof && ch_N(_db.line))) {
             _db.line_valid = true;
         } else {
             ch_Alloc(_db.line) = c;
@@ -273,15 +287,32 @@ void lib_rl::KillBuffer() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// Hand readline one character from the stream GetLine reads.
+//
+// Readline reads ahead on its own for any key longer than one byte, and a
+// bracketed paste is the extreme case: its handler for ESC[200~ consumes the
+// rest of the burst itself.  The burst is already in this stream's buffer by
+// then, so reading the descriptor underneath finds nothing and waits for
+// bytes that have arrived -- a paste that hangs the session.
+//
+// The descriptor is non-blocking, so a burst split across two reads ends the
+// paste early rather than stalling the step.
+static int Getc(FILE *stream) {
+    return getc(stream);
+}
+
+//------------------------------------------------------------------------------
+
 // begin readline, user shall add own iohook function
 void lib_rl::BeginReadline(strptr app, strptr prompt) {
     if (!ValidQ(_db.iohook.fildes)) {
         _db.cmdline.app = app;
+        _db.cmdline.prompt = prompt;
         rl_readline_name = Zeroterm(_db.cmdline.app); // ponter - do not modify
+        rl_getc_function = Getc;
         rl_initialize();
         _db.isatty = isatty(fileno(rl_instream));
         InitHistory();
-        _db.cmdline.prompt = prompt;
         _db.iohook.fildes = algo::Fildes(fileno(rl_instream));
         algo::SetBlockingMode(_db.iohook.fildes,false);
         IOEvtFlags flags;
@@ -306,4 +337,11 @@ void lib_rl::EndReadline() {
 // restore terminal settings
 void lib_rl::iohook_Cleanup() {
     EndReadline();
+}
+
+//------------------------------------------------------------------------------
+
+// flush unread input, so it will not go to shell
+void lib_rl::FlushInput() {
+    while (getc(rl_instream) != EOF) {}
 }

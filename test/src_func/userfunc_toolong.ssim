@@ -1,0 +1,4 @@
+dev.target  target:xx
+dev.gitfile  gitfile:src/y.cpp
+dev.targsrc  targsrc:xx/src/y.cpp  comment:""
+dmmeta.userfunc  userfunc:xx...UserfuncKeyOneCharOverTheHundredCharacterLimitOfTheWidenedPrimaryKeyPaddedOutWithWordsToGetThere  acrkey:gstatic/atfdb.amctest:OverLimit  cppname:xx.UserfuncKeyOneCharOverTheHundredCharacterLimitOfTheWidenedPrimaryKeyPaddedOutWithWordsToGetThere  comment:""

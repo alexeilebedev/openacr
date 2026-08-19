@@ -74,8 +74,10 @@ inline void atf_ci::step_Call(atf_ci::FCitest& citest) {
 // --- atf_ci.FCitest..Init
 // Set all fields to initial values.
 inline void atf_ci::FCitest_Init(atf_ci::FCitest& citest) {
-    citest.cijob = algo::strptr("test");
+    citest.cijob = algo::strptr("normalize");
     citest.sandbox = bool(false);
+    citest.timeout = i32(600);
+    citest.failfast = bool(false);
     citest.nerr = i32(0);
     citest.step = NULL;
     citest.ind_citest_next = (atf_ci::FCitest*)-1; // (atf_ci.FDb.ind_citest) not-in-hash
@@ -124,7 +126,7 @@ inline atf_ci::FCitest* atf_ci::citest_Last() {
 
 // --- atf_ci.FDb.citest.N
 // Return number of items in the pool
-inline i32 atf_ci::citest_N() {
+inline i64 atf_ci::citest_N() {
     return _db.citest_n;
 }
 
@@ -166,7 +168,7 @@ inline atf_ci::FSsimfile* atf_ci::ssimfile_Last() {
 
 // --- atf_ci.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 atf_ci::ssimfile_N() {
+inline i64 atf_ci::ssimfile_N() {
     return _db.ssimfile_n;
 }
 
@@ -220,7 +222,7 @@ inline atf_ci::FScriptfile* atf_ci::scriptfile_Last() {
 
 // --- atf_ci.FDb.scriptfile.N
 // Return number of items in the pool
-inline i32 atf_ci::scriptfile_N() {
+inline i64 atf_ci::scriptfile_N() {
     return _db.scriptfile_n;
 }
 
@@ -274,7 +276,7 @@ inline atf_ci::FNs* atf_ci::ns_Last() {
 
 // --- atf_ci.FDb.ns.N
 // Return number of items in the pool
-inline i32 atf_ci::ns_N() {
+inline i64 atf_ci::ns_N() {
     return _db.ns_n;
 }
 
@@ -328,7 +330,7 @@ inline atf_ci::FReadmefile* atf_ci::readmefile_Last() {
 
 // --- atf_ci.FDb.readmefile.N
 // Return number of items in the pool
-inline i32 atf_ci::readmefile_N() {
+inline i64 atf_ci::readmefile_N() {
     return _db.readmefile_n;
 }
 
@@ -370,7 +372,7 @@ inline atf_ci::FBuilddir* atf_ci::builddir_Last() {
 
 // --- atf_ci.FDb.builddir.N
 // Return number of items in the pool
-inline i32 atf_ci::builddir_N() {
+inline i64 atf_ci::builddir_N() {
     return _db.builddir_n;
 }
 
@@ -412,7 +414,7 @@ inline atf_ci::FCfg* atf_ci::cfg_Last() {
 
 // --- atf_ci.FDb.cfg.N
 // Return number of items in the pool
-inline i32 atf_ci::cfg_N() {
+inline i64 atf_ci::cfg_N() {
     return _db.cfg_n;
 }
 
@@ -466,7 +468,7 @@ inline atf_ci::FGitfile* atf_ci::gitfile_Last() {
 
 // --- atf_ci.FDb.gitfile.N
 // Return number of items in the pool
-inline i32 atf_ci::gitfile_N() {
+inline i64 atf_ci::gitfile_N() {
     return _db.gitfile_n;
 }
 
@@ -520,7 +522,7 @@ inline atf_ci::FNoindent* atf_ci::noindent_Last() {
 
 // --- atf_ci.FDb.noindent.N
 // Return number of items in the pool
-inline i32 atf_ci::noindent_N() {
+inline i64 atf_ci::noindent_N() {
     return _db.noindent_n;
 }
 
@@ -562,7 +564,7 @@ inline atf_ci::FTargsrc* atf_ci::targsrc_Last() {
 
 // --- atf_ci.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 atf_ci::targsrc_N() {
+inline i64 atf_ci::targsrc_N() {
     return _db.targsrc_n;
 }
 
@@ -604,7 +606,7 @@ inline atf_ci::FMsgfile* atf_ci::msgfile_Last() {
 
 // --- atf_ci.FDb.msgfile.N
 // Return number of items in the pool
-inline i32 atf_ci::msgfile_N() {
+inline i64 atf_ci::msgfile_N() {
     return _db.msgfile_n;
 }
 
@@ -658,7 +660,7 @@ inline atf_ci::File* atf_ci::file_Last() {
 
 // --- atf_ci.FDb.file.N
 // Return number of items in the pool
-inline i32 atf_ci::file_N() {
+inline i64 atf_ci::file_N() {
     return _db.file_n;
 }
 
@@ -712,7 +714,7 @@ inline atf_ci::FCipackage* atf_ci::cipackage_Last() {
 
 // --- atf_ci.FDb.cipackage.N
 // Return number of items in the pool
-inline i32 atf_ci::cipackage_N() {
+inline i64 atf_ci::cipackage_N() {
     return _db.cipackage_n;
 }
 
@@ -724,6 +726,90 @@ inline atf_ci::FCipackage& atf_ci::cipackage_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.cipackage_lary[bsr][index];
+}
+
+// --- atf_ci.FDb.pkggen.EmptyQ
+// Return true if index is empty
+inline bool atf_ci::pkggen_EmptyQ() {
+    return _db.pkggen_n == 0;
+}
+
+// --- atf_ci.FDb.pkggen.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_ci::FPkggen* atf_ci::pkggen_Find(u64 t) {
+    atf_ci::FPkggen *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.pkggen_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.pkggen_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_ci.FDb.pkggen.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_ci::FPkggen* atf_ci::pkggen_Last() {
+    return pkggen_Find(u64(_db.pkggen_n-1));
+}
+
+// --- atf_ci.FDb.pkggen.N
+// Return number of items in the pool
+inline i64 atf_ci::pkggen_N() {
+    return _db.pkggen_n;
+}
+
+// --- atf_ci.FDb.pkggen.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_ci::FPkggen& atf_ci::pkggen_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.pkggen_lary[bsr][index];
+}
+
+// --- atf_ci.FDb.package.EmptyQ
+// Return true if index is empty
+inline bool atf_ci::package_EmptyQ() {
+    return _db.package_n == 0;
+}
+
+// --- atf_ci.FDb.package.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_ci::FPackage* atf_ci::package_Find(u64 t) {
+    atf_ci::FPackage *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.package_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.package_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_ci.FDb.package.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_ci::FPackage* atf_ci::package_Last() {
+    return package_Find(u64(_db.package_n-1));
+}
+
+// --- atf_ci.FDb.package.N
+// Return number of items in the pool
+inline i64 atf_ci::package_N() {
+    return _db.package_n;
+}
+
+// --- atf_ci.FDb.package.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_ci::FPackage& atf_ci::package_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.package_lary[bsr][index];
 }
 
 // --- atf_ci.FDb.citest_curs.Reset
@@ -1051,6 +1137,56 @@ inline atf_ci::FCipackage& atf_ci::_db_cipackage_curs_Access(_db_cipackage_curs 
     return cipackage_qFind(u64(curs.index));
 }
 
+// --- atf_ci.FDb.pkggen_curs.Reset
+// cursor points to valid item
+inline void atf_ci::_db_pkggen_curs_Reset(_db_pkggen_curs &curs, atf_ci::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_ci.FDb.pkggen_curs.ValidQ
+// cursor points to valid item
+inline bool atf_ci::_db_pkggen_curs_ValidQ(_db_pkggen_curs &curs) {
+    return curs.index < _db.pkggen_n;
+}
+
+// --- atf_ci.FDb.pkggen_curs.Next
+// proceed to next item
+inline void atf_ci::_db_pkggen_curs_Next(_db_pkggen_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_ci.FDb.pkggen_curs.Access
+// item access
+inline atf_ci::FPkggen& atf_ci::_db_pkggen_curs_Access(_db_pkggen_curs &curs) {
+    return pkggen_qFind(u64(curs.index));
+}
+
+// --- atf_ci.FDb.package_curs.Reset
+// cursor points to valid item
+inline void atf_ci::_db_package_curs_Reset(_db_package_curs &curs, atf_ci::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_ci.FDb.package_curs.ValidQ
+// cursor points to valid item
+inline bool atf_ci::_db_package_curs_ValidQ(_db_package_curs &curs) {
+    return curs.index < _db.package_n;
+}
+
+// --- atf_ci.FDb.package_curs.Next
+// proceed to next item
+inline void atf_ci::_db_package_curs_Next(_db_package_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_ci.FDb.package_curs.Access
+// item access
+inline atf_ci::FPackage& atf_ci::_db_package_curs_Access(_db_package_curs &curs) {
+    return package_qFind(u64(curs.index));
+}
+
 // --- atf_ci.FExecLimit..Ctor
 inline  atf_ci::FExecLimit::FExecLimit() {
 }
@@ -1170,6 +1306,14 @@ inline  atf_ci::FNs::FNs() {
 // --- atf_ci.FNs..Dtor
 inline  atf_ci::FNs::~FNs() {
     atf_ci::FNs_Uninit(*this);
+}
+
+// --- atf_ci.FPackage..Ctor
+inline  atf_ci::FPackage::FPackage() {
+}
+
+// --- atf_ci.FPkggen..Ctor
+inline  atf_ci::FPkggen::FPkggen() {
 }
 
 // --- atf_ci.FReadmefile..Init

@@ -36,7 +36,7 @@ inline bool amc_vis::c_field_EmptyQ(amc_vis::FCtype& ctype) {
 
 // --- amc_vis.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::FField* amc_vis::c_field_Find(amc_vis::FCtype& ctype, u32 t) {
+inline amc_vis::FField* amc_vis::c_field_Find(amc_vis::FCtype& ctype, u64 t) {
     amc_vis::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_n;
@@ -54,14 +54,14 @@ inline algo::aryptr<amc_vis::FField*> amc_vis::c_field_Getary(amc_vis::FCtype& c
 
 // --- amc_vis.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i32 amc_vis::c_field_N(const amc_vis::FCtype& ctype) {
+inline i64 amc_vis::c_field_N(const amc_vis::FCtype& ctype) {
     return ctype.c_field_n;
 }
 
 // --- amc_vis.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void amc_vis::c_field_RemoveAll(amc_vis::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_field_n; i++) {
+    for (u64 i = 0; i < ctype.c_field_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
@@ -70,7 +70,7 @@ inline void amc_vis::c_field_RemoveAll(amc_vis::FCtype& ctype) {
 
 // --- amc_vis.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline amc_vis::FField& amc_vis::c_field_qFind(amc_vis::FCtype& ctype, u32 idx) {
+inline amc_vis::FField& amc_vis::c_field_qFind(amc_vis::FCtype& ctype, u64 idx) {
     return *ctype.c_field_elems[idx];
 }
 
@@ -153,7 +153,7 @@ inline amc_vis::FCtype* amc_vis::ctype_Last() {
 
 // --- amc_vis.FDb.ctype.N
 // Return number of items in the pool
-inline i32 amc_vis::ctype_N() {
+inline i64 amc_vis::ctype_N() {
     return _db.ctype_n;
 }
 
@@ -195,7 +195,7 @@ inline amc_vis::FField* amc_vis::field_Last() {
 
 // --- amc_vis.FDb.field.N
 // Return number of items in the pool
-inline i32 amc_vis::field_N() {
+inline i64 amc_vis::field_N() {
     return _db.field_n;
 }
 
@@ -261,7 +261,7 @@ inline amc_vis::FNode* amc_vis::node_Last() {
 
 // --- amc_vis.FDb.node.N
 // Return number of items in the pool
-inline i32 amc_vis::node_N() {
+inline i64 amc_vis::node_N() {
     return _db.node_n;
 }
 
@@ -315,7 +315,7 @@ inline amc_vis::FLink* amc_vis::link_Last() {
 
 // --- amc_vis.FDb.link.N
 // Return number of items in the pool
-inline i32 amc_vis::link_N() {
+inline i64 amc_vis::link_N() {
     return _db.link_n;
 }
 
@@ -369,7 +369,7 @@ inline amc_vis::FLinkdep* amc_vis::linkdep_Last() {
 
 // --- amc_vis.FDb.linkdep.N
 // Return number of items in the pool
-inline i32 amc_vis::linkdep_N() {
+inline i64 amc_vis::linkdep_N() {
     return _db.linkdep_n;
 }
 
@@ -391,7 +391,7 @@ inline bool amc_vis::c_linklist_EmptyQ() {
 
 // --- amc_vis.FDb.c_linklist.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::FLink* amc_vis::c_linklist_Find(u32 t) {
+inline amc_vis::FLink* amc_vis::c_linklist_Find(u64 t) {
     amc_vis::FLink *retval = NULL;
     u64 idx = t;
     u64 lim = _db.c_linklist_n;
@@ -409,14 +409,14 @@ inline algo::aryptr<amc_vis::FLink*> amc_vis::c_linklist_Getary() {
 
 // --- amc_vis.FDb.c_linklist.N
 // Return number of items in the pointer array
-inline i32 amc_vis::c_linklist_N() {
+inline i64 amc_vis::c_linklist_N() {
     return _db.c_linklist_n;
 }
 
 // --- amc_vis.FDb.c_linklist.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void amc_vis::c_linklist_RemoveAll() {
-    for (u32 i = 0; i < _db.c_linklist_n; i++) {
+    for (u64 i = 0; i < _db.c_linklist_n; i++) {
         // mark all elements as not-in-array
         _db.c_linklist_elems[i]->c_linklist_in_ary = false;
     }
@@ -425,7 +425,7 @@ inline void amc_vis::c_linklist_RemoveAll() {
 
 // --- amc_vis.FDb.c_linklist.qFind
 // Return reference without bounds checking
-inline amc_vis::FLink& amc_vis::c_linklist_qFind(u32 idx) {
+inline amc_vis::FLink& amc_vis::c_linklist_qFind(u64 idx) {
     return *_db.c_linklist_elems[idx];
 }
 
@@ -529,7 +529,7 @@ inline amc_vis::FReftype* amc_vis::reftype_Last() {
 
 // --- amc_vis.FDb.reftype.N
 // Return number of items in the pool
-inline i32 amc_vis::reftype_N() {
+inline i64 amc_vis::reftype_N() {
     return _db.reftype_n;
 }
 
@@ -583,7 +583,7 @@ inline amc_vis::FNodedep* amc_vis::nodedep_Last() {
 
 // --- amc_vis.FDb.nodedep.N
 // Return number of items in the pool
-inline i32 amc_vis::nodedep_N() {
+inline i64 amc_vis::nodedep_N() {
     return _db.nodedep_n;
 }
 
@@ -625,7 +625,7 @@ inline amc_vis::FOutrow* amc_vis::outrow_Last() {
 
 // --- amc_vis.FDb.outrow.N
 // Return number of items in the pool
-inline i32 amc_vis::outrow_N() {
+inline i64 amc_vis::outrow_N() {
     return _db.outrow_n;
 }
 
@@ -723,7 +723,7 @@ inline amc_vis::FFinput* amc_vis::finput_Last() {
 
 // --- amc_vis.FDb.finput.N
 // Return number of items in the pool
-inline i32 amc_vis::finput_N() {
+inline i64 amc_vis::finput_N() {
     return _db.finput_n;
 }
 
@@ -1069,7 +1069,6 @@ inline  amc_vis::FField::~FField() {
 // --- amc_vis.FFinput..Init
 // Set all fields to initial values.
 inline void amc_vis::FFinput_Init(amc_vis::FFinput& finput) {
-    finput.extrn = bool(false);
     finput.update = bool(false);
     finput.strict = bool(true);
 }
@@ -1900,14 +1899,14 @@ inline u16* amc_vis::text_Last(amc_vis::FOutrow& outrow) {
 
 // --- amc_vis.FOutrow.text.Max
 // Return max. number of items in the array
-inline i32 amc_vis::text_Max(amc_vis::FOutrow& outrow) {
+inline i64 amc_vis::text_Max(amc_vis::FOutrow& outrow) {
     (void)outrow;
     return outrow.text_max;
 }
 
 // --- amc_vis.FOutrow.text.N
 // Return number of items in the array
-inline i32 amc_vis::text_N(const amc_vis::FOutrow& outrow) {
+inline i64 amc_vis::text_N(const amc_vis::FOutrow& outrow) {
     return outrow.text_n;
 }
 
@@ -1918,8 +1917,8 @@ inline void amc_vis::text_RemoveAll(amc_vis::FOutrow& outrow) {
 
 // --- amc_vis.FOutrow.text.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void amc_vis::text_Reserve(amc_vis::FOutrow& outrow, int n) {
-    u32 new_n = outrow.text_n + n;
+inline void amc_vis::text_Reserve(amc_vis::FOutrow& outrow, i64 n) {
+    u64 new_n = outrow.text_n + n;
     if (UNLIKELY(new_n > outrow.text_max)) {
         text_AbsReserve(outrow, new_n);
     }

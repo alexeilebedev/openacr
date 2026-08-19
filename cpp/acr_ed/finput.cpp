@@ -27,15 +27,9 @@
 // -----------------------------------------------------------------------------
 
 static tempstr Pooltype() {
-    tempstr ret;
-    ret = dmmeta_Reftype_reftype_Lary;
-    if (acr_ed::_db.cmdline.pooltype != "") {
-        ret = acr_ed::_db.cmdline.pooltype;
-    }
-    if (acr_ed::_db.cmdline.reftype != "") {
-        ret = acr_ed::_db.cmdline.reftype;
-    }
-    return ret;
+    return tempstr(acr_ed::_db.cmdline.reftype != ""
+                   ? algo::strptr(acr_ed::_db.cmdline.reftype)
+                   : algo::strptr(dmmeta_Reftype_reftype_Lary));
 }
 
 // -----------------------------------------------------------------------------
@@ -83,7 +77,7 @@ void acr_ed::edaction_Create_Finput() {
         acr_ed::_db.out_ssim << hook << eol;
         InsertFieldExtras(hook.field, hook.arg, hook.reftype);
     } else {
-        dmmeta::Finput finput(pool.field,false/*extrn*/,false/*update*/,true/*strict*/,algo::Comment());
+        dmmeta::Finput finput(pool.field,false/*update*/,true/*strict*/,algo::Comment());
         acr_ed::_db.out_ssim << finput  << eol;
     }
 

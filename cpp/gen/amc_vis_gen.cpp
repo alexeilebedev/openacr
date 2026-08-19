@@ -43,28 +43,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 amc_vis::FDb    amc_vis::_db;     // dependency found via dev.targdep
 
-namespace amc_vis {
-const char *amc_vis_help =
-"amc_vis: Draw access path diagrams\n"
-"Usage: amc_vis [[-ctype:]<regx>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    [ctype]     regx    \"%\"     Ctype regexp to compute access path diagram\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -dot        string  \"\"      Save dot file with specified filename\n"
-"    -xref                       Include all ctypes referenced by selected ones\n"
-"    -xns                Y       Cross namespace boundaries\n"
-"    -noinput                    Deselect module inputs\n"
-"    -check                      Check model for dependency problems\n"
-"    -render             Y       Produce an ascii drawing\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace amc_vis
 amc_vis::_db_bh_node_curs::~_db_bh_node_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
 
@@ -125,7 +103,7 @@ namespace amc_vis { // gen:ns_print_proto
 // Copy fields out of row
 void amc_vis::ctype_CopyOut(amc_vis::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- amc_vis.FCtype.msghdr.CopyIn
@@ -136,24 +114,22 @@ void amc_vis::ctype_CopyIn(amc_vis::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- amc_vis.FCtype.ns.Get
-algo::Smallstr16 amc_vis::ns_Get(amc_vis::FCtype& ctype) {
-    algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
-    return ret;
+algo::strptr amc_vis::ns_Get(amc_vis::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RL");
 }
 
 // --- amc_vis.FCtype.name.Get
-algo::Smallstr100 amc_vis::name_Get(amc_vis::FCtype& ctype) {
-    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
-    return ret;
+algo::strptr amc_vis::name_Get(amc_vis::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RR");
 }
 
 // --- amc_vis.FCtype.c_field.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void amc_vis::c_field_Insert(amc_vis::FCtype& ctype, amc_vis::FField& row) {
     if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n++;
+        u64 n  = ctype.c_field_n++;
         ctype.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
@@ -172,15 +148,15 @@ bool amc_vis::c_field_InsertMaybe(amc_vis::FCtype& ctype, amc_vis::FField& row) 
 // --- amc_vis.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void amc_vis::c_field_Remove(amc_vis::FCtype& ctype, amc_vis::FField& row) {
-    int n = ctype.c_field_n;
+    i64 n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
         amc_vis::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             amc_vis::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(amc_vis::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ctype.c_field_n = n - 1;
@@ -192,12 +168,12 @@ void amc_vis::c_field_Remove(amc_vis::FCtype& ctype, amc_vis::FField& row) {
 
 // --- amc_vis.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void amc_vis::c_field_Reserve(amc_vis::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_field_max;
+void amc_vis::c_field_Reserve(amc_vis::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_field_max;
     if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(amc_vis::FField*);
-        u32 new_size = new_max * sizeof(amc_vis::FField*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+        u64 old_size = old_max * sizeof(amc_vis::FField*);
+        u64 new_size = new_max * sizeof(amc_vis::FField*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc_vis.out_of_memory  field:amc_vis.FCtype.c_field");
@@ -245,10 +221,39 @@ void amc_vis::trace_Print(amc_vis::trace& row, algo::cstring& str) {
 
 // --- amc_vis.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 void amc_vis::lpool_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (mem && cell < 36) {
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
+        lpool_Lpblock *rec = (lpool_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.lpool_blk[blk->cell];
+            blk->pprev = &_db.lpool_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.lpool_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.lpool_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            lpool_Lpblock *raw = (lpool_Lpblock*)blk;
+            raw->next = _db.lpool_free[12];
+            _db.lpool_free[12] = raw;
+        }
+    } else if (mem && cell < 36) {
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -262,36 +267,76 @@ void amc_vis::lpool_FreeMem(void* mem, u64 size) {
 // The maximum allocation size is at most 1<<(36+4)
 void* amc_vis::lpool_AllocMem(u64 size) {
     void *retval = NULL;
-    size     = u64_Max(size,1<<4); // enforce alignment
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (cell < 36) {
-        u64 i    = cell;
-        // try to find a block that's at least as large as required.
-        // if found, remove from free list
+    lpool_Lpblk *blk = cell < 11 ? _db.lpool_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
         for (; i < 36; i++) {
-            lpool_Lpblock *blk = _db.lpool_free[i];
-            if (blk) {
-                _db.lpool_free[i] = blk->next;
-                retval = blk;
+            lpool_Lpblock *rawblk = _db.lpool_free[i];
+            if (rawblk) {
+                _db.lpool_free[i] = rawblk->next;
+                rawmem = rawblk;
                 break;
             }
         }
-        // if suitable size block is not found, create a new one
-        // by requesting a block from the base allocator.
-        if (UNLIKELY(!retval)) {
-            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
-            retval = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
         }
-        if (LIKELY(retval)) {
+        if (LIKELY(rawmem)) {
             // if block is more than 2x as large as needed, return the upper half to the free
-            // list (repeatedly). meanwhile, retval doesn't change.
-            while (i > cell) {
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
                 i--;
-                int half = 1ULL<<(i+4);
-                lpool_Lpblock *blk = (lpool_Lpblock*)((u8*)retval + half);
-                blk->next = _db.lpool_free[i];
-                _db.lpool_free[i] = blk;
+                u64 half = 1ULL<<(i+4);
+                lpool_Lpblock *shed = (lpool_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.lpool_free[i];
+                _db.lpool_free[i] = shed;
             }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (lpool_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.lpool_blk[cell];
+                _db.lpool_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        lpool_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
         }
     }
     return retval;
@@ -299,23 +344,25 @@ void* amc_vis::lpool_AllocMem(u64 size) {
 
 // --- amc_vis.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 bool amc_vis::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 1<<4);
-    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
-    if (cell < 36) {
-        for (u64 i = 0; i < nbuf; i++) {
-            u64 size = 1ULL<<(cell+4);
-            lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
-            if (temp == NULL) {
-                retval = false;
-                break;// why continue?
-            } else {
-                temp->next = _db.lpool_free[cell];
-                _db.lpool_free[cell] = temp;
-            }
+    lpool_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        lpool_Lpblock *temp = (lpool_Lpblock*)lpool_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
         }
+    }
+    while (head) {
+        lpool_Lpblock *next = head->next;
+        lpool_FreeMem(head, bufsize);
+        head = next;
     }
     return retval;
 }
@@ -411,7 +458,7 @@ void* amc_vis::ctype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     amc_vis::FCtype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ctype_lary[bsr];
         if (!lev) {
             lev=(amc_vis::FCtype*)algo_lib::malloc_AllocMem(sizeof(amc_vis::FCtype) * (u64(1)<<bsr));
@@ -420,7 +467,7 @@ void* amc_vis::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = i32(new_nelems);
+        _db.ctype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -433,7 +480,7 @@ void amc_vis::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(u64(n)).~FCtype();
-        _db.ctype_n = i32(n);
+        _db.ctype_n = i64(n);
     }
 }
 
@@ -508,7 +555,7 @@ void* amc_vis::field_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     amc_vis::FField*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.field_lary[bsr];
         if (!lev) {
             lev=(amc_vis::FField*)algo_lib::malloc_AllocMem(sizeof(amc_vis::FField) * (u64(1)<<bsr));
@@ -517,7 +564,7 @@ void* amc_vis::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = i32(new_nelems);
+        _db.field_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -530,7 +577,7 @@ void amc_vis::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = i32(n);
+        _db.field_n = i64(n);
     }
 }
 
@@ -591,116 +638,16 @@ bool amc_vis::field_XrefMaybe(amc_vis::FField &row) {
 }
 
 // --- amc_vis.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     amc_vis.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of amc_vis.FDb.cmdline (and any base command line)
+// via amc_vis_ReadArgv; then apply -help/-version and load floadtuples input.
 void amc_vis::ReadArgv() {
     command::amc_vis &cmd = amc_vis::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::amc_vis_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::amc_vis_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"amc_vis: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"amc_vis: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::amc_vis_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "amc_vis: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::amc_vis_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"amc_vis: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::amc_vis_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -723,9 +670,7 @@ void amc_vis::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:amc_vis.FDb.cmdline
+    // dmmeta.floadtuples:command.amc_vis.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!amc_vis::LoadTuplesMaybe(cmd.in,true)) {
@@ -738,7 +683,7 @@ void amc_vis::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(amc_vis_help);
+        prlog(command::amc_vis_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -765,7 +710,13 @@ void amc_vis::Step() {
 // --- amc_vis.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void amc_vis::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("amc_vis", amc_vis::InsertStrptrMaybe, NULL, amc_vis::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "amc_vis";
+    row.InsertStrptrMaybe  = amc_vis::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = amc_vis::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = amc_vis::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "amc_vis.trace";
@@ -779,7 +730,7 @@ static void amc_vis::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'3fd9f00c5d7a2ad359db59975e0c5ca517daced4'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'26977645615fc5990f8402112565332eb0b76112'");
 }
 
 // --- amc_vis.FDb._db.InsertStrptrMaybe
@@ -897,6 +848,45 @@ bool amc_vis::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // Calls Step function of dependencies
 void amc_vis::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- amc_vis.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool amc_vis::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    amc_vis::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case amc_vis_TableId_dmmeta_Ctype: { // finput:amc_vis.FDb.ctype
+            // finput amc_vis.FDb.ctype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case amc_vis_TableId_dmmeta_Field: { // finput:amc_vis.FDb.field
+            // finput amc_vis.FDb.field: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case amc_vis_TableId_dmmeta_Reftype: { // finput:amc_vis.FDb.reftype
+            // finput amc_vis.FDb.reftype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case amc_vis_TableId_dmmeta_Finput: { // finput:amc_vis.FDb.finput
+            // finput amc_vis.FDb.finput: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
 }
 
 // --- amc_vis.FDb._db.XrefMaybe
@@ -1034,7 +1024,7 @@ void amc_vis::ind_ctype_AbsReserve(int n) {
 // --- amc_vis.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 amc_vis::FField* amc_vis::ind_field_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     amc_vis::FField *ret = _db.ind_field_buckets_elems[index];
     for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
     }
@@ -1049,12 +1039,28 @@ amc_vis::FField& amc_vis::ind_field_FindX(const algo::strptr& key) {
     return *ret;
 }
 
+// --- amc_vis.FDb.ind_field.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+amc_vis::FField* amc_vis::ind_field_GetOrCreate(const algo::strptr& key) {
+    amc_vis::FField* ret = ind_field_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &field_Alloc();
+        (*ret).field = key;
+        bool good = field_XrefMaybe(*ret);
+        if (!good) {
+            field_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
 // --- amc_vis.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool amc_vis::ind_field_InsertMaybe(amc_vis::FField& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (amc_vis::FField*)-1)) {// check if in hash already
-        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        row.ind_field_hashval = algo::Smallstr150_Hash(0, row.field);
         ind_field_Reserve(1);
         u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         amc_vis::FField* *prev = &_db.ind_field_buckets_elems[index];
@@ -1171,7 +1177,7 @@ void* amc_vis::node_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     amc_vis::FNode*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.node_lary[bsr];
         if (!lev) {
             lev=(amc_vis::FNode*)algo_lib::malloc_AllocMem(sizeof(amc_vis::FNode) * (u64(1)<<bsr));
@@ -1180,7 +1186,7 @@ void* amc_vis::node_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.node_n = i32(new_nelems);
+        _db.node_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1192,7 +1198,7 @@ void amc_vis::node_RemoveAll() {
     for (u64 n = _db.node_n; n>0; ) {
         n--;
         node_qFind(i32(n)).~FNode(); // destroy last element
-        _db.node_n = i32(n);
+        _db.node_n = i64(n);
     }
 }
 
@@ -1203,7 +1209,7 @@ void amc_vis::node_RemoveLast() {
     if (n > 0) {
         n -= 1;
         node_qFind(i32(n)).~FNode();
-        _db.node_n = i32(n);
+        _db.node_n = i64(n);
     }
 }
 
@@ -1381,7 +1387,7 @@ void* amc_vis::link_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     amc_vis::FLink*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.link_lary[bsr];
         if (!lev) {
             lev=(amc_vis::FLink*)algo_lib::malloc_AllocMem(sizeof(amc_vis::FLink) * (u64(1)<<bsr));
@@ -1390,7 +1396,7 @@ void* amc_vis::link_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.link_n = i32(new_nelems);
+        _db.link_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1402,7 +1408,7 @@ void amc_vis::link_RemoveAll() {
     for (u64 n = _db.link_n; n>0; ) {
         n--;
         link_qFind(u64(n)).~FLink(); // destroy last element
-        _db.link_n = i32(n);
+        _db.link_n = i64(n);
     }
 }
 
@@ -1413,7 +1419,7 @@ void amc_vis::link_RemoveLast() {
     if (n > 0) {
         n -= 1;
         link_qFind(u64(n)).~FLink();
-        _db.link_n = i32(n);
+        _db.link_n = i64(n);
     }
 }
 
@@ -1469,6 +1475,22 @@ amc_vis::FLink& amc_vis::ind_link_FindX(const algo::strptr& key) {
     amc_vis::FLink* ret = ind_link_Find(key);
     vrfy(ret, tempstr() << "amc_vis.key_error  table:ind_link  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- amc_vis.FDb.ind_link.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+amc_vis::FLink* amc_vis::ind_link_GetOrCreate(const algo::strptr& key) {
+    amc_vis::FLink* ret = ind_link_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &link_Alloc();
+        (*ret).link = key;
+        bool good = link_XrefMaybe(*ret);
+        if (!good) {
+            link_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- amc_vis.FDb.ind_link.InsertMaybe
@@ -1593,7 +1615,7 @@ void* amc_vis::linkdep_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     amc_vis::FLinkdep*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.linkdep_lary[bsr];
         if (!lev) {
             lev=(amc_vis::FLinkdep*)algo_lib::malloc_AllocMem(sizeof(amc_vis::FLinkdep) * (u64(1)<<bsr));
@@ -1602,7 +1624,7 @@ void* amc_vis::linkdep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.linkdep_n = i32(new_nelems);
+        _db.linkdep_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1614,7 +1636,7 @@ void amc_vis::linkdep_RemoveAll() {
     for (u64 n = _db.linkdep_n; n>0; ) {
         n--;
         linkdep_qFind(i32(n)).~FLinkdep(); // destroy last element
-        _db.linkdep_n = i32(n);
+        _db.linkdep_n = i64(n);
     }
 }
 
@@ -1625,7 +1647,7 @@ void amc_vis::linkdep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         linkdep_qFind(i32(n)).~FLinkdep();
-        _db.linkdep_n = i32(n);
+        _db.linkdep_n = i64(n);
     }
 }
 
@@ -1657,12 +1679,12 @@ bool amc_vis::linkdep_XrefMaybe(amc_vis::FLinkdep &row) {
 }
 
 // --- amc_vis.FDb.c_linklist.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void amc_vis::c_linklist_Insert(amc_vis::FLink& row) {
     if (!row.c_linklist_in_ary) {
         c_linklist_Reserve(1);
-        u32 n  = _db.c_linklist_n++;
+        u64 n  = _db.c_linklist_n++;
         _db.c_linklist_elems[n] = &row;
         row.c_linklist_in_ary = true;
     }
@@ -1681,15 +1703,15 @@ bool amc_vis::c_linklist_InsertMaybe(amc_vis::FLink& row) {
 // --- amc_vis.FDb.c_linklist.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void amc_vis::c_linklist_Remove(amc_vis::FLink& row) {
-    int n = _db.c_linklist_n;
+    i64 n = _db.c_linklist_n;
     if (bool_Update(row.c_linklist_in_ary,false)) {
         amc_vis::FLink* *elems = _db.c_linklist_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             amc_vis::FLink* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(amc_vis::FLink*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 _db.c_linklist_n = n - 1;
@@ -1701,12 +1723,12 @@ void amc_vis::c_linklist_Remove(amc_vis::FLink& row) {
 
 // --- amc_vis.FDb.c_linklist.Reserve
 // Reserve space in index for N more elements;
-void amc_vis::c_linklist_Reserve(u32 n) {
-    u32 old_max = _db.c_linklist_max;
+void amc_vis::c_linklist_Reserve(u64 n) {
+    u64 old_max = _db.c_linklist_max;
     if (UNLIKELY(_db.c_linklist_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(amc_vis::FLink*);
-        u32 new_size = new_max * sizeof(amc_vis::FLink*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, _db.c_linklist_n + n), 4);
+        u64 old_size = old_max * sizeof(amc_vis::FLink*);
+        u64 new_size = new_max * sizeof(amc_vis::FLink*);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.c_linklist_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc_vis.out_of_memory  field:amc_vis.FDb.c_linklist");
@@ -2112,7 +2134,7 @@ void* amc_vis::reftype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     amc_vis::FReftype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.reftype_lary[bsr];
         if (!lev) {
             lev=(amc_vis::FReftype*)algo_lib::malloc_AllocMem(sizeof(amc_vis::FReftype) * (u64(1)<<bsr));
@@ -2121,7 +2143,7 @@ void* amc_vis::reftype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.reftype_n = i32(new_nelems);
+        _db.reftype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2134,7 +2156,7 @@ void amc_vis::reftype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         reftype_qFind(u64(n)).~FReftype();
-        _db.reftype_n = i32(n);
+        _db.reftype_n = i64(n);
     }
 }
 
@@ -2320,7 +2342,7 @@ void* amc_vis::nodedep_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     amc_vis::FNodedep*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.nodedep_lary[bsr];
         if (!lev) {
             lev=(amc_vis::FNodedep*)algo_lib::malloc_AllocMem(sizeof(amc_vis::FNodedep) * (u64(1)<<bsr));
@@ -2329,7 +2351,7 @@ void* amc_vis::nodedep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nodedep_n = i32(new_nelems);
+        _db.nodedep_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2341,7 +2363,7 @@ void amc_vis::nodedep_RemoveAll() {
     for (u64 n = _db.nodedep_n; n>0; ) {
         n--;
         nodedep_qFind(i32(n)).~FNodedep(); // destroy last element
-        _db.nodedep_n = i32(n);
+        _db.nodedep_n = i64(n);
     }
 }
 
@@ -2352,7 +2374,7 @@ void amc_vis::nodedep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nodedep_qFind(i32(n)).~FNodedep();
-        _db.nodedep_n = i32(n);
+        _db.nodedep_n = i64(n);
     }
 }
 
@@ -2416,7 +2438,7 @@ void* amc_vis::outrow_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     amc_vis::FOutrow*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.outrow_lary[bsr];
         if (!lev) {
             lev=(amc_vis::FOutrow*)algo_lib::malloc_AllocMem(sizeof(amc_vis::FOutrow) * (u64(1)<<bsr));
@@ -2425,7 +2447,7 @@ void* amc_vis::outrow_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.outrow_n = i32(new_nelems);
+        _db.outrow_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2437,7 +2459,7 @@ void amc_vis::outrow_RemoveAll() {
     for (u64 n = _db.outrow_n; n>0; ) {
         n--;
         outrow_qFind(i32(n)).~FOutrow(); // destroy last element
-        _db.outrow_n = i32(n);
+        _db.outrow_n = i64(n);
     }
 }
 
@@ -2448,7 +2470,7 @@ void amc_vis::outrow_RemoveLast() {
     if (n > 0) {
         n -= 1;
         outrow_qFind(i32(n)).~FOutrow();
-        _db.outrow_n = i32(n);
+        _db.outrow_n = i64(n);
     }
 }
 
@@ -2533,6 +2555,24 @@ amc_vis::FCtype* amc_vis::zd_select_RemoveFirst() {
     return row;
 }
 
+// --- amc_vis.FDb.zd_select.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void amc_vis::zd_select_InsertBefore(amc_vis::FCtype& row, amc_vis::FCtype* before) {
+    if (!zd_select_InLlistQ(row) && &row != before) {
+        amc_vis::FCtype* next = before;
+        amc_vis::FCtype* prev = next ? next->zd_select_prev : _db.zd_select_tail;
+        row.zd_select_next = next;
+        row.zd_select_prev = prev;
+        amc_vis::FCtype **prev_link_a = &prev->zd_select_next;
+        amc_vis::FCtype **prev_link_b = &_db.zd_select_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        amc_vis::FCtype **next_link_a = &next->zd_select_prev;
+        amc_vis::FCtype **next_link_b = &_db.zd_select_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_select_n++;
+    }
+}
+
 // --- amc_vis.FDb.finput.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2579,7 +2619,7 @@ void* amc_vis::finput_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     amc_vis::FFinput*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.finput_lary[bsr];
         if (!lev) {
             lev=(amc_vis::FFinput*)algo_lib::malloc_AllocMem(sizeof(amc_vis::FFinput) * (u64(1)<<bsr));
@@ -2588,7 +2628,7 @@ void* amc_vis::finput_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.finput_n = i32(new_nelems);
+        _db.finput_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2601,7 +2641,7 @@ void amc_vis::finput_RemoveLast() {
     if (n > 0) {
         n -= 1;
         finput_qFind(u64(n)).~FFinput();
-        _db.finput_n = i32(n);
+        _db.finput_n = i64(n);
     }
 }
 
@@ -2827,6 +2867,7 @@ void amc_vis::_db_bh_link_curs_Next(_db_bh_link_curs &curs) {
 // Set all fields to initial values.
 void amc_vis::FDb_Init() {
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
+    memset(_db.lpool_blk, 0, sizeof(_db.lpool_blk));
     // initialize LAry ctype (amc_vis.FDb.ctype)
     _db.ctype_n = 0;
     memset(_db.ctype_lary, 0, sizeof(_db.ctype_lary)); // zero out all level pointers
@@ -3049,7 +3090,7 @@ void amc_vis::field_CopyOut(amc_vis::FField &row, dmmeta::Field &out) {
     out.arg = row.arg;
     out.reftype = row.reftype;
     out.dflt = row.dflt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- amc_vis.FField.msghdr.CopyIn
@@ -3063,21 +3104,18 @@ void amc_vis::field_CopyIn(amc_vis::FField &row, dmmeta::Field &in) {
 }
 
 // --- amc_vis.FField.ctype.Get
-algo::Smallstr100 amc_vis::ctype_Get(amc_vis::FField& field) {
-    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
-    return ret;
+algo::strptr amc_vis::ctype_Get(amc_vis::FField& field) {
+    return algo::Pathcomp(field.field, ".RL");
 }
 
 // --- amc_vis.FField.ns.Get
-algo::Smallstr16 amc_vis::ns_Get(amc_vis::FField& field) {
-    algo::Smallstr16 ret(algo::Pathcomp(field.field, ".RL.RL"));
-    return ret;
+algo::strptr amc_vis::ns_Get(amc_vis::FField& field) {
+    return algo::Pathcomp(field.field, ".RL.RL");
 }
 
 // --- amc_vis.FField.name.Get
-algo::Smallstr50 amc_vis::name_Get(amc_vis::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RR"));
-    return ret;
+algo::strptr amc_vis::name_Get(amc_vis::FField& field) {
+    return algo::Pathcomp(field.field, ".RR");
 }
 
 // --- amc_vis.FField..Init
@@ -3107,26 +3145,23 @@ void amc_vis::FField_Uninit(amc_vis::FField& field) {
 // Copy fields out of row
 void amc_vis::finput_CopyOut(amc_vis::FFinput &row, dmmeta::Finput &out) {
     out.field = row.field;
-    out.extrn = row.extrn;
     out.update = row.update;
     out.strict = row.strict;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- amc_vis.FFinput.msghdr.CopyIn
 // Copy fields in to row
 void amc_vis::finput_CopyIn(amc_vis::FFinput &row, dmmeta::Finput &in) {
     row.field = in.field;
-    row.extrn = in.extrn;
     row.update = in.update;
     row.strict = in.strict;
     row.comment = in.comment;
 }
 
 // --- amc_vis.FFinput.ns.Get
-algo::Smallstr16 amc_vis::ns_Get(amc_vis::FFinput& finput) {
-    algo::Smallstr16 ret(algo::Pathcomp(finput.field, ".LL"));
-    return ret;
+algo::strptr amc_vis::ns_Get(amc_vis::FFinput& finput) {
+    return algo::Pathcomp(finput.field, ".LL");
 }
 
 // --- amc_vis.FFinput..Uninit
@@ -3223,6 +3258,23 @@ amc_vis::FLinkdep* amc_vis::zd_linkdep_out_RemoveFirst(amc_vis::FLink& link) {
     return row;
 }
 
+// --- amc_vis.FLink.zd_linkdep_out.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void amc_vis::zd_linkdep_out_InsertBefore(amc_vis::FLink& link, amc_vis::FLinkdep& row, amc_vis::FLinkdep* before) {
+    if (!link_zd_linkdep_out_InLlistQ(row) && &row != before) {
+        amc_vis::FLinkdep* next = before;
+        amc_vis::FLinkdep* prev = next ? next->link_zd_linkdep_out_prev : link.zd_linkdep_out_tail;
+        row.link_zd_linkdep_out_next = next;
+        row.link_zd_linkdep_out_prev = prev;
+        amc_vis::FLinkdep **prev_link_a = &prev->link_zd_linkdep_out_next;
+        amc_vis::FLinkdep **prev_link_b = &link.zd_linkdep_out_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        amc_vis::FLinkdep **next_link_a = &next->link_zd_linkdep_out_prev;
+        amc_vis::FLinkdep **next_link_b = &link.zd_linkdep_out_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
+}
+
 // --- amc_vis.FLink.zd_linkdep_in.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void amc_vis::zd_linkdep_in_Insert(amc_vis::FLink& link, amc_vis::FLinkdep& row) {
@@ -3289,6 +3341,23 @@ amc_vis::FLinkdep* amc_vis::zd_linkdep_in_RemoveFirst(amc_vis::FLink& link) {
         row->link_zd_linkdep_in_next = (amc_vis::FLinkdep*)-1; // mark as not-in-list
     }
     return row;
+}
+
+// --- amc_vis.FLink.zd_linkdep_in.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void amc_vis::zd_linkdep_in_InsertBefore(amc_vis::FLink& link, amc_vis::FLinkdep& row, amc_vis::FLinkdep* before) {
+    if (!link_zd_linkdep_in_InLlistQ(row) && &row != before) {
+        amc_vis::FLinkdep* next = before;
+        amc_vis::FLinkdep* prev = next ? next->link_zd_linkdep_in_prev : link.zd_linkdep_in_tail;
+        row.link_zd_linkdep_in_next = next;
+        row.link_zd_linkdep_in_prev = prev;
+        amc_vis::FLinkdep **prev_link_a = &prev->link_zd_linkdep_in_next;
+        amc_vis::FLinkdep **prev_link_b = &link.zd_linkdep_in_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        amc_vis::FLinkdep **next_link_a = &next->link_zd_linkdep_in_prev;
+        amc_vis::FLinkdep **next_link_b = &link.zd_linkdep_in_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
 }
 
 // --- amc_vis.FLink..Init
@@ -3467,6 +3536,23 @@ amc_vis::FNodedep* amc_vis::zd_nodedep_out_RemoveFirst(amc_vis::FNode& node) {
     return row;
 }
 
+// --- amc_vis.FNode.zd_nodedep_out.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void amc_vis::zd_nodedep_out_InsertBefore(amc_vis::FNode& node, amc_vis::FNodedep& row, amc_vis::FNodedep* before) {
+    if (!node_zd_nodedep_out_InLlistQ(row) && &row != before) {
+        amc_vis::FNodedep* next = before;
+        amc_vis::FNodedep* prev = next ? next->node_zd_nodedep_out_prev : node.zd_nodedep_out_tail;
+        row.node_zd_nodedep_out_next = next;
+        row.node_zd_nodedep_out_prev = prev;
+        amc_vis::FNodedep **prev_link_a = &prev->node_zd_nodedep_out_next;
+        amc_vis::FNodedep **prev_link_b = &node.zd_nodedep_out_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        amc_vis::FNodedep **next_link_a = &next->node_zd_nodedep_out_prev;
+        amc_vis::FNodedep **next_link_b = &node.zd_nodedep_out_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
+}
+
 // --- amc_vis.FNode.zd_nodedep_in.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void amc_vis::zd_nodedep_in_Insert(amc_vis::FNode& node, amc_vis::FNodedep& row) {
@@ -3537,6 +3623,24 @@ amc_vis::FNodedep* amc_vis::zd_nodedep_in_RemoveFirst(amc_vis::FNode& node) {
         row->node_zd_nodedep_in_next = (amc_vis::FNodedep*)-1; // mark as not-in-list
     }
     return row;
+}
+
+// --- amc_vis.FNode.zd_nodedep_in.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void amc_vis::zd_nodedep_in_InsertBefore(amc_vis::FNode& node, amc_vis::FNodedep& row, amc_vis::FNodedep* before) {
+    if (!node_zd_nodedep_in_InLlistQ(row) && &row != before) {
+        amc_vis::FNodedep* next = before;
+        amc_vis::FNodedep* prev = next ? next->node_zd_nodedep_in_prev : node.zd_nodedep_in_tail;
+        row.node_zd_nodedep_in_next = next;
+        row.node_zd_nodedep_in_prev = prev;
+        amc_vis::FNodedep **prev_link_a = &prev->node_zd_nodedep_in_next;
+        amc_vis::FNodedep **prev_link_b = &node.zd_nodedep_in_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        amc_vis::FNodedep **next_link_a = &next->node_zd_nodedep_in_prev;
+        amc_vis::FNodedep **next_link_b = &node.zd_nodedep_in_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        node.zd_nodedep_in_n++;
+    }
 }
 
 // --- amc_vis.FNode.zd_link_out.Insert
@@ -3611,6 +3715,24 @@ amc_vis::FLink* amc_vis::zd_link_out_RemoveFirst(amc_vis::FNode& node) {
     return row;
 }
 
+// --- amc_vis.FNode.zd_link_out.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void amc_vis::zd_link_out_InsertBefore(amc_vis::FNode& node, amc_vis::FLink& row, amc_vis::FLink* before) {
+    if (!node_zd_link_out_InLlistQ(row) && &row != before) {
+        amc_vis::FLink* next = before;
+        amc_vis::FLink* prev = next ? next->node_zd_link_out_prev : node.zd_link_out_tail;
+        row.node_zd_link_out_next = next;
+        row.node_zd_link_out_prev = prev;
+        amc_vis::FLink **prev_link_a = &prev->node_zd_link_out_next;
+        amc_vis::FLink **prev_link_b = &node.zd_link_out_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        amc_vis::FLink **next_link_a = &next->node_zd_link_out_prev;
+        amc_vis::FLink **next_link_b = &node.zd_link_out_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        node.zd_link_out_n++;
+    }
+}
+
 // --- amc_vis.FNode.zd_link_in.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void amc_vis::zd_link_in_Insert(amc_vis::FNode& node, amc_vis::FLink& row) {
@@ -3683,6 +3805,24 @@ amc_vis::FLink* amc_vis::zd_link_in_RemoveFirst(amc_vis::FNode& node) {
     return row;
 }
 
+// --- amc_vis.FNode.zd_link_in.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void amc_vis::zd_link_in_InsertBefore(amc_vis::FNode& node, amc_vis::FLink& row, amc_vis::FLink* before) {
+    if (!node_zd_link_in_InLlistQ(row) && &row != before) {
+        amc_vis::FLink* next = before;
+        amc_vis::FLink* prev = next ? next->node_zd_link_in_prev : node.zd_link_in_tail;
+        row.node_zd_link_in_next = next;
+        row.node_zd_link_in_prev = prev;
+        amc_vis::FLink **prev_link_a = &prev->node_zd_link_in_next;
+        amc_vis::FLink **prev_link_b = &node.zd_link_in_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        amc_vis::FLink **next_link_a = &next->node_zd_link_in_prev;
+        amc_vis::FLink **next_link_b = &node.zd_link_in_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        node.zd_link_in_n++;
+    }
+}
+
 // --- amc_vis.FNode..Init
 // Set all fields to initial values.
 void amc_vis::FNode_Init(amc_vis::FNode& node) {
@@ -3736,9 +3876,9 @@ algo::aryptr<u16> amc_vis::text_Addary(amc_vis::FOutrow& outrow, algo::aryptr<u1
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("amc_vis.tary_alias  field:amc_vis.FOutrow.text  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     text_Reserve(outrow, nnew); // reserve space
-    int at = outrow.text_n;
+    i64 at = outrow.text_n;
     memcpy(outrow.text_elems + at, rhs.elems, nnew * sizeof(u16));
     outrow.text_n += nnew;
     return algo::aryptr<u16>(outrow.text_elems + at, nnew);
@@ -3749,8 +3889,8 @@ algo::aryptr<u16> amc_vis::text_Addary(amc_vis::FOutrow& outrow, algo::aryptr<u1
 // The new element is initialized to a default value
 u16& amc_vis::text_Alloc(amc_vis::FOutrow& outrow) {
     text_Reserve(outrow, 1);
-    int n  = outrow.text_n;
-    int at = n;
+    i64 n  = outrow.text_n;
+    i64 at = n;
     u16 *elems = outrow.text_elems;
     new (elems + at) u16(0); // construct new element, default initializer
     outrow.text_n = n+1;
@@ -3760,9 +3900,9 @@ u16& amc_vis::text_Alloc(amc_vis::FOutrow& outrow) {
 // --- amc_vis.FOutrow.text.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u16& amc_vis::text_AllocAt(amc_vis::FOutrow& outrow, int at) {
+u16& amc_vis::text_AllocAt(amc_vis::FOutrow& outrow, i64 at) {
     text_Reserve(outrow, 1);
-    int n  = outrow.text_n;
+    i64 n  = outrow.text_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("amc_vis.bad_alloc_at  field:amc_vis.FOutrow.text  comment:'index out of range'");
     }
@@ -3775,12 +3915,12 @@ u16& amc_vis::text_AllocAt(amc_vis::FOutrow& outrow, int at) {
 
 // --- amc_vis.FOutrow.text.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u16> amc_vis::text_AllocN(amc_vis::FOutrow& outrow, int n_elems) {
+algo::aryptr<u16> amc_vis::text_AllocN(amc_vis::FOutrow& outrow, i64 n_elems) {
     text_Reserve(outrow, n_elems);
-    int old_n  = outrow.text_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = outrow.text_n;
+    i64 new_n = old_n + n_elems;
     u16 *elems = outrow.text_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u16(0); // construct new element, default initialize
     }
     outrow.text_n = new_n;
@@ -3791,15 +3931,15 @@ algo::aryptr<u16> amc_vis::text_AllocN(amc_vis::FOutrow& outrow, int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<u16> amc_vis::text_AllocNAt(amc_vis::FOutrow& outrow, int n_elems, int at) {
+algo::aryptr<u16> amc_vis::text_AllocNAt(amc_vis::FOutrow& outrow, i64 n_elems, i64 at) {
     text_Reserve(outrow, n_elems);
-    int n  = outrow.text_n;
+    i64 n  = outrow.text_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("amc_vis.bad_alloc_n_at  field:amc_vis.FOutrow.text  comment:'index out of range'");
     }
     u16 *elems = outrow.text_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u16));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) u16(0); // construct new element, default initialize
     }
     outrow.text_n = n+n_elems;
@@ -3808,8 +3948,8 @@ algo::aryptr<u16> amc_vis::text_AllocNAt(amc_vis::FOutrow& outrow, int n_elems, 
 
 // --- amc_vis.FOutrow.text.Remove
 // Remove item by index. If index outside of range, do nothing.
-void amc_vis::text_Remove(amc_vis::FOutrow& outrow, u32 i) {
-    u32 lim = outrow.text_n;
+void amc_vis::text_Remove(amc_vis::FOutrow& outrow, u64 i) {
+    u64 lim = outrow.text_n;
     u16 *elems = outrow.text_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(u16) * (lim - (i + 1)));
@@ -3829,10 +3969,10 @@ void amc_vis::text_RemoveLast(amc_vis::FOutrow& outrow) {
 
 // --- amc_vis.FOutrow.text.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void amc_vis::text_AbsReserve(amc_vis::FOutrow& outrow, int n) {
-    u32 old_max  = outrow.text_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void amc_vis::text_AbsReserve(amc_vis::FOutrow& outrow, i64 n) {
+    u64 old_max  = outrow.text_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(outrow.text_elems, old_max * sizeof(u16), new_max * sizeof(u16));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc_vis.tary_nomem  field:amc_vis.FOutrow.text  comment:'out of memory'");
@@ -3846,9 +3986,9 @@ void amc_vis::text_AbsReserve(amc_vis::FOutrow& outrow, int n) {
 // Copy contents of RHS to PARENT.
 void amc_vis::text_Setary(amc_vis::FOutrow& outrow, amc_vis::FOutrow &rhs) {
     text_RemoveAll(outrow);
-    int nnew = rhs.text_n;
+    i64 nnew = rhs.text_n;
     text_Reserve(outrow, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (outrow.text_elems + i) u16(text_qFind(rhs, i));
         outrow.text_n = i + 1;
     }
@@ -3864,12 +4004,12 @@ void amc_vis::text_Setary(amc_vis::FOutrow& outrow, const algo::aryptr<u16> &rhs
 
 // --- amc_vis.FOutrow.text.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u16> amc_vis::text_AllocNVal(amc_vis::FOutrow& outrow, int n_elems, const u16& val) {
+algo::aryptr<u16> amc_vis::text_AllocNVal(amc_vis::FOutrow& outrow, i64 n_elems, const u16& val) {
     text_Reserve(outrow, n_elems);
-    int old_n  = outrow.text_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = outrow.text_n;
+    i64 new_n = old_n + n_elems;
     u16 *elems = outrow.text_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u16(val);
     }
     outrow.text_n = new_n;
@@ -3893,20 +4033,35 @@ bool amc_vis::text_ReadStrptrMaybe(amc_vis::FOutrow& outrow, algo::strptr in_str
 // --- amc_vis.FOutrow.text.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void amc_vis::text_Insary(amc_vis::FOutrow& outrow, algo::aryptr<u16> rhs, int at) {
+void amc_vis::text_Insary(amc_vis::FOutrow& outrow, algo::aryptr<u16> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= outrow.text_elems && rhs.elems < outrow.text_elems + outrow.text_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("amc_vis.tary_alias  field:amc_vis.FOutrow.text  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(outrow.text_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(outrow.text_n+1))) {
         FatalErrorExit("amc_vis.bad_insary  field:amc_vis.FOutrow.text  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = outrow.text_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = outrow.text_n - at;
     text_Reserve(outrow, nnew); // reserve space
     memmove(outrow.text_elems + at + nnew, outrow.text_elems + at, nmove * sizeof(u16));
     memcpy(outrow.text_elems + at, rhs.elems, nnew * sizeof(u16));
     outrow.text_n += nnew;
+}
+
+// --- amc_vis.FOutrow.text.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void amc_vis::text_RemRegion(amc_vis::FOutrow& outrow, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, outrow.text_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        memmove(outrow.text_elems+beg, outrow.text_elems+end, sizeof(u16) * (outrow.text_n-end));
+        outrow.text_n -= n;
+    }
 }
 
 // --- amc_vis.FOutrow..Uninit
@@ -3964,7 +4119,7 @@ void amc_vis::reftype_CopyOut(amc_vis::FReftype &row, dmmeta::Reftype &out) {
     out.cascins = row.cascins;
     out.usebasepool = row.usebasepool;
     out.cancopy = row.cancopy;
-    out.isxref = row.isxref;
+    out.needxref = row.needxref;
     out.del = row.del;
     out.up = row.up;
     out.isnew = row.isnew;
@@ -3981,7 +4136,7 @@ void amc_vis::reftype_CopyIn(amc_vis::FReftype &row, dmmeta::Reftype &in) {
     row.cascins = in.cascins;
     row.usebasepool = in.usebasepool;
     row.cancopy = in.cancopy;
-    row.isxref = in.isxref;
+    row.needxref = in.needxref;
     row.del = in.del;
     row.up = in.up;
     row.isnew = in.isnew;
@@ -3998,7 +4153,7 @@ void amc_vis::FReftype_Init(amc_vis::FReftype& reftype) {
     reftype.cascins = bool(false);
     reftype.usebasepool = bool(false);
     reftype.cancopy = bool(false);
-    reftype.isxref = bool(false);
+    reftype.needxref = bool(false);
     reftype.del = bool(false);
     reftype.up = bool(false);
     reftype.isnew = bool(false);
@@ -4087,7 +4242,7 @@ bool amc_vis::FieldId_ReadStrptrMaybe(amc_vis::FieldId &parent, algo::strptr in_
 // --- amc_vis.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.FieldId.String  printfmt:Raw
-void amc_vis::FieldId_Print(amc_vis::FieldId& row, algo::cstring& str) {
+void amc_vis::FieldId_Print(amc_vis::FieldId row, algo::cstring& str) {
     amc_vis::value_Print(row, str);
 }
 
@@ -4205,7 +4360,7 @@ bool amc_vis::TableId_ReadStrptrMaybe(amc_vis::TableId &parent, algo::strptr in_
 // --- amc_vis.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.TableId.String  printfmt:Raw
-void amc_vis::TableId_Print(amc_vis::TableId& row, algo::cstring& str) {
+void amc_vis::TableId_Print(amc_vis::TableId row, algo::cstring& str) {
     amc_vis::value_Print(row, str);
 }
 

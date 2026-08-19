@@ -28,7 +28,7 @@
 //#pragma endinclude
 namespace ietf { // gen:ns_print_proto
     // func:ietf.Ipv4Addr.addr.ReadStrptrMaybe
-    inline static bool   addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   addr_ReadStrptrMaybe(ietf::Ipv4Addr& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ietf...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
@@ -131,12 +131,12 @@ bool ietf::FieldId_ReadStrptrMaybe(ietf::FieldId &parent, algo::strptr in_str) {
 // --- ietf.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ietf.FieldId.String  printfmt:Raw
-void ietf::FieldId_Print(ietf::FieldId& row, algo::cstring& str) {
+void ietf::FieldId_Print(ietf::FieldId row, algo::cstring& str) {
     ietf::value_Print(row, str);
 }
 
 // --- ietf.Ipv4Addr.addr.ReadStrptrMaybe
-inline static bool ietf::addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) {
+inline static bool ietf::addr_ReadStrptrMaybe(ietf::Ipv4Addr& parent, algo::strptr in_str) {
     bool retval = true;
     u32 addr_tmp;
     retval = u32_ReadStrptrMaybe(addr_tmp, in_str);

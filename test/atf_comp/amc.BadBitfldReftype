@@ -1,0 +1,17 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.flag  arg:bool  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.good  arg:bool  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.FDb.good  offset:0  width:1  srcfield:algo_lib.FDb.word  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.notbitfld  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.FDb.notbitfld  offset:8  width:8  srcfield:algo_lib.FDb.word  comment:""
+# eof amc
+amc -> amc.missing_record  field:algo_lib.FDb.flag  comment:"Missing dmmeta.bitfld record"
+amc -> amc.missing_record  field:algo_lib.FDb.notbitfld  comment:"Field reftype must be a Bitfld"
+amc -> amc.error  reftype errors prevent code generation
+# exit amc code:1

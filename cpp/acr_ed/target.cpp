@@ -44,9 +44,12 @@ void acr_ed::edaction_Create_Target() {
     bool is_ssimdb = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_ssimdb;
 
     // namespace
+    algo::strptr license = acr_ed::_db.cmdline.license != ""
+        ? algo::strptr(acr_ed::_db.cmdline.license)
+        : algo::strptr(dev_License_license_GPL);
     acr_ed::_db.out_ssim<< dmmeta::Ns(acr_ed::_db.cmdline.target
                                       , acr_ed::_db.cmdline.nstype
-                                      , dev_License_license_GPL
+                                      , license
                                       , algo::Comment(acr_ed::_db.cmdline.comment)) << eol;
 
     if (is_protocol) {
@@ -108,6 +111,9 @@ void acr_ed::edaction_Create_Target() {
     if (is_exe) {
         dmmeta::Ctype ctype;
         ctype.ctype = "command.$target";
+        // mirror ns.comment onto the cmdline ctype so the description
+        // is reachable without dmmeta.ns
+        ctype.comment.value = acr_ed::_db.cmdline.comment;
         Ins(&R, acr_ed::_db.out_ssim, tempstr() << ctype);
 
         dmmeta::Cfmt cfmt;
@@ -124,11 +130,10 @@ void acr_ed::edaction_Create_Target() {
         field.reftype = dmmeta_Reftype_reftype_Val;
         Ins(&R, acr_ed::_db.out_ssim, tempstr() << field);
 
-        dmmeta::Fcmdline fcmdline;
-        fcmdline.field=field.field;
-        fcmdline.basecmdline="algo_lib.FDb.cmdline";
-        fcmdline.read=true;
-        Ins(&R, acr_ed::_db.out_ssim, tempstr() << fcmdline);
+        dmmeta::Ccmdline ccmdline;
+        ccmdline.ctype=field.arg;
+        ccmdline.basecmdline="algo_lib.FDb.cmdline";
+        Ins(&R, acr_ed::_db.out_ssim, tempstr() << ccmdline);
 
         dmmeta::Field in;
         in.field="command.$target.in";
@@ -185,9 +190,9 @@ void acr_ed::edaction_Create_Target() {
     }
     acr_ed::RegisterFile(Subst(R,"txt/$nstype/$target/README.md"), "");
 
-    // create internals file
+    // create gen file
     if (is_exe) {
-        acr_ed::RegisterFile(Subst(R,"txt/$nstype/$target/internals.md"), "");
+        acr_ed::RegisterFile(Subst(R,"txt/gen/$target/$target.md"), "");
     }
 
     // update headers
@@ -283,17 +288,18 @@ void acr_ed::edaction_Rename_Target() {
     }ind_end;
     acr_ed::_db.script << script2;
 
-    // TODO: rename md file
-    // rename md file -- speculative
-    // {
-    //     command::acr acr;
-    //     acr.query << "readme:txt/"<<acr_ed::_db.cmdline.target<<".md";
-    //     acr.rename << "txt/"<<acr_ed::_db.cmdline.rename<<".md";
-    //     acr.write=true;
-    //     acr.g=true;// issue git mv
-    //     acr.report=false;
-    //     Ins(&R, acr_ed::_db.script, acr_ToCmdline(acr));
-    // }
+    if (ns->nstype == dmmeta_Nstype_nstype_exe) {
+        Ins(&R, acr_ed::_db.script, "mkdir -p txt/gen/$newtarg");
+        Ins(&R, acr_ed::_db.script, "git mv txt/gen/$oldtarg/$oldtarg.md txt/gen/$newtarg/$newtarg.md");
+        {
+            command::acr acr;
+            acr.query << "gitfile:txt/gen/$oldtarg/$oldtarg.md";
+            acr.rename << "txt/gen/$newtarg/$newtarg.md";
+            acr.write = true;
+            acr.report = false;
+            Ins(&R, acr_ed::_db.script, acr_ToCmdline(acr));
+        }
+    }
 
     if (ns->nstype == dmmeta_Nstype_nstype_exe) {
         Ins(&R, acr_ed::_db.script, "ln -sf ../build/release/$newtarg bin/$oldtarg");

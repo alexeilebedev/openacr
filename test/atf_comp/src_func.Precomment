@@ -1,0 +1,49 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir src && printf "namespace xx { // update-hdr\\n}\\n" > src/x.h && printf "// plain leading comment\\nvoid xx::Plain() {\\n}\\n" > src/y.cpp && printf "// above the divider\\n// ----------------------------------------\\n// below the divider\\nvoid xx::Divider() {\\n}\\n" >> src/y.cpp && printf "// above the banner\\n/////////////////////////////////////////\\n// below the banner\\nvoid xx::Banner() {\\n}\\n" >> src/y.cpp && printf "// above the comment banner\\n// //////////////////////////////////////\\n// below the comment banner\\nvoid xx::CommentBanner() {\\n}\\n" >> src/y.cpp && printf "// above the short slash run\\n// //////////\\n// below the short slash run\\nvoid xx::ShortSlashRun() {\\n}\\n" >> src/y.cpp && printf "// above the slash title\\n// //////// Section ////////////////////\\n// below the slash title\\nvoid xx::SlashTitle() {\\n}\\n" >> src/y.cpp && printf "// what TableRule does\\n//\\n//   shape                  | expected\\n//   ---------------------- ----------\\n//   a row                  | a result\\nvoid xx::TableRule() {\\n}\\n" >> src/y.cpp && printf "// above the section marker\\n// ---- Section ------------------------\\n// below the section marker\\nvoid xx::Section() {\\n}\\n" >> src/y.cpp && printf "// above the short run\\n// ----------\\n// below the short run\\nvoid xx::ShortRun() {\\n}\\n" >> src/y.cpp && printf "// above the pipe rule\\n//   ----------------------|----------------------\\n// below the pipe rule\\nvoid xx::PipeRule() {\\n}\\n" >> src/y.cpp && printf "// above the bare rule\\n//   ----------------------------------------\\n// below the bare rule\\nvoid xx::BareRule() {\\n}\\n" >> src/y.cpp && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/precomment.ssim -updateproto && cat src/x.h\''
+# eof bash
+bash -> namespace xx { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     // plain leading comment
+bash ->     void Plain();
+bash ->     // below the divider
+bash ->     void Divider();
+bash ->     // below the banner
+bash ->     void Banner();
+bash ->     // below the comment banner
+bash ->     void CommentBanner();
+bash ->     // above the short slash run
+bash ->     // //////////
+bash ->     // below the short slash run
+bash ->     void ShortSlashRun();
+bash ->     // above the slash title
+bash ->     // //////// Section ////////////////////
+bash ->     // below the slash title
+bash ->     void SlashTitle();
+bash ->     // what TableRule does
+bash ->     //
+bash ->     // shape                  | expected
+bash ->     // ---------------------- ----------
+bash ->     // a row                  | a result
+bash ->     void TableRule();
+bash ->     // above the section marker
+bash ->     // ---- Section ------------------------
+bash ->     // below the section marker
+bash ->     void Section();
+bash ->     // above the short run
+bash ->     // ----------
+bash ->     // below the short run
+bash ->     void ShortRun();
+bash ->     // above the pipe rule
+bash ->     // ----------------------|----------------------
+bash ->     // below the pipe rule
+bash ->     void PipeRule();
+bash ->     // below the bare rule
+bash ->     void BareRule();
+bash -> }
+# exit bash code:0

@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -73,9 +64,8 @@ u16 lib_http::code_Get(lib_http::FStatus& status) {
 }
 
 // --- lib_http.FStatus.reason.Get
-algo::Smallstr50 lib_http::reason_Get(lib_http::FStatus& status) {
-    algo::Smallstr50 ret(algo::Pathcomp(status.status, " LR"));
-    return ret;
+algo::strptr lib_http::reason_Get(lib_http::FStatus& status) {
+    return algo::Pathcomp(status.status, " LR");
 }
 
 // --- lib_http.trace..Print
@@ -90,7 +80,13 @@ void lib_http::trace_Print(lib_http::trace& row, algo::cstring& str) {
 // --- lib_http.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_http::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_http", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_http";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_http.trace";
@@ -186,6 +182,15 @@ void lib_http::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- lib_http.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_http::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
+}
+
 // --- lib_http.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -232,11 +237,7 @@ lib_http::FStatus* lib_http::status_InsertMaybe(const httpdb::Status &value) {
 // --- lib_http.FDb.status.RemoveAll
 // Destroy all elements of Inlary
 void lib_http::status_RemoveAll() {
-    for (u64 n = _db.status_n; n>0; ) {
-        n--;
-        reinterpret_cast<lib_http::FStatus*>(_db.status_data)[n].~FStatus(); // destroy last element
-        _db.status_n=n;
-    }
+    _db.status_n = 0;
 }
 
 // --- lib_http.FDb.status.RemoveLast
@@ -245,7 +246,6 @@ void lib_http::status_RemoveLast() {
     u64 n = _db.status_n;
     if (n > 0) {
         n -= 1;
-        reinterpret_cast<lib_http::FStatus*>(_db.status_data)[n].~FStatus();
         _db.status_n = n;
     }
 }
@@ -298,8 +298,8 @@ static void lib_http::status_LoadStatic() {
         ,{NULL}
     };
     (void)data;
-    httpdb::Status status;
     for (int i=0; data[i].s; i++) {
+        httpdb::Status status;
         (void)httpdb::Status_ReadStrptrMaybe(status, algo::strptr(data[i].s));
         lib_http::FStatus *elem = status_InsertMaybe(status);
         vrfy(elem, tempstr("lib_http.static_insert_fatal_error")
@@ -418,7 +418,7 @@ bool lib_http::FieldId_ReadStrptrMaybe(lib_http::FieldId &parent, algo::strptr i
 // --- lib_http.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_http.FieldId.String  printfmt:Raw
-void lib_http::FieldId_Print(lib_http::FieldId& row, algo::cstring& str) {
+void lib_http::FieldId_Print(lib_http::FieldId row, algo::cstring& str) {
     lib_http::value_Print(row, str);
 }
 

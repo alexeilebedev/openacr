@@ -69,11 +69,12 @@ void atf_amc::amctest_ReadProc() {
     // spawn a subprocess and read output line by line
     command::amc_proc amc;
     amc.cmd.query = "command.amc_proc";
-    algo_lib::FFildes read;
 
     prlog("reading output 1");
     cstring out1;
-    ind_beg(algo::FileLine_curs,line,amc_StartRead(amc,read)) {
+    amc.fstdout = "|";
+    amc_Start(amc);
+    ind_beg(algo::FileLine_curs,line,amc.from_stdout) {
         out1 << line << eol;
     }ind_end;
 

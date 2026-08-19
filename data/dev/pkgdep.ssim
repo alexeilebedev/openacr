@@ -1,3 +1,5 @@
 dev.pkgdep  pkgdep:amc_js.openacr  soft:Y  comment:""
 dev.pkgdep  pkgdep:apm.openacr  soft:Y  comment:""
-dev.pkgdep  pkgdep:gcli.openacr  soft:Y  comment:""
+dev.pkgdep  pkgdep:samp_make.openacr  soft:Y  comment:""
+dev.pkgdep  pkgdep:ws.amc_js  soft:N  comment:""
+dev.pkgdep  pkgdep:ws.openacr  soft:Y  comment:""

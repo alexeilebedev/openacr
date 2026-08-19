@@ -96,7 +96,10 @@ namespace gcache { // update-hdr
     // However, it is possible to put the directive in multiple files.
     // As result, the latest file  having no any meaningful source line before is taken.
     //
-    void Pch();
+    // Returns false when the precompiled header's own compile failed: the caller
+    // must not go on to the compile that would include it, and the failure is
+    // already counted in the run's exit code.
+    bool Pch();
 
     // main routine
     //     (user-implemented function, prototype is in amc-generated header)

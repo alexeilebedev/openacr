@@ -1,0 +1,15 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.steptype  steptype:Inline  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.FRow  comment:""
+amc <- dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:""  comment:""
+amc <- dmmeta.fstep  fstep:algo_lib.FRow.rowid  steptype:Inline  comment:""
+# eof amc
+amc -> amc.fstep_global  fstep:algo_lib.FRow.rowid  ctype:algo_lib.FRow  comment:"fstep requires a global field (a field of the namespace FDb)"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

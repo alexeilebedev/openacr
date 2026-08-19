@@ -36,6 +36,10 @@ static strptr LastVer(strptr range) {
     return Pathcomp(range,"-LR");
 }
 
+// Generate the kafka wire codec for a ctype with a ckafka record:
+// DIR 0 emits the encoder (ctype to byte buffer), any other value the
+// decoder (byte buffer to ctype). Fields outside the message's valid
+// version range are skipped at runtime by generated version checks.
 void amc::KafkaCodec(int dir) {
     bool encode = dir==0;
     bool decode = !encode;
@@ -111,7 +115,24 @@ void amc::KafkaCodec(int dir) {
             if (kafka && !base && !tagged) {
                 Set(R, "$Argtype", field.p_arg->cpp_type);
                 Set(R, "$fldname", name_Get(field));
-                Set(R, "$fldval", "parent.$fldname");
+                // Singular field access: encode reads through FieldvalExpr,
+                // which routes bitfld/fbigend/fldfunc fields through their
+                // Get accessor; decode of a field with no direct member
+                // (NoDirectMemberQ) lands in a temporary stored through the
+                // Set accessor after the decode. The wider AssignViaSetQ is
+                // deliberately not used here: this codec's presence bits
+                // depend on the wire's null flag (the prsset block below),
+                // and a pmask-registered Set would mark a null field
+                // present. A Tary overrides $fldval below (cursor element
+                // on encode, Alloc on decode).
+                bool need_set = decode && field.reftype != dmmeta_Reftype_reftype_Tary && NoDirectMemberQ(field);
+                if (encode) {
+                    Set(R, "$fldval", FieldvalExpr(field.p_ctype,field,"parent"));
+                } else if (need_set) {
+                    Set(R, "$fldval", "$fldname_tmp");
+                } else {
+                    Set(R, "$fldval", "parent.$fldname");
+                }
                 cstring fldverchk;
                 strptr first = FirstVer(field.c_fkafka->versions);
                 strptr last = LastVer(field.c_fkafka->versions);
@@ -150,7 +171,7 @@ void amc::KafkaCodec(int dir) {
                         fldnulchk << "true";
                     }
                     if (c_pmaskfld_member_N(field)) {
-                        Ins(&R,fldprschk,"$fldname_PresentQ(parent)",false);
+                        fldprschk << PresentQExpr(field,"parent");
                         prsset = true;
                     } else if (count < n_hdr_fld || header) {
                         vrfy(name_Get(field)=="client_id", "Can't cope with unknown nullable field in header");
@@ -219,8 +240,11 @@ void amc::KafkaCodec(int dir) {
                 if (decode) {
                     if (field.reftype == dmmeta_Reftype_reftype_Tary) {
                         Ins(&R,func.body,"ok = ok && lib_kafka::DecodeArrayLen(buf,len,present,$fldnulchk,$fldflxchk);");
-                        Ins(&R,func.body,"for (u32 i=0; i<len; ++i) {");
+                        Ins(&R,func.body,"for (u32 i=0; ok && i<len; ++i) {");
                         Set(R,"$fldval","$fldname_Alloc(parent)");
+                    }
+                    if (need_set) {
+                        Ins(&R,func.body,"$Argtype $fldname_tmp = $Argtype();");
                     }
                     if (field.arg == "bool") {
                         Ins(&R,func.body,"ok = ok && algo::DecodeBoolean(buf,$fldval);");
@@ -263,9 +287,12 @@ void amc::KafkaCodec(int dir) {
                     if (field.reftype == dmmeta_Reftype_reftype_Tary) {
                         Ins(&R,func.body,"}");
                     }
+                    if (need_set) {
+                        Ins(&R,func.body,tempstr() << AssignExpr(field,"parent",Subst(R,"$fldname_tmp"),false) << ";");
+                    }
                     if (prsset) {
                         Ins(&R,func.body,"if (present) {");
-                        Ins(&R,func.body,"$fldname_SetPresent(parent);");
+                        SetPresent(func,"parent",field);
                         Ins(&R,func.body,"}");
                     }
                 }
@@ -287,7 +314,7 @@ void amc::KafkaCodec(int dir) {
                     }
                     if (decode) {
                         Ins(&R,func.body,"ok = ok && lib_kafka::DecodeUnsignedVarint(buf,len); // _tagged_fields for header");
-                        Ins(&R,func.body,"ok = len == 0;");
+                        Ins(&R,func.body,"ok = ok && len == 0;");
                     }
                 }
             }

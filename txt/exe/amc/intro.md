@@ -104,7 +104,7 @@ with using algorithms are:
 * Unexpected changes in upstream generic libraries.
 
 #### Libraries Vs. Custom Code
-<a href="#libraries-vs--custom-code"></a>
+<a href="#libraries-vs-custom-code"></a>
 
 The motivation for writing generators is that writing code for reusability doesn't work.
 The reason it doesn't work is that the definition of correctness doesn't lie with
@@ -160,73 +160,85 @@ of code we wrote to get these features.
 
 ### AMC Features
 <a href="#amc-features"></a>
-AMC Generates
+AMC generates (each bullet links to its reference page):
 
-* hash tables
-* arrays
-* linked lists
-* dequeues
-* binary heaps
-* trees
-* region-based memory allocators of several types: free list, powers-of-two freelist, fifo allocator, sbrk
-* attaching huge pages to any allocator
-* fifos
-* linear arrays (vectors)
-* indirect arrays (with permanent pointers)
-* inline arrays and fixed-size arrays
-* Functions to convert any struct to/from a string or a bash command line
-* Enums based on any column from a table, supporting both integer and string values
-* presence masks
-* big-endian fields
-* Scaled decimal types
-* enforced packing for protocol namespaces
-* calculation of cryptographic hashes of protocols, ensuring binary compatibility of messages sent over the wire
-* parsing of command lines with arbitrary user-defined types, supporting enums, arrays and optional fields
-* optimized 'placement new' functions for various memory buffers
-* buffers with or without asynchronous I/O, with automatic parsing of messages and edge-triggered epoll/kqueue
-* automatic incremental group-by indexes (inserting a record automatically updates global and partitioned indexes)
-* syntax help string for an executable
-* '#include' lines only for those files that are needed to compile a unit
-* forward declarations for any referenced types whose headers don't need to be included
-* controlled order of initialization (an unsolved issue in C++)
+#### Indexes & containers
+<a href="#indexes-containers"></a>
+* hash tables — [Thash](/txt/exe/amc/reftype/Thash.md)
+* linked lists & deques — [Llist](/txt/exe/amc/reftype/Llist.md), [ZSListMT](/txt/exe/amc/reftype/ZSListMT.md)
+* binary heaps — [Bheap](/txt/exe/amc/reftype/Bheap.md)
+* AVL trees — [Atree](/txt/exe/amc/reftype/Atree.md)
+* dynamic arrays (vectors) — [Tary](/txt/exe/amc/reftype/Tary.md)
+* indirect arrays with permanent pointers — [Lary](/txt/exe/amc/reftype/Lary.md)
+* inline / fixed-size arrays — [Inlary](/txt/exe/amc/reftype/Inlary.md)
+* automatic incremental group-by indexes — [xref](/txt/exe/amc/xref.md)
+* records carrying an arbitrary number of indexes simultaneously — [xref](/txt/exe/amc/xref.md)
+
+#### Memory allocators
+<a href="#memory-allocators"></a>
+* region-based allocators (freelist, power-of-two freelist, FIFO, sbrk) — [Memory pools](/txt/exe/amc/pool.md)
+* huge-page backing for any allocator — [Sbrk](/txt/exe/amc/reftype/Sbrk.md)
+* custom pool (or pool-of-pools) per type — [Memory pools](/txt/exe/amc/pool.md)
+* optimized placement-new constructors — [Varlen](/txt/exe/amc/varlen.md)
+* copy protection for records that cannot be moved
+* automatic cascade delete — [xref](/txt/exe/amc/xref.md)
+
+#### Values, strings, numbers
+<a href="#values-strings-numbers"></a>
+* enums with integer and string values — [Enums](/txt/exe/amc/enum.md)
+* string ↔ enum and enum ↔ enum bidirectional mappings — [Enums](/txt/exe/amc/enum.md)
+* fixed-length string types (Pascal, left-padded, right-padded) with optional numeric conversion — [Strings](/txt/exe/amc/string.md)
+* scaled decimal types — [Decimals](/txt/exe/amc/decimal.md)
+* bitsets over any integer or array — [Bitsets](/txt/exe/amc/bitset.md)
+* char sets, bitmap-based or computed — [Charsets](/txt/exe/amc/charset.md)
+* arbitrary fields packed as bitfields, with overlap checks — [Bitfld](/txt/exe/amc/reftype/Bitfld.md)
+* big-endian field accessors — [Big-endian fields](/txt/exe/amc/bigendian.md)
+* lexicographic comparison and sorting of structs across N fields
+* full set of C++ comparison and `<< / >>` operators for any type
+* sort functions on user-chosen fields
+
+#### Conversion & serialization
+<a href="#conversion-serialization"></a>
+* convert any struct to/from string or bash command line — [Strings](/txt/exe/amc/string.md)
+* JSON encode/decode for any type — [Strings (Strfmt:Json)](/txt/exe/amc/string.md)
+* presence masks — [Presence masks](/txt/exe/amc/pmask.md)
+* compile-time size & offset assertions — [csize / fldoffset / ctypelen](/txt/exe/amc/csize.md)
+* enforced packing for protocol namespaces — [Protocols](/txt/exe/amc/proto.md)
+* cryptographic signature over a protocol for wire-compatibility checks — [Dispatches](/txt/exe/amc/dispatch.md)
+* dispatches over groups of ctypes (with or without shared header) — [Dispatches](/txt/exe/amc/dispatch.md)
+* binary & text print / read / call paths for dispatches — [Dispatches](/txt/exe/amc/dispatch.md)
+
+#### Process & I/O
+<a href="#process-i-o"></a>
+* command-line parsing with user-defined argv types, enums, arrays, optionals — [Command-line](/txt/exe/amc/cmdline.md)
+* `-help` syntax-help string generation — [Command-line](/txt/exe/amc/cmdline.md)
+* synchronous & asynchronous subprocess invocation — [Exec](/txt/exe/amc/exec.md)
+* asynchronous I/O buffers with edge-triggered epoll/kqueue & automatic message parsing — [Fbuf](/txt/exe/amc/fbuf.md)
+* statically loaded tables baked into the binary — [I/O](/txt/exe/amc/io.md)
+* scheduling constructs (steps) for real-time modules — [Runtime](/txt/exe/amc/runtime.md)
+* cycle accounting ('traces') for steps and dispatches — [Trace counters](/txt/exe/amc/trace.md)
+* C++ symbols projected from ssim columns — see [Internals](/txt/gen/amc/amc.md)
+
+#### Code-emission hygiene
+<a href="#code-emission-hygiene"></a>
+* `#include` lines limited to actually-required headers
+* forward declarations for referenced types whose headers aren't needed
+* controlled order of static initialization (a long-standing C++ pain point)
 * field-wise constructors for any record
-* copy protection for records which are cross-referenced and thus cannot be moved
-* functions to map strings to enums and enums to strings
-* allocating arbitrary fields as bitfields within other fields, with checks for overlapping
-* getters and setters for any field, if requested
-* functions to create a structured pkey out of its components (_Concat functions)
-* recursive checking that a packed type doesn't include an unpacked type by value; other consistency checks
-* conversion of any type to/from JSON object
-* full set of C++ comparison operators for any types
-* << and >> operators
-* tracking of pointers with automatic cascade delete
-* protection against linear scanning when deleting elements of singly linked lists
-* lexicographic sorting and comparison of structs with any number of fields, enabling structured keys and multi-dimensional priority queues.
-* sort functions on custom fields
-* scheduling constructs (steps) for real-time modules
-* cycle accounting ('traces') for steps, dispatches
-* records indexed with an arbitrary number of indexes (multiple priority queues, linked lists, etc.)
-* custom pool (allocator) for any type
-* custom pool for any pool, allowing use of completely separate memory for different types (this is used both for performance and security)
-* optional alloc/delete counters for any pool
-* C++ symbols from ssimfile columns
-* Statically loaded tables (that become part of the source code)
-* Synchronous and asynchronous subprocess invocation
-* Asynchronous I/O functions
-* Bitsets on top of any integer or array type
-* Char sets, both bitmap-based and computed
-* Fixed string types (Pascal strings, Left-padded strings, Right-padded strings, Fixed-length strings) with optional numeric conversion
-* Bidirectional mappings between enumerated types
-* Dispatches (any group of ctypes), whether sharing a common header with a type field, or not.
-* Printing, reading, calling dispatches given both binary and text input
-* Uniform cursors (iterators):
-** cursors for all indexes
-** destructive cursors
-** cursors that allow deletion of elements while scanning
-** cursors for any defined message types
-** cursors for lines in a file, or in a memory region
-** cursors for files in directory
-** cursors for messages in a memory region.
+* `_Concat` functions that build a structured pkey from its components — [Pkey](/txt/exe/amc/reftype/Pkey.md)
+* protection against linear scans when deleting from singly-linked lists — [Llist](/txt/exe/amc/reftype/Llist.md)
+* optional alloc/delete counters per pool
+
+#### Uniform cursors (iterators)
+<a href="#uniform-cursors-iterators-"></a>
+
+* cursors for every index
+* destructive cursors
+* cursors safe for in-scan deletion
+* cursors for any defined message type
+* cursors over lines in a file or memory region
+* cursors over files in a directory
+* cursors over messages in a memory region
 
 For each namespace, all code is generated from scratch.
 The resulting code forms a *database of source code*,
@@ -243,9 +255,9 @@ class hierarchies, and found them to be unmaintainable in the long
 run.  amc represents a step forward by stepping away from these
 concepts; The templates, which are a form of compile-time code
 generation, are fully superseded by explicit code generation, which
-can perform deductive reaasoning on closed sets, something that's not
+can perform deductive reasoning on closed sets, something that's not
 available to templates. Templates, which are based on the idea of
-substitution of expressions, cannot in princple insert or remove
+substitution of expressions, cannot in principle insert or remove
 fields at runtime, or delete certain functions, or create multiple
 symbols, and are hard to debug because they break the mapping between
 lines of code and assembly, which is required for debugging system
@@ -265,11 +277,12 @@ enumerated by some state field or an enum, and collects the code for
 processing the distinct cases into one place, making it possible to think
 about post-conditions again.
 
-`Amc` loads about 100 ssim tables. The full list can be obtained with
-`acr_in amc` and appears at the end of this document.
-The exact actual `amc` input can be printed with `acr_in
-amc -data`.  About 20% of these tables are responsible for 80% of the
-generated code, the rest deal with finer details.
+`Amc` loads about 115 ssim tables.  The list is on the
+[README](/txt/exe/amc/README.md#inputs) page and can be
+regenerated at any time with `acr_in amc -list`.  The exact tuples
+that flow into amc on a given run can be dumped with `acr_in amc
+-data`.  About 20% of these tables are responsible for 80% of the
+generated code; the rest deal with finer details.
 
 `Amc` was initially coded by hand, but once its capabilities became
 powerful enough, it was used to generate data structures for its next
@@ -287,9 +300,9 @@ On average, `amc` generates 15-25 lines of code per 1 line of ssimfile specifica
 It is easy enough to check this claim:
 
     $ acr ns:amc -t | wc -l
-    2010
+    2363
     $ amc amc.% | wc -l
-    47431
+    61344
 
 The specification can be edited manually and adjusted frequently with Unix tools such as
 sed and perl, or by issuing `acr_ed` commands. The compression factor, and the fact
@@ -337,4 +350,3 @@ It is very tiresome to debug such code. The code should already have been writte
 by hand, possibly a couple of times, to the point where the duplication occurs, but the
 different implementations cannot be unified because of either unacceptable performance costs,
 or too many dependencies. Such code is to be lifted into a generator.
-

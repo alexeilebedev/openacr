@@ -1,1 +1,2 @@
 dmmeta.dispfilter  dispatch:atf_amc.Disp  match_all:N  comment:""
+dmmeta.dispfilter  dispatch:atf_amc.Disp2  match_all:Y  comment:"Every filter field must match, including one the message does not carry"

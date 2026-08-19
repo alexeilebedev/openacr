@@ -1,2 +1,6 @@
-dmmeta.nsjs  ns:algo  typescript:Y  gensel:Y  comment:""
-dmmeta.nsjs  ns:ams  typescript:Y  gensel:Y  comment:""
+dmmeta.nsjs  ns:algo  typescript:Y  ifaceonly:N  comment:""
+dmmeta.nsjs  ns:ams  typescript:Y  ifaceonly:N  comment:""
+dmmeta.nsjs  ns:atf_amc  typescript:Y  ifaceonly:N  comment:"TS serde of amc test ctypes: the VarlenAlloc% family exercises lenfld scale/extra/width"
+dmmeta.nsjs  ns:atfdb  typescript:Y  ifaceonly:N  comment:"Bench catalogs (benchtest/benchcap/benchenv) for the bench dashboard"
+dmmeta.nsjs  ns:fm  typescript:Y  ifaceonly:N  comment:"Fault-management messages (AlarmMsg on /sys/alarm)"
+dmmeta.nsjs  ns:report  typescript:Y  ifaceonly:N  comment:"Report-record schemas (text tuples on streams/stdout) for the bench feed"

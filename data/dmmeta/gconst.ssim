@@ -3,8 +3,9 @@ dmmeta.gconst  field:amc.CppkeywordId.id  namefld:dmmeta.Cppkeyword.cppkeyword  
 dmmeta.gconst  field:amc.Pnewtype.value  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
 dmmeta.gconst  field:amcdb.Curstype.curstype  namefld:amcdb.Curstype.curstype  idfld:""  wantenum:N
 dmmeta.gconst  field:amcdb.Tclass.tclass  namefld:amcdb.Tclass.tclass  idfld:amcdb.Tclass.tclass  wantenum:N
+dmmeta.gconst  field:ams.Grptype.value  namefld:amsdb.Grptype.grptype  idfld:amsdb.Grptype.id  wantenum:Y
 dmmeta.gconst  field:ams.Proctype.value  namefld:amsdb.Proctype.proctype  idfld:amsdb.Proctype.id  wantenum:Y
-dmmeta.gconst  field:ams.Shmtype.value  namefld:amsdb.Shmtype.shmtype  idfld:amsdb.Shmtype.id  wantenum:Y
+dmmeta.gconst  field:ams.Trafficclass.value  namefld:amsdb.Trafficclass.trafficclass  idfld:amsdb.Trafficclass.id  wantenum:Y
 dmmeta.gconst  field:atfdb.Msgdir.msgdir  namefld:atfdb.Msgdir.msgdir  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Arch.arch  namefld:dev.Arch.arch  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Builddir.builddir  namefld:dev.Builddir.builddir  idfld:""  wantenum:N
@@ -29,16 +30,6 @@ dmmeta.gconst  field:dmmeta.Ssimfile.ssimfile  namefld:dmmeta.Ssimfile.ssimfile 
 dmmeta.gconst  field:dmmeta.Steptype.steptype  namefld:dmmeta.Steptype.steptype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Strfmt.strfmt  namefld:dmmeta.Strfmt.strfmt  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Strtype.strtype  namefld:dmmeta.Strtype.strtype  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gact.gact  namefld:gclidb.Gact.gact  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gclicmd.gclicmd  namefld:gclidb.Gclicmd.gclicmd  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gclienv.gclienv  namefld:gclidb.Gclienv.gclienv  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gclisub.gclisub  namefld:gclidb.Gclisub.gclisub  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gfld.gfld  namefld:gclidb.Gfld.gfld  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gstate.gstate  namefld:gclidb.Gstate.gstate  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gtbl.gtbl  namefld:gclidb.Gtbl.gtbl  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gtblact.gtblact  namefld:gclidb.Gtblact.gtblact  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gtype.gtype  namefld:gclidb.Gtype.gtype  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Label.label  namefld:gclidb.Label.label  idfld:""  wantenum:N
 dmmeta.gconst  field:http.HeaderType.value  namefld:httpdb.Header.header  idfld:""  wantenum:Y
 dmmeta.gconst  field:http.Method.value  namefld:httpdb.Method.method  idfld:httpdb.Method.id  wantenum:Y
 dmmeta.gconst  field:ws.StatusCode.value  namefld:wsdb.Status.reason  idfld:wsdb.Status.code  wantenum:N

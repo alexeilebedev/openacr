@@ -32,8 +32,8 @@
 
 // --- src_hdr_FieldIdEnum
 
-enum src_hdr_FieldIdEnum {        // src_hdr.FieldId.value
-     src_hdr_FieldId_value   = 0
+enum src_hdr_FieldIdEnum {    // src_hdr.FieldId.value
+     src_hdr_FieldId_value
 };
 
 enum { src_hdr_FieldIdEnum_N = 1 };
@@ -63,7 +63,6 @@ enum { src_hdr_TableIdEnum_N = 14 };
 namespace src_hdr { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace src_hdr { // gen:ns_tclass_field
-extern const char *src_hdr_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace src_hdr { struct FLicense; }
@@ -112,7 +111,6 @@ private:
     friend src_hdr::FCopyline*  fcopyline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 fcopyline_Delete(src_hdr::FCopyline &row) __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:src_hdr.FCopyline..Init
 inline void          FCopyline_Init(src_hdr::FCopyline& fcopyline);
@@ -128,7 +126,7 @@ void                 FCopyline_Uninit(src_hdr::FCopyline& fcopyline) __attribute
 struct FCopyright { // src_hdr.FCopyright
     algo::Smallstr50       copyright;               //
     bool                   dflt;                    //   false
-    algo::Comment          comment;                 //
+    algo::cstring          comment;                 //
     algo::cstring          years;                   //
     i32                    sortkey;                 //   0
     src_hdr::FCopyright*   ind_copyright_next;      // hash next
@@ -148,7 +146,6 @@ private:
     friend void                 copyright_RemoveAll() __attribute__((nothrow));
     friend void                 copyright_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_hdr.FCopyright.base.CopyOut
 void                 copyright_CopyOut(src_hdr::FCopyright &row, dev::Copyright &out) __attribute__((nothrow));
@@ -169,7 +166,6 @@ struct trace { // src_hdr.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:src_hdr.trace.String  printfmt:Tuple
 // func:src_hdr.trace..Print
@@ -179,34 +175,34 @@ void                 trace_Print(src_hdr::trace& row, algo::cstring& str) __attr
 // create: src_hdr.FDb._db (Global)
 struct FDb { // src_hdr.FDb: In-memory database for src_hdr
     command::src_hdr        cmdline;                       //
-    src_hdr::FTargsrc*      targsrc_lary[32];              // level array
-    i32                     targsrc_n;                     // number of elements in array
-    src_hdr::FNs*           ns_lary[32];                   // level array
-    i32                     ns_n;                          // number of elements in array
+    src_hdr::FTargsrc*      targsrc_lary[36];              // level array
+    i64                     targsrc_n;                     // number of elements in array
+    src_hdr::FNs*           ns_lary[36];                   // level array
+    i64                     ns_n;                          // number of elements in array
     src_hdr::FNs**          ind_ns_buckets_elems;          // pointer to bucket array
     i32                     ind_ns_buckets_n;              // number of elements in bucket array
     i32                     ind_ns_n;                      // number of elements in the hash table
-    src_hdr::FNsx*          nsx_lary[32];                  // level array
-    i32                     nsx_n;                         // number of elements in array
-    src_hdr::FLicense*      license_lary[32];              // level array
-    i32                     license_n;                     // number of elements in array
+    src_hdr::FNsx*          nsx_lary[36];                  // level array
+    i64                     nsx_n;                         // number of elements in array
+    src_hdr::FLicense*      license_lary[36];              // level array
+    i64                     license_n;                     // number of elements in array
     src_hdr::FLicense**     ind_license_buckets_elems;     // pointer to bucket array
     i32                     ind_license_buckets_n;         // number of elements in bucket array
     i32                     ind_license_n;                 // number of elements in the hash table
-    src_hdr::FTarget*       target_lary[32];               // level array
-    i32                     target_n;                      // number of elements in array
+    src_hdr::FTarget*       target_lary[36];               // level array
+    i64                     target_n;                      // number of elements in array
     src_hdr::FTarget**      ind_target_buckets_elems;      // pointer to bucket array
     i32                     ind_target_buckets_n;          // number of elements in bucket array
     i32                     ind_target_n;                  // number of elements in the hash table
-    src_hdr::FScriptfile*   scriptfile_lary[32];           // level array
-    i32                     scriptfile_n;                  // number of elements in array
+    src_hdr::FScriptfile*   scriptfile_lary[36];           // level array
+    i64                     scriptfile_n;                  // number of elements in array
     u64                     fcopyline_blocksize;           // # bytes per block
     src_hdr::FCopyline*     fcopyline_free;                //
     src_hdr::FCopyline**    ind_fcopyline_buckets_elems;   // pointer to bucket array
     i32                     ind_fcopyline_buckets_n;       // number of elements in bucket array
     i32                     ind_fcopyline_n;               // number of elements in the hash table
-    src_hdr::FCopyright*    copyright_lary[32];            // level array
-    i32                     copyright_n;                   // number of elements in array
+    src_hdr::FCopyright*    copyright_lary[36];            // level array
+    i64                     copyright_n;                   // number of elements in array
     src_hdr::FCopyright*    c_dflt_copyright;              // optional pointer
     src_hdr::FCopyright**   ind_copyright_buckets_elems;   // pointer to bucket array
     i32                     ind_copyright_buckets_n;       // number of elements in bucket array
@@ -216,11 +212,8 @@ struct FDb { // src_hdr.FDb: In-memory database for src_hdr
     i32                     bh_copyright_max;              // max elements in bh_copyright_elems
     src_hdr::trace          trace;                         //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     src_hdr.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of src_hdr.FDb.cmdline (and any base command line)
+// via src_hdr_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:src_hdr.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -257,6 +250,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:src_hdr.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:src_hdr.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:src_hdr.FDb._db.XrefMaybe
@@ -287,7 +284,7 @@ inline src_hdr::FTargsrc* targsrc_Find(u64 t) __attribute__((__warn_unused_resul
 inline src_hdr::FTargsrc* targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_hdr.FDb.targsrc.N
-inline i32           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_hdr.FDb.targsrc.RemoveLast
 void                 targsrc_RemoveLast() __attribute__((nothrow));
@@ -324,7 +321,7 @@ inline src_hdr::FNs* ns_Find(u64 t) __attribute__((__warn_unused_result__, nothr
 inline src_hdr::FNs* ns_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_hdr.FDb.ns.N
-inline i32           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_hdr.FDb.ns.RemoveLast
 void                 ns_RemoveLast() __attribute__((nothrow));
@@ -345,6 +342,9 @@ src_hdr::FNs*        ind_ns_Find(const algo::strptr& key) __attribute__((__warn_
 // Look up row by key and return reference. Throw exception if not found
 // func:src_hdr.FDb.ind_ns.FindX
 src_hdr::FNs&        ind_ns_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:src_hdr.FDb.ind_ns.GetOrCreate
+src_hdr::FNs*        ind_ns_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:src_hdr.FDb.ind_ns.N
 inline i32           ind_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -386,7 +386,7 @@ inline src_hdr::FNsx* nsx_Find(u64 t) __attribute__((__warn_unused_result__, not
 inline src_hdr::FNsx* nsx_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_hdr.FDb.nsx.N
-inline i32           nsx_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           nsx_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_hdr.FDb.nsx.RemoveLast
 void                 nsx_RemoveLast() __attribute__((nothrow));
@@ -423,7 +423,7 @@ inline src_hdr::FLicense* license_Find(u64 t) __attribute__((__warn_unused_resul
 inline src_hdr::FLicense* license_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_hdr.FDb.license.N
-inline i32           license_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           license_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_hdr.FDb.license.RemoveAll
 void                 license_RemoveAll() __attribute__((nothrow));
@@ -491,7 +491,7 @@ inline src_hdr::FTarget* target_Find(u64 t) __attribute__((__warn_unused_result_
 inline src_hdr::FTarget* target_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_hdr.FDb.target.N
-inline i32           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_hdr.FDb.target.RemoveAll
 void                 target_RemoveAll() __attribute__((nothrow));
@@ -515,6 +515,9 @@ src_hdr::FTarget*    ind_target_Find(const algo::strptr& key) __attribute__((__w
 // Look up row by key and return reference. Throw exception if not found
 // func:src_hdr.FDb.ind_target.FindX
 src_hdr::FTarget&    ind_target_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:src_hdr.FDb.ind_target.GetOrCreate
+src_hdr::FTarget*    ind_target_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:src_hdr.FDb.ind_target.N
 inline i32           ind_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -556,7 +559,7 @@ inline src_hdr::FScriptfile* scriptfile_Find(u64 t) __attribute__((__warn_unused
 inline src_hdr::FScriptfile* scriptfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_hdr.FDb.scriptfile.N
-inline i32           scriptfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           scriptfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_hdr.FDb.scriptfile.RemoveAll
 void                 scriptfile_RemoveAll() __attribute__((nothrow));
@@ -654,7 +657,7 @@ inline src_hdr::FCopyright* copyright_Find(u64 t) __attribute__((__warn_unused_r
 inline src_hdr::FCopyright* copyright_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_hdr.FDb.copyright.N
-inline i32           copyright_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           copyright_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_hdr.FDb.copyright.RemoveAll
 void                 copyright_RemoveAll() __attribute__((nothrow));
@@ -685,6 +688,9 @@ src_hdr::FCopyright* ind_copyright_Find(const algo::strptr& key) __attribute__((
 // Look up row by key and return reference. Throw exception if not found
 // func:src_hdr.FDb.ind_copyright.FindX
 src_hdr::FCopyright& ind_copyright_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:src_hdr.FDb.ind_copyright.GetOrCreate
+src_hdr::FCopyright* ind_copyright_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:src_hdr.FDb.ind_copyright.N
 inline i32           ind_copyright_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -858,7 +864,7 @@ struct FLicense { // src_hdr.FLicense
     src_hdr::FLicense*   ind_license_next;      // hash next
     u32                  ind_license_hashval;   // hash value
     algo::Smallstr50     license;               //
-    algo::Comment        comment;               //
+    algo::cstring        comment;               //
     algo::cstring        text;                  //
     // func:src_hdr.FLicense..AssignOp
     inline src_hdr::FLicense& operator =(const src_hdr::FLicense &rhs) = delete;
@@ -874,7 +880,6 @@ private:
     friend void                 license_RemoveAll() __attribute__((nothrow));
     friend void                 license_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_hdr.FLicense.base.CopyOut
 void                 license_CopyOut(src_hdr::FLicense &row, dev::License &out) __attribute__((nothrow));
@@ -899,7 +904,7 @@ struct FNs { // src_hdr.FNs
     algo::Smallstr16     ns;               // Namespace name (primary key)
     algo::Smallstr50     nstype;           // Namespace type
     algo::Smallstr50     license;          // Associated license
-    algo::Comment        comment;          //
+    algo::cstring        comment;          //
     src_hdr::FNsx*       c_nsx;            // optional pointer
     src_hdr::FLicense*   p_license;        // reference to parent row
     // x-reference on src_hdr.FNs.c_nsx prevents copy
@@ -919,7 +924,6 @@ private:
     friend src_hdr::FNs*        ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ns_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_hdr.FNs.base.CopyOut
 void                 ns_CopyOut(src_hdr::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
@@ -948,10 +952,10 @@ struct FNsx { // src_hdr.FNsx
     algo::Smallstr16    ns;                    //
     bool                genthrow;              //   false
     bool                correct_getorcreate;   //   false
-    algo::Smallstr100   pool;                  //
+    algo::Smallstr150   pool;                  //
     bool                sortxref;              //   false
     bool                pack;                  //   false
-    algo::Comment       comment;               //
+    algo::cstring       comment;               //
     // func:src_hdr.FNsx..AssignOp
     inline src_hdr::FNsx& operator =(const src_hdr::FNsx &rhs) = delete;
     // func:src_hdr.FNsx..CopyCtor
@@ -965,7 +969,6 @@ private:
     friend src_hdr::FNsx*       nsx_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 nsx_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_hdr.FNsx.base.CopyOut
 void                 nsx_CopyOut(src_hdr::FNsx &row, dmmeta::Nsx &out) __attribute__((nothrow));
@@ -985,7 +988,7 @@ void                 FNsx_Uninit(src_hdr::FNsx& nsx) __attribute__((nothrow));
 struct FScriptfile { // src_hdr.FScriptfile
     algo::Smallstr200    gitfile;     //
     algo::Smallstr50     license;     //
-    algo::Comment        comment;     //
+    algo::cstring        comment;     //
     src_hdr::FLicense*   p_license;   // reference to parent row
 private:
     // func:src_hdr.FScriptfile..Ctor
@@ -995,7 +998,6 @@ private:
     friend void                 scriptfile_RemoveAll() __attribute__((nothrow));
     friend void                 scriptfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_hdr.FScriptfile.base.CopyOut
 void                 scriptfile_CopyOut(src_hdr::FScriptfile &row, dev::Scriptfile &out) __attribute__((nothrow));
@@ -1004,7 +1006,7 @@ void                 scriptfile_CopyOut(src_hdr::FScriptfile &row, dev::Scriptfi
 void                 scriptfile_CopyIn(src_hdr::FScriptfile &row, dev::Scriptfile &in) __attribute__((nothrow));
 
 // func:src_hdr.FScriptfile.name.Get
-algo::Smallstr50     name_Get(src_hdr::FScriptfile& scriptfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(src_hdr::FScriptfile& scriptfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_hdr.FScriptfile..Init
@@ -1026,7 +1028,6 @@ struct FSrc { // src_hdr.FSrc
     // func:src_hdr.FSrc..Ctor
     inline               FSrc() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:src_hdr.FSrc..Init
 void                 FSrc_Init(src_hdr::FSrc& parent);
@@ -1041,8 +1042,8 @@ struct FTarget { // src_hdr.FTarget
     u32                   ind_target_hashval;   // hash value
     algo::Smallstr16      target;               // Primary key - name of target
     src_hdr::FTargsrc**   c_targsrc_elems;      // array of pointers
-    u32                   c_targsrc_n;          // array of pointers
-    u32                   c_targsrc_max;        // capacity of allocated array
+    u64                   c_targsrc_n;          // current size
+    u64                   c_targsrc_max;        // capacity of allocated array
     src_hdr::FNs*         p_ns;                 // reference to parent row
     // reftype Ptrary of src_hdr.FTarget.c_targsrc prohibits copy
     // x-reference on src_hdr.FTarget.p_ns prevents copy
@@ -1062,7 +1063,6 @@ private:
     friend void                 target_RemoveAll() __attribute__((nothrow));
     friend void                 target_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_hdr.FTarget.base.CopyOut
 void                 target_CopyOut(src_hdr::FTarget &row, dev::Target &out) __attribute__((nothrow));
@@ -1075,12 +1075,12 @@ void                 target_CopyIn(src_hdr::FTarget &row, dev::Target &in) __att
 inline bool          c_targsrc_EmptyQ(src_hdr::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:src_hdr.FTarget.c_targsrc.Find
-inline src_hdr::FTargsrc* c_targsrc_Find(src_hdr::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline src_hdr::FTargsrc* c_targsrc_Find(src_hdr::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:src_hdr.FTarget.c_targsrc.Getary
 inline algo::aryptr<src_hdr::FTargsrc*> c_targsrc_Getary(src_hdr::FTarget& target) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:src_hdr.FTarget.c_targsrc.Insert
 void                 c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -1090,7 +1090,7 @@ void                 c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsr
 bool                 c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:src_hdr.FTarget.c_targsrc.N
-inline i32           c_targsrc_N(const src_hdr::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targsrc_N(const src_hdr::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:src_hdr.FTarget.c_targsrc.Remove
 void                 c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
@@ -1099,10 +1099,10 @@ void                 c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsr
 inline void          c_targsrc_RemoveAll(src_hdr::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:src_hdr.FTarget.c_targsrc.Reserve
-void                 c_targsrc_Reserve(src_hdr::FTarget& target, u32 n) __attribute__((nothrow));
+void                 c_targsrc_Reserve(src_hdr::FTarget& target, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:src_hdr.FTarget.c_targsrc.qFind
-inline src_hdr::FTargsrc& c_targsrc_qFind(src_hdr::FTarget& target, u32 idx) __attribute__((nothrow));
+inline src_hdr::FTargsrc& c_targsrc_qFind(src_hdr::FTarget& target, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:src_hdr.FTarget.c_targsrc.InAryQ
 inline bool          target_c_targsrc_InAryQ(src_hdr::FTargsrc& row) __attribute__((nothrow));
@@ -1134,7 +1134,7 @@ void                 FTarget_Uninit(src_hdr::FTarget& target) __attribute__((not
 // access: src_hdr.FTarget.c_targsrc (Ptrary)
 struct FTargsrc { // src_hdr.FTargsrc
     algo::Smallstr100   targsrc;                   //
-    algo::Comment       comment;                   //
+    algo::cstring       comment;                   //
     bool                select;                    //   false  Temporary flag
     src_hdr::FTarget*   p_target;                  // reference to parent row
     bool                target_c_targsrc_in_ary;   //   false  membership flag
@@ -1153,7 +1153,6 @@ private:
     friend src_hdr::FTargsrc*   targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 targsrc_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_hdr.FTargsrc.base.CopyOut
 void                 targsrc_CopyOut(src_hdr::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
@@ -1162,13 +1161,13 @@ void                 targsrc_CopyOut(src_hdr::FTargsrc &row, dev::Targsrc &out) 
 void                 targsrc_CopyIn(src_hdr::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:src_hdr.FTargsrc.target.Get
-algo::Smallstr16     target_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_hdr.FTargsrc.src.Get
-algo::Smallstr200    src_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_hdr.FTargsrc.ext.Get
-algo::Smallstr10     ext_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_hdr.FTargsrc..Init
@@ -1190,7 +1189,6 @@ struct FieldId { // src_hdr.FieldId: Field read helper
     inline               FieldId(src_hdr_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:src_hdr.FieldId.value.GetEnum
 inline src_hdr_FieldIdEnum value_GetEnum(const src_hdr::FieldId& parent) __attribute__((nothrow));
@@ -1228,7 +1226,7 @@ inline void          FieldId_Init(src_hdr::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:src_hdr.FieldId.String  printfmt:Raw
 // func:src_hdr.FieldId..Print
-void                 FieldId_Print(src_hdr::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(src_hdr::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- src_hdr.TableId
 struct TableId { // src_hdr.TableId: Index of table in this namespace
@@ -1242,7 +1240,6 @@ struct TableId { // src_hdr.TableId: Index of table in this namespace
     // func:src_hdr.TableId..EnumCtor
     inline               TableId(src_hdr_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:src_hdr.TableId.value.GetEnum
 inline src_hdr_TableIdEnum value_GetEnum(const src_hdr::TableId& parent) __attribute__((nothrow));
@@ -1280,7 +1277,7 @@ inline void          TableId_Init(src_hdr::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:src_hdr.TableId.String  printfmt:Raw
 // func:src_hdr.TableId..Print
-void                 TableId_Print(src_hdr::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(src_hdr::TableId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace src_hdr { // gen:ns_curstext
 
@@ -1355,8 +1352,8 @@ struct _db_bh_copyright_curs {
 struct target_c_targsrc_curs {// fcurs:src_hdr.FTarget.c_targsrc/curs
     typedef src_hdr::FTargsrc ChildType;
     src_hdr::FTargsrc** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     target_c_targsrc_curs() { elems=NULL; n_elems=0; index=0; }
 };
 

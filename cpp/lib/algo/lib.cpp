@@ -51,18 +51,14 @@ tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo DFL
         } else {
             verblog(cmd);
         }
-        command::bash_proc bash;
-        bash.cmd.c = cmd;
-        algo_lib::FFildes readpipe;
-        {
-            int pipefd[2];
-            int rc=pipe(pipefd);
-            (void)rc;
-            readpipe.fd.value = pipefd[0];
-            bash.fstdout  << ">&" << pipefd[1];
-            start_code=bash_Start(bash);
-            (void)close(pipefd[1]);
-        }
+        // arbitrary shell command string -- run it through bash, but via the
+        // hand-written algo_lib::FProc rather than amc-generated command code.
+        algo_lib::FProc proc;
+        ary_Alloc(proc.args) = "bash";
+        ary_Alloc(proc.args) = "-c";
+        ary_Alloc(proc.args) = cmd;
+        proc.fstdout = "|"; // capture stdout through a pipe
+        start_code = algo_lib::ProcStart(proc);
         vrfy(start_code==0 || fail_ok
              ,tempstr("algo_lib.exec_error")
              <<Keyval("code",start_code)
@@ -71,10 +67,10 @@ tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo DFL
         if (ok) {
             char buf[4096];
             size_t nread;
-            while ((nread = read(readpipe.fd.value, buf, sizeof(buf)))!=0) {
+            while ((nread = read(proc.from_stdout.value, buf, sizeof(buf)))!=0) {
                 result << strptr(buf,(i32)nread);
                 if (ch_N(result) > max_output) {
-                    bash_Kill(bash);// terminate subprocess
+                    algo_lib::ProcKill(proc);// terminate subprocess
                     vrfy(fail_ok,tempstr("algo_lib.max_output_exceeded")
                          << Keyval("max_n",max_output)
                          << Keyval("cmd",cmd));
@@ -84,11 +80,11 @@ tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo DFL
             }
         }
         // wait for subprocess to finish
-        bash_Wait(bash);
+        algo_lib::ProcWait(proc);
         if (ok) {
-            errno_vrfy(bash.status==0 || fail_ok
+            errno_vrfy(proc.status==0 || fail_ok
                        ,tempstr("algo_lib.cmd_status_error")
-                       << Keyval("status",bash.status)
+                       << Keyval("comment",algo::DescribeWaitStatus(proc.status))
                        << Keyval("cmd",cmd));
         }
     }
@@ -117,13 +113,15 @@ int algo::SysCmd(strptr cmd, FailokQ fail_ok DFLTVAL(FailokQ(true)), DryrunQ dry
         }
         // empty command will cause a long-living shell; don't do it
         if (cmd.n_elems > 0) {
-            command::bash_proc bash;
-            bash.cmd.c = cmd;
-            if (fail_ok) {
-                ret = bash_Exec(bash);
-            } else {
-                bash_ExecX(bash); // let amc-generated code throw the exception
-            }
+            // arbitrary shell command string -- run it through bash via FProc
+            algo_lib::FProc proc;
+            ary_Alloc(proc.args) = "bash";
+            ary_Alloc(proc.args) = "-c";
+            ary_Alloc(proc.args) = cmd;
+            ret = algo_lib::ProcExec(proc);
+            vrfy(ret==0 || fail_ok, tempstr() << "algo_lib.exec"
+                 << Keyval("cmd", cmd)
+                 << Keyval("comment", algo::DescribeWaitStatus(proc.status)));
         }
     }
     return ret;
@@ -145,6 +143,54 @@ tempstr algo::DescribeWaitStatus(int status) {
         ret << "status "<<status;
     }
     return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Convert STATUS as returned by wait() / waitpid() into a process exit code.
+// A wait status is not an exit code: a child that called exit(N) yields the
+// status N<<8, so assigning the raw word to a process's own exit code hands
+// the C runtime a value whose low eight bits are zero -- the child's failure
+// reads as success.  A child that exited yields its exit code; a child killed
+// by a signal yields 128 plus the signal number (the shell convention), so it
+// stays nonzero and distinguishable from an exit; any other status is a
+// nonzero 1.
+int algo::WaitStatusToExitCode(int status) {
+    int ret = 1;
+    if (WIFEXITED(status)) {
+        ret = WEXITSTATUS(status);
+    } else if (WIFSIGNALED(status)) {
+        ret = 128 + WTERMSIG(status);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// The signal that terminated the child whose wait() / waitpid() status is
+// STATUS, or 0 when the child was not killed by a signal.  The companion of
+// WaitStatusToExitCode for the caller that needs the signal as a fact of its
+// own rather than folded into the shell-convention exit code.
+int algo::WaitStatusToSignal(int status) {
+    int ret = 0;
+    if (WIFSIGNALED(status)) {
+        ret = WTERMSIG(status);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Record child wait status STATUS as this process's own exit facts: exit_code
+// receives the shell-convention exit code (exit N -> N, death by signal ->
+// 128+signal), and exit_signal separately receives the terminating signal --
+// 0 when the child exited -- so the fold into the exit code never loses which
+// case it was.  The one site that decomposes a wait status for export; a
+// caller that assigned the raw status directly would hand the C runtime a
+// value whose low eight bits are zero for every exit(N) child.
+void algo_lib::ExportWaitStatus(int status) {
+    algo_lib::_db.exit_code = algo::WaitStatusToExitCode(status);
+    algo_lib::_db.exit_signal = algo::WaitStatusToSignal(status);
 }
 
 // -----------------------------------------------------------------------------
@@ -419,6 +465,23 @@ bool algo_lib::dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck) {
     return retval;
 }
 
+// -----------------------------------------------------------------------------
+
+// Signature of dispatch DISPSIG as this binary was compiled with, empty when the
+// binary carries no such dispatch.  Every executable loads its own namespace's
+// rows into this table at startup, so the answer is a fact about the running
+// program and not about any data it has read.
+tempstr algo_lib::GetDispsig(algo::strptr dispsig) {
+    tempstr ret;
+    algo_lib::FDispsigcheck *dispsigcheck = algo_lib::ind_dispsigcheck_Find(dispsig);
+    if (dispsigcheck) {
+        ret << dispsigcheck->signature;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 const tempstr algo::GetHostname() {
     tempstr str;
     ch_Reserve(str,128);
@@ -495,14 +558,21 @@ void algo_lib::fildes_Cleanup(algo_lib::FTempfile &tempfile) {
     }
 }
 
+// Return a pseudorandom double uniformly distributed over [0, SCALE].
+// The generator is the C library's random(), which is deterministic and
+// predictable, so the result is fit for test data and jitter, never for a
+// secret or a token.
 double algo::double_WeakRandom(double scale) {
-    // #AL# annotation doesn't seem to work. why?
     // coverity[dont_call]
     return (double(random()) / double((1u<<31)-1)) * scale;
 }
 
+// Return a pseudorandom i32 over [0, MODULO), from the same weak generator
+// double_WeakRandom uses, folded down by %: unless MODULO divides 2^31 the
+// low residues come up a little more often than the high ones. A MODULO of
+// one or less leaves no room for a choice, and the result is then always
+// zero.
 i32 algo::i32_WeakRandom(i32 modulo) {
-    // #AL# annotation doesn't seem to work. why?
     // coverity[dont_call]
     return random() % i32_Max(modulo,1);
 }
@@ -549,13 +619,44 @@ int algo_lib::CreateRedirect(strptr redirect) {
 
 // -----------------------------------------------------------------------------
 
+// True if REDIRECT names a filesystem path (worth showing in a command line),
+// as opposed to a pipe "|" or an fd dup "<&N"/">&N" -- those are internal
+// plumbing (temporary fds), so _ToCmdline/ProcToCmdline omit them.
+bool algo_lib::RedirectFileQ(strptr redirect) {
+    bool ret = false;
+    if (ch_N(redirect) && redirect != "|") {
+        algo::StringIter iter(Trimmed(redirect));
+        if (SkipChar(iter,'<')) {
+            // input redirect operator consumed
+        } else if (SkipChar(iter,'>')) {
+            (void)SkipChar(iter,'>');// optional second '>' (append)
+        }
+        // "&" after the operator marks an fd dup (internal); otherwise a path
+        ret = !SkipChar(iter,'&');
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Interpret redirect string and make DST_FD consistent with
 // the intended state. Return 0 on success, -1 on failure
 // This function is usually called in the child process right after fork
 // See CreateRedirect for interpretation of redirect string
-int algo_lib::ApplyRedirect(strptr redirect, int dst_fd) {
+// The pipe token "|" makes DST_FD a copy of PIPE_FD (a pipe end set up by the
+// caller before fork). PIPE_FD is not closed here -- the caller owns both pipe
+// ends. "|" with PIPE_FD<0 is a misuse and returns -1. To merge stderr into the
+// stdout pipe, set fstdout="|" and fstderr=">&1" (the child applies stdout
+// before stderr, so >&1 duplicates the already-redirected stdout pipe).
+int algo_lib::ApplyRedirect(strptr redirect, int dst_fd, int pipe_fd DFLTVAL(-1)) {
     int rc=0;
-    if (redirect != "") {
+    if (redirect == "|") {
+        if (pipe_fd < 0) {
+            rc=-1; // "|" with no pipe is a misuse
+        } else if (pipe_fd != dst_fd) {
+            (void)dup2(pipe_fd,dst_fd);
+        }
+    } else if (redirect != "") {
         int src_fd = CreateRedirect(redirect);
         if (src_fd < 0) {
             rc=-1;
@@ -566,6 +667,17 @@ int algo_lib::ApplyRedirect(strptr redirect, int dst_fd) {
         }
     }
     return rc;
+}
+
+// -----------------------------------------------------------------------------
+
+// Close FD if it holds a valid descriptor (value>=0), then mark it invalid.
+// No-op when FD is already invalid.
+void algo_lib::Close(algo::Fildes &fd) {
+    if (fd.value >= 0) {
+        (void)close(fd.value);
+        fd.value = -1;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -660,11 +772,26 @@ int algo_lib::KillRecurse(int pid, int sig, bool kill_topmost) {
 
 // -----------------------------------------------------------------------------
 
-// Return computed name for sandbox SANDBOX
-tempstr algo_lib::SandboxDir(algo::strptr sandbox) {
+// Return directory of the worktree named NAME (empty name -> empty result)
+tempstr algo_lib::WtDir(algo::strptr name) {
     tempstr ret;
-    if (sandbox != "") {
-        ret << "temp/sandbox." << sandbox;
+    if (name != "") {
+        ret << "wt/" << name;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the current directory lies inside a worktree rather than the
+// main checkout.  A linked worktree's root has .git as a gitdir-pointer
+// file, where the main checkout has a directory; a cow-farm sandbox has
+// its own .git directory, so it is recognized by the wt/ path component
+// every wt-managed checkout lives under.
+bool algo_lib::WorktreeQ() {
+    bool ret = algo::FileQ(".git");
+    if (!ret) {
+        ret = FindStr(algo::GetCurDir(), "/wt/", true) >= 0;
     }
     return ret;
 }
@@ -719,8 +846,52 @@ void algo_lib::EndStep() {
     algo_lib::_db.step_limit.value = 0;
 }
 
+// Name the file a fail-stop writes its report to, from the directory the
+// process's supervisor put in X2FATALDIR, one file per pid.
+//
+// The report is otherwise written only to stderr, and stderr belongs to
+// whoever spawned the process: a supervised process shares its supervisor's,
+// so the one account of why it died lands in that supervisor's log and never
+// reaches the records its cluster reads.  A file the supervisor can name for
+// itself closes that gap -- it reaps a pid, so it can read back what the pid
+// wrote about its own death.
+//
+// The path is composed and zero-terminated here, while memory is plentiful,
+// because the writer that uses it runs after an allocation has already failed
+// and cannot afford to build a string.  Nothing else assigns the field, so the
+// terminator placed here stands for the life of the process.  An unset
+// X2FATALDIR leaves the field empty and the report goes to stderr alone, which
+// is what an interactively run tool wants.
+static void FatalRecordInit() {
+    algo::strptr dir = algo::strptr(getenv("X2FATALDIR"));
+    if (ch_N(dir) > 0) {
+        algo_lib::_db.fatalerr_file << dir << "/" << getpid() << ".fatal";
+        algo::Zeroterm(algo_lib::_db.fatalerr_file);
+    }
+}
+
 void algo_lib::Userinit() {
+    // The fatal path is armed first, because everything below it can be what
+    // fails: a process that dies during its own startup is exactly the case
+    // whose cause is hardest to recover, and each allocation performed before
+    // the record is named is one more death that leaves nothing behind.  The
+    // reserve lets a report compose its build, backtrace and trace counters
+    // without allocating at the moment when allocation is what failed;
+    // FatalErrorExit survives an overrun anyway, losing only the enrichment.
+    FatalRecordInit();
+    ch_Reserve(algo_lib::_db.fatalerr, 32*1024);
     algo_lib::_db.last_signal = 0;
+    // Arm the signal handler here, after the record is named and the reserve
+    // exists, so a death by signal states its cause the same way a fail-stop
+    // does.  Without it a process killed by SIGSEGV leaves a core and nothing
+    // else: the supervisor records that a signal ended the process and says
+    // nothing about where, so reading the crash needs the matching binary and a
+    // debugger on the node that produced it, and a cluster node often keeps no
+    // core at all.  The report that answers the question is written already, and
+    // arming is the whole of what stood between a signal death and a stated
+    // cause.  A core is still produced: the handler restores the default
+    // disposition and re-raises.
+    algo::SetupFatalSignals();
     ind_beg_aryptr(cstring, str, algo_lib::temp_strings_Getary()) {
         ch_Reserve(str, 256);
     }ind_end_aryptr;

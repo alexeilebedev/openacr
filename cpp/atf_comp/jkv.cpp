@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: atf_comp (exe) -- Algo Test Framework - Component test execution
+// Target: atf_comp (exe) -- Component test runner: spawn processes and diff the log against a reference
 // Exceptions: yes
 // Source: cpp/atf_comp/jkv.cpp
 //
@@ -37,6 +37,17 @@ void atf_comp::comptest_jkv_ReverseSmoke() {
     atf_comp::ProcWrite(proc, "A.G-2:0.3");
     atf_comp::ProcWrite(proc, "A.H:{}");
     atf_comp::ProcWrite(proc, "A.I:0.33");
+}
+
+// A tool that writes its output file has to check the write: a full disk or an
+// unwritable path otherwise leaves no output and reports success. The output
+// path here has a regular file standing where its parent directory would be, so
+// the write cannot succeed under any filesystem state or privilege level, and
+// jkv names the file and the errno and exits non-zero. The blocking file is
+// seeded in the test's own tempdir, which the harness reclaims per run.
+void atf_comp::comptest_jkv_WriteFail() {
+    atf_comp::ProcStart("bash -c 'touch $tempdir/notadir"
+                        " && $bindir/jkv -write -file:$tempdir/notadir/out.json -kv:a=1'");
 }
 
 void atf_comp::comptest_jkv_Smoke() {

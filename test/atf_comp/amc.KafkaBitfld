@@ -1,0 +1,41 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ns  ns:ktst  nstype:protocol  license:GPL  comment:""
+amc <- dmmeta.nscpp  ns:ktst  comment:""
+amc <- dmmeta.ctype  ctype:ktst.Rec  comment:""
+amc <- dmmeta.field  field:ktst.Rec.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:ktst.Rec.val  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:ktst.Rec.val  offset:0  width:16  srcfield:ktst.Rec.word  comment:""
+amc <- dmmeta.ckafka  ctype:ktst.Rec  kind:field  root:Rec  valid_versions:0  flexible_versions:""  comment:""
+amc <- dmmeta.fkafka  field:ktst.Rec.val  versions:0+  nullable_versions:""  tagged_versions:""  tag:0  comment:""
+# eof amc
+amc -> // --- ktst.Rec..KafkaEncode
+amc -> void ktst::Rec_KafkaEncode(algo::ByteAry& buf, ktst::Rec& parent, i16 version) {
+amc ->     if (version>=0) {
+amc ->         bool flexible(false);
+amc ->         (void)flexible; // avoid unused variable
+amc ->         lib_kafka::EncodeU32(buf,val_Get(parent));
+amc ->     }
+amc -> }
+amc -> // --- ktst.Rec..KafkaDecode
+amc -> bool ktst::Rec_KafkaDecode(algo::memptr& buf, ktst::Rec& parent, i16 version) {
+amc ->     bool ok = true;
+amc ->     bool present(false);
+amc ->     (void)present; // avoid unused variable
+amc ->     u32 len(0);
+amc ->     (void)len; // avoid unused variable
+amc ->     ok = version>=0;
+amc ->     if (ok) {
+amc ->         bool flexible(false);
+amc ->         (void)flexible; // avoid unused variable
+amc ->         u32 val_tmp = u32();
+amc ->         ok = ok && lib_kafka::DecodeU32(buf,val_tmp);
+amc ->         val_Set(parent, val_tmp);
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

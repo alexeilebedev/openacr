@@ -59,10 +59,10 @@ GEN              PERNS  COMMENT
 basepool         N      Create basepools based on defaults
 bitfldenum       N      Generate fconsts from bool bitfield
 cget             N      Generate helpful Q functions based on fconsts and bools
+cheapcopy        N      Determine which ctypes are small enough to pass by value
 check_basefield  N      Check Base usage
 check_basepool   N      Check basepool order
 check_bigend     N      Check big-endians
-check_bitfld     N      Check that bitfields don't overlap
 
 ```
 
@@ -73,12 +73,12 @@ void amc::gen_cget()
 void amc::gen_fcmap()
 void amc::gen_basepool() 
 void amc::gen_bitfldenum() 
+void amc::gen_cheapcopy() 
 void amc::gen_check_basefield() 
 void amc::gen_check_basepool() 
 void amc::gen_check_bigend() 
 void amc::gen_check_bitfld() 
 void amc::gen_check_cascdel() 
-void amc::gen_check_cheapcopy() 
 ```
 
 In language-centric systems, one would start by writing some functions, and then use "reflection" to
@@ -91,27 +91,19 @@ See [Hook](hook.md)
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Gstatic
 
 * file:[data/dmmeta/gstatic.ssim](/data/dmmeta/gstatic.ssim)
 
-italicised fields: *ns* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+italicised fields: *ns* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>.LL of field*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.LL of field*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FGstatic](/txt/exe/abt_md/internals.md#abt_md-fgstatic)
-* [amc](/txt/exe/amc/internals.md) as [amc.FGstatic](/txt/exe/amc/internals.md#amc-fgstatic)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [abt_md](/txt/gen/abt_md/abt_md.md) as [abt_md.FGstatic](/txt/gen/abt_md/abt_md.md#abt_md-fgstatic)
+* [amc](/txt/gen/amc/amc.md) as [amc.FGstatic](/txt/gen/amc/amc.md#amc-fgstatic)

@@ -59,10 +59,28 @@ static void CheckXref_Cascdel(amc::FXref &xref) {
 
 // -----------------------------------------------------------------------------
 
+// True when a row of CHILD's ctype could outlive the PARENT row it points at:
+// some xref field of PARENT reaching that ctype neither cascades nor declares
+// that it deliberately does not, so nothing states what happens to the referrer
+// when its target goes away.  SHOW names each such field, which is the fix the
+// caller prints.
+//
+// Two kinds of field are not candidates.  A field carrying dmmeta.nocascdel has
+// already answered the question the other way: the two lifetimes are
+// independent by design, as a stream's are from those of the names that reach
+// it, and the referrer is expected to find its target absent.  And CHILD itself
+// is never its own cascade -- a tree's parent pointer, an Upptr whose ctype is
+// also its target as a path's parent is another path, would otherwise be asked
+// to cascdel itself, which is refused outright: a pointer up the hierarchy
+// states where a row belongs, and taking the row down with the one it belongs
+// to is the inverse collection's job.  The walk therefore looks for that
+// inverse -- the parent's own child list -- and reports it when it is the one
+// left undeclared.
 static bool HasNoncascdelRefs(amc::FCtype &parent, amc::FField &child, bool show) {
     bool retval=false;
     ind_beg(amc::ctype_c_field_curs,field,parent) {
-        if (field.p_arg==child.p_ctype && field.c_xref && !field.c_cascdel) {
+        bool declared = field.c_cascdel || (field.c_xref && field.c_xref->c_nocascdel);
+        if (&field != &child && field.p_arg==child.p_ctype && field.c_xref && !declared) {
             if (show) {
                 prerr("dmmeta.cascdel"
                       <<Keyval("field",field.field));
@@ -227,15 +245,6 @@ static void CheckXref_Impossible(amc::FXref &xref) {
 // -----------------------------------------------------------------------------
 
 void amc::gen_check_xref() {
-    // Require presence of xref on certain fields, or accept exception record
-    ind_beg(amc::_db_field_curs,field,amc::_db) {
-        if (field.p_reftype->isxref && !field.c_xref && !field.c_noxref) {
-            prerr("amc.xref_required"
-                  <<Keyval("field",field.field)
-                  <<Keyval("reftype",field.reftype));
-            algo_lib::_db.exit_code++;
-        }
-    }ind_end;
     ind_beg(amc::_db_xref_curs,xref,amc::_db) {
         if (!xref.p_field->p_ctype->p_ns->c_globfld) {
             prerr("amc.missing_glob"

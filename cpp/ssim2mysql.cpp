@@ -29,6 +29,10 @@
 #include "include/gen/ssim2mysql_gen.h"
 #include "include/gen/ssim2mysql_gen.inl.h"
 
+static bool UseFieldQ(ssim2mysql::FField& fld) {
+    bool ret = !fld.c_cppfunc && (!fld.c_substr || ssim2mysql::_db.cmdline.fldfunc);
+    return ret;
+}
 
 static void NewCmd(strptr text) {
     ssim2mysql::FCmd &cmd = ssim2mysql::cmd_Alloc();
@@ -231,7 +235,7 @@ static bool GoodReftype(dmmeta::ReftypePkey reftype) {
 static void FixupFields(ssim2mysql::FCtype &ctype) {
     int n_field = 0;
     ind_beg(ssim2mysql::ctype_c_field_curs, fld, ctype) {
-        bool good = !fld.c_substr || ssim2mysql::_db.cmdline.fldfunc;
+        bool good = UseFieldQ(fld);
         n_field += good;
     }ind_end;
 
@@ -275,7 +279,7 @@ static void Main_GenSchema_Table(ssim2mysql::FSsimfile &ssimfile) {
         // fldfuncs are excluded unless explicitly requested
         // (they cannot show up in the web-oriented database, and they
         // do not make it back via mysql2ssim, but they simplify writing of joins)
-        bool good = !fld.c_substr || ssim2mysql::_db.cmdline.fldfunc;
+        bool good = UseFieldQ(fld);
         fld.select = good;
         dmmeta::ReftypePkey reftype(dmmeta_Reftype_reftype_Val);
         fld.is_pkeyref = reftype == dmmeta_Reftype_reftype_Pkey;
@@ -374,7 +378,7 @@ void ssim2mysql::Main() {
     // Create columns and fill in their properties
     ind_beg(ssim2mysql::_db_ssimfile_curs, ssimfile, ssim2mysql::_db) if (ssimfile.select){
         ssim2mysql::FCtype &ctype = *ssimfile.p_ctype;
-        ind_beg(ssim2mysql::ctype_c_field_curs, field, ctype) if (!field.c_substr || ssim2mysql::_db.cmdline.fldfunc) {
+        ind_beg(ssim2mysql::ctype_c_field_curs, field, ctype) if (UseFieldQ(field)) {
             tempstr colkey;
             colkey << ssimfile.ssimfile << "." << name_Get(field);
             ssim2mysql::FColumn   &col     = ssim2mysql::ind_column_GetOrCreate(colkey);

@@ -24,81 +24,73 @@
 
 #pragma once
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-
-// --- lib_curl.trace..Ctor
-inline  lib_curl::trace::trace() {
-}
-
-// --- lib_curl.FDb..Uninit
-inline void lib_curl::FDb_Uninit() {
-    lib_curl::FDb &row = _db; (void)row;
-}
 
 // --- lib_curl.FRequest.headers.EmptyQ
 // Return true if index is empty
-inline bool lib_curl::headers_EmptyQ(lib_curl::FRequest& request) {
-    return request.headers_n == 0;
+inline bool lib_curl::headers_EmptyQ(lib_curl::FRequest& parent) {
+    return parent.headers_n == 0;
 }
 
 // --- lib_curl.FRequest.headers.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* lib_curl::headers_Find(lib_curl::FRequest& request, u64 t) {
+inline algo::cstring* lib_curl::headers_Find(lib_curl::FRequest& parent, u64 t) {
     algo::cstring *retval = NULL;
-    if (LIKELY(u64(t) < u64(request.headers_n))) {
+    if (LIKELY(u64(t) < u64(parent.headers_n))) {
         u64 x = t + 1;
         u64 bsr   = algo::u64_BitScanReverse(x);
         u64 base  = u64(1)<<bsr;
         u64 index = x-base;
-        retval = &request.headers_lary[bsr][index];
+        retval = &parent.headers_lary[bsr][index];
     }
     return retval;
 }
 
 // --- lib_curl.FRequest.headers.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* lib_curl::headers_Last(lib_curl::FRequest& request) {
-    return headers_Find(request, u64(request.headers_n-1));
+inline algo::cstring* lib_curl::headers_Last(lib_curl::FRequest& parent) {
+    return headers_Find(parent, u64(parent.headers_n-1));
 }
 
 // --- lib_curl.FRequest.headers.N
 // Return number of items in the pool
-inline i32 lib_curl::headers_N(const lib_curl::FRequest& request) {
-    return request.headers_n;
+inline i64 lib_curl::headers_N(const lib_curl::FRequest& parent) {
+    return parent.headers_n;
 }
 
 // --- lib_curl.FRequest.headers.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& lib_curl::headers_qFind(lib_curl::FRequest& request, u64 t) {
+inline algo::cstring& lib_curl::headers_qFind(lib_curl::FRequest& parent, u64 t) {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
-    return request.headers_lary[bsr][index];
+    return parent.headers_lary[bsr][index];
 }
 
 // --- lib_curl.FRequest.headers_curs.Reset
 // cursor points to valid item
-inline void lib_curl::request_headers_curs_Reset(request_headers_curs &curs, lib_curl::FRequest &parent) {
+inline void lib_curl::FRequest_headers_curs_Reset(FRequest_headers_curs &curs, lib_curl::FRequest &parent) {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_curl.FRequest.headers_curs.ValidQ
 // cursor points to valid item
-inline bool lib_curl::request_headers_curs_ValidQ(request_headers_curs &curs) {
+inline bool lib_curl::FRequest_headers_curs_ValidQ(FRequest_headers_curs &curs) {
     return curs.index < (*curs.parent).headers_n;
 }
 
 // --- lib_curl.FRequest.headers_curs.Next
 // proceed to next item
-inline void lib_curl::request_headers_curs_Next(request_headers_curs &curs) {
+inline void lib_curl::FRequest_headers_curs_Next(FRequest_headers_curs &curs) {
     curs.index++;
 }
 
 // --- lib_curl.FRequest.headers_curs.Access
 // item access
-inline algo::cstring& lib_curl::request_headers_curs_Access(request_headers_curs &curs) {
+inline algo::cstring& lib_curl::FRequest_headers_curs_Access(FRequest_headers_curs &curs) {
     return headers_qFind((*curs.parent), u64(curs.index));
 }
 
@@ -114,68 +106,68 @@ inline  lib_curl::FRequest::~FRequest() {
 
 // --- lib_curl.FResponse.headers.EmptyQ
 // Return true if index is empty
-inline bool lib_curl::headers_EmptyQ(lib_curl::FResponse& response) {
-    return response.headers_n == 0;
+inline bool lib_curl::headers_EmptyQ(lib_curl::FResponse& parent) {
+    return parent.headers_n == 0;
 }
 
 // --- lib_curl.FResponse.headers.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* lib_curl::headers_Find(lib_curl::FResponse& response, u64 t) {
+inline algo::cstring* lib_curl::headers_Find(lib_curl::FResponse& parent, u64 t) {
     algo::cstring *retval = NULL;
-    if (LIKELY(u64(t) < u64(response.headers_n))) {
+    if (LIKELY(u64(t) < u64(parent.headers_n))) {
         u64 x = t + 1;
         u64 bsr   = algo::u64_BitScanReverse(x);
         u64 base  = u64(1)<<bsr;
         u64 index = x-base;
-        retval = &response.headers_lary[bsr][index];
+        retval = &parent.headers_lary[bsr][index];
     }
     return retval;
 }
 
 // --- lib_curl.FResponse.headers.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* lib_curl::headers_Last(lib_curl::FResponse& response) {
-    return headers_Find(response, u64(response.headers_n-1));
+inline algo::cstring* lib_curl::headers_Last(lib_curl::FResponse& parent) {
+    return headers_Find(parent, u64(parent.headers_n-1));
 }
 
 // --- lib_curl.FResponse.headers.N
 // Return number of items in the pool
-inline i32 lib_curl::headers_N(const lib_curl::FResponse& response) {
-    return response.headers_n;
+inline i64 lib_curl::headers_N(const lib_curl::FResponse& parent) {
+    return parent.headers_n;
 }
 
 // --- lib_curl.FResponse.headers.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& lib_curl::headers_qFind(lib_curl::FResponse& response, u64 t) {
+inline algo::cstring& lib_curl::headers_qFind(lib_curl::FResponse& parent, u64 t) {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
-    return response.headers_lary[bsr][index];
+    return parent.headers_lary[bsr][index];
 }
 
 // --- lib_curl.FResponse.headers_curs.Reset
 // cursor points to valid item
-inline void lib_curl::response_headers_curs_Reset(response_headers_curs &curs, lib_curl::FResponse &parent) {
+inline void lib_curl::FResponse_headers_curs_Reset(FResponse_headers_curs &curs, lib_curl::FResponse &parent) {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_curl.FResponse.headers_curs.ValidQ
 // cursor points to valid item
-inline bool lib_curl::response_headers_curs_ValidQ(response_headers_curs &curs) {
+inline bool lib_curl::FResponse_headers_curs_ValidQ(FResponse_headers_curs &curs) {
     return curs.index < (*curs.parent).headers_n;
 }
 
 // --- lib_curl.FResponse.headers_curs.Next
 // proceed to next item
-inline void lib_curl::response_headers_curs_Next(response_headers_curs &curs) {
+inline void lib_curl::FResponse_headers_curs_Next(FResponse_headers_curs &curs) {
     curs.index++;
 }
 
 // --- lib_curl.FResponse.headers_curs.Access
 // item access
-inline algo::cstring& lib_curl::response_headers_curs_Access(response_headers_curs &curs) {
+inline algo::cstring& lib_curl::FResponse_headers_curs_Access(FResponse_headers_curs &curs) {
     return headers_qFind((*curs.parent), u64(curs.index));
 }
 
@@ -187,6 +179,157 @@ inline  lib_curl::FResponse::FResponse() {
 // --- lib_curl.FResponse..Dtor
 inline  lib_curl::FResponse::~FResponse() {
     lib_curl::FResponse_Uninit(*this);
+}
+
+// --- lib_curl.FCall.done.Call
+// Invoke function by pointer
+inline void lib_curl::done_Call(lib_curl::FCall& call, lib_curl::FCall& arg) {
+    if (call.done) {
+        call.done((void*)call.done_ctx, arg);
+    }
+}
+
+// --- lib_curl.FCall.done.Set0
+// Assign 0-argument hook with no context pointer
+inline void lib_curl::done_Set0(lib_curl::FCall& call, void (*fcn)() ) {
+    call.done_ctx = 0;
+    call.done = (lib_curl::call_done_hook)fcn;
+}
+
+// --- lib_curl.FCall.done.Set1
+// Assign 1-argument hook with context pointer
+template<class T> inline void lib_curl::done_Set1(lib_curl::FCall& call, T& ctx, void (*fcn)(T&) ) {
+    call.done_ctx = (u64)&ctx;
+    call.done = (lib_curl::call_done_hook)fcn;
+}
+
+// --- lib_curl.FCall.done.Set2
+// Assign 2-argument hook with context pointer
+template<class T> inline void lib_curl::done_Set2(lib_curl::FCall& call, T& ctx, void (*fcn)(T&, lib_curl::FCall& arg) ) {
+    call.done_ctx = (u64)&ctx;
+    call.done = (lib_curl::call_done_hook)fcn;
+}
+
+// --- lib_curl.FCall..Init
+// Set all fields to initial values.
+inline void lib_curl::FCall_Init(lib_curl::FCall& call) {
+    call.hdrs = u64(0);
+    call.done = NULL;
+    call.done_ctx = 0;
+    call.call_next = (lib_curl::FCall*)-1; // (lib_curl.FDb.call) not-in-tpool's freelist
+}
+
+// --- lib_curl.FCall..Ctor
+inline  lib_curl::FCall::FCall() {
+    lib_curl::FCall_Init(*this);
+}
+
+// --- lib_curl.trace..Ctor
+inline  lib_curl::trace::trace() {
+}
+
+// --- lib_curl.FDb.zd_sock_free.EmptyQ
+// Return true if index is empty
+inline bool lib_curl::zd_sock_free_EmptyQ() {
+    return _db.zd_sock_free_head == NULL;
+}
+
+// --- lib_curl.FDb.zd_sock_free.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline lib_curl::FSock* lib_curl::zd_sock_free_First() {
+    lib_curl::FSock *row = NULL;
+    row = _db.zd_sock_free_head;
+    return row;
+}
+
+// --- lib_curl.FDb.zd_sock_free.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool lib_curl::zd_sock_free_InLlistQ(lib_curl::FSock& row) {
+    bool result = false;
+    result = !(row.zd_sock_free_next == (lib_curl::FSock*)-1);
+    return result;
+}
+
+// --- lib_curl.FDb.zd_sock_free.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline lib_curl::FSock* lib_curl::zd_sock_free_Last() {
+    lib_curl::FSock *row = NULL;
+    row = _db.zd_sock_free_tail;
+    return row;
+}
+
+// --- lib_curl.FDb.zd_sock_free.N
+// Return number of items in the linked list
+inline i32 lib_curl::zd_sock_free_N() {
+    return _db.zd_sock_free_n;
+}
+
+// --- lib_curl.FDb.zd_sock_free.Next
+// Return pointer to next element in the list
+inline lib_curl::FSock* lib_curl::zd_sock_free_Next(lib_curl::FSock &row) {
+    return row.zd_sock_free_next;
+}
+
+// --- lib_curl.FDb.zd_sock_free.Prev
+// Return pointer to previous element in the list
+inline lib_curl::FSock* lib_curl::zd_sock_free_Prev(lib_curl::FSock &row) {
+    return row.zd_sock_free_prev;
+}
+
+// --- lib_curl.FDb.zd_sock_free.qLast
+// Return reference to last element in the index. No bounds checking.
+inline lib_curl::FSock& lib_curl::zd_sock_free_qLast() {
+    lib_curl::FSock *row = NULL;
+    row = _db.zd_sock_free_tail;
+    return *row;
+}
+
+// --- lib_curl.FDb.zd_sock_free_curs.Reset
+// cursor points to valid item
+inline void lib_curl::_db_zd_sock_free_curs_Reset(_db_zd_sock_free_curs &curs, lib_curl::FDb &parent) {
+    curs.row = parent.zd_sock_free_head;
+}
+
+// --- lib_curl.FDb.zd_sock_free_curs.ValidQ
+// cursor points to valid item
+inline bool lib_curl::_db_zd_sock_free_curs_ValidQ(_db_zd_sock_free_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- lib_curl.FDb.zd_sock_free_curs.Next
+// proceed to next item
+inline void lib_curl::_db_zd_sock_free_curs_Next(_db_zd_sock_free_curs &curs) {
+    lib_curl::FSock *next = (*curs.row).zd_sock_free_next;
+    curs.row = next;
+}
+
+// --- lib_curl.FDb.zd_sock_free_curs.Access
+// item access
+inline lib_curl::FSock& lib_curl::_db_zd_sock_free_curs_Access(_db_zd_sock_free_curs &curs) {
+    return *curs.row;
+}
+
+// --- lib_curl.FDb..Uninit
+inline void lib_curl::FDb_Uninit() {
+    lib_curl::FDb &row = _db; (void)row;
+}
+
+// --- lib_curl.FSock..Init
+// Set all fields to initial values.
+inline void lib_curl::FSock_Init(lib_curl::FSock& sock) {
+    sock.sock_next = (lib_curl::FSock*)-1; // (lib_curl.FDb.sock) not-in-tpool's freelist
+    sock.zd_sock_free_next = (lib_curl::FSock*)-1; // (lib_curl.FDb.zd_sock_free) not-in-list
+    sock.zd_sock_free_prev = NULL; // (lib_curl.FDb.zd_sock_free)
+}
+
+// --- lib_curl.FSock..Ctor
+inline  lib_curl::FSock::FSock() {
+    lib_curl::FSock_Init(*this);
+}
+
+// --- lib_curl.FSock..Dtor
+inline  lib_curl::FSock::~FSock() {
+    lib_curl::FSock_Uninit(*this);
 }
 
 // --- lib_curl.FieldId.value.GetEnum

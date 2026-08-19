@@ -33,7 +33,7 @@ static strptr CurCitest() {
 
 // -----------------------------------------------------------------------------
 
-static bool CaptureQ() {
+bool atf_ci::CaptureQ() {
     return atf_ci::_db.cmdline.capture
         || (atf_ci::_db.c_citest
             && atf_ci::_db.c_citest->cijob == atf_ci::atfdb_cijob_normalize);
@@ -41,23 +41,39 @@ static bool CaptureQ() {
 
 // -----------------------------------------------------------------------------
 
-// Check that a list of directories specified with DIRS is clean
-// Nothing is done if an error exit code is already set, since
-// this error might have been caused by the previous error.
-// Return TRUE if test succeeds
-bool atf_ci::CheckCleanDirs(strptr dirs) {
+// Compare the current `git ls-files -m` snapshot against the previous
+// one stored in atf_ci::_db.modfiles, report any newly-modified files,
+// and update atf_ci::_db.modfiles to the current snapshot.  Without
+// this delta, every test after the first dirtying one reports the
+// same pre-existing dirt and gets charged for it.
+// Return TRUE if no new modifications.  On drift, also set exit_code
+// (like CheckNoDir) so a caller that discards the return -- e.g. a
+// sandboxed citest whose per-test gate is skipped -- still fails the run.
+bool atf_ci::CheckCleanDirs() {
     bool ret=true;
-    tempstr mod = lib_git::GitModifiedFiles(dirs);
-    if (mod != "") {
+    tempstr after = lib_git::GitModifiedFiles(".");
+    tempstr added;
+    ind_beg(algo::Line_curs,line,after) {
+        bool seen=false;
+        ind_beg(algo::Line_curs,prev,_db.modfiles) {
+            if (prev == line) { seen=true; break; }
+        }ind_end;
+        if (!seen) {
+            added << line << eol;
+        }
+    }ind_end;
+    if (added != "") {
         prerr("atf_ci.modified_files"
               <<Keyval("during",CurCitest())
-              <<Keyval("files",mod)
+              <<Keyval("files",Trimmed(added))
               <<Keyval("success","N")
               <<Keyval("comment","Please resolve modified files and try again"));
         prerr("Some of the diffs are shown below");
         SysCmd("git diff | head -500");
+        algo_lib::_db.exit_code=1;
         ret=false;
     }
+    _db.modfiles = after;
     return ret;
 }
 
@@ -74,81 +90,6 @@ void atf_ci::CheckNoDir(strptr dir) {
         }
     }
 }
-
-
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_atf_amc() {
-    command::atf_amc_proc atf_amc;
-    atf_amc_ExecX(atf_amc);
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_atf_unit() {
-    command::atf_unit_proc atf_unit;
-    atf_unit.cmd.capture = CaptureQ();
-    atf_unit.cmd.perf_secs=0;
-    atf_unit_ExecX(atf_unit);
-}
-
-// -----------------------------------------------------------------------------
-void atf_ci::citest_atf_comp() {
-    command::atf_comp_proc atf_comp;
-    atf_comp.cmd.capture = CaptureQ();
-    atf_comp.cmd.maxerr = 3;
-    atf_comp.cmd.maxrepeat = 10000;
-    atf_comp_ExecX(atf_comp);
-}
-
-// -----------------------------------------------------------------------------
-void atf_ci::citest_atf_comp_cov() {
-    command::atf_comp_proc atf_comp;
-    atf_comp.cmd.build = true;
-    atf_comp.cmd.covcapture = CaptureQ();
-    atf_comp.cmd.maxerr = 3;
-    atf_comp.cmd.covcheck = !atf_comp.cmd.covcapture;
-    atf_comp_ExecX(atf_comp);
-}
-
-// -----------------------------------------------------------------------------
-void atf_ci::citest_atf_comp_mem() {
-    command::atf_comp_proc atf_comp;
-    atf_comp.cmd.build = true;
-    atf_comp.cmd.maxerr = 3;
-    atf_comp.cmd.memcheck = true;
-    atf_comp_ExecX(atf_comp);
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_normalize_amc_vis() {
-    command::amc_vis amc_vis;
-    amc_vis.ctype.expr = "%";
-    amc_vis.check      = true;
-    SysCmd(amc_vis_ToCmdline(amc_vis),FailokQ(false));
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_gitfile() {
-    SysCmd("bin/update-gitfile >/dev/null",FailokQ(false));
-    ind_beg(algo::FileLine_curs,line,SsimFname(atf_ci::_db.cmdline.in,dmmeta_Ssimfile_ssimfile_dev_gitfile)) {
-        dev::Gitfile gitfile;
-        if (Gitfile_ReadStrptrMaybe(gitfile,line)) {
-            if (!FileObjectExistsQ(gitfile.gitfile)) {
-                prlog("atf_ci.missing_file"
-                      <<Keyval("success","N")
-                      <<Keyval("gitfile",gitfile.gitfile)
-                      <<Keyval("comment","File missing from filesystem"));
-                algo_lib::_db.exit_code=1;
-            }
-        }
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
 
 algo::UnTime atf_ci::FileAtime(algo::strptr fname) {
     struct stat st;
@@ -173,50 +114,20 @@ algo::UnTime atf_ci::DirAtime(algo::strptr dirname) {
     return ret;
 }
 
-// Delete files that haven't been accessed in the last couple days
-void atf_ci::citest_cleantemp() {
-    algo::UnTime thresh = algo::CurrUnTime() - algo::UnDiffHMS(48,0,0);
-    ind_beg(algo::Dir_curs,entry,"temp/*") if (!StartsWithQ(entry.filename, ".")) {
-        algo::UnTime atime = entry.is_dir ? DirAtime(entry.pathname) : FileAtime(entry.pathname);
-        // empty dir will yield atime = 0, don't delete it
-        if (atime.value && atime < thresh){
-            prlog("cleanup: "<<entry.pathname);
-            if (entry.is_dir) {
-                RemDirRecurse(entry.pathname,true);
-            } else {
-                DeleteFile(entry.pathname);
-            }
-        }
-    }ind_end;
-}
-
 // -----------------------------------------------------------------------------
 
-void atf_ci::citest_scanreadme() {
-    // update list of readmes
-    cstring out;
-    ind_beg(_db_gitfile_curs,gitfile,_db) if (StartsWithQ(gitfile.gitfile,"txt/")) {
-        // print just the pkey so that other attrs don't get overwritten
-        out << "dev.readmefile gitfile:"<<gitfile.gitfile<<eol;
-    }ind_end;
-    algo_lib::FTempfile tempfile;
-    TempfileInitX(tempfile,"readme");
-    StringToFile(out,tempfile.filename);
-    command::acr_proc acr;
-    acr.cmd.write   = true;
-    acr.cmd.merge   = true;
-    acr.fstdin << "<"<<tempfile.filename;
-    acr.cmd.print   = true;
-    acr.cmd.report  = false;
-    acr_ExecX(acr);
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_quickreadme() {
-    command::abt_md_proc abt_md;
-    abt_md.cmd.evalcmd=false;
-    abt_md_ExecX(abt_md);
+// SIGALRM handler: the running citest exceeded atf_ci.FCitest.timeout.  An
+// in-process step cannot be unwound to continue, so name the offending citest
+// and exit 124.  Mirrors algo's fatal-signal handler: compose into _db.fatalerr
+// and emit with a single write(), never prerr.
+static void CitestTimeout(int) {
+    algo_lib::_db.fatalerr << "atf_ci.timeout"
+                           <<Keyval("citest", CurCitest())
+                           <<Keyval("comment", "citest exceeded its timeout budget") << eol;
+    algo::strptr msg = algo_lib::_db.fatalerr;
+    ssize_t n = write(2, msg.elems, msg.n_elems);
+    (void)n;
+    _exit(124);
 }
 
 // -----------------------------------------------------------------------------
@@ -228,29 +139,57 @@ static bool RunCiTest(atf_ci::FCitest &citest) {
     algo::UnTime start=algo::CurrUnTime();
     // enter sandbox, if requested
     if (citest.sandbox) {
-        command::sandbox_proc sandbox;
-        sandbox.cmd.name.expr = dev_Sandbox_sandbox_atf_ci;
+        command::wt_proc wt;
+        wt.cmd.name.expr = dev_Sandbox_sandbox_atf_ci;
         if (bool_Update(atf_ci::_db.sandbox_need_init,true)) {
-            sandbox.cmd.reset = true;// initialize
+            wt.cmd.reset = true;// initialize
         } else {
-            sandbox.cmd.clean = true;// quick reset
+            wt.cmd.clean = true;// quick reset
         }
-        sandbox_ExecX(sandbox);
-        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci));
+        wt_ExecX(wt);
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci));
+    }
+    // a coverage citest writes its .gcda into its own dir; GCC_PROFILE_DIR is
+    // resolved at runtime by every coverage-built binary and inherited down
+    // the whole spawn tree, so cov_finalize can merge the per-citest dirs.
+    // Absolute path -- subprocesses chdir into tempdirs / the sandbox.
+    bool cov = citest.cijob == atf_ci::atfdb_cijob_coverage;
+    if (cov) {
+        tempstr covdir = tempstr() << "temp/cov/" << citest.citest << ".d";
+        algo::RemDirRecurse(covdir, true);
+        algo::CreateDirRecurse(covdir);
+        setenv("GCC_PROFILE_DIR", Zeroterm(GetFullPath(covdir)), 1);
+    }
+    // Cap the step at the citest's timeout: alarm() arms SIGALRM, whose handler
+    // (CitestTimeout, installed in Main) reports the offending citest and exits.
+    // The step runs in-process -- it cannot be unwound to continue, so a timeout
+    // ends the whole run; the surviving non-timeout path keeps the original
+    // exit_code/ErrorX accounting and modfiles/gcov behavior.  Disarm afterwards
+    // so the alarm cannot fire during CheckCleanDirs or the next citest's setup.
+    atf_ci::_db.c_citest = &citest;
+    if (citest.timeout > 0) {
+        alarm(citest.timeout);
     }
     try {
-        atf_ci::_db.c_citest=&citest;
         int code_before = algo_lib::_db.exit_code;
         citest.step();
-        citest.nerr += (code_before ==0 && algo_lib::_db.exit_code != 0);
+        citest.nerr += code_before == 0 && algo_lib::_db.exit_code != 0;
     } catch (algo_lib::ErrorX &x) {
         citest.nerr++;
         prlog(x.str);
     }
-    // for sandboxed tests, do not check for modified files
-    // for regular tests, it is mandatory
+    alarm(0);
+    if (cov) {
+        unsetenv("GCC_PROFILE_DIR");
+    }
+    // for sandboxed tests, do not check for modified files;
+    // for regular tests, compare the post-test git-modified set with
+    // _db.modfiles (set at startup or end of the previous test) and
+    // charge this test only with NEW lines in the diff.  Without the
+    // delta, every test after the first dirtying one would see the
+    // same pre-existing dirt and get charged for it.
     if (!citest.sandbox && atf_ci::_db.cmdline.check_clean) {
-        citest.nerr += !atf_ci::CheckCleanDirs(".");
+        citest.nerr += !atf_ci::CheckCleanDirs();
     }
     if (citest.nerr) {
         algo_lib::_db.exit_code = 1;
@@ -285,94 +224,42 @@ void atf_ci::CompareOutput(strptr outfname) {
 
 // -----------------------------------------------------------------------------
 
-void atf_ci::citest_bintests() {
-    ind_beg(algo::Dir_curs,entry,"bin/test-*") {
-        if (!entry.is_dir && !EndsWithQ(entry.pathname,"~")) {
-            SysCmd(entry.pathname,FailokQ(false));
-        }
-    }ind_end;
-}
+// Run the citests the cmdline selects, and report the run.
+static void RunCijob() {
+    // Each citest is capped at its atfdb.Citest.timeout via alarm() in RunCiTest.
+    signal(SIGALRM, CitestTimeout);
 
-// -----------------------------------------------------------------------------
+    // Release the AMS shared-memory segments that no longer have an owner,
+    // before any test spawns one of its own.  A segment outlives the process
+    // that created it, since only shm_unlink removes one, so a run that ended
+    // abruptly leaves its segments behind, and they accumulate until shm is
+    // exhausted and every later shm/spawn/connect test fails.
+    //
+    // Unlinking a segment whose writer is already gone cannot disturb anything
+    // that is running, which is why this runs everywhere -- on a developer host
+    // as much as on a CI runner.  Killing the processes that still hold
+    // segments is the other half of the same reclamation, and it cannot be
+    // scoped that way: a developer host carries several worktrees of this repo
+    // at once, each running its own atf_ci, and lock/atf_ci is a per-checkout
+    // path, so it serializes runs within a worktree and not across them.  An
+    // unscoped kill there means one worktree's normalize kills the cluster
+    // another session is measuring, and the victim observes only that its
+    // process disappeared.  So the kill belongs where a predecessor's orphans
+    // are the only processes that can be present, which is a CI runner between
+    // two jobs, and bin/ci-reap performs it there from before_script.
+    SysCmd("amsspy -clean", algo::FailokQ(true));
 
-void atf_ci::citest_checkclean() {
-    // do nothing - atf_ci will check clean dirs
-    // after this test
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_lineendings() {
-    algo_lib::Regx regx;
-    Regx_ReadSql(regx, "txt/%",true);
-    cstring files(SysEval("git ls-files",FailokQ(true),1024*1024*100));
-    ind_beg(Line_curs,fname,files) {
-        if (Regx_Match(regx,fname) && FileQ(fname)) {
-            SysCmd(tempstr() << "sed -i 's/\\r$//;s/\\r/\\n/g' "<<fname);
-        }
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_shebang() {
-    ind_beg(_db_scriptfile_curs,scriptfile,_db) {
-        ind_beg(algo::FileLine_curs,line,scriptfile.gitfile) {
-            if (StartsWithQ(line,"#!")) {
-                strptr interpreter = Pathcomp(line,"!LR LL");
-                if (interpreter != "/bin/sh" && interpreter != "/usr/bin/env") {
-                    prerr(scriptfile.gitfile<<":1: Non-portable interpreter "<<interpreter<<" use /usr/bin/env");
-                    algo_lib::_db.exit_code=1;
-                }
-            }
-            break;// first line only
-        }ind_end;
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_comptest() {
-    // rewrite messages in tests
-    {
-        command::atf_comp_proc atf_comp;
-        atf_comp.cmd.normalize=true;
-        atf_comp.cmd.write=true;
-        (void)atf_comp_Exec(atf_comp);
+    // With -check_clean, refuse to start when the working tree is
+    // already dirty: subsequent tests may overwrite the user's
+    // modified files and destroy their work.  Otherwise the empty
+    // baseline guarantees per-test delta detection is exact.
+    if (atf_ci::_db.cmdline.check_clean) {
+        tempstr dirty = lib_git::GitModifiedFiles(".");
+        vrfy(dirty=="", tempstr()
+             <<"atf_ci.dirty_tree"
+             <<Keyval("files",Trimmed(dirty))
+             <<Keyval("comment","-check_clean refuses to run on a dirty tree; commit or stash first"));
     }
-    // write to file
-    {
-        command::atf_comp_proc atf_comp;
-        atf_comp.cmd.print = true;
-        atf_comp.fstdout = ">temp/atf_comp.txt";
-        atf_comp_ExecX(atf_comp);
-    }
-    // read from file
-    {
-        command::atf_comp_proc atf_comp;
-        atf_comp.cmd.i = true;
-        atf_comp.cmd.run = false;
-        atf_comp.cmd.write = true;
-        atf_comp.fstdin = "<temp/atf_comp.txt";
-        atf_comp_ExecX(atf_comp);
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_readme() {
-    command::abt_md_proc abt_md;
-    abt_md_ExecX(abt_md);
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::Main() {
-    algo_lib::DieWithParent();
-    algo_lib::FLockfile lockfile;
-    LockFileInit(lockfile, "lock/atf_ci");// prevent overlapping runs
-
-    lib_ctype::Init();
 
     int n_run  = 0;
     int n_pass = 0;
@@ -380,8 +267,20 @@ void atf_ci::Main() {
         if (Regx_Match(atf_ci::_db.cmdline.citest, citest.citest)
             && Regx_Match(atf_ci::_db.cmdline.cijob, citest.cijob)) {
             ++n_run;
-            n_pass += RunCiTest(citest);
-            if (n_run-n_pass > _db.cmdline.maxerr) {
+            bool ok = RunCiTest(citest);
+            n_pass += ok;
+            // -maxerr sets the run's error budget (collect-all under
+            // normalize); a failfast citest overrides it -- its failure is
+            // conclusive on its own (a perf gate miss needs no corroboration
+            // from the remaining tests), so the run reports immediately
+            // instead of spending the rest of the job's runtime.
+            if (!ok && citest.failfast) {
+                prlog("atf_ci.failfast"
+                      <<Keyval("citest",citest.citest)
+                      <<Keyval("comment","failfast citest failed; skipping remaining citests"));
+                break;
+            }
+            if (n_run-n_pass > atf_ci::_db.cmdline.maxerr) {
                 break;
             }
         }
@@ -396,7 +295,7 @@ void atf_ci::Main() {
     }
 
     if (algo_lib::_db.exit_code != 0) {
-        ind_beg(_db_citest_curs,citest,_db) {
+        ind_beg(atf_ci::_db_citest_curs,citest,atf_ci::_db) {
             if (citest.nerr) {
                 prlog("atf_ci.failed"
                       <<Keyval("citest",citest.citest)
@@ -414,4 +313,24 @@ void atf_ci::Main() {
           <<Keyval("comment",(algo_lib::_db.exit_code==0
                               ? "The coast is clear. Proceed with caution :-)"
                               : "Did not pass. Please resolve issues and try again.")));
+}
+
+// Two modes: -cleanup removes the credentials this checkout installed, and
+// anything else runs the selected citests.
+//
+// The scrub takes none of the citest prologue, and -check_clean is the reason
+// that matters.  A run of the tests refuses to start on a dirty tree, because a
+// test may then overwrite work the operator has not committed.  The scrub reads
+// its own record under temp/ and writes nothing to the tree, so the same refusal
+// would only mean that a job which modified the tree -- which is most of them --
+// leaves its credential behind on the runner.  Both modes take the lockfile, so
+// a scrub cannot land while a run that installed a credential is still using it.
+void atf_ci::Main() {
+    algo_lib::DieWithParent();
+    algo_lib::FLockfile lockfile;
+    LockFileInit(lockfile, "lock/atf_ci");// prevent overlapping runs
+
+    lib_ctype::Init();
+
+    RunCijob();
 }

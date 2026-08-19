@@ -27,6 +27,7 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/report_gen.inl.h"
 //#pragma endinclude
 
 // --- atf_cov.FCovfile..Init
@@ -120,7 +121,7 @@ inline atf_cov::FCovline* atf_cov::covline_Last() {
 
 // --- atf_cov.FDb.covline.N
 // Return number of items in the pool
-inline i32 atf_cov::covline_N() {
+inline i64 atf_cov::covline_N() {
     return _db.covline_n;
 }
 
@@ -174,7 +175,7 @@ inline atf_cov::FTarget* atf_cov::target_Last() {
 
 // --- atf_cov.FDb.target.N
 // Return number of items in the pool
-inline i32 atf_cov::target_N() {
+inline i64 atf_cov::target_N() {
     return _db.target_n;
 }
 
@@ -228,7 +229,7 @@ inline atf_cov::FTargsrc* atf_cov::targsrc_Last() {
 
 // --- atf_cov.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 atf_cov::targsrc_N() {
+inline i64 atf_cov::targsrc_N() {
     return _db.targsrc_n;
 }
 
@@ -282,7 +283,7 @@ inline atf_cov::FGitfile* atf_cov::gitfile_Last() {
 
 // --- atf_cov.FDb.gitfile.N
 // Return number of items in the pool
-inline i32 atf_cov::gitfile_N() {
+inline i64 atf_cov::gitfile_N() {
     return _db.gitfile_n;
 }
 
@@ -336,7 +337,7 @@ inline atf_cov::FCovtarget* atf_cov::covtarget_Last() {
 
 // --- atf_cov.FDb.covtarget.N
 // Return number of items in the pool
-inline i32 atf_cov::covtarget_N() {
+inline i64 atf_cov::covtarget_N() {
     return _db.covtarget_n;
 }
 
@@ -378,7 +379,7 @@ inline atf_cov::FCovfile* atf_cov::covfile_Last() {
 
 // --- atf_cov.FDb.covfile.N
 // Return number of items in the pool
-inline i32 atf_cov::covfile_N() {
+inline i64 atf_cov::covfile_N() {
     return _db.covfile_n;
 }
 
@@ -420,7 +421,7 @@ inline atf_cov::FTgtcov* atf_cov::tgtcov_Last() {
 
 // --- atf_cov.FDb.tgtcov.N
 // Return number of items in the pool
-inline i32 atf_cov::tgtcov_N() {
+inline i64 atf_cov::tgtcov_N() {
     return _db.tgtcov_n;
 }
 
@@ -444,6 +445,48 @@ inline bool atf_cov::ind_tgtcov_EmptyQ() {
 // Return number of items in the hash
 inline i32 atf_cov::ind_tgtcov_N() {
     return _db.ind_tgtcov_n;
+}
+
+// --- atf_cov.FDb.uncovfunc.EmptyQ
+// Return true if index is empty
+inline bool atf_cov::uncovfunc_EmptyQ() {
+    return _db.uncovfunc_n == 0;
+}
+
+// --- atf_cov.FDb.uncovfunc.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_cov::FUncovfunc* atf_cov::uncovfunc_Find(u64 t) {
+    atf_cov::FUncovfunc *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.uncovfunc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.uncovfunc_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_cov.FDb.uncovfunc.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_cov::FUncovfunc* atf_cov::uncovfunc_Last() {
+    return uncovfunc_Find(u64(_db.uncovfunc_n-1));
+}
+
+// --- atf_cov.FDb.uncovfunc.N
+// Return number of items in the pool
+inline i64 atf_cov::uncovfunc_N() {
+    return _db.uncovfunc_n;
+}
+
+// --- atf_cov.FDb.uncovfunc.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_cov::FUncovfunc& atf_cov::uncovfunc_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.uncovfunc_lary[bsr][index];
 }
 
 // --- atf_cov.FDb.covline_curs.Reset
@@ -621,6 +664,31 @@ inline atf_cov::FTgtcov& atf_cov::_db_tgtcov_curs_Access(_db_tgtcov_curs &curs) 
     return tgtcov_qFind(u64(curs.index));
 }
 
+// --- atf_cov.FDb.uncovfunc_curs.Reset
+// cursor points to valid item
+inline void atf_cov::_db_uncovfunc_curs_Reset(_db_uncovfunc_curs &curs, atf_cov::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_cov.FDb.uncovfunc_curs.ValidQ
+// cursor points to valid item
+inline bool atf_cov::_db_uncovfunc_curs_ValidQ(_db_uncovfunc_curs &curs) {
+    return curs.index < _db.uncovfunc_n;
+}
+
+// --- atf_cov.FDb.uncovfunc_curs.Next
+// proceed to next item
+inline void atf_cov::_db_uncovfunc_curs_Next(_db_uncovfunc_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_cov.FDb.uncovfunc_curs.Access
+// item access
+inline atf_cov::FUncovfunc& atf_cov::_db_uncovfunc_curs_Access(_db_uncovfunc_curs &curs) {
+    return uncovfunc_qFind(u64(curs.index));
+}
+
 // --- atf_cov.FGitfile.c_targsrc.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FTargsrc& row) {
@@ -649,7 +717,7 @@ inline bool atf_cov::c_covline_EmptyQ(atf_cov::FGitfile& gitfile) {
 
 // --- atf_cov.FGitfile.c_covline.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_cov::FCovline* atf_cov::c_covline_Find(atf_cov::FGitfile& gitfile, u32 t) {
+inline atf_cov::FCovline* atf_cov::c_covline_Find(atf_cov::FGitfile& gitfile, u64 t) {
     atf_cov::FCovline *retval = NULL;
     u64 idx = t;
     u64 lim = gitfile.c_covline_n;
@@ -667,14 +735,14 @@ inline algo::aryptr<atf_cov::FCovline*> atf_cov::c_covline_Getary(atf_cov::FGitf
 
 // --- atf_cov.FGitfile.c_covline.N
 // Return number of items in the pointer array
-inline i32 atf_cov::c_covline_N(const atf_cov::FGitfile& gitfile) {
+inline i64 atf_cov::c_covline_N(const atf_cov::FGitfile& gitfile) {
     return gitfile.c_covline_n;
 }
 
 // --- atf_cov.FGitfile.c_covline.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void atf_cov::c_covline_RemoveAll(atf_cov::FGitfile& gitfile) {
-    for (u32 i = 0; i < gitfile.c_covline_n; i++) {
+    for (u64 i = 0; i < gitfile.c_covline_n; i++) {
         // mark all elements as not-in-array
         gitfile.c_covline_elems[i]->gitfile_c_covline_in_ary = false;
     }
@@ -683,7 +751,7 @@ inline void atf_cov::c_covline_RemoveAll(atf_cov::FGitfile& gitfile) {
 
 // --- atf_cov.FGitfile.c_covline.qFind
 // Return reference without bounds checking
-inline atf_cov::FCovline& atf_cov::c_covline_qFind(atf_cov::FGitfile& gitfile, u32 idx) {
+inline atf_cov::FCovline& atf_cov::c_covline_qFind(atf_cov::FGitfile& gitfile, u64 idx) {
     return *gitfile.c_covline_elems[idx];
 }
 
@@ -774,7 +842,7 @@ inline bool atf_cov::c_targsrc_EmptyQ(atf_cov::FTarget& target) {
 
 // --- atf_cov.FTarget.c_targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_cov::FTargsrc* atf_cov::c_targsrc_Find(atf_cov::FTarget& target, u32 t) {
+inline atf_cov::FTargsrc* atf_cov::c_targsrc_Find(atf_cov::FTarget& target, u64 t) {
     atf_cov::FTargsrc *retval = NULL;
     u64 idx = t;
     u64 lim = target.c_targsrc_n;
@@ -792,14 +860,14 @@ inline algo::aryptr<atf_cov::FTargsrc*> atf_cov::c_targsrc_Getary(atf_cov::FTarg
 
 // --- atf_cov.FTarget.c_targsrc.N
 // Return number of items in the pointer array
-inline i32 atf_cov::c_targsrc_N(const atf_cov::FTarget& target) {
+inline i64 atf_cov::c_targsrc_N(const atf_cov::FTarget& target) {
     return target.c_targsrc_n;
 }
 
 // --- atf_cov.FTarget.c_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void atf_cov::c_targsrc_RemoveAll(atf_cov::FTarget& target) {
-    for (u32 i = 0; i < target.c_targsrc_n; i++) {
+    for (u64 i = 0; i < target.c_targsrc_n; i++) {
         // mark all elements as not-in-array
         target.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
     }
@@ -808,7 +876,7 @@ inline void atf_cov::c_targsrc_RemoveAll(atf_cov::FTarget& target) {
 
 // --- atf_cov.FTarget.c_targsrc.qFind
 // Return reference without bounds checking
-inline atf_cov::FTargsrc& atf_cov::c_targsrc_qFind(atf_cov::FTarget& target, u32 idx) {
+inline atf_cov::FTargsrc& atf_cov::c_targsrc_qFind(atf_cov::FTarget& target, u64 idx) {
     return *target.c_targsrc_elems[idx];
 }
 
@@ -946,6 +1014,10 @@ inline  atf_cov::FTgtcov::FTgtcov() {
 // --- atf_cov.FTgtcov..Dtor
 inline  atf_cov::FTgtcov::~FTgtcov() {
     atf_cov::FTgtcov_Uninit(*this);
+}
+
+// --- atf_cov.FUncovfunc..Ctor
+inline  atf_cov::FUncovfunc::FUncovfunc() {
 }
 
 // --- atf_cov.FieldId.value.GetEnum

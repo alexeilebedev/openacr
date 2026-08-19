@@ -1,0 +1,4 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir ro bin && echo "echo hi" > ro/x.sh && echo "exit 1" > bin/src_func && chmod +x bin/src_func && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:%\''
+# eof bash
+bash -> src_hdr.updateproto  status:"exit code 1"  comment:"src_func -updateproto failed; function prototypes were not updated"
+# exit bash code:1

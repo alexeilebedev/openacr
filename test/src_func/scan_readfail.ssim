@@ -1,0 +1,5 @@
+dev.target  target:xx
+dev.gitfile  gitfile:missing_dir/x.cpp
+dev.gitfile  gitfile:hdr/x.h
+dev.targsrc  targsrc:xx/missing_dir/x.cpp  comment:""
+dev.targsrc  targsrc:xx/hdr/x.h  comment:""

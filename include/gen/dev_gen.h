@@ -40,10 +40,6 @@ extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64;   // 
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64;      // FreeBSD-clang++.debug-amd64       fconst:dev.Builddir.builddir/FreeBSD-clang++.debug-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64;    // FreeBSD-clang++.profile-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.profile-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_release_amd64;    // FreeBSD-clang++.release-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.release-amd64
-extern const char *  dev_Builddir_builddir_Linux_clangPP_coverage_x86_64;    // Linux-clang++.coverage-x86_64     fconst:dev.Builddir.builddir/Linux-clang++.coverage-x86_64
-extern const char *  dev_Builddir_builddir_Linux_clangPP_debug_x86_64;       // Linux-clang++.debug-x86_64        fconst:dev.Builddir.builddir/Linux-clang++.debug-x86_64
-extern const char *  dev_Builddir_builddir_Linux_clangPP_profile_x86_64;     // Linux-clang++.profile-x86_64      fconst:dev.Builddir.builddir/Linux-clang++.profile-x86_64
-extern const char *  dev_Builddir_builddir_Linux_clangPP_release_x86_64;     // Linux-clang++.release-x86_64      fconst:dev.Builddir.builddir/Linux-clang++.release-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_coverage_x86_64;        // Linux-g++.coverage-x86_64         fconst:dev.Builddir.builddir/Linux-g++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_debug_x86_64;           // Linux-g++.debug-x86_64            fconst:dev.Builddir.builddir/Linux-g++.debug-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_profile_x86_64;         // Linux-g++.profile-x86_64          fconst:dev.Builddir.builddir/Linux-g++.profile-x86_64
@@ -57,6 +53,7 @@ extern const char *  dev_Compiler_compiler_;          //            fconst:dev.C
 extern const char *  dev_Compiler_compiler_cl;        // cl         fconst:dev.Compiler.compiler/cl
 extern const char *  dev_Compiler_compiler_clangPP;   // clang++    fconst:dev.Compiler.compiler/clang++
 extern const char *  dev_Compiler_compiler_gPP;       // g++        fconst:dev.Compiler.compiler/g++
+extern const char *  dev_Compiler_compiler_gPP_9;     // g++-9      fconst:dev.Compiler.compiler/g++-9
 
 // --- dev_Covline_flag_Enum
 
@@ -71,148 +68,141 @@ enum { dev_Covline_flag_Enum_N = 3 };
 
 // --- dev_FieldIdEnum
 
-enum dev_FieldIdEnum {                   // dev.FieldId.value
-     dev_FieldId_arch             = 0
-    ,dev_FieldId_comment          = 1
-    ,dev_FieldId_badline          = 2
-    ,dev_FieldId_expr             = 3
-    ,dev_FieldId_targsrc_regx     = 4
-    ,dev_FieldId_builddir         = 5
-    ,dev_FieldId_uname            = 6
-    ,dev_FieldId_compiler         = 7
-    ,dev_FieldId_cfg              = 8
-    ,dev_FieldId_suffix           = 9
-    ,dev_FieldId_ranlib           = 10
-    ,dev_FieldId_ar               = 11
-    ,dev_FieldId_link             = 12
-    ,dev_FieldId_libext           = 13
-    ,dev_FieldId_exeext           = 14
-    ,dev_FieldId_pchext           = 15
-    ,dev_FieldId_objext           = 16
-    ,dev_FieldId_rc               = 17
-    ,dev_FieldId_copyright        = 18
-    ,dev_FieldId_dflt             = 19
-    ,dev_FieldId_covfile          = 20
-    ,dev_FieldId_total            = 21
-    ,dev_FieldId_nonexe           = 22
-    ,dev_FieldId_exe              = 23
-    ,dev_FieldId_exer             = 24
-    ,dev_FieldId_hit              = 25
-    ,dev_FieldId_cov              = 26
-    ,dev_FieldId_covline          = 27
-    ,dev_FieldId_src              = 28
-    ,dev_FieldId_line             = 29
-    ,dev_FieldId_flag             = 30
-    ,dev_FieldId_text             = 31
-    ,dev_FieldId_covtarget        = 32
-    ,dev_FieldId_edaction         = 33
-    ,dev_FieldId_edacttype        = 34
-    ,dev_FieldId_name             = 35
-    ,dev_FieldId_needamc          = 36
-    ,dev_FieldId_gitfile          = 37
-    ,dev_FieldId_ext              = 38
-    ,dev_FieldId_gitinfo          = 39
-    ,dev_FieldId_author           = 40
-    ,dev_FieldId_compver          = 41
-    ,dev_FieldId_package          = 42
-    ,dev_FieldId_hilite           = 43
-    ,dev_FieldId_color            = 44
-    ,dev_FieldId_htmlentity       = 45
-    ,dev_FieldId_code             = 46
-    ,dev_FieldId_include          = 47
-    ,dev_FieldId_srcfile          = 48
-    ,dev_FieldId_filename         = 49
-    ,dev_FieldId_sys              = 50
-    ,dev_FieldId_license          = 51
-    ,dev_FieldId_nlongline        = 52
-    ,dev_FieldId_longestline      = 53
-    ,dev_FieldId_nbadws           = 54
-    ,dev_FieldId_maxws            = 55
-    ,dev_FieldId_nlongfunc        = 56
-    ,dev_FieldId_longestfunc      = 57
-    ,dev_FieldId_nmysteryfunc     = 58
-    ,dev_FieldId_badness          = 59
-    ,dev_FieldId_mdmark           = 60
-    ,dev_FieldId_state            = 61
-    ,dev_FieldId_param            = 62
-    ,dev_FieldId_mdsection        = 63
-    ,dev_FieldId_match            = 64
-    ,dev_FieldId_path             = 65
-    ,dev_FieldId_genlist          = 66
-    ,dev_FieldId_strict           = 67
-    ,dev_FieldId_netproto         = 68
-    ,dev_FieldId_tls              = 69
-    ,dev_FieldId_opt_type         = 70
-    ,dev_FieldId_sep              = 71
-    ,dev_FieldId_baseref          = 72
-    ,dev_FieldId_origin           = 73
-    ,dev_FieldId_pkgdep           = 74
-    ,dev_FieldId_parent           = 75
-    ,dev_FieldId_soft             = 76
-    ,dev_FieldId_pkgkey           = 77
-    ,dev_FieldId_key              = 78
-    ,dev_FieldId_prototransport   = 79
-    ,dev_FieldId_transport        = 80
-    ,dev_FieldId_inl              = 81
-    ,dev_FieldId_sandbox          = 82
-    ,dev_FieldId_filter           = 83
-    ,dev_FieldId_readmesort       = 84
-    ,dev_FieldId_rpm              = 85
-    ,dev_FieldId_sbpath           = 86
-    ,dev_FieldId_syscmd           = 87
-    ,dev_FieldId_execkey          = 88
-    ,dev_FieldId_command          = 89
-    ,dev_FieldId_pid              = 90
-    ,dev_FieldId_status           = 91
-    ,dev_FieldId_nprereq          = 92
-    ,dev_FieldId_fail_prereq      = 93
-    ,dev_FieldId_completed        = 94
-    ,dev_FieldId_maxtime          = 95
-    ,dev_FieldId_child            = 96
-    ,dev_FieldId_syslib           = 97
-    ,dev_FieldId_targdep          = 98
-    ,dev_FieldId_target           = 99
-    ,dev_FieldId_targsrc          = 100
-    ,dev_FieldId_targsyslib       = 101
-    ,dev_FieldId_prefix           = 102
-    ,dev_FieldId_cov_min          = 103
-    ,dev_FieldId_maxerr           = 104
-    ,dev_FieldId_timefmt          = 105
-    ,dev_FieldId_dirname          = 106
-    ,dev_FieldId_tool_opt         = 107
-    ,dev_FieldId_opt              = 108
-    ,dev_FieldId_sortfld          = 109
-    ,dev_FieldId_ip               = 110
-    ,dev_FieldId_field            = 111
-    ,dev_FieldId_value            = 112
+enum dev_FieldIdEnum {    // dev.FieldId.value
+     dev_FieldId_arch
+    ,dev_FieldId_comment
+    ,dev_FieldId_badline
+    ,dev_FieldId_expr
+    ,dev_FieldId_targsrc_regx
+    ,dev_FieldId_builddir
+    ,dev_FieldId_uname
+    ,dev_FieldId_compiler
+    ,dev_FieldId_cfg
+    ,dev_FieldId_suffix
+    ,dev_FieldId_ranlib
+    ,dev_FieldId_ar
+    ,dev_FieldId_link
+    ,dev_FieldId_libext
+    ,dev_FieldId_exeext
+    ,dev_FieldId_pchext
+    ,dev_FieldId_objext
+    ,dev_FieldId_rc
+    ,dev_FieldId_copyright
+    ,dev_FieldId_dflt
+    ,dev_FieldId_covfile
+    ,dev_FieldId_total
+    ,dev_FieldId_nonexe
+    ,dev_FieldId_exe
+    ,dev_FieldId_exer
+    ,dev_FieldId_hit
+    ,dev_FieldId_cov
+    ,dev_FieldId_covline
+    ,dev_FieldId_src
+    ,dev_FieldId_line
+    ,dev_FieldId_flag
+    ,dev_FieldId_text
+    ,dev_FieldId_covtarget
+    ,dev_FieldId_dbgtarget
+    ,dev_FieldId_args
+    ,dev_FieldId_buildcmd
+    ,dev_FieldId_edaction
+    ,dev_FieldId_edacttype
+    ,dev_FieldId_name
+    ,dev_FieldId_needamc
+    ,dev_FieldId_gitfile
+    ,dev_FieldId_ext
+    ,dev_FieldId_gitinfo
+    ,dev_FieldId_package
+    ,dev_FieldId_gitref
+    ,dev_FieldId_builddate
+    ,dev_FieldId_hilite
+    ,dev_FieldId_color
+    ,dev_FieldId_htmlentity
+    ,dev_FieldId_code
+    ,dev_FieldId_include
+    ,dev_FieldId_srcfile
+    ,dev_FieldId_filename
+    ,dev_FieldId_sys
+    ,dev_FieldId_license
+    ,dev_FieldId_nlongline
+    ,dev_FieldId_longestline
+    ,dev_FieldId_nbadws
+    ,dev_FieldId_maxws
+    ,dev_FieldId_nlongfunc
+    ,dev_FieldId_longestfunc
+    ,dev_FieldId_nmysteryfunc
+    ,dev_FieldId_badness
+    ,dev_FieldId_mdsection
+    ,dev_FieldId_match
+    ,dev_FieldId_path
+    ,dev_FieldId_genlist
+    ,dev_FieldId_strict
+    ,dev_FieldId_netproto
+    ,dev_FieldId_tls
+    ,dev_FieldId_opt_type
+    ,dev_FieldId_sep
+    ,dev_FieldId_baseref
+    ,dev_FieldId_origin
+    ,dev_FieldId_nomention
+    ,dev_FieldId_pkgdep
+    ,dev_FieldId_parent
+    ,dev_FieldId_soft
+    ,dev_FieldId_pkgkey
+    ,dev_FieldId_key
+    ,dev_FieldId_up
+    ,dev_FieldId_down
+    ,dev_FieldId_exclude
+    ,dev_FieldId_prototransport
+    ,dev_FieldId_transport
+    ,dev_FieldId_inl
+    ,dev_FieldId_sandbox
+    ,dev_FieldId_filter
+    ,dev_FieldId_readmesort
+    ,dev_FieldId_rpm
+    ,dev_FieldId_cow
+    ,dev_FieldId_sbpath
+    ,dev_FieldId_syscmd
+    ,dev_FieldId_execkey
+    ,dev_FieldId_command
+    ,dev_FieldId_pid
+    ,dev_FieldId_status
+    ,dev_FieldId_nprereq
+    ,dev_FieldId_fail_prereq
+    ,dev_FieldId_completed
+    ,dev_FieldId_maxtime
+    ,dev_FieldId_child
+    ,dev_FieldId_syslib
+    ,dev_FieldId_targdep
+    ,dev_FieldId_target
+    ,dev_FieldId_targsrc
+    ,dev_FieldId_targsyslib
+    ,dev_FieldId_prefix
+    ,dev_FieldId_cov_min
+    ,dev_FieldId_timefmt
+    ,dev_FieldId_dirname
+    ,dev_FieldId_tool_opt
+    ,dev_FieldId_opt
+    ,dev_FieldId_sortfld
+    ,dev_FieldId_ip
+    ,dev_FieldId_uncovfunc
+    ,dev_FieldId_field
+    ,dev_FieldId_value
 };
 
-enum { dev_FieldIdEnum_N = 113 };
+enum { dev_FieldIdEnum_N = 118 };
 
-extern const char *  dev_License_license_;      //        fconst:dev.License.license/
-extern const char *  dev_License_license_GPL;   // GPL    fconst:dev.License.license/GPL
-extern const char *  dev_Mdmark_mdmark_MDSECTION;   // MDSECTION    fconst:dev.Mdmark.mdmark/MDSECTION
-extern const char *  dev_Mdmark_mdmark_CMD;         // CMD          fconst:dev.Mdmark.mdmark/CMD
-extern const char *  dev_Mdmark_mdmark_TOC;         // TOC          fconst:dev.Mdmark.mdmark/TOC
-extern const char *  dev_Mdmark_state_BEG;          // BEG          fconst:dev.Mdmark.state/BEG
-extern const char *  dev_Mdmark_state_END;          // END          fconst:dev.Mdmark.state/END
-extern const char *  dev_Mdmark_state_BEG_AUTO;     // BEG_AUTO     fconst:dev.Mdmark.state/BEG_AUTO
-extern const char *  dev_Mdmark_state_END_AUTO;     // END_AUTO     fconst:dev.Mdmark.state/END_AUTO
-
-// --- dev_MdmarkCaseEnum
-
-enum dev_MdmarkCaseEnum {             // dev.MdmarkCase.mdmark
-     dev_MdmarkCase_MDSECTION   = 1   // mdsection marker
-    ,dev_MdmarkCase_CMD         = 2   // hidden inline-command marker
-    ,dev_MdmarkCase_TOC         = 3   // MYst Table of Contents directive
-};
-
-enum { dev_MdmarkCaseEnum_N = 3 };
-
-extern const char *  dev_Netproto_netproto_http;    // http     fconst:dev.Netproto.netproto/http
-extern const char *  dev_Netproto_netproto_https;   // https    fconst:dev.Netproto.netproto/https
-extern const char *  dev_Netproto_netproto_smtp;    // smtp     fconst:dev.Netproto.netproto/smtp
-extern const char *  dev_Netproto_netproto_ssh;     // ssh      fconst:dev.Netproto.netproto/ssh
+extern const char *  dev_License_license_;       //         fconst:dev.License.license/
+extern const char *  dev_License_license_ARND;   // ARND    fconst:dev.License.license/ARND
+extern const char *  dev_License_license_GPL;    // GPL     fconst:dev.License.license/GPL
+extern const char *  dev_Netproto_netproto_http;     // http      fconst:dev.Netproto.netproto/http
+extern const char *  dev_Netproto_netproto_https;    // https     fconst:dev.Netproto.netproto/https
+extern const char *  dev_Netproto_netproto_kafka;    // kafka     fconst:dev.Netproto.netproto/kafka
+extern const char *  dev_Netproto_netproto_kafkas;   // kafkas    fconst:dev.Netproto.netproto/kafkas
+extern const char *  dev_Netproto_netproto_mqtts;    // mqtts     fconst:dev.Netproto.netproto/mqtts
+extern const char *  dev_Netproto_netproto_natss;    // natss     fconst:dev.Netproto.netproto/natss
+extern const char *  dev_Netproto_netproto_resps;    // resps     fconst:dev.Netproto.netproto/resps
+extern const char *  dev_Netproto_netproto_smtp;     // smtp      fconst:dev.Netproto.netproto/smtp
+extern const char *  dev_Netproto_netproto_ssh;      // ssh       fconst:dev.Netproto.netproto/ssh
 extern const char *  dev_Sandbox_sandbox_abt_md;       // abt_md        fconst:dev.Sandbox.sandbox/abt_md
 extern const char *  dev_Sandbox_sandbox_acr_ed;       // acr_ed        fconst:dev.Sandbox.sandbox/acr_ed
 extern const char *  dev_Sandbox_sandbox_amc;          // amc           fconst:dev.Sandbox.sandbox/amc
@@ -231,6 +221,7 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 CompilerPkey;
     typedef algo::Smallstr50 CopyrightPkey;
     typedef algo::cstring CovlinePkey;
+    typedef algo::Smallstr50 DbgtargetPkey;
     typedef algo::Smallstr50 EdactionPkey;
     typedef algo::Smallstr50 EdacttypePkey;
     typedef algo::Smallstr200 GitfilePkey;
@@ -239,7 +230,6 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 HtmlentityPkey;
     typedef algo::Smallstr200 IncludePkey;
     typedef algo::Smallstr50 LicensePkey;
-    typedef algo::Smallstr50 MdmarkPkey;
     typedef algo::Smallstr50 MdsectionPkey;
     typedef algo::Smallstr50 NetprotoPkey;
     typedef algo::Smallstr50 OptTypePkey;
@@ -262,6 +252,7 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr100 ToolOptPkey;
     typedef algo::Smallstr50 TransportPkey;
     typedef algo::Smallstr50 UnamePkey;
+    typedef algo::cstring UncovfuncPkey;
 } // gen:ns_pkeytypedef
 namespace dev { // gen:ns_tclass_field
 } // gen:ns_tclass_field
@@ -275,6 +266,7 @@ namespace dev { struct Copyright; }
 namespace dev { struct Covfile; }
 namespace dev { struct Covline; }
 namespace dev { struct Covtarget; }
+namespace dev { struct Dbgtarget; }
 namespace dev { struct Edaction; }
 namespace dev { struct Edacttype; }
 namespace dev { struct FieldId; }
@@ -285,8 +277,6 @@ namespace dev { struct Htmlentity; }
 namespace dev { struct Include; }
 namespace dev { struct License; }
 namespace dev { struct Linelim; }
-namespace dev { struct Mdmark; }
-namespace dev { struct MdmarkCase; }
 namespace dev { struct Mdsection; }
 namespace dev { struct Msgfile; }
 namespace dev { struct Netproto; }
@@ -294,6 +284,7 @@ namespace dev { struct Noindent; }
 namespace dev { struct OptType; }
 namespace dev { struct Package; }
 namespace dev { struct Pkgdep; }
+namespace dev { struct Pkggen; }
 namespace dev { struct Pkgkey; }
 namespace dev { struct Prototransport; }
 namespace dev { struct Readmefile; }
@@ -315,6 +306,7 @@ namespace dev { struct Timefmt; }
 namespace dev { struct ToolOpt; }
 namespace dev { struct Transport; }
 namespace dev { struct Uname; }
+namespace dev { struct Uncovfunc; }
 namespace dev { struct Unstablefld; }
 namespace dev { // gen:ns_print_struct
 
@@ -327,7 +319,6 @@ struct Arch { // dev.Arch: System architecture
     // func:dev.Arch..FieldwiseCtor
     explicit inline               Arch(const algo::strptr& in_arch, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Arch..ReadFieldMaybe
 bool                 Arch_ReadFieldMaybe(dev::Arch& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Arch from an ascii string.
@@ -348,7 +339,6 @@ struct Badline { // dev.Badline: Regex of a dubious source code line
     // func:dev.Badline..Ctor
     inline               Badline() __attribute__((nothrow));
 };
-
 // func:dev.Badline..ReadFieldMaybe
 bool                 Badline_ReadFieldMaybe(dev::Badline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Badline from an ascii string.
@@ -367,26 +357,25 @@ struct Builddir { // dev.Builddir: Directory where object files/executables go. 
     // func:dev.Builddir..Ctor
     inline               Builddir() __attribute__((nothrow));
 };
-
 // func:dev.Builddir.uname.Get
-algo::Smallstr50     uname_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         uname_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Builddir.uname.Get2
-algo::Smallstr50     Builddir_uname_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Builddir_uname_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Builddir.compiler.Get
-algo::Smallstr50     compiler_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         compiler_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Builddir.compiler.Get2
-algo::Smallstr50     Builddir_compiler_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Builddir_compiler_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Builddir.cfg.Get
-algo::Smallstr50     cfg_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         cfg_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Builddir.cfg.Get2
-algo::Smallstr50     Builddir_cfg_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Builddir_cfg_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Builddir.arch.Get
-algo::Smallstr50     arch_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         arch_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Builddir.arch.Get2
-algo::Smallstr50     Builddir_arch_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Builddir_arch_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Builddir..Concat_uname_compiler_cfg_arch
 tempstr              Builddir_Concat_uname_compiler_cfg_arch( const algo::strptr& uname ,const algo::strptr& compiler ,const algo::strptr& cfg ,const algo::strptr& arch );
@@ -411,7 +400,6 @@ struct Cfg { // dev.Cfg: Compiler configuration
     // func:dev.Cfg..FieldwiseCtor
     explicit inline               Cfg(const algo::strptr& in_cfg, const algo::strptr& in_suffix, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Cfg..ReadFieldMaybe
 bool                 Cfg_ReadFieldMaybe(dev::Cfg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Cfg from an ascii string.
@@ -440,7 +428,6 @@ struct Compiler { // dev.Compiler: One of the known compilers
     // func:dev.Compiler..FieldwiseCtor
     explicit inline               Compiler(const algo::strptr& in_compiler, const algo::strptr& in_ranlib, const algo::strptr& in_ar, const algo::strptr& in_link, const algo::strptr& in_libext, const algo::strptr& in_exeext, const algo::strptr& in_pchext, const algo::strptr& in_objext, const algo::strptr& in_rc, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Compiler..ReadFieldMaybe
 bool                 Compiler_ReadFieldMaybe(dev::Compiler& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Compiler from an ascii string.
@@ -460,7 +447,6 @@ struct Copyright { // dev.Copyright: Copyrighting entity
     // func:dev.Copyright..Ctor
     inline               Copyright() __attribute__((nothrow));
 };
-
 // func:dev.Copyright..ReadFieldMaybe
 bool                 Copyright_ReadFieldMaybe(dev::Copyright& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Copyright from an ascii string.
@@ -487,7 +473,6 @@ struct Covfile { // dev.Covfile
     // func:dev.Covfile..Ctor
     inline               Covfile() __attribute__((nothrow));
 };
-
 // func:dev.Covfile..ReadFieldMaybe
 bool                 Covfile_ReadFieldMaybe(dev::Covfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Covfile from an ascii string.
@@ -511,11 +496,10 @@ struct Covline { // dev.Covline
     // func:dev.Covline..Ctor
     inline               Covline() __attribute__((nothrow));
 };
-
 // func:dev.Covline.src.Get
-algo::Smallstr200    src_Get(dev::Covline& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(dev::Covline& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Covline.src.Get2
-algo::Smallstr200    Covline_src_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Covline_src_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Covline.line.Get
 u32                  line_Get(dev::Covline& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -577,7 +561,6 @@ struct Covtarget { // dev.Covtarget
     // func:dev.Covtarget..Ctor
     inline               Covtarget() __attribute__((nothrow));
 };
-
 // func:dev.Covtarget..ReadFieldMaybe
 bool                 Covtarget_ReadFieldMaybe(dev::Covtarget& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Covtarget from an ascii string.
@@ -592,6 +575,26 @@ inline void          Covtarget_Init(dev::Covtarget& parent);
 // func:dev.Covtarget..Print
 void                 Covtarget_Print(dev::Covtarget& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Dbgtarget
+struct Dbgtarget { // dev.Dbgtarget
+    algo::Smallstr50   dbgtarget;   //
+    algo::cstring      args;        // Arguments appended to the debugged process, $-substituted
+    algo::cstring      buildcmd;    // Command whose output is the abt target regx to rebuild first
+    algo::Comment      comment;     //
+    // func:dev.Dbgtarget..Ctor
+    inline               Dbgtarget() __attribute__((nothrow));
+};
+// func:dev.Dbgtarget..ReadFieldMaybe
+bool                 Dbgtarget_ReadFieldMaybe(dev::Dbgtarget& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Dbgtarget from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Dbgtarget..ReadStrptrMaybe
+bool                 Dbgtarget_ReadStrptrMaybe(dev::Dbgtarget &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Dbgtarget.String  printfmt:Tuple
+// func:dev.Dbgtarget..Print
+void                 Dbgtarget_Print(dev::Dbgtarget& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Edaction
 struct Edaction { // dev.Edaction: acr_ed editing action (only one can exist at a time)
     algo::Smallstr50   edaction;   //
@@ -600,16 +603,15 @@ struct Edaction { // dev.Edaction: acr_ed editing action (only one can exist at 
     // func:dev.Edaction..Ctor
     inline               Edaction() __attribute__((nothrow));
 };
-
 // func:dev.Edaction.edacttype.Get
-algo::Smallstr50     edacttype_Get(dev::Edaction& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         edacttype_Get(dev::Edaction& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Edaction.edacttype.Get2
-algo::Smallstr50     Edaction_edacttype_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Edaction_edacttype_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Edaction.name.Get
-algo::Smallstr50     name_Get(dev::Edaction& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(dev::Edaction& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Edaction.name.Get2
-algo::Smallstr50     Edaction_name_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Edaction_name_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Edaction..Concat_edacttype_name
 tempstr              Edaction_Concat_edacttype_name( const algo::strptr& edacttype ,const algo::strptr& name );
@@ -634,7 +636,6 @@ struct Edacttype { // dev.Edacttype: acr_ed editing action type
     // func:dev.Edacttype..Ctor
     inline               Edacttype() __attribute__((nothrow));
 };
-
 // func:dev.Edacttype..ReadFieldMaybe
 bool                 Edacttype_ReadFieldMaybe(dev::Edacttype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Edacttype from an ascii string.
@@ -660,7 +661,6 @@ struct FieldId { // dev.FieldId: Field read helper
     inline               FieldId(dev_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:dev.FieldId.value.GetEnum
 inline dev_FieldIdEnum value_GetEnum(const dev::FieldId& parent) __attribute__((nothrow));
@@ -698,7 +698,7 @@ inline void          FieldId_Init(dev::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:dev.FieldId.String  printfmt:Raw
 // func:dev.FieldId..Print
-void                 FieldId_Print(dev::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(dev::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Gitfile
 struct Gitfile { // dev.Gitfile: File managed by git
@@ -708,11 +708,10 @@ struct Gitfile { // dev.Gitfile: File managed by git
     // func:dev.Gitfile..FieldwiseCtor
     explicit inline               Gitfile(const algo::strptr& in_gitfile) __attribute__((nothrow));
 };
-
 // func:dev.Gitfile.ext.Get
-algo::Smallstr50     ext_Get(dev::Gitfile& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(dev::Gitfile& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Gitfile.ext.Get2
-algo::Smallstr50     Gitfile_ext_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gitfile_ext_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Gitfile..ReadFieldMaybe
 bool                 Gitfile_ReadFieldMaybe(dev::Gitfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -727,18 +726,16 @@ void                 Gitfile_Print(dev::Gitfile& row, algo::cstring& str) __attr
 
 // --- dev.Gitinfo
 struct Gitinfo { // dev.Gitinfo
-    algo::Smallstr40   gitinfo;   //
-    algo::Smallstr50   author;    //
-    algo::Smallstr40   cfg;       //
-    algo::Smallstr20   compver;   //
-    algo::Smallstr40   package;   //
-    algo::Comment      comment;   //
+    algo::Smallstr40   gitinfo;     //
+    algo::Smallstr40   package;     //
+    algo::Smallstr50   gitref;      // Full git ref of the commit the build was made from
+    algo::UnTime       builddate;   // When the build ran
+    algo::Comment      comment;     //
     // func:dev.Gitinfo..Ctor
     inline               Gitinfo() __attribute__((nothrow));
     // func:dev.Gitinfo..FieldwiseCtor
-    explicit inline               Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_author, const algo::strptr& in_cfg, const algo::strptr& in_compver, const algo::strptr& in_package, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_package, const algo::strptr& in_gitref, algo::UnTime in_builddate, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Gitinfo..ReadFieldMaybe
 bool                 Gitinfo_ReadFieldMaybe(dev::Gitinfo& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Gitinfo from an ascii string.
@@ -758,7 +755,6 @@ struct Hilite { // dev.Hilite: Mapping of perl regx->hilite pattern
     // func:dev.Hilite..Ctor
     inline               Hilite() __attribute__((nothrow));
 };
-
 // func:dev.Hilite..ReadFieldMaybe
 bool                 Hilite_ReadFieldMaybe(dev::Hilite& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Hilite from an ascii string.
@@ -778,7 +774,6 @@ struct Htmlentity { // dev.Htmlentity: Known HTML entity strings & codes
     // func:dev.Htmlentity..Ctor
     inline               Htmlentity() __attribute__((nothrow));
 };
-
 // func:dev.Htmlentity..ReadFieldMaybe
 bool                 Htmlentity_ReadFieldMaybe(dev::Htmlentity& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Htmlentity from an ascii string.
@@ -801,16 +796,15 @@ struct Include { // dev.Include: A site where one file includes another
     // func:dev.Include..Ctor
     inline               Include() __attribute__((nothrow));
 };
-
 // func:dev.Include.srcfile.Get
-algo::Smallstr200    srcfile_Get(dev::Include& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         srcfile_Get(dev::Include& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Include.srcfile.Get2
-algo::Smallstr200    Include_srcfile_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Include_srcfile_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Include.filename.Get
-algo::Smallstr200    filename_Get(dev::Include& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         filename_Get(dev::Include& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Include.filename.Get2
-algo::Smallstr200    Include_filename_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Include_filename_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Include..Concat_srcfile_filename
 tempstr              Include_Concat_srcfile_filename( const algo::strptr& srcfile ,const algo::strptr& filename );
@@ -835,7 +829,6 @@ struct License { // dev.License: Source code license
     // func:dev.License..Ctor
     inline               License() __attribute__((nothrow));
 };
-
 // func:dev.License..ReadFieldMaybe
 bool                 License_ReadFieldMaybe(dev::License& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::License from an ascii string.
@@ -861,7 +854,6 @@ struct Linelim { // dev.Linelim
     // func:dev.Linelim..Ctor
     inline               Linelim() __attribute__((nothrow));
 };
-
 // func:dev.Linelim..ReadFieldMaybe
 bool                 Linelim_ReadFieldMaybe(dev::Linelim& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Linelim from an ascii string.
@@ -876,69 +868,6 @@ inline void          Linelim_Init(dev::Linelim& parent);
 // func:dev.Linelim..Print
 void                 Linelim_Print(dev::Linelim& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- dev.Mdmark
-struct Mdmark { // dev.Mdmark: invisible markers for markdown files
-    algo::Smallstr50   mdmark;   //
-    algo::Smallstr50   state;    //
-    algo::cstring      param;    // parameter of mdmark - command or mdsection etc...
-    // func:dev.Mdmark..Ctor
-    inline               Mdmark() __attribute__((nothrow));
-};
-
-// func:dev.Mdmark..ReadFieldMaybe
-bool                 Mdmark_ReadFieldMaybe(dev::Mdmark& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Mdmark from an ascii string.
-// The format of the string is an ssim Tuple
-// func:dev.Mdmark..ReadStrptrMaybe
-bool                 Mdmark_ReadStrptrMaybe(dev::Mdmark &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:dev.Mdmark.String  printfmt:Tuple
-// func:dev.Mdmark..Print
-void                 Mdmark_Print(dev::Mdmark& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- dev.MdmarkCase
-#pragma pack(push,1)
-struct MdmarkCase { // dev.MdmarkCase: enum helper invisible markers for markdown files
-    u8   mdmark;   //   0
-    // func:dev.MdmarkCase.mdmark.Cast
-    inline               operator dev_MdmarkCaseEnum() const __attribute__((nothrow));
-    // func:dev.MdmarkCase..Ctor
-    inline               MdmarkCase() __attribute__((nothrow));
-    // func:dev.MdmarkCase..FieldwiseCtor
-    explicit inline               MdmarkCase(u8 in_mdmark) __attribute__((nothrow));
-    // func:dev.MdmarkCase..EnumCtor
-    inline               MdmarkCase(dev_MdmarkCaseEnum arg) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Get value of field as enum type
-// func:dev.MdmarkCase.mdmark.GetEnum
-inline dev_MdmarkCaseEnum mdmark_GetEnum(const dev::MdmarkCase& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:dev.MdmarkCase.mdmark.SetEnum
-inline void          mdmark_SetEnum(dev::MdmarkCase& parent, dev_MdmarkCaseEnum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:dev.MdmarkCase.mdmark.ToCstr
-const char*          mdmark_ToCstr(const dev::MdmarkCase& parent) __attribute__((nothrow));
-// Convert mdmark to a string. First, attempt conversion to a known string.
-// If no string matches, print mdmark as a numeric value.
-// func:dev.MdmarkCase.mdmark.Print
-void                 mdmark_Print(const dev::MdmarkCase& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:dev.MdmarkCase.mdmark.SetStrptrMaybe
-bool                 mdmark_SetStrptrMaybe(dev::MdmarkCase& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:dev.MdmarkCase.mdmark.SetStrptr
-void                 mdmark_SetStrptr(dev::MdmarkCase& parent, algo::strptr rhs, dev_MdmarkCaseEnum dflt) __attribute__((nothrow));
-
-// Set all fields to initial values.
-// func:dev.MdmarkCase..Init
-inline void          MdmarkCase_Init(dev::MdmarkCase& parent);
-
 // --- dev.Mdsection
 struct Mdsection { // dev.Mdsection: Template for updating a markdown file
     algo::Smallstr50    mdsection;   //
@@ -949,7 +878,6 @@ struct Mdsection { // dev.Mdsection: Template for updating a markdown file
     // func:dev.Mdsection..Ctor
     inline               Mdsection() __attribute__((nothrow));
 };
-
 // func:dev.Mdsection..ReadFieldMaybe
 bool                 Mdsection_ReadFieldMaybe(dev::Mdsection& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Mdsection from an ascii string.
@@ -969,7 +897,6 @@ struct Msgfile { // dev.Msgfile: File in repo containing messages that should be
     // func:dev.Msgfile..Ctor
     inline               Msgfile() __attribute__((nothrow));
 };
-
 // func:dev.Msgfile..ReadFieldMaybe
 bool                 Msgfile_ReadFieldMaybe(dev::Msgfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Msgfile from an ascii string.
@@ -992,7 +919,6 @@ struct Netproto { // dev.Netproto: Network protocol: add all levels here
     // func:dev.Netproto..Ctor
     inline               Netproto() __attribute__((nothrow));
 };
-
 // func:dev.Netproto..ReadFieldMaybe
 bool                 Netproto_ReadFieldMaybe(dev::Netproto& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Netproto from an ascii string.
@@ -1014,7 +940,6 @@ struct Noindent { // dev.Noindent: Indicates that a file should not be automatic
     // func:dev.Noindent..Ctor
     inline               Noindent() __attribute__((nothrow));
 };
-
 // func:dev.Noindent..ReadFieldMaybe
 bool                 Noindent_ReadFieldMaybe(dev::Noindent& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Noindent from an ascii string.
@@ -1036,7 +961,6 @@ struct OptType { // dev.OptType: Type of option (used in tool_opt)
     // func:dev.OptType..FieldwiseCtor
     explicit inline               OptType(const algo::strptr& in_opt_type, const algo::strptr& in_sep, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.OptType..ReadFieldMaybe
 bool                 OptType_ReadFieldMaybe(dev::OptType& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::OptType from an ascii string.
@@ -1050,16 +974,16 @@ void                 OptType_Print(dev::OptType& row, algo::cstring& str) __attr
 
 // --- dev.Package
 struct Package { // dev.Package: OpenACR package
-    algo::Smallstr50    package;   // Package name
-    algo::Smallstr50    baseref;   // Base gitref of installed package
-    algo::Smallstr200   origin;    // Source URL for published package
-    algo::Comment       comment;   //
+    algo::Smallstr50    package;     // Package name
+    algo::Smallstr50    baseref;     // Base gitref of installed package
+    algo::Smallstr200   origin;      // Source URL for published package
+    algo::Smallstr50    nomention;   // Regx of words the package contents must not mention; empty disables the check
+    algo::Comment       comment;     //
     // func:dev.Package..Ctor
     inline               Package() __attribute__((nothrow));
     // func:dev.Package..FieldwiseCtor
-    explicit inline               Package(const algo::strptr& in_package, const algo::strptr& in_baseref, const algo::strptr& in_origin, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Package(const algo::strptr& in_package, const algo::strptr& in_baseref, const algo::strptr& in_origin, const algo::strptr& in_nomention, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Package..ReadFieldMaybe
 bool                 Package_ReadFieldMaybe(dev::Package& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Package from an ascii string.
@@ -1081,16 +1005,15 @@ struct Pkgdep { // dev.Pkgdep: OpenACR Package dependency
     // func:dev.Pkgdep..FieldwiseCtor
     explicit inline               Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Pkgdep.package.Get
-algo::Smallstr50     package_Get(dev::Pkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         package_Get(dev::Pkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Pkgdep.package.Get2
-algo::Smallstr50     Pkgdep_package_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Pkgdep_package_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Pkgdep.parent.Get
-algo::Smallstr50     parent_Get(dev::Pkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_Get(dev::Pkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Pkgdep.parent.Get2
-algo::Smallstr50     Pkgdep_parent_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Pkgdep_parent_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Pkgdep..Concat_package_parent
 tempstr              Pkgdep_Concat_package_parent( const algo::strptr& package ,const algo::strptr& parent );
@@ -1108,25 +1031,45 @@ inline void          Pkgdep_Init(dev::Pkgdep& parent);
 // func:dev.Pkgdep..Print
 void                 Pkgdep_Print(dev::Pkgdep& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Pkggen
+struct Pkggen { // dev.Pkggen
+    algo::Smallstr50   package;   //
+    algo::Comment      comment;   //
+    // func:dev.Pkggen..Ctor
+    inline               Pkggen() __attribute__((nothrow));
+};
+// func:dev.Pkggen..ReadFieldMaybe
+bool                 Pkggen_ReadFieldMaybe(dev::Pkggen& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Pkggen from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Pkggen..ReadStrptrMaybe
+bool                 Pkggen_ReadStrptrMaybe(dev::Pkggen &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Pkggen.String  printfmt:Tuple
+// func:dev.Pkggen..Print
+void                 Pkggen_Print(dev::Pkggen& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Pkgkey
 struct Pkgkey { // dev.Pkgkey: Keys belonging to the OpenACR package
     algo::Smallstr150   pkgkey;    //
+    bool                up;        //   false  perform transitive closure upwards
+    bool                down;      //   false  perform transitive closure downwards (via the leftmost parent link)
+    bool                exclude;   //   false  exclude selected records from the package
     algo::Comment       comment;   //
     // func:dev.Pkgkey..Ctor
     inline               Pkgkey() __attribute__((nothrow));
     // func:dev.Pkgkey..FieldwiseCtor
-    explicit inline               Pkgkey(const algo::strptr& in_pkgkey, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Pkgkey(const algo::strptr& in_pkgkey, bool in_up, bool in_down, bool in_exclude, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Pkgkey.package.Get
-algo::Smallstr50     package_Get(dev::Pkgkey& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         package_Get(dev::Pkgkey& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Pkgkey.package.Get2
-algo::Smallstr50     Pkgkey_package_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Pkgkey_package_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Pkgkey.key.Get
-algo::Smallstr150    key_Get(dev::Pkgkey& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         key_Get(dev::Pkgkey& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Pkgkey.key.Get2
-algo::Smallstr150    Pkgkey_key_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Pkgkey_key_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Pkgkey..Concat_package_key
 tempstr              Pkgkey_Concat_package_key( const algo::strptr& package ,const algo::strptr& key );
@@ -1136,6 +1079,9 @@ bool                 Pkgkey_ReadFieldMaybe(dev::Pkgkey& parent, algo::strptr fie
 // The format of the string is an ssim Tuple
 // func:dev.Pkgkey..ReadStrptrMaybe
 bool                 Pkgkey_ReadStrptrMaybe(dev::Pkgkey &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:dev.Pkgkey..Init
+inline void          Pkgkey_Init(dev::Pkgkey& parent);
 // print string representation of ROW to string STR
 // cfmt:dev.Pkgkey.String  printfmt:Tuple
 // func:dev.Pkgkey..Print
@@ -1148,16 +1094,15 @@ struct Prototransport { // dev.Prototransport: Protocol/transport binding
     // func:dev.Prototransport..Ctor
     inline               Prototransport() __attribute__((nothrow));
 };
-
 // func:dev.Prototransport.netproto.Get
-algo::Smallstr50     netproto_Get(dev::Prototransport& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         netproto_Get(dev::Prototransport& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Prototransport.netproto.Get2
-algo::Smallstr50     Prototransport_netproto_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Prototransport_netproto_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Prototransport.transport.Get
-algo::Smallstr50     transport_Get(dev::Prototransport& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         transport_Get(dev::Prototransport& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Prototransport.transport.Get2
-algo::Smallstr50     Prototransport_transport_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Prototransport_transport_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Prototransport..Concat_netproto_transport
 tempstr              Prototransport_Concat_netproto_transport( const algo::strptr& netproto ,const algo::strptr& transport );
@@ -1184,7 +1129,6 @@ struct Readmefile { // dev.Readmefile: File containing documentation
     // func:dev.Readmefile..FieldwiseCtor
     explicit inline               Readmefile(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Readmefile..ReadFieldMaybe
 bool                 Readmefile_ReadFieldMaybe(dev::Readmefile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Readmefile from an ascii string.
@@ -1206,7 +1150,6 @@ struct Readmesort { // dev.Readmesort: sorted categories of txt/ *.md files pres
     // func:dev.Readmesort..Ctor
     inline               Readmesort() __attribute__((nothrow));
 };
-
 // func:dev.Readmesort..ReadFieldMaybe
 bool                 Readmesort_ReadFieldMaybe(dev::Readmesort& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Readmesort from an ascii string.
@@ -1225,7 +1168,6 @@ struct Rpm { // dev.Rpm
     // func:dev.Rpm..Ctor
     inline               Rpm() __attribute__((nothrow));
 };
-
 // func:dev.Rpm..ReadFieldMaybe
 bool                 Rpm_ReadFieldMaybe(dev::Rpm& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Rpm from an ascii string.
@@ -1238,19 +1180,22 @@ bool                 Rpm_ReadStrptrMaybe(dev::Rpm &parent, algo::strptr in_str) 
 void                 Rpm_Print(dev::Rpm& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Sandbox
-struct Sandbox { // dev.Sandbox: Registered sandbox
+struct Sandbox { // dev.Sandbox: Registered sandbox: a named, resettable copy of the checkout
     algo::Smallstr50   sandbox;   //
+    bool               cow;       //   false  Materialize as cow farm when the host has cowdancer; worktree otherwise
     algo::Comment      comment;   //
     // func:dev.Sandbox..Ctor
     inline               Sandbox() __attribute__((nothrow));
 };
-
 // func:dev.Sandbox..ReadFieldMaybe
 bool                 Sandbox_ReadFieldMaybe(dev::Sandbox& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Sandbox from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Sandbox..ReadStrptrMaybe
 bool                 Sandbox_ReadStrptrMaybe(dev::Sandbox &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:dev.Sandbox..Init
+inline void          Sandbox_Init(dev::Sandbox& parent);
 // print string representation of ROW to string STR
 // cfmt:dev.Sandbox.String  printfmt:Tuple
 // func:dev.Sandbox..Print
@@ -1263,7 +1208,6 @@ struct Sbpath { // dev.Sbpath: Extra files to copy into the sandbox
     // func:dev.Sbpath..Ctor
     inline               Sbpath() __attribute__((nothrow));
 };
-
 // func:dev.Sbpath..ReadFieldMaybe
 bool                 Sbpath_ReadFieldMaybe(dev::Sbpath& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Sbpath from an ascii string.
@@ -1283,11 +1227,10 @@ struct Scriptfile { // dev.Scriptfile: Known script file
     // func:dev.Scriptfile..Ctor
     inline               Scriptfile() __attribute__((nothrow));
 };
-
 // func:dev.Scriptfile.name.Get
-algo::Smallstr50     name_Get(dev::Scriptfile& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(dev::Scriptfile& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Scriptfile.name.Get2
-algo::Smallstr50     Scriptfile_name_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Scriptfile_name_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Scriptfile..ReadFieldMaybe
 bool                 Scriptfile_ReadFieldMaybe(dev::Scriptfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -1306,11 +1249,10 @@ struct Srcfile { // dev.Srcfile: Source file or header (key is pathname)
     // func:dev.Srcfile..Ctor
     inline               Srcfile() __attribute__((nothrow));
 };
-
 // func:dev.Srcfile.ext.Get
-algo::Smallstr10     ext_Get(dev::Srcfile& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(dev::Srcfile& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Srcfile.ext.Get2
-algo::Smallstr10     Srcfile_ext_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Srcfile_ext_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Srcfile..ReadFieldMaybe
 bool                 Srcfile_ReadFieldMaybe(dev::Srcfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -1338,7 +1280,6 @@ struct Syscmd { // dev.Syscmd: System command to execute
     // func:dev.Syscmd..FieldwiseCtor
     explicit inline               Syscmd(i64 in_syscmd, const algo::strptr& in_command, i32 in_pid, i32 in_status, i32 in_nprereq, bool in_fail_prereq, bool in_completed, i32 in_maxtime) __attribute__((nothrow));
 };
-
 // func:dev.Syscmd.execkey.Get
 // this function is 'extrn' and implemented by user
 i64                  execkey_Get(dev::Syscmd& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -1366,7 +1307,6 @@ struct Syscmddep { // dev.Syscmddep: Dependency between two commands
     // func:dev.Syscmddep..FieldwiseCtor
     explicit inline               Syscmddep(i64 in_child, i64 in_parent) __attribute__((nothrow));
 };
-
 // func:dev.Syscmddep..ReadFieldMaybe
 bool                 Syscmddep_ReadFieldMaybe(dev::Syscmddep& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Syscmddep from an ascii string.
@@ -1379,7 +1319,7 @@ inline void          Syscmddep_Init(dev::Syscmddep& parent);
 // print string representation of ROW to string STR
 // cfmt:dev.Syscmddep.String  printfmt:Tuple
 // func:dev.Syscmddep..Print
-void                 Syscmddep_Print(dev::Syscmddep& row, algo::cstring& str) __attribute__((nothrow));
+void                 Syscmddep_Print(dev::Syscmddep row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Syslib
 struct Syslib { // dev.Syslib: Registered system library
@@ -1388,7 +1328,6 @@ struct Syslib { // dev.Syslib: Registered system library
     // func:dev.Syslib..Ctor
     inline               Syslib() __attribute__((nothrow));
 };
-
 // func:dev.Syslib..ReadFieldMaybe
 bool                 Syslib_ReadFieldMaybe(dev::Syslib& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Syslib from an ascii string.
@@ -1409,16 +1348,15 @@ struct Targdep { // dev.Targdep: Dependency between targets
     // func:dev.Targdep..FieldwiseCtor
     explicit inline               Targdep(const algo::strptr& in_targdep, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Targdep.target.Get
-algo::Smallstr16     target_Get(dev::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(dev::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Targdep.target.Get2
-algo::Smallstr16     Targdep_target_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targdep_target_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Targdep.parent.Get
-algo::Smallstr16     parent_Get(dev::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_Get(dev::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Targdep.parent.Get2
-algo::Smallstr16     Targdep_parent_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targdep_parent_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Targdep..Concat_target_parent
 tempstr              Targdep_Concat_target_parent( const algo::strptr& target ,const algo::strptr& parent );
@@ -1441,7 +1379,6 @@ struct Target { // dev.Target: Build target
     // func:dev.Target..FieldwiseCtor
     explicit inline               Target(const algo::strptr& in_target) __attribute__((nothrow));
 };
-
 // func:dev.Target..ReadFieldMaybe
 bool                 Target_ReadFieldMaybe(dev::Target& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Target from an ascii string.
@@ -1462,21 +1399,20 @@ struct Targsrc { // dev.Targsrc: List of sources for target
     // func:dev.Targsrc..FieldwiseCtor
     explicit inline               Targsrc(const algo::strptr& in_targsrc, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Targsrc.target.Get
-algo::Smallstr16     target_Get(dev::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(dev::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Targsrc.target.Get2
-algo::Smallstr16     Targsrc_target_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targsrc_target_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Targsrc.src.Get
-algo::Smallstr200    src_Get(dev::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(dev::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Targsrc.src.Get2
-algo::Smallstr200    Targsrc_src_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targsrc_src_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Targsrc.ext.Get
-algo::Smallstr10     ext_Get(dev::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(dev::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Targsrc.ext.Get2
-algo::Smallstr10     Targsrc_ext_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targsrc_ext_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Targsrc..Concat_target_src
 tempstr              Targsrc_Concat_target_src( const algo::strptr& target ,const algo::strptr& src );
@@ -1498,26 +1434,25 @@ struct Targsyslib { // dev.Targsyslib: Use of system library by target
     // func:dev.Targsyslib..Ctor
     inline               Targsyslib() __attribute__((nothrow));
 };
-
 // func:dev.Targsyslib.target.Get
-algo::Smallstr16     target_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Targsyslib.target.Get2
-algo::Smallstr16     Targsyslib_target_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targsyslib_target_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Targsyslib.syslib.Get
-algo::Smallstr50     syslib_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         syslib_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Targsyslib.syslib.Get2
-algo::Smallstr50     Targsyslib_syslib_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targsyslib_syslib_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Targsyslib.uname.Get
-algo::Smallstr50     uname_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         uname_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Targsyslib.uname.Get2
-algo::Smallstr50     Targsyslib_uname_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targsyslib_uname_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Targsyslib.prefix.Get
-algo::Smallstr50     prefix_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         prefix_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.Targsyslib.prefix.Get2
-algo::Smallstr50     Targsyslib_prefix_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targsyslib_prefix_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.Targsyslib..Concat_uname_target_syslib
 tempstr              Targsyslib_Concat_uname_target_syslib( const algo::strptr& uname ,const algo::strptr& target ,const algo::strptr& syslib );
@@ -1536,12 +1471,10 @@ void                 Targsyslib_Print(dev::Targsyslib& row, algo::cstring& str) 
 struct Tgtcov { // dev.Tgtcov: Captured line coverate information by target
     algo::Smallstr16   target;    // Target
     algo::U32Dec2      cov_min;   // Minimal coverage limit
-    algo::U32Dec2      maxerr;    // Tolerable error
     algo::Comment      comment;   //
     // func:dev.Tgtcov..Ctor
     inline               Tgtcov() __attribute__((nothrow));
 };
-
 // func:dev.Tgtcov..ReadFieldMaybe
 bool                 Tgtcov_ReadFieldMaybe(dev::Tgtcov& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Tgtcov from an ascii string.
@@ -1561,7 +1494,6 @@ struct Timefmt { // dev.Timefmt: Time formats supported by orgfile
     // func:dev.Timefmt..Ctor
     inline               Timefmt() __attribute__((nothrow));
 };
-
 // func:dev.Timefmt..ReadFieldMaybe
 bool                 Timefmt_ReadFieldMaybe(dev::Timefmt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Timefmt from an ascii string.
@@ -1585,46 +1517,45 @@ struct ToolOpt { // dev.ToolOpt: Compiler/linker options to use
     // func:dev.ToolOpt..FieldwiseCtor
     explicit inline               ToolOpt(const algo::strptr& in_tool_opt, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.ToolOpt.uname.Get
-algo::Smallstr50     uname_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         uname_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.ToolOpt.uname.Get2
-algo::Smallstr50     ToolOpt_uname_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         ToolOpt_uname_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.ToolOpt.compiler.Get
-algo::Smallstr50     compiler_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         compiler_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.ToolOpt.compiler.Get2
-algo::Smallstr50     ToolOpt_compiler_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         ToolOpt_compiler_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.ToolOpt.cfg.Get
-algo::Smallstr50     cfg_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         cfg_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.ToolOpt.cfg.Get2
-algo::Smallstr50     ToolOpt_cfg_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         ToolOpt_cfg_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.ToolOpt.arch.Get
-algo::Smallstr50     arch_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         arch_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.ToolOpt.arch.Get2
-algo::Smallstr50     ToolOpt_arch_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         ToolOpt_arch_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.ToolOpt.target.Get
-algo::Smallstr50     target_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.ToolOpt.target.Get2
-algo::Smallstr50     ToolOpt_target_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         ToolOpt_target_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.ToolOpt.opt_type.Get
-algo::Smallstr50     opt_type_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         opt_type_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.ToolOpt.opt_type.Get2
-algo::Smallstr50     ToolOpt_opt_type_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         ToolOpt_opt_type_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.ToolOpt.opt.Get
-algo::Smallstr100    opt_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         opt_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.ToolOpt.opt.Get2
-algo::Smallstr100    ToolOpt_opt_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         ToolOpt_opt_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.ToolOpt.sortfld.Get
-algo::Smallstr50     sortfld_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         sortfld_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:dev.ToolOpt.sortfld.Get2
-algo::Smallstr50     ToolOpt_sortfld_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         ToolOpt_sortfld_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:dev.ToolOpt..Concat_uname_compiler_cfg_arch_target_opt_type_opt
 tempstr              ToolOpt_Concat_uname_compiler_cfg_arch_target_opt_type_opt( const algo::strptr& uname ,const algo::strptr& compiler ,const algo::strptr& cfg ,const algo::strptr& arch ,const algo::strptr& target ,const algo::strptr& opt_type ,const algo::strptr& opt );
@@ -1647,7 +1578,6 @@ struct Transport { // dev.Transport: Transport layer
     // func:dev.Transport..Ctor
     inline               Transport() __attribute__((nothrow));
 };
-
 // func:dev.Transport..ReadFieldMaybe
 bool                 Transport_ReadFieldMaybe(dev::Transport& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Transport from an ascii string.
@@ -1671,7 +1601,6 @@ struct Uname { // dev.Uname: List of known unames
     // func:dev.Uname..FieldwiseCtor
     explicit inline               Uname(const algo::strptr& in_uname, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:dev.Uname..ReadFieldMaybe
 bool                 Uname_ReadFieldMaybe(dev::Uname& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Uname from an ascii string.
@@ -1683,14 +1612,35 @@ bool                 Uname_ReadStrptrMaybe(dev::Uname &parent, algo::strptr in_s
 // func:dev.Uname..Print
 void                 Uname_Print(dev::Uname& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Uncovfunc
+struct Uncovfunc { // dev.Uncovfunc: Functions with no test coverage -- every executable line unhit across the suite
+    algo::cstring   uncovfunc;   // Key: ns.name(args)
+    // func:dev.Uncovfunc..Ctor
+    inline               Uncovfunc() __attribute__((nothrow));
+};
+// func:dev.Uncovfunc.name.Get
+algo::strptr         name_Get(dev::Uncovfunc& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Uncovfunc.name.Get2
+algo::strptr         Uncovfunc_name_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Uncovfunc..ReadFieldMaybe
+bool                 Uncovfunc_ReadFieldMaybe(dev::Uncovfunc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Uncovfunc from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Uncovfunc..ReadStrptrMaybe
+bool                 Uncovfunc_ReadStrptrMaybe(dev::Uncovfunc &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Uncovfunc.String  printfmt:Tuple
+// func:dev.Uncovfunc..Print
+void                 Uncovfunc_Print(dev::Uncovfunc& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Unstablefld
 struct Unstablefld { // dev.Unstablefld: Fields that should be stripped from component test output because they contain timestamps etc.
-    algo::Smallstr100   field;     //
+    algo::Smallstr150   field;     //
     algo::Comment       comment;   //
     // func:dev.Unstablefld..Ctor
     inline               Unstablefld() __attribute__((nothrow));
 };
-
 // func:dev.Unstablefld..ReadFieldMaybe
 bool                 Unstablefld_ReadFieldMaybe(dev::Unstablefld& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Unstablefld from an ascii string.
@@ -1711,6 +1661,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Copyright &row)
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covfile &row);// cfmt:dev.Covfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covline &row);// cfmt:dev.Covline.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covtarget &row);// cfmt:dev.Covtarget.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Dbgtarget &row);// cfmt:dev.Dbgtarget.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Edaction &row);// cfmt:dev.Edaction.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Edacttype &row);// cfmt:dev.Edacttype.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::FieldId &row);// cfmt:dev.FieldId.String
@@ -1720,13 +1671,13 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Htmlentity &row
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Include &row);// cfmt:dev.Include.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::License &row);// cfmt:dev.License.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Linelim &row);// cfmt:dev.Linelim.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Mdmark &row);// cfmt:dev.Mdmark.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Mdsection &row);// cfmt:dev.Mdsection.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Msgfile &row);// cfmt:dev.Msgfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Netproto &row);// cfmt:dev.Netproto.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Noindent &row);// cfmt:dev.Noindent.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Package &row);// cfmt:dev.Package.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdep &row);// cfmt:dev.Pkgdep.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkggen &row);// cfmt:dev.Pkggen.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkey &row);// cfmt:dev.Pkgkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Prototransport &row);// cfmt:dev.Prototransport.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmefile &row);// cfmt:dev.Readmefile.String
@@ -1748,5 +1699,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Timefmt &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::ToolOpt &row);// cfmt:dev.ToolOpt.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Transport &row);// cfmt:dev.Transport.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Uname &row);// cfmt:dev.Uname.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Uncovfunc &row);// cfmt:dev.Uncovfunc.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Unstablefld &row);// cfmt:dev.Unstablefld.String
 }

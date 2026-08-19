@@ -31,8 +31,8 @@
 
 // --- ssim2csv_FieldIdEnum
 
-enum ssim2csv_FieldIdEnum {        // ssim2csv.FieldId.value
-     ssim2csv_FieldId_value   = 0
+enum ssim2csv_FieldIdEnum {    // ssim2csv.FieldId.value
+     ssim2csv_FieldId_value
 };
 
 enum { ssim2csv_FieldIdEnum_N = 1 };
@@ -40,7 +40,6 @@ enum { ssim2csv_FieldIdEnum_N = 1 };
 namespace ssim2csv { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace ssim2csv { // gen:ns_tclass_field
-extern const char *ssim2csv_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ssim2csv { struct _db_expand_curs; }
@@ -64,7 +63,6 @@ struct trace { // ssim2csv.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.trace.String  printfmt:Tuple
 // func:ssim2csv.trace..Print
@@ -74,32 +72,29 @@ void                 trace_Print(ssim2csv::trace& row, algo::cstring& str) __att
 // create: ssim2csv.FDb._db (Global)
 struct FDb { // ssim2csv.FDb: In-memory database for ssim2csv
     command::ssim2csv      cmdline;                     //
-    ssim2csv::FExpand*     expand_lary[32];             // level array
-    i32                    expand_n;                    // number of elements in array
+    ssim2csv::FExpand*     expand_lary[36];             // level array
+    i64                    expand_n;                    // number of elements in array
     ssim2csv::FExpand**    ind_expand_buckets_elems;    // pointer to bucket array
     i32                    ind_expand_buckets_n;        // number of elements in bucket array
     i32                    ind_expand_n;                // number of elements in the hash table
-    ssim2csv::FOutfile*    outfile_lary[32];            // level array
-    i32                    outfile_n;                   // number of elements in array
+    ssim2csv::FOutfile*    outfile_lary[36];            // level array
+    i64                    outfile_n;                   // number of elements in array
     ssim2csv::FOutfile**   ind_outfile_buckets_elems;   // pointer to bucket array
     i32                    ind_outfile_buckets_n;       // number of elements in bucket array
     i32                    ind_outfile_n;               // number of elements in the hash table
     algo::cstring*         name_elems;                  // pointer to elements
-    u32                    name_n;                      // number of elements in array
-    u32                    name_max;                    // max. capacity of array before realloc
+    u64                    name_n;                      // number of elements in array
+    u64                    name_max;                    // max. capacity of array before realloc
     algo::cstring*         value_elems;                 // pointer to elements
-    u32                    value_n;                     // number of elements in array
-    u32                    value_max;                   // max. capacity of array before realloc
+    u64                    value_n;                     // number of elements in array
+    u64                    value_max;                   // max. capacity of array before realloc
     ssim2csv::FFlatten*    flatten_elems;               // pointer to elements
-    u32                    flatten_n;                   // number of elements in array
-    u32                    flatten_max;                 // max. capacity of array before realloc
+    u64                    flatten_n;                   // number of elements in array
+    u64                    flatten_max;                 // max. capacity of array before realloc
     ssim2csv::trace        trace;                       //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     ssim2csv.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of ssim2csv.FDb.cmdline (and any base command line)
+// via ssim2csv_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:ssim2csv.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -136,6 +131,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:ssim2csv.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:ssim2csv.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:ssim2csv.FDb._db.XrefMaybe
@@ -162,7 +161,7 @@ inline ssim2csv::FExpand* expand_Find(u64 t) __attribute__((__warn_unused_result
 inline ssim2csv::FExpand* expand_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2csv.FDb.expand.N
-inline i32           expand_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           expand_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssim2csv.FDb.expand.RemoveAll
 void                 expand_RemoveAll() __attribute__((nothrow));
@@ -226,7 +225,7 @@ inline ssim2csv::FOutfile* outfile_Find(u64 t) __attribute__((__warn_unused_resu
 inline ssim2csv::FOutfile* outfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2csv.FDb.outfile.N
-inline i32           outfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           outfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssim2csv.FDb.outfile.RemoveAll
 void                 outfile_RemoveAll() __attribute__((nothrow));
@@ -281,15 +280,15 @@ algo::cstring&       name_Alloc() __attribute__((__warn_unused_result__, nothrow
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:ssim2csv.FDb.name.AllocAt
-algo::cstring&       name_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       name_AllocAt(i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.name.AllocN
-algo::aryptr<algo::cstring> name_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> name_AllocN(i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:ssim2csv.FDb.name.AllocNAt
-algo::aryptr<algo::cstring> name_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> name_AllocNAt(i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssim2csv.FDb.name.EmptyQ
 inline bool          name_EmptyQ() __attribute__((nothrow));
@@ -304,13 +303,13 @@ inline algo::aryptr<algo::cstring> name_Getary() __attribute__((nothrow));
 inline algo::cstring* name_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:ssim2csv.FDb.name.Max
-inline i32           name_Max() __attribute__((nothrow));
+inline i64           name_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:ssim2csv.FDb.name.N
-inline i32           name_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           name_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:ssim2csv.FDb.name.Remove
-void                 name_Remove(u32 i) __attribute__((nothrow));
+void                 name_Remove(u64 i) __attribute__((nothrow));
 // func:ssim2csv.FDb.name.RemoveAll
 void                 name_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -318,10 +317,10 @@ void                 name_RemoveAll() __attribute__((nothrow));
 void                 name_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:ssim2csv.FDb.name.Reserve
-inline void          name_Reserve(int n) __attribute__((nothrow));
+inline void          name_Reserve(i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:ssim2csv.FDb.name.AbsReserve
-void                 name_AbsReserve(int n) __attribute__((nothrow));
+void                 name_AbsReserve(i64 n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:ssim2csv.FDb.name.qFind
 inline algo::cstring& name_qFind(u64 t) __attribute__((nothrow));
@@ -333,7 +332,7 @@ inline algo::cstring& name_qLast() __attribute__((nothrow));
 inline u64           name_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.name.AllocNVal
-algo::aryptr<algo::cstring> name_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+algo::aryptr<algo::cstring> name_AllocNVal(i64 n_elems, const algo::cstring& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -342,7 +341,13 @@ bool                 name_ReadStrptrMaybe(algo::strptr in_str) __attribute__((no
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:ssim2csv.FDb.name.Insary
-void                 name_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
+void                 name_Insary(algo::aryptr<algo::cstring> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:ssim2csv.FDb.name.RemRegion
+void                 name_RemRegion(i64 beg, i64 n) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -356,15 +361,15 @@ algo::cstring&       value_Alloc() __attribute__((__warn_unused_result__, nothro
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:ssim2csv.FDb.value.AllocAt
-algo::cstring&       value_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       value_AllocAt(i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.value.AllocN
-algo::aryptr<algo::cstring> value_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> value_AllocN(i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:ssim2csv.FDb.value.AllocNAt
-algo::aryptr<algo::cstring> value_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> value_AllocNAt(i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssim2csv.FDb.value.EmptyQ
 inline bool          value_EmptyQ() __attribute__((nothrow));
@@ -379,13 +384,13 @@ inline algo::aryptr<algo::cstring> value_Getary() __attribute__((nothrow));
 inline algo::cstring* value_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:ssim2csv.FDb.value.Max
-inline i32           value_Max() __attribute__((nothrow));
+inline i64           value_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:ssim2csv.FDb.value.N
-inline i32           value_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           value_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:ssim2csv.FDb.value.Remove
-void                 value_Remove(u32 i) __attribute__((nothrow));
+void                 value_Remove(u64 i) __attribute__((nothrow));
 // func:ssim2csv.FDb.value.RemoveAll
 void                 value_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -393,10 +398,10 @@ void                 value_RemoveAll() __attribute__((nothrow));
 void                 value_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:ssim2csv.FDb.value.Reserve
-inline void          value_Reserve(int n) __attribute__((nothrow));
+inline void          value_Reserve(i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:ssim2csv.FDb.value.AbsReserve
-void                 value_AbsReserve(int n) __attribute__((nothrow));
+void                 value_AbsReserve(i64 n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:ssim2csv.FDb.value.qFind
 inline algo::cstring& value_qFind(u64 t) __attribute__((nothrow));
@@ -408,7 +413,7 @@ inline algo::cstring& value_qLast() __attribute__((nothrow));
 inline u64           value_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.value.AllocNVal
-algo::aryptr<algo::cstring> value_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+algo::aryptr<algo::cstring> value_AllocNVal(i64 n_elems, const algo::cstring& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -417,7 +422,13 @@ bool                 value_ReadStrptrMaybe(algo::strptr in_str) __attribute__((n
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:ssim2csv.FDb.value.Insary
-void                 value_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
+void                 value_Insary(algo::aryptr<algo::cstring> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:ssim2csv.FDb.value.RemRegion
+void                 value_RemRegion(i64 beg, i64 n) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -431,15 +442,15 @@ ssim2csv::FFlatten&  flatten_Alloc() __attribute__((__warn_unused_result__, noth
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:ssim2csv.FDb.flatten.AllocAt
-ssim2csv::FFlatten&  flatten_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+ssim2csv::FFlatten&  flatten_AllocAt(i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.flatten.AllocN
-algo::aryptr<ssim2csv::FFlatten> flatten_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<ssim2csv::FFlatten> flatten_AllocN(i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:ssim2csv.FDb.flatten.AllocNAt
-algo::aryptr<ssim2csv::FFlatten> flatten_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<ssim2csv::FFlatten> flatten_AllocNAt(i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssim2csv.FDb.flatten.EmptyQ
 inline bool          flatten_EmptyQ() __attribute__((nothrow));
@@ -454,13 +465,13 @@ inline algo::aryptr<ssim2csv::FFlatten> flatten_Getary() __attribute__((nothrow)
 inline ssim2csv::FFlatten* flatten_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:ssim2csv.FDb.flatten.Max
-inline i32           flatten_Max() __attribute__((nothrow));
+inline i64           flatten_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:ssim2csv.FDb.flatten.N
-inline i32           flatten_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           flatten_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:ssim2csv.FDb.flatten.Remove
-void                 flatten_Remove(u32 i) __attribute__((nothrow));
+void                 flatten_Remove(u64 i) __attribute__((nothrow));
 // func:ssim2csv.FDb.flatten.RemoveAll
 void                 flatten_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -468,10 +479,10 @@ void                 flatten_RemoveAll() __attribute__((nothrow));
 void                 flatten_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:ssim2csv.FDb.flatten.Reserve
-inline void          flatten_Reserve(int n) __attribute__((nothrow));
+inline void          flatten_Reserve(i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:ssim2csv.FDb.flatten.AbsReserve
-void                 flatten_AbsReserve(int n) __attribute__((nothrow));
+void                 flatten_AbsReserve(i64 n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:ssim2csv.FDb.flatten.qFind
 inline ssim2csv::FFlatten& flatten_qFind(u64 t) __attribute__((nothrow));
@@ -483,11 +494,17 @@ inline ssim2csv::FFlatten& flatten_qLast() __attribute__((nothrow));
 inline u64           flatten_rowid_Get(ssim2csv::FFlatten &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.flatten.AllocNVal
-algo::aryptr<ssim2csv::FFlatten> flatten_AllocNVal(int n_elems, const ssim2csv::FFlatten& val) __attribute__((nothrow));
+algo::aryptr<ssim2csv::FFlatten> flatten_AllocNVal(i64 n_elems, const ssim2csv::FFlatten& val) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:ssim2csv.FDb.flatten.Insary
-void                 flatten_Insary(algo::aryptr<ssim2csv::FFlatten> rhs, int at) __attribute__((nothrow));
+void                 flatten_Insary(algo::aryptr<ssim2csv::FFlatten> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:ssim2csv.FDb.flatten.RemRegion
+void                 flatten_RemRegion(i64 beg, i64 n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:ssim2csv.FDb.expand_curs.Reset
@@ -574,7 +591,6 @@ private:
     friend void                 expand_RemoveAll() __attribute__((nothrow));
     friend void                 expand_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:ssim2csv.FExpand..Init
 inline void          FExpand_Init(ssim2csv::FExpand& expand);
@@ -593,7 +609,6 @@ struct FFlatten { // ssim2csv.FFlatten
     // func:ssim2csv.FFlatten..Ctor
     inline               FFlatten() __attribute__((nothrow));
 };
-
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.FFlatten.String  printfmt:Tuple
 // func:ssim2csv.FFlatten..Print
@@ -623,7 +638,6 @@ private:
     friend void                 outfile_RemoveAll() __attribute__((nothrow));
     friend void                 outfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:ssim2csv.FOutfile..Init
 inline void          FOutfile_Init(ssim2csv::FOutfile& outfile);
@@ -648,7 +662,6 @@ struct FieldId { // ssim2csv.FieldId: Field read helper
     inline               FieldId(ssim2csv_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ssim2csv.FieldId.value.GetEnum
 inline ssim2csv_FieldIdEnum value_GetEnum(const ssim2csv::FieldId& parent) __attribute__((nothrow));
@@ -686,7 +699,7 @@ inline void          FieldId_Init(ssim2csv::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.FieldId.String  printfmt:Raw
 // func:ssim2csv.FieldId..Print
-void                 FieldId_Print(ssim2csv::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(ssim2csv::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace ssim2csv { // gen:ns_curstext
 
@@ -709,8 +722,8 @@ struct _db_outfile_curs {// cursor
 struct _db_name_curs {// cursor
     typedef algo::cstring ChildType;
     algo::cstring* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     _db_name_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -718,8 +731,8 @@ struct _db_name_curs {// cursor
 struct _db_value_curs {// cursor
     typedef algo::cstring ChildType;
     algo::cstring* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     _db_value_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -727,8 +740,8 @@ struct _db_value_curs {// cursor
 struct _db_flatten_curs {// cursor
     typedef ssim2csv::FFlatten ChildType;
     ssim2csv::FFlatten* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     _db_flatten_curs() { elems=NULL; n_elems=0; index=0; }
 };
 

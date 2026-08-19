@@ -24,7 +24,7 @@
 
 #include "include/atf_unit.h"
 static int counter=0;
-struct Counter {
+struct Counter { // ignore:struct_in_src
     Counter() {counter++;}
     ~Counter() {counter--;}
     Counter(const Counter &) {counter++;}
@@ -52,7 +52,7 @@ enum {
 
 // Linear congruential generator
 
-struct GenNum {
+struct GenNum { // ignore:struct_in_src
     const i64 a;
     const i64 c;
     const i64 m;
@@ -65,7 +65,7 @@ struct GenNum {
 
 // ----------------------------------------------------------------------------
 
-struct TimeTestIter {
+struct TimeTestIter { // ignore:struct_in_src
     enum : i64 {
         MIN_UTIME = -2208988800 // 1900-01-01 00:00:00 - min value to test
         ,MAX_UTIME = 2147483647  // 2038-01-19 03:14:07 - max value to test
@@ -410,6 +410,18 @@ void atf_unit::unittest_algo_lib_ParseUnTime() {
     ParseUnTimeStr("2013-11-21T12:13:14.000123000crap","2013-11-21T12:13:14.000123");
     ParseUnTimeStr("2013-11-21" ,"2013-11-21T00:00:00");
     ParseUnTimeStr("2013/11/21" ,"2013-11-21T00:00:00");
+    // Trailing 'Z' (ISO 8601 UTC marker) -- parsed via timegm() so the
+    // host's TZ offset doesn't shift the value.  Under a fixed UTC-5 TZ
+    // the non-Z parse goes through mktime() and lands 5h later.
+    {
+        algo::SetTz("EST5");// fixed UTC-5, no DST
+        algo::UnTime tz, tnoz;
+        vrfy_(UnTime_ReadStrptrMaybe(tz,   "1970-01-01T00:00:00Z"));
+        vrfy_(UnTime_ReadStrptrMaybe(tnoz, "1970-01-01T00:00:00"));
+        vrfyeq_(tz.value,              i64(0));
+        vrfyeq_(tnoz.value - tz.value, i64(5*3600) * algo::UNTIME_PER_SEC);
+        algo::SetTz("GMT");// restore for later cases
+    }
     TestParseUnDiff("12:13:14.567890123","12:13:14.567890123");
     TestParseUnDiff("13:14.567890123", "00:13:14.567890123");
     TestParseUnDiff("14.567890123",  "00:00:14.567890123");

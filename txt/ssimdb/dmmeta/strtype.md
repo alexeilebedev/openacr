@@ -10,28 +10,21 @@ rightpad  String of length N, padded on the right
 leftpad   String of length N, padded on the left
 
 ```
-For more information, see [Strings](/txt/exe/amc/strings.md)
+For more information, see [Strings](/txt/exe/amc/string.md)
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Strtype
 
 * file:[data/dmmeta/strtype.ssim](/data/dmmeta/strtype.ssim)
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|strtype|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|strtype|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Related
 <a href="#related"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
 These ssimfiles reference dmmeta.strtype
 
-* [dmmeta.smallstr via strtype](/txt/ssimdb/dmmeta/smallstr.md) - Data format for string 
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
-
+* [dmmeta.smallstr via strtype](/txt/ssimdb/dmmeta/smallstr.md) - Data format for string

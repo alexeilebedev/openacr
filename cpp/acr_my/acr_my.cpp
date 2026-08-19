@@ -48,15 +48,28 @@ static tempstr MysqldSafeCmd(){
 
 static void Main_Start() {
     bool started=false;
-    // check if dir exist, and initialize if not
+    // MariaDB initializes a datadir with mysql_install_db (mariadbd rejects the
+    // MySQL-only --initialize); MySQL 5.7+ ships no mysql_install_db and uses
+    // --initialize.  A datadir missing its mysql system db (left behind by an
+    // init that aborted partway) is repaired by mysql_install_db, which
+    // tolerates existing data.
     tempstr cmd;
     CreateDirRecurse(acr_my::_db.data_logdir);
-    if (!DirectoryQ(acr_my::_db.data_dir)){
-        // create mysql directory
-        CreateDirRecurse(acr_my::_db.data_dir);
+    bool mariadb = SysCmd("command -v mysql_install_db 1>/dev/null 2>&1")==0;
+    if (mariadb && !DirectoryQ(DirFileJoin(acr_my::_db.data_dir,"mysql"))){
+        cmd << Subst(acr_my::_db.R,
+                     "mysql_install_db"
+                     " --no-defaults"
+                     " --datadir=$data_dir"
+                     " --skip-test-db"
+                     " 1>/dev/null");
+    } else if (!mariadb && !DirectoryQ(acr_my::_db.data_dir)){
         cmd << MysqldSafeCmd()
             << " --initialize"
             << " 1>/dev/null";
+    }
+    if (cmd != ""){
+        CreateDirRecurse(acr_my::_db.data_dir);
         prlog("waiting for server init...");
         SysCmd(cmd, FailokQ(false));
     }
@@ -84,7 +97,10 @@ static void Main_Start() {
         }
         algo::SleepMsec(100);
         step++;
-    } while (!started && algo::ElapsedSecs(t0,algo::CurrSchedTime()) < 5.0);
+        // generous ceiling: the loop exits on the first successful ping, so it
+        // only delays the verdict on a dead server -- while a tight one fails a
+        // first-ever InnoDB init on a loaded CI runner
+    } while (!started && algo::ElapsedSecs(t0,algo::CurrSchedTime()) < 60.0);
 
     // oops -- start failed. proceed straight to abort.
     if (!started) {

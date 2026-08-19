@@ -170,11 +170,11 @@ strptr algo::StripNs(strptr ns_name, strptr ident) {
 // SubstringIndex("a.b.c", '.', -1) -> "c"
 // SubstringIndex("a.b.c", '.', -2) -> "b.c"
 // SubstringIndex("a.b.c", '.', -3) -> "a.b.c"
-strptr algo::SubstringIndex(strptr str, char c, int idx) {
-    int start = 0;
-    int end = elems_N(str);
+strptr algo::SubstringIndex(strptr str, char c, i64 idx) {
+    i64 start = 0;
+    i64 end = elems_N(str);
     if (idx < 0) {
-        int j = end;
+        i64 j = end;
         while (j > 0) {
             idx += str[j-1] == c;
             if (idx==0) break;
@@ -182,7 +182,7 @@ strptr algo::SubstringIndex(strptr str, char c, int idx) {
         }
         start = j;
     } else {
-        int j = 0;
+        i64 j = 0;
         while (j < end) {
             idx -= str[j] == c;
             if (idx==0) break;
@@ -213,19 +213,19 @@ static int NoCaseStrCmp(const char *A ,const char *B, size_t count) {
     return( 0 );
 }
 
-int algo::FindFrom(strptr s, strptr t, int from, bool case_sensitive) {
-    u32 n = elems_N(t);
-    if (n > (u32)s.n_elems || !n) {
+i64 algo::FindFrom(strptr s, strptr t, i64 from, bool case_sensitive) {
+    u64 n = elems_N(t);
+    if (n > (u64)s.n_elems || !n) {
         return -1;
     }
     if (case_sensitive) {
-        for (int i=from, lim=s.n_elems-n+1; i<lim; i++) {
+        for (i64 i=from, lim=s.n_elems-n+1; i<lim; i++) {
             if (memcmp(s.elems+i, t.elems, n)==0) {
                 return i;
             }
         }
     } else {
-        for (int i=from, lim=s.n_elems-n+1; i<lim; i++) {
+        for (i64 i=from, lim=s.n_elems-n+1; i<lim; i++) {
             if (CompareNoCase(strptr(s.elems+i,n), strptr(t.elems, n))==0) {
                 return i;
             }
@@ -234,12 +234,12 @@ int algo::FindFrom(strptr s, strptr t, int from, bool case_sensitive) {
     return -1;
 }
 
-int algo::FindFrom(strptr s, strptr t, int from) {
+i64 algo::FindFrom(strptr s, strptr t, i64 from) {
     return algo::FindFrom(s,t,from,true);
 }
 
-int algo::FindFrom(strptr s, char c, int from) {
-    for (int i=from; i < (int)s.n_elems; i++) if (s.elems[i]==c) return i;
+i64 algo::FindFrom(strptr s, char c, i64 from) {
+    for (i64 i=from; i < s.n_elems; i++) if (s.elems[i]==c) return i;
     return -1;
 }
 
@@ -277,7 +277,7 @@ static inline int GetCharNum(strptr s, int &i) {
 }
 
 int algo::CompareNoCase(strptr lhs, strptr s) {
-    if (int result=NoCaseStrCmp(lhs.elems,s.elems,i32_Min(lhs.n_elems,s.n_elems))) {
+    if (int result=NoCaseStrCmp(lhs.elems,s.elems,i64_Min(lhs.n_elems,s.n_elems))) {
         return result;
     }
     return lhs.n_elems-s.n_elems;
@@ -302,6 +302,167 @@ bool algo::StartsWithQ(strptr s, strptr sstr, bool case_sensitive DFLTVAL(true))
 bool algo::EndsWithQ(strptr s, strptr sstr) {
     return LastN(s,elems_N(sstr)) == sstr;
 }
+
+// True if TEXT contains IDENT as a whole identifier: delimited on both
+// sides by a non-identifier character or the string edge. A raw substring
+// search would match a short name inside a longer token (w inside new())
+// and misreport the identifier as present.
+bool algo::ContainsIdentQ(strptr text, strptr ident) {
+    // After a rejected match, the scan may resume past the match's interior
+    // only when every char of IDENT is an identifier char: an occurrence
+    // overlapping the rejected one then has an identifier char as its left
+    // neighbor and can never pass. An IDENT containing a non-identifier
+    // char can hide a passing occurrence inside a rejected one -- ident
+    // "a-a" in text "xa-a-a" -- so the scan resumes one char past the
+    // match start instead.
+    bool skipable = true;
+    frep_(i,ident.n_elems) {
+        skipable = skipable && algo_lib::IdentCharQ(ident[i]);
+    }
+    bool found = false;
+    int off = 0;
+    while (!found && ident.n_elems > 0 && off < text.n_elems) {
+        int pos = FindStr(RestFrom(text, off), ident, true);
+        if (pos == -1) {
+            off = text.n_elems;
+        } else {
+            int start = off + pos;
+            int end = start + ident.n_elems;
+            bool left_ok = start == 0 || !algo_lib::IdentCharQ(text.elems[start-1]);
+            bool right_ok = end == text.n_elems || !algo_lib::IdentCharQ(text.elems[end]);
+            found = left_ok && right_ok;
+            off = skipable ? end : start + 1;
+        }
+    }
+    return found;
+}
+
+// The length of the raw string literal delimiter beginning at POS in TEXT,
+// the offset just past the R" that opens one, or -1 when no raw string begins
+// there. The delimiter runs to the parenthesis that opens the payload and is
+// at most 16 characters, none of them a space, a parenthesis, a backslash or
+// a quote, so an R that merely ends a longer name and stands before an
+// ordinary literal (gR"x") opens no raw string and -1 sends the scan on to
+// read that literal as the ordinary one it is.
+static i64 RawDelimN(strptr text, i64 pos) {
+    i64 ret = -1;
+    i64 n = text.n_elems;
+    i64 i = pos;
+    bool bad = false;
+    while (!bad && ret == -1 && i < n && i - pos <= 16) {
+        char c = text.elems[i];
+        if (c == '(') {
+            ret = i - pos;
+        } else if (c == ' ' || c == ')' || c == '\\' || c == '"' || c == '\n') {
+            bad = true;
+        } else {
+            i++;
+        }
+    }
+    return ret;
+}
+
+// The offset just past the C++ string literal, character literal or comment
+// beginning at POS in TEXT, or POS itself when none begins there.
+// A field default reaches the generators as arbitrary user text, so the
+// characters that spell an identifier also occur where they name nothing:
+// sizeof("parent") declares no variable called parent, and neither does a
+// /* parent */ note left beside an expression. Those spans are content, not
+// code, and a scan that reads them as identifier occurrences reports a
+// reference the compiler will never see. Each span is measured by its own
+// terminator -- the matching quote, the newline, the closing delimiter -- and
+// a backslash inside a literal consumes the character after it, so the quote
+// in '\'' does not end the literal early. A raw string literal carries its own
+// delimiter instead of an escape, so the quote in R"(a "b" c)" is payload too,
+// and only the parenthesis and delimiter matching the ones it opened with end
+// it. An unterminated span runs to the end of the text, which leaves no
+// position for a later occurrence to be found at.
+static i64 SkipNoncode(strptr text, i64 pos) {
+    i64 ret = pos;
+    i64 n = text.n_elems;
+    char c = text.elems[pos];
+    char c2 = pos+1 < n ? text.elems[pos+1] : '\0';
+    i64 delim_n = c == 'R' && c2 == '"' ? RawDelimN(text, pos+2) : -1;
+    if (delim_n >= 0) {
+        tempstr close;
+        close << ")" << FirstN(RestFrom(text,pos+2), delim_n) << "\"";
+        i64 body = pos+3+delim_n;
+        int rel = FindStr(RestFrom(text,body), close, true);
+        ret = rel == -1 ? n : body + rel + ch_N(close);
+    } else if (c == '"' || c == '\'') {
+        i64 i = pos+1;
+        while (i < n && text.elems[i] != c) {
+            i += text.elems[i] == '\\' ? 2 : 1;
+        }
+        ret = i < n ? i+1 : n;
+    } else if (c == '/' && c2 == '/') {
+        i64 i = pos+2;
+        while (i < n && text.elems[i] != '\n') {
+            i++;
+        }
+        ret = i;
+    } else if (c == '/' && c2 == '*') {
+        i64 i = pos+2;
+        while (i+1 < n && !(text.elems[i] == '*' && text.elems[i+1] == '/')) {
+            i++;
+        }
+        ret = i+1 < n ? i+2 : n;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Replace every whole-identifier occurrence of IDENT in STR with TO and
+// return the number of replacements.
+// STR is read as C++ source, so an occurrence counts on two conditions. It is
+// delimited on both sides by a non-identifier character or the string edge:
+// substituting the instance reference *this in "*thisvalue + ssizeof(*this)"
+// must not rewrite the first occurrence, which is the head of a longer
+// identifier and not a reference at all, into the undeclared name
+// "parentvalue". And it lies in code rather than inside a string literal
+// (ordinary or raw), a character literal or a comment, where the same
+// characters are content that names nothing; such a span is copied through
+// untouched.
+// A rejected occurrence does not advance the scan past its interior: an
+// IDENT that itself contains a non-identifier character can hide a passing
+// occurrence inside a rejected one -- ident "a-a" in "xa-a-a".
+// A span is located by its delimiters rather than by tokenizing the source,
+// so a quote that delimits no span -- the digit separator in 1'000'000 -- is
+// read as one and the text behind it is skipped instead of substituted.
+// Unittest algo_lib.ReplaceIdent holds the spans that are recognized.
+int algo::ReplaceIdent(cstring &str, strptr ident, strptr to) {
+    strptr text = ch_Getary(str);
+    cstring out;
+    i64 base = 0;
+    i64 scan = 0;
+    i64 nrep = 0;
+    while (elems_N(ident) > 0 && scan < text.n_elems) {
+        i64 skip = SkipNoncode(text, scan);
+        if (skip > scan) {
+            scan = skip;
+        } else {
+            i64 end = scan + elems_N(ident);
+            bool fit_ok = StrEqual(FirstN(RestFrom(text,scan), elems_N(ident)), ident, true);
+            bool left_ok = scan == 0 || !algo_lib::IdentCharQ(text.elems[scan-1]);
+            bool right_ok = end >= text.n_elems || !algo_lib::IdentCharQ(text.elems[end]);
+            if (fit_ok && left_ok && right_ok) {
+                out << ch_GetRegion(str,base,scan-base);
+                out << to;
+                nrep++;
+                base = end;
+                scan = end;
+            } else {
+                scan++;
+            }
+        }
+    }
+    out << ch_RestFrom(str,base);
+    TSwap(str,out);
+    return nrep;
+}
+
+// -----------------------------------------------------------------------------
 
 void algo::MakeLower(strptr s) {
     frep_(i,elems_N(s)) {
@@ -439,9 +600,9 @@ int algo::Replace(cstring &str, const strptr& from, const strptr& to, bool case_
         return 0;
     }
     cstring out;
-    int base=0;
-    int nrep=0;
-    int idx;
+    i64 base=0;
+    i64 nrep=0;
+    i64 idx;
     if (case_sensitive || !elems_N(to)) {
         preserve_case=false;
     }
@@ -467,9 +628,9 @@ int algo::Replace(cstring &str, const strptr& from, const strptr& to, bool case_
 // Example:
 // Translate("aabcd", "bd", "xy") -> "aaxcy"
 void algo::Translate(strptr s, strptr from, strptr to) {
-    from = FirstN(from,u32_Min(from.n_elems,to.n_elems));// avoid out of bounds access on 'to'
+    from = FirstN(from,u64_Min(from.n_elems,to.n_elems));// avoid out of bounds access on 'to'
     frep_(i,elems_N(s)) {
-        int idx = Find(from,s[i]);
+        i64 idx = Find(from,s[i]);
         if (idx !=-1) s[i] = to[idx];
     }
 }
@@ -646,37 +807,41 @@ template <class T> static algo::NumParseFlags TParseNumber(algo::StringIter &S, 
 
 bool algo::TryParseI32(algo::StringIter &iter, i32 &result) {
     u32 v;
-    u32 max = u32(-1) >> 1;
     algo::NumParseFlags flags = TParseNumber<u32>(iter, v);
     if (flags & algo_NumParseFlags_err) {
         return false;
     }
+    // Two's-complement negative range is one larger than positive: when the
+    // sign bit is set, allow magnitude up to INT32_MAX+1 so INT32_MIN parses.
+    bool neg = (flags & algo_NumParseFlags_neg) != 0;
+    u32 max = u32(INT32_MAX) + u32(neg);
     if ((v > max) | (flags & algo_NumParseFlags_overflow)) {
         v = max;
     }
-    i32 out = (i32)v;
-    if (flags & algo_NumParseFlags_neg) {
-        out = -out;
+    if (neg) {
+        v = -v;
     }
-    result = out;
+    result = i32(v);
     return true;
 }
 
 bool algo::TryParseI64(algo::StringIter &iter, i64 &result) {
     u64 v;
-    u64 max = u64(-1) >> 1;
     algo::NumParseFlags flags = TParseNumber<u64>(iter, v);
     if (flags & algo_NumParseFlags_err) {
         return false;
     }
+    // Two's-complement negative range is one larger than positive: when the
+    // sign bit is set, allow magnitude up to INT64_MAX+1 so INT64_MIN parses.
+    bool neg = (flags & algo_NumParseFlags_neg) != 0;
+    u64 max = u64(INT64_MAX) + u64(neg);
     if ((v > max) | (flags & algo_NumParseFlags_overflow)) {
         v = max;
     }
-    i64 out = v;
-    if (flags & algo_NumParseFlags_neg) {
-        out = -out;
+    if (neg) {
+        v = -v;
     }
-    result = out;
+    result = i64(v);
     return true;
 }
 
@@ -749,7 +914,7 @@ bool algo::TryParseDigits(algo::StringIter &S, double &result) {
         c = S.expr[S.index];
         if (c>='0' && c<='9') {
             if (inum >= ((INT_MAX-9)/10)) {
-                goto long_case;
+                goto long_case; // ignore:goto
             }
             inum=inum*10+c-'0';
             S.index++;
@@ -794,7 +959,7 @@ bool algo::TryParseFraction(algo::StringIter &S, double &result) {
         c = expr[S.index];
         if (c>='0' && c<='9') {
             if (idenom >= (INT_MAX-9)/10) {
-                goto long_case;
+                goto long_case; // ignore:goto
             }
             ifrac = ifrac*10+c-'0';
             idenom *= 10;
@@ -886,6 +1051,23 @@ bool algo::TryParseDouble(algo::StringIter &iter, double &result) {
             iter.index = old_index;
         }
         return ok;
+    } else if ((c=='i' || c=='I') && iter.index + 2 < limit) { // inf
+        bool ok = false;
+        iter.index++;
+        c = iter.expr[iter.index];
+        if (c == 'n' || c == 'N') {
+            iter.index++;
+            c = iter.expr[iter.index];
+            if (c == 'f' || c == 'F') {
+                ok = true;
+                result = isneg ? -INFINITY : INFINITY;
+                iter.index++;
+            }
+        }
+        if (!ok) {
+            iter.index = old_index;
+        }
+        return ok;
     } else {
         iter.index=old_index;    // error
         return false;
@@ -920,7 +1102,7 @@ bool algo::TryParseDouble(algo::StringIter &iter, double &result) {
     switch (iter.Peek()) {
     case 'B':
         num *= 1e9;
-        goto found_scaling_factor;
+        goto found_scaling_factor; // ignore:goto
     case 'M':
         num *= 1e6;
     found_scaling_factor:
@@ -1097,7 +1279,7 @@ algo::i32_Range algo::substr_FindLast(const aryptr<char> &s, const aryptr<char> 
 
 // Strip leading whitespace, return new strptr.
 strptr algo::TrimmedLeft(strptr s) {
-    int i=0;
+    i64 i=0;
     for (; i<elems_N(s) && algo_lib::WhiteCharQ(s[i]); i++) {
     }
     return RestFrom(s,i);
@@ -1105,7 +1287,7 @@ strptr algo::TrimmedLeft(strptr s) {
 
 // Strip trailing whitespace, return new strptr.
 strptr algo::TrimmedRight(strptr s) {
-    int i=elems_N(s);
+    i64 i=elems_N(s);
     for (; i>0 && algo_lib::WhiteCharQ(s[i-1]); i--) {
     }
     return FirstN(s,i);
@@ -1124,8 +1306,8 @@ strptr algo::Trimmed(strptr s) {
 // str = "abc.def", sep='.'; After NextSep, str="def", left="abc"
 // str = "abc-def", sep='.'; After NextSep, str="", left="abc-def"
 void algo::NextSep(algo::strptr &str, char sep, algo::strptr &left) {
-    int i=0;
-    int j=str.n_elems;// start of str's next value
+    i64 i=0;
+    i64 j=str.n_elems;// start of str's next value
     left.elems=str.elems;
     for (; i<str.n_elems; i++) {
         if (str.elems[i] == sep) {
@@ -1148,7 +1330,7 @@ void algo::Word_curs_Reset(Word_curs &curs, strptr text) {
 
 void algo::Word_curs_Next(Word_curs &curs) {
     char *elems = curs.text.elems;
-    int index = curs.index;
+    i64 index = curs.index;
     while (index < curs.text.n_elems && algo_lib::WhiteCharQ(elems[index])) {// skip white chars before word
         index++;
     }
@@ -1185,7 +1367,7 @@ bool algo::StripTypeTag(strptr &in_str, strptr typetag) {
 
 // Limit length of string S ot at most LEN characters
 // If S is trimmed, append "..." to the end
-tempstr algo::LimitLengthEllipsis(strptr s, int len) {
+tempstr algo::LimitLengthEllipsis(strptr s, i64 len) {
     tempstr ret;
     ret << FirstN(s,len);
     if (elems_N(s) > len) {

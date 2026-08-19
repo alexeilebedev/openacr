@@ -54,6 +54,17 @@ void amc::SignatureVisit(amc::FCtype &ctype) {
 
 // -----------------------------------------------------------------------------
 
+// TRUE if CTYPE is ROOT, or reaches ROOT by following base fields.
+static bool DerivedFromQ(amc::FCtype &ctype, amc::FCtype &root) {
+    amc::FCtype *cur = &ctype;
+    while (cur && cur != &root) {
+        cur = amc::GetBaseType(*cur,NULL);
+    }
+    return cur != NULL;
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::gen_prep_signature() {
     // compute own ctype signature
     // hash fields only those impact binary compatibility
@@ -65,7 +76,16 @@ void amc::gen_prep_signature() {
         Update(signature, strptr_ToMemptr(name_Get(ctype)));
         ind_beg(amc::ctype_c_field_curs, field,ctype) {
             Update(signature, strptr_ToMemptr(field.field));
-            Update(signature, strptr_ToMemptr(field.arg));
+            if (field.c_bitfld) {
+                // a bitfield's accessor arg is a local code-gen choice and does not
+                // affect the wire; its contract is which bits of which source field
+                // it occupies, so hash that rather than the accessor type.
+                amc::FBitfld &bitfld = *field.c_bitfld;
+                Update(signature, strptr_ToMemptr(bitfld.p_srcfield->field));
+                Update(signature, strptr_ToMemptr(tempstr()<<bitfld.offset<<":"<<bitfld.width));
+            } else {
+                Update(signature, strptr_ToMemptr(field.arg));
+            }
             Update(signature, strptr_ToMemptr(field.reftype));
             if (WidthMin(field)>1) {
                 Update(signature, strptr_ToMemptr(tempstr()<<WidthMin(field)));
@@ -111,6 +131,31 @@ void amc::gen_prep_signature() {
         dispsig.signature = dispatch.signature;
         amc::dispsig_InsertMaybe(dispsig);
     }ind_end;
+
+    // Signature of the whole internal message space.  A filesystem's genesis
+    // log records the message layout the build that created it spoke, and a
+    // later build replaying that log has to be able to tell whether it still
+    // speaks the same one.  A per-dispatch signature cannot answer that: a
+    // dispatch names the messages one process handles, so a format no process
+    // dispatches on -- a store record, the fabric datagram envelope, a record
+    // fragment -- belongs to no dispatch and would drift unnoticed.  Every
+    // message in the system carries ams.MsgHeader, which makes the set of that
+    // header's descendants the message space itself.  Hashed together they are
+    // one signature no newly declared message can escape.
+    if (amc::FCtype *msgheader = amc::ind_ctype_Find("ams.MsgHeader")) {
+        ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
+            if (DerivedFromQ(ctype,*msgheader)) {
+                SignatureVisit(ctype);
+            }
+        }ind_end;
+        dmmeta::Dispsig dispsig;
+        dispsig.dispsig = "lib_ams.Msg";
+        ind_beg(amc::_db_zs_sig_visit_curs,dep_ctype,amc::_db) {
+            CombineSignaturesUnordered(dispsig.signature,dep_ctype.signature);
+        }ind_end;
+        amc::zs_sig_visit_RemoveAll();
+        amc::dispsig_InsertMaybe(dispsig);
+    }
 
     // compute ns input signature
     ind_beg(amc::_db_ns_curs,ns,amc::_db) {

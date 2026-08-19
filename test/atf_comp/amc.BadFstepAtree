@@ -1,0 +1,19 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.ccmp  ctype:u64  extrn:N  genop:N  order:Y  minmax:N  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.steptype  steptype:TimeHookRecur  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.FRow  comment:""
+amc <- dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.tr_row  arg:algo_lib.FRow  reftype:Atree  dflt:""  comment:""
+amc <- dmmeta.sortfld  field:algo_lib.FDb.tr_row  sortfld:algo_lib.FRow.rowid
+amc <- dmmeta.xref  field:algo_lib.FDb.tr_row  inscond:false  via:""
+amc <- dmmeta.fstep  fstep:algo_lib.FDb.tr_row  steptype:TimeHookRecur  comment:""
+# eof amc
+amc -> amc.fstep_first  fstep:algo_lib.FDb.tr_row  steptype:TimeHookRecur  reftype:Atree  comment:"steptype TimeHookRecur requires an Llist or Bheap step field"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

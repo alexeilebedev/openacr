@@ -131,8 +131,42 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_CaseConversion(); // gstatic/atfdb.unittest:algo_lib.CaseConversion
     // void unittest_algo_FileFlags(); // gstatic/atfdb.unittest:algo.FileFlags
     // void unittest_algo_Base64(); // gstatic/atfdb.unittest:algo.Base64
+    // void unittest_algo_ReadBase64(); // gstatic/atfdb.unittest:algo.ReadBase64
     // void unittest_algo_lib_PrintUuid(); // gstatic/atfdb.unittest:algo_lib.PrintUuid
     // void unittest_algo_lib_ReadUuid(); // gstatic/atfdb.unittest:algo_lib.ReadUuid
+
+    // strptr formatters in fmt.cpp: SQL/XML/CPP/DOT/URI/TeX quoting, padding,
+    // thousands separators, case copy, trailing-zero trim.
+    // void unittest_algo_StrptrPrintFmt(); // gstatic/atfdb.unittest:algo.StrptrPrintFmt
+
+    // Number/quantity formatters in fmt.cpp: hex, base32, 128-bit, pointer,
+    // percent, comma grouping, ranges, and the scaled Hz/nsec helpers driven
+    // through the merged unit tables.
+    // void unittest_algo_NumPrintFmt(); // gstatic/atfdb.unittest:algo.NumPrintFmt
+
+    // Numeric parsers in fmt.cpp: packed-digit fast parse, octal, counts, and
+    // the suffix parsers exercising the merged unit tables (longest-suffix and
+    // case-alias matching).
+    // void unittest_algo_ParseNumFmt(); // gstatic/atfdb.unittest:algo.ParseNumFmt
+
+    // Print/Read round-trips for the time and diff types in fmt.cpp.  Compare
+    // parsed values (not text) so the check is independent of the exact format.
+    // void unittest_algo_TimeRoundtrip(); // gstatic/atfdb.unittest:algo.TimeRoundtrip
+
+    // Print/Read round-trips for URL and Ipmask in fmt.cpp.
+    // void unittest_algo_UrlIpmaskFmt(); // gstatic/atfdb.unittest:algo.UrlIpmaskFmt
+
+    // An integer range list round-trips through its text form; a span is inclusive
+    // at both ends where the struct behind it is half-open; and the order the list
+    // states is the order it keeps.
+    // void unittest_algo_lib_RangeAryList(); // gstatic/atfdb.unittest:algo_lib.RangeAryList
+
+    // The argv split reads a token by scanning to the next break character, and
+    // the ssim break set is "[]{}()\t \r\n:".  A brace therefore ends a token
+    // without being read, and a scan that only ever ends tokens never gets past
+    // one: a bare "{" spun forever, taking x2cli with it, until each such
+    // character became a word of its own.
+    // void unittest_algo_CmdlineToArgv(); // gstatic/atfdb.unittest:algo.CmdlineToArgv
 
     // -------------------------------------------------------------------
     // cpp/atf_unit/algo_lib.cpp
@@ -197,9 +231,87 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_NextSep(); // gstatic/atfdb.unittest:algo_lib.NextSep
     // void unittest_algo_lib_I32Dec3Fmt(); // gstatic/atfdb.unittest:algo_lib.I32Dec3Fmt
     // void unittest_algo_lib_OrderID(); // gstatic/atfdb.unittest:algo_lib.OrderID
+
+    // DecodeNBytes and DecodeNChars take a length that always comes from the wire:
+    // a protobuf field header carrying the varint 0xFFFFFFFF, a kafka record whose
+    // signed varint length decodes to -1. Such a length must be refused, and the
+    // refusal has to hold for every integer type a caller can hand over -- the
+    // callers spell the length u16, u32, i32 and i64, and each of those spans a
+    // different set of values that no buffer can satisfy.
+    //
+    // The length is therefore compared as a signed 64-bit count, which every
+    // caller's type converts into without changing value, and the accepted range is
+    // stated on both ends: at least zero and at most the number of bytes left in
+    // the buffer. A negative length has no reading as a byte count, and a length
+    // above the remaining size cannot be served. A rejected call leaves the buffer
+    // where it was and the result empty, so a caller that ignores the return value
+    // still sees no fabricated payload.
+    // void unittest_algo_lib_DecodeNRange(); // gstatic/atfdb.unittest:algo_lib.DecodeNRange
+
+    // A varint arrives as a sequence of seven-bit groups and is accumulated into a
+    // fixed-width integer, so the decoder has to answer what happens when the
+    // encoding names a value the accumulator cannot hold. A protobuf length field
+    // carrying the five bytes 83 80 80 80 10 names 4294967299 bytes of payload;
+    // keeping only the low 32 bits of that leaves 3, and a decode reported as
+    // successful then hands the caller the three-byte payload of a message that
+    // declared four gigabytes.
+    //
+    // The general condition is that a group's bits have to survive the shift that
+    // places them. A group shifted by the accumulator's width or more contributes
+    // nothing, and a group whose top bits fall off the end contributes only part of
+    // itself; in both cases the encoding names a value the accumulator does not
+    // hold, and the decode of the whole varint is refused.
+    //
+    // Each decoder therefore walks groups only while the shift stays inside its own
+    // width -- five bytes for u32, ten for u64 -- and only while the group under
+    // that shift keeps all its bits. A varint that runs past the width, and one the
+    // buffer never terminates, both leave the buffer where it was and the result
+    // zero. The zigzag decoders read through the same two accumulators and answer
+    // the same table.
+    // void unittest_algo_lib_DecodeVLCLERange(); // gstatic/atfdb.unittest:algo_lib.DecodeVLCLERange
+
+    // The Dec reader accumulates the digits into a u64 and then stores the
+    // result in the field's own type. A string whose scaled value exceeds that
+    // type must be refused: 700.00 in a u16-backed field with two implied
+    // places scales to 70000, and storing it would wrap to 4464 -- a read that
+    // returns true after silently changing the value. A field as wide as the
+    // accumulator is exposed to the same failure one level up: the scaled value
+    // of 495765611597143987 with two implied places is 49576561159714398700,
+    // which does not fit a u64, and the top of the range must still read. The
+    // signed field is bounded by the same magnitude, so its own maximum reads
+    // and one unit past it is refused.
+    //
+    // A signed field's negative range reaches one unit further than its positive
+    // range, and the reader admits that unit: value_Print of an i32-backed field
+    // with one implied place at the type minimum emits -214748364.8, and reading
+    // that string back has to return the same value, or a record that printed
+    // cannot be loaded. Digits past the field's scale are dropped rather than
+    // rounded, so -214748364.85 reads as the minimum too, while a magnitude one
+    // unit further down is refused. An unsigned field has no negative range at
+    // all and refuses any leading minus.
+    // void unittest_algo_lib_DecReadRange(); // gstatic/atfdb.unittest:algo_lib.DecReadRange
+
+    // SetDoubleMaybe stores the value rounded to the nearest scaled integer, so
+    // the bound it checks is the range the rounded value must land in, half a
+    // unit wider than the field's own range at each end: 214748364.7 scales to
+    // exactly 2147483647, the top of an i32-backed field with one implied place,
+    // and must store, while a value half a unit further up rounds past the top
+    // and is refused. The bottom of the range grants the same allowance, so a
+    // value that rounds up to the field's minimum stores and one that rounds
+    // below it is refused. A field whose type is as wide as the double's own
+    // integer reach is refused at the point where the scaled value reaches the
+    // type's magnitude, so no out-of-range double is ever stored.
+    // void unittest_algo_lib_DecSetDoubleRange(); // gstatic/atfdb.unittest:algo_lib.DecSetDoubleRange
     // void unittest_algo_lib_IntPrice(); // gstatic/atfdb.unittest:algo_lib.IntPrice
     // void unittest_algo_lib_Keyval(); // gstatic/atfdb.unittest:algo_lib.Keyval
     // void unittest_algo_lib_StringToFile(); // gstatic/atfdb.unittest:algo_lib.StringToFile
+
+    // SafeStringToFile stages the new contents in a mkstemp tempfile beside the
+    // target, then renames it over the target. A failed rename -- forced here by
+    // making the target an existing directory -- must not leave the tempfile
+    // behind: each failed save would otherwise leak one <target>-XXXXXX file
+    // beside the target. Verify the call reports failure and removes the tempfile.
+    // void unittest_algo_lib_SsfRenameFail(); // gstatic/atfdb.unittest:algo_lib.SsfRenameFail
     // void unittest_algo_lib_U128PrintHex(); // gstatic/atfdb.unittest:algo_lib.U128PrintHex
     // void unittest_algo_lib_FileToString(); // gstatic/atfdb.unittest:algo_lib.FileToString
     // void unittest_algo_lib_CheckIpmask(); // gstatic/atfdb.unittest:algo_lib.CheckIpmask
@@ -229,6 +341,11 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_u128(); // gstatic/atfdb.unittest:algo_lib.u128
     // void unittest_algo_lib_Mmap(); // gstatic/atfdb.unittest:algo_lib.Mmap
     // void unittest_algo_lib_FileQ(); // gstatic/atfdb.unittest:algo_lib.FileQ
+
+    // _Exec returns the raw wait status; ExportWaitStatus decomposes it into the
+    // process's exit facts: exit_code carries the shell-convention code (exit N
+    // -> N, death by signal -> 128+signal), exit_signal carries the terminating
+    // signal alone, 0 when the child exited.
     // void unittest_algo_lib_ExitCode(); // gstatic/atfdb.unittest:algo_lib.ExitCode
     // void unittest_algo_lib_KillRecurse(); // gstatic/atfdb.unittest:algo_lib.KillRecurse
 
@@ -245,18 +362,42 @@ namespace atf_unit { // update-hdr
     // regardless of file position
     // void unittest_algo_lib_FileAppend(); // gstatic/atfdb.unittest:algo_lib.FileAppend
     // void unittest_algo_lib_Url(); // gstatic/atfdb.unittest:algo_lib.Url
+    // void unittest_algo_lib_Blkpool(); // gstatic/atfdb.unittest:algo_lib.Blkpool
+    // void unittest_algo_lib_FProc(); // gstatic/atfdb.unittest:algo_lib.FProc
+
+    // Pump a bit of data through cat/tee and verify it round-trips through every
+    // amc-generated _proc pipe redirect: stdin, stdout, stderr, merged stdout+stderr
+    // (fstdout="|" + fstderr=">&1"), and all three at once.
+    // Source of truth: amc::tfunc_Exec_Start in cpp/amc/exec.cpp.
+    // void unittest_algo_lib_ExecPipe(); // gstatic/atfdb.unittest:algo_lib.ExecPipe
+
+    // The calibration this process runs on came from the kernel: where the
+    // kernel exports a TSC rate, algo_lib::_db.hz is that exact figure, and
+    // RequireKernelCpuHz admits the process.  Exact equality is the point of
+    // the test -- a rate derived any other way (timed against a wall clock, or
+    // read off a P-state file) lands near the kernel's figure rather than on
+    // it, so an approximate comparison would pass for the very values the
+    // kernel export exists to exclude.
+    //
+    // A host with no export has nothing to compare against, so the check is
+    // announced as skipped rather than passing silently.  That host is exactly
+    // where an x2 process refuses to start unless the rate is stated, and where
+    // the file source /etc/x2.d/tscfreq_khz is exercised -- installing that file
+    // needs root, so it is covered on such a host rather than here.  The second
+    // half of the test covers the variable on either kind of host:
+    // where the export exists it must be ignored, and where it does not it must be
+    // installed exactly as written.  The rate used is 2.5GHz, a figure inside the
+    // range ApplyCpuHz admits and unequal to any host's real rate, so a variable
+    // that was silently ignored cannot pass for one that was honored.  The
+    // process runs on the restored calibration afterwards, so the original is put
+    // back before the test returns.
+    // void unittest_algo_lib_RequireKernelCpuHz(); // gstatic/atfdb.unittest:algo_lib.RequireKernelCpuHz
 
     // -------------------------------------------------------------------
     // cpp/atf_unit/algo_txttbl.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_Txttbl(); // gstatic/atfdb.unittest:algo_lib.Txttbl
-
-    // -------------------------------------------------------------------
-    // cpp/atf_unit/ams.cpp
-    //
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void unittest_ams_StreamId(); // gstatic/atfdb.unittest:ams.StreamId
 
     // -------------------------------------------------------------------
     // cpp/atf_unit/bash.cpp
@@ -277,28 +418,6 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_Decimal(); // gstatic/atfdb.unittest:algo_lib.Decimal
 
     // -------------------------------------------------------------------
-    // cpp/atf_unit/fm.cpp
-    //
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void unittest_fm(); // gstatic/atfdb.unittest:fm
-
-    // -------------------------------------------------------------------
-    // cpp/atf_unit/lib_ams.cpp
-    //
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void unittest_lib_ams_Test1(); // gstatic/atfdb.unittest:lib_ams.Test1
-    // void unittest_ams_sendtest(); // gstatic/atfdb.unittest:ams_sendtest
-
-    // -------------------------------------------------------------------
-    // cpp/atf_unit/lib_curl.cpp
-    //
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void unittest_lib_curl_GET_Echo(); // gstatic/atfdb.unittest:lib_curl.GET_Echo
-    // void unittest_lib_curl_POST_JSON(); // gstatic/atfdb.unittest:lib_curl.POST_JSON
-    // void unittest_lib_curl_PUT_PLAINTEXT(); // gstatic/atfdb.unittest:lib_curl.PUT_PLAINTEXT
-    // void unittest_lib_curl_STATUS_200(); // gstatic/atfdb.unittest:lib_curl.STATUS_200
-
-    // -------------------------------------------------------------------
     // cpp/atf_unit/lib_exec.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
@@ -306,6 +425,19 @@ namespace atf_unit { // update-hdr
     // void unittest_lib_exec_TooManyFds(); // gstatic/atfdb.unittest:lib_exec.TooManyFds
     // void unittest_lib_exec_Timeout(); // gstatic/atfdb.unittest:lib_exec.Timeout
     // void unittest_lib_exec_Dependency(); // gstatic/atfdb.unittest:lib_exec.Dependency
+
+    // Verify amc-generated _ToArgv forwards -debug to subprocess argv with one fewer
+    // level, matching how -verbose is already forwarded. Source of truth: the loop
+    // emitted by amc::tfunc_Exec_ToArgv in cpp/amc/exec.cpp.
+    // void unittest_lib_exec_DebugForward(); // gstatic/atfdb.unittest:lib_exec.DebugForward
+
+    // Verify amc-generated _ToArgv picks -name:value vs -name value based on whether
+    // the wrapped command has a ccmdline. acr_ed has one (amc-built; its ReadArgv
+    // parses colon syntax); bash does not (external tool; needs two-token form).
+    // Source of truth: the branch on cmdtype.c_ccmdline in amc::tfunc_Exec_ToArgv
+    // in cpp/amc/exec.cpp.
+    // void unittest_lib_exec_ExecToArgvSyntax(); // gstatic/atfdb.unittest:lib_exec.ExecToArgvSyntax
+    // void unittest_lib_exec_PtyIn(); // gstatic/atfdb.unittest:lib_exec.PtyIn
 
     // -------------------------------------------------------------------
     // cpp/atf_unit/lib_json.cpp
@@ -392,8 +524,7 @@ namespace atf_unit { // update-hdr
     // void unittest_lib_json_ErrorObjectColon5(); // gstatic/atfdb.unittest:lib_json.ErrorObjectColon5
     // void unittest_lib_json_ErrorBareColon(); // gstatic/atfdb.unittest:lib_json.ErrorBareColon
     // void unittest_lib_json_ErrorArrayColon(); // gstatic/atfdb.unittest:lib_json.ErrorArrayColon
-    // matches known generated affix atf_unit.unittest_
-    // void unittest_lib_json_ErrorBareValuesWithColon();
+    // void unittest_lib_json_ErrorBareValuesWithColon(); // gstatic/atfdb.unittest:lib_json.ErrorBareValuesWithColon
     // void unittest_lib_json_ErrorObjectDupField(); // gstatic/atfdb.unittest:lib_json.ErrorObjectDupField
     // void unittest_lib_json_FmtJson_u64_0(); // gstatic/atfdb.unittest:lib_json.FmtJson_u64_0
     // void unittest_lib_json_FmtJson_u64_max(); // gstatic/atfdb.unittest:lib_json.FmtJson_u64_max
@@ -417,19 +548,40 @@ namespace atf_unit { // update-hdr
     // void unittest_lib_json_FmtJson_bool_false(); // gstatic/atfdb.unittest:lib_json.FmtJson_bool_false
     // void unittest_lib_json_FmtJson_char(); // gstatic/atfdb.unittest:lib_json.FmtJson_char
     // void unittest_lib_json_FmtJson_TypeA(); // gstatic/atfdb.unittest:lib_json.FmtJson_TypeA
-    // void unittest_lib_json_FmtJson_Object(); // gstatic/atfdb.unittest:lib_json.FmtJson_Object
 
-    // -------------------------------------------------------------------
-    // cpp/atf_unit/lib_netio.cpp
-    //
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void unittest_lib_netio_GetHostAddr(); // gstatic/atfdb.unittest:lib_netio_GetHostAddr
+    // A record standing on a single array field prints as that array, not as an
+    // object wrapping it: the returned node is the array itself, and each element
+    // is a string, since Smallstr20 has no Json cfmt and prints through Print.
+    // void unittest_lib_json_FmtJson_Ary(); // gstatic/atfdb.unittest:lib_json.FmtJson_Ary
+    // void unittest_lib_json_FmtJson_Object(); // gstatic/atfdb.unittest:lib_json.FmtJson_Object
 
     // -------------------------------------------------------------------
     // cpp/atf_unit/lib_sql.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_lib_sql_Main(); // gstatic/atfdb.unittest:lib_sql.Main
+
+    // -------------------------------------------------------------------
+    // cpp/atf_unit/lib_ws.cpp
+    //
+
+    // Roundtrip small frame (payload <= 125): byte1's low 7 bits hold the length
+    // directly. Covers both unmasked (byte1 < 0x80) and masked (byte1 >= 0x80).
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_lib_ws_SmallFrame(); // gstatic/atfdb.unittest:lib_ws.SmallFrame
+
+    // Roundtrip Frame16 / FrameMasked16 (payload in [126..65535]):
+    // byte1 == 126 (unmasked) or 254 (masked), followed by u16 big-endian length.
+    // void unittest_lib_ws_Frame16(); // gstatic/atfdb.unittest:lib_ws.Frame16
+
+    // Roundtrip Frame64 / FrameMasked64 (payload >= 65536):
+    // byte1 == 127 (unmasked) or 255 (masked), followed by u64 big-endian length.
+    // void unittest_lib_ws_Frame64(); // gstatic/atfdb.unittest:lib_ws.Frame64
+
+    // Confirm rsv1/rsv2/rsv3 setters land in byte0 at the documented bit positions
+    // (RFC 6455 §5.2: RSV1=bit6, RSV2=bit5, RSV3=bit4). The x2gw parser uses these
+    // getters to reject extensions we don't support; this keeps the encoding stable.
+    // void unittest_lib_ws_RsvBits(); // gstatic/atfdb.unittest:lib_ws.RsvBits
 
     // -------------------------------------------------------------------
     // cpp/atf_unit/line.cpp
@@ -493,9 +645,11 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_Aligned(); // gstatic/atfdb.unittest:algo_lib.Aligned
     // void unittest_algo_lib_CString(); // gstatic/atfdb.unittest:algo_lib.CString
     // void unittest_algo_lib_StringFind(); // gstatic/atfdb.unittest:algo_lib.StringFind
+    // void unittest_algo_lib_ReplaceIdent(); // gstatic/atfdb.unittest:algo_lib.ReplaceIdent
     // void unittest_algo_lib_StringCase(); // gstatic/atfdb.unittest:algo_lib.StringCase
     // void unittest_algo_lib_Tabulate(); // gstatic/atfdb.unittest:algo_lib.Tabulate
     // void unittest_algo_lib_StringSepCurs(); // gstatic/atfdb.unittest:algo_lib.StringSepCurs
+    // void unittest_algo_lib_LongStr(); // gstatic/atfdb.unittest:algo_lib.LongStr
 
     // -------------------------------------------------------------------
     // cpp/atf_unit/time.cpp
@@ -518,4 +672,9 @@ namespace atf_unit { // update-hdr
 
     // Check Attr_curs
     // void unittest_algo_lib_Tuple(); // gstatic/atfdb.unittest:algo_lib.Tuple
+
+    // An unterminated quote fails the parse regardless of which side of a colon
+    // it falls on: bare-token, name, and value positions all reject the line,
+    // and a properly closed quote in any position stays accepted.
+    // void unittest_algo_lib_TupleBadQuote(); // gstatic/atfdb.unittest:algo_lib.TupleBadQuote
 }

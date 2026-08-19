@@ -1,0 +1,124 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.LbangStr5_U32_Base95  comment:""
+amc <- dmmeta.field  field:algo_lib.LbangStr5_U32_Base95.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LbangStr5_U32_Base95.ch  length:5  strtype:leftpad  pad:"'!'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LbangStr5_U32_Base95.ch  numtype:u32  base:95  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LceeStr5_U32_Base36  comment:""
+amc <- dmmeta.field  field:algo_lib.LceeStr5_U32_Base36.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LceeStr5_U32_Base36.ch  length:5  strtype:leftpad  pad:"'c'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LceeStr5_U32_Base36.ch  numtype:u32  base:36  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LdashStr5_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.LdashStr5_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LdashStr5_I32.ch  length:5  strtype:leftpad  pad:"'-'"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.LdashStr5_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LdashStr5_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LdashStr5_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LdashStr5_U32.ch  length:5  strtype:leftpad  pad:"'-'"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.LdashStr5_U32.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LemptyStr5_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.LemptyStr5_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LemptyStr5_I32.ch  length:5  strtype:leftpad  pad:""  strict:N
+amc <- dmmeta.numstr  field:algo_lib.LemptyStr5_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LemptyStr5_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LemptyStr5_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LemptyStr5_U32.ch  length:5  strtype:leftpad  pad:""  strict:N
+amc <- dmmeta.numstr  field:algo_lib.LemptyStr5_U32.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LescnulStr5_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.LescnulStr5_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LescnulStr5_I32.ch  length:5  strtype:leftpad  pad:"'\\0'"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.LescnulStr5_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LescnulStr5_U32_Base95  comment:""
+amc <- dmmeta.field  field:algo_lib.LescnulStr5_U32_Base95.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LescnulStr5_U32_Base95.ch  length:5  strtype:leftpad  pad:"'\\0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LescnulStr5_U32_Base95.ch  numtype:u32  base:95  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LfiveStr6_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LfiveStr6_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LfiveStr6_U32.ch  length:6  strtype:leftpad  pad:"'5'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LfiveStr6_U32.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnullStr5_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnullStr5_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnullStr5_I32.ch  length:5  strtype:leftpad  pad:0  strict:N
+amc <- dmmeta.numstr  field:algo_lib.LnullStr5_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LplusStr5_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.LplusStr5_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LplusStr5_I32.ch  length:5  strtype:leftpad  pad:"'+'"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.LplusStr5_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LzeroStr5_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.LzeroStr5_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LzeroStr5_I32.ch  length:5  strtype:leftpad  pad:"'0'"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.LzeroStr5_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.PpasStr5_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.PpasStr5_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.PpasStr5_I32.ch  length:5  strtype:rpascal  pad:""  strict:N
+amc <- dmmeta.numstr  field:algo_lib.PpasStr5_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.PpasdigStr5_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.PpasdigStr5_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.PpasdigStr5_U32.ch  length:5  strtype:rpascal  pad:"'7'"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.PpasdigStr5_U32.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.RcapaStr5_U32_Base36  comment:""
+amc <- dmmeta.field  field:algo_lib.RcapaStr5_U32_Base36.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RcapaStr5_U32_Base36.ch  length:5  strtype:rightpad  pad:"'A'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.RcapaStr5_U32_Base36.ch  numtype:u32  base:36  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.RdashStr5_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.RdashStr5_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RdashStr5_I32.ch  length:5  strtype:rightpad  pad:"'-'"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.RdashStr5_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.RemptyStr5_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.RemptyStr5_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RemptyStr5_I32.ch  length:5  strtype:rightpad  pad:""  strict:N
+amc <- dmmeta.numstr  field:algo_lib.RemptyStr5_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.RemptyStr5_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.RemptyStr5_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RemptyStr5_U32.ch  length:5  strtype:rightpad  pad:""  strict:N
+amc <- dmmeta.numstr  field:algo_lib.RemptyStr5_U32.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.RescdigStr5  comment:""
+amc <- dmmeta.field  field:algo_lib.RescdigStr5.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RescdigStr5.ch  length:5  strtype:rightpad  pad:"'\\x30'"  strict:N
+amc <- dmmeta.ctype  ctype:algo_lib.RescletStr5  comment:""
+amc <- dmmeta.field  field:algo_lib.RescletStr5.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RescletStr5.ch  length:5  strtype:rightpad  pad:"'\\x41'"  strict:N
+amc <- dmmeta.ctype  ctype:algo_lib.RescnulStr5  comment:""
+amc <- dmmeta.field  field:algo_lib.RescnulStr5.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RescnulStr5.ch  length:5  strtype:rightpad  pad:"'\\0'"  strict:N
+amc <- dmmeta.ctype  ctype:algo_lib.RescnumStr5_U32_Base16  comment:""
+amc <- dmmeta.field  field:algo_lib.RescnumStr5_U32_Base16.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RescnumStr5_U32_Base16.ch  length:5  strtype:rightpad  pad:"'\\x30'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.RescnumStr5_U32_Base16.ch  numtype:u32  base:16  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.RnullStr4_U32_Base256  comment:""
+amc <- dmmeta.field  field:algo_lib.RnullStr4_U32_Base256.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RnullStr4_U32_Base256.ch  length:4  strtype:rightpad  pad:0  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.RnullStr4_U32_Base256.ch  numtype:u32  base:256  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.RsevenStr5_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.RsevenStr5_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RsevenStr5_U32.ch  length:5  strtype:rightpad  pad:"'7'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.RsevenStr5_U32.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.RspaceStr5_U32_Base95  comment:""
+amc <- dmmeta.field  field:algo_lib.RspaceStr5_U32_Base95.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RspaceStr5_U32_Base95.ch  length:5  strtype:rightpad  pad:"' '"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.RspaceStr5_U32_Base95.ch  numtype:u32  base:95  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.RthreeStr5  comment:""
+amc <- dmmeta.field  field:algo_lib.RthreeStr5.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RthreeStr5.ch  length:5  strtype:rightpad  pad:"'3'"  strict:N
+# eof amc
+amc -> amc.bad_numstr  field:algo_lib.LbangStr5_U32_Base95.ch  pad:"'!'"  base:95  comment:"left-pad that is a nonzero digit of the base corrupts values on read"
+amc -> amc.bad_numstr  field:algo_lib.LceeStr5_U32_Base36.ch  pad:"'c'"  base:36  comment:"left-pad that is a nonzero digit of the base corrupts values on read"
+amc -> amc.bad_numstr  field:algo_lib.LdashStr5_I32.ch  pad:"'-'"  comment:"signed numstr cannot use the sign character as a left pad"
+amc -> amc.bad_numstr  field:algo_lib.LemptyStr5_I32.ch  comment:"signed numstr cannot use the NUL pad"
+amc -> amc.bad_numstr  field:algo_lib.LescnulStr5_I32.ch  comment:"signed numstr cannot use the NUL pad"
+amc -> amc.bad_numstr  field:algo_lib.LfiveStr6_U32.ch  pad:"'5'"  base:10  comment:"left-pad that is a nonzero digit of the base corrupts values on read"
+amc -> amc.bad_numstr  field:algo_lib.LnullStr5_I32.ch  comment:"signed numstr cannot use the NUL pad"
+amc -> amc.bad_numstr  field:algo_lib.RcapaStr5_U32_Base36.ch  pad:"'A'"  base:36  comment:"right-pad that is a digit of the base corrupts values on read"
+amc -> amc.bad_numstr  field:algo_lib.RemptyStr5_I32.ch  comment:"signed numstr cannot use the NUL pad"
+amc -> amc.invalidpad  field:algo_lib.RescdigStr5.ch  pad:"'\\x30'"  comment:"right-pad character cannot be confused with a number"
+amc -> amc.bad_numstr  field:algo_lib.RescnumStr5_U32_Base16.ch  pad:"'\\x30'"  base:16  comment:"right-pad that is a digit of the base corrupts values on read"
+amc -> amc.bad_numstr  field:algo_lib.RnullStr4_U32_Base256.ch  pad:0  base:256  comment:"right-pad that is a digit of the base corrupts values on read"
+amc -> amc.bad_numstr  field:algo_lib.RsevenStr5_U32.ch  pad:"'7'"  base:10  comment:"right-pad that is a digit of the base corrupts values on read"
+amc -> amc.bad_numstr  field:algo_lib.RspaceStr5_U32_Base95.ch  pad:"' '"  base:95  comment:"right-pad that is a digit of the base corrupts values on read"
+amc -> amc.invalidpad  field:algo_lib.RthreeStr5.ch  pad:"'3'"  comment:"right-pad character cannot be confused with a number"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:15

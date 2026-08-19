@@ -45,6 +45,51 @@ void atf_amc::key_Cleanup(atf_amc::FCascdel &parent) {
     //prlog(parent.key);
 }
 
+// Child count of the root's Atree index; Atree generates no _N accessor.
+static i32 CascdelAtreeN(const atf_amc::FCascdel &cascdel) {
+    return cascdel.tr_child_atree_n;
+}
+
+// Fan-out cascdel shape shared by the per-reftype tests: 100 children of
+// TYPE under one root, the root's child count read via CHILD_N. Deleting
+// the root must cascade to every child, leaving no check bit set.
+template <typename CountFn> static void TestCascdelFanout(atf_amc_FCascdel_type_Enum type, CountFn child_n) {
+    // setup
+    atf_amc::_db.cascdel_next_key=0;
+    ary_RemoveAll(atf_amc::_db.cascdel_check);
+    atf_amc::FCascdel &x = NewCascdel(NULL,type);
+    frep_(i,100) {
+        NewCascdel(&x,type);
+    }
+    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
+    vrfy_(child_n(x) == 100);
+    // examine
+    cascdel_Delete(x);
+    // verify
+    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+}
+
+// Chain cascdel shape shared by the per-reftype tests: a 100-deep chain of
+// TYPE nodes, each the sole child of the previous, the root's child count
+// read via CHILD_N. Deleting the root must recurse down the whole chain,
+// leaving no check bit set.
+template <typename CountFn> static void TestCascdelChain(atf_amc_FCascdel_type_Enum type, CountFn child_n) {
+    // setup
+    atf_amc::_db.cascdel_next_key=0;
+    ary_RemoveAll(atf_amc::_db.cascdel_check);
+    atf_amc::FCascdel &x = NewCascdel(NULL,type);
+    atf_amc::FCascdel *y = &x;
+    frep_(i,100) {
+        y = &NewCascdel(y,type);
+    }
+    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
+    vrfy_(child_n(x) == 1);
+    // examine
+    cascdel_Delete(x);
+    // verify
+    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+}
+
 // ptr
 void atf_amc::amctest_CascdelPtr() {
     // setup
@@ -77,33 +122,38 @@ void atf_amc::amctest_CascdelPtr() {
 
 // ptrary
 void atf_amc::amctest_CascdelPtrary() {
-    // setup
-    atf_amc::_db.cascdel_next_key=0;
-    ary_RemoveAll(atf_amc::_db.cascdel_check);
-    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_ptrary);
-    frep_(i,100) {
-        NewCascdel(&x,atf_amc_FCascdel_type_ptrary);
-    }
-    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
-    vrfy_(c_child_ptrary_N(x) == 100);
-    // examine
-    cascdel_Delete(x);
-    // verify
-    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+    TestCascdelFanout(atf_amc_FCascdel_type_ptrary, c_child_ptrary_N);
 }
 
 // ptrary - chain
 void atf_amc::amctest_CascdelPtraryChain() {
+    TestCascdelChain(atf_amc_FCascdel_type_ptrary, c_child_ptrary_N);
+}
+
+// ptrary - heaplike
+void atf_amc::amctest_CascdelPtraryHeap() {
+    TestCascdelFanout(atf_amc_FCascdel_type_heap, c_child_heap_N);
+}
+
+// ptrary - heaplike, chain: recursion through the delete-until-empty walk
+void atf_amc::amctest_CascdelPtraryHeapChain() {
+    TestCascdelChain(atf_amc_FCascdel_type_heap, c_child_heap_N);
+}
+
+// ptrary - heaplike, with a cascade edge between two members of the same
+// array. Deleting c2 (visited first by Cascdel) cascade-deletes its sibling
+// c1, whose removal from the array must observe the array's true state --
+// not a count zeroed up front, which turns the unlink into an elems[-1]
+// read and leaves the count at (u64)-1.
+void atf_amc::amctest_CascdelPtraryHeapSibling() {
     // setup
     atf_amc::_db.cascdel_next_key=0;
     ary_RemoveAll(atf_amc::_db.cascdel_check);
-    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_ptrary);
-    atf_amc::FCascdel *y = &x;
-    frep_(i,100) {
-        y = &NewCascdel(y,atf_amc_FCascdel_type_ptrary);
-    }
-    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
-    vrfy_(c_child_ptrary_N(x) == 1);
+    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_heap);
+    atf_amc::FCascdel &c1 = NewCascdel(&x,atf_amc_FCascdel_type_heap);
+    atf_amc::FCascdel &c2 = NewCascdel(&x,atf_amc_FCascdel_type_heap);
+    c2.child_ptr = &c1; // deleting c2 cascade-deletes c1
+    vrfy_(c_child_heap_N(x) == 2);
     // examine
     cascdel_Delete(x);
     // verify
@@ -112,131 +162,40 @@ void atf_amc::amctest_CascdelPtraryChain() {
 
 // thash
 void atf_amc::amctest_CascdelThash() {
-    // setup
-    atf_amc::_db.cascdel_next_key=0;
-    ary_RemoveAll(atf_amc::_db.cascdel_check);
-    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_thash);
-    frep_(i,100) {
-        NewCascdel(&x,atf_amc_FCascdel_type_thash);
-    }
-    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
-    vrfy_(ind_child_thash_N(x) == 100);
-    // examine
-    cascdel_Delete(x);
-    // verify
-    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+    TestCascdelFanout(atf_amc_FCascdel_type_thash, ind_child_thash_N);
 }
 
 // thash - chain
 void atf_amc::amctest_CascdelThashChain() {
-    // setup
-    atf_amc::_db.cascdel_next_key=0;
-    ary_RemoveAll(atf_amc::_db.cascdel_check);
-    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_thash);
-    atf_amc::FCascdel *y = &x;
-    frep_(i,100) {
-        y = &NewCascdel(y,atf_amc_FCascdel_type_thash);
-    }
-    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
-    vrfy_(ind_child_thash_N(x) == 1);
-    // examine
-    cascdel_Delete(x);
-    // verify
-    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+    TestCascdelChain(atf_amc_FCascdel_type_thash, ind_child_thash_N);
 }
 
 // bheap
 void atf_amc::amctest_CascdelBheap() {
-    // setup
-    atf_amc::_db.cascdel_next_key=0;
-    ary_RemoveAll(atf_amc::_db.cascdel_check);
-    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_bheap);
-    frep_(i,100) {
-        NewCascdel(&x,atf_amc_FCascdel_type_bheap);
-    }
-    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
-    vrfy_(bh_child_bheap_N(x) == 100);
-    // examine
-    cascdel_Delete(x);
-    // verify
-    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+    TestCascdelFanout(atf_amc_FCascdel_type_bheap, bh_child_bheap_N);
 }
 
 // bheap - chain
 void atf_amc::amctest_CascdelBheapChain() {
-    // setup
-    atf_amc::_db.cascdel_next_key=0;
-    ary_RemoveAll(atf_amc::_db.cascdel_check);
-    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_bheap);
-    atf_amc::FCascdel *y = &x;
-    frep_(i,100) {
-        y = &NewCascdel(y,atf_amc_FCascdel_type_bheap);
-    }
-    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
-    vrfy_(bh_child_bheap_N(x) == 1);
-    // examine
-    cascdel_Delete(x);
-    // verify
-    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+    TestCascdelChain(atf_amc_FCascdel_type_bheap, bh_child_bheap_N);
 }
 
-// zslist
-void atf_amc::amctest_CascdelZslist() {
-}
-
-// zslist - chain
-void atf_amc::amctest_CascdelZslistChain() {
-}
-
-// atf_amc::atf_amc::zdlist
+// zdlist
 void atf_amc::amctest_CascdelZdlist() {
-    // setup
-    atf_amc::_db.cascdel_next_key=0;
-    ary_RemoveAll(atf_amc::_db.cascdel_check);
-    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_zdlist);
-    frep_(i,100) {
-        NewCascdel(&x,atf_amc_FCascdel_type_zdlist);
-    }
-    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
-    vrfy_(zd_childlist_N(x) == 100);
-    // examine
-    cascdel_Delete(x);
-    // verify
-    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+    TestCascdelFanout(atf_amc_FCascdel_type_zdlist, zd_childlist_N);
 }
 
 // zdlist - chain
 void atf_amc::amctest_CascdelZdlistChain() {
-    // setup
-    atf_amc::_db.cascdel_next_key=0;
-    ary_RemoveAll(atf_amc::_db.cascdel_check);
-    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_zdlist);
-    atf_amc::FCascdel *y = &x;
-    frep_(i,100) {
-        y = &NewCascdel(y,atf_amc_FCascdel_type_zdlist);
-    }
-    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
-    vrfy_(zd_childlist_N(x) == 1);
-    // examine
-    cascdel_Delete(x);
-    // verify
-    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+    TestCascdelChain(atf_amc_FCascdel_type_zdlist, zd_childlist_N);
 }
 
-
-// bheap
+// atree
 void atf_amc::amctest_CascdelAtree() {
-    // setup
-    atf_amc::_db.cascdel_next_key=0;
-    ary_RemoveAll(atf_amc::_db.cascdel_check);
-    atf_amc::FCascdel &x = NewCascdel(NULL,atf_amc_FCascdel_type_atree);
-    frep_(i,100) {
-        NewCascdel(&x,atf_amc_FCascdel_type_atree);
-    }
-    vrfy_(ary_Sum1s(atf_amc::_db.cascdel_check)==atf_amc::_db.cascdel_next_key);
-    vrfy_(x.tr_child_atree_n == 100);
-    // examine
-    cascdel_Delete(x);
-    // verify
-    vrfy_(!ary_Sum1s(atf_amc::_db.cascdel_check));
+    TestCascdelFanout(atf_amc_FCascdel_type_atree, CascdelAtreeN);
+}
+
+// atree - chain
+void atf_amc::amctest_CascdelAtreeChain() {
+    TestCascdelChain(atf_amc_FCascdel_type_atree, CascdelAtreeN);
 }

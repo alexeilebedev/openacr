@@ -29,8 +29,8 @@
 
 // --- atf_cmdline_FieldIdEnum
 
-enum atf_cmdline_FieldIdEnum {        // atf_cmdline.FieldId.value
-     atf_cmdline_FieldId_value   = 0
+enum atf_cmdline_FieldIdEnum {    // atf_cmdline.FieldId.value
+     atf_cmdline_FieldId_value
 };
 
 enum { atf_cmdline_FieldIdEnum_N = 1 };
@@ -38,7 +38,6 @@ enum { atf_cmdline_FieldIdEnum_N = 1 };
 namespace atf_cmdline { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace atf_cmdline { // gen:ns_tclass_field
-extern const char *atf_cmdline_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atf_cmdline { struct trace; }
@@ -54,7 +53,6 @@ struct trace { // atf_cmdline.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:atf_cmdline.trace.String  printfmt:Tuple
 // func:atf_cmdline.trace..Print
@@ -66,11 +64,8 @@ struct FDb { // atf_cmdline.FDb: In-memory database for atf_cmdline
     command::atf_cmdline   cmdline;   //
     atf_cmdline::trace     trace;     //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_cmdline.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_cmdline.FDb.cmdline (and any base command line)
+// via atf_cmdline_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:atf_cmdline.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -107,6 +102,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:atf_cmdline.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:atf_cmdline.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_cmdline.FDb._db.XrefMaybe
@@ -132,7 +131,6 @@ struct FieldId { // atf_cmdline.FieldId: Field read helper
     inline               FieldId(atf_cmdline_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_cmdline.FieldId.value.GetEnum
 inline atf_cmdline_FieldIdEnum value_GetEnum(const atf_cmdline::FieldId& parent) __attribute__((nothrow));
@@ -170,7 +168,7 @@ inline void          FieldId_Init(atf_cmdline::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_cmdline.FieldId.String  printfmt:Raw
 // func:atf_cmdline.FieldId..Print
-void                 FieldId_Print(atf_cmdline::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(atf_cmdline::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_cmdline { // gen:ns_func
 // func:atf_cmdline...StaticCheck

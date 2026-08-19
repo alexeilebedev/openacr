@@ -152,6 +152,7 @@ static tempstr ChunkyTabulated(algo::strptr in, algo::strptr sep, algo::strptr f
 
 // -----------------------------------------------------------------------------
 
+// Emit struct definition for CTYPE into NS's header
 void amc::GenStruct(amc::FNs& ns, amc::FCtype& ctype) {// print struct contents
     algo_lib::Replscope R;
     Set(R, "$Name", name_Get(ctype));
@@ -166,7 +167,7 @@ void amc::GenStruct(amc::FNs& ns, amc::FCtype& ctype) {// print struct contents
     }
     tempstr comment;
     Ins(&R, comment, "$ns.$Name", false);
-    if (ch_N(ctype.comment.value)) {
+    if (ch_N(ctype.comment)) {
         comment << ": "<<ctype.comment;
     }
     Set(R, "$comment", comment);
@@ -181,5 +182,24 @@ void amc::GenStruct(amc::FNs& ns, amc::FCtype& ctype) {// print struct contents
     if (ctype.c_pack) {
         Ins(&R, *ns.hdr, "#pragma pack(pop)");
     }
-    *ns.hdr << "\n" ;
+    if (HasArgvReadQ(ctype)) {
+        // everything in command namespace uses algo_lib.Cmdline as the base
+        // for other types, use NULL since copied fields will be displayed anyway
+        amc::FCtype *base = (ns_Get(ctype) == "command" && !GetBaseType(ctype,NULL) ? ind_ctype_Find("algo_lib.Cmdline") : NULL);
+        algo::strptr helpcomment = ctype.comment;
+        if (ns_Get(ctype) == "command" && helpcomment == "") {
+            // for ctype 'command.abt', if missing a comment,
+            // pick a comment from target namespace 'abt'
+            if (helpcomment == "") {
+                if (amc::FNs *target_ns=ind_ns_Find(name_Get(ctype))) {
+                    helpcomment = target_ns->comment;
+                }
+            }
+        }
+        tempstr helpstr;
+        strptr_PrintCppQuoted(GenHelpString(ctype,base,helpcomment), helpstr, '"', true);
+        Set(R,"$helpstr",helpstr);
+        Ins(&R, *ns.hdr, "extern const char *$Name_help;");
+        Ins(&R, *ns.cpp, "const char *$ns::$Name_help = $helpstr;");
+    }
 }

@@ -26,6 +26,20 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 
+// --- atfdb.Age..Init
+// Set all fields to initial values.
+inline void atfdb::Age_Init(atfdb::Age& parent) {
+    parent.matchorder = u32(0);
+    parent.cold = bool(false);
+    parent.timeout = u32(300);
+    parent.costmb = u32(0);
+}
+
+// --- atfdb.Age..Ctor
+inline  atfdb::Age::Age() {
+    atfdb::Age_Init(*this);
+}
+
 // --- atfdb.Amctest..Ctor
 inline  atfdb::Amctest::Amctest() {
 }
@@ -49,8 +63,10 @@ inline  atfdb::Cipackage::Cipackage() {
 // --- atfdb.Citest..Init
 // Set all fields to initial values.
 inline void atfdb::Citest_Init(atfdb::Citest& parent) {
-    parent.cijob = algo::strptr("test");
+    parent.cijob = algo::strptr("normalize");
     parent.sandbox = bool(false);
+    parent.timeout = i32(600);
+    parent.failfast = bool(false);
 }
 
 // --- atfdb.Citest..Ctor
@@ -64,7 +80,6 @@ inline void atfdb::Comptest_Init(atfdb::Comptest& parent) {
     parent.timeout = i32(10);
     parent.memcheck = bool(true);
     parent.coverage = bool(true);
-    parent.exit_code = u8(0);
     parent.stablefld = bool(false);
 }
 
@@ -132,8 +147,24 @@ inline  atfdb::TestGsymbolPkey::TestGsymbolPkey() {
 inline  atfdb::TestGsymbolStrptr::TestGsymbolStrptr() {
 }
 
+// --- atfdb.Testenv..Init
+// Set all fields to initial values.
+inline void atfdb::Testenv_Init(atfdb::Testenv& parent) {
+    parent.slowonly = bool(false);
+    parent.vardir = bool(false);
+}
+
+// --- atfdb.Testenv..Ctor
+inline  atfdb::Testenv::Testenv() {
+    atfdb::Testenv_Init(*this);
+}
+
 // --- atfdb.Tfilt..Ctor
 inline  atfdb::Tfilt::Tfilt() {
+}
+
+// --- atfdb.Tifilt..Ctor
+inline  atfdb::Tifilt::Tifilt() {
 }
 
 // --- atfdb.Unittest..Ctor
@@ -146,6 +177,11 @@ inline  atfdb::Unstableattr::Unstableattr() {
 
 // --- atfdb.Var..Ctor
 inline  atfdb::Var::Var() {
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Age &row) {// cfmt:atfdb.Age.String
+    atfdb::Age_Print(const_cast<atfdb::Age&>(row), str);
+    return str;
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Cijob &row) {// cfmt:atfdb.Cijob.String
@@ -198,8 +234,18 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::TestGsy
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Testenv &row) {// cfmt:atfdb.Testenv.String
+    atfdb::Testenv_Print(const_cast<atfdb::Testenv&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tfilt &row) {// cfmt:atfdb.Tfilt.String
     atfdb::Tfilt_Print(const_cast<atfdb::Tfilt&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tifilt &row) {// cfmt:atfdb.Tifilt.String
+    atfdb::Tifilt_Print(const_cast<atfdb::Tifilt&>(row), str);
     return str;
 }
 

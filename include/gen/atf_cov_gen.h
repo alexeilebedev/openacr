@@ -27,13 +27,14 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/algo_lib_gen.h"
+#include "include/gen/report_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
 // --- atf_cov_FieldIdEnum
 
-enum atf_cov_FieldIdEnum {        // atf_cov.FieldId.value
-     atf_cov_FieldId_value   = 0
+enum atf_cov_FieldIdEnum {    // atf_cov.FieldId.value
+     atf_cov_FieldId_value
 };
 
 enum { atf_cov_FieldIdEnum_N = 1 };
@@ -41,11 +42,11 @@ enum { atf_cov_FieldIdEnum_N = 1 };
 
 // --- atf_cov_Phase_value_Enum
 
-enum atf_cov_Phase_value_Enum {         // atf_cov.Phase.value
-     atf_cov_Phase_value_runcmd   = 0   // Run command
-    ,atf_cov_Phase_value_gcov     = 1   // Prepare and run gcov
-    ,atf_cov_Phase_value_ssim     = 2   // Generate ssim coverage files
-    ,atf_cov_Phase_value_report   = 3   // Create all report
+enum atf_cov_Phase_value_Enum {                                    // atf_cov.Phase.value
+     atf_cov_Phase_value_runcmd   // Run command
+    ,atf_cov_Phase_value_gcov     // Prepare and run gcov
+    ,atf_cov_Phase_value_ssim     // Generate ssim coverage files
+    ,atf_cov_Phase_value_report   // Create all report
 };
 
 enum { atf_cov_Phase_value_Enum_N = 4 };
@@ -75,7 +76,6 @@ enum { atf_cov_TableIdEnum_N = 14 };
 namespace atf_cov { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace atf_cov { // gen:ns_tclass_field
-extern const char *atf_cov_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Covfile; }
@@ -87,6 +87,7 @@ namespace dev { struct Target; }
 namespace dev { struct Targsrc; }
 namespace atf_cov { struct FTarget; }
 namespace dev { struct Tgtcov; }
+namespace dev { struct Uncovfunc; }
 namespace atf_cov { struct _db_covline_curs; }
 namespace atf_cov { struct _db_target_curs; }
 namespace atf_cov { struct _db_targsrc_curs; }
@@ -94,6 +95,7 @@ namespace atf_cov { struct _db_gitfile_curs; }
 namespace atf_cov { struct _db_covtarget_curs; }
 namespace atf_cov { struct _db_covfile_curs; }
 namespace atf_cov { struct _db_tgtcov_curs; }
+namespace atf_cov { struct _db_uncovfunc_curs; }
 namespace atf_cov { struct gitfile_c_covline_curs; }
 namespace atf_cov { struct target_c_targsrc_curs; }
 namespace atf_cov { struct FCovfile; }
@@ -103,6 +105,7 @@ namespace atf_cov { struct trace; }
 namespace atf_cov { struct FDb; }
 namespace atf_cov { struct FTargsrc; }
 namespace atf_cov { struct FTgtcov; }
+namespace atf_cov { struct FUncovfunc; }
 namespace atf_cov { struct FieldId; }
 namespace atf_cov { struct Phase; }
 namespace atf_cov { struct TableId; }
@@ -135,7 +138,6 @@ private:
     friend void                 covfile_RemoveAll() __attribute__((nothrow));
     friend void                 covfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_cov.FCovfile.base.CopyOut
 void                 covfile_CopyOut(atf_cov::FCovfile &row, dev::Covfile &out) __attribute__((nothrow));
@@ -179,7 +181,6 @@ private:
     friend void                 covline_RemoveAll() __attribute__((nothrow));
     friend void                 covline_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_cov.FCovline.base.CopyOut
 void                 covline_CopyOut(atf_cov::FCovline &row, dev::Covline &out) __attribute__((nothrow));
@@ -188,7 +189,7 @@ void                 covline_CopyOut(atf_cov::FCovline &row, dev::Covline &out) 
 void                 covline_CopyIn(atf_cov::FCovline &row, dev::Covline &in) __attribute__((nothrow));
 
 // func:atf_cov.FCovline.src.Get
-algo::Smallstr200    src_Get(atf_cov::FCovline& covline) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(atf_cov::FCovline& covline) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_cov.FCovline.line.Get
 u32                  line_Get(atf_cov::FCovline& covline) __attribute__((__warn_unused_result__, nothrow));
@@ -229,7 +230,6 @@ private:
     friend void                 covtarget_RemoveAll() __attribute__((nothrow));
     friend void                 covtarget_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_cov.FCovtarget.base.CopyOut
 void                 covtarget_CopyOut(atf_cov::FCovtarget &row, dev::Covtarget &out) __attribute__((nothrow));
@@ -250,7 +250,6 @@ struct trace { // atf_cov.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:atf_cov.trace.String  printfmt:Tuple
 // func:atf_cov.trace..Print
@@ -263,42 +262,42 @@ struct FDb { // atf_cov.FDb: In-memory database for atf_cov
     command::bash_proc     bash;                        //
     algo_lib::FFildes      logfd;                       //
     dev::Covtarget         total;                       //
-    atf_cov::FCovline*     covline_lary[32];            // level array
-    i32                    covline_n;                   // number of elements in array
+    atf_cov::FCovline*     covline_lary[36];            // level array
+    i64                    covline_n;                   // number of elements in array
     atf_cov::FCovline**    ind_covline_buckets_elems;   // pointer to bucket array
     i32                    ind_covline_buckets_n;       // number of elements in bucket array
     i32                    ind_covline_n;               // number of elements in the hash table
-    atf_cov::FTarget*      target_lary[32];             // level array
-    i32                    target_n;                    // number of elements in array
+    atf_cov::FTarget*      target_lary[36];             // level array
+    i64                    target_n;                    // number of elements in array
     atf_cov::FTarget**     ind_target_buckets_elems;    // pointer to bucket array
     i32                    ind_target_buckets_n;        // number of elements in bucket array
     i32                    ind_target_n;                // number of elements in the hash table
-    atf_cov::FTargsrc*     targsrc_lary[32];            // level array
-    i32                    targsrc_n;                   // number of elements in array
+    atf_cov::FTargsrc*     targsrc_lary[36];            // level array
+    i64                    targsrc_n;                   // number of elements in array
     atf_cov::FTargsrc**    ind_targsrc_buckets_elems;   // pointer to bucket array
     i32                    ind_targsrc_buckets_n;       // number of elements in bucket array
     i32                    ind_targsrc_n;               // number of elements in the hash table
-    atf_cov::FGitfile*     gitfile_lary[32];            // level array
-    i32                    gitfile_n;                   // number of elements in array
+    atf_cov::FGitfile*     gitfile_lary[36];            // level array
+    i64                    gitfile_n;                   // number of elements in array
     atf_cov::FGitfile**    ind_gitfile_buckets_elems;   // pointer to bucket array
     i32                    ind_gitfile_buckets_n;       // number of elements in bucket array
     i32                    ind_gitfile_n;               // number of elements in the hash table
-    atf_cov::FCovtarget*   covtarget_lary[32];          // level array
-    i32                    covtarget_n;                 // number of elements in array
-    atf_cov::FCovfile*     covfile_lary[32];            // level array
-    i32                    covfile_n;                   // number of elements in array
-    atf_cov::FTgtcov*      tgtcov_lary[32];             // level array
-    i32                    tgtcov_n;                    // number of elements in array
+    atf_cov::FCovtarget*   covtarget_lary[36];          // level array
+    i64                    covtarget_n;                 // number of elements in array
+    atf_cov::FCovfile*     covfile_lary[36];            // level array
+    i64                    covfile_n;                   // number of elements in array
+    atf_cov::FTgtcov*      tgtcov_lary[36];             // level array
+    i64                    tgtcov_n;                    // number of elements in array
     atf_cov::FTgtcov**     ind_tgtcov_buckets_elems;    // pointer to bucket array
     i32                    ind_tgtcov_buckets_n;        // number of elements in bucket array
     i32                    ind_tgtcov_n;                // number of elements in the hash table
+    atf_cov::FUncovfunc*   uncovfunc_lary[36];          // level array
+    i64                    uncovfunc_n;                 // number of elements in array
+    report::atf_cov        report;                      // Extent of this run's measurement
     atf_cov::trace         trace;                       //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_cov.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_cov.FDb.cmdline (and any base command line)
+// via atf_cov_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:atf_cov.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -335,6 +334,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:atf_cov.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:atf_cov.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_cov.FDb._db.XrefMaybe
@@ -365,7 +368,7 @@ inline atf_cov::FCovline* covline_Find(u64 t) __attribute__((__warn_unused_resul
 inline atf_cov::FCovline* covline_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.covline.N
-inline i32           covline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           covline_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.covline.RemoveAll
 void                 covline_RemoveAll() __attribute__((nothrow));
@@ -389,6 +392,9 @@ atf_cov::FCovline*   ind_covline_Find(const algo::strptr& key) __attribute__((__
 // Look up row by key and return reference. Throw exception if not found
 // func:atf_cov.FDb.ind_covline.FindX
 atf_cov::FCovline&   ind_covline_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_cov.FDb.ind_covline.GetOrCreate
+atf_cov::FCovline*   ind_covline_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_cov.FDb.ind_covline.N
 inline i32           ind_covline_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -430,7 +436,7 @@ inline atf_cov::FTarget* target_Find(u64 t) __attribute__((__warn_unused_result_
 inline atf_cov::FTarget* target_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.target.N
-inline i32           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.target.RemoveAll
 void                 target_RemoveAll() __attribute__((nothrow));
@@ -498,7 +504,7 @@ inline atf_cov::FTargsrc* targsrc_Find(u64 t) __attribute__((__warn_unused_resul
 inline atf_cov::FTargsrc* targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.targsrc.N
-inline i32           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.targsrc.RemoveAll
 void                 targsrc_RemoveAll() __attribute__((nothrow));
@@ -522,6 +528,9 @@ atf_cov::FTargsrc*   ind_targsrc_Find(const algo::strptr& key) __attribute__((__
 // Look up row by key and return reference. Throw exception if not found
 // func:atf_cov.FDb.ind_targsrc.FindX
 atf_cov::FTargsrc&   ind_targsrc_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_cov.FDb.ind_targsrc.GetOrCreate
+atf_cov::FTargsrc*   ind_targsrc_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_cov.FDb.ind_targsrc.N
 inline i32           ind_targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -563,7 +572,7 @@ inline atf_cov::FGitfile* gitfile_Find(u64 t) __attribute__((__warn_unused_resul
 inline atf_cov::FGitfile* gitfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.gitfile.N
-inline i32           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.gitfile.RemoveAll
 void                 gitfile_RemoveAll() __attribute__((nothrow));
@@ -631,7 +640,7 @@ inline atf_cov::FCovtarget* covtarget_Find(u64 t) __attribute__((__warn_unused_r
 inline atf_cov::FCovtarget* covtarget_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.covtarget.N
-inline i32           covtarget_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           covtarget_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.covtarget.RemoveAll
 void                 covtarget_RemoveAll() __attribute__((nothrow));
@@ -671,7 +680,7 @@ inline atf_cov::FCovfile* covfile_Find(u64 t) __attribute__((__warn_unused_resul
 inline atf_cov::FCovfile* covfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.covfile.N
-inline i32           covfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           covfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.covfile.RemoveAll
 void                 covfile_RemoveAll() __attribute__((nothrow));
@@ -711,7 +720,7 @@ inline atf_cov::FTgtcov* tgtcov_Find(u64 t) __attribute__((__warn_unused_result_
 inline atf_cov::FTgtcov* tgtcov_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.tgtcov.N
-inline i32           tgtcov_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           tgtcov_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.tgtcov.RemoveAll
 void                 tgtcov_RemoveAll() __attribute__((nothrow));
@@ -735,6 +744,9 @@ atf_cov::FTgtcov*    ind_tgtcov_Find(const algo::strptr& key) __attribute__((__w
 // Look up row by key and return reference. Throw exception if not found
 // func:atf_cov.FDb.ind_tgtcov.FindX
 atf_cov::FTgtcov&    ind_tgtcov_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_cov.FDb.ind_tgtcov.GetOrCreate
+atf_cov::FTgtcov*    ind_tgtcov_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_cov.FDb.ind_tgtcov.N
 inline i32           ind_tgtcov_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -750,6 +762,46 @@ void                 ind_tgtcov_Reserve(int n) __attribute__((nothrow));
 // Reserve enough room for exacty N elements. Return success code.
 // func:atf_cov.FDb.ind_tgtcov.AbsReserve
 void                 ind_tgtcov_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_cov.FDb.uncovfunc.Alloc
+atf_cov::FUncovfunc& uncovfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_cov.FDb.uncovfunc.AllocMaybe
+atf_cov::FUncovfunc* uncovfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_cov.FDb.uncovfunc.InsertMaybe
+atf_cov::FUncovfunc* uncovfunc_InsertMaybe(const dev::Uncovfunc &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_cov.FDb.uncovfunc.AllocMem
+void*                uncovfunc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_cov.FDb.uncovfunc.EmptyQ
+inline bool          uncovfunc_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_cov.FDb.uncovfunc.Find
+inline atf_cov::FUncovfunc* uncovfunc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_cov.FDb.uncovfunc.Last
+inline atf_cov::FUncovfunc* uncovfunc_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_cov.FDb.uncovfunc.N
+inline i64           uncovfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_cov.FDb.uncovfunc.RemoveAll
+void                 uncovfunc_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_cov.FDb.uncovfunc.RemoveLast
+void                 uncovfunc_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_cov.FDb.uncovfunc.qFind
+inline atf_cov::FUncovfunc& uncovfunc_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_cov.FDb.uncovfunc.XrefMaybe
+bool                 uncovfunc_XrefMaybe(atf_cov::FUncovfunc &row);
 
 // cursor points to valid item
 // func:atf_cov.FDb.covline_curs.Reset
@@ -835,6 +887,18 @@ inline void          _db_tgtcov_curs_Next(_db_tgtcov_curs &curs) __attribute__((
 // item access
 // func:atf_cov.FDb.tgtcov_curs.Access
 inline atf_cov::FTgtcov& _db_tgtcov_curs_Access(_db_tgtcov_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_cov.FDb.uncovfunc_curs.Reset
+inline void          _db_uncovfunc_curs_Reset(_db_uncovfunc_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_cov.FDb.uncovfunc_curs.ValidQ
+inline bool          _db_uncovfunc_curs_ValidQ(_db_uncovfunc_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_cov.FDb.uncovfunc_curs.Next
+inline void          _db_uncovfunc_curs_Next(_db_uncovfunc_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_cov.FDb.uncovfunc_curs.Access
+inline atf_cov::FUncovfunc& _db_uncovfunc_curs_Access(_db_uncovfunc_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_cov.FDb..Init
 void                 FDb_Init();
@@ -853,8 +917,8 @@ struct FGitfile { // atf_cov.FGitfile
     algo::Smallstr200     gitfile;               //
     atf_cov::FTargsrc*    c_targsrc;             // optional pointer
     atf_cov::FCovline**   c_covline_elems;       // array of pointers
-    u32                   c_covline_n;           // array of pointers
-    u32                   c_covline_max;         // capacity of allocated array
+    u64                   c_covline_n;           // current size
+    u64                   c_covline_max;         // capacity of allocated array
     atf_cov::FCovfile*    c_covfile;             // optional pointer
     // x-reference on atf_cov.FGitfile.c_targsrc prevents copy
     // reftype Ptrary of atf_cov.FGitfile.c_covline prohibits copy
@@ -876,7 +940,6 @@ private:
     friend void                 gitfile_RemoveAll() __attribute__((nothrow));
     friend void                 gitfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_cov.FGitfile.base.CopyOut
 void                 gitfile_CopyOut(atf_cov::FGitfile &row, dev::Gitfile &out) __attribute__((nothrow));
@@ -885,7 +948,7 @@ void                 gitfile_CopyOut(atf_cov::FGitfile &row, dev::Gitfile &out) 
 void                 gitfile_CopyIn(atf_cov::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
 
 // func:atf_cov.FGitfile.ext.Get
-algo::Smallstr50     ext_Get(atf_cov::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(atf_cov::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_cov.FGitfile.c_targsrc.InsertMaybe
@@ -899,12 +962,12 @@ inline void          c_targsrc_Remove(atf_cov::FGitfile& gitfile, atf_cov::FTarg
 inline bool          c_covline_EmptyQ(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FGitfile.c_covline.Find
-inline atf_cov::FCovline* c_covline_Find(atf_cov::FGitfile& gitfile, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_cov::FCovline* c_covline_Find(atf_cov::FGitfile& gitfile, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_cov.FGitfile.c_covline.Getary
 inline algo::aryptr<atf_cov::FCovline*> c_covline_Getary(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_cov.FGitfile.c_covline.Insert
 void                 c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -914,7 +977,7 @@ void                 c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovl
 bool                 c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_cov.FGitfile.c_covline.N
-inline i32           c_covline_N(const atf_cov::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_covline_N(const atf_cov::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_cov.FGitfile.c_covline.Remove
 void                 c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) __attribute__((nothrow));
@@ -923,10 +986,10 @@ void                 c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovl
 inline void          c_covline_RemoveAll(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_cov.FGitfile.c_covline.Reserve
-void                 c_covline_Reserve(atf_cov::FGitfile& gitfile, u32 n) __attribute__((nothrow));
+void                 c_covline_Reserve(atf_cov::FGitfile& gitfile, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_cov.FGitfile.c_covline.qFind
-inline atf_cov::FCovline& c_covline_qFind(atf_cov::FGitfile& gitfile, u32 idx) __attribute__((nothrow));
+inline atf_cov::FCovline& c_covline_qFind(atf_cov::FGitfile& gitfile, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_cov.FGitfile.c_covline.InAryQ
 inline bool          gitfile_c_covline_InAryQ(atf_cov::FCovline& row) __attribute__((nothrow));
@@ -968,8 +1031,8 @@ struct FTarget { // atf_cov.FTarget
     u32                    ind_target_hashval;   // hash value
     algo::Smallstr16       target;               // Primary key - name of target
     atf_cov::FTargsrc**    c_targsrc_elems;      // array of pointers
-    u32                    c_targsrc_n;          // array of pointers
-    u32                    c_targsrc_max;        // capacity of allocated array
+    u64                    c_targsrc_n;          // current size
+    u64                    c_targsrc_max;        // capacity of allocated array
     atf_cov::FCovtarget*   c_covtarget;          // optional pointer
     atf_cov::FTgtcov*      c_tgtcov;             // optional pointer
     // reftype Ptrary of atf_cov.FTarget.c_targsrc prohibits copy
@@ -992,7 +1055,6 @@ private:
     friend void                 target_RemoveAll() __attribute__((nothrow));
     friend void                 target_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_cov.FTarget.base.CopyOut
 void                 target_CopyOut(atf_cov::FTarget &row, dev::Target &out) __attribute__((nothrow));
@@ -1005,12 +1067,12 @@ void                 target_CopyIn(atf_cov::FTarget &row, dev::Target &in) __att
 inline bool          c_targsrc_EmptyQ(atf_cov::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FTarget.c_targsrc.Find
-inline atf_cov::FTargsrc* c_targsrc_Find(atf_cov::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_cov::FTargsrc* c_targsrc_Find(atf_cov::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_cov.FTarget.c_targsrc.Getary
 inline algo::aryptr<atf_cov::FTargsrc*> c_targsrc_Getary(atf_cov::FTarget& target) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_cov.FTarget.c_targsrc.Insert
 void                 c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -1020,7 +1082,7 @@ void                 c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsr
 bool                 c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_cov.FTarget.c_targsrc.N
-inline i32           c_targsrc_N(const atf_cov::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targsrc_N(const atf_cov::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_cov.FTarget.c_targsrc.Remove
 void                 c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row) __attribute__((nothrow));
@@ -1029,10 +1091,10 @@ void                 c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsr
 inline void          c_targsrc_RemoveAll(atf_cov::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_cov.FTarget.c_targsrc.Reserve
-void                 c_targsrc_Reserve(atf_cov::FTarget& target, u32 n) __attribute__((nothrow));
+void                 c_targsrc_Reserve(atf_cov::FTarget& target, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_cov.FTarget.c_targsrc.qFind
-inline atf_cov::FTargsrc& c_targsrc_qFind(atf_cov::FTarget& target, u32 idx) __attribute__((nothrow));
+inline atf_cov::FTargsrc& c_targsrc_qFind(atf_cov::FTarget& target, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_cov.FTarget.c_targsrc.InAryQ
 inline bool          target_c_targsrc_InAryQ(atf_cov::FTargsrc& row) __attribute__((nothrow));
@@ -1081,7 +1143,7 @@ struct FTargsrc { // atf_cov.FTargsrc
     atf_cov::FTargsrc*   ind_targsrc_next;          // hash next
     u32                  ind_targsrc_hashval;       // hash value
     algo::Smallstr100    targsrc;                   //
-    algo::Comment        comment;                   //
+    algo::cstring        comment;                   //
     atf_cov::FGitfile*   p_gitfile;                 // reference to parent row
     atf_cov::FTarget*    p_target;                  // reference to parent row
     bool                 target_c_targsrc_in_ary;   //   false  membership flag
@@ -1103,7 +1165,6 @@ private:
     friend void                 targsrc_RemoveAll() __attribute__((nothrow));
     friend void                 targsrc_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_cov.FTargsrc.base.CopyOut
 void                 targsrc_CopyOut(atf_cov::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
@@ -1112,13 +1173,13 @@ void                 targsrc_CopyOut(atf_cov::FTargsrc &row, dev::Targsrc &out) 
 void                 targsrc_CopyIn(atf_cov::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:atf_cov.FTargsrc.target.Get
-algo::Smallstr16     target_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_cov.FTargsrc.src.Get
-algo::Smallstr200    src_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_cov.FTargsrc.ext.Get
-algo::Smallstr10     ext_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:atf_cov.FTargsrc..Init
@@ -1136,8 +1197,7 @@ struct FTgtcov { // atf_cov.FTgtcov
     u32                 ind_tgtcov_hashval;   // hash value
     algo::Smallstr16    target;               // Target
     algo::U32Dec2       cov_min;              // Minimal coverage limit
-    algo::U32Dec2       maxerr;               // Tolerable error
-    algo::Comment       comment;              //
+    algo::cstring       comment;              //
     // func:atf_cov.FTgtcov..AssignOp
     inline atf_cov::FTgtcov& operator =(const atf_cov::FTgtcov &rhs) = delete;
     // func:atf_cov.FTgtcov..CopyCtor
@@ -1152,7 +1212,6 @@ private:
     friend void                 tgtcov_RemoveAll() __attribute__((nothrow));
     friend void                 tgtcov_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_cov.FTgtcov.base.CopyOut
 void                 tgtcov_CopyOut(atf_cov::FTgtcov &row, dev::Tgtcov &out) __attribute__((nothrow));
@@ -1165,6 +1224,30 @@ void                 tgtcov_CopyIn(atf_cov::FTgtcov &row, dev::Tgtcov &in) __att
 inline void          FTgtcov_Init(atf_cov::FTgtcov& tgtcov);
 // func:atf_cov.FTgtcov..Uninit
 void                 FTgtcov_Uninit(atf_cov::FTgtcov& tgtcov) __attribute__((nothrow));
+
+// --- atf_cov.FUncovfunc
+// create: atf_cov.FDb.uncovfunc (Lary)
+// global access: uncovfunc (Lary, by rowid)
+struct FUncovfunc { // atf_cov.FUncovfunc
+    algo::cstring   uncovfunc;   // Key: ns.name(args)
+private:
+    // func:atf_cov.FUncovfunc..Ctor
+    inline               FUncovfunc() __attribute__((nothrow));
+    friend atf_cov::FUncovfunc& uncovfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_cov::FUncovfunc* uncovfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 uncovfunc_RemoveAll() __attribute__((nothrow));
+    friend void                 uncovfunc_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_cov.FUncovfunc.base.CopyOut
+void                 uncovfunc_CopyOut(atf_cov::FUncovfunc &row, dev::Uncovfunc &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_cov.FUncovfunc.base.CopyIn
+void                 uncovfunc_CopyIn(atf_cov::FUncovfunc &row, dev::Uncovfunc &in) __attribute__((nothrow));
+
+// func:atf_cov.FUncovfunc.name.Get
+algo::strptr         name_Get(atf_cov::FUncovfunc& uncovfunc) __attribute__((__warn_unused_result__, nothrow));
+
 
 // --- atf_cov.FieldId
 #pragma pack(push,1)
@@ -1180,7 +1263,6 @@ struct FieldId { // atf_cov.FieldId: Field read helper
     inline               FieldId(atf_cov_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_cov.FieldId.value.GetEnum
 inline atf_cov_FieldIdEnum value_GetEnum(const atf_cov::FieldId& parent) __attribute__((nothrow));
@@ -1218,7 +1300,7 @@ inline void          FieldId_Init(atf_cov::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_cov.FieldId.String  printfmt:Raw
 // func:atf_cov.FieldId..Print
-void                 FieldId_Print(atf_cov::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(atf_cov::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_cov.Phase
 struct Phase { // atf_cov.Phase
@@ -1243,7 +1325,6 @@ struct Phase { // atf_cov.Phase
     // func:atf_cov.Phase..EnumCtor
     inline               Phase(atf_cov_Phase_value_Enum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:atf_cov.Phase.value.GetEnum
 inline atf_cov_Phase_value_Enum value_GetEnum(const atf_cov::Phase& parent) __attribute__((nothrow));
@@ -1316,7 +1397,6 @@ struct TableId { // atf_cov.TableId: Index of table in this namespace
     // func:atf_cov.TableId..EnumCtor
     inline               TableId(atf_cov_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:atf_cov.TableId.value.GetEnum
 inline atf_cov_TableIdEnum value_GetEnum(const atf_cov::TableId& parent) __attribute__((nothrow));
@@ -1354,7 +1434,7 @@ inline void          TableId_Init(atf_cov::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_cov.TableId.String  printfmt:Raw
 // func:atf_cov.TableId..Print
-void                 TableId_Print(atf_cov::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(atf_cov::TableId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_cov { // gen:ns_curstext
 
@@ -1414,11 +1494,19 @@ struct _db_tgtcov_curs {// cursor
 };
 
 
+struct _db_uncovfunc_curs {// cursor
+    typedef atf_cov::FUncovfunc ChildType;
+    atf_cov::FDb *parent;
+    i64 index;
+    _db_uncovfunc_curs(){ parent=NULL; index=0; }
+};
+
+
 struct gitfile_c_covline_curs {// fcurs:atf_cov.FGitfile.c_covline/curs
     typedef atf_cov::FCovline ChildType;
     atf_cov::FCovline** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     gitfile_c_covline_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -1426,8 +1514,8 @@ struct gitfile_c_covline_curs {// fcurs:atf_cov.FGitfile.c_covline/curs
 struct target_c_targsrc_curs {// fcurs:atf_cov.FTarget.c_targsrc/curs
     typedef atf_cov::FTargsrc ChildType;
     atf_cov::FTargsrc** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     target_c_targsrc_curs() { elems=NULL; n_elems=0; index=0; }
 };
 

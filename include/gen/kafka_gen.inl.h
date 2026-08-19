@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -418,7 +409,7 @@ inline void kafka::value_SetEnum(kafka::ConfigSource& parent, kafka_ConfigSource
 }
 
 // --- kafka.ConfigSource..Hash
-inline u32 kafka::ConfigSource_Hash(u32 prev, const kafka::ConfigSource& rhs) {
+inline u32 kafka::ConfigSource_Hash(u32 prev, kafka::ConfigSource rhs) {
     prev = u8_Hash(prev, rhs.value);
     return prev;
 }
@@ -434,7 +425,7 @@ inline bool kafka::ConfigSource::operator !=(const kafka::ConfigSource &rhs) con
 }
 
 // --- kafka.ConfigSource..Cmp
-inline i32 kafka::ConfigSource_Cmp(kafka::ConfigSource& lhs, kafka::ConfigSource& rhs) {
+inline i32 kafka::ConfigSource_Cmp(kafka::ConfigSource lhs, kafka::ConfigSource rhs) {
     i32 retval = 0;
     retval = u8_Cmp(lhs.value, rhs.value);
     return retval;
@@ -447,7 +438,7 @@ inline void kafka::ConfigSource_Init(kafka::ConfigSource& parent) {
 }
 
 // --- kafka.ConfigSource..Eq
-inline bool kafka::ConfigSource_Eq(kafka::ConfigSource& lhs, kafka::ConfigSource& rhs) {
+inline bool kafka::ConfigSource_Eq(kafka::ConfigSource lhs, kafka::ConfigSource rhs) {
     bool retval = true;
     retval = u8_Eq(lhs.value, rhs.value);
     return retval;
@@ -488,7 +479,7 @@ inline void kafka::value_SetEnum(kafka::ConfigType& parent, kafka_ConfigTypeEnum
 }
 
 // --- kafka.ConfigType..Hash
-inline u32 kafka::ConfigType_Hash(u32 prev, const kafka::ConfigType& rhs) {
+inline u32 kafka::ConfigType_Hash(u32 prev, kafka::ConfigType rhs) {
     prev = u8_Hash(prev, rhs.value);
     return prev;
 }
@@ -504,7 +495,7 @@ inline bool kafka::ConfigType::operator !=(const kafka::ConfigType &rhs) const {
 }
 
 // --- kafka.ConfigType..Cmp
-inline i32 kafka::ConfigType_Cmp(kafka::ConfigType& lhs, kafka::ConfigType& rhs) {
+inline i32 kafka::ConfigType_Cmp(kafka::ConfigType lhs, kafka::ConfigType rhs) {
     i32 retval = 0;
     retval = u8_Cmp(lhs.value, rhs.value);
     return retval;
@@ -517,7 +508,7 @@ inline void kafka::ConfigType_Init(kafka::ConfigType& parent) {
 }
 
 // --- kafka.ConfigType..Eq
-inline bool kafka::ConfigType_Eq(kafka::ConfigType& lhs, kafka::ConfigType& rhs) {
+inline bool kafka::ConfigType_Eq(kafka::ConfigType lhs, kafka::ConfigType rhs) {
     bool retval = true;
     retval = u8_Eq(lhs.value, rhs.value);
     return retval;
@@ -873,7 +864,7 @@ inline void kafka::value_SetEnum(kafka::GroupState& parent, kafka_GroupStateEnum
 }
 
 // --- kafka.GroupState..Hash
-inline u32 kafka::GroupState_Hash(u32 prev, const kafka::GroupState& rhs) {
+inline u32 kafka::GroupState_Hash(u32 prev, kafka::GroupState rhs) {
     prev = u8_Hash(prev, rhs.value);
     return prev;
 }
@@ -889,7 +880,7 @@ inline bool kafka::GroupState::operator !=(const kafka::GroupState &rhs) const {
 }
 
 // --- kafka.GroupState..Cmp
-inline i32 kafka::GroupState_Cmp(kafka::GroupState& lhs, kafka::GroupState& rhs) {
+inline i32 kafka::GroupState_Cmp(kafka::GroupState lhs, kafka::GroupState rhs) {
     i32 retval = 0;
     retval = u8_Cmp(lhs.value, rhs.value);
     return retval;
@@ -902,7 +893,7 @@ inline void kafka::GroupState_Init(kafka::GroupState& parent) {
 }
 
 // --- kafka.GroupState..Eq
-inline bool kafka::GroupState_Eq(kafka::GroupState& lhs, kafka::GroupState& rhs) {
+inline bool kafka::GroupState_Eq(kafka::GroupState lhs, kafka::GroupState rhs) {
     bool retval = true;
     retval = u8_Eq(lhs.value, rhs.value);
     return retval;
@@ -1004,7 +995,7 @@ inline void kafka::value_SetEnum(kafka::PatternType& parent, kafka_PatternTypeEn
 }
 
 // --- kafka.PatternType..Hash
-inline u32 kafka::PatternType_Hash(u32 prev, const kafka::PatternType& rhs) {
+inline u32 kafka::PatternType_Hash(u32 prev, kafka::PatternType rhs) {
     prev = u8_Hash(prev, rhs.value);
     return prev;
 }
@@ -1020,7 +1011,7 @@ inline bool kafka::PatternType::operator !=(const kafka::PatternType &rhs) const
 }
 
 // --- kafka.PatternType..Cmp
-inline i32 kafka::PatternType_Cmp(kafka::PatternType& lhs, kafka::PatternType& rhs) {
+inline i32 kafka::PatternType_Cmp(kafka::PatternType lhs, kafka::PatternType rhs) {
     i32 retval = 0;
     retval = u8_Cmp(lhs.value, rhs.value);
     return retval;
@@ -1033,7 +1024,7 @@ inline void kafka::PatternType_Init(kafka::PatternType& parent) {
 }
 
 // --- kafka.PatternType..Eq
-inline bool kafka::PatternType_Eq(kafka::PatternType& lhs, kafka::PatternType& rhs) {
+inline bool kafka::PatternType_Eq(kafka::PatternType lhs, kafka::PatternType rhs) {
     bool retval = true;
     retval = u8_Eq(lhs.value, rhs.value);
     return retval;
@@ -1288,21 +1279,21 @@ inline kafka::Header* kafka::headers_Last(kafka::Record& parent) {
 
 // --- kafka.Record.headers.Max
 // Return max. number of items in the array
-inline i32 kafka::headers_Max(kafka::Record& parent) {
+inline i64 kafka::headers_Max(kafka::Record& parent) {
     (void)parent;
     return parent.headers_max;
 }
 
 // --- kafka.Record.headers.N
 // Return number of items in the array
-inline i32 kafka::headers_N(const kafka::Record& parent) {
+inline i64 kafka::headers_N(const kafka::Record& parent) {
     return parent.headers_n;
 }
 
 // --- kafka.Record.headers.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void kafka::headers_Reserve(kafka::Record& parent, int n) {
-    u32 new_n = parent.headers_n + n;
+inline void kafka::headers_Reserve(kafka::Record& parent, i64 n) {
+    u64 new_n = parent.headers_n + n;
     if (UNLIKELY(new_n > parent.headers_max)) {
         headers_AbsReserve(parent, new_n);
     }
@@ -1403,21 +1394,21 @@ inline kafka::Record* kafka::records_Last(kafka::RecordBatch& parent) {
 
 // --- kafka.RecordBatch.records.Max
 // Return max. number of items in the array
-inline i32 kafka::records_Max(kafka::RecordBatch& parent) {
+inline i64 kafka::records_Max(kafka::RecordBatch& parent) {
     (void)parent;
     return parent.records_max;
 }
 
 // --- kafka.RecordBatch.records.N
 // Return number of items in the array
-inline i32 kafka::records_N(const kafka::RecordBatch& parent) {
+inline i64 kafka::records_N(const kafka::RecordBatch& parent) {
     return parent.records_n;
 }
 
 // --- kafka.RecordBatch.records.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void kafka::records_Reserve(kafka::RecordBatch& parent, int n) {
-    u32 new_n = parent.records_n + n;
+inline void kafka::records_Reserve(kafka::RecordBatch& parent, i64 n) {
+    u64 new_n = parent.records_n + n;
     if (UNLIKELY(new_n > parent.records_max)) {
         records_AbsReserve(parent, new_n);
     }
@@ -1490,7 +1481,7 @@ inline void kafka::value_SetEnum(kafka::ResourceType& parent, kafka_ResourceType
 }
 
 // --- kafka.ResourceType..Hash
-inline u32 kafka::ResourceType_Hash(u32 prev, const kafka::ResourceType& rhs) {
+inline u32 kafka::ResourceType_Hash(u32 prev, kafka::ResourceType rhs) {
     prev = u8_Hash(prev, rhs.value);
     return prev;
 }
@@ -1506,7 +1497,7 @@ inline bool kafka::ResourceType::operator !=(const kafka::ResourceType &rhs) con
 }
 
 // --- kafka.ResourceType..Cmp
-inline i32 kafka::ResourceType_Cmp(kafka::ResourceType& lhs, kafka::ResourceType& rhs) {
+inline i32 kafka::ResourceType_Cmp(kafka::ResourceType lhs, kafka::ResourceType rhs) {
     i32 retval = 0;
     retval = u8_Cmp(lhs.value, rhs.value);
     return retval;
@@ -1519,7 +1510,7 @@ inline void kafka::ResourceType_Init(kafka::ResourceType& parent) {
 }
 
 // --- kafka.ResourceType..Eq
-inline bool kafka::ResourceType_Eq(kafka::ResourceType& lhs, kafka::ResourceType& rhs) {
+inline bool kafka::ResourceType_Eq(kafka::ResourceType lhs, kafka::ResourceType rhs) {
     bool retval = true;
     retval = u8_Eq(lhs.value, rhs.value);
     return retval;

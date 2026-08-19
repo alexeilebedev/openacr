@@ -47,51 +47,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 abt::FDb        abt::_db;         // dependency found via dev.targdep
 
-namespace abt {
-const char *abt_help =
-"abt: Algo Build Tool - build & link C++ targets\n"
-"Usage: abt [[-target:]<regx>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    [target]    regx    \"\"      Regx of target name\n"
-"    -in         string  \"data\"  Root of input ssim dir\n"
-"    -cfg        regx    \"\"      Set config\n"
-"    -compiler   string  \"\"      Set compiler.\n"
-"    -uname      string  \"\"      Set uname (default: guess)\n"
-"    -arch       string  \"\"      Set architecture (default: guess)\n"
-"    -ood                        List out-of-date source files\n"
-"    -list                       List target files\n"
-"    -listincl                   List includes\n"
-"    -build                      If set, build specified target (all necessary steps)\n"
-"    -preproc                    Preprocess file, produce .i file\n"
-"    -srcfile    regx    \"%\"     Build/disassemble/preprocess specific file\n"
-"    -clean                      Delete all output files\n"
-"    -dry_run                    Print actions, do not perform\n"
-"    -maxjobs    int     0       Maximum number of child build processes. 0=pick good default\n"
-"    -printcmd                   Print commands. Do not execute\n"
-"    -force                      Assume all files are out-of-date\n"
-"    -install                    Update soft-link under bin/\n"
-"    -coverity                   Run abt in coverity mode\n"
-"    -package    string  \"\"      Package tag\n"
-"    -maxerr     int     100     Max failing commands before rest of pipeline is forced to fail\n"
-"    -disas      regx    \"\"      Regex of function to disassemble\n"
-"    -report             Y       Print final report\n"
-"    -jcdb       string  \"\"      Create JSON compilation database in specified file\n"
-"    -cache      enum    auto    Cache mode (auto|none|gcache|gcache-force|ccache)\n"
-"                                    auto  Select cache automatically among enabled\n"
-"                                    none  No cache\n"
-"                                    gcache  Select gcache if enabled (no cache if disabled)\n"
-"                                    gcache-force  Pass --force to gcache (no cache if disabled)\n"
-"                                    ccache  Select ccache if enabled (no cache if disabled)\n"
-"    -shortlink                  Try to shorten sort link if possible\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace abt
 abt::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
     abt::lpool_FreeMem(temp_elems, sizeof(void*) * temp_max);
 
@@ -167,7 +122,7 @@ namespace abt { // gen:ns_print_proto
 // Copy fields out of row
 void abt::arch_CopyOut(abt::FArch &row, dev::Arch &out) {
     out.arch = row.arch;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FArch.msghdr.CopyIn
@@ -187,7 +142,7 @@ void abt::FArch_Uninit(abt::FArch& arch) {
 // Copy fields out of row
 void abt::builddir_CopyOut(abt::FBuilddir &row, dev::Builddir &out) {
     out.builddir = row.builddir;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FBuilddir.base.CopyIn
@@ -198,27 +153,23 @@ void abt::builddir_CopyIn(abt::FBuilddir &row, dev::Builddir &in) {
 }
 
 // --- abt.FBuilddir.uname.Get
-algo::Smallstr50 abt::uname_Get(abt::FBuilddir& builddir) {
-    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LL"));
-    return ret;
+algo::strptr abt::uname_Get(abt::FBuilddir& builddir) {
+    return algo::Pathcomp(builddir.builddir, ".LL-LL");
 }
 
 // --- abt.FBuilddir.compiler.Get
-algo::Smallstr50 abt::compiler_Get(abt::FBuilddir& builddir) {
-    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LR"));
-    return ret;
+algo::strptr abt::compiler_Get(abt::FBuilddir& builddir) {
+    return algo::Pathcomp(builddir.builddir, ".LL-LR");
 }
 
 // --- abt.FBuilddir.cfg.Get
-algo::Smallstr50 abt::cfg_Get(abt::FBuilddir& builddir) {
-    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LL"));
-    return ret;
+algo::strptr abt::cfg_Get(abt::FBuilddir& builddir) {
+    return algo::Pathcomp(builddir.builddir, ".LR-LL");
 }
 
 // --- abt.FBuilddir.arch.Get
-algo::Smallstr50 abt::arch_Get(abt::FBuilddir& builddir) {
-    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LR"));
-    return ret;
+algo::strptr abt::arch_Get(abt::FBuilddir& builddir) {
+    return algo::Pathcomp(builddir.builddir, ".LR-LR");
 }
 
 // --- abt.FBuilddir..Init
@@ -241,7 +192,7 @@ void abt::FBuilddir_Uninit(abt::FBuilddir& builddir) {
 void abt::cfg_CopyOut(abt::FCfg &row, dev::Cfg &out) {
     out.cfg = row.cfg;
     out.suffix = row.suffix;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FCfg.msghdr.CopyIn
@@ -270,7 +221,7 @@ void abt::compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) {
     out.pchext = row.pchext;
     out.objext = row.objext;
     out.rc = row.rc;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FCompiler.msghdr.CopyIn
@@ -305,10 +256,39 @@ void abt::trace_Print(abt::trace& row, algo::cstring& str) {
 
 // --- abt.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 void abt::lpool_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (mem && cell < 36) {
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
+        lpool_Lpblock *rec = (lpool_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.lpool_blk[blk->cell];
+            blk->pprev = &_db.lpool_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.lpool_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.lpool_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            lpool_Lpblock *raw = (lpool_Lpblock*)blk;
+            raw->next = _db.lpool_free[12];
+            _db.lpool_free[12] = raw;
+        }
+    } else if (mem && cell < 36) {
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -322,36 +302,76 @@ void abt::lpool_FreeMem(void* mem, u64 size) {
 // The maximum allocation size is at most 1<<(36+4)
 void* abt::lpool_AllocMem(u64 size) {
     void *retval = NULL;
-    size     = u64_Max(size,1<<4); // enforce alignment
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (cell < 36) {
-        u64 i    = cell;
-        // try to find a block that's at least as large as required.
-        // if found, remove from free list
+    lpool_Lpblk *blk = cell < 11 ? _db.lpool_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
         for (; i < 36; i++) {
-            lpool_Lpblock *blk = _db.lpool_free[i];
-            if (blk) {
-                _db.lpool_free[i] = blk->next;
-                retval = blk;
+            lpool_Lpblock *rawblk = _db.lpool_free[i];
+            if (rawblk) {
+                _db.lpool_free[i] = rawblk->next;
+                rawmem = rawblk;
                 break;
             }
         }
-        // if suitable size block is not found, create a new one
-        // by requesting a block from the base allocator.
-        if (UNLIKELY(!retval)) {
-            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
-            retval = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
         }
-        if (LIKELY(retval)) {
+        if (LIKELY(rawmem)) {
             // if block is more than 2x as large as needed, return the upper half to the free
-            // list (repeatedly). meanwhile, retval doesn't change.
-            while (i > cell) {
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
                 i--;
-                int half = 1ULL<<(i+4);
-                lpool_Lpblock *blk = (lpool_Lpblock*)((u8*)retval + half);
-                blk->next = _db.lpool_free[i];
-                _db.lpool_free[i] = blk;
+                u64 half = 1ULL<<(i+4);
+                lpool_Lpblock *shed = (lpool_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.lpool_free[i];
+                _db.lpool_free[i] = shed;
             }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (lpool_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.lpool_blk[cell];
+                _db.lpool_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        lpool_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
         }
     }
     return retval;
@@ -359,23 +379,25 @@ void* abt::lpool_AllocMem(u64 size) {
 
 // --- abt.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 bool abt::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 1<<4);
-    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
-    if (cell < 36) {
-        for (u64 i = 0; i < nbuf; i++) {
-            u64 size = 1ULL<<(cell+4);
-            lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
-            if (temp == NULL) {
-                retval = false;
-                break;// why continue?
-            } else {
-                temp->next = _db.lpool_free[cell];
-                _db.lpool_free[cell] = temp;
-            }
+    lpool_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        lpool_Lpblock *temp = (lpool_Lpblock*)lpool_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
         }
+    }
+    while (head) {
+        lpool_Lpblock *next = head->next;
+        lpool_FreeMem(head, bufsize);
+        head = next;
     }
     return retval;
 }
@@ -471,7 +493,7 @@ void* abt::srcfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FSrcfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.srcfile_lary[bsr];
         if (!lev) {
             lev=(abt::FSrcfile*)abt::lpool_AllocMem(sizeof(abt::FSrcfile) * (u64(1)<<bsr));
@@ -480,7 +502,7 @@ void* abt::srcfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.srcfile_n = i32(new_nelems);
+        _db.srcfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -492,7 +514,7 @@ void abt::srcfile_RemoveAll() {
     for (u64 n = _db.srcfile_n; n>0; ) {
         n--;
         srcfile_qFind(u64(n)).~FSrcfile(); // destroy last element
-        _db.srcfile_n = i32(n);
+        _db.srcfile_n = i64(n);
     }
 }
 
@@ -503,7 +525,7 @@ void abt::srcfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         srcfile_qFind(u64(n)).~FSrcfile();
-        _db.srcfile_n = i32(n);
+        _db.srcfile_n = i64(n);
     }
 }
 
@@ -575,7 +597,7 @@ void* abt::targdep_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FTargdep*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targdep_lary[bsr];
         if (!lev) {
             lev=(abt::FTargdep*)abt::lpool_AllocMem(sizeof(abt::FTargdep) * (u64(1)<<bsr));
@@ -584,7 +606,7 @@ void* abt::targdep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targdep_n = i32(new_nelems);
+        _db.targdep_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -597,7 +619,7 @@ void abt::targdep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targdep_qFind(u64(n)).~FTargdep();
-        _db.targdep_n = i32(n);
+        _db.targdep_n = i64(n);
     }
 }
 
@@ -681,7 +703,7 @@ void* abt::tool_opt_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FToolOpt*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.tool_opt_lary[bsr];
         if (!lev) {
             lev=(abt::FToolOpt*)abt::lpool_AllocMem(sizeof(abt::FToolOpt) * (u64(1)<<bsr));
@@ -690,7 +712,7 @@ void* abt::tool_opt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tool_opt_n = i32(new_nelems);
+        _db.tool_opt_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -703,7 +725,7 @@ void abt::tool_opt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tool_opt_qFind(u64(n)).~FToolOpt();
-        _db.tool_opt_n = i32(n);
+        _db.tool_opt_n = i64(n);
     }
 }
 
@@ -885,7 +907,7 @@ void* abt::target_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FTarget*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.target_lary[bsr];
         if (!lev) {
             lev=(abt::FTarget*)abt::lpool_AllocMem(sizeof(abt::FTarget) * (u64(1)<<bsr));
@@ -894,7 +916,7 @@ void* abt::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = i32(new_nelems);
+        _db.target_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -907,7 +929,7 @@ void abt::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -1107,7 +1129,7 @@ void* abt::targsrc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FTargsrc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targsrc_lary[bsr];
         if (!lev) {
             lev=(abt::FTargsrc*)abt::lpool_AllocMem(sizeof(abt::FTargsrc) * (u64(1)<<bsr));
@@ -1116,7 +1138,7 @@ void* abt::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = i32(new_nelems);
+        _db.targsrc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1129,7 +1151,7 @@ void abt::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = i32(n);
+        _db.targsrc_n = i64(n);
     }
 }
 
@@ -1217,7 +1239,7 @@ void* abt::syscmddep_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FSyscmddep*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.syscmddep_lary[bsr];
         if (!lev) {
             lev=(abt::FSyscmddep*)abt::lpool_AllocMem(sizeof(abt::FSyscmddep) * (u64(1)<<bsr));
@@ -1226,7 +1248,7 @@ void* abt::syscmddep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syscmddep_n = i32(new_nelems);
+        _db.syscmddep_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1239,7 +1261,7 @@ void abt::syscmddep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syscmddep_qFind(u64(n)).~FSyscmddep();
-        _db.syscmddep_n = i32(n);
+        _db.syscmddep_n = i64(n);
     }
 }
 
@@ -1332,7 +1354,7 @@ void* abt::syscmd_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FSyscmd*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.syscmd_lary[bsr];
         if (!lev) {
             lev=(abt::FSyscmd*)abt::lpool_AllocMem(sizeof(abt::FSyscmd) * (u64(1)<<bsr));
@@ -1341,7 +1363,7 @@ void* abt::syscmd_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syscmd_n = i32(new_nelems);
+        _db.syscmd_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1354,7 +1376,7 @@ void abt::syscmd_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syscmd_qFind(i32(n)).~FSyscmd();
-        _db.syscmd_n = i32(n);
+        _db.syscmd_n = i64(n);
     }
 }
 
@@ -1393,116 +1415,16 @@ bool abt::syscmd_XrefMaybe(abt::FSyscmd &row) {
 }
 
 // --- abt.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     abt.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of abt.FDb.cmdline (and any base command line)
+// via abt_ReadArgv; then apply -help/-version and load floadtuples input.
 void abt::ReadArgv() {
     command::abt &cmd = abt::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::abt_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::abt_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"abt: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"abt: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::abt_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "abt: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::abt_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"abt: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::abt_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -1525,9 +1447,7 @@ void abt::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:abt.FDb.cmdline
+    // dmmeta.floadtuples:command.abt.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!abt::LoadTuplesMaybe(cmd.in,true)) {
@@ -1540,7 +1460,7 @@ void abt::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(abt_help);
+        prlog(command::abt_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -1567,7 +1487,13 @@ void abt::Step() {
 // --- abt.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void abt::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("abt", abt::InsertStrptrMaybe, NULL, abt::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "abt";
+    row.InsertStrptrMaybe  = abt::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = abt::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = abt::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "abt.trace";
@@ -1581,7 +1507,7 @@ static void abt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'a3467e9a802a9e293d88ca8cb2cead5a09c85dcf'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'45ae13dbd8e9b176a16a144e29c12d49f1dc6dea'");
 }
 
 // --- abt.FDb._db.InsertStrptrMaybe
@@ -1776,6 +1702,111 @@ bool abt::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // Calls Step function of dependencies
 void abt::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- abt.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool abt::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    abt::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case abt_TableId_dev_Targdep: { // finput:abt.FDb.targdep
+            // finput abt.FDb.targdep: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_ToolOpt: { // finput:abt.FDb.tool_opt
+            // finput abt.FDb.tool_opt: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Target: { // finput:abt.FDb.target
+            // finput abt.FDb.target: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Targsrc: { // finput:abt.FDb.targsrc
+            // finput abt.FDb.targsrc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Syscmddep: { // finput:abt.FDb.syscmddep
+            // finput abt.FDb.syscmddep: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Syscmd: { // finput:abt.FDb.syscmd
+            // finput abt.FDb.syscmd: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Cfg: { // finput:abt.FDb.cfg
+            // finput abt.FDb.cfg: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Uname: { // finput:abt.FDb.uname
+            // finput abt.FDb.uname: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Compiler: { // finput:abt.FDb.compiler
+            // finput abt.FDb.compiler: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Arch: { // finput:abt.FDb.arch
+            // finput abt.FDb.arch: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Targsyslib: { // finput:abt.FDb.targsyslib
+            // finput abt.FDb.targsyslib: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Syslib: { // finput:abt.FDb.syslib
+            // finput abt.FDb.syslib: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Include: { // finput:abt.FDb.include
+            // finput abt.FDb.include: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dmmeta_Ns: { // finput:abt.FDb.ns
+            // finput abt.FDb.ns: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Builddir: { // finput:abt.FDb.builddir
+            // finput abt.FDb.builddir: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
 }
 
 // --- abt.FDb._db.XrefMaybe
@@ -2180,7 +2211,7 @@ void* abt::cfg_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FCfg*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.cfg_lary[bsr];
         if (!lev) {
             lev=(abt::FCfg*)abt::lpool_AllocMem(sizeof(abt::FCfg) * (u64(1)<<bsr));
@@ -2189,7 +2220,7 @@ void* abt::cfg_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cfg_n = i32(new_nelems);
+        _db.cfg_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2202,7 +2233,7 @@ void abt::cfg_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cfg_qFind(u64(n)).~FCfg();
-        _db.cfg_n = i32(n);
+        _db.cfg_n = i64(n);
     }
 }
 
@@ -2393,7 +2424,7 @@ void* abt::uname_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FUname*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.uname_lary[bsr];
         if (!lev) {
             lev=(abt::FUname*)abt::lpool_AllocMem(sizeof(abt::FUname) * (u64(1)<<bsr));
@@ -2402,7 +2433,7 @@ void* abt::uname_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.uname_n = i32(new_nelems);
+        _db.uname_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2415,7 +2446,7 @@ void abt::uname_RemoveLast() {
     if (n > 0) {
         n -= 1;
         uname_qFind(u64(n)).~FUname();
-        _db.uname_n = i32(n);
+        _db.uname_n = i64(n);
     }
 }
 
@@ -2606,7 +2637,7 @@ void* abt::compiler_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FCompiler*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.compiler_lary[bsr];
         if (!lev) {
             lev=(abt::FCompiler*)abt::lpool_AllocMem(sizeof(abt::FCompiler) * (u64(1)<<bsr));
@@ -2615,7 +2646,7 @@ void* abt::compiler_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.compiler_n = i32(new_nelems);
+        _db.compiler_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2628,7 +2659,7 @@ void abt::compiler_RemoveLast() {
     if (n > 0) {
         n -= 1;
         compiler_qFind(u64(n)).~FCompiler();
-        _db.compiler_n = i32(n);
+        _db.compiler_n = i64(n);
     }
 }
 
@@ -2819,7 +2850,7 @@ void* abt::arch_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FArch*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.arch_lary[bsr];
         if (!lev) {
             lev=(abt::FArch*)abt::lpool_AllocMem(sizeof(abt::FArch) * (u64(1)<<bsr));
@@ -2828,7 +2859,7 @@ void* abt::arch_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.arch_n = i32(new_nelems);
+        _db.arch_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2841,7 +2872,7 @@ void abt::arch_RemoveLast() {
     if (n > 0) {
         n -= 1;
         arch_qFind(u64(n)).~FArch();
-        _db.arch_n = i32(n);
+        _db.arch_n = i64(n);
     }
 }
 
@@ -3361,7 +3392,7 @@ void* abt::targsyslib_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FTargsyslib*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targsyslib_lary[bsr];
         if (!lev) {
             lev=(abt::FTargsyslib*)abt::lpool_AllocMem(sizeof(abt::FTargsyslib) * (u64(1)<<bsr));
@@ -3370,7 +3401,7 @@ void* abt::targsyslib_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsyslib_n = i32(new_nelems);
+        _db.targsyslib_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3383,7 +3414,7 @@ void abt::targsyslib_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsyslib_qFind(u64(n)).~FTargsyslib();
-        _db.targsyslib_n = i32(n);
+        _db.targsyslib_n = i64(n);
     }
 }
 
@@ -3467,7 +3498,7 @@ void* abt::syslib_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FSyslib*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.syslib_lary[bsr];
         if (!lev) {
             lev=(abt::FSyslib*)abt::lpool_AllocMem(sizeof(abt::FSyslib) * (u64(1)<<bsr));
@@ -3476,7 +3507,7 @@ void* abt::syslib_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syslib_n = i32(new_nelems);
+        _db.syslib_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3489,7 +3520,7 @@ void abt::syslib_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syslib_qFind(u64(n)).~FSyslib();
-        _db.syslib_n = i32(n);
+        _db.syslib_n = i64(n);
     }
 }
 
@@ -3680,7 +3711,7 @@ void* abt::include_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FInclude*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.include_lary[bsr];
         if (!lev) {
             lev=(abt::FInclude*)abt::lpool_AllocMem(sizeof(abt::FInclude) * (u64(1)<<bsr));
@@ -3689,7 +3720,7 @@ void* abt::include_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.include_n = i32(new_nelems);
+        _db.include_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3702,7 +3733,7 @@ void abt::include_RemoveLast() {
     if (n > 0) {
         n -= 1;
         include_qFind(u64(n)).~FInclude();
-        _db.include_n = i32(n);
+        _db.include_n = i64(n);
     }
 }
 
@@ -3874,10 +3905,10 @@ algo::aryptr<algo::cstring> abt::sysincl_Addary(algo::aryptr<algo::cstring> rhs)
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("abt.tary_alias  field:abt.FDb.sysincl  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     sysincl_Reserve(nnew); // reserve space
-    int at = _db.sysincl_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = _db.sysincl_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (_db.sysincl_elems + at + i) algo::cstring(rhs[i]);
         _db.sysincl_n++;
     }
@@ -3889,8 +3920,8 @@ algo::aryptr<algo::cstring> abt::sysincl_Addary(algo::aryptr<algo::cstring> rhs)
 // The new element is initialized to a default value
 algo::cstring& abt::sysincl_Alloc() {
     sysincl_Reserve(1);
-    int n  = _db.sysincl_n;
-    int at = n;
+    i64 n  = _db.sysincl_n;
+    i64 at = n;
     algo::cstring *elems = _db.sysincl_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
     _db.sysincl_n = n+1;
@@ -3900,9 +3931,9 @@ algo::cstring& abt::sysincl_Alloc() {
 // --- abt.FDb.sysincl.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& abt::sysincl_AllocAt(int at) {
+algo::cstring& abt::sysincl_AllocAt(i64 at) {
     sysincl_Reserve(1);
-    int n  = _db.sysincl_n;
+    i64 n  = _db.sysincl_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("abt.bad_alloc_at  field:abt.FDb.sysincl  comment:'index out of range'");
     }
@@ -3915,12 +3946,12 @@ algo::cstring& abt::sysincl_AllocAt(int at) {
 
 // --- abt.FDb.sysincl.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> abt::sysincl_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> abt::sysincl_AllocN(i64 n_elems) {
     sysincl_Reserve(n_elems);
-    int old_n  = _db.sysincl_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.sysincl_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.sysincl_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
     _db.sysincl_n = new_n;
@@ -3931,15 +3962,15 @@ algo::aryptr<algo::cstring> abt::sysincl_AllocN(int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> abt::sysincl_AllocNAt(int n_elems, int at) {
+algo::aryptr<algo::cstring> abt::sysincl_AllocNAt(i64 n_elems, i64 at) {
     sysincl_Reserve(n_elems);
-    int n  = _db.sysincl_n;
+    i64 n  = _db.sysincl_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("abt.bad_alloc_n_at  field:abt.FDb.sysincl  comment:'index out of range'");
     }
     algo::cstring *elems = _db.sysincl_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
     _db.sysincl_n = n+n_elems;
@@ -3948,8 +3979,8 @@ algo::aryptr<algo::cstring> abt::sysincl_AllocNAt(int n_elems, int at) {
 
 // --- abt.FDb.sysincl.Remove
 // Remove item by index. If index outside of range, do nothing.
-void abt::sysincl_Remove(u32 i) {
-    u32 lim = _db.sysincl_n;
+void abt::sysincl_Remove(u64 i) {
+    u64 lim = _db.sysincl_n;
     algo::cstring *elems = _db.sysincl_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
@@ -3960,12 +3991,11 @@ void abt::sysincl_Remove(u32 i) {
 
 // --- abt.FDb.sysincl.RemoveAll
 void abt::sysincl_RemoveAll() {
-    u32 n = _db.sysincl_n;
-    while (n > 0) {
-        n -= 1;
-        _db.sysincl_elems[n].~cstring();
-        _db.sysincl_n = n;
+    u64 n = _db.sysincl_n;
+    for (u64 i=0; i<n; i++) {
+        _db.sysincl_elems[i].~cstring();
     }
+    _db.sysincl_n = 0;
 }
 
 // --- abt.FDb.sysincl.RemoveLast
@@ -3981,10 +4011,10 @@ void abt::sysincl_RemoveLast() {
 
 // --- abt.FDb.sysincl.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void abt::sysincl_AbsReserve(int n) {
-    u32 old_max  = _db.sysincl_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void abt::sysincl_AbsReserve(i64 n) {
+    u64 old_max  = _db.sysincl_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = abt::lpool_ReallocMem(_db.sysincl_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("abt.tary_nomem  field:abt.FDb.sysincl  comment:'out of memory'");
@@ -3996,12 +4026,12 @@ void abt::sysincl_AbsReserve(int n) {
 
 // --- abt.FDb.sysincl.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> abt::sysincl_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> abt::sysincl_AllocNVal(i64 n_elems, const algo::cstring& val) {
     sysincl_Reserve(n_elems);
-    int old_n  = _db.sysincl_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.sysincl_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.sysincl_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
     _db.sysincl_n = new_n;
@@ -4025,25 +4055,43 @@ bool abt::sysincl_ReadStrptrMaybe(algo::strptr in_str) {
 // --- abt.FDb.sysincl.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void abt::sysincl_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+void abt::sysincl_Insary(algo::aryptr<algo::cstring> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.sysincl_elems && rhs.elems < _db.sysincl_elems + _db.sysincl_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("abt.tary_alias  field:abt.FDb.sysincl  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(_db.sysincl_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(_db.sysincl_n+1))) {
         FatalErrorExit("abt.bad_insary  field:abt.FDb.sysincl  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = _db.sysincl_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = _db.sysincl_n - at;
     sysincl_Reserve(nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (_db.sysincl_elems + at + nnew + i) algo::cstring(_db.sysincl_elems[at + i]);
         _db.sysincl_elems[at + i].~cstring(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (_db.sysincl_elems + at + i) algo::cstring(rhs[i]);
     }
     _db.sysincl_n += nnew;
+}
+
+// --- abt.FDb.sysincl.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void abt::sysincl_RemRegion(i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, _db.sysincl_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            _db.sysincl_elems[i].~cstring();
+        }
+        memmove(_db.sysincl_elems+beg, _db.sysincl_elems+end, sizeof(algo::cstring) * (_db.sysincl_n-end));
+        _db.sysincl_n -= n;
+    }
 }
 
 // --- abt.FDb.zs_origsel_target.Insert
@@ -4167,7 +4215,7 @@ void* abt::ns_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FNs*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ns_lary[bsr];
         if (!lev) {
             lev=(abt::FNs*)abt::lpool_AllocMem(sizeof(abt::FNs) * (u64(1)<<bsr));
@@ -4176,7 +4224,7 @@ void* abt::ns_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ns_n = i32(new_nelems);
+        _db.ns_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4189,7 +4237,7 @@ void abt::ns_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ns_qFind(u64(n)).~FNs();
-        _db.ns_n = i32(n);
+        _db.ns_n = i64(n);
     }
 }
 
@@ -4366,7 +4414,7 @@ void* abt::filestat_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FFilestat*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.filestat_lary[bsr];
         if (!lev) {
             lev=(abt::FFilestat*)abt::lpool_AllocMem(sizeof(abt::FFilestat) * (u64(1)<<bsr));
@@ -4375,7 +4423,7 @@ void* abt::filestat_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.filestat_n = i32(new_nelems);
+        _db.filestat_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4387,7 +4435,7 @@ void abt::filestat_RemoveAll() {
     for (u64 n = _db.filestat_n; n>0; ) {
         n--;
         filestat_qFind(u64(n)).~FFilestat(); // destroy last element
-        _db.filestat_n = i32(n);
+        _db.filestat_n = i64(n);
     }
 }
 
@@ -4398,7 +4446,7 @@ void abt::filestat_RemoveLast() {
     if (n > 0) {
         n -= 1;
         filestat_qFind(u64(n)).~FFilestat();
-        _db.filestat_n = i32(n);
+        _db.filestat_n = i64(n);
     }
 }
 
@@ -4582,7 +4630,7 @@ void* abt::builddir_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     abt::FBuilddir*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.builddir_lary[bsr];
         if (!lev) {
             lev=(abt::FBuilddir*)abt::lpool_AllocMem(sizeof(abt::FBuilddir) * (u64(1)<<bsr));
@@ -4591,7 +4639,7 @@ void* abt::builddir_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.builddir_n = i32(new_nelems);
+        _db.builddir_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4603,7 +4651,7 @@ void abt::builddir_RemoveAll() {
     for (u64 n = _db.builddir_n; n>0; ) {
         n--;
         builddir_qFind(u64(n)).~FBuilddir(); // destroy last element
-        _db.builddir_n = i32(n);
+        _db.builddir_n = i64(n);
     }
 }
 
@@ -4614,7 +4662,7 @@ void abt::builddir_RemoveLast() {
     if (n > 0) {
         n -= 1;
         builddir_qFind(u64(n)).~FBuilddir();
-        _db.builddir_n = i32(n);
+        _db.builddir_n = i64(n);
     }
 }
 
@@ -4840,6 +4888,24 @@ abt::FSrcfile* abt::zd_inclstack_RemoveFirst() {
     return row;
 }
 
+// --- abt.FDb.zd_inclstack.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void abt::zd_inclstack_InsertBefore(abt::FSrcfile& row, abt::FSrcfile* before) {
+    if (!zd_inclstack_InLlistQ(row) && &row != before) {
+        abt::FSrcfile* next = before;
+        abt::FSrcfile* prev = next ? next->zd_inclstack_prev : _db.zd_inclstack_tail;
+        row.zd_inclstack_next = next;
+        row.zd_inclstack_prev = prev;
+        abt::FSrcfile **prev_link_a = &prev->zd_inclstack_next;
+        abt::FSrcfile **prev_link_b = &_db.zd_inclstack_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        abt::FSrcfile **next_link_a = &next->zd_inclstack_prev;
+        abt::FSrcfile **next_link_b = &_db.zd_inclstack_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_inclstack_n++;
+    }
+}
+
 // --- abt.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr abt::trace_RowidFind(int t) {
@@ -4944,6 +5010,7 @@ void abt::_db_bh_syscmd_curs_Next(_db_bh_syscmd_curs &curs) {
 // Set all fields to initial values.
 void abt::FDb_Init() {
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
+    memset(_db.lpool_blk, 0, sizeof(_db.lpool_blk));
     // initialize LAry srcfile (abt.FDb.srcfile)
     _db.srcfile_n = 0;
     memset(_db.srcfile_lary, 0, sizeof(_db.srcfile_lary)); // zero out all level pointers
@@ -5385,7 +5452,7 @@ void abt::FFilestat_Uninit(abt::FFilestat& filestat) {
 void abt::include_CopyOut(abt::FInclude &row, dev::Include &out) {
     out.include = row.include;
     out.sys = row.sys;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FInclude.msghdr.CopyIn
@@ -5397,15 +5464,13 @@ void abt::include_CopyIn(abt::FInclude &row, dev::Include &in) {
 }
 
 // --- abt.FInclude.srcfile.Get
-algo::Smallstr200 abt::srcfile_Get(abt::FInclude& include) {
-    algo::Smallstr200 ret(algo::Pathcomp(include.include, ":LL"));
-    return ret;
+algo::strptr abt::srcfile_Get(abt::FInclude& include) {
+    return algo::Pathcomp(include.include, ":LL");
 }
 
 // --- abt.FInclude.filename.Get
-algo::Smallstr200 abt::filename_Get(abt::FInclude& include) {
-    algo::Smallstr200 ret(algo::Pathcomp(include.include, ":LR"));
-    return ret;
+algo::strptr abt::filename_Get(abt::FInclude& include) {
+    return algo::Pathcomp(include.include, ":LR");
 }
 
 // --- abt.FInclude..Uninit
@@ -5424,7 +5489,7 @@ void abt::ns_CopyOut(abt::FNs &row, dmmeta::Ns &out) {
     out.ns = row.ns;
     out.nstype = row.nstype;
     out.license = row.license;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FNs.base.CopyIn
@@ -5455,9 +5520,8 @@ void abt::srcfile_CopyIn(abt::FSrcfile &row, dev::Srcfile &in) {
 }
 
 // --- abt.FSrcfile.ext.Get
-algo::Smallstr10 abt::ext_Get(abt::FSrcfile& srcfile) {
-    algo::Smallstr10 ret(algo::Pathcomp(srcfile.srcfile, ".RR"));
-    return ret;
+algo::strptr abt::ext_Get(abt::FSrcfile& srcfile) {
+    return algo::Pathcomp(srcfile.srcfile, ".RR");
 }
 
 // --- abt.FSrcfile.zd_include.Insert
@@ -5532,6 +5596,24 @@ abt::FInclude* abt::zd_include_RemoveFirst(abt::FSrcfile& srcfile) {
     return row;
 }
 
+// --- abt.FSrcfile.zd_include.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void abt::zd_include_InsertBefore(abt::FSrcfile& srcfile, abt::FInclude& row, abt::FInclude* before) {
+    if (!srcfile_zd_include_InLlistQ(row) && &row != before) {
+        abt::FInclude* next = before;
+        abt::FInclude* prev = next ? next->srcfile_zd_include_prev : srcfile.zd_include_tail;
+        row.srcfile_zd_include_next = next;
+        row.srcfile_zd_include_prev = prev;
+        abt::FInclude **prev_link_a = &prev->srcfile_zd_include_next;
+        abt::FInclude **prev_link_b = &srcfile.zd_include_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        abt::FInclude **next_link_a = &next->srcfile_zd_include_prev;
+        abt::FInclude **next_link_b = &srcfile.zd_include_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        srcfile.zd_include_n++;
+    }
+}
+
 // --- abt.FSrcfile..Init
 // Set all fields to initial values.
 void abt::FSrcfile_Init(abt::FSrcfile& srcfile) {
@@ -5586,12 +5668,12 @@ void abt::syscmd_CopyIn(abt::FSyscmd &row, dev::Syscmd &in) {
 }
 
 // --- abt.FSyscmd.c_prior.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void abt::c_prior_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
     if (!row.syscmd_c_prior_in_ary) {
         c_prior_Reserve(syscmd, 1);
-        u32 n  = syscmd.c_prior_n++;
+        u64 n  = syscmd.c_prior_n++;
         syscmd.c_prior_elems[n] = &row;
         row.syscmd_c_prior_in_ary = true;
     }
@@ -5610,15 +5692,15 @@ bool abt::c_prior_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 // --- abt.FSyscmd.c_prior.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
-    int n = syscmd.c_prior_n;
+    i64 n = syscmd.c_prior_n;
     if (bool_Update(row.syscmd_c_prior_in_ary,false)) {
         abt::FSyscmddep* *elems = syscmd.c_prior_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             abt::FSyscmddep* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(abt::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 syscmd.c_prior_n = n - 1;
@@ -5630,12 +5712,12 @@ void abt::c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 
 // --- abt.FSyscmd.c_prior.Reserve
 // Reserve space in index for N more elements;
-void abt::c_prior_Reserve(abt::FSyscmd& syscmd, u32 n) {
-    u32 old_max = syscmd.c_prior_max;
+void abt::c_prior_Reserve(abt::FSyscmd& syscmd, u64 n) {
+    u64 old_max = syscmd.c_prior_max;
     if (UNLIKELY(syscmd.c_prior_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(abt::FSyscmddep*);
-        u32 new_size = new_max * sizeof(abt::FSyscmddep*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, syscmd.c_prior_n + n), 4);
+        u64 old_size = old_max * sizeof(abt::FSyscmddep*);
+        u64 new_size = new_max * sizeof(abt::FSyscmddep*);
         void *new_mem = abt::lpool_ReallocMem(syscmd.c_prior_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("abt.out_of_memory  field:abt.FSyscmd.c_prior");
@@ -5646,12 +5728,12 @@ void abt::c_prior_Reserve(abt::FSyscmd& syscmd, u32 n) {
 }
 
 // --- abt.FSyscmd.c_next.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void abt::c_next_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
     if (!row.syscmd_c_next_in_ary) {
         c_next_Reserve(syscmd, 1);
-        u32 n  = syscmd.c_next_n++;
+        u64 n  = syscmd.c_next_n++;
         syscmd.c_next_elems[n] = &row;
         row.syscmd_c_next_in_ary = true;
     }
@@ -5670,15 +5752,15 @@ bool abt::c_next_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 // --- abt.FSyscmd.c_next.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
-    int n = syscmd.c_next_n;
+    i64 n = syscmd.c_next_n;
     if (bool_Update(row.syscmd_c_next_in_ary,false)) {
         abt::FSyscmddep* *elems = syscmd.c_next_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             abt::FSyscmddep* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(abt::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 syscmd.c_next_n = n - 1;
@@ -5690,12 +5772,12 @@ void abt::c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 
 // --- abt.FSyscmd.c_next.Reserve
 // Reserve space in index for N more elements;
-void abt::c_next_Reserve(abt::FSyscmd& syscmd, u32 n) {
-    u32 old_max = syscmd.c_next_max;
+void abt::c_next_Reserve(abt::FSyscmd& syscmd, u64 n) {
+    u64 old_max = syscmd.c_next_max;
     if (UNLIKELY(syscmd.c_next_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(abt::FSyscmddep*);
-        u32 new_size = new_max * sizeof(abt::FSyscmddep*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, syscmd.c_next_n + n), 4);
+        u64 old_size = old_max * sizeof(abt::FSyscmddep*);
+        u64 new_size = new_max * sizeof(abt::FSyscmddep*);
         void *new_mem = abt::lpool_ReallocMem(syscmd.c_next_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("abt.out_of_memory  field:abt.FSyscmd.c_next");
@@ -5776,7 +5858,7 @@ void abt::FSyscmddep_Uninit(abt::FSyscmddep& syscmddep) {
 // Copy fields out of row
 void abt::syslib_CopyOut(abt::FSyslib &row, dev::Syslib &out) {
     out.syslib = row.syslib;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FSyslib.msghdr.CopyIn
@@ -5796,7 +5878,7 @@ void abt::FSyslib_Uninit(abt::FSyslib& syslib) {
 // Copy fields out of row
 void abt::targdep_CopyOut(abt::FTargdep &row, dev::Targdep &out) {
     out.targdep = row.targdep;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FTargdep.msghdr.CopyIn
@@ -5807,15 +5889,13 @@ void abt::targdep_CopyIn(abt::FTargdep &row, dev::Targdep &in) {
 }
 
 // --- abt.FTargdep.target.Get
-algo::Smallstr16 abt::target_Get(abt::FTargdep& targdep) {
-    algo::Smallstr16 ret(algo::Pathcomp(targdep.targdep, ".RL"));
-    return ret;
+algo::strptr abt::target_Get(abt::FTargdep& targdep) {
+    return algo::Pathcomp(targdep.targdep, ".RL");
 }
 
 // --- abt.FTargdep.parent.Get
-algo::Smallstr16 abt::parent_Get(abt::FTargdep& targdep) {
-    algo::Smallstr16 ret(algo::Pathcomp(targdep.targdep, ".RR"));
-    return ret;
+algo::strptr abt::parent_Get(abt::FTargdep& targdep) {
+    return algo::Pathcomp(targdep.targdep, ".RR");
 }
 
 // --- abt.FTargdep..Uninit
@@ -5840,12 +5920,12 @@ void abt::target_CopyIn(abt::FTarget &row, dev::Target &in) {
 }
 
 // --- abt.FTarget.c_targsrc.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void abt::c_targsrc_Insert(abt::FTarget& target, abt::FTargsrc& row) {
     if (!row.target_c_targsrc_in_ary) {
         c_targsrc_Reserve(target, 1);
-        u32 n  = target.c_targsrc_n++;
+        u64 n  = target.c_targsrc_n++;
         target.c_targsrc_elems[n] = &row;
         row.target_c_targsrc_in_ary = true;
     }
@@ -5864,15 +5944,15 @@ bool abt::c_targsrc_InsertMaybe(abt::FTarget& target, abt::FTargsrc& row) {
 // --- abt.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) {
-    int n = target.c_targsrc_n;
+    i64 n = target.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
         abt::FTargsrc* *elems = target.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             abt::FTargsrc* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(abt::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 target.c_targsrc_n = n - 1;
@@ -5884,12 +5964,12 @@ void abt::c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) {
 
 // --- abt.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void abt::c_targsrc_Reserve(abt::FTarget& target, u32 n) {
-    u32 old_max = target.c_targsrc_max;
+void abt::c_targsrc_Reserve(abt::FTarget& target, u64 n) {
+    u64 old_max = target.c_targsrc_max;
     if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(abt::FTargsrc*);
-        u32 new_size = new_max * sizeof(abt::FTargsrc*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targsrc_n + n), 4);
+        u64 old_size = old_max * sizeof(abt::FTargsrc*);
+        u64 new_size = new_max * sizeof(abt::FTargsrc*);
         void *new_mem = abt::lpool_ReallocMem(target.c_targsrc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("abt.out_of_memory  field:abt.FTarget.c_targsrc");
@@ -5900,11 +5980,11 @@ void abt::c_targsrc_Reserve(abt::FTarget& target, u32 n) {
 }
 
 // --- abt.FTarget.c_srcfile.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void abt::c_srcfile_Insert(abt::FTarget& target, abt::FSrcfile& row) {
     c_srcfile_Reserve(target, 1);
-    u32 n  = target.c_srcfile_n++;
+    u64 n  = target.c_srcfile_n++;
     target.c_srcfile_elems[n] = &row;
 }
 
@@ -5915,18 +5995,15 @@ void abt::c_srcfile_Insert(abt::FTarget& target, abt::FSrcfile& row) {
 // Return value: whether element was inserted into array.
 bool abt::c_srcfile_ScanInsertMaybe(abt::FTarget& target, abt::FSrcfile& row) {
     bool retval = true;
-    u32 n  = target.c_srcfile_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = target.c_srcfile_n;
+    for (u64 i = 0; i < n; i++) {
         if (target.c_srcfile_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_srcfile_Reserve(target, 1);
-        target.c_srcfile_elems[n] = &row;
-        target.c_srcfile_n = n+1;
+        c_srcfile_Insert(target,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -5934,9 +6011,9 @@ bool abt::c_srcfile_ScanInsertMaybe(abt::FTarget& target, abt::FSrcfile& row) {
 // --- abt.FTarget.c_srcfile.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) {
-    int n = target.c_srcfile_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = target.c_srcfile_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (target.c_srcfile_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -5950,12 +6027,12 @@ void abt::c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) {
 
 // --- abt.FTarget.c_srcfile.Reserve
 // Reserve space in index for N more elements;
-void abt::c_srcfile_Reserve(abt::FTarget& target, u32 n) {
-    u32 old_max = target.c_srcfile_max;
+void abt::c_srcfile_Reserve(abt::FTarget& target, u64 n) {
+    u64 old_max = target.c_srcfile_max;
     if (UNLIKELY(target.c_srcfile_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(abt::FSrcfile*);
-        u32 new_size = new_max * sizeof(abt::FSrcfile*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_srcfile_n + n), 4);
+        u64 old_size = old_max * sizeof(abt::FSrcfile*);
+        u64 new_size = new_max * sizeof(abt::FSrcfile*);
         void *new_mem = abt::lpool_ReallocMem(target.c_srcfile_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("abt.out_of_memory  field:abt.FTarget.c_srcfile");
@@ -5966,12 +6043,12 @@ void abt::c_srcfile_Reserve(abt::FTarget& target, u32 n) {
 }
 
 // --- abt.FTarget.c_targdep.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void abt::c_targdep_Insert(abt::FTarget& target, abt::FTargdep& row) {
     if (!row.target_c_targdep_in_ary) {
         c_targdep_Reserve(target, 1);
-        u32 n  = target.c_targdep_n++;
+        u64 n  = target.c_targdep_n++;
         target.c_targdep_elems[n] = &row;
         row.target_c_targdep_in_ary = true;
     }
@@ -5990,15 +6067,15 @@ bool abt::c_targdep_InsertMaybe(abt::FTarget& target, abt::FTargdep& row) {
 // --- abt.FTarget.c_targdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) {
-    int n = target.c_targdep_n;
+    i64 n = target.c_targdep_n;
     if (bool_Update(row.target_c_targdep_in_ary,false)) {
         abt::FTargdep* *elems = target.c_targdep_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             abt::FTargdep* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(abt::FTargdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 target.c_targdep_n = n - 1;
@@ -6010,12 +6087,12 @@ void abt::c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) {
 
 // --- abt.FTarget.c_targdep.Reserve
 // Reserve space in index for N more elements;
-void abt::c_targdep_Reserve(abt::FTarget& target, u32 n) {
-    u32 old_max = target.c_targdep_max;
+void abt::c_targdep_Reserve(abt::FTarget& target, u64 n) {
+    u64 old_max = target.c_targdep_max;
     if (UNLIKELY(target.c_targdep_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(abt::FTargdep*);
-        u32 new_size = new_max * sizeof(abt::FTargdep*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targdep_n + n), 4);
+        u64 old_size = old_max * sizeof(abt::FTargdep*);
+        u64 new_size = new_max * sizeof(abt::FTargdep*);
         void *new_mem = abt::lpool_ReallocMem(target.c_targdep_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("abt.out_of_memory  field:abt.FTarget.c_targdep");
@@ -6026,12 +6103,12 @@ void abt::c_targdep_Reserve(abt::FTarget& target, u32 n) {
 }
 
 // --- abt.FTarget.c_targsyslib.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void abt::c_targsyslib_Insert(abt::FTarget& target, abt::FTargsyslib& row) {
     if (!row.target_c_targsyslib_in_ary) {
         c_targsyslib_Reserve(target, 1);
-        u32 n  = target.c_targsyslib_n++;
+        u64 n  = target.c_targsyslib_n++;
         target.c_targsyslib_elems[n] = &row;
         row.target_c_targsyslib_in_ary = true;
     }
@@ -6050,15 +6127,15 @@ bool abt::c_targsyslib_InsertMaybe(abt::FTarget& target, abt::FTargsyslib& row) 
 // --- abt.FTarget.c_targsyslib.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib& row) {
-    int n = target.c_targsyslib_n;
+    i64 n = target.c_targsyslib_n;
     if (bool_Update(row.target_c_targsyslib_in_ary,false)) {
         abt::FTargsyslib* *elems = target.c_targsyslib_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             abt::FTargsyslib* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(abt::FTargsyslib*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 target.c_targsyslib_n = n - 1;
@@ -6070,12 +6147,12 @@ void abt::c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib& row) {
 
 // --- abt.FTarget.c_targsyslib.Reserve
 // Reserve space in index for N more elements;
-void abt::c_targsyslib_Reserve(abt::FTarget& target, u32 n) {
-    u32 old_max = target.c_targsyslib_max;
+void abt::c_targsyslib_Reserve(abt::FTarget& target, u64 n) {
+    u64 old_max = target.c_targsyslib_max;
     if (UNLIKELY(target.c_targsyslib_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(abt::FTargsyslib*);
-        u32 new_size = new_max * sizeof(abt::FTargsyslib*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targsyslib_n + n), 4);
+        u64 old_size = old_max * sizeof(abt::FTargsyslib*);
+        u64 new_size = new_max * sizeof(abt::FTargsyslib*);
         void *new_mem = abt::lpool_ReallocMem(target.c_targsyslib_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("abt.out_of_memory  field:abt.FTarget.c_targsyslib");
@@ -6086,11 +6163,11 @@ void abt::c_targsyslib_Reserve(abt::FTarget& target, u32 n) {
 }
 
 // --- abt.FTarget.c_alldep.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void abt::c_alldep_Insert(abt::FTarget& target, abt::FTarget& row) {
     c_alldep_Reserve(target, 1);
-    u32 n  = target.c_alldep_n++;
+    u64 n  = target.c_alldep_n++;
     target.c_alldep_elems[n] = &row;
 }
 
@@ -6101,18 +6178,15 @@ void abt::c_alldep_Insert(abt::FTarget& target, abt::FTarget& row) {
 // Return value: whether element was inserted into array.
 bool abt::c_alldep_ScanInsertMaybe(abt::FTarget& target, abt::FTarget& row) {
     bool retval = true;
-    u32 n  = target.c_alldep_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = target.c_alldep_n;
+    for (u64 i = 0; i < n; i++) {
         if (target.c_alldep_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_alldep_Reserve(target, 1);
-        target.c_alldep_elems[n] = &row;
-        target.c_alldep_n = n+1;
+        c_alldep_Insert(target,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -6120,9 +6194,9 @@ bool abt::c_alldep_ScanInsertMaybe(abt::FTarget& target, abt::FTarget& row) {
 // --- abt.FTarget.c_alldep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) {
-    int n = target.c_alldep_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = target.c_alldep_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (target.c_alldep_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -6136,12 +6210,12 @@ void abt::c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) {
 
 // --- abt.FTarget.c_alldep.Reserve
 // Reserve space in index for N more elements;
-void abt::c_alldep_Reserve(abt::FTarget& target, u32 n) {
-    u32 old_max = target.c_alldep_max;
+void abt::c_alldep_Reserve(abt::FTarget& target, u64 n) {
+    u64 old_max = target.c_alldep_max;
     if (UNLIKELY(target.c_alldep_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(abt::FTarget*);
-        u32 new_size = new_max * sizeof(abt::FTarget*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_alldep_n + n), 4);
+        u64 old_size = old_max * sizeof(abt::FTarget*);
+        u64 new_size = new_max * sizeof(abt::FTarget*);
         void *new_mem = abt::lpool_ReallocMem(target.c_alldep_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("abt.out_of_memory  field:abt.FTarget.c_alldep");
@@ -6211,7 +6285,7 @@ void abt::FTarget_Uninit(abt::FTarget& target) {
 // Copy fields out of row
 void abt::targsrc_CopyOut(abt::FTargsrc &row, dev::Targsrc &out) {
     out.targsrc = row.targsrc;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FTargsrc.msghdr.CopyIn
@@ -6222,21 +6296,18 @@ void abt::targsrc_CopyIn(abt::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- abt.FTargsrc.target.Get
-algo::Smallstr16 abt::target_Get(abt::FTargsrc& targsrc) {
-    algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
-    return ret;
+algo::strptr abt::target_Get(abt::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LL");
 }
 
 // --- abt.FTargsrc.src.Get
-algo::Smallstr200 abt::src_Get(abt::FTargsrc& targsrc) {
-    algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
-    return ret;
+algo::strptr abt::src_Get(abt::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LR");
 }
 
 // --- abt.FTargsrc.ext.Get
-algo::Smallstr10 abt::ext_Get(abt::FTargsrc& targsrc) {
-    algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
-    return ret;
+algo::strptr abt::ext_Get(abt::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, ".RR");
 }
 
 // --- abt.FTargsrc..Uninit
@@ -6253,7 +6324,7 @@ void abt::FTargsrc_Uninit(abt::FTargsrc& targsrc) {
 // Copy fields out of row
 void abt::targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) {
     out.targsyslib = row.targsyslib;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FTargsyslib.msghdr.CopyIn
@@ -6264,27 +6335,23 @@ void abt::targsyslib_CopyIn(abt::FTargsyslib &row, dev::Targsyslib &in) {
 }
 
 // --- abt.FTargsyslib.target.Get
-algo::Smallstr16 abt::target_Get(abt::FTargsyslib& targsyslib) {
-    algo::Smallstr16 ret(algo::Pathcomp(targsyslib.targsyslib, "/LR.LL"));
-    return ret;
+algo::strptr abt::target_Get(abt::FTargsyslib& targsyslib) {
+    return algo::Pathcomp(targsyslib.targsyslib, "/LR.LL");
 }
 
 // --- abt.FTargsyslib.syslib.Get
-algo::Smallstr50 abt::syslib_Get(abt::FTargsyslib& targsyslib) {
-    algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, "/LR.LR"));
-    return ret;
+algo::strptr abt::syslib_Get(abt::FTargsyslib& targsyslib) {
+    return algo::Pathcomp(targsyslib.targsyslib, "/LR.LR");
 }
 
 // --- abt.FTargsyslib.uname.Get
-algo::Smallstr50 abt::uname_Get(abt::FTargsyslib& targsyslib) {
-    algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, "/LL"));
-    return ret;
+algo::strptr abt::uname_Get(abt::FTargsyslib& targsyslib) {
+    return algo::Pathcomp(targsyslib.targsyslib, "/LL");
 }
 
 // --- abt.FTargsyslib.prefix.Get
-algo::Smallstr50 abt::prefix_Get(abt::FTargsyslib& targsyslib) {
-    algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, ".RL"));
-    return ret;
+algo::strptr abt::prefix_Get(abt::FTargsyslib& targsyslib) {
+    return algo::Pathcomp(targsyslib.targsyslib, ".RL");
 }
 
 // --- abt.FTargsyslib..Uninit
@@ -6300,7 +6367,7 @@ void abt::FTargsyslib_Uninit(abt::FTargsyslib& targsyslib) {
 // Copy fields out of row
 void abt::tool_opt_CopyOut(abt::FToolOpt &row, dev::ToolOpt &out) {
     out.tool_opt = row.tool_opt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FToolOpt.msghdr.CopyIn
@@ -6311,51 +6378,43 @@ void abt::tool_opt_CopyIn(abt::FToolOpt &row, dev::ToolOpt &in) {
 }
 
 // --- abt.FToolOpt.uname.Get
-algo::Smallstr50 abt::uname_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LL-LL"));
-    return ret;
+algo::strptr abt::uname_Get(abt::FToolOpt& tool_opt) {
+    return algo::Pathcomp(tool_opt.tool_opt, "/LL.LL-LL");
 }
 
 // --- abt.FToolOpt.compiler.Get
-algo::Smallstr50 abt::compiler_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LL-LR"));
-    return ret;
+algo::strptr abt::compiler_Get(abt::FToolOpt& tool_opt) {
+    return algo::Pathcomp(tool_opt.tool_opt, "/LL.LL-LR");
 }
 
 // --- abt.FToolOpt.cfg.Get
-algo::Smallstr50 abt::cfg_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LR-LL"));
-    return ret;
+algo::strptr abt::cfg_Get(abt::FToolOpt& tool_opt) {
+    return algo::Pathcomp(tool_opt.tool_opt, "/LL.LR-LL");
 }
 
 // --- abt.FToolOpt.arch.Get
-algo::Smallstr50 abt::arch_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LR-LR"));
-    return ret;
+algo::strptr abt::arch_Get(abt::FToolOpt& tool_opt) {
+    return algo::Pathcomp(tool_opt.tool_opt, "/LL.LR-LR");
 }
 
 // --- abt.FToolOpt.target.Get
-algo::Smallstr50 abt::target_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LL"));
-    return ret;
+algo::strptr abt::target_Get(abt::FToolOpt& tool_opt) {
+    return algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LL");
 }
 
 // --- abt.FToolOpt.opt_type.Get
-algo::Smallstr50 abt::opt_type_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LR"));
-    return ret;
+algo::strptr abt::opt_type_Get(abt::FToolOpt& tool_opt) {
+    return algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LR");
 }
 
 // --- abt.FToolOpt.opt.Get
-algo::Smallstr100 abt::opt_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr100 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LR"));
-    return ret;
+algo::strptr abt::opt_Get(abt::FToolOpt& tool_opt) {
+    return algo::Pathcomp(tool_opt.tool_opt, "/LR:LR");
 }
 
 // --- abt.FToolOpt.sortfld.Get
-algo::Smallstr50 abt::sortfld_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, ".LL"));
-    return ret;
+algo::strptr abt::sortfld_Get(abt::FToolOpt& tool_opt) {
+    return algo::Pathcomp(tool_opt.tool_opt, ".LL");
 }
 
 // --- abt.FToolOpt.regx_opt.Print
@@ -6374,7 +6433,7 @@ void abt::regx_target_Print(abt::FToolOpt& tool_opt, algo::cstring &out) {
 // Copy fields out of row
 void abt::uname_CopyOut(abt::FUname &row, dev::Uname &out) {
     out.uname = row.uname;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- abt.FUname.msghdr.CopyIn
@@ -6462,7 +6521,7 @@ bool abt::FieldId_ReadStrptrMaybe(abt::FieldId &parent, algo::strptr in_str) {
 // --- abt.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:abt.FieldId.String  printfmt:Raw
-void abt::FieldId_Print(abt::FieldId& row, algo::cstring& str) {
+void abt::FieldId_Print(abt::FieldId row, algo::cstring& str) {
     abt::value_Print(row, str);
 }
 
@@ -6694,7 +6753,7 @@ bool abt::TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr in_str) {
 // --- abt.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:abt.TableId.String  printfmt:Raw
-void abt::TableId_Print(abt::TableId& row, algo::cstring& str) {
+void abt::TableId_Print(abt::TableId row, algo::cstring& str) {
     abt::value_Print(row, str);
 }
 

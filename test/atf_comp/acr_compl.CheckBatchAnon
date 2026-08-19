@@ -1,0 +1,6 @@
+# start acr_compl cmd:"$bindir/acr_compl -check_batch"
+acr_compl <- acr_compl.checkreq  id:1  line:'gcache -- g++ -c x.cpp'
+acr_compl <- acr_compl.checkreq  id:2  line:'acr -nosuchflag'
+# eof acr_compl
+acr_compl -> acr_compl.checkerr  id:2  err:'acr_compl.check  error:"unknown option"  value:nosuchflag  command:acr'
+# exit acr_compl code:1

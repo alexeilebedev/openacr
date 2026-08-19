@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -29,22 +20,22 @@
 
 // --- kafka_AclOperationTypeEnum
 
-enum kafka_AclOperationTypeEnum {                    // kafka.AclOperationType.value
-     kafka_AclOperationType_UNKNOWN            = 0
-    ,kafka_AclOperationType_ANY                = 1
-    ,kafka_AclOperationType_ALL                = 2
-    ,kafka_AclOperationType_READ               = 3
-    ,kafka_AclOperationType_WRITE              = 4
-    ,kafka_AclOperationType_CREATE             = 5
-    ,kafka_AclOperationType_DELETE             = 6
-    ,kafka_AclOperationType_ALTER              = 7
-    ,kafka_AclOperationType_DESCRIBE           = 8
-    ,kafka_AclOperationType_CLUSTER_ACTION     = 9
-    ,kafka_AclOperationType_DESCRIBE_CONFIGS   = 10
-    ,kafka_AclOperationType_ALTER_CONFIGS      = 11
-    ,kafka_AclOperationType_IDEMPOTENT_WRITE   = 12
-    ,kafka_AclOperationType_CREATE_TOKENS      = 13
-    ,kafka_AclOperationType_DESCRIBE_TOKENS    = 14
+enum kafka_AclOperationTypeEnum {    // kafka.AclOperationType.value
+     kafka_AclOperationType_UNKNOWN
+    ,kafka_AclOperationType_ANY
+    ,kafka_AclOperationType_ALL
+    ,kafka_AclOperationType_READ
+    ,kafka_AclOperationType_WRITE
+    ,kafka_AclOperationType_CREATE
+    ,kafka_AclOperationType_DELETE
+    ,kafka_AclOperationType_ALTER
+    ,kafka_AclOperationType_DESCRIBE
+    ,kafka_AclOperationType_CLUSTER_ACTION
+    ,kafka_AclOperationType_DESCRIBE_CONFIGS
+    ,kafka_AclOperationType_ALTER_CONFIGS
+    ,kafka_AclOperationType_IDEMPOTENT_WRITE
+    ,kafka_AclOperationType_CREATE_TOKENS
+    ,kafka_AclOperationType_DESCRIBE_TOKENS
 };
 
 enum { kafka_AclOperationTypeEnum_N = 15 };
@@ -76,11 +67,11 @@ enum { kafka_AclOperationsEnum_N = 16 };
 
 // --- kafka_AclPermissionTypeEnum
 
-enum kafka_AclPermissionTypeEnum {          // kafka.AclPermissionType.value
-     kafka_AclPermissionType_UNKNOWN   = 0
-    ,kafka_AclPermissionType_ANY       = 1
-    ,kafka_AclPermissionType_DENY      = 2
-    ,kafka_AclPermissionType_ALLOW     = 3
+enum kafka_AclPermissionTypeEnum {    // kafka.AclPermissionType.value
+     kafka_AclPermissionType_UNKNOWN
+    ,kafka_AclPermissionType_ANY
+    ,kafka_AclPermissionType_DENY
+    ,kafka_AclPermissionType_ALLOW
 };
 
 enum { kafka_AclPermissionTypeEnum_N = 4 };
@@ -88,12 +79,12 @@ enum { kafka_AclPermissionTypeEnum_N = 4 };
 
 // --- kafka_CompressionTypeEnum
 
-enum kafka_CompressionTypeEnum {                 // kafka.CompressionType.value
-     kafka_CompressionType_no_compression   = 0
-    ,kafka_CompressionType_gzip             = 1
-    ,kafka_CompressionType_snappy           = 2
-    ,kafka_CompressionType_lz4              = 3
-    ,kafka_CompressionType_zstd             = 4
+enum kafka_CompressionTypeEnum {    // kafka.CompressionType.value
+     kafka_CompressionType_no_compression
+    ,kafka_CompressionType_gzip
+    ,kafka_CompressionType_snappy
+    ,kafka_CompressionType_lz4
+    ,kafka_CompressionType_zstd
 };
 
 enum { kafka_CompressionTypeEnum_N = 5 };
@@ -101,16 +92,16 @@ enum { kafka_CompressionTypeEnum_N = 5 };
 
 // --- kafka_ConfigSourceEnum
 
-enum kafka_ConfigSourceEnum {                                // kafka.ConfigSource.value
-     kafka_ConfigSource_UNKNOWN                         = 0
-    ,kafka_ConfigSource_TOPIC_CONFIG                    = 1
-    ,kafka_ConfigSource_DYNAMIC_BROKER_CONFIG           = 2
-    ,kafka_ConfigSource_DYNAMIC_DEFAULT_BROKER_CONFIG   = 3
-    ,kafka_ConfigSource_STATIC_BROKER_CONFIG            = 4
-    ,kafka_ConfigSource_DEFAULT_CONFIG                  = 5
-    ,kafka_ConfigSource_DYNAMIC_BROKER_LOGGER_CONFIG    = 6
-    ,kafka_ConfigSource_CLIENT_METRICS_CONFIG           = 7
-    ,kafka_ConfigSource_GROUP_CONFIG                    = 8
+enum kafka_ConfigSourceEnum {    // kafka.ConfigSource.value
+     kafka_ConfigSource_UNKNOWN
+    ,kafka_ConfigSource_TOPIC_CONFIG
+    ,kafka_ConfigSource_DYNAMIC_BROKER_CONFIG
+    ,kafka_ConfigSource_DYNAMIC_DEFAULT_BROKER_CONFIG
+    ,kafka_ConfigSource_STATIC_BROKER_CONFIG
+    ,kafka_ConfigSource_DEFAULT_CONFIG
+    ,kafka_ConfigSource_DYNAMIC_BROKER_LOGGER_CONFIG
+    ,kafka_ConfigSource_CLIENT_METRICS_CONFIG
+    ,kafka_ConfigSource_GROUP_CONFIG
 };
 
 enum { kafka_ConfigSourceEnum_N = 9 };
@@ -118,17 +109,17 @@ enum { kafka_ConfigSourceEnum_N = 9 };
 
 // --- kafka_ConfigTypeEnum
 
-enum kafka_ConfigTypeEnum {           // kafka.ConfigType.value
-     kafka_ConfigType_UNKNOWN    = 0
-    ,kafka_ConfigType_BOOLEAN    = 1
-    ,kafka_ConfigType_STRING     = 2
-    ,kafka_ConfigType_INT        = 3
-    ,kafka_ConfigType_SHORT      = 4
-    ,kafka_ConfigType_LONG       = 5
-    ,kafka_ConfigType_DOUBLE     = 6
-    ,kafka_ConfigType_LIST       = 7
-    ,kafka_ConfigType_CLASS      = 8
-    ,kafka_ConfigType_PASSWORD   = 9
+enum kafka_ConfigTypeEnum {    // kafka.ConfigType.value
+     kafka_ConfigType_UNKNOWN
+    ,kafka_ConfigType_BOOLEAN
+    ,kafka_ConfigType_STRING
+    ,kafka_ConfigType_INT
+    ,kafka_ConfigType_SHORT
+    ,kafka_ConfigType_LONG
+    ,kafka_ConfigType_DOUBLE
+    ,kafka_ConfigType_LIST
+    ,kafka_ConfigType_CLASS
+    ,kafka_ConfigType_PASSWORD
 };
 
 enum { kafka_ConfigTypeEnum_N = 10 };
@@ -136,47 +127,47 @@ enum { kafka_ConfigTypeEnum_N = 10 };
 
 // --- kafka_FieldIdEnum
 
-enum kafka_FieldIdEnum {                          // kafka.FieldId.value
-     kafka_FieldId_value                    = 0
-    ,kafka_FieldId_UNKNOWN                  = 1
-    ,kafka_FieldId_ANY                      = 2
-    ,kafka_FieldId_ALL                      = 3
-    ,kafka_FieldId_READ                     = 4
-    ,kafka_FieldId_WRITE                    = 5
-    ,kafka_FieldId_CREATE                   = 6
-    ,kafka_FieldId_DELETE                   = 7
-    ,kafka_FieldId_ALTER                    = 8
-    ,kafka_FieldId_DESCRIBE                 = 9
-    ,kafka_FieldId_CLUSTER_ACTION           = 10
-    ,kafka_FieldId_DESCRIBE_CONFIGS         = 11
-    ,kafka_FieldId_ALTER_CONFIGS            = 12
-    ,kafka_FieldId_IDEMPOTENT_WRITE         = 13
-    ,kafka_FieldId_CREATE_TOKENS            = 14
-    ,kafka_FieldId_DESCRIBE_TOKENS          = 15
-    ,kafka_FieldId_OMITTED                  = 16
-    ,kafka_FieldId_key                      = 17
-    ,kafka_FieldId_base                     = 18
-    ,kafka_FieldId_type                     = 19
-    ,kafka_FieldId_version                  = 20
-    ,kafka_FieldId_group                    = 21
-    ,kafka_FieldId_topic                    = 22
-    ,kafka_FieldId_partition                = 23
-    ,kafka_FieldId_attributes               = 24
-    ,kafka_FieldId_pmask                    = 25
-    ,kafka_FieldId_timestamp_delta          = 26
-    ,kafka_FieldId_offset_delta             = 27
-    ,kafka_FieldId_headers                  = 28
-    ,kafka_FieldId_base_offset              = 29
-    ,kafka_FieldId_partition_leader_epoch   = 30
-    ,kafka_FieldId_magic                    = 31
-    ,kafka_FieldId_crc                      = 32
-    ,kafka_FieldId_last_offset_delta        = 33
-    ,kafka_FieldId_base_timestamp           = 34
-    ,kafka_FieldId_max_timestamp            = 35
-    ,kafka_FieldId_producer_id              = 36
-    ,kafka_FieldId_producer_epoch           = 37
-    ,kafka_FieldId_base_sequence            = 38
-    ,kafka_FieldId_records                  = 39
+enum kafka_FieldIdEnum {    // kafka.FieldId.value
+     kafka_FieldId_value
+    ,kafka_FieldId_UNKNOWN
+    ,kafka_FieldId_ANY
+    ,kafka_FieldId_ALL
+    ,kafka_FieldId_READ
+    ,kafka_FieldId_WRITE
+    ,kafka_FieldId_CREATE
+    ,kafka_FieldId_DELETE
+    ,kafka_FieldId_ALTER
+    ,kafka_FieldId_DESCRIBE
+    ,kafka_FieldId_CLUSTER_ACTION
+    ,kafka_FieldId_DESCRIBE_CONFIGS
+    ,kafka_FieldId_ALTER_CONFIGS
+    ,kafka_FieldId_IDEMPOTENT_WRITE
+    ,kafka_FieldId_CREATE_TOKENS
+    ,kafka_FieldId_DESCRIBE_TOKENS
+    ,kafka_FieldId_OMITTED
+    ,kafka_FieldId_key
+    ,kafka_FieldId_base
+    ,kafka_FieldId_type
+    ,kafka_FieldId_version
+    ,kafka_FieldId_group
+    ,kafka_FieldId_topic
+    ,kafka_FieldId_partition
+    ,kafka_FieldId_attributes
+    ,kafka_FieldId_pmask
+    ,kafka_FieldId_timestamp_delta
+    ,kafka_FieldId_offset_delta
+    ,kafka_FieldId_headers
+    ,kafka_FieldId_base_offset
+    ,kafka_FieldId_partition_leader_epoch
+    ,kafka_FieldId_magic
+    ,kafka_FieldId_crc
+    ,kafka_FieldId_last_offset_delta
+    ,kafka_FieldId_base_timestamp
+    ,kafka_FieldId_max_timestamp
+    ,kafka_FieldId_producer_id
+    ,kafka_FieldId_producer_epoch
+    ,kafka_FieldId_base_sequence
+    ,kafka_FieldId_records
 };
 
 enum { kafka_FieldIdEnum_N = 40 };
@@ -220,16 +211,16 @@ enum { kafka_GroupRecordValueHeaderMsgsCaseEnum_N = 1 };
 
 // --- kafka_GroupStateEnum
 
-enum kafka_GroupStateEnum {                      // kafka.GroupState.value
-     kafka_GroupState_Unknown               = 0
-    ,kafka_GroupState_PreparingRebalance    = 1
-    ,kafka_GroupState_CompletingRebalance   = 2
-    ,kafka_GroupState_Stable                = 3
-    ,kafka_GroupState_Dead                  = 4
-    ,kafka_GroupState_Empty                 = 5
-    ,kafka_GroupState_Assigning             = 6
-    ,kafka_GroupState_Reconciling           = 7
-    ,kafka_GroupState_NotReady              = 8
+enum kafka_GroupStateEnum {    // kafka.GroupState.value
+     kafka_GroupState_Unknown
+    ,kafka_GroupState_PreparingRebalance
+    ,kafka_GroupState_CompletingRebalance
+    ,kafka_GroupState_Stable
+    ,kafka_GroupState_Dead
+    ,kafka_GroupState_Empty
+    ,kafka_GroupState_Assigning
+    ,kafka_GroupState_Reconciling
+    ,kafka_GroupState_NotReady
 };
 
 enum { kafka_GroupStateEnum_N = 9 };
@@ -237,12 +228,12 @@ enum { kafka_GroupStateEnum_N = 9 };
 
 // --- kafka_PatternTypeEnum
 
-enum kafka_PatternTypeEnum {            // kafka.PatternType.value
-     kafka_PatternType_UNKNOWN    = 0   // Client is too old
-    ,kafka_PatternType_ANY        = 1   // In a filter, matches any resource pattern type
-    ,kafka_PatternType_MATCH      = 2   // In a filter, pattern matching
-    ,kafka_PatternType_LITERAL    = 3   // Literal resource name, or * for any
-    ,kafka_PatternType_PREFIXED   = 4   // Prefix for a resource
+enum kafka_PatternTypeEnum {                                                         // kafka.PatternType.value
+     kafka_PatternType_UNKNOWN    // Client is too old
+    ,kafka_PatternType_ANY        // In a filter, matches any resource pattern type
+    ,kafka_PatternType_MATCH      // In a filter, pattern matching
+    ,kafka_PatternType_LITERAL    // Literal resource name, or * for any
+    ,kafka_PatternType_PREFIXED   // Prefix for a resource
 };
 
 enum { kafka_PatternTypeEnum_N = 5 };
@@ -250,15 +241,15 @@ enum { kafka_PatternTypeEnum_N = 5 };
 
 // --- kafka_ResourceTypeEnum
 
-enum kafka_ResourceTypeEnum {                   // kafka.ResourceType.value
-     kafka_ResourceType_UNKNOWN            = 0
-    ,kafka_ResourceType_ANY                = 1
-    ,kafka_ResourceType_TOPIC              = 2
-    ,kafka_ResourceType_GROUP              = 3
-    ,kafka_ResourceType_CLUSTER            = 4
-    ,kafka_ResourceType_TRANSACTIONAL_ID   = 5
-    ,kafka_ResourceType_DELEGATION_TOKEN   = 6
-    ,kafka_ResourceType_USER               = 7
+enum kafka_ResourceTypeEnum {    // kafka.ResourceType.value
+     kafka_ResourceType_UNKNOWN
+    ,kafka_ResourceType_ANY
+    ,kafka_ResourceType_TOPIC
+    ,kafka_ResourceType_GROUP
+    ,kafka_ResourceType_CLUSTER
+    ,kafka_ResourceType_TRANSACTIONAL_ID
+    ,kafka_ResourceType_DELEGATION_TOKEN
+    ,kafka_ResourceType_USER
 };
 
 enum { kafka_ResourceTypeEnum_N = 8 };
@@ -266,9 +257,9 @@ enum { kafka_ResourceTypeEnum_N = 8 };
 
 // --- kafka_TimestampTypeEnum
 
-enum kafka_TimestampTypeEnum {                  // kafka.TimestampType.value
-     kafka_TimestampType_create_time       = 0
-    ,kafka_TimestampType_log_append_time   = 1
+enum kafka_TimestampTypeEnum {    // kafka.TimestampType.value
+     kafka_TimestampType_create_time
+    ,kafka_TimestampType_log_append_time
 };
 
 enum { kafka_TimestampTypeEnum_N = 2 };
@@ -318,7 +309,6 @@ struct AclOperationType { // kafka.AclOperationType: AclOperation type
     inline               AclOperationType(kafka_AclOperationTypeEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.AclOperationType.value.GetEnum
 inline kafka_AclOperationTypeEnum value_GetEnum(const kafka::AclOperationType& parent) __attribute__((nothrow));
@@ -356,7 +346,7 @@ inline void          AclOperationType_Init(kafka::AclOperationType& parent);
 // print string representation of ROW to string STR
 // cfmt:kafka.AclOperationType.String  printfmt:Raw
 // func:kafka.AclOperationType..Print
-void                 AclOperationType_Print(kafka::AclOperationType& row, algo::cstring& str) __attribute__((nothrow));
+void                 AclOperationType_Print(kafka::AclOperationType row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.AclOperations
 struct AclOperations { // kafka.AclOperations: ACL operations
@@ -370,7 +360,6 @@ struct AclOperations { // kafka.AclOperations: ACL operations
     // func:kafka.AclOperations..EnumCtor
     inline               AclOperations(kafka_AclOperationsEnum arg) __attribute__((nothrow));
 };
-
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 0.
 // func:kafka.AclOperations.UNKNOWN.Get
@@ -542,7 +531,6 @@ struct AclPermissionType { // kafka.AclPermissionType: AclPermission type
     inline               AclPermissionType(kafka_AclPermissionTypeEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.AclPermissionType.value.GetEnum
 inline kafka_AclPermissionTypeEnum value_GetEnum(const kafka::AclPermissionType& parent) __attribute__((nothrow));
@@ -580,7 +568,7 @@ inline void          AclPermissionType_Init(kafka::AclPermissionType& parent);
 // print string representation of ROW to string STR
 // cfmt:kafka.AclPermissionType.String  printfmt:Raw
 // func:kafka.AclPermissionType..Print
-void                 AclPermissionType_Print(kafka::AclPermissionType& row, algo::cstring& str) __attribute__((nothrow));
+void                 AclPermissionType_Print(kafka::AclPermissionType row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.CompressionType
 struct CompressionType { // kafka.CompressionType
@@ -592,7 +580,6 @@ struct CompressionType { // kafka.CompressionType
     // func:kafka.CompressionType..EnumCtor
     inline               CompressionType(kafka_CompressionTypeEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:kafka.CompressionType.value.GetEnum
 inline kafka_CompressionTypeEnum value_GetEnum(const kafka::CompressionType& parent) __attribute__((nothrow));
@@ -630,7 +617,7 @@ inline void          CompressionType_Init(kafka::CompressionType& parent);
 // print string representation of ROW to string STR
 // cfmt:kafka.CompressionType.String  printfmt:Raw
 // func:kafka.CompressionType..Print
-void                 CompressionType_Print(kafka::CompressionType& row, algo::cstring& str) __attribute__((nothrow));
+void                 CompressionType_Print(kafka::CompressionType row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.ConfigSource
 #pragma pack(push,1)
@@ -651,7 +638,6 @@ struct ConfigSource { // kafka.ConfigSource: Config type
     inline               ConfigSource(kafka_ConfigSourceEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.ConfigSource.value.GetEnum
 inline kafka_ConfigSourceEnum value_GetEnum(const kafka::ConfigSource& parent) __attribute__((nothrow));
@@ -680,22 +666,22 @@ void                 value_SetStrptr(kafka::ConfigSource& parent, algo::strptr r
 bool                 value_ReadStrptrMaybe(kafka::ConfigSource& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:kafka.ConfigSource..Hash
-inline u32           ConfigSource_Hash(u32 prev, const kafka::ConfigSource& rhs) __attribute__((nothrow));
+inline u32           ConfigSource_Hash(u32 prev, kafka::ConfigSource rhs) __attribute__((nothrow));
 // Read fields of kafka::ConfigSource from an ascii string.
 // The format of the string is the format of the kafka::ConfigSource's only field
 // func:kafka.ConfigSource..ReadStrptrMaybe
 bool                 ConfigSource_ReadStrptrMaybe(kafka::ConfigSource &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:kafka.ConfigSource..Cmp
-inline i32           ConfigSource_Cmp(kafka::ConfigSource& lhs, kafka::ConfigSource& rhs) __attribute__((nothrow));
+inline i32           ConfigSource_Cmp(kafka::ConfigSource lhs, kafka::ConfigSource rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:kafka.ConfigSource..Init
 inline void          ConfigSource_Init(kafka::ConfigSource& parent);
 // func:kafka.ConfigSource..Eq
-inline bool          ConfigSource_Eq(kafka::ConfigSource& lhs, kafka::ConfigSource& rhs) __attribute__((nothrow));
+inline bool          ConfigSource_Eq(kafka::ConfigSource lhs, kafka::ConfigSource rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:kafka.ConfigSource.String  printfmt:Raw
 // func:kafka.ConfigSource..Print
-void                 ConfigSource_Print(kafka::ConfigSource& row, algo::cstring& str) __attribute__((nothrow));
+void                 ConfigSource_Print(kafka::ConfigSource row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.ConfigType
 #pragma pack(push,1)
@@ -716,7 +702,6 @@ struct ConfigType { // kafka.ConfigType: Config type
     inline               ConfigType(kafka_ConfigTypeEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.ConfigType.value.GetEnum
 inline kafka_ConfigTypeEnum value_GetEnum(const kafka::ConfigType& parent) __attribute__((nothrow));
@@ -745,22 +730,22 @@ void                 value_SetStrptr(kafka::ConfigType& parent, algo::strptr rhs
 bool                 value_ReadStrptrMaybe(kafka::ConfigType& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:kafka.ConfigType..Hash
-inline u32           ConfigType_Hash(u32 prev, const kafka::ConfigType& rhs) __attribute__((nothrow));
+inline u32           ConfigType_Hash(u32 prev, kafka::ConfigType rhs) __attribute__((nothrow));
 // Read fields of kafka::ConfigType from an ascii string.
 // The format of the string is the format of the kafka::ConfigType's only field
 // func:kafka.ConfigType..ReadStrptrMaybe
 bool                 ConfigType_ReadStrptrMaybe(kafka::ConfigType &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:kafka.ConfigType..Cmp
-inline i32           ConfigType_Cmp(kafka::ConfigType& lhs, kafka::ConfigType& rhs) __attribute__((nothrow));
+inline i32           ConfigType_Cmp(kafka::ConfigType lhs, kafka::ConfigType rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:kafka.ConfigType..Init
 inline void          ConfigType_Init(kafka::ConfigType& parent);
 // func:kafka.ConfigType..Eq
-inline bool          ConfigType_Eq(kafka::ConfigType& lhs, kafka::ConfigType& rhs) __attribute__((nothrow));
+inline bool          ConfigType_Eq(kafka::ConfigType lhs, kafka::ConfigType rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:kafka.ConfigType.String  printfmt:Raw
 // func:kafka.ConfigType..Print
-void                 ConfigType_Print(kafka::ConfigType& row, algo::cstring& str) __attribute__((nothrow));
+void                 ConfigType_Print(kafka::ConfigType row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.Error
 struct Error { // kafka.Error
@@ -772,7 +757,6 @@ struct Error { // kafka.Error
     // func:kafka.Error..FieldwiseCtor
     explicit inline               Error(i16 in_value) __attribute__((nothrow));
 };
-
 // Read fields of kafka::Error from an ascii string.
 // The format of the string is the format of the kafka::Error's only field
 // func:kafka.Error..ReadStrptrMaybe
@@ -783,7 +767,7 @@ inline void          Error_Init(kafka::Error& parent);
 // print string representation of ROW to string STR
 // cfmt:kafka.Error.String  printfmt:Raw
 // func:kafka.Error..Print
-void                 Error_Print(kafka::Error& row, algo::cstring& str) __attribute__((nothrow));
+void                 Error_Print(kafka::Error row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.FieldId
 #pragma pack(push,1)
@@ -799,7 +783,6 @@ struct FieldId { // kafka.FieldId: Field read helper
     inline               FieldId(kafka_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.FieldId.value.GetEnum
 inline kafka_FieldIdEnum value_GetEnum(const kafka::FieldId& parent) __attribute__((nothrow));
@@ -837,7 +820,7 @@ inline void          FieldId_Init(kafka::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:kafka.FieldId.String  printfmt:Raw
 // func:kafka.FieldId..Print
-void                 FieldId_Print(kafka::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(kafka::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.Frame
 // access: kafka.Frame_curs.msg (Ptr)
@@ -847,7 +830,6 @@ struct Frame { // kafka.Frame: Frame of binary Kafka protocol
     // func:kafka.Frame..Ctor
     inline               Frame() __attribute__((nothrow));
 };
-
 // func:kafka.Frame.size.Get
 inline i32           size_Get(const kafka::Frame& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:kafka.Frame.size.Set
@@ -899,7 +881,6 @@ struct Frame_curs { // kafka.Frame_curs: Cursor for scanning messages in a mempt
     inline               Frame_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:kafka.Frame_curs..ValidQ
 inline bool          Frame_curs_ValidQ(kafka::Frame_curs& curs) __attribute__((nothrow));
 // func:kafka.Frame_curs..Reset
@@ -920,7 +901,6 @@ struct GroupRecordKeyHeader { // kafka.GroupRecordKeyHeader
     // func:kafka.GroupRecordKeyHeader..Ctor
     inline               GroupRecordKeyHeader() __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:kafka.GroupRecordKeyHeader.type.GetEnum
 inline kafka_GroupRecordKeyHeader_type_Enum type_GetEnum(const kafka::GroupRecordKeyHeader& parent) __attribute__((nothrow));
@@ -963,7 +943,6 @@ struct GroupRecordKeyHeaderMsgsCase { // kafka.GroupRecordKeyHeaderMsgsCase: Enu
     inline               GroupRecordKeyHeaderMsgsCase(kafka_GroupRecordKeyHeaderMsgsCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.GroupRecordKeyHeaderMsgsCase.value.GetEnum
 inline kafka_GroupRecordKeyHeaderMsgsCaseEnum value_GetEnum(const kafka::GroupRecordKeyHeaderMsgsCase& parent) __attribute__((nothrow));
@@ -1007,7 +986,6 @@ struct GroupRecordValueHeader { // kafka.GroupRecordValueHeader
     // func:kafka.GroupRecordValueHeader..Ctor
     inline               GroupRecordValueHeader() __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:kafka.GroupRecordValueHeader.type.GetEnum
 inline kafka_GroupRecordValueHeader_type_Enum type_GetEnum(const kafka::GroupRecordValueHeader& parent) __attribute__((nothrow));
@@ -1050,7 +1028,6 @@ struct GroupRecordValueHeaderMsgsCase { // kafka.GroupRecordValueHeaderMsgsCase:
     inline               GroupRecordValueHeaderMsgsCase(kafka_GroupRecordValueHeaderMsgsCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.GroupRecordValueHeaderMsgsCase.value.GetEnum
 inline kafka_GroupRecordValueHeaderMsgsCaseEnum value_GetEnum(const kafka::GroupRecordValueHeaderMsgsCase& parent) __attribute__((nothrow));
@@ -1105,7 +1082,6 @@ struct GroupState { // kafka.GroupState: Group state
     inline               GroupState(kafka_GroupStateEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.GroupState.value.GetEnum
 inline kafka_GroupStateEnum value_GetEnum(const kafka::GroupState& parent) __attribute__((nothrow));
@@ -1134,22 +1110,22 @@ void                 value_SetStrptr(kafka::GroupState& parent, algo::strptr rhs
 bool                 value_ReadStrptrMaybe(kafka::GroupState& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:kafka.GroupState..Hash
-inline u32           GroupState_Hash(u32 prev, const kafka::GroupState& rhs) __attribute__((nothrow));
+inline u32           GroupState_Hash(u32 prev, kafka::GroupState rhs) __attribute__((nothrow));
 // Read fields of kafka::GroupState from an ascii string.
 // The format of the string is the format of the kafka::GroupState's only field
 // func:kafka.GroupState..ReadStrptrMaybe
 bool                 GroupState_ReadStrptrMaybe(kafka::GroupState &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:kafka.GroupState..Cmp
-inline i32           GroupState_Cmp(kafka::GroupState& lhs, kafka::GroupState& rhs) __attribute__((nothrow));
+inline i32           GroupState_Cmp(kafka::GroupState lhs, kafka::GroupState rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:kafka.GroupState..Init
 inline void          GroupState_Init(kafka::GroupState& parent);
 // func:kafka.GroupState..Eq
-inline bool          GroupState_Eq(kafka::GroupState& lhs, kafka::GroupState& rhs) __attribute__((nothrow));
+inline bool          GroupState_Eq(kafka::GroupState lhs, kafka::GroupState rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:kafka.GroupState.String  printfmt:Raw
 // func:kafka.GroupState..Print
-void                 GroupState_Print(kafka::GroupState& row, algo::cstring& str) __attribute__((nothrow));
+void                 GroupState_Print(kafka::GroupState row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.Header
 // create: kafka.Record.headers (Tary)
@@ -1159,7 +1135,6 @@ struct Header { // kafka.Header
     // func:kafka.Header..Ctor
     inline               Header() __attribute__((nothrow));
 };
-
 // func:kafka.Header..ReadFieldMaybe
 bool                 Header_ReadFieldMaybe(kafka::Header& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of kafka::Header from an ascii string.
@@ -1181,7 +1156,6 @@ struct OffsetCommitKey { // kafka.OffsetCommitKey
     // func:kafka.OffsetCommitKey..Ctor
     inline               OffsetCommitKey() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:kafka.OffsetCommitKey.base.CopyOut
 void                 parent_CopyOut(kafka::OffsetCommitKey &row, kafka::GroupRecordKeyHeader &out) __attribute__((nothrow));
@@ -1219,7 +1193,6 @@ struct OffsetCommitValue { // kafka.OffsetCommitValue
     // func:kafka.OffsetCommitValue..Ctor
     inline               OffsetCommitValue() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:kafka.OffsetCommitValue.base.CopyOut
 void                 parent_CopyOut(kafka::OffsetCommitValue &row, kafka::GroupRecordValueHeader &out) __attribute__((nothrow));
@@ -1258,7 +1231,6 @@ struct PatternType { // kafka.PatternType: Pattern type
     inline               PatternType(kafka_PatternTypeEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.PatternType.value.GetEnum
 inline kafka_PatternTypeEnum value_GetEnum(const kafka::PatternType& parent) __attribute__((nothrow));
@@ -1287,22 +1259,22 @@ void                 value_SetStrptr(kafka::PatternType& parent, algo::strptr rh
 bool                 value_ReadStrptrMaybe(kafka::PatternType& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:kafka.PatternType..Hash
-inline u32           PatternType_Hash(u32 prev, const kafka::PatternType& rhs) __attribute__((nothrow));
+inline u32           PatternType_Hash(u32 prev, kafka::PatternType rhs) __attribute__((nothrow));
 // Read fields of kafka::PatternType from an ascii string.
 // The format of the string is the format of the kafka::PatternType's only field
 // func:kafka.PatternType..ReadStrptrMaybe
 bool                 PatternType_ReadStrptrMaybe(kafka::PatternType &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:kafka.PatternType..Cmp
-inline i32           PatternType_Cmp(kafka::PatternType& lhs, kafka::PatternType& rhs) __attribute__((nothrow));
+inline i32           PatternType_Cmp(kafka::PatternType lhs, kafka::PatternType rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:kafka.PatternType..Init
 inline void          PatternType_Init(kafka::PatternType& parent);
 // func:kafka.PatternType..Eq
-inline bool          PatternType_Eq(kafka::PatternType& lhs, kafka::PatternType& rhs) __attribute__((nothrow));
+inline bool          PatternType_Eq(kafka::PatternType lhs, kafka::PatternType rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:kafka.PatternType.String  printfmt:Raw
 // func:kafka.PatternType..Print
-void                 PatternType_Print(kafka::PatternType& row, algo::cstring& str) __attribute__((nothrow));
+void                 PatternType_Print(kafka::PatternType row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.Record
 // create: kafka.RecordBatch.records (Tary)
@@ -1314,8 +1286,8 @@ struct Record { // kafka.Record
     algo::cstring    key;               //
     algo::cstring    value;             //
     kafka::Header*   headers_elems;     // pointer to elements
-    u32              headers_n;         // number of elements in array
-    u32              headers_max;       // max. capacity of array before realloc
+    u64              headers_n;         // number of elements in array
+    u64              headers_max;       // max. capacity of array before realloc
     // func:kafka.Record..AssignOp
     kafka::Record&       operator =(const kafka::Record &rhs) __attribute__((nothrow));
     // func:kafka.Record..Ctor
@@ -1325,7 +1297,6 @@ struct Record { // kafka.Record
     // func:kafka.Record..CopyCtor
     Record(const kafka::Record &rhs) __attribute__((nothrow));
 };
-
 // Return constant 1
 // func:kafka.Record.pmask.N
 inline int           pmask_N(kafka::Record& parent) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -1404,15 +1375,15 @@ kafka::Header&       headers_Alloc(kafka::Record& parent) __attribute__((__warn_
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:kafka.Record.headers.AllocAt
-kafka::Header&       headers_AllocAt(kafka::Record& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+kafka::Header&       headers_AllocAt(kafka::Record& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:kafka.Record.headers.AllocN
-algo::aryptr<kafka::Header> headers_AllocN(kafka::Record& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<kafka::Header> headers_AllocN(kafka::Record& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:kafka.Record.headers.AllocNAt
-algo::aryptr<kafka::Header> headers_AllocNAt(kafka::Record& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<kafka::Header> headers_AllocNAt(kafka::Record& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:kafka.Record.headers.EmptyQ
 inline bool          headers_EmptyQ(kafka::Record& parent) __attribute__((nothrow));
@@ -1427,13 +1398,13 @@ inline algo::aryptr<kafka::Header> headers_Getary(const kafka::Record& parent) _
 inline kafka::Header* headers_Last(kafka::Record& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:kafka.Record.headers.Max
-inline i32           headers_Max(kafka::Record& parent) __attribute__((nothrow));
+inline i64           headers_Max(kafka::Record& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:kafka.Record.headers.N
-inline i32           headers_N(const kafka::Record& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           headers_N(const kafka::Record& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:kafka.Record.headers.Remove
-void                 headers_Remove(kafka::Record& parent, u32 i) __attribute__((nothrow));
+void                 headers_Remove(kafka::Record& parent, u64 i) __attribute__((nothrow));
 // func:kafka.Record.headers.RemoveAll
 void                 headers_RemoveAll(kafka::Record& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -1441,10 +1412,10 @@ void                 headers_RemoveAll(kafka::Record& parent) __attribute__((not
 void                 headers_RemoveLast(kafka::Record& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:kafka.Record.headers.Reserve
-inline void          headers_Reserve(kafka::Record& parent, int n) __attribute__((nothrow));
+inline void          headers_Reserve(kafka::Record& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:kafka.Record.headers.AbsReserve
-void                 headers_AbsReserve(kafka::Record& parent, int n) __attribute__((nothrow));
+void                 headers_AbsReserve(kafka::Record& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:kafka.Record.headers.Setary
 void                 headers_Setary(kafka::Record& parent, kafka::Record &rhs) __attribute__((nothrow));
@@ -1463,7 +1434,7 @@ inline kafka::Header& headers_qLast(kafka::Record& parent) __attribute__((nothro
 inline u64           headers_rowid_Get(kafka::Record& parent, kafka::Header &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:kafka.Record.headers.AllocNVal
-algo::aryptr<kafka::Header> headers_AllocNVal(kafka::Record& parent, int n_elems, const kafka::Header& val) __attribute__((nothrow));
+algo::aryptr<kafka::Header> headers_AllocNVal(kafka::Record& parent, i64 n_elems, const kafka::Header& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -1472,7 +1443,13 @@ bool                 headers_ReadStrptrMaybe(kafka::Record& parent, algo::strptr
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:kafka.Record.headers.Insary
-void                 headers_Insary(kafka::Record& parent, algo::aryptr<kafka::Header> rhs, int at) __attribute__((nothrow));
+void                 headers_Insary(kafka::Record& parent, algo::aryptr<kafka::Header> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:kafka.Record.headers.RemRegion
+void                 headers_RemRegion(kafka::Record& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:kafka.Record.headers_curs.Next
@@ -1515,8 +1492,8 @@ struct RecordBatch { // kafka.RecordBatch
     i16              producer_epoch;           //   -1
     i32              base_sequence;            //   -1
     kafka::Record*   records_elems;            // pointer to elements
-    u32              records_n;                // number of elements in array
-    u32              records_max;              // max. capacity of array before realloc
+    u64              records_n;                // number of elements in array
+    u64              records_max;              // max. capacity of array before realloc
     // func:kafka.RecordBatch..AssignOp
     kafka::RecordBatch&  operator =(const kafka::RecordBatch &rhs) __attribute__((nothrow));
     // func:kafka.RecordBatch..Ctor
@@ -1526,7 +1503,6 @@ struct RecordBatch { // kafka.RecordBatch
     // func:kafka.RecordBatch..CopyCtor
     RecordBatch(const kafka::RecordBatch &rhs) __attribute__((nothrow));
 };
-
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
@@ -1539,15 +1515,15 @@ kafka::Record&       records_Alloc(kafka::RecordBatch& parent) __attribute__((__
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:kafka.RecordBatch.records.AllocAt
-kafka::Record&       records_AllocAt(kafka::RecordBatch& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+kafka::Record&       records_AllocAt(kafka::RecordBatch& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:kafka.RecordBatch.records.AllocN
-algo::aryptr<kafka::Record> records_AllocN(kafka::RecordBatch& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<kafka::Record> records_AllocN(kafka::RecordBatch& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:kafka.RecordBatch.records.AllocNAt
-algo::aryptr<kafka::Record> records_AllocNAt(kafka::RecordBatch& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<kafka::Record> records_AllocNAt(kafka::RecordBatch& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:kafka.RecordBatch.records.EmptyQ
 inline bool          records_EmptyQ(kafka::RecordBatch& parent) __attribute__((nothrow));
@@ -1562,13 +1538,13 @@ inline algo::aryptr<kafka::Record> records_Getary(const kafka::RecordBatch& pare
 inline kafka::Record* records_Last(kafka::RecordBatch& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:kafka.RecordBatch.records.Max
-inline i32           records_Max(kafka::RecordBatch& parent) __attribute__((nothrow));
+inline i64           records_Max(kafka::RecordBatch& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:kafka.RecordBatch.records.N
-inline i32           records_N(const kafka::RecordBatch& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           records_N(const kafka::RecordBatch& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:kafka.RecordBatch.records.Remove
-void                 records_Remove(kafka::RecordBatch& parent, u32 i) __attribute__((nothrow));
+void                 records_Remove(kafka::RecordBatch& parent, u64 i) __attribute__((nothrow));
 // func:kafka.RecordBatch.records.RemoveAll
 void                 records_RemoveAll(kafka::RecordBatch& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -1576,10 +1552,10 @@ void                 records_RemoveAll(kafka::RecordBatch& parent) __attribute__
 void                 records_RemoveLast(kafka::RecordBatch& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:kafka.RecordBatch.records.Reserve
-inline void          records_Reserve(kafka::RecordBatch& parent, int n) __attribute__((nothrow));
+inline void          records_Reserve(kafka::RecordBatch& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:kafka.RecordBatch.records.AbsReserve
-void                 records_AbsReserve(kafka::RecordBatch& parent, int n) __attribute__((nothrow));
+void                 records_AbsReserve(kafka::RecordBatch& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:kafka.RecordBatch.records.Setary
 void                 records_Setary(kafka::RecordBatch& parent, kafka::RecordBatch &rhs) __attribute__((nothrow));
@@ -1598,7 +1574,7 @@ inline kafka::Record& records_qLast(kafka::RecordBatch& parent) __attribute__((n
 inline u64           records_rowid_Get(kafka::RecordBatch& parent, kafka::Record &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:kafka.RecordBatch.records.AllocNVal
-algo::aryptr<kafka::Record> records_AllocNVal(kafka::RecordBatch& parent, int n_elems, const kafka::Record& val) __attribute__((nothrow));
+algo::aryptr<kafka::Record> records_AllocNVal(kafka::RecordBatch& parent, i64 n_elems, const kafka::Record& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -1607,7 +1583,13 @@ bool                 records_ReadStrptrMaybe(kafka::RecordBatch& parent, algo::s
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:kafka.RecordBatch.records.Insary
-void                 records_Insary(kafka::RecordBatch& parent, algo::aryptr<kafka::Record> rhs, int at) __attribute__((nothrow));
+void                 records_Insary(kafka::RecordBatch& parent, algo::aryptr<kafka::Record> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:kafka.RecordBatch.records.RemRegion
+void                 records_RemRegion(kafka::RecordBatch& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:kafka.RecordBatch.records_curs.Next
@@ -1655,7 +1637,6 @@ struct ResourceType { // kafka.ResourceType: Resource type
     inline               ResourceType(kafka_ResourceTypeEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:kafka.ResourceType.value.GetEnum
 inline kafka_ResourceTypeEnum value_GetEnum(const kafka::ResourceType& parent) __attribute__((nothrow));
@@ -1684,22 +1665,22 @@ void                 value_SetStrptr(kafka::ResourceType& parent, algo::strptr r
 bool                 value_ReadStrptrMaybe(kafka::ResourceType& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:kafka.ResourceType..Hash
-inline u32           ResourceType_Hash(u32 prev, const kafka::ResourceType& rhs) __attribute__((nothrow));
+inline u32           ResourceType_Hash(u32 prev, kafka::ResourceType rhs) __attribute__((nothrow));
 // Read fields of kafka::ResourceType from an ascii string.
 // The format of the string is the format of the kafka::ResourceType's only field
 // func:kafka.ResourceType..ReadStrptrMaybe
 bool                 ResourceType_ReadStrptrMaybe(kafka::ResourceType &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:kafka.ResourceType..Cmp
-inline i32           ResourceType_Cmp(kafka::ResourceType& lhs, kafka::ResourceType& rhs) __attribute__((nothrow));
+inline i32           ResourceType_Cmp(kafka::ResourceType lhs, kafka::ResourceType rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:kafka.ResourceType..Init
 inline void          ResourceType_Init(kafka::ResourceType& parent);
 // func:kafka.ResourceType..Eq
-inline bool          ResourceType_Eq(kafka::ResourceType& lhs, kafka::ResourceType& rhs) __attribute__((nothrow));
+inline bool          ResourceType_Eq(kafka::ResourceType lhs, kafka::ResourceType rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:kafka.ResourceType.String  printfmt:Raw
 // func:kafka.ResourceType..Print
-void                 ResourceType_Print(kafka::ResourceType& row, algo::cstring& str) __attribute__((nothrow));
+void                 ResourceType_Print(kafka::ResourceType row, algo::cstring& str) __attribute__((nothrow));
 
 // --- kafka.TimestampType
 struct TimestampType { // kafka.TimestampType
@@ -1711,7 +1692,6 @@ struct TimestampType { // kafka.TimestampType
     // func:kafka.TimestampType..EnumCtor
     inline               TimestampType(kafka_TimestampTypeEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:kafka.TimestampType.value.GetEnum
 inline kafka_TimestampTypeEnum value_GetEnum(const kafka::TimestampType& parent) __attribute__((nothrow));
@@ -1749,7 +1729,7 @@ inline void          TimestampType_Init(kafka::TimestampType& parent);
 // print string representation of ROW to string STR
 // cfmt:kafka.TimestampType.String  printfmt:Raw
 // func:kafka.TimestampType..Print
-void                 TimestampType_Print(kafka::TimestampType& row, algo::cstring& str) __attribute__((nothrow));
+void                 TimestampType_Print(kafka::TimestampType row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace kafka { // gen:ns_curstext
 
@@ -1765,8 +1745,8 @@ struct Frame_payload_curs {// cursor
 struct Record_headers_curs {// cursor
     typedef kafka::Header ChildType;
     kafka::Header* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     Record_headers_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -1774,8 +1754,8 @@ struct Record_headers_curs {// cursor
 struct RecordBatch_records_curs {// cursor
     typedef kafka::Record ChildType;
     kafka::Record* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     RecordBatch_records_curs() { elems=NULL; n_elems=0; index=0; }
 };
 

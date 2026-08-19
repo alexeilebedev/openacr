@@ -1,0 +1,5 @@
+amsdb.mcgrptype  grptype:xbcast  trafficclass:control  fanout:Y  comment:""
+amsdb.mcgrptype  grptype:xinctl  trafficclass:control  fanout:N  comment:""
+amsdb.mcgrptype  grptype:xindata  trafficclass:data  fanout:N  comment:""
+amsdb.mcgrptype  grptype:xingf  trafficclass:gapfill  fanout:N  comment:""
+amsdb.mcgrptype  grptype:xpart  trafficclass:data  fanout:Y  comment:""

@@ -1,0 +1,39 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N %.FmtJson < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.BaseType  comment:""
+amc <- dmmeta.field  field:algo_lib.BaseType.value  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.BaseType.count  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Derived  comment:""
+amc <- dmmeta.field  field:algo_lib.Derived.base  arg:algo_lib.BaseType  reftype:Base  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Derived.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Flags  comment:""
+amc <- dmmeta.field  field:algo_lib.Flags.value  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Flags.bit0  arg:bool  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.Flags.bit0  offset:0  width:1  srcfield:algo_lib.Flags.value  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Flags.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+# eof amc
+amc -> // --- algo_lib.Derived..FmtJson
+amc -> // Create JSON representation of algo_lib::Derived under PARENT node
+amc -> // cfmt:algo_lib.Derived.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Derived_FmtJson(algo_lib::Derived row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     u32_Print(row.value, lib_json::NewStringNode(objnode, "value").value);
+amc ->     u64_Print(row.count, lib_json::NewStringNode(objnode, "count").value);
+amc ->     return objnode;
+amc -> }
+amc -> // --- algo_lib.Flags..FmtJson
+amc -> // Create JSON representation of algo_lib::Flags under PARENT node
+amc -> // cfmt:algo_lib.Flags.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Flags_FmtJson(algo_lib::Flags row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode& value_node = lib_json::NewStringNode(parent);
+amc ->     u32_Print(row.value, value_node.value);
+amc ->     return &value_node;
+amc -> }
+# exit amc code:0

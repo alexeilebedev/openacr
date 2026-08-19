@@ -58,9 +58,6 @@ static bool EarlierPoolQ(amc::FField &field, amc::FField &first_inst) {
 static void Thash_Check(amc::FField &field) {
     // check if the field is an index for an item whose pool is in the same
     // scope but declared earlier (e.g. Lary, Tary).
-    // #AL# -- one way to avoid this is if we call RemoveAll on the index
-    // in the destructor.
-    // #AL# What if the child element has Upptr to the parent element?
     amc::FField *first_inst = amc::FirstInst(*field.p_arg);
     if (first_inst && EarlierPoolQ(field,*first_inst)) {
         prerr("amc.hash_order"
@@ -260,8 +257,7 @@ static bool CanGetOrCreateQ(amc::FField &field) {
         n_iffy_path += !ignore && !always_succeeds;
     }ind_end;
     return n_iffy_path <= max_iffy_path
-        && zd_varlenfld_EmptyQ(ctype)
-        && !ctype.c_optfld
+        && !amc::RuntimeFrameLenQ(ctype)
         && FirstInst(ctype)!=NULL;
 }
 
@@ -272,11 +268,22 @@ void amc::tfunc_Thash_GetOrCreate() {
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField *inst = FirstInst(*field.p_arg);
     amc::FThash &thash = *field.c_thash;
-    // this function must always succeed!
-    if (CanGetOrCreateQ(field) && field.c_xref && !FldfuncQ(*thash.p_hashfld)) {
+    // CanGetOrCreateQ-clean fields: xref always succeeds → reference
+    // return (vrfy guards against the unreachable failure case).
+    // Iffy fields (some xref can return false at runtime — see
+    // CanGetOrCreateQ): pointer return; caller checks for NULL.
+    bool always   = field.c_xref && inst && !FldfuncQ(*thash.p_hashfld)
+        && CanGetOrCreateQ(field);
+    // Pointer variant requires the same shape constraints as the
+    // always-succeeds case minus the iffy-budget check.
+    bool eligible_iffy = !always
+        && field.c_xref && inst && !FldfuncQ(*thash.p_hashfld)
+        && !amc::RuntimeFrameLenQ(*field.p_arg);
+    bool eligible = always || eligible_iffy;
+    if (eligible) {
         Set(R, "$impool"     , strptr(name_Get(*inst)));
         amc::FFunc& goc = amc::CreateCurFunc();
-        Ins(&R, goc.ret  , "$Cpptype&", false);
+        Ins(&R, goc.ret  , always ? "$Cpptype&" : "$Cpptype*", false);
         Ins(&R, goc.proto, "$name_GetOrCreate($Parent, $Hashfldarg key)", false);
         Ins(&R, goc.body,         "$Cpptype* ret = $name_Find($pararg, key);");
         Ins(&R, goc.body,         "if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.");
@@ -304,8 +311,12 @@ void amc::tfunc_Thash_GetOrCreate() {
         Ins(&R, goc.body,         "        ret = NULL;");
         Ins(&R, goc.body,         "    }");
         Ins(&R, goc.body,         "}");
-        Ins(&R, goc.body,         "vrfy(ret, tempstr() << \"$ns.create_error  table:$name  key:'\"<<key<<\"'  comment:'bad xref'\");");
-        Ins(&R, goc.body,         "return *ret;");
+        if (always) {
+            Ins(&R, goc.body,     "vrfy(ret, tempstr() << \"$ns.create_error  table:$name  key:'\"<<key<<\"'  comment:'bad xref'\");");
+            Ins(&R, goc.body,     "return *ret;");
+        } else {
+            Ins(&R, goc.body,     "return ret;");
+        }
     }
 }
 
@@ -367,6 +378,9 @@ void amc::tfunc_Thash_InsertMaybe() {
     Ins(&R, ins.body    , "        row.$xfname_next = *prev;");
     Ins(&R, ins.body    , "        $parname.$name_n++;");
     Ins(&R, ins.body    , "        *prev = &row;");
+    if (amc::FindFfunc(field, amcdb_cbtype_OnXref, true)) {
+        Ins(&R, ins.body, "        $name_OnXref($pararg, row); // dmmeta.ffunc:$field/OnXref");
+    }
     Ins(&R, ins.body    , "    }");
     Ins(&R, ins.body    , "}");
     Ins(&R, ins.body    , "return retval;");
@@ -393,6 +407,7 @@ void amc::tfunc_Thash_Cascdel() {
 
 void amc::tfunc_Thash_Remove() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& rem = amc::CreateCurFunc();
     Ins(&R, rem.ret  , "void", false);
@@ -410,6 +425,9 @@ void amc::tfunc_Thash_Remove() {
     Ins(&R, rem.body, "            *prev = next->$xfname_next; // unlink (singly linked list)");
     Ins(&R, rem.body, "            $parname.$name_n--;");
     Ins(&R, rem.body, "            row.$xfname_next = ($Cpptype*)-1;// not-in-hash");
+    if (amc::FindFfunc(field, amcdb_cbtype_OnUnref, true)) {
+        Ins(&R, rem.body, "            $name_OnUnref($pararg, row); // dmmeta.ffunc:$field/OnUnref");
+    }
     Ins(&R, rem.body, "            break;");
     Ins(&R, rem.body, "        }");
     Ins(&R, rem.body, "        prev = &next->$xfname_next;");
@@ -421,7 +439,7 @@ void amc::tfunc_Thash_FindRemove() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
 
-    if (field.c_findrem) {
+    if (amc::FindFfunc(field, "FindRemove", true)) {
         amc::FFunc& findrem = amc::CreateCurFunc();
         Ins(&R, findrem.ret  , "$Cpptype*", false);
         Ins(&R, findrem.proto, "$name_FindRemove($Parent, $Hashfldarg key)", false);

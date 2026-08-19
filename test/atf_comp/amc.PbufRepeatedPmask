@@ -1,0 +1,67 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Msg..Print' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:""
+amc <- dmmeta.nscpp  ns:pbt  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Msg  comment:""
+amc <- dmmeta.field  field:pbt.Msg.pmask  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld  field:pbt.Msg.pmask  filter_print:Y  comment:""
+amc <- dmmeta.field  field:pbt.Msg.tag  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:pbt.Msg.tag  aliased:N  comment:""
+amc <- dmmeta.cfmt  cfmt:pbt.Msg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.tag  field_number:1  pb_type:uint32  packed:N  comment:""
+# eof amc
+amc -> // --- pbt.Msg..Print
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:pbt.Msg.String  printfmt:Tuple
+amc -> void pbt::Msg_Print(pbt::Msg& row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     str << "pbt.Msg";
+amc ->     if (tag_PresentQ(row)) {
+amc ->         ind_beg(Msg_tag_curs,tag,row) {
+amc ->             u32_Print(tag, temp);
+amc ->             tempstr name;
+amc ->             name << "tag.";
+amc ->             name << ind_curs(tag).index;
+amc ->             PrintAttrSpaceReset(str, name, temp);
+amc ->         }ind_end;
+amc ->     }
+amc -> }
+amc -> // --- pbt.Msg..PbufDecode
+amc -> bool pbt::Msg_PbufDecode(algo::memptr& buf, pbt::Msg& parent) {
+amc ->     bool ok = true;
+amc ->     while (ok && elems_N(buf) > 0) {
+amc ->         u32 pb_field_number(0);
+amc ->         u8 pb_wire_type(0);
+amc ->         ok = lib_pb::DecodeTag(buf,pb_field_number,pb_wire_type);
+amc ->         if (!ok) {
+amc ->             break;
+amc ->         }
+amc ->         switch (pb_field_number) {
+amc ->             case 1: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     algo::memptr tag_packed;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,tag_packed);
+amc ->                     while (ok && elems_N(tag_packed) > 0) {
+amc ->                         ok = ok && lib_pb::DecodeVarintU32(tag_packed,tag_Alloc(parent));
+amc ->                     }
+amc ->                     tag_SetPresent(parent);
+amc ->                 } else if (pb_wire_type == 0) {
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,tag_Alloc(parent));
+amc ->                     tag_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             default:
+amc ->             ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->             break;
+amc ->         }
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

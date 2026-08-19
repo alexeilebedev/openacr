@@ -102,7 +102,7 @@ inline bool lib_ctype::c_field_EmptyQ(lib_ctype::FCtype& ctype) {
 
 // --- lib_ctype.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_ctype::FField* lib_ctype::c_field_Find(lib_ctype::FCtype& ctype, u32 t) {
+inline lib_ctype::FField* lib_ctype::c_field_Find(lib_ctype::FCtype& ctype, u64 t) {
     lib_ctype::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_n;
@@ -120,14 +120,14 @@ inline algo::aryptr<lib_ctype::FField*> lib_ctype::c_field_Getary(lib_ctype::FCt
 
 // --- lib_ctype.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i32 lib_ctype::c_field_N(const lib_ctype::FCtype& ctype) {
+inline i64 lib_ctype::c_field_N(const lib_ctype::FCtype& ctype) {
     return ctype.c_field_n;
 }
 
 // --- lib_ctype.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_ctype::c_field_RemoveAll(lib_ctype::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_field_n; i++) {
+    for (u64 i = 0; i < ctype.c_field_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
@@ -136,7 +136,7 @@ inline void lib_ctype::c_field_RemoveAll(lib_ctype::FCtype& ctype) {
 
 // --- lib_ctype.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline lib_ctype::FField& lib_ctype::c_field_qFind(lib_ctype::FCtype& ctype, u32 idx) {
+inline lib_ctype::FField& lib_ctype::c_field_qFind(lib_ctype::FCtype& ctype, u64 idx) {
     return *ctype.c_field_elems[idx];
 }
 
@@ -180,7 +180,7 @@ inline bool lib_ctype::c_cfmt_EmptyQ(lib_ctype::FCtype& ctype) {
 
 // --- lib_ctype.FCtype.c_cfmt.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_ctype::FCfmt* lib_ctype::c_cfmt_Find(lib_ctype::FCtype& ctype, u32 t) {
+inline lib_ctype::FCfmt* lib_ctype::c_cfmt_Find(lib_ctype::FCtype& ctype, u64 t) {
     lib_ctype::FCfmt *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_cfmt_n;
@@ -198,14 +198,14 @@ inline algo::aryptr<lib_ctype::FCfmt*> lib_ctype::c_cfmt_Getary(lib_ctype::FCtyp
 
 // --- lib_ctype.FCtype.c_cfmt.N
 // Return number of items in the pointer array
-inline i32 lib_ctype::c_cfmt_N(const lib_ctype::FCtype& ctype) {
+inline i64 lib_ctype::c_cfmt_N(const lib_ctype::FCtype& ctype) {
     return ctype.c_cfmt_n;
 }
 
 // --- lib_ctype.FCtype.c_cfmt.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_ctype::c_cfmt_RemoveAll(lib_ctype::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_cfmt_n; i++) {
+    for (u64 i = 0; i < ctype.c_cfmt_n; i++) {
         // mark all elements as not-in-array
         ctype.c_cfmt_elems[i]->ctype_c_cfmt_in_ary = false;
     }
@@ -214,7 +214,7 @@ inline void lib_ctype::c_cfmt_RemoveAll(lib_ctype::FCtype& ctype) {
 
 // --- lib_ctype.FCtype.c_cfmt.qFind
 // Return reference without bounds checking
-inline lib_ctype::FCfmt& lib_ctype::c_cfmt_qFind(lib_ctype::FCtype& ctype, u32 idx) {
+inline lib_ctype::FCfmt& lib_ctype::c_cfmt_qFind(lib_ctype::FCtype& ctype, u64 idx) {
     return *ctype.c_cfmt_elems[idx];
 }
 
@@ -362,7 +362,7 @@ inline lib_ctype::FFconst* lib_ctype::fconst_Last() {
 
 // --- lib_ctype.FDb.fconst.N
 // Return number of items in the pool
-inline i32 lib_ctype::fconst_N() {
+inline i64 lib_ctype::fconst_N() {
     return _db.fconst_n;
 }
 
@@ -428,7 +428,7 @@ inline lib_ctype::FSsimfile* lib_ctype::ssimfile_Last() {
 
 // --- lib_ctype.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 lib_ctype::ssimfile_N() {
+inline i64 lib_ctype::ssimfile_N() {
     return _db.ssimfile_n;
 }
 
@@ -482,7 +482,7 @@ inline lib_ctype::FFtuple* lib_ctype::ftuple_Last() {
 
 // --- lib_ctype.FDb.ftuple.N
 // Return number of items in the pool
-inline i32 lib_ctype::ftuple_N() {
+inline i64 lib_ctype::ftuple_N() {
     return _db.ftuple_n;
 }
 
@@ -524,7 +524,7 @@ inline lib_ctype::FCtype* lib_ctype::ctype_Last() {
 
 // --- lib_ctype.FDb.ctype.N
 // Return number of items in the pool
-inline i32 lib_ctype::ctype_N() {
+inline i64 lib_ctype::ctype_N() {
     return _db.ctype_n;
 }
 
@@ -578,7 +578,7 @@ inline lib_ctype::FField* lib_ctype::field_Last() {
 
 // --- lib_ctype.FDb.field.N
 // Return number of items in the pool
-inline i32 lib_ctype::field_N() {
+inline i64 lib_ctype::field_N() {
     return _db.field_n;
 }
 
@@ -632,7 +632,7 @@ inline lib_ctype::FCdflt* lib_ctype::cdflt_Last() {
 
 // --- lib_ctype.FDb.cdflt.N
 // Return number of items in the pool
-inline i32 lib_ctype::cdflt_N() {
+inline i64 lib_ctype::cdflt_N() {
     return _db.cdflt_n;
 }
 
@@ -674,7 +674,7 @@ inline lib_ctype::FCfmt* lib_ctype::cfmt_Last() {
 
 // --- lib_ctype.FDb.cfmt.N
 // Return number of items in the pool
-inline i32 lib_ctype::cfmt_N() {
+inline i64 lib_ctype::cfmt_N() {
     return _db.cfmt_n;
 }
 
@@ -728,7 +728,7 @@ inline lib_ctype::FCppfunc* lib_ctype::cppfunc_Last() {
 
 // --- lib_ctype.FDb.cppfunc.N
 // Return number of items in the pool
-inline i32 lib_ctype::cppfunc_N() {
+inline i64 lib_ctype::cppfunc_N() {
     return _db.cppfunc_n;
 }
 
@@ -770,7 +770,7 @@ inline lib_ctype::FSubstr* lib_ctype::substr_Last() {
 
 // --- lib_ctype.FDb.substr.N
 // Return number of items in the pool
-inline i32 lib_ctype::substr_N() {
+inline i64 lib_ctype::substr_N() {
     return _db.substr_n;
 }
 
@@ -812,7 +812,7 @@ inline lib_ctype::FUnstablefld* lib_ctype::unstablefld_Last() {
 
 // --- lib_ctype.FDb.unstablefld.N
 // Return number of items in the pool
-inline i32 lib_ctype::unstablefld_N() {
+inline i64 lib_ctype::unstablefld_N() {
     return _db.unstablefld_n;
 }
 
@@ -854,7 +854,7 @@ inline lib_ctype::FBltin* lib_ctype::bltin_Last() {
 
 // --- lib_ctype.FDb.bltin.N
 // Return number of items in the pool
-inline i32 lib_ctype::bltin_N() {
+inline i64 lib_ctype::bltin_N() {
     return _db.bltin_n;
 }
 
@@ -896,7 +896,7 @@ inline lib_ctype::FSqltype* lib_ctype::sqltype_Last() {
 
 // --- lib_ctype.FDb.sqltype.N
 // Return number of items in the pool
-inline i32 lib_ctype::sqltype_N() {
+inline i64 lib_ctype::sqltype_N() {
     return _db.sqltype_n;
 }
 
@@ -1375,7 +1375,7 @@ inline bool lib_ctype::c_substr_srcfield_EmptyQ(lib_ctype::FField& field) {
 
 // --- lib_ctype.FField.c_substr_srcfield.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_ctype::FSubstr* lib_ctype::c_substr_srcfield_Find(lib_ctype::FField& field, u32 t) {
+inline lib_ctype::FSubstr* lib_ctype::c_substr_srcfield_Find(lib_ctype::FField& field, u64 t) {
     lib_ctype::FSubstr *retval = NULL;
     u64 idx = t;
     u64 lim = field.c_substr_srcfield_n;
@@ -1393,14 +1393,14 @@ inline algo::aryptr<lib_ctype::FSubstr*> lib_ctype::c_substr_srcfield_Getary(lib
 
 // --- lib_ctype.FField.c_substr_srcfield.N
 // Return number of items in the pointer array
-inline i32 lib_ctype::c_substr_srcfield_N(const lib_ctype::FField& field) {
+inline i64 lib_ctype::c_substr_srcfield_N(const lib_ctype::FField& field) {
     return field.c_substr_srcfield_n;
 }
 
 // --- lib_ctype.FField.c_substr_srcfield.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_ctype::c_substr_srcfield_RemoveAll(lib_ctype::FField& field) {
-    for (u32 i = 0; i < field.c_substr_srcfield_n; i++) {
+    for (u64 i = 0; i < field.c_substr_srcfield_n; i++) {
         // mark all elements as not-in-array
         field.c_substr_srcfield_elems[i]->field_c_substr_srcfield_in_ary = false;
     }
@@ -1409,7 +1409,7 @@ inline void lib_ctype::c_substr_srcfield_RemoveAll(lib_ctype::FField& field) {
 
 // --- lib_ctype.FField.c_substr_srcfield.qFind
 // Return reference without bounds checking
-inline lib_ctype::FSubstr& lib_ctype::c_substr_srcfield_qFind(lib_ctype::FField& field, u32 idx) {
+inline lib_ctype::FSubstr& lib_ctype::c_substr_srcfield_qFind(lib_ctype::FField& field, u64 idx) {
     return *field.c_substr_srcfield_elems[idx];
 }
 

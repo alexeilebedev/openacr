@@ -59,6 +59,6 @@ namespace lib_mysql { // update-hdr
     // error
     void MQuery(MYSQL *conn, strptr query, lib_mysql::Res &res);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void mysql_Cleanup(); // fcleanup:lib_mysql.FDb.mysql
-    // void res_Cleanup(lib_mysql::Res &res); // fcleanup:lib_mysql.Res.res
+    // void mysql_Cleanup(); // ffunc:lib_mysql.FDb.mysql.Cleanup
+    // void res_Cleanup(lib_mysql::Res &res); // ffunc:lib_mysql.Res.res.Cleanup
 }

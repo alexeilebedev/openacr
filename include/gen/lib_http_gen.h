@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -30,8 +21,8 @@
 
 // --- lib_http_FieldIdEnum
 
-enum lib_http_FieldIdEnum {        // lib_http.FieldId.value
-     lib_http_FieldId_value   = 0
+enum lib_http_FieldIdEnum {    // lib_http.FieldId.value
+     lib_http_FieldId_value
 };
 
 enum { lib_http_FieldIdEnum_N = 1 };
@@ -56,7 +47,6 @@ struct FStatus { // lib_http.FStatus
     // func:lib_http.FStatus..Ctor
     inline               FStatus() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_http.FStatus.base.CopyOut
 void                 status_CopyOut(lib_http::FStatus &row, httpdb::Status &out) __attribute__((nothrow));
@@ -68,7 +58,7 @@ void                 status_CopyIn(lib_http::FStatus &row, httpdb::Status &in) _
 u16                  code_Get(lib_http::FStatus& status) __attribute__((__warn_unused_result__, nothrow));
 
 // func:lib_http.FStatus.reason.Get
-algo::Smallstr50     reason_Get(lib_http::FStatus& status) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         reason_Get(lib_http::FStatus& status) __attribute__((__warn_unused_result__, nothrow));
 
 
 // --- lib_http.trace
@@ -78,7 +68,6 @@ struct trace { // lib_http.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:lib_http.trace.String  printfmt:Tuple
 // func:lib_http.trace..Print
@@ -87,12 +76,11 @@ void                 trace_Print(lib_http::trace& row, algo::cstring& str) __att
 // --- lib_http.FDb
 // create: lib_http.FDb._db (Global)
 struct FDb { // lib_http.FDb
-    u128              status_data[sizeu128(lib_http::FStatus,40)];   // place for data
-    i32               status_n;                                      // number of elems current in existence
+    alignas(lib_http::FStatus) u8   status_data[sizeof(lib_http::FStatus) * 40];   // place for data
+    i32                             status_n;                                      // number of elems current in existence
     enum { status_max = 40 };
-    lib_http::trace   trace;                                         //
+    lib_http::trace                 trace;                                         //
 };
-
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_http.FDb._db.InsertStrptrMaybe
@@ -117,6 +105,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_http.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_http.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_http.FDb._db.XrefMaybe
@@ -203,7 +195,6 @@ struct FieldId { // lib_http.FieldId: Field read helper
     inline               FieldId(lib_http_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_http.FieldId.value.GetEnum
 inline lib_http_FieldIdEnum value_GetEnum(const lib_http::FieldId& parent) __attribute__((nothrow));
@@ -241,7 +232,7 @@ inline void          FieldId_Init(lib_http::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_http.FieldId.String  printfmt:Raw
 // func:lib_http.FieldId..Print
-void                 FieldId_Print(lib_http::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_http::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_http { // gen:ns_curstext
 

@@ -1,0 +1,197 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Rep..PbufDecode' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:""
+amc <- dmmeta.listtype  listtype:cd  circular:Y  haveprev:Y  instail:Y  comment:""
+amc <- amcdb.tcurs  tfunc:Llist.curs  dflt:Y  comment:""
+amc <- amcdb.tcurs  tfunc:Llist.delcurs  dflt:N  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ns  ns:pbt  nstype:lib  license:GPL  comment:""
+amc <- dmmeta.nscpp  ns:pbt  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Sub  comment:"embedded message, with a repeated member so a merge is visible"
+amc <- dmmeta.field  field:pbt.Sub.item  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:pbt.Sub.item  aliased:N  comment:""
+amc <- dmmeta.cpbuf  ctype:pbt.Sub  syntax:proto3  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Sub.item  field_number:1  pb_type:uint32  packed:N  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Msg  comment:"every singular store shape of the pbuf decoder in one message"
+amc <- dmmeta.field  field:pbt.Msg.pmask  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld  field:pbt.Msg.pmask  filter_print:N  comment:""
+amc <- dmmeta.field  field:pbt.Msg.plain  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:pbt.Msg.opt  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld_member  pmaskfld_member:pbt.Msg.pmask/pbt.Msg.opt  comment:""
+amc <- dmmeta.field  field:pbt.Msg.bare  arg:pbt.Sub  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:pbt.Msg.sub  arg:pbt.Sub  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld_member  pmaskfld_member:pbt.Msg.pmask/pbt.Msg.sub  comment:""
+amc <- dmmeta.field  field:pbt.Msg.flags  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:pbt.Msg.slice  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:pbt.Msg.slice  offset:0  width:8  srcfield:pbt.Msg.flags  comment:""
+amc <- dmmeta.pmaskfld_member  pmaskfld_member:pbt.Msg.pmask/pbt.Msg.slice  comment:""
+amc <- dmmeta.field  field:pbt.Msg.netval  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fbigend  field:pbt.Msg.netval  comment:""
+amc <- dmmeta.field  field:pbt.Msg.computed  arg:pbt.Sub  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cppfunc  field:pbt.Msg.computed  expr:"parent.bare"  print:N  set:Y
+amc <- dmmeta.field  field:pbt.Msg.cond  arg:bool  reftype:Val  dflt:false  comment:""
+amc <- dmmeta.ctype  ctype:pbt.FDb  comment:""
+amc <- dmmeta.field  field:pbt.FDb._db  arg:pbt.FDb  reftype:Global  dflt:""  comment:""
+amc <- dmmeta.field  field:pbt.FDb.msg  arg:pbt.Msg  reftype:Tpool  dflt:""  comment:""
+amc <- dmmeta.field  field:pbt.FDb.cd_msg_on  arg:pbt.Msg  reftype:Llist  dflt:""  comment:""
+amc <- dmmeta.llist  field:pbt.FDb.cd_msg_on  havetail:N  havecount:N  comment:""
+amc <- dmmeta.xref  field:pbt.FDb.cd_msg_on  inscond:false  via:""
+amc <- dmmeta.fcond  fcond:pbt.Msg.cond/true  ins:pbt.FDb.cd_msg_on  via:""  rem:Y  comment:"mirror: on the list iff the wire said true"
+amc <- dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.plain  field_number:1  pb_type:uint32  packed:N  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.opt  field_number:2  pb_type:uint32  packed:N  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.bare  field_number:3  pb_type:message  packed:N  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.sub  field_number:4  pb_type:message  packed:N  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.slice  field_number:5  pb_type:uint32  packed:N  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.netval  field_number:6  pb_type:uint32  packed:N  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.computed  field_number:7  pb_type:message  packed:N  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.cond  field_number:8  pb_type:bool  packed:N  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Rep  comment:"the repeated controls: every occurrence appends through Alloc"
+amc <- dmmeta.field  field:pbt.Rep.pmask  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld  field:pbt.Rep.pmask  filter_print:N  comment:""
+amc <- dmmeta.field  field:pbt.Rep.tag  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:pbt.Rep.tag  aliased:N  comment:""
+amc <- dmmeta.pmaskfld_member  pmaskfld_member:pbt.Rep.pmask/pbt.Rep.tag  comment:""
+amc <- dmmeta.field  field:pbt.Rep.item  arg:pbt.Sub  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:pbt.Rep.item  aliased:N  comment:""
+amc <- dmmeta.cpbuf  ctype:pbt.Rep  syntax:proto3  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Rep.tag  field_number:1  pb_type:uint32  packed:N  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Rep.item  field_number:2  pb_type:message  packed:N  comment:""
+# eof amc
+amc -> // --- pbt.Msg..PbufDecode
+amc -> bool pbt::Msg_PbufDecode(algo::memptr& buf, pbt::Msg& parent) {
+amc ->     bool ok = true;
+amc ->     while (ok && elems_N(buf) > 0) {
+amc ->         u32 pb_field_number(0);
+amc ->         u8 pb_wire_type(0);
+amc ->         ok = lib_pb::DecodeTag(buf,pb_field_number,pb_wire_type);
+amc ->         if (!ok) {
+amc ->             break;
+amc ->         }
+amc ->         switch (pb_field_number) {
+amc ->             case 1: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,parent.plain);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 2: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,parent.opt);
+amc ->                     opt_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 3: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     algo::memptr bare_sub;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,bare_sub);
+amc ->                     ok = ok && pbt::Sub_PbufDecode(bare_sub,parent.bare);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 4: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     algo::memptr sub_sub;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,sub_sub);
+amc ->                     ok = ok && pbt::Sub_PbufDecode(sub_sub,parent.sub);
+amc ->                     sub_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 5: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     u32 slice_tmp = u32();
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,slice_tmp);
+amc ->                     slice_Set(parent, slice_tmp);
+amc ->                     slice_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 6: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     u32 netval_tmp = u32();
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,netval_tmp);
+amc ->                     netval_Set(parent, netval_tmp);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 7: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     pbt::Sub computed_tmp(computed_Get(parent));
+amc ->                     algo::memptr computed_sub;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,computed_sub);
+amc ->                     ok = ok && pbt::Sub_PbufDecode(computed_sub,computed_tmp);
+amc ->                     computed_Set(parent, computed_tmp);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 8: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     bool cond_tmp = bool();
+amc ->                     ok = ok && lib_pb::DecodeBool(buf,cond_tmp);
+amc ->                     cond_Set(parent, cond_tmp);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             default:
+amc ->             ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->             break;
+amc ->         }
+amc ->     }
+amc ->     return ok;
+amc -> }
+amc -> // --- pbt.Rep..PbufDecode
+amc -> bool pbt::Rep_PbufDecode(algo::memptr& buf, pbt::Rep& parent) {
+amc ->     bool ok = true;
+amc ->     while (ok && elems_N(buf) > 0) {
+amc ->         u32 pb_field_number(0);
+amc ->         u8 pb_wire_type(0);
+amc ->         ok = lib_pb::DecodeTag(buf,pb_field_number,pb_wire_type);
+amc ->         if (!ok) {
+amc ->             break;
+amc ->         }
+amc ->         switch (pb_field_number) {
+amc ->             case 1: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     algo::memptr tag_packed;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,tag_packed);
+amc ->                     while (ok && elems_N(tag_packed) > 0) {
+amc ->                         ok = ok && lib_pb::DecodeVarintU32(tag_packed,tag_Alloc(parent));
+amc ->                     }
+amc ->                     tag_SetPresent(parent);
+amc ->                 } else if (pb_wire_type == 0) {
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,tag_Alloc(parent));
+amc ->                     tag_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 2: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     algo::memptr item_sub;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,item_sub);
+amc ->                     ok = ok && pbt::Sub_PbufDecode(item_sub,item_Alloc(parent));
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             default:
+amc ->             ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->             break;
+amc ->         }
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

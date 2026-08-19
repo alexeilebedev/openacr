@@ -3,8 +3,7 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-<!-- dev.mdmark  mdmark:TOC  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
 &#128193; [algo - Basic types and functions](/txt/protocol/algo/README.md)<br/>
 &#128193; [ams - Algo Messaging System protocol](/txt/protocol/ams/README.md)<br/>
 &#128193; [atf - Algo Testing Framework](/txt/protocol/atf/README.md)<br/>
@@ -16,8 +15,4 @@
 &#128193; [kafka - Kafka protocol](/txt/protocol/kafka/README.md)<br/>
 &#128193; [report - Command reports](/txt/protocol/report/README.md)<br/>
 &#128193; [ws - WebSocket binary protocol](/txt/protocol/ws/README.md)<br/>
-
-<!-- dev.mdmark  mdmark:TOC  state:END_AUTO  param:Toc -->
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
+<!-- abt_md.toc_end -->

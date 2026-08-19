@@ -72,7 +72,7 @@ inline orgfile::FFilehash* orgfile::filehash_Last() {
 
 // --- orgfile.FDb.filehash.N
 // Return number of items in the pool
-inline i32 orgfile::filehash_N() {
+inline i64 orgfile::filehash_N() {
     return _db.filehash_n;
 }
 
@@ -126,7 +126,7 @@ inline orgfile::FTimefmt* orgfile::timefmt_Last() {
 
 // --- orgfile.FDb.timefmt.N
 // Return number of items in the pool
-inline i32 orgfile::timefmt_N() {
+inline i64 orgfile::timefmt_N() {
     return _db.timefmt_n;
 }
 
@@ -198,7 +198,7 @@ inline bool orgfile::c_filename_EmptyQ(orgfile::FFilehash& filehash) {
 
 // --- orgfile.FFilehash.c_filename.Find
 // Look up row by row id. Return NULL if out of range
-inline orgfile::FFilename* orgfile::c_filename_Find(orgfile::FFilehash& filehash, u32 t) {
+inline orgfile::FFilename* orgfile::c_filename_Find(orgfile::FFilehash& filehash, u64 t) {
     orgfile::FFilename *retval = NULL;
     u64 idx = t;
     u64 lim = filehash.c_filename_n;
@@ -216,14 +216,14 @@ inline algo::aryptr<orgfile::FFilename*> orgfile::c_filename_Getary(orgfile::FFi
 
 // --- orgfile.FFilehash.c_filename.N
 // Return number of items in the pointer array
-inline i32 orgfile::c_filename_N(const orgfile::FFilehash& filehash) {
+inline i64 orgfile::c_filename_N(const orgfile::FFilehash& filehash) {
     return filehash.c_filename_n;
 }
 
 // --- orgfile.FFilehash.c_filename.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void orgfile::c_filename_RemoveAll(orgfile::FFilehash& filehash) {
-    for (u32 i = 0; i < filehash.c_filename_n; i++) {
+    for (u64 i = 0; i < filehash.c_filename_n; i++) {
         // mark all elements as not-in-array
         filehash.c_filename_elems[i]->filehash_c_filename_in_ary = false;
     }
@@ -232,7 +232,7 @@ inline void orgfile::c_filename_RemoveAll(orgfile::FFilehash& filehash) {
 
 // --- orgfile.FFilehash.c_filename.qFind
 // Return reference without bounds checking
-inline orgfile::FFilename& orgfile::c_filename_qFind(orgfile::FFilehash& filehash, u32 idx) {
+inline orgfile::FFilename& orgfile::c_filename_qFind(orgfile::FFilehash& filehash, u64 idx) {
     return *filehash.c_filename_elems[idx];
 }
 

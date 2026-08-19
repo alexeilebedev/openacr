@@ -46,11 +46,11 @@ template<class T> inline void algo::Refurbish(T &t) FUNCATTR(F_NONNULL) {
 }
 
 
-template<class T> inline int algo::elems_N(const aryptr<T> &ary) {
+template<class T> inline i64 algo::elems_N(const aryptr<T> &ary) {
     return ary.n_elems;
 }
 
-template<class T> inline int algo::ch_N(const aryptr<T> &ary) {
+template<class T> inline i64 algo::ch_N(const aryptr<T> &ary) {
     return ary.n_elems;
 }
 
@@ -65,51 +65,51 @@ template<class T> inline algo::aryptr<T>::aryptr() {
     n_elems = 0;
 }
 
-template<class T> inline T &algo::aryptr<T>::operator [](u32 idx) const {
+template<class T> inline T &algo::aryptr<T>::operator [](u64 idx) const {
     return elems[idx];
 }
 
-template<class T, class U> inline int algo::Find(const algo::aryptr<T> &lhs, const U&t) {
-    frep_ (i, lhs.n_elems) {
-        if (lhs.elems[i]==t) {
+template<class T, class U> inline i64 algo::Find(const algo::aryptr<T> &lhs, const U&t) {
+    for (i64 i = 0; i < lhs.n_elems; ++i) {
+        if (lhs.elems[i] == t) {
             return i;
         }
     }
     return -1;
 }
 
-template<class T> inline algo::aryptr<T> algo::FirstN(const algo::aryptr<T> &lhs, u32 n) {
-    u32 lim = lhs.n_elems;
+template<class T> inline algo::aryptr<T> algo::FirstN(const algo::aryptr<T> &lhs, u64 n) {
+    u64 lim = lhs.n_elems;
     if (n > lim) {
         n = lim;
     }
     return algo::aryptr<T>(lhs.elems, n);
 }
 
-template<class T> inline algo::aryptr<T> algo::LastN(const algo::aryptr<T> &lhs, u32 n) {
-    u32 lim = lhs.n_elems;
+template<class T> inline algo::aryptr<T> algo::LastN(const algo::aryptr<T> &lhs, u64 n) {
+    u64 lim = lhs.n_elems;
     if (n > lim) {
         n = lim;
     }
     return algo::aryptr<T>(lhs.elems + lim - n, n);
 }
 
-template<class T> inline algo::aryptr<T> algo::RestFrom(const algo::aryptr<T> &lhs, u32 n) {
-    u32 lim = lhs.n_elems;
+template<class T> inline algo::aryptr<T> algo::RestFrom(const algo::aryptr<T> &lhs, u64 n) {
+    u64 lim = lhs.n_elems;
     if (n > lim) {
         n = lim;
     }
     return algo::aryptr<T>(lhs.elems + n, lim - n);
 }
 
-template<class T> inline algo::aryptr<T> algo::qGetRegion(const algo::aryptr<T> &lhs, u32 lo, u32 n) {
+template<class T> inline algo::aryptr<T> algo::qGetRegion(const algo::aryptr<T> &lhs, u64 lo, u64 n) {
     return algo::aryptr<T>(lhs.elems + lo, n);
 }
 
-template<class T> inline algo::aryptr<T> algo::GetRegion(const algo::aryptr<T> &lhs, u32 lo, u32 n) {
-    u32 max = lhs.n_elems;
-    lo = u32_Min(lo, max);
-    n  = u32_Min(n,  max - lo);
+template<class T> inline algo::aryptr<T> algo::GetRegion(const algo::aryptr<T> &lhs, u64 lo, u64 n) {
+    u64 max = lhs.n_elems;
+    lo = u64_Min(lo, max);
+    n  = u64_Min(n,  max - lo);
     return algo::aryptr<T>(lhs.elems + lo, n);
 }
 
@@ -117,7 +117,7 @@ template<class T> inline algo::aryptr<u8> algo::BytesOf(const T &t) {
     return algo::aryptr<u8>((u8*)&t,sizeof(t));
 }
 
-template<class T> inline algo::aryptr<T>::aryptr(const T *e, i32 in_n) : elems(const_cast<T*>(e)) , n_elems(in_n) {
+template<class T> inline algo::aryptr<T>::aryptr(const T *e, i64 in_n) : elems(const_cast<T*>(e)) , n_elems(in_n) {
 }
 
 template<class T> inline T &algo::qLast(const algo::aryptr<T> &ary) {
@@ -374,9 +374,21 @@ inline algo::SchedTime operator -  (const algo::SchedTime &a, algo::SchedTime d)
 }
 
 
-// move ctor
-inline algo::tempstr::tempstr(const tempstr &rhs) : algo::cstring(rhs) {
+// Move ctor: steal the source's buffer and clear the source, so its dtor
+// (and the base cstring dtor behind it) frees nothing.
+// The base is default-initialized, never copy-initialized: a copy would
+// allocate a second buffer, and the manual clear below would then orphan
+// the source's -- one buffer leaked per invocation.  The pattern
+// `return tempstr() << ...` produces an lvalue (operator<< returns a
+// reference), so this ctor is not elidable there and runs on every such
+// return: amc emits it in every _Concat_* function, and a monitor calling
+// two of them per object per evaluation tick leaked its way to the memory
+// watermark in hours (issue #2395).
+inline algo::tempstr::tempstr(const tempstr &rhs) : algo::cstring() {
     tempstr &r  = (tempstr&) rhs;
+    ch_elems    = r.ch_elems;
+    ch_n        = r.ch_n;
+    ch_max      = r.ch_max;
     r.ch_elems     = 0;
     r.ch_n   = 0;
     r.ch_max = 0;
@@ -627,6 +639,16 @@ inline u32 algo::u8_BitScanReverse(u8 v) {
     return u32_BitScanReverse(v);
 }
 
+inline u64 algo::u128_BitScanForward(u128 v) {
+    u64 lo = u64(v);
+    return lo ? u64_BitScanForward(lo) : 64 + u64_BitScanForward(u64(v>>u32(64)));
+}
+
+inline u64 algo::u128_BitScanReverse(u128 v) {
+    u64 hi = u64(v>>u32(64));
+    return hi ? 64 + u64_BitScanReverse(hi) : u64_BitScanReverse(u64(v));
+}
+
 inline u32  algo::CeilingLog2(u32 orig) {
     return orig>1 ? u32_BitScanReverse(orig-1)+1 : 0;
 }
@@ -809,7 +831,7 @@ inline algo::SchedTime algo::CurrSchedTime() {
 
 // Elapsed time in seconds between two SchedTimes.
 inline double algo::ElapsedSecs(algo::SchedTime start, algo::SchedTime end) {
-    return (end-start)/get_cpu_hz();
+    return u64_SubClip(end,start)/get_cpu_hz();
 }
 
 inline algo::TimeStruct::TimeStruct() {
@@ -917,38 +939,38 @@ inline algo::i32_Range algo::TRevFind(const strptr &s, char match) {
     return ch_FindLast(s,match);
 }
 
-inline algo::aryptr<char> algo::ch_FirstN(const strptr &lhs, u32 n) {
-    u32 lim = lhs.n_elems;
+inline algo::aryptr<char> algo::ch_FirstN(const strptr &lhs, u64 n) {
+    u64 lim = lhs.n_elems;
     if (n > lim) {
         n = lim;
     }
     return algo::aryptr<char>(lhs.elems, n);
 }
 
-inline algo::aryptr<char> algo::ch_LastN(const strptr &lhs, u32 n) {
-    u32 lim = lhs.n_elems;
+inline algo::aryptr<char> algo::ch_LastN(const strptr &lhs, u64 n) {
+    u64 lim = lhs.n_elems;
     if (n > lim) {
         n = lim;
     }
     return algo::aryptr<char>(lhs.elems + lim - n, n);
 }
 
-inline algo::aryptr<char> algo::ch_RestFrom(const strptr &lhs, u32 n) {
-    u32 lim = lhs.n_elems;
+inline algo::aryptr<char> algo::ch_RestFrom(const strptr &lhs, u64 n) {
+    u64 lim = lhs.n_elems;
     if (n > lim) {
         n = lim;
     }
     return algo::aryptr<char>(lhs.elems + n, lim - n);
 }
 
-inline algo::aryptr<char> algo::ch_GetRegion(const strptr &lhs, u32 lo, u32 n) {
-    u32 max = lhs.n_elems;
-    lo = u32_Min(lo, max);
-    n  = u32_Min(n,  max - lo);
+inline algo::aryptr<char> algo::ch_GetRegion(const strptr &lhs, u64 lo, u64 n) {
+    u64 max = lhs.n_elems;
+    lo = u64_Min(lo, max);
+    n  = u64_Min(n,  max - lo);
     return algo::aryptr<char>(lhs.elems + lo, n);
 }
 
-inline int algo::ch_N(const strptr &s) {
+inline i64 algo::ch_N(const strptr &s) {
     return s.n_elems;
 }
 
@@ -960,7 +982,7 @@ inline int algo::ch_Last(const strptr &s, int dflt DFLTVAL(0)) {
     return s.n_elems>0 ? s.elems[s.n_elems-1] : dflt;
 }
 
-inline int algo::ch_N(const tempstr &str) {
+inline i64 algo::ch_N(const tempstr &str) {
     return str.ch_n;
 }
 
@@ -1147,9 +1169,30 @@ inline i32 algo::strptr_Cmp(algo::strptr a, algo::strptr b) {
 }
 
 // helper: N bytes as chars
-template<typename T> inline bool algo::DecodeNChars(algo::memptr &buf, int n, T &result) {
+template<typename T> inline bool algo::DecodeNChars(algo::memptr &buf, i64 n, T &result) {
     strptr tmp;
     bool ok = DecodeNChars(buf,n,tmp);
     result = tmp;
     return ok;
+}
+
+// Reverse all 64 bits of a u64
+inline u64 algo::BitReverse64(u64 x) {
+    x = ((x & 0x5555555555555555ULL) << 1)  | ((x >> 1)  & 0x5555555555555555ULL);
+    x = ((x & 0x3333333333333333ULL) << 2)  | ((x >> 2)  & 0x3333333333333333ULL);
+    x = ((x & 0x0F0F0F0F0F0F0F0FULL) << 4) | ((x >> 4)  & 0x0F0F0F0F0F0F0F0FULL);
+    x = __builtin_bswap64(x);
+    return x;
+}
+
+// TRUE when LOGCAT may emit right now: the operator has it on and the throttle
+// is not suppressing the rest of its window.
+//
+// The two are separate fields because they are separate facts with separate
+// owners -- enabled is what the operator asked for, suppress is what the
+// throttle is doing about the current window -- and this is the one place that
+// combines them.  A caller testing only ENABLED would print through a throttle;
+// one testing only SUPPRESS would print a category nobody asked for.
+inline bool algo_lib::LogcatOnQ(algo_lib::FLogcat &logcat) {
+    return logcat.enabled && !logcat.suppress;
 }

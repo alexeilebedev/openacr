@@ -62,20 +62,20 @@ inline algo::cstring* acr_my::ary_ns_Last() {
 
 // --- acr_my.FDb.ary_ns.Max
 // Return max. number of items in the array
-inline i32 acr_my::ary_ns_Max() {
+inline i64 acr_my::ary_ns_Max() {
     return _db.ary_ns_max;
 }
 
 // --- acr_my.FDb.ary_ns.N
 // Return number of items in the array
-inline i32 acr_my::ary_ns_N() {
+inline i64 acr_my::ary_ns_N() {
     return _db.ary_ns_n;
 }
 
 // --- acr_my.FDb.ary_ns.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void acr_my::ary_ns_Reserve(int n) {
-    u32 new_n = _db.ary_ns_n + n;
+inline void acr_my::ary_ns_Reserve(i64 n) {
+    u64 new_n = _db.ary_ns_n + n;
     if (UNLIKELY(new_n > _db.ary_ns_max)) {
         ary_ns_AbsReserve(new_n);
     }
@@ -128,7 +128,7 @@ inline acr_my::FNsdb* acr_my::nsdb_Last() {
 
 // --- acr_my.FDb.nsdb.N
 // Return number of items in the pool
-inline i32 acr_my::nsdb_N() {
+inline i64 acr_my::nsdb_N() {
     return _db.nsdb_n;
 }
 
@@ -170,7 +170,7 @@ inline acr_my::FSsimfile* acr_my::ssimfile_Last() {
 
 // --- acr_my.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 acr_my::ssimfile_N() {
+inline i64 acr_my::ssimfile_N() {
     return _db.ssimfile_n;
 }
 

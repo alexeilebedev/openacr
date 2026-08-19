@@ -34,7 +34,7 @@ bool amc::HasFinputQ(amc::FCtype &ctype) {
 
 void amc::GenTableId(amc::FNs &ns) {
     amc::FCtype& table_ctype = amc::ind_ctype_GetOrCreate(tempstr() << ns.ns << ".TableId");
-    table_ctype.comment.value = "Index of table in this namespace";
+    table_ctype.comment = "Index of table in this namespace";
 
     amc::FCpptype& cpptype = amc::ind_cpptype_GetOrCreate(table_ctype.ctype);
     cpptype.ctor  = true;
@@ -90,7 +90,7 @@ void amc::gen_tableenum() {
 
 void amc::GenFieldId(amc::FNs &ns) {
     amc::FCtype& field_ctype = amc::ind_ctype_GetOrCreate(tempstr() << ns.ns << ".FieldId");
-    field_ctype.comment.value = "Field read helper";
+    field_ctype.comment = "Field read helper";
 
     amc::FCpptype& cpptype = amc::ind_cpptype_GetOrCreate(field_ctype.ctype);
     cpptype.ctor  = true;

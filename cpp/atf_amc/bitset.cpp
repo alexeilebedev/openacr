@@ -133,12 +133,14 @@ void atf_amc::amctest_BitsetVal128() {
         fld128_qSetBit(frame, i);
         vrfyeq_(frame.fld128, (u64(i)==127 ? u128(-1) : (u128(1)<<(i+1))-u128(1)));
         vrfyeq_(fld128_Sum1s(frame), u128(i+1));
+        vrfyeq_(fld128_Sup(frame), i+1);
     }
     // clear all 128 bits one by one
     for (int i=127; i>=0; i--) {
         fld128_qClearBit(frame, i);
         vrfyeq_(frame.fld128, (u128(1)<<i)-1);
         vrfyeq_(fld128_Sum1s(frame), u128(i));
+        vrfyeq_(fld128_Sup(frame), i);
     }
 }
 
@@ -186,6 +188,18 @@ void atf_amc::amctest_BitsetBitcurs() {
         fld8_qSetBit(B, 5);
         fld8_qSetBit(B, 7);
         TEST_BITCURS(Bitset_fld8_bitcurs,B,"0,2,5,7");
+    }
+
+    // u128 element: bits on both sides of the 64-bit boundary
+    {
+        Bitset B;
+        TEST_BITCURS(Bitset_fld128_bitcurs,B,"");
+        fld128_qSetBit(B, 0);
+        fld128_qSetBit(B, 63);
+        fld128_qSetBit(B, 64);
+        fld128_qSetBit(B, 100);
+        fld128_qSetBit(B, 127);
+        TEST_BITCURS(Bitset_fld128_bitcurs,B,"0,63,64,100,127");
     }
 
     {

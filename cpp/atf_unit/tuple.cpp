@@ -86,3 +86,17 @@ void atf_unit::unittest_algo_lib_Tuple() {
     Set(R,"$T","A");
     vrfyeq_(algo_lib::Tuple_Subst(R,"a:b  $S:c  e:\"fff$Tzzz\""), "a:b  abc:c  e:fffAzzz");
 }
+
+// --------------------------------------------------------------------------------
+
+// An unterminated quote fails the parse regardless of which side of a colon
+// it falls on: bare-token, name, and value positions all reject the line,
+// and a properly closed quote in any position stays accepted.
+void atf_unit::unittest_algo_lib_TupleBadQuote() {
+    Tuple tuple;
+    vrfy_(!Tuple_ReadStrptrMaybe(tuple, "dmmeta.dispsig  dispsig:b.Y  signature:\"unterminated"));
+    vrfy_(!Tuple_ReadStrptrMaybe(tuple, "\"unterminated  a:b"));
+    vrfy_(!Tuple_ReadStrptrMaybe(tuple, "head  \"unterminated:value"));
+    vrfy_(Tuple_ReadStrptrMaybe(tuple, "head  \"a b\":c"));
+    vrfy_(Tuple_ReadStrptrMaybe(tuple, "head  a:\"b c\""));
+}

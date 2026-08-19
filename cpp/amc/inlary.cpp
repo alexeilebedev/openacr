@@ -66,25 +66,88 @@ static void CheckSep(amc::FField &field) {
 
 // -----------------------------------------------------------------------------
 
-static bool FixedQ(amc::FField &field) {
-    amc::FInlary&        inlary     = *field.c_inlary;
-    return  inlary.max == inlary.min;
+// A variable char/u8 inlary reads from a string by copying it, and the
+// copy's length becomes the count, which a short input puts below min;
+// reject min>0 on this shape until floor semantics are defined for it
+static void CheckMin(amc::FField &field) {
+    amc::FInlary &inlary = *field.c_inlary;
+    if (!amc::FixaryQ(field) && inlary.min > 0 && (field.arg == "char" || field.arg == "u8")) {
+        prerr("amc.bad_inlary_min"
+              <<Keyval("inlary",field.field)
+              <<Keyval("elem_type",field.arg)
+              <<Keyval("comment","a variable char/u8 inlary is read by copying the string, which cannot keep a minimum count; use min:0 or a fixed inlary"));
+        algo_lib::_db.exit_code++;
+    }
 }
 
 // -----------------------------------------------------------------------------
 
+// A variable inlary is emptied through RemoveAll: Setary and the
+// separated-string read flush the old contents through it, and Uninit
+// destroys through it. fnoremove suppresses the function while those
+// callers keep referencing it, so the generated code cannot compile;
+// reject the combination
+static void CheckFnoremove(amc::FField &field) {
+    if (!amc::FixaryQ(field) && field.c_fnoremove) {
+        prerr("amc.bad_inlary_fnoremove"
+              <<Keyval("inlary",field.field)
+              <<Keyval("comment","a variable inlary is emptied through RemoveAll, which fnoremove suppresses; remove the fnoremove or make the inlary fixed"));
+        algo_lib::_db.exit_code++;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Emit into FUNC the loop restoring the min floor of a variable inlary FIELD:
+// the array is topped back up to min with value-initialized elements, so a
+// content-replacement operation with fewer than min source elements leaves
+// no stale contents behind
+static void InsMinTopup(algo_lib::Replscope &R, amc::FFunc &func, amc::FField &field) {
+    Ins(&R, func.body, "while ($name_N($pararg) < $min) { // restore the floor: slots the input does not cover hold a fresh element's value");
+    Ins(&R, func.body, "    $Cpptype &elem = $name_Alloc($pararg);");
+    if (field.p_arg->plaindata) {
+        Ins(&R, func.body, "    elem = $Cpptype(); // plain data: placement new leaves the value unspecified");
+    } else {
+        Ins(&R, func.body, "    (void)elem; // the constructor produces the fresh value");
+    }
+    Ins(&R, func.body, "}");
+}
+
+// -----------------------------------------------------------------------------
+
+// Declare the storage for an inlary field: a fixed inlary (min==max) is a
+// bare C array; a variable one is raw element storage plus a live count,
+// with the Pool tfuncs layered on top. Also validates the shape: separator
+// print compatibility, the char/u8 min floor, min against max, and
+// remove-function suppression.
 void amc::tclass_Inlary() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = FixedQ(field);
+    bool                 fixed      = amc::FixaryQ(field);
 
     // Check print misconfiguration
     CheckSep(field);
+    // Check min-count misconfiguration
+    CheckMin(field);
+    // Check remove-function suppression misconfiguration
+    CheckFnoremove(field);
 
     Set(R, "$Rowid"  , EvalRowid(*field.p_arg));
     inlary.max = i64_Max(inlary.max, c_static_N(*field.p_arg));
     vrfy(inlary.max > 0, "unknown size of inline array: set width or add gstatic");
+    // Init preallocates min elements with Alloc, whose capacity is max
+    // ("will succeed -- min <= max"); with min above max the loop overruns
+    // the array and kills the process on the first record constructed.
+    // Checked after the gstatic adjustment, which can only raise max.
+    if (inlary.min > inlary.max) {
+        prerr("amc.bad_inlary_minmax"
+              <<Keyval("inlary",field.field)
+              <<Keyval("min",inlary.min)
+              <<Keyval("max",inlary.max)
+              <<Keyval("comment","min exceeds max; the Init preallocation of min elements cannot fit"));
+        algo_lib::_db.exit_code++;
+    }
     Set(R, "$min", tempstr() << inlary.min);
     Set(R, "$max", tempstr() << inlary.max);
     Set(R, "$lenexpr", fixed ? "$max" : "$parname.$name_n");
@@ -96,11 +159,14 @@ void amc::tclass_Inlary() {
         InsVar(R, field.p_ctype, "$Cpptype", "$name_elems[$lenexpr]", strptr(field.dflt.value), "fixed array");
     } else {
         GenTclass(amc_tclass_Pool);
-        if (PackQ(*field.p_arg)) {
-            InsVar(R, field.p_ctype, "u8", "$name_data[sizeof($Cpptype) * $max]", "", "place for data");
-        } else {
-            InsVar(R, field.p_ctype, "u128", "$name_data[sizeu128($Cpptype,$max)]", "", "place for data");
-        }
+        // The pool's storage is raw bytes that the allocator constructs rows
+        // into, so it is declared as what it is: a character array, aligned
+        // for the record it holds.  Saying it in those terms is what lets a
+        // row be addressed by casting the storage -- a character array may be
+        // read as the objects living in it, where an array of some unrelated
+        // wide integer chosen for its alignment may not, and the compiler
+        // rejects the cast on exactly that ground.
+        InsVar(R, field.p_ctype, "alignas($Cpptype) u8", "$name_data[sizeof($Cpptype) * $max]", "", "place for data");
         InsVar(R, field.p_ctype, "i32", "$name_n", "", "number of elems current in existence");
         InsStruct(R, field.p_ctype, "enum { $name_max = $max };");
     }
@@ -108,11 +174,11 @@ void amc::tclass_Inlary() {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_AllocMem for a variable inlary: hand out the next raw slot, or NULL when the array is full.
 void amc::tfunc_Inlary_AllocMem() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
-    amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = inlary.max == inlary.min;
+    bool                 fixed      = amc::FixaryQ(field);
 
     if (!fixed) {
         amc::FFunc& allocmem = amc::CreateCurFunc();
@@ -128,11 +194,11 @@ void amc::tfunc_Inlary_AllocMem() {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_EmptyQ: true when a variable inlary holds no elements.
 void amc::tfunc_Inlary_EmptyQ() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
-    amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = inlary.max == inlary.min;
+    bool                 fixed      = amc::FixaryQ(field);
 
     if (!fixed) {
         amc::FFunc& emptyq = amc::CreateCurFunc();
@@ -144,11 +210,11 @@ void amc::tfunc_Inlary_EmptyQ() {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_Fill for a fixed inlary: assign the given value to every slot.
 void amc::tfunc_Inlary_Fill() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
-    amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = inlary.max == inlary.min;
+    bool                 fixed      = amc::FixaryQ(field);
 
     if (fixed && !PadQ(field) && field.p_arg->n_xref==0 && !CopyPrivQ(*field.p_arg)) {
         amc::FFunc& fill = amc::CreateCurFunc();
@@ -180,11 +246,11 @@ void amc::tfunc_Inlary_Find() {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_Getary: view the inlary's live elements as an aryptr.
 void amc::tfunc_Inlary_Getary() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
-    amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = inlary.max == inlary.min;
+    bool                 fixed      = amc::FixaryQ(field);
 
     if (!PadQ(field)) {
         amc::FFunc& getary = amc::CreateCurFunc();
@@ -201,11 +267,14 @@ void amc::tfunc_Inlary_Getary() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the field's Init fragment: a variable inlary starts at zero
+// elements and preallocates its min floor; a fixed inlary with a field
+// default fills every slot with it
 void amc::tfunc_Inlary_Init() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = inlary.max == inlary.min;
+    bool                 fixed      = amc::FixaryQ(field);
 
     if (!fixed) {
         amc::FFunc& init = amc::CreateCurFunc();
@@ -216,7 +285,8 @@ void amc::tfunc_Inlary_Init() {
             Set(R, "$min", tempstr() << inlary.min);
             Ins(&R, init.body, "// min size");
             Ins(&R, init.body, "for (int i = 0; i < $min; i++) {");
-            Ins(&R, init.body, "    $name_Alloc($pararg);");
+            Ins(&R, init.body, "    $Cpptype &elem = $name_Alloc($pararg);");
+            Ins(&R, init.body, "    (void)elem; // will succeed -- min <= max");
             Ins(&R, init.body, "}");
         }
     }
@@ -289,11 +359,11 @@ void amc::tfunc_Inlary_Cmp() {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_Max: return the inlary's capacity, its maximum element count.
 void amc::tfunc_Inlary_Max() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
-    amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = inlary.max == inlary.min;
+    bool                 fixed      = amc::FixaryQ(field);
 
     if (!fixed) {
         amc::FFunc& maxitems = amc::CreateCurFunc();
@@ -334,12 +404,12 @@ void amc::tfunc_Inlary_N() {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_RemoveAll for a variable inlary: destroy every element and reset the count to zero.
 void amc::tfunc_Inlary_RemoveAll() {
     algo_lib::Replscope &R      = amc::_db.genctx.R;
     amc::FField         &field  = *amc::_db.genctx.p_field;
-    amc::FInlary&        inlary = *field.c_inlary;
-    bool                 dtor   = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor) ||!field.p_arg->c_cpptype;
-    bool                 fixed  = inlary.max == inlary.min;
+    bool                 dtor   = HasDtorQ(*field.p_arg);
+    bool                 fixed  = amc::FixaryQ(field);
 
     if (!fixed && !field.c_fnoremove) {
         amc::FFunc& removeall = amc::CreateCurFunc();
@@ -363,12 +433,12 @@ void amc::tfunc_Inlary_RemoveAll() {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_RemoveLast for a variable inlary: destroy the last element and shrink the count by one.
 void amc::tfunc_Inlary_RemoveLast() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
-    amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 dtor       = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
-    bool                 fixed      = inlary.max == inlary.min;
+    bool                 dtor       = HasDtorQ(*field.p_arg);
+    bool                 fixed      = amc::FixaryQ(field);
 
     if (!fixed) {
         amc::FFunc& remlast = amc::CreateCurFunc();
@@ -405,10 +475,15 @@ void amc::tfunc_Inlary_RowidFind() {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_Setary, replacing the array's contents with a copy of the
+// source: plain data is copied with memcpy; otherwise a variable inlary
+// destroys the old elements and rebuilds, and a fixed one assigns in
+// place. A variable inlary with min>0 is topped back up to its floor
 void amc::tfunc_Inlary_Setary() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
+    bool                 fixed      = amc::FixaryQ(field);
     if (!PadQ(field) && field.p_arg->n_xref==0 && !CopyPrivQ(*field.p_arg)) {
         amc::FFunc& setary = amc::CreateCurFunc();
         setary.inl=true;
@@ -417,25 +492,34 @@ void amc::tfunc_Inlary_Setary() {
         Ins(&R, setary.body, "int n = i32_Min($max, rhs.n_elems);");
         if (field.p_arg->plaindata) {
             Ins(&R, setary.body, "memcpy($parelems, rhs.elems, sizeof($Cpptype)*n);");
-        } else {
+            if (!fixed) {
+                Ins(&R, setary.body, "$parname.$name_n = n;");
+            }
+        } else if (fixed) {
             Ins(&R, setary.body, "for (int i = 0; i < n; i++) {");
             Ins(&R, setary.body, "    $parelems[i] = rhs[i];");
             Ins(&R, setary.body, "}");
+        } else {
+            Ins(&R, setary.body, "$name_RemoveAll($pararg); // destroy the old elements, then rebuild from the source, like Tary Setary");
+            Ins(&R, setary.body, "for (int i = 0; i < n; i++) {");
+            Ins(&R, setary.body, "    $Cpptype &elem = $name_Alloc($pararg); // will succeed -- n <= max");
+            Ins(&R, setary.body, "    elem = rhs[i];");
+            Ins(&R, setary.body, "}");
         }
-        if (inlary.min > 0 && inlary.min < inlary.max) {
-            Ins(&R, setary.body, "$parname.$name_n = i32_Max(n,$min);");
+        if (!fixed && inlary.min > 0) {
+            InsMinTopup(R, setary, field);
         }
     }
 }
 
 // -----------------------------------------------------------------------------
 
+// Generate the variable inlary's Uninit fragment: destroy its elements when the parent is torn down, skipped in global scope.
 void amc::tfunc_Inlary_Uninit() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
-    amc::FInlary&        inlary     = *field.c_inlary;
     bool                 glob       = GlobalQ(*field.p_ctype);
-    bool                 fixed      = inlary.max == inlary.min;
+    bool                 fixed      = amc::FixaryQ(field);
 
     if (!fixed) {
         amc::FFunc& uninit = amc::CreateCurFunc();
@@ -463,11 +547,11 @@ void amc::tfunc_Inlary_qFind() {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_rowid_Get: recover an element's rowid from its address within the inlary.
 void amc::tfunc_Inlary_rowid_Get() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
-    amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = inlary.max == inlary.min;
+    bool                 fixed      = amc::FixaryQ(field);
 
     if (!fixed) {
         amc::FFunc& rowid_get = amc::CreateCurFunc();
@@ -481,13 +565,13 @@ void amc::tfunc_Inlary_rowid_Get() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the inlary's cursor: a cursor type and the functions that walk the array's elements in order.
 void amc::tfunc_Inlary_curs() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
-    amc::FInlary& inlary = *field.c_inlary;
     bool glob = GlobalQ(*field.p_ctype);
-    bool fixed = inlary.max == inlary.min;
+    bool fixed = amc::FixaryQ(field);
 
     if (!PadQ(field)) {
         Set(R, "$Rowid"  , EvalRowid(*field.p_arg));
@@ -558,6 +642,12 @@ void amc::tfunc_Inlary_curs() {
 //    the array is flushed before reading
 //    input string is split on separator character, elements are appended one by one
 //    if the input is too large, it is silently truncated
+//    a variable inlary with min>0 keeps at least min elements through
+//    Init, Setary, and this read: after the flush and append, the array is
+//    topped back up to min with value-initialized elements, so the result
+//    is a function of the input alone. The floor binds only these content
+//    producers; explicit removal (RemoveAll, RemoveLast) still empties
+//    the array
 // any other type, without separator:
 //    one element is read from input string and appended to the array without flushing.
 //    if the element doesn't fit, function returns false.
@@ -566,10 +656,12 @@ void amc::tfunc_Inlary_curs() {
 void amc::tfunc_Inlary_ReadStrptrMaybe() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FInlary &inlary = *field.c_inlary;
+    bool fixed = amc::FixaryQ(field);
     char sep = GetSep(field);
     if (!PadQ(field) && (field.arg=="char" || field.arg=="u8" || HasStringReadQ(*field.p_arg))) {
         Set(R, "$sep", char_ToCppSingleQuote(sep));
-        Set(R, "$min", tempstr() << field.c_inlary->min);
+        Set(R, "$min", tempstr() << inlary.min);
         amc::FFunc& func = amc::CreateCurFunc(true);
         Ins(&R, func.comment, "Convert string to field. Return success value");
         AddRetval(func, "bool", "retval", "true");
@@ -577,34 +669,36 @@ void amc::tfunc_Inlary_ReadStrptrMaybe() {
         if (field.arg == "char" || field.arg == "u8") {
             Ins(&R, func.body , "i32 newlen = i32_Min(in_str.n_elems, $max);");
             Ins(&R, func.body , "memcpy($parelems, in_str.elems, newlen);");
-            if (!FixedQ(field)) {
-                Ins(&R, func.body , "$pararg.$name_n = newlen;");
+            if (!fixed) {
+                Ins(&R, func.body , "$parname.$name_n = newlen;");
             }
             // retval is true
             // always succeed -- even if clipping of input string took place.
         } else if (sep) {
             Set(R, "$Fldcpptype", field.p_arg->cpp_type);
-            if (!FixedQ(field)) {
+            bool minfloor = !fixed && inlary.min > 0;
+            if (!fixed) {
                 Ins(&R, func.body, "$name_RemoveAll($pararg);");
             }
             Ins(&R, func.body , "for (int i=0; in_str != \"\" && i < $max; i++) {");
             Ins(&R, func.body , "    algo::strptr token;");
             Ins(&R, func.body , "    algo::NextSep(in_str, $sep, token);");
-            if (!FixedQ(field)) {
-                Ins(&R, func.body , "    if (i >= $min) { // make room for new element...");
-                Ins(&R, func.body , "        $Cpptype &elem = $name_Alloc($pararg);");
-                Ins(&R, func.body , "        (void)elem; // will succeed due to a previous check");
-                Ins(&R, func.body , "    }");
+            if (!fixed) {
+                Ins(&R, func.body , "    $Cpptype &elem = $name_Alloc($pararg); // will succeed due to the loop bound");
+                Ins(&R, func.body , "    (void)elem;");
             }
             Ins(&R, func.body , "    retval = $Cpptype_ReadStrptrMaybe($parelems[i], token);");
             Ins(&R, func.body , "    if (!retval) {");
-            if (!FixedQ(field)) {
+            if (!fixed) {
                 Ins(&R, func.body , "        $name_RemoveLast($pararg);");
             }
             Ins(&R, func.body , "        break;");
             Ins(&R, func.body , "    }");
             Ins(&R, func.body , "}");
-        } else if (FixedQ(field)) {
+            if (minfloor) {
+                InsMinTopup(R, func, field);
+            }
+        } else if (fixed) {
             Ins(&R, func.body , "if ($max>0) {");
             Ins(&R, func.body , "    retval = $Cpptype_ReadStrptrMaybe($parelems[0], in_str);");
             Ins(&R, func.body , "}");

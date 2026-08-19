@@ -189,7 +189,7 @@ static void Normalize(algo_lib::FTxttbl &txttbl) {
 // -----------------------------------------------------------------------------
 
 void algo_lib::FTxttbl_Print(algo_lib::FTxttbl &txttbl, algo::cstring &str) {
-    bool use_style = algo::SaneTerminalQ();
+    bool use_style = txttbl.style || algo::SaneTerminalQ();
     if (bool_Update(txttbl.normalized,true)) {
         Normalize(txttbl);
     }

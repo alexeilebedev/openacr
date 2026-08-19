@@ -30,8 +30,8 @@
 
 // --- atf_nrun_FieldIdEnum
 
-enum atf_nrun_FieldIdEnum {        // atf_nrun.FieldId.value
-     atf_nrun_FieldId_value   = 0
+enum atf_nrun_FieldIdEnum {    // atf_nrun.FieldId.value
+     atf_nrun_FieldId_value
 };
 
 enum { atf_nrun_FieldIdEnum_N = 1 };
@@ -39,7 +39,6 @@ enum { atf_nrun_FieldIdEnum_N = 1 };
 namespace atf_nrun { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace atf_nrun { // gen:ns_tclass_field
-extern const char *atf_nrun_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atf_nrun { struct _db_fentry_curs; }
@@ -58,7 +57,6 @@ struct trace { // atf_nrun.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:atf_nrun.trace.String  printfmt:Tuple
 // func:atf_nrun.trace..Print
@@ -68,8 +66,8 @@ void                 trace_Print(atf_nrun::trace& row, algo::cstring& str) __att
 // create: atf_nrun.FDb._db (Global)
 struct FDb { // atf_nrun.FDb: In-memory database for atf_nrun
     command::atf_nrun    cmdline;                     //
-    atf_nrun::FEntry*    fentry_lary[32];             // level array
-    i32                  fentry_n;                    // number of elements in array
+    atf_nrun::FEntry*    fentry_lary[36];             // level array
+    i64                  fentry_n;                    // number of elements in array
     atf_nrun::FEntry**   ind_running_buckets_elems;   // pointer to bucket array
     i32                  ind_running_buckets_n;       // number of elements in bucket array
     i32                  ind_running_n;               // number of elements in the hash table
@@ -82,11 +80,8 @@ struct FDb { // atf_nrun.FDb: In-memory database for atf_nrun
     algo::SchedTime      zd_todo_delay;               // atf_nrun.FDb.zd_todo                  Delay between invocations
     atf_nrun::trace      trace;                       //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_nrun.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_nrun.FDb.cmdline (and any base command line)
+// via atf_nrun_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:atf_nrun.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -123,6 +118,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:atf_nrun.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:atf_nrun.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_nrun.FDb._db.XrefMaybe
@@ -149,7 +148,7 @@ inline atf_nrun::FEntry* fentry_Find(u64 t) __attribute__((__warn_unused_result_
 inline atf_nrun::FEntry* fentry_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_nrun.FDb.fentry.N
-inline i32           fentry_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           fentry_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_nrun.FDb.fentry.RemoveAll
 void                 fentry_RemoveAll() __attribute__((nothrow));
@@ -236,6 +235,9 @@ atf_nrun::FEntry*    zd_todo_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:atf_nrun.FDb.zd_todo.qLast
 inline atf_nrun::FEntry& zd_todo_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_nrun.FDb.zd_todo.InsertBefore
+void                 zd_todo_InsertBefore(atf_nrun::FEntry& row, atf_nrun::FEntry* before) __attribute__((nothrow));
 // First element of index changed.
 // func:atf_nrun.FDb.zd_todo.FirstChanged
 void                 zd_todo_FirstChanged() __attribute__((nothrow));
@@ -294,9 +296,14 @@ struct FEntry { // atf_nrun.FEntry
     algo::cstring       job_fstdin;            // redirect for stdin
     algo::cstring       job_fstdout;           // redirect for stdout
     algo::cstring       job_fstderr;           // redirect for stderr
+    algo::Fildes        job_to_stdin;          // write end of stdin pipe when fstdin=="|"; closed by _Wait
+    algo::Fildes        job_from_stdout;       // read end of stdout pipe when fstdout=="|"; closed by _Wait
+    algo::Fildes        job_from_stderr;       // read end of stderr pipe when fstderr=="|"; closed by _Wait
     pid_t               job_pid;               //   0  pid of running child process
     i32                 job_timeout;           //   0  optional timeout for child process
+    u32                 job_memlimitmb;        //   0  optional child memory ceiling MB (10^6): RLIMIT_AS before exec; 0 = leave inherited
     i32                 job_status;            //   0  last exit status of child process
+    bool                job_pgroup;            //   false  run child in its own process group; _Kill targets the group
     // reftype Exec of atf_nrun.FEntry.job prohibits copy
     // func:atf_nrun.FEntry..AssignOp
     atf_nrun::FEntry&    operator =(const atf_nrun::FEntry &rhs) = delete;
@@ -313,14 +320,10 @@ private:
     friend void                 fentry_RemoveAll() __attribute__((nothrow));
     friend void                 fentry_RemoveLast() __attribute__((nothrow));
 };
-
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 // func:atf_nrun.FEntry.job.Start
 int                  job_Start(atf_nrun::FEntry& fentry) __attribute__((nothrow));
-// Start subprocess & Read output
-// func:atf_nrun.FEntry.job.StartRead
-algo::Fildes         job_StartRead(atf_nrun::FEntry& fentry, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 // func:atf_nrun.FEntry.job.Kill
 void                 job_Kill(atf_nrun::FEntry& fentry);
@@ -328,7 +331,7 @@ void                 job_Kill(atf_nrun::FEntry& fentry);
 // func:atf_nrun.FEntry.job.Wait
 void                 job_Wait(atf_nrun::FEntry& fentry) __attribute__((nothrow));
 // Start + Wait
-// Execute subprocess and return exit code
+// Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
 // func:atf_nrun.FEntry.job.Exec
 int                  job_Exec(atf_nrun::FEntry& fentry) __attribute__((nothrow));
 // Start + Wait, throw exception on error
@@ -365,7 +368,6 @@ struct FieldId { // atf_nrun.FieldId: Field read helper
     inline               FieldId(atf_nrun_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_nrun.FieldId.value.GetEnum
 inline atf_nrun_FieldIdEnum value_GetEnum(const atf_nrun::FieldId& parent) __attribute__((nothrow));
@@ -403,7 +405,7 @@ inline void          FieldId_Init(atf_nrun::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_nrun.FieldId.String  printfmt:Raw
 // func:atf_nrun.FieldId..Print
-void                 FieldId_Print(atf_nrun::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(atf_nrun::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_nrun { // gen:ns_curstext
 

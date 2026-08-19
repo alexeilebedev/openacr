@@ -1,4 +1,4 @@
-# start acr_compl cmd:"build/release/acr_compl -install"
+# start acr_compl cmd:"build/release/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -install"
 # eof acr_compl
-acr_compl -> complete -o default -o nospace -C build/release/acr_compl abt abt_md acr acr_compl acr_dm acr_ed acr_in acr_my amc amc_gc amc_vis ams_sendtest apm aqlite atf_amc atf_ci atf_cmdline atf_comp atf_cov atf_fuzz atf_gcli atf_nrun atf_unit bash2html gcache gcli jkv mdbg mysql2ssim orgfile samp_make samp_meng samp_regx sandbox src_func src_hdr src_lim ssim2csv ssim2mysql ssimfilt strconv sv2ssim
+acr_compl -> complete -o default -o nospace -C build/release/acr_compl acr atf_cmdline
 # exit acr_compl code:0

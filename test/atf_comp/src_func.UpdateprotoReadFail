@@ -1,0 +1,4 @@
+# start src_func cmd:"$bindir/src_func -in:test/src_func/hdr_readfail.ssim -updateproto"
+# eof src_func
+src_func -> src_func.file_read  file:missing_dir/x.h  err:"No such file or directory"  comment:"source file could not be read"
+# exit src_func code:1

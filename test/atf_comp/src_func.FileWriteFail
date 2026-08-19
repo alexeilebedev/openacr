@@ -1,0 +1,4 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir ro && printf "namespace xx { // update-hdr\\njunk\\n}\\n" > ro/x.h && trap "chmod 755 ro" EXIT && trap "exit 1" TERM && chmod 555 ro && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/writefail.ssim -updateproto\''
+# eof bash
+bash -> src_func.file_write  file:ro/x.h  err:"Permission denied"  comment:"header file could not be written"
+# exit bash code:1

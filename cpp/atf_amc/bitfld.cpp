@@ -102,6 +102,23 @@ void atf_amc::amctest_BitfldTuple() {
 
 // -----------------------------------------------------------------------------
 
+// Fconst on a bitfld field: the field has no direct member, so the numeric
+// fallback of ReadStrptrMaybe stores through the generated Set
+void atf_amc::amctest_BitfldFconst() {
+    atf_amc::BitfldType1 bitfld_type1;
+    // symbolic read via the fconst table
+    vrfy_(atf_amc::bits5_ReadStrptrMaybe(bitfld_type1, "high"));
+    vrfyeq_(bits5_Get(bitfld_type1), 1000);
+    // numeric fallback
+    vrfy_(atf_amc::bits5_ReadStrptrMaybe(bitfld_type1, "9"));
+    vrfyeq_(bits5_Get(bitfld_type1), 9);
+    // unknown symbol fails and leaves the field unchanged
+    vrfy_(!atf_amc::bits5_ReadStrptrMaybe(bitfld_type1, "zzz"));
+    vrfyeq_(bits5_Get(bitfld_type1), 9);
+}
+
+// -----------------------------------------------------------------------------
+
 void atf_amc::amctest_BitfldBitset() {
     {
         atf_amc::BitfldType2 var1;
@@ -182,4 +199,16 @@ void atf_amc::amctest_BitfldBitset() {
         vrfy_(!BitfldType2_ReadStrptrMaybe(var,"bit0bit1freebool"));
         vrfy_(FindStr(algo_lib::DetachBadTags(),"bit0bit1freebool")!=-1);
     }
+}
+
+// --------------------------------------------------------------------------------
+
+// Bitfld on a global (FDb) ctype: the default value is applied at init,
+// and Get/Set take no parent argument.
+void atf_amc::amctest_BitfldGlobal() {
+    vrfyeq_(atf_amc::flaglo_Get(), u32(3));
+    vrfyeq_(atf_amc::_db.flagbits, u32(3));
+    atf_amc::flaglo_Set(9);
+    vrfyeq_(atf_amc::_db.flagbits, u32(9));
+    atf_amc::flaglo_Set(3);
 }

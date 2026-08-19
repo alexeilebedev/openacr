@@ -313,14 +313,20 @@ static void StrayInclude() {
     int nerr=0;
     ind_beg(src_lim::_db_include_curs,include,src_lim::_db) if (!include.sys) {    // check that every include site refers to a versioned header.
         src_lim::FGitfile *hdrfile=src_lim::ind_gitfile_Find(filename_Get(include));
-        if (!hdrfile) {
+        // A header under build/ is a build product rather than a source file, so
+        // no checkout can carry it and this check does not apply.  The one that
+        // exists is build/gitinfo.h, where abt records the commit a binary came
+        // from and the moment it was built; its include site guards itself with
+        // __has_include, so a tree that has never been built still compiles.
+        bool product = StartsWithQ(filename_Get(include),"build/");
+        if (hdrfile) {
+            zd_include_Insert(*hdrfile,include);
+        } else if (!product) {
             prlog("src_lim.unversioned_include"
                   <<Keyval("srcfile",srcfile_Get(include))
                   <<Keyval("hdrfile",filename_Get(include))
                   <<Keyval("comment","Header file not versioned"));
             nerr++;
-        } else {
-            zd_include_Insert(*hdrfile,include);
         }
     }ind_end;
     // Check that every versioned include has at least one include site

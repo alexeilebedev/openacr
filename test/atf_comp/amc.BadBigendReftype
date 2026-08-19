@@ -1,0 +1,17 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.cpptype  ctype:u16  ctor:N
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- amcdb.bltin  ctype:u16  likeu64:N  bigendok:Y  issigned:N  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Rec  comment:""
+amc <- dmmeta.cpptype  ctype:algo_lib.Rec  ctor:Y
+amc <- dmmeta.field  field:algo_lib.Rec.big  arg:u16  reftype:Inlary  dflt:""  comment:""
+amc <- dmmeta.inlary  field:algo_lib.Rec.big  min:4  max:4  comment:""
+amc <- dmmeta.fbigend  field:algo_lib.Rec.big  comment:""
+# eof amc
+amc -> amc.bad_bigend  field:algo_lib.Rec.big  reftype:Inlary  comment:"big-endian storage requires reftype Val"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

@@ -45,12 +45,12 @@
 #include "include/gen/lib_ams_gen.inl.h"
 #include "include/gen/lib_curl_gen.h"
 #include "include/gen/lib_curl_gen.inl.h"
-#include "include/gen/lib_fm_gen.h"
-#include "include/gen/lib_fm_gen.inl.h"
 #include "include/gen/lib_netio_gen.h"
 #include "include/gen/lib_netio_gen.inl.h"
 #include "include/gen/lib_sql_gen.h"
 #include "include/gen/lib_sql_gen.inl.h"
+#include "include/gen/lib_ws_gen.h"
+#include "include/gen/lib_ws_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -60,35 +60,11 @@ algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ams::FDb     lib_ams::_db;      // dependency found via dev.targdep
 lib_curl::FDb    lib_curl::_db;     // dependency found via dev.targdep
 lib_exec::FDb    lib_exec::_db;     // dependency found via dev.targdep
-lib_fm::FDb      lib_fm::_db;       // dependency found via dev.targdep
 lib_netio::FDb   lib_netio::_db;    // dependency found via dev.targdep
 lib_sql::FDb     lib_sql::_db;      // dependency found via dev.targdep
+lib_ws::FDb      lib_ws::_db;       // dependency found via dev.targdep
 atf_unit::FDb    atf_unit::_db;     // dependency found via dev.targdep
 
-namespace atf_unit {
-const char *atf_unit_help =
-"atf_unit: Unit tests (see unittest table)\n"
-"Usage: atf_unit [[-unittest:]<regx>] [options]\n"
-"    OPTION            TYPE    DFLT    COMMENT\n"
-"    [unittest]        regx    \"%\"     SQL regex, selecting test to run\n"
-"    -nofork                           Do not fork for destructive tests\n"
-"    -arg              string  \"\"      Argument to pass to tool\n"
-"    -data_dir         string  \"data\"  Data directory\n"
-"    -mdbg                     0       Break at testcase in debugger\n"
-"    -perf_secs        double  1.0     # Of seconds to run perf tests for\n"
-"    -pertest_timeout  int     900     Max runtime of any individual unit test\n"
-"    -report                   Y       Print final report\n"
-"    -capture                          Re-capture test results\n"
-"    -check_untracked          Y       Check for untracked file before allowing test to run\n"
-"    -verbose          flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug            flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                             Print help and exit; alias -h\n"
-"    -version                          Print version and exit\n"
-"    -signature                        Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace atf_unit
 namespace atf_unit { // gen:ns_print_proto
     // Extract next character from STR and advance IDX
     // func:atf_unit.Cstr.val.Nextchar
@@ -167,7 +143,7 @@ bool atf_unit::Cstr_ReadStrptrMaybe(atf_unit::Cstr &parent, algo::strptr in_str)
 // Create JSON representation of atf_unit::Cstr under PARENT node
 // cfmt:atf_unit.Cstr.Json  printfmt:Auto
 lib_json::FNode * atf_unit::Cstr_FmtJson(atf_unit::Cstr& row, lib_json::FNode *parent) {
-    return algo::cstring_FmtJson(const_cast<atf_unit::Cstr&>(row).val,parent);;
+    return algo::cstring_FmtJson(row.val,parent);
 }
 
 // --- atf_unit.Cstr..Print
@@ -190,7 +166,7 @@ bool atf_unit::Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str) {
 // Create JSON representation of atf_unit::Dbl under PARENT node
 // cfmt:atf_unit.Dbl.Json  printfmt:Auto
 lib_json::FNode * atf_unit::Dbl_FmtJson(atf_unit::Dbl row, lib_json::FNode *parent) {
-    return double_FmtJson(const_cast<atf_unit::Dbl&>(row).val,parent);;
+    return double_FmtJson(row.val,parent);
 }
 
 // --- atf_unit.Dbl..Print
@@ -221,15 +197,50 @@ int atf_unit::acr_ed_Start() {
         tempstr cmdline(acr_ed_ToCmdline());
         _db.acr_ed_pid = dospawn(Zeroterm(_db.acr_ed_path),Zeroterm(cmdline),_db.acr_ed_timeout,_db.acr_ed_fstdin,_db.acr_ed_fstdout,_db.acr_ed_fstderr);
 #else
+        int in_pipe[2]  = {-1,-1}; // [0]=child stdin (read), [1]=_db.acr_ed_to_stdin (write)
+        int out_pipe[2] = {-1,-1}; // [0]=_db.acr_ed_from_stdout (read), [1]=child stdout (write)
+        int err_pipe[2] = {-1,-1}; // [0]=_db.acr_ed_from_stderr (read), [1]=child stderr (write)
+        if (_db.acr_ed_fstdin  == "|" && pipe(in_pipe)  == 0) { _db.acr_ed_to_stdin.value    = in_pipe[1];  }
+        if (_db.acr_ed_fstdout == "|" && pipe(out_pipe) == 0) { _db.acr_ed_from_stdout.value = out_pipe[0]; }
+        if (_db.acr_ed_fstderr == "|" && pipe(err_pipe) == 0) { _db.acr_ed_from_stderr.value = err_pipe[0]; }
         _db.acr_ed_pid = fork();
         if (_db.acr_ed_pid == 0) { // child
             algo_lib::DieWithParent();
+            // inherited signal handlers stay live until exec, so a kill aimed at
+            // the child in the fork-to-exec window would run the parent's handler
+            // in the child and be consumed instead of killing; restore the default
+            // dispositions so the signal does what the sender means
+            (void)signal(SIGTERM, SIG_DFL);
+            (void)signal(SIGINT , SIG_DFL);
+            (void)signal(SIGHUP , SIG_DFL);
+            (void)signal(SIGQUIT, SIG_DFL);
+            (void)signal(SIGALRM, SIG_DFL);
+            if (_db.acr_ed_pgroup) {
+                // own process group: a kill by the child's pid alone would
+                // orphan its descendants alive; the group is one killable unit
+                (void)setpgid(0, 0);
+            }
             if (_db.acr_ed_timeout > 0) {
                 alarm(_db.acr_ed_timeout);
             }
-            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstdin , 0);
-            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstdout, 1);
-            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstderr, 2);
+            if (_db.acr_ed_memlimitmb > 0) {
+                // memory ceiling: soft and hard, so a child that drops
+                // privileges cannot raise it; the child sees allocation
+                // failure at the limit instead of inviting the OOM killer
+                struct rlimit rlim;
+                rlim.rlim_cur = rlim_t(_db.acr_ed_memlimitmb) * 1000000;
+                rlim.rlim_max = rlim.rlim_cur;
+                (void)setrlimit(RLIMIT_AS, &rlim);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstdin , 0, in_pipe[0]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstdout, 1, out_pipe[1]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstderr, 2, err_pipe[1]);
+            if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);
+            if (in_pipe[1]  >= 0) (void)close(in_pipe[1]);
+            if (out_pipe[0] >= 0) (void)close(out_pipe[0]);
+            if (out_pipe[1] >= 0) (void)close(out_pipe[1]);
+            if (err_pipe[0] >= 0) (void)close(err_pipe[0]);
+            if (err_pipe[1] >= 0) (void)close(err_pipe[1]);
             if (retval==0) retval= acr_ed_Execv();
             if (retval != 0) { // if start fails, print error
                 int err=errno;
@@ -241,31 +252,28 @@ int atf_unit::acr_ed_Start() {
             _exit(127); // if failed to start, exit anyway
         } else if (_db.acr_ed_pid == -1) {
             retval = errno; // failed to fork
+        } else if (_db.acr_ed_pgroup) {
+            // mirror the child's setpgid: the group must exist the moment fork
+            // returns, or a group kill racing the child's first quantum finds no
+            // group, loses the signal, and the unkilled child boots into whatever
+            // the killer already tore down.  EACCES -- the child exec'd first, its
+            // own setpgid won -- is the benign side of the race.
+            (void)setpgid(_db.acr_ed_pid, _db.acr_ed_pid);
         }
+        if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);  // parent keeps write end (to_stdin)
+        if (out_pipe[1] >= 0) (void)close(out_pipe[1]); // parent keeps read end (from_stdout)
+        if (err_pipe[1] >= 0) (void)close(err_pipe[1]); // parent keeps read end (from_stderr)
 #endif
     }
     _db.acr_ed_status = _db.acr_ed_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
 }
 
-// --- atf_unit.FDb.acr_ed.StartRead
-// Start subprocess & Read output
-algo::Fildes atf_unit::acr_ed_StartRead(algo_lib::FFildes &read) {
-    int pipefd[2];
-    int rc=pipe(pipefd);
-    (void)rc;
-    read.fd.value = pipefd[0];
-    _db.acr_ed_fstdout  << ">&" << pipefd[1];
-    acr_ed_Start();
-    (void)close(pipefd[1]);
-    return read.fd;
-}
-
 // --- atf_unit.FDb.acr_ed.Kill
 // Kill subprocess and wait
 void atf_unit::acr_ed_Kill() {
     if (_db.acr_ed_pid > 0) {
-        kill(_db.acr_ed_pid,9);
+        kill(_db.acr_ed_pgroup ? -_db.acr_ed_pid : _db.acr_ed_pid,9); // pgroup child dies as a whole group
         acr_ed_Wait();
     }
 }
@@ -273,6 +281,7 @@ void atf_unit::acr_ed_Kill() {
 // --- atf_unit.FDb.acr_ed.Wait
 // Wait for subprocess to return
 void atf_unit::acr_ed_Wait() {
+    algo_lib::Close(_db.acr_ed_to_stdin);
     if (_db.acr_ed_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -286,11 +295,13 @@ void atf_unit::acr_ed_Wait() {
             _db.acr_ed_pid = 0;
         }
     }
+    algo_lib::Close(_db.acr_ed_from_stdout);
+    algo_lib::Close(_db.acr_ed_from_stderr);
 }
 
 // --- atf_unit.FDb.acr_ed.Exec
 // Start + Wait
-// Execute subprocess and return exit code
+// Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
 int atf_unit::acr_ed_Exec() {
     acr_ed_Start();
     acr_ed_Wait();
@@ -329,13 +340,13 @@ algo::tempstr atf_unit::acr_ed_ToCmdline() {
     algo::tempstr retval;
     retval << _db.acr_ed_path << " ";
     command::acr_ed_PrintArgv(_db.acr_ed_cmd,retval);
-    if (ch_N(_db.acr_ed_fstdin)) {
+    if (algo_lib::RedirectFileQ(_db.acr_ed_fstdin)) {
         retval << " " << _db.acr_ed_fstdin;
     }
-    if (ch_N(_db.acr_ed_fstdout)) {
+    if (algo_lib::RedirectFileQ(_db.acr_ed_fstdout)) {
         retval << " " << _db.acr_ed_fstdout;
     }
-    if (ch_N(_db.acr_ed_fstderr)) {
+    if (algo_lib::RedirectFileQ(_db.acr_ed_fstderr)) {
         retval << " 2" << _db.acr_ed_fstderr;
     }
     return retval;
@@ -419,12 +430,6 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
         Smallstr100_Print(_db.acr_ed_cmd.ctype, *arg);
     }
 
-    if (_db.acr_ed_cmd.pooltype != "") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-pooltype:";
-        Smallstr50_Print(_db.acr_ed_cmd.pooltype, *arg);
-    }
-
     if (_db.acr_ed_cmd.ssimfile != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-ssimfile:";
@@ -452,7 +457,7 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
     if (_db.acr_ed_cmd.field != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-field:";
-        Smallstr100_Print(_db.acr_ed_cmd.field, *arg);
+        Smallstr150_Print(_db.acr_ed_cmd.field, *arg);
     }
 
     if (_db.acr_ed_cmd.arg != "") {
@@ -488,13 +493,13 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
     if (_db.acr_ed_cmd.before != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-before:";
-        Smallstr100_Print(_db.acr_ed_cmd.before, *arg);
+        Smallstr150_Print(_db.acr_ed_cmd.before, *arg);
     }
 
     if (_db.acr_ed_cmd.substr != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-substr:";
-        Smallstr100_Print(_db.acr_ed_cmd.substr, *arg);
+        Smallstr150_Print(_db.acr_ed_cmd.substr, *arg);
     }
 
     if (_db.acr_ed_cmd.alias != false) {
@@ -506,13 +511,7 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
     if (_db.acr_ed_cmd.srcfield != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-srcfield:";
-        Smallstr100_Print(_db.acr_ed_cmd.srcfield, *arg);
-    }
-
-    if (_db.acr_ed_cmd.fstep != "") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-fstep:";
-        Smallstr100_Print(_db.acr_ed_cmd.fstep, *arg);
+        Smallstr150_Print(_db.acr_ed_cmd.srcfield, *arg);
     }
 
     if (_db.acr_ed_cmd.inscond != "true") {
@@ -530,13 +529,13 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
     if (_db.acr_ed_cmd.hashfld != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-hashfld:";
-        Smallstr100_Print(_db.acr_ed_cmd.hashfld, *arg);
+        Smallstr150_Print(_db.acr_ed_cmd.hashfld, *arg);
     }
 
     if (_db.acr_ed_cmd.sortfld != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-sortfld:";
-        Smallstr100_Print(_db.acr_ed_cmd.sortfld, *arg);
+        Smallstr150_Print(_db.acr_ed_cmd.sortfld, *arg);
     }
 
     if (_db.acr_ed_cmd.unittest != "") {
@@ -593,12 +592,6 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
         bool_Print(_db.acr_ed_cmd.sandbox, *arg);
     }
 
-    if (_db.acr_ed_cmd.test != false) {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-test:";
-        bool_Print(_db.acr_ed_cmd.test, *arg);
-    }
-
     if (_db.acr_ed_cmd.showcpp != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-showcpp:";
@@ -617,13 +610,40 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
         bool_Print(_db.acr_ed_cmd.anonfld, *arg);
     }
 
-    if (_db.acr_ed_cmd.amc != true) {
+    if (_db.acr_ed_cmd.license != "GPL") {
         cstring *arg = &ary_Alloc(args);
-        *arg << "-amc:";
-        bool_Print(_db.acr_ed_cmd.amc, *arg);
+        *arg << "-license:";
+        Smallstr50_Print(_db.acr_ed_cmd.license, *arg);
+    }
+
+    if (_db.acr_ed_cmd.fstep != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fstep:";
+        Smallstr150_Print(_db.acr_ed_cmd.fstep, *arg);
+    }
+
+    if (_db.acr_ed_cmd.steptype != "Inline") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-steptype:";
+        Smallstr50_Print(_db.acr_ed_cmd.steptype, *arg);
+    }
+
+    if (_db.acr_ed_cmd.fcurs != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fcurs:";
+        Smallstr50_Print(_db.acr_ed_cmd.fcurs, *arg);
+    }
+
+    if (_db.acr_ed_cmd.dispatch_msg != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dispatch_msg:";
+        Smallstr100_Print(_db.acr_ed_cmd.dispatch_msg, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.debug; ++i) {
+        ary_Alloc(args) << "-debug";
     }
 }
 
@@ -1043,7 +1063,7 @@ void* atf_unit::unittest_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_unit::FUnittest*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.unittest_lary[bsr];
         if (!lev) {
             lev=(atf_unit::FUnittest*)algo_lib::malloc_AllocMem(sizeof(atf_unit::FUnittest) * (u64(1)<<bsr));
@@ -1052,7 +1072,7 @@ void* atf_unit::unittest_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.unittest_n = i32(new_nelems);
+        _db.unittest_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1064,7 +1084,7 @@ void atf_unit::unittest_RemoveAll() {
     for (u64 n = _db.unittest_n; n>0; ) {
         n--;
         unittest_qFind(u64(n)).~FUnittest(); // destroy last element
-        _db.unittest_n = i32(n);
+        _db.unittest_n = i64(n);
     }
 }
 
@@ -1075,7 +1095,7 @@ void atf_unit::unittest_RemoveLast() {
     if (n > 0) {
         n -= 1;
         unittest_qFind(u64(n)).~FUnittest();
-        _db.unittest_n = i32(n);
+        _db.unittest_n = i64(n);
     }
 }
 
@@ -1105,10 +1125,18 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:acr.Xref1  comment:\"\"", atf_unit::unittest_acr_Xref1 }
         ,{ "atfdb.unittest  unittest:acr.Xref2  comment:\"\"", atf_unit::unittest_acr_Xref2 }
         ,{ "atfdb.unittest  unittest:algo.Base64  comment:\"\"", atf_unit::unittest_algo_Base64 }
+        ,{ "atfdb.unittest  unittest:algo.CmdlineToArgv  comment:\"argv split is total: a break character is a word, never a stall\"", atf_unit::unittest_algo_CmdlineToArgv }
         ,{ "atfdb.unittest  unittest:algo.FileFlags  comment:\"\"", atf_unit::unittest_algo_FileFlags }
+        ,{ "atfdb.unittest  unittest:algo.NumPrintFmt  comment:\"fmt.cpp number/quantity formatters: hex, base32, u128, pointer, scaled Hz/nsec\"", atf_unit::unittest_algo_NumPrintFmt }
+        ,{ "atfdb.unittest  unittest:algo.ParseNumFmt  comment:\"fmt.cpp numeric parsers: packed-digit, octal, count, Hz/nsec suffixes\"", atf_unit::unittest_algo_ParseNumFmt }
+        ,{ "atfdb.unittest  unittest:algo.ReadBase64  comment:\"\"", atf_unit::unittest_algo_ReadBase64 }
+        ,{ "atfdb.unittest  unittest:algo.StrptrPrintFmt  comment:\"fmt.cpp strptr formatters: SQL/XML/CPP/DOT/URI/TeX quoting, padding, commas\"", atf_unit::unittest_algo_StrptrPrintFmt }
+        ,{ "atfdb.unittest  unittest:algo.TimeRoundtrip  comment:\"fmt.cpp time/diff Print+Read round-trips\"", atf_unit::unittest_algo_TimeRoundtrip }
+        ,{ "atfdb.unittest  unittest:algo.UrlIpmaskFmt  comment:\"fmt.cpp URL and Ipmask Print+Read round-trips\"", atf_unit::unittest_algo_UrlIpmaskFmt }
         ,{ "atfdb.unittest  unittest:algo_lib.Abs  comment:\"\"", atf_unit::unittest_algo_lib_Abs }
         ,{ "atfdb.unittest  unittest:algo_lib.Aligned  comment:\"\"", atf_unit::unittest_algo_lib_Aligned }
         ,{ "atfdb.unittest  unittest:algo_lib.AvlvsMap  comment:\"\"", atf_unit::unittest_algo_lib_AvlvsMap }
+        ,{ "atfdb.unittest  unittest:algo_lib.Blkpool  comment:\"basic blkpool test\"", atf_unit::unittest_algo_lib_Blkpool }
         ,{ "atfdb.unittest  unittest:algo_lib.CSVTokens  comment:\"\"", atf_unit::unittest_algo_lib_CSVTokens }
         ,{ "atfdb.unittest  unittest:algo_lib.CString  comment:\"\"", atf_unit::unittest_algo_lib_CString }
         ,{ "atfdb.unittest  unittest:algo_lib.CaseConversion  comment:\"\"", atf_unit::unittest_algo_lib_CaseConversion }
@@ -1121,10 +1149,16 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.CurrentTime  comment:\"\"", atf_unit::unittest_algo_lib_CurrentTime }
         ,{ "atfdb.unittest  unittest:algo_lib.Datecache  comment:\"\"", atf_unit::unittest_algo_lib_Datecache }
         ,{ "atfdb.unittest  unittest:algo_lib.DayName  comment:\"\"", atf_unit::unittest_algo_lib_DayName }
+        ,{ "atfdb.unittest  unittest:algo_lib.DecReadRange  comment:\"Dec ReadStrptrMaybe rejects a value outside the field type range\"", atf_unit::unittest_algo_lib_DecReadRange }
+        ,{ "atfdb.unittest  unittest:algo_lib.DecSetDoubleRange  comment:\"Dec SetDoubleMaybe accepts the exact top of the field type range\"", atf_unit::unittest_algo_lib_DecSetDoubleRange }
         ,{ "atfdb.unittest  unittest:algo_lib.Decimal  comment:\"\"", atf_unit::unittest_algo_lib_Decimal }
+        ,{ "atfdb.unittest  unittest:algo_lib.DecodeNRange  comment:\"DecodeNBytes/DecodeNChars accept a length only in [0,bytes remaining]\"", atf_unit::unittest_algo_lib_DecodeNRange }
+        ,{ "atfdb.unittest  unittest:algo_lib.DecodeVLCLERange  comment:\"A varint decodes only when its value fits the accumulator width\"", atf_unit::unittest_algo_lib_DecodeVLCLERange }
         ,{ "atfdb.unittest  unittest:algo_lib.DirBeg  comment:\"Test Dir_curs\"", atf_unit::unittest_algo_lib_DirBeg }
         ,{ "atfdb.unittest  unittest:algo_lib.DoTestRounding  comment:\"\"", atf_unit::unittest_algo_lib_DoTestRounding }
+        ,{ "atfdb.unittest  unittest:algo_lib.ExecPipe  comment:\"_proc pipe redirect variants through cat/tee\"", atf_unit::unittest_algo_lib_ExecPipe }
         ,{ "atfdb.unittest  unittest:algo_lib.ExitCode  comment:\"\"", atf_unit::unittest_algo_lib_ExitCode }
+        ,{ "atfdb.unittest  unittest:algo_lib.FProc  comment:\"spawn an external process via algo_lib.FProc\"", atf_unit::unittest_algo_lib_FProc }
         ,{ "atfdb.unittest  unittest:algo_lib.FTruncate  comment:\"\"", atf_unit::unittest_algo_lib_FTruncate }
         ,{ "atfdb.unittest  unittest:algo_lib.FileAppend  comment:\"\"", atf_unit::unittest_algo_lib_FileAppend }
         ,{ "atfdb.unittest  unittest:algo_lib.FileLine_curs  comment:\"\"", atf_unit::unittest_algo_lib_FileLine_curs }
@@ -1137,6 +1171,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.Keyval  comment:\"\"", atf_unit::unittest_algo_lib_Keyval }
         ,{ "atfdb.unittest  unittest:algo_lib.KillRecurse  comment:\"\"", atf_unit::unittest_algo_lib_KillRecurse }
         ,{ "atfdb.unittest  unittest:algo_lib.Lockfile  comment:\"\"", atf_unit::unittest_algo_lib_Lockfile }
+        ,{ "atfdb.unittest  unittest:algo_lib.LongStr  comment:\"Allocate 8GB string (test lpool)\"", atf_unit::unittest_algo_lib_LongStr }
         ,{ "atfdb.unittest  unittest:algo_lib.MinMax  comment:\"\"", atf_unit::unittest_algo_lib_MinMax }
         ,{ "atfdb.unittest  unittest:algo_lib.Mmap  comment:\"\"", atf_unit::unittest_algo_lib_Mmap }
         ,{ "atfdb.unittest  unittest:algo_lib.NToh  comment:\"\"", atf_unit::unittest_algo_lib_NToh }
@@ -1170,6 +1205,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.PrintUnTime  comment:\"\"", atf_unit::unittest_algo_lib_PrintUnTime }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintUuid  comment:\"\"", atf_unit::unittest_algo_lib_PrintUuid }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintWithCommas  comment:\"\"", atf_unit::unittest_algo_lib_PrintWithCommas }
+        ,{ "atfdb.unittest  unittest:algo_lib.RangeAryList  comment:\"An integer range list round-trips; a span is inclusive, its range half-open\"", atf_unit::unittest_algo_lib_RangeAryList }
         ,{ "atfdb.unittest  unittest:algo_lib.ReadLine  comment:\"\"", atf_unit::unittest_algo_lib_ReadLine }
         ,{ "atfdb.unittest  unittest:algo_lib.ReadModuleId  comment:\"\"", atf_unit::unittest_algo_lib_ReadModuleId }
         ,{ "atfdb.unittest  unittest:algo_lib.ReadUuid  comment:\"\"", atf_unit::unittest_algo_lib_ReadUuid }
@@ -1178,13 +1214,16 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.RegxReadTwice2  comment:\"\"", atf_unit::unittest_algo_lib_RegxReadTwice2 }
         ,{ "atfdb.unittest  unittest:algo_lib.RegxShortCircuit  comment:\"\"", atf_unit::unittest_algo_lib_RegxShortCircuit }
         ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse  comment:\"Test RemDirRecurse functions\"", atf_unit::unittest_algo_lib_RemDirRecurse }
+        ,{ "atfdb.unittest  unittest:algo_lib.ReplaceIdent  comment:\"ReplaceIdent substitutes only whole-identifier occurrences\"", atf_unit::unittest_algo_lib_ReplaceIdent }
         ,{ "atfdb.unittest  unittest:algo_lib.Replscope  comment:\"\"", atf_unit::unittest_algo_lib_Replscope }
         ,{ "atfdb.unittest  unittest:algo_lib.ReplscopeSharedPrefix  comment:\"\"", atf_unit::unittest_algo_lib_ReplscopeSharedPrefix }
+        ,{ "atfdb.unittest  unittest:algo_lib.RequireKernelCpuHz  comment:\"hz comes from the kernel export, else the caller-named variable, never measured\"", atf_unit::unittest_algo_lib_RequireKernelCpuHz }
         ,{ "atfdb.unittest  unittest:algo_lib.ReverseBits  comment:\"\"", atf_unit::unittest_algo_lib_ReverseBits }
         ,{ "atfdb.unittest  unittest:algo_lib.SchedTime  comment:\"\"", atf_unit::unittest_algo_lib_SchedTime }
         ,{ "atfdb.unittest  unittest:algo_lib.Sleep  comment:\"\"", atf_unit::unittest_algo_lib_Sleep }
         ,{ "atfdb.unittest  unittest:algo_lib.Smallstr  comment:\"\"", atf_unit::unittest_algo_lib_Smallstr }
         ,{ "atfdb.unittest  unittest:algo_lib.SmallstrEq  comment:\"\"", atf_unit::unittest_algo_lib_SmallstrEq }
+        ,{ "atfdb.unittest  unittest:algo_lib.SsfRenameFail  comment:\"SafeStringToFile: a failed rename removes the mkstemp tempfile\"", atf_unit::unittest_algo_lib_SsfRenameFail }
         ,{ "atfdb.unittest  unittest:algo_lib.Strfind  comment:\"\"", atf_unit::unittest_algo_lib_Strfind }
         ,{ "atfdb.unittest  unittest:algo_lib.StringCase  comment:\"\"", atf_unit::unittest_algo_lib_StringCase }
         ,{ "atfdb.unittest  unittest:algo_lib.StringFind  comment:\"\"", atf_unit::unittest_algo_lib_StringFind }
@@ -1208,6 +1247,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.Tuple  comment:\"\"", atf_unit::unittest_algo_lib_Tuple }
         ,{ "atfdb.unittest  unittest:algo_lib.Tuple1  comment:\"\"", atf_unit::unittest_algo_lib_Tuple1 }
         ,{ "atfdb.unittest  unittest:algo_lib.Tuple2  comment:\"\"", atf_unit::unittest_algo_lib_Tuple2 }
+        ,{ "atfdb.unittest  unittest:algo_lib.TupleBadQuote  comment:\"Unterminated quote fails the parse in bare, name, and value positions\"", atf_unit::unittest_algo_lib_TupleBadQuote }
         ,{ "atfdb.unittest  unittest:algo_lib.Txttbl  comment:\"\"", atf_unit::unittest_algo_lib_Txttbl }
         ,{ "atfdb.unittest  unittest:algo_lib.U128PrintHex  comment:\"\"", atf_unit::unittest_algo_lib_U128PrintHex }
         ,{ "atfdb.unittest  unittest:algo_lib.UnescapeC  comment:\"\"", atf_unit::unittest_algo_lib_UnescapeC }
@@ -1218,17 +1258,12 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.test_strptr  comment:\"\"", atf_unit::unittest_algo_lib_test_strptr }
         ,{ "atfdb.unittest  unittest:algo_lib.u128  comment:\"\"", atf_unit::unittest_algo_lib_u128 }
         ,{ "atfdb.unittest  unittest:amc.Unit  comment:\"\"", atf_unit::unittest_amc_Unit }
-        ,{ "atfdb.unittest  unittest:ams.StreamId  comment:\"\"", atf_unit::unittest_ams_StreamId }
-        ,{ "atfdb.unittest  unittest:ams_sendtest  comment:\"\"", atf_unit::unittest_ams_sendtest }
         ,{ "atfdb.unittest  unittest:atf_unit.Outfile  comment:\"\"", atf_unit::unittest_atf_unit_Outfile }
-        ,{ "atfdb.unittest  unittest:fm  comment:\"\"", atf_unit::unittest_fm }
-        ,{ "atfdb.unittest  unittest:lib_ams.Test1  comment:WIP", atf_unit::unittest_lib_ams_Test1 }
-        ,{ "atfdb.unittest  unittest:lib_curl.GET_Echo  comment:\"GET /echo\"", atf_unit::unittest_lib_curl_GET_Echo }
-        ,{ "atfdb.unittest  unittest:lib_curl.POST_JSON  comment:\"POST /echo with JSON + header\"", atf_unit::unittest_lib_curl_POST_JSON }
-        ,{ "atfdb.unittest  unittest:lib_curl.PUT_PLAINTEXT  comment:\"PUT /echo with plain text\"", atf_unit::unittest_lib_curl_PUT_PLAINTEXT }
-        ,{ "atfdb.unittest  unittest:lib_curl.STATUS_200  comment:\"GET status 200\"", atf_unit::unittest_lib_curl_STATUS_200 }
+        ,{ "atfdb.unittest  unittest:lib_exec.DebugForward  comment:\"\"", atf_unit::unittest_lib_exec_DebugForward }
         ,{ "atfdb.unittest  unittest:lib_exec.Dependency  comment:\"\"", atf_unit::unittest_lib_exec_Dependency }
+        ,{ "atfdb.unittest  unittest:lib_exec.ExecToArgvSyntax  comment:\"\"", atf_unit::unittest_lib_exec_ExecToArgvSyntax }
         ,{ "atfdb.unittest  unittest:lib_exec.Parallel1  comment:\"\"", atf_unit::unittest_lib_exec_Parallel1 }
+        ,{ "atfdb.unittest  unittest:lib_exec.PtyIn  comment:\"\"", atf_unit::unittest_lib_exec_PtyIn }
         ,{ "atfdb.unittest  unittest:lib_exec.Timeout  comment:\"\"", atf_unit::unittest_lib_exec_Timeout }
         ,{ "atfdb.unittest  unittest:lib_exec.TooManyFds  comment:\"\"", atf_unit::unittest_lib_exec_TooManyFds }
         ,{ "atfdb.unittest  unittest:lib_json.ArrayAll  comment:\"Array with many elements with all value types\"", atf_unit::unittest_lib_json_ArrayAll }
@@ -1290,6 +1325,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:lib_json.ErrorObjectComma4  comment:\"Error case - extra comma 3\"", atf_unit::unittest_lib_json_ErrorObjectComma4 }
         ,{ "atfdb.unittest  unittest:lib_json.ErrorObjectDupField  comment:\"Error case - duplicate field\"", atf_unit::unittest_lib_json_ErrorObjectDupField }
         ,{ "atfdb.unittest  unittest:lib_json.ErrorObjectNoValue  comment:\"Error case - no value\"", atf_unit::unittest_lib_json_ErrorObjectNoValue }
+        ,{ "atfdb.unittest  unittest:lib_json.FmtJson_Ary  comment:\"Json conversion: a record that stands on one array field\"", atf_unit::unittest_lib_json_FmtJson_Ary }
         ,{ "atfdb.unittest  unittest:lib_json.FmtJson_Object  comment:\"Json conversion: non-trivial object\"", atf_unit::unittest_lib_json_FmtJson_Object }
         ,{ "atfdb.unittest  unittest:lib_json.FmtJson_TypeA  comment:\"Json conversion: wrapped integer\"", atf_unit::unittest_lib_json_FmtJson_TypeA }
         ,{ "atfdb.unittest  unittest:lib_json.FmtJson_bool_false  comment:\"Json conversion: bool false\"", atf_unit::unittest_lib_json_FmtJson_bool_false }
@@ -1337,13 +1373,16 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:lib_json.TokenNull  comment:\"Single null token\"", atf_unit::unittest_lib_json_TokenNull }
         ,{ "atfdb.unittest  unittest:lib_json.TokenTrue  comment:\"Single true token\"", atf_unit::unittest_lib_json_TokenTrue }
         ,{ "atfdb.unittest  unittest:lib_json.Typical  comment:\"Normal case similar to typical usage\"", atf_unit::unittest_lib_json_Typical }
-        ,{ "atfdb.unittest  unittest:lib_netio_GetHostAddr  comment:\"resolve hostname to ips\"", atf_unit::unittest_lib_netio_GetHostAddr }
         ,{ "atfdb.unittest  unittest:lib_sql.Main  comment:\"\"", atf_unit::unittest_lib_sql_Main }
+        ,{ "atfdb.unittest  unittest:lib_ws.Frame16  comment:\"\"", atf_unit::unittest_lib_ws_Frame16 }
+        ,{ "atfdb.unittest  unittest:lib_ws.Frame64  comment:\"\"", atf_unit::unittest_lib_ws_Frame64 }
+        ,{ "atfdb.unittest  unittest:lib_ws.RsvBits  comment:\"\"", atf_unit::unittest_lib_ws_RsvBits }
+        ,{ "atfdb.unittest  unittest:lib_ws.SmallFrame  comment:\"\"", atf_unit::unittest_lib_ws_SmallFrame }
         ,{NULL, NULL}
     };
     (void)data;
-    atfdb::Unittest unittest;
     for (int i=0; data[i].s; i++) {
+        atfdb::Unittest unittest;
         (void)atfdb::Unittest_ReadStrptrMaybe(unittest, algo::strptr(data[i].s));
         atf_unit::FUnittest *elem = unittest_InsertMaybe(unittest);
         vrfy(elem, tempstr("atf_unit.static_insert_fatal_error")
@@ -1372,116 +1411,16 @@ bool atf_unit::unittest_XrefMaybe(atf_unit::FUnittest &row) {
 }
 
 // --- atf_unit.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_unit.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_unit.FDb.cmdline (and any base command line)
+// via atf_unit_ReadArgv; then apply -help/-version and load floadtuples input.
 void atf_unit::ReadArgv() {
     command::atf_unit &cmd = atf_unit::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::atf_unit_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::atf_unit_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"atf_unit: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"atf_unit: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::atf_unit_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "atf_unit: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::atf_unit_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"atf_unit: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::atf_unit_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -1504,9 +1443,7 @@ void atf_unit::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:atf_unit.FDb.cmdline
+    // dmmeta.floadtuples:command.atf_unit.data_dir
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!atf_unit::LoadTuplesMaybe(cmd.data_dir,true)) {
@@ -1519,7 +1456,7 @@ void atf_unit::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(atf_unit_help);
+        prlog(command::atf_unit_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -1546,7 +1483,13 @@ void atf_unit::Step() {
 // --- atf_unit.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void atf_unit::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("atf_unit", NULL, NULL, atf_unit::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "atf_unit";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = atf_unit::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "atf_unit.trace";
@@ -1580,8 +1523,6 @@ bool atf_unit::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = atf_unit::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_objtype"),recursive);
-        retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_code"),recursive);
         retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
@@ -1616,7 +1557,6 @@ bool atf_unit::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
             retval = retval && algo_lib::InsertStrptrMaybe(line);
-            retval = retval && lib_fm::InsertStrptrMaybe(line);
         }
         if (!retval) {
             algo_lib::_db.errtext << eol
@@ -1644,6 +1584,15 @@ bool atf_unit::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 void atf_unit::Steps() {
     lib_ams::Step(); // dependent namespace specified via (dev.targdep)
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- atf_unit.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool atf_unit::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_unit.FDb._db.XrefMaybe
@@ -1778,6 +1727,162 @@ void atf_unit::ind_unittest_AbsReserve(int n) {
     }
 }
 
+// --- atf_unit.FDb.msg.Alloc
+// Allocate memory for a new row with N_VARFLD var-len elements
+// If out of memory, process is killed.
+atf_unit::FMsg& atf_unit::msg_Alloc(i32 n_varfld) {
+    atf_unit::FMsg* row = msg_AllocMaybe(n_varfld);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_unit.out_of_mem  field:atf_unit.FDb.msg  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_unit.FDb.msg.AllocExtra
+atf_unit::FMsg& atf_unit::msg_AllocExtra(void *extra, i32 nbyte_extra) {
+    atf_unit::FMsg *row = msg_AllocExtraMaybe(extra, nbyte_extra);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_unit.out_of_mem  field:atf_unit.FDb.msg  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_unit.FDb.msg.AllocExtraMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_unit::FMsg* atf_unit::msg_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+    atf_unit::FMsg *row = NULL;
+    if (nbyte_extra >= 0 && nbyte_extra <= 2147483647 - ssizeof(atf_unit::FMsg)) { // a negative count would underallocate the fixed portion; larger totals do not fit the length field
+        row = (atf_unit::FMsg*)msg_AllocMem(sizeof(atf_unit::FMsg) + nbyte_extra);
+    }
+    if (row) {
+        new (row) atf_unit::FMsg; // call constructor
+        row->msg_buf = _db.msg_cur;
+        row->len = i32(sizeof(atf_unit::FMsg) + nbyte_extra);
+        if (extra) {
+            memcpy((u8*)row + sizeof(atf_unit::FMsg), extra, nbyte_extra);
+        }
+    }
+    return row;
+}
+
+// --- atf_unit.FDb.msg.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_unit::msg_Delete(atf_unit::FMsg &row) {
+    int length = i32(row.len);
+    msg_Bpbuf* buf = row.msg_buf;
+    row.msg_buf = (msg_Bpbuf*)-1; // (atf_unit.FDb.msg) not in blkpool; FreeMem catches a second delete
+    (void)length;
+    msg_FreeMem(buf);
+}
+
+// --- atf_unit.FDb.msg.AllocMem
+// Allocate n bytes. If no memory available, return NULL.
+// If requested block size exceeds Blkpool buffer size, or out-of-memory, return NULL
+atf_unit::FMsg* atf_unit::msg_AllocMem(size_t size) {
+    size = (size + 15) & ~15; // 16-byte alignment
+    atf_unit::FMsg *ret = NULL;
+    msg_Bpbuf *curbuf  = _db.msg_cur;
+    u32       pos  = _db.msg_pos;
+    bool      fits = curbuf && pos + size <= curbuf->size;// check if the bytes fit current buffer
+    if (UNLIKELY(!fits)) {
+        curbuf = _db.msg_free;
+        // check if the free buffer exists and is reasonbly large
+        // (next empty buffer may be too small, due to user's miscalculation)
+        if (!curbuf || size + sizeof(msg_Bpbuf) > curbuf->size) {
+            u32 rsrv_size = u32_Max(size + sizeof(msg_Bpbuf), _db.msg_buf_dflt_size);
+            msg_ReserveBuffers(1, rsrv_size);
+            curbuf = _db.msg_free;
+        }
+        if (curbuf) {
+            _db.msg_free = curbuf->next;
+            _db.msg_free_bytes -= curbuf->size;
+            curbuf->next = NULL;
+            pos = ssizeof(msg_Bpbuf);
+            fits = pos + size <= curbuf->size;
+        }
+        _db.msg_cur = curbuf;
+    }
+    // allocate requested number of bytes
+    // increment buf refcount.
+    if (fits) {
+        ret                  = (atf_unit::FMsg*)((u8*)curbuf + pos);
+        // set back pointer.
+        // IMPORTANT: subsequent ctor must not overwrite msg_buf.
+        ret->msg_buf       = curbuf;
+        _db.msg_pos   = pos + size;
+        curbuf->refcount    += 1;
+    }
+    return ret;
+}
+
+// --- atf_unit.FDb.msg.SetBufferSize
+// Set size of all future buffers to NBYTES each.
+void atf_unit::msg_SetBufferSize(u32 nbytes) {
+    _db.msg_buf_dflt_size = nbytes;
+}
+
+// --- atf_unit.FDb.msg.ReserveBuffers
+// Reserve NBUF buffers of specified size
+bool atf_unit::msg_ReserveBuffers(u32 nbuf, u32 size) {
+    bool retval = true;
+    for (u32 i = 0; i < nbuf; i++) {
+        msg_Bpbuf *buf = (msg_Bpbuf*)algo_lib::malloc_AllocMem(size);
+        if (buf) {
+            buf->refcount = 0;
+            buf->size = size;
+            buf->next = _db.msg_free;
+            _db.msg_free = buf;
+            _db.msg_reserved_bytes += size;
+            _db.msg_free_bytes += size;
+        } else {
+            retval = false;
+            break;
+        }
+    }
+    return retval;
+}
+
+// --- atf_unit.FDb.msg.FreeMem
+// Deallocate memory previously allocated from pool
+void atf_unit::msg_FreeMem(atf_unit::msg_Bpbuf* buf) {
+    if (UNLIKELY(buf == (msg_Bpbuf*)-1)) {
+        FatalErrorExit("atf_unit.blkpool_double_delete  pool:atf_unit.FDb.msg  comment:'double deletion caught'");
+    }
+    u32 rc = buf->refcount;
+    if (UNLIKELY(rc == 0)) {
+        FatalErrorExit("atf_unit.blkpool_double_free  pool:atf_unit.FDb.msg  comment:'access to freed buffer'");
+    }
+    buf->refcount = rc-1;
+    if (rc == 1) {
+        if (buf == _db.msg_cur) {
+            // free rewind
+            _db.msg_pos = ssizeof(msg_Bpbuf);
+        } else {
+            buf->next = _db.msg_free;
+            _db.msg_free = buf;
+            _db.msg_free_bytes += buf->size;
+        }
+    }
+}
+
+// --- atf_unit.FDb.msg.UsedBytes
+// Pool bytes not reusable by Alloc (reserved minus free list)
+// Buffer bytes not reusable by Alloc: reserved from the base pool, minus the free list.
+// Counts whole buffers -- a buffer pinned by one live element counts in full, so this
+// is the pool's true address-space cost, which live-byte accounting understates.
+u64 atf_unit::msg_UsedBytes() {
+    return _db.msg_reserved_bytes - _db.msg_free_bytes;
+}
+
+// --- atf_unit.FDb.msg.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_unit::msg_XrefMaybe(atf_unit::FMsg &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- atf_unit.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_unit::trace_RowidFind(int t) {
@@ -1796,7 +1901,9 @@ void atf_unit::FDb_Init() {
     _db.acr_ed_path = algo::strptr("bin/acr_ed");
     _db.acr_ed_pid = pid_t(0);
     _db.acr_ed_timeout = i32(0);
+    _db.acr_ed_memlimitmb = u32(0);
     _db.acr_ed_status = i32(0);
+    _db.acr_ed_pgroup = bool(false);
     // number: initialize Tpool
     _db.number_free      = NULL;
     _db.number_blocksize = algo::BumpToPow2(64 * sizeof(atf_unit::FNumber)); // allocate 64-127 elements at a time
@@ -1823,6 +1930,12 @@ void atf_unit::FDb_Init() {
     memset(_db.ind_unittest_buckets_elems, 0, sizeof(atf_unit::FUnittest*)*_db.ind_unittest_buckets_n); // (atf_unit.FDb.ind_unittest)
     _db.c_curtest = NULL;
     _db.perf_cycle_budget = u64(0);
+    _db.msg_buf_dflt_size   = 4096;
+    _db.msg_pos             = 0; // past the end
+    _db.msg_free = NULL;
+    _db.msg_cur = NULL;
+    _db.msg_reserved_bytes = 0;
+    _db.msg_free_bytes = 0;
 
     atf_unit::InitReflection();
     unittest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_unit.FDb.unittest  load atf_unit.FUnittest records
@@ -1842,6 +1955,24 @@ void atf_unit::FDb_Uninit() {
     acr_ed_Kill(); // kill child, ensure forward progress
 }
 
+// --- atf_unit.FMsg.msg.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u8> atf_unit::msg_Getary(atf_unit::FMsg& msg) {
+    return algo::aryptr<u8>(msg_Addr(msg), msg_N(msg));
+}
+
+// --- atf_unit.FMsg.msg.Addr
+u8* atf_unit::msg_Addr(atf_unit::FMsg& msg) {
+    return (u8*)((u8*)&msg + sizeof(atf_unit::FMsg)); // address of varlen portion
+}
+
+// --- atf_unit.FMsg.msg.Print
+// Convert msg to a string.
+// Array is printed as a regular string.
+void atf_unit::msg_Print(atf_unit::FMsg& msg, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(msg_Getary(msg));
+}
+
 // --- atf_unit.FNumber..Uninit
 void atf_unit::FNumber_Uninit(atf_unit::FNumber& number) {
     atf_unit::FNumber &row = number; (void)row;
@@ -1857,10 +1988,10 @@ algo::aryptr<atf_unit::Dbl> atf_unit::orig_Addary(atf_unit::FPerfSort& parent, a
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.orig  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     orig_Reserve(parent, nnew); // reserve space
-    int at = parent.orig_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.orig_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.orig_elems + at + i) atf_unit::Dbl(rhs[i]);
         parent.orig_n++;
     }
@@ -1872,8 +2003,8 @@ algo::aryptr<atf_unit::Dbl> atf_unit::orig_Addary(atf_unit::FPerfSort& parent, a
 // The new element is initialized to a default value
 atf_unit::Dbl& atf_unit::orig_Alloc(atf_unit::FPerfSort& parent) {
     orig_Reserve(parent, 1);
-    int n  = parent.orig_n;
-    int at = n;
+    i64 n  = parent.orig_n;
+    i64 at = n;
     atf_unit::Dbl *elems = parent.orig_elems;
     new (elems + at) atf_unit::Dbl(); // construct new element, default initializer
     parent.orig_n = n+1;
@@ -1883,9 +2014,9 @@ atf_unit::Dbl& atf_unit::orig_Alloc(atf_unit::FPerfSort& parent) {
 // --- atf_unit.FPerfSort.orig.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_unit::Dbl& atf_unit::orig_AllocAt(atf_unit::FPerfSort& parent, int at) {
+atf_unit::Dbl& atf_unit::orig_AllocAt(atf_unit::FPerfSort& parent, i64 at) {
     orig_Reserve(parent, 1);
-    int n  = parent.orig_n;
+    i64 n  = parent.orig_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("atf_unit.bad_alloc_at  field:atf_unit.FPerfSort.orig  comment:'index out of range'");
     }
@@ -1898,12 +2029,12 @@ atf_unit::Dbl& atf_unit::orig_AllocAt(atf_unit::FPerfSort& parent, int at) {
 
 // --- atf_unit.FPerfSort.orig.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocN(atf_unit::FPerfSort& parent, int n_elems) {
+algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocN(atf_unit::FPerfSort& parent, i64 n_elems) {
     orig_Reserve(parent, n_elems);
-    int old_n  = parent.orig_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.orig_n;
+    i64 new_n = old_n + n_elems;
     atf_unit::Dbl *elems = parent.orig_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_unit::Dbl(); // construct new element, default initialize
     }
     parent.orig_n = new_n;
@@ -1914,15 +2045,15 @@ algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocN(atf_unit::FPerfSort& parent, i
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNAt(atf_unit::FPerfSort& parent, int n_elems, int at) {
+algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNAt(atf_unit::FPerfSort& parent, i64 n_elems, i64 at) {
     orig_Reserve(parent, n_elems);
-    int n  = parent.orig_n;
+    i64 n  = parent.orig_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("atf_unit.bad_alloc_n_at  field:atf_unit.FPerfSort.orig  comment:'index out of range'");
     }
     atf_unit::Dbl *elems = parent.orig_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(atf_unit::Dbl));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) atf_unit::Dbl(); // construct new element, default initialize
     }
     parent.orig_n = n+n_elems;
@@ -1931,8 +2062,8 @@ algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNAt(atf_unit::FPerfSort& parent,
 
 // --- atf_unit.FPerfSort.orig.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_unit::orig_Remove(atf_unit::FPerfSort& parent, u32 i) {
-    u32 lim = parent.orig_n;
+void atf_unit::orig_Remove(atf_unit::FPerfSort& parent, u64 i) {
+    u64 lim = parent.orig_n;
     atf_unit::Dbl *elems = parent.orig_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(atf_unit::Dbl) * (lim - (i + 1)));
@@ -1952,10 +2083,10 @@ void atf_unit::orig_RemoveLast(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.orig.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_unit::orig_AbsReserve(atf_unit::FPerfSort& parent, int n) {
-    u32 old_max  = parent.orig_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void atf_unit::orig_AbsReserve(atf_unit::FPerfSort& parent, i64 n) {
+    u64 old_max  = parent.orig_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.orig_elems, old_max * sizeof(atf_unit::Dbl), new_max * sizeof(atf_unit::Dbl));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_unit.tary_nomem  field:atf_unit.FPerfSort.orig  comment:'out of memory'");
@@ -1969,9 +2100,9 @@ void atf_unit::orig_AbsReserve(atf_unit::FPerfSort& parent, int n) {
 // Copy contents of RHS to PARENT.
 void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) {
     orig_RemoveAll(parent);
-    int nnew = rhs.orig_n;
+    i64 nnew = rhs.orig_n;
     orig_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.orig_elems + i) atf_unit::Dbl(orig_qFind(rhs, i));
         parent.orig_n = i + 1;
     }
@@ -1987,12 +2118,12 @@ void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_u
 
 // --- atf_unit.FPerfSort.orig.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) {
+algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNVal(atf_unit::FPerfSort& parent, i64 n_elems, const atf_unit::Dbl& val) {
     orig_Reserve(parent, n_elems);
-    int old_n  = parent.orig_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.orig_n;
+    i64 new_n = old_n + n_elems;
     atf_unit::Dbl *elems = parent.orig_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_unit::Dbl(val);
     }
     parent.orig_n = new_n;
@@ -2016,24 +2147,39 @@ bool atf_unit::orig_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in
 // --- atf_unit.FPerfSort.orig.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void atf_unit::orig_Insary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs, int at) {
+void atf_unit::orig_Insary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.orig_elems && rhs.elems < parent.orig_elems + parent.orig_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.orig  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.orig_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.orig_n+1))) {
         FatalErrorExit("atf_unit.bad_insary  field:atf_unit.FPerfSort.orig  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.orig_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.orig_n - at;
     orig_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.orig_elems + at + nnew + i) atf_unit::Dbl(parent.orig_elems[at + i]);
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.orig_elems + at + i) atf_unit::Dbl(rhs[i]);
     }
     parent.orig_n += nnew;
+}
+
+// --- atf_unit.FPerfSort.orig.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void atf_unit::orig_RemRegion(atf_unit::FPerfSort& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.orig_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        memmove(parent.orig_elems+beg, parent.orig_elems+end, sizeof(atf_unit::Dbl) * (parent.orig_n-end));
+        parent.orig_n -= n;
+    }
 }
 
 // --- atf_unit.FPerfSort.sorted.Addary
@@ -2045,10 +2191,10 @@ algo::aryptr<atf_unit::Dbl> atf_unit::sorted_Addary(atf_unit::FPerfSort& parent,
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.sorted  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     sorted_Reserve(parent, nnew); // reserve space
-    int at = parent.sorted_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.sorted_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.sorted_elems + at + i) atf_unit::Dbl(rhs[i]);
         parent.sorted_n++;
     }
@@ -2060,8 +2206,8 @@ algo::aryptr<atf_unit::Dbl> atf_unit::sorted_Addary(atf_unit::FPerfSort& parent,
 // The new element is initialized to a default value
 atf_unit::Dbl& atf_unit::sorted_Alloc(atf_unit::FPerfSort& parent) {
     sorted_Reserve(parent, 1);
-    int n  = parent.sorted_n;
-    int at = n;
+    i64 n  = parent.sorted_n;
+    i64 at = n;
     atf_unit::Dbl *elems = parent.sorted_elems;
     new (elems + at) atf_unit::Dbl(); // construct new element, default initializer
     parent.sorted_n = n+1;
@@ -2071,9 +2217,9 @@ atf_unit::Dbl& atf_unit::sorted_Alloc(atf_unit::FPerfSort& parent) {
 // --- atf_unit.FPerfSort.sorted.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_unit::Dbl& atf_unit::sorted_AllocAt(atf_unit::FPerfSort& parent, int at) {
+atf_unit::Dbl& atf_unit::sorted_AllocAt(atf_unit::FPerfSort& parent, i64 at) {
     sorted_Reserve(parent, 1);
-    int n  = parent.sorted_n;
+    i64 n  = parent.sorted_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("atf_unit.bad_alloc_at  field:atf_unit.FPerfSort.sorted  comment:'index out of range'");
     }
@@ -2086,12 +2232,12 @@ atf_unit::Dbl& atf_unit::sorted_AllocAt(atf_unit::FPerfSort& parent, int at) {
 
 // --- atf_unit.FPerfSort.sorted.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocN(atf_unit::FPerfSort& parent, int n_elems) {
+algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocN(atf_unit::FPerfSort& parent, i64 n_elems) {
     sorted_Reserve(parent, n_elems);
-    int old_n  = parent.sorted_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.sorted_n;
+    i64 new_n = old_n + n_elems;
     atf_unit::Dbl *elems = parent.sorted_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_unit::Dbl(); // construct new element, default initialize
     }
     parent.sorted_n = new_n;
@@ -2102,15 +2248,15 @@ algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocN(atf_unit::FPerfSort& parent,
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNAt(atf_unit::FPerfSort& parent, int n_elems, int at) {
+algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNAt(atf_unit::FPerfSort& parent, i64 n_elems, i64 at) {
     sorted_Reserve(parent, n_elems);
-    int n  = parent.sorted_n;
+    i64 n  = parent.sorted_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("atf_unit.bad_alloc_n_at  field:atf_unit.FPerfSort.sorted  comment:'index out of range'");
     }
     atf_unit::Dbl *elems = parent.sorted_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(atf_unit::Dbl));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) atf_unit::Dbl(); // construct new element, default initialize
     }
     parent.sorted_n = n+n_elems;
@@ -2119,8 +2265,8 @@ algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNAt(atf_unit::FPerfSort& paren
 
 // --- atf_unit.FPerfSort.sorted.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_unit::sorted_Remove(atf_unit::FPerfSort& parent, u32 i) {
-    u32 lim = parent.sorted_n;
+void atf_unit::sorted_Remove(atf_unit::FPerfSort& parent, u64 i) {
+    u64 lim = parent.sorted_n;
     atf_unit::Dbl *elems = parent.sorted_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(atf_unit::Dbl) * (lim - (i + 1)));
@@ -2140,10 +2286,10 @@ void atf_unit::sorted_RemoveLast(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.sorted.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_unit::sorted_AbsReserve(atf_unit::FPerfSort& parent, int n) {
-    u32 old_max  = parent.sorted_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void atf_unit::sorted_AbsReserve(atf_unit::FPerfSort& parent, i64 n) {
+    u64 old_max  = parent.sorted_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.sorted_elems, old_max * sizeof(atf_unit::Dbl), new_max * sizeof(atf_unit::Dbl));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_unit.tary_nomem  field:atf_unit.FPerfSort.sorted  comment:'out of memory'");
@@ -2157,9 +2303,9 @@ void atf_unit::sorted_AbsReserve(atf_unit::FPerfSort& parent, int n) {
 // Copy contents of RHS to PARENT.
 void atf_unit::sorted_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) {
     sorted_RemoveAll(parent);
-    int nnew = rhs.sorted_n;
+    i64 nnew = rhs.sorted_n;
     sorted_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.sorted_elems + i) atf_unit::Dbl(sorted_qFind(rhs, i));
         parent.sorted_n = i + 1;
     }
@@ -2175,12 +2321,12 @@ void atf_unit::sorted_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf
 
 // --- atf_unit.FPerfSort.sorted.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) {
+algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNVal(atf_unit::FPerfSort& parent, i64 n_elems, const atf_unit::Dbl& val) {
     sorted_Reserve(parent, n_elems);
-    int old_n  = parent.sorted_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.sorted_n;
+    i64 new_n = old_n + n_elems;
     atf_unit::Dbl *elems = parent.sorted_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_unit::Dbl(val);
     }
     parent.sorted_n = new_n;
@@ -2204,24 +2350,39 @@ bool atf_unit::sorted_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr 
 // --- atf_unit.FPerfSort.sorted.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void atf_unit::sorted_Insary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs, int at) {
+void atf_unit::sorted_Insary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.sorted_elems && rhs.elems < parent.sorted_elems + parent.sorted_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.sorted  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.sorted_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.sorted_n+1))) {
         FatalErrorExit("atf_unit.bad_insary  field:atf_unit.FPerfSort.sorted  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.sorted_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.sorted_n - at;
     sorted_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.sorted_elems + at + nnew + i) atf_unit::Dbl(parent.sorted_elems[at + i]);
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.sorted_elems + at + i) atf_unit::Dbl(rhs[i]);
     }
     parent.sorted_n += nnew;
+}
+
+// --- atf_unit.FPerfSort.sorted.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void atf_unit::sorted_RemRegion(atf_unit::FPerfSort& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.sorted_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        memmove(parent.sorted_elems+beg, parent.sorted_elems+end, sizeof(atf_unit::Dbl) * (parent.sorted_n-end));
+        parent.sorted_n -= n;
+    }
 }
 
 // --- atf_unit.FPerfSort.sorted.Swap
@@ -2399,9 +2560,9 @@ algo::aryptr<i32> atf_unit::index_Addary(atf_unit::FPerfSort& parent, algo::aryp
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.index  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     index_Reserve(parent, nnew); // reserve space
-    int at = parent.index_n;
+    i64 at = parent.index_n;
     memcpy(parent.index_elems + at, rhs.elems, nnew * sizeof(i32));
     parent.index_n += nnew;
     return algo::aryptr<i32>(parent.index_elems + at, nnew);
@@ -2412,8 +2573,8 @@ algo::aryptr<i32> atf_unit::index_Addary(atf_unit::FPerfSort& parent, algo::aryp
 // The new element is initialized to a default value
 i32& atf_unit::index_Alloc(atf_unit::FPerfSort& parent) {
     index_Reserve(parent, 1);
-    int n  = parent.index_n;
-    int at = n;
+    i64 n  = parent.index_n;
+    i64 at = n;
     i32 *elems = parent.index_elems;
     new (elems + at) i32(0); // construct new element, default initializer
     parent.index_n = n+1;
@@ -2423,9 +2584,9 @@ i32& atf_unit::index_Alloc(atf_unit::FPerfSort& parent) {
 // --- atf_unit.FPerfSort.index.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-i32& atf_unit::index_AllocAt(atf_unit::FPerfSort& parent, int at) {
+i32& atf_unit::index_AllocAt(atf_unit::FPerfSort& parent, i64 at) {
     index_Reserve(parent, 1);
-    int n  = parent.index_n;
+    i64 n  = parent.index_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("atf_unit.bad_alloc_at  field:atf_unit.FPerfSort.index  comment:'index out of range'");
     }
@@ -2438,12 +2599,12 @@ i32& atf_unit::index_AllocAt(atf_unit::FPerfSort& parent, int at) {
 
 // --- atf_unit.FPerfSort.index.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> atf_unit::index_AllocN(atf_unit::FPerfSort& parent, int n_elems) {
+algo::aryptr<i32> atf_unit::index_AllocN(atf_unit::FPerfSort& parent, i64 n_elems) {
     index_Reserve(parent, n_elems);
-    int old_n  = parent.index_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.index_n;
+    i64 new_n = old_n + n_elems;
     i32 *elems = parent.index_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) i32(0); // construct new element, default initialize
     }
     parent.index_n = new_n;
@@ -2454,15 +2615,15 @@ algo::aryptr<i32> atf_unit::index_AllocN(atf_unit::FPerfSort& parent, int n_elem
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<i32> atf_unit::index_AllocNAt(atf_unit::FPerfSort& parent, int n_elems, int at) {
+algo::aryptr<i32> atf_unit::index_AllocNAt(atf_unit::FPerfSort& parent, i64 n_elems, i64 at) {
     index_Reserve(parent, n_elems);
-    int n  = parent.index_n;
+    i64 n  = parent.index_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("atf_unit.bad_alloc_n_at  field:atf_unit.FPerfSort.index  comment:'index out of range'");
     }
     i32 *elems = parent.index_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(i32));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) i32(0); // construct new element, default initialize
     }
     parent.index_n = n+n_elems;
@@ -2471,8 +2632,8 @@ algo::aryptr<i32> atf_unit::index_AllocNAt(atf_unit::FPerfSort& parent, int n_el
 
 // --- atf_unit.FPerfSort.index.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_unit::index_Remove(atf_unit::FPerfSort& parent, u32 i) {
-    u32 lim = parent.index_n;
+void atf_unit::index_Remove(atf_unit::FPerfSort& parent, u64 i) {
+    u64 lim = parent.index_n;
     i32 *elems = parent.index_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(i32) * (lim - (i + 1)));
@@ -2492,10 +2653,10 @@ void atf_unit::index_RemoveLast(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.index.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_unit::index_AbsReserve(atf_unit::FPerfSort& parent, int n) {
-    u32 old_max  = parent.index_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void atf_unit::index_AbsReserve(atf_unit::FPerfSort& parent, i64 n) {
+    u64 old_max  = parent.index_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.index_elems, old_max * sizeof(i32), new_max * sizeof(i32));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_unit.tary_nomem  field:atf_unit.FPerfSort.index  comment:'out of memory'");
@@ -2509,9 +2670,9 @@ void atf_unit::index_AbsReserve(atf_unit::FPerfSort& parent, int n) {
 // Copy contents of RHS to PARENT.
 void atf_unit::index_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) {
     index_RemoveAll(parent);
-    int nnew = rhs.index_n;
+    i64 nnew = rhs.index_n;
     index_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.index_elems + i) i32(index_qFind(rhs, i));
         parent.index_n = i + 1;
     }
@@ -2527,12 +2688,12 @@ void atf_unit::index_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<i32>
 
 // --- atf_unit.FPerfSort.index.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> atf_unit::index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) {
+algo::aryptr<i32> atf_unit::index_AllocNVal(atf_unit::FPerfSort& parent, i64 n_elems, const i32& val) {
     index_Reserve(parent, n_elems);
-    int old_n  = parent.index_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.index_n;
+    i64 new_n = old_n + n_elems;
     i32 *elems = parent.index_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) i32(val);
     }
     parent.index_n = new_n;
@@ -2556,20 +2717,35 @@ bool atf_unit::index_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr i
 // --- atf_unit.FPerfSort.index.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void atf_unit::index_Insary(atf_unit::FPerfSort& parent, algo::aryptr<i32> rhs, int at) {
+void atf_unit::index_Insary(atf_unit::FPerfSort& parent, algo::aryptr<i32> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.index_elems && rhs.elems < parent.index_elems + parent.index_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.index  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.index_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.index_n+1))) {
         FatalErrorExit("atf_unit.bad_insary  field:atf_unit.FPerfSort.index  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.index_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.index_n - at;
     index_Reserve(parent, nnew); // reserve space
     memmove(parent.index_elems + at + nnew, parent.index_elems + at, nmove * sizeof(i32));
     memcpy(parent.index_elems + at, rhs.elems, nnew * sizeof(i32));
     parent.index_n += nnew;
+}
+
+// --- atf_unit.FPerfSort.index.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void atf_unit::index_RemRegion(atf_unit::FPerfSort& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.index_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        memmove(parent.index_elems+beg, parent.index_elems+end, sizeof(i32) * (parent.index_n-end));
+        parent.index_n -= n;
+    }
 }
 
 // --- atf_unit.FPerfSort..Uninit
@@ -2623,7 +2799,7 @@ atf_unit::FPerfSort& atf_unit::FPerfSort::operator =(const atf_unit::FPerfSort &
 // Copy fields out of row
 void atf_unit::unittest_CopyOut(atf_unit::FUnittest &row, atfdb::Unittest &out) {
     out.unittest = row.unittest;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_unit.FUnittest.base.CopyIn
@@ -2634,15 +2810,13 @@ void atf_unit::unittest_CopyIn(atf_unit::FUnittest &row, atfdb::Unittest &in) {
 }
 
 // --- atf_unit.FUnittest.ns.Get
-algo::Smallstr16 atf_unit::ns_Get(atf_unit::FUnittest& unittest) {
-    algo::Smallstr16 ret(algo::Pathcomp(unittest.unittest, ".RL"));
-    return ret;
+algo::strptr atf_unit::ns_Get(atf_unit::FUnittest& unittest) {
+    return algo::Pathcomp(unittest.unittest, ".RL");
 }
 
 // --- atf_unit.FUnittest.testname.Get
-algo::Smallstr50 atf_unit::testname_Get(atf_unit::FUnittest& unittest) {
-    algo::Smallstr50 ret(algo::Pathcomp(unittest.unittest, ".RR"));
-    return ret;
+algo::strptr atf_unit::testname_Get(atf_unit::FUnittest& unittest) {
+    return algo::Pathcomp(unittest.unittest, ".RR");
 }
 
 // --- atf_unit.FUnittest..Uninit
@@ -2661,7 +2835,7 @@ void atf_unit::FUnittest_Print(atf_unit::FUnittest& row, algo::cstring& str) {
     algo::Smallstr50_Print(row.unittest, temp);
     PrintAttrSpaceReset(str,"unittest", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
     bool_Print(row.select, temp);
@@ -2771,8 +2945,88 @@ bool atf_unit::FieldId_ReadStrptrMaybe(atf_unit::FieldId &parent, algo::strptr i
 // --- atf_unit.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.FieldId.String  printfmt:Raw
-void atf_unit::FieldId_Print(atf_unit::FieldId& row, algo::cstring& str) {
+void atf_unit::FieldId_Print(atf_unit::FieldId row, algo::cstring& str) {
     atf_unit::value_Print(row, str);
+}
+
+// --- atf_unit.JsonAry.name.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+algo::Smallstr20& atf_unit::name_Alloc(atf_unit::JsonAry& parent) {
+    algo::Smallstr20* row = name_AllocMaybe(parent);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_unit.out_of_mem  field:atf_unit.JsonAry.name  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_unit.JsonAry.name.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+algo::Smallstr20* atf_unit::name_AllocMaybe(atf_unit::JsonAry& parent) {
+    algo::Smallstr20 *row = (algo::Smallstr20*)name_AllocMem(parent);
+    if (row) {
+        new (row) algo::Smallstr20; // call constructor
+    }
+    return row;
+}
+
+// --- atf_unit.JsonAry.name.RemoveAll
+// Destroy all elements of Inlary
+void atf_unit::name_RemoveAll(atf_unit::JsonAry& parent) {
+    parent.name_n = 0;
+}
+
+// --- atf_unit.JsonAry.name.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_unit::name_RemoveLast(atf_unit::JsonAry& parent) {
+    u64 n = parent.name_n;
+    if (n > 0) {
+        n -= 1;
+        parent.name_n = n;
+    }
+}
+
+// --- atf_unit.JsonAry.name.ReadStrptrMaybe
+// Read array from string
+// Convert string to field. Return success value
+bool atf_unit::name_ReadStrptrMaybe(atf_unit::JsonAry& parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = name_N(parent) < 4;
+    if (retval) {
+        algo::Smallstr20 &elem = name_Alloc(parent);
+        retval = algo::Smallstr20_ReadStrptrMaybe(elem, in_str);
+        if (!retval) {
+            name_RemoveLast(parent);
+        }
+    }
+    return retval;
+}
+
+// --- atf_unit.JsonAry..Init
+// Set all fields to initial values.
+void atf_unit::JsonAry_Init(atf_unit::JsonAry& parent) {
+    parent.name_n = 0; // name: initialize count
+}
+
+// --- atf_unit.JsonAry..Uninit
+void atf_unit::JsonAry_Uninit(atf_unit::JsonAry& parent) {
+    atf_unit::JsonAry &row = parent; (void)row;
+
+    // atf_unit.JsonAry.name.Uninit (Inlary)  //elements print as strings: Smallstr20 has no Json cfmt
+    name_RemoveAll(parent);
+}
+
+// --- atf_unit.JsonAry..FmtJson
+// Create JSON representation of atf_unit::JsonAry under PARENT node
+// cfmt:atf_unit.JsonAry.Json  printfmt:Auto
+lib_json::FNode * atf_unit::JsonAry_FmtJson(atf_unit::JsonAry& row, lib_json::FNode *parent) {
+
+    algo::aryptr<algo::Smallstr20> name_ary = name_Getary(row);
+    lib_json::FNode& name_node = lib_json::NewArrayNode(parent);
+    for (int i = 0; i < name_ary.n_elems; ++i) {
+        algo::Smallstr20_Print(name_ary[i], lib_json::NewStringNode(&name_node).value);
+    }
+    return &name_node;
 }
 
 // --- atf_unit.TypeA..ReadStrptrMaybe
@@ -2787,14 +3041,14 @@ bool atf_unit::TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_st
 // --- atf_unit.TypeA..FmtJson
 // Create JSON representation of atf_unit::TypeA under PARENT node
 // cfmt:atf_unit.TypeA.Json  printfmt:Auto
-lib_json::FNode * atf_unit::TypeA_FmtJson(atf_unit::TypeA& row, lib_json::FNode *parent) {
-    return i32_FmtJson(const_cast<atf_unit::TypeA&>(row).typea,parent);;
+lib_json::FNode * atf_unit::TypeA_FmtJson(atf_unit::TypeA row, lib_json::FNode *parent) {
+    return i32_FmtJson(row.typea,parent);
 }
 
 // --- atf_unit.TypeA..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.TypeA.String  printfmt:Raw
-void atf_unit::TypeA_Print(atf_unit::TypeA& row, algo::cstring& str) {
+void atf_unit::TypeA_Print(atf_unit::TypeA row, algo::cstring& str) {
     i32_Print(row.typea, str);
 }
 
@@ -2836,32 +3090,32 @@ bool atf_unit::TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_st
 // --- atf_unit.TypeB..FmtJson
 // Create JSON representation of atf_unit::TypeB under PARENT node
 // cfmt:atf_unit.TypeB.Json  printfmt:Auto
-lib_json::FNode * atf_unit::TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode *parent) {
-    lib_json::FNode *object_node = &lib_json::node_Alloc();
-    object_node->p_parent = parent?parent:object_node;
-    object_node->type   = lib_json_FNode_type_object;
-    node_XrefMaybe(*object_node);
+lib_json::FNode * atf_unit::TypeB_FmtJson(atf_unit::TypeB row, lib_json::FNode *parent) {
+    lib_json::FNode *objnode = &lib_json::node_Alloc();
+    objnode->p_parent = parent?parent:objnode;
+    objnode->type   = lib_json_FNode_type_object;
+    node_XrefMaybe(*objnode);
 
-    lib_json::FNode *typea_field_node = &lib_json::node_Alloc();
-    typea_field_node->p_parent = object_node;
-    typea_field_node->type   = lib_json_FNode_type_field;
-    typea_field_node->value  = "typea";
-    node_XrefMaybe(*typea_field_node);
-    i32_FmtJson(const_cast<atf_unit::TypeB&>(row).typea,typea_field_node);
+    lib_json::FNode *typea_node = &lib_json::node_Alloc();
+    typea_node->p_parent = objnode;
+    typea_node->type   = lib_json_FNode_type_field;
+    typea_node->value  = "typea";
+    node_XrefMaybe(*typea_node);
+    i32_FmtJson(row.typea,typea_node);
 
-    lib_json::FNode *j_field_node = &lib_json::node_Alloc();
-    j_field_node->p_parent = object_node;
-    j_field_node->type   = lib_json_FNode_type_field;
-    j_field_node->value  = "j";
-    node_XrefMaybe(*j_field_node);
-    i32_FmtJson(const_cast<atf_unit::TypeB&>(row).j,j_field_node);
-    return object_node;
+    lib_json::FNode *j_node = &lib_json::node_Alloc();
+    j_node->p_parent = objnode;
+    j_node->type   = lib_json_FNode_type_field;
+    j_node->value  = "j";
+    node_XrefMaybe(*j_node);
+    i32_FmtJson(row.j,j_node);
+    return objnode;
 }
 
 // --- atf_unit.TypeB..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.TypeB.String  printfmt:Tuple
-void atf_unit::TypeB_Print(atf_unit::TypeB& row, algo::cstring& str) {
+void atf_unit::TypeB_Print(atf_unit::TypeB row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_unit.TypeB";
 
@@ -2870,6 +3124,112 @@ void atf_unit::TypeB_Print(atf_unit::TypeB& row, algo::cstring& str) {
 
     i32_Print(row.j, temp);
     PrintAttrSpaceReset(str,"j", temp);
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+u32& atf_unit::fld_ary_u32_Alloc(atf_unit::TestJson& parent) {
+    u32* row = fld_ary_u32_AllocMaybe(parent);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_unit.out_of_mem  field:atf_unit.TestJson.fld_ary_u32  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+u32* atf_unit::fld_ary_u32_AllocMaybe(atf_unit::TestJson& parent) {
+    u32 *row = (u32*)fld_ary_u32_AllocMem(parent);
+    if (row) {
+        new (row) u32; // call constructor
+    }
+    return row;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.RemoveAll
+// Destroy all elements of Inlary
+void atf_unit::fld_ary_u32_RemoveAll(atf_unit::TestJson& parent) {
+    parent.fld_ary_u32_n = 0;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_unit::fld_ary_u32_RemoveLast(atf_unit::TestJson& parent) {
+    u64 n = parent.fld_ary_u32_n;
+    if (n > 0) {
+        n -= 1;
+        parent.fld_ary_u32_n = n;
+    }
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.ReadStrptrMaybe
+// Read array from string
+// Convert string to field. Return success value
+bool atf_unit::fld_ary_u32_ReadStrptrMaybe(atf_unit::TestJson& parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = fld_ary_u32_N(parent) < 4;
+    if (retval) {
+        u32 &elem = fld_ary_u32_Alloc(parent);
+        retval = u32_ReadStrptrMaybe(elem, in_str);
+        if (!retval) {
+            fld_ary_u32_RemoveLast(parent);
+        }
+    }
+    return retval;
+}
+
+// --- atf_unit.TestJson.fld_ary_name.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+algo::Smallstr20& atf_unit::fld_ary_name_Alloc(atf_unit::TestJson& parent) {
+    algo::Smallstr20* row = fld_ary_name_AllocMaybe(parent);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_unit.out_of_mem  field:atf_unit.TestJson.fld_ary_name  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_unit.TestJson.fld_ary_name.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+algo::Smallstr20* atf_unit::fld_ary_name_AllocMaybe(atf_unit::TestJson& parent) {
+    algo::Smallstr20 *row = (algo::Smallstr20*)fld_ary_name_AllocMem(parent);
+    if (row) {
+        new (row) algo::Smallstr20; // call constructor
+    }
+    return row;
+}
+
+// --- atf_unit.TestJson.fld_ary_name.RemoveAll
+// Destroy all elements of Inlary
+void atf_unit::fld_ary_name_RemoveAll(atf_unit::TestJson& parent) {
+    parent.fld_ary_name_n = 0;
+}
+
+// --- atf_unit.TestJson.fld_ary_name.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_unit::fld_ary_name_RemoveLast(atf_unit::TestJson& parent) {
+    u64 n = parent.fld_ary_name_n;
+    if (n > 0) {
+        n -= 1;
+        parent.fld_ary_name_n = n;
+    }
+}
+
+// --- atf_unit.TestJson.fld_ary_name.ReadStrptrMaybe
+// Read array from string
+// Convert string to field. Return success value
+bool atf_unit::fld_ary_name_ReadStrptrMaybe(atf_unit::TestJson& parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = fld_ary_name_N(parent) < 4;
+    if (retval) {
+        algo::Smallstr20 &elem = fld_ary_name_Alloc(parent);
+        retval = algo::Smallstr20_ReadStrptrMaybe(elem, in_str);
+        if (!retval) {
+            fld_ary_name_RemoveLast(parent);
+        }
+    }
+    return retval;
 }
 
 // --- atf_unit.TestJson..Init
@@ -2887,143 +3247,168 @@ void atf_unit::TestJson_Init(atf_unit::TestJson& parent) {
     parent.fld_float = float(0.f);
     parent.fld_double = double(0.0);
     parent.fld_char = char(0);
+    parent.fld_ary_u32_n = 0; // fld_ary_u32: initialize count
+    parent.fld_ary_name_n = 0; // fld_ary_name: initialize count
+}
+
+// --- atf_unit.TestJson..Uninit
+void atf_unit::TestJson_Uninit(atf_unit::TestJson& parent) {
+    atf_unit::TestJson &row = parent; (void)row;
+
+    // atf_unit.TestJson.fld_ary_name.Uninit (Inlary)  //array of a type with no Json cfmt: elements are strings
+    fld_ary_name_RemoveAll(parent);
+
+    // atf_unit.TestJson.fld_ary_u32.Uninit (Inlary)  //array of a type with a Json cfmt: elements are numbers
+    fld_ary_u32_RemoveAll(parent);
 }
 
 // --- atf_unit.TestJson..FmtJson
 // Create JSON representation of atf_unit::TestJson under PARENT node
 // cfmt:atf_unit.TestJson.Json  printfmt:Auto
 lib_json::FNode * atf_unit::TestJson_FmtJson(atf_unit::TestJson& row, lib_json::FNode *parent) {
-    lib_json::FNode *object_node = &lib_json::node_Alloc();
-    object_node->p_parent = parent?parent:object_node;
-    object_node->type   = lib_json_FNode_type_object;
-    node_XrefMaybe(*object_node);
+    lib_json::FNode *objnode = &lib_json::node_Alloc();
+    objnode->p_parent = parent?parent:objnode;
+    objnode->type   = lib_json_FNode_type_object;
+    node_XrefMaybe(*objnode);
 
-    lib_json::FNode *fld_bool_field_node = &lib_json::node_Alloc();
-    fld_bool_field_node->p_parent = object_node;
-    fld_bool_field_node->type   = lib_json_FNode_type_field;
-    fld_bool_field_node->value  = "fld_bool";
-    node_XrefMaybe(*fld_bool_field_node);
-    bool_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_bool,fld_bool_field_node);
+    lib_json::FNode *fld_bool_node = &lib_json::node_Alloc();
+    fld_bool_node->p_parent = objnode;
+    fld_bool_node->type   = lib_json_FNode_type_field;
+    fld_bool_node->value  = "fld_bool";
+    node_XrefMaybe(*fld_bool_node);
+    bool_FmtJson(row.fld_bool,fld_bool_node);
 
-    lib_json::FNode *fld_u8_field_node = &lib_json::node_Alloc();
-    fld_u8_field_node->p_parent = object_node;
-    fld_u8_field_node->type   = lib_json_FNode_type_field;
-    fld_u8_field_node->value  = "fld_u8";
-    node_XrefMaybe(*fld_u8_field_node);
-    u8_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_u8,fld_u8_field_node);
+    lib_json::FNode *fld_u8_node = &lib_json::node_Alloc();
+    fld_u8_node->p_parent = objnode;
+    fld_u8_node->type   = lib_json_FNode_type_field;
+    fld_u8_node->value  = "fld_u8";
+    node_XrefMaybe(*fld_u8_node);
+    u8_FmtJson(row.fld_u8,fld_u8_node);
 
-    lib_json::FNode *fld_i8_field_node = &lib_json::node_Alloc();
-    fld_i8_field_node->p_parent = object_node;
-    fld_i8_field_node->type   = lib_json_FNode_type_field;
-    fld_i8_field_node->value  = "fld_i8";
-    node_XrefMaybe(*fld_i8_field_node);
-    i8_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_i8,fld_i8_field_node);
+    lib_json::FNode *fld_i8_node = &lib_json::node_Alloc();
+    fld_i8_node->p_parent = objnode;
+    fld_i8_node->type   = lib_json_FNode_type_field;
+    fld_i8_node->value  = "fld_i8";
+    node_XrefMaybe(*fld_i8_node);
+    i8_FmtJson(row.fld_i8,fld_i8_node);
 
-    lib_json::FNode *fld_u16_field_node = &lib_json::node_Alloc();
-    fld_u16_field_node->p_parent = object_node;
-    fld_u16_field_node->type   = lib_json_FNode_type_field;
-    fld_u16_field_node->value  = "fld_u16";
-    node_XrefMaybe(*fld_u16_field_node);
-    u16_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_u16,fld_u16_field_node);
+    lib_json::FNode *fld_u16_node = &lib_json::node_Alloc();
+    fld_u16_node->p_parent = objnode;
+    fld_u16_node->type   = lib_json_FNode_type_field;
+    fld_u16_node->value  = "fld_u16";
+    node_XrefMaybe(*fld_u16_node);
+    u16_FmtJson(row.fld_u16,fld_u16_node);
 
-    lib_json::FNode *fld_i16_field_node = &lib_json::node_Alloc();
-    fld_i16_field_node->p_parent = object_node;
-    fld_i16_field_node->type   = lib_json_FNode_type_field;
-    fld_i16_field_node->value  = "fld_i16";
-    node_XrefMaybe(*fld_i16_field_node);
-    i16_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_i16,fld_i16_field_node);
+    lib_json::FNode *fld_i16_node = &lib_json::node_Alloc();
+    fld_i16_node->p_parent = objnode;
+    fld_i16_node->type   = lib_json_FNode_type_field;
+    fld_i16_node->value  = "fld_i16";
+    node_XrefMaybe(*fld_i16_node);
+    i16_FmtJson(row.fld_i16,fld_i16_node);
 
-    lib_json::FNode *fld_u32_field_node = &lib_json::node_Alloc();
-    fld_u32_field_node->p_parent = object_node;
-    fld_u32_field_node->type   = lib_json_FNode_type_field;
-    fld_u32_field_node->value  = "fld_u32";
-    node_XrefMaybe(*fld_u32_field_node);
-    u32_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_u32,fld_u32_field_node);
+    lib_json::FNode *fld_u32_node = &lib_json::node_Alloc();
+    fld_u32_node->p_parent = objnode;
+    fld_u32_node->type   = lib_json_FNode_type_field;
+    fld_u32_node->value  = "fld_u32";
+    node_XrefMaybe(*fld_u32_node);
+    u32_FmtJson(row.fld_u32,fld_u32_node);
 
-    lib_json::FNode *fld_i32_field_node = &lib_json::node_Alloc();
-    fld_i32_field_node->p_parent = object_node;
-    fld_i32_field_node->type   = lib_json_FNode_type_field;
-    fld_i32_field_node->value  = "fld_i32";
-    node_XrefMaybe(*fld_i32_field_node);
-    i32_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_i32,fld_i32_field_node);
+    lib_json::FNode *fld_i32_node = &lib_json::node_Alloc();
+    fld_i32_node->p_parent = objnode;
+    fld_i32_node->type   = lib_json_FNode_type_field;
+    fld_i32_node->value  = "fld_i32";
+    node_XrefMaybe(*fld_i32_node);
+    i32_FmtJson(row.fld_i32,fld_i32_node);
 
-    lib_json::FNode *fld_u64_field_node = &lib_json::node_Alloc();
-    fld_u64_field_node->p_parent = object_node;
-    fld_u64_field_node->type   = lib_json_FNode_type_field;
-    fld_u64_field_node->value  = "fld_u64";
-    node_XrefMaybe(*fld_u64_field_node);
-    u64_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_u64,fld_u64_field_node);
+    lib_json::FNode *fld_u64_node = &lib_json::node_Alloc();
+    fld_u64_node->p_parent = objnode;
+    fld_u64_node->type   = lib_json_FNode_type_field;
+    fld_u64_node->value  = "fld_u64";
+    node_XrefMaybe(*fld_u64_node);
+    u64_FmtJson(row.fld_u64,fld_u64_node);
 
-    lib_json::FNode *fld_i64_field_node = &lib_json::node_Alloc();
-    fld_i64_field_node->p_parent = object_node;
-    fld_i64_field_node->type   = lib_json_FNode_type_field;
-    fld_i64_field_node->value  = "fld_i64";
-    node_XrefMaybe(*fld_i64_field_node);
-    i64_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_i64,fld_i64_field_node);
+    lib_json::FNode *fld_i64_node = &lib_json::node_Alloc();
+    fld_i64_node->p_parent = objnode;
+    fld_i64_node->type   = lib_json_FNode_type_field;
+    fld_i64_node->value  = "fld_i64";
+    node_XrefMaybe(*fld_i64_node);
+    i64_FmtJson(row.fld_i64,fld_i64_node);
 
-    lib_json::FNode *fld_float_field_node = &lib_json::node_Alloc();
-    fld_float_field_node->p_parent = object_node;
-    fld_float_field_node->type   = lib_json_FNode_type_field;
-    fld_float_field_node->value  = "fld_float";
-    node_XrefMaybe(*fld_float_field_node);
-    float_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_float,fld_float_field_node);
+    lib_json::FNode *fld_float_node = &lib_json::node_Alloc();
+    fld_float_node->p_parent = objnode;
+    fld_float_node->type   = lib_json_FNode_type_field;
+    fld_float_node->value  = "fld_float";
+    node_XrefMaybe(*fld_float_node);
+    float_FmtJson(row.fld_float,fld_float_node);
 
-    lib_json::FNode *fld_double_field_node = &lib_json::node_Alloc();
-    fld_double_field_node->p_parent = object_node;
-    fld_double_field_node->type   = lib_json_FNode_type_field;
-    fld_double_field_node->value  = "fld_double";
-    node_XrefMaybe(*fld_double_field_node);
-    double_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_double,fld_double_field_node);
+    lib_json::FNode *fld_double_node = &lib_json::node_Alloc();
+    fld_double_node->p_parent = objnode;
+    fld_double_node->type   = lib_json_FNode_type_field;
+    fld_double_node->value  = "fld_double";
+    node_XrefMaybe(*fld_double_node);
+    double_FmtJson(row.fld_double,fld_double_node);
 
-    lib_json::FNode *fld_char_field_node = &lib_json::node_Alloc();
-    fld_char_field_node->p_parent = object_node;
-    fld_char_field_node->type   = lib_json_FNode_type_field;
-    fld_char_field_node->value  = "fld_char";
-    node_XrefMaybe(*fld_char_field_node);
-    char_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_char,fld_char_field_node);
+    lib_json::FNode *fld_char_node = &lib_json::node_Alloc();
+    fld_char_node->p_parent = objnode;
+    fld_char_node->type   = lib_json_FNode_type_field;
+    fld_char_node->value  = "fld_char";
+    node_XrefMaybe(*fld_char_node);
+    char_FmtJson(row.fld_char,fld_char_node);
 
-    lib_json::FNode *fld_strptr_field_node = &lib_json::node_Alloc();
-    fld_strptr_field_node->p_parent = object_node;
-    fld_strptr_field_node->type   = lib_json_FNode_type_field;
-    fld_strptr_field_node->value  = "fld_strptr";
-    node_XrefMaybe(*fld_strptr_field_node);
-    algo::strptr_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_strptr,fld_strptr_field_node);
+    lib_json::FNode *fld_strptr_node = &lib_json::node_Alloc();
+    fld_strptr_node->p_parent = objnode;
+    fld_strptr_node->type   = lib_json_FNode_type_field;
+    fld_strptr_node->value  = "fld_strptr";
+    node_XrefMaybe(*fld_strptr_node);
+    algo::strptr_FmtJson(row.fld_strptr,fld_strptr_node);
 
-    lib_json::FNode *fld_cstring_field_node = &lib_json::node_Alloc();
-    fld_cstring_field_node->p_parent = object_node;
-    fld_cstring_field_node->type   = lib_json_FNode_type_field;
-    fld_cstring_field_node->value  = "fld_cstring";
-    node_XrefMaybe(*fld_cstring_field_node);
-    algo::cstring_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_cstring,fld_cstring_field_node);
+    lib_json::FNode *fld_cstring_node = &lib_json::node_Alloc();
+    fld_cstring_node->p_parent = objnode;
+    fld_cstring_node->type   = lib_json_FNode_type_field;
+    fld_cstring_node->value  = "fld_cstring";
+    node_XrefMaybe(*fld_cstring_node);
+    algo::cstring_FmtJson(row.fld_cstring,fld_cstring_node);
 
-    lib_json::FNode *fld_atftypea_field_node = &lib_json::node_Alloc();
-    fld_atftypea_field_node->p_parent = object_node;
-    fld_atftypea_field_node->type   = lib_json_FNode_type_field;
-    fld_atftypea_field_node->value  = "fld_atftypea";
-    node_XrefMaybe(*fld_atftypea_field_node);
-    atf_unit::TypeA_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_atftypea,fld_atftypea_field_node);
+    lib_json::FNode *fld_atftypea_node = &lib_json::node_Alloc();
+    fld_atftypea_node->p_parent = objnode;
+    fld_atftypea_node->type   = lib_json_FNode_type_field;
+    fld_atftypea_node->value  = "fld_atftypea";
+    node_XrefMaybe(*fld_atftypea_node);
+    atf_unit::TypeA_FmtJson(row.fld_atftypea,fld_atftypea_node);
 
-    lib_json::FNode *fld_atfcstr_field_node = &lib_json::node_Alloc();
-    fld_atfcstr_field_node->p_parent = object_node;
-    fld_atfcstr_field_node->type   = lib_json_FNode_type_field;
-    fld_atfcstr_field_node->value  = "fld_atfcstr";
-    node_XrefMaybe(*fld_atfcstr_field_node);
-    atf_unit::Cstr_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_atfcstr,fld_atfcstr_field_node);
+    lib_json::FNode *fld_atfcstr_node = &lib_json::node_Alloc();
+    fld_atfcstr_node->p_parent = objnode;
+    fld_atfcstr_node->type   = lib_json_FNode_type_field;
+    fld_atfcstr_node->value  = "fld_atfcstr";
+    node_XrefMaybe(*fld_atfcstr_node);
+    atf_unit::Cstr_FmtJson(row.fld_atfcstr,fld_atfcstr_node);
 
-    lib_json::FNode *fld_atfdbl_field_node = &lib_json::node_Alloc();
-    fld_atfdbl_field_node->p_parent = object_node;
-    fld_atfdbl_field_node->type   = lib_json_FNode_type_field;
-    fld_atfdbl_field_node->value  = "fld_atfdbl";
-    node_XrefMaybe(*fld_atfdbl_field_node);
-    atf_unit::Dbl_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_atfdbl,fld_atfdbl_field_node);
+    lib_json::FNode *fld_atfdbl_node = &lib_json::node_Alloc();
+    fld_atfdbl_node->p_parent = objnode;
+    fld_atfdbl_node->type   = lib_json_FNode_type_field;
+    fld_atfdbl_node->value  = "fld_atfdbl";
+    node_XrefMaybe(*fld_atfdbl_node);
+    atf_unit::Dbl_FmtJson(row.fld_atfdbl,fld_atfdbl_node);
 
-    lib_json::FNode *fld_atftypeb_field_node = &lib_json::node_Alloc();
-    fld_atftypeb_field_node->p_parent = object_node;
-    fld_atftypeb_field_node->type   = lib_json_FNode_type_field;
-    fld_atftypeb_field_node->value  = "fld_atftypeb";
-    node_XrefMaybe(*fld_atftypeb_field_node);
-    atf_unit::TypeB_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_atftypeb,fld_atftypeb_field_node);
-    return object_node;
+    lib_json::FNode *fld_atftypeb_node = &lib_json::node_Alloc();
+    fld_atftypeb_node->p_parent = objnode;
+    fld_atftypeb_node->type   = lib_json_FNode_type_field;
+    fld_atftypeb_node->value  = "fld_atftypeb";
+    node_XrefMaybe(*fld_atftypeb_node);
+    atf_unit::TypeB_FmtJson(row.fld_atftypeb,fld_atftypeb_node);
+
+    algo::aryptr<u32> fld_ary_u32_ary = fld_ary_u32_Getary(row);
+    lib_json::FNode& fld_ary_u32_node = lib_json::NewArrayNode(objnode, "fld_ary_u32");
+    for (int i = 0; i < fld_ary_u32_ary.n_elems; ++i) {
+        u32_FmtJson(fld_ary_u32_ary[i], &fld_ary_u32_node);
+    }
+
+    algo::aryptr<algo::Smallstr20> fld_ary_name_ary = fld_ary_name_Getary(row);
+    lib_json::FNode& fld_ary_name_node = lib_json::NewArrayNode(objnode, "fld_ary_name");
+    for (int i = 0; i < fld_ary_name_ary.n_elems; ++i) {
+        algo::Smallstr20_Print(fld_ary_name_ary[i], lib_json::NewStringNode(&fld_ary_name_node).value);
+    }
+    return objnode;
 }
 
 // --- atf_unit.TestJson..Print
@@ -3086,6 +3471,74 @@ void atf_unit::TestJson_Print(atf_unit::TestJson& row, algo::cstring& str) {
 
     atf_unit::TypeB_Print(row.fld_atftypeb, temp);
     PrintAttrSpaceReset(str,"fld_atftypeb", temp);
+
+    ind_beg(TestJson_fld_ary_u32_curs,fld_ary_u32,row) {
+        u32_Print(fld_ary_u32, temp);
+        tempstr name;
+        name << "fld_ary_u32.";
+        name << ind_curs(fld_ary_u32).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+
+    ind_beg(TestJson_fld_ary_name_curs,fld_ary_name,row) {
+        algo::Smallstr20_Print(fld_ary_name, temp);
+        tempstr name;
+        name << "fld_ary_name.";
+        name << ind_curs(fld_ary_name).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+}
+
+// --- atf_unit.TestJson..AssignOp
+atf_unit::TestJson& atf_unit::TestJson::operator =(const atf_unit::TestJson &rhs) {
+    fld_bool = rhs.fld_bool;
+    fld_u8 = rhs.fld_u8;
+    fld_i8 = rhs.fld_i8;
+    fld_u16 = rhs.fld_u16;
+    fld_i16 = rhs.fld_i16;
+    fld_u32 = rhs.fld_u32;
+    fld_i32 = rhs.fld_i32;
+    fld_u64 = rhs.fld_u64;
+    fld_i64 = rhs.fld_i64;
+    fld_float = rhs.fld_float;
+    fld_double = rhs.fld_double;
+    fld_char = rhs.fld_char;
+    fld_strptr = rhs.fld_strptr;
+    fld_cstring = rhs.fld_cstring;
+    fld_atftypea = rhs.fld_atftypea;
+    fld_atfcstr = rhs.fld_atfcstr;
+    fld_atfdbl = rhs.fld_atfdbl;
+    fld_atftypeb = rhs.fld_atftypeb;
+    fld_ary_u32_Setary(*this, fld_ary_u32_Getary(const_cast<atf_unit::TestJson&>(rhs)));
+    fld_ary_name_Setary(*this, fld_ary_name_Getary(const_cast<atf_unit::TestJson&>(rhs)));
+    return *this;
+}
+
+// --- atf_unit.TestJson..CopyCtor
+ atf_unit::TestJson::TestJson(const atf_unit::TestJson &rhs)
+    : fld_bool(rhs.fld_bool)
+    , fld_u8(rhs.fld_u8)
+    , fld_i8(rhs.fld_i8)
+    , fld_u16(rhs.fld_u16)
+    , fld_i16(rhs.fld_i16)
+    , fld_u32(rhs.fld_u32)
+    , fld_i32(rhs.fld_i32)
+    , fld_u64(rhs.fld_u64)
+    , fld_i64(rhs.fld_i64)
+    , fld_float(rhs.fld_float)
+    , fld_double(rhs.fld_double)
+    , fld_char(rhs.fld_char)
+    , fld_strptr(rhs.fld_strptr)
+    , fld_cstring(rhs.fld_cstring)
+    , fld_atftypea(rhs.fld_atftypea)
+    , fld_atfcstr(rhs.fld_atfcstr)
+    , fld_atfdbl(rhs.fld_atfdbl)
+    , fld_atftypeb(rhs.fld_atftypeb)
+ {
+    fld_ary_u32_n = 0; // fld_ary_u32: initialize count
+    fld_ary_u32_Setary(*this, fld_ary_u32_Getary(const_cast<atf_unit::TestJson&>(rhs)));
+    fld_ary_name_n = 0; // fld_ary_name: initialize count
+    fld_ary_name_Setary(*this, fld_ary_name_Getary(const_cast<atf_unit::TestJson&>(rhs)));
 }
 
 // --- atf_unit...SizeCheck
@@ -3095,6 +3548,7 @@ inline static void atf_unit::SizeCheck() {
 // --- atf_unit...StaticCheck
 void atf_unit::StaticCheck() {
     algo_assert(sizeof(atf_unit::unittest_step_hook) == 8); // csize:atf_unit.unittest_step_hook
+    algo_assert(_offset_of(atf_unit::FMsg_curs, msglen) + sizeof(((atf_unit::FMsg_curs*)0)->msglen) == sizeof(atf_unit::FMsg_curs));
     algo_assert(_offset_of(atf_unit::FieldId, value) + sizeof(((atf_unit::FieldId*)0)->value) == sizeof(atf_unit::FieldId));
 }
 
@@ -3106,9 +3560,9 @@ int main(int argc, char **argv) {
         lib_ams::FDb_Init();
         lib_curl::FDb_Init();
         lib_exec::FDb_Init();
-        lib_fm::FDb_Init();
         lib_netio::FDb_Init();
         lib_sql::FDb_Init();
+        lib_ws::FDb_Init();
         atf_unit::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -3125,9 +3579,9 @@ int main(int argc, char **argv) {
     }
     try {
         atf_unit::FDb_Uninit();
+        lib_ws::FDb_Uninit();
         lib_sql::FDb_Uninit();
         lib_netio::FDb_Uninit();
-        lib_fm::FDb_Uninit();
         lib_exec::FDb_Uninit();
         lib_curl::FDb_Uninit();
         lib_ams::FDb_Uninit();

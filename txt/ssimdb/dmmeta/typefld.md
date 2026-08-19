@@ -6,27 +6,19 @@ It is widely used when describing [protocols](/txt/exe/amc/proto.md)
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Typefld
 
 * file:[data/dmmeta/typefld.ssim](/data/dmmeta/typefld.ssim)
 
-italicised fields: *ctype* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+italicised fields: *ctype* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*Name of length field<br>.RL of field*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*Name of length field<br>.RL of field*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FTypefld](/txt/exe/acr_ed/internals.md#acr_ed-ftypefld)
-* [amc](/txt/exe/amc/internals.md) as [amc.FTypefld](/txt/exe/amc/internals.md#amc-ftypefld)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [acr_ed](/txt/gen/acr_ed/acr_ed.md) as [acr_ed.FTypefld](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftypefld)
+* [amc](/txt/gen/amc/amc.md) as [amc.FTypefld](/txt/gen/amc/amc.md#amc-ftypefld)

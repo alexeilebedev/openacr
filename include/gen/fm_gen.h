@@ -33,17 +33,18 @@
 enum fm_Flag_value_Enum {            // fm.Flag.value
      fm_Flag_value_cleared   = 'C'   // Cleared alarm
     ,fm_Flag_value_raised    = 'R'   // Raised alarm
+    ,fm_Flag_value_purge     = 'P'   // Purge marker on the alarm stream: drop historic (cleared) alarms; active alarms are not affected
 };
 
-enum { fm_Flag_value_Enum_N = 2 };
+enum { fm_Flag_value_Enum_N = 3 };
 
 
 // --- fm_Severity_value_Enum
 
 enum fm_Severity_value_Enum {             // fm.Severity.value
-     fm_Severity_value_critical   = '0'   // Service-affecting fault, immediate attention
-    ,fm_Severity_value_major      = '1'   // Service-affecting fault, urgent attention
-    ,fm_Severity_value_minor      = '2'   // Non-service affecting fault, need attention
+     fm_Severity_value_critical   = '0'   // only immediate operator action ends it, or data is at risk while it stands
+    ,fm_Severity_value_major      = '1'   // stands until an operator or healing action resolves it
+    ,fm_Severity_value_minor      = '2'   // the platform's routine operation ends it: load passing, catch-up, retention
 };
 
 enum { fm_Severity_value_Enum_N = 3 };
@@ -51,29 +52,30 @@ enum { fm_Severity_value_Enum_N = 3 };
 
 // --- fm_FieldIdEnum
 
-enum fm_FieldIdEnum {                   // fm.FieldId.value
-     fm_FieldId_base              = 0
-    ,fm_FieldId_type              = 1
-    ,fm_FieldId_length            = 2
-    ,fm_FieldId_code              = 3
-    ,fm_FieldId_objtype           = 4
-    ,fm_FieldId_objinst           = 5
-    ,fm_FieldId_flag              = 6
-    ,fm_FieldId_severity          = 7
-    ,fm_FieldId_n_occurred        = 8
-    ,fm_FieldId_first_time        = 9
-    ,fm_FieldId_last_time         = 10
-    ,fm_FieldId_clear_time        = 11
-    ,fm_FieldId_update_time       = 12
-    ,fm_FieldId_objtype_summary   = 13
-    ,fm_FieldId_summary           = 14
-    ,fm_FieldId_description       = 15
-    ,fm_FieldId_source            = 16
-    ,fm_FieldId_ch                = 17
-    ,fm_FieldId_value             = 18
+enum fm_FieldIdEnum {    // fm.FieldId.value
+     fm_FieldId_base
+    ,fm_FieldId_type
+    ,fm_FieldId_length
+    ,fm_FieldId_code
+    ,fm_FieldId_objtype
+    ,fm_FieldId_objinst
+    ,fm_FieldId_flag
+    ,fm_FieldId_severity
+    ,fm_FieldId_n_occurred
+    ,fm_FieldId_first_time
+    ,fm_FieldId_last_time
+    ,fm_FieldId_clear_time
+    ,fm_FieldId_update_time
+    ,fm_FieldId_objtype_summary
+    ,fm_FieldId_summary
+    ,fm_FieldId_description
+    ,fm_FieldId_shelved
+    ,fm_FieldId_n_flap
+    ,fm_FieldId_ch
+    ,fm_FieldId_value
 };
 
-enum { fm_FieldIdEnum_N = 19 };
+enum { fm_FieldIdEnum_N = 20 };
 
 namespace fm { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -87,7 +89,6 @@ namespace fm { struct Flag; }
 namespace fm { struct Severity; }
 namespace fm { struct Summary; }
 namespace fm { struct Description; }
-namespace fm { struct Source; }
 namespace fm { struct FieldId; }
 namespace fm { // gen:ns_print_struct
 
@@ -117,7 +118,6 @@ struct Code { // fm.Code
     inline               Code(const fm::Code &rhs) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Access string as array of chars
 // func:fm.Code.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Code& parent) __attribute__((nothrow));
@@ -183,7 +183,6 @@ struct Objtype { // fm.Objtype
     inline               Objtype(const fm::Objtype &rhs) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Access string as array of chars
 // func:fm.Objtype.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Objtype& parent) __attribute__((nothrow));
@@ -249,7 +248,6 @@ struct Objinst { // fm.Objinst
     inline               Objinst(const fm::Objinst &rhs) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Access string as array of chars
 // func:fm.Objinst.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Objinst& parent) __attribute__((nothrow));
@@ -299,7 +297,6 @@ struct Flag { // fm.Flag
     inline               Flag(fm_Flag_value_Enum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:fm.Flag.value.GetEnum
 inline fm_Flag_value_Enum value_GetEnum(const fm::Flag& parent) __attribute__((nothrow));
@@ -364,7 +361,6 @@ struct Severity { // fm.Severity
     inline               Severity(fm_Severity_value_Enum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:fm.Severity.value.GetEnum
 inline fm_Severity_value_Enum value_GetEnum(const fm::Severity& parent) __attribute__((nothrow));
@@ -451,7 +447,6 @@ struct Summary { // fm.Summary
     inline               Summary(const fm::Summary &rhs) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Access string as array of chars
 // func:fm.Summary.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Summary& parent) __attribute__((nothrow));
@@ -517,7 +512,6 @@ struct Description { // fm.Description
     inline               Description(const fm::Description &rhs) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Access string as array of chars
 // func:fm.Description.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Description& parent) __attribute__((nothrow));
@@ -557,77 +551,11 @@ inline bool          Description_Eq(fm::Description& lhs, fm::Description& rhs) 
 // func:fm.Description..Print
 void                 Description_Print(fm::Description& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- fm.Source
-#pragma pack(push,1)
-struct Source { // fm.Source
-    enum { ch_max = 32 };
-    u8 ch[32];
-    // Copy from strptr (operator=)
-    // func:fm.Source.ch.AssignStrptr
-    inline void          operator =(const algo::strptr &str) __attribute__((nothrow));
-    // func:fm.Source.ch.CtorStrptr
-    inline               Source(const algo::strptr &rhs) __attribute__((nothrow));
-    // func:fm.Source.ch.Cast
-    inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:fm.Source..EqOp
-    inline bool          operator ==(const fm::Source &rhs) const __attribute__((nothrow));
-    // func:fm.Source..NeOp
-    inline bool          operator !=(const fm::Source &rhs) const __attribute__((nothrow));
-    // func:fm.Source..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
-    // func:fm.Source..AssignOp
-    inline fm::Source&   operator =(const fm::Source &rhs) __attribute__((nothrow));
-    // func:fm.Source..Ctor
-    inline               Source() __attribute__((nothrow));
-    // func:fm.Source..CopyCtor
-    inline               Source(const fm::Source &rhs) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Access string as array of chars
-// func:fm.Source.ch.Getary
-inline algo::aryptr<char> ch_Getary(const fm::Source& parent) __attribute__((nothrow));
-// func:fm.Source.ch.Init
-inline void          ch_Init(fm::Source &parent) __attribute__((nothrow));
-// always return constant 32
-// func:fm.Source.ch.Max
-inline int           ch_Max(fm::Source& parent) __attribute__((nothrow));
-// func:fm.Source.ch.N
-inline int           ch_N(const fm::Source& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-// func:fm.Source.ch.Print
-void                 ch_Print(fm::Source& parent, algo::cstring &out) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:fm.Source.ch.ReadStrptrMaybe
-bool                 ch_ReadStrptrMaybe(fm::Source& parent, algo::strptr rhs) __attribute__((nothrow));
-// Copy from strptr, clipping length
-// Set string to the value provided by RHS.
-// If RHS is too large, it is silently clipped.
-// func:fm.Source.ch.SetStrptr
-void                 ch_SetStrptr(fm::Source& parent, const algo::strptr& rhs) __attribute__((nothrow));
-
-// func:fm.Source..Hash
-u32                  Source_Hash(u32 prev, const fm::Source& rhs) __attribute__((nothrow));
-// Read fields of fm::Source from an ascii string.
-// The format of the string is the format of the fm::Source's only field
-// func:fm.Source..ReadStrptrMaybe
-bool                 Source_ReadStrptrMaybe(fm::Source &parent, algo::strptr in_str) __attribute__((nothrow));
-// func:fm.Source..Cmp
-inline i32           Source_Cmp(fm::Source& lhs, fm::Source& rhs) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:fm.Source..Init
-inline void          Source_Init(fm::Source& parent);
-// func:fm.Source..Eq
-inline bool          Source_Eq(fm::Source& lhs, fm::Source& rhs) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:fm.Source.String  printfmt:Raw
-// func:fm.Source..Print
-void                 Source_Print(fm::Source& row, algo::cstring& str) __attribute__((nothrow));
-
 // --- fm.AlarmMsg
 #pragma pack(push,1)
 struct AlarmMsg { // fm.AlarmMsg
     u32               type;              //   17
-    u32               length;            //   ssizeof(parent) + (0)
+    u32               length;            //   ssizeof(parent)
     fm::Code          code;              // Alarm code
     fm::Objtype       objtype;           // Alarmed object type
     fm::Objinst       objinst;           // Alarmed object instance
@@ -641,12 +569,12 @@ struct AlarmMsg { // fm.AlarmMsg
     fm::Summary       objtype_summary;   // Object type explained
     fm::Summary       summary;           // Alarm summary from inventory
     fm::Description   description;       // Alarm message from object
-    fm::Source        source;            // Subsystem where detected
+    bool              shelved;           //   false  RFC 8632 shelving: published but hidden from the default operator view
+    u32               n_flap;            //   0  Reading transitions absorbed by the debounce window
     // func:fm.AlarmMsg..Ctor
     inline               AlarmMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:fm.AlarmMsg.base.CopyOut
 void                 parent_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -693,7 +621,6 @@ struct FieldId { // fm.FieldId: Field read helper
     inline               FieldId(fm_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:fm.FieldId.value.GetEnum
 inline fm_FieldIdEnum value_GetEnum(const fm::FieldId& parent) __attribute__((nothrow));
@@ -731,7 +658,7 @@ inline void          FieldId_Init(fm::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:fm.FieldId.String  printfmt:Raw
 // func:fm.FieldId..Print
-void                 FieldId_Print(fm::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(fm::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace fm { // gen:ns_func
 // func:fm...StaticCheck

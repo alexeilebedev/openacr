@@ -1,0 +1,2 @@
+dmmeta.gconst  field:algo_lib.CharId.value  namefld:dev.License.license  idfld:algo_lib.FDb.malloc  wantenum:Y
+dmmeta.gconst  field:algo_lib.LicenseId.value  namefld:dev.License.license  idfld:algo_lib.FDb.malloc  wantenum:Y

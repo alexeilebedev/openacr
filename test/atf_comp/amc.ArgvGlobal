@@ -1,0 +1,116 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb..PrintArgv|algo_lib.FDb..ToArgv|algo_lib.Cmd..PrintArgv|algo_lib.Cmd..ToArgv' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.state  arg:u8  reftype:Val  dflt:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.FDb.state/idle  value:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.FDb.state/busy  value:1  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.limit  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.buf  arg:u32  reftype:Inlary  dflt:""  comment:""
+amc <- dmmeta.inlary  field:algo_lib.FDb.buf  min:0  max:4  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.FDb.Argv  printfmt:Auto  read:N  print:Y  sep:""  genop:N  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Cmd  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.state  arg:u8  reftype:Val  dflt:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Cmd.state/idle  value:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Cmd.state/busy  value:1  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.limit  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Cmd.Argv  printfmt:Auto  read:N  print:Y  sep:""  genop:N  comment:""
+# eof amc
+amc -> // --- algo_lib.Cmd..PrintArgv
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:algo_lib.Cmd.Argv  printfmt:Auto
+amc -> void algo_lib::Cmd_PrintArgv(algo_lib::Cmd row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     (void)str;
+amc ->     if (!(row.state == 0)) {
+amc ->         ch_RemoveAll(temp);
+amc ->         algo_lib::state_Print(row, temp);
+amc ->         str << " -state:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }
+amc ->     ch_RemoveAll(temp);
+amc ->     u32_Print(row.limit, temp);
+amc ->     str << " -limit:";
+amc ->     strptr_PrintBash(temp,str);
+amc -> }
+amc -> // --- algo_lib.Cmd..ToArgv
+amc -> // Build argv from ROW into ARGS; args[0] is the command name
+amc -> // cfmt:algo_lib.Cmd.Argv  printfmt:Auto
+amc -> void algo_lib::Cmd_ToArgv(algo_lib::Cmd row, algo::StringAry& args) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     ary_RemoveAll(args);
+amc ->     ary_Alloc(args) << "bin/Cmd"; // command path
+amc ->     if (!(row.state == 0)) {
+amc ->         ch_RemoveAll(temp);
+amc ->         algo_lib::state_Print(row, temp);
+amc ->         ary_Alloc(args) << "-state:" << temp;
+amc ->     }
+amc ->     ch_RemoveAll(temp);
+amc ->     u32_Print(row.limit, temp);
+amc ->     ary_Alloc(args) << "-limit:" << temp;
+amc -> }
+amc -> // --- algo_lib.FDb..PrintArgv
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:algo_lib.FDb.Argv  printfmt:Auto
+amc -> void algo_lib::FDb_PrintArgv(algo_lib::FDb& row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     (void)str;
+amc ->     ch_RemoveAll(temp);
+amc ->     u64_Print(row.malloc, temp);
+amc ->     str << " -malloc:";
+amc ->     strptr_PrintBash(temp,str);
+amc ->     if (!(row.state == 0)) {
+amc ->         ch_RemoveAll(temp);
+amc ->         algo_lib::state_Print(temp);
+amc ->         str << " -state:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }
+amc ->     ch_RemoveAll(temp);
+amc ->     u32_Print(row.limit, temp);
+amc ->     str << " -limit:";
+amc ->     strptr_PrintBash(temp,str);
+amc ->     ind_beg(FDb_buf_curs,value,row) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(value, temp);
+amc ->         str << " -buf:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }ind_end;
+amc ->     ch_RemoveAll(temp);
+amc ->     trace_Print(row.trace, temp);
+amc ->     str << " -trace:";
+amc ->     strptr_PrintBash(temp,str);
+amc -> }
+amc -> // --- algo_lib.FDb..ToArgv
+amc -> // Build argv from ROW into ARGS; args[0] is the command name
+amc -> // cfmt:algo_lib.FDb.Argv  printfmt:Auto
+amc -> void algo_lib::FDb_ToArgv(algo_lib::FDb& row, algo::StringAry& args) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     ary_RemoveAll(args);
+amc ->     ary_Alloc(args) << "bin/FDb"; // command path
+amc ->     ch_RemoveAll(temp);
+amc ->     u64_Print(row.malloc, temp);
+amc ->     ary_Alloc(args) << "-malloc:" << temp;
+amc ->     if (!(row.state == 0)) {
+amc ->         ch_RemoveAll(temp);
+amc ->         algo_lib::state_Print(temp);
+amc ->         ary_Alloc(args) << "-state:" << temp;
+amc ->     }
+amc ->     ch_RemoveAll(temp);
+amc ->     u32_Print(row.limit, temp);
+amc ->     ary_Alloc(args) << "-limit:" << temp;
+amc ->     ind_beg(FDb_buf_curs,value,row) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(value, temp);
+amc ->         ary_Alloc(args) << "-buf:" << temp;
+amc ->     }ind_end;
+amc ->     ch_RemoveAll(temp);
+amc ->     trace_Print(row.trace, temp);
+amc ->     ary_Alloc(args) << "-trace:" << temp;
+amc -> }
+# exit amc code:0

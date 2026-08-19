@@ -1,0 +1,5 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir src hdr && printf "void xx::Foo() {\\n    body();\\n" > src/y.cpp && printf "namespace xx { // update-hdr\\nvoid OldFunc();\\n}\\n" > hdr/x.h && cp hdr/x.h orig && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/unfinished.ssim -updateproto; test $$? = 1 && cmp hdr/x.h orig && echo header_unchanged\''
+# eof bash
+bash -> src_func.unfinished_func  file:src/y.cpp  func:"void xx::Foo() {"  comment:"file ends inside a function body; scan is incomplete"
+bash -> header_unchanged
+# exit bash code:0

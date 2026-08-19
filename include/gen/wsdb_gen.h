@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -29,12 +20,12 @@
 
 // --- wsdb_FieldIdEnum
 
-enum wsdb_FieldIdEnum {             // wsdb.FieldId.value
-     wsdb_FieldId_code         = 0
-    ,wsdb_FieldId_reason       = 1
-    ,wsdb_FieldId_local_only   = 2
-    ,wsdb_FieldId_comment      = 3
-    ,wsdb_FieldId_value        = 4
+enum wsdb_FieldIdEnum {    // wsdb.FieldId.value
+     wsdb_FieldId_code
+    ,wsdb_FieldId_reason
+    ,wsdb_FieldId_local_only
+    ,wsdb_FieldId_comment
+    ,wsdb_FieldId_value
 };
 
 enum { wsdb_FieldIdEnum_N = 5 };
@@ -63,7 +54,6 @@ struct FieldId { // wsdb.FieldId: Field read helper
     inline               FieldId(wsdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:wsdb.FieldId.value.GetEnum
 inline wsdb_FieldIdEnum value_GetEnum(const wsdb::FieldId& parent) __attribute__((nothrow));
@@ -101,7 +91,7 @@ inline void          FieldId_Init(wsdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:wsdb.FieldId.String  printfmt:Raw
 // func:wsdb.FieldId..Print
-void                 FieldId_Print(wsdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(wsdb::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- wsdb.Status
 struct Status { // wsdb.Status
@@ -112,7 +102,6 @@ struct Status { // wsdb.Status
     // func:wsdb.Status..Ctor
     inline               Status() __attribute__((nothrow));
 };
-
 // func:wsdb.Status..ReadFieldMaybe
 bool                 Status_ReadFieldMaybe(wsdb::Status& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of wsdb::Status from an ascii string.

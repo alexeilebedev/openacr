@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir ro && printf \"{}\\n\" > ro/x.json && cp ro/x.json orig && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/nocmt.ssim -write -scriptfile:%; test $$? = 1 && cmp ro/x.json orig && echo file_unchanged'"
+# eof bash
+bash -> src_hdr.no_cmtstring  file:ro/x.json  comment:"no comment syntax known for this file; cannot maintain a header"
+bash -> file_unchanged
+# exit bash code:0

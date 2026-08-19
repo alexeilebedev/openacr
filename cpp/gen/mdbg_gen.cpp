@@ -43,37 +43,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 mdbg::FDb       mdbg::_db;        // dependency found via dev.targdep
 
-namespace mdbg {
-const char *mdbg_help =
-"mdbg: Gdb front-end\n"
-"Usage: mdbg [-target:]<string> [[-args:]<string>] [options]\n"
-"    OPTION         TYPE    DFLT     COMMENT\n"
-"    [target]       string           Executable name\n"
-"    -in            string  \"data\"   Input directory or filename, - for stdin\n"
-"    [args]...      string           Additional module args\n"
-"    -cfg           string  \"debug\"  Configuration to use\n"
-"    -disas                          Show disassembly (use F12)\n"
-"    -attach                         Attach to a running process\n"
-"    -pid           int     0        (with -attach) Pid, if omitted mdbg will guess\n"
-"    -b...          string           Set breakpoint, e.g. 'a.cpp:123 if cond1', 'func#3'\n"
-"    -catchthrow            Y        Stop on exceptions\n"
-"    -tui                            Use gdb -tui as the debugger\n"
-"    -bcmd          string  \"\"       Evaluate command at breakpoint\n"
-"    -emacs                 Y        Use emacs environment as the debugger\n"
-"    -manywin                        Use gdb-many-windows emacs mode\n"
-"    -follow_child                   When forking, follow child (default is parent)\n"
-"    -py                             Enable python scripting\n"
-"    -dry_run                        Print commands but don't execute\n"
-"    -mp                             Multi-process debugging\n"
-"    -verbose       flag             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug         flag             Debug level (0..255); alias -d; cumulative\n"
-"    -help                           Print help and exit; alias -h\n"
-"    -version                        Print version and exit\n"
-"    -signature                      Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace mdbg
 namespace mdbg { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:mdbg.FDb._db.InitReflection
@@ -82,6 +51,8 @@ namespace mdbg { // gen:ns_print_proto
     static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
     // func:mdbg.FDb.builddir.InputMaybe
     static bool          builddir_InputMaybe(dev::Builddir &elem) __attribute__((nothrow));
+    // func:mdbg.FDb.dbgtarget.InputMaybe
+    static bool          dbgtarget_InputMaybe(dev::Dbgtarget &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:mdbg.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -96,7 +67,7 @@ namespace mdbg { // gen:ns_print_proto
 // Copy fields out of row
 void mdbg::builddir_CopyOut(mdbg::FBuilddir &row, dev::Builddir &out) {
     out.builddir = row.builddir;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- mdbg.FBuilddir.base.CopyIn
@@ -107,27 +78,23 @@ void mdbg::builddir_CopyIn(mdbg::FBuilddir &row, dev::Builddir &in) {
 }
 
 // --- mdbg.FBuilddir.uname.Get
-algo::Smallstr50 mdbg::uname_Get(mdbg::FBuilddir& builddir) {
-    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LL"));
-    return ret;
+algo::strptr mdbg::uname_Get(mdbg::FBuilddir& builddir) {
+    return algo::Pathcomp(builddir.builddir, ".LL-LL");
 }
 
 // --- mdbg.FBuilddir.compiler.Get
-algo::Smallstr50 mdbg::compiler_Get(mdbg::FBuilddir& builddir) {
-    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LR"));
-    return ret;
+algo::strptr mdbg::compiler_Get(mdbg::FBuilddir& builddir) {
+    return algo::Pathcomp(builddir.builddir, ".LL-LR");
 }
 
 // --- mdbg.FBuilddir.cfg.Get
-algo::Smallstr50 mdbg::cfg_Get(mdbg::FBuilddir& builddir) {
-    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LL"));
-    return ret;
+algo::strptr mdbg::cfg_Get(mdbg::FBuilddir& builddir) {
+    return algo::Pathcomp(builddir.builddir, ".LR-LL");
 }
 
 // --- mdbg.FBuilddir.arch.Get
-algo::Smallstr50 mdbg::arch_Get(mdbg::FBuilddir& builddir) {
-    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LR"));
-    return ret;
+algo::strptr mdbg::arch_Get(mdbg::FBuilddir& builddir) {
+    return algo::Pathcomp(builddir.builddir, ".LR-LR");
 }
 
 // --- mdbg.FBuilddir..Uninit
@@ -144,7 +111,7 @@ void mdbg::FBuilddir_Uninit(mdbg::FBuilddir& builddir) {
 void mdbg::cfg_CopyOut(mdbg::FCfg &row, dev::Cfg &out) {
     out.cfg = row.cfg;
     out.suffix = row.suffix;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- mdbg.FCfg.base.CopyIn
@@ -156,12 +123,12 @@ void mdbg::cfg_CopyIn(mdbg::FCfg &row, dev::Cfg &in) {
 }
 
 // --- mdbg.FCfg.c_builddir.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void mdbg::c_builddir_Insert(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
     if (!row.cfg_c_builddir_in_ary) {
         c_builddir_Reserve(cfg, 1);
-        u32 n  = cfg.c_builddir_n++;
+        u64 n  = cfg.c_builddir_n++;
         cfg.c_builddir_elems[n] = &row;
         row.cfg_c_builddir_in_ary = true;
     }
@@ -180,15 +147,15 @@ bool mdbg::c_builddir_InsertMaybe(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
 // --- mdbg.FCfg.c_builddir.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void mdbg::c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
-    int n = cfg.c_builddir_n;
+    i64 n = cfg.c_builddir_n;
     if (bool_Update(row.cfg_c_builddir_in_ary,false)) {
         mdbg::FBuilddir* *elems = cfg.c_builddir_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             mdbg::FBuilddir* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(mdbg::FBuilddir*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 cfg.c_builddir_n = n - 1;
@@ -200,12 +167,12 @@ void mdbg::c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
 
 // --- mdbg.FCfg.c_builddir.Reserve
 // Reserve space in index for N more elements;
-void mdbg::c_builddir_Reserve(mdbg::FCfg& cfg, u32 n) {
-    u32 old_max = cfg.c_builddir_max;
+void mdbg::c_builddir_Reserve(mdbg::FCfg& cfg, u64 n) {
+    u64 old_max = cfg.c_builddir_max;
     if (UNLIKELY(cfg.c_builddir_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(mdbg::FBuilddir*);
-        u32 new_size = new_max * sizeof(mdbg::FBuilddir*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, cfg.c_builddir_n + n), 4);
+        u64 old_size = old_max * sizeof(mdbg::FBuilddir*);
+        u64 new_size = new_max * sizeof(mdbg::FBuilddir*);
         void *new_mem = mdbg::lpool_ReallocMem(cfg.c_builddir_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("mdbg.out_of_memory  field:mdbg.FCfg.c_builddir");
@@ -235,10 +202,39 @@ void mdbg::trace_Print(mdbg::trace& row, algo::cstring& str) {
 
 // --- mdbg.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 void mdbg::lpool_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (mem && cell < 36) {
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
+        lpool_Lpblock *rec = (lpool_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.lpool_blk[blk->cell];
+            blk->pprev = &_db.lpool_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.lpool_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.lpool_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            lpool_Lpblock *raw = (lpool_Lpblock*)blk;
+            raw->next = _db.lpool_free[12];
+            _db.lpool_free[12] = raw;
+        }
+    } else if (mem && cell < 36) {
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -252,36 +248,76 @@ void mdbg::lpool_FreeMem(void* mem, u64 size) {
 // The maximum allocation size is at most 1<<(36+4)
 void* mdbg::lpool_AllocMem(u64 size) {
     void *retval = NULL;
-    size     = u64_Max(size,1<<4); // enforce alignment
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (cell < 36) {
-        u64 i    = cell;
-        // try to find a block that's at least as large as required.
-        // if found, remove from free list
+    lpool_Lpblk *blk = cell < 11 ? _db.lpool_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
         for (; i < 36; i++) {
-            lpool_Lpblock *blk = _db.lpool_free[i];
-            if (blk) {
-                _db.lpool_free[i] = blk->next;
-                retval = blk;
+            lpool_Lpblock *rawblk = _db.lpool_free[i];
+            if (rawblk) {
+                _db.lpool_free[i] = rawblk->next;
+                rawmem = rawblk;
                 break;
             }
         }
-        // if suitable size block is not found, create a new one
-        // by requesting a block from the base allocator.
-        if (UNLIKELY(!retval)) {
-            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
-            retval = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
         }
-        if (LIKELY(retval)) {
+        if (LIKELY(rawmem)) {
             // if block is more than 2x as large as needed, return the upper half to the free
-            // list (repeatedly). meanwhile, retval doesn't change.
-            while (i > cell) {
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
                 i--;
-                int half = 1ULL<<(i+4);
-                lpool_Lpblock *blk = (lpool_Lpblock*)((u8*)retval + half);
-                blk->next = _db.lpool_free[i];
-                _db.lpool_free[i] = blk;
+                u64 half = 1ULL<<(i+4);
+                lpool_Lpblock *shed = (lpool_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.lpool_free[i];
+                _db.lpool_free[i] = shed;
             }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (lpool_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.lpool_blk[cell];
+                _db.lpool_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        lpool_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
         }
     }
     return retval;
@@ -289,23 +325,25 @@ void* mdbg::lpool_AllocMem(u64 size) {
 
 // --- mdbg.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 bool mdbg::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 1<<4);
-    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
-    if (cell < 36) {
-        for (u64 i = 0; i < nbuf; i++) {
-            u64 size = 1ULL<<(cell+4);
-            lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
-            if (temp == NULL) {
-                retval = false;
-                break;// why continue?
-            } else {
-                temp->next = _db.lpool_free[cell];
-                _db.lpool_free[cell] = temp;
-            }
+    lpool_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        lpool_Lpblock *temp = (lpool_Lpblock*)lpool_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
         }
+    }
+    while (head) {
+        lpool_Lpblock *next = head->next;
+        lpool_FreeMem(head, bufsize);
+        head = next;
     }
     return retval;
 }
@@ -356,118 +394,16 @@ void mdbg::lpool_Delete(u8 &row) {
 }
 
 // --- mdbg.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     mdbg.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of mdbg.FDb.cmdline (and any base command line)
+// via mdbg_ReadArgv; then apply -help/-version and load floadtuples input.
 void mdbg::ReadArgv() {
     command::mdbg &cmd = mdbg::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::mdbg_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    bool target_present = false;
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::mdbg_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"mdbg: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"mdbg: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::mdbg_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "mdbg: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::mdbg_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    case command_FieldId_target: target_present=true; break;
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"mdbg: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::mdbg_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -490,13 +426,7 @@ void mdbg::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-        if (!target_present) {
-            err << "mdbg: Missing value for required argument -target (see -help)" << eol;
-            doexit = true;
-        }
-    }
-    // dmmeta.floadtuples:mdbg.FDb.cmdline
+    // dmmeta.floadtuples:command.mdbg.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!mdbg::LoadTuplesMaybe(cmd.in,true)) {
@@ -509,7 +439,7 @@ void mdbg::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(mdbg_help);
+        prlog(command::mdbg_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -536,7 +466,13 @@ void mdbg::Step() {
 // --- mdbg.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void mdbg::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("mdbg", mdbg::InsertStrptrMaybe, NULL, mdbg::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "mdbg";
+    row.InsertStrptrMaybe  = mdbg::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = mdbg::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = mdbg::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "mdbg.trace";
@@ -550,7 +486,7 @@ static void mdbg::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'mdbg.Input'  signature:'a39a7508119d6dc51451d2cda9f120fd888b1184'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'mdbg.Input'  signature:'a96e37245fbc6083743174687f296366cdd68cff'");
 }
 
 // --- mdbg.FDb._db.InsertStrptrMaybe
@@ -573,6 +509,12 @@ bool mdbg::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && builddir_InputMaybe(elem);
             break;
         }
+        case mdbg_TableId_dev_Dbgtarget: { // finput:mdbg.FDb.dbgtarget
+            dev::Dbgtarget elem;
+            retval = dev::Dbgtarget_ReadStrptrMaybe(elem, str);
+            retval = retval && dbgtarget_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -592,6 +534,7 @@ bool mdbg::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = mdbg::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
         retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dev.dbgtarget"),recursive);
         retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
         retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dev.builddir"),recursive);
     } else {
@@ -656,6 +599,39 @@ void mdbg::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- mdbg.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool mdbg::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    mdbg::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case mdbg_TableId_dev_Cfg: { // finput:mdbg.FDb.cfg
+            // finput mdbg.FDb.cfg: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case mdbg_TableId_dev_Builddir: { // finput:mdbg.FDb.builddir
+            // finput mdbg.FDb.builddir: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case mdbg_TableId_dev_Dbgtarget: { // finput:mdbg.FDb.dbgtarget
+            // finput mdbg.FDb.dbgtarget: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- mdbg.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -710,7 +686,7 @@ void* mdbg::cfg_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     mdbg::FCfg*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.cfg_lary[bsr];
         if (!lev) {
             lev=(mdbg::FCfg*)mdbg::lpool_AllocMem(sizeof(mdbg::FCfg) * (u64(1)<<bsr));
@@ -719,7 +695,7 @@ void* mdbg::cfg_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cfg_n = i32(new_nelems);
+        _db.cfg_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -731,7 +707,7 @@ void mdbg::cfg_RemoveAll() {
     for (u64 n = _db.cfg_n; n>0; ) {
         n--;
         cfg_qFind(u64(n)).~FCfg(); // destroy last element
-        _db.cfg_n = i32(n);
+        _db.cfg_n = i64(n);
     }
 }
 
@@ -742,7 +718,7 @@ void mdbg::cfg_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cfg_qFind(u64(n)).~FCfg();
-        _db.cfg_n = i32(n);
+        _db.cfg_n = i64(n);
     }
 }
 
@@ -933,7 +909,7 @@ void* mdbg::builddir_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     mdbg::FBuilddir*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.builddir_lary[bsr];
         if (!lev) {
             lev=(mdbg::FBuilddir*)mdbg::lpool_AllocMem(sizeof(mdbg::FBuilddir) * (u64(1)<<bsr));
@@ -942,7 +918,7 @@ void* mdbg::builddir_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.builddir_n = i32(new_nelems);
+        _db.builddir_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -954,7 +930,7 @@ void mdbg::builddir_RemoveAll() {
     for (u64 n = _db.builddir_n; n>0; ) {
         n--;
         builddir_qFind(u64(n)).~FBuilddir(); // destroy last element
-        _db.builddir_n = i32(n);
+        _db.builddir_n = i64(n);
     }
 }
 
@@ -965,7 +941,7 @@ void mdbg::builddir_RemoveLast() {
     if (n > 0) {
         n -= 1;
         builddir_qFind(u64(n)).~FBuilddir();
-        _db.builddir_n = i32(n);
+        _db.builddir_n = i64(n);
     }
 }
 
@@ -994,6 +970,104 @@ bool mdbg::builddir_XrefMaybe(mdbg::FBuilddir &row) {
     return retval;
 }
 
+// --- mdbg.FDb.dbgtarget.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+mdbg::FDbgtarget& mdbg::dbgtarget_Alloc() {
+    mdbg::FDbgtarget* row = dbgtarget_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("mdbg.out_of_mem  field:mdbg.FDb.dbgtarget  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- mdbg.FDb.dbgtarget.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+mdbg::FDbgtarget* mdbg::dbgtarget_AllocMaybe() {
+    mdbg::FDbgtarget *row = (mdbg::FDbgtarget*)dbgtarget_AllocMem();
+    if (row) {
+        new (row) mdbg::FDbgtarget; // call constructor
+    }
+    return row;
+}
+
+// --- mdbg.FDb.dbgtarget.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+mdbg::FDbgtarget* mdbg::dbgtarget_InsertMaybe(const dev::Dbgtarget &value) {
+    mdbg::FDbgtarget *row = &dbgtarget_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    dbgtarget_CopyIn(*row,const_cast<dev::Dbgtarget&>(value));
+    bool ok = dbgtarget_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        dbgtarget_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- mdbg.FDb.dbgtarget.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* mdbg::dbgtarget_AllocMem() {
+    u64 new_nelems     = _db.dbgtarget_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    mdbg::FDbgtarget*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.dbgtarget_lary[bsr];
+        if (!lev) {
+            lev=(mdbg::FDbgtarget*)mdbg::lpool_AllocMem(sizeof(mdbg::FDbgtarget) * (u64(1)<<bsr));
+            _db.dbgtarget_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.dbgtarget_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- mdbg.FDb.dbgtarget.RemoveAll
+// Remove all elements from Lary
+void mdbg::dbgtarget_RemoveAll() {
+    for (u64 n = _db.dbgtarget_n; n>0; ) {
+        n--;
+        dbgtarget_qFind(u64(n)).~FDbgtarget(); // destroy last element
+        _db.dbgtarget_n = i64(n);
+    }
+}
+
+// --- mdbg.FDb.dbgtarget.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void mdbg::dbgtarget_RemoveLast() {
+    u64 n = _db.dbgtarget_n;
+    if (n > 0) {
+        n -= 1;
+        dbgtarget_qFind(u64(n)).~FDbgtarget();
+        _db.dbgtarget_n = i64(n);
+    }
+}
+
+// --- mdbg.FDb.dbgtarget.InputMaybe
+static bool mdbg::dbgtarget_InputMaybe(dev::Dbgtarget &elem) {
+    bool retval = true;
+    retval = dbgtarget_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- mdbg.FDb.dbgtarget.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool mdbg::dbgtarget_XrefMaybe(mdbg::FDbgtarget &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- mdbg.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr mdbg::trace_RowidFind(int t) {
@@ -1010,6 +1084,7 @@ inline static i32 mdbg::trace_N() {
 // Set all fields to initial values.
 void mdbg::FDb_Init() {
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
+    memset(_db.lpool_blk, 0, sizeof(_db.lpool_blk));
     // initialize LAry cfg (mdbg.FDb.cfg)
     _db.cfg_n = 0;
     memset(_db.cfg_lary, 0, sizeof(_db.cfg_lary)); // zero out all level pointers
@@ -1042,6 +1117,17 @@ void mdbg::FDb_Init() {
     }
     _db.break_main = bool(false);
     _db.bnum = i32(1);
+    // initialize LAry dbgtarget (mdbg.FDb.dbgtarget)
+    _db.dbgtarget_n = 0;
+    memset(_db.dbgtarget_lary, 0, sizeof(_db.dbgtarget_lary)); // zero out all level pointers
+    mdbg::FDbgtarget* dbgtarget_first = (mdbg::FDbgtarget*)mdbg::lpool_AllocMem(sizeof(mdbg::FDbgtarget) * (u64(1)<<4));
+    if (!dbgtarget_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.dbgtarget_lary[i]  = dbgtarget_first;
+        dbgtarget_first    += 1ULL<<i;
+    }
 
     mdbg::InitReflection();
 }
@@ -1049,6 +1135,9 @@ void mdbg::FDb_Init() {
 // --- mdbg.FDb..Uninit
 void mdbg::FDb_Uninit() {
     mdbg::FDb &row = _db; (void)row;
+
+    // mdbg.FDb.dbgtarget.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // mdbg.FDb.builddir.Uninit (Lary)  //
     // skip destruction in global scope
@@ -1058,6 +1147,24 @@ void mdbg::FDb_Uninit() {
 
     // mdbg.FDb.cfg.Uninit (Lary)  //
     // skip destruction in global scope
+}
+
+// --- mdbg.FDbgtarget.base.CopyOut
+// Copy fields out of row
+void mdbg::dbgtarget_CopyOut(mdbg::FDbgtarget &row, dev::Dbgtarget &out) {
+    out.dbgtarget = row.dbgtarget;
+    out.args = row.args;
+    out.buildcmd = row.buildcmd;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- mdbg.FDbgtarget.base.CopyIn
+// Copy fields in to row
+void mdbg::dbgtarget_CopyIn(mdbg::FDbgtarget &row, dev::Dbgtarget &in) {
+    row.dbgtarget = in.dbgtarget;
+    row.args = in.args;
+    row.buildcmd = in.buildcmd;
+    row.comment = in.comment;
 }
 
 // --- mdbg.FieldId.value.ToCstr
@@ -1132,7 +1239,7 @@ bool mdbg::FieldId_ReadStrptrMaybe(mdbg::FieldId &parent, algo::strptr in_str) {
 // --- mdbg.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:mdbg.FieldId.String  printfmt:Raw
-void mdbg::FieldId_Print(mdbg::FieldId& row, algo::cstring& str) {
+void mdbg::FieldId_Print(mdbg::FieldId row, algo::cstring& str) {
     mdbg::value_Print(row, str);
 }
 
@@ -1144,6 +1251,7 @@ const char* mdbg::value_ToCstr(const mdbg::TableId& parent) {
     switch(value_GetEnum(parent)) {
         case mdbg_TableId_dev_Builddir     : ret = "dev.Builddir";  break;
         case mdbg_TableId_dev_Cfg          : ret = "dev.Cfg";  break;
+        case mdbg_TableId_dev_Dbgtarget    : ret = "dev.Dbgtarget";  break;
     }
     return ret;
 }
@@ -1191,6 +1299,19 @@ bool mdbg::value_SetStrptrMaybe(mdbg::TableId& parent, algo::strptr rhs) {
             }
             break;
         }
+        case 13: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','D','b','g','t'): {
+                    if (memcmp(rhs.elems+8,"arget",5)==0) { value_SetEnum(parent,mdbg_TableId_dev_Dbgtarget); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','d','b','g','t'): {
+                    if (memcmp(rhs.elems+8,"arget",5)==0) { value_SetEnum(parent,mdbg_TableId_dev_dbgtarget); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
     }
     return ret;
 }
@@ -1225,7 +1346,7 @@ bool mdbg::TableId_ReadStrptrMaybe(mdbg::TableId &parent, algo::strptr in_str) {
 // --- mdbg.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:mdbg.TableId.String  printfmt:Raw
-void mdbg::TableId_Print(mdbg::TableId& row, algo::cstring& str) {
+void mdbg::TableId_Print(mdbg::TableId row, algo::cstring& str) {
     mdbg::value_Print(row, str);
 }
 

@@ -23,55 +23,38 @@
 // Source: cpp/amc/main.cpp -- Main driver
 //
 // Algo Model Compiler (AMC)
-// TODO: amc can't delete double cascdel
-// TODO: amc: Base field must be first -- otherwise no castbase
-// TODO: amc: add UpdateTrace function
-// TODO: amc: add fldoffset for first data field of Base -- must be zero?
-// TODO: amc: add instname
-// TODO: amc: add support for aggregation of attribute across xref.
-// TODO: amc: add support for aggregation of attribute across xref. cascdel + no xref
-// TODO: amc: all field print functions have to be implement as individual macros
-// TODO: amc: allow any program to be a module (what does it mean?)
-// TODO: amc: bheap: instead of field_Set(...), use c_field_SetSortkey(...)
-// TODO: amc: breakpoint when generating ith line of function in amc.
-// TODO: amc: calls to amc::ind_func_Find are dangerous -- depend on the order of generation
-// TODO: amc: compute sizes of ctypes
-// TODO: amc: create function before calling function generator
-// TODO: amc: create per-namespace symbol table
-// TODO: amc: cstring: define fcmp
-// TODO: amc: delete function if flag is set.
-// TODO: amc: disallow gconst with > 100 items if not an executable (too much code)
-// TODO: amc: eliminate forder -- use bheaps
-// TODO: amc: eliminate use of bltin
-// TODO: amc: finput on Val - keep updating same value
-// TODO: amc: for timehook, add extra function that does timing.
-// TODO: amc: generate bad code if step for bheap has different name than bheap
-// TODO: amc: generate builtins.
-// TODO: amc: generate cursors as regular ctypes
-// TODO: amc: mark whole namespace as key namespace?
-// TODO: amc: newfield: pluggable
-// TODO: amc: print ctype functions with their ctype
-// TODO: amc: print ctype functions with their ctype. cstring: define fcmp
-// TODO: amc: print function for inlary impossible -- tuple format is not respected
-// TODO: amc: protect xrefs --
-// TODO: amc: replace numstr with a fldfunc.
-// TODO: amc: suggest cheapcopy types?
-// TODO: amc: support fnotify for ibendpt
-// TODO: amc: use top-down Cmp, Lt generator for Smallstr.
-// TODO: amc_vis: print ns summary
-// TODO: amcdb: add pool table
-// TODO: do not make amc dependent on the conversion -- use elems_Getary where necessary
-// TODO: does amc support defaults for bitfld?
-// TODO: fix generation of cross-namespace steps in amc (currently broken -- confuses step namespace with field namespace)
-// TODO: idea: unify steps and fields in amc -- cannot be done, steps are defined over fields.
-// TODO: in amc: never call built-in operators, always call functions.
-// TODO: jira.Issue  issue:AB-13338  basebranch:master  status:"In Progress"  approvedby:""  mergereq:No  assignee:alebedev  summary:"arch: amc_gc cycle"
-// TODO: must move strptr to amc.
-// TODO: replace aryptr with amc-generated code and aryptr table
-// TODO: stringiter: move to amc
 
 #include "include/amc.h"
 #include "include/gen/report_gen.h"
+
+// -----------------------------------------------------------------------------
+
+// Query whether a value of CTYPE has to be destroyed rather than simply
+// forgotten: whether generated code that stops using one must call a destructor
+// for it.
+// See gen_plaindata, which computes the flag from what the ctype contains -- an
+// owning field, a Cleanup callback, a cascdel dependent, or an index the record
+// must unlink itself from. That list is what a generated destructor does, so a
+// ctype containing none of it has nothing to destroy.
+bool amc::HasDtorQ(amc::FCtype &ctype) {
+    return ctype.has_dtor;
+}
+
+// -----------------------------------------------------------------------------
+
+//
+bool amc::CanCopyQ(amc::FCtype &ctype) {
+    amc::FCtype *fldbase = GetBaseType(ctype,NULL);
+    bool can_copy = fldbase && zd_varlenfld_EmptyQ(*fldbase) && zd_varlenfld_EmptyQ(ctype);
+    if (fldbase) {
+        ind_beg(amc::ctype_c_field_curs, fld, *fldbase) {
+            if (ValQ(fld)) {
+                can_copy &= !CopyPrivQ(*fld.p_arg);
+            }
+        }ind_end;
+    }
+    return can_copy;
+}
 
 // -----------------------------------------------------------------------------
 
@@ -349,12 +332,16 @@ tempstr amc::Initcast(amc::FField &field) {
 
 // -----------------------------------------------------------------------------
 
+// Emit a statement printing FIELD of the record named PARENTNAME into the
+// string named STRNAME: the field's own Print function when one exists
+// (parent argument collapsed by ParentArgExpr when the parent is a global),
+// otherwise the field type's Print applied to the field value.
 void amc::GenPrintStmt(cstring &out, amc::FCtype &parenttype, amc::FField &field, strptr strname, strptr parentname) {
     if (amc::FFunc* func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"))) {
         vrfy(!func->ismacro, tempstr()<<"invalid macro print function "<<func->func);
         out << ns_Get(*field.p_ctype) << "::"
             << name_Get(field)
-            << "_Print("<<parentname<<"), "<<strname<<");\n";
+            << "_Print("<<ParentArgExpr(*field.p_ctype,parentname,true)<<strname<<");\n";
     } else {
         out << name_Get(*field.p_arg)
             <<"_Print("<<FieldvalExpr(&parenttype,field,parentname) <<", "<<strname<<");\n";
@@ -367,28 +354,16 @@ bool amc::FldfuncQ(amc::FField &field) {
     return field.c_cppfunc || field.c_substr || field.c_falias;
 }
 
-bool amc::CanCopyQ(amc::FCtype &ctype) {
-    amc::FCtype *fldbase = GetBaseType(ctype,NULL);
-    bool can_copy = fldbase && zd_varlenfld_EmptyQ(*fldbase) && zd_varlenfld_EmptyQ(ctype);
-    // cannot copy if any of the parent fields are a Tary
-    // cannot copy if any of the parent fields have a private copy constructor
-    // or disallow a copy operator.
-    if (fldbase) {
-        ind_beg(amc::ctype_c_field_curs, fld, *fldbase) {
-            //can_copy &= !fld.c_tary;
-            if (ValQ(fld)) {
-                can_copy &= !CopyPrivQ(*fld.p_arg);
-            }
-        }ind_end;
-    }
-    return can_copy;
-}
-
 bool amc::PoolVarlenQ(amc::FField &field) {
     bool pool_varlen  = field.reftype == dmmeta_Reftype_reftype_Lpool;
     pool_varlen      |= field.reftype == dmmeta_Reftype_reftype_Malloc;
     pool_varlen      |= field.reftype == dmmeta_Reftype_reftype_Blkpool;
     return pool_varlen;
+}
+
+bool amc::BlkpoolQ(amc::FField &field) {
+    bool ret = field.reftype == dmmeta_Reftype_reftype_Blkpool;
+    return ret;
 }
 
 bool amc::FieldStringQ(amc::FField &field) {
@@ -456,37 +431,125 @@ tempstr amc::VarStringToInteger(strptr name, i32 len) {
 
 // -----------------------------------------------------------------------------
 
-void amc::GetMinMax(amc::FCtype& _ctype, u64 &min, u64 &max, bool &issigned) {
+// The builtin CTYPE stands for, as a bltin id: a ctype whose single field is
+// a Val stands for whatever that field holds, so algo.Uint32 -- one Val field
+// over u32 -- stands for u32, and a chain of such wrappers stands for the type
+// at its end. True when the chain ends at a builtin amc knows by name, false
+// when it ends at a struct. The name is the authority, not the amcdb.bltin
+// row: a universe that omits the row still names the builtin the same way.
+// A chain of such wrappers can also close on itself -- a ctype whose one Val
+// field names the ctype itself, or a pair that name each other -- and a walk
+// of it would never reach an end. The descent is therefore capped, and a
+// chain that reaches the cap names no builtin, which is what the callers
+// already report field by field before the size computation reports the
+// cycle: test/amc/bad_size_cycle.ssim carries a cycle of each shape with a
+// decimal field on it, so the run stays a diagnostic and never a hang.
+bool amc::GetBltinId(amc::FCtype& _ctype, amc::BltinId &bltin_id) {
     amc::FCtype *ctype = &_ctype;
-    while (c_field_N(*ctype) == 1 && c_field_Find(*ctype,0)->reftype == dmmeta_Reftype_reftype_Val) {
+    int niter = 0;
+    while (niter < 100 && c_field_N(*ctype) == 1 && c_field_Find(*ctype,0)->reftype == dmmeta_Reftype_reftype_Val) {
         ctype = c_field_Find(*ctype,0)->p_arg;
+        niter++;
     }
-    if (ctype->c_bltin) {
-        issigned=ctype->c_bltin->issigned;
+    bool retval = false;
+    if (niter < 100) {
+        retval = value_SetStrptrMaybe(bltin_id,ctype->ctype);
     }
-    amc::BltinId bltin_id(amc_BltinIdEnum(0));
-    value_SetStrptrMaybe(bltin_id,ctype->ctype);
-    switch (bltin_id.value) {
-    case amc_BltinId_bool:    min = 0;                  max = 1;                  break;
-    case amc_BltinId_u8:      min = 0;                  max = 0xff;               break;
-    case amc_BltinId_i8:      min = 0xffffffffffffff80; max = 0x7f;               break;
-    case amc_BltinId_u16:     min = 0x00;               max = 0xffff;             break;
-    case amc_BltinId_i16:     min = 0xffffffffffff8000; max = 0x7fff;             break;
-    case amc_BltinId_u32:     min = 0x00000000;         max = 0xffffffff;         break;
-    case amc_BltinId_i32:     min = 0xffffffff80000000; max = 0x7fffffff;         break;
-    case amc_BltinId_u64:     min = 0x0000000000000000; max = 0xffffffffffffffff; break;
-    case amc_BltinId_i64:
-        // min signed 64-bit value is off by one because even GCC can't
-        // properly recognize this constant
-    default:                     min = 0x8000000000000001; max = 0x7fffffffffffffff; break;
-    }
+    return retval;
 }
 
 // -----------------------------------------------------------------------------
 
+// Why a value of the integer builtin CTYPE stands for cannot move in and out
+// of CTYPE, as a sentence naming what is missing; empty when the value moves
+// both ways.
+// A field declared with a wrapper ctype -- one whose single Val field holds the
+// builtin -- stores the wrapper, while the range checks, scale factors and
+// parse results the numeric generators build are arithmetic on the builtin. So
+// every such generator converts in both directions. Out of the wrapper the
+// conversion is the operator dmmeta.fcast generates. Into it the conversion is
+// the fieldwise constructor, which the ctype gets from a dmmeta.cpptype row
+// asking for a constructor. A ctype carrying only one of the two takes the
+// value in one direction while the generated code names the other anyway, so
+// the answer names the one that is missing and the generator reports the field
+// rather than emitting C++ that does not compile.
+// The fieldwise constructor takes one argument per field, of that field's own
+// type, so it converts from the builtin only when the builtin is what the one
+// field holds. A chain of two wrappers converts from the inner wrapper instead,
+// and is named as standing for the builtin only through another ctype. The
+// builtin itself needs no conversion at all and is the empty answer.
+tempstr amc::BadBltinCast(amc::FCtype &ctype) {
+    tempstr retval;
+    amc::BltinId bltin_id(amc_BltinIdEnum(0));
+    if (!value_SetStrptrMaybe(bltin_id, ctype.ctype)) {
+        amc::FField *field = c_field_N(ctype) == 1 ? c_field_Find(ctype,0) : NULL;
+        bool direct = field != NULL
+            && field->reftype == dmmeta_Reftype_reftype_Val
+            && value_SetStrptrMaybe(bltin_id, field->p_arg->ctype);
+        if (!direct) {
+            retval << "ctype stands for the builtin only through another ctype; one Val field over the builtin converts";
+        } else {
+            tempstr need;
+            algo::ListSep ls(" and ");
+            if (!field->c_fcast) {
+                need << ls << "dmmeta.fcast to read the builtin value out of it";
+            }
+            if (!amc::FieldwiseCtorQ(ctype)) {
+                need << ls << "dmmeta.cpptype ctor:Y to construct one from a builtin value";
+            }
+            if (ch_N(need)) {
+                retval << "ctype needs " << need;
+            }
+        }
+    }
+    return retval;
+}
+
+// -----------------------------------------------------------------------------
+
+// Numeric range of CTYPE as u64 bit patterns; CTYPE may wrap the bltin in
+// a chain of single-Val-field ctypes. The resolved bltin id determines
+// bounds and signedness alike: a signed integer named by a universe that
+// lacks the type's amcdb.bltin row must still get signed range checks.
+// The types with a range are the fixed-width integers, u8 through i64.
+// Returns false for everything else -- bool, char, pad_byte, u128, float
+// and double -- and hands back the widest signed bounds as a fallback:
+// bool has only two values and cannot carry a magnitude, char's signedness
+// is the compiler's choice, and amc has no arithmetic for the rest.
+// Range checks built from the fallback bound nothing, so each generator
+// that needs a range rejects the field before its checks are emitted
+// (gen_check_lenfld for a length word, tclass_Dec for a fixed-point value,
+// tclass_Numstr for a numeric string), and the run exits nonzero.
+bool amc::GetMinMax(amc::FCtype& _ctype, u64 &min, u64 &max, bool &issigned) {
+    amc::BltinId bltin_id(amc_BltinIdEnum(0));
+    bool known = GetBltinId(_ctype, bltin_id);
+    issigned = false;
+    if (known) {
+        switch (bltin_id.value) {
+        case amc_BltinId_u8:      min = 0;                  max = 0xff;                               break;
+        case amc_BltinId_i8:      min = 0xffffffffffffff80; max = 0x7f;               issigned=true;  break;
+        case amc_BltinId_u16:     min = 0x00;               max = 0xffff;                             break;
+        case amc_BltinId_i16:     min = 0xffffffffffff8000; max = 0x7fff;             issigned=true;  break;
+        case amc_BltinId_u32:     min = 0x00000000;         max = 0xffffffff;                         break;
+        case amc_BltinId_i32:     min = 0xffffffff80000000; max = 0x7fffffff;         issigned=true;  break;
+        case amc_BltinId_u64:     min = 0x0000000000000000; max = 0xffffffffffffffff;                 break;
+        case amc_BltinId_i64:     min = 0x8000000000000000; max = 0x7fffffffffffffff; issigned=true;  break;
+        default:                  known = false;            break;
+        }
+    }
+    if (!known) {
+        min = 0x8000000000000000;
+        max = 0x7fffffffffffffff;
+        issigned = true;
+    }
+    return known;
+}
+
+// -----------------------------------------------------------------------------
+
+// Query whether FIELD's type is passed by value; see gen_cheapcopy.
 bool amc::CheapCopyQ(amc::FField &field) {
-    amc::FCtype         &tgttype    = *field.p_arg;
-    return tgttype.c_cpptype && tgttype.c_cpptype->cheap_copy;
+    return field.p_arg->cheap_copy;
 }
 
 bool amc::HasFcast(amc::FCtype& ctype){
@@ -515,9 +578,9 @@ bool amc::CopyPrivQ(amc::FCtype &ctype) {
             copy_priv = true;
         } else if (field.c_cascdel != NULL) {
             copy_priv = true;
-        } else if (field.c_fcleanup != NULL) {
+        } else if (amc::FindFfunc(field, amcdb_cbtype_Cleanup) != NULL) {
             copy_priv = true;
-        } else if (field.c_fuserinit != NULL) {
+        } else if (amc::FindFfunc(field, amcdb_cbtype_Userinit) != NULL) {
             copy_priv = true;
         }
     }ind_end;
@@ -654,43 +717,80 @@ bool amc::IdentQ(strptr type) {
     return ident;
 }
 
-int amc::Field_Sizeof(amc::FField &field) {
-    amc::FCtype &ctype = *field.p_arg;
-    int size = ctype.c_csize ? ctype.c_csize->size : 0;
-    int width = amc::WidthMax(field);
-    return size * width;
+// Byte size of FIELD's storage: the arg's byte size (via Ctype_Nbit: builtin
+// csize, or the totsize_byte computed by gen_compute_size) times the inline
+// array multiple. Before gen_compute_size runs, a non-builtin arg reports 0.
+// i64 like Ctype_Nbit: an uncapped csize times an array multiple can exceed
+// i32, and callers scale the result back up to bits.
+i64 amc::Field_Sizeof(amc::FField &field) {
+    return amc::Ctype_Nbit(*field.p_arg)/8 * amc::WidthMax(field);
 }
 
 // Remove naming layers from ctype (i.e. as long as ctype contains
 // a single val field, keep going down, then finally return the basic type).
-// If the ctype contains more than one field at any given layer, return DFLT.
+// If the ctype contains more than one such field at any given layer, the
+// layer names no single type below it and the answer is DFLT.
+// The layers can also close on themselves -- a ctype whose one Val field
+// names the ctype itself, or a pair that name each other -- and a walk of
+// such a chain reaches no basic type at all. The descent is therefore
+// capped, and a chain that reaches the cap answers DFLT as well: a cycle
+// names no type below it any more than an ambiguous layer does. Every
+// caller already has an answer for DFLT, so a cyclic ctype is left to the
+// diagnostics the schema checks report for it -- the field-level ones
+// naming each field, and the size computation naming the cycle itself.
+// test/amc/bad_size_cycle.ssim carries a bitfield whose arg is a cycle and
+// a cycle under a bitfield's source field, so the run is pinned as a
+// diagnostic rather than an internal error.
 amc::FCtype *amc::StripWrappers(amc::FCtype &ctype, amc::FCtype *dflt) {
     amc::FCtype *parent = &ctype;
-    int niter=0;
-    for (; niter<100; niter++) {
-        bool found = false;
+    amc::FCtype *retval = dflt;
+    bool done = false;
+    int niter = 0;
+    while (!done && niter < 100) {
+        amc::FCtype *layer = NULL;
+        bool ambig = false;
         ind_beg(amc::ctype_c_field_curs, field, *parent) {
             if (field.reftype == dmmeta_Reftype_reftype_Val || field.reftype == dmmeta_Reftype_reftype_Inlary) {
-                if (found) {
-                    return dflt;// two or more fields -- no match
-                }
-                parent = field.p_arg;
-                found = true;
+                ambig = ambig || layer != NULL;
+                layer = field.p_arg;
             }
         }ind_end;
-        if (!found) {
-            break;
+        if (ambig) {
+            done = true;// two or more fields -- no match
+        } else if (layer == NULL) {
+            retval = parent;
+            done = true;
+        } else {
+            parent = layer;
+            niter++;
         }
     }
-    vrfy(niter<100, tempstr()<<"amc.deep_impact"
-         <<Keyval("ctype",ctype.ctype)
-         <<Keyval("comment","Recursion limit exceeded"));
-    return parent;
+    return retval;
 }
 
 bool amc::FixaryQ(amc::FField &field) {
     return field.reftype == dmmeta_Reftype_reftype_Inlary && field.c_inlary->min == field.c_inlary->max;
 }
+
+// Return the parent-argument prefix for a call to one of the field
+// accessors of CTYPE (Get, Set, ReadStrptrMaybe, Set<Present>, the pmask
+// bitset accessors): the accessors of a global ctype's fields take no
+// parent argument -- there is exactly one instance, reached through the
+// namespace global -- so for a global CTYPE the result is empty.
+// Otherwise the result is PARENT, followed by ", " when COMMA is set
+// (the parent precedes further arguments in the call).
+tempstr amc::ParentArgExpr(amc::FCtype &ctype, strptr parent, bool comma) {
+    tempstr ret;
+    if (!GlobalQ(ctype)) {
+        ret << parent;
+        if (comma) {
+            ret << ", ";
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
 
 // Return C++ expression for accessing the 'value' of the field
 // given parent reference PARNAME.
@@ -771,7 +871,17 @@ tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr parname
     }
     // use the shortest form of accessing the field -- omit _Get if necessary
     if (need_get) {
-        ret << name<<"_Get("<<parname<<path<<")";
+        // with a non-empty path the accessor belongs to the subfield's
+        // ctype and the parent reference is a member access, never the
+        // collapsed accessor of a global (ParentArgExpr)
+        amc::FCtype *parctype = ctype ? ctype : field.p_ctype;
+        tempstr parentarg;
+        if (ch_N(path)) {
+            parentarg << parname << path;
+        } else {
+            parentarg << ParentArgExpr(*parctype, parname, false);
+        }
+        ret << name<<"_Get("<<parentarg<<")";
     } else {
         if (parname != "" || path != "") {
             ret << parname << path << ".";
@@ -783,17 +893,51 @@ tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr parname
 
 // -----------------------------------------------------------------------------
 
+// True when CTYPE's frame length is known only at runtime: a varlen tail
+// appends bytes past the fixed portion, and an Opt field appends one optional
+// element there. A ctype with neither occupies exactly its fixed size, so
+// every store of its length writes a value the generator itself computed.
+// This is the only predicate in amc for the question "is this frame's length
+// fixed": gen_check_lenfld reads it to decide which totals it can prove
+// storable at generation time, and the Fmt* constructor, the TS Encode and
+// the dispatch read consult it before deciding whether their store of a
+// runtime total needs a guard.
+bool amc::RuntimeFrameLenQ(amc::FCtype &ctype) {
+    return !zd_varlenfld_EmptyQ(ctype) || ctype.c_optfld != NULL;
+}
+
+// -----------------------------------------------------------------------------
+
+// Largest frame byte count the wire format admits, in bytes.
+// Consider a 3GiB frame whose length word is an unsigned 32-bit field: the
+// word holds the count exactly, so a writer that consults only the word's
+// range sends the frame. Its reader reconstructs the total through
+// LengthExpr, which evaluates in i32, and reads a negative length -- the
+// frame is framed as a message nobody wrote. The count a length word can
+// hold is therefore not the count the format admits, and the two backends
+// cannot each pick their own: whatever one encoder produces, the other's
+// reader must be able to represent.
+// The narrower of the two representations is the i32 the C++ reader
+// reconstructs in, which is also what every buffer size argument in the
+// tree is expressed as, so the domain is i32 and it is stated here alone.
+// The C++ range guard drops its maximum term once the length word already
+// covers this bound (LenfldCheckExpr), the message constructor refuses a
+// total past it, and the TypeScript encoder throws at it.
+u64 amc::FrameLenMax() {
+    return 0x7fffffff;
+}
+
+// -----------------------------------------------------------------------------
+
 // Return C++ expression computing total length of ctype CTYPE
 // accessible via name NAME.
 tempstr amc::LengthExpr(amc::FCtype &ctype, strptr name) {
     tempstr ret;
     ret << "i32(";
     if (ctype.c_lenfld) {
-        vrfy(ctype.c_lenfld->scale > 0
-             , tempstr() << "amc.bad_scale"
-             << Keyval("lenfld", ctype.c_lenfld->field)
-             << Keyval("scale", ctype.c_lenfld->scale)
-             << Keyval("comment", "scale must be > 0"));
+        // a scale<=0 lenfld is rejected by gen_check_lenfld, which reports
+        // every offender in one run; the expression built here for such a
+        // schema is never consumed because the run exits nonzero
         ret << FieldvalExpr(&ctype, *ctype.c_lenfld->p_field, name);
         if (ctype.c_lenfld->scale != 1) {
             ret << " * " << ctype.c_lenfld->scale;
@@ -808,6 +952,189 @@ tempstr amc::LengthExpr(amc::FCtype &ctype, strptr name) {
     }
     ret << ")";
     return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return C++ expression computing total length of ctype CTYPE accessible
+// via name NAME, in i64 domain. LengthExpr runs the scale multiply in the
+// length word's own type, so a corrupt stored value wraps mod 2^N into a
+// small plausible total; here the word is widened to i64 first, and the
+// exact total survives for a caller that validates an untrusted length
+// word against the storable range before narrowing (InsertMaybe).
+// The widening is exact only while the arithmetic fits i64: for a word
+// range wider than u32, at any scale, the caller must bound the raw word
+// before evaluating this expression (InsertMaybe emits a generation-time
+// bound) -- otherwise the scaled multiply, or at scale 1 the extra and
+// fixed-size adjustment after the u64->i64 wrap, itself overflows.
+tempstr amc::LengthExpr64(amc::FCtype &ctype, strptr name) {
+    tempstr ret;
+    if (ctype.c_lenfld) {
+        ret << "i64(" << FieldvalExpr(&ctype, *ctype.c_lenfld->p_field, name) << ")";
+        if (ctype.c_lenfld->scale != 1) {
+            ret << " * " << ctype.c_lenfld->scale;
+        }
+        if (ctype.c_lenfld->extra > 0) {
+            ret << " - " << ctype.c_lenfld->extra;
+        } else if (ctype.c_lenfld->extra < 0) {
+            ret << " + " << -ctype.c_lenfld->extra;
+        }
+    } else {
+        ret << "i64(sizeof("<<ctype.cpp_type<<"))";
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Max value LENFLD's word can store, which is the same question FieldMaxStore
+// answers about the word's field: the arg type's max, clamped to the bits a
+// Bitfld store keeps.
+// Returns false when the arg resolves to no integer type: the word then has
+// no numeric range, MAX holds the widest-signed fallback, and gen_check_lenfld
+// rejects the schema, so generated expressions built from the fallback are
+// never consumed.
+bool amc::LenfldMaxStore(amc::FLenfld &lenfld, u64 &max) {
+    return amc::FieldMaxStore(*lenfld.p_field, max);
+}
+
+// -----------------------------------------------------------------------------
+
+// Largest frame byte total LENFLD can store: max storable word * scale - extra
+// (the reader formula at the word's max). Exact for a word range within u32 --
+// every range an emitter guards; a wider word stores any frame total either
+// backend can meet (C++ i32, JS 2^53), so the formula, which could wrap u64
+// there (a u64 word with a negative extra), saturates instead. A shipping
+// schema cannot go negative (gen_check_lenfld rejects extra beyond the
+// range); the clamp keeps the reject-run expression harmless.
+u64 amc::LenfldMaxLen(amc::FLenfld &lenfld) {
+    u64 max = 0;
+    amc::LenfldMaxStore(lenfld, max);// no numeric range: rejected by gen_check_lenfld
+    u64 ret = 0xffffffffffffffff;
+    if (max <= 0xffffffff) {
+        ret = u64(i64_Max(i64(max) * lenfld.scale - lenfld.extra, 0));
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True if a runtime byte total stored through LENFLD can fall below the
+// smallest total the word represents, so that the store numerator
+// (total + extra) goes negative and wraps through the word's own type.
+// A total of 1 byte stored through a u8 word with extra:-8 writes 249, and
+// the reader reconstructs 257 -- a frame 256 bytes longer than was written.
+// Only a negative extra can produce it, and only one whose magnitude exceeds
+// the ctype's fixed size: a store site's smallest total is that fixed size,
+// so a schema whose fixed size already covers the extra can never reach the
+// low end. gen_check_lenfld rejects the same shape outright wherever the
+// stored total is the fixed size itself; here the total is a runtime one.
+bool amc::LenfldLowGuardNeededQ(amc::FLenfld &lenfld) {
+    amc::FCtype &ctype = *lenfld.p_field->p_ctype;
+    return lenfld.extra < 0 && !ctype.size_unknown && i64(ctype.totsize_byte) + lenfld.extra < 0;
+}
+
+// -----------------------------------------------------------------------------
+
+// True if a runtime byte total stored through LENFLD needs a guard before
+// the store: an indivisible total truncates through the store formula
+// (scale != 1), a total beyond the storable range wraps mod 2^N through
+// the word's own type, and a total below the low end wraps the same way
+// (LenfldLowGuardNeededQ). A scale-1 lenfld whose range covers the whole
+// frame-length domain (FrameLenMax), and whose fixed size covers its extra,
+// can store any total and needs no test at all.
+bool amc::LenfldGuardNeededQ(amc::FLenfld &lenfld) {
+    return lenfld.scale != 1 || amc::LenfldMaxLen(lenfld) < amc::FrameLenMax() || amc::LenfldLowGuardNeededQ(lenfld);
+}
+
+// -----------------------------------------------------------------------------
+
+// Append LENFLD's extra term to RET, the numerator of the store formula
+// LENEXPR + extra: "+extra" for a positive extra, "-|extra|" for a negative
+// one, nothing when extra is zero.
+static void AppendLenfldExtra(cstring &ret, amc::FLenfld &lenfld) {
+    if (lenfld.extra > 0) {
+        ret << "+" << lenfld.extra;
+    } else if (lenfld.extra < 0) {
+        ret << lenfld.extra;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Return C++ boolean expression testing that LENEXPR, an expression for a
+// total byte length, is representable in LENFLD: the store formula
+// (LENEXPR + extra) / scale truncates unless scale divides the numerator
+// (the reader reconstructs stored*scale - extra, so only a multiple
+// round-trips), a total beyond the storable range (LenfldMaxLen) wraps
+// mod 2^N through the word's own type, framing a shorter message than was
+// written, and a total below the low end (LenfldLowGuardNeededQ) wraps the
+// same way, framing a longer one. Emitters of a runtime-length store guard
+// with this expression when LenfldGuardNeededQ; each term is emitted only
+// when its failure is possible, so the expression is never vacuous at a
+// guarded site.
+tempstr amc::LenfldCheckExpr(amc::FLenfld &lenfld, strptr lenexpr) {
+    tempstr ret;
+    algo::ListSep ls(" && ");
+    if (amc::LenfldLowGuardNeededQ(lenfld)) {
+        ret << ls << "(" << lenexpr << ") >= " << -lenfld.extra;
+    }
+    if (lenfld.scale != 1) {
+        ret << ls << "(" << lenexpr;
+        AppendLenfldExtra(ret, lenfld);
+        ret << ") % " << lenfld.scale << " == 0";
+    }
+    u64 maxlen = amc::LenfldMaxLen(lenfld);
+    if (maxlen < amc::FrameLenMax()) {
+        ret << ls << "(" << lenexpr << ") <= " << maxlen;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return C++ expression computing the value stored in LENFLD from LENEXPR,
+// an expression for the total byte length: (LENEXPR + extra) / scale --
+// the exact inverse of the reader formula (LengthExpr: total = stored*scale - extra).
+tempstr amc::LenfldStoreExpr(amc::FLenfld &lenfld, strptr lenexpr) {
+    bool scaled = lenfld.scale != 1;
+    tempstr ret;
+    if (scaled) {
+        ret << "(";
+    }
+    ret << lenexpr;
+    AppendLenfldExtra(ret, lenfld);
+    if (scaled) {
+        ret << ") / " << lenfld.scale;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True if the field has no direct member to write: the value lives behind
+// an accessor pair (fbigend byte-swapped storage, a bitfld slice of its
+// source word, a fldfunc computed view), so any store must go through the
+// generated $name_Set. Codecs that manage side effects themselves (the
+// kafka decoder, whose presence bits depend on the wire's null flag and
+// must not be set by a pmask Set) route stores on this predicate alone.
+bool amc::NoDirectMemberQ(amc::FField &field) {
+    return field.c_fbigend || FldfuncQ(field) || field.c_bitfld;
+}
+
+// -----------------------------------------------------------------------------
+
+// True if a store to the field must go through the generated $name_Set:
+// the field has no direct member (NoDirectMemberQ), or a Set exists to
+// dispatch side effects (fcond membership, pmask presence).
+// Generated store sites that run after the record is xreffed (assignment,
+// read fallbacks) route on this predicate. Init is the deliberate
+// exception: it writes the raw member of a freshly allocated record,
+// before XrefMaybe derives fcond membership from the value and before
+// the presence mask may be touched.
+bool amc::AssignViaSetQ(amc::FField &field) {
+    bool has_set = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Set"));
+    return has_set || amc::NoDirectMemberQ(field);
 }
 
 // -----------------------------------------------------------------------------
@@ -829,9 +1156,8 @@ tempstr amc::AssignExpr(amc::FField &field, strptr parname, strptr value, bool n
     } else {
         value_expr << value;
     }
-    bool has_set = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Set"));
-    if (has_set || field.c_fbigend || FldfuncQ(field) || field.c_bitfld ) {
-        ret << name<<"_Set("<<parname<<", "<<value_expr<<")";
+    if (AssignViaSetQ(field)) {
+        ret << name<<"_Set("<<ParentArgExpr(*field.p_ctype,parname,true)<<value_expr<<")";
     } else {
         if (elems_N(parname)>0 && parname[0] == '*') {
             ret << RestFrom(parname,1) << "->";
@@ -853,21 +1179,6 @@ bool amc::StringQ(amc::FCtype &ctype) {
         wrapped_type = amc::c_datafld_Find(*wrapped_type, 0)->p_arg;
     }
     return wrapped_type->c_cstr != NULL;
-}
-
-// -----------------------------------------------------------------------------
-
-// True if ctype contains a varlen field
-bool amc::VarlenQ(amc::FCtype &ctype) {// has varlen or opt field
-    bool ret = false;
-    ind_beg(amc::ctype_c_field_curs, field, ctype) {
-        ret = field.reftype == dmmeta_Reftype_reftype_Varlen
-            || field.reftype == dmmeta_Reftype_reftype_Opt;
-        if (ret) {
-            break;
-        }
-    }ind_end;
-    return ret;
 }
 
 // check if ctype has a string print function
@@ -998,14 +1309,52 @@ amc::FCtype *amc::UltimateBaseType(amc::FCtype *ctype, amc::FCtype *dflt) {
     return retval==ctype ? dflt : retval;
 }
 
-tempstr amc::SsimFilename(strptr root, amc::FCtype& ctype, bool do_throw) {
+// Root for side-loaded table data (gconst and gstatic values, gsymbol
+// tables): the -in_dir root when it names a directory. A single-file or
+// stdin -in_dir provides no directory for side files; the default data
+// root applies. The root is resolved once, in Main -- the answer cannot
+// change within the run, and DataRoot is consulted per gconst, gstatic,
+// and gsymbol row and per manifest side-load.
+algo::strptr amc::DataRoot() {
+    return strptr(amc::_db.dataroot);
+}
+
+// Load side table data (gconst and gstatic values, gsymbol tables) from
+// FNAME, a filename already resolved against DataRoot(). When -in_dir is
+// not a directory, side tables resolve against ./data of the current
+// working directory, which may belong to a different universe than the
+// -in_dir schema: a run from an unrelated checkout would quietly generate
+// symbol and constant values from that checkout's tables and exit 0. The
+// first successful load through the fallback root therefore prints a
+// notice naming the root and the file, making the side-load visible in
+// the run's output.
+bool amc::SideloadFile(algo_lib::MmapFile &file, strptr fname) {
+    bool ret = MmapFile_Load(file,fname);
+    if (ret && amc::_db.dataroot_dflt && !amc::_db.sideload_noted) {
+        amc::_db.sideload_noted = true;
+        prerr("amc.sideload"
+              <<Keyval("root",DataRoot())
+              <<Keyval("file",fname)
+              <<Keyval("comment","-in_dir is not a directory; side table data loads from the default root"));
+    }
+    return ret;
+}
+
+// Path under ROOT of the ssimfile CTYPE's rows live in, either because CTYPE
+// owns the ssimfile or because the type it is based on does; empty when CTYPE
+// reaches no ssimfile.
+// A ctype fails to reach a file two ways: it declares no base at all, or a base
+// that owns no ssimfile. Both are the same answer to this function's question,
+// so both come back as an empty path rather than as an abort. Ending the run
+// here would take the diagnostic away from the caller, and the caller is the one
+// that knows which gconst or gstatic field asked -- which is what it names.
+tempstr amc::SsimFilename(strptr root, amc::FCtype& ctype) {
     tempstr name;
     amc::FCtype *base = &ctype;
     if (!base->c_ssimfile) {
         base = amc::GetBaseType(*base,NULL);
     }
-    vrfy(base && (base->c_ssimfile || !do_throw),tempstr()<< "no ssimfile defined for ["<<ctype.ctype<<"]");
-    if (base->c_ssimfile) {
+    if (base && base->c_ssimfile) {
         name = SsimFname(root, base->c_ssimfile->ssimfile);
     }
     return name;
@@ -1062,7 +1411,7 @@ bool amc::ExeQ(amc::FNs &ns) {
 // For cheap types, 'const' is omitted since there is no sense in protecting
 // a copy.
 tempstr amc::ByvalArgtype(amc::FCtype &ctype, bool isconst DFLTVAL(false)) {
-    bool cheap = ctype.c_cpptype && ctype.c_cpptype->cheap_copy;
+    bool cheap = ctype.cheap_copy;
     return tempstr() << (isconst && !cheap ? "const " : "") << ctype.cpp_type<<(cheap ? "" : "&");
 }
 
@@ -1090,7 +1439,9 @@ void amc::Main_CloneFconst_Field(amc::FField &field) {
     dmmeta::Field field_enum(tempstr() << ctype_enum.ctype << "." << name_Get(field)
                              , "u8", dmmeta_Reftype_reftype_Val, algo::CppExpr(), algo::Comment());
     dmmeta::Fcast fcast(field_enum.field, "", algo::Comment());
-    dmmeta::Cpptype cpptype(ctype_enum.ctype, true/*ctor*/,true/*dtor*/, false/*cheap_copy*/);
+    dmmeta::Cpptype cpptype;
+    cpptype.ctype = ctype_enum.ctype;
+    cpptype.ctor = true;
     dmmeta::Pack pack(ctype_enum.ctype, algo::Comment());// insert pack
     dmmeta::Anonfld anonfld(field_enum.field, algo::Comment());
 
@@ -1111,7 +1462,7 @@ void amc::Main_CloneFconst_Field(amc::FField &field) {
             // map empty string to 0, everything to integers 1+
             tempstr val = tempstr() << (ch_N(fconst.value.value)>0 ? int(next_val++) : int(0));
             dmmeta::Fconst fconst_enum(tempstr() << field_enum.field << "/" << fconst.value
-                                       , algo::CppExpr(val), fconst.comment);
+                                       , algo::CppExpr(val), algo::Comment(fconst.comment));
             if (amc::ind_fconst_Find(fconst_enum.fconst)) {
                 verblog("amc.clone_fconst:'"<< fconst_enum.fconst<<"  comment:'Value skipped because it is a duplicate'");
             } else {
@@ -1192,13 +1543,19 @@ static void Main_Edit() {
     acr.cmd.t = true;
     acr.cmd.e = true;
     acr.cmd.print = true;
-    // vim uses stdout, so redirecting output is not an option
-    // return code from acr -e indicates how many files were modified.
-    int rc = acr_Exec(acr);
-    if (rc==0) {
-        // acr did nothing, exit as quickly as possible
-        _exit(0);
-    }
+    // the editor owns the terminal: acr inherits amc's stdout so vim can
+    // draw, which also puts acr's report line on the screen rather than in
+    // a pipe amc could parse. the exit status therefore carries only
+    // success or failure. a failed edit aborts the run before codegen -- a
+    // session whose changes were never written back must not end with amc
+    // regenerating and reporting success. after a successful edit the run
+    // proceeds unconditionally; regeneration from an unchanged schema is a
+    // no-op.
+    int status = acr_Exec(acr);
+    vrfy(status==0, tempstr()<<"amc.edit"
+         <<Keyval("cmd",acr_ToCmdline(acr))
+         <<Keyval("status",algo::DescribeWaitStatus(acr.status))
+         <<Keyval("comment","edit failed; no code was regenerated"));
     amc::_db.cmdline.query = "";// revert to a normal run
 }
 
@@ -1254,6 +1611,9 @@ void amc::Main() {
     if (amc::_db.cmdline.e) {
         Main_Edit();
     }
+    // resolve the root for side-loaded table data once (one stat per run)
+    amc::_db.dataroot_dflt = !DirectoryQ(amc::_db.cmdline.in_dir);
+    amc::_db.dataroot = amc::_db.dataroot_dflt ? strptr("data") : strptr(amc::_db.cmdline.in_dir);
     vrfy(amc::LoadTuplesMaybe(amc::_db.cmdline.in_dir,true), algo_lib::_db.errtext);
     // Look up default allocator
     amc::_db.c_malloc = amc::ind_field_Find("algo_lib.FDb.malloc");
@@ -1270,7 +1630,9 @@ void amc::Main() {
         Main_Querymode();
     }
 
-    if (algo_lib::_db.exit_code!=0) {
+    // a failing run reports amc.no_output only when it truly wrote nothing;
+    // a run that fails after writing some files must not claim otherwise
+    if (algo_lib::_db.exit_code!=0 && amc::_db.report.n_filemod==0) {
         prerr("amc.no_output"
               <<Keyval("comment","no files were modified"));
     }

@@ -32,7 +32,13 @@
 // but if THEIRS_DIR is specified, then BASE_DIR must also be specified
 // The list of package file is evaluated in each directory independently.
 // But if the directory doesn't have apm, the local package definition is used.
-void apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, algo::strptr theirs_dir) {
+// Return success code
+// Each list comes from a child whose output this function reads, so a child that
+// fails contributes no file rather than an error, and a file the child never
+// named is a file the merge leaves at the version it already had. The failure is
+// reported per directory and the caller decides what an incomplete table means.
+bool apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, algo::strptr theirs_dir) {
+    bool ok=true;
     tempstr dirs[3];
     dirs[0]="";//ours
     dirs[1]=base_dir;
@@ -40,11 +46,10 @@ void apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, alg
     int n = 1 + (base_dir!="") + (base_dir!="" && theirs_dir!="");
     for (int i=0; i<n; i++) {
         command::apm_proc apm;
-        apm.path=DirFileJoin(algo::GetCurDir(),"bin/apm");
+        apm.path=GetApmPath(dirs[i]);
         if (_db.cmdline.l) { // use local package definitions
             apm.cmd.pkgdata = DirFileJoin(algo::GetCurDir(),_db.pkgdata_recfile);
         }
-        algo_lib::FFildes read;
         bool push = dirs[i] != "";
         if (push) {
             algo_lib::PushDir(dirs[i]);
@@ -52,11 +57,12 @@ void apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, alg
         apm.cmd.package.expr=regx_package;
         apm.cmd.showfile=true;
         apm.cmd.t=true;// include dependencies
-        apm_StartRead(apm,read);
+        apm.fstdout = "|";
+        apm_Start(apm);
         if (push) {
             algo_lib::PopDir();
         }
-        ind_beg(algo::FileLine_curs,line,read.fd) {
+        ind_beg(algo::FileLine_curs,line,apm.from_stdout) {
             //verblog("mergefiles: "<<dirs[i]<<": "<<line);
             dev::Gitfile gitfile;
             if (Gitfile_ReadStrptrMaybe(gitfile,line)) {
@@ -67,10 +73,19 @@ void apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, alg
                 mode=GetFileMode(file);
             }
         }ind_end;
+        apm_Wait(apm);
+        if (apm.status!=0) {
+            ok=false;
+            prerr("apm.pkgfile_read"
+                  <<Keyval("dir",dirs[i])
+                  <<Keyval("status",algo::DescribeWaitStatus(apm.status))
+                  <<Keyval("comment","package file list could not be read from the directory"));
+        }
     }
     ind_beg(_db_mergefile_curs,mergefile,_db) {
         verblog(mergefile);
     }ind_end;
+    return ok;
 }
 
 // Scan mergefile table and perform per-file 3-way non-history-aware merge
@@ -88,8 +103,8 @@ void apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, alg
 void apm::MergeFiles(apm::FPackage &package) {
     (void)package;
     ind_beg(_db_mergefile_curs,mergefile,_db) {
-        tempstr base_file=DirFileJoin(algo_lib::SandboxDir(_db.base_sandbox),mergefile.mergefile);
-        tempstr theirs_file=DirFileJoin(algo_lib::SandboxDir(_db.theirs_sandbox),mergefile.mergefile);
+        tempstr base_file=DirFileJoin(algo_lib::WtDir(_db.base_sandbox),mergefile.mergefile);
+        tempstr theirs_file=DirFileJoin(algo_lib::WtDir(_db.theirs_sandbox),mergefile.mergefile);
         if (mergefile.base_mode == 0 && mergefile.ours_mode == 0 && mergefile.theirs_mode != 0) {
             // create parent directory if necessary
             tempstr dirname(GetDirName(mergefile.mergefile));
@@ -152,6 +167,17 @@ void apm::RewritePackageRecs(algo::strptr origin, algo::strptr baseref, algo::st
 // insert conflicts into ssimfiles in appropriate places
 // user continues with `git add ...`, `git commit` or `git reset --hard` to abort
 // This function handles installation as well (the case where package.baseref = empty string)
+//
+// Each step below produces one of the inputs the next steps read: a sandbox
+// directory, one of the three sides of the record merge, the merged records, or
+// the table of files to merge. Every one of those inputs is a file or a
+// directory, so a step that fails leaves its input empty rather than missing,
+// and an empty input is a legitimate value everywhere it is read -- an empty
+// "theirs" says the incoming version deleted every record of the package, and
+// the plan built from it deletes the package's records with nothing to put back.
+// So a step that fails stops the update: the plan is not composed at all, and
+// the nonzero exit keeps the transaction from running. The steps, and what apm
+// does when each of them fails, are pinned by comptest apm.UpdateFate.
 void apm::Main_Update() {
     if (!_db.cmdline.dry_run && _db.cmdline.checkclean) {
         lib_git::CheckGitCleanX(".","Please make sure the working directory is clean or use -dry_run");
@@ -160,7 +186,7 @@ void apm::Main_Update() {
     tempstr acrtxn_recfile = tempstr() << "temp/apm.acrtxn.ssim";
     bool has_conflict=false;
     tempstr acrtxn;// final acr transaction
-    int rc=0;
+    bool ok=true;
     ind_beg(_db_zd_sel_package_curs,package,_db) {
         // fetch updated version of package
         tempstr new_package_gitref = FetchPackageOrigin(package.origin,"HEAD");
@@ -168,68 +194,84 @@ void apm::Main_Update() {
         verblog("apm.update"
                 <<Keyval("package",package.package)
                 <<Keyval("new_baseref",new_package_gitref));
-        if (new_package_gitref == "") {
-            algo_lib::_db.exit_code=1;
-            break;
-        }
         // fetch base version of package
         (void)FetchPackageOrigin(package.origin,package.baseref);
         // create sandbox for original package version
-        CreatePackageSandbox(_db.base_sandbox,package.baseref);
-        // update package baseref to the version being fetched
-        package.baseref=new_package_gitref;
+        ok = CreatePackageSandbox(_db.base_sandbox,package.baseref)==0;
+        if (ok) {
+            // update package baseref to the version being fetched
+            package.baseref=new_package_gitref;
+            // create file with original package records
+            ok = apm::CollectPkgrecFromDir(package.package,_db.base_recfile,algo_lib::WtDir(_db.base_sandbox));
+        }
+        if (ok) {
+            // create file with current package records
+            ok = apm::CollectPkgrecToFile(package,_db.ours_recfile);
+        }
+        if (ok) {
+            // create sandbox with new package records
+            ok = CreatePackageSandbox(_db.theirs_sandbox,new_package_gitref)==0;
+        }
+        if (ok) {
+            ok = apm::CollectPkgrecFromDir(package.package,_db.theirs_recfile,algo_lib::WtDir(_db.theirs_sandbox));
+        }
+        if (ok) {
+            // update any dev.package records found in the records files
+            // to match ORIGIN and BASEREF of the package being updated
+            // because they will be inserted back into the acr database in this tree
+            apm::RewritePackageRecs(package.origin,package.baseref,package.package,_db.base_recfile);
+            apm::RewritePackageRecs(package.origin,package.baseref,package.package,_db.ours_recfile);
+            apm::RewritePackageRecs(package.origin,package.baseref,package.package,_db.theirs_recfile);
 
-        // create file with original package records
-        apm::CollectPkgrecFromDir(package.package,_db.base_recfile,algo_lib::SandboxDir(_db.base_sandbox));
-
-        // create file with current package records
-        apm::CollectPkgrecToFile(package,_db.ours_recfile);
-
-        // create sandbox with new package records
-        CreatePackageSandbox(_db.theirs_sandbox,new_package_gitref);
-        apm::CollectPkgrecFromDir(package.package,_db.theirs_recfile,algo_lib::SandboxDir(_db.theirs_sandbox));
-
-        // update any dev.package records found in the records files
-        // to match ORIGIN and BASEREF of the package being updated
-        // because they will be inserted back into the acr database in this tree
-        apm::RewritePackageRecs(package.origin,package.baseref,package.package,_db.base_recfile);
-        apm::RewritePackageRecs(package.origin,package.baseref,package.package,_db.ours_recfile);
-        apm::RewritePackageRecs(package.origin,package.baseref,package.package,_db.theirs_recfile);
-
-        // merge records
-        command::acr_dm_proc acr_dm;
-        arg_Alloc(acr_dm.cmd)=_db.base_recfile;
-        arg_Alloc(acr_dm.cmd)=_db.ours_recfile;
-        arg_Alloc(acr_dm.cmd)=_db.theirs_recfile;
-        acr_dm.fstdout << ">"<<merged_recfile;
-        acr_dm_Exec(acr_dm);
-        // delete original package records
-        ind_beg(algo::FileLine_curs,line,_db.base_recfile) {
-            if (Trimmed(line)!="") {
-                acrtxn << "acr.delete "<<line << eol;
+            // merge records
+            command::acr_dm_proc acr_dm;
+            arg_Alloc(acr_dm.cmd)=_db.base_recfile;
+            arg_Alloc(acr_dm.cmd)=_db.ours_recfile;
+            arg_Alloc(acr_dm.cmd)=_db.theirs_recfile;
+            acr_dm.fstdout << ">"<<merged_recfile;
+            int status = acr_dm_Exec(acr_dm);
+            ok = status==0;
+            if (!ok) {
+                prerr("apm.recmerge"
+                      <<Keyval("recfile",merged_recfile)
+                      <<Keyval("status",algo::DescribeWaitStatus(status))
+                      <<Keyval("comment","package records could not be merged"));
             }
-        }ind_end;
-        // insert updated package records
-        ind_beg(algo::FileLine_curs,line,merged_recfile) {
-            acrtxn << "acr.replace "<<line << eol;
-            if (StartsWithQ(line,"<<<<<") || StartsWithQ(line,">>>>>") || StartsWithQ(line,"=====")) {
-                has_conflict=true;
-            }
-        }ind_end;
+        }
+        if (ok) {
+            // delete original package records
+            ind_beg(algo::FileLine_curs,line,_db.base_recfile) {
+                if (Trimmed(line)!="") {
+                    acrtxn << "acr.delete "<<line << eol;
+                }
+            }ind_end;
+            // insert updated package records
+            ind_beg(algo::FileLine_curs,line,merged_recfile) {
+                acrtxn << "acr.replace "<<line << eol;
+                if (StartsWithQ(line,"<<<<<") || StartsWithQ(line,">>>>>") || StartsWithQ(line,"=====")) {
+                    has_conflict=true;
+                }
+            }ind_end;
 
-        CreateMergeFiles(package.package,algo_lib::SandboxDir(_db.base_sandbox),algo_lib::SandboxDir(_db.theirs_sandbox));
-        // log the entries
-        ind_beg(_db_mergefile_curs,mergefile,_db) {
-            _db.script << "# "<<mergefile<<eol;
-        }ind_end;
-        MergeFiles(package);
-        _db.script << "echo "<<strptr_ToBash(tempstr()<<"package "<<package.package<<" updated to "<<new_package_gitref)<<eol;
+            ok = CreateMergeFiles(package.package,algo_lib::WtDir(_db.base_sandbox),algo_lib::WtDir(_db.theirs_sandbox));
+        }
+        if (ok) {
+            // log the entries
+            ind_beg(_db_mergefile_curs,mergefile,_db) {
+                _db.script << "# "<<mergefile<<eol;
+            }ind_end;
+            MergeFiles(package);
+            _db.script << "echo "<<strptr_ToBash(tempstr()<<"package "<<package.package<<" updated to "<<new_package_gitref)<<eol;
+        }
+        if (!ok) {
+            break;
+        }
     }ind_end;
 
     // save acr transaction records to acrtxn_recfile
     // if the file has conflicts, let user finish
     // otherwise, apply transaction (subject to -dry_run)
-    if (rc==0) {
+    if (ok) {
         if (_db.cmdline.dry_run) {
             prlog(acrtxn);
         }
@@ -250,14 +292,13 @@ void apm::Main_Update() {
             _db.script << acr_ToCmdline(acr) << eol;
             _db.script << acr_ToCmdline(acr) << eol;
         }
-    }
-    // re-generate code after updating package
-    _db.script << "acr ssimfile -cmd 'mkdir -p data/$ns; touch data/$ns/$name.ssim' | bash"<<eol;
-    _db.script << "amc -report:N" << eol;
-    // create empty ssimfiles since they are required
-    _db.script << "git add data"<<eol;// add new ssimfiles
-    _db.script << "update-gitfile" << eol;
-    if (rc!=0) {
-        algo_lib::_db.exit_code=1;
+        // re-generate code after updating package
+        _db.script << "acr ssimfile -cmd 'mkdir -p data/$ns; touch data/$ns/$name.ssim' | bash"<<eol;
+        _db.script << "amc -report:N" << eol;
+        // create empty ssimfiles since they are required
+        _db.script << "git add data"<<eol;// add new ssimfiles
+        _db.script << "update-gitfile" << eol;
+    } else {
+        algo_lib::_db.exit_code++;
     }
 }

@@ -25,26 +25,53 @@
 
 // -----------------------------------------------------------------------------
 
+// Report a query match in a namespace that emits no C++.
+// A query names records, not namespaces, so ctype:amcdb.Tclass matches a ctype
+// whose namespace is an ssimdb projected to TypeScript alone. There is no C++
+// rendering of that record for the query to print. Whether a namespace emits
+// C++ at all is stated by its dmmeta.nscpp record, and the per-namespace code
+// buffers are allocated from that record, so the record is what a match is
+// tested against. Such a match is an error and counts toward the run's exit
+// code, which keeps a query that printed nothing from reporting success.
+// The report goes to stderr because query mode's stdout carries the generated
+// C++ and is consumed programmatically: a caller that wants code alone writes
+// 2>/dev/null, and one that folds the two streams together captures the report
+// beside the code. KEY names the kind of match, ctype or func; VALUE is the
+// matched name.
+static void ReportQueryNocpp(amc::FNs &ns, strptr key, strptr value) {
+    prerr("amc.query_nocpp"
+          <<Keyval("ns",ns.ns)
+          <<Keyval(key,value)
+          <<Keyval("comment","namespace has no dmmeta.nscpp record and emits no C++"));
+    algo_lib::_db.exit_code++;
+}
+
+// -----------------------------------------------------------------------------
+
 static void Query_Ctype(algo_lib::Regx &regx_value, cstring &out) {
     ind_beg(amc::_db_ctype_curs, ctype, amc::_db) {
         amc::FNs& ns = *ctype.p_ns;
         if (Regx_Match(regx_value, ctype.ctype)) {
-            amc::_db.report.n_ctype++;
-            ch_RemoveAll(*ns.cpp);
-            ch_RemoveAll(*ns.hdr);
-            ch_RemoveAll(*ns.inl);
-            Main_GenEnum(ns, ctype);
-            if (!ctype.c_cextern) {
-                GenStruct(ns, ctype);
-            }
-            if (ch_N(*ns.hdr)) {
-                out << *ns.hdr;
-            }
-            if (ch_N(*ns.inl)) {
-                out << *ns.inl;
-            }
-            if (ch_N(*ns.cpp)) {
-                out << *ns.cpp;
+            if (!ns.c_nscpp) {
+                ReportQueryNocpp(ns, "ctype", ctype.ctype);
+            } else {
+                amc::_db.report.n_ctype++;
+                ch_RemoveAll(*ns.cpp);
+                ch_RemoveAll(*ns.hdr);
+                ch_RemoveAll(*ns.inl);
+                Main_GenEnum(ns, ctype);
+                if (!ctype.c_cextern) {
+                    GenStruct(ns, ctype);
+                }
+                if (ch_N(*ns.hdr)) {
+                    out << *ns.hdr;
+                }
+                if (ch_N(*ns.inl)) {
+                    out << *ns.inl;
+                }
+                if (ch_N(*ns.cpp)) {
+                    out << *ns.cpp;
+                }
             }
         }
     }ind_end;
@@ -57,26 +84,30 @@ static void Query_Func(algo_lib::Regx &regx, cstring &out) {
         if (ch_N(func.proto) > 0 && !func.disable) {
             amc::FNs& ns = *func.p_ns;
             if (Regx_Match(regx, func.func)) {
-                ch_RemoveAll(*ns.cpp);
-                ch_RemoveAll(*ns.hdr);
-                ch_RemoveAll(*ns.inl);
-                if (amc::_db.cmdline.proto || func.extrn || func.deleted) {
-                    amc::_db.report.n_func++;
-                    tempstr proto;
-                    PrintFuncProto(func, NULL, proto,true);
-                    algo::InsertIndent(*ns.hdr, proto, 0);
+                if (!ns.c_nscpp) {
+                    ReportQueryNocpp(ns, "func", func.func);
                 } else {
-                    amc::_db.report.n_func++;
-                    PrintFuncBody(ns, func);
-                }
-                if (ch_N(*ns.hdr)) {
-                    out << *ns.hdr;
-                }
-                if (ch_N(*ns.inl)) {
-                    out << *ns.inl;
-                }
-                if (ch_N(*ns.cpp)) {
-                    out << *ns.cpp;
+                    ch_RemoveAll(*ns.cpp);
+                    ch_RemoveAll(*ns.hdr);
+                    ch_RemoveAll(*ns.inl);
+                    if (amc::_db.cmdline.proto || func.extrn || func.deleted) {
+                        amc::_db.report.n_func++;
+                        tempstr proto;
+                        PrintFuncProto(func, NULL, proto,true);
+                        algo::InsertIndent(*ns.hdr, proto, 0);
+                    } else {
+                        amc::_db.report.n_func++;
+                        PrintFuncBody(ns, func);
+                    }
+                    if (ch_N(*ns.hdr)) {
+                        out << *ns.hdr;
+                    }
+                    if (ch_N(*ns.inl)) {
+                        out << *ns.inl;
+                    }
+                    if (ch_N(*ns.cpp)) {
+                        out << *ns.cpp;
+                    }
                 }
             }
         }

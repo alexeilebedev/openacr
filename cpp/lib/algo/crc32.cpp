@@ -24,7 +24,6 @@
 
 #include "include/algo.h"
 
-#ifndef AOS_SSE42
 #define UPDC32(octet, crc) (crc_32_tab[((crc) ^ (octet)) & 0xff] ^ ((crc) >> 8))
 
 /* CRC polynomial 0xedb88320 */
@@ -74,6 +73,15 @@ static u32 crc_32_tab[] = {
     0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 };
 
+// IEEE 802.3/zlib CRC-32, table-driven; fixed regardless of build.
+u32 algo::CRC32IEEE(u32 old, const u8 *data, size_t len) {
+    rep_(i,int(len)) {
+        old = UPDC32(data[i], old);
+    }
+    return old;
+}
+
+#ifndef AOS_SSE42
 u32 algo::CRC32Step(u32 old, const u8 *data, size_t len) {
     rep_(i,int(len)) {
         old = UPDC32(data[i], old);
@@ -81,6 +89,15 @@ u32 algo::CRC32Step(u32 old, const u8 *data, size_t len) {
     return old;
 }
 #endif
+
+// FNV-1a 64-bit over LEN bytes at X, continuing from OLD; pass the offset
+// basis 14695981039346656037 to start a new hash.
+u64 algo::Fnv1a64Step(u64 old, const u8 *x, size_t len) {
+    rep_(i,i64(len)) {
+        old = (old ^ x[i]) * 1099511628211ULL;
+    }
+    return old;
+}
 
 // This is a low-quality random number generator suitable for simple tasks...
 // Set seed for srng state

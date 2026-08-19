@@ -30,8 +30,8 @@
 
 // --- lib_rl_FieldIdEnum
 
-enum lib_rl_FieldIdEnum {        // lib_rl.FieldId.value
-     lib_rl_FieldId_value   = 0
+enum lib_rl_FieldIdEnum {    // lib_rl.FieldId.value
+     lib_rl_FieldId_value
 };
 
 enum { lib_rl_FieldIdEnum_N = 1 };
@@ -57,7 +57,6 @@ struct Cmdline { // lib_rl.Cmdline
     // func:lib_rl.Cmdline..Ctor
     inline               Cmdline() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:lib_rl.Cmdline..Init
 inline void          Cmdline_Init(lib_rl::Cmdline& parent);
@@ -69,7 +68,6 @@ struct trace { // lib_rl.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:lib_rl.trace.String  printfmt:Tuple
 // func:lib_rl.trace..Print
@@ -89,7 +87,6 @@ struct FDb { // lib_rl.FDb
     bool                isatty;         //   false
     lib_rl::trace       trace;          //
 };
-
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_rl.FDb._db.InsertStrptrMaybe
@@ -114,6 +111,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_rl.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_rl.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_rl.FDb._db.XrefMaybe
@@ -145,7 +146,6 @@ struct FieldId { // lib_rl.FieldId: Field read helper
     inline               FieldId(lib_rl_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_rl.FieldId.value.GetEnum
 inline lib_rl_FieldIdEnum value_GetEnum(const lib_rl::FieldId& parent) __attribute__((nothrow));
@@ -183,7 +183,7 @@ inline void          FieldId_Init(lib_rl::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_rl.FieldId.String  printfmt:Raw
 // func:lib_rl.FieldId..Print
-void                 FieldId_Print(lib_rl::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_rl::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_rl { // gen:ns_func
 // func:lib_rl...StaticCheck

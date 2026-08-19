@@ -18,49 +18,74 @@
 // Exceptions: yes
 // Source: cpp/samp_meng/samp_meng.cpp -- Main source
 //
+// samp_meng matches orders: it folds an order log into a book and emits the
+// trades, new orders and cancels that follow.  It is a filter -- orders arrive
+// through lib_ams, as binary messages on a shm ring or as ssim text on stdin,
+// and its own output leaves the same way.
+// A pipe of orders carries no sequencing time, so an order is stamped with the
+// wall clock as it is matched.  That makes the matcher a function of when it
+// ran as well as of what it read, so two copies fed the same orders agree on
+// the trades and disagree on their timestamps.
 
-#include "include/algo.h"
 #include "include/algo.h"
 #include "include/samp_meng.h"
+#include "include/lib_ams.h"
 
-void samp_meng::In_TextMsg(samp_meng::TextMsg &) {
+// Emit a message through lib_ams: binary to the output shm, or ssim text on
+// stdout when the matcher is running at the end of a pipe.
+template<class T> static void Emit(T &msg) {
+    lib_ams::EmitMsg(Castbase(msg));
+}
+
+void samp_meng::In_SampMengTextMsg(ams::SampMengTextMsg &) {
+}
+
+// Bring SYMBOL into the book with its two order queues, and report whether it
+// was not there already.  A symbol's id is its position among the symbols, so
+// the order symbols are created in is part of the book's state.
+static bool CreateSymbol(ams::SampMengSymbol name) {
+    samp_meng::FSymbol &symbol = samp_meng::ind_symbol_GetOrCreate(name);
+    bool fresh = symbol.id == 0;
+    if (fresh) {
+        symbol.id = samp_meng::symbol_N();
+        for (int i=0; i<2; i++) {
+            samp_meng::FOrdq &ordq=samp_meng::ordq_Alloc();
+            ordq.p_symbol=&symbol;
+            samp_meng::ordq_XrefMaybe(ordq);
+        }
+    }
+    return fresh;
+}
+
+// Bring USER into the book, and report whether it was not there already.
+static bool CreateUser(i32 user) {
+    int n_user = samp_meng::ind_user_N();
+    samp_meng::ind_user_GetOrCreate(user);
+    return samp_meng::ind_user_N() > n_user;
 }
 
 // Create new symbol
-void samp_meng::In_NewSymbolReqMsg(samp_meng::NewSymbolReqMsg &msg) {
-    samp_meng::FSymbol &symbol = ind_symbol_GetOrCreate(msg.symbol);
-    if (symbol.id == 0) {
-        // key is already populated
-        symbol.id = symbol_N(); // first symbol gets 1
-        for (int i=0; i<2; i++) {
-            samp_meng::FOrdq &ordq=ordq_Alloc();
-            ordq.p_symbol=&symbol;
-            ordq_XrefMaybe(ordq); // will succeed;
-        }
-        samp_meng::NewSymbolMsg out(msg.symbol);
-        prlog(out);
+void samp_meng::In_SampMengNewSymbolReqMsg(ams::SampMengNewSymbolReqMsg &msg) {
+    if (CreateSymbol(msg.symbol)) {
+        ams::SampMengNewSymbolMsg out;
+        out.symbol = msg.symbol;
+        Emit(out);
     }
 }
 
-// Create new user.
-void samp_meng::In_NewUserReqMsg(samp_meng::NewUserReqMsg &msg) {
-    int n_user=ind_user_N();
-    samp_meng::FUser &user = ind_user_GetOrCreate(msg.user);
-    if (ind_user_N()>n_user) {
-        samp_meng::NewUserMsg out(user.user);
-        prlog(out);
+// Create new user
+void samp_meng::In_SampMengNewUserReqMsg(ams::SampMengNewUserReqMsg &msg) {
+    if (CreateUser(msg.user)) {
+        ams::SampMengNewUserMsg out;
+        out.user = msg.user;
+        Emit(out);
     }
 }
 
 // Add an order to the orderbook.
 // Publish any resulting trades; If order is IOC, cancel the remainder back,
 // otherwise post it to the book
-// USER_ID: owning user
-// SYMBOL: symbol associated with order
-// PRICE: order price
-// QTY: signed quantity; positive=buy, negative=sell
-// IOC: if TRUE, order is cancelled immediately after matching
-void samp_meng::In_NewOrderReqMsg(samp_meng::NewOrderReqMsg &msg) {
+void samp_meng::In_SampMengNewOrderReqMsg(ams::SampMengNewOrderReqMsg &msg) {
     samp_meng::FUser *user = ind_user_Find(msg.user);
     samp_meng::FSymbol *symbol = ind_symbol_Find(msg.symbol);
     samp_meng::FOrder *order=&order_Alloc();
@@ -68,20 +93,23 @@ void samp_meng::In_NewOrderReqMsg(samp_meng::NewOrderReqMsg &msg) {
         order->order = _db.next_order_id++;
         order->price = msg.price;
         order->p_ordq = &c_ordq_qFind(*symbol,msg.qty<0);
-        order->time = algo::CurrUnTime();
+        order->time = _db.now;
         order->qty = labs(msg.qty);
         order->p_user = user;
         order->ordkey.price = algo::i64_NegateIf(order->price.value, msg.qty>0);
-        order->ordkey.time = -order->time.value;// oldest orders first
-        order_XrefMaybe(*order);// will succeed;
+        order->ordkey.time = -order->time.value;
+        order_XrefMaybe(*order);
     }
     samp_meng::FOrdq *xside=&c_ordq_qFind(*symbol,msg.qty>=0);
     samp_meng::FOrder *xorder = 0;
     while (order->qty !=0 && (xorder = bh_order_First(*xside))!=0) {
-        if (msg.qty>0 ? (order->price >= xorder->price) : (order->price <= xorder->price)){
+        if (msg.qty>0 ? (order->price.value >= xorder->price.value) : (order->price.value <= xorder->price.value)){
             int matchqty = i32_Min(order->qty,xorder->qty);
-            samp_meng::OrderTradeMsg out(xorder->order,matchqty,xorder->price);
-            prlog(out);
+            ams::SampMengOrderTradeMsg out;
+            out.order = xorder->order;
+            out.qty = matchqty;
+            out.price = xorder->price;
+            Emit(out);
             order->qty -= matchqty;
             xorder->qty -= matchqty;
             if (xorder->qty==0) {
@@ -90,8 +118,13 @@ void samp_meng::In_NewOrderReqMsg(samp_meng::NewOrderReqMsg &msg) {
         }
     }
     if (order->qty !=0 && !msg.ioc) {
-        samp_meng::NewOrderMsg out(order->time,order->price,order->order,msg.symbol,order->qty);
-        prlog(out);
+        ams::SampMengNewOrderMsg out;
+        out.time = order->time;
+        out.price = order->price;
+        out.order = order->order;
+        out.symbol = msg.symbol;
+        out.qty = order->qty;
+        Emit(out);
     } else {
         CancelOrder(order,false);
         order=NULL;
@@ -101,21 +134,20 @@ void samp_meng::In_NewOrderReqMsg(samp_meng::NewOrderReqMsg &msg) {
 // Cancel a single order
 void samp_meng::CancelOrder(samp_meng::FOrder *order, bool notify) {
     if (notify) {
-        samp_meng::CancelOrderMsg out(order->order);
-        prlog(out);
+        ams::SampMengCancelOrderMsg out;
+        out.order = order->order;
+        Emit(out);
     }
     order_Delete(*order);
 }
 
-// Cancel a single order
-void samp_meng::In_CancelReqMsg(samp_meng::CancelReqMsg &msg) {
+void samp_meng::In_SampMengCancelReqMsg(ams::SampMengCancelReqMsg &msg) {
     if (samp_meng::FOrder *order = ind_order_Find(msg.order)) {
         CancelOrder(order,true);
     }
 }
 
-// Cancel all orders for user
-void samp_meng::In_MassCancelReqMsg(samp_meng::MassCancelReqMsg &msg) {
+void samp_meng::In_SampMengMassCancelReqMsg(ams::SampMengMassCancelReqMsg &msg) {
     if (samp_meng::FUser *user = ind_user_Find(msg.user)) {
         while (!zd_order_EmptyQ(*user)) {
             CancelOrder(zd_order_First(*user),true);
@@ -123,35 +155,25 @@ void samp_meng::In_MassCancelReqMsg(samp_meng::MassCancelReqMsg &msg) {
     }
 }
 
-void samp_meng::cd_fdin_eof_Step() {
-    fdin_RemoveAll();
-}
-
-// Read next input line from stdin
-void samp_meng::cd_fdin_read_Step() {
-    samp_meng::FFdin &fdin = *cd_fdin_read_RotateFirst();
-    algo::strptr msgstr = in_GetMsg(fdin);
-    if (msgstr.elems) {
+// Route an inbound lib_ams message into InDispatch.
+// Messages are ams.SampMeng* types (ams.MsgHeader-based).
+// In stdio mode, lib_ams parses text into InputLineMsg; re-parse as ams message.
+static void OnRecv(lib_ams::FShm &shm, ams::MsgHeader &msg) {
+    (void)shm;
+    samp_meng::_db.now = algo::CurrUnTime();
+    samp_meng::_db.n_in++;
+    if (ams::InputLineMsg *ilm = ams::InputLineMsg_Castdown(msg)) {
+        algo::strptr line = Trimmed(ams::payload_Getary(*ilm));
         algo::ByteAry buf;
-        if (In_ReadStrptrMaybe(msgstr,buf)) {
-            samp_meng::MsgHeader *msg=(samp_meng::MsgHeader*)buf.ary_elems;
-            tempstr out;
-            In_Print(out,*msg,msg->length);
-            prlog("input: "<<out);
-            samp_meng::InDispatch(*msg);
-            prlog("");
-        } else if (Trimmed(msgstr)!="") {
-            prlog("bad input: "<<msgstr);
+        if (samp_meng::In_ReadStrptrMaybe(line, buf)) {
+            samp_meng::InDispatch(*(ams::MsgHeader*)buf.ary_elems);
         }
-        in_SkipMsg(fdin);
+    } else {
+        samp_meng::InDispatch(msg);
     }
 }
 
 void samp_meng::Main() {
-    samp_meng::FFdin &fdin = fdin_Alloc();
-    fdin_XrefMaybe(fdin);
-    algo::Fildes fd(0);
-    algo::SetBlockingMode(fd,false);
-    in_BeginRead(fdin,fd);
+    lib_ams::Init(_db.cmdline.proc, OnRecv);
     samp_meng::MainLoop();
 }

@@ -61,7 +61,7 @@ inline atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_Last() {
 
 // --- atf_fuzz.FDb.fuzzstrat.N
 // Return number of items in the pool
-inline i32 atf_fuzz::fuzzstrat_N() {
+inline i64 atf_fuzz::fuzzstrat_N() {
     return _db.fuzzstrat_n;
 }
 
@@ -103,7 +103,7 @@ inline atf_fuzz::FTarget* atf_fuzz::target_Last() {
 
 // --- atf_fuzz.FDb.target.N
 // Return number of items in the pool
-inline i32 atf_fuzz::target_N() {
+inline i64 atf_fuzz::target_N() {
     return _db.target_n;
 }
 

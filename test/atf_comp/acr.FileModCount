@@ -1,0 +1,6 @@
+# start acr cmd:"$bindir/acr -in:$tempdir -insert -write -print:N"
+acr <- dmmeta.dispsig  dispsig:xx.yy  signature:9
+acr <- dmmeta.ctype  ctype:xx.Yy  comment:""
+# eof acr
+acr -> report.acr  n_select:2  n_insert:2  n_delete:0  n_ignore:0  n_update:0  n_file_mod:2  n_badline:0
+# exit acr code:0

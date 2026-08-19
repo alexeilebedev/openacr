@@ -33,8 +33,8 @@
 
 // --- atf_ci_FieldIdEnum
 
-enum atf_ci_FieldIdEnum {        // atf_ci.FieldId.value
-     atf_ci_FieldId_value   = 0
+enum atf_ci_FieldIdEnum {    // atf_ci.FieldId.value
+     atf_ci_FieldId_value
 };
 
 enum { atf_ci_FieldIdEnum_N = 1 };
@@ -57,22 +57,25 @@ enum atf_ci_TableIdEnum {                    // atf_ci.TableId.value
     ,atf_ci_TableId_dev_noindent      = 5    // dev.noindent -> atf_ci.FNoindent
     ,atf_ci_TableId_dmmeta_Ns         = 6    // dmmeta.Ns -> atf_ci.FNs
     ,atf_ci_TableId_dmmeta_ns         = 6    // dmmeta.ns -> atf_ci.FNs
-    ,atf_ci_TableId_dev_Readmefile    = 7    // dev.Readmefile -> atf_ci.FReadmefile
-    ,atf_ci_TableId_dev_readmefile    = 7    // dev.readmefile -> atf_ci.FReadmefile
-    ,atf_ci_TableId_dev_Scriptfile    = 8    // dev.Scriptfile -> atf_ci.FScriptfile
-    ,atf_ci_TableId_dev_scriptfile    = 8    // dev.scriptfile -> atf_ci.FScriptfile
-    ,atf_ci_TableId_dmmeta_Ssimfile   = 9    // dmmeta.Ssimfile -> atf_ci.FSsimfile
-    ,atf_ci_TableId_dmmeta_ssimfile   = 9    // dmmeta.ssimfile -> atf_ci.FSsimfile
-    ,atf_ci_TableId_dev_Targsrc       = 10   // dev.Targsrc -> atf_ci.FTargsrc
-    ,atf_ci_TableId_dev_targsrc       = 10   // dev.targsrc -> atf_ci.FTargsrc
+    ,atf_ci_TableId_dev_Package       = 7    // dev.Package -> atf_ci.FPackage
+    ,atf_ci_TableId_dev_package       = 7    // dev.package -> atf_ci.FPackage
+    ,atf_ci_TableId_dev_Pkggen        = 8    // dev.Pkggen -> atf_ci.FPkggen
+    ,atf_ci_TableId_dev_pkggen        = 8    // dev.pkggen -> atf_ci.FPkggen
+    ,atf_ci_TableId_dev_Readmefile    = 9    // dev.Readmefile -> atf_ci.FReadmefile
+    ,atf_ci_TableId_dev_readmefile    = 9    // dev.readmefile -> atf_ci.FReadmefile
+    ,atf_ci_TableId_dev_Scriptfile    = 10   // dev.Scriptfile -> atf_ci.FScriptfile
+    ,atf_ci_TableId_dev_scriptfile    = 10   // dev.scriptfile -> atf_ci.FScriptfile
+    ,atf_ci_TableId_dmmeta_Ssimfile   = 11   // dmmeta.Ssimfile -> atf_ci.FSsimfile
+    ,atf_ci_TableId_dmmeta_ssimfile   = 11   // dmmeta.ssimfile -> atf_ci.FSsimfile
+    ,atf_ci_TableId_dev_Targsrc       = 12   // dev.Targsrc -> atf_ci.FTargsrc
+    ,atf_ci_TableId_dev_targsrc       = 12   // dev.targsrc -> atf_ci.FTargsrc
 };
 
-enum { atf_ci_TableIdEnum_N = 22 };
+enum { atf_ci_TableIdEnum_N = 26 };
 
 namespace atf_ci { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace atf_ci { // gen:ns_tclass_field
-extern const char *atf_ci_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Builddir; }
@@ -83,6 +86,8 @@ namespace dev { struct Gitfile; }
 namespace dev { struct Msgfile; }
 namespace dev { struct Noindent; }
 namespace dmmeta { struct Ns; }
+namespace dev { struct Package; }
+namespace dev { struct Pkggen; }
 namespace dev { struct Readmefile; }
 namespace dev { struct Scriptfile; }
 namespace dmmeta { struct Ssimfile; }
@@ -100,6 +105,8 @@ namespace atf_ci { struct _db_targsrc_curs; }
 namespace atf_ci { struct _db_msgfile_curs; }
 namespace atf_ci { struct _db_file_curs; }
 namespace atf_ci { struct _db_cipackage_curs; }
+namespace atf_ci { struct _db_pkggen_curs; }
+namespace atf_ci { struct _db_package_curs; }
 namespace atf_ci { struct FBuilddir; }
 namespace atf_ci { struct FCfg; }
 namespace atf_ci { struct FCipackage; }
@@ -111,6 +118,8 @@ namespace atf_ci { struct FGitfile; }
 namespace atf_ci { struct FMsgfile; }
 namespace atf_ci { struct FNoindent; }
 namespace atf_ci { struct FNs; }
+namespace atf_ci { struct FPackage; }
+namespace atf_ci { struct FPkggen; }
 namespace atf_ci { struct FReadmefile; }
 namespace atf_ci { struct FScriptfile; }
 namespace atf_ci { struct FSsimfile; }
@@ -131,17 +140,6 @@ namespace atf_ci { // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_gsymbol
     extern const dev::GitfilePkey dev_gitfile_conf_copyright_txt; // "conf/copyright.txt"
 } // gen:ns_gsymbol
-namespace atf_ci { // gen:ns_gsymbol
-    extern const char* dev_scriptfile_bin_find_non_copyrighted; // "bin/find-non-copyrighted"
-    extern const char* dev_scriptfile_bin_fix_gen_conflicts; // "bin/fix-gen-conflicts"
-    extern const char* dev_scriptfile_bin_msloc_pl; // "bin/msloc.pl"
-    extern const char* dev_scriptfile_bin_update_gitfile; // "bin/update-gitfile"
-    extern const char* dev_scriptfile_bin_update_hdr; // "bin/update-hdr"
-    extern const char* dev_scriptfile_bin_update_scriptfile; // "bin/update-scriptfile"
-} // gen:ns_gsymbol
-namespace atf_ci { // gen:ns_gsymbol
-    extern const dmmeta::SsimfilePkey dmmeta_ssimfile_atfdb_cipackage; // "atfdb.cipackage"
-} // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_print_struct
 
 // --- atf_ci.FBuilddir
@@ -150,7 +148,7 @@ namespace atf_ci { // gen:ns_print_struct
 // global access: ind_builddir (Thash, hash field builddir)
 struct FBuilddir { // atf_ci.FBuilddir
     algo::Smallstr50     builddir;               // Primary key - uname.compiler.cfg-arch
-    algo::Comment        comment;                //
+    algo::cstring        comment;                //
     atf_ci::FBuilddir*   ind_builddir_next;      // hash next
     u32                  ind_builddir_hashval;   // hash value
     // func:atf_ci.FBuilddir..AssignOp
@@ -167,7 +165,6 @@ private:
     friend void                 builddir_RemoveAll() __attribute__((nothrow));
     friend void                 builddir_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FBuilddir.base.CopyOut
 void                 builddir_CopyOut(atf_ci::FBuilddir &row, dev::Builddir &out) __attribute__((nothrow));
@@ -176,16 +173,16 @@ void                 builddir_CopyOut(atf_ci::FBuilddir &row, dev::Builddir &out
 void                 builddir_CopyIn(atf_ci::FBuilddir &row, dev::Builddir &in) __attribute__((nothrow));
 
 // func:atf_ci.FBuilddir.uname.Get
-algo::Smallstr50     uname_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         uname_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FBuilddir.compiler.Get
-algo::Smallstr50     compiler_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         compiler_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FBuilddir.cfg.Get
-algo::Smallstr50     cfg_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         cfg_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FBuilddir.arch.Get
-algo::Smallstr50     arch_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         arch_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:atf_ci.FBuilddir..Init
@@ -199,7 +196,7 @@ void                 FBuilddir_Uninit(atf_ci::FBuilddir& builddir) __attribute__
 struct FCfg { // atf_ci.FCfg
     algo::Smallstr50   cfg;       //
     algo::Smallstr5    suffix;    //
-    algo::Comment      comment;   //
+    algo::cstring      comment;   //
 private:
     // func:atf_ci.FCfg..Ctor
     inline               FCfg() __attribute__((nothrow));
@@ -208,7 +205,6 @@ private:
     friend void                 cfg_RemoveAll() __attribute__((nothrow));
     friend void                 cfg_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FCfg.base.CopyOut
 void                 cfg_CopyOut(atf_ci::FCfg &row, dev::Cfg &out) __attribute__((nothrow));
@@ -225,7 +221,7 @@ struct FCipackage { // atf_ci.FCipackage
     bool                remove;      //   false
     bool                build;       //   false
     algo::Smallstr100   reinstall;   //
-    algo::Comment       comment;     //
+    algo::cstring       comment;     //
 private:
     // func:atf_ci.FCipackage..Ctor
     inline               FCipackage() __attribute__((nothrow));
@@ -234,7 +230,6 @@ private:
     friend void                 cipackage_RemoveAll() __attribute__((nothrow));
     friend void                 cipackage_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FCipackage.base.CopyOut
 void                 cipackage_CopyOut(atf_ci::FCipackage &row, atfdb::Cipackage &out) __attribute__((nothrow));
@@ -253,19 +248,22 @@ inline void          FCipackage_Init(atf_ci::FCipackage& cipackage);
 // global access: ind_citest (Thash, hash field citest)
 struct FCitest { // atf_ci.FCitest
     algo::Smallstr50           citest;               // Primary key
-    algo::Smallstr50           cijob;                //   "test"  CI job in which this test runs
+    algo::Smallstr50           cijob;                //   "normalize"  CI job in which this test runs
     bool                       sandbox;              //   false  Run test in sandbox
-    algo::Comment              comment;              //
+    i32                        timeout;              //   600  Max runtime budget for this citest, seconds (>= observed runtime doubled, floored at 10min)
+    bool                       failfast;             //   false  A failure ends the run: remaining citests are skipped
+    algo::cstring              comment;              //
     i32                        nerr;                 //   0
     atf_ci::citest_step_hook   step;                 //   NULL  Pointer to a function
+    algo::cstring              srcfile;              //
     atf_ci::FCitest*           ind_citest_next;      // hash next
     u32                        ind_citest_hashval;   // hash value
     // reftype Hook of atf_ci.FCitest.step prohibits copy
     // func:atf_ci.FCitest..AssignOp
-    inline atf_ci::FCitest& operator =(const atf_ci::FCitest &rhs) = delete;
+    atf_ci::FCitest&     operator =(const atf_ci::FCitest &rhs) = delete;
     // reftype Hook of atf_ci.FCitest.step prohibits copy
     // func:atf_ci.FCitest..CopyCtor
-    inline               FCitest(const atf_ci::FCitest &rhs) = delete;
+    FCitest(const atf_ci::FCitest &rhs) = delete;
 private:
     // func:atf_ci.FCitest..Ctor
     inline               FCitest() __attribute__((nothrow));
@@ -276,7 +274,6 @@ private:
     friend void                 citest_RemoveAll() __attribute__((nothrow));
     friend void                 citest_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FCitest.base.CopyOut
 void                 citest_CopyOut(atf_ci::FCitest &row, atfdb::Citest &out) __attribute__((nothrow));
@@ -301,7 +298,6 @@ struct trace { // atf_ci.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:atf_ci.trace.String  printfmt:Tuple
 // func:atf_ci.trace..Print
@@ -311,63 +307,65 @@ void                 trace_Print(atf_ci::trace& row, algo::cstring& str) __attri
 // create: atf_ci.FDb._db (Global)
 struct FDb { // atf_ci.FDb: In-memory database for atf_ci
     command::atf_ci         cmdline;                        //
-    atf_ci::FCitest*        citest_lary[32];                // level array
-    i32                     citest_n;                       // number of elements in array
-    atf_ci::FSsimfile*      ssimfile_lary[32];              // level array
-    i32                     ssimfile_n;                     // number of elements in array
+    atf_ci::FCitest*        citest_lary[36];                // level array
+    i64                     citest_n;                       // number of elements in array
+    atf_ci::FSsimfile*      ssimfile_lary[36];              // level array
+    i64                     ssimfile_n;                     // number of elements in array
     atf_ci::FSsimfile**     ind_ssimfile_buckets_elems;     // pointer to bucket array
     i32                     ind_ssimfile_buckets_n;         // number of elements in bucket array
     i32                     ind_ssimfile_n;                 // number of elements in the hash table
     atf_ci::FCitest*        c_citest;                       // optional pointer
-    atf_ci::FScriptfile*    scriptfile_lary[32];            // level array
-    i32                     scriptfile_n;                   // number of elements in array
+    atf_ci::FScriptfile*    scriptfile_lary[36];            // level array
+    i64                     scriptfile_n;                   // number of elements in array
     atf_ci::FScriptfile**   ind_scriptfile_buckets_elems;   // pointer to bucket array
     i32                     ind_scriptfile_buckets_n;       // number of elements in bucket array
     i32                     ind_scriptfile_n;               // number of elements in the hash table
-    atf_ci::FNs*            ns_lary[32];                    // level array
-    i32                     ns_n;                           // number of elements in array
+    atf_ci::FNs*            ns_lary[36];                    // level array
+    i64                     ns_n;                           // number of elements in array
     atf_ci::FNs**           ind_ns_buckets_elems;           // pointer to bucket array
     i32                     ind_ns_buckets_n;               // number of elements in bucket array
     i32                     ind_ns_n;                       // number of elements in the hash table
-    atf_ci::FReadmefile*    readmefile_lary[32];            // level array
-    i32                     readmefile_n;                   // number of elements in array
-    atf_ci::FBuilddir*      builddir_lary[32];              // level array
-    i32                     builddir_n;                     // number of elements in array
-    atf_ci::FCfg*           cfg_lary[32];                   // level array
-    i32                     cfg_n;                          // number of elements in array
+    atf_ci::FReadmefile*    readmefile_lary[36];            // level array
+    i64                     readmefile_n;                   // number of elements in array
+    atf_ci::FBuilddir*      builddir_lary[36];              // level array
+    i64                     builddir_n;                     // number of elements in array
+    atf_ci::FCfg*           cfg_lary[36];                   // level array
+    i64                     cfg_n;                          // number of elements in array
     atf_ci::FBuilddir**     ind_builddir_buckets_elems;     // pointer to bucket array
     i32                     ind_builddir_buckets_n;         // number of elements in bucket array
     i32                     ind_builddir_n;                 // number of elements in the hash table
-    atf_ci::FGitfile*       gitfile_lary[32];               // level array
-    i32                     gitfile_n;                      // number of elements in array
+    atf_ci::FGitfile*       gitfile_lary[36];               // level array
+    i64                     gitfile_n;                      // number of elements in array
     atf_ci::FGitfile**      ind_gitfile_buckets_elems;      // pointer to bucket array
     i32                     ind_gitfile_buckets_n;          // number of elements in bucket array
     i32                     ind_gitfile_n;                  // number of elements in the hash table
-    atf_ci::FNoindent*      noindent_lary[32];              // level array
-    i32                     noindent_n;                     // number of elements in array
-    atf_ci::FTargsrc*       targsrc_lary[32];               // level array
-    i32                     targsrc_n;                      // number of elements in array
-    atf_ci::FMsgfile*       msgfile_lary[32];               // level array
-    i32                     msgfile_n;                      // number of elements in array
+    atf_ci::FNoindent*      noindent_lary[36];              // level array
+    i64                     noindent_n;                     // number of elements in array
+    atf_ci::FTargsrc*       targsrc_lary[36];               // level array
+    i64                     targsrc_n;                      // number of elements in array
+    atf_ci::FMsgfile*       msgfile_lary[36];               // level array
+    i64                     msgfile_n;                      // number of elements in array
     atf_ci::FCitest**       ind_citest_buckets_elems;       // pointer to bucket array
     i32                     ind_citest_buckets_n;           // number of elements in bucket array
     i32                     ind_citest_n;                   // number of elements in the hash table
-    atf_ci::File*           file_lary[32];                  // level array
-    i32                     file_n;                         // number of elements in array
+    atf_ci::File*           file_lary[36];                  // level array
+    i64                     file_n;                         // number of elements in array
     atf_ci::File**          ind_file_buckets_elems;         // pointer to bucket array
     i32                     ind_file_buckets_n;             // number of elements in bucket array
     i32                     ind_file_n;                     // number of elements in the hash table
     bool                    sandbox_need_init;              //   false
-    atf_ci::FCipackage*     cipackage_lary[32];             // level array
-    i32                     cipackage_n;                    // number of elements in array
+    atf_ci::FCipackage*     cipackage_lary[36];             // level array
+    i64                     cipackage_n;                    // number of elements in array
     bool                    called_npm_install;             //   false
+    algo::cstring           modfiles;                       // GitModifiedFiles output from end of previous citest
+    atf_ci::FPkggen*        pkggen_lary[36];                // level array
+    i64                     pkggen_n;                       // number of elements in array
+    atf_ci::FPackage*       package_lary[36];               // level array
+    i64                     package_n;                      // number of elements in array
     atf_ci::trace           trace;                          //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_ci.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_ci.FDb.cmdline (and any base command line)
+// via atf_ci_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:atf_ci.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -404,6 +402,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:atf_ci.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:atf_ci.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_ci.FDb._db.XrefMaybe
@@ -434,7 +436,7 @@ inline atf_ci::FCitest* citest_Find(u64 t) __attribute__((__warn_unused_result__
 inline atf_ci::FCitest* citest_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.citest.N
-inline i32           citest_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           citest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.citest.RemoveAll
 void                 citest_RemoveAll() __attribute__((nothrow));
@@ -474,7 +476,7 @@ inline atf_ci::FSsimfile* ssimfile_Find(u64 t) __attribute__((__warn_unused_resu
 inline atf_ci::FSsimfile* ssimfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.ssimfile.N
-inline i32           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:atf_ci.FDb.ssimfile.RemoveLast
 void                 ssimfile_RemoveLast() __attribute__((nothrow));
@@ -539,7 +541,7 @@ inline atf_ci::FScriptfile* scriptfile_Find(u64 t) __attribute__((__warn_unused_
 inline atf_ci::FScriptfile* scriptfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.scriptfile.N
-inline i32           scriptfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           scriptfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.scriptfile.RemoveAll
 void                 scriptfile_RemoveAll() __attribute__((nothrow));
@@ -563,6 +565,9 @@ atf_ci::FScriptfile* ind_scriptfile_Find(const algo::strptr& key) __attribute__(
 // Look up row by key and return reference. Throw exception if not found
 // func:atf_ci.FDb.ind_scriptfile.FindX
 atf_ci::FScriptfile& ind_scriptfile_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_ci.FDb.ind_scriptfile.GetOrCreate
+atf_ci::FScriptfile* ind_scriptfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_ci.FDb.ind_scriptfile.N
 inline i32           ind_scriptfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -604,7 +609,7 @@ inline atf_ci::FNs*  ns_Find(u64 t) __attribute__((__warn_unused_result__, nothr
 inline atf_ci::FNs*  ns_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.ns.N
-inline i32           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.ns.RemoveAll
 void                 ns_RemoveAll() __attribute__((nothrow));
@@ -672,7 +677,7 @@ inline atf_ci::FReadmefile* readmefile_Find(u64 t) __attribute__((__warn_unused_
 inline atf_ci::FReadmefile* readmefile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.readmefile.N
-inline i32           readmefile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           readmefile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.readmefile.RemoveAll
 void                 readmefile_RemoveAll() __attribute__((nothrow));
@@ -712,7 +717,7 @@ inline atf_ci::FBuilddir* builddir_Find(u64 t) __attribute__((__warn_unused_resu
 inline atf_ci::FBuilddir* builddir_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.builddir.N
-inline i32           builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.builddir.RemoveAll
 void                 builddir_RemoveAll() __attribute__((nothrow));
@@ -752,7 +757,7 @@ inline atf_ci::FCfg* cfg_Find(u64 t) __attribute__((__warn_unused_result__, noth
 inline atf_ci::FCfg* cfg_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.cfg.N
-inline i32           cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.cfg.RemoveAll
 void                 cfg_RemoveAll() __attribute__((nothrow));
@@ -820,7 +825,7 @@ inline atf_ci::FGitfile* gitfile_Find(u64 t) __attribute__((__warn_unused_result
 inline atf_ci::FGitfile* gitfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.gitfile.N
-inline i32           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.gitfile.RemoveAll
 void                 gitfile_RemoveAll() __attribute__((nothrow));
@@ -888,7 +893,7 @@ inline atf_ci::FNoindent* noindent_Find(u64 t) __attribute__((__warn_unused_resu
 inline atf_ci::FNoindent* noindent_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.noindent.N
-inline i32           noindent_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           noindent_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.noindent.RemoveAll
 void                 noindent_RemoveAll() __attribute__((nothrow));
@@ -928,7 +933,7 @@ inline atf_ci::FTargsrc* targsrc_Find(u64 t) __attribute__((__warn_unused_result
 inline atf_ci::FTargsrc* targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.targsrc.N
-inline i32           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.targsrc.RemoveAll
 void                 targsrc_RemoveAll() __attribute__((nothrow));
@@ -968,7 +973,7 @@ inline atf_ci::FMsgfile* msgfile_Find(u64 t) __attribute__((__warn_unused_result
 inline atf_ci::FMsgfile* msgfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.msgfile.N
-inline i32           msgfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           msgfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.msgfile.RemoveAll
 void                 msgfile_RemoveAll() __attribute__((nothrow));
@@ -1032,7 +1037,7 @@ inline atf_ci::File* file_Find(u64 t) __attribute__((__warn_unused_result__, not
 inline atf_ci::File* file_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.file.N
-inline i32           file_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           file_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.file.RemoveAll
 void                 file_RemoveAll() __attribute__((nothrow));
@@ -1100,7 +1105,7 @@ inline atf_ci::FCipackage* cipackage_Find(u64 t) __attribute__((__warn_unused_re
 inline atf_ci::FCipackage* cipackage_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_ci.FDb.cipackage.N
-inline i32           cipackage_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           cipackage_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_ci.FDb.cipackage.RemoveAll
 void                 cipackage_RemoveAll() __attribute__((nothrow));
@@ -1114,6 +1119,86 @@ inline atf_ci::FCipackage& cipackage_qFind(u64 t) __attribute__((nothrow, pure))
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_ci.FDb.cipackage.XrefMaybe
 bool                 cipackage_XrefMaybe(atf_ci::FCipackage &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_ci.FDb.pkggen.Alloc
+atf_ci::FPkggen&     pkggen_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.pkggen.AllocMaybe
+atf_ci::FPkggen*     pkggen_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.pkggen.InsertMaybe
+atf_ci::FPkggen*     pkggen_InsertMaybe(const dev::Pkggen &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.pkggen.AllocMem
+void*                pkggen_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_ci.FDb.pkggen.EmptyQ
+inline bool          pkggen_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.pkggen.Find
+inline atf_ci::FPkggen* pkggen_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.pkggen.Last
+inline atf_ci::FPkggen* pkggen_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_ci.FDb.pkggen.N
+inline i64           pkggen_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_ci.FDb.pkggen.RemoveAll
+void                 pkggen_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.pkggen.RemoveLast
+void                 pkggen_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.pkggen.qFind
+inline atf_ci::FPkggen& pkggen_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.pkggen.XrefMaybe
+bool                 pkggen_XrefMaybe(atf_ci::FPkggen &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_ci.FDb.package.Alloc
+atf_ci::FPackage&    package_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.package.AllocMaybe
+atf_ci::FPackage*    package_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.package.InsertMaybe
+atf_ci::FPackage*    package_InsertMaybe(const dev::Package &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.package.AllocMem
+void*                package_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_ci.FDb.package.EmptyQ
+inline bool          package_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.package.Find
+inline atf_ci::FPackage* package_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.package.Last
+inline atf_ci::FPackage* package_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_ci.FDb.package.N
+inline i64           package_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_ci.FDb.package.RemoveAll
+void                 package_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.package.RemoveLast
+void                 package_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.package.qFind
+inline atf_ci::FPackage& package_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.package.XrefMaybe
+bool                 package_XrefMaybe(atf_ci::FPackage &row);
 
 // cursor points to valid item
 // func:atf_ci.FDb.citest_curs.Reset
@@ -1271,6 +1356,30 @@ inline void          _db_cipackage_curs_Next(_db_cipackage_curs &curs) __attribu
 // item access
 // func:atf_ci.FDb.cipackage_curs.Access
 inline atf_ci::FCipackage& _db_cipackage_curs_Access(_db_cipackage_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.pkggen_curs.Reset
+inline void          _db_pkggen_curs_Reset(_db_pkggen_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.pkggen_curs.ValidQ
+inline bool          _db_pkggen_curs_ValidQ(_db_pkggen_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_ci.FDb.pkggen_curs.Next
+inline void          _db_pkggen_curs_Next(_db_pkggen_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_ci.FDb.pkggen_curs.Access
+inline atf_ci::FPkggen& _db_pkggen_curs_Access(_db_pkggen_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.package_curs.Reset
+inline void          _db_package_curs_Reset(_db_package_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.package_curs.ValidQ
+inline bool          _db_package_curs_ValidQ(_db_package_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_ci.FDb.package_curs.Next
+inline void          _db_package_curs_Next(_db_package_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_ci.FDb.package_curs.Access
+inline atf_ci::FPackage& _db_package_curs_Access(_db_package_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_ci.FDb..Init
 void                 FDb_Init();
@@ -1282,7 +1391,6 @@ struct FExecLimit { // atf_ci.FExecLimit
     // func:atf_ci.FExecLimit..Ctor
     inline               FExecLimit() __attribute__((nothrow));
 };
-
 
 // --- atf_ci.FGitfile
 // create: atf_ci.FDb.gitfile (Lary)
@@ -1315,7 +1423,6 @@ private:
     friend void                 gitfile_RemoveAll() __attribute__((nothrow));
     friend void                 gitfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FGitfile.base.CopyOut
 void                 gitfile_CopyOut(atf_ci::FGitfile &row, dev::Gitfile &out) __attribute__((nothrow));
@@ -1324,7 +1431,7 @@ void                 gitfile_CopyOut(atf_ci::FGitfile &row, dev::Gitfile &out) _
 void                 gitfile_CopyIn(atf_ci::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
 
 // func:atf_ci.FGitfile.ext.Get
-algo::Smallstr50     ext_Get(atf_ci::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(atf_ci::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_ci.FGitfile.c_noindent.InsertMaybe
@@ -1359,7 +1466,7 @@ void                 FGitfile_Uninit(atf_ci::FGitfile& gitfile) __attribute__((n
 struct FMsgfile { // atf_ci.FMsgfile
     algo::Smallstr200   gitfile;   // Name of file containing messages
     bool                strict;    //   false  Delete unrecognizable lines (except comments)
-    algo::Comment       comment;   //
+    algo::cstring       comment;   //
 private:
     // func:atf_ci.FMsgfile..Ctor
     inline               FMsgfile() __attribute__((nothrow));
@@ -1368,7 +1475,6 @@ private:
     friend void                 msgfile_RemoveAll() __attribute__((nothrow));
     friend void                 msgfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FMsgfile.base.CopyOut
 void                 msgfile_CopyOut(atf_ci::FMsgfile &row, dev::Msgfile &out) __attribute__((nothrow));
@@ -1386,7 +1492,7 @@ inline void          FMsgfile_Init(atf_ci::FMsgfile& msgfile);
 // access: atf_ci.FGitfile.c_noindent (Ptr)
 struct FNoindent { // atf_ci.FNoindent
     algo::Smallstr200   gitfile;   //
-    algo::Comment       comment;   //
+    algo::cstring       comment;   //
     // func:atf_ci.FNoindent..AssignOp
     inline atf_ci::FNoindent& operator =(const atf_ci::FNoindent &rhs) = delete;
     // func:atf_ci.FNoindent..CopyCtor
@@ -1401,7 +1507,6 @@ private:
     friend void                 noindent_RemoveAll() __attribute__((nothrow));
     friend void                 noindent_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FNoindent.base.CopyOut
 void                 noindent_CopyOut(atf_ci::FNoindent &row, dev::Noindent &out) __attribute__((nothrow));
@@ -1422,7 +1527,7 @@ struct FNs { // atf_ci.FNs
     algo::Smallstr16   ns;               // Namespace name (primary key)
     algo::Smallstr50   nstype;           // Namespace type
     algo::Smallstr50   license;          // Associated license
-    algo::Comment      comment;          //
+    algo::cstring      comment;          //
     // func:atf_ci.FNs..AssignOp
     inline atf_ci::FNs&  operator =(const atf_ci::FNs &rhs) = delete;
     // func:atf_ci.FNs..CopyCtor
@@ -1437,7 +1542,6 @@ private:
     friend void                 ns_RemoveAll() __attribute__((nothrow));
     friend void                 ns_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FNs.base.CopyOut
 void                 ns_CopyOut(atf_ci::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
@@ -1451,6 +1555,53 @@ inline void          FNs_Init(atf_ci::FNs& ns);
 // func:atf_ci.FNs..Uninit
 void                 FNs_Uninit(atf_ci::FNs& ns) __attribute__((nothrow));
 
+// --- atf_ci.FPackage
+// create: atf_ci.FDb.package (Lary)
+// global access: package (Lary, by rowid)
+struct FPackage { // atf_ci.FPackage
+    algo::Smallstr50    package;     // Package name
+    algo::Smallstr50    baseref;     // Base gitref of installed package
+    algo::Smallstr200   origin;      // Source URL for published package
+    algo::Smallstr50    nomention;   // Regx of words the package contents must not mention; empty disables the check
+    algo::cstring       comment;     //
+private:
+    // func:atf_ci.FPackage..Ctor
+    inline               FPackage() __attribute__((nothrow));
+    friend atf_ci::FPackage&    package_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_ci::FPackage*    package_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 package_RemoveAll() __attribute__((nothrow));
+    friend void                 package_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_ci.FPackage.base.CopyOut
+void                 package_CopyOut(atf_ci::FPackage &row, dev::Package &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_ci.FPackage.base.CopyIn
+void                 package_CopyIn(atf_ci::FPackage &row, dev::Package &in) __attribute__((nothrow));
+
+
+// --- atf_ci.FPkggen
+// create: atf_ci.FDb.pkggen (Lary)
+// global access: pkggen (Lary, by rowid)
+struct FPkggen { // atf_ci.FPkggen
+    algo::Smallstr50   package;   //
+    algo::cstring      comment;   //
+private:
+    // func:atf_ci.FPkggen..Ctor
+    inline               FPkggen() __attribute__((nothrow));
+    friend atf_ci::FPkggen&     pkggen_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_ci::FPkggen*     pkggen_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 pkggen_RemoveAll() __attribute__((nothrow));
+    friend void                 pkggen_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_ci.FPkggen.base.CopyOut
+void                 pkggen_CopyOut(atf_ci::FPkggen &row, dev::Pkggen &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_ci.FPkggen.base.CopyIn
+void                 pkggen_CopyIn(atf_ci::FPkggen &row, dev::Pkggen &in) __attribute__((nothrow));
+
+
 // --- atf_ci.FReadmefile
 // create: atf_ci.FDb.readmefile (Lary)
 // global access: readmefile (Lary, by rowid)
@@ -1459,7 +1610,7 @@ struct FReadmefile { // atf_ci.FReadmefile
     bool                inl;       //   false
     bool                sandbox;   //   false
     algo::Smallstr100   filter;    //
-    algo::Comment       comment;   //
+    algo::cstring       comment;   //
 private:
     // func:atf_ci.FReadmefile..Ctor
     inline               FReadmefile() __attribute__((nothrow));
@@ -1468,7 +1619,6 @@ private:
     friend void                 readmefile_RemoveAll() __attribute__((nothrow));
     friend void                 readmefile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FReadmefile.base.CopyOut
 void                 readmefile_CopyOut(atf_ci::FReadmefile &row, dev::Readmefile &out) __attribute__((nothrow));
@@ -1490,7 +1640,7 @@ struct FScriptfile { // atf_ci.FScriptfile
     u32                    ind_scriptfile_hashval;   // hash value
     algo::Smallstr200      gitfile;                  //
     algo::Smallstr50       license;                  //
-    algo::Comment          comment;                  //
+    algo::cstring          comment;                  //
     // func:atf_ci.FScriptfile..AssignOp
     inline atf_ci::FScriptfile& operator =(const atf_ci::FScriptfile &rhs) = delete;
     // func:atf_ci.FScriptfile..CopyCtor
@@ -1505,7 +1655,6 @@ private:
     friend void                 scriptfile_RemoveAll() __attribute__((nothrow));
     friend void                 scriptfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FScriptfile.base.CopyOut
 void                 scriptfile_CopyOut(atf_ci::FScriptfile &row, dev::Scriptfile &out) __attribute__((nothrow));
@@ -1514,7 +1663,7 @@ void                 scriptfile_CopyOut(atf_ci::FScriptfile &row, dev::Scriptfil
 void                 scriptfile_CopyIn(atf_ci::FScriptfile &row, dev::Scriptfile &in) __attribute__((nothrow));
 
 // func:atf_ci.FScriptfile.name.Get
-algo::Smallstr50     name_Get(atf_ci::FScriptfile& scriptfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(atf_ci::FScriptfile& scriptfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:atf_ci.FScriptfile..Init
@@ -1544,7 +1693,6 @@ private:
     friend atf_ci::FSsimfile*   ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FSsimfile.base.CopyOut
 void                 ssimfile_CopyOut(atf_ci::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
@@ -1553,13 +1701,13 @@ void                 ssimfile_CopyOut(atf_ci::FSsimfile &row, dmmeta::Ssimfile &
 void                 ssimfile_CopyIn(atf_ci::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:atf_ci.FSsimfile.ssimns.Get
-algo::Smallstr16     ssimns_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FSsimfile.ns.Get
-algo::Smallstr16     ns_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FSsimfile.name.Get
-algo::Smallstr50     name_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:atf_ci.FSsimfile..Init
@@ -1573,7 +1721,7 @@ void                 FSsimfile_Uninit(atf_ci::FSsimfile& ssimfile) __attribute__
 // access: atf_ci.FGitfile.c_targsrc (Ptr)
 struct FTargsrc { // atf_ci.FTargsrc
     algo::Smallstr100   targsrc;   //
-    algo::Comment       comment;   //
+    algo::cstring       comment;   //
     // func:atf_ci.FTargsrc..AssignOp
     inline atf_ci::FTargsrc& operator =(const atf_ci::FTargsrc &rhs) = delete;
     // func:atf_ci.FTargsrc..CopyCtor
@@ -1588,7 +1736,6 @@ private:
     friend void                 targsrc_RemoveAll() __attribute__((nothrow));
     friend void                 targsrc_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_ci.FTargsrc.base.CopyOut
 void                 targsrc_CopyOut(atf_ci::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
@@ -1597,13 +1744,13 @@ void                 targsrc_CopyOut(atf_ci::FTargsrc &row, dev::Targsrc &out) _
 void                 targsrc_CopyIn(atf_ci::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:atf_ci.FTargsrc.target.Get
-algo::Smallstr16     target_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FTargsrc.src.Get
-algo::Smallstr200    src_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FTargsrc.ext.Get
-algo::Smallstr10     ext_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FTargsrc..Uninit
 void                 FTargsrc_Uninit(atf_ci::FTargsrc& targsrc) __attribute__((nothrow));
@@ -1622,7 +1769,6 @@ struct FieldId { // atf_ci.FieldId: Field read helper
     inline               FieldId(atf_ci_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_ci.FieldId.value.GetEnum
 inline atf_ci_FieldIdEnum value_GetEnum(const atf_ci::FieldId& parent) __attribute__((nothrow));
@@ -1660,7 +1806,7 @@ inline void          FieldId_Init(atf_ci::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_ci.FieldId.String  printfmt:Raw
 // func:atf_ci.FieldId..Print
-void                 FieldId_Print(atf_ci::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(atf_ci::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_ci.File
 // create: atf_ci.FDb.file (Lary)
@@ -1686,7 +1832,6 @@ private:
     friend void                 file_RemoveAll() __attribute__((nothrow));
     friend void                 file_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:atf_ci.File..Init
 inline void          File_Init(atf_ci::File& file);
@@ -1705,7 +1850,6 @@ struct TableId { // atf_ci.TableId: Index of table in this namespace
     // func:atf_ci.TableId..EnumCtor
     inline               TableId(atf_ci_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:atf_ci.TableId.value.GetEnum
 inline atf_ci_TableIdEnum value_GetEnum(const atf_ci::TableId& parent) __attribute__((nothrow));
@@ -1743,7 +1887,7 @@ inline void          TableId_Init(atf_ci::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_ci.TableId.String  printfmt:Raw
 // func:atf_ci.TableId..Print
-void                 TableId_Print(atf_ci::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(atf_ci::TableId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_ci { // gen:ns_curstext
 
@@ -1850,6 +1994,22 @@ struct _db_cipackage_curs {// cursor
     _db_cipackage_curs(){ parent=NULL; index=0; }
 };
 
+
+struct _db_pkggen_curs {// cursor
+    typedef atf_ci::FPkggen ChildType;
+    atf_ci::FDb *parent;
+    i64 index;
+    _db_pkggen_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_package_curs {// cursor
+    typedef atf_ci::FPackage ChildType;
+    atf_ci::FDb *parent;
+    i64 index;
+    _db_package_curs(){ parent=NULL; index=0; }
+};
+
 } // gen:ns_curstext
 namespace atf_ci { // gen:ns_func
 // User-implemented function from gstatic:atf_ci.FDb.citest
@@ -1880,6 +2040,10 @@ void                 citest_ssimfile();
 // func:atf_ci...citest_normalize_acr
 // this function is 'extrn' and implemented by user
 void                 citest_normalize_acr();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_normalize_amc_vis
+// this function is 'extrn' and implemented by user
+void                 citest_normalize_amc_vis();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_src_lim
 // this function is 'extrn' and implemented by user
@@ -1933,6 +2097,10 @@ void                 citest_update_script();
 // this function is 'extrn' and implemented by user
 void                 citest_indent_script();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_normalize_acr_my
+// this function is 'extrn' and implemented by user
+void                 citest_normalize_acr_my();
+// User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_cppcheck
 // this function is 'extrn' and implemented by user
 void                 citest_cppcheck();
@@ -1945,29 +2113,21 @@ void                 citest_indent_srcfile();
 // this function is 'extrn' and implemented by user
 void                 citest_readme();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_normalize_amc_vis
-// this function is 'extrn' and implemented by user
-void                 citest_normalize_amc_vis();
-// User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_normalize_acr_my
-// this function is 'extrn' and implemented by user
-void                 citest_normalize_acr_my();
-// User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_apm_check
 // this function is 'extrn' and implemented by user
 void                 citest_apm_check();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_apm_gen
+// this function is 'extrn' and implemented by user
+void                 citest_apm_gen();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_atf_amc
 // this function is 'extrn' and implemented by user
 void                 citest_atf_amc();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_comptest
+// func:atf_ci...citest_check_json
 // this function is 'extrn' and implemented by user
-void                 citest_comptest();
-// User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_bintests
-// this function is 'extrn' and implemented by user
-void                 citest_bintests();
+void                 citest_check_json();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_atf_unit
 // this function is 'extrn' and implemented by user
@@ -1976,6 +2136,14 @@ void                 citest_atf_unit();
 // func:atf_ci...citest_atf_comp
 // this function is 'extrn' and implemented by user
 void                 citest_atf_comp();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_cov_prep
+// this function is 'extrn' and implemented by user
+void                 citest_cov_prep();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_atf_unit_cov
+// this function is 'extrn' and implemented by user
+void                 citest_atf_unit_cov();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_atf_comp_cov
 // this function is 'extrn' and implemented by user
@@ -2012,6 +2180,22 @@ void                 citest_abt_md_after_ssimfile_is_added();
 // func:atf_ci...citest_atf_comp_mem
 // this function is 'extrn' and implemented by user
 void                 citest_atf_comp_mem();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_check_citest
+// this function is 'extrn' and implemented by user
+void                 citest_check_citest();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_cov_finalize
+// this function is 'extrn' and implemented by user
+void                 citest_cov_finalize();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_ams_sendtest
+// this function is 'extrn' and implemented by user
+void                 citest_ams_sendtest();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_apm_nodownstream
+// this function is 'extrn' and implemented by user
+void                 citest_apm_nodownstream();
 // func:atf_ci...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func

@@ -1,0 +1,21 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.LspaceStr5_I32_Base95  comment:""
+amc <- dmmeta.field  field:algo_lib.LspaceStr5_I32_Base95.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LspaceStr5_I32_Base95.ch  length:5  strtype:leftpad  pad:"' '"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LspaceStr5_I32_Base95.ch  numtype:i32  base:95  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LspaceStr4_I32_Base256  comment:""
+amc <- dmmeta.field  field:algo_lib.LspaceStr4_I32_Base256.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LspaceStr4_I32_Base256.ch  length:4  strtype:leftpad  pad:"' '"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LspaceStr4_I32_Base256.ch  numtype:i32  base:256  min_len:1
+# eof amc
+amc -> amc.bad_numstr  field:algo_lib.LspaceStr4_I32_Base256.ch  base:256  comment:"signed numstr cannot use a base where '-' is a digit"
+amc -> amc.bad_numstr  field:algo_lib.LspaceStr4_I32_Base256.ch  pad:"' '"  base:256  comment:"left-pad that is a nonzero digit of the base corrupts values on read"
+amc -> amc.bad_numstr  field:algo_lib.LspaceStr5_I32_Base95.ch  base:95  comment:"signed numstr cannot use a base where '-' is a digit"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:3

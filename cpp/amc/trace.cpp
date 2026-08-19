@@ -122,6 +122,21 @@ void amc::gen_trace() {
         }
         // mark field as being traced
         field.do_trace = regular_trace || fbuf_trace;
+        // A dmmeta.ftrace row is a claim that this field publishes a counter, and
+        // a reader who finds one stops looking for the reason a quantity is
+        // unobservable.  A field whose kind this generator emits no counter for
+        // accepts the row all the same and emits nothing, so the claim reads as
+        // true while the process publishes no such metric -- the one failure that
+        // looks exactly like a quantity that never moved.  Rejecting the row
+        // leaves the two honest answers: drop the claim, or make the counter real
+        // by declaring a dmmeta.usertracefld and incrementing it where the
+        // quantity changes.
+        amccheck(!field.c_ftrace || regular_trace || fbuf_trace || field.c_fstep
+                 , "amc.ftrace_ineligible"
+                 <<Keyval("field",field.field)
+                 <<Keyval("reftype",field.reftype)
+                 <<Keyval("comment","dmmeta.ftrace generates no counter for this field;"
+                          " remove the row, or declare a dmmeta.usertracefld and increment it"));
     }ind_end;
 
     ind_beg(amc::_db_ns_curs,ns,_db) if (ns.c_globfld) {

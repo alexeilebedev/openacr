@@ -39,10 +39,12 @@ void amc::Disp_CreateFromMsg() {
                                                          , false // haslen
                                                          , false // call
                                                          , false // strict
-                                                         , typefld.p_field->p_ctype->c_ckafka // dyn
-                                                         , typefld.p_field->p_ctype->c_ckafka // kafka
-                                                         , typefld.p_ctype->comment));
-        (void)disp;
+                                                         , algo::Comment(typefld.p_ctype->comment)));
+
+        bool kafka  = typefld.p_field->p_ctype->c_ckafka;
+        disp->dyn   = kafka;
+        disp->kafka = kafka;
+
         // loop over all messages that use this header...
         int nmsg=0;
         ind_beg(amc::_db_msgtype_curs, msgtype, amc::_db) {
@@ -50,7 +52,7 @@ void amc::Disp_CreateFromMsg() {
             if (base == typefld.p_ctype) {
                 nmsg++;
                 amc::dispatch_msg_InsertMaybe(dmmeta::DispatchMsg(tempstr()<<key<<"/"<<msgtype.ctype
-                                                                  , typefld.p_ctype->comment));
+                                                                  , algo::Comment(typefld.p_ctype->comment)));
             }
         }ind_end;
         if (nmsg==0) {
@@ -69,7 +71,7 @@ void amc::Disp_CreateFromMsg() {
             amc::FField &base_field = c_field_N(*curfield.p_arg) ? *c_field_Find(*curfield.p_arg,0) : curfield;
             fconst.fconst  = tempstr() << base_field.field << "/" << ctype.ctype;
             fconst.value   = ctype.c_msgtype->type;
-            fconst.comment = ctype.comment;
+            fconst.comment = algo::Comment(ctype.comment);
             amc::fconst_InsertMaybe(fconst);
         }ind_end;
     }ind_end;

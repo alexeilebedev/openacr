@@ -3,20 +3,22 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Test cases](#test-cases)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [sv2ssim - Internals](/txt/exe/sv2ssim/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [sv2ssim - Internals](/txt/gen/sv2ssim/sv2ssim.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 sv2ssim: sv2ssim - Separated Value file processor
 Usage: sv2ssim [-fname:]<string> [options]
@@ -38,14 +40,10 @@ Usage: sv2ssim [-fname:]<string> [options]
     -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 sv2ssim is a tool for extracting schema from tab-,comma-, and other delimiter-separated files (sv-files).
 The tool can process files with and without a header line (`-header`), extract schema by observing
@@ -80,19 +78,17 @@ dmmeta.svtype  ctype:u32               maxwid:32          fixedwid1:0  fixedwid2
 dmmeta.svtype  ctype:u64               maxwid:64          fixedwid1:0  fixedwid2:0  comment:""
 ```
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
-
 ### Test cases
 <a href="#test-cases"></a>
 
 ```
 inline-command: acr comptest:sv2ssim.%
-atfdb.comptest  comptest:sv2ssim.Convert1         timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert1Signed   timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert2         timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert2Tsv      timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
-atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
-report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+atfdb.comptest  comptest:sv2ssim.Convert1         timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert1Signed   timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert2         timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert2Tsv      timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
+atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
+report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
 ### Examples
@@ -137,8 +133,6 @@ dmmeta.field  field:a.B._1960  arg:i32  reftype:Val  dflt:""  comment:_1960
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -175,17 +169,11 @@ dmmeta.field  field:a.B._1960  arg:i32  reftype:Val  dflt:""  comment:_1960
 #### -prefer_signed -- Prefer signed types when given a choice
 <a href="#-prefer_signed"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `sv2ssim` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
 |[dmmeta.svtype](/txt/ssimdb/dmmeta/svtype.md)|Table for determining ctype from separated value file|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

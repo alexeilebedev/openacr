@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'touch $tempdir/in.ssim && chmod 000 $tempdir/in.ssim && $bindir/acr -in:$tempdir/in.ssim ns:%'"
+# eof bash
+bash -> acr.file_read  file:temp/atf_comp/acr.FileReadDeny/in.ssim  err:"Permission denied"  comment:"input file could not be read"
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+# exit bash code:1

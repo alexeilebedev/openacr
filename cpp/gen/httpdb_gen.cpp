@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -220,7 +211,7 @@ bool httpdb::FieldId_ReadStrptrMaybe(httpdb::FieldId &parent, algo::strptr in_st
 // --- httpdb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:httpdb.FieldId.String  printfmt:Raw
-void httpdb::FieldId_Print(httpdb::FieldId& row, algo::cstring& str) {
+void httpdb::FieldId_Print(httpdb::FieldId row, algo::cstring& str) {
     httpdb::value_Print(row, str);
 }
 
@@ -345,15 +336,13 @@ u16 httpdb::Status_code_Get(algo::strptr arg) {
 }
 
 // --- httpdb.Status.reason.Get
-algo::Smallstr50 httpdb::reason_Get(httpdb::Status& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.status, " LR"));
-    return ret;
+algo::strptr httpdb::reason_Get(httpdb::Status& parent) {
+    return algo::Pathcomp(parent.status, " LR");
 }
 
 // --- httpdb.Status.reason.Get2
-algo::Smallstr50 httpdb::Status_reason_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, " LR"));
-    return ret;
+algo::strptr httpdb::Status_reason_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, " LR");
 }
 
 // --- httpdb.Status..Concat_code_reason

@@ -3,22 +3,25 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Bootstrapping](#bootstrapping)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Target Definition](#target-definition)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Build Directory](#build-directory)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Build Identity](#build-identity)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Debugging the build](#debugging-the-build)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [abt - Internals](/txt/exe/abt/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [abt - Internals](/txt/gen/abt/abt.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 abt: Algo Build Tool - build & link C++ targets
 Usage: abt [[-target:]<regx>] [options]
@@ -48,25 +51,16 @@ Usage: abt [[-target:]<regx>] [options]
     -report             Y       Print final report
     -jcdb       string  ""      Create JSON compilation database in specified file
     -cache      enum    auto    Cache mode (auto|none|gcache|gcache-force|ccache)
-                                    auto  Select cache automatically among enabled
-                                    none  No cache
-                                    gcache  Select gcache if enabled (no cache if disabled)
-                                    gcache-force  Pass --force to gcache (no cache if disabled)
-                                    ccache  Select ccache if enabled (no cache if disabled)
     -shortlink                  Try to shorten sort link if possible
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 Abt is a build tool. The argument to abt is a target name regex.
 Target means 'build target'.
 
@@ -81,8 +75,6 @@ Invokes build commands, several jobs running at a time.
 
 Builds happen in parallel by default. The default is picked
 based on the number of processors in the system. It can be overriden by specifying `-maxjobs`.
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
 
 ### Bootstrapping
 <a href="#bootstrapping"></a>
@@ -110,6 +102,42 @@ for instance `cpp/abt/main.cpp` becomes `build/Linux-g++.release-x86_64/cpp.abt.
 
 For each executable, there is a soft link `bin/$target` usually pointing to `../build/release/$target`.
 
+### Build Identity
+<a href="#build-identity"></a>
+
+Suppose a deployed program misbehaves and the only thing at hand is the
+directory it runs from.  The question a reader asks first is which build created it, and no
+answer is recoverable after the fact: the source tree may have moved on, and the
+binaries may have been replaced.  The fact has to be written down while it is
+still known.
+
+Only the act of building knows it.  A source file cannot state the commit it will
+be compiled at, and it cannot state when that will happen.  So `abt` writes both
+at the start of every run, as `build/gitinfo.h` and `build/gitinfo.ssim`, and
+`algo_lib` compiles the first of the two in.  Every executable then reports it
+under `-version`, as a `dev.gitinfo` tuple:
+
+```
+dev.gitinfo  gitinfo:2026-07-27.3867b78e3.abt  package:""  gitref:3867b78e3b54b0860a10a74672c381bd6e1c7a36  builddate:2026-07-27T11:09:49  comment:""
+```
+
+`gitref` names the commit and `builddate` the moment of the build; they are
+independent, because a binary can be built at any time from any commit.
+`gitinfo` is the short label the two make together, and `package` carries the
+`-package` tag when one was given.  A tree compiled without `abt` — the
+bootstrap, or a compiler run by hand — has no such file, and its binaries report
+`comment:unversioned` instead.  So does a tree with no git history, such as a
+release unpacked from an archive.
+
+The stamp is rewritten only when the commit or the `-package` tag changes.
+Repeated builds at one commit therefore leave it alone, and nothing goes out of
+date on its account; the first build after a commit recompiles the single source
+file that carries it.
+
+A program that creates persistent state can read its own stamp and write the two
+facts into that state's first record, where they stay readable for as long as the
+state does.
+
 ### Debugging the build
 <a href="#debugging-the-build"></a>
 
@@ -120,8 +148,6 @@ clean.
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -target -- Regx of target name
 <a href="#-target"></a>
 
@@ -156,6 +182,7 @@ COMPILER  RANLIB       AR       LINK      LIBEXT  EXEEXT  PCHEXT  OBJEXT  RC    
 cl                     LIB.EXE  LINK.EXE  .lib    .exe    .pch    .obj    RC.EXE
 clang++   llvm-ranlib  llvm-ar  clang++   .a              .gch    .o
 g++       ranlib       ar       g++       .a              .gch    .o
+g++-9     ranlib       ar       g++-9     .a              .gch    .o
 
 ```
 
@@ -226,6 +253,8 @@ Example:
 inline-command: abt -listincl abt -srcfile cpp/abt/%
 dev.include  include:cpp/abt/build.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/disas.cpp:include/abt.h  sys:N  comment:""
+dev.include  include:cpp/abt/gitinfo.cpp:include/algo.h  sys:N  comment:""
+dev.include  include:cpp/abt/gitinfo.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/main.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/ood.cpp:include/algo.h  sys:N  comment:""
 dev.include  include:cpp/abt/ood.cpp:include/abt.h  sys:N  comment:""
@@ -340,11 +369,8 @@ cache is used. See [gcache][/txt/exe/gcache/README.md] for more information.
 This option is used with `-printcmd` to make sure the installed binaries point to `../build/release`
 instead of `../build/Linux-g++.release-x86_64`.
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `abt` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
@@ -364,6 +390,3 @@ instead of `../build/Linux-g++.release-x86_64`.
 |[dev.targsyslib](/txt/ssimdb/dev/targsyslib.md)|Use of system library by target|
 |[dev.tool_opt](/txt/ssimdb/dev/tool_opt.md)|Compiler/linker options to use|
 |[dev.uname](/txt/ssimdb/dev/uname.md)|List of known unames|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

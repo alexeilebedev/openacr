@@ -3,24 +3,16 @@
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Msgtype
 
 * file:[data/dmmeta/msgtype.ssim](/data/dmmeta/msgtype.ssim)
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|type|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|type|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FMsgtype](/txt/exe/acr_ed/internals.md#acr_ed-fmsgtype)
-* [amc](/txt/exe/amc/internals.md) as [amc.FMsgtype](/txt/exe/amc/internals.md#amc-fmsgtype)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [acr_ed](/txt/gen/acr_ed/acr_ed.md) as [acr_ed.FMsgtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fmsgtype)
+* [amc](/txt/gen/amc/amc.md) as [amc.FMsgtype](/txt/gen/amc/amc.md#amc-fmsgtype)

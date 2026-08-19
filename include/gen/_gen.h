@@ -36,7 +36,6 @@ struct pad_byte { // pad_byte
     explicit inline               pad_byte(u8 in_value) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Set all fields to initial values.
 // func:pad_byte..Init
 inline void          pad_byte_Init(pad_byte& parent);
@@ -171,11 +170,12 @@ inline u32           i16_Hash(u32 prev, i16 rhs) __attribute__((nothrow));
 // Read fields of i16 from an ascii string.
 // Attempt to parse i16 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 // func:i16..ReadStrptrMaybe
 bool                 i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -215,11 +215,12 @@ inline u32           i32_Hash(u32 prev, i32 rhs) __attribute__((nothrow));
 // Read fields of i32 from an ascii string.
 // Attempt to parse i32 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 // func:i32..ReadStrptrMaybe
 bool                 i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -259,11 +260,12 @@ inline u32           i64_Hash(u32 prev, i64 rhs) __attribute__((nothrow));
 // Read fields of i64 from an ascii string.
 // Attempt to parse i64 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 // func:i64..ReadStrptrMaybe
 bool                 i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -303,11 +305,12 @@ inline u32           i8_Hash(u32 prev, i8 rhs) __attribute__((nothrow));
 // Read fields of i8 from an ascii string.
 // Attempt to parse i8 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 // func:i8..ReadStrptrMaybe
 bool                 i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -347,11 +350,12 @@ inline u32           u8_Hash(u32 prev, u8 rhs) __attribute__((nothrow));
 // Read fields of u8 from an ascii string.
 // Attempt to parse u8 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 // func:u8..ReadStrptrMaybe
 bool                 u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -391,11 +395,12 @@ inline u32           u128_Hash(u32 prev, u128 rhs) __attribute__((nothrow));
 // Read fields of u128 from an ascii string.
 // Attempt to parse u128 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 // func:u128..ReadStrptrMaybe
 bool                 u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -430,11 +435,12 @@ inline u32           u16_Hash(u32 prev, u16 rhs) __attribute__((nothrow));
 // Read fields of u16 from an ascii string.
 // Attempt to parse u16 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 // func:u16..ReadStrptrMaybe
 bool                 u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -474,11 +480,12 @@ inline u32           u32_Hash(u32 prev, u32 rhs) __attribute__((nothrow));
 // Read fields of u32 from an ascii string.
 // Attempt to parse u32 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 // func:u32..ReadStrptrMaybe
 bool                 u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -518,11 +525,12 @@ inline u32           u64_Hash(u32 prev, u64 rhs) __attribute__((nothrow));
 // Read fields of u64 from an ascii string.
 // Attempt to parse u64 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 // func:u64..ReadStrptrMaybe
 bool                 u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str) __attribute__((nothrow));

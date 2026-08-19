@@ -3,7 +3,6 @@
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)algo.DirEntry
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
@@ -20,6 +19,3 @@
 |match|bool|Val||(internal) File entry matches pattern|
 |is_dir|bool|Val||File is a directory|
 |dir_handle|DIR|Ptr||(internal) handle for scanning|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
-

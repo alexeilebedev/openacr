@@ -31,8 +31,8 @@
 
 // --- ssimfilt_FieldIdEnum
 
-enum ssimfilt_FieldIdEnum {        // ssimfilt.FieldId.value
-     ssimfilt_FieldId_value   = 0
+enum ssimfilt_FieldIdEnum {    // ssimfilt.FieldId.value
+     ssimfilt_FieldId_value
 };
 
 enum { ssimfilt_FieldIdEnum_N = 1 };
@@ -50,7 +50,6 @@ enum { ssimfilt_TableIdEnum_N = 2 };
 namespace ssimfilt { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace ssimfilt { // gen:ns_tclass_field
-extern const char *ssimfilt_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ssimfilt { struct _db_tuple_curs; }
@@ -73,7 +72,6 @@ struct trace { // ssimfilt.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:ssimfilt.trace.String  printfmt:Tuple
 // func:ssimfilt.trace..Print
@@ -83,26 +81,23 @@ void                 trace_Print(ssimfilt::trace& row, algo::cstring& str) __att
 // create: ssimfilt.FDb._db (Global)
 struct FDb { // ssimfilt.FDb: In-memory database for ssimfilt
     command::ssimfilt          cmdline;                         //
-    algo::Tuple*               tuple_lary[32];                  // level array
-    i32                        tuple_n;                         // number of elements in array
-    ssimfilt::KVRegx*          matchfield_lary[32];             // level array
-    i32                        matchfield_n;                    // number of elements in array
-    ssimfilt::KVRegx*          selfield_lary[32];               // level array
-    i32                        selfield_n;                      // number of elements in array
+    algo::Tuple*               tuple_lary[36];                  // level array
+    i64                        tuple_n;                         // number of elements in array
+    ssimfilt::KVRegx*          matchfield_lary[36];             // level array
+    i64                        matchfield_n;                    // number of elements in array
+    ssimfilt::KVRegx*          selfield_lary[36];               // level array
+    i64                        selfield_n;                      // number of elements in array
     bool                       csv_locked;                      //   false  CSV header locked
     bool                       markdown;                        //   false  Use Markdown output
-    ssimfilt::FUnstablefld*    unstablefld_lary[32];            // level array
-    i32                        unstablefld_n;                   // number of elements in array
+    ssimfilt::FUnstablefld*    unstablefld_lary[36];            // level array
+    i64                        unstablefld_n;                   // number of elements in array
     ssimfilt::FUnstablefld**   ind_unstablefld_buckets_elems;   // pointer to bucket array
     i32                        ind_unstablefld_buckets_n;       // number of elements in bucket array
     i32                        ind_unstablefld_n;               // number of elements in the hash table
     ssimfilt::trace            trace;                           //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     ssimfilt.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of ssimfilt.FDb.cmdline (and any base command line)
+// via ssimfilt_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:ssimfilt.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -139,6 +134,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:ssimfilt.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:ssimfilt.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:ssimfilt.FDb._db.XrefMaybe
@@ -165,7 +164,7 @@ inline algo::Tuple*  tuple_Find(u64 t) __attribute__((__warn_unused_result__, no
 inline algo::Tuple*  tuple_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssimfilt.FDb.tuple.N
-inline i32           tuple_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           tuple_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssimfilt.FDb.tuple.RemoveAll
 void                 tuple_RemoveAll() __attribute__((nothrow));
@@ -197,7 +196,7 @@ inline ssimfilt::KVRegx* matchfield_Find(u64 t) __attribute__((__warn_unused_res
 inline ssimfilt::KVRegx* matchfield_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssimfilt.FDb.matchfield.N
-inline i32           matchfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           matchfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssimfilt.FDb.matchfield.RemoveAll
 void                 matchfield_RemoveAll() __attribute__((nothrow));
@@ -233,7 +232,7 @@ inline ssimfilt::KVRegx* selfield_Find(u64 t) __attribute__((__warn_unused_resul
 inline ssimfilt::KVRegx* selfield_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssimfilt.FDb.selfield.N
-inline i32           selfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           selfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssimfilt.FDb.selfield.RemoveAll
 void                 selfield_RemoveAll() __attribute__((nothrow));
@@ -269,7 +268,7 @@ inline ssimfilt::FUnstablefld* unstablefld_Find(u64 t) __attribute__((__warn_unu
 inline ssimfilt::FUnstablefld* unstablefld_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssimfilt.FDb.unstablefld.N
-inline i32           unstablefld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           unstablefld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssimfilt.FDb.unstablefld.RemoveAll
 void                 unstablefld_RemoveAll() __attribute__((nothrow));
@@ -373,8 +372,8 @@ void                 FDb_Uninit() __attribute__((nothrow));
 struct FUnstablefld { // ssimfilt.FUnstablefld
     ssimfilt::FUnstablefld*   ind_unstablefld_next;      // hash next
     u32                       ind_unstablefld_hashval;   // hash value
-    algo::Smallstr100         field;                     //
-    algo::Comment             comment;                   //
+    algo::Smallstr150         field;                     //
+    algo::cstring             comment;                   //
     // func:ssimfilt.FUnstablefld..AssignOp
     inline ssimfilt::FUnstablefld& operator =(const ssimfilt::FUnstablefld &rhs) = delete;
     // func:ssimfilt.FUnstablefld..CopyCtor
@@ -389,7 +388,6 @@ private:
     friend void                 unstablefld_RemoveAll() __attribute__((nothrow));
     friend void                 unstablefld_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:ssimfilt.FUnstablefld.base.CopyOut
 void                 unstablefld_CopyOut(ssimfilt::FUnstablefld &row, dev::Unstablefld &out) __attribute__((nothrow));
@@ -417,7 +415,6 @@ struct FieldId { // ssimfilt.FieldId: Field read helper
     inline               FieldId(ssimfilt_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ssimfilt.FieldId.value.GetEnum
 inline ssimfilt_FieldIdEnum value_GetEnum(const ssimfilt::FieldId& parent) __attribute__((nothrow));
@@ -455,7 +452,7 @@ inline void          FieldId_Init(ssimfilt::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:ssimfilt.FieldId.String  printfmt:Raw
 // func:ssimfilt.FieldId..Print
-void                 FieldId_Print(ssimfilt::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(ssimfilt::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ssimfilt.KVRegx
 // create: ssimfilt.FDb.matchfield (Lary)
@@ -477,7 +474,6 @@ private:
     friend void                 selfield_RemoveAll() __attribute__((nothrow));
     friend void                 selfield_RemoveLast() __attribute__((nothrow));
 };
-
 // Print back to string
 // func:ssimfilt.KVRegx.key.Print
 void                 key_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) __attribute__((nothrow));
@@ -499,7 +495,6 @@ struct TableId { // ssimfilt.TableId: Index of table in this namespace
     // func:ssimfilt.TableId..EnumCtor
     inline               TableId(ssimfilt_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:ssimfilt.TableId.value.GetEnum
 inline ssimfilt_TableIdEnum value_GetEnum(const ssimfilt::TableId& parent) __attribute__((nothrow));
@@ -537,7 +532,7 @@ inline void          TableId_Init(ssimfilt::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:ssimfilt.TableId.String  printfmt:Raw
 // func:ssimfilt.TableId..Print
-void                 TableId_Print(ssimfilt::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(ssimfilt::TableId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace ssimfilt { // gen:ns_curstext
 

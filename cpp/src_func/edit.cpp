@@ -27,21 +27,35 @@
 // -----------------------------------------------------------------------------
 
 void src_func::Main_EditFunc() {
+    cstring out;
     if (_db.editloc != "") {
-        StringToFile(_db.editloc,"temp/src_func.loc");
-        SysCmd("errlist cat temp/src_func.loc");
+        out << _db.editloc;
     } else {
-        command::src_func cmd = _db.cmdline;
-        cmd.showloc      = true;
-        cmd.showbody     = false;
-        cmd.e            = false;
-        SysCmd(tempstr()<<"errlist "<<strptr_ToBash(src_func_ToCmdline(cmd)));
+        ind_beg(src_func::_db_bh_func_curs, func, src_func::_db) {
+            if (func.select) {
+                out << Location(func, 0) << eol;
+            }
+        }ind_end;
     }
+    StringToFile(out, "temp/src_func.txt");
+    SysCmd("errlist cat temp/src_func.txt");
 }
 
 void src_func::Main_CreateMissing() {
     ind_beg(_db_userfunc_curs,userfunc,_db) {
         src_func::FUserfunc *alias = ind_userfunc_cppname_Find(userfunc.cppname);
+        src_func::FTarget *target = ind_target_Find(Pathcomp(userfunc.userfunc,".LL"));
+        // Only a target whose sources were actually scanned (selected by
+        // -targsrc) can tell us a function is missing.  Outside the scan
+        // scope the absent instance is meaningless -- without this a scoped
+        // run (e.g. -targsrc:amc/%) would stub every userfunc in the tree
+        // whose definition merely wasn't scanned.
+        bool scanned = false;
+        if (target) {
+            ind_beg(target_cd_targsrc_curs,targsrc,*target) {
+                scanned = scanned || targsrc.select;
+            }ind_end;
+        }
         if (!zd_func_EmptyQ(userfunc)) {
             // instances exist
         } else if (alias && alias!=&userfunc) {
@@ -49,27 +63,27 @@ void src_func::Main_CreateMissing() {
             // but another function with the same cpp name exists.
             // this means we can't reliably determine if the function is missing
             // because we don't parse prototypes
+        } else if (!scanned) {
+            // target out of scan scope -- can't tell whether it is missing
         } else {
             // step 1: determine prefix
             src_func::FGenaffix *affix=FindAffix(userfunc.cppname);
             // step 2: scan source files and count which files have the most functions with the same prefix
             src_func::FTargsrc *bestsrc=NULL;
-            if (src_func::FTarget *target=ind_target_Find(Pathcomp(userfunc.userfunc,".LL"))) {
-                ind_beg(target_cd_targsrc_curs,targsrc,*target) if (!StartsWithQ(src_Get(targsrc),"cpp/gen")) {
-                    targsrc.counter=0;
-                    ind_beg(targsrc_zd_func_curs,func,targsrc) {
-                        src_func::FGenaffix *thisaffix=FindAffix(func.name);
-                        if (thisaffix == affix) {
-                            targsrc.counter++;
-                        }
-                    }ind_end;
-                    if (!bestsrc || targsrc.counter>bestsrc->counter) {
-                        bestsrc=&targsrc;
+            ind_beg(target_cd_targsrc_curs,targsrc,*target) if (!StartsWithQ(src_Get(targsrc),"cpp/gen")) {
+                targsrc.counter=0;
+                ind_beg(targsrc_zd_func_curs,func,targsrc) {
+                    src_func::FGenaffix *thisaffix=FindAffix(func.name);
+                    if (thisaffix == affix) {
+                        targsrc.counter++;
                     }
                 }ind_end;
-                if (!bestsrc) {
-                    bestsrc=cd_targsrc_First(*target);
+                if (!bestsrc || targsrc.counter>bestsrc->counter) {
+                    bestsrc=&targsrc;
                 }
+            }ind_end;
+            if (!bestsrc) {
+                bestsrc=cd_targsrc_First(*target);
             }
             // step 3: write missing function to the file
             if (bestsrc) {

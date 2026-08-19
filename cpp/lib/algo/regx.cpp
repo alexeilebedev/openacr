@@ -47,9 +47,9 @@
 #include "include/algo.h"
 #include <algorithm>
 
-static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str, int i);
-static void RewriteRegx(algo::strptr input, algo_lib::RegxStyle style, algo::cstring &out);
-static int SingleOutput(algo_lib::Bitset &bitset);
+static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str, int i); // ignore:static_fwd_decl
+static void RewriteRegx(algo::strptr input, algo_lib::RegxStyle style, algo::cstring &out); // ignore:static_fwd_decl
+static int SingleOutput(algo_lib::Bitset &bitset); // ignore:static_fwd_decl
 
 // -----------------------------------------------------------------------------
 
@@ -155,20 +155,32 @@ static void CalcAcceptsAllQ(algo_lib::Regx &regx) {
 
 // if state STATE leads to state OTHER
 // which is a TRUE op consuming zero chars, then
-// skip the OTHER state
+// skip the OTHER state, splicing OTHER's own next states in its place.
+// A regex such as "a**" or "(a*)*" builds a cycle of zero-consume TRUE
+// states that point back at one another; without a guard the splice would
+// re-discover the same state forever and never terminate.  EXPANDED records
+// the zero-consume TRUE states already spliced for the current STATE, so
+// each is spliced at most once and a cycle collapses in a finite number of
+// passes.
 static void RemoveBranches(algo_lib::Regx &regx) {
     algo_lib::Bitset next;
+    algo_lib::Bitset expanded;
     ary_ExpandBits(next,state_N(regx));
+    ary_ExpandBits(expanded,state_N(regx));
     ind_beg(algo_lib::regx_state_curs,state,regx) {
         int nmatch=0;
+        ary_ClearBitsAll(expanded);
         do {
             ary_Setary(next,state.next);
             nmatch=0;
             ind_beg(algo_lib::Bitset_ary_bitcurs,id,state.next) {
                 algo_lib::RegxState &other = state_qFind(regx, id);
                 if (other.op.op == algo_lib_RegxOp_true && other.op.consume == 0) {
-                    ary_OrBits(next, other.next);
                     ary_ClearBit(next, id);
+                    if (!ary_GetBit(expanded, id)) {
+                        ary_SetBit(expanded, id);
+                        ary_OrBits(next, other.next);
+                    }
                     nmatch++;
                 }
             }ind_end;
@@ -733,9 +745,11 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
     ary_RemoveAll(regxm.front);
     ary_RemoveAll(regxm.next_char);
     ary_RemoveAll(regxm.this_char);
+    ary_RemoveAll(regxm.visited);
     ary_ExpandBits(regxm.front,regx.state_n);
     ary_ExpandBits(regxm.next_char,regx.state_n);
     ary_ExpandBits(regxm.this_char,regx.state_n);
+    ary_ExpandBits(regxm.visited,regx.state_n);
     ary_qSetBit(regxm.front, 0);
     int ch_index=0;
     while (true) {
@@ -749,6 +763,7 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
         int ntest=0;
         ind_beg(algo_lib::Bitset_ary_bitcurs,idx,regxm.front) {
             ntest++;
+            ary_SetBit(regxm.visited, idx);// this state is now closed for this char
             algo_lib::RegxState &state  = state_qFind(regx, idx);
             bool test = false;
             switch (state.op.op) {
@@ -809,8 +824,20 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
                 if (state.op.consume) {
                     ary_OrBits(regxm.next_char, state.next);
                 } else {
-                    ary_OrBits(regxm.this_char, state.next);
-                    nthis++;
+                    // Follow a zero-consume arc to states tested against the
+                    // same char.  A group closed under repetition, such as
+                    // "()*" or "(a*)*", forms a cycle of lparen/rparen/true
+                    // states that RemoveBranches cannot splice out because the
+                    // captures must survive; forwarding it unguarded would keep
+                    // re-adding the same states and never advance the char.
+                    // Only states not yet closed for this char count as
+                    // progress, so a cycle drains after one pass.
+                    ind_beg(algo_lib::Bitset_ary_bitcurs,nx,state.next) {
+                        if (!ary_GetBit(regxm.visited, nx)) {
+                            ary_SetBit(regxm.this_char, nx);
+                            nthis++;
+                        }
+                    }ind_end;
                 }
             }
         }ind_end;
@@ -831,6 +858,7 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
                 break;
             }
             ary_ClearBitsAll(regxm.front);
+            ary_ClearBitsAll(regxm.visited);// new char -> reopen every state
             algo::TSwap(regxm.front,regxm.next_char);
             ch_index++;
             // keep processing non-consuming states...

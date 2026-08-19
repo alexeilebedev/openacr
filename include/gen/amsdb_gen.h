@@ -30,27 +30,39 @@
 
 // --- amsdb_FieldIdEnum
 
-enum amsdb_FieldIdEnum {           // amsdb.FieldId.value
-     amsdb_FieldId_proctype   = 0
-    ,amsdb_FieldId_id         = 1
-    ,amsdb_FieldId_ns         = 2
-    ,amsdb_FieldId_comment    = 3
-    ,amsdb_FieldId_shmtype    = 4
-    ,amsdb_FieldId_nonblock   = 5
-    ,amsdb_FieldId_value      = 6
+enum amsdb_FieldIdEnum {    // amsdb.FieldId.value
+     amsdb_FieldId_grptype
+    ,amsdb_FieldId_id
+    ,amsdb_FieldId_comment
+    ,amsdb_FieldId_trafficclass
+    ,amsdb_FieldId_fanout
+    ,amsdb_FieldId_proctype
+    ,amsdb_FieldId_ns
+    ,amsdb_FieldId_overheadmb
+    ,amsdb_FieldId_hugemb
+    ,amsdb_FieldId_pathbyte
+    ,amsdb_FieldId_userbyte
+    ,amsdb_FieldId_openbyte
+    ,amsdb_FieldId_connbyte
+    ,amsdb_FieldId_hbtimeout
+    ,amsdb_FieldId_value
 };
 
-enum { amsdb_FieldIdEnum_N = 7 };
+enum { amsdb_FieldIdEnum_N = 15 };
 
 namespace amsdb { // gen:ns_pkeytypedef
-    typedef algo::Smallstr50 ShmtypePkey;
+    typedef algo::Smallstr50 GrptypePkey;
+    typedef algo::Smallstr50 ProctypePkey;
+    typedef algo::Smallstr50 TrafficclassPkey;
 } // gen:ns_pkeytypedef
 namespace amsdb { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace amsdb { struct FieldId; }
+namespace amsdb { struct Grptype; }
+namespace amsdb { struct Mcgrptype; }
 namespace amsdb { struct Proctype; }
-namespace amsdb { struct Shmtype; }
+namespace amsdb { struct Trafficclass; }
 namespace amsdb { // gen:ns_print_struct
 
 // --- amsdb.FieldId
@@ -67,7 +79,6 @@ struct FieldId { // amsdb.FieldId: Field read helper
     inline               FieldId(amsdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:amsdb.FieldId.value.GetEnum
 inline amsdb_FieldIdEnum value_GetEnum(const amsdb::FieldId& parent) __attribute__((nothrow));
@@ -105,18 +116,66 @@ inline void          FieldId_Init(amsdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:amsdb.FieldId.String  printfmt:Raw
 // func:amsdb.FieldId..Print
-void                 FieldId_Print(amsdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(amsdb::FieldId row, algo::cstring& str) __attribute__((nothrow));
+
+// --- amsdb.Grptype
+struct Grptype { // amsdb.Grptype
+    algo::Smallstr50   grptype;   //
+    ams::Grptype       id;        //
+    algo::Comment      comment;   //
+    // func:amsdb.Grptype..Ctor
+    inline               Grptype() __attribute__((nothrow));
+};
+// func:amsdb.Grptype..ReadFieldMaybe
+bool                 Grptype_ReadFieldMaybe(amsdb::Grptype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amsdb::Grptype from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amsdb.Grptype..ReadStrptrMaybe
+bool                 Grptype_ReadStrptrMaybe(amsdb::Grptype &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amsdb.Grptype.String  printfmt:Tuple
+// func:amsdb.Grptype..Print
+void                 Grptype_Print(amsdb::Grptype& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- amsdb.Mcgrptype
+struct Mcgrptype { // amsdb.Mcgrptype
+    algo::Smallstr50   grptype;        //
+    algo::Smallstr50   trafficclass;   // Backplane traffic class of every queue this fabric grptype names
+    bool               fanout;         //   false  TRUE when several processes read this class, which is what multicast is for
+    algo::Comment      comment;        //
+    // func:amsdb.Mcgrptype..Ctor
+    inline               Mcgrptype() __attribute__((nothrow));
+};
+// func:amsdb.Mcgrptype..ReadFieldMaybe
+bool                 Mcgrptype_ReadFieldMaybe(amsdb::Mcgrptype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amsdb::Mcgrptype from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amsdb.Mcgrptype..ReadStrptrMaybe
+bool                 Mcgrptype_ReadStrptrMaybe(amsdb::Mcgrptype &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:amsdb.Mcgrptype..Init
+inline void          Mcgrptype_Init(amsdb::Mcgrptype& parent);
+// print string representation of ROW to string STR
+// cfmt:amsdb.Mcgrptype.String  printfmt:Tuple
+// func:amsdb.Mcgrptype..Print
+void                 Mcgrptype_Print(amsdb::Mcgrptype& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amsdb.Proctype
 struct Proctype { // amsdb.Proctype
-    algo::Smallstr16   proctype;   //
-    u32                id;         //   0
-    algo::Smallstr16   ns;         //
-    algo::Comment      comment;    //
+    algo::Smallstr50   proctype;     //
+    u32                id;           //   0
+    algo::cstring      ns;           // dmmeta.ns can be missing if the module is external, don't set it as xref
+    u32                overheadmb;   //   0  Measured base memory overhead MB (10^6) beyond topo budgets; 0=no derived proc limit
+    u32                hugemb;       //   0  Huge-page heap ceiling MB (10^6); 0 = maps none, as a forking supervisor must
+    u32                pathbyte;     //   0  Measured bytes of address space per path entry; times topo maxpath it is the path term of the derived proc limit (0=no term)
+    u32                userbyte;     //   0  Measured bytes of address space per user; times topo maxuser it is the user term of the derived proc limit (0=no term)
+    u32                openbyte;     //   0  Measured bytes of address space per open-stream row; times topo maxopen it is the open term of the derived proc limit (0=no term)
+    u32                connbyte;     //   0  Measured bytes of address space per client connection; times topo maxconn it is the conn term of the derived proc limit (0=no term)
+    algo::Comment      comment;      //
+    i32                hbtimeout;    //   30  Heartbeat timeout sec: the supervisor kills a module silent this long
     // func:amsdb.Proctype..Ctor
     inline               Proctype() __attribute__((nothrow));
 };
-
 // func:amsdb.Proctype..ReadFieldMaybe
 bool                 Proctype_ReadFieldMaybe(amsdb::Proctype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amsdb::Proctype from an ascii string.
@@ -125,41 +184,41 @@ bool                 Proctype_ReadFieldMaybe(amsdb::Proctype& parent, algo::strp
 bool                 Proctype_ReadStrptrMaybe(amsdb::Proctype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amsdb.Proctype..Init
-inline void          Proctype_Init(amsdb::Proctype& parent);
+void                 Proctype_Init(amsdb::Proctype& parent);
 // print string representation of ROW to string STR
 // cfmt:amsdb.Proctype.String  printfmt:Tuple
 // func:amsdb.Proctype..Print
 void                 Proctype_Print(amsdb::Proctype& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- amsdb.Shmtype
-struct Shmtype { // amsdb.Shmtype
-    algo::Smallstr50   shmtype;    //
-    ams::Shmtype       id;         //
-    bool               nonblock;   //   false  Non-blocking (lossy) stream
-    algo::Comment      comment;    //
-    // func:amsdb.Shmtype..Ctor
-    inline               Shmtype() __attribute__((nothrow));
+// --- amsdb.Trafficclass
+struct Trafficclass { // amsdb.Trafficclass
+    algo::Smallstr50   trafficclass;   //
+    u8                 id;             //   0  Class index: the per-class unicast port offset (data 0, gapfill 1, control 2)
+    algo::Comment      comment;        //
+    // func:amsdb.Trafficclass..Ctor
+    inline               Trafficclass() __attribute__((nothrow));
 };
-
-// func:amsdb.Shmtype..ReadFieldMaybe
-bool                 Shmtype_ReadFieldMaybe(amsdb::Shmtype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of amsdb::Shmtype from an ascii string.
+// func:amsdb.Trafficclass..ReadFieldMaybe
+bool                 Trafficclass_ReadFieldMaybe(amsdb::Trafficclass& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amsdb::Trafficclass from an ascii string.
 // The format of the string is an ssim Tuple
-// func:amsdb.Shmtype..ReadStrptrMaybe
-bool                 Shmtype_ReadStrptrMaybe(amsdb::Shmtype &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:amsdb.Trafficclass..ReadStrptrMaybe
+bool                 Trafficclass_ReadStrptrMaybe(amsdb::Trafficclass &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:amsdb.Shmtype..Init
-inline void          Shmtype_Init(amsdb::Shmtype& parent);
+// func:amsdb.Trafficclass..Init
+inline void          Trafficclass_Init(amsdb::Trafficclass& parent);
 // print string representation of ROW to string STR
-// cfmt:amsdb.Shmtype.String  printfmt:Tuple
-// func:amsdb.Shmtype..Print
-void                 Shmtype_Print(amsdb::Shmtype& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:amsdb.Trafficclass.String  printfmt:Tuple
+// func:amsdb.Trafficclass..Print
+void                 Trafficclass_Print(amsdb::Trafficclass& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace amsdb { // gen:ns_func
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amsdb::FieldId &row);// cfmt:amsdb.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const amsdb::Grptype &row);// cfmt:amsdb.Grptype.String
+inline algo::cstring &operator <<(algo::cstring &str, const amsdb::Mcgrptype &row);// cfmt:amsdb.Mcgrptype.String
 inline algo::cstring &operator <<(algo::cstring &str, const amsdb::Proctype &row);// cfmt:amsdb.Proctype.String
-inline algo::cstring &operator <<(algo::cstring &str, const amsdb::Shmtype &row);// cfmt:amsdb.Shmtype.String
+inline algo::cstring &operator <<(algo::cstring &str, const amsdb::Trafficclass &row);// cfmt:amsdb.Trafficclass.String
 }

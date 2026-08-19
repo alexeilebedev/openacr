@@ -1,0 +1,3 @@
+# start wt-scratch cmd:"test/wt-scratch $bindir/wt test.clean.xyz -cow -q -clean"
+# eof wt-scratch
+# exit wt-scratch code:0

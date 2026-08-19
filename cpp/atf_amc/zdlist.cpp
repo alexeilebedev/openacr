@@ -90,6 +90,54 @@ void atf_amc::amctest_ZdlistInsert1() {
 }
 
 //
+// InsertBefore: position-addressed insertion; covers every splice shape --
+// empty list, before First (head), before NULL (tail), interior -- plus the
+// two no-op guards (row already in list; row given as its own anchor)
+//
+void atf_amc::amctest_ZdlistInsertBefore() {
+    // setup
+    atf_amc::FTypeC item_a;
+    atf_amc::FTypeC item_b;
+    atf_amc::FTypeC item_c;
+    atf_amc::FTypeC item_d;
+    item_a.typec = 1;
+    item_b.typec = 2;
+    item_c.typec = 3;
+    item_d.typec = 4;
+    // exercise + verify
+    // before NULL on an empty list: sole element, head and tail at once
+    atf_amc::zd_t_typec_InsertBefore(item_a, NULL);
+    vrfy_(&item_a == atf_amc::zd_t_typec_First());
+    vrfy_(&item_a == atf_amc::zd_t_typec_Last());
+    vrfy_(1 == atf_amc::zd_t_typec_N());
+    // before First: new head, tail unchanged
+    atf_amc::zd_t_typec_InsertBefore(item_b, atf_amc::zd_t_typec_First());
+    vrfy_(&item_b == atf_amc::zd_t_typec_First());
+    vrfy_(&item_a == atf_amc::zd_t_typec_Last());
+    // before NULL on a non-empty list: tail append
+    atf_amc::zd_t_typec_InsertBefore(item_c, NULL);
+    vrfy_(&item_c == atf_amc::zd_t_typec_Last());
+    vrfy_(&item_a == atf_amc::zd_t_typec_Prev(item_c));
+    // before an interior element: splice mid-list; order is b d a c
+    atf_amc::zd_t_typec_InsertBefore(item_d, &item_a);
+    vrfy_(4 == atf_amc::zd_t_typec_N());
+    vrfy_(&item_d == atf_amc::zd_t_typec_Next(item_b));
+    vrfy_(&item_a == atf_amc::zd_t_typec_Next(item_d));
+    vrfy_(&item_b == atf_amc::zd_t_typec_Prev(item_d));
+    vrfy_(&item_c == atf_amc::zd_t_typec_Next(item_a));
+    // a row already in the list stays where it is
+    atf_amc::zd_t_typec_InsertBefore(item_a, atf_amc::zd_t_typec_First());
+    vrfy_(4 == atf_amc::zd_t_typec_N());
+    vrfy_(&item_b == atf_amc::zd_t_typec_First());
+    // a row given as its own anchor is refused, not self-linked
+    atf_amc::zd_t_typec_RemoveAll();
+    atf_amc::zd_t_typec_InsertBefore(item_a, &item_a);
+    vrfy_(0 == atf_amc::zd_t_typec_N());
+    vrfy_(false == atf_amc::zd_t_typec_InLlistQ(item_a));
+    // teardown
+}
+
+//
 // Insert 2 elements in the list, check if it they are really in the list
 //
 void atf_amc::amctest_ZdlistInsert2() {

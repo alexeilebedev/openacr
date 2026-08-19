@@ -1,0 +1,3 @@
+curl -k 'https://api.github.com/graphql' -X POST -H "Authorization: Bearer github_pat_11EXAMPLE0000000000000_EXAMPLE0000000000000000000000000000000000000000000000000000" --data \
+'{"query":"query {__type(name:\"PullRequest\"){name kind description fields {name}}}"}' \
+| jq

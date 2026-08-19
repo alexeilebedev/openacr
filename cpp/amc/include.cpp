@@ -202,7 +202,7 @@ void amc::GenUsedNs() {
     }ind_end;
 
     // check that one exe doesn't use another exe (will break during linking, but not fatal for amc)
-    // #AL# this can be OK since we allow cross-namespace pointers
+    // this can be OK since we allow cross-namespace pointers
 #if 0
     ind_beg(amc::_db_ns_curs, ns, amc::_db) {
         ind_beg(amc::ns_c_cppincl_curs, usedns, ns) if (&usedns != &ns) {

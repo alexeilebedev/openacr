@@ -34,7 +34,6 @@ void amc::tclass_Tary() {
     vrfy(field.c_tary, "tary required");
 
     Set(R, "$dflt", field.dflt.value);
-
     Set(R, "$Rowid"  , EvalRowid(*field.p_arg));
     if (field.p_arg->n_xref > 0) {
         prerr("A row allocated using Tary cannot have pointers to it.");
@@ -50,8 +49,8 @@ void amc::tclass_Tary() {
     }
 
     InsVar(R, field.p_ctype     , "$Cpptype*", "$name_elems", "", "pointer to elements");
-    InsVar(R, field.p_ctype     , "u32", "$name_n", "", "number of elements in array");
-    InsVar(R, field.p_ctype     , "u32", "$name_max", "", "max. capacity of array before realloc");
+    InsVar(R, field.p_ctype     , "u64", "$name_n", "", "number of elements in array");
+    InsVar(R, field.p_ctype     , "u64", "$name_max", "", "max. capacity of array before realloc");
 }
 
 // -----------------------------------------------------------------------------
@@ -74,23 +73,19 @@ void amc::tfunc_Tary_Addary() {
         Ins(&R, addary.body    , "if (UNLIKELY(overlaps)) {");
         Ins(&R, addary.body    , "    FatalErrorExit(\"$ns.tary_alias  field:$field  comment:'alias error: sub-array is being appended to the whole'\");");
         Ins(&R, addary.body    , "}");
-        Ins(&R, addary.body    , "int nnew = rhs.n_elems;");
+        Ins(&R, addary.body    , "i64 nnew = rhs.n_elems;");
         Ins(&R, addary.body    , "$name_Reserve($pararg, nnew); // reserve space");
-        Ins(&R, addary.body    , "int at = $parname.$name_n;");
+        Ins(&R, addary.body    , "i64 at = $parname.$name_n;");
         if (can_memcpy) {
             Ins(&R, addary.body, "memcpy($parname.$name_elems + at, rhs.elems, nnew * sizeof($Cpptype));");
             Ins(&R, addary.body, "$parname.$name_n += nnew;");
         } else {
             // copy one by one -- if exception thrown during copying, $name_n will contain
             // a valid value.
-            Ins(&R, addary.body, "for (int i = 0; i < nnew; i++) {");
+            Ins(&R, addary.body, "for (i64 i = 0; i < nnew; i++) {");
             Ins(&R, addary.body, "    new ($parname.$name_elems + at + i) $Cpptype(rhs[i]);");
             Ins(&R, addary.body, "    $parname.$name_n++;");
             Ins(&R, addary.body, "}");
-        }
-        if (field.do_trace) {
-            Set(R, "$partrace", Refname(*field.p_ctype));
-            Ins(&R, addary.body, "$ns::_db.trace.alloc_$partrace_$name += nnew;");
         }
         Ins(&R, addary.body    , "return algo::aryptr<$Cpptype>($parname.$name_elems + at, nnew);");
     }
@@ -100,23 +95,17 @@ void amc::tfunc_Tary_Addary() {
 
 void amc::tfunc_Tary_Alloc() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-
     amc::FFunc& alloc = amc::CreateCurFunc();
     Ins(&R, alloc.comment, "Reserve space. Insert element at the end");
     Ins(&R, alloc.comment, "The new element is initialized to a default value");
     Ins(&R, alloc.ret  , "$Cpptype&", false);
     Ins(&R, alloc.proto, "$name_Alloc($Parent)", false);
     Ins(&R, alloc.body    , "$name_Reserve($pararg, 1);");
-    Ins(&R, alloc.body    , "int n  = $parname.$name_n;");
-    Ins(&R, alloc.body    , "int at = n;");
+    Ins(&R, alloc.body    , "i64 n  = $parname.$name_n;");
+    Ins(&R, alloc.body    , "i64 at = n;");
     Ins(&R, alloc.body    , "$Cpptype *elems = $parname.$name_elems;");
     Ins(&R, alloc.body    , "new (elems + at) $Cpptype($dflt); // construct new element, default initializer");
     Ins(&R, alloc.body    , "$parname.$name_n = n+1;");
-    if (field.do_trace) {
-        Set(R, "$partrace", Refname(*field.p_ctype));
-        Ins(&R, alloc.body, "++$ns::_db.trace.alloc_$partrace_$name;");
-    }
     Ins(&R, alloc.body    , "return elems[at];");
 }
 
@@ -124,16 +113,14 @@ void amc::tfunc_Tary_Alloc() {
 
 void amc::tfunc_Tary_AllocAt() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-
     {
         amc::FFunc& allocat = amc::CreateCurFunc();
         Ins(&R, allocat.comment, "Reserve space for new element, reallocating the array if necessary");
         Ins(&R, allocat.comment, "Insert new element at specified index. Index must be in range or a fatal error occurs.", false);
         Ins(&R, allocat.ret  , "$Cpptype&", false);
-        Ins(&R, allocat.proto, "$name_AllocAt($Parent, int at)", false);
+        Ins(&R, allocat.proto, "$name_AllocAt($Parent, i64 at)", false);
         Ins(&R, allocat.body    , "$name_Reserve($pararg, 1);");
-        Ins(&R, allocat.body    , "int n  = $parname.$name_n;");
+        Ins(&R, allocat.body    , "i64 n  = $parname.$name_n;");
         Ins(&R, allocat.body    , "if (UNLIKELY(u64(at) >= u64(n+1))) {");// silently cure bad index?
         Ins(&R, allocat.body    , "    FatalErrorExit(\"$ns.bad_alloc_at  field:$field  comment:'index out of range'\");");
         Ins(&R, allocat.body    , "}");
@@ -141,10 +128,6 @@ void amc::tfunc_Tary_AllocAt() {
         Ins(&R, allocat.body    , "memmove(elems + at + 1, elems + at, (n - at) * sizeof($Cpptype));");
         Ins(&R, allocat.body    , "new (elems + at) $Cpptype($dflt); // construct element, default initializer");
         Ins(&R, allocat.body    , "$parname.$name_n = n+1;");
-        if (field.do_trace) {
-            Set(R, "$partrace", Refname(*field.p_ctype));
-            Ins(&R, allocat.body, "++$ns::_db.trace.alloc_$partrace_$name;");
-        }
         Ins(&R, allocat.body    , "return elems[at];");
     }
 }
@@ -159,23 +142,19 @@ void amc::tfunc_Tary_AllocN() {
     {
         amc::FFunc& allocn = amc::CreateCurFunc();
         Ins(&R, allocn.ret  , "algo::aryptr<$Cpptype>", false);
-        Ins(&R, allocn.proto, "$name_AllocN($Parent, int n_elems)", false);
+        Ins(&R, allocn.proto, "$name_AllocN($Parent, i64 n_elems)", false);
         Ins(&R, allocn.body    , "$name_Reserve($pararg, n_elems);");
-        Ins(&R, allocn.body    , "int old_n  = $parname.$name_n;");
-        Ins(&R, allocn.body    , "int new_n = old_n + n_elems;");
+        Ins(&R, allocn.body    , "i64 old_n  = $parname.$name_n;");
+        Ins(&R, allocn.body    , "i64 new_n = old_n + n_elems;");
         Ins(&R, allocn.body    , "$Cpptype *elems = $parname.$name_elems;");
         if (can_memset) {
             Ins(&R, allocn.body, "memset(elems + old_n, $dflt, new_n - old_n); // initialize new space");
         } else {
-            Ins(&R, allocn.body, "for (int i = old_n; i < new_n; i++) {");
+            Ins(&R, allocn.body, "for (i64 i = old_n; i < new_n; i++) {");
             Ins(&R, allocn.body, "    new (elems + i) $Cpptype($dflt); // construct new element, default initialize");
             Ins(&R, allocn.body, "}");
         }
         Ins(&R, allocn.body    , "$parname.$name_n = new_n;");
-        if (field.do_trace) {
-            Set(R, "$partrace", Refname(*field.p_ctype));
-            Ins(&R, allocn.body, "$ns::_db.trace.alloc_$partrace_$name += n_elems;");
-        }
         Ins(&R, allocn.body    , "return algo::aryptr<$Cpptype>(elems + old_n, n_elems);");
     }
 }
@@ -190,9 +169,9 @@ void amc::tfunc_Tary_AllocNAt() {
         Ins(&R, allocnat.comment, "Reserve space for new element, reallocating the array if necessary");
         Ins(&R, allocnat.comment, "Insert new element at specified index. Index must be in range or a fatal error occurs.", false);
         Ins(&R, allocnat.ret  , "algo::aryptr<$Cpptype>", false);
-        Ins(&R, allocnat.proto, "$name_AllocNAt($Parent, int n_elems, int at)", false);
+        Ins(&R, allocnat.proto, "$name_AllocNAt($Parent, i64 n_elems, i64 at)", false);
         Ins(&R, allocnat.body    , "$name_Reserve($pararg, n_elems);");
-        Ins(&R, allocnat.body    , "int n  = $parname.$name_n;");
+        Ins(&R, allocnat.body    , "i64 n  = $parname.$name_n;");
         Ins(&R, allocnat.body    , "if (UNLIKELY(u64(at) > u64(n))) {");// silently cure bad index?
         Ins(&R, allocnat.body    , "    FatalErrorExit(\"$ns.bad_alloc_n_at  field:$field  comment:'index out of range'\");");
         Ins(&R, allocnat.body    , "}");
@@ -201,15 +180,11 @@ void amc::tfunc_Tary_AllocNAt() {
         if (can_memset) {
             Ins(&R, allocnat.body, "memset(elems + at, $dflt, n_elems); // initialize new space");
         } else {
-            Ins(&R, allocnat.body, "for (int i = 0; i < n_elems; i++) {");
+            Ins(&R, allocnat.body, "for (i64 i = 0; i < n_elems; i++) {");
             Ins(&R, allocnat.body, "    new (elems + at + i) $Cpptype($dflt); // construct new element, default initialize");
             Ins(&R, allocnat.body, "}");
         }
         Ins(&R, allocnat.body    , "$parname.$name_n = n+n_elems;");
-        if (field.do_trace) {
-            Set(R, "$partrace", Refname(*field.p_ctype));
-            Ins(&R, allocnat.body, "$ns::_db.trace.alloc_$partrace_$name += n_elems;");
-        }
         Ins(&R, allocnat.body    , "return algo::aryptr<$Cpptype>(elems+at,n_elems);");
     }
 }
@@ -226,23 +201,19 @@ void amc::tfunc_Tary_AllocNVal() {
         {
             amc::FFunc& allocnval = amc::CreateCurFunc();
             Ins(&R, allocnval.ret     , "algo::aryptr<$Cpptype>", false);
-            Ins(&R, allocnval.proto   , "$name_AllocNVal($Parent, int n_elems, const $Cpptype& val)", false);
+            Ins(&R, allocnval.proto   , "$name_AllocNVal($Parent, i64 n_elems, const $Cpptype& val)", false);
             Ins(&R, allocnval.body    , "$name_Reserve($pararg, n_elems);");
-            Ins(&R, allocnval.body    , "int old_n  = $parname.$name_n;");
-            Ins(&R, allocnval.body    , "int new_n = old_n + n_elems;");
+            Ins(&R, allocnval.body    , "i64 old_n  = $parname.$name_n;");
+            Ins(&R, allocnval.body    , "i64 new_n = old_n + n_elems;");
             Ins(&R, allocnval.body    , "$Cpptype *elems = $parname.$name_elems;");
             if (can_memset) {
                 Ins(&R, allocnval.body, "memset(elems + old_n, val, new_n - old_n); // initialize new space");
             } else {
-                Ins(&R, allocnval.body, "for (int i = old_n; i < new_n; i++) {");
+                Ins(&R, allocnval.body, "for (i64 i = old_n; i < new_n; i++) {");
                 Ins(&R, allocnval.body, "    new (elems + i) $Cpptype(val);");
                 Ins(&R, allocnval.body, "}");
             }
             Ins(&R, allocnval.body    , "$parname.$name_n = new_n;");
-            if (field.do_trace) {
-                Set(R, "$partrace", Refname(*field.p_ctype));
-                Ins(&R, allocnval.body, "$ns::_db.trace.alloc_$partrace_$name += n_elems;");
-            }
             Ins(&R, allocnval.body    , "return algo::aryptr<$Cpptype>(elems + old_n, n_elems);");
         }
     }
@@ -313,7 +284,7 @@ void amc::tfunc_Tary_Max() {
     amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& maxitems = amc::CreateCurFunc();
-    Ins(&R, maxitems.ret  , "i32", false);
+    Ins(&R, maxitems.ret  , "i64", false);
     Ins(&R, maxitems.proto, "$name_Max($Parent)", false);
     if (!GlobalQ(*field.p_ctype)) {
         Ins(&R, maxitems.body, "(void)$pararg;");
@@ -327,7 +298,7 @@ void amc::tfunc_Tary_N() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& nitems = amc::CreateCurFunc();
-    Ins(&R, nitems.ret  , "i32", false);
+    Ins(&R, nitems.ret  , "i64", false);
     Ins(&R, nitems.proto, "$name_N($Cparent)", false);
     Ins(&R, nitems.body, "return $parname.$name_n;");
 }
@@ -337,24 +308,18 @@ void amc::tfunc_Tary_N() {
 void amc::tfunc_Tary_Remove() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
-
-    amc::FFunc& remove = amc::CreateCurFunc();
-    Ins(&R, remove.ret    , "void", false);
-    Ins(&R, remove.proto  , "$name_Remove($Parent, u32 i)", false);
-    Ins(&R, remove.body    , "u32 lim = $parname.$name_n;");
-    Ins(&R, remove.body    , "$Cpptype *elems = $parname.$name_elems;");
-    Ins(&R, remove.body    , "if (i < lim) {");
-    if (dtor) {
-        Ins(&R, remove.body, "    elems[i].~$Ctype(); // destroy element");
+    amc::FFunc& func = amc::CreateCurFunc(true);
+    AddRetval(func, "void", "", "");
+    AddProtoArg(func, "u64", "i", "");
+    Ins(&R, func.body    , "u64 lim = $parname.$name_n;");
+    Ins(&R, func.body    , "$Cpptype *elems = $parname.$name_elems;");
+    Ins(&R, func.body    , "if (i < lim) {");// checks both ends of the range
+    if (HasDtorQ(*field.p_arg)) {
+        Ins(&R, func.body, "    elems[i].~$Ctype(); // destroy element");
     }
-    Ins(&R, remove.body    , "    memmove(elems + i, elems + (i + 1), sizeof($Cpptype) * (lim - (i + 1)));");
-    Ins(&R, remove.body    , "    $parname.$name_n = lim - 1;");
-    if (field.do_trace) {
-        Set(R, "$partrace", Refname(*field.p_ctype));
-        Ins(&R, remove.body, "    $ns::_db.trace.del_$partrace_$name += 1;");
-    }
-    Ins(&R, remove.body    , "}");
+    Ins(&R, func.body    , "    memmove(elems + i, elems + (i + 1), sizeof($Cpptype) * (lim - (i + 1)));");
+    Ins(&R, func.body    , "    $parname.$name_n = lim - 1;");
+    Ins(&R, func.body    , "}");
 }
 
 // -----------------------------------------------------------------------------
@@ -362,27 +327,19 @@ void amc::tfunc_Tary_Remove() {
 void amc::tfunc_Tary_RemoveAll() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
-
     if (!field.c_fnoremove) {
         amc::FFunc& removeall = amc::CreateCurFunc();
         Ins(&R, removeall.ret  , "void", false);
         Ins(&R, removeall.proto, "$name_RemoveAll($Parent)", false);
-        if (field.do_trace) {
-            Set(R, "$partrace", Refname(*field.p_ctype));
-            Ins(&R, removeall.body, "$ns::_db.trace.del_$partrace_$name += $parname.$name_n;");
-        }
-        if (!dtor) {
-            removeall.inl = true;
-            Ins(&R, removeall.body, "$parname.$name_n = 0;");
-        } else {
-            Ins(&R, removeall.body, "u32 n = $parname.$name_n;");
-            Ins(&R, removeall.body, "while (n > 0) {");
-            Ins(&R, removeall.body, "    n -= 1;");
-            Ins(&R, removeall.body, "    $parname.$name_elems[n].~$Ctype();");
-            Ins(&R, removeall.body, "    $parname.$name_n = n;");
+        if (HasDtorQ(*field.p_arg)) {
+            Ins(&R, removeall.body, "u64 n = $parname.$name_n;");
+            Ins(&R, removeall.body, "for (u64 i=0; i<n; i++) {");
+            Ins(&R, removeall.body, "    $parname.$name_elems[i].~$Ctype();");
             Ins(&R, removeall.body, "}");
+        } else {
+            removeall.inl = true;
         }
+        Ins(&R, removeall.body, "$parname.$name_n = 0;");
     }
 }
 
@@ -391,20 +348,14 @@ void amc::tfunc_Tary_RemoveAll() {
 void amc::tfunc_Tary_RemoveLast() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
-
     amc::FFunc& removelast = amc::CreateCurFunc();
     Ins(&R, removelast.ret  , "void", false);
     Ins(&R, removelast.proto, "$name_RemoveLast($Parent)", false);
     Ins(&R, removelast.body    , "u64 n = $parname.$name_n;");
     Ins(&R, removelast.body    , "if (n > 0) {");
     Ins(&R, removelast.body    , "    n -= 1;");
-    if (dtor) {
+    if (HasDtorQ(*field.p_arg)) {
         Ins(&R, removelast.body, "    $name_qFind($pararg, $Rowid(n)).~$Ctype();");
-    }
-    if (field.do_trace) {
-        Set(R, "$partrace", Refname(*field.p_ctype));
-        Ins(&R, removelast.body, "    $ns::_db.trace.del_$partrace_$name += 1;");
     }
     Ins(&R, removelast.body    , "    $parname.$name_n = n;");
     Ins(&R, removelast.body    , "}");
@@ -417,10 +368,10 @@ void amc::tfunc_Tary_AbsReserve() {
 
     amc::FFunc& func = amc::CreateCurFunc(true); {
         AddRetval(func, "void", "", "");
-        AddProtoArg(func, "int", "n");
-        Ins(&R, func.body, "u32 old_max  = $parname.$name_max;");
-        Ins(&R, func.body, "if (n > i32(old_max)) {");
-        Ins(&R, func.body, "    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);");
+        AddProtoArg(func, "i64", "n");
+        Ins(&R, func.body, "u64 old_max  = $parname.$name_max;");
+        Ins(&R, func.body, "if (n > i64(old_max)) {");
+        Ins(&R, func.body, "    u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);");
         Ins(&R, func.body, "    void *new_mem = $basepool_ReallocMem($parname.$name_elems, old_max * sizeof($Cpptype), new_max * sizeof($Cpptype));");
         Ins(&R, func.body, "    if (UNLIKELY(!new_mem)) {");
         Ins(&R, func.body, "        FatalErrorExit(\"$ns.tary_nomem  field:$field  comment:'out of memory'\");");
@@ -438,8 +389,8 @@ void amc::tfunc_Tary_Reserve() {
 
     amc::FFunc& func = amc::CreateCurFunc(true); {
         AddRetval(func, "void", "", "");
-        AddProtoArg(func, "int", "n");
-        Ins(&R, func.body, "u32 new_n = $parname.$name_n + n;");
+        AddProtoArg(func, "i64", "n");
+        Ins(&R, func.body, "u64 new_n = $parname.$name_n + n;");
         Ins(&R, func.body, "if (UNLIKELY(new_n > $parname.$name_max)) {");
         Ins(&R, func.body, "    $name_AbsReserve($pararg, new_n);");
         Ins(&R, func.body, "}");
@@ -455,7 +406,7 @@ void amc::tfunc_Tary_RowidFind() {
         amc::FFunc& rowid_findx = amc::CreateCurFunc();
         rowid_findx.priv=true;
         Ins(&R, rowid_findx.ret  , "algo::ImrowPtr", false);
-        Ins(&R, rowid_findx.proto, "$name_RowidFind(int t)", false);
+        Ins(&R, rowid_findx.proto, "$name_RowidFind(i64 t)", false);
         Ins(&R, rowid_findx.body, "return algo::ImrowPtr(u64($name_Find($pararg, $Rowid(t))));");
     }
 }
@@ -474,20 +425,16 @@ void amc::tfunc_Tary_Setary() {
         Ins(&R, setary.ret  , "void",false);
         Ins(&R, setary.proto, "$name_Setary($Parent, $Partype &rhs)",false);
         Ins(&R, setary.body    , "$name_RemoveAll($pararg);");
-        Ins(&R, setary.body    , "int nnew = rhs.$name_n;");
+        Ins(&R, setary.body    , "i64 nnew = rhs.$name_n;");
         Ins(&R, setary.body    , "$name_Reserve($pararg, nnew); // reserve space");
         if (can_memcpy) {
             Ins(&R, setary.body, "memcpy($parname.$name_elems, rhs.$name_elems, nnew * sizeof($Cpptype));");
             Ins(&R, setary.body, "$parname.$name_n = nnew;");
         } else {
-            Ins(&R, setary.body, "for (int i = 0; i < nnew; i++) { // copy elements over");
+            Ins(&R, setary.body, "for (i64 i = 0; i < nnew; i++) { // copy elements over");
             Ins(&R, setary.body, "    new ($parname.$name_elems + i) $Cpptype($name_qFind(rhs, i));");
             Ins(&R, setary.body, "    $parname.$name_n = i + 1;");
             Ins(&R, setary.body, "}");
-        }
-        if (field.do_trace) {
-            Set(R, "$partrace", Refname(*field.p_ctype));
-            Ins(&R, setary.body, "$ns::_db.trace.alloc_$partrace_$name += nnew;");
         }
     }
 }
@@ -568,11 +515,11 @@ void amc::tfunc_Tary_Eq() {
         amc::FFunc& opeq = amc::CreateCurFunc();
         Ins(&R, opeq.proto, "$name_Eq(const $Parent,const $Partype &rhs)", false);
         Ins(&R, opeq.ret, "bool", false);
-        Ins(&R, opeq.body, "int len = $name_N($pararg);");
+        Ins(&R, opeq.body, "i64 len = $name_N($pararg);");
         Ins(&R, opeq.body, "if (len != $name_N(rhs)) {");// short-circuit
         Ins(&R, opeq.body, "    return false;");
         Ins(&R, opeq.body, "}");
-        Ins(&R, opeq.body, "for (int i = 0; i < len; i++) {");
+        Ins(&R, opeq.body, "for (i64 i = 0; i < len; i++) {");
         Ins(&R, opeq.body, "    if (!($parname.$name_elems[i] == rhs.$name_elems[i])) {");// TODO: USE EQ!
         Ins(&R, opeq.body, "        return false;");
         Ins(&R, opeq.body, "    }");
@@ -591,15 +538,15 @@ void amc::tfunc_Tary_Cmp() {
         amc::FFunc& opeq = amc::CreateCurFunc();
         Ins(&R, opeq.proto, "$name_Cmp($Parent, $Partype &rhs)", false);
         Ins(&R, opeq.ret, "int", false);
-        Ins(&R, opeq.body, "int len = i32_Min($name_N($pararg), $name_N(rhs));");
+        Ins(&R, opeq.body, "i64 len = i64_Min($name_N($pararg), $name_N(rhs));");
         Ins(&R, opeq.body, "int retval = 0;");
-        Ins(&R, opeq.body, "for (int i = 0; i < len; i++) {");
+        Ins(&R, opeq.body, "for (i64 i = 0; i < len; i++) {");
         Ins(&R, opeq.body, "    retval = $Fldtype_Cmp($parname.$name_elems[i], rhs.$name_elems[i]);");
         Ins(&R, opeq.body, "    if (retval != 0) {");
         Ins(&R, opeq.body, "        return retval;");
         Ins(&R, opeq.body, "    }");
         Ins(&R, opeq.body, "}");
-        Ins(&R, opeq.body, "return i32_Cmp($name_N($pararg), $name_N(rhs));");
+        Ins(&R, opeq.body, "return i64_Cmp($name_N($pararg), $name_N(rhs));");
     }
 }
 
@@ -612,8 +559,8 @@ void amc::tfunc_Tary_curs() {
     Ins(&R, ns.curstext, "struct $Parname_$name_curs {// cursor");
     Ins(&R, ns.curstext, "    typedef $Cpptype ChildType;");
     Ins(&R, ns.curstext, "    $Cpptype* elems;");
-    Ins(&R, ns.curstext, "    int n_elems;");
-    Ins(&R, ns.curstext, "    int index;");
+    Ins(&R, ns.curstext, "    i64 n_elems;");
+    Ins(&R, ns.curstext, "    i64 index;");
     Ins(&R, ns.curstext, "    $Parname_$name_curs() { elems=NULL; n_elems=0; index=0; }");
     Ins(&R, ns.curstext, "};");
     Ins(&R, ns.curstext, "");
@@ -687,7 +634,7 @@ void amc::tfunc_Tary_ReadStrptrMaybe() {
             Ins(&R, func.comment, "Function returns true if the input string contains no error.");
             Ins(&R, func.comment, "Any values already loaded into the array remain in place");
             Ins(&R, func.body, "$name_RemoveAll($pararg);");
-            Ins(&R, func.body, "for (int i=0; in_str != \"\"; i++) {");
+            Ins(&R, func.body, "for (i64 i=0; in_str != \"\"; i++) {");
             Ins(&R, func.body, "    algo::strptr token;");
             Ins(&R, func.body, "    algo::NextSep(in_str, $sep, token);");
             Ins(&R, func.body, "    $Cpptype &elem = $name_Alloc($pararg);");
@@ -759,24 +706,24 @@ void amc::tfunc_Tary_Insary() {
     amc::FField &field = *amc::_db.genctx.p_field;
     bool can_copy = !CopyPrivQ(*field.p_arg);
     bool can_memcpy = field.p_arg->c_bltin;
-    bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
+    bool dtor = HasDtorQ(*field.p_arg);
 
     if (field.p_arg->n_xref == 0 && can_copy) {
         amc::FFunc& insary = amc::CreateCurFunc();
         Ins(&R, insary.comment, "Insert N elements at specified index. Index must be in range or a fatal error occurs.", false);
         Ins(&R, insary.comment, "Reserve space, and move existing elements to end.", false);
         Ins(&R, insary.comment, "If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.");
-        Ins(&R, insary.proto, "$name_Insary($Parent, algo::aryptr<$Cpptype> rhs, int at)", false);
+        Ins(&R, insary.proto, "$name_Insary($Parent, algo::aryptr<$Cpptype> rhs, i64 at)", false);
         Ins(&R, insary.ret     , "void", false);
         Ins(&R, insary.body    , "bool overlaps = rhs.n_elems>0 && rhs.elems >= $parname.$name_elems && rhs.elems < $parname.$name_elems + $parname.$name_max;");
         Ins(&R, insary.body    , "if (UNLIKELY(overlaps)) {");
         Ins(&R, insary.body    , "    FatalErrorExit(\"$ns.tary_alias  field:$field  comment:'alias error: sub-array is being appended to the whole'\");");
         Ins(&R, insary.body    , "}");
-        Ins(&R, insary.body    , "if (UNLIKELY(u64(at) >= u64($parname.$name_elems+1))) {");
+        Ins(&R, insary.body    , "if (UNLIKELY(u64(at) >= u64($parname.$name_n+1))) {");
         Ins(&R, insary.body    , "    FatalErrorExit(\"$ns.bad_insary  field:$field  comment:'index out of range'\");");
         Ins(&R, insary.body    , "}");
-        Ins(&R, insary.body    , "int nnew = rhs.n_elems;");
-        Ins(&R, insary.body    , "int nmove = $parname.$name_n - at;");
+        Ins(&R, insary.body    , "i64 nnew = rhs.n_elems;");
+        Ins(&R, insary.body    , "i64 nmove = $parname.$name_n - at;");
         Ins(&R, insary.body    , "$name_Reserve($pararg, nnew); // reserve space");
         if (can_memcpy) {
             Ins(&R, insary.body, "memmove($parname.$name_elems + at + nnew, $parname.$name_elems + at, nmove * sizeof($Cpptype));");
@@ -785,20 +732,94 @@ void amc::tfunc_Tary_Insary() {
         } else {
             // copy one by one -- if exception thrown during copying, $name_n will contain
             // a valid value.
-            Ins(&R, insary.body, "for (int i = nmove-1; i >=0 ; --i) {");
+            Ins(&R, insary.body, "for (i64 i = nmove-1; i >=0 ; --i) {");
             Ins(&R, insary.body, "    new ($parname.$name_elems + at + nnew + i) $Cpptype($parname.$name_elems[at + i]);");
             if (dtor) {
                 Ins(&R, insary.body, "    $parname.$name_elems[at + i].~$Ctype(); // destroy element");
             }
             Ins(&R, insary.body, "}");
-            Ins(&R, insary.body, "for (int i = 0; i < nnew; ++i) {");
+            Ins(&R, insary.body, "for (i64 i = 0; i < nnew; ++i) {");
             Ins(&R, insary.body, "    new ($parname.$name_elems + at + i) $Cpptype(rhs[i]);");
             Ins(&R, insary.body, "}");
             Ins(&R, insary.body, "$parname.$name_n += nnew;");
         }
-        if (field.do_trace) {
-            Set(R, "$partrace", Refname(*field.p_ctype));
-            Ins(&R, insary.body, "$ns::_db.trace.alloc_$partrace_$name += nnew;");
-        }
     }
+}
+
+void amc::tfunc_Tary_GetAlloc() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
+    if (field.arg == "u8") {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        AddRetval(func, "algo::Alloc", "ret", "");
+        Ins(&R, func.proto, "$name_GetAlloc($Parent)", false);
+        Ins(&R, func.body, "ret.ctx = &$parname;");
+        Ins(&R, func.body, "void *(*begin)($Partype&,i64) = $name_BeginAlloc;");
+        Ins(&R, func.body, "ret.begin = algo::BeginAllocFcn(begin);");
+        Ins(&R, func.body, "ret.end = NULL;");
+    }
+}
+
+void amc::tfunc_Tary_BeginAlloc() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
+    if (field.arg == "u8") {
+        amc::FFunc& func = amc::CreateCurFunc();
+        AddRetval(func, "void*", "", "");
+        Ins(&R, func.proto, "$name_BeginAlloc($Partype &$parname, i64 len)", false);
+        Ins(&R, func.body, "$name_RemoveAll($pararg); // clear array");
+        Ins(&R, func.body, "return $name_AllocN($parname,len).elems;");
+    }
+}
+
+void amc::tfunc_Tary_GetAllocAppend() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
+    if (field.arg == "u8") {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        AddRetval(func, "algo::Alloc", "ret", "");
+        Ins(&R, func.proto, "$name_GetAllocAppend($Parent)", false);
+        Ins(&R, func.body, "ret.ctx = &$parname;");
+        Ins(&R, func.body, "void *(*begin)($Partype&,i64) = $name_BeginAllocAppend;");
+        Ins(&R, func.body, "ret.begin = algo::BeginAllocFcn(begin);");
+        Ins(&R, func.body, "ret.end = NULL;");
+    }
+}
+
+void amc::tfunc_Tary_BeginAllocAppend() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
+    if (field.arg == "u8") {
+        amc::FFunc& func = amc::CreateCurFunc();
+        AddRetval(func, "void*", "", "");
+        Ins(&R, func.proto, "$name_BeginAllocAppend($Partype &$parname, i64 len)", false);
+        Ins(&R, func.body, "return $name_AllocN($parname,len).elems;");
+    }
+}
+
+void amc::tfunc_Tary_RemRegion() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
+    amc::FFunc& func = amc::CreateCurFunc(true);
+    AddRetval(func, "void", "", "");
+    AddProtoArg(func, "i64", "beg");
+    AddProtoArg(func, "i64", "n");
+    Ins(&R, func.comment, "Remove region from the middle of the array");
+    Ins(&R, func.comment, "The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.");
+    Ins(&R, func.comment, "If N is negative, nothing is removed.");
+    Ins(&R, func.body    , "i64 end = i64_Min(beg+n, $parname.$name_n);");
+    Ins(&R, func.body    , "beg = i64_Max(beg,0);");
+    Ins(&R, func.body    , "n = end-beg;");
+    Ins(&R, func.body    , "if (n>0) {");
+    // destruct elements
+    if (HasDtorQ(*field.p_arg)) {
+        Ins(&R, func.body, "    for (i64 i=beg; i<end; i++) {");
+        Ins(&R, func.body, "        $parname.$name_elems[i].~$Ctype();");
+        Ins(&R, func.body, "    }");
+    }
+    Ins(&R, func.body    , "    memmove($parname.$name_elems+beg, $parname.$name_elems+end, sizeof($Cpptype) * ($parname.$name_n-end));");
+    Ins(&R, func.body    , "    $parname.$name_n -= n;");
+    Ins(&R, func.body    , "}");
 }

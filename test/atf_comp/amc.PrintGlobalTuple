@@ -1,0 +1,32 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.FDb.%Print% < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.val  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.buf  arg:u32  reftype:Inlary  dflt:""  comment:""
+amc <- dmmeta.inlary  field:algo_lib.FDb.buf  min:0  max:4  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
+# eof amc
+amc -> // --- algo_lib.FDb..Print
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:algo_lib.FDb.String  printfmt:Tuple
+amc -> void algo_lib::FDb_Print(algo_lib::FDb& row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     str << "algo_lib.FDb";
+amc ->     u64_Print(row.malloc, temp);
+amc ->     PrintAttrSpaceReset(str,"malloc", temp);
+amc ->     u32_Print(row.val, temp);
+amc ->     PrintAttrSpaceReset(str,"val", temp);
+amc ->     ind_beg(_db_buf_curs,buf,row) {
+amc ->         u32_Print(buf, temp);
+amc ->         tempstr name;
+amc ->         name << "buf.";
+amc ->         name << ind_curs(buf).index;
+amc ->         PrintAttrSpaceReset(str, name, temp);
+amc ->     }ind_end;
+amc ->     algo_lib::trace_Print(row.trace, temp);
+amc ->     PrintAttrSpaceReset(str,"trace", temp);
+amc -> }
+# exit amc code:0

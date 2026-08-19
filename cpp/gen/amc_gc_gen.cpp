@@ -41,24 +41,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 amc_gc::FDb     amc_gc::_db;      // dependency found via dev.targdep
 
-namespace amc_gc {
-const char *amc_gc_help =
-"amc_gc: Garbage collector for in-memory databases\n"
-"Usage: amc_gc [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -target     regx    \"%\"     Target to test-build\n"
-"    -key        regx    \"\"      ACR query selecting records to eliminate, e.g. dmmeta.ctype:amc.%\n"
-"    -include                    Garbage collect includes for specified target\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace amc_gc
 namespace amc_gc { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:amc_gc.FDb._db.InitReflection
@@ -83,99 +65,16 @@ void amc_gc::trace_Print(amc_gc::trace& row, algo::cstring& str) {
 }
 
 // --- amc_gc.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     amc_gc.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of amc_gc.FDb.cmdline (and any base command line)
+// via amc_gc_ReadArgv; then apply -help/-version and load floadtuples input.
 void amc_gc::ReadArgv() {
     command::amc_gc &cmd = amc_gc::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::amc_gc_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"amc_gc: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "amc_gc: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::amc_gc_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"amc_gc: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::amc_gc_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -198,9 +97,7 @@ void amc_gc::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:amc_gc.FDb.cmdline
+    // dmmeta.floadtuples:command.amc_gc.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!amc_gc::LoadTuplesMaybe(cmd.in,true)) {
@@ -213,7 +110,7 @@ void amc_gc::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(amc_gc_help);
+        prlog(command::amc_gc_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -240,7 +137,13 @@ void amc_gc::Step() {
 // --- amc_gc.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void amc_gc::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("amc_gc", NULL, NULL, amc_gc::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "amc_gc";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = amc_gc::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "amc_gc.trace";
@@ -334,6 +237,15 @@ bool amc_gc::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // Calls Step function of dependencies
 void amc_gc::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- amc_gc.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool amc_gc::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- amc_gc.FDb._db.XrefMaybe
@@ -441,7 +353,7 @@ bool amc_gc::FieldId_ReadStrptrMaybe(amc_gc::FieldId &parent, algo::strptr in_st
 // --- amc_gc.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:amc_gc.FieldId.String  printfmt:Raw
-void amc_gc::FieldId_Print(amc_gc::FieldId& row, algo::cstring& str) {
+void amc_gc::FieldId_Print(amc_gc::FieldId row, algo::cstring& str) {
     amc_gc::value_Print(row, str);
 }
 

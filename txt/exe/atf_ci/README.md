@@ -3,41 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [atf_ci - Internals](/txt/exe/atf_ci/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Syntax
-<a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
-```
-atf_ci: Normalization tests (see citest table)
-Usage: atf_ci [[-citest:]<regx>] [options]
-    OPTION        TYPE    DFLT    COMMENT
-    -in           string  "data"  Input directory or filename, - for stdin
-    [citest]      regx    "%"     Regx of tests to run
-    -maxerr       int     0       Exit after this many errors
-    -cijob        regx    "%"
-    -capture                      Capture the output of the test
-    -check_clean          Y       Check for modifications after each test
-    -verbose      flag            Verbosity level (0..255); alias -v; cumulative
-    -debug        flag            Debug level (0..255); alias -d; cumulative
-    -help                         Print help and exit; alias -h
-    -version                      Print version and exit
-    -signature                    Show signatures and exit; alias -sig
-
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+### Internals
+<a href="#internals"></a>
+&#128196; [atf_ci - Internals](/txt/gen/atf_ci/atf_ci.md)<br/>
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -56,11 +33,8 @@ Usage: atf_ci [[-citest:]<regx>] [options]
 #### -check_clean -- Check for modifications after each test
 <a href="#-check_clean"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `atf_ci` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
@@ -84,10 +58,9 @@ Usage: atf_ci [[-citest:]<regx>] [options]
 |[dev.msgfile](/txt/ssimdb/dev/msgfile.md)|File in repo containing messages that should be normalized during CI|
 |[dev.noindent](/txt/ssimdb/dev/noindent.md)|Indicates that a file should not be automatically indented|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
+|[dev.package](/txt/ssimdb/dev/package.md)|OpenACR package|
+|[dev.pkggen](/txt/ssimdb/dev/pkggen.md)||
 |[dev.readmefile](/txt/ssimdb/dev/readmefile.md)|File containing documentation|
 |[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

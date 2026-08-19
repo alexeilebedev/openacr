@@ -1,0 +1,4 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir temp d d/dmmeta && printf "dmmeta.dispsig  dispsig:xx.aa  signature:1\\n" > d/dmmeta/dispsig.ssim && printf "dmmeta.ctype  ctype:xx.Bb  comment:hello\\n" > d/dmmeta/ctype.ssim && printf "dmmeta.dispsig  dispsig:xx.aa  signature:2\\ndmmeta.ctype  ctype:xx.Bb  comment:world\\n" > edited.ssim && EDITOR="cp edited.ssim" $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data %:xx% -e -print:N\''
+# eof bash
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:2  n_file_mod:2  n_badline:0
+# exit bash code:0

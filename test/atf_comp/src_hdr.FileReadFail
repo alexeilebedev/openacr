@@ -1,0 +1,4 @@
+# start bash cmd:"bash -c 'cd $tempdir && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:%'"
+# eof bash
+bash -> src_hdr.file_read  file:ro/x.sh  err:"No such file or directory"  comment:"source file could not be read"
+# exit bash code:1

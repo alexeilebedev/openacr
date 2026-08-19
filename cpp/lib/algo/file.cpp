@@ -122,11 +122,47 @@ bool algo::DirectoryQ(strptr path) NOTHROW {
 
 // -----------------------------------------------------------------------------
 
+// Test whether directory PATH grants search (execute) permission to the real
+// user id -- the permission opening a file by name under PATH requires, on top
+// of that file's own.  Read permission is a separate bit, needed to list PATH's
+// entries and not consulted here, so a directory whose files are only ever
+// opened by name reads as searchable without it.
+bool algo::DirSearchableQ(strptr path) NOTHROW {
+    return 0==access(TOCSTR(path), X_OK);
+}
+
+// -----------------------------------------------------------------------------
+
+// Test whether PATH is a mount point -- a filesystem is actually mounted there,
+// so PATH's device id differs from its parent directory's.  A directory that
+// merely exists with nothing mounted on it (e.g. a drive that failed to mount or
+// is bound to a userspace driver) is NOT a mount point and reads as unmounted.
+bool algo::MountpointQ(strptr path) NOTHROW {
+    StatStruct fst;
+    StatStruct pst;
+    strptr parent = GetDirName(path);
+    bool ret = 0==stat(TOCSTR(path), &fst) && 0==stat(TOCSTR(parent), &pst) && fst.st_dev != pst.st_dev;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Test if F refers to an existing regular file (i.e. not a special file or directory)
 bool algo::FileQ(strptr fname) NOTHROW {
     StatStruct fst;
     int rc = stat(TOCSTR(fname), &fst);
     return rc==0 && S_ISREG(fst.st_mode);
+}
+
+// -----------------------------------------------------------------------------
+
+// Test if FNAME refers to a path that can be opened and read as a stream of bytes:
+// a regular file, a FIFO/socket, a character/block device, or a /dev/fd/N pipe
+// produced by bash <(...) process substitution. Returns false for directories
+// and for paths that don't exist.
+bool algo::FileLikeQ(strptr fname) NOTHROW {
+    StatStruct fst;
+    return 0==stat(TOCSTR(fname), &fst) && !S_ISDIR(fst.st_mode);
 }
 
 // -----------------------------------------------------------------------------
@@ -459,12 +495,21 @@ void algo::dir_handle_Cleanup(algo::DirEntry &dir_entry) {
 // -----------------------------------------------------------------------------
 
 // User-defined cleanup trigger fildes field of ctype:algo_lib.FLockfile
+// With KEEP set, the file survives: the flock alone was the lock, and the
+// file's content remains behind as a durable record for later readers.
+// The mtime is refreshed on release, so a reader can judge how long ago
+// the record's holder let go of it.
 void algo_lib::fildes_Cleanup(algo_lib::FLockfile &lockfile) {
     if (ValidQ(lockfile.fildes.fd)) {
+        if (lockfile.keep) {
+            (void)futimens(lockfile.fildes.fd.value, NULL);
+        }
         (void)flock(lockfile.fildes.fd.value, LOCK_UN);
         algo::Refurbish(lockfile.fildes);
         // delete file, but only if it was successfully locked.
-        unlink(Zeroterm(lockfile.filename));
+        if (!lockfile.keep) {
+            unlink(Zeroterm(lockfile.filename));
+        }
     }
 }
 
@@ -748,12 +793,20 @@ algo::Fildes algo::CreateReplacementFile(cstring &oldfname, cstring &newfname, i
 // No exceptions are thrown. If the function fails, check errno.
 // Default mode for new file is provided by MODE.
 // If the file is being replaced, MODE is ignored and copied from the old file.
-bool algo::SafeStringToFile(const strptr& str, const strptr& filename, int dfltmode){
+// With CHECK_SAME false the comparison is skipped and the file is replaced
+// whatever it holds, so the file that ends up at FILENAME carries the
+// modification time of this write. A caller whose target is read by its
+// modification time -- a build artifact against its sources, a cache entry
+// against a retention window -- needs that, because a skipped write leaves the
+// time it was called to move.
+bool algo::SafeStringToFile(const strptr& str, const strptr& filename, int dfltmode, bool check_same DFLTVAL(true)){
     bool ok = true;
     bool attempt_write=false;
     if (!ch_N(filename)) {
         errno = EINVAL;
         ok = false;
+    } else if (!check_same) {
+        attempt_write = true;
     } else {
         algo_lib::MmapFile file;
         ok = MmapFile_Load(file, filename);// does not throw
@@ -764,24 +817,48 @@ bool algo::SafeStringToFile(const strptr& str, const strptr& filename, int dfltm
         tempstr oldfile(filename);
         tempstr newfile;
         algo::Fildes fd = CreateReplacementFile(oldfile,newfile,dfltmode);
-        if (!ValidQ(fd)) {
+        bool created = ValidQ(fd);// the tempfile exists on disk only if mkstemp succeeded
+        if (!created) {
             ok=false;
         } else {
             ok=WriteFile(fd, (u8*)str.elems, str.n_elems);// does not throw
-            (void)close(fd.value);
+            // A filesystem may report the write error from close() instead of
+            // from write(): on NFS, and on a quota- or space-limited mount,
+            // the buffered tail is flushed as the descriptor is released, and
+            // an ENOSPC there means the tempfile holds only part of STR.
+            // Discarding that result would rename the truncated tempfile over
+            // an intact target, count the write, and return success, so the
+            // close joins the write in deciding whether the content reached
+            // disk. The close is unconditional: a failed write still owns a
+            // descriptor to release.
+            int closerc = close(fd.value);
+            ok = ok && closerc==0;
         }
+        bool target_gone = false;// the target itself was unlinked before the rename
         if (ok) {
 #ifdef WIN32
-            // Windows is unable to rename a file on top of an existing file
-            (void)unlink(Zeroterm(oldfile));
+            // Windows is unable to rename a file on top of an existing file,
+            // so the target is unlinked first; from that point the tempfile
+            // holds the only copy of the content
+            target_gone = unlink(Zeroterm(oldfile))==0;
 #endif
             ok=rename(Zeroterm(newfile),Zeroterm(oldfile))==0;
-        } else {
+        }
+        if (!ok && created && !target_gone) {
+            // a failed write and a failed rename both leave the tempfile
+            // beside the target; remove it so failed saves don't accumulate.
+            // a failed mkstemp leaves no tempfile: newfile then holds only
+            // the unused template name, which is not this function's to
+            // unlink. if the target was already unlinked, the tempfile is
+            // the only surviving copy of the content, so it is kept for
+            // recovery
             int savederr=errno;
             unlink(Zeroterm(newfile));
             errno=savederr;// ignore unlink error -- previous error is what counts
         }
-        algo_lib::_db.stringtofile_nwrite++;// count the event
+        if (ok) {
+            algo_lib::_db.stringtofile_nwrite++;// count the completed write; readers derive files-modified counts from this
+        }
     }
     return ok;
 }
@@ -790,6 +867,52 @@ bool algo::SafeStringToFile(const strptr& str, const strptr& filename, int dfltm
 
 bool algo::SafeStringToFile(const strptr& str, const strptr& filename) {
     return SafeStringToFile(str,filename,0644);
+}
+
+// -----------------------------------------------------------------------------
+
+// Report a file operation that failed with errno: print TAG to stderr,
+// naming FILE, the decoded errno, and COMMENT.
+// The caller performs the operation, calls this on failure, and decides how
+// the failure affects the run -- typically algo_lib::_db.exit_code++.
+void algo::PrerrFileFail(algo::strptr tag, algo::strptr file, algo::strptr comment) {
+    prerr(tag
+          <<Keyval("file",file)
+          <<Keyval("err",algo::FromErrno(errno))
+          <<Keyval("comment",comment));
+}
+
+// -----------------------------------------------------------------------------
+
+// Save STR to file FNAME (SafeStringToFile: the file is rewritten only when
+// its contents differ). A write that fails is reported to stderr under log
+// tag TAG with COMMENT (PrerrFileFail). Return success; the caller decides
+// how a failure affects the run.
+// DFLTMODE is the mode a newly created file gets; replacing an existing file
+// keeps that file's mode.
+bool algo::SaveFile(algo::strptr str, algo::strptr fname, algo::strptr tag, algo::strptr comment, int dfltmode DFLTVAL(0644)) {
+    bool ok = SafeStringToFile(str,fname,dfltmode);
+    if (!ok) {
+        PrerrFileFail(tag,fname,comment);
+    }
+    return ok;
+}
+
+// -----------------------------------------------------------------------------
+
+// Save STR to file FNAME the way SaveFile does, and replace the file even when
+// it already holds STR (SafeStringToFile with CHECK_SAME false), so FNAME comes
+// out of the call with the modification time of this write.
+// Use this rather than SaveFile wherever the modification time of FNAME is read
+// by something else: a build tool comparing an object against its sources, a
+// cache pass evicting by last use. SaveFile leaves such a file untouched when
+// the bytes match, and its old time then says the file was never written.
+bool algo::SaveFileFresh(algo::strptr str, algo::strptr fname, algo::strptr tag, algo::strptr comment, int dfltmode DFLTVAL(0644)) {
+    bool ok = SafeStringToFile(str,fname,dfltmode,false);
+    if (!ok) {
+        PrerrFileFail(tag,fname,comment);
+    }
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
@@ -834,10 +957,10 @@ algo::Fildes algo::OpenRead(const strptr& filename, algo::FileFlags flags DFLTVA
 // Go until all bytes are written on an error occurs.
 // If FILDES is non-blocking, spin indefinitely until bytes do get through.
 // At the end, return success status (TRUE if all bytes written)
-bool algo::WriteFile(algo::Fildes fildes, u8 *start, int nwrite) {
+bool algo::WriteFile(algo::Fildes fildes, u8 *start, i64 nwrite) {
     bool ok = true;
     while (nwrite > 0 && ok) {
-        int nwritten = write(fildes.value, start, nwrite);
+        i64 nwritten = write(fildes.value, start, nwrite);
         if (nwritten<0) {
             ok = errno==EAGAIN; // spin
         } else {// >=0

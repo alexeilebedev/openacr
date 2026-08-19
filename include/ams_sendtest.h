@@ -33,7 +33,23 @@ namespace ams_sendtest { // update-hdr
     // -------------------------------------------------------------------
     // cpp/ams_sendtest.cpp
     //
-    lib_ams::FShm &GetOrCreateShm(ams::ShmId shm_id);
+    lib_ams::FShm &GetOrCreateShm(ams::GrpId grp_id);
+
+    // child reads parent messsage
+    void ReadParentMsg(lib_ams::FShm &shm, ams::MsgHeader &msg);
+
+    // Compose TEXT as a LogMsg and deliver it to every reader; TRUE when all of them
+    // got it.  Delivery is all or nothing, because a reader that missed one message
+    // of a numbered stream has a gap it cannot ask to have filled.
+    //
+    // Two independent choices decide the shape.  The message goes to one ring every
+    // reader shares, or to a ring per reader; and it travels inline in those rings
+    // or as a reference to a board slot.  Inline delivery to N rings is N copies of
+    // the payload -- that is the cost the board exists to remove, and the only
+    // arrangement in which the two paths can be told apart, since a shared ring is
+    // one write however many readers consume it.
+    bool SendText(algo::strptr text);
+    void SendMsg();
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // main:ams_sendtest
 }

@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -30,9 +21,9 @@
 
 // --- ws_SideEnum
 
-enum ws_SideEnum {         // ws.Side.value
-     ws_Side_server   = 0
-    ,ws_Side_client   = 1
+enum ws_SideEnum {    // ws.Side.value
+     ws_Side_server
+    ,ws_Side_client
 };
 
 enum { ws_SideEnum_N = 2 };
@@ -74,29 +65,29 @@ enum { ws_OpcodeEnum_N = 6 };
 
 // --- ws_FieldIdEnum
 
-enum ws_FieldIdEnum {                   // ws.FieldId.value
-     ws_FieldId_base              = 0
-    ,ws_FieldId_type              = 1
-    ,ws_FieldId_length            = 2
-    ,ws_FieldId_conn              = 3
-    ,ws_FieldId_side              = 4
-    ,ws_FieldId_code              = 5
-    ,ws_FieldId_reason            = 6
-    ,ws_FieldId_opcode            = 7
-    ,ws_FieldId_data              = 8
-    ,ws_FieldId_byte0             = 9
-    ,ws_FieldId_byte1             = 10
-    ,ws_FieldId_fin               = 11
-    ,ws_FieldId_rsv1              = 12
-    ,ws_FieldId_rsv2              = 13
-    ,ws_FieldId_rsv3              = 14
-    ,ws_FieldId_mask              = 15
-    ,ws_FieldId_payload_len       = 16
-    ,ws_FieldId_payload           = 17
-    ,ws_FieldId_ext_payload_len   = 18
-    ,ws_FieldId_masking_key       = 19
-    ,ws_FieldId_value             = 20
-    ,ws_FieldId_server            = 21
+enum ws_FieldIdEnum {    // ws.FieldId.value
+     ws_FieldId_base
+    ,ws_FieldId_type
+    ,ws_FieldId_length
+    ,ws_FieldId_conn
+    ,ws_FieldId_side
+    ,ws_FieldId_code
+    ,ws_FieldId_reason
+    ,ws_FieldId_opcode
+    ,ws_FieldId_data
+    ,ws_FieldId_byte0
+    ,ws_FieldId_byte1
+    ,ws_FieldId_fin
+    ,ws_FieldId_rsv1
+    ,ws_FieldId_rsv2
+    ,ws_FieldId_rsv3
+    ,ws_FieldId_mask
+    ,ws_FieldId_payload_len
+    ,ws_FieldId_payload
+    ,ws_FieldId_ext_payload_len
+    ,ws_FieldId_masking_key
+    ,ws_FieldId_value
+    ,ws_FieldId_server
 };
 
 enum { ws_FieldIdEnum_N = 22 };
@@ -141,12 +132,12 @@ enum { ws_FrameHeaderMsgsCaseEnum_N = 4 };
 
 // --- ws_HttpStateEnum
 
-enum ws_HttpStateEnum {           // ws.HttpState.value
-     ws_HttpState_INIT      = 0   // created connection, waiting request-line
-    ,ws_HttpState_REQLINE   = 1   // request-line received, waiting first header
-    ,ws_HttpState_HEADER    = 2   // waiting next header
-    ,ws_HttpState_BODY      = 3   // headers received, waiting body
-    ,ws_HttpState_FIN       = 4   // connection closed, to be deleted
+enum ws_HttpStateEnum {                                                     // ws.HttpState.value
+     ws_HttpState_INIT      // created connection, waiting request-line
+    ,ws_HttpState_REQLINE   // request-line received, waiting first header
+    ,ws_HttpState_HEADER    // waiting next header
+    ,ws_HttpState_BODY      // headers received, waiting body
+    ,ws_HttpState_FIN       // connection closed, to be deleted
 };
 
 enum { ws_HttpStateEnum_N = 5 };
@@ -197,7 +188,6 @@ struct Side { // ws.Side
     inline               Side(ws_SideEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ws.Side.value.GetEnum
 inline ws_SideEnum   value_GetEnum(const ws::Side& parent) __attribute__((nothrow));
@@ -251,7 +241,6 @@ struct StatusCode { // ws.StatusCode
     inline               StatusCode(ws_StatusCodeEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ws.StatusCode.value.GetEnum
 inline ws_StatusCodeEnum value_GetEnum(const ws::StatusCode& parent) __attribute__((nothrow));
@@ -295,7 +284,7 @@ void                 StatusCode_Print(ws::StatusCode row, algo::cstring& str) __
 #pragma pack(push,1)
 struct CloseMsg { // ws.CloseMsg
     u32                 type;     //   504
-    u32                 length;   //   ssizeof(parent) + (0)
+    u32                 length;   //   ssizeof(parent)
     algo::RspaceStr50   conn;     //
     ws::Side            side;     //
     ws::StatusCode      code;     //
@@ -304,7 +293,6 @@ struct CloseMsg { // ws.CloseMsg
     inline               CloseMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.CloseMsg.base.CopyOut
 void                 parent_CopyOut(ws::CloseMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -369,14 +357,13 @@ void                 CloseMsg_Print(ws::CloseMsg& row, algo::cstring& str) __att
 #pragma pack(push,1)
 struct ConnectMsg { // ws.ConnectMsg
     u32                 type;     //   502
-    u32                 length;   //   ssizeof(parent) + (0)
+    u32                 length;   //   ssizeof(parent)
     algo::RspaceStr50   conn;     //
     ws::Side            side;     //
     // func:ws.ConnectMsg..Ctor
     inline               ConnectMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.ConnectMsg.base.CopyOut
 void                 parent_CopyOut(ws::ConnectMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -428,7 +415,6 @@ struct Opcode { // ws.Opcode
     inline               Opcode(ws_OpcodeEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ws.Opcode.value.GetEnum
 inline ws_OpcodeEnum value_GetEnum(const ws::Opcode& parent) __attribute__((nothrow));
@@ -472,7 +458,7 @@ void                 Opcode_Print(ws::Opcode row, algo::cstring& str) __attribut
 #pragma pack(push,1)
 struct DataMsg { // ws.DataMsg
     u32                 type;     //   503
-    u32                 length;   //   ssizeof(parent) + (0)
+    u32                 length;   //   ssizeof(parent)
     algo::RspaceStr50   conn;     //
     ws::Side            side;     //
     ws::Opcode          opcode;   //
@@ -481,7 +467,6 @@ struct DataMsg { // ws.DataMsg
     inline               DataMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.DataMsg.base.CopyOut
 void                 parent_CopyOut(ws::DataMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -556,7 +541,6 @@ struct FieldId { // ws.FieldId: Field read helper
     inline               FieldId(ws_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ws.FieldId.value.GetEnum
 inline ws_FieldIdEnum value_GetEnum(const ws::FieldId& parent) __attribute__((nothrow));
@@ -594,7 +578,7 @@ inline void          FieldId_Init(ws::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:ws.FieldId.String  printfmt:Raw
 // func:ws.FieldId..Print
-void                 FieldId_Print(ws::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(ws::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ws.Frame
 #pragma pack(push,1)
@@ -606,7 +590,6 @@ struct Frame { // ws.Frame
     inline               Frame() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.Frame.base.CopyOut
 void                 parent_CopyOut(ws::Frame &row, ws::FrameHeader &out) __attribute__((nothrow));
@@ -714,13 +697,12 @@ void                 Frame_Print(ws::Frame& row, algo::cstring& str) __attribute
 struct Frame16 { // ws.Frame16
     u8    byte0;                //   0
     u8    byte1;                //   126
-    u16   ext_payload_len_be;   //   ssizeof(parent) + (-4)
+    u16   ext_payload_len_be;   //   ssizeof(parent)-4
     // var-length field ws.Frame16.payload starts here. access it with payload_Addr
     // func:ws.Frame16..Ctor
     inline               Frame16() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.Frame16.base.CopyOut
 void                 parent_CopyOut(ws::Frame16 &row, ws::FrameHeader &out) __attribute__((nothrow));
@@ -861,7 +843,6 @@ struct Frame16_curs { // ws.Frame16_curs: Cursor for scanning messages in a memp
     inline               Frame16_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:ws.Frame16_curs..ValidQ
 inline bool          Frame16_curs_ValidQ(ws::Frame16_curs& curs) __attribute__((nothrow));
 // func:ws.Frame16_curs..Reset
@@ -880,13 +861,12 @@ inline void          Frame16_curs_Init(ws::Frame16_curs& parent);
 struct Frame64 { // ws.Frame64
     u8    byte0;                //   0
     u8    byte1;                //   127
-    u64   ext_payload_len_be;   //   ssizeof(parent) + (-10)
+    u64   ext_payload_len_be;   //   ssizeof(parent)-10
     // var-length field ws.Frame64.payload starts here. access it with payload_Addr
     // func:ws.Frame64..Ctor
     inline               Frame64() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.Frame64.base.CopyOut
 void                 parent_CopyOut(ws::Frame64 &row, ws::FrameHeader &out) __attribute__((nothrow));
@@ -1027,7 +1007,6 @@ struct Frame64_curs { // ws.Frame64_curs: Cursor for scanning messages in a memp
     inline               Frame64_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:ws.Frame64_curs..ValidQ
 inline bool          Frame64_curs_ValidQ(ws::Frame64_curs& curs) __attribute__((nothrow));
 // func:ws.Frame64_curs..Reset
@@ -1055,7 +1034,6 @@ struct FrameHeader { // ws.FrameHeader
     inline               FrameHeader() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Retrieve bitfield from value of field byte0
 //    1 bits starting at bit 7.
 // func:ws.FrameHeader.fin.Get
@@ -1137,7 +1115,6 @@ struct FrameHeaderMsgsCase { // ws.FrameHeaderMsgsCase: Enum for dispatch ws.Fra
     inline               FrameHeaderMsgsCase(ws_FrameHeaderMsgsCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ws.FrameHeaderMsgsCase.value.GetEnum
 inline ws_FrameHeaderMsgsCaseEnum value_GetEnum(const ws::FrameHeaderMsgsCase& parent) __attribute__((nothrow));
@@ -1184,7 +1161,6 @@ struct FrameMasked { // ws.FrameMasked
     inline               FrameMasked() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.FrameMasked.base.CopyOut
 void                 parent_CopyOut(ws::FrameMasked &row, ws::FrameHeader &out) __attribute__((nothrow));
@@ -1292,14 +1268,13 @@ void                 FrameMasked_Print(ws::FrameMasked& row, algo::cstring& str)
 struct FrameMasked16 { // ws.FrameMasked16
     u8    byte0;                //   0
     u8    byte1;                //   254
-    u16   ext_payload_len_be;   //   ssizeof(parent) + (-8)
+    u16   ext_payload_len_be;   //   ssizeof(parent)-8
     u32   masking_key;          //   0
     // var-length field ws.FrameMasked16.payload starts here. access it with payload_Addr
     // func:ws.FrameMasked16..Ctor
     inline               FrameMasked16() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.FrameMasked16.base.CopyOut
 void                 parent_CopyOut(ws::FrameMasked16 &row, ws::FrameHeader &out) __attribute__((nothrow));
@@ -1440,7 +1415,6 @@ struct FrameMasked16_curs { // ws.FrameMasked16_curs: Cursor for scanning messag
     inline               FrameMasked16_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:ws.FrameMasked16_curs..ValidQ
 inline bool          FrameMasked16_curs_ValidQ(ws::FrameMasked16_curs& curs) __attribute__((nothrow));
 // func:ws.FrameMasked16_curs..Reset
@@ -1459,14 +1433,13 @@ inline void          FrameMasked16_curs_Init(ws::FrameMasked16_curs& parent);
 struct FrameMasked64 { // ws.FrameMasked64
     u8    byte0;                //   0
     u8    byte1;                //   255
-    u64   ext_payload_len_be;   //   ssizeof(parent) + (-14)
+    u64   ext_payload_len_be;   //   ssizeof(parent)-14
     u32   masking_key;          //   0
     // var-length field ws.FrameMasked64.payload starts here. access it with payload_Addr
     // func:ws.FrameMasked64..Ctor
     inline               FrameMasked64() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.FrameMasked64.base.CopyOut
 void                 parent_CopyOut(ws::FrameMasked64 &row, ws::FrameHeader &out) __attribute__((nothrow));
@@ -1607,7 +1580,6 @@ struct FrameMasked64_curs { // ws.FrameMasked64_curs: Cursor for scanning messag
     inline               FrameMasked64_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:ws.FrameMasked64_curs..ValidQ
 inline bool          FrameMasked64_curs_ValidQ(ws::FrameMasked64_curs& curs) __attribute__((nothrow));
 // func:ws.FrameMasked64_curs..Reset
@@ -1632,7 +1604,6 @@ struct HttpState { // ws.HttpState
     inline               HttpState(ws_HttpStateEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ws.HttpState.value.GetEnum
 inline ws_HttpStateEnum value_GetEnum(const ws::HttpState& parent) __attribute__((nothrow));
@@ -1676,13 +1647,12 @@ void                 HttpState_Print(ws::HttpState row, algo::cstring& str) __at
 #pragma pack(push,1)
 struct ServerStartMsg { // ws.ServerStartMsg
     u32                 type;     //   500
-    u32                 length;   //   ssizeof(parent) + (0)
+    u32                 length;   //   ssizeof(parent)
     algo::RspaceStr25   server;   //
     // func:ws.ServerStartMsg..Ctor
     inline               ServerStartMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.ServerStartMsg.base.CopyOut
 void                 parent_CopyOut(ws::ServerStartMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -1719,13 +1689,12 @@ void                 ServerStartMsg_Print(ws::ServerStartMsg& row, algo::cstring
 #pragma pack(push,1)
 struct ServerStopMsg { // ws.ServerStopMsg
     u32                 type;     //   501
-    u32                 length;   //   ssizeof(parent) + (0)
+    u32                 length;   //   ssizeof(parent)
     algo::RspaceStr25   server;   //
     // func:ws.ServerStopMsg..Ctor
     inline               ServerStopMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ws.ServerStopMsg.base.CopyOut
 void                 parent_CopyOut(ws::ServerStopMsg &row, ams::MsgHeader &out) __attribute__((nothrow));

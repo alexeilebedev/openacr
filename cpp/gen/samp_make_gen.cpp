@@ -45,25 +45,6 @@ lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 samp_make::FDb   samp_make::_db;    // dependency found via dev.targdep
 
-namespace samp_make {
-const char *samp_make_help =
-"samp_make: sample program for Makefile management\n"
-"Usage: samp_make [options]\n"
-"    OPTION       TYPE    DFLT                              COMMENT\n"
-"    -in          string  \"data\"                            Input directory or filename, - for stdin\n"
-"    -target      regx    \"%\"                               Create Makefile for selected targets\n"
-"    -parse_make                                            Parse extern/gnumake/Simple-Makefile\n"
-"    -makefile    string  \"extern/gnumake/Simple-Makefile\"  (with parse_make) makefile to parse\n"
-"    -write                                                 P(with parse_make) write ssimfiles, otherwise print them\n"
-"    -verbose     flag                                      Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug       flag                                      Debug level (0..255); alias -d; cumulative\n"
-"    -help                                                  Print help and exit; alias -h\n"
-"    -version                                               Print version and exit\n"
-"    -signature                                             Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace samp_make
 namespace samp_make { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:samp_make.FDb._db.InitReflection
@@ -98,99 +79,16 @@ void samp_make::trace_Print(samp_make::trace& row, algo::cstring& str) {
 }
 
 // --- samp_make.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     samp_make.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of samp_make.FDb.cmdline (and any base command line)
+// via samp_make_ReadArgv; then apply -help/-version and load floadtuples input.
 void samp_make::ReadArgv() {
     command::samp_make &cmd = samp_make::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::samp_make_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"samp_make: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "samp_make: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::samp_make_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"samp_make: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::samp_make_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -213,15 +111,13 @@ void samp_make::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
-        prlog(samp_make_help);
+        prlog(command::samp_make_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -248,7 +144,13 @@ void samp_make::Step() {
 // --- samp_make.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void samp_make::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("samp_make", samp_make::InsertStrptrMaybe, NULL, samp_make::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "samp_make";
+    row.InsertStrptrMaybe  = samp_make::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = samp_make::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = samp_make::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "samp_make.trace";
@@ -389,6 +291,51 @@ void samp_make::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- samp_make.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool samp_make::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    samp_make::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case samp_make_TableId_sampdb_Gitfile: { // finput:samp_make.FDb.gitfile
+            // finput samp_make.FDb.gitfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case samp_make_TableId_sampdb_Target: { // finput:samp_make.FDb.target
+            // finput samp_make.FDb.target: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case samp_make_TableId_sampdb_Targdep: { // finput:samp_make.FDb.targdep
+            // finput samp_make.FDb.targdep: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case samp_make_TableId_sampdb_Targsrc: { // finput:samp_make.FDb.targsrc
+            // finput samp_make.FDb.targsrc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case samp_make_TableId_sampdb_Targrec: { // finput:samp_make.FDb.targrec
+            // finput samp_make.FDb.targrec: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- samp_make.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -443,7 +390,7 @@ void* samp_make::gitfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     samp_make::FGitfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.gitfile_lary[bsr];
         if (!lev) {
             lev=(samp_make::FGitfile*)algo_lib::malloc_AllocMem(sizeof(samp_make::FGitfile) * (u64(1)<<bsr));
@@ -452,7 +399,7 @@ void* samp_make::gitfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.gitfile_n = i32(new_nelems);
+        _db.gitfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -464,7 +411,7 @@ void samp_make::gitfile_RemoveAll() {
     for (u64 n = _db.gitfile_n; n>0; ) {
         n--;
         gitfile_qFind(u64(n)).~FGitfile(); // destroy last element
-        _db.gitfile_n = i32(n);
+        _db.gitfile_n = i64(n);
     }
 }
 
@@ -475,7 +422,7 @@ void samp_make::gitfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         gitfile_qFind(u64(n)).~FGitfile();
-        _db.gitfile_n = i32(n);
+        _db.gitfile_n = i64(n);
     }
 }
 
@@ -674,7 +621,7 @@ void* samp_make::target_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     samp_make::FTarget*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.target_lary[bsr];
         if (!lev) {
             lev=(samp_make::FTarget*)algo_lib::malloc_AllocMem(sizeof(samp_make::FTarget) * (u64(1)<<bsr));
@@ -683,7 +630,7 @@ void* samp_make::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = i32(new_nelems);
+        _db.target_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -695,7 +642,7 @@ void samp_make::target_RemoveAll() {
     for (u64 n = _db.target_n; n>0; ) {
         n--;
         target_qFind(u64(n)).~FTarget(); // destroy last element
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -706,7 +653,7 @@ void samp_make::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -905,7 +852,7 @@ void* samp_make::targdep_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     samp_make::FTargdep*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targdep_lary[bsr];
         if (!lev) {
             lev=(samp_make::FTargdep*)algo_lib::malloc_AllocMem(sizeof(samp_make::FTargdep) * (u64(1)<<bsr));
@@ -914,7 +861,7 @@ void* samp_make::targdep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targdep_n = i32(new_nelems);
+        _db.targdep_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -926,7 +873,7 @@ void samp_make::targdep_RemoveAll() {
     for (u64 n = _db.targdep_n; n>0; ) {
         n--;
         targdep_qFind(u64(n)).~FTargdep(); // destroy last element
-        _db.targdep_n = i32(n);
+        _db.targdep_n = i64(n);
     }
 }
 
@@ -937,7 +884,7 @@ void samp_make::targdep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targdep_qFind(u64(n)).~FTargdep();
-        _db.targdep_n = i32(n);
+        _db.targdep_n = i64(n);
     }
 }
 
@@ -1004,6 +951,22 @@ samp_make::FTargdep& samp_make::ind_targdep_FindX(const algo::strptr& key) {
     samp_make::FTargdep* ret = ind_targdep_Find(key);
     vrfy(ret, tempstr() << "samp_make.key_error  table:ind_targdep  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- samp_make.FDb.ind_targdep.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+samp_make::FTargdep* samp_make::ind_targdep_GetOrCreate(const algo::strptr& key) {
+    samp_make::FTargdep* ret = ind_targdep_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &targdep_Alloc();
+        (*ret).targdep = key;
+        bool good = targdep_XrefMaybe(*ret);
+        if (!good) {
+            targdep_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- samp_make.FDb.ind_targdep.InsertMaybe
@@ -1141,7 +1104,7 @@ void* samp_make::targsrc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     samp_make::FTargsrc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targsrc_lary[bsr];
         if (!lev) {
             lev=(samp_make::FTargsrc*)algo_lib::malloc_AllocMem(sizeof(samp_make::FTargsrc) * (u64(1)<<bsr));
@@ -1150,7 +1113,7 @@ void* samp_make::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = i32(new_nelems);
+        _db.targsrc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1162,7 +1125,7 @@ void samp_make::targsrc_RemoveAll() {
     for (u64 n = _db.targsrc_n; n>0; ) {
         n--;
         targsrc_qFind(u64(n)).~FTargsrc(); // destroy last element
-        _db.targsrc_n = i32(n);
+        _db.targsrc_n = i64(n);
     }
 }
 
@@ -1173,7 +1136,7 @@ void samp_make::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = i32(n);
+        _db.targsrc_n = i64(n);
     }
 }
 
@@ -1227,6 +1190,22 @@ samp_make::FTargsrc& samp_make::ind_targsrc_FindX(const algo::strptr& key) {
     samp_make::FTargsrc* ret = ind_targsrc_Find(key);
     vrfy(ret, tempstr() << "samp_make.key_error  table:ind_targsrc  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- samp_make.FDb.ind_targsrc.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+samp_make::FTargsrc* samp_make::ind_targsrc_GetOrCreate(const algo::strptr& key) {
+    samp_make::FTargsrc* ret = ind_targsrc_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &targsrc_Alloc();
+        (*ret).targsrc = key;
+        bool good = targsrc_XrefMaybe(*ret);
+        if (!good) {
+            targsrc_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- samp_make.FDb.ind_targsrc.InsertMaybe
@@ -1364,7 +1343,7 @@ void* samp_make::targrec_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     samp_make::FTargrec*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targrec_lary[bsr];
         if (!lev) {
             lev=(samp_make::FTargrec*)algo_lib::malloc_AllocMem(sizeof(samp_make::FTargrec) * (u64(1)<<bsr));
@@ -1373,7 +1352,7 @@ void* samp_make::targrec_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targrec_n = i32(new_nelems);
+        _db.targrec_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1385,7 +1364,7 @@ void samp_make::targrec_RemoveAll() {
     for (u64 n = _db.targrec_n; n>0; ) {
         n--;
         targrec_qFind(u64(n)).~FTargrec(); // destroy last element
-        _db.targrec_n = i32(n);
+        _db.targrec_n = i64(n);
     }
 }
 
@@ -1396,7 +1375,7 @@ void samp_make::targrec_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targrec_qFind(u64(n)).~FTargrec();
-        _db.targrec_n = i32(n);
+        _db.targrec_n = i64(n);
     }
 }
 
@@ -1455,6 +1434,22 @@ samp_make::FTargrec& samp_make::ind_targrec_FindX(const algo::strptr& key) {
     samp_make::FTargrec* ret = ind_targrec_Find(key);
     vrfy(ret, tempstr() << "samp_make.key_error  table:ind_targrec  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- samp_make.FDb.ind_targrec.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+samp_make::FTargrec* samp_make::ind_targrec_GetOrCreate(const algo::strptr& key) {
+    samp_make::FTargrec* ret = ind_targrec_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &targrec_Alloc();
+        (*ret).target = key;
+        bool good = targrec_XrefMaybe(*ret);
+        if (!good) {
+            targrec_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- samp_make.FDb.ind_targrec.InsertMaybe
@@ -1547,12 +1542,12 @@ void samp_make::ind_targrec_AbsReserve(int n) {
 }
 
 // --- samp_make.FDb.c_target.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void samp_make::c_target_Insert(samp_make::FTarget& row) {
     if (!row.c_target_in_ary) {
         c_target_Reserve(1);
-        u32 n  = _db.c_target_n++;
+        u64 n  = _db.c_target_n++;
         _db.c_target_elems[n] = &row;
         row.c_target_in_ary = true;
     }
@@ -1571,15 +1566,15 @@ bool samp_make::c_target_InsertMaybe(samp_make::FTarget& row) {
 // --- samp_make.FDb.c_target.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void samp_make::c_target_Remove(samp_make::FTarget& row) {
-    int n = _db.c_target_n;
+    i64 n = _db.c_target_n;
     if (bool_Update(row.c_target_in_ary,false)) {
         samp_make::FTarget* *elems = _db.c_target_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             samp_make::FTarget* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(samp_make::FTarget*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 _db.c_target_n = n - 1;
@@ -1591,12 +1586,12 @@ void samp_make::c_target_Remove(samp_make::FTarget& row) {
 
 // --- samp_make.FDb.c_target.Reserve
 // Reserve space in index for N more elements;
-void samp_make::c_target_Reserve(u32 n) {
-    u32 old_max = _db.c_target_max;
+void samp_make::c_target_Reserve(u64 n) {
+    u64 old_max = _db.c_target_max;
     if (UNLIKELY(_db.c_target_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(samp_make::FTarget*);
-        u32 new_size = new_max * sizeof(samp_make::FTarget*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, _db.c_target_n + n), 4);
+        u64 old_size = old_max * sizeof(samp_make::FTarget*);
+        u64 new_size = new_max * sizeof(samp_make::FTarget*);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.c_target_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("samp_make.out_of_memory  field:samp_make.FDb.c_target");
@@ -1765,7 +1760,7 @@ void samp_make::FDb_Uninit() {
 // Copy fields out of row
 void samp_make::gitfile_CopyOut(samp_make::FGitfile &row, sampdb::Gitfile &out) {
     out.gitfile = row.gitfile;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- samp_make.FGitfile.base.CopyIn
@@ -1787,7 +1782,7 @@ void samp_make::targdep_CopyOut(samp_make::FTargdep &row, sampdb::Targdep &out) 
     out.targdep = row.targdep;
     out.rec = row.rec;
     out.pre = row.pre;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- samp_make.FTargdep.base.CopyIn
@@ -1800,15 +1795,13 @@ void samp_make::targdep_CopyIn(samp_make::FTargdep &row, sampdb::Targdep &in) {
 }
 
 // --- samp_make.FTargdep.target.Get
-algo::Smallstr50 samp_make::target_Get(samp_make::FTargdep& targdep) {
-    algo::Smallstr50 ret(algo::Pathcomp(targdep.targdep, ".LL"));
-    return ret;
+algo::strptr samp_make::target_Get(samp_make::FTargdep& targdep) {
+    return algo::Pathcomp(targdep.targdep, ".LL");
 }
 
 // --- samp_make.FTargdep.parent.Get
-algo::Smallstr50 samp_make::parent_Get(samp_make::FTargdep& targdep) {
-    algo::Smallstr50 ret(algo::Pathcomp(targdep.targdep, ".LR"));
-    return ret;
+algo::strptr samp_make::parent_Get(samp_make::FTargdep& targdep) {
+    return algo::Pathcomp(targdep.targdep, ".LR");
 }
 
 // --- samp_make.FTargdep..Uninit
@@ -1826,7 +1819,7 @@ void samp_make::FTargdep_Uninit(samp_make::FTargdep& targdep) {
 void samp_make::target_CopyOut(samp_make::FTarget &row, sampdb::Target &out) {
     out.target = row.target;
     out.dflt = row.dflt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- samp_make.FTarget.base.CopyIn
@@ -1838,12 +1831,12 @@ void samp_make::target_CopyIn(samp_make::FTarget &row, sampdb::Target &in) {
 }
 
 // --- samp_make.FTarget.c_targsrc.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void samp_make::c_targsrc_Insert(samp_make::FTarget& target, samp_make::FTargsrc& row) {
     if (!row.target_c_targsrc_in_ary) {
         c_targsrc_Reserve(target, 1);
-        u32 n  = target.c_targsrc_n++;
+        u64 n  = target.c_targsrc_n++;
         target.c_targsrc_elems[n] = &row;
         row.target_c_targsrc_in_ary = true;
     }
@@ -1862,15 +1855,15 @@ bool samp_make::c_targsrc_InsertMaybe(samp_make::FTarget& target, samp_make::FTa
 // --- samp_make.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void samp_make::c_targsrc_Remove(samp_make::FTarget& target, samp_make::FTargsrc& row) {
-    int n = target.c_targsrc_n;
+    i64 n = target.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
         samp_make::FTargsrc* *elems = target.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             samp_make::FTargsrc* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(samp_make::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 target.c_targsrc_n = n - 1;
@@ -1882,12 +1875,12 @@ void samp_make::c_targsrc_Remove(samp_make::FTarget& target, samp_make::FTargsrc
 
 // --- samp_make.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void samp_make::c_targsrc_Reserve(samp_make::FTarget& target, u32 n) {
-    u32 old_max = target.c_targsrc_max;
+void samp_make::c_targsrc_Reserve(samp_make::FTarget& target, u64 n) {
+    u64 old_max = target.c_targsrc_max;
     if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(samp_make::FTargsrc*);
-        u32 new_size = new_max * sizeof(samp_make::FTargsrc*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targsrc_n + n), 4);
+        u64 old_size = old_max * sizeof(samp_make::FTargsrc*);
+        u64 new_size = new_max * sizeof(samp_make::FTargsrc*);
         void *new_mem = algo_lib::malloc_ReallocMem(target.c_targsrc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("samp_make.out_of_memory  field:samp_make.FTarget.c_targsrc");
@@ -1898,12 +1891,12 @@ void samp_make::c_targsrc_Reserve(samp_make::FTarget& target, u32 n) {
 }
 
 // --- samp_make.FTarget.c_targdep.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void samp_make::c_targdep_Insert(samp_make::FTarget& target, samp_make::FTargdep& row) {
     if (!row.target_c_targdep_in_ary) {
         c_targdep_Reserve(target, 1);
-        u32 n  = target.c_targdep_n++;
+        u64 n  = target.c_targdep_n++;
         target.c_targdep_elems[n] = &row;
         row.target_c_targdep_in_ary = true;
     }
@@ -1922,15 +1915,15 @@ bool samp_make::c_targdep_InsertMaybe(samp_make::FTarget& target, samp_make::FTa
 // --- samp_make.FTarget.c_targdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void samp_make::c_targdep_Remove(samp_make::FTarget& target, samp_make::FTargdep& row) {
-    int n = target.c_targdep_n;
+    i64 n = target.c_targdep_n;
     if (bool_Update(row.target_c_targdep_in_ary,false)) {
         samp_make::FTargdep* *elems = target.c_targdep_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             samp_make::FTargdep* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(samp_make::FTargdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 target.c_targdep_n = n - 1;
@@ -1942,12 +1935,12 @@ void samp_make::c_targdep_Remove(samp_make::FTarget& target, samp_make::FTargdep
 
 // --- samp_make.FTarget.c_targdep.Reserve
 // Reserve space in index for N more elements;
-void samp_make::c_targdep_Reserve(samp_make::FTarget& target, u32 n) {
-    u32 old_max = target.c_targdep_max;
+void samp_make::c_targdep_Reserve(samp_make::FTarget& target, u64 n) {
+    u64 old_max = target.c_targdep_max;
     if (UNLIKELY(target.c_targdep_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(samp_make::FTargdep*);
-        u32 new_size = new_max * sizeof(samp_make::FTargdep*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targdep_n + n), 4);
+        u64 old_size = old_max * sizeof(samp_make::FTargdep*);
+        u64 new_size = new_max * sizeof(samp_make::FTargdep*);
         void *new_mem = algo_lib::malloc_ReallocMem(target.c_targdep_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("samp_make.out_of_memory  field:samp_make.FTarget.c_targdep");
@@ -1991,7 +1984,7 @@ void samp_make::FTarget_Uninit(samp_make::FTarget& target) {
 void samp_make::targrec_CopyOut(samp_make::FTargrec &row, sampdb::Targrec &out) {
     out.target = row.target;
     out.recipe = row.recipe;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- samp_make.FTargrec.base.CopyIn
@@ -2018,7 +2011,7 @@ void samp_make::targsrc_CopyOut(samp_make::FTargsrc &row, sampdb::Targsrc &out) 
     out.targsrc = row.targsrc;
     out.pre = row.pre;
     out.rec = row.rec;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- samp_make.FTargsrc.base.CopyIn
@@ -2031,15 +2024,13 @@ void samp_make::targsrc_CopyIn(samp_make::FTargsrc &row, sampdb::Targsrc &in) {
 }
 
 // --- samp_make.FTargsrc.target.Get
-algo::Smallstr50 samp_make::target_Get(samp_make::FTargsrc& targsrc) {
-    algo::Smallstr50 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
-    return ret;
+algo::strptr samp_make::target_Get(samp_make::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LL");
 }
 
 // --- samp_make.FTargsrc.src.Get
-algo::Smallstr50 samp_make::src_Get(samp_make::FTargsrc& targsrc) {
-    algo::Smallstr50 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
-    return ret;
+algo::strptr samp_make::src_Get(samp_make::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LR");
 }
 
 // --- samp_make.FTargsrc..Uninit
@@ -2124,7 +2115,7 @@ bool samp_make::FieldId_ReadStrptrMaybe(samp_make::FieldId &parent, algo::strptr
 // --- samp_make.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:samp_make.FieldId.String  printfmt:Raw
-void samp_make::FieldId_Print(samp_make::FieldId& row, algo::cstring& str) {
+void samp_make::FieldId_Print(samp_make::FieldId row, algo::cstring& str) {
     samp_make::value_Print(row, str);
 }
 
@@ -2234,7 +2225,7 @@ bool samp_make::TableId_ReadStrptrMaybe(samp_make::TableId &parent, algo::strptr
 // --- samp_make.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:samp_make.TableId.String  printfmt:Raw
-void samp_make::TableId_Print(samp_make::TableId& row, algo::cstring& str) {
+void samp_make::TableId_Print(samp_make::TableId row, algo::cstring& str) {
     samp_make::value_Print(row, str);
 }
 

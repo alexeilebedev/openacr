@@ -12,14 +12,19 @@ inline-command: amc command.amc_proc | grep -B 20 '};'
 
 // --- command.amc_proc
 struct amc_proc { // command.amc_proc: Subprocess: Algo Model Compiler: generate code under include/gen and cpp/gen
-    algo::cstring   path;      //   "bin/amc"  path for executable
-    command::amc    cmd;       // command line for child process
-    algo::cstring   fstdin;    // redirect for stdin
-    algo::cstring   fstdout;   // redirect for stdout
-    algo::cstring   fstderr;   // redirect for stderr
-    pid_t           pid;       //   0  pid of running child process
-    i32             timeout;   //   0  optional timeout for child process
-    i32             status;    //   0  last exit status of child process
+    algo::cstring   path;          //   "bin/amc"  path for executable
+    command::amc    cmd;           // command line for child process
+    algo::cstring   fstdin;        // redirect for stdin
+    algo::cstring   fstdout;       // redirect for stdout
+    algo::cstring   fstderr;       // redirect for stderr
+    algo::Fildes    to_stdin;      // write end of stdin pipe when fstdin=="|"; closed by _Wait
+    algo::Fildes    from_stdout;   // read end of stdout pipe when fstdout=="|"; closed by _Wait
+    algo::Fildes    from_stderr;   // read end of stderr pipe when fstderr=="|"; closed by _Wait
+    pid_t           pid;           //   0  pid of running child process
+    i32             timeout;       //   0  optional timeout for child process
+    u32             memlimitmb;    //   0  optional child memory ceiling MB (10^6): RLIMIT_AS before exec; 0 = leave inherited
+    i32             status;        //   0  last exit status of child process
+    bool            pgroup;        //   false  run child in its own process group; _Kill targets the group
     // func:command.amc_proc..Ctor
     inline               amc_proc() __attribute__((nothrow));
     // func:command.amc_proc..Dtor
@@ -31,33 +36,36 @@ The generated fields are:
 - `path`: path to the executable. Defaults to `bin/target` but can be customized
 - `cmd`: the command line, to be filled out before executing
 - `fstdin`, `fstdout`, `fstderr`: strings describing redirects. By default, empty.
-If non-empty, can be
--- `filename`
--- `>filename`
--- `>>filename`
--- `<filename`
--- `>&fd`
+  If non-empty, can be:
+  - `filename`
+  - `>filename`
+  - `>>filename`
+  - `<filename`
+  - `>&fd`
 - `pid`: if the subprocess is running (see `Start()`), this contains the subprocess pid
 - timeout: maximum subprocess runtime, can be specified before starting (produces `alarm()` when hit)
 - status: exit status of subprocess, if it has exited.
 
 The generated functions are:
 * _Start(): If `pid` is zero, start the subprocess using specified command line, timeout, and redirects.
- After the process is started, it will run until
--- it exits by itself
--- timeout occurs. Child process calls `alarm` after `fork()` and before `exec()` if the timeout is non-zero.
--- Kill is called. This occurs when the field is destroyed or the parent process exits. All child processes
-call `algo_lib::DieWithParent()` after `fork()` and before `exec()` to ensure the child dies when the parent dies.
-This prevents run away processes.
+  After the process is started, it will run until:
+  - it exits by itself
+  - timeout occurs. Child process calls `alarm` after `fork()` and before `exec()` if the timeout is non-zero.
+  - Kill is called. This occurs when the field is destroyed or the parent process exits. All child processes
+    call `algo_lib::DieWithParent()` after `fork()` and before `exec()` to ensure the child dies when the
+    parent dies. This prevents run-away processes.
 
-* _StartRead(): Like `Start`, but takes a `FFildes` argument and can be used to conveniently read output from subprocess
-as follows:
+* Pipe redirects: set `fstdin`, `fstdout`, or `fstderr` to `"|"` and `_Start` creates a pipe, exposing
+the parent end as `to_stdin` (write), `from_stdout` (read), or `from_stderr` (read). The fds are closed
+by `_Wait`. Reading a subprocess's output line-by-line:
 ```
-    algo_lib::FFildes read;
-    ind_beg(algo::FileLine_curs,line,proc_StartRead(proc,read)) {
+    proc.fstdout = "|";
+    proc_Start(proc);
+    ind_beg(algo::FileLine_curs,line,proc.from_stdout) {
         out1 << line << eol;
     }ind_end;
 ```
+To merge stderr into the same pipe, also set `proc.fstderr = ">&1"`.
 
 * _Kill(): Kill the subprocess with signal 9.
 
@@ -85,4 +93,3 @@ abt.cmd.arch        = "x86_64";
 abt.cmd.jcdb        = project;
 abt_ExecX(abt);
 ```
-

@@ -75,28 +75,39 @@ void apm::Main_SelectPackage() {
 // -----------------------------------------------------------------------------
 
 // Check out package contents into a sandbox
+// Return the wait status of the checkout, zero on success
 // This is the pristine version of the package (as specified with the gitref)
 // If BASEREF is an empty string, then the entire current directory, with whatever
 // local changes, is copied to the sandbox instead
+// A checkout that fails leaves the sandbox directory absent or holding the wrong
+// commit, and every reader of that directory afterwards reads a version of the
+// package nobody asked for. The failure is reported here, naming the sandbox and
+// the ref, and the status is returned for the caller to act on.
 int apm::CreatePackageSandbox(algo::strptr sandbox_name, algo::strptr baseref) {
     int rc=0;
-    command::sandbox_proc sandbox;
-    sandbox.cmd.create=true;
-    sandbox.cmd.q=true;
-    sandbox.cmd.name.expr=sandbox_name;
+    command::wt_proc wt;
+    wt.cmd.create=true;
+    wt.cmd.q=true;
+    wt.cmd.name.expr=sandbox_name;
     if (baseref == "") {
-        sandbox.cmd.reset=true;
+        wt.cmd.reset=true;
     } else {
-        // add desired ref to the fetch set, otherwise it might not be cloned
-        // into the sandbox
-        sandbox.cmd.refs<<" "<<baseref;
-        cmd_Alloc(sandbox.cmd) << "git";
-        cmd_Alloc(sandbox.cmd) << "reset";
-        cmd_Alloc(sandbox.cmd) << "-q";
-        cmd_Alloc(sandbox.cmd) << "--hard";
-        cmd_Alloc(sandbox.cmd) << baseref;
+        // the sandbox shares the repo's object store, so baseref is
+        // resolvable inside it without any fetch
+        cmd_Alloc(wt.cmd) << "git";
+        cmd_Alloc(wt.cmd) << "reset";
+        cmd_Alloc(wt.cmd) << "-q";
+        cmd_Alloc(wt.cmd) << "--hard";
+        cmd_Alloc(wt.cmd) << baseref;
     }
-    rc= sandbox_Exec(sandbox);
+    rc= wt_Exec(wt);
+    if (rc!=0) {
+        prerr("apm.sandbox_create"
+              <<Keyval("sandbox",sandbox_name)
+              <<Keyval("baseref",baseref)
+              <<Keyval("status",algo::DescribeWaitStatus(rc))
+              <<Keyval("comment","package sandbox could not be checked out"));
+    }
     return rc;
 }
 
@@ -113,7 +124,9 @@ tempstr apm::FetchPackageOrigin(algo::strptr origin, algo::strptr ref) {
     } else {
         int rc=SysCmd(tempstr()<<"git fetch -q "<<origin<<" "<<ref);
         if (rc==0) {
-            gitref=algo::Pathcomp(algo::FileToString(".git/FETCH_HEAD"),"\tLL");
+            // FETCH_HEAD lives in the per-worktree gitdir (.git may be a file),
+            // so resolve it through git instead of reading .git/FETCH_HEAD
+            gitref=Trimmed(SysEval("git rev-parse FETCH_HEAD",FailokQ(true),1024));
         }
     }
     verblog("apm.fetch_package_origin"
@@ -127,21 +140,66 @@ tempstr apm::FetchPackageOrigin(algo::strptr origin, algo::strptr ref) {
 // if -dry_run, print it to the screen
 // Script is reset after the run
 void apm::Main_Transaction() {
-    SafeStringToFile(_db.script,_db.scriptfile,0755);
-    command::bash_proc bash;
-    bash.cmd.c=_db.scriptfile;
     int rc=0;
-    if (!_db.cmdline.dry_run) {
-        rc=bash_Exec(bash);
-    } else {
+    if (_db.cmdline.dry_run) {
+        // A dry run reports the plan instead of running it, so it writes no
+        // script: the plan is the whole output, and a temp/ that is absent
+        // or unwritable must not be able to suppress it. Printing the plan
+        // and then failing on a file the run never reads would leave the
+        // caller with no plan and a nonzero exit.
+        // What a dry run does not promise is an untouched tree. An update
+        // computes its plan from a three-way merge of the package's records,
+        // so a dry run of one still fetches the package, creates the two
+        // sandboxes the merge compares, and leaves the record files it read
+        // under temp/. The plan itself names one of those files when the
+        // merge conflicts, and the reader is told to edit it, so the files
+        // are part of the plan rather than a side effect of running it.
         prlog(_db.script);
+    } else {
+        // bash runs the file, not the string, so an unwritten script means bash
+        // runs whatever a previous transaction left at that path -- or nothing at
+        // all -- while the transaction reports success. The run is skipped instead.
+        bool saved = algo::SaveFile(_db.script,_db.scriptfile,"apm.script_write","transaction script could not be written; the transaction was not run",0755);
+        if (!saved) {
+            algo_lib::_db.exit_code++;
+        } else {
+            command::bash_proc bash;
+            bash.cmd.c=_db.scriptfile;
+            rc=bash_Exec(bash);
+        }
     }
     _db.script="";
     if (rc!=0) {
-        algo_lib::_db.exit_code=rc;
+        // bash_Exec hands back the raw wait status of the transaction script,
+        // and a wait status is not an exit code: a script that exits 1 yields
+        // the status 256, whose low eight bits are zero, and a script killed
+        // by SIGTERM yields 15, the same word a script calling exit(15) would
+        // produce. A caller that reads apm's exit code to decide what to do
+        // next needs the status decoded first, which is what ExportWaitStatus
+        // does -- the script's own code for an exit, 128 plus the signal for a
+        // death by signal. The table is pinned by comptest apm.TransactionExit.
+        algo_lib::ExportWaitStatus(rc);
     }
 }
 
+// Return the apm binary that evaluates a package inside directory DIR.
+// Evaluating a package means loading that directory's dmmeta tables, and a
+// directory under sync holds tables of a different vintage than ours.  Openacr
+// carries dmmeta.Cdflt.jsdflt, a field this tree does not have, so our binary
+// stops on the first line of its cdflt.ssim and reads nothing at all.  A tree's
+// own apm is compiled against that tree's schema, which makes it the one binary
+// guaranteed to read it, so prefer it wherever DIR has one.  Ours answers for
+// the two cases that leaves: a directory carrying package files but no openacr
+// tooling, which is how apm serves a plain submodule, and a run under -l, where
+// the package definition being evaluated is ours and only our binary parses it.
+// Command line field BINPATH names the subdirectory the binaries sit in.
+tempstr apm::GetApmPath(algo::strptr dir) {
+    tempstr ours(DirFileJoin(algo::GetCurDir(),DirFileJoin(_db.cmdline.binpath,"apm")));
+    tempstr theirs(DirFileJoin(algo::GetCurDir(),DirFileJoin(dir,DirFileJoin(_db.cmdline.binpath,"apm"))));
+    return (_db.cmdline.l || !FileQ(theirs)) ? ours : theirs;
+}
+
+// Return the mode bits of FILENAME, which are zero when it cannot be stat'ed.
 int apm::GetFileMode(algo::strptr filename) {
     struct stat struct_stat;
     algo::ZeroBytes(struct_stat);
@@ -220,7 +278,13 @@ void apm::DefPackages() {
                     pkgdep.soft=true;
                     pkgdep_InsertMaybe(pkgdep);
 
+                    // A namespace record on its own names nothing but itself, and the
+                    // files and ctypes a caller means by "namespace algo_lib" are reached
+                    // from it by following references.  Every pkgkey written by hand in
+                    // the tree therefore sets down, and a fabricated one that leaves it
+                    // clear selects two records and no files at all.
                     dev::Pkgkey pkgkey;
+                    pkgkey.down=true;
                     pkgkey.pkgkey=tempstr()<<package.package<<"/dev.package:"<<package.package;
                     pkgkey_InsertMaybe(pkgkey);
                     pkgkey.pkgkey=tempstr()<<package.package<<"/dmmeta.ns:"<<package.package;
@@ -272,10 +336,10 @@ void apm::Main() {
     vrfy(!((_db.cmdline.install || _db.cmdline.update) && _db.cmdline.remove),
          "-install/-update is incompatible with -remove, please select just one option");
     vrfy(_db.cmdline.install + _db.cmdline.update + _db.cmdline.push + _db.cmdline.diff + _db.cmdline.showrec
-         + _db.cmdline.showfile + _db.cmdline.e + _db.cmdline.remove + _db.cmdline.reset <= 1,
+         + _db.cmdline.showfile + _db.cmdline.generate + _db.cmdline.e + _db.cmdline.remove + _db.cmdline.reset <= 1,
          "more than one action selected");
     if (_db.cmdline.annotate != "" || _db.cmdline.check || _db.cmdline.diff || _db.cmdline.showrec || _db.cmdline.push
-        || _db.cmdline.showfile || _db.cmdline.update || _db.cmdline.remove || _db.cmdline.install) {
+        || _db.cmdline.showfile || _db.cmdline.generate || _db.cmdline.update || _db.cmdline.remove || _db.cmdline.install) {
         LoadRecs();
     }
     bool needlock=_db.cmdline.update || _db.cmdline.remove || _db.cmdline.install;
@@ -328,6 +392,9 @@ void apm::Main() {
         actions++;
     } else if (_db.cmdline.showfile) {
         Main_Showfile();
+        actions++;
+    } else if (_db.cmdline.generate) {
+        Main_Generate();
         actions++;
     } else if (_db.cmdline.e) {
         Main_Edit();

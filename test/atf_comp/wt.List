@@ -1,0 +1,8 @@
+# start wt cmd:"$bindir/wt -in:- -list test%"
+wt <- dev.sandbox  sandbox:test1  comment:"Test sandbox 1"
+wt <- dev.sandbox  sandbox:test2  cow:Y  comment:"Test sandbox 2"
+# eof wt
+wt -> Sandbox	Cow	Size	Clean	Path	Comment
+wt -> test1	N	N/A	Y	wt/test1	Test sandbox 1
+wt -> test2	Y	N/A	Y	wt/test2	Test sandbox 2
+# exit wt code:0

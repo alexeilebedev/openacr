@@ -1,0 +1,206 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb..PrintArgv|algo_lib.Cmd..PrintArgv|algo_lib.Cmd..ToArgv|algo_lib.Flags..PrintArgv|algo_lib.Flags..ToArgv' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:""
+amc <- dmmeta.ccmp  ctype:u32  extrn:N  genop:N  order:N  minmax:N  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.FDb.Argv  printfmt:Auto  read:N  print:Y  sep:""  genop:N  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.FRow  comment:""
+amc <- dmmeta.field  field:algo_lib.FRow.id  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Base  comment:""
+amc <- dmmeta.field  field:algo_lib.Base.count  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Cmd  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.base  arg:algo_lib.Base  reftype:Base  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.plain  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.state  arg:u8  reftype:Val  dflt:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Cmd.state/idle  value:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Cmd.state/busy  value:1  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.big  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fbigend  field:algo_lib.Cmd.big  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.pmask  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld  field:algo_lib.Cmd.pmask  filter_print:N  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.limit  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.mode  arg:u8  reftype:Val  dflt:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Cmd.mode/idle  value:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Cmd.mode/busy  value:1  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.name  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.Cmd.name  length:20  strtype:rpascal  pad:""  strict:Y
+amc <- dmmeta.field  field:algo_lib.Cmd.tag  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.Cmd.tag  comment:""
+amc <- dmmeta.field  field:algo_lib.Cmd.p_row  arg:algo_lib.FRow  reftype:Ptr  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Cmd.Argv  printfmt:Auto  read:N  print:Y  sep:""  genop:N  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Ary  comment:""
+amc <- dmmeta.field  field:algo_lib.Ary.buf  arg:u32  reftype:Inlary  dflt:""  comment:""
+amc <- dmmeta.inlary  field:algo_lib.Ary.buf  min:0  max:4  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Ary.Argv  printfmt:Auto  read:N  print:Y  sep:""  genop:N  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Flags  comment:""
+amc <- dmmeta.field  field:algo_lib.Flags.seqno  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fbigend  field:algo_lib.Flags.seqno  comment:""
+amc <- dmmeta.field  field:algo_lib.Flags.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Flags.flag  arg:bool  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.Flags.flag  offset:0  width:1  srcfield:algo_lib.Flags.word  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Flags.Argv  printfmt:Auto  read:N  print:Y  sep:""  genop:N  comment:""
+# eof amc
+amc -> // --- algo_lib.Cmd..PrintArgv
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:algo_lib.Cmd.Argv  printfmt:Auto
+amc -> void algo_lib::Cmd_PrintArgv(algo_lib::Cmd& row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     (void)str;
+amc ->     ch_RemoveAll(temp);
+amc ->     u64_Print(row.count, temp);
+amc ->     str << " -count:";
+amc ->     strptr_PrintBash(temp,str);
+amc ->     if (!(row.plain == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(row.plain, temp);
+amc ->         str << " -plain:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }
+amc ->     if (!(row.state == 0)) {
+amc ->         ch_RemoveAll(temp);
+amc ->         algo_lib::state_Print(row, temp);
+amc ->         str << " -state:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }
+amc ->     if (!(big_Get(row) == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(big_Get(row), temp);
+amc ->         str << " -big:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }
+amc ->     if (!(row.word == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(row.word, temp);
+amc ->         str << " -word:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }
+amc ->     if (!(row.limit == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(row.limit, temp);
+amc ->         str << " -limit:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }
+amc ->     if (!(row.mode == 0)) {
+amc ->         ch_RemoveAll(temp);
+amc ->         algo_lib::mode_Print(row, temp);
+amc ->         str << " -mode:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }
+amc ->     ch_RemoveAll(temp);
+amc ->     algo_lib::name_Print(row, temp);
+amc ->     str << " -name:";
+amc ->     strptr_PrintBash(temp,str);
+amc ->     ind_beg(Cmd_tag_curs,value,row) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(value, temp);
+amc ->         str << " -tag:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }ind_end;
+amc -> }
+amc -> // --- algo_lib.Cmd..ToArgv
+amc -> // Build argv from ROW into ARGS; args[0] is the command name
+amc -> // cfmt:algo_lib.Cmd.Argv  printfmt:Auto
+amc -> void algo_lib::Cmd_ToArgv(algo_lib::Cmd& row, algo::StringAry& args) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     ary_RemoveAll(args);
+amc ->     ary_Alloc(args) << "bin/Cmd"; // command path
+amc ->     ch_RemoveAll(temp);
+amc ->     u64_Print(row.count, temp);
+amc ->     ary_Alloc(args) << "-count:" << temp;
+amc ->     if (!(row.plain == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(row.plain, temp);
+amc ->         ary_Alloc(args) << "-plain:" << temp;
+amc ->     }
+amc ->     if (!(row.state == 0)) {
+amc ->         ch_RemoveAll(temp);
+amc ->         algo_lib::state_Print(row, temp);
+amc ->         ary_Alloc(args) << "-state:" << temp;
+amc ->     }
+amc ->     if (!(big_Get(row) == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(big_Get(row), temp);
+amc ->         ary_Alloc(args) << "-big:" << temp;
+amc ->     }
+amc ->     if (!(row.word == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(row.word, temp);
+amc ->         ary_Alloc(args) << "-word:" << temp;
+amc ->     }
+amc ->     if (!(row.limit == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(row.limit, temp);
+amc ->         ary_Alloc(args) << "-limit:" << temp;
+amc ->     }
+amc ->     if (!(row.mode == 0)) {
+amc ->         ch_RemoveAll(temp);
+amc ->         algo_lib::mode_Print(row, temp);
+amc ->         ary_Alloc(args) << "-mode:" << temp;
+amc ->     }
+amc ->     ch_RemoveAll(temp);
+amc ->     algo_lib::name_Print(row, temp);
+amc ->     ary_Alloc(args) << "-name:" << temp;
+amc ->     ind_beg(Cmd_tag_curs,value,row) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(value, temp);
+amc ->         ary_Alloc(args) << "-tag:" << temp;
+amc ->     }ind_end;
+amc -> }
+amc -> // --- algo_lib.FDb..PrintArgv
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:algo_lib.FDb.Argv  printfmt:Auto
+amc -> void algo_lib::FDb_PrintArgv(algo_lib::FDb& row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     (void)str;
+amc ->     ch_RemoveAll(temp);
+amc ->     u64_Print(row.malloc, temp);
+amc ->     str << " -malloc:";
+amc ->     strptr_PrintBash(temp,str);
+amc ->     ch_RemoveAll(temp);
+amc ->     trace_Print(row.trace, temp);
+amc ->     str << " -trace:";
+amc ->     strptr_PrintBash(temp,str);
+amc -> }
+amc -> // --- algo_lib.Flags..PrintArgv
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:algo_lib.Flags.Argv  printfmt:Auto
+amc -> void algo_lib::Flags_PrintArgv(algo_lib::Flags row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     (void)str;
+amc ->     if (!(seqno_Get(row) == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(seqno_Get(row), temp);
+amc ->         str << " -seqno:";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }
+amc ->     ch_RemoveAll(temp);
+amc ->     bool_Print(flag_Get(row), temp);
+amc ->     str << " -flag:";
+amc ->     strptr_PrintBash(temp,str);
+amc -> }
+amc -> // --- algo_lib.Flags..ToArgv
+amc -> // Build argv from ROW into ARGS; args[0] is the command name
+amc -> // cfmt:algo_lib.Flags.Argv  printfmt:Auto
+amc -> void algo_lib::Flags_ToArgv(algo_lib::Flags row, algo::StringAry& args) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     ary_RemoveAll(args);
+amc ->     ary_Alloc(args) << "bin/Flags"; // command path
+amc ->     if (!(seqno_Get(row) == u32())) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(seqno_Get(row), temp);
+amc ->         ary_Alloc(args) << "-seqno:" << temp;
+amc ->     }
+amc ->     ch_RemoveAll(temp);
+amc ->     bool_Print(flag_Get(row), temp);
+amc ->     ary_Alloc(args) << "-flag:" << temp;
+amc -> }
+# exit amc code:0

@@ -59,10 +59,6 @@ interactive tool intended to ease readibility or terminal-based output.
 
 ### Sources
 <a href="#sources"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 
 Source file: [bin/hilite](/bin/hilite)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
-

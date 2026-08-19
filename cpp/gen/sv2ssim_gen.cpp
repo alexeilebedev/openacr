@@ -47,32 +47,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 sv2ssim::FDb    sv2ssim::_db;     // dependency found via dev.targdep
 
-namespace sv2ssim {
-const char *sv2ssim_help =
-"sv2ssim: sv2ssim - Separated Value file processor\n"
-"Usage: sv2ssim [-fname:]<string> [options]\n"
-"    OPTION          TYPE    DFLT    COMMENT\n"
-"    -in             string  \"data\"  Input directory or filename, - for stdin\n"
-"    [fname]         string          Input file, use - for stdin\n"
-"    -separator      string  ','     Input field separator\n"
-"    -outseparator   string  \"\"      Output separator. Default: ssim\n"
-"    -header                 Y       File has header line\n"
-"    -ctype          string  \"\"      Type tag for output tuples\n"
-"    -ssimfile       string  \"\"      (with -schema) Create ssimfile definition\n"
-"    -schema                         (output)Generate schema from input file\n"
-"    -field          regx    \"%\"     (output) Print selected fields\n"
-"    -data                           (output) Convert input file to ssim tuples\n"
-"    -report                 Y       Print final report\n"
-"    -prefer_signed                  Prefer signed types when given a choice\n"
-"    -verbose        flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug          flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                           Print help and exit; alias -h\n"
-"    -version                        Print version and exit\n"
-"    -signature                      Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace sv2ssim
 namespace sv2ssim { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:sv2ssim.FDb._db.InitReflection
@@ -98,7 +72,7 @@ void sv2ssim::bltin_CopyOut(sv2ssim::FBltin &row, amcdb::Bltin &out) {
     out.likeu64 = row.likeu64;
     out.bigendok = row.bigendok;
     out.issigned = row.issigned;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- sv2ssim.FBltin.base.CopyIn
@@ -127,118 +101,16 @@ void sv2ssim::trace_Print(sv2ssim::trace& row, algo::cstring& str) {
 }
 
 // --- sv2ssim.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     sv2ssim.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of sv2ssim.FDb.cmdline (and any base command line)
+// via sv2ssim_ReadArgv; then apply -help/-version and load floadtuples input.
 void sv2ssim::ReadArgv() {
     command::sv2ssim &cmd = sv2ssim::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::sv2ssim_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    bool fname_present = false;
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::sv2ssim_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"sv2ssim: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"sv2ssim: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::sv2ssim_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "sv2ssim: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::sv2ssim_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    case command_FieldId_fname: fname_present=true; break;
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"sv2ssim: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::sv2ssim_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -261,13 +133,7 @@ void sv2ssim::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-        if (!fname_present) {
-            err << "sv2ssim: Missing value for required argument -fname (see -help)" << eol;
-            doexit = true;
-        }
-    }
-    // dmmeta.floadtuples:sv2ssim.FDb.cmdline
+    // dmmeta.floadtuples:command.sv2ssim.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!sv2ssim::LoadTuplesMaybe(cmd.in,true)) {
@@ -280,7 +146,7 @@ void sv2ssim::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(sv2ssim_help);
+        prlog(command::sv2ssim_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -307,7 +173,13 @@ void sv2ssim::Step() {
 // --- sv2ssim.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void sv2ssim::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("sv2ssim", sv2ssim::InsertStrptrMaybe, NULL, sv2ssim::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "sv2ssim";
+    row.InsertStrptrMaybe  = sv2ssim::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = sv2ssim::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = sv2ssim::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "sv2ssim.trace";
@@ -427,6 +299,33 @@ void sv2ssim::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- sv2ssim.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool sv2ssim::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    sv2ssim::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case sv2ssim_TableId_dmmeta_Svtype: { // finput:sv2ssim.FDb.svtype
+            // finput sv2ssim.FDb.svtype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case sv2ssim_TableId_amcdb_Bltin: { // finput:sv2ssim.FDb.bltin
+            // finput sv2ssim.FDb.bltin: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- sv2ssim.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -468,7 +367,7 @@ void* sv2ssim::field_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     sv2ssim::FField*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.field_lary[bsr];
         if (!lev) {
             lev=(sv2ssim::FField*)algo_lib::malloc_AllocMem(sizeof(sv2ssim::FField) * (u64(1)<<bsr));
@@ -477,7 +376,7 @@ void* sv2ssim::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = i32(new_nelems);
+        _db.field_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -489,7 +388,7 @@ void sv2ssim::field_RemoveAll() {
     for (u64 n = _db.field_n; n>0; ) {
         n--;
         field_qFind(i32(n)).~FField(); // destroy last element
-        _db.field_n = i32(n);
+        _db.field_n = i64(n);
     }
 }
 
@@ -500,7 +399,7 @@ void sv2ssim::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(i32(n)).~FField();
-        _db.field_n = i32(n);
+        _db.field_n = i64(n);
     }
 }
 
@@ -531,10 +430,10 @@ algo::aryptr<algo::cstring> sv2ssim::linetok_Addary(algo::aryptr<algo::cstring> 
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("sv2ssim.tary_alias  field:sv2ssim.FDb.linetok  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     linetok_Reserve(nnew); // reserve space
-    int at = _db.linetok_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = _db.linetok_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (_db.linetok_elems + at + i) algo::cstring(rhs[i]);
         _db.linetok_n++;
     }
@@ -546,8 +445,8 @@ algo::aryptr<algo::cstring> sv2ssim::linetok_Addary(algo::aryptr<algo::cstring> 
 // The new element is initialized to a default value
 algo::cstring& sv2ssim::linetok_Alloc() {
     linetok_Reserve(1);
-    int n  = _db.linetok_n;
-    int at = n;
+    i64 n  = _db.linetok_n;
+    i64 at = n;
     algo::cstring *elems = _db.linetok_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
     _db.linetok_n = n+1;
@@ -557,9 +456,9 @@ algo::cstring& sv2ssim::linetok_Alloc() {
 // --- sv2ssim.FDb.linetok.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& sv2ssim::linetok_AllocAt(int at) {
+algo::cstring& sv2ssim::linetok_AllocAt(i64 at) {
     linetok_Reserve(1);
-    int n  = _db.linetok_n;
+    i64 n  = _db.linetok_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("sv2ssim.bad_alloc_at  field:sv2ssim.FDb.linetok  comment:'index out of range'");
     }
@@ -572,12 +471,12 @@ algo::cstring& sv2ssim::linetok_AllocAt(int at) {
 
 // --- sv2ssim.FDb.linetok.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> sv2ssim::linetok_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> sv2ssim::linetok_AllocN(i64 n_elems) {
     linetok_Reserve(n_elems);
-    int old_n  = _db.linetok_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.linetok_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.linetok_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
     _db.linetok_n = new_n;
@@ -588,15 +487,15 @@ algo::aryptr<algo::cstring> sv2ssim::linetok_AllocN(int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNAt(int n_elems, int at) {
+algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNAt(i64 n_elems, i64 at) {
     linetok_Reserve(n_elems);
-    int n  = _db.linetok_n;
+    i64 n  = _db.linetok_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("sv2ssim.bad_alloc_n_at  field:sv2ssim.FDb.linetok  comment:'index out of range'");
     }
     algo::cstring *elems = _db.linetok_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
     _db.linetok_n = n+n_elems;
@@ -605,8 +504,8 @@ algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNAt(int n_elems, int at) {
 
 // --- sv2ssim.FDb.linetok.Remove
 // Remove item by index. If index outside of range, do nothing.
-void sv2ssim::linetok_Remove(u32 i) {
-    u32 lim = _db.linetok_n;
+void sv2ssim::linetok_Remove(u64 i) {
+    u64 lim = _db.linetok_n;
     algo::cstring *elems = _db.linetok_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
@@ -617,12 +516,11 @@ void sv2ssim::linetok_Remove(u32 i) {
 
 // --- sv2ssim.FDb.linetok.RemoveAll
 void sv2ssim::linetok_RemoveAll() {
-    u32 n = _db.linetok_n;
-    while (n > 0) {
-        n -= 1;
-        _db.linetok_elems[n].~cstring();
-        _db.linetok_n = n;
+    u64 n = _db.linetok_n;
+    for (u64 i=0; i<n; i++) {
+        _db.linetok_elems[i].~cstring();
     }
+    _db.linetok_n = 0;
 }
 
 // --- sv2ssim.FDb.linetok.RemoveLast
@@ -638,10 +536,10 @@ void sv2ssim::linetok_RemoveLast() {
 
 // --- sv2ssim.FDb.linetok.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void sv2ssim::linetok_AbsReserve(int n) {
-    u32 old_max  = _db.linetok_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void sv2ssim::linetok_AbsReserve(i64 n) {
+    u64 old_max  = _db.linetok_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.linetok_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("sv2ssim.tary_nomem  field:sv2ssim.FDb.linetok  comment:'out of memory'");
@@ -653,12 +551,12 @@ void sv2ssim::linetok_AbsReserve(int n) {
 
 // --- sv2ssim.FDb.linetok.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNVal(i64 n_elems, const algo::cstring& val) {
     linetok_Reserve(n_elems);
-    int old_n  = _db.linetok_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.linetok_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.linetok_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
     _db.linetok_n = new_n;
@@ -682,25 +580,43 @@ bool sv2ssim::linetok_ReadStrptrMaybe(algo::strptr in_str) {
 // --- sv2ssim.FDb.linetok.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void sv2ssim::linetok_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+void sv2ssim::linetok_Insary(algo::aryptr<algo::cstring> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.linetok_elems && rhs.elems < _db.linetok_elems + _db.linetok_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("sv2ssim.tary_alias  field:sv2ssim.FDb.linetok  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(_db.linetok_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(_db.linetok_n+1))) {
         FatalErrorExit("sv2ssim.bad_insary  field:sv2ssim.FDb.linetok  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = _db.linetok_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = _db.linetok_n - at;
     linetok_Reserve(nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (_db.linetok_elems + at + nnew + i) algo::cstring(_db.linetok_elems[at + i]);
         _db.linetok_elems[at + i].~cstring(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (_db.linetok_elems + at + i) algo::cstring(rhs[i]);
     }
     _db.linetok_n += nnew;
+}
+
+// --- sv2ssim.FDb.linetok.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void sv2ssim::linetok_RemRegion(i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, _db.linetok_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            _db.linetok_elems[i].~cstring();
+        }
+        memmove(_db.linetok_elems+beg, _db.linetok_elems+end, sizeof(algo::cstring) * (_db.linetok_n-end));
+        _db.linetok_n -= n;
+    }
 }
 
 // --- sv2ssim.FDb.svtype.Alloc
@@ -749,7 +665,7 @@ void* sv2ssim::svtype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     sv2ssim::FSvtype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.svtype_lary[bsr];
         if (!lev) {
             lev=(sv2ssim::FSvtype*)algo_lib::malloc_AllocMem(sizeof(sv2ssim::FSvtype) * (u64(1)<<bsr));
@@ -758,7 +674,7 @@ void* sv2ssim::svtype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.svtype_n = i32(new_nelems);
+        _db.svtype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -770,7 +686,7 @@ void sv2ssim::svtype_RemoveAll() {
     for (u64 n = _db.svtype_n; n>0; ) {
         n--;
         svtype_qFind(u64(n)).~FSvtype(); // destroy last element
-        _db.svtype_n = i32(n);
+        _db.svtype_n = i64(n);
     }
 }
 
@@ -781,7 +697,7 @@ void sv2ssim::svtype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         svtype_qFind(u64(n)).~FSvtype();
-        _db.svtype_n = i32(n);
+        _db.svtype_n = i64(n);
     }
 }
 
@@ -997,6 +913,24 @@ sv2ssim::FField* sv2ssim::zd_selfield_RemoveFirst() {
     return row;
 }
 
+// --- sv2ssim.FDb.zd_selfield.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void sv2ssim::zd_selfield_InsertBefore(sv2ssim::FField& row, sv2ssim::FField* before) {
+    if (!zd_selfield_InLlistQ(row) && &row != before) {
+        sv2ssim::FField* next = before;
+        sv2ssim::FField* prev = next ? next->zd_selfield_prev : _db.zd_selfield_tail;
+        row.zd_selfield_next = next;
+        row.zd_selfield_prev = prev;
+        sv2ssim::FField **prev_link_a = &prev->zd_selfield_next;
+        sv2ssim::FField **prev_link_b = &_db.zd_selfield_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        sv2ssim::FField **next_link_a = &next->zd_selfield_prev;
+        sv2ssim::FField **next_link_b = &_db.zd_selfield_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_selfield_n++;
+    }
+}
+
 // --- sv2ssim.FDb.bltin.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1043,7 +977,7 @@ void* sv2ssim::bltin_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     sv2ssim::FBltin*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.bltin_lary[bsr];
         if (!lev) {
             lev=(sv2ssim::FBltin*)algo_lib::malloc_AllocMem(sizeof(sv2ssim::FBltin) * (u64(1)<<bsr));
@@ -1052,7 +986,7 @@ void* sv2ssim::bltin_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.bltin_n = i32(new_nelems);
+        _db.bltin_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1064,7 +998,7 @@ void sv2ssim::bltin_RemoveAll() {
     for (u64 n = _db.bltin_n; n>0; ) {
         n--;
         bltin_qFind(u64(n)).~FBltin(); // destroy last element
-        _db.bltin_n = i32(n);
+        _db.bltin_n = i64(n);
     }
 }
 
@@ -1075,7 +1009,7 @@ void sv2ssim::bltin_RemoveLast() {
     if (n > 0) {
         n -= 1;
         bltin_qFind(u64(n)).~FBltin();
-        _db.bltin_n = i32(n);
+        _db.bltin_n = i64(n);
     }
 }
 
@@ -1486,7 +1420,7 @@ void sv2ssim::svtype_CopyOut(sv2ssim::FSvtype &row, dmmeta::Svtype &out) {
     out.maxwid = row.maxwid;
     out.fixedwid1 = row.fixedwid1;
     out.fixedwid2 = row.fixedwid2;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- sv2ssim.FSvtype.base.CopyIn
@@ -1651,7 +1585,7 @@ bool sv2ssim::FieldId_ReadStrptrMaybe(sv2ssim::FieldId &parent, algo::strptr in_
 // --- sv2ssim.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:sv2ssim.FieldId.String  printfmt:Raw
-void sv2ssim::FieldId_Print(sv2ssim::FieldId& row, algo::cstring& str) {
+void sv2ssim::FieldId_Print(sv2ssim::FieldId row, algo::cstring& str) {
     sv2ssim::value_Print(row, str);
 }
 
@@ -1746,7 +1680,7 @@ bool sv2ssim::TableId_ReadStrptrMaybe(sv2ssim::TableId &parent, algo::strptr in_
 // --- sv2ssim.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:sv2ssim.TableId.String  printfmt:Raw
-void sv2ssim::TableId_Print(sv2ssim::TableId& row, algo::cstring& str) {
+void sv2ssim::TableId_Print(sv2ssim::TableId row, algo::cstring& str) {
     sv2ssim::value_Print(row, str);
 }
 

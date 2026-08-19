@@ -1,0 +1,26 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.MsgWidth  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgWidth.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgWidth.len  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.MsgWidth.len  offset:0  width:4  srcfield:algo_lib.MsgWidth.word  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgWidth.len  extra:0  scale:1
+amc <- dmmeta.field  field:algo_lib.MsgWidth.p1  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgWidth.p2  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgWidth.p3  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgWidth.p4  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.msgtype  ctype:algo_lib.MsgWidth  type:1
+amc <- dmmeta.ctype  ctype:algo_lib.MsgExtra  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgExtra.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgExtra.len  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.MsgExtra.len  offset:0  width:6  srcfield:algo_lib.MsgExtra.word  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgExtra.len  extra:252  scale:1
+# eof amc
+amc -> amc.lenfld_extra  field:algo_lib.MsgWidth.len  size:20  extra:0  scale:1  max:15  comment:"fixed size + extra is outside the length field range; the minimum frame's length cannot be stored"
+amc -> amc.lenfld_extra  field:algo_lib.MsgExtra.len  extra:252  scale:1  max:63  comment:"extra exceeds the length field range; no frame length is representable"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

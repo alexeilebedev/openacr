@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -29,68 +20,68 @@
 
 // --- http_FieldIdEnum
 
-enum http_FieldIdEnum {                            // http.FieldId.value
-     http_FieldId_name                       = 0
-    ,http_FieldId_value                      = 1
-    ,http_FieldId_method                     = 2
-    ,http_FieldId_extension_method           = 3
-    ,http_FieldId_uri                        = 4
-    ,http_FieldId_version                    = 5
-    ,http_FieldId_cache_control              = 6
-    ,http_FieldId_connection                 = 7
-    ,http_FieldId_date                       = 8
-    ,http_FieldId_pragma                     = 9
-    ,http_FieldId_trailer                    = 10
-    ,http_FieldId_transfer_encoding          = 11
-    ,http_FieldId_upgrade                    = 12
-    ,http_FieldId_via                        = 13
-    ,http_FieldId_warning                    = 14
-    ,http_FieldId_accept                     = 15
-    ,http_FieldId_accept_charset             = 16
-    ,http_FieldId_accept_encoding            = 17
-    ,http_FieldId_accept_language            = 18
-    ,http_FieldId_authorization              = 19
-    ,http_FieldId_expect                     = 20
-    ,http_FieldId_from                       = 21
-    ,http_FieldId_host                       = 22
-    ,http_FieldId_if_match                   = 23
-    ,http_FieldId_if_modified_since          = 24
-    ,http_FieldId_if_none_match              = 25
-    ,http_FieldId_if_range                   = 26
-    ,http_FieldId_if_unmodified_since        = 27
-    ,http_FieldId_max_forwards               = 28
-    ,http_FieldId_proxy_authorization        = 29
-    ,http_FieldId_range                      = 30
-    ,http_FieldId_referer                    = 31
-    ,http_FieldId_te                         = 32
-    ,http_FieldId_user_agent                 = 33
-    ,http_FieldId_allow                      = 34
-    ,http_FieldId_content_encoding           = 35
-    ,http_FieldId_content_language           = 36
-    ,http_FieldId_content_length             = 37
-    ,http_FieldId_content_location           = 38
-    ,http_FieldId_content_md5                = 39
-    ,http_FieldId_content_range              = 40
-    ,http_FieldId_content_type               = 41
-    ,http_FieldId_expires                    = 42
-    ,http_FieldId_last_modified              = 43
-    ,http_FieldId_sec_websocket_key          = 44
-    ,http_FieldId_sec_websocket_extensions   = 45
-    ,http_FieldId_sec_websocket_protocol     = 46
-    ,http_FieldId_sec_websocket_version      = 47
-    ,http_FieldId_extension_header           = 48
-    ,http_FieldId_body                       = 49
-    ,http_FieldId_status                     = 50
-    ,http_FieldId_accept_ranges              = 51
-    ,http_FieldId_age                        = 52
-    ,http_FieldId_etag                       = 53
-    ,http_FieldId_location                   = 54
-    ,http_FieldId_proxy_authenticate         = 55
-    ,http_FieldId_retry_after                = 56
-    ,http_FieldId_server                     = 57
-    ,http_FieldId_vary                       = 58
-    ,http_FieldId_www_authenticate           = 59
-    ,http_FieldId_sec_websocket_accept       = 60
+enum http_FieldIdEnum {    // http.FieldId.value
+     http_FieldId_name
+    ,http_FieldId_value
+    ,http_FieldId_method
+    ,http_FieldId_extension_method
+    ,http_FieldId_uri
+    ,http_FieldId_version
+    ,http_FieldId_cache_control
+    ,http_FieldId_connection
+    ,http_FieldId_date
+    ,http_FieldId_pragma
+    ,http_FieldId_trailer
+    ,http_FieldId_transfer_encoding
+    ,http_FieldId_upgrade
+    ,http_FieldId_via
+    ,http_FieldId_warning
+    ,http_FieldId_accept
+    ,http_FieldId_accept_charset
+    ,http_FieldId_accept_encoding
+    ,http_FieldId_accept_language
+    ,http_FieldId_authorization
+    ,http_FieldId_expect
+    ,http_FieldId_from
+    ,http_FieldId_host
+    ,http_FieldId_if_match
+    ,http_FieldId_if_modified_since
+    ,http_FieldId_if_none_match
+    ,http_FieldId_if_range
+    ,http_FieldId_if_unmodified_since
+    ,http_FieldId_max_forwards
+    ,http_FieldId_proxy_authorization
+    ,http_FieldId_range
+    ,http_FieldId_referer
+    ,http_FieldId_te
+    ,http_FieldId_user_agent
+    ,http_FieldId_allow
+    ,http_FieldId_content_encoding
+    ,http_FieldId_content_language
+    ,http_FieldId_content_length
+    ,http_FieldId_content_location
+    ,http_FieldId_content_md5
+    ,http_FieldId_content_range
+    ,http_FieldId_content_type
+    ,http_FieldId_expires
+    ,http_FieldId_last_modified
+    ,http_FieldId_sec_websocket_key
+    ,http_FieldId_sec_websocket_extensions
+    ,http_FieldId_sec_websocket_protocol
+    ,http_FieldId_sec_websocket_version
+    ,http_FieldId_extension_header
+    ,http_FieldId_body
+    ,http_FieldId_status
+    ,http_FieldId_accept_ranges
+    ,http_FieldId_age
+    ,http_FieldId_etag
+    ,http_FieldId_location
+    ,http_FieldId_proxy_authenticate
+    ,http_FieldId_retry_after
+    ,http_FieldId_server
+    ,http_FieldId_vary
+    ,http_FieldId_www_authenticate
+    ,http_FieldId_sec_websocket_accept
 };
 
 enum { http_FieldIdEnum_N = 61 };
@@ -98,59 +89,59 @@ enum { http_FieldIdEnum_N = 61 };
 
 // --- http_HeaderTypeEnum
 
-enum http_HeaderTypeEnum {                            // http.HeaderType.value
-     http_HeaderType_accept                     = 0
-    ,http_HeaderType_accept_charset             = 1
-    ,http_HeaderType_accept_encoding            = 2
-    ,http_HeaderType_accept_language            = 3
-    ,http_HeaderType_accept_ranges              = 4
-    ,http_HeaderType_age                        = 5
-    ,http_HeaderType_allow                      = 6
-    ,http_HeaderType_authorization              = 7
-    ,http_HeaderType_cache_control              = 8
-    ,http_HeaderType_connection                 = 9
-    ,http_HeaderType_content_encoding           = 10
-    ,http_HeaderType_content_language           = 11
-    ,http_HeaderType_content_length             = 12
-    ,http_HeaderType_content_location           = 13
-    ,http_HeaderType_content_md5                = 14
-    ,http_HeaderType_content_range              = 15
-    ,http_HeaderType_content_type               = 16
-    ,http_HeaderType_date                       = 17
-    ,http_HeaderType_etag                       = 18
-    ,http_HeaderType_expect                     = 19
-    ,http_HeaderType_expires                    = 20
-    ,http_HeaderType_from                       = 21
-    ,http_HeaderType_host                       = 22
-    ,http_HeaderType_if_match                   = 23
-    ,http_HeaderType_if_modified_since          = 24
-    ,http_HeaderType_if_none_match              = 25
-    ,http_HeaderType_if_range                   = 26
-    ,http_HeaderType_if_unmodified_since        = 27
-    ,http_HeaderType_last_modified              = 28
-    ,http_HeaderType_location                   = 29
-    ,http_HeaderType_max_forwards               = 30
-    ,http_HeaderType_pragma                     = 31
-    ,http_HeaderType_proxy_authenticate         = 32
-    ,http_HeaderType_proxy_authorization        = 33
-    ,http_HeaderType_range                      = 34
-    ,http_HeaderType_referer                    = 35
-    ,http_HeaderType_retry_after                = 36
-    ,http_HeaderType_sec_websocket_accept       = 37
-    ,http_HeaderType_sec_websocket_extensions   = 38
-    ,http_HeaderType_sec_websocket_key          = 39
-    ,http_HeaderType_sec_websocket_protocol     = 40
-    ,http_HeaderType_sec_websocket_version      = 41
-    ,http_HeaderType_server                     = 42
-    ,http_HeaderType_te                         = 43
-    ,http_HeaderType_trailer                    = 44
-    ,http_HeaderType_transfer_encoding          = 45
-    ,http_HeaderType_upgrade                    = 46
-    ,http_HeaderType_user_agent                 = 47
-    ,http_HeaderType_vary                       = 48
-    ,http_HeaderType_via                        = 49
-    ,http_HeaderType_warning                    = 50
-    ,http_HeaderType_www_authenticate           = 51
+enum http_HeaderTypeEnum {    // http.HeaderType.value
+     http_HeaderType_accept
+    ,http_HeaderType_accept_charset
+    ,http_HeaderType_accept_encoding
+    ,http_HeaderType_accept_language
+    ,http_HeaderType_accept_ranges
+    ,http_HeaderType_age
+    ,http_HeaderType_allow
+    ,http_HeaderType_authorization
+    ,http_HeaderType_cache_control
+    ,http_HeaderType_connection
+    ,http_HeaderType_content_encoding
+    ,http_HeaderType_content_language
+    ,http_HeaderType_content_length
+    ,http_HeaderType_content_location
+    ,http_HeaderType_content_md5
+    ,http_HeaderType_content_range
+    ,http_HeaderType_content_type
+    ,http_HeaderType_date
+    ,http_HeaderType_etag
+    ,http_HeaderType_expect
+    ,http_HeaderType_expires
+    ,http_HeaderType_from
+    ,http_HeaderType_host
+    ,http_HeaderType_if_match
+    ,http_HeaderType_if_modified_since
+    ,http_HeaderType_if_none_match
+    ,http_HeaderType_if_range
+    ,http_HeaderType_if_unmodified_since
+    ,http_HeaderType_last_modified
+    ,http_HeaderType_location
+    ,http_HeaderType_max_forwards
+    ,http_HeaderType_pragma
+    ,http_HeaderType_proxy_authenticate
+    ,http_HeaderType_proxy_authorization
+    ,http_HeaderType_range
+    ,http_HeaderType_referer
+    ,http_HeaderType_retry_after
+    ,http_HeaderType_sec_websocket_accept
+    ,http_HeaderType_sec_websocket_extensions
+    ,http_HeaderType_sec_websocket_key
+    ,http_HeaderType_sec_websocket_protocol
+    ,http_HeaderType_sec_websocket_version
+    ,http_HeaderType_server
+    ,http_HeaderType_te
+    ,http_HeaderType_trailer
+    ,http_HeaderType_transfer_encoding
+    ,http_HeaderType_upgrade
+    ,http_HeaderType_user_agent
+    ,http_HeaderType_vary
+    ,http_HeaderType_via
+    ,http_HeaderType_warning
+    ,http_HeaderType_www_authenticate
 };
 
 enum { http_HeaderTypeEnum_N = 52 };
@@ -203,7 +194,6 @@ struct ExtensionHeader { // http.ExtensionHeader
     // func:http.ExtensionHeader..Ctor
     inline               ExtensionHeader() __attribute__((nothrow));
 };
-
 // func:http.ExtensionHeader..ReadFieldMaybe
 bool                 ExtensionHeader_ReadFieldMaybe(http::ExtensionHeader& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of http::ExtensionHeader from an ascii string.
@@ -229,7 +219,6 @@ struct FieldId { // http.FieldId: Field read helper
     inline               FieldId(http_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:http.FieldId.value.GetEnum
 inline http_FieldIdEnum value_GetEnum(const http::FieldId& parent) __attribute__((nothrow));
@@ -267,7 +256,7 @@ inline void          FieldId_Init(http::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:http.FieldId.String  printfmt:Raw
 // func:http.FieldId..Print
-void                 FieldId_Print(http::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(http::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- http.HeaderType
 struct HeaderType { // http.HeaderType
@@ -277,7 +266,6 @@ struct HeaderType { // http.HeaderType
     // func:http.HeaderType..EnumCtor
     inline               HeaderType(http_HeaderTypeEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:http.HeaderType.value.GetEnum
 inline http_HeaderTypeEnum value_GetEnum(const http::HeaderType& parent) __attribute__((nothrow));
@@ -315,7 +303,7 @@ inline void          HeaderType_Init(http::HeaderType& parent);
 // print string representation of ROW to string STR
 // cfmt:http.HeaderType.String  printfmt:Raw
 // func:http.HeaderType..Print
-void                 HeaderType_Print(http::HeaderType& row, algo::cstring& str) __attribute__((nothrow));
+void                 HeaderType_Print(http::HeaderType row, algo::cstring& str) __attribute__((nothrow));
 
 // --- http.Method
 struct Method { // http.Method
@@ -325,7 +313,6 @@ struct Method { // http.Method
     // func:http.Method..EnumCtor
     inline               Method(http_MethodEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:http.Method.value.GetEnum
 inline http_MethodEnum value_GetEnum(const http::Method& parent) __attribute__((nothrow));
@@ -363,7 +350,7 @@ inline void          Method_Init(http::Method& parent);
 // print string representation of ROW to string STR
 // cfmt:http.Method.String  printfmt:Raw
 // func:http.Method..Print
-void                 Method_Print(http::Method& row, algo::cstring& str) __attribute__((nothrow));
+void                 Method_Print(http::Method row, algo::cstring& str) __attribute__((nothrow));
 
 // --- http.Request
 struct Request { // http.Request
@@ -414,8 +401,8 @@ struct Request { // http.Request
     algo::cstring            sec_websocket_protocol;     //
     algo::cstring            sec_websocket_version;      //
     http::ExtensionHeader*   extension_header_elems;     // pointer to elements
-    u32                      extension_header_n;         // number of elements in array
-    u32                      extension_header_max;       // max. capacity of array before realloc
+    u64                      extension_header_n;         // number of elements in array
+    u64                      extension_header_max;       // max. capacity of array before realloc
     algo::cstring            body;                       //
     // func:http.Request..AssignOp
     http::Request&       operator =(const http::Request &rhs) __attribute__((nothrow));
@@ -426,7 +413,6 @@ struct Request { // http.Request
     // func:http.Request..CopyCtor
     Request(const http::Request &rhs) __attribute__((nothrow));
 };
-
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
@@ -439,15 +425,15 @@ http::ExtensionHeader& extension_header_Alloc(http::Request& parent) __attribute
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:http.Request.extension_header.AllocAt
-http::ExtensionHeader& extension_header_AllocAt(http::Request& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+http::ExtensionHeader& extension_header_AllocAt(http::Request& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:http.Request.extension_header.AllocN
-algo::aryptr<http::ExtensionHeader> extension_header_AllocN(http::Request& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<http::ExtensionHeader> extension_header_AllocN(http::Request& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:http.Request.extension_header.AllocNAt
-algo::aryptr<http::ExtensionHeader> extension_header_AllocNAt(http::Request& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<http::ExtensionHeader> extension_header_AllocNAt(http::Request& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:http.Request.extension_header.EmptyQ
 inline bool          extension_header_EmptyQ(http::Request& parent) __attribute__((nothrow));
@@ -462,13 +448,13 @@ inline algo::aryptr<http::ExtensionHeader> extension_header_Getary(const http::R
 inline http::ExtensionHeader* extension_header_Last(http::Request& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:http.Request.extension_header.Max
-inline i32           extension_header_Max(http::Request& parent) __attribute__((nothrow));
+inline i64           extension_header_Max(http::Request& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:http.Request.extension_header.N
-inline i32           extension_header_N(const http::Request& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           extension_header_N(const http::Request& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:http.Request.extension_header.Remove
-void                 extension_header_Remove(http::Request& parent, u32 i) __attribute__((nothrow));
+void                 extension_header_Remove(http::Request& parent, u64 i) __attribute__((nothrow));
 // func:http.Request.extension_header.RemoveAll
 void                 extension_header_RemoveAll(http::Request& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -476,10 +462,10 @@ void                 extension_header_RemoveAll(http::Request& parent) __attribu
 void                 extension_header_RemoveLast(http::Request& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:http.Request.extension_header.Reserve
-inline void          extension_header_Reserve(http::Request& parent, int n) __attribute__((nothrow));
+inline void          extension_header_Reserve(http::Request& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:http.Request.extension_header.AbsReserve
-void                 extension_header_AbsReserve(http::Request& parent, int n) __attribute__((nothrow));
+void                 extension_header_AbsReserve(http::Request& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:http.Request.extension_header.Setary
 void                 extension_header_Setary(http::Request& parent, http::Request &rhs) __attribute__((nothrow));
@@ -498,7 +484,7 @@ inline http::ExtensionHeader& extension_header_qLast(http::Request& parent) __at
 inline u64           extension_header_rowid_Get(http::Request& parent, http::ExtensionHeader &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:http.Request.extension_header.AllocNVal
-algo::aryptr<http::ExtensionHeader> extension_header_AllocNVal(http::Request& parent, int n_elems, const http::ExtensionHeader& val) __attribute__((nothrow));
+algo::aryptr<http::ExtensionHeader> extension_header_AllocNVal(http::Request& parent, i64 n_elems, const http::ExtensionHeader& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -507,7 +493,13 @@ bool                 extension_header_ReadStrptrMaybe(http::Request& parent, alg
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:http.Request.extension_header.Insary
-void                 extension_header_Insary(http::Request& parent, algo::aryptr<http::ExtensionHeader> rhs, int at) __attribute__((nothrow));
+void                 extension_header_Insary(http::Request& parent, algo::aryptr<http::ExtensionHeader> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:http.Request.extension_header.RemRegion
+void                 extension_header_RemRegion(http::Request& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:http.Request.extension_header_curs.Next
@@ -573,8 +565,8 @@ struct Response { // http.Response
     algo::cstring            sec_websocket_protocol;     //
     algo::cstring            sec_websocket_version;      //
     http::ExtensionHeader*   extension_header_elems;     // pointer to elements
-    u32                      extension_header_n;         // number of elements in array
-    u32                      extension_header_max;       // max. capacity of array before realloc
+    u64                      extension_header_n;         // number of elements in array
+    u64                      extension_header_max;       // max. capacity of array before realloc
     algo::cstring            body;                       //
     // func:http.Response..AssignOp
     http::Response&      operator =(const http::Response &rhs) __attribute__((nothrow));
@@ -585,7 +577,6 @@ struct Response { // http.Response
     // func:http.Response..CopyCtor
     Response(const http::Response &rhs) __attribute__((nothrow));
 };
-
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
@@ -598,15 +589,15 @@ http::ExtensionHeader& extension_header_Alloc(http::Response& parent) __attribut
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:http.Response.extension_header.AllocAt
-http::ExtensionHeader& extension_header_AllocAt(http::Response& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+http::ExtensionHeader& extension_header_AllocAt(http::Response& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:http.Response.extension_header.AllocN
-algo::aryptr<http::ExtensionHeader> extension_header_AllocN(http::Response& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<http::ExtensionHeader> extension_header_AllocN(http::Response& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:http.Response.extension_header.AllocNAt
-algo::aryptr<http::ExtensionHeader> extension_header_AllocNAt(http::Response& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<http::ExtensionHeader> extension_header_AllocNAt(http::Response& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:http.Response.extension_header.EmptyQ
 inline bool          extension_header_EmptyQ(http::Response& parent) __attribute__((nothrow));
@@ -621,13 +612,13 @@ inline algo::aryptr<http::ExtensionHeader> extension_header_Getary(const http::R
 inline http::ExtensionHeader* extension_header_Last(http::Response& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:http.Response.extension_header.Max
-inline i32           extension_header_Max(http::Response& parent) __attribute__((nothrow));
+inline i64           extension_header_Max(http::Response& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:http.Response.extension_header.N
-inline i32           extension_header_N(const http::Response& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           extension_header_N(const http::Response& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:http.Response.extension_header.Remove
-void                 extension_header_Remove(http::Response& parent, u32 i) __attribute__((nothrow));
+void                 extension_header_Remove(http::Response& parent, u64 i) __attribute__((nothrow));
 // func:http.Response.extension_header.RemoveAll
 void                 extension_header_RemoveAll(http::Response& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -635,10 +626,10 @@ void                 extension_header_RemoveAll(http::Response& parent) __attrib
 void                 extension_header_RemoveLast(http::Response& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:http.Response.extension_header.Reserve
-inline void          extension_header_Reserve(http::Response& parent, int n) __attribute__((nothrow));
+inline void          extension_header_Reserve(http::Response& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:http.Response.extension_header.AbsReserve
-void                 extension_header_AbsReserve(http::Response& parent, int n) __attribute__((nothrow));
+void                 extension_header_AbsReserve(http::Response& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:http.Response.extension_header.Setary
 void                 extension_header_Setary(http::Response& parent, http::Response &rhs) __attribute__((nothrow));
@@ -657,7 +648,7 @@ inline http::ExtensionHeader& extension_header_qLast(http::Response& parent) __a
 inline u64           extension_header_rowid_Get(http::Response& parent, http::ExtensionHeader &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:http.Response.extension_header.AllocNVal
-algo::aryptr<http::ExtensionHeader> extension_header_AllocNVal(http::Response& parent, int n_elems, const http::ExtensionHeader& val) __attribute__((nothrow));
+algo::aryptr<http::ExtensionHeader> extension_header_AllocNVal(http::Response& parent, i64 n_elems, const http::ExtensionHeader& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -666,7 +657,13 @@ bool                 extension_header_ReadStrptrMaybe(http::Response& parent, al
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:http.Response.extension_header.Insary
-void                 extension_header_Insary(http::Response& parent, algo::aryptr<http::ExtensionHeader> rhs, int at) __attribute__((nothrow));
+void                 extension_header_Insary(http::Response& parent, algo::aryptr<http::ExtensionHeader> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:http.Response.extension_header.RemRegion
+void                 extension_header_RemRegion(http::Response& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:http.Response.extension_header_curs.Next
@@ -700,8 +697,8 @@ namespace http { // gen:ns_curstext
 struct Request_extension_header_curs {// cursor
     typedef http::ExtensionHeader ChildType;
     http::ExtensionHeader* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     Request_extension_header_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -709,8 +706,8 @@ struct Request_extension_header_curs {// cursor
 struct Response_extension_header_curs {// cursor
     typedef http::ExtensionHeader ChildType;
     http::ExtensionHeader* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     Response_extension_header_curs() { elems=NULL; n_elems=0; index=0; }
 };
 

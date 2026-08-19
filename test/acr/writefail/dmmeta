@@ -1,0 +1,3 @@
+This file occupies the dmmeta path inside the acr.FileWriteFail dataset:
+acr resolves the inserted record to dmmeta/dispsig.ssim under -in, and the
+write fails with ENOTDIR because this path component is a file.

@@ -43,9 +43,32 @@ namespace atf_cov { // update-hdr
     void Summary();
     void XmlIndent(algo::cstring &out, strptr text, int indent);
     void GenerateCoberturaReport();
+
+    // Judge every target that carries a coverage floor, and name which of the two
+    // things that can go wrong did.  A target whose measurement came in under its
+    // floor is a regression, and the diff under test is where to look for it.  A
+    // target that produced no data at all did not regress: the run never measured
+    // it, and scoring that as zero coverage sends the reader hunting for a code
+    // cause that does not exist.  The two need opposite responses, so they are
+    // reported as different facts.
     void Main_Check();
     void Main_Capture();
     void SaveCov();
+
+    // Build the dev.uncovfunc backlog: every in-scope function whose
+    // executable lines are all unhit across the suite.  Function extents
+    // (source file, begin and end line) come from src_func -printssim;
+    // per-line hit data from the Covline pool.  Scoped like the coverage
+    // report -- only functions in target sources are considered, which
+    // excludes generated/external the same way RunGcov already filters.
+    void ComputeUncovfunc();
+
+    // Dump the uncovfunc pool to PATH in dev.uncovfunc ssim format.
+    void WriteUncovfunc(strptr path);
+
+    // Persist the uncovfunc pool to its committed ssimfile, replacing prior
+    // contents -- the same acr -replace -trunc path SaveCov uses for tgtcov.
+    void SaveUncovfunc();
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // main:atf_cov
 }

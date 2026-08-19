@@ -3,5 +3,5 @@
 acr -> acr.delete  dmmeta.field  field:dmmeta.Ns.license  arg:dev.License  reftype:Pkey  dflt:""  comment:"Associated license"
 acr -> acr.delete  dmmeta.xref  field:amc.FNs.p_license      inscond:true  via:amc.FDb.ind_license/dmmeta.Ns.license
 acr -> acr.delete  dmmeta.xref  field:src_hdr.FNs.p_license  inscond:true  via:src_hdr.FDb.ind_license/dmmeta.Ns.license
-acr -> report.acr  n_select:3  n_insert:0  n_delete:3  n_ignore:0  n_update:0  n_file_mod:0
+acr -> report.acr  n_select:3  n_insert:0  n_delete:3  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 # exit acr code:0

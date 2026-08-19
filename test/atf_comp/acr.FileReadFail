@@ -1,0 +1,5 @@
+# start acr cmd:"$bindir/acr -in:test/acr/missing ns:%"
+# eof acr
+acr -> acr.file_read  file:test/acr/missing  err:"No such file or directory"  comment:"input directory or file could not be read"
+acr -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+# exit acr code:1

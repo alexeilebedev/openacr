@@ -1,0 +1,12 @@
+# start bash cmd:"bash -c 'printf \"dmmeta.dispsig  dispsig:a.X  signature:1\\ndmmeta.dispsig  dispsig:b.Y  signature:\\042unterminated\\ndmmeta.dispsig  dispsig:c.Z  signature:3\\n\" > $tempdir/t.ssim; echo dmmeta.dispsig  dispsig:d.W  signature:4 | $bindir/acr -insert -write -in:$tempdir/t.ssim %; echo acr_exit:$?; cat $tempdir/t.ssim'"
+# eof bash
+bash -> temp/atf_comp/acr.BadLine/t.ssim:2: acr.badline  reason:"cannot parse line"  text:'dmmeta.dispsig  dispsig:b.Y  signature:"unterminated'
+bash -> dmmeta.dispsig  dispsig:a.X  signature:1
+bash -> dmmeta.dispsig  dispsig:c.Z  signature:3
+bash -> acr.insert  dmmeta.dispsig  dispsig:d.W  signature:4
+bash -> report.acr  n_select:3  n_insert:1  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:1
+bash -> acr_exit:1
+bash -> dmmeta.dispsig  dispsig:a.X  signature:1
+bash -> dmmeta.dispsig  dispsig:b.Y  signature:"unterminated
+bash -> dmmeta.dispsig  dispsig:c.Z  signature:3
+# exit bash code:0

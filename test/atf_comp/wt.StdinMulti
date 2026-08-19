@@ -1,0 +1,8 @@
+# start wt-scratch cmd:"test/wt-scratch $bindir/wt test.stdin.xyz -cow -q -del"
+wt-scratch <- echo line1
+wt-scratch <- echo line2
+# eof wt-scratch
+wt-scratch -> line1
+wt-scratch -> line2
+wt-scratch -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:1  n_update:0  n_file_mod:0  n_badline:0
+# exit wt-scratch code:0

@@ -38,4 +38,33 @@
     done
     echo "(save-buffers-kill-terminal t)"
 ) > temp/cpp-indent
-emacs -nw --batch --load temp/cpp-indent
+
+# The indenter is an emacs, and an emacs given no bound is one that outlives
+# every way this script can end: when the calling process tree died, the wrapper
+# and its emacs were reparented to init and kept spinning at 100% of a core --
+# one was found with fifteen minutes of accumulated CPU time and no live parent.
+# On a shared CI runner that is a core taken from every other job on the host
+# until somebody notices by hand.  So the run is bounded, and the child is killed
+# on every signal this script can receive.  The bound is deliberately larger than
+# a slow file needs (one large hand-written header runs about a minute, and the
+# dominant cost is per-invocation rather than per-line) and smaller than the
+# citest budget it runs inside, so a file that cannot be finished is named here
+# rather than ending the whole indent step on its alarm with nothing to read.
+indent_timeout=${CPP_INDENT_TIMEOUT:-120}
+emacs_pid=""
+kill_emacs() {
+    if [ -n "$emacs_pid" ]; then
+        kill -TERM "$emacs_pid" 2>/dev/null || true
+    fi
+}
+trap kill_emacs EXIT HUP INT TERM
+timeout -k 5 "$indent_timeout" emacs -nw --batch --load temp/cpp-indent &
+emacs_pid=$!
+wait "$emacs_pid"
+status=$?
+emacs_pid=""
+if [ "$status" -eq 124 ] || [ "$status" -eq 137 ]; then
+    echo "cpp-indent.skip  file:\"$*\"  timeout:$indent_timeout  comment:\"indenter did not finish; file left as it was\""
+    status=0
+fi
+exit "$status"

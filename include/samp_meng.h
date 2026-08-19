@@ -33,36 +33,23 @@ namespace samp_meng { // update-hdr
     // cpp/samp_meng/samp_meng.cpp -- Main source
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void In_TextMsg(samp_meng::TextMsg &); // dispatch_msg:samp_meng.In/samp_meng.TextMsg
+    // void In_SampMengTextMsg(ams::SampMengTextMsg &); // dispatch_msg:samp_meng.In/ams.SampMengTextMsg
 
     // Create new symbol
-    // void In_NewSymbolReqMsg(samp_meng::NewSymbolReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.NewSymbolReqMsg
+    // void In_SampMengNewSymbolReqMsg(ams::SampMengNewSymbolReqMsg &msg); // dispatch_msg:samp_meng.In/ams.SampMengNewSymbolReqMsg
 
-    // Create new user.
-    // void In_NewUserReqMsg(samp_meng::NewUserReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.NewUserReqMsg
+    // Create new user
+    // void In_SampMengNewUserReqMsg(ams::SampMengNewUserReqMsg &msg); // dispatch_msg:samp_meng.In/ams.SampMengNewUserReqMsg
 
     // Add an order to the orderbook.
     // Publish any resulting trades; If order is IOC, cancel the remainder back,
     // otherwise post it to the book
-    // USER_ID: owning user
-    // SYMBOL: symbol associated with order
-    // PRICE: order price
-    // QTY: signed quantity; positive=buy, negative=sell
-    // IOC: if TRUE, order is cancelled immediately after matching
-    // void In_NewOrderReqMsg(samp_meng::NewOrderReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.NewOrderReqMsg
+    // void In_SampMengNewOrderReqMsg(ams::SampMengNewOrderReqMsg &msg); // dispatch_msg:samp_meng.In/ams.SampMengNewOrderReqMsg
 
     // Cancel a single order
     void CancelOrder(samp_meng::FOrder *order, bool notify);
-
-    // Cancel a single order
     //     (user-implemented function, prototype is in amc-generated header)
-    // void In_CancelReqMsg(samp_meng::CancelReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.CancelReqMsg
-
-    // Cancel all orders for user
-    // void In_MassCancelReqMsg(samp_meng::MassCancelReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.MassCancelReqMsg
-    // void cd_fdin_eof_Step(); // fstep:samp_meng.FDb.cd_fdin_eof
-
-    // Read next input line from stdin
-    // void cd_fdin_read_Step(); // fstep:samp_meng.FDb.cd_fdin_read
+    // void In_SampMengCancelReqMsg(ams::SampMengCancelReqMsg &msg); // dispatch_msg:samp_meng.In/ams.SampMengCancelReqMsg
+    // void In_SampMengMassCancelReqMsg(ams::SampMengMassCancelReqMsg &msg); // dispatch_msg:samp_meng.In/ams.SampMengMassCancelReqMsg
     // void Main(); // main:samp_meng
 }

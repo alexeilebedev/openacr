@@ -1,0 +1,6 @@
+dev.gitfile  gitfile:sub/a.md
+dev.readmefile  gitfile:sub/a.md  inl:N  sandbox:N  filter:""  comment:""
+dev.gitfile  gitfile:sub/b.md
+dev.readmefile  gitfile:sub/b.md  inl:N  sandbox:N  filter:""  comment:""
+dev.gitfile  gitfile:c.md
+dev.readmefile  gitfile:c.md  inl:N  sandbox:N  filter:""  comment:""

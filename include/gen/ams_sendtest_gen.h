@@ -23,18 +23,19 @@
 
 
 #pragma once
-#include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/ams_gen.h"
 #include "include/gen/lib_ams_gen.h"
+#include "include/gen/report_gen.h"
+#include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
 // --- ams_sendtest_FieldIdEnum
 
-enum ams_sendtest_FieldIdEnum {        // ams_sendtest.FieldId.value
-     ams_sendtest_FieldId_value   = 0
+enum ams_sendtest_FieldIdEnum {    // ams_sendtest.FieldId.value
+     ams_sendtest_FieldId_value
 };
 
 enum { ams_sendtest_FieldIdEnum_N = 1 };
@@ -42,53 +43,36 @@ enum { ams_sendtest_FieldIdEnum_N = 1 };
 namespace ams_sendtest { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace ams_sendtest { // gen:ns_tclass_field
-extern const char *ams_sendtest_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ams_sendtest { struct _db_child_curs; }
-namespace ams_sendtest { struct AmsSendTest; }
 namespace ams_sendtest { struct FChild; }
+namespace ams_sendtest { struct FTest; }
 namespace ams_sendtest { struct trace; }
 namespace ams_sendtest { struct FDb; }
 namespace ams_sendtest { struct FieldId; }
 namespace ams_sendtest { extern struct ams_sendtest::FDb _db; }
 namespace ams_sendtest { // gen:ns_print_struct
 
-// --- ams_sendtest.AmsSendTest
-struct AmsSendTest { // ams_sendtest.AmsSendTest
-    u64                   n_msg_send;         //   0  Number of messages sent
-    u64                   off_send;           //   0  Offset sent
-    u64                   off_recv;           //   0  Offset received
-    u64                   n_msg_recv;         //   0  Number of messages received
-    u64                   n_write_wait;       //   0  Number of waits by parent
-    u64                   n_msg_limit;        //   1000000  Limit of messages to send
-    algo_lib::FTimehook   h_write;            //
-    u64                   sum_recv_latency;   //   0
-    // func:ams_sendtest.AmsSendTest..Ctor
-    inline               AmsSendTest() __attribute__((nothrow));
-};
-
-// Set all fields to initial values.
-// func:ams_sendtest.AmsSendTest..Init
-inline void          AmsSendTest_Init(ams_sendtest::AmsSendTest& parent);
-// print string representation of ROW to string STR
-// cfmt:ams_sendtest.AmsSendTest.String  printfmt:Tuple
-// func:ams_sendtest.AmsSendTest..Print
-void                 AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cstring& str) __attribute__((nothrow));
-
 // --- ams_sendtest.FChild
 // create: ams_sendtest.FDb.child (Lary)
 // global access: child (Lary, by rowid)
 struct FChild { // ams_sendtest.FChild
-    algo::cstring           child_path;      //   "bin/ams_sendtest"  path for executable
-    command::ams_sendtest   child_cmd;       // command line for child process
-    algo::cstring           child_fstdin;    // redirect for stdin
-    algo::cstring           child_fstdout;   // redirect for stdout
-    algo::cstring           child_fstderr;   // redirect for stderr
-    pid_t                   child_pid;       //   0  pid of running child process
-    i32                     child_timeout;   //   0  optional timeout for child process
-    i32                     child_status;    //   0  last exit status of child process
-    ams::ProcId             proc_id;         //
+    algo::cstring           child_path;          //   "bin/ams_sendtest"  path for executable
+    command::ams_sendtest   child_cmd;           // command line for child process
+    algo::cstring           child_fstdin;        // redirect for stdin
+    algo::cstring           child_fstdout;       // redirect for stdout
+    algo::cstring           child_fstderr;       // redirect for stderr
+    algo::Fildes            child_to_stdin;      // write end of stdin pipe when fstdin=="|"; closed by _Wait
+    algo::Fildes            child_from_stdout;   // read end of stdout pipe when fstdout=="|"; closed by _Wait
+    algo::Fildes            child_from_stderr;   // read end of stderr pipe when fstderr=="|"; closed by _Wait
+    pid_t                   child_pid;           //   0  pid of running child process
+    i32                     child_timeout;       //   0  optional timeout for child process
+    u32                     child_memlimitmb;    //   0  optional child memory ceiling MB (10^6): RLIMIT_AS before exec; 0 = leave inherited
+    i32                     child_status;        //   0  last exit status of child process
+    bool                    child_pgroup;        //   false  run child in its own process group; _Kill targets the group
+    ams::ProcId             proc_id;             //
+    lib_ams::FShm*          p_shm;               // This child's own lane, in unicast mode. optional pointer
 private:
     // func:ams_sendtest.FChild..Ctor
     inline               FChild() __attribute__((nothrow));
@@ -99,14 +83,10 @@ private:
     friend void                 child_RemoveAll() __attribute__((nothrow));
     friend void                 child_RemoveLast() __attribute__((nothrow));
 };
-
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 // func:ams_sendtest.FChild.child.Start
 int                  child_Start(ams_sendtest::FChild& child) __attribute__((nothrow));
-// Start subprocess & Read output
-// func:ams_sendtest.FChild.child.StartRead
-algo::Fildes         child_StartRead(ams_sendtest::FChild& child, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 // func:ams_sendtest.FChild.child.Kill
 void                 child_Kill(ams_sendtest::FChild& child);
@@ -114,7 +94,7 @@ void                 child_Kill(ams_sendtest::FChild& child);
 // func:ams_sendtest.FChild.child.Wait
 void                 child_Wait(ams_sendtest::FChild& child) __attribute__((nothrow));
 // Start + Wait
-// Execute subprocess and return exit code
+// Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
 // func:ams_sendtest.FChild.child.Exec
 int                  child_Exec(ams_sendtest::FChild& child) __attribute__((nothrow));
 // Start + Wait, throw exception on error
@@ -137,6 +117,27 @@ void                 FChild_Init(ams_sendtest::FChild& child);
 // func:ams_sendtest.FChild..Uninit
 void                 FChild_Uninit(ams_sendtest::FChild& child) __attribute__((nothrow));
 
+// --- ams_sendtest.FTest
+struct FTest { // ams_sendtest.FTest
+    u64                   n_msg_send;         //   0  Number of messages sent
+    u64                   off_send;           //   0  Offset sent
+    u64                   off_recv;           //   0  Offset received
+    u64                   n_msg_recv;         //   0  Number of messages received
+    u64                   n_write_wait;       //   0  Number of waits by parent
+    u64                   n_msg_limit;        //   1000000  Limit of messages to send
+    algo_lib::FTimehook   h_write;            //
+    u64                   sum_recv_latency;   //   0
+    // func:ams_sendtest.FTest..Ctor
+    inline               FTest() __attribute__((nothrow));
+};
+// Set all fields to initial values.
+// func:ams_sendtest.FTest..Init
+inline void          FTest_Init(ams_sendtest::FTest& parent);
+// print string representation of ROW to string STR
+// cfmt:ams_sendtest.FTest.String  printfmt:Tuple
+// func:ams_sendtest.FTest..Print
+void                 FTest_Print(ams_sendtest::FTest& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- ams_sendtest.trace
 #pragma pack(push,1)
 struct trace { // ams_sendtest.trace
@@ -144,7 +145,6 @@ struct trace { // ams_sendtest.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:ams_sendtest.trace.String  printfmt:Tuple
 // func:ams_sendtest.trace..Print
@@ -153,18 +153,18 @@ void                 trace_Print(ams_sendtest::trace& row, algo::cstring& str) _
 // --- ams_sendtest.FDb
 // create: ams_sendtest.FDb._db (Global)
 struct FDb { // ams_sendtest.FDb: In-memory database for ams_sendtest
-    lib_ams::FShm*              c_out;            // Output goes here. optional pointer
-    command::ams_sendtest       cmdline;          //
-    ams_sendtest::AmsSendTest   ams_send_test;    //
-    ams_sendtest::FChild*       child_lary[32];   // level array
-    i32                         child_n;          // number of elements in array
-    ams_sendtest::trace         trace;            //
+    lib_ams::FShm*          c_out;            // Output goes here. optional pointer
+    command::ams_sendtest   cmdline;          //
+    ams_sendtest::FTest     test;             // Context for the test
+    ams_sendtest::FChild*   child_lary[36];   // level array
+    i64                     child_n;          // number of elements in array
+    u64                     nsync;            //   0  Number of child processes synchronized (parent)
+    algo::ByteAry           msgbuf;           // Scratch buffer a board-bound message is formatted into
+    report::ams_sendtest    report;           // This run's verdict, printed once at exit
+    ams_sendtest::trace     trace;            //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     ams_sendtest.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of ams_sendtest.FDb.cmdline (and any base command line)
+// via ams_sendtest_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:ams_sendtest.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -201,6 +201,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:ams_sendtest.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:ams_sendtest.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:ams_sendtest.FDb._db.XrefMaybe
@@ -227,7 +231,7 @@ inline ams_sendtest::FChild* child_Find(u64 t) __attribute__((__warn_unused_resu
 inline ams_sendtest::FChild* child_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ams_sendtest.FDb.child.N
-inline i32           child_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           child_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ams_sendtest.FDb.child.RemoveAll
 void                 child_RemoveAll() __attribute__((nothrow));
@@ -274,7 +278,6 @@ struct FieldId { // ams_sendtest.FieldId: Field read helper
     inline               FieldId(ams_sendtest_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ams_sendtest.FieldId.value.GetEnum
 inline ams_sendtest_FieldIdEnum value_GetEnum(const ams_sendtest::FieldId& parent) __attribute__((nothrow));
@@ -312,7 +315,7 @@ inline void          FieldId_Init(ams_sendtest::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:ams_sendtest.FieldId.String  printfmt:Raw
 // func:ams_sendtest.FieldId..Print
-void                 FieldId_Print(ams_sendtest::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(ams_sendtest::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace ams_sendtest { // gen:ns_curstext
 
@@ -336,7 +339,7 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators
 namespace algo {
-inline algo::cstring &operator <<(algo::cstring &str, const ams_sendtest::AmsSendTest &row);// cfmt:ams_sendtest.AmsSendTest.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams_sendtest::FTest &row);// cfmt:ams_sendtest.FTest.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams_sendtest::trace &row);// cfmt:ams_sendtest.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams_sendtest::FieldId &row);// cfmt:ams_sendtest.FieldId.String
 }

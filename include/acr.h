@@ -104,14 +104,45 @@ namespace acr { // update-hdr
     // -------------------------------------------------------------------
     // cpp/acr/git.cpp -- Git triggers
     //
-    void Main_GitTriggers();
+
+    // Emit the git commands that make the worktree match the selected dev.gitfile
+    // rows: a deleted row's file is removed, a renamed row's file is moved, and a
+    // new row's file is created and staged. WRITE_OK says the ssimfile write-back
+    // went through, and the script then runs; otherwise the script is printed.
+    // A nonzero script status fails the run. acr_ed's rename arrives here as an acr
+    // run that renames the source file's dev.gitfile row under -write and -g, and by
+    // the time the script runs the ssimfiles already name the destination. A git mv
+    // refused because the source is untracked therefore leaves the worktree holding
+    // the old path while the database names the new one, and the next amc or abt
+    // compiles against a database naming a file that does not exist. The script's
+    // status therefore travels out in the exit code, and the diagnostic names the
+    // script that failed, so a caller that checks either one can tell that run apart
+    // from a clean one.
+    void Main_GitTriggers(bool write_ok);
 
     // -------------------------------------------------------------------
     // cpp/acr/load.cpp -- Load files
     //
 
-    // Load records for this ctype from the appropriate ssimfile
-    // This does nothing if acr is operating in file mode, or if the ssimfile doesn't exist
+    // Report input line TEXT (at FILE's current lineno) that cannot be loaded,
+    // for REASON: a parse failure or a ctype acr does not know.  A dropped line
+    // would not survive a -write -- the file is rewritten from the rows that
+    // loaded, so an unloadable row silently vanishes, possibly weeks later via
+    // an -insert into an unrelated row of the same file.  Recording the load
+    // failure and a nonzero exit blocks the rewrite (main.cpp gates -write on
+    // exit_code==0, and editor mode on !load_failed), so the file keeps every
+    // line it held.  Blank and comment-only lines parse into an empty tuple and
+    // never reach this path.
+    void ReportBadLine(acr::FFile &file, algo::strptr text, algo::strptr reason);
+
+    // Load records for this ctype from the appropriate ssimfile.
+    // This does nothing if acr is operating in file mode.
+    // A dataset holds only the ssimfiles it needs, so an ssimfile whose path
+    // resolves to nothing loads as an empty table. Any other read failure -- a
+    // permission problem, an i/o error, a mapping that did not succeed -- fails the
+    // run instead: the query would otherwise answer from a table missing every row
+    // of that file, and a -write would rewrite the file from the rows that did
+    // load, dropping the rest. acr.DsetFileReadDeny pins both halves.
     void LoadRecords(acr::FCtype &ctype);
 
     // Return default read mode as specified on the command line

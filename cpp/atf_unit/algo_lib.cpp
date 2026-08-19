@@ -24,6 +24,9 @@
 
 #include "include/atf_unit.h"
 #include <algorithm>
+#ifndef WIN32
+#include <unistd.h>
+#endif
 
 
 void atf_unit::unittest_algo_lib_PopCnt1() {
@@ -48,7 +51,7 @@ void atf_unit::unittest_algo_lib_PopCnt2() {
     }
 }
 
-struct RandomTypeName {
+struct RandomTypeName { // ignore:struct_in_src
     char c[18];
     RandomTypeName(){memset(this,0,sizeof(*this));}
 };
@@ -1011,7 +1014,7 @@ void atf_unit::unittest_algo_lib_ParseHex2() {
 
 }
 
-struct AliasedU32 {
+struct AliasedU32 { // ignore:struct_in_src
     u32 val;
 } __attribute__((__may_alias__));
 
@@ -1405,6 +1408,304 @@ void atf_unit::unittest_algo_lib_OrderID() {
 
 // -----------------------------------------------------------------------------
 
+// DecodeNBytes and DecodeNChars take a length that always comes from the wire:
+// a protobuf field header carrying the varint 0xFFFFFFFF, a kafka record whose
+// signed varint length decodes to -1. Such a length must be refused, and the
+// refusal has to hold for every integer type a caller can hand over -- the
+// callers spell the length u16, u32, i32 and i64, and each of those spans a
+// different set of values that no buffer can satisfy.
+//
+// The length is therefore compared as a signed 64-bit count, which every
+// caller's type converts into without changing value, and the accepted range is
+// stated on both ends: at least zero and at most the number of bytes left in
+// the buffer. A negative length has no reading as a byte count, and a length
+// above the remaining size cannot be served. A rejected call leaves the buffer
+// where it was and the result empty, so a caller that ignores the return value
+// still sees no fabricated payload.
+void atf_unit::unittest_algo_lib_DecodeNRange() {
+    u8 wire[] = {'a','b','c'};
+    algo::memptr result;
+    strptr chars;
+    // zero bytes: accepted, buffer untouched
+    algo::memptr buf(wire,sizeof(wire));
+    vrfyeq_(algo::DecodeNBytes(buf,0,result),true);
+    vrfyeq_(elems_N(result),0);
+    vrfyeq_(elems_N(buf),3);
+    // a length inside the buffer, then the whole remainder
+    vrfyeq_(algo::DecodeNBytes(buf,1,result),true);
+    vrfyeq_(ToStrPtr(result),strptr("a"));
+    vrfyeq_(algo::DecodeNBytes(buf,2,result),true);
+    vrfyeq_(ToStrPtr(result),strptr("bc"));
+    vrfyeq_(elems_N(buf),0);
+    // one byte past the end
+    buf = algo::memptr(wire,sizeof(wire));
+    vrfyeq_(algo::DecodeNBytes(buf,4,result),false);
+    vrfyeq_(elems_N(result),0);
+    vrfyeq_(elems_N(buf),3);
+    // i32 lengths that a signed varint can produce
+    vrfyeq_(algo::DecodeNBytes(buf,i32(-1),result),false);
+    vrfyeq_(algo::DecodeNBytes(buf,i32(-2147483647-1),result),false);
+    // u32 lengths that an unsigned varint can produce
+    vrfyeq_(algo::DecodeNBytes(buf,u32(0x80000000),result),false);
+    vrfyeq_(algo::DecodeNBytes(buf,u32(0xFFFFFFFF),result),false);
+    // the widest lengths a caller can spell
+    u64 u64max = ~u64(0);
+    vrfyeq_(algo::DecodeNBytes(buf,u64max,result),false);
+    vrfyeq_(algo::DecodeNBytes(buf,i64(-1),result),false);
+    vrfyeq_(elems_N(buf),3);
+    // DecodeNChars answers the same table
+    vrfyeq_(algo::DecodeNChars(buf,0,chars),true);
+    vrfyeq_(algo::DecodeNChars(buf,3,chars),true);
+    vrfyeq_(chars,strptr("abc"));
+    buf = algo::memptr(wire,sizeof(wire));
+    vrfyeq_(algo::DecodeNChars(buf,4,chars),false);
+    vrfyeq_(algo::DecodeNChars(buf,i32(-1),chars),false);
+    vrfyeq_(algo::DecodeNChars(buf,u32(0xFFFFFFFF),chars),false);
+    vrfyeq_(algo::DecodeNChars(buf,u64max,chars),false);
+    vrfyeq_(elems_N(chars),0);
+    vrfyeq_(elems_N(buf),3);
+}
+
+// -----------------------------------------------------------------------------
+
+// Decode WIRE as a u32 varint, reporting the value and the number of bytes the
+// decode took out of the buffer.
+static bool DecodeVlcU32(algo::memptr wire, u32 &result, int &nread) {
+    algo::memptr buf = wire;
+    bool ret = algo::DecodeVLCLEU32(buf,result);
+    nread = elems_N(wire) - elems_N(buf);
+    return ret;
+}
+
+// Decode WIRE as a u64 varint, reporting the value and the number of bytes the
+// decode took out of the buffer.
+static bool DecodeVlcU64(algo::memptr wire, u64 &result, int &nread) {
+    algo::memptr buf = wire;
+    bool ret = algo::DecodeVLCLEU64(buf,result);
+    nread = elems_N(wire) - elems_N(buf);
+    return ret;
+}
+
+// A varint arrives as a sequence of seven-bit groups and is accumulated into a
+// fixed-width integer, so the decoder has to answer what happens when the
+// encoding names a value the accumulator cannot hold. A protobuf length field
+// carrying the five bytes 83 80 80 80 10 names 4294967299 bytes of payload;
+// keeping only the low 32 bits of that leaves 3, and a decode reported as
+// successful then hands the caller the three-byte payload of a message that
+// declared four gigabytes.
+//
+// The general condition is that a group's bits have to survive the shift that
+// places them. A group shifted by the accumulator's width or more contributes
+// nothing, and a group whose top bits fall off the end contributes only part of
+// itself; in both cases the encoding names a value the accumulator does not
+// hold, and the decode of the whole varint is refused.
+//
+// Each decoder therefore walks groups only while the shift stays inside its own
+// width -- five bytes for u32, ten for u64 -- and only while the group under
+// that shift keeps all its bits. A varint that runs past the width, and one the
+// buffer never terminates, both leave the buffer where it was and the result
+// zero. The zigzag decoders read through the same two accumulators and answer
+// the same table.
+void atf_unit::unittest_algo_lib_DecodeVLCLERange() {
+    u32 v32(0);
+    int nread(0);
+    // one group per byte; four groups always fit u32
+    u8 one32[] = {0x7f};
+    vrfyeq_(DecodeVlcU32(algo::memptr(one32,sizeof(one32)),v32,nread),true);
+    vrfyeq_(v32,u32(0x7f));
+    vrfyeq_(nread,1);
+    u8 four32[] = {0xff,0xff,0xff,0x7f};
+    vrfyeq_(DecodeVlcU32(algo::memptr(four32,sizeof(four32)),v32,nread),true);
+    vrfyeq_(v32,u32(0x0fffffff));
+    vrfyeq_(nread,4);
+    // the fifth group fits when it is 0x0f or less, which spans u32 to its top
+    u8 max32[] = {0xff,0xff,0xff,0xff,0x0f};
+    vrfyeq_(DecodeVlcU32(algo::memptr(max32,sizeof(max32)),v32,nread),true);
+    vrfyeq_(v32,u32(0xffffffff));
+    vrfyeq_(nread,5);
+    // a fifth group of zero pads the encoding without naming a wider value
+    u8 pad32[] = {0x80,0x80,0x80,0x80,0x00};
+    vrfyeq_(DecodeVlcU32(algo::memptr(pad32,sizeof(pad32)),v32,nread),true);
+    vrfyeq_(v32,u32(0));
+    vrfyeq_(nread,5);
+    // 0x10 is the smallest fifth group that does not fit: 2^32 and 2^32+3
+    u8 over32[] = {0x80,0x80,0x80,0x80,0x10};
+    vrfyeq_(DecodeVlcU32(algo::memptr(over32,sizeof(over32)),v32,nread),false);
+    vrfyeq_(v32,u32(0));
+    vrfyeq_(nread,0);
+    u8 wide32[] = {0x83,0x80,0x80,0x80,0x10};
+    vrfyeq_(DecodeVlcU32(algo::memptr(wide32,sizeof(wide32)),v32,nread),false);
+    vrfyeq_(v32,u32(0));
+    vrfyeq_(nread,0);
+    // a sixth group is past the width whatever it holds
+    u8 six32[] = {0x80,0x80,0x80,0x80,0x80,0x01};
+    vrfyeq_(DecodeVlcU32(algo::memptr(six32,sizeof(six32)),v32,nread),false);
+    vrfyeq_(nread,0);
+    // ten and eleven groups are refused for the same reason, small value or not
+    u8 ten32[] = {0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x01};
+    vrfyeq_(DecodeVlcU32(algo::memptr(ten32,sizeof(ten32)),v32,nread),false);
+    vrfyeq_(nread,0);
+    u8 eleven32[] = {0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x01};
+    vrfyeq_(DecodeVlcU32(algo::memptr(eleven32,sizeof(eleven32)),v32,nread),false);
+    vrfyeq_(nread,0);
+    // a varint the buffer never terminates
+    u8 cut32[] = {0x80,0x80};
+    vrfyeq_(DecodeVlcU32(algo::memptr(cut32,sizeof(cut32)),v32,nread),false);
+    vrfyeq_(nread,0);
+    // the u32 zigzag decoder answers the same table and consumes nothing
+    algo::memptr zbuf(wide32,sizeof(wide32));
+    i32 z32(1);
+    vrfyeq_(algo::DecodeVLCLEI32Z(zbuf,z32),false);
+    vrfyeq_(z32,0);
+    vrfyeq_(elems_N(zbuf),5);
+    // nine groups always fit u64
+    u64 v64(0);
+    u8 one64[] = {0x01};
+    vrfyeq_(DecodeVlcU64(algo::memptr(one64,sizeof(one64)),v64,nread),true);
+    vrfyeq_(v64,u64(1));
+    vrfyeq_(nread,1);
+    u8 nine64[] = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x7f};
+    vrfyeq_(DecodeVlcU64(algo::memptr(nine64,sizeof(nine64)),v64,nread),true);
+    vrfyeq_(v64,u64(0x7fffffffffffffff));
+    vrfyeq_(nread,9);
+    // the tenth group fits when it is 0x01, which spans u64 to its top
+    u8 max64[] = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x01};
+    vrfyeq_(DecodeVlcU64(algo::memptr(max64,sizeof(max64)),v64,nread),true);
+    vrfyeq_(v64,~u64(0));
+    vrfyeq_(nread,10);
+    // 0x02 is the smallest tenth group that does not fit
+    u8 over64[] = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x02};
+    vrfyeq_(DecodeVlcU64(algo::memptr(over64,sizeof(over64)),v64,nread),false);
+    vrfyeq_(v64,u64(0));
+    vrfyeq_(nread,0);
+    // an eleventh group is past the width, and shifting by it is not defined
+    u8 eleven64[] = {0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x01};
+    vrfyeq_(DecodeVlcU64(algo::memptr(eleven64,sizeof(eleven64)),v64,nread),false);
+    vrfyeq_(v64,u64(0));
+    vrfyeq_(nread,0);
+    // a varint the buffer never terminates
+    u8 cut64[] = {0x80};
+    vrfyeq_(DecodeVlcU64(algo::memptr(cut64,sizeof(cut64)),v64,nread),false);
+    vrfyeq_(nread,0);
+    // the u64 zigzag decoder answers the same table and consumes nothing
+    algo::memptr zbuf64(eleven64,sizeof(eleven64));
+    i64 z64(1);
+    vrfyeq_(algo::DecodeVLCLEI64Z(zbuf64,z64),false);
+    vrfyeq_(z64,0);
+    vrfyeq_(elems_N(zbuf64),11);
+}
+
+// -----------------------------------------------------------------------------
+
+// The Dec reader accumulates the digits into a u64 and then stores the
+// result in the field's own type. A string whose scaled value exceeds that
+// type must be refused: 700.00 in a u16-backed field with two implied
+// places scales to 70000, and storing it would wrap to 4464 -- a read that
+// returns true after silently changing the value. A field as wide as the
+// accumulator is exposed to the same failure one level up: the scaled value
+// of 495765611597143987 with two implied places is 49576561159714398700,
+// which does not fit a u64, and the top of the range must still read. The
+// signed field is bounded by the same magnitude, so its own maximum reads
+// and one unit past it is refused.
+//
+// A signed field's negative range reaches one unit further than its positive
+// range, and the reader admits that unit: value_Print of an i32-backed field
+// with one implied place at the type minimum emits -214748364.8, and reading
+// that string back has to return the same value, or a record that printed
+// cannot be loaded. Digits past the field's scale are dropped rather than
+// rounded, so -214748364.85 reads as the minimum too, while a magnitude one
+// unit further down is refused. An unsigned field has no negative range at
+// all and refuses any leading minus.
+void atf_unit::unittest_algo_lib_DecReadRange() {
+    algo::U16Dec2 dec16;
+    vrfyeq_(value_ReadStrptrMaybe(dec16,"655.35"),true);
+    vrfyeq_(dec16.value,65535);
+    vrfyeq_(value_ReadStrptrMaybe(dec16,"700.00"),false);
+    algo::U32Dec1 dec32;
+    vrfyeq_(value_ReadStrptrMaybe(dec32,"429496729.5"),true);
+    vrfyeq_(dec32.value,4294967295);
+    vrfyeq_(value_ReadStrptrMaybe(dec32,"429496729.6"),false);
+    algo::U64Dec2 dec64;
+    vrfyeq_(value_ReadStrptrMaybe(dec64,"184467440737095516.15"),true);
+    vrfyeq_(dec64.value,u64(18446744073709551615ULL));
+    vrfyeq_(value_ReadStrptrMaybe(dec64,"184467440737095516.16"),false);
+    vrfyeq_(value_ReadStrptrMaybe(dec64,"495765611597143987"),false);
+    vrfyeq_(value_ReadStrptrMaybe(dec64,"276701161105643274.00"),false);
+    vrfyeq_(dec64.value,u64(18446744073709551615ULL));
+    algo::I64Dec2 dec64s;
+    vrfyeq_(value_ReadStrptrMaybe(dec64s,"92233720368547758.07"),true);
+    vrfyeq_(dec64s.value,i64(9223372036854775807LL));
+    vrfyeq_(value_ReadStrptrMaybe(dec64s,"92233720368547758.08"),false);
+    vrfyeq_(value_ReadStrptrMaybe(dec64s,"431955459045440910"),false);
+    vrfyeq_(value_ReadStrptrMaybe(dec64s,"-431955459045440910"),false);
+    vrfyeq_(dec64s.value,i64(9223372036854775807LL));
+    vrfyeq_(value_ReadStrptrMaybe(dec64s,"-92233720368547758.08"),true);
+    vrfyeq_(dec64s.value,i64(-9223372036854775807LL-1));
+    vrfyeq_(value_ReadStrptrMaybe(dec64s,"-92233720368547758.09"),false);
+    vrfyeq_(dec64s.value,i64(-9223372036854775807LL-1));
+    algo::I32Dec1 dec32s;
+    vrfyeq_(value_ReadStrptrMaybe(dec32s,"214748364.7"),true);
+    vrfyeq_(dec32s.value,2147483647);
+    vrfyeq_(value_ReadStrptrMaybe(dec32s,"214748364.8"),false);
+    vrfyeq_(value_ReadStrptrMaybe(dec32s,"-214748364.8"),true);
+    vrfyeq_(dec32s.value,i32(-2147483647-1));
+    vrfyeq_(value_ReadStrptrMaybe(dec32s,"-214748364.85"),true);
+    vrfyeq_(dec32s.value,i32(-2147483647-1));
+    vrfyeq_(value_ReadStrptrMaybe(dec32s,"-214748364.9"),false);
+    vrfyeq_(value_ReadStrptrMaybe(dec32s,"-2147483648"),false);
+    vrfyeq_(dec32s.value,i32(-2147483647-1));
+    // the printed minimum reads back as the same value
+    tempstr out;
+    value_Print(dec32s,out);
+    vrfyeq_(out,strptr("-214748364.8"));
+    algo::I32Dec1 dec32back;
+    vrfyeq_(value_ReadStrptrMaybe(dec32back,out),true);
+    vrfyeq_(dec32back.value,dec32s.value);
+    // an unsigned field refuses a leading minus
+    vrfyeq_(value_ReadStrptrMaybe(dec16,"-1.00"),false);
+    vrfyeq_(value_ReadStrptrMaybe(dec32,"-1.0"),false);
+}
+
+// -----------------------------------------------------------------------------
+
+// SetDoubleMaybe stores the value rounded to the nearest scaled integer, so
+// the bound it checks is the range the rounded value must land in, half a
+// unit wider than the field's own range at each end: 214748364.7 scales to
+// exactly 2147483647, the top of an i32-backed field with one implied place,
+// and must store, while a value half a unit further up rounds past the top
+// and is refused. The bottom of the range grants the same allowance, so a
+// value that rounds up to the field's minimum stores and one that rounds
+// below it is refused. A field whose type is as wide as the double's own
+// integer reach is refused at the point where the scaled value reaches the
+// type's magnitude, so no out-of-range double is ever stored.
+void atf_unit::unittest_algo_lib_DecSetDoubleRange() {
+    algo::I32Dec1 dec32;
+    vrfyeq_(value_SetDoubleMaybe(dec32,214748364.7),true);
+    vrfyeq_(dec32.value,2147483647);
+    vrfyeq_(value_SetDoubleMaybe(dec32,214748364.74),true);
+    vrfyeq_(dec32.value,2147483647);
+    vrfyeq_(value_SetDoubleMaybe(dec32,-214748364.8),true);
+    vrfyeq_(dec32.value,-2147483648);
+    vrfyeq_(value_SetDoubleMaybe(dec32,-214748364.84),true);
+    vrfyeq_(dec32.value,-2147483648);
+    vrfyeq_(value_SetDoubleMaybe(dec32,-214748364.9),false);
+    vrfyeq_(value_SetDoubleMaybe(dec32,-300000000.0),false);
+    algo::U16Dec2 dec16;
+    vrfyeq_(value_SetDoubleMaybe(dec16,655.35),true);
+    vrfyeq_(dec16.value,65535);
+    vrfyeq_(value_SetDoubleMaybe(dec16,655.4),false);
+    vrfyeq_(value_SetDoubleMaybe(dec16,-0.004),true);
+    vrfyeq_(dec16.value,0);
+    vrfyeq_(value_SetDoubleMaybe(dec16,-0.01),false);
+    algo::I64Dec1 dec64;
+    vrfyeq_(value_SetDoubleMaybe(dec64,922337203685477580.8),false);
+    vrfyeq_(value_SetDoubleMaybe(dec64,-922337203685477580.8),false);
+    vrfyeq_(value_SetDoubleMaybe(dec64,1e30),false);
+    vrfyeq_(value_SetDoubleMaybe(dec64,-1e30),false);
+}
+
+// -----------------------------------------------------------------------------
+
 void atf_unit::unittest_algo_lib_IntPrice() {
     // start with integer
     algo::I64Dec4 price4 = algo::I64Dec4(i64(50000));
@@ -1488,6 +1789,44 @@ void atf_unit::unittest_algo_lib_StringToFile() {
         ok = SafeStringToFile("test2",fname); // new string to file
         vrfyeq_(FileToString(fname),"test2");// must be there
     }
+}
+
+// --------------------------------------------------------------------------------
+
+// SafeStringToFile stages the new contents in a mkstemp tempfile beside the
+// target, then renames it over the target. A failed rename -- forced here by
+// making the target an existing directory -- must not leave the tempfile
+// behind: each failed save would otherwise leak one <target>-XXXXXX file
+// beside the target. Verify the call reports failure and removes the tempfile.
+void atf_unit::unittest_algo_lib_SsfRenameFail() {
+    strptr target("temp/algo_lib_ssf_renamefail");
+    // the tempfile is created as <target>-XXXXXX, so both scans below derive
+    // their glob from the target: the leak check cannot drift onto a stale
+    // stem and pass vacuously if the target path changes
+    tempstr pattern;
+    pattern << target << "-*";
+    // clean droppings from a previous failed run so the check below is
+    // fresh -- collecting first and deleting after the walk: Dir_curs wraps
+    // readdir() live, and an unlink mid-walk can perturb the enumeration so
+    // a second stale dropping is skipped, survives the pre-clean, and trips
+    // the leak check below as a false failure
+    cstring stale;
+    ind_beg(algo::Dir_curs,entry,pattern) {
+        stale << entry.pathname << eol;
+    }ind_end;
+    ind_beg(algo::Line_curs,line,stale) {
+        (void)DeleteFile(line);
+    }ind_end;
+    CreateDirRecurse(target);
+    bool ok = SafeStringToFile("test",target);
+    vrfyeq_(ok,false);
+    bool leaked = false;
+    ind_beg(algo::Dir_curs,entry,pattern) {
+        (void)entry;
+        leaked = true;
+    }ind_end;
+    vrfyeq_(leaked,false);
+    (void)RemDirRecurse(target,true);
 }
 
 // --------------------------------------------------------------------------------
@@ -1808,7 +2147,7 @@ void atf_unit::unittest_algo_lib_PerfParseDouble() {
     }
 }
 
-namespace atf_unit {
+namespace atf_unit { // ignore:namespace_block
     inline bool operator >(const atf_unit::Dbl &a, const atf_unit::Dbl &b) {
         return a.val > b.val;
     }
@@ -2529,17 +2868,29 @@ void atf_unit::unittest_algo_lib_FileQ() {
 }
 // --------------------------------------------------------------------------------
 
-static void CheckExitCode(algo::strptr cmd, int code) {
+static void CheckExitCode(algo::strptr cmd, int code, int exit_code, int exit_signal) {
     command::bash_proc bash;
     bash.cmd.c = cmd;
     int rc = bash_Exec(bash);
     vrfyeq_(rc,code);
+    algo_lib::ExportWaitStatus(rc);
+    vrfyeq_(algo_lib::_db.exit_code,exit_code);
+    vrfyeq_(algo_lib::_db.exit_signal,exit_signal);
 }
 
+// _Exec returns the raw wait status; ExportWaitStatus decomposes it into the
+// process's exit facts: exit_code carries the shell-convention code (exit N
+// -> N, death by signal -> 128+signal), exit_signal carries the terminating
+// signal alone, 0 when the child exited.
 void atf_unit::unittest_algo_lib_ExitCode() {
-    CheckExitCode("true", 0);
-    CheckExitCode("false", 256);
-    CheckExitCode("kill $$", 15);
+    int save_code = algo_lib::_db.exit_code;
+    int save_signal = algo_lib::_db.exit_signal;
+    CheckExitCode("true", 0, 0, 0);
+    CheckExitCode("false", 256, 1, 0);
+    CheckExitCode("exit 3", 3*256, 3, 0);
+    CheckExitCode("kill $$", 15, 143, 15);
+    algo_lib::_db.exit_code = save_code;
+    algo_lib::_db.exit_signal = save_signal;
 }
 
 // --------------------------------------------------------------------------------
@@ -2560,8 +2911,12 @@ void atf_unit::unittest_algo_lib_KillRecurse() {
 #ifdef __linux__
     CreateProcessTreeRecurse(2,3,5);
     sleep(1); // give some time to establish process tree
-    vrfyeq_(15,algo_lib::KillRecurse(getpid(),0,true));
-    vrfyeq_(14,algo_lib::KillRecurse(getpid(),SIGKILL,false));
+    // the walk is what the assertion measures, so it runs once, outside the
+    // macro that re-evaluates its arguments to build the failure message
+    int nproc_probe = algo_lib::KillRecurse(getpid(),0,true);
+    vrfyeq_(15,nproc_probe);
+    int nproc_kill = algo_lib::KillRecurse(getpid(),SIGKILL,false);
+    vrfyeq_(14,nproc_kill);
 #else
     (void)CreateProcessTreeRecurse;
 #endif
@@ -2815,4 +3170,261 @@ void atf_unit::unittest_algo_lib_Url() {
     algo::Tuple tuple;
     ParseUrl(tuple,"/api/v1/stream?beg=100&end=inf&par%201=Hello%20World!&flag&par2=John%26Co.");
     vrfyeq_(tempstr()<<tuple,"/api/v1/stream  beg:100  end:inf  \"par 1\":\"Hello World!\"  flag:\"\"  par2:John&Co.");
+}
+
+// --------------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_Blkpool() {
+    atf_unit::FMsg& msg = atf_unit::msg_AllocExtra(NULL, 123);
+    atf_unit::msg_Delete(msg);
+}
+
+// --------------------------------------------------------------------------------
+
+#ifndef WIN32
+// Read FD to EOF and return its contents.
+static algo::tempstr ReadAllFd(algo::Fildes fd) {
+    algo::tempstr out;
+    char buf[256];
+    ssize_t nread;
+    while ((nread = read(fd.value, buf, sizeof(buf))) > 0) {
+        out << algo::strptr(buf, (int)nread);
+    }
+    return out;
+}
+
+// Write DATA into the child's stdin pipe and close it so the child sees EOF.
+static void PumpStdin(command::bash_proc &p, algo::strptr data) {
+    algo::WriteFile(p.to_stdin, (u8*)data.elems, data.n_elems);
+    algo_lib::Close(p.to_stdin);
+}
+#endif
+
+// Spawn an arbitrary external process (here `cat` and `false`) directly through
+// algo_lib::FProc -- no amc-generated _proc type. Build argv into proc.args,
+// set redirects, and drive the lifecycle with the generic ProcStart/Wait/Exec.
+// This is the path one would use to spawn `ssh` or any other external command.
+#ifndef WIN32
+// Spawn a long-lived proc holding a stdout-pipe read end (with the given cloexec
+// setting), then spawn a second child that lists its own open fds, and report
+// whether the held pipe leaked into that second child.  Matches the pipe's
+// unique "pipe:[inode]" name rather than the fd number, so the lister's own dir
+// fd can't cause a false positive.
+static bool PipeFdLeaksQ(bool cloexec) {
+    algo_lib::FProc longproc;
+    ary_Alloc(longproc.args) = "sleep";
+    ary_Alloc(longproc.args) = "30";
+    longproc.fstdout = "|";
+    longproc.cloexec = cloexec;
+    algo_lib::ProcStart(longproc);
+    tempstr linkpath;
+    linkpath << "/proc/self/fd/" << longproc.from_stdout.value;
+    char target[64];
+    ssize_t n = readlink(Zeroterm(linkpath), target, sizeof(target)-1);
+    tempstr pipename;
+    if (n > 0) {
+        pipename = algo::strptr(target, (int)n);
+    }
+    algo_lib::FProc lsproc;
+    ary_Alloc(lsproc.args) = "sh";
+    ary_Alloc(lsproc.args) = "-c";
+    ary_Alloc(lsproc.args) = "ls -l /proc/self/fd";
+    lsproc.fstdout = "|";
+    algo_lib::ProcStart(lsproc);
+    algo::tempstr listing = ReadAllFd(lsproc.from_stdout);
+    algo_lib::ProcWait(lsproc);
+    algo_lib::ProcKill(longproc);
+    return ch_N(pipename) > 0 && algo::FindStr(listing, pipename) != -1;
+}
+#endif
+
+void atf_unit::unittest_algo_lib_FProc() {
+#ifndef WIN32
+    algo::strptr data = "the quick brown fox\n";
+
+    // round-trip data through `cat` with stdin + stdout pipes
+    {
+        algo_lib::FProc proc;
+        ary_Alloc(proc.args) = "cat";
+        proc.fstdin  = "|";
+        proc.fstdout = "|";
+        algo_lib::ProcStart(proc);
+        algo::WriteFile(proc.to_stdin, (u8*)data.elems, data.n_elems);
+        algo_lib::Close(proc.to_stdin); // EOF -> cat exits
+        algo::tempstr out;
+        char buf[256];
+        ssize_t nread;
+        while ((nread = read(proc.from_stdout.value, buf, sizeof(buf))) > 0) {
+            out << algo::strptr(buf, (int)nread);
+        }
+        algo_lib::ProcWait(proc);
+        vrfyeq_(out, data);
+        TESTCMP(algo_lib::ProcExitCode(proc), 0);
+    }
+
+    // exit code is collected from a non-zero exit
+    {
+        algo_lib::FProc proc;
+        ary_Alloc(proc.args) = "false";
+        TESTCMP(algo_lib::ProcExec(proc) != 0, true);
+        TESTCMP(algo_lib::ProcExitCode(proc), 1);
+    }
+
+    // args[0] stays the command name (not the PATH-resolved pathname): the child
+    // sees its own name, so error messages read "bash:" not "/usr/bin/bash:".
+    {
+        algo_lib::FProc proc;
+        ary_Alloc(proc.args) = "bash";
+        ary_Alloc(proc.args) = "-c";
+        ary_Alloc(proc.args) = "echo $0";
+        proc.fstdout = "|";
+        algo_lib::ProcStart(proc);
+        algo::tempstr out;
+        char buf[256];
+        ssize_t nread;
+        while ((nread = read(proc.from_stdout.value, buf, sizeof(buf))) > 0) {
+            out << algo::strptr(buf, (int)nread);
+        }
+        algo_lib::ProcWait(proc);
+        vrfyeq_(algo::Trimmed(out), "bash");
+    }
+
+    // cloexec (default true) keeps the parent's pipe fd out of later-spawned
+    // children; cloexec=false lets it leak in.
+    TESTCMP(PipeFdLeaksQ(true), false);
+    TESTCMP(PipeFdLeaksQ(false), true);
+#endif
+}
+
+// Pump a bit of data through cat/tee and verify it round-trips through every
+// amc-generated _proc pipe redirect: stdin, stdout, stderr, merged stdout+stderr
+// (fstdout="|" + fstderr=">&1"), and all three at once.
+// Source of truth: amc::tfunc_Exec_Start in cpp/amc/exec.cpp.
+void atf_unit::unittest_algo_lib_ExecPipe() {
+#ifndef WIN32
+    algo::strptr data = "the quick brown fox\n";
+
+    // 1. stdin pipe: feed via to_stdin; child writes stdout to a file we read back
+    {
+        algo::strptr fname = "temp/algo_lib_execpipe.out";
+        DeleteFile(fname);
+        command::bash_proc p;
+        p.cmd.c   = "cat";
+        p.fstdin  = "|";
+        p.fstdout = tempstr() << ">" << fname;
+        bash_Start(p);
+        PumpStdin(p, data);
+        bash_Wait(p);
+        TESTCMP(p.status, 0);
+        vrfyeq_(algo::FileToString(fname), data);
+        DeleteFile(fname);
+    }
+
+    // 2. stdout pipe: child cats stdin to stdout; parent reads from_stdout
+    {
+        command::bash_proc p;
+        p.cmd.c   = "cat";
+        p.fstdin  = "|";
+        p.fstdout = "|";
+        bash_Start(p);
+        PumpStdin(p, data);
+        vrfyeq_(ReadAllFd(p.from_stdout), data);
+        bash_Wait(p);
+        TESTCMP(p.status, 0);
+    }
+
+    // 3. stderr pipe: child cats stdin to stderr; parent reads from_stderr
+    {
+        command::bash_proc p;
+        p.cmd.c   = "cat 1>&2";
+        p.fstdin  = "|";
+        p.fstderr = "|";
+        bash_Start(p);
+        PumpStdin(p, data);
+        vrfyeq_(ReadAllFd(p.from_stderr), data);
+        bash_Wait(p);
+        TESTCMP(p.status, 0);
+    }
+
+    // 4. stdout+stderr merged: tee writes data to stdout and to /dev/stderr, and
+    //    fstderr=">&1" folds stderr into the stdout pipe, so it arrives twice
+    {
+        command::bash_proc p;
+        p.cmd.c   = "tee /dev/stderr";
+        p.fstdin  = "|";
+        p.fstdout = "|";
+        p.fstderr = ">&1";
+        bash_Start(p);
+        PumpStdin(p, data);
+        vrfyeq_(ReadAllFd(p.from_stdout), tempstr() << data << data);
+        bash_Wait(p);
+        TESTCMP(p.status, 0);
+    }
+
+    // 5. all three pipes: tee splits stdin to the stdout pipe and (via
+    //    /dev/stderr) the separate stderr pipe
+    {
+        command::bash_proc p;
+        p.cmd.c   = "tee /dev/stderr";
+        p.fstdin  = "|";
+        p.fstdout = "|";
+        p.fstderr = "|";
+        bash_Start(p);
+        PumpStdin(p, data);
+        algo::tempstr out = ReadAllFd(p.from_stdout);
+        algo::tempstr err = ReadAllFd(p.from_stderr);
+        vrfyeq_(out, data);
+        vrfyeq_(err, data);
+        bash_Wait(p);
+        TESTCMP(p.status, 0);
+    }
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+// The calibration this process runs on came from the kernel: where the
+// kernel exports a TSC rate, algo_lib::_db.hz is that exact figure, and
+// RequireKernelCpuHz admits the process.  Exact equality is the point of
+// the test -- a rate derived any other way (timed against a wall clock, or
+// read off a P-state file) lands near the kernel's figure rather than on
+// it, so an approximate comparison would pass for the very values the
+// kernel export exists to exclude.
+//
+// A host with no export has nothing to compare against, so the check is
+// announced as skipped rather than passing silently.  That host is exactly
+// where an x2 process refuses to start unless the rate is stated, and where
+// the file source /etc/x2.d/tscfreq_khz is exercised -- installing that file
+// needs root, so it is covered on such a host rather than here.  The second
+// half of the test covers the variable on either kind of host:
+// where the export exists it must be ignored, and where it does not it must be
+// installed exactly as written.  The rate used is 2.5GHz, a figure inside the
+// range ApplyCpuHz admits and unequal to any host's real rate, so a variable
+// that was silently ignored cannot pass for one that was honored.  The
+// process runs on the restored calibration afterwards, so the original is put
+// back before the test returns.
+void atf_unit::unittest_algo_lib_RequireKernelCpuHz() {
+    i32 freq_khz = 0;
+    tempstr value(algo::FileToString("/sys/devices/system/cpu/cpu0/tsc_freq_khz", algo::FileFlags()));
+    algo::StringIter iter(value);
+    (void)TryParseI32(iter, freq_khz);
+    bool exported = freq_khz > 0;
+    double orig_hz = algo_lib::_db.hz;
+    prlog("atf_unit.kernel_cpu_hz"
+          <<Keyval("exported",exported)
+          <<Keyval("kernel_hz",u64(double(freq_khz)*1e3))
+          <<Keyval("db_hz",u64(algo_lib::_db.hz)));
+    if (exported) {
+        algo_lib::RequireKernelCpuHz("/nonexistent/tscfreq_khz", "ATF_UNIT_TSCFREQKHZ");
+        vrfy_(algo_lib::_db.hz == double(freq_khz)*1e3);
+    }
+    setenv("ATF_UNIT_TSCFREQKHZ","2500000",1);
+    algo_lib::RequireKernelCpuHz("/nonexistent/tscfreq_khz", "ATF_UNIT_TSCFREQKHZ");
+    if (exported) {
+        vrfy_(algo_lib::_db.hz == double(freq_khz)*1e3);
+    } else {
+        vrfy_(algo_lib::_db.hz == 2500000.0*1e3);
+    }
+    unsetenv("ATF_UNIT_TSCFREQKHZ");
+    algo_lib::ApplyCpuHz(orig_hz);
 }

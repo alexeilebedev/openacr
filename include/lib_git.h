@@ -53,7 +53,10 @@ namespace lib_git { // update-hdr
     tempstr LastCommitLog();
 
     // Check that specified DIR is free of any git modifications.
-    // Return a string describing modified files, or an empty string if none
+    // Returns the raw newline-separated output of `git ls-files -m`, or
+    // an empty string if the tree is clean.  No truncation — callers
+    // (e.g. atf_ci's modfiles tracking) need every line to compute deltas
+    // across many tests.
     tempstr GitModifiedFiles(strptr dir);
 
     // Check that specified DIR is free of any git modifications.

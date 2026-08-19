@@ -130,10 +130,34 @@ static void CheckIndBegIndentation(src_func::FFunc &func) {
 
 // -----------------------------------------------------------------------------
 
+// Verify any whitespace-bounded "gitfile:<path>" token in func.precomment
+// names a real dev.gitfile entry. Skips template values containing $ and
+// is opted out per-function via 'ignore:bad_gitfile'.
+static void CheckGitfileRefs(src_func::FFunc &func) {
+    ind_beg(algo::Word_curs, tok, func.precomment) {
+        if (StartsWithQ(tok, "gitfile:")) {
+            strptr path = ch_RestFrom(tok, 8);
+            if (path != "" && FindStr(path, "$") == -1
+                && !src_func::ind_gitfile_Find(path)) {
+                MarkIffy(func, 0, path, "bad_gitfile", "no such file in dev.gitfile");
+            }
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 // Check if the function is iffy and set FUNC.IFFY flag if so.
 // Checks can be disabled with ignore: annotations in function pre-comment
 void src_func::ComputeIffy(src_func::FFunc &func) {
-    strptr retval = Pathcomp(func.func,"(LL");
+    // the return type is what stands left of the parameter list, and the
+    // parameter list is the first paren on the stripped line: a template
+    // parameter list can carry parens of its own (the function-pointer
+    // parameter in 'template<typename T, void (*F)(T)>'), and reading the raw
+    // line stops at that paren instead. The type extracted then comes out of
+    // the template list, so the check fires on functions that are fine and
+    // stays silent on functions that are not.
+    strptr retval = Pathcomp(src_func::StripTemplate(func.func),"(LL");
     if (FindStr(retval, "cstring ") != -1 && ByValQ(retval)) {
         MarkIffy(func, 0, "retval", "bigret", "return tempstr instead");
     }
@@ -142,11 +166,12 @@ void src_func::ComputeIffy(src_func::FFunc &func) {
         strptr arg=Pathcomp(proto,",LL");
         CheckArg(func,arg);
     }
-    strptr ns = GetFuncNs(func);
+    tempstr ns(GetFuncNs(func.func));
     tempstr need_ns(target_Get(*func.p_targsrc));
     if (ns != "" && ns != need_ns && ind_target_Find(ns)) {
         MarkIffy(func, 0, func.func, "funcns"
                  , (tempstr()<<"Expected namespace "<<need_ns));
     }
+    CheckGitfileRefs(func);
     CheckIndBegIndentation(func);
 }

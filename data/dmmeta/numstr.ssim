@@ -22,9 +22,12 @@ dmmeta.numstr  field:algo.LnumStr9_U64.ch  numtype:u64  base:10  min_len:1
 dmmeta.numstr  field:algo.LspaceStr20_I64.ch  numtype:i64  base:10  min_len:1
 dmmeta.numstr  field:algo.LspaceStr20_U64.ch  numtype:u64  base:10  min_len:1
 dmmeta.numstr  field:algo.LspaceStr3_I16.ch  numtype:i16  base:10  min_len:1
-dmmeta.numstr  field:algo.LspaceStr5_I16.ch  numtype:u16  base:10  min_len:5
+dmmeta.numstr  field:algo.LspaceStr5_U16.ch  numtype:u16  base:10  min_len:5
 dmmeta.numstr  field:algo.LspaceStr6_U32.ch  numtype:u32  base:10  min_len:1
 dmmeta.numstr  field:algo.LspaceStr7_I32_Base36.ch  numtype:i32  base:36  min_len:1
 dmmeta.numstr  field:algo.RnullStr6_U32.ch  numtype:u32  base:10  min_len:1
+dmmeta.numstr  field:atf_amc.LnullStr4_U32_Base256.ch  numtype:u32  base:256  min_len:3
+dmmeta.numstr  field:atf_amc.LspaceStr5_U32_Base95.ch  numtype:u32  base:95  min_len:3
+dmmeta.numstr  field:atf_amc.LspaceStr7_I32.ch  numtype:i32  base:10  min_len:3
 dmmeta.numstr  field:atf_amc.RnullStr6_U32.ch  numtype:u32  base:10  min_len:1
 dmmeta.numstr  field:atf_amc.RpasU32Str6.ch  numtype:u32  base:10  min_len:1

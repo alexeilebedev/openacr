@@ -40,6 +40,120 @@ static amc::FField *GetSoleValField(amc::FCtype &ctype) {
 
 //------------------------------------------------------------------------------
 
+// The pmask named PMASK on the FAST state record of NS, <ns>.FastState, or NULL
+// when the namespace declares no such pmask.
+// A FAST codec compares each field against the value the peer last saw, and
+// qualifies that value with two facts: the assigned pmask says a value has
+// been seen at all, the present pmask says the last one was present.  The
+// pmaskfld row is what names the accessors the codec calls: the pmask's own
+// field name prefixes the whole-word bitset accessors, and its funcname
+// spells the per-field ones -- a pmask named present yields <field>_PresentQ,
+// <field>_SetPresent and <field>_Present_GetBit.  Reading the row is what
+// keeps the emitted names equal to the generated ones, so a pmask renamed in
+// the schema renames both together.
+static amc::FPmaskfld *FindStatePmask(amc::FNs &ns, strptr pmask) {
+    amc::FField *field = amc::ind_field_Find(tempstr()<<ns.ns<<".FastState."<<pmask);
+    return field ? field->c_pmaskfld : NULL;
+}
+
+// Whether CTYPE gets FAST codec functions of its own.  A cfast ctype encoded
+// as a type carries a single value and is coded inline by whichever message
+// holds it, so it gets none.
+static bool FastCodecQ(amc::FCtype &ctype) {
+    return ctype.c_cfast && ctype.c_cfast->encoding != dmmeta_Fastenc_fastenc_type;
+}
+
+// Report a FAST state pmask the codecs of NS need and the namespace does not
+// declare: every accessor that qualifies a field's previous value is named
+// after that pmask, so without the row there is no name to emit and the
+// expressions the codec builds come out empty.
+static void CheckStatePmask(amc::FNs &ns, strptr pmask) {
+    if (!FindStatePmask(ns, pmask)) {
+        prerr("amc.fast_state"
+              <<Keyval("pmask",tempstr()<<ns.ns<<".FastState."<<pmask)
+              <<Keyval("comment","FAST codec qualifies each field's previous value through this pmask of the namespace's FastState record"));
+        algo_lib::_db.exit_code++;
+    }
+}
+
+//------------------------------------------------------------------------------
+
+// Return C++ expression(s) assigning VALEXPR to the present bit of FIELD in
+// every presence mask of which the field is a member; PARENT names the parent
+// record (collapsed by ParentArgExpr when the parent is a global).
+// A decoder learns from the wire whether the field was present and has to
+// record that answer either way, which amc::SetPresentExpr cannot do -- it
+// marks presence unconditionally. Returns empty string if the field has no
+// pmask membership.
+static tempstr SetPresentValExpr(amc::FField &field, strptr parent, strptr valexpr) {
+    tempstr out;
+    tempstr parent_arg(amc::ParentArgExpr(*field.p_ctype,parent,true));
+    algo::ListSep ls("; ");
+    ind_beg(amc::field_c_pmaskfld_member_curs,pmaskfld_member,field) {
+        out << ls << name_Get(*pmaskfld_member.p_pmaskfld->p_field) << "_qSetBitVal("
+            << parent_arg << pmaskfld_member.bit << ", " << valexpr << ")";
+    }ind_end;
+    return out;
+}
+
+//------------------------------------------------------------------------------
+
+// Check that every namespace with FAST codecs declares the two pmasks those
+// codecs qualify each field's previous value through.
+// The pmask is a field of the namespace's own FastState record, so the missing
+// row is one defect of the namespace no matter how many messages the namespace
+// codes: a protocol with a hundred templates needs the one row, and reporting
+// it per message, or per codec function of each message, would charge the same
+// defect hundreds of times and count each charge as an error.
+void amc::gen_check_fast() {
+    ind_beg(amc::_db_ns_curs,ns,amc::_db) {
+        bool codec = false;
+        ind_beg(amc::ns_c_ctype_curs,ctype,ns) {
+            codec = codec || FastCodecQ(ctype);
+        }ind_end;
+        if (codec) {
+            CheckStatePmask(ns, "assigned");
+            CheckStatePmask(ns, "present");
+        }
+    }ind_end;
+}
+
+//------------------------------------------------------------------------------
+
+// C++ expression testing PMASKFLD's bit for the state field named NAME.
+// Empty when the namespace declares no such pmask, which gen_check_fast has
+// reported.
+static tempstr StateBitQExpr(strptr name, amc::FPmaskfld *pmaskfld) {
+    tempstr ret;
+    if (pmaskfld) {
+        ret << name << "_" << pmaskfld->funcname << "Q(state)";
+    }
+    return ret;
+}
+
+// C++ statement setting PMASKFLD's bit for the state field named NAME.
+// Empty when the namespace declares no such pmask.
+static tempstr StateSetBitExpr(strptr name, amc::FPmaskfld *pmaskfld) {
+    tempstr ret;
+    if (pmaskfld) {
+        ret << name << "_Set" << pmaskfld->funcname << "(state)";
+    }
+    return ret;
+}
+
+// C++ statement assigning VALEXPR to PMASKFLD's bit for the state field named
+// NAME.  Empty when the namespace declares no such pmask.
+static tempstr StateSetBitValExpr(strptr name, amc::FPmaskfld *pmaskfld, strptr valexpr) {
+    tempstr ret;
+    if (pmaskfld) {
+        ret << name_Get(*pmaskfld->p_field) << "_qSetBitVal(state, " << name << "_"
+            << pmaskfld->funcname << "_GetBit(state), " << valexpr << ")";
+    }
+    return ret;
+}
+
+//------------------------------------------------------------------------------
+
 // Prepare FAST data
 void amc::gen_fast_presence() {
     // sort by position
@@ -79,7 +193,7 @@ static int PmapBitsN(strptr op, bool optional) {
 
 //------------------------------------------------------------------------------
 
-static int PmapBitsN(amc::FCtype &ctype);
+static int PmapBitsN(amc::FCtype &ctype); // ignore:static_fwd_decl
 
 // Get pmap bits for field
 //
@@ -329,7 +443,7 @@ static void FastEncodePrimitiveType(algo_lib::Replscope &R, amc::FFunc &func, bo
 void amc::tfunc_Ctype_FastEncode() {
     algo_lib::Replscope R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
-    if (ctype.c_cfast && ctype.c_cfast->encoding != dmmeta_Fastenc_fastenc_type) {
+    if (FastCodecQ(ctype)) {
         dmmeta::FastencCase ctype_encoding;
         dmmeta::fastenc_SetStrptrMaybe(ctype_encoding,ctype.c_cfast->encoding);
         Set(R, "$Cpptype", ctype.cpp_type);
@@ -339,6 +453,11 @@ void amc::tfunc_Ctype_FastEncode() {
         AddProtoArg(func, Refto("algo::ByteAry"), "buf");
         AddProtoArg(func, Refto("FastState"), "state");
         AddProtoArg(func, Refto(ctype.cpp_type), "parent");
+        // the two pmasks on the namespace's FastState record whose accessors
+        // qualify each field's previous value; gen_check_fast has reported a
+        // namespace that declares neither
+        amc::FPmaskfld *state_ass = FindStatePmask(*ctype.p_ns, "assigned");
+        amc::FPmaskfld *state_prs = FindStatePmask(*ctype.p_ns, "present");
         if (PmapBitsN(ctype) || ctype.c_cfast->encoding == dmmeta_Fastenc_fastenc_template) {
             Ins(&R, func.body,"    int index = ary_N(buf);");
             Ins(&R, func.body,"    u64 pmap(0);");
@@ -346,11 +465,13 @@ void amc::tfunc_Ctype_FastEncode() {
         if (ctype.c_cfast->encoding == dmmeta_Fastenc_fastenc_template) {
             // tid - copy mandatory
             if (ctype.c_cfast->id) {
-                Ins(&R, func.body,"    if (!tid_AssignedQ(state) || parent.id != state.tid) {");
+                Set(R, "$tidgetass", StateBitQExpr("tid", state_ass));
+                Set(R, "$tidsetass", StateSetBitExpr("tid", state_ass));
+                Ins(&R, func.body,"    if (!$tidgetass || parent.id != state.tid) {");
                 Ins(&R, func.body,"        lib_fast::EncodeUnsigned(buf,parent.id,false);");
                 Ins(&R, func.body,"        lib_fast::SetPmapBit(pmap,0);");
                 Ins(&R, func.body,"    }");
-                Ins(&R, func.body,"    tid_SetAssigned(state);");
+                Ins(&R, func.body,"    $tidsetass;");
                 Ins(&R, func.body,"    state.tid = parent.id;");
             }
         }
@@ -359,12 +480,12 @@ void amc::tfunc_Ctype_FastEncode() {
             Set(R, "$fldname", name_Get(*ffast.p_field));
             Set(R, "$fldkey", ffast.name);
             Set(R, "$fldval", "parent.$fldname");
-            Set(R, "$fldgetprs", "$fldname_PresentQ(parent)");
+            Set(R, "$fldgetprs", amc::PresentQExpr(*ffast.p_field,"parent"));
             Set(R, "$fldoldval", "state.$fldkey");
-            Set(R, "$fldoldgetass", "$fldname_AssignedQ(state)");
-            Set(R, "$fldoldsetass", "$fldname_SetAssigned(state)");
-            Set(R, "$fldoldgetprs", "$fldname_PresentQ(state)");
-            Set(R, "$fldoldsetprs", "present_qSetBitVal(state,$fldname_Present_GetBit(state),$fldname_PresentQ(parent))");
+            Set(R, "$fldoldgetass", StateBitQExpr(name_Get(*ffast.p_field), state_ass));
+            Set(R, "$fldoldsetass", StateSetBitExpr(name_Get(*ffast.p_field), state_ass));
+            Set(R, "$fldoldgetprs", StateBitQExpr(name_Get(*ffast.p_field), state_prs));
+            Set(R, "$fldoldsetprs", StateSetBitValExpr(name_Get(*ffast.p_field), state_prs, amc::PresentQExpr(*ffast.p_field,"parent")));
             Set(R, "$fldargtype", name_Get(*ffast.p_field->p_arg));
             Set(R, "$fldopt", ffast.optional ? "true" : "false");
             Set(R, "$fldpbit", tempstr()<<pbit);
@@ -387,10 +508,10 @@ void amc::tfunc_Ctype_FastEncode() {
                     Set(R, "$fldname", name_Get(*ffast.p_field));
                     Set(R, "$fldkey", ffast.p_field->c_ffast_length->name);
                     Set(R, "$fldoldval", "state.$fldkey");
-                    Set(R, "$fldoldgetass", "$fldkey_AssignedQ(state)");
-                    Set(R, "$fldoldsetass", "$fldkey_SetAssigned(state)");
-                    Set(R, "$fldoldgetprs", "$fldkey_PresentQ(state)");
-                    Set(R, "$fldoldsetprs", "present_qSetBitVal(state,$fldkey_Present_GetBit(state),prs)");
+                    Set(R, "$fldoldgetass", StateBitQExpr(ffast.p_field->c_ffast_length->name, state_ass));
+                    Set(R, "$fldoldsetass", StateSetBitExpr(ffast.p_field->c_ffast_length->name, state_ass));
+                    Set(R, "$fldoldgetprs", StateBitQExpr(ffast.p_field->c_ffast_length->name, state_prs));
+                    Set(R, "$fldoldsetprs", StateSetBitValExpr(ffast.p_field->c_ffast_length->name, state_prs, "prs"));
                     Set(R, "$fldival", ffast.p_field->c_ffast_length->value.value);
                     Set(R, "$fldenc",PrimitiveEncoding(ffast.p_field->c_ffast_length->encoding));
                     Set(R, "$flddeltabase",DeltaBase(*ffast.p_field->c_ffast_length));
@@ -657,7 +778,7 @@ static void FastDecodePrimitiveType(algo_lib::Replscope &R, amc::FFunc &func, bo
 void amc::tfunc_Ctype_FastDecode() {
     algo_lib::Replscope R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
-    if (ctype.c_cfast && ctype.c_cfast->encoding != dmmeta_Fastenc_fastenc_type) {
+    if (FastCodecQ(ctype)) {
         amc::FFunc& func = amc::CreateCurFunc(true);
         AddRetval(func, "bool", "ok", "true");
         AddProtoArg(func, "algo::memptr&", "from");
@@ -666,6 +787,11 @@ void amc::tfunc_Ctype_FastDecode() {
         }
         AddProtoArg(func, Refto("FastState"),"state");
         AddProtoArg(func, Refto(ctype.cpp_type),"parent");
+        // the two pmasks on the namespace's FastState record whose accessors
+        // qualify each field's previous value; gen_check_fast has reported a
+        // namespace that declares neither
+        amc::FPmaskfld *state_ass = FindStatePmask(*ctype.p_ns, "assigned");
+        amc::FPmaskfld *state_prs = FindStatePmask(*ctype.p_ns, "present");
         if (ctype.c_cfast->encoding != dmmeta_Fastenc_fastenc_template && PmapBitsN(ctype)) {
             Set(R,"$Ctype",ctype.ctype);
             Ins(&R, func.body , "u64 pmap;");
@@ -680,12 +806,12 @@ void amc::tfunc_Ctype_FastDecode() {
             Set(R, "$fldname", name_Get(*ffast.p_field));
             Set(R, "$fldkey", ffast.name);
             Set(R, "$fldval", "parent.$fldname");
-            Set(R, "$fldsetprs", "pmask_qSetBitVal(parent,$fldname_Present_GetBit(parent),prs)");
+            Set(R, "$fldsetprs", SetPresentValExpr(*ffast.p_field,"parent","prs"));
             Set(R, "$fldoldval", "state.$fldkey");
-            Set(R, "$fldoldgetass", "$fldkey_AssignedQ(state)");
-            Set(R, "$fldoldsetass", "$fldkey_SetAssigned(state)");
-            Set(R, "$fldoldgetprs", "$fldkey_PresentQ(state)");
-            Set(R, "$fldoldsetprs", "present_qSetBitVal(state,$fldkey_Present_GetBit(state),prs)");
+            Set(R, "$fldoldgetass", StateBitQExpr(ffast.name, state_ass));
+            Set(R, "$fldoldsetass", StateSetBitExpr(ffast.name, state_ass));
+            Set(R, "$fldoldgetprs", StateBitQExpr(ffast.name, state_prs));
+            Set(R, "$fldoldsetprs", StateSetBitValExpr(ffast.name, state_prs, "prs"));
             Set(R, "$fldargtype", name_Get(*ffast.p_field->p_arg));
             Set(R, "$fldopt", ffast.optional ? "true" : "false");
             Set(R, "$fldpbit", tempstr()<<pbit);
@@ -708,10 +834,10 @@ void amc::tfunc_Ctype_FastDecode() {
                     Set(R, "$fldname", name_Get(*ffast.p_field));
                     Set(R, "$fldkey", ffast.p_field->c_ffast_length->name);
                     Set(R, "$fldoldval", "state.$fldkey");
-                    Set(R, "$fldoldgetass", "$fldkey_AssignedQ(state)");
-                    Set(R, "$fldoldsetass", "$fldkey_SetAssigned(state)");
-                    Set(R, "$fldoldgetprs", "$fldkey_PresentQ(state)");
-                    Set(R, "$fldoldsetprs", "present_qSetBitVal(state,$fldkey_Present_GetBit(state),prs)");
+                    Set(R, "$fldoldgetass", StateBitQExpr(ffast.p_field->c_ffast_length->name, state_ass));
+                    Set(R, "$fldoldsetass", StateSetBitExpr(ffast.p_field->c_ffast_length->name, state_ass));
+                    Set(R, "$fldoldgetprs", StateBitQExpr(ffast.p_field->c_ffast_length->name, state_prs));
+                    Set(R, "$fldoldsetprs", StateSetBitValExpr(ffast.p_field->c_ffast_length->name, state_prs, "prs"));
                     Set(R, "$fldival", ffast.p_field->c_ffast_length->value.value);
                     Set(R, "$fldenc",PrimitiveEncoding(ffast.p_field->c_ffast_length->encoding));
                     Set(R, "$flddeltabase",DeltaBase(*ffast.p_field->c_ffast_length));
@@ -786,9 +912,10 @@ static void DecodeMsgs() {
             Set(R, "$Field", "$ns.TemplateHeader.id");
             Set(R, "$fldval", "tid");
             Set(R, "$fldkey", "tid");
+            amc::FPmaskfld *state_ass = FindStatePmask(*ctype.p_ns, "assigned");
             Set(R, "$fldoldval", "state.$fldkey");
-            Set(R, "$fldoldgetass", "$fldkey_AssignedQ(state)");
-            Set(R, "$fldoldsetass", "$fldkey_SetAssigned(state)");
+            Set(R, "$fldoldgetass", StateBitQExpr("tid", state_ass));
+            Set(R, "$fldoldsetass", StateSetBitExpr("tid", state_ass));
             Set(R, "$fldopt", "false");
             Set(R, "$fldpbit", "0");
             Set(R, "$fldival", "");
@@ -808,12 +935,12 @@ static void DecodeMsgs() {
             Ins(&R, func->body , "            state.assigned = 0;");
             Ins(&R, func->body , "            state.present = 0;");
         }
-        if (VarlenQ(ctype)) {
+        if (amc::RuntimeFrameLenQ(ctype)) {
             Ins(&R, func->body , "            ary_RemoveAll(lib_fast::_db.varlen);");
         }
         Ins(&R, func->body , "            $Cpptype &msg = *new(ary_AllocN(buf,sizeof msg).elems) $Cpptype;");
         Ins(&R, func->body , "            ok = $Name_FastDecode(from,pmap,state,msg);");
-        if (VarlenQ(ctype)) {
+        if (amc::RuntimeFrameLenQ(ctype)) {
             Ins(&R, func->body , "            msg.length += ary_N(lib_fast::_db.varlen);");
             Ins(&R, func->body , "            ary_Addary(buf,ary_Getary(lib_fast::_db.varlen));");
             Ins(&R, func->body , "            ary_RemoveAll(lib_fast::_db.varlen);");
@@ -855,7 +982,7 @@ void amc::tfunc_Ctype_FixEncode() {
         ind_beg(ctype_c_ffast_curs,ffast,ctype) if (fastinstr_Get(ffast) != dmmeta_Fastinstr_fastinstr_length) {
             Set(R, "$fldname", name_Get(*ffast.p_field));
             Set(R, "$fldval", ffast.p_field->c_cppfunc ? "$fldname_Get(parent)" : "parent.$fldname");
-            Set(R, "$fldgetprs", "$fldname_PresentQ(parent)");
+            Set(R, "$fldgetprs", amc::PresentQExpr(*ffast.p_field,"parent"));
             Set(R, "$fldtag", tempstr()<<ffast.id);
             Set(R, "$fldargtype", name_Get(*ffast.p_field->p_arg));
             if (ffast.p_field->c_ffast_length && ffast.p_field->c_ffast_length->id) {

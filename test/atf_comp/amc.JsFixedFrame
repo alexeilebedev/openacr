@@ -1,0 +1,40 @@
+# start bash cmd:"bash -c 'mkdir -p $tempdir/o/ts/gen $tempdir/o/include/gen $tempdir/o/cpp/gen $tempdir/o/data && $bindir/amc -in_dir:- -out_dir:$tempdir/o -report:N < <(cat test/amc/bootstrap.ssim -) && sed -n \"/_Encode/,/^}/p\" $tempdir/o/ts/gen/algo_lib_gen.ts'"
+bash <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+bash <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+bash <- dmmeta.pack  ctype:u32  comment:""
+bash <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+bash <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+bash <- dmmeta.nsjs  ns:algo_lib  typescript:Y  comment:""
+bash <- dmmeta.ctype  ctype:algo_lib.MsgFix  comment:""
+bash <- dmmeta.jstype  ctype:algo_lib.MsgFix  comment:""
+bash <- dmmeta.pack  ctype:algo_lib.MsgFix  comment:""
+bash <- dmmeta.field  field:algo_lib.MsgFix.len  arg:u32  reftype:Val  dflt:""  comment:""
+bash <- dmmeta.lenfld  field:algo_lib.MsgFix.len  extra:0  scale:1
+bash <- dmmeta.field  field:algo_lib.MsgFix.val  arg:u32  reftype:Val  dflt:""  comment:""
+bash <- dmmeta.ctype  ctype:algo_lib.MsgVar  comment:""
+bash <- dmmeta.jstype  ctype:algo_lib.MsgVar  comment:""
+bash <- dmmeta.pack  ctype:algo_lib.MsgVar  comment:""
+bash <- dmmeta.field  field:algo_lib.MsgVar.len  arg:u32  reftype:Val  dflt:""  comment:""
+bash <- dmmeta.lenfld  field:algo_lib.MsgVar.len  extra:0  scale:1
+bash <- dmmeta.field  field:algo_lib.MsgVar.data  arg:u8  reftype:Varlen  dflt:""  comment:""
+# eof bash
+bash -> export function MsgFix_Encode(view: DataView, offset: number, parent: MsgFix) {
+bash ->     let length = 8;
+bash ->     view.setUint32(offset+0,length,true);
+bash ->     view.setUint32(offset+4,parent.val,true);
+bash ->     return length;
+bash -> }
+bash -> export function MsgVar_Encode(view: DataView, offset: number, parent: MsgVar) {
+bash ->     let length = 4;
+bash ->     if (parent.data.length > view.byteLength - (offset + length)) {
+bash ->         throw new RangeError("MsgVar_Encode: data does not fit in the target buffer");
+bash ->     }
+bash ->     new Uint8Array(view.buffer,view.byteOffset+offset+length,view.byteLength-(offset+length)).set(parent.data);
+bash ->     length += parent.data.length;
+bash ->     if (length > 2147483647) {
+bash ->         throw new RangeError("MsgVar_Encode: frame length " + length + " exceeds the frame length range (max 2147483647)");
+bash ->     }
+bash ->     view.setUint32(offset+0,length,true);
+bash ->     return length;
+bash -> }
+# exit bash code:0

@@ -332,6 +332,14 @@ void ssimfilt::Main() {
     if (_db.cmdline.t) {
         _db.cmdline.format = command_ssimfilt_format_table;
     }
+    if (_db.cmdline.f != "") {
+        // -f:<name> = -field:<name> -format:field
+        KVRegx &kvregx = selfield_Alloc();
+        tempstr expr(_db.cmdline.f);
+        Replace(expr,",","|");
+        Regx_ReadSql(kvregx.key, expr, true);
+        _db.cmdline.format = command_ssimfilt_format_field;
+    }
     if (_db.cmdline.cmd != "") {
         _db.cmdline.format = command_ssimfilt_format_cmd;
     }

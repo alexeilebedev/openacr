@@ -1,0 +1,19 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr5_U32_Base1  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr5_U32_Base1.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr5_U32_Base1.ch  length:5  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr5_U32_Base1.ch  numtype:u32  base:1  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr5_U32_Base37  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr5_U32_Base37.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr5_U32_Base37.ch  length:5  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr5_U32_Base37.ch  numtype:u32  base:37  min_len:1
+# eof amc
+amc -> amc.bad_numstr  field:algo_lib.LnumStr5_U32_Base1.ch  base:1  comment:"unsupported base (must be 2..36, 95, or 256)"
+amc -> amc.bad_numstr  field:algo_lib.LnumStr5_U32_Base37.ch  base:37  comment:"unsupported base (must be 2..36, 95, or 256)"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

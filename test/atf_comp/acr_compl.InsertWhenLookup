@@ -1,0 +1,5 @@
+# start acr_compl cmd:"$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dvariety:'"
+# eof acr_compl
+acr_compl -> rose/cherry 
+acr_compl -> tulip/peach 
+# exit acr_compl code:0

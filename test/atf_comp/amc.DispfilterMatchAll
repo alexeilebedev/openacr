@@ -1,0 +1,111 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.DispFilter..Match%' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Regx  comment:""
+amc <- dmmeta.field  field:algo_lib.Regx.expr  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Ev  comment:""
+amc <- dmmeta.field  field:algo_lib.Ev.state  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Ev.state/idle  value:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Ev.state/busy  value:1  comment:""
+amc <- dmmeta.field  field:algo_lib.Ev.seqno  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fbigend  field:algo_lib.Ev.seqno  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Ev2  comment:""
+amc <- dmmeta.field  field:algo_lib.Ev2.other  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.DispFilter  comment:""
+amc <- dmmeta.field  field:algo_lib.DispFilter.state_regx  arg:algo_lib.Regx  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.dispatch  dispatch:algo_lib.Disp  unk:N  read:N  print:N  haslen:N  call:N  strict:N  comment:""
+amc <- dmmeta.dispatch_msg  dispatch_msg:algo_lib.Disp/algo_lib.Ev  comment:""
+amc <- dmmeta.dispatch_msg  dispatch_msg:algo_lib.Disp/algo_lib.Ev2  comment:""
+amc <- dmmeta.dispfilter  dispatch:algo_lib.Disp  match_all:Y  comment:""
+# eof amc
+amc -> // --- algo_lib.DispFilter..MatchEv
+amc -> bool algo_lib::DispFilter_MatchEv(algo_lib::DispFilter &parent, algo_lib::Ev &msg) {
+amc ->     bool ret = true;
+amc ->     tempstr fieldstr;
+amc ->     if (state_PresentQ(parent) && !(msg.state == parent.state)) {
+amc ->         return false;
+amc ->     }
+amc ->     if (state_regx_PresentQ(parent)) {
+amc ->         ch_RemoveAll(fieldstr);
+amc ->         algo_lib::state_Print(msg, fieldstr);
+amc ->         if (!algo_lib::Regx_Match(parent.state_regx, fieldstr)) {
+amc ->             return false;
+amc ->         }
+amc ->     }
+amc ->     if (start_state_PresentQ(parent) && msg.state < parent.start_state) {
+amc ->         return false;
+amc ->     }
+amc ->     if (end_state_PresentQ(parent) && parent.end_state < msg.state) {
+amc ->         return false;
+amc ->     }
+amc ->     if (seqno_PresentQ(parent) && !(seqno_Get(msg) == parent.seqno)) {
+amc ->         return false;
+amc ->     }
+amc ->     if (start_seqno_PresentQ(parent) && seqno_Get(msg) < parent.start_seqno) {
+amc ->         return false;
+amc ->     }
+amc ->     if (end_seqno_PresentQ(parent) && parent.end_seqno < seqno_Get(msg)) {
+amc ->         return false;
+amc ->     }
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (start_other_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (end_other_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (other_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     return ret;
+amc -> }
+amc -> // --- algo_lib.DispFilter..MatchEv2
+amc -> bool algo_lib::DispFilter_MatchEv2(algo_lib::DispFilter &parent, algo_lib::Ev2 &msg) {
+amc ->     bool ret = true;
+amc ->     tempstr fieldstr;
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (state_regx_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (start_state_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (end_state_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (state_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (start_seqno_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (end_seqno_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     // if field present in filter but not a member of ctype, return not filtered
+amc ->     if (seqno_PresentQ(parent)) {
+amc ->         return false;
+amc ->     }
+amc ->     if (other_PresentQ(parent) && !(msg.other == parent.other)) {
+amc ->         return false;
+amc ->     }
+amc ->     if (start_other_PresentQ(parent) && msg.other < parent.start_other) {
+amc ->         return false;
+amc ->     }
+amc ->     if (end_other_PresentQ(parent) && parent.end_other < msg.other) {
+amc ->         return false;
+amc ->     }
+amc ->     return ret;
+amc -> }
+# exit amc code:0

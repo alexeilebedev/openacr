@@ -1,0 +1,41 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Proto%..PbufEncode' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:""
+amc <- dmmeta.nscpp  ns:pbt  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Proto2  comment:""
+amc <- dmmeta.field  field:pbt.Proto2.val  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cpbuf  ctype:pbt.Proto2  syntax:proto2  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Proto2.val  field_number:1  pb_type:uint32  packed:N  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Proto3  comment:""
+amc <- dmmeta.field  field:pbt.Proto3.val  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cpbuf  ctype:pbt.Proto3  syntax:proto3  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Proto3.val  field_number:1  pb_type:uint32  packed:N  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Misspelled  comment:""
+amc <- dmmeta.field  field:pbt.Misspelled.val  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cpbuf  ctype:pbt.Misspelled  syntax:prot3  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Misspelled.val  field_number:1  pb_type:uint32  packed:N  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Unset  comment:""
+amc <- dmmeta.field  field:pbt.Unset.val  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cpbuf  ctype:pbt.Unset  syntax:""  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Unset.val  field_number:1  pb_type:uint32  packed:N  comment:""
+# eof amc
+amc -> amc.pbuf_syntax  ctype:pbt.Misspelled  syntax:prot3  comment:"unknown cpbuf syntax, expected a dmmeta.pbsyntax value"
+amc -> amc.pbuf_syntax  ctype:pbt.Unset  syntax:""  comment:"unknown cpbuf syntax, expected a dmmeta.pbsyntax value"
+amc -> // --- pbt.Proto2..PbufEncode
+amc -> void pbt::Proto2_PbufEncode(algo::ByteAry& buf, pbt::Proto2& parent) {
+amc ->     lib_pb::EncodeTag(buf,1,0);
+amc ->     lib_pb::EncodeVarintU32(buf,parent.val);
+amc -> }
+amc -> // --- pbt.Proto3..PbufEncode
+amc -> void pbt::Proto3_PbufEncode(algo::ByteAry& buf, pbt::Proto3& parent) {
+amc ->     if (parent.val != 0) {
+amc ->         lib_pb::EncodeTag(buf,1,0);
+amc ->         lib_pb::EncodeVarintU32(buf,parent.val);
+amc ->     }
+amc -> }
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

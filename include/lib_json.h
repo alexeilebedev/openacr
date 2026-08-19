@@ -89,7 +89,7 @@ namespace lib_json { // update-hdr
 
     // AMC cleanup function - automatically delete parsed JSON tree
     //     (user-implemented function, prototype is in amc-generated header)
-    // void root_node_Cleanup(lib_json::FParser& parent); // fcleanup:lib_json.FParser.root_node
+    // void root_node_Cleanup(lib_json::FParser& parent); // ffunc:lib_json.FParser.root_node.Cleanup
 
     // encode json string
     // "The representation of strings is similar to conventions used in the C

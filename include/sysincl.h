@@ -100,6 +100,7 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/resource.h>
 #include <sys/file.h>
 #include <sys/stat.h>
 #include <netinet/in.h>

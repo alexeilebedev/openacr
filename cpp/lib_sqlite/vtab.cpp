@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: lib_sqlite (lib)
+// Target: lib_sqlite (lib) -- SQLite binding: connections and a virtual table over ssimfiles
 // Exceptions: yes
 // Source: cpp/lib_sqlite/vtab.cpp
 //
@@ -23,7 +23,7 @@
 #include "include/algo.h"
 #include "include/lib_sqlite.h"
 
-using namespace lib_sqlite;
+using namespace lib_sqlite; // ignore:using_namespace
 
 // Find ctype from ctype name
 // Supports ctype and ssimfile lookups.
@@ -43,7 +43,7 @@ static tempstr CreateCtypeTable(FCtype& ctype) {
             sqltype = "TEXT";
         }
         cmd << ls
-            << "'" << name_Get(field) << "' "
+            << "'" << name_Get(field) << "' " // ignore:hand_quote
             << (field.c_substr ? " HIDDEN " : "")
             << sqltype;
     }ind_end;

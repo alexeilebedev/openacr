@@ -23,10 +23,19 @@
 #include "include/algo.h"
 #include "include/atf_cov.h"
 
+// Write this run's progress to the logfile and leave its errors on stderr.
+// A merge names every directory it reads and every ssimfile it writes, which is
+// thousands of lines that would drown whatever console the run was started from,
+// and that is the reason the logfile exists.  A verdict is not progress: it is
+// the answer the caller asked for, and a caller who is handed only the logfile's
+// path learns nothing when the file goes with the machine that wrote it.  So the
+// sink follows the logcat -- stdout to the file, stderr to stderr.
 static void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) {
-    (void)logcat;
-    (void)tstamp;
-    WriteFileX(atf_cov::_db.logfd.fd,strptr_ToMemptr(str));
+    if (logcat && !logcat->stdout) {
+        algo::Prlog(logcat,tstamp,str);
+    } else {
+        WriteFileX(atf_cov::_db.logfd.fd,strptr_ToMemptr(str));
+    }
 }
 
 static tempstr GetGcovDstDir(strptr covdir, strptr name) {
@@ -228,6 +237,17 @@ void atf_cov::ComputeCoverage() {
         value_qSetDouble(_db.total.exer, _db.total.total ? 100.0*_db.total.exe/_db.total.total : 0.0);
         value_qSetDouble(_db.total.cov, _db.total.exe ? 100.0*_db.total.hit/_db.total.exe : 100.0);
     }ind_end;
+    // Record how far this measurement reaches.  Every percentage above is correct
+    // for the data the run happened to find, so a run whose instrumentation data
+    // is mostly missing prints a plausible table and a healthy TOTAL.  The number
+    // of targets that produced data, set beside the number that carry a floor,
+    // is what tells the two apart.
+    ind_beg(_db_target_curs,target,_db) {
+        _db.report.n_covtarget += target.c_covtarget ? 1 : 0;
+        _db.report.n_tgtcov += target.c_tgtcov ? 1 : 0;
+    }ind_end;
+    _db.report.exe = _db.total.exe;
+    _db.report.hit = _db.total.hit;
 }
 
 void atf_cov::GenerateSsimReport() {
@@ -328,6 +348,7 @@ void atf_cov::Summary() {
         << "\t" << _db.total.cov
         << "\n\n";
     cstring tbl = Tabulated(txt,"\t","lrrrl",2);
+    tbl << _db.report << "\n";
     if (_db.cmdline.report) {
         cstring report_txt  = DirFileJoin(_db.cmdline.covdir,"summary.txt");
         StringToFile(tbl,report_txt);
@@ -406,18 +427,35 @@ void atf_cov::GenerateCoberturaReport() {
     prlog("Generated "<<cobertura_xml);
 }
 
+// Judge every target that carries a coverage floor, and name which of the two
+// things that can go wrong did.  A target whose measurement came in under its
+// floor is a regression, and the diff under test is where to look for it.  A
+// target that produced no data at all did not regress: the run never measured
+// it, and scoring that as zero coverage sends the reader hunting for a code
+// cause that does not exist.  The two need opposite responses, so they are
+// reported as different facts.
 void atf_cov::Main_Check() {
     ind_beg(_db_target_curs,target,_db) if (target.c_tgtcov) {
         algo::U32Dec2 cov = target.c_covtarget ? target.c_covtarget->cov : algo::U32Dec2(0);
-        algo::U32Dec2 cov_plus_maxerr(cov + target.c_tgtcov->maxerr);
-        if (cov_plus_maxerr < target.c_tgtcov->cov_min) {
-            prlog("atf_cov.coverage_lowered"
+        algo::U32Dec2 maxerr(500);// tolerable error: 5%, scale 1e2
+        algo::U32Dec2 cov_plus_maxerr(cov + maxerr);
+        bool below = cov_plus_maxerr < target.c_tgtcov->cov_min;
+        if (below && !target.c_covtarget) {
+            prerr("atf_cov.coverage_unmeasured"
                   <<Keyval("target",target.target)
                   <<Keyval("success","N")
                   <<Keyval("cov_min",target.c_tgtcov->cov_min)
-                  <<Keyval("maxerr",target.c_tgtcov->maxerr)
+                  <<Keyval("comment","target produced no coverage data"));
+        } else if (below) {
+            prerr("atf_cov.coverage_lowered"
+                  <<Keyval("target",target.target)
+                  <<Keyval("success","N")
+                  <<Keyval("cov_min",target.c_tgtcov->cov_min)
+                  <<Keyval("maxerr",maxerr)
                   <<Keyval("cov_measured",cov)
                   <<Keyval("comment",""));
+        }
+        if (below) {
             algo_lib::_db.exit_code=1;
         }
     }ind_end;
@@ -445,6 +483,76 @@ void atf_cov::SaveCov() {
     }ind_end;
     const auto acr_in = "temp/tgtcov.ssim";
     StringToFile(text, acr_in);
+    command::acr acr;
+    acr.replace = true;
+    acr.trunc = true;
+    acr.print = false;
+    acr.write = true;
+    SysCmd(acr_ToCmdline(acr) << " <" << acr_in);
+}
+
+// Build the dev.uncovfunc backlog: every in-scope function whose
+// executable lines are all unhit across the suite.  Function extents
+// (source file, begin and end line) come from src_func -printssim;
+// per-line hit data from the Covline pool.  Scoped like the coverage
+// report -- only functions in target sources are considered, which
+// excludes generated/external the same way RunGcov already filters.
+void atf_cov::ComputeUncovfunc() {
+    cstring func_ssim = DirFileJoin(_db.cmdline.covdir, "func.ssim");
+    command::src_func src_func;
+    (void)Regx_ReadStrptrMaybe(src_func.func,"%");
+    src_func.printssim = true;
+    SysCmd(command::src_func_ToCmdline(src_func) << " >" << func_ssim);
+    ind_beg(algo::FileLine_curs,line,func_ssim) {
+        algo::Tuple tuple;
+        if (Tuple_ReadStrptrMaybe(tuple,line)) {
+            strptr name = attr_GetString(tuple,"func");
+            strptr src = attr_GetString(tuple,"src");
+            i32 begline = 0;
+            i32 endline = 0;
+            i32_ReadStrptrMaybe(begline,attr_GetString(tuple,"line"));
+            i32_ReadStrptrMaybe(endline,attr_GetString(tuple,"endline"));
+            atf_cov::FGitfile *gitfile = ind_gitfile_Find(src);
+            // skip non-pivotable parses (empty function name) and sources outside coverage scope
+            if (!EndsWithQ(name,".") && gitfile && gitfile->c_targsrc && endline >= begline) {
+                u32 nexe = 0;
+                u32 nhit = 0;
+                // point-lookup each source line of the function in the Covline index
+                for (i32 ln = begline; ln <= endline; ++ln) {
+                    atf_cov::FCovline *covline = ind_covline_Find(dev::Covline_Concat_src_line(src,ln));
+                    if (covline && covline->flag != dev_Covline_flag_N) {
+                        nexe += 1;
+                        nhit += covline->hit > 0;
+                    }
+                }
+                if (nexe > 0 && nhit == 0) {
+                    strptr args = attr_GetString(tuple,"args");
+                    atf_cov::FUncovfunc &uncovfunc = uncovfunc_Alloc();
+                    // key is the signature: name + arglist through the closing paren (drops the body
+                    // brace).  name/src/line/target are not stored -- name is a substr of this pkey.
+                    uncovfunc.uncovfunc = tempstr() << name << "(" << Pathcomp(args,")RL") << ")";
+                }
+            }
+        }
+    }ind_end;
+}
+
+// Dump the uncovfunc pool to PATH in dev.uncovfunc ssim format.
+void atf_cov::WriteUncovfunc(strptr path) {
+    cstring text;
+    ind_beg(atf_cov::_db_uncovfunc_curs,uncovfunc,atf_cov::_db) {
+        dev::Uncovfunc out;
+        uncovfunc_CopyOut(uncovfunc,out);
+        text << out << eol;
+    }ind_end;
+    StringToFile(text, path);
+}
+
+// Persist the uncovfunc pool to its committed ssimfile, replacing prior
+// contents -- the same acr -replace -trunc path SaveCov uses for tgtcov.
+void atf_cov::SaveUncovfunc() {
+    const auto acr_in = "temp/uncovfunc.ssim";
+    WriteUncovfunc(acr_in);
     command::acr acr;
     acr.replace = true;
     acr.trunc = true;
@@ -513,11 +621,15 @@ void atf_cov::Main() {
         WriteCovSsim();
     }
     ComputeCoverage();
+    if (_db.cmdline.report || _db.cmdline.capture) {
+        ComputeUncovfunc();
+    }
     if (_db.cmdline.report) {
         CleanupDirPhase(_db.cmdline.covdir,atf_cov_Phase_value_report);
         GenerateSsimReport();
         GenerateTxtReport();
         GenerateCoberturaReport();
+        WriteUncovfunc(DirFileJoin(_db.cmdline.covdir,"uncovfunc.ssim"));
     }
     Summary();
     if (_db.cmdline.check) {
@@ -526,5 +638,6 @@ void atf_cov::Main() {
     if (_db.cmdline.capture) {
         Main_Capture();
         SaveCov();
+        SaveUncovfunc();
     }
 }

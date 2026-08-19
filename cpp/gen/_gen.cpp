@@ -46,11 +46,12 @@ void StaticCheck() {
 // Read fields of i16 from an ascii string.
 // Attempt to parse i16 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 bool i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -96,7 +97,12 @@ bool i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+6-1, in_str.n_elems); // 1 digit already in num
+        // leading zeros carry no magnitude: skip them so the digit window that
+        // bounds overflow detection counts significant digits only
+        while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {
+            index++;
+        }
+        int lim = u32_Min(index + 6 - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num
         for (; index < lim; index++) {
             c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
@@ -104,8 +110,8 @@ bool i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) {
             }
             num = num*10 + (c-'0');
         }
-        if (num > 0x7fff) {
-            num = 0x7fff;
+        if (num > (0x7fff + u32(neg))) {
+            num = (0x7fff + u32(neg));
         }
     }
     if (neg) {
@@ -124,11 +130,12 @@ bool i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) {
 // Read fields of i32 from an ascii string.
 // Attempt to parse i32 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 bool i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -174,7 +181,12 @@ bool i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+12-1, in_str.n_elems); // 1 digit already in num
+        // leading zeros carry no magnitude: skip them so the digit window that
+        // bounds overflow detection counts significant digits only
+        while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {
+            index++;
+        }
+        int lim = u32_Min(index + 12 - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num
         for (; index < lim; index++) {
             c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
@@ -182,8 +194,8 @@ bool i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) {
             }
             num = num*10 + (c-'0');
         }
-        if (num > 0x7fffffff) {
-            num = 0x7fffffff;
+        if (num > (0x7fffffff + u64(neg))) {
+            num = (0x7fffffff + u64(neg));
         }
     }
     if (neg) {
@@ -202,11 +214,12 @@ bool i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) {
 // Read fields of i64 from an ascii string.
 // Attempt to parse i64 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 bool i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -252,7 +265,12 @@ bool i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+14-1, in_str.n_elems); // 1 digit already in num
+        // leading zeros carry no magnitude: skip them so the digit window that
+        // bounds overflow detection counts significant digits only
+        while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {
+            index++;
+        }
+        int lim = u32_Min(index + 14 - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num
         for (; index < lim; index++) {
             c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
@@ -273,8 +291,11 @@ bool i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) {
                 num2 = num2*10 + (c-'0');
                 div = div*10;
             }
-            if (num > 0x7fffffffffffffffULL/div) {
-                num = 0x7fffffffffffffffULL;
+            // clip: num > cap/div alone misses the boundary batch, where
+            // num == cap/div but the second batch pushes past cap
+            u64 cap = (0x7fffffffffffffffULL + u64(neg));
+            if (num > cap/div || (num == cap/div && num2 > cap - num*div)) {
+                num = cap;
             } else {
                 num = num*div + num2;
             }
@@ -296,11 +317,12 @@ bool i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) {
 // Read fields of i8 from an ascii string.
 // Attempt to parse i8 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 bool i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -346,7 +368,12 @@ bool i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+4-1, in_str.n_elems); // 1 digit already in num
+        // leading zeros carry no magnitude: skip them so the digit window that
+        // bounds overflow detection counts significant digits only
+        while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {
+            index++;
+        }
+        int lim = u32_Min(index + 4 - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num
         for (; index < lim; index++) {
             c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
@@ -354,8 +381,8 @@ bool i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) {
             }
             num = num*10 + (c-'0');
         }
-        if (num > 0x7f) {
-            num = 0x7f;
+        if (num > (0x7f + u32(neg))) {
+            num = (0x7f + u32(neg));
         }
     }
     if (neg) {
@@ -374,11 +401,12 @@ bool i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) {
 // Read fields of u8 from an ascii string.
 // Attempt to parse u8 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 bool u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -424,7 +452,12 @@ bool u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+4-1, in_str.n_elems); // 1 digit already in num
+        // leading zeros carry no magnitude: skip them so the digit window that
+        // bounds overflow detection counts significant digits only
+        while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {
+            index++;
+        }
+        int lim = u32_Min(index + 4 - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num
         for (; index < lim; index++) {
             c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
@@ -452,11 +485,12 @@ bool u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) {
 // Read fields of u128 from an ascii string.
 // Attempt to parse u128 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 bool u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -502,7 +536,12 @@ bool u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+25-1, in_str.n_elems); // 1 digit already in num
+        // leading zeros carry no magnitude: skip them so the digit window that
+        // bounds overflow detection counts significant digits only
+        while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {
+            index++;
+        }
+        int lim = u32_Min(index + 25 - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num
         for (; index < lim; index++) {
             c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
@@ -523,8 +562,11 @@ bool u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) {
                 num2 = num2*10 + (c-'0');
                 div = div*10;
             }
-            if (num > ((u128(0xffffffffffffffffULL) << 64) | 0xffffffffffffffffULL)/div) {
-                num = ((u128(0xffffffffffffffffULL) << 64) | 0xffffffffffffffffULL);
+            // clip: num > cap/div alone misses the boundary batch, where
+            // num == cap/div but the second batch pushes past cap
+            u128 cap = ((u128(0xffffffffffffffffULL) << 64) | 0xffffffffffffffffULL);
+            if (num > cap/div || (num == cap/div && num2 > cap - num*div)) {
+                num = cap;
             } else {
                 num = num*div + num2;
             }
@@ -546,11 +588,12 @@ bool u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) {
 // Read fields of u16 from an ascii string.
 // Attempt to parse u16 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 bool u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -596,7 +639,12 @@ bool u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+6-1, in_str.n_elems); // 1 digit already in num
+        // leading zeros carry no magnitude: skip them so the digit window that
+        // bounds overflow detection counts significant digits only
+        while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {
+            index++;
+        }
+        int lim = u32_Min(index + 6 - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num
         for (; index < lim; index++) {
             c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
@@ -624,11 +672,12 @@ bool u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) {
 // Read fields of u32 from an ascii string.
 // Attempt to parse u32 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 bool u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -674,7 +723,12 @@ bool u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+12-1, in_str.n_elems); // 1 digit already in num
+        // leading zeros carry no magnitude: skip them so the digit window that
+        // bounds overflow detection counts significant digits only
+        while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {
+            index++;
+        }
+        int lim = u32_Min(index + 12 - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num
         for (; index < lim; index++) {
             c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
@@ -702,11 +756,12 @@ bool u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) {
 // Read fields of u64 from an ascii string.
 // Attempt to parse u64 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, PARENT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
+// Return success value; if false, PARENT is unchanged
+// An empty string parses as 0; a whitespace-only string fails
+// Number may be prefixed with + or - (with no space after)
+// Parsing stops at the first non-digit character; trailing text is silently ignored
 // If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
+// Supported bases: 10, 16 (if string starts with 0x or 0X)
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
 bool u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -752,7 +807,12 @@ bool u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+14-1, in_str.n_elems); // 1 digit already in num
+        // leading zeros carry no magnitude: skip them so the digit window that
+        // bounds overflow detection counts significant digits only
+        while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {
+            index++;
+        }
+        int lim = u32_Min(index + 14 - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num
         for (; index < lim; index++) {
             c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
@@ -773,8 +833,11 @@ bool u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str) {
                 num2 = num2*10 + (c-'0');
                 div = div*10;
             }
-            if (num > 0xffffffffffffffffULL/div) {
-                num = 0xffffffffffffffffULL;
+            // clip: num > cap/div alone misses the boundary batch, where
+            // num == cap/div but the second batch pushes past cap
+            u64 cap = 0xffffffffffffffffULL;
+            if (num > cap/div || (num == cap/div && num2 > cap - num*div)) {
+                num = cap;
             } else {
                 num = num*div + num2;
             }

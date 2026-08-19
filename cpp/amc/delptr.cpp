@@ -57,7 +57,7 @@ void amc::tfunc_Delptr_Delete() {
         AddRetval(func, "void", "", "");
         Ins(&R, func.comment, "Delete value.");
         Ins(&R, func.body, "if ($parname.$name) {");
-        if (!field.p_arg->c_cpptype || field.p_arg->c_cpptype->dtor) {
+        if (HasDtorQ(*field.p_arg)) {
             Ins(&R, func.body, "$parname.$name->~$Ctype();");
         }
         Ins(&R, func.body, "$basepool_FreeMem($parname.$name, sizeof($Cpptype));");

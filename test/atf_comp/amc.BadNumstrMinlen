@@ -1,0 +1,24 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr9_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr9_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr9_U32.ch  length:9  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr9_U32.ch  numtype:u32  base:10  min_len:12
+amc <- dmmeta.ctype  ctype:algo_lib.LspaceStr100_U64  comment:""
+amc <- dmmeta.field  field:algo_lib.LspaceStr100_U64.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LspaceStr100_U64.ch  length:100  strtype:leftpad  pad:"' '"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LspaceStr100_U64.ch  numtype:u64  base:10  min_len:80
+amc <- dmmeta.ctype  ctype:algo_lib.LspaceStr6_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.LspaceStr6_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LspaceStr6_I32.ch  length:6  strtype:leftpad  pad:"' '"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LspaceStr6_I32.ch  numtype:i32  base:10  min_len:6
+# eof amc
+amc -> amc.bad_numstr  field:algo_lib.LnumStr9_U32.ch  min_len:12  length:9  comment:"numstr min_len cannot exceed the string length"
+amc -> amc.bad_numstr  field:algo_lib.LspaceStr100_U64.ch  min_len:80  pad_budget:64  comment:"numstr min_len exceeds the pad budget"
+amc -> amc.bad_numstr  field:algo_lib.LspaceStr6_I32.ch  min_len:6  length:6  comment:"signed numstr min_len leaves no room for the sign"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:3

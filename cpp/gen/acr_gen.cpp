@@ -49,59 +49,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr::FDb        acr::_db;         // dependency found via dev.targdep
 
-namespace acr {
-const char *acr_help =
-"acr: Algo Cross-Reference - ssimfile database & update tool\n"
-"Usage: acr [[-query:]<string>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    [query]     string  \"\"      Regx to match record\n"
-"    -where...   string          Additional key:value pairs to match\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -del                        Delete found item\n"
-"    -sel                        Read stdin and select records\n"
-"    -insert                     Read stdin and insert tuples\n"
-"    -replace                    Read stdin and replace tuples\n"
-"    -update                     Read stdin and update attributes of existing tuples\n"
-"    -merge                      Combination of -update and -insert\n"
-"    -unused                     Only select records which are not referenced.\n"
-"    -trunc                      Truncate table on first write\n"
-"    -check                      Run cross-reference check on selection\n"
-"    -selerr             Y       (with -check): Select error records\n"
-"    -maxshow    int     100     Limit number of errors per table\n"
-"    -write                      Write data back to disk.\n"
-"    -rename     string  \"\"      Change value of found item\n"
-"    -nup        int     0       Number of levels to go up\n"
-"    -ndown      int     0       Number of levels to go down\n"
-"    -l                          Go down via pkeys only\n"
-"    -xref                       Short for -nup 100 -ndown 100\n"
-"    -fldfunc                    Evaluate fldfunc when printing tuple\n"
-"    -maxgroup   int     25      Max. items per group\n"
-"    -pretty             Y       Align output in blocks\n"
-"    -tree                       Print as tree\n"
-"    -loose                      Allow printing a record before its references (used with -e)\n"
-"    -my                         Invoke acr_my -e (using acr_my directly is faster)\n"
-"    -schema     string  \"data\"  Directory for initializing acr meta-data\n"
-"    -e                          Open selection in editor, write back when done.\n"
-"    -t                          Short for -tree -xref -loose\n"
-"    -g                          Trigger git commands for changes in dev.gitfile table\n"
-"    -x                          Propagate select/rename/delete to ssimreq records\n"
-"    -rowid                      Always print acr.rowid attribute\n"
-"    -cmt                        Print comments for all columns referenced in output\n"
-"    -report             Y       Show final report\n"
-"    -print              Y       Print selected records\n"
-"    -cmd        string  \"\"      Print script with command execution for each selected row\n"
-"    -field...   string          Fields to select\n"
-"    -regxof     string  \"\"      Single field: output regx of matching field values\n"
-"    -meta                       Select meta-data for selected records\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace acr
 acr::_db_bh_pline_curs::~_db_bh_pline_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
 
@@ -218,7 +165,7 @@ void acr::AttrRegx_Print(acr::AttrRegx& row, algo::cstring& str) {
 // --- acr.CtypeTopoKey..Print
 // print string representation of ROW to string STR
 // cfmt:acr.CtypeTopoKey.String  printfmt:Tuple
-void acr::CtypeTopoKey_Print(acr::CtypeTopoKey& row, algo::cstring& str) {
+void acr::CtypeTopoKey_Print(acr::CtypeTopoKey row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr.CtypeTopoKey";
 
@@ -256,14 +203,14 @@ void acr::Err_Print(acr::Err& row, algo::cstring& str) {
 // Copy fields out of row
 void acr::anonfld_CopyOut(acr::FAnonfld &row, dmmeta::Anonfld &out) {
     out.field = row.field;
-    // comment: field stripped (see dmmeta.fbase:acr.FAnonfld.base)
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr.FAnonfld.base.CopyIn
 // Copy fields in to row
 void acr::anonfld_CopyIn(acr::FAnonfld &row, dmmeta::Anonfld &in) {
     row.field = in.field;
-    // comment: field stripped (see dmmeta.fbase:acr.FAnonfld.base)
+    row.comment = in.comment;
 }
 
 // --- acr.FBltin.base.CopyOut
@@ -273,7 +220,7 @@ void acr::bltin_CopyOut(acr::FBltin &row, amcdb::Bltin &out) {
     out.likeu64 = row.likeu64;
     out.bigendok = row.bigendok;
     out.issigned = row.issigned;
-    // comment: field stripped (see dmmeta.fbase:acr.FBltin.base)
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr.FBltin.base.CopyIn
@@ -283,7 +230,7 @@ void acr::bltin_CopyIn(acr::FBltin &row, amcdb::Bltin &in) {
     row.likeu64 = in.likeu64;
     row.bigendok = in.bigendok;
     row.issigned = in.issigned;
-    // comment: field stripped (see dmmeta.fbase:acr.FBltin.base)
+    row.comment = in.comment;
 }
 
 // --- acr.FBltin..Uninit
@@ -302,8 +249,7 @@ void acr::cdflt_CopyOut(acr::FCdflt &row, dmmeta::Cdflt &out) {
     out.dflt = row.dflt;
     out.cppdflt = row.cppdflt;
     out.ssimdflt = row.ssimdflt;
-    out.jsdflt = row.jsdflt;
-    // comment: field stripped (see dmmeta.fbase:acr.FCdflt.base)
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr.FCdflt.base.CopyIn
@@ -313,8 +259,7 @@ void acr::cdflt_CopyIn(acr::FCdflt &row, dmmeta::Cdflt &in) {
     row.dflt = in.dflt;
     row.cppdflt = in.cppdflt;
     row.ssimdflt = in.ssimdflt;
-    row.jsdflt = in.jsdflt;
-    // comment: field stripped (see dmmeta.fbase:acr.FCdflt.base)
+    row.comment = in.comment;
 }
 
 // --- acr.FCdflt..Uninit
@@ -327,11 +272,11 @@ void acr::FCdflt_Uninit(acr::FCdflt& cdflt) {
 }
 
 // --- acr.FCheck.c_bad_rec.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_bad_rec_Insert(acr::FCheck& check, acr::FRec& row) {
     c_bad_rec_Reserve(check, 1);
-    u32 n  = check.c_bad_rec_n++;
+    u64 n  = check.c_bad_rec_n++;
     check.c_bad_rec_elems[n] = &row;
 }
 
@@ -342,18 +287,15 @@ void acr::c_bad_rec_Insert(acr::FCheck& check, acr::FRec& row) {
 // Return value: whether element was inserted into array.
 bool acr::c_bad_rec_ScanInsertMaybe(acr::FCheck& check, acr::FRec& row) {
     bool retval = true;
-    u32 n  = check.c_bad_rec_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = check.c_bad_rec_n;
+    for (u64 i = 0; i < n; i++) {
         if (check.c_bad_rec_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_bad_rec_Reserve(check, 1);
-        check.c_bad_rec_elems[n] = &row;
-        check.c_bad_rec_n = n+1;
+        c_bad_rec_Insert(check,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -361,9 +303,9 @@ bool acr::c_bad_rec_ScanInsertMaybe(acr::FCheck& check, acr::FRec& row) {
 // --- acr.FCheck.c_bad_rec.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_bad_rec_Remove(acr::FCheck& check, acr::FRec& row) {
-    int n = check.c_bad_rec_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = check.c_bad_rec_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (check.c_bad_rec_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -377,12 +319,12 @@ void acr::c_bad_rec_Remove(acr::FCheck& check, acr::FRec& row) {
 
 // --- acr.FCheck.c_bad_rec.Reserve
 // Reserve space in index for N more elements;
-void acr::c_bad_rec_Reserve(acr::FCheck& check, u32 n) {
-    u32 old_max = check.c_bad_rec_max;
+void acr::c_bad_rec_Reserve(acr::FCheck& check, u64 n) {
+    u64 old_max = check.c_bad_rec_max;
     if (UNLIKELY(check.c_bad_rec_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FRec*);
-        u32 new_size = new_max * sizeof(acr::FRec*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, check.c_bad_rec_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FRec*);
+        u64 new_size = new_max * sizeof(acr::FRec*);
         void *new_mem = algo_lib::malloc_ReallocMem(check.c_bad_rec_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FCheck.c_bad_rec");
@@ -401,10 +343,10 @@ algo::aryptr<algo::cstring> acr::ary_name_Addary(acr::FCheck& check, algo::arypt
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr.tary_alias  field:acr.FCheck.ary_name  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     ary_name_Reserve(check, nnew); // reserve space
-    int at = check.ary_name_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = check.ary_name_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (check.ary_name_elems + at + i) algo::cstring(rhs[i]);
         check.ary_name_n++;
     }
@@ -416,8 +358,8 @@ algo::aryptr<algo::cstring> acr::ary_name_Addary(acr::FCheck& check, algo::arypt
 // The new element is initialized to a default value
 algo::cstring& acr::ary_name_Alloc(acr::FCheck& check) {
     ary_name_Reserve(check, 1);
-    int n  = check.ary_name_n;
-    int at = n;
+    i64 n  = check.ary_name_n;
+    i64 at = n;
     algo::cstring *elems = check.ary_name_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
     check.ary_name_n = n+1;
@@ -427,9 +369,9 @@ algo::cstring& acr::ary_name_Alloc(acr::FCheck& check) {
 // --- acr.FCheck.ary_name.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& acr::ary_name_AllocAt(acr::FCheck& check, int at) {
+algo::cstring& acr::ary_name_AllocAt(acr::FCheck& check, i64 at) {
     ary_name_Reserve(check, 1);
-    int n  = check.ary_name_n;
+    i64 n  = check.ary_name_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("acr.bad_alloc_at  field:acr.FCheck.ary_name  comment:'index out of range'");
     }
@@ -442,12 +384,12 @@ algo::cstring& acr::ary_name_AllocAt(acr::FCheck& check, int at) {
 
 // --- acr.FCheck.ary_name.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr::ary_name_AllocN(acr::FCheck& check, int n_elems) {
+algo::aryptr<algo::cstring> acr::ary_name_AllocN(acr::FCheck& check, i64 n_elems) {
     ary_name_Reserve(check, n_elems);
-    int old_n  = check.ary_name_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = check.ary_name_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = check.ary_name_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
     check.ary_name_n = new_n;
@@ -458,15 +400,15 @@ algo::aryptr<algo::cstring> acr::ary_name_AllocN(acr::FCheck& check, int n_elems
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> acr::ary_name_AllocNAt(acr::FCheck& check, int n_elems, int at) {
+algo::aryptr<algo::cstring> acr::ary_name_AllocNAt(acr::FCheck& check, i64 n_elems, i64 at) {
     ary_name_Reserve(check, n_elems);
-    int n  = check.ary_name_n;
+    i64 n  = check.ary_name_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("acr.bad_alloc_n_at  field:acr.FCheck.ary_name  comment:'index out of range'");
     }
     algo::cstring *elems = check.ary_name_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
     check.ary_name_n = n+n_elems;
@@ -475,8 +417,8 @@ algo::aryptr<algo::cstring> acr::ary_name_AllocNAt(acr::FCheck& check, int n_ele
 
 // --- acr.FCheck.ary_name.Remove
 // Remove item by index. If index outside of range, do nothing.
-void acr::ary_name_Remove(acr::FCheck& check, u32 i) {
-    u32 lim = check.ary_name_n;
+void acr::ary_name_Remove(acr::FCheck& check, u64 i) {
+    u64 lim = check.ary_name_n;
     algo::cstring *elems = check.ary_name_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
@@ -487,12 +429,11 @@ void acr::ary_name_Remove(acr::FCheck& check, u32 i) {
 
 // --- acr.FCheck.ary_name.RemoveAll
 void acr::ary_name_RemoveAll(acr::FCheck& check) {
-    u32 n = check.ary_name_n;
-    while (n > 0) {
-        n -= 1;
-        check.ary_name_elems[n].~cstring();
-        check.ary_name_n = n;
+    u64 n = check.ary_name_n;
+    for (u64 i=0; i<n; i++) {
+        check.ary_name_elems[i].~cstring();
     }
+    check.ary_name_n = 0;
 }
 
 // --- acr.FCheck.ary_name.RemoveLast
@@ -508,10 +449,10 @@ void acr::ary_name_RemoveLast(acr::FCheck& check) {
 
 // --- acr.FCheck.ary_name.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void acr::ary_name_AbsReserve(acr::FCheck& check, int n) {
-    u32 old_max  = check.ary_name_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void acr::ary_name_AbsReserve(acr::FCheck& check, i64 n) {
+    u64 old_max  = check.ary_name_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(check.ary_name_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.tary_nomem  field:acr.FCheck.ary_name  comment:'out of memory'");
@@ -525,9 +466,9 @@ void acr::ary_name_AbsReserve(acr::FCheck& check, int n) {
 // Copy contents of RHS to PARENT.
 void acr::ary_name_Setary(acr::FCheck& check, acr::FCheck &rhs) {
     ary_name_RemoveAll(check);
-    int nnew = rhs.ary_name_n;
+    i64 nnew = rhs.ary_name_n;
     ary_name_Reserve(check, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (check.ary_name_elems + i) algo::cstring(ary_name_qFind(rhs, i));
         check.ary_name_n = i + 1;
     }
@@ -543,12 +484,12 @@ void acr::ary_name_Setary(acr::FCheck& check, const algo::aryptr<algo::cstring> 
 
 // --- acr.FCheck.ary_name.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr::ary_name_AllocNVal(acr::FCheck& check, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> acr::ary_name_AllocNVal(acr::FCheck& check, i64 n_elems, const algo::cstring& val) {
     ary_name_Reserve(check, n_elems);
-    int old_n  = check.ary_name_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = check.ary_name_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = check.ary_name_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
     check.ary_name_n = new_n;
@@ -572,25 +513,43 @@ bool acr::ary_name_ReadStrptrMaybe(acr::FCheck& check, algo::strptr in_str) {
 // --- acr.FCheck.ary_name.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void acr::ary_name_Insary(acr::FCheck& check, algo::aryptr<algo::cstring> rhs, int at) {
+void acr::ary_name_Insary(acr::FCheck& check, algo::aryptr<algo::cstring> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= check.ary_name_elems && rhs.elems < check.ary_name_elems + check.ary_name_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr.tary_alias  field:acr.FCheck.ary_name  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(check.ary_name_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(check.ary_name_n+1))) {
         FatalErrorExit("acr.bad_insary  field:acr.FCheck.ary_name  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = check.ary_name_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = check.ary_name_n - at;
     ary_name_Reserve(check, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (check.ary_name_elems + at + nnew + i) algo::cstring(check.ary_name_elems[at + i]);
         check.ary_name_elems[at + i].~cstring(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (check.ary_name_elems + at + i) algo::cstring(rhs[i]);
     }
     check.ary_name_n += nnew;
+}
+
+// --- acr.FCheck.ary_name.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void acr::ary_name_RemRegion(acr::FCheck& check, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, check.ary_name_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            check.ary_name_elems[i].~cstring();
+        }
+        memmove(check.ary_name_elems+beg, check.ary_name_elems+end, sizeof(algo::cstring) * (check.ary_name_n-end));
+        check.ary_name_n -= n;
+    }
 }
 
 // --- acr.FCheck..Uninit
@@ -629,7 +588,7 @@ void acr::cppfunc_CopyIn(acr::FCppfunc &row, dmmeta::Cppfunc &in) {
 // Copy fields out of row
 void acr::ctype_CopyOut(acr::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr.FCtype.base.CopyIn
@@ -640,24 +599,22 @@ void acr::ctype_CopyIn(acr::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- acr.FCtype.ns.Get
-algo::Smallstr16 acr::ns_Get(acr::FCtype& ctype) {
-    algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
-    return ret;
+algo::strptr acr::ns_Get(acr::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RL");
 }
 
 // --- acr.FCtype.name.Get
-algo::Smallstr100 acr::name_Get(acr::FCtype& ctype) {
-    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
-    return ret;
+algo::strptr acr::name_Get(acr::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RR");
 }
 
 // --- acr.FCtype.c_field.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_field_Insert(acr::FCtype& ctype, acr::FField& row) {
     if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n++;
+        u64 n  = ctype.c_field_n++;
         ctype.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
@@ -676,15 +633,15 @@ bool acr::c_field_InsertMaybe(acr::FCtype& ctype, acr::FField& row) {
 // --- acr.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_field_Remove(acr::FCtype& ctype, acr::FField& row) {
-    int n = ctype.c_field_n;
+    i64 n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
         acr::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             acr::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(acr::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ctype.c_field_n = n - 1;
@@ -696,12 +653,12 @@ void acr::c_field_Remove(acr::FCtype& ctype, acr::FField& row) {
 
 // --- acr.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void acr::c_field_Reserve(acr::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_field_max;
+void acr::c_field_Reserve(acr::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_field_max;
     if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FField*);
-        u32 new_size = new_max * sizeof(acr::FField*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FField*);
+        u64 new_size = new_max * sizeof(acr::FField*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FCtype.c_field");
@@ -779,12 +736,45 @@ acr::FRec* acr::zd_rec_RemoveFirst(acr::FCtype& ctype) {
     return row;
 }
 
+// --- acr.FCtype.zd_rec.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_rec_InsertBefore(acr::FCtype& ctype, acr::FRec& row, acr::FRec* before) {
+    if (!ctype_zd_rec_InLlistQ(row) && &row != before) {
+        acr::FRec* next = before;
+        acr::FRec* prev = next ? next->ctype_zd_rec_prev : ctype.zd_rec_tail;
+        row.ctype_zd_rec_next = next;
+        row.ctype_zd_rec_prev = prev;
+        acr::FRec **prev_link_a = &prev->ctype_zd_rec_next;
+        acr::FRec **prev_link_b = &ctype.zd_rec_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FRec **next_link_a = &next->ctype_zd_rec_prev;
+        acr::FRec **next_link_b = &ctype.zd_rec_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
+}
+
 // --- acr.FCtype.ind_ctype_rec.Find
 // Find row by key. Return NULL if not found.
 acr::FRec* acr::ind_ctype_rec_Find(acr::FCtype& ctype, const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (ctype.ind_ctype_rec_buckets_n - 1);
     acr::FRec *ret = ctype.ind_ctype_rec_buckets_elems[index];
     for (; ret && !((*ret).pkey == key); ret = ret->ctype_ind_ctype_rec_next) {
+    }
+    return ret;
+}
+
+// --- acr.FCtype.ind_ctype_rec.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr::FRec* acr::ind_ctype_rec_GetOrCreate(acr::FCtype& ctype, const algo::strptr& key) {
+    acr::FRec* ret = ind_ctype_rec_Find(ctype, key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &rec_Alloc();
+        (*ret).pkey = key;
+        bool good = rec_XrefMaybe(*ret);
+        if (!good) {
+            rec_Delete(*ret); // delete offending row, any existin xrefs are cleared
+            ret = NULL;
+        }
     }
     return ret;
 }
@@ -946,12 +936,29 @@ acr::FRec* acr::zd_selrec_RemoveFirst(acr::FCtype& ctype) {
     return row;
 }
 
+// --- acr.FCtype.zd_selrec.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_selrec_InsertBefore(acr::FCtype& ctype, acr::FRec& row, acr::FRec* before) {
+    if (!ctype_zd_selrec_InLlistQ(row) && &row != before) {
+        acr::FRec* next = before;
+        acr::FRec* prev = next ? next->ctype_zd_selrec_prev : ctype.zd_selrec_tail;
+        row.ctype_zd_selrec_next = next;
+        row.ctype_zd_selrec_prev = prev;
+        acr::FRec **prev_link_a = &prev->ctype_zd_selrec_next;
+        acr::FRec **prev_link_b = &ctype.zd_selrec_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FRec **next_link_a = &next->ctype_zd_selrec_prev;
+        acr::FRec **next_link_b = &ctype.zd_selrec_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
+}
+
 // --- acr.FCtype.c_child.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_child_Insert(acr::FCtype& ctype, acr::FCtype& row) {
     c_child_Reserve(ctype, 1);
-    u32 n  = ctype.c_child_n++;
+    u64 n  = ctype.c_child_n++;
     ctype.c_child_elems[n] = &row;
 }
 
@@ -962,18 +969,15 @@ void acr::c_child_Insert(acr::FCtype& ctype, acr::FCtype& row) {
 // Return value: whether element was inserted into array.
 bool acr::c_child_ScanInsertMaybe(acr::FCtype& ctype, acr::FCtype& row) {
     bool retval = true;
-    u32 n  = ctype.c_child_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = ctype.c_child_n;
+    for (u64 i = 0; i < n; i++) {
         if (ctype.c_child_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_child_Reserve(ctype, 1);
-        ctype.c_child_elems[n] = &row;
-        ctype.c_child_n = n+1;
+        c_child_Insert(ctype,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -981,9 +985,9 @@ bool acr::c_child_ScanInsertMaybe(acr::FCtype& ctype, acr::FCtype& row) {
 // --- acr.FCtype.c_child.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_child_Remove(acr::FCtype& ctype, acr::FCtype& row) {
-    int n = ctype.c_child_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = ctype.c_child_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (ctype.c_child_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -997,12 +1001,12 @@ void acr::c_child_Remove(acr::FCtype& ctype, acr::FCtype& row) {
 
 // --- acr.FCtype.c_child.Reserve
 // Reserve space in index for N more elements;
-void acr::c_child_Reserve(acr::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_child_max;
+void acr::c_child_Reserve(acr::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_child_max;
     if (UNLIKELY(ctype.c_child_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FCtype*);
-        u32 new_size = new_max * sizeof(acr::FCtype*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_child_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FCtype*);
+        u64 new_size = new_max * sizeof(acr::FCtype*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_child_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FCtype.c_child");
@@ -1084,13 +1088,31 @@ acr::FField* acr::zd_arg_RemoveFirst(acr::FCtype& ctype) {
     return row;
 }
 
+// --- acr.FCtype.zd_arg.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_arg_InsertBefore(acr::FCtype& ctype, acr::FField& row, acr::FField* before) {
+    if (!ctype_zd_arg_InLlistQ(row) && &row != before) {
+        acr::FField* next = before;
+        acr::FField* prev = next ? next->ctype_zd_arg_prev : ctype.zd_arg_tail;
+        row.ctype_zd_arg_next = next;
+        row.ctype_zd_arg_prev = prev;
+        acr::FField **prev_link_a = &prev->ctype_zd_arg_next;
+        acr::FField **prev_link_b = &ctype.zd_arg_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FField **next_link_a = &next->ctype_zd_arg_prev;
+        acr::FField **next_link_b = &ctype.zd_arg_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        ctype.zd_arg_n++;
+    }
+}
+
 // --- acr.FCtype.c_ssimreq.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_ssimreq_Insert(acr::FCtype& ctype, acr::FSsimreq& row) {
     if (!row.ctype_c_ssimreq_in_ary) {
         c_ssimreq_Reserve(ctype, 1);
-        u32 n  = ctype.c_ssimreq_n++;
+        u64 n  = ctype.c_ssimreq_n++;
         ctype.c_ssimreq_elems[n] = &row;
         row.ctype_c_ssimreq_in_ary = true;
     }
@@ -1109,15 +1131,15 @@ bool acr::c_ssimreq_InsertMaybe(acr::FCtype& ctype, acr::FSsimreq& row) {
 // --- acr.FCtype.c_ssimreq.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_ssimreq_Remove(acr::FCtype& ctype, acr::FSsimreq& row) {
-    int n = ctype.c_ssimreq_n;
+    i64 n = ctype.c_ssimreq_n;
     if (bool_Update(row.ctype_c_ssimreq_in_ary,false)) {
         acr::FSsimreq* *elems = ctype.c_ssimreq_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             acr::FSsimreq* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(acr::FSsimreq*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ctype.c_ssimreq_n = n - 1;
@@ -1129,12 +1151,12 @@ void acr::c_ssimreq_Remove(acr::FCtype& ctype, acr::FSsimreq& row) {
 
 // --- acr.FCtype.c_ssimreq.Reserve
 // Reserve space in index for N more elements;
-void acr::c_ssimreq_Reserve(acr::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_ssimreq_max;
+void acr::c_ssimreq_Reserve(acr::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_ssimreq_max;
     if (UNLIKELY(ctype.c_ssimreq_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FSsimreq*);
-        u32 new_size = new_max * sizeof(acr::FSsimreq*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_ssimreq_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FSsimreq*);
+        u64 new_size = new_max * sizeof(acr::FSsimreq*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_ssimreq_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FCtype.c_ssimreq");
@@ -1528,6 +1550,23 @@ acr::FPline* acr::zd_pline_RemoveFirst() {
     return row;
 }
 
+// --- acr.FDb.zd_pline.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_pline_InsertBefore(acr::FPline& row, acr::FPline* before) {
+    if (!zd_pline_InLlistQ(row) && &row != before) {
+        acr::FPline* next = before;
+        acr::FPline* prev = next ? next->zd_pline_prev : _db.zd_pline_tail;
+        row.zd_pline_next = next;
+        row.zd_pline_prev = prev;
+        acr::FPline **prev_link_a = &prev->zd_pline_next;
+        acr::FPline **prev_link_b = &_db.zd_pline_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FPline **next_link_a = &next->zd_pline_prev;
+        acr::FPline **next_link_b = &_db.zd_pline_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
+}
+
 // --- acr.FDb.zd_pdep.Cascdel
 // Delete all elements in the linked list.
 void acr::zd_pdep_Cascdel() {
@@ -1604,6 +1643,23 @@ acr::FPdep* acr::zd_pdep_RemoveFirst() {
     return row;
 }
 
+// --- acr.FDb.zd_pdep.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_pdep_InsertBefore(acr::FPdep& row, acr::FPdep* before) {
+    if (!zd_pdep_InLlistQ(row) && &row != before) {
+        acr::FPdep* next = before;
+        acr::FPdep* prev = next ? next->zd_pdep_prev : _db.zd_pdep_tail;
+        row.zd_pdep_next = next;
+        row.zd_pdep_prev = prev;
+        acr::FPdep **prev_link_a = &prev->zd_pdep_next;
+        acr::FPdep **prev_link_b = &_db.zd_pdep_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FPdep **next_link_a = &next->zd_pdep_prev;
+        acr::FPdep **next_link_b = &_db.zd_pdep_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
+}
+
 // --- acr.FDb.ctype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1651,7 +1707,7 @@ void* acr::ctype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FCtype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ctype_lary[bsr];
         if (!lev) {
             lev=(acr::FCtype*)algo_lib::malloc_AllocMem(sizeof(acr::FCtype) * (u64(1)<<bsr));
@@ -1660,7 +1716,7 @@ void* acr::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = i32(new_nelems);
+        _db.ctype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1673,7 +1729,7 @@ void acr::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(i32(n)).~FCtype();
-        _db.ctype_n = i32(n);
+        _db.ctype_n = i64(n);
     }
 }
 
@@ -1865,7 +1921,7 @@ void* acr::anonfld_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FAnonfld*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.anonfld_lary[bsr];
         if (!lev) {
             lev=(acr::FAnonfld*)algo_lib::malloc_AllocMem(sizeof(acr::FAnonfld) * (u64(1)<<bsr));
@@ -1874,7 +1930,7 @@ void* acr::anonfld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.anonfld_n = i32(new_nelems);
+        _db.anonfld_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1887,7 +1943,7 @@ void acr::anonfld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         anonfld_qFind(u64(n)).~FAnonfld();
-        _db.anonfld_n = i32(n);
+        _db.anonfld_n = i64(n);
     }
 }
 
@@ -1953,7 +2009,7 @@ void* acr::cdflt_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FCdflt*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.cdflt_lary[bsr];
         if (!lev) {
             lev=(acr::FCdflt*)algo_lib::malloc_AllocMem(sizeof(acr::FCdflt) * (u64(1)<<bsr));
@@ -1962,7 +2018,7 @@ void* acr::cdflt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cdflt_n = i32(new_nelems);
+        _db.cdflt_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1975,7 +2031,7 @@ void acr::cdflt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cdflt_qFind(u64(n)).~FCdflt();
-        _db.cdflt_n = i32(n);
+        _db.cdflt_n = i64(n);
     }
 }
 
@@ -2380,7 +2436,7 @@ void* acr::field_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FField*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.field_lary[bsr];
         if (!lev) {
             lev=(acr::FField*)algo_lib::malloc_AllocMem(sizeof(acr::FField) * (u64(1)<<bsr));
@@ -2389,7 +2445,7 @@ void* acr::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = i32(new_nelems);
+        _db.field_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2402,7 +2458,7 @@ void acr::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = i32(n);
+        _db.field_n = i64(n);
     }
 }
 
@@ -2489,7 +2545,7 @@ void* acr::file_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FFile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.file_lary[bsr];
         if (!lev) {
             lev=(acr::FFile*)algo_lib::malloc_AllocMem(sizeof(acr::FFile) * (u64(1)<<bsr));
@@ -2498,7 +2554,7 @@ void* acr::file_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.file_n = i32(new_nelems);
+        _db.file_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2510,7 +2566,7 @@ void acr::file_RemoveAll() {
     for (u64 n = _db.file_n; n>0; ) {
         n--;
         file_qFind(u64(n)).~FFile(); // destroy last element
-        _db.file_n = i32(n);
+        _db.file_n = i64(n);
     }
 }
 
@@ -2521,7 +2577,7 @@ void acr::file_RemoveLast() {
     if (n > 0) {
         n -= 1;
         file_qFind(u64(n)).~FFile();
-        _db.file_n = i32(n);
+        _db.file_n = i64(n);
     }
 }
 
@@ -2544,116 +2600,16 @@ bool acr::file_XrefMaybe(acr::FFile &row) {
 }
 
 // --- acr.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     acr.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of acr.FDb.cmdline (and any base command line)
+// via acr_ReadArgv; then apply -help/-version and load floadtuples input.
 void acr::ReadArgv() {
     command::acr &cmd = acr::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::acr_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::acr_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"acr: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"acr: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::acr_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "acr: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::acr_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"acr: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::acr_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -2676,9 +2632,7 @@ void acr::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:acr.FDb.cmdline
+    // dmmeta.floadtuples:command.acr.schema
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!acr::LoadTuplesMaybe(cmd.schema,true)) {
@@ -2691,7 +2645,7 @@ void acr::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(acr_help);
+        prlog(command::acr_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -2718,7 +2672,13 @@ void acr::Step() {
 // --- acr.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void acr::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("acr", acr::InsertStrptrMaybe, NULL, acr::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "acr";
+    row.InsertStrptrMaybe  = acr::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = acr::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = acr::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "acr.trace";
@@ -2732,7 +2692,7 @@ static void acr::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr.Input'  signature:'bb2ab492247f7dd389e5b120d6369aafe91d87da'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr.Input'  signature:'c6935f73956e56a335981d77c20a8e70466ad02d'");
 }
 
 // --- acr.FDb._db.InsertStrptrMaybe
@@ -2920,6 +2880,93 @@ void acr::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- acr.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool acr::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    acr::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case acr_TableId_dmmeta_Ctype: { // finput:acr.FDb.ctype
+            // finput acr.FDb.ctype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Anonfld: { // finput:acr.FDb.anonfld
+            // finput acr.FDb.anonfld: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Cdflt: { // finput:acr.FDb.cdflt
+            // finput acr.FDb.cdflt: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Field: { // finput:acr.FDb.field
+            // finput acr.FDb.field: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Substr: { // finput:acr.FDb.substr
+            // finput acr.FDb.substr: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Ssimfile: { // finput:acr.FDb.ssimfile
+            // finput acr.FDb.ssimfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Ssimsort: { // finput:acr.FDb.ssimsort
+            // finput acr.FDb.ssimsort: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Smallstr: { // finput:acr.FDb.smallstr
+            // finput acr.FDb.smallstr: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Funique: { // finput:acr.FDb.funique
+            // finput acr.FDb.funique: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_amcdb_Bltin: { // finput:acr.FDb.bltin
+            // finput acr.FDb.bltin: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Cppfunc: { // finput:acr.FDb.cppfunc
+            // finput acr.FDb.cppfunc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_TableId_dmmeta_Ssimreq: { // finput:acr.FDb.ssimreq
+            // finput acr.FDb.ssimreq: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- acr.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -2934,6 +2981,22 @@ acr::FCtype* acr::ind_ctype_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     acr::FCtype *ret = _db.ind_ctype_buckets_elems[index];
     for (; ret && !((*ret).ctype == key); ret = ret->ind_ctype_next) {
+    }
+    return ret;
+}
+
+// --- acr.FDb.ind_ctype.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr::FCtype* acr::ind_ctype_GetOrCreate(const algo::strptr& key) {
+    acr::FCtype* ret = ind_ctype_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ctype_Alloc();
+        (*ret).ctype = key;
+        bool good = ctype_XrefMaybe(*ret);
+        if (!good) {
+            ctype_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
     }
     return ret;
 }
@@ -3030,9 +3093,25 @@ void acr::ind_ctype_AbsReserve(int n) {
 // --- acr.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 acr::FField* acr::ind_field_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     acr::FField *ret = _db.ind_field_buckets_elems[index];
     for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
+    }
+    return ret;
+}
+
+// --- acr.FDb.ind_field.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr::FField* acr::ind_field_GetOrCreate(const algo::strptr& key) {
+    acr::FField* ret = ind_field_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &field_Alloc();
+        (*ret).field = key;
+        bool good = field_XrefMaybe(*ret);
+        if (!good) {
+            field_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
     }
     return ret;
 }
@@ -3042,7 +3121,7 @@ acr::FField* acr::ind_field_Find(const algo::strptr& key) {
 bool acr::ind_field_InsertMaybe(acr::FField& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (acr::FField*)-1)) {// check if in hash already
-        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        row.ind_field_hashval = algo::Smallstr150_Hash(0, row.field);
         ind_field_Reserve(1);
         u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         acr::FField* *prev = &_db.ind_field_buckets_elems[index];
@@ -3314,6 +3393,24 @@ acr::FRec* acr::zd_all_selrec_RemoveFirst() {
     return row;
 }
 
+// --- acr.FDb.zd_all_selrec.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_all_selrec_InsertBefore(acr::FRec& row, acr::FRec* before) {
+    if (!zd_all_selrec_InLlistQ(row) && &row != before) {
+        acr::FRec* next = before;
+        acr::FRec* prev = next ? next->zd_all_selrec_prev : _db.zd_all_selrec_tail;
+        row.zd_all_selrec_next = next;
+        row.zd_all_selrec_prev = prev;
+        acr::FRec **prev_link_a = &prev->zd_all_selrec_next;
+        acr::FRec **prev_link_b = &_db.zd_all_selrec_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FRec **next_link_a = &next->zd_all_selrec_prev;
+        acr::FRec **next_link_b = &_db.zd_all_selrec_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_all_selrec_n++;
+    }
+}
+
 // --- acr.FDb.zd_all_err.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void acr::zd_all_err_Insert(acr::FErr& row) {
@@ -3386,6 +3483,24 @@ acr::FErr* acr::zd_all_err_RemoveFirst() {
     return row;
 }
 
+// --- acr.FDb.zd_all_err.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_all_err_InsertBefore(acr::FErr& row, acr::FErr* before) {
+    if (!zd_all_err_InLlistQ(row) && &row != before) {
+        acr::FErr* next = before;
+        acr::FErr* prev = next ? next->zd_all_err_prev : _db.zd_all_err_tail;
+        row.zd_all_err_next = next;
+        row.zd_all_err_prev = prev;
+        acr::FErr **prev_link_a = &prev->zd_all_err_next;
+        acr::FErr **prev_link_b = &_db.zd_all_err_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FErr **next_link_a = &next->zd_all_err_prev;
+        acr::FErr **next_link_b = &_db.zd_all_err_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_all_err_n++;
+    }
+}
+
 // --- acr.FDb.zd_sel_ctype.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void acr::zd_sel_ctype_Insert(acr::FCtype& row) {
@@ -3452,6 +3567,23 @@ acr::FCtype* acr::zd_sel_ctype_RemoveFirst() {
         row->zd_sel_ctype_next = (acr::FCtype*)-1; // mark as not-in-list
     }
     return row;
+}
+
+// --- acr.FDb.zd_sel_ctype.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_sel_ctype_InsertBefore(acr::FCtype& row, acr::FCtype* before) {
+    if (!zd_sel_ctype_InLlistQ(row) && &row != before) {
+        acr::FCtype* next = before;
+        acr::FCtype* prev = next ? next->zd_sel_ctype_prev : _db.zd_sel_ctype_tail;
+        row.zd_sel_ctype_next = next;
+        row.zd_sel_ctype_prev = prev;
+        acr::FCtype **prev_link_a = &prev->zd_sel_ctype_next;
+        acr::FCtype **prev_link_b = &_db.zd_sel_ctype_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FCtype **next_link_a = &next->zd_sel_ctype_prev;
+        acr::FCtype **next_link_b = &_db.zd_sel_ctype_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
 }
 
 // --- acr.FDb.bh_pline.Dealloc
@@ -3675,7 +3807,7 @@ void* acr::substr_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FSubstr*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.substr_lary[bsr];
         if (!lev) {
             lev=(acr::FSubstr*)algo_lib::malloc_AllocMem(sizeof(acr::FSubstr) * (u64(1)<<bsr));
@@ -3684,7 +3816,7 @@ void* acr::substr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.substr_n = i32(new_nelems);
+        _db.substr_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3697,7 +3829,7 @@ void acr::substr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         substr_qFind(u64(n)).~FSubstr();
-        _db.substr_n = i32(n);
+        _db.substr_n = i64(n);
     }
 }
 
@@ -3777,7 +3909,7 @@ void* acr::ssimfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FSsimfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ssimfile_lary[bsr];
         if (!lev) {
             lev=(acr::FSsimfile*)algo_lib::malloc_AllocMem(sizeof(acr::FSsimfile) * (u64(1)<<bsr));
@@ -3786,7 +3918,7 @@ void* acr::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = i32(new_nelems);
+        _db.ssimfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3799,7 +3931,7 @@ void acr::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = i32(n);
+        _db.ssimfile_n = i64(n);
     }
 }
 
@@ -3878,7 +4010,7 @@ void* acr::tempkey_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FTempkey*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.tempkey_lary[bsr];
         if (!lev) {
             lev=(acr::FTempkey*)algo_lib::malloc_AllocMem(sizeof(acr::FTempkey) * (u64(1)<<bsr));
@@ -3887,7 +4019,7 @@ void* acr::tempkey_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tempkey_n = i32(new_nelems);
+        _db.tempkey_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3899,7 +4031,7 @@ void acr::tempkey_RemoveAll() {
     for (u64 n = _db.tempkey_n; n>0; ) {
         n--;
         tempkey_qFind(u64(n)).~FTempkey(); // destroy last element
-        _db.tempkey_n = i32(n);
+        _db.tempkey_n = i64(n);
     }
 }
 
@@ -3910,7 +4042,7 @@ void acr::tempkey_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tempkey_qFind(u64(n)).~FTempkey();
-        _db.tempkey_n = i32(n);
+        _db.tempkey_n = i64(n);
     }
 }
 
@@ -4054,6 +4186,22 @@ acr::FSsimfile* acr::ind_ssimfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
     acr::FSsimfile *ret = _db.ind_ssimfile_buckets_elems[index];
     for (; ret && !((*ret).ssimfile == key); ret = ret->ind_ssimfile_next) {
+    }
+    return ret;
+}
+
+// --- acr.FDb.ind_ssimfile.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr::FSsimfile* acr::ind_ssimfile_GetOrCreate(const algo::strptr& key) {
+    acr::FSsimfile* ret = ind_ssimfile_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ssimfile_Alloc();
+        (*ret).ssimfile = key;
+        bool good = ssimfile_XrefMaybe(*ret);
+        if (!good) {
+            ssimfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
     }
     return ret;
 }
@@ -4367,7 +4515,7 @@ void* acr::ssimsort_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FSsimsort*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ssimsort_lary[bsr];
         if (!lev) {
             lev=(acr::FSsimsort*)algo_lib::malloc_AllocMem(sizeof(acr::FSsimsort) * (u64(1)<<bsr));
@@ -4376,7 +4524,7 @@ void* acr::ssimsort_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimsort_n = i32(new_nelems);
+        _db.ssimsort_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4389,7 +4537,7 @@ void acr::ssimsort_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimsort_qFind(u64(n)).~FSsimsort();
-        _db.ssimsort_n = i32(n);
+        _db.ssimsort_n = i64(n);
     }
 }
 
@@ -4438,6 +4586,22 @@ acr::FSsimsort* acr::ind_ssimsort_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimsort_buckets_n - 1);
     acr::FSsimsort *ret = _db.ind_ssimsort_buckets_elems[index];
     for (; ret && !((*ret).ssimfile == key); ret = ret->ind_ssimsort_next) {
+    }
+    return ret;
+}
+
+// --- acr.FDb.ind_ssimsort.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr::FSsimsort* acr::ind_ssimsort_GetOrCreate(const algo::strptr& key) {
+    acr::FSsimsort* ret = ind_ssimsort_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ssimsort_Alloc();
+        (*ret).ssimfile = key;
+        bool good = ssimsort_XrefMaybe(*ret);
+        if (!good) {
+            ssimsort_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
     }
     return ret;
 }
@@ -4586,7 +4750,7 @@ void* acr::smallstr_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FSmallstr*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.smallstr_lary[bsr];
         if (!lev) {
             lev=(acr::FSmallstr*)algo_lib::malloc_AllocMem(sizeof(acr::FSmallstr) * (u64(1)<<bsr));
@@ -4595,7 +4759,7 @@ void* acr::smallstr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.smallstr_n = i32(new_nelems);
+        _db.smallstr_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4607,8 +4771,7 @@ void acr::smallstr_RemoveLast() {
     u64 n = _db.smallstr_n;
     if (n > 0) {
         n -= 1;
-        smallstr_qFind(u64(n)).~FSmallstr();
-        _db.smallstr_n = i32(n);
+        _db.smallstr_n = i64(n);
     }
 }
 
@@ -4674,7 +4837,7 @@ void* acr::funique_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FFunique*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.funique_lary[bsr];
         if (!lev) {
             lev=(acr::FFunique*)algo_lib::malloc_AllocMem(sizeof(acr::FFunique) * (u64(1)<<bsr));
@@ -4683,7 +4846,7 @@ void* acr::funique_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.funique_n = i32(new_nelems);
+        _db.funique_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4696,7 +4859,7 @@ void acr::funique_RemoveLast() {
     if (n > 0) {
         n -= 1;
         funique_qFind(u64(n)).~FFunique();
-        _db.funique_n = i32(n);
+        _db.funique_n = i64(n);
     }
 }
 
@@ -4878,7 +5041,7 @@ void* acr::bltin_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FBltin*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.bltin_lary[bsr];
         if (!lev) {
             lev=(acr::FBltin*)algo_lib::malloc_AllocMem(sizeof(acr::FBltin) * (u64(1)<<bsr));
@@ -4887,7 +5050,7 @@ void* acr::bltin_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.bltin_n = i32(new_nelems);
+        _db.bltin_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4900,7 +5063,7 @@ void acr::bltin_RemoveLast() {
     if (n > 0) {
         n -= 1;
         bltin_qFind(u64(n)).~FBltin();
-        _db.bltin_n = i32(n);
+        _db.bltin_n = i64(n);
     }
 }
 
@@ -5155,7 +5318,7 @@ void* acr::cppfunc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FCppfunc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.cppfunc_lary[bsr];
         if (!lev) {
             lev=(acr::FCppfunc*)algo_lib::malloc_AllocMem(sizeof(acr::FCppfunc) * (u64(1)<<bsr));
@@ -5164,7 +5327,7 @@ void* acr::cppfunc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cppfunc_n = i32(new_nelems);
+        _db.cppfunc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5173,11 +5336,7 @@ void* acr::cppfunc_AllocMem() {
 // --- acr.FDb.cppfunc.RemoveAll
 // Remove all elements from Lary
 void acr::cppfunc_RemoveAll() {
-    for (u64 n = _db.cppfunc_n; n>0; ) {
-        n--;
-        cppfunc_qFind(u64(n)).~FCppfunc(); // destroy last element
-        _db.cppfunc_n = i32(n);
-    }
+    _db.cppfunc_n = 0;
 }
 
 // --- acr.FDb.cppfunc.RemoveLast
@@ -5186,8 +5345,7 @@ void acr::cppfunc_RemoveLast() {
     u64 n = _db.cppfunc_n;
     if (n > 0) {
         n -= 1;
-        cppfunc_qFind(u64(n)).~FCppfunc();
-        _db.cppfunc_n = i32(n);
+        _db.cppfunc_n = i64(n);
     }
 }
 
@@ -5253,7 +5411,7 @@ void* acr::ssimreq_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FSsimreq*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ssimreq_lary[bsr];
         if (!lev) {
             lev=(acr::FSsimreq*)algo_lib::malloc_AllocMem(sizeof(acr::FSsimreq) * (u64(1)<<bsr));
@@ -5262,7 +5420,7 @@ void* acr::ssimreq_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimreq_n = i32(new_nelems);
+        _db.ssimreq_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5274,7 +5432,7 @@ void acr::ssimreq_RemoveAll() {
     for (u64 n = _db.ssimreq_n; n>0; ) {
         n--;
         ssimreq_qFind(u64(n)).~FSsimreq(); // destroy last element
-        _db.ssimreq_n = i32(n);
+        _db.ssimreq_n = i64(n);
     }
 }
 
@@ -5285,7 +5443,7 @@ void acr::ssimreq_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimreq_qFind(u64(n)).~FSsimreq();
-        _db.ssimreq_n = i32(n);
+        _db.ssimreq_n = i64(n);
     }
 }
 
@@ -5337,12 +5495,12 @@ bool acr::ssimreq_XrefMaybe(acr::FSsimreq &row) {
 }
 
 // --- acr.FDb.c_ssimreq_rec.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_ssimreq_rec_Insert(acr::FRec& row) {
     if (!row.c_ssimreq_rec_in_ary) {
         c_ssimreq_rec_Reserve(1);
-        u32 n  = _db.c_ssimreq_rec_n++;
+        u64 n  = _db.c_ssimreq_rec_n++;
         _db.c_ssimreq_rec_elems[n] = &row;
         row.c_ssimreq_rec_in_ary = true;
     }
@@ -5361,15 +5519,15 @@ bool acr::c_ssimreq_rec_InsertMaybe(acr::FRec& row) {
 // --- acr.FDb.c_ssimreq_rec.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_ssimreq_rec_Remove(acr::FRec& row) {
-    int n = _db.c_ssimreq_rec_n;
+    i64 n = _db.c_ssimreq_rec_n;
     if (bool_Update(row.c_ssimreq_rec_in_ary,false)) {
         acr::FRec* *elems = _db.c_ssimreq_rec_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             acr::FRec* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(acr::FRec*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 _db.c_ssimreq_rec_n = n - 1;
@@ -5381,12 +5539,12 @@ void acr::c_ssimreq_rec_Remove(acr::FRec& row) {
 
 // --- acr.FDb.c_ssimreq_rec.Reserve
 // Reserve space in index for N more elements;
-void acr::c_ssimreq_rec_Reserve(u32 n) {
-    u32 old_max = _db.c_ssimreq_rec_max;
+void acr::c_ssimreq_rec_Reserve(u64 n) {
+    u64 old_max = _db.c_ssimreq_rec_max;
     if (UNLIKELY(_db.c_ssimreq_rec_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FRec*);
-        u32 new_size = new_max * sizeof(acr::FRec*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, _db.c_ssimreq_rec_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FRec*);
+        u64 new_size = new_max * sizeof(acr::FRec*);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.c_ssimreq_rec_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FDb.c_ssimreq_rec");
@@ -5397,12 +5555,12 @@ void acr::c_ssimreq_rec_Reserve(u32 n) {
 }
 
 // --- acr.FDb.c_ctype_front.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_ctype_front_Insert(acr::FCtype& row) {
     if (!row.c_ctype_front_in_ary) {
         c_ctype_front_Reserve(1);
-        u32 n  = _db.c_ctype_front_n++;
+        u64 n  = _db.c_ctype_front_n++;
         _db.c_ctype_front_elems[n] = &row;
         row.c_ctype_front_in_ary = true;
     }
@@ -5421,15 +5579,15 @@ bool acr::c_ctype_front_InsertMaybe(acr::FCtype& row) {
 // --- acr.FDb.c_ctype_front.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_ctype_front_Remove(acr::FCtype& row) {
-    int n = _db.c_ctype_front_n;
+    i64 n = _db.c_ctype_front_n;
     if (bool_Update(row.c_ctype_front_in_ary,false)) {
         acr::FCtype* *elems = _db.c_ctype_front_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             acr::FCtype* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(acr::FCtype*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 _db.c_ctype_front_n = n - 1;
@@ -5441,12 +5599,12 @@ void acr::c_ctype_front_Remove(acr::FCtype& row) {
 
 // --- acr.FDb.c_ctype_front.Reserve
 // Reserve space in index for N more elements;
-void acr::c_ctype_front_Reserve(u32 n) {
-    u32 old_max = _db.c_ctype_front_max;
+void acr::c_ctype_front_Reserve(u64 n) {
+    u64 old_max = _db.c_ctype_front_max;
     if (UNLIKELY(_db.c_ctype_front_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FCtype*);
-        u32 new_size = new_max * sizeof(acr::FCtype*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, _db.c_ctype_front_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FCtype*);
+        u64 new_size = new_max * sizeof(acr::FCtype*);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.c_ctype_front_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FDb.c_ctype_front");
@@ -5488,7 +5646,7 @@ void* acr::sortkey_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr::FSortkey*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.sortkey_lary[bsr];
         if (!lev) {
             lev=(acr::FSortkey*)algo_lib::malloc_AllocMem(sizeof(acr::FSortkey) * (u64(1)<<bsr));
@@ -5497,7 +5655,7 @@ void* acr::sortkey_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.sortkey_n = i32(new_nelems);
+        _db.sortkey_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5509,7 +5667,7 @@ void acr::sortkey_RemoveAll() {
     for (u64 n = _db.sortkey_n; n>0; ) {
         n--;
         sortkey_qFind(u64(n)).~FSortkey(); // destroy last element
-        _db.sortkey_n = i32(n);
+        _db.sortkey_n = i64(n);
     }
 }
 
@@ -5520,7 +5678,7 @@ void acr::sortkey_RemoveLast() {
     if (n > 0) {
         n -= 1;
         sortkey_qFind(u64(n)).~FSortkey();
-        _db.sortkey_n = i32(n);
+        _db.sortkey_n = i64(n);
     }
 }
 
@@ -5928,6 +6086,7 @@ void acr::FDb_Init() {
     }
     _db.err_seq = u32(0);
     _db.check_failed = bool(false);
+    _db.load_failed = bool(false);
     // initialize hash table for acr::FCtype;
     _db.ind_ctype_n             	= 0; // (acr.FDb.ind_ctype)
     _db.ind_ctype_buckets_n     	= 4; // (acr.FDb.ind_ctype)
@@ -6254,7 +6413,7 @@ void acr::field_CopyOut(acr::FField &row, dmmeta::Field &out) {
     out.arg = row.arg;
     out.reftype = row.reftype;
     out.dflt = row.dflt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr.FField.base.CopyIn
@@ -6268,21 +6427,18 @@ void acr::field_CopyIn(acr::FField &row, dmmeta::Field &in) {
 }
 
 // --- acr.FField.ctype.Get
-algo::Smallstr100 acr::ctype_Get(acr::FField& field) {
-    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
-    return ret;
+algo::strptr acr::ctype_Get(acr::FField& field) {
+    return algo::Pathcomp(field.field, ".RL");
 }
 
 // --- acr.FField.ns.Get
-algo::Smallstr16 acr::ns_Get(acr::FField& field) {
-    algo::Smallstr16 ret(algo::Pathcomp(field.field, ".RL.RL"));
-    return ret;
+algo::strptr acr::ns_Get(acr::FField& field) {
+    return algo::Pathcomp(field.field, ".RL.RL");
 }
 
 // --- acr.FField.name.Get
-algo::Smallstr50 acr::name_Get(acr::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RR"));
-    return ret;
+algo::strptr acr::name_Get(acr::FField& field) {
+    return algo::Pathcomp(field.field, ".RR");
 }
 
 // --- acr.FField..Init
@@ -6295,6 +6451,7 @@ void acr::FField_Init(acr::FField& field) {
     field.max_attr_len = u32(0);
     field.col_width = u32(0);
     field.isfldfunc = bool(false);
+    field.iscppfunc = bool(false);
     field.anon = bool(false);
     field.unique = bool(false);
     field.ctype_c_field_in_ary = bool(false);
@@ -6386,6 +6543,23 @@ acr::FRec* acr::zd_frec_RemoveFirst(acr::FFile& file) {
     return row;
 }
 
+// --- acr.FFile.zd_frec.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_frec_InsertBefore(acr::FFile& file, acr::FRec& row, acr::FRec* before) {
+    if (!file_zd_frec_InLlistQ(row) && &row != before) {
+        acr::FRec* next = before;
+        acr::FRec* prev = next ? next->file_zd_frec_prev : file.zd_frec_tail;
+        row.file_zd_frec_next = next;
+        row.file_zd_frec_prev = prev;
+        acr::FRec **prev_link_a = &prev->file_zd_frec_next;
+        acr::FRec **prev_link_b = &file.zd_frec_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FRec **next_link_a = &next->file_zd_frec_prev;
+        acr::FRec **next_link_b = &file.zd_frec_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
+}
+
 // --- acr.FFile..Uninit
 void acr::FFile_Uninit(acr::FFile& file) {
     acr::FFile &row = file; (void)row;
@@ -6396,14 +6570,14 @@ void acr::FFile_Uninit(acr::FFile& file) {
 // Copy fields out of row
 void acr::funique_CopyOut(acr::FFunique &row, dmmeta::Funique &out) {
     out.field = row.field;
-    // comment: field stripped (see dmmeta.fbase:acr.FFunique.base)
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr.FFunique.base.CopyIn
 // Copy fields in to row
 void acr::funique_CopyIn(acr::FFunique &row, dmmeta::Funique &in) {
     row.field = in.field;
-    // comment: field stripped (see dmmeta.fbase:acr.FFunique.base)
+    row.comment = in.comment;
 }
 
 // --- acr.FPdep..Uninit
@@ -6600,6 +6774,23 @@ acr::FPdep* acr::zd_child_RemoveFirst(acr::FPline& pline) {
     return row;
 }
 
+// --- acr.FPline.zd_child.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr::zd_child_InsertBefore(acr::FPline& pline, acr::FPdep& row, acr::FPdep* before) {
+    if (!pline_zd_child_InLlistQ(row) && &row != before) {
+        acr::FPdep* next = before;
+        acr::FPdep* prev = next ? next->pline_zd_child_prev : pline.zd_child_tail;
+        row.pline_zd_child_next = next;
+        row.pline_zd_child_prev = prev;
+        acr::FPdep **prev_link_a = &prev->pline_zd_child_next;
+        acr::FPdep **prev_link_b = &pline.zd_child_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr::FPdep **next_link_a = &next->pline_zd_child_prev;
+        acr::FPdep **next_link_b = &pline.zd_child_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
+}
+
 // --- acr.FPline..Uninit
 void acr::FPline_Uninit(acr::FPline& pline) {
     acr::FPline &row = pline; (void)row;
@@ -6629,9 +6820,25 @@ void acr::ind_printattr_Cascdel(acr::FPrint& print) {
 // --- acr.FPrint.ind_printattr.Find
 // Find row by key. Return NULL if not found.
 acr::FPrintAttr* acr::ind_printattr_Find(acr::FPrint& print, const algo::strptr& key) {
-    u32 index = algo::Smallstr100_Hash(0, key) & (print.ind_printattr_buckets_n - 1);
+    u32 index = algo::Smallstr150_Hash(0, key) & (print.ind_printattr_buckets_n - 1);
     acr::FPrintAttr *ret = print.ind_printattr_buckets_elems[index];
     for (; ret && !((*ret).field == key); ret = ret->print_ind_printattr_next) {
+    }
+    return ret;
+}
+
+// --- acr.FPrint.ind_printattr.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr::FPrintAttr* acr::ind_printattr_GetOrCreate(acr::FPrint& print, const algo::strptr& key) {
+    acr::FPrintAttr* ret = ind_printattr_Find(print, key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &printattr_Alloc();
+        (*ret).field = key;
+        bool good = printattr_XrefMaybe(*ret);
+        if (!good) {
+            printattr_Delete(*ret); // delete offending row, any existin xrefs are cleared
+            ret = NULL;
+        }
     }
     return ret;
 }
@@ -6641,7 +6848,7 @@ acr::FPrintAttr* acr::ind_printattr_Find(acr::FPrint& print, const algo::strptr&
 bool acr::ind_printattr_InsertMaybe(acr::FPrint& print, acr::FPrintAttr& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.print_ind_printattr_next == (acr::FPrintAttr*)-1)) {// check if in hash already
-        row.print_ind_printattr_hashval = algo::Smallstr100_Hash(0, row.field);
+        row.print_ind_printattr_hashval = algo::Smallstr150_Hash(0, row.field);
         ind_printattr_Reserve(print, 1);
         u32 index = row.print_ind_printattr_hashval & (print.ind_printattr_buckets_n - 1);
         acr::FPrintAttr* *prev = &print.ind_printattr_buckets_elems[index];
@@ -6726,11 +6933,11 @@ void acr::ind_printattr_AbsReserve(acr::FPrint& print, int n) {
 }
 
 // --- acr.FPrint.c_pline.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_pline_Insert(acr::FPrint& print, acr::FPline& row) {
     c_pline_Reserve(print, 1);
-    u32 n  = print.c_pline_n++;
+    u64 n  = print.c_pline_n++;
     print.c_pline_elems[n] = &row;
 }
 
@@ -6741,18 +6948,15 @@ void acr::c_pline_Insert(acr::FPrint& print, acr::FPline& row) {
 // Return value: whether element was inserted into array.
 bool acr::c_pline_ScanInsertMaybe(acr::FPrint& print, acr::FPline& row) {
     bool retval = true;
-    u32 n  = print.c_pline_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = print.c_pline_n;
+    for (u64 i = 0; i < n; i++) {
         if (print.c_pline_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_pline_Reserve(print, 1);
-        print.c_pline_elems[n] = &row;
-        print.c_pline_n = n+1;
+        c_pline_Insert(print,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -6760,9 +6964,9 @@ bool acr::c_pline_ScanInsertMaybe(acr::FPrint& print, acr::FPline& row) {
 // --- acr.FPrint.c_pline.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_pline_Remove(acr::FPrint& print, acr::FPline& row) {
-    int n = print.c_pline_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = print.c_pline_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (print.c_pline_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -6776,12 +6980,12 @@ void acr::c_pline_Remove(acr::FPrint& print, acr::FPline& row) {
 
 // --- acr.FPrint.c_pline.Reserve
 // Reserve space in index for N more elements;
-void acr::c_pline_Reserve(acr::FPrint& print, u32 n) {
-    u32 old_max = print.c_pline_max;
+void acr::c_pline_Reserve(acr::FPrint& print, u64 n) {
+    u64 old_max = print.c_pline_max;
     if (UNLIKELY(print.c_pline_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FPline*);
-        u32 new_size = new_max * sizeof(acr::FPline*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, print.c_pline_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FPline*);
+        u64 new_size = new_max * sizeof(acr::FPline*);
         void *new_mem = algo_lib::malloc_ReallocMem(print.c_pline_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FPrint.c_pline");
@@ -6944,7 +7148,7 @@ void acr::value_SetStrptr(acr::Queryop& parent, algo::strptr rhs, acr_Queryop_va
 // --- acr.Queryop..Print
 // print string representation of ROW to string STR
 // cfmt:acr.Queryop.String  printfmt:Raw
-void acr::Queryop_Print(acr::Queryop& row, algo::cstring& str) {
+void acr::Queryop_Print(acr::Queryop row, algo::cstring& str) {
     acr::value_Print(row, str);
 }
 
@@ -6957,10 +7161,10 @@ algo::aryptr<acr::AttrRegx> acr::where_Addary(acr::FQuery& query, algo::aryptr<a
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr.tary_alias  field:acr.FQuery.where  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     where_Reserve(query, nnew); // reserve space
-    int at = query.where_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = query.where_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (query.where_elems + at + i) acr::AttrRegx(rhs[i]);
         query.where_n++;
     }
@@ -6972,8 +7176,8 @@ algo::aryptr<acr::AttrRegx> acr::where_Addary(acr::FQuery& query, algo::aryptr<a
 // The new element is initialized to a default value
 acr::AttrRegx& acr::where_Alloc(acr::FQuery& query) {
     where_Reserve(query, 1);
-    int n  = query.where_n;
-    int at = n;
+    i64 n  = query.where_n;
+    i64 at = n;
     acr::AttrRegx *elems = query.where_elems;
     new (elems + at) acr::AttrRegx(); // construct new element, default initializer
     query.where_n = n+1;
@@ -6983,9 +7187,9 @@ acr::AttrRegx& acr::where_Alloc(acr::FQuery& query) {
 // --- acr.FQuery.where.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-acr::AttrRegx& acr::where_AllocAt(acr::FQuery& query, int at) {
+acr::AttrRegx& acr::where_AllocAt(acr::FQuery& query, i64 at) {
     where_Reserve(query, 1);
-    int n  = query.where_n;
+    i64 n  = query.where_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("acr.bad_alloc_at  field:acr.FQuery.where  comment:'index out of range'");
     }
@@ -6998,12 +7202,12 @@ acr::AttrRegx& acr::where_AllocAt(acr::FQuery& query, int at) {
 
 // --- acr.FQuery.where.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<acr::AttrRegx> acr::where_AllocN(acr::FQuery& query, int n_elems) {
+algo::aryptr<acr::AttrRegx> acr::where_AllocN(acr::FQuery& query, i64 n_elems) {
     where_Reserve(query, n_elems);
-    int old_n  = query.where_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = query.where_n;
+    i64 new_n = old_n + n_elems;
     acr::AttrRegx *elems = query.where_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) acr::AttrRegx(); // construct new element, default initialize
     }
     query.where_n = new_n;
@@ -7014,15 +7218,15 @@ algo::aryptr<acr::AttrRegx> acr::where_AllocN(acr::FQuery& query, int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<acr::AttrRegx> acr::where_AllocNAt(acr::FQuery& query, int n_elems, int at) {
+algo::aryptr<acr::AttrRegx> acr::where_AllocNAt(acr::FQuery& query, i64 n_elems, i64 at) {
     where_Reserve(query, n_elems);
-    int n  = query.where_n;
+    i64 n  = query.where_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("acr.bad_alloc_n_at  field:acr.FQuery.where  comment:'index out of range'");
     }
     acr::AttrRegx *elems = query.where_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(acr::AttrRegx));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) acr::AttrRegx(); // construct new element, default initialize
     }
     query.where_n = n+n_elems;
@@ -7031,8 +7235,8 @@ algo::aryptr<acr::AttrRegx> acr::where_AllocNAt(acr::FQuery& query, int n_elems,
 
 // --- acr.FQuery.where.Remove
 // Remove item by index. If index outside of range, do nothing.
-void acr::where_Remove(acr::FQuery& query, u32 i) {
-    u32 lim = query.where_n;
+void acr::where_Remove(acr::FQuery& query, u64 i) {
+    u64 lim = query.where_n;
     acr::AttrRegx *elems = query.where_elems;
     if (i < lim) {
         elems[i].~AttrRegx(); // destroy element
@@ -7043,12 +7247,11 @@ void acr::where_Remove(acr::FQuery& query, u32 i) {
 
 // --- acr.FQuery.where.RemoveAll
 void acr::where_RemoveAll(acr::FQuery& query) {
-    u32 n = query.where_n;
-    while (n > 0) {
-        n -= 1;
-        query.where_elems[n].~AttrRegx();
-        query.where_n = n;
+    u64 n = query.where_n;
+    for (u64 i=0; i<n; i++) {
+        query.where_elems[i].~AttrRegx();
     }
+    query.where_n = 0;
 }
 
 // --- acr.FQuery.where.RemoveLast
@@ -7064,10 +7267,10 @@ void acr::where_RemoveLast(acr::FQuery& query) {
 
 // --- acr.FQuery.where.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void acr::where_AbsReserve(acr::FQuery& query, int n) {
-    u32 old_max  = query.where_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void acr::where_AbsReserve(acr::FQuery& query, i64 n) {
+    u64 old_max  = query.where_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(query.where_elems, old_max * sizeof(acr::AttrRegx), new_max * sizeof(acr::AttrRegx));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.tary_nomem  field:acr.FQuery.where  comment:'out of memory'");
@@ -7081,9 +7284,9 @@ void acr::where_AbsReserve(acr::FQuery& query, int n) {
 // Copy contents of RHS to PARENT.
 void acr::where_Setary(acr::FQuery& query, acr::FQuery &rhs) {
     where_RemoveAll(query);
-    int nnew = rhs.where_n;
+    i64 nnew = rhs.where_n;
     where_Reserve(query, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (query.where_elems + i) acr::AttrRegx(where_qFind(rhs, i));
         query.where_n = i + 1;
     }
@@ -7099,12 +7302,12 @@ void acr::where_Setary(acr::FQuery& query, const algo::aryptr<acr::AttrRegx> &rh
 
 // --- acr.FQuery.where.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<acr::AttrRegx> acr::where_AllocNVal(acr::FQuery& query, int n_elems, const acr::AttrRegx& val) {
+algo::aryptr<acr::AttrRegx> acr::where_AllocNVal(acr::FQuery& query, i64 n_elems, const acr::AttrRegx& val) {
     where_Reserve(query, n_elems);
-    int old_n  = query.where_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = query.where_n;
+    i64 new_n = old_n + n_elems;
     acr::AttrRegx *elems = query.where_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) acr::AttrRegx(val);
     }
     query.where_n = new_n;
@@ -7114,25 +7317,43 @@ algo::aryptr<acr::AttrRegx> acr::where_AllocNVal(acr::FQuery& query, int n_elems
 // --- acr.FQuery.where.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void acr::where_Insary(acr::FQuery& query, algo::aryptr<acr::AttrRegx> rhs, int at) {
+void acr::where_Insary(acr::FQuery& query, algo::aryptr<acr::AttrRegx> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= query.where_elems && rhs.elems < query.where_elems + query.where_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr.tary_alias  field:acr.FQuery.where  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(query.where_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(query.where_n+1))) {
         FatalErrorExit("acr.bad_insary  field:acr.FQuery.where  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = query.where_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = query.where_n - at;
     where_Reserve(query, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (query.where_elems + at + nnew + i) acr::AttrRegx(query.where_elems[at + i]);
         query.where_elems[at + i].~AttrRegx(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (query.where_elems + at + i) acr::AttrRegx(rhs[i]);
     }
     query.where_n += nnew;
+}
+
+// --- acr.FQuery.where.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void acr::where_RemRegion(acr::FQuery& query, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, query.where_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            query.where_elems[i].~AttrRegx();
+        }
+        memmove(query.where_elems+beg, query.where_elems+end, sizeof(acr::AttrRegx) * (query.where_n-end));
+        query.where_n -= n;
+    }
 }
 
 // --- acr.FQuery.ssimfile.Print
@@ -7142,11 +7363,11 @@ void acr::ssimfile_Print(acr::FQuery& query, algo::cstring &out) {
 }
 
 // --- acr.FQuery.c_ctype.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_ctype_Insert(acr::FQuery& query, acr::FCtype& row) {
     c_ctype_Reserve(query, 1);
-    u32 n  = query.c_ctype_n++;
+    u64 n  = query.c_ctype_n++;
     query.c_ctype_elems[n] = &row;
 }
 
@@ -7157,18 +7378,15 @@ void acr::c_ctype_Insert(acr::FQuery& query, acr::FCtype& row) {
 // Return value: whether element was inserted into array.
 bool acr::c_ctype_ScanInsertMaybe(acr::FQuery& query, acr::FCtype& row) {
     bool retval = true;
-    u32 n  = query.c_ctype_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = query.c_ctype_n;
+    for (u64 i = 0; i < n; i++) {
         if (query.c_ctype_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_ctype_Reserve(query, 1);
-        query.c_ctype_elems[n] = &row;
-        query.c_ctype_n = n+1;
+        c_ctype_Insert(query,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -7176,9 +7394,9 @@ bool acr::c_ctype_ScanInsertMaybe(acr::FQuery& query, acr::FCtype& row) {
 // --- acr.FQuery.c_ctype.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_ctype_Remove(acr::FQuery& query, acr::FCtype& row) {
-    int n = query.c_ctype_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = query.c_ctype_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (query.c_ctype_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -7192,12 +7410,12 @@ void acr::c_ctype_Remove(acr::FQuery& query, acr::FCtype& row) {
 
 // --- acr.FQuery.c_ctype.Reserve
 // Reserve space in index for N more elements;
-void acr::c_ctype_Reserve(acr::FQuery& query, u32 n) {
-    u32 old_max = query.c_ctype_max;
+void acr::c_ctype_Reserve(acr::FQuery& query, u64 n) {
+    u64 old_max = query.c_ctype_max;
     if (UNLIKELY(query.c_ctype_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FCtype*);
-        u32 new_size = new_max * sizeof(acr::FCtype*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, query.c_ctype_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FCtype*);
+        u64 new_size = new_max * sizeof(acr::FCtype*);
         void *new_mem = algo_lib::malloc_ReallocMem(query.c_ctype_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FQuery.c_ctype");
@@ -7208,11 +7426,11 @@ void acr::c_ctype_Reserve(acr::FQuery& query, u32 n) {
 }
 
 // --- acr.FQuery.c_field.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_field_Insert(acr::FQuery& query, acr::FField& row) {
     c_field_Reserve(query, 1);
-    u32 n  = query.c_field_n++;
+    u64 n  = query.c_field_n++;
     query.c_field_elems[n] = &row;
 }
 
@@ -7223,18 +7441,15 @@ void acr::c_field_Insert(acr::FQuery& query, acr::FField& row) {
 // Return value: whether element was inserted into array.
 bool acr::c_field_ScanInsertMaybe(acr::FQuery& query, acr::FField& row) {
     bool retval = true;
-    u32 n  = query.c_field_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = query.c_field_n;
+    for (u64 i = 0; i < n; i++) {
         if (query.c_field_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_field_Reserve(query, 1);
-        query.c_field_elems[n] = &row;
-        query.c_field_n = n+1;
+        c_field_Insert(query,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -7242,9 +7457,9 @@ bool acr::c_field_ScanInsertMaybe(acr::FQuery& query, acr::FField& row) {
 // --- acr.FQuery.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_field_Remove(acr::FQuery& query, acr::FField& row) {
-    int n = query.c_field_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = query.c_field_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (query.c_field_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -7258,12 +7473,12 @@ void acr::c_field_Remove(acr::FQuery& query, acr::FField& row) {
 
 // --- acr.FQuery.c_field.Reserve
 // Reserve space in index for N more elements;
-void acr::c_field_Reserve(acr::FQuery& query, u32 n) {
-    u32 old_max = query.c_field_max;
+void acr::c_field_Reserve(acr::FQuery& query, u64 n) {
+    u64 old_max = query.c_field_max;
     if (UNLIKELY(query.c_field_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FField*);
-        u32 new_size = new_max * sizeof(acr::FField*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, query.c_field_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FField*);
+        u64 new_size = new_max * sizeof(acr::FField*);
         void *new_mem = algo_lib::malloc_ReallocMem(query.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FQuery.c_field");
@@ -7274,11 +7489,11 @@ void acr::c_field_Reserve(acr::FQuery& query, u32 n) {
 }
 
 // --- acr.FQuery.c_rec.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_rec_Insert(acr::FQuery& query, acr::FRec& row) {
     c_rec_Reserve(query, 1);
-    u32 n  = query.c_rec_n++;
+    u64 n  = query.c_rec_n++;
     query.c_rec_elems[n] = &row;
 }
 
@@ -7289,18 +7504,15 @@ void acr::c_rec_Insert(acr::FQuery& query, acr::FRec& row) {
 // Return value: whether element was inserted into array.
 bool acr::c_rec_ScanInsertMaybe(acr::FQuery& query, acr::FRec& row) {
     bool retval = true;
-    u32 n  = query.c_rec_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = query.c_rec_n;
+    for (u64 i = 0; i < n; i++) {
         if (query.c_rec_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_rec_Reserve(query, 1);
-        query.c_rec_elems[n] = &row;
-        query.c_rec_n = n+1;
+        c_rec_Insert(query,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -7308,9 +7520,9 @@ bool acr::c_rec_ScanInsertMaybe(acr::FQuery& query, acr::FRec& row) {
 // --- acr.FQuery.c_rec.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_rec_Remove(acr::FQuery& query, acr::FRec& row) {
-    int n = query.c_rec_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = query.c_rec_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (query.c_rec_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -7324,12 +7536,12 @@ void acr::c_rec_Remove(acr::FQuery& query, acr::FRec& row) {
 
 // --- acr.FQuery.c_rec.Reserve
 // Reserve space in index for N more elements;
-void acr::c_rec_Reserve(acr::FQuery& query, u32 n) {
-    u32 old_max = query.c_rec_max;
+void acr::c_rec_Reserve(acr::FQuery& query, u64 n) {
+    u64 old_max = query.c_rec_max;
     if (UNLIKELY(query.c_rec_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FRec*);
-        u32 new_size = new_max * sizeof(acr::FRec*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, query.c_rec_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FRec*);
+        u64 new_size = new_max * sizeof(acr::FRec*);
         void *new_mem = algo_lib::malloc_ReallocMem(query.c_rec_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FQuery.c_rec");
@@ -7598,9 +7810,8 @@ void acr::smallstr_CopyIn(acr::FSmallstr &row, dmmeta::Smallstr &in) {
 }
 
 // --- acr.FSmallstr.ctype.Get
-algo::Smallstr100 acr::ctype_Get(acr::FSmallstr& smallstr) {
-    algo::Smallstr100 ret(algo::Pathcomp(smallstr.field, ".RL"));
-    return ret;
+algo::strptr acr::ctype_Get(acr::FSmallstr& smallstr) {
+    return algo::Pathcomp(smallstr.field, ".RL");
 }
 
 // --- acr.FSortkey..Uninit
@@ -7624,21 +7835,18 @@ void acr::ssimfile_CopyIn(acr::FSsimfile &row, dmmeta::Ssimfile &in) {
 }
 
 // --- acr.FSsimfile.ssimns.Get
-algo::Smallstr16 acr::ssimns_Get(acr::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr acr::ssimns_Get(acr::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- acr.FSsimfile.ns.Get
-algo::Smallstr16 acr::ns_Get(acr::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr acr::ns_Get(acr::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- acr.FSsimfile.name.Get
-algo::Smallstr50 acr::name_Get(acr::FSsimfile& ssimfile) {
-    algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
-    return ret;
+algo::strptr acr::name_Get(acr::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
 }
 
 // --- acr.FSsimfile..Uninit
@@ -7658,7 +7866,7 @@ void acr::ssimreq_CopyOut(acr::FSsimreq &row, dmmeta::Ssimreq &out) {
     out.parent = row.parent;
     out.reqchild = row.reqchild;
     out.bidir = row.bidir;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr.FSsimreq.base.CopyIn
@@ -7672,33 +7880,28 @@ void acr::ssimreq_CopyIn(acr::FSsimreq &row, dmmeta::Ssimreq &in) {
 }
 
 // --- acr.FSsimreq.parent_field.Get
-algo::Smallstr100 acr::parent_field_Get(acr::FSsimreq& ssimreq) {
-    algo::Smallstr100 ret(algo::Pathcomp(ssimreq.parent, ":LL"));
-    return ret;
+algo::strptr acr::parent_field_Get(acr::FSsimreq& ssimreq) {
+    return algo::Pathcomp(ssimreq.parent, ":LL");
 }
 
 // --- acr.FSsimreq.parent_ctype.Get
-algo::Smallstr100 acr::parent_ctype_Get(acr::FSsimreq& ssimreq) {
-    algo::Smallstr100 ret(algo::Pathcomp(ssimreq.parent, ":LL.RL"));
-    return ret;
+algo::strptr acr::parent_ctype_Get(acr::FSsimreq& ssimreq) {
+    return algo::Pathcomp(ssimreq.parent, ":LL.RL");
 }
 
 // --- acr.FSsimreq.value.Get
-algo::Smallstr100 acr::value_Get(acr::FSsimreq& ssimreq) {
-    algo::Smallstr100 ret(algo::Pathcomp(ssimreq.parent, ":LR"));
-    return ret;
+algo::strptr acr::value_Get(acr::FSsimreq& ssimreq) {
+    return algo::Pathcomp(ssimreq.parent, ":LR");
 }
 
 // --- acr.FSsimreq.child_ssimfile.Get
-algo::Smallstr50 acr::child_ssimfile_Get(acr::FSsimreq& ssimreq) {
-    algo::Smallstr50 ret(algo::Pathcomp(ssimreq.ssimreq, ":LL"));
-    return ret;
+algo::strptr acr::child_ssimfile_Get(acr::FSsimreq& ssimreq) {
+    return algo::Pathcomp(ssimreq.ssimreq, ":LL");
 }
 
 // --- acr.FSsimreq.child_key.Get
-algo::Smallstr100 acr::child_key_Get(acr::FSsimreq& ssimreq) {
-    algo::Smallstr100 ret(algo::Pathcomp(ssimreq.ssimreq, ":RR"));
-    return ret;
+algo::strptr acr::child_key_Get(acr::FSsimreq& ssimreq) {
+    return algo::Pathcomp(ssimreq.ssimreq, ":RR");
 }
 
 // --- acr.FSsimreq.regx_value.Print
@@ -7732,7 +7935,7 @@ void acr::FSsimreq_Uninit(acr::FSsimreq& ssimreq) {
 void acr::ssimsort_CopyOut(acr::FSsimsort &row, dmmeta::Ssimsort &out) {
     out.ssimfile = row.ssimfile;
     out.sortfld = row.sortfld;
-    // comment: field stripped (see dmmeta.fbase:acr.FSsimsort.base)
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr.FSsimsort.base.CopyIn
@@ -7740,7 +7943,7 @@ void acr::ssimsort_CopyOut(acr::FSsimsort &row, dmmeta::Ssimsort &out) {
 void acr::ssimsort_CopyIn(acr::FSsimsort &row, dmmeta::Ssimsort &in) {
     row.ssimfile = in.ssimfile;
     row.sortfld = in.sortfld;
-    // comment: field stripped (see dmmeta.fbase:acr.FSsimsort.base)
+    row.comment = in.comment;
 }
 
 // --- acr.FSsimsort..Uninit
@@ -7791,11 +7994,11 @@ void acr::FUniqueattr_Uninit(acr::FUniqueattr& uniqueattr) {
 }
 
 // --- acr.FWrite.c_cmtrec.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr::c_cmtrec_Insert(acr::FWrite& write, acr::FRec& row) {
     c_cmtrec_Reserve(write, 1);
-    u32 n  = write.c_cmtrec_n++;
+    u64 n  = write.c_cmtrec_n++;
     write.c_cmtrec_elems[n] = &row;
 }
 
@@ -7806,18 +8009,15 @@ void acr::c_cmtrec_Insert(acr::FWrite& write, acr::FRec& row) {
 // Return value: whether element was inserted into array.
 bool acr::c_cmtrec_ScanInsertMaybe(acr::FWrite& write, acr::FRec& row) {
     bool retval = true;
-    u32 n  = write.c_cmtrec_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = write.c_cmtrec_n;
+    for (u64 i = 0; i < n; i++) {
         if (write.c_cmtrec_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_cmtrec_Reserve(write, 1);
-        write.c_cmtrec_elems[n] = &row;
-        write.c_cmtrec_n = n+1;
+        c_cmtrec_Insert(write,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -7825,9 +8025,9 @@ bool acr::c_cmtrec_ScanInsertMaybe(acr::FWrite& write, acr::FRec& row) {
 // --- acr.FWrite.c_cmtrec.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr::c_cmtrec_Remove(acr::FWrite& write, acr::FRec& row) {
-    int n = write.c_cmtrec_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = write.c_cmtrec_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (write.c_cmtrec_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -7841,12 +8041,12 @@ void acr::c_cmtrec_Remove(acr::FWrite& write, acr::FRec& row) {
 
 // --- acr.FWrite.c_cmtrec.Reserve
 // Reserve space in index for N more elements;
-void acr::c_cmtrec_Reserve(acr::FWrite& write, u32 n) {
-    u32 old_max = write.c_cmtrec_max;
+void acr::c_cmtrec_Reserve(acr::FWrite& write, u64 n) {
+    u64 old_max = write.c_cmtrec_max;
     if (UNLIKELY(write.c_cmtrec_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr::FRec*);
-        u32 new_size = new_max * sizeof(acr::FRec*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, write.c_cmtrec_n + n), 4);
+        u64 old_size = old_max * sizeof(acr::FRec*);
+        u64 new_size = new_max * sizeof(acr::FRec*);
         void *new_mem = algo_lib::malloc_ReallocMem(write.c_cmtrec_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr.out_of_memory  field:acr.FWrite.c_cmtrec");
@@ -8102,7 +8302,7 @@ bool acr::FieldId_ReadStrptrMaybe(acr::FieldId &parent, algo::strptr in_str) {
 // --- acr.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:acr.FieldId.String  printfmt:Raw
-void acr::FieldId_Print(acr::FieldId& row, algo::cstring& str) {
+void acr::FieldId_Print(acr::FieldId row, algo::cstring& str) {
     acr::value_Print(row, str);
 }
 
@@ -8194,7 +8394,7 @@ void acr::read_mode_SetStrptr(acr::ReadMode& parent, algo::strptr rhs, acr_ReadM
 // --- acr.ReadMode..Print
 // print string representation of ROW to string STR
 // cfmt:acr.ReadMode.String  printfmt:Raw
-void acr::ReadMode_Print(acr::ReadMode& row, algo::cstring& str) {
+void acr::ReadMode_Print(acr::ReadMode row, algo::cstring& str) {
     acr::read_mode_Print(row, str);
 }
 
@@ -8376,7 +8576,7 @@ bool acr::TableId_ReadStrptrMaybe(acr::TableId &parent, algo::strptr in_str) {
 // --- acr.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:acr.TableId.String  printfmt:Raw
-void acr::TableId_Print(acr::TableId& row, algo::cstring& str) {
+void acr::TableId_Print(acr::TableId row, algo::cstring& str) {
     acr::value_Print(row, str);
 }
 

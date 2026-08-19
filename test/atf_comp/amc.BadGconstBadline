@@ -1,0 +1,20 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_gconst_badline -out_dir: -report:N algo_lib.ColorId"
+# eof amc
+amc -> amc.bad_gconst  gconst:algo_lib.ColorId.value  file:test/amc/bad_gconst_badline/testdb/color.ssim  line:4  text:'testdb.color  color:"green'  comment:"gconst value table line is not a tuple"
+amc -> amc.bad_gconst  gconst:algo_lib.ColorId.value  file:test/amc/bad_gconst_badline/testdb/color.ssim  line:5  text:'testdb.color  color:blue  comment:"unterminated'  comment:"gconst value table line is not a tuple"
+amc -> // --- algo_lib_ColorId_value_Enum
+amc -> enum algo_lib_ColorId_value_Enum {                  // algo_lib.ColorId.value
+amc ->      algo_lib_ColorId_value_red     // the primary
+amc ->     ,algo_lib_ColorId_value_cyan
+amc -> };
+amc -> enum { algo_lib_ColorId_value_Enum_N = 2 };
+amc -> // --- algo_lib.ColorId
+amc -> struct ColorId { // algo_lib.ColorId
+amc ->     u8   value;   //
+amc ->     // func:algo_lib.ColorId..Ctor
+amc ->     inline               ColorId() __attribute__((nothrow));
+amc ->     // func:algo_lib.ColorId..EnumCtor
+amc ->     inline               ColorId(algo_lib_ColorId_value_Enum arg) __attribute__((nothrow));
+amc -> };
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

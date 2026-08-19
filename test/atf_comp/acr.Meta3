@@ -12,7 +12,7 @@ acr -> # bool              1-byte bool, c++ type.
 acr -> # algo.Smallstr20   inline string with length field
 acr -> # dmmeta.Ctypelen   Size of Ctype
 acr -> # dmmeta.Field      Specify field of a struct
-acr -> # algo.Smallstr50   inline string with length field
+acr -> # algo.Smallstr150  inline string with length field
 acr -> # dmmeta.Reftype    Field type constructor (e.g. reference type)
 acr -> # algo.CppExpr      C++ expression
 acr -> # e.g. dmmeta.ctype  ctype:""  comment:""
@@ -23,7 +23,7 @@ acr -> dmmeta.ctype  ctype:dmmeta.Ftuple  comment:""
 acr ->   dmmeta.field  field:dmmeta.Ftuple.field    arg:dmmeta.Field  reftype:Pkey  dflt:""  comment:""
 acr ->   dmmeta.field  field:dmmeta.Ftuple.comment  arg:algo.Comment  reftype:Val   dflt:""  comment:""
 acr ->   dmmeta.cfmt  cfmt:dmmeta.Ftuple.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-acr ->   dmmeta.ctypelen  ctype:dmmeta.Ftuple  len:254  alignment:1  padbytes:0  plaindata:Y
+acr ->   dmmeta.ctypelen  ctype:dmmeta.Ftuple  len:304  alignment:1  padbytes:0  plaindata:Y
 acr -> # Field                      Arg               Reftype  Comment
 acr -> # dmmeta.Ctype.ctype         algo.Smallstr100  Val      Identifier. must be ns.typename
 acr -> # dmmeta.Ctype.comment       algo.Comment      Val
@@ -38,11 +38,11 @@ acr -> # dmmeta.Ctypelen.ctype      dmmeta.Ctype      Pkey     Identifies the Ct
 acr -> # dmmeta.Ctypelen.len        u32               Val      (calculated) length of the C++ struct in bytes
 acr -> # dmmeta.Ctypelen.alignment  i32               Val      (calculated) alignment for the struct
 acr -> # dmmeta.Ctypelen.padbytes   i32               Val      (calculated) total # of pad bytes
-acr -> # dmmeta.Ctypelen.plaindata  bool              Val      (calculated) this struct can me safely memcpy'ed
-acr -> # dmmeta.Field.field         algo.Smallstr100  Val      Primary key, as ctype.name
+acr -> # dmmeta.Ctypelen.plaindata  bool              Val      (calculated) can safely call memcpy on this struct
+acr -> # dmmeta.Field.field         algo.Smallstr150  Val      Primary key, as ctype.name
 acr -> # dmmeta.Field.arg           dmmeta.Ctype      Pkey     Type of field
 acr -> # dmmeta.Field.reftype       dmmeta.Reftype    Pkey     Type constructor
 acr -> # dmmeta.Field.dflt          algo.CppExpr      Val      Default value (c++ expression)
 acr -> # dmmeta.Field.comment       algo.Comment      Val
-acr -> report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+acr -> report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 # exit acr code:0

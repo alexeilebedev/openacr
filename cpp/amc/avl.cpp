@@ -320,6 +320,7 @@ void amc::tfunc_Atree_InsertImpl(){
 //3. Assign new root.
 void amc::tfunc_Atree_Insert(){
     algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.proto,"$name_Insert($Parent, $Cpptype& row)", false);
     Ins(&R, func.ret,  "void", false);
@@ -327,6 +328,9 @@ void amc::tfunc_Atree_Insert(){
     Ins(&R, func.body, "    $NElem++;");
     Ins(&R, func.body, "    $name_InsertImpl($pararg, $Root, row);");
     Ins(&R, func.body, "    $Root = $name_Propagate(row);");
+    if (amc::FindFfunc(field, amcdb_cbtype_OnXref, true)) {
+        Ins(&R, func.body, "    $name_OnXref($pararg, row); // dmmeta.ffunc:$field/OnXref");
+    }
     Ins(&R, func.body, "}");
 }
 
@@ -432,6 +436,7 @@ void amc::tfunc_Atree_Connect(){
 //5. Propagate up from the next's parent.
 void amc::tfunc_Atree_Remove(){
     algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.ret  , "void", false);
@@ -463,6 +468,9 @@ void amc::tfunc_Atree_Remove(){
     Ins(&R, func.body , "row.$Right = NULL;");
     Ins(&R, func.body , "row.$Up = ($Cpptype*)-1;");
     Ins(&R, func.body , "$NElem--;");
+    if (amc::FindFfunc(field, amcdb_cbtype_OnUnref, true)) {
+        Ins(&R, func.body, "$name_OnUnref($pararg, row); // dmmeta.ffunc:$field/OnUnref");
+    }
 }
 
 

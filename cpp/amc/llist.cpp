@@ -292,6 +292,9 @@ void amc::tfunc_Llist_Remove() {
         Ins(&R, remove.body, "        $name_FirstChanged($pararg);");
         Ins(&R, remove.body, "    }");
     }
+    if (amc::FindFfunc(field, amcdb_cbtype_OnUnref, true)) {
+        Ins(&R, remove.body, "    $name_OnUnref($pararg, row); // dmmeta.ffunc:$field/OnUnref");
+    }
     Ins(&R,             remove.body, "}");
 }
 
@@ -512,7 +515,54 @@ void amc::tfunc_Llist_Insert() {
         Ins(&R, ins.body, "        $name_FirstChanged($pararg);");
         Ins(&R, ins.body, "    }");
     }
+    if (amc::FindFfunc(field, amcdb_cbtype_OnXref, true)) {
+        Ins(&R, ins.body, "    $name_OnXref($pararg, row); // dmmeta.ffunc:$field/OnXref");
+    }
     Ins(&R, ins.body, "}");
+}
+
+// Insert ROW at an explicit position: before BEFORE, or at the tail when
+// BEFORE is NULL -- the position-addressed primitive of a doubly-linked list,
+// of which head insertion (BEFORE = First) and the listtype's own Insert
+// direction are the two fixed special cases.  Lets a caller rank a row ahead
+// of the list order (an eviction candidate that should go first) without a
+// second list.  Emitted only for non-circular doubly-linked listtypes with a
+// tail pointer: prev links make the splice O(1), and the tail pointer makes
+// the BEFORE = NULL case O(1).
+void amc::tfunc_Llist_InsertBefore() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FLlist *llist = field.c_llist;
+    amc::FListtype &listtype = *llist->p_listtype;
+
+    if (!listtype.circular && listtype.haveprev && llist->havetail) {
+        amc::FFunc& ins = amc::CreateCurFunc();
+        Ins(&R,             ins.proto, "$name_InsertBefore($Parent, $Cpptype& row, $Cpptype* before)", false);
+        Ins(&R,             ins.body, "if (!$xfname_InLlistQ(row) && &row != before) {");
+        Ins(&R,             ins.ret  , "void", false);
+        Ins(&R,             ins.body, "    $Cpptype* next = before;");
+        Ins(&R,             ins.body, "    $Cpptype* prev = next ? next->$xfname_prev : $parname.$name_tail;");
+        Ins(&R,             ins.body, "    row.$xfname_next = next;");
+        Ins(&R,             ins.body, "    row.$xfname_prev = prev;");
+        Ins(&R,             ins.body, "    $Cpptype **prev_link_a = &prev->$xfname_next;");
+        Ins(&R,             ins.body, "    $Cpptype **prev_link_b = &$parname.$name_head;");
+        Ins(&R,             ins.body, "    *(prev ? prev_link_a : prev_link_b) = &row;");
+        Ins(&R,             ins.body, "    $Cpptype **next_link_a = &next->$xfname_prev;");
+        Ins(&R,             ins.body, "    $Cpptype **next_link_b = &$parname.$name_tail;");
+        Ins(&R,             ins.body, "    *(next ? next_link_a : next_link_b) = &row;");
+        if (llist->havecount) {
+            Ins(&R,         ins.body, "    $parname.$name_n++;");
+        }
+        if (field.need_firstchanged) {
+            Ins(&R,         ins.body, "    if ($parname.$name_head == &row) {");
+            Ins(&R,         ins.body, "        $name_FirstChanged($pararg);");
+            Ins(&R,         ins.body, "    }");
+        }
+        if (amc::FindFfunc(field, amcdb_cbtype_OnXref, true)) {
+            Ins(&R,         ins.body, "    $name_OnXref($pararg, row); // dmmeta.ffunc:$field/OnXref");
+        }
+        Ins(&R,             ins.body, "}");
+    }
 }
 
 void amc::tfunc_Llist_qLast() {
@@ -660,6 +710,7 @@ void amc::tfunc_ZSListMT_Init() {
 
 // Generate cursor for llist
 void amc::Llist_curs(bool needdel) {
+    RequireTcurs();
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;

@@ -35,7 +35,7 @@ inline  acr::AttrRegx::AttrRegx() {
 }
 
 // --- acr.CtypeTopoKey..Hash
-inline u32 acr::CtypeTopoKey_Hash(u32 prev, const acr::CtypeTopoKey& rhs) {
+inline u32 acr::CtypeTopoKey_Hash(u32 prev, acr::CtypeTopoKey rhs) {
     prev = i32_Hash(prev, rhs.alldep);
     prev = i32_Hash(prev, rhs.rowid);
     return prev;
@@ -72,12 +72,12 @@ inline bool acr::CtypeTopoKey::operator >=(const acr::CtypeTopoKey &rhs) const {
 }
 
 // --- acr.CtypeTopoKey..Lt
-inline bool acr::CtypeTopoKey_Lt(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) {
+inline bool acr::CtypeTopoKey_Lt(acr::CtypeTopoKey lhs, acr::CtypeTopoKey rhs) {
     return CtypeTopoKey_Cmp(lhs,rhs) < 0;
 }
 
 // --- acr.CtypeTopoKey..Cmp
-inline i32 acr::CtypeTopoKey_Cmp(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) {
+inline i32 acr::CtypeTopoKey_Cmp(acr::CtypeTopoKey lhs, acr::CtypeTopoKey rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.alldep, rhs.alldep);
     if (retval != 0) {
@@ -95,7 +95,7 @@ inline void acr::CtypeTopoKey_Init(acr::CtypeTopoKey& parent) {
 }
 
 // --- acr.CtypeTopoKey..Eq
-inline bool acr::CtypeTopoKey_Eq(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) {
+inline bool acr::CtypeTopoKey_Eq(acr::CtypeTopoKey lhs, acr::CtypeTopoKey rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.alldep, rhs.alldep);
     if (!retval) {
@@ -107,7 +107,7 @@ inline bool acr::CtypeTopoKey_Eq(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs)
 
 // --- acr.CtypeTopoKey..Update
 // Set value. Return true if new value is different from old value.
-inline bool acr::CtypeTopoKey_Update(acr::CtypeTopoKey &lhs, acr::CtypeTopoKey& rhs) {
+inline bool acr::CtypeTopoKey_Update(acr::CtypeTopoKey &lhs, acr::CtypeTopoKey rhs) {
     bool ret = !CtypeTopoKey_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -173,7 +173,7 @@ inline bool acr::c_bad_rec_EmptyQ(acr::FCheck& check) {
 
 // --- acr.FCheck.c_bad_rec.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FRec* acr::c_bad_rec_Find(acr::FCheck& check, u32 t) {
+inline acr::FRec* acr::c_bad_rec_Find(acr::FCheck& check, u64 t) {
     acr::FRec *retval = NULL;
     u64 idx = t;
     u64 lim = check.c_bad_rec_n;
@@ -191,7 +191,7 @@ inline algo::aryptr<acr::FRec*> acr::c_bad_rec_Getary(acr::FCheck& check) {
 
 // --- acr.FCheck.c_bad_rec.N
 // Return number of items in the pointer array
-inline i32 acr::c_bad_rec_N(const acr::FCheck& check) {
+inline i64 acr::c_bad_rec_N(const acr::FCheck& check) {
     return check.c_bad_rec_n;
 }
 
@@ -203,7 +203,7 @@ inline void acr::c_bad_rec_RemoveAll(acr::FCheck& check) {
 
 // --- acr.FCheck.c_bad_rec.qFind
 // Return reference without bounds checking
-inline acr::FRec& acr::c_bad_rec_qFind(acr::FCheck& check, u32 idx) {
+inline acr::FRec& acr::c_bad_rec_qFind(acr::FCheck& check, u64 idx) {
     return *check.c_bad_rec_elems[idx];
 }
 
@@ -242,21 +242,21 @@ inline algo::cstring* acr::ary_name_Last(acr::FCheck& check) {
 
 // --- acr.FCheck.ary_name.Max
 // Return max. number of items in the array
-inline i32 acr::ary_name_Max(acr::FCheck& check) {
+inline i64 acr::ary_name_Max(acr::FCheck& check) {
     (void)check;
     return check.ary_name_max;
 }
 
 // --- acr.FCheck.ary_name.N
 // Return number of items in the array
-inline i32 acr::ary_name_N(const acr::FCheck& check) {
+inline i64 acr::ary_name_N(const acr::FCheck& check) {
     return check.ary_name_n;
 }
 
 // --- acr.FCheck.ary_name.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void acr::ary_name_Reserve(acr::FCheck& check, int n) {
-    u32 new_n = check.ary_name_n + n;
+inline void acr::ary_name_Reserve(acr::FCheck& check, i64 n) {
+    u64 new_n = check.ary_name_n + n;
     if (UNLIKELY(new_n > check.ary_name_max)) {
         ary_name_AbsReserve(check, new_n);
     }
@@ -374,7 +374,7 @@ inline bool acr::c_field_EmptyQ(acr::FCtype& ctype) {
 
 // --- acr.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FField* acr::c_field_Find(acr::FCtype& ctype, u32 t) {
+inline acr::FField* acr::c_field_Find(acr::FCtype& ctype, u64 t) {
     acr::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_n;
@@ -392,14 +392,14 @@ inline algo::aryptr<acr::FField*> acr::c_field_Getary(acr::FCtype& ctype) {
 
 // --- acr.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i32 acr::c_field_N(const acr::FCtype& ctype) {
+inline i64 acr::c_field_N(const acr::FCtype& ctype) {
     return ctype.c_field_n;
 }
 
 // --- acr.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void acr::c_field_RemoveAll(acr::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_field_n; i++) {
+    for (u64 i = 0; i < ctype.c_field_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
@@ -408,7 +408,7 @@ inline void acr::c_field_RemoveAll(acr::FCtype& ctype) {
 
 // --- acr.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline acr::FField& acr::c_field_qFind(acr::FCtype& ctype, u32 idx) {
+inline acr::FField& acr::c_field_qFind(acr::FCtype& ctype, u64 idx) {
     return *ctype.c_field_elems[idx];
 }
 
@@ -584,7 +584,7 @@ inline bool acr::c_child_EmptyQ(acr::FCtype& ctype) {
 
 // --- acr.FCtype.c_child.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FCtype* acr::c_child_Find(acr::FCtype& ctype, u32 t) {
+inline acr::FCtype* acr::c_child_Find(acr::FCtype& ctype, u64 t) {
     acr::FCtype *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_child_n;
@@ -602,7 +602,7 @@ inline algo::aryptr<acr::FCtype*> acr::c_child_Getary(acr::FCtype& ctype) {
 
 // --- acr.FCtype.c_child.N
 // Return number of items in the pointer array
-inline i32 acr::c_child_N(const acr::FCtype& ctype) {
+inline i64 acr::c_child_N(const acr::FCtype& ctype) {
     return ctype.c_child_n;
 }
 
@@ -614,7 +614,7 @@ inline void acr::c_child_RemoveAll(acr::FCtype& ctype) {
 
 // --- acr.FCtype.c_child.qFind
 // Return reference without bounds checking
-inline acr::FCtype& acr::c_child_qFind(acr::FCtype& ctype, u32 idx) {
+inline acr::FCtype& acr::c_child_qFind(acr::FCtype& ctype, u64 idx) {
     return *ctype.c_child_elems[idx];
 }
 
@@ -722,7 +722,7 @@ inline bool acr::c_ssimreq_EmptyQ(acr::FCtype& ctype) {
 
 // --- acr.FCtype.c_ssimreq.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FSsimreq* acr::c_ssimreq_Find(acr::FCtype& ctype, u32 t) {
+inline acr::FSsimreq* acr::c_ssimreq_Find(acr::FCtype& ctype, u64 t) {
     acr::FSsimreq *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_ssimreq_n;
@@ -740,14 +740,14 @@ inline algo::aryptr<acr::FSsimreq*> acr::c_ssimreq_Getary(acr::FCtype& ctype) {
 
 // --- acr.FCtype.c_ssimreq.N
 // Return number of items in the pointer array
-inline i32 acr::c_ssimreq_N(const acr::FCtype& ctype) {
+inline i64 acr::c_ssimreq_N(const acr::FCtype& ctype) {
     return ctype.c_ssimreq_n;
 }
 
 // --- acr.FCtype.c_ssimreq.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void acr::c_ssimreq_RemoveAll(acr::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_ssimreq_n; i++) {
+    for (u64 i = 0; i < ctype.c_ssimreq_n; i++) {
         // mark all elements as not-in-array
         ctype.c_ssimreq_elems[i]->ctype_c_ssimreq_in_ary = false;
     }
@@ -756,7 +756,7 @@ inline void acr::c_ssimreq_RemoveAll(acr::FCtype& ctype) {
 
 // --- acr.FCtype.c_ssimreq.qFind
 // Return reference without bounds checking
-inline acr::FSsimreq& acr::c_ssimreq_qFind(acr::FCtype& ctype, u32 idx) {
+inline acr::FSsimreq& acr::c_ssimreq_qFind(acr::FCtype& ctype, u64 idx) {
     return *ctype.c_ssimreq_elems[idx];
 }
 
@@ -1087,7 +1087,7 @@ inline acr::FCtype* acr::ctype_Last() {
 
 // --- acr.FDb.ctype.N
 // Return number of items in the pool
-inline i32 acr::ctype_N() {
+inline i64 acr::ctype_N() {
     return _db.ctype_n;
 }
 
@@ -1129,7 +1129,7 @@ inline acr::FAnonfld* acr::anonfld_Last() {
 
 // --- acr.FDb.anonfld.N
 // Return number of items in the pool
-inline i32 acr::anonfld_N() {
+inline i64 acr::anonfld_N() {
     return _db.anonfld_n;
 }
 
@@ -1171,7 +1171,7 @@ inline acr::FCdflt* acr::cdflt_Last() {
 
 // --- acr.FDb.cdflt.N
 // Return number of items in the pool
-inline i32 acr::cdflt_N() {
+inline i64 acr::cdflt_N() {
     return _db.cdflt_n;
 }
 
@@ -1213,7 +1213,7 @@ inline acr::FField* acr::field_Last() {
 
 // --- acr.FDb.field.N
 // Return number of items in the pool
-inline i32 acr::field_N() {
+inline i64 acr::field_N() {
     return _db.field_n;
 }
 
@@ -1255,7 +1255,7 @@ inline acr::FFile* acr::file_Last() {
 
 // --- acr.FDb.file.N
 // Return number of items in the pool
-inline i32 acr::file_N() {
+inline i64 acr::file_N() {
     return _db.file_n;
 }
 
@@ -1525,7 +1525,7 @@ inline acr::FSubstr* acr::substr_Last() {
 
 // --- acr.FDb.substr.N
 // Return number of items in the pool
-inline i32 acr::substr_N() {
+inline i64 acr::substr_N() {
     return _db.substr_n;
 }
 
@@ -1567,7 +1567,7 @@ inline acr::FSsimfile* acr::ssimfile_Last() {
 
 // --- acr.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 acr::ssimfile_N() {
+inline i64 acr::ssimfile_N() {
     return _db.ssimfile_n;
 }
 
@@ -1609,7 +1609,7 @@ inline acr::FTempkey* acr::tempkey_Last() {
 
 // --- acr.FDb.tempkey.N
 // Return number of items in the pool
-inline i32 acr::tempkey_N() {
+inline i64 acr::tempkey_N() {
     return _db.tempkey_n;
 }
 
@@ -1719,7 +1719,7 @@ inline acr::FSsimsort* acr::ssimsort_Last() {
 
 // --- acr.FDb.ssimsort.N
 // Return number of items in the pool
-inline i32 acr::ssimsort_N() {
+inline i64 acr::ssimsort_N() {
     return _db.ssimsort_n;
 }
 
@@ -1773,7 +1773,7 @@ inline acr::FSmallstr* acr::smallstr_Last() {
 
 // --- acr.FDb.smallstr.N
 // Return number of items in the pool
-inline i32 acr::smallstr_N() {
+inline i64 acr::smallstr_N() {
     return _db.smallstr_n;
 }
 
@@ -1815,7 +1815,7 @@ inline acr::FFunique* acr::funique_Last() {
 
 // --- acr.FDb.funique.N
 // Return number of items in the pool
-inline i32 acr::funique_N() {
+inline i64 acr::funique_N() {
     return _db.funique_n;
 }
 
@@ -1869,7 +1869,7 @@ inline acr::FBltin* acr::bltin_Last() {
 
 // --- acr.FDb.bltin.N
 // Return number of items in the pool
-inline i32 acr::bltin_N() {
+inline i64 acr::bltin_N() {
     return _db.bltin_n;
 }
 
@@ -1941,7 +1941,7 @@ inline acr::FCppfunc* acr::cppfunc_Last() {
 
 // --- acr.FDb.cppfunc.N
 // Return number of items in the pool
-inline i32 acr::cppfunc_N() {
+inline i64 acr::cppfunc_N() {
     return _db.cppfunc_n;
 }
 
@@ -1983,7 +1983,7 @@ inline acr::FSsimreq* acr::ssimreq_Last() {
 
 // --- acr.FDb.ssimreq.N
 // Return number of items in the pool
-inline i32 acr::ssimreq_N() {
+inline i64 acr::ssimreq_N() {
     return _db.ssimreq_n;
 }
 
@@ -2005,7 +2005,7 @@ inline bool acr::c_ssimreq_rec_EmptyQ() {
 
 // --- acr.FDb.c_ssimreq_rec.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FRec* acr::c_ssimreq_rec_Find(u32 t) {
+inline acr::FRec* acr::c_ssimreq_rec_Find(u64 t) {
     acr::FRec *retval = NULL;
     u64 idx = t;
     u64 lim = _db.c_ssimreq_rec_n;
@@ -2023,14 +2023,14 @@ inline algo::aryptr<acr::FRec*> acr::c_ssimreq_rec_Getary() {
 
 // --- acr.FDb.c_ssimreq_rec.N
 // Return number of items in the pointer array
-inline i32 acr::c_ssimreq_rec_N() {
+inline i64 acr::c_ssimreq_rec_N() {
     return _db.c_ssimreq_rec_n;
 }
 
 // --- acr.FDb.c_ssimreq_rec.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void acr::c_ssimreq_rec_RemoveAll() {
-    for (u32 i = 0; i < _db.c_ssimreq_rec_n; i++) {
+    for (u64 i = 0; i < _db.c_ssimreq_rec_n; i++) {
         // mark all elements as not-in-array
         _db.c_ssimreq_rec_elems[i]->c_ssimreq_rec_in_ary = false;
     }
@@ -2039,7 +2039,7 @@ inline void acr::c_ssimreq_rec_RemoveAll() {
 
 // --- acr.FDb.c_ssimreq_rec.qFind
 // Return reference without bounds checking
-inline acr::FRec& acr::c_ssimreq_rec_qFind(u32 idx) {
+inline acr::FRec& acr::c_ssimreq_rec_qFind(u64 idx) {
     return *_db.c_ssimreq_rec_elems[idx];
 }
 
@@ -2063,7 +2063,7 @@ inline bool acr::c_ctype_front_EmptyQ() {
 
 // --- acr.FDb.c_ctype_front.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FCtype* acr::c_ctype_front_Find(u32 t) {
+inline acr::FCtype* acr::c_ctype_front_Find(u64 t) {
     acr::FCtype *retval = NULL;
     u64 idx = t;
     u64 lim = _db.c_ctype_front_n;
@@ -2081,14 +2081,14 @@ inline algo::aryptr<acr::FCtype*> acr::c_ctype_front_Getary() {
 
 // --- acr.FDb.c_ctype_front.N
 // Return number of items in the pointer array
-inline i32 acr::c_ctype_front_N() {
+inline i64 acr::c_ctype_front_N() {
     return _db.c_ctype_front_n;
 }
 
 // --- acr.FDb.c_ctype_front.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void acr::c_ctype_front_RemoveAll() {
-    for (u32 i = 0; i < _db.c_ctype_front_n; i++) {
+    for (u64 i = 0; i < _db.c_ctype_front_n; i++) {
         // mark all elements as not-in-array
         _db.c_ctype_front_elems[i]->c_ctype_front_in_ary = false;
     }
@@ -2097,7 +2097,7 @@ inline void acr::c_ctype_front_RemoveAll() {
 
 // --- acr.FDb.c_ctype_front.qFind
 // Return reference without bounds checking
-inline acr::FCtype& acr::c_ctype_front_qFind(u32 idx) {
+inline acr::FCtype& acr::c_ctype_front_qFind(u64 idx) {
     return *_db.c_ctype_front_elems[idx];
 }
 
@@ -2141,7 +2141,7 @@ inline acr::FSortkey* acr::sortkey_Last() {
 
 // --- acr.FDb.sortkey.N
 // Return number of items in the pool
-inline i32 acr::sortkey_N() {
+inline i64 acr::sortkey_N() {
     return _db.sortkey_n;
 }
 
@@ -2834,7 +2834,7 @@ inline  acr::FEvalattr::FEvalattr() {
 }
 
 // --- acr.FEvalattr..FieldwiseCtor
-inline  acr::FEvalattr::FEvalattr(bool in_pick_dflt, bool in_normalize, acr::FField* in_field, algo::Attr* in_attr, const algo::strptr& in_value, const algo::i32_Range& in_val_range)
+inline  acr::FEvalattr::FEvalattr(bool in_pick_dflt, bool in_normalize, acr::FField* in_field, algo::Attr* in_attr, const algo::strptr& in_value, algo::i32_Range in_val_range)
     : pick_dflt(in_pick_dflt)
     , normalize(in_normalize)
     , field(in_field)
@@ -2933,6 +2933,7 @@ inline void acr::FFile_Init(acr::FFile& file) {
     file.zd_frec_head = NULL; // (acr.FFile.zd_frec)
     file.zd_frec_tail = NULL; // (acr.FFile.zd_frec)
     file.autoloaded = bool(false);
+    file.stdin = bool(false);
     file.ind_file_next = (acr::FFile*)-1; // (acr.FDb.ind_file) not-in-hash
     file.ind_file_hashval = 0; // stored hash value
 }
@@ -3264,7 +3265,7 @@ inline bool acr::c_pline_EmptyQ(acr::FPrint& print) {
 
 // --- acr.FPrint.c_pline.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FPline* acr::c_pline_Find(acr::FPrint& print, u32 t) {
+inline acr::FPline* acr::c_pline_Find(acr::FPrint& print, u64 t) {
     acr::FPline *retval = NULL;
     u64 idx = t;
     u64 lim = print.c_pline_n;
@@ -3282,7 +3283,7 @@ inline algo::aryptr<acr::FPline*> acr::c_pline_Getary(acr::FPrint& print) {
 
 // --- acr.FPrint.c_pline.N
 // Return number of items in the pointer array
-inline i32 acr::c_pline_N(const acr::FPrint& print) {
+inline i64 acr::c_pline_N(const acr::FPrint& print) {
     return print.c_pline_n;
 }
 
@@ -3294,7 +3295,7 @@ inline void acr::c_pline_RemoveAll(acr::FPrint& print) {
 
 // --- acr.FPrint.c_pline.qFind
 // Return reference without bounds checking
-inline acr::FPline& acr::c_pline_qFind(acr::FPrint& print, u32 idx) {
+inline acr::FPline& acr::c_pline_qFind(acr::FPrint& print, u64 idx) {
     return *print.c_pline_elems[idx];
 }
 
@@ -3427,21 +3428,21 @@ inline acr::AttrRegx* acr::where_Last(acr::FQuery& query) {
 
 // --- acr.FQuery.where.Max
 // Return max. number of items in the array
-inline i32 acr::where_Max(acr::FQuery& query) {
+inline i64 acr::where_Max(acr::FQuery& query) {
     (void)query;
     return query.where_max;
 }
 
 // --- acr.FQuery.where.N
 // Return number of items in the array
-inline i32 acr::where_N(const acr::FQuery& query) {
+inline i64 acr::where_N(const acr::FQuery& query) {
     return query.where_n;
 }
 
 // --- acr.FQuery.where.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void acr::where_Reserve(acr::FQuery& query, int n) {
-    u32 new_n = query.where_n + n;
+inline void acr::where_Reserve(acr::FQuery& query, i64 n) {
+    u64 new_n = query.where_n + n;
     if (UNLIKELY(new_n > query.where_max)) {
         where_AbsReserve(query, new_n);
     }
@@ -3474,7 +3475,7 @@ inline bool acr::c_ctype_EmptyQ(acr::FQuery& query) {
 
 // --- acr.FQuery.c_ctype.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FCtype* acr::c_ctype_Find(acr::FQuery& query, u32 t) {
+inline acr::FCtype* acr::c_ctype_Find(acr::FQuery& query, u64 t) {
     acr::FCtype *retval = NULL;
     u64 idx = t;
     u64 lim = query.c_ctype_n;
@@ -3492,7 +3493,7 @@ inline algo::aryptr<acr::FCtype*> acr::c_ctype_Getary(acr::FQuery& query) {
 
 // --- acr.FQuery.c_ctype.N
 // Return number of items in the pointer array
-inline i32 acr::c_ctype_N(const acr::FQuery& query) {
+inline i64 acr::c_ctype_N(const acr::FQuery& query) {
     return query.c_ctype_n;
 }
 
@@ -3504,7 +3505,7 @@ inline void acr::c_ctype_RemoveAll(acr::FQuery& query) {
 
 // --- acr.FQuery.c_ctype.qFind
 // Return reference without bounds checking
-inline acr::FCtype& acr::c_ctype_qFind(acr::FQuery& query, u32 idx) {
+inline acr::FCtype& acr::c_ctype_qFind(acr::FQuery& query, u64 idx) {
     return *query.c_ctype_elems[idx];
 }
 
@@ -3522,7 +3523,7 @@ inline bool acr::c_field_EmptyQ(acr::FQuery& query) {
 
 // --- acr.FQuery.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FField* acr::c_field_Find(acr::FQuery& query, u32 t) {
+inline acr::FField* acr::c_field_Find(acr::FQuery& query, u64 t) {
     acr::FField *retval = NULL;
     u64 idx = t;
     u64 lim = query.c_field_n;
@@ -3540,7 +3541,7 @@ inline algo::aryptr<acr::FField*> acr::c_field_Getary(acr::FQuery& query) {
 
 // --- acr.FQuery.c_field.N
 // Return number of items in the pointer array
-inline i32 acr::c_field_N(const acr::FQuery& query) {
+inline i64 acr::c_field_N(const acr::FQuery& query) {
     return query.c_field_n;
 }
 
@@ -3552,7 +3553,7 @@ inline void acr::c_field_RemoveAll(acr::FQuery& query) {
 
 // --- acr.FQuery.c_field.qFind
 // Return reference without bounds checking
-inline acr::FField& acr::c_field_qFind(acr::FQuery& query, u32 idx) {
+inline acr::FField& acr::c_field_qFind(acr::FQuery& query, u64 idx) {
     return *query.c_field_elems[idx];
 }
 
@@ -3570,7 +3571,7 @@ inline bool acr::c_rec_EmptyQ(acr::FQuery& query) {
 
 // --- acr.FQuery.c_rec.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FRec* acr::c_rec_Find(acr::FQuery& query, u32 t) {
+inline acr::FRec* acr::c_rec_Find(acr::FQuery& query, u64 t) {
     acr::FRec *retval = NULL;
     u64 idx = t;
     u64 lim = query.c_rec_n;
@@ -3588,7 +3589,7 @@ inline algo::aryptr<acr::FRec*> acr::c_rec_Getary(acr::FQuery& query) {
 
 // --- acr.FQuery.c_rec.N
 // Return number of items in the pointer array
-inline i32 acr::c_rec_N(const acr::FQuery& query) {
+inline i64 acr::c_rec_N(const acr::FQuery& query) {
     return query.c_rec_n;
 }
 
@@ -3600,7 +3601,7 @@ inline void acr::c_rec_RemoveAll(acr::FQuery& query) {
 
 // --- acr.FQuery.c_rec.qFind
 // Return reference without bounds checking
-inline acr::FRec& acr::c_rec_qFind(acr::FQuery& query, u32 idx) {
+inline acr::FRec& acr::c_rec_qFind(acr::FQuery& query, u64 idx) {
     return *query.c_rec_elems[idx];
 }
 
@@ -3899,7 +3900,7 @@ inline bool acr::c_cmtrec_EmptyQ(acr::FWrite& write) {
 
 // --- acr.FWrite.c_cmtrec.Find
 // Look up row by row id. Return NULL if out of range
-inline acr::FRec* acr::c_cmtrec_Find(acr::FWrite& write, u32 t) {
+inline acr::FRec* acr::c_cmtrec_Find(acr::FWrite& write, u64 t) {
     acr::FRec *retval = NULL;
     u64 idx = t;
     u64 lim = write.c_cmtrec_n;
@@ -3917,7 +3918,7 @@ inline algo::aryptr<acr::FRec*> acr::c_cmtrec_Getary(acr::FWrite& write) {
 
 // --- acr.FWrite.c_cmtrec.N
 // Return number of items in the pointer array
-inline i32 acr::c_cmtrec_N(const acr::FWrite& write) {
+inline i64 acr::c_cmtrec_N(const acr::FWrite& write) {
     return write.c_cmtrec_n;
 }
 
@@ -3929,7 +3930,7 @@ inline void acr::c_cmtrec_RemoveAll(acr::FWrite& write) {
 
 // --- acr.FWrite.c_cmtrec.qFind
 // Return reference without bounds checking
-inline acr::FRec& acr::c_cmtrec_qFind(acr::FWrite& write, u32 idx) {
+inline acr::FRec& acr::c_cmtrec_qFind(acr::FWrite& write, u64 idx) {
     return *write.c_cmtrec_elems[idx];
 }
 
@@ -4039,7 +4040,7 @@ inline  acr::ReadMode::operator acr_ReadModeEnum() const {
 }
 
 // --- acr.ReadMode..Cmp
-inline i32 acr::ReadMode_Cmp(acr::ReadMode& lhs, acr::ReadMode& rhs) {
+inline i32 acr::ReadMode_Cmp(acr::ReadMode lhs, acr::ReadMode rhs) {
     i32 retval = 0;
     retval = u8_Cmp(lhs.read_mode, rhs.read_mode);
     return retval;
@@ -4052,7 +4053,7 @@ inline void acr::ReadMode_Init(acr::ReadMode& parent) {
 }
 
 // --- acr.ReadMode..Eq
-inline bool acr::ReadMode_Eq(acr::ReadMode& lhs, acr::ReadMode& rhs) {
+inline bool acr::ReadMode_Eq(acr::ReadMode lhs, acr::ReadMode rhs) {
     bool retval = true;
     retval = u8_Eq(lhs.read_mode, rhs.read_mode);
     return retval;

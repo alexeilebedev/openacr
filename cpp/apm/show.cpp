@@ -21,18 +21,25 @@
 
 #include "include/algo.h"
 #include "include/apm.h"
+#include "include/sha.h"
 
 // -----------------------------------------------------------------------------
 
 // Topologically sort selected records and save them to file RECFILE
 // Return success code
+// Every apm action that needs these records reads them back from RECFILE rather
+// than from the selection they were written from, so a write that fails leaves
+// the file absent and every reader after it sees an empty record set. The
+// failure is reported here, at the one place that performs the write, naming the
+// file and the decoded errno; what a failed write means for the run is the
+// caller's to decide.
 bool apm::SaveSelrecToFile(algo::strptr recfile) {
     tempstr recs;
     DeleteFile(recfile);
     ind_beg(_db_zd_selrec_curs,rec,_db) {
         recs << rec.tuple << eol;
     }ind_end;
-    return SafeStringToFile(recs,recfile);
+    return algo::SaveFile(recs,recfile,"apm.recfile_write","package records could not be written; the records they select were not acted on");
 }
 
 // -----------------------------------------------------------------------------
@@ -61,11 +68,22 @@ void apm::SavePackageDefs(algo::strptr filename) {
 // -----------------------------------------------------------------------------
 
 // Collect package records from directory DIR into RECFILE
+// Return success code
 // We run our executable in the remote directory to get predictable results
-void apm::CollectPkgrecFromDir(algo::strptr package, algo::strptr recfile, algo::strptr dir) {
+// The caller reads the records back from RECFILE, and the child's stdout
+// redirect truncates RECFILE before the child runs. A child that fails
+// therefore leaves an empty file, which reads exactly like a directory whose
+// copy of the package holds no record at all -- and a merge given that empty
+// side concludes the package's records were all deleted. The wait status is the
+// only thing that tells the two apart, so it is reported here, at the one place
+// that runs the child; what an unread side means for the run is the caller's to
+// decide.
+// The child is started inside DIR and waited for after the current directory is
+// restored, so nothing that reports the failure runs while DIR is pushed.
+bool apm::CollectPkgrecFromDir(algo::strptr package, algo::strptr recfile, algo::strptr dir) {
     tempstr full_recfile=DirFileJoin(algo::GetCurDir(),recfile);
     command::apm_proc apm;
-    apm.path = DirFileJoin(algo::GetCurDir(),"bin/apm");
+    apm.path = GetApmPath(dir);
     if (_db.cmdline.l) { // use local package definitions
         apm.cmd.pkgdata = DirFileJoin(algo::GetCurDir(),_db.pkgdata_recfile);
     }
@@ -75,9 +93,18 @@ void apm::CollectPkgrecFromDir(algo::strptr package, algo::strptr recfile, algo:
     apm.cmd.t=_db.cmdline.t;
     // make filename absolute because we're now in a different directory
     apm.fstdout << ">"<<full_recfile;
-    // #AL# todo: failure?
-    apm_Exec(apm);
+    apm_Start(apm);
     algo_lib::PopDir();
+    apm_Wait(apm);
+    bool ok = apm.status==0;
+    if (!ok) {
+        prerr("apm.pkgrec_read"
+              <<Keyval("dir",dir)
+              <<Keyval("recfile",recfile)
+              <<Keyval("status",algo::DescribeWaitStatus(apm.status))
+              <<Keyval("comment","package records could not be read from the directory"));
+    }
+    return ok;
 }
 
 // -----------------------------------------------------------------------------
@@ -135,6 +162,73 @@ void apm::Main_Showfile() {
         rec=next;
     }
     zd_selrec_RemoveAll();
+}
+
+// -----------------------------------------------------------------------------
+
+static tempstr ComputeSha1(strptr gitfile) {
+    Sha1Ctx sha1;
+    tempstr content = algo::FileToString(gitfile);
+    Update(sha1,algo::strptr_ToMemptr(content));
+    Finish(sha1);
+    algo::Sha1sig sig = GetDigest(sha1);
+    tempstr out;
+    strptr_PrintBase64(algo::memptr_ToStrptr(sha1sig_Getary(sig)), out);
+    return out;
+}
+
+static bool GenFileQ(strptr gitfile) {
+    bool ret = false;
+    ret |= StartsWithQ(gitfile, "apm/gen/");
+    ret |= StartsWithQ(gitfile, "aws/gen/");
+    ret |= StartsWithQ(gitfile, "cpp/gen/");
+    ret |= StartsWithQ(gitfile, "docker/gen/");
+    ret |= StartsWithQ(gitfile, "include/gen/");
+    ret |= StartsWithQ(gitfile, "js/gen/");
+    ret |= StartsWithQ(gitfile, "ts/gen/");
+    ret |= StartsWithQ(gitfile, "txt/gen/");
+    ret |= StartsWithQ(gitfile, "txt/ssimdb/");
+    return ret;
+}
+
+static tempstr ComputeSha1NoteMaybe(apm::FRec& rec) {
+    tempstr ret;
+    if (rec.p_ssimfile->ssimfile == dmmeta_Ssimfile_ssimfile_dev_gitfile) {
+        algo::Attr* attr = algo::attr_Find(rec.tuple, "gitfile");
+        if (attr && !GenFileQ(attr->value)) {
+            tempstr sha1 = ComputeSha1(attr->value);
+            ret << "# SHA1 = " << sha1 << eol;
+        }
+    }
+    return ret;
+}
+
+// Save package records into apm/gen/<package>.ssim
+void apm::Main_Generate() {
+    ind_beg(apm::_db_package_curs, package, apm::_db) {
+        if (Regx_Match(_db.cmdline.package, package.package)) {
+            zd_selrec_RemoveAll();
+            SelectPkgRecs(package);
+
+            apm::c_rec_RemoveAll();
+            ind_beg(apm::_db_zd_selrec_curs, rec, apm::_db) {
+                apm::c_rec_Insert(rec);
+            }ind_end;
+            apm::c_rec_QuickSort();
+
+            tempstr recs;
+            ind_beg(apm::_db_c_rec_curs, rec, apm::_db) {
+                // non-generated files get a comment with their SHA1 to track the changes
+                recs << ComputeSha1NoteMaybe(rec);
+                recs << rec.tuple << eol;
+            }ind_end;
+
+            tempstr pkg_file = tempstr("apm/gen/") << package.package << ".ssim";
+            vrfy(SafeStringToFile(recs, pkg_file), tempstr("apm.error")
+                 << Keyval("package", package.package)
+                 << Keyval("comment", "error creating records file"));
+        }
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------

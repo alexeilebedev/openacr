@@ -1,0 +1,3 @@
+This source code constitutes confidential information and trade secrets
+of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+via any medium, is strictly prohibited.

@@ -1,0 +1,4 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir ro bin && echo "echo hi" > ro/x.sh && echo "exit 0" > bin/src_func && chmod +x bin/src_func && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:% && cp ro/x.sh first && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:% && cmp ro/x.sh first && echo second_run_noop\''
+# eof bash
+bash -> second_run_noop
+# exit bash code:0

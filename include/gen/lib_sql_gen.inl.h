@@ -76,7 +76,7 @@ inline lib_sql::FAttr* lib_sql::attr_Last() {
 
 // --- lib_sql.FDb.attr.N
 // Return number of items in the pool
-inline i32 lib_sql::attr_N() {
+inline i64 lib_sql::attr_N() {
     return _db.attr_n;
 }
 

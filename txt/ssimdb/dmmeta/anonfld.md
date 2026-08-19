@@ -14,25 +14,17 @@ etc.
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Anonfld
 
 * file:[data/dmmeta/anonfld.ssim](/data/dmmeta/anonfld.ssim)
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [acr](/txt/exe/acr/internals.md) as [acr.FAnonfld](/txt/exe/acr/internals.md#acr-fanonfld)
-* [acr_compl](/txt/exe/acr_compl/internals.md) as [acr_compl.FAnonfld](/txt/exe/acr_compl/internals.md#acr_compl-fanonfld)
-* [amc](/txt/exe/amc/internals.md) as [amc.FAnonfld](/txt/exe/amc/internals.md#amc-fanonfld)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [acr](/txt/gen/acr/acr.md) as [acr.FAnonfld](/txt/gen/acr/acr.md#acr-fanonfld)
+* [acr_compl](/txt/gen/acr_compl/acr_compl.md) as [acr_compl.FAnonfld](/txt/gen/acr_compl/acr_compl.md#acr_compl-fanonfld)
+* [amc](/txt/gen/amc/amc.md) as [amc.FAnonfld](/txt/gen/amc/amc.md#amc-fanonfld)

@@ -34,8 +34,8 @@
 
 // --- src_func_FieldIdEnum
 
-enum src_func_FieldIdEnum {        // src_func.FieldId.value
-     src_func_FieldId_value   = 0
+enum src_func_FieldIdEnum {    // src_func.FieldId.value
+     src_func_FieldId_value
 };
 
 enum { src_func_FieldIdEnum_N = 1 };
@@ -46,20 +46,21 @@ enum { src_func_FieldIdEnum_N = 1 };
 enum src_func_TableIdEnum {                   // src_func.TableId.value
      src_func_TableId_dmmeta_Ctypelen   = 0   // dmmeta.Ctypelen -> src_func.FCtypelen
     ,src_func_TableId_dmmeta_ctypelen   = 0   // dmmeta.ctypelen -> src_func.FCtypelen
-    ,src_func_TableId_dev_Target        = 1   // dev.Target -> src_func.FTarget
-    ,src_func_TableId_dev_target        = 1   // dev.target -> src_func.FTarget
-    ,src_func_TableId_dev_Targsrc       = 2   // dev.Targsrc -> src_func.FTargsrc
-    ,src_func_TableId_dev_targsrc       = 2   // dev.targsrc -> src_func.FTargsrc
-    ,src_func_TableId_dmmeta_Userfunc   = 3   // dmmeta.Userfunc -> src_func.FUserfunc
-    ,src_func_TableId_dmmeta_userfunc   = 3   // dmmeta.userfunc -> src_func.FUserfunc
+    ,src_func_TableId_dev_Gitfile       = 1   // dev.Gitfile -> src_func.FGitfile
+    ,src_func_TableId_dev_gitfile       = 1   // dev.gitfile -> src_func.FGitfile
+    ,src_func_TableId_dev_Target        = 2   // dev.Target -> src_func.FTarget
+    ,src_func_TableId_dev_target        = 2   // dev.target -> src_func.FTarget
+    ,src_func_TableId_dev_Targsrc       = 3   // dev.Targsrc -> src_func.FTargsrc
+    ,src_func_TableId_dev_targsrc       = 3   // dev.targsrc -> src_func.FTargsrc
+    ,src_func_TableId_dmmeta_Userfunc   = 4   // dmmeta.Userfunc -> src_func.FUserfunc
+    ,src_func_TableId_dmmeta_userfunc   = 4   // dmmeta.userfunc -> src_func.FUserfunc
 };
 
-enum { src_func_TableIdEnum_N = 8 };
+enum { src_func_TableIdEnum_N = 10 };
 
 namespace src_func { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace src_func { // gen:ns_tclass_field
-extern const char *src_func_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace src_func { struct FTargsrc; }
@@ -72,6 +73,7 @@ namespace src_func { struct _db_bh_func_curs; }
 namespace src_func { struct _db_ctypelen_curs; }
 namespace src_func { struct _db_userfunc_curs; }
 namespace src_func { struct _db_genaffix_curs; }
+namespace src_func { struct _db_gitfile_curs; }
 namespace src_func { struct target_cd_targsrc_curs; }
 namespace src_func { struct targsrc_zd_func_curs; }
 namespace src_func { struct userfunc_zd_func_curs; }
@@ -80,6 +82,7 @@ namespace src_func { struct trace; }
 namespace src_func { struct FDb; }
 namespace src_func { struct FFunc; }
 namespace src_func { struct FGenaffix; }
+namespace src_func { struct FGitfile; }
 namespace src_func { struct FieldId; }
 namespace src_func { struct TableId; }
 namespace src_func { extern struct src_func::FDb _db; }
@@ -94,7 +97,7 @@ struct FCtypelen { // src_func.FCtypelen
     u32                    len;                    //   0  (calculated) length of the C++ struct in bytes
     i32                    alignment;              //   0  (calculated) alignment for the struct
     i32                    padbytes;               //   0  (calculated) total # of pad bytes
-    bool                   plaindata;              //   false  (calculated) this struct can me safely memcpy'ed
+    bool                   plaindata;              //   false  (calculated) can safely call memcpy on this struct
     src_func::FCtypelen*   ind_ctypelen_next;      // hash next
     u32                    ind_ctypelen_hashval;   // hash value
     // func:src_func.FCtypelen..AssignOp
@@ -111,7 +114,6 @@ private:
     friend void                 ctypelen_RemoveAll() __attribute__((nothrow));
     friend void                 ctypelen_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_func.FCtypelen.base.CopyOut
 void                 ctypelen_CopyOut(src_func::FCtypelen &row, dmmeta::Ctypelen &out) __attribute__((nothrow));
@@ -132,7 +134,6 @@ struct trace { // src_func.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:src_func.trace.String  printfmt:Tuple
 // func:src_func.trace..Print
@@ -143,15 +144,15 @@ void                 trace_Print(src_func::trace& row, algo::cstring& str) __att
 struct FDb { // src_func.FDb: In-memory database for src_func
     report::src_func        report;                               // Final report
     command::src_func       cmdline;                              //
-    src_func::FTargsrc*     targsrc_lary[32];                     // level array
-    i32                     targsrc_n;                            // number of elements in array
-    src_func::FTarget*      target_lary[32];                      // level array
-    i32                     target_n;                             // number of elements in array
+    src_func::FTargsrc*     targsrc_lary[36];                     // level array
+    i64                     targsrc_n;                            // number of elements in array
+    src_func::FTarget*      target_lary[36];                      // level array
+    i64                     target_n;                             // number of elements in array
     src_func::FTarget**     ind_target_buckets_elems;             // pointer to bucket array
     i32                     ind_target_buckets_n;                 // number of elements in bucket array
     i32                     ind_target_n;                         // number of elements in the hash table
-    src_func::FFunc*        func_lary[32];                        // level array
-    i32                     func_n;                               // number of elements in array
+    src_func::FFunc*        func_lary[36];                        // level array
+    i64                     func_n;                               // number of elements in array
     src_func::FFunc**       ind_func_buckets_elems;               // pointer to bucket array
     i32                     ind_func_buckets_n;                   // number of elements in bucket array
     i32                     ind_func_n;                           // number of elements in the hash table
@@ -161,14 +162,14 @@ struct FDb { // src_func.FDb: In-memory database for src_func
     src_func::FTargsrc*     c_cur_targsrc;                        // optional pointer
     i32                     cur_line;                             //   0
     algo_lib::Regx          ignore_funcstart;                     //
-    src_func::FCtypelen*    ctypelen_lary[32];                    // level array
-    i32                     ctypelen_n;                           // number of elements in array
+    src_func::FCtypelen*    ctypelen_lary[36];                    // level array
+    i64                     ctypelen_n;                           // number of elements in array
     src_func::FCtypelen**   ind_ctypelen_buckets_elems;           // pointer to bucket array
     i32                     ind_ctypelen_buckets_n;               // number of elements in bucket array
     i32                     ind_ctypelen_n;                       // number of elements in the hash table
     bool                    printed_user_impl_notice;             //   false
-    src_func::FUserfunc*    userfunc_lary[32];                    // level array
-    i32                     userfunc_n;                           // number of elements in array
+    src_func::FUserfunc*    userfunc_lary[36];                    // level array
+    i64                     userfunc_n;                           // number of elements in array
     src_func::FUserfunc**   ind_userfunc_buckets_elems;           // pointer to bucket array
     i32                     ind_userfunc_buckets_n;               // number of elements in bucket array
     i32                     ind_userfunc_n;                       // number of elements in the hash table
@@ -176,18 +177,20 @@ struct FDb { // src_func.FDb: In-memory database for src_func
     i32                     ind_userfunc_cppname_buckets_n;       // number of elements in bucket array
     i32                     ind_userfunc_cppname_n;               // number of elements in the hash table
     algo::cstring           editloc;                              // List of locations to edit
-    src_func::FGenaffix*    genaffix_lary[32];                    // level array
-    i32                     genaffix_n;                           // number of elements in array
+    src_func::FGenaffix*    genaffix_lary[36];                    // level array
+    i64                     genaffix_n;                           // number of elements in array
     src_func::FGenaffix**   ind_genaffix_buckets_elems;           // pointer to bucket array
     i32                     ind_genaffix_buckets_n;               // number of elements in bucket array
     i32                     ind_genaffix_n;                       // number of elements in the hash table
+    src_func::FGitfile*     gitfile_lary[36];                     // level array
+    i64                     gitfile_n;                            // number of elements in array
+    src_func::FGitfile**    ind_gitfile_buckets_elems;            // pointer to bucket array
+    i32                     ind_gitfile_buckets_n;                // number of elements in bucket array
+    i32                     ind_gitfile_n;                        // number of elements in the hash table
     src_func::trace         trace;                                //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     src_func.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of src_func.FDb.cmdline (and any base command line)
+// via src_func_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:src_func.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -224,6 +227,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:src_func.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:src_func.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:src_func.FDb._db.XrefMaybe
@@ -254,7 +261,7 @@ inline src_func::FTargsrc* targsrc_Find(u64 t) __attribute__((__warn_unused_resu
 inline src_func::FTargsrc* targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_func.FDb.targsrc.N
-inline i32           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_func.FDb.targsrc.RemoveLast
 void                 targsrc_RemoveLast() __attribute__((nothrow));
@@ -291,7 +298,7 @@ inline src_func::FTarget* target_Find(u64 t) __attribute__((__warn_unused_result
 inline src_func::FTarget* target_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_func.FDb.target.N
-inline i32           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_func.FDb.target.RemoveLast
 void                 target_RemoveLast() __attribute__((nothrow));
@@ -352,7 +359,7 @@ inline src_func::FFunc* func_Find(u64 t) __attribute__((__warn_unused_result__, 
 inline src_func::FFunc* func_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_func.FDb.func.N
-inline i32           func_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           func_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_func.FDb.func.RemoveAll
 void                 func_RemoveAll() __attribute__((nothrow));
@@ -376,6 +383,9 @@ src_func::FFunc*     ind_func_Find(const algo::strptr& key) __attribute__((__war
 // Look up row by key and return reference. Throw exception if not found
 // func:src_func.FDb.ind_func.FindX
 src_func::FFunc&     ind_func_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:src_func.FDb.ind_func.GetOrCreate
+src_func::FFunc*     ind_func_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:src_func.FDb.ind_func.N
 inline i32           ind_func_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -459,7 +469,7 @@ inline src_func::FCtypelen* ctypelen_Find(u64 t) __attribute__((__warn_unused_re
 inline src_func::FCtypelen* ctypelen_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_func.FDb.ctypelen.N
-inline i32           ctypelen_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ctypelen_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_func.FDb.ctypelen.RemoveAll
 void                 ctypelen_RemoveAll() __attribute__((nothrow));
@@ -527,7 +537,7 @@ inline src_func::FUserfunc* userfunc_Find(u64 t) __attribute__((__warn_unused_re
 inline src_func::FUserfunc* userfunc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_func.FDb.userfunc.N
-inline i32           userfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           userfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_func.FDb.userfunc.RemoveAll
 void                 userfunc_RemoveAll() __attribute__((nothrow));
@@ -551,6 +561,9 @@ src_func::FUserfunc* ind_userfunc_Find(const algo::strptr& key) __attribute__((_
 // Look up row by key and return reference. Throw exception if not found
 // func:src_func.FDb.ind_userfunc.FindX
 src_func::FUserfunc& ind_userfunc_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:src_func.FDb.ind_userfunc.GetOrCreate
+src_func::FUserfunc* ind_userfunc_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:src_func.FDb.ind_userfunc.N
 inline i32           ind_userfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -576,6 +589,9 @@ src_func::FUserfunc* ind_userfunc_cppname_Find(const algo::strptr& key) __attrib
 // Look up row by key and return reference. Throw exception if not found
 // func:src_func.FDb.ind_userfunc_cppname.FindX
 src_func::FUserfunc& ind_userfunc_cppname_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:src_func.FDb.ind_userfunc_cppname.GetOrCreate
+src_func::FUserfunc* ind_userfunc_cppname_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:src_func.FDb.ind_userfunc_cppname.N
 inline i32           ind_userfunc_cppname_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -613,7 +629,7 @@ inline src_func::FGenaffix* genaffix_Find(u64 t) __attribute__((__warn_unused_re
 inline src_func::FGenaffix* genaffix_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_func.FDb.genaffix.N
-inline i32           genaffix_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           genaffix_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_func.FDb.genaffix.RemoveAll
 void                 genaffix_RemoveAll() __attribute__((nothrow));
@@ -655,6 +671,74 @@ void                 ind_genaffix_Reserve(int n) __attribute__((nothrow));
 // Reserve enough room for exacty N elements. Return success code.
 // func:src_func.FDb.ind_genaffix.AbsReserve
 void                 ind_genaffix_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:src_func.FDb.gitfile.Alloc
+src_func::FGitfile&  gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:src_func.FDb.gitfile.AllocMaybe
+src_func::FGitfile*  gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:src_func.FDb.gitfile.InsertMaybe
+src_func::FGitfile*  gitfile_InsertMaybe(const dev::Gitfile &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:src_func.FDb.gitfile.AllocMem
+void*                gitfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:src_func.FDb.gitfile.EmptyQ
+inline bool          gitfile_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:src_func.FDb.gitfile.Find
+inline src_func::FGitfile* gitfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:src_func.FDb.gitfile.Last
+inline src_func::FGitfile* gitfile_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:src_func.FDb.gitfile.N
+inline i64           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:src_func.FDb.gitfile.RemoveAll
+void                 gitfile_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:src_func.FDb.gitfile.RemoveLast
+void                 gitfile_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:src_func.FDb.gitfile.qFind
+inline src_func::FGitfile& gitfile_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_func.FDb.gitfile.XrefMaybe
+bool                 gitfile_XrefMaybe(src_func::FGitfile &row);
+
+// Return true if hash is empty
+// func:src_func.FDb.ind_gitfile.EmptyQ
+inline bool          ind_gitfile_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:src_func.FDb.ind_gitfile.Find
+src_func::FGitfile*  ind_gitfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:src_func.FDb.ind_gitfile.FindX
+src_func::FGitfile&  ind_gitfile_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:src_func.FDb.ind_gitfile.GetOrCreate
+src_func::FGitfile&  ind_gitfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:src_func.FDb.ind_gitfile.N
+inline i32           ind_gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:src_func.FDb.ind_gitfile.InsertMaybe
+bool                 ind_gitfile_InsertMaybe(src_func::FGitfile& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:src_func.FDb.ind_gitfile.Remove
+void                 ind_gitfile_Remove(src_func::FGitfile& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:src_func.FDb.ind_gitfile.Reserve
+void                 ind_gitfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:src_func.FDb.ind_gitfile.AbsReserve
+void                 ind_gitfile_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:src_func.FDb.targsrc_curs.Reset
@@ -742,6 +826,18 @@ inline void          _db_genaffix_curs_Next(_db_genaffix_curs &curs) __attribute
 // item access
 // func:src_func.FDb.genaffix_curs.Access
 inline src_func::FGenaffix& _db_genaffix_curs_Access(_db_genaffix_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:src_func.FDb.gitfile_curs.Reset
+inline void          _db_gitfile_curs_Reset(_db_gitfile_curs &curs, src_func::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:src_func.FDb.gitfile_curs.ValidQ
+inline bool          _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:src_func.FDb.gitfile_curs.Next
+inline void          _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__((nothrow));
+// item access
+// func:src_func.FDb.gitfile_curs.Access
+inline src_func::FGitfile& _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_func.FDb..Init
 void                 FDb_Init();
@@ -774,6 +870,7 @@ struct FFunc { // src_func.FFunc
     bool                   mystery;                 //   false  Non-static and missing a comment
     src_func::FTargsrc*    p_written_to;            // reference to parent row
     src_func::FUserfunc*   p_userfunc;              // reference to parent row
+    i32                    endline;                 //   0  Line where function definition ends
     src_func::FFunc*       targsrc_zd_func_next;    // zslist link; -1 means not-in-list
     src_func::FFunc*       targsrc_zd_func_prev;    // previous element
     src_func::FFunc*       userfunc_zd_func_next;   // zslist link; -1 means not-in-list
@@ -792,13 +889,11 @@ private:
     friend void                 func_RemoveAll() __attribute__((nothrow));
     friend void                 func_RemoveLast() __attribute__((nothrow));
 };
-
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:src_func.FFunc.sortkey.Lt
 inline bool          sortkey_Lt(src_func::FFunc& func, src_func::FFunc &rhs) __attribute__((nothrow));
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
-// Comparison is case-insensitive.
 // func:src_func.FFunc.sortkey.Cmp
 i32                  sortkey_Cmp(src_func::FFunc& func, src_func::FFunc &rhs) __attribute__((nothrow));
 
@@ -830,12 +925,49 @@ private:
     friend void                 genaffix_RemoveAll() __attribute__((nothrow));
     friend void                 genaffix_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:src_func.FGenaffix..Init
 inline void          FGenaffix_Init(src_func::FGenaffix& genaffix);
 // func:src_func.FGenaffix..Uninit
 void                 FGenaffix_Uninit(src_func::FGenaffix& genaffix) __attribute__((nothrow));
+
+// --- src_func.FGitfile
+// create: src_func.FDb.gitfile (Lary)
+// global access: gitfile (Lary, by rowid)
+// global access: ind_gitfile (Thash, hash field gitfile)
+struct FGitfile { // src_func.FGitfile
+    src_func::FGitfile*   ind_gitfile_next;      // hash next
+    u32                   ind_gitfile_hashval;   // hash value
+    algo::Smallstr200     gitfile;               //
+    // func:src_func.FGitfile..AssignOp
+    inline src_func::FGitfile& operator =(const src_func::FGitfile &rhs) = delete;
+    // func:src_func.FGitfile..CopyCtor
+    inline               FGitfile(const src_func::FGitfile &rhs) = delete;
+private:
+    // func:src_func.FGitfile..Ctor
+    inline               FGitfile() __attribute__((nothrow));
+    // func:src_func.FGitfile..Dtor
+    inline               ~FGitfile() __attribute__((nothrow));
+    friend src_func::FGitfile&  gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend src_func::FGitfile*  gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 gitfile_RemoveAll() __attribute__((nothrow));
+    friend void                 gitfile_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:src_func.FGitfile.base.CopyOut
+void                 gitfile_CopyOut(src_func::FGitfile &row, dev::Gitfile &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:src_func.FGitfile.base.CopyIn
+void                 gitfile_CopyIn(src_func::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
+
+// func:src_func.FGitfile.ext.Get
+algo::strptr         ext_Get(src_func::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:src_func.FGitfile..Init
+inline void          FGitfile_Init(src_func::FGitfile& gitfile);
+// func:src_func.FGitfile..Uninit
+void                 FGitfile_Uninit(src_func::FGitfile& gitfile) __attribute__((nothrow));
 
 // --- src_func.FTarget
 // create: src_func.FDb.target (Lary)
@@ -863,7 +995,6 @@ private:
     friend src_func::FTarget*   target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 target_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_func.FTarget.base.CopyOut
 void                 target_CopyOut(src_func::FTarget &row, dev::Target &out) __attribute__((nothrow));
@@ -941,7 +1072,7 @@ struct FTargsrc { // src_func.FTargsrc
     src_func::FTargsrc*   target_cd_targsrc_next;   // zslist link; -1 means not-in-list
     src_func::FTargsrc*   target_cd_targsrc_prev;   // previous element
     algo::Smallstr100     targsrc;                  //
-    algo::Comment         comment;                  //
+    algo::cstring         comment;                  //
     src_func::FFunc*      zd_func_head;             // zero-terminated doubly linked list
     i32                   zd_func_n;                // zero-terminated doubly linked list
     src_func::FFunc*      zd_func_tail;             // pointer to last element
@@ -965,7 +1096,6 @@ private:
     friend src_func::FTargsrc*  targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 targsrc_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_func.FTargsrc.base.CopyOut
 void                 targsrc_CopyOut(src_func::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
@@ -974,13 +1104,13 @@ void                 targsrc_CopyOut(src_func::FTargsrc &row, dev::Targsrc &out)
 void                 targsrc_CopyIn(src_func::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:src_func.FTargsrc.target.Get
-algo::Smallstr16     target_Get(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_func.FTargsrc.src.Get
-algo::Smallstr200    src_Get(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_func.FTargsrc.ext.Get
-algo::Smallstr10     ext_Get(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:src_func.FTargsrc.zd_func.EmptyQ
@@ -1018,6 +1148,9 @@ src_func::FFunc*     zd_func_RemoveFirst(src_func::FTargsrc& targsrc) __attribut
 // Return reference to last element in the index. No bounds checking.
 // func:src_func.FTargsrc.zd_func.qLast
 inline src_func::FFunc& zd_func_qLast(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:src_func.FTargsrc.zd_func.InsertBefore
+void                 zd_func_InsertBefore(src_func::FTargsrc& targsrc, src_func::FFunc& row, src_func::FFunc* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:src_func.FTargsrc..Init
@@ -1048,13 +1181,14 @@ struct FUserfunc { // src_func.FUserfunc
     u32                    ind_userfunc_hashval;           // hash value
     src_func::FUserfunc*   ind_userfunc_cppname_next;      // hash next
     u32                    ind_userfunc_cppname_hashval;   // hash value
-    algo::Smallstr50       userfunc;                       //
+    algo::Smallstr100      userfunc;                       // Primary key: as wide as dmmeta.Func.func, the key it is copied from
     algo::Smallstr200      acrkey;                         //
     algo::Smallstr100      cppname;                        //
-    algo::Comment          comment;                        //
+    algo::cstring          comment;                        //
     src_func::FFunc*       zd_func_head;                   // zero-terminated doubly linked list
     i32                    zd_func_n;                      // zero-terminated doubly linked list
     src_func::FFunc*       zd_func_tail;                   // pointer to last element
+    algo::cstring          proto;                          //   ""  Cached prototype from amc
     // reftype Llist of src_func.FUserfunc.zd_func prohibits copy
     // func:src_func.FUserfunc..AssignOp
     inline src_func::FUserfunc& operator =(const src_func::FUserfunc &rhs) = delete;
@@ -1071,7 +1205,6 @@ private:
     friend void                 userfunc_RemoveAll() __attribute__((nothrow));
     friend void                 userfunc_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_func.FUserfunc.base.CopyOut
 void                 userfunc_CopyOut(src_func::FUserfunc &row, dmmeta::Userfunc &out) __attribute__((nothrow));
@@ -1115,6 +1248,9 @@ src_func::FFunc*     zd_func_RemoveFirst(src_func::FUserfunc& userfunc) __attrib
 // Return reference to last element in the index. No bounds checking.
 // func:src_func.FUserfunc.zd_func.qLast
 inline src_func::FFunc& zd_func_qLast(src_func::FUserfunc& userfunc) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:src_func.FUserfunc.zd_func.InsertBefore
+void                 zd_func_InsertBefore(src_func::FUserfunc& userfunc, src_func::FFunc& row, src_func::FFunc* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:src_func.FUserfunc..Init
@@ -1148,7 +1284,6 @@ struct FieldId { // src_func.FieldId: Field read helper
     inline               FieldId(src_func_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:src_func.FieldId.value.GetEnum
 inline src_func_FieldIdEnum value_GetEnum(const src_func::FieldId& parent) __attribute__((nothrow));
@@ -1186,7 +1321,7 @@ inline void          FieldId_Init(src_func::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:src_func.FieldId.String  printfmt:Raw
 // func:src_func.FieldId..Print
-void                 FieldId_Print(src_func::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(src_func::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- src_func.TableId
 struct TableId { // src_func.TableId: Index of table in this namespace
@@ -1200,7 +1335,6 @@ struct TableId { // src_func.TableId: Index of table in this namespace
     // func:src_func.TableId..EnumCtor
     inline               TableId(src_func_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:src_func.TableId.value.GetEnum
 inline src_func_TableIdEnum value_GetEnum(const src_func::TableId& parent) __attribute__((nothrow));
@@ -1238,7 +1372,7 @@ inline void          TableId_Init(src_func::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:src_func.TableId.String  printfmt:Raw
 // func:src_func.TableId..Print
-void                 TableId_Print(src_func::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(src_func::TableId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace src_func { // gen:ns_curstext
 
@@ -1299,6 +1433,14 @@ struct _db_genaffix_curs {// cursor
     src_func::FDb *parent;
     i64 index;
     _db_genaffix_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_gitfile_curs {// cursor
+    typedef src_func::FGitfile ChildType;
+    src_func::FDb *parent;
+    i64 index;
+    _db_gitfile_curs(){ parent=NULL; index=0; }
 };
 
 

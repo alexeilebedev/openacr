@@ -1,0 +1,19 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir hdr src && printf "void Global() {\\n}\\nvoid named::Named() {\\n}\\n" > src/y.cpp && try(){ printf "$$2" > hdr/x.h; cp hdr/x.h orig; $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/sectionns.ssim -updateproto; echo $$1_code:$$?; cmp -s hdr/x.h orig && echo $$1_header:unchanged || echo $$1_header:rewritten; }; try anon "namespace { // update-hdr\\nvoid Old();\\n}\\n"; try named "namespace named { // update-hdr\\nvoid Old();\\n}\\n"; cat hdr/x.h\''
+# eof bash
+bash -> src_func.unnamed_section  file:hdr/x.h  comment:"update-hdr marker line names no namespace; file not rewritten"
+bash -> anon_code:1
+bash -> anon_header:unchanged
+bash -> named_code:0
+bash -> named_header:rewritten
+bash -> namespace named { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Named();
+bash -> }
+# exit bash code:0

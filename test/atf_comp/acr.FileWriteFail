@@ -1,0 +1,11 @@
+# start acr cmd:"$bindir/acr -in:test/acr/writefail -insert -write -g -print:N"
+acr <- dmmeta.dispsig  dispsig:xx.yy  signature:9
+acr <- dev.gitfile  gitfile:test/acr/writefail/newsrc
+# eof acr
+acr -> acr.file_write  file:test/acr/writefail/dmmeta/dispsig.ssim  err:"Not a directory"  comment:"output file could not be written"
+acr -> acr.file_write  file:test/acr/writefail/dev/gitfile.ssim  err:"Not a directory"  comment:"output file could not be written"
+acr -> # acr output script
+acr -> touch test/acr/writefail/newsrc
+acr -> git add test/acr/writefail/newsrc
+acr -> report.acr  n_select:2  n_insert:2  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+# exit acr code:2

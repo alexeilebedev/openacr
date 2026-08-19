@@ -1,0 +1,11 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.TestBitset  comment:""
+amc <- dmmeta.field  field:algo_lib.TestBitset.bits  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fbitset  field:algo_lib.TestBitset.bits  comment:""
+# eof amc
+amc -> amc.bitset_elem_size  fbitset:algo_lib.TestBitset.bits  arg:u32  comment:"element size unknown; add a dmmeta.csize row for the element type"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

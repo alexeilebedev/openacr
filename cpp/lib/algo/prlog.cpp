@@ -41,8 +41,8 @@ void algo::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) 
             // rich and slow case
             tempstr out;
             algo::UnTime time = algo::CurrUnTime() - algo::UnDiffSecs(double(get_cycles() - tstamp) / get_cpu_hz());
-            i32 pos(0);
-            i32 start(0);
+            i64 pos(0);
+            i64 start(0);
             while(pos<ch_N(str)) {
                 if (str[pos++] == '\n') {
                     // get whole line including eol
@@ -81,102 +81,87 @@ void algo::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) 
 
 // Enable or disable logcat tracing based on traace expression WHAT
 // WHAT is a comma-separated list of logcat regexes, e.g. a,b,c
-// Each component can be prefixed with + or -, e.g. +a,-b etc.
-// Finally, each component can be a key-value pair, e.g. +a:<filter>,-b,+c
+// Each component can be a key-value pair, e.g. a:<filter>,b,c
 // <filter> is an optional regex; Regex can be prefixed with ! to indicate a negative match.
-// Timestamps can be enabled with 'timestamps', disabled with '-timestamps'
-// Verbose can be enabled with 'verbose', disabled with '-verbose'
-// Debug can be enabled with 'debug', disabled with '-debug'
-int algo_lib::ApplyTrace(algo::strptr what) {
+// Timestamps can be controlled with 'timestamps'
+// Verbose can be controlled with 'verbose'
+// Debug can be controlled with 'debug'
+int algo_lib::ApplyTrace(algo::strptr what, bool enable DFLTVAL(true)) {
     int nmatch=0;
     for (; what != ""; what=Pathcomp(what, ",LR")) {
         algo::strptr expr=Pathcomp(what,",LL");
         algo::strptr name=Pathcomp(expr,":LL");
         algo::strptr filter=Pathcomp(expr,":LR");
-        nmatch += algo_lib::ApplyTrace(name,filter);
+        nmatch += algo_lib::ApplyTrace(name,filter,enable);
     }
     return nmatch;
 }
 
 // Enable/disable log category NAME with filter FILTER.
-// If NAME is prefixed with +, logging is enabled
-// If NAME is prefixed with -, logging is disabled
-// If NAME is an empty string. current state is printed
 // FILTER is a regex
 // If FILTER starts with !, it is a negative filter (any matching lines are omitted)
 // Return number of logcats affected.
-int algo_lib::ApplyTrace(algo::strptr name, algo::strptr filter) {
-    int change=0;
+// Changed logcats are marked, attribute changed = algo_lib::_db.clock
+int algo_lib::ApplyTrace(algo::strptr name, algo::strptr filter, bool enable DFLTVAL(true)) {
     int nmatch=0;
-    if (StartsWithQ(name,"+")) {
-        change=1;
-        name=ch_RestFrom(name,1);
-    } else if (StartsWithQ(name,"-")) {
-        change=-1;
-        name=ch_RestFrom(name,1);
-    } else {
-        change = name != "";
-    }
-    algo::strptr negfilter;
+    bool negfilter=false;
     if (StartsWithQ(filter,"!")) {
-        negfilter=RestFrom(filter,1);
-        filter="";
-    }
-    if (change<=0 && name=="") {
-        name="%";// show all, or disable all
+        filter=RestFrom(filter,1);
+        negfilter=true;
     }
     algo_lib::Regx name_regx;
     Regx_ReadSql(name_regx,name,true);
     ind_beg(algo_lib::_db_logcat_curs,logcat,algo_lib::_db) {
         if (!logcat.builtin && algo_lib::Regx_Match(name_regx, logcat.logcat)) {
             nmatch++;
-            if (change>0) {
+            bool changed = false;
+            if (enable) {
                 logcat.enabled=true;
-                logcat.nmsg=0;// reset message counter
+                changed=true;
                 if (filter!="") {
-                    Regx_ReadSql(logcat.filter,filter,false);
+                    Regx_ReadSql((negfilter ? logcat.negfilter : logcat.filter),filter,false);
                 }
-                if (negfilter!="") {
-                    Regx_ReadSql(logcat.negfilter,negfilter,false);
-                }
-            } else if (change<0) {
+            } else {
+                changed = logcat.enabled;
                 logcat.enabled=false;
-                logcat.nmsg=0;
                 algo::Refurbish(logcat.filter);
                 algo::Refurbish(logcat.negfilter);
             }
-            if (change) {
-                // update various internal flags based on logcats being enabled/disabled
-                // this allows selecting debug / verbose tracing at runtime,
-                // with regex filters
-                if (&logcat == &algo_lib_logcat_debug) {
-                    algo_lib::_db.cmdline.debug = logcat.enabled;
-                } else if (&logcat == &algo_lib_logcat_verbose2) {
-                    u8_UpdateMax(algo_lib::_db.cmdline.verbose, logcat.enabled*2);
-                } else if (&logcat == &algo_lib_logcat_verbose) {
-                    u8_UpdateMax(algo_lib::_db.cmdline.verbose, logcat.enabled);
-                } else if (&logcat == &algo_lib_logcat_timestamps) {
-                    algo_lib::_db.show_tstamp = logcat.enabled;
-                }
+            if (changed) {
+                logcat.changed = algo_lib::_db.clock;// mark as changed
+                logcat.nmsg=0;// reset message counter
+                logcat.suppress=false;// an operator's decision outranks the window in progress
+            }
+            // update various internal flags based on logcats being enabled/disabled
+            // this allows selecting debug / verbose tracing at runtime,
+            // with regex filters
+            if (&logcat == &algo_lib_logcat_debug) {
+                algo_lib::_db.cmdline.debug = logcat.enabled;
+            } else if (&logcat == &algo_lib_logcat_verbose2) {
+                u8_UpdateMax(algo_lib::_db.cmdline.verbose, logcat.enabled*2);
+            } else if (&logcat == &algo_lib_logcat_verbose) {
+                u8_UpdateMax(algo_lib::_db.cmdline.verbose, logcat.enabled);
+            } else if (&logcat == &algo_lib_logcat_timestamps) {
+                algo_lib::_db.show_tstamp = logcat.enabled;
             }
         }
     }ind_end;
     return nmatch;
 }
 
-void algo_lib::ShowTrace() {
-    ind_beg(algo_lib::_db_logcat_curs,logcat,algo_lib::_db) if (!logcat.builtin) {
-        if (logcat.enabled) {
-            prlog("trace"
-                  << Keyval("target",logcat.logcat)
-                  << Keyval("filter",logcat.filter.expr));
-        }
-    }ind_end;
-}
-
+// End LOGCAT's throttle window: lift the suppression and start a fresh count,
+// reporting how many messages the window turned away.
+//
+// The suppression is its own flag and never the enabled bit, because the two
+// facts have different owners: enabled is what the operator asked for, and
+// suppress is what the throttle is doing about the current window.  Written to
+// one field, an operator's `trace -disable` on a busy category survived only
+// until this hook ran, which restored the bit from whether traffic had arrived
+// -- so tracing resumed a window later, on a category the operator had turned
+// off and a report had confirmed as off.
 static void LogcatThrottleCheck(algo_lib::FLogcat &logcat) {
     int extra=logcat.nmsg - logcat.maxmsg;
-    logcat.enabled=logcat.nmsg>0;// re-enable if the message counter was non-zero
+    logcat.suppress=false;
     logcat.nmsg=0;
     if (extra > 0) {
         prlog_cat(logcat,extra<<" more messages suppressed");
@@ -191,22 +176,31 @@ static void LogcatThrottleCheck(algo_lib::FLogcat &logcat) {
 // In addition, if throttling is enabled on LOGCAT, block message
 // if more than MAXMSG are being printed within WINDOW secs. The counter
 // is reset every WINDOW secs.
+// The window's count is of messages this category *matched*, not of messages it
+// printed, which is what makes the suppressed tally at window end a real number.
+// Counting only what printed freezes the count at the cap -- nothing increments
+// it once suppression is on -- so the overflow reads as zero and an operator is
+// never told the trace they are reading is lossy.  TOTMSG stays the count of
+// messages that went out.
 bool algo_lib::LogcatFilterQ(algo_lib::FLogcat &logcat, algo::strptr str) {
     bool ret = logcat.enabled
         && (logcat.filter.expr.ch_n==0 || algo_lib::Regx_Match(logcat.filter,str))
         && !algo_lib::Regx_Match(logcat.negfilter,str);
-    if (ret && logcat.maxmsg>0) {
+    if (ret && logcat.maxmsg>0) {// check throttle setting
         if (logcat.nmsg==0) {
             // schedule throttle reset
             hook_Set1(logcat.th_throttle, logcat, LogcatThrottleCheck);
             algo_lib::ThScheduleIn(logcat.th_throttle, algo::ToSchedTime(double(logcat.window)));
         }
-        logcat.nmsg++;// count number of messages printed
+        logcat.nmsg++;// count number of messages within this window
         // check throttle
-        if (logcat.nmsg >= logcat.maxmsg) {
-            logcat.enabled=false;
-            ret=false;
+        if (logcat.nmsg > logcat.maxmsg) {
+            logcat.suppress=true;
         }
+    }
+    ret = ret && !logcat.suppress;
+    if (ret) {
+        logcat.totmsg++;// count total messages printed
     }
     return ret;
 }

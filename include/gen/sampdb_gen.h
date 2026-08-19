@@ -29,19 +29,19 @@
 
 // --- sampdb_FieldIdEnum
 
-enum sampdb_FieldIdEnum {           // sampdb.FieldId.value
-     sampdb_FieldId_gitfile   = 0
-    ,sampdb_FieldId_comment   = 1
-    ,sampdb_FieldId_targdep   = 2
-    ,sampdb_FieldId_target    = 3
-    ,sampdb_FieldId_parent    = 4
-    ,sampdb_FieldId_rec       = 5
-    ,sampdb_FieldId_pre       = 6
-    ,sampdb_FieldId_dflt      = 7
-    ,sampdb_FieldId_recipe    = 8
-    ,sampdb_FieldId_targsrc   = 9
-    ,sampdb_FieldId_src       = 10
-    ,sampdb_FieldId_value     = 11
+enum sampdb_FieldIdEnum {    // sampdb.FieldId.value
+     sampdb_FieldId_gitfile
+    ,sampdb_FieldId_comment
+    ,sampdb_FieldId_targdep
+    ,sampdb_FieldId_target
+    ,sampdb_FieldId_parent
+    ,sampdb_FieldId_rec
+    ,sampdb_FieldId_pre
+    ,sampdb_FieldId_dflt
+    ,sampdb_FieldId_recipe
+    ,sampdb_FieldId_targsrc
+    ,sampdb_FieldId_src
+    ,sampdb_FieldId_value
 };
 
 enum { sampdb_FieldIdEnum_N = 12 };
@@ -77,7 +77,6 @@ struct FieldId { // sampdb.FieldId: Field read helper
     inline               FieldId(sampdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:sampdb.FieldId.value.GetEnum
 inline sampdb_FieldIdEnum value_GetEnum(const sampdb::FieldId& parent) __attribute__((nothrow));
@@ -115,7 +114,7 @@ inline void          FieldId_Init(sampdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:sampdb.FieldId.String  printfmt:Raw
 // func:sampdb.FieldId..Print
-void                 FieldId_Print(sampdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(sampdb::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- sampdb.Gitfile
 struct Gitfile { // sampdb.Gitfile: samp_make list of gitfile sources
@@ -124,7 +123,6 @@ struct Gitfile { // sampdb.Gitfile: samp_make list of gitfile sources
     // func:sampdb.Gitfile..Ctor
     inline               Gitfile() __attribute__((nothrow));
 };
-
 // func:sampdb.Gitfile..ReadFieldMaybe
 bool                 Gitfile_ReadFieldMaybe(sampdb::Gitfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of sampdb::Gitfile from an ascii string.
@@ -145,16 +143,15 @@ struct Targdep { // sampdb.Targdep: samp_make targets dependencies
     // func:sampdb.Targdep..Ctor
     inline               Targdep() __attribute__((nothrow));
 };
-
 // func:sampdb.Targdep.target.Get
-algo::Smallstr50     target_Get(sampdb::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(sampdb::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:sampdb.Targdep.target.Get2
-algo::Smallstr50     Targdep_target_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targdep_target_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:sampdb.Targdep.parent.Get
-algo::Smallstr50     parent_Get(sampdb::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_Get(sampdb::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:sampdb.Targdep.parent.Get2
-algo::Smallstr50     Targdep_parent_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targdep_parent_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:sampdb.Targdep..Concat_target_parent
 tempstr              Targdep_Concat_target_parent( const algo::strptr& target ,const algo::strptr& parent );
@@ -180,7 +177,6 @@ struct Target { // sampdb.Target: samp_make targets list
     // func:sampdb.Target..Ctor
     inline               Target() __attribute__((nothrow));
 };
-
 // func:sampdb.Target..ReadFieldMaybe
 bool                 Target_ReadFieldMaybe(sampdb::Target& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of sampdb::Target from an ascii string.
@@ -203,7 +199,6 @@ struct Targrec { // sampdb.Targrec: samp_make recipe for a target
     // func:sampdb.Targrec..Ctor
     inline               Targrec() __attribute__((nothrow));
 };
-
 // func:sampdb.Targrec..ReadFieldMaybe
 bool                 Targrec_ReadFieldMaybe(sampdb::Targrec& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of sampdb::Targrec from an ascii string.
@@ -224,16 +219,15 @@ struct Targsrc { // sampdb.Targsrc: samp_make targets source dependencies
     // func:sampdb.Targsrc..Ctor
     inline               Targsrc() __attribute__((nothrow));
 };
-
 // func:sampdb.Targsrc.target.Get
-algo::Smallstr50     target_Get(sampdb::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(sampdb::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:sampdb.Targsrc.target.Get2
-algo::Smallstr50     Targsrc_target_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targsrc_target_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:sampdb.Targsrc.src.Get
-algo::Smallstr50     src_Get(sampdb::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(sampdb::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:sampdb.Targsrc.src.Get2
-algo::Smallstr50     Targsrc_src_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Targsrc_src_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:sampdb.Targsrc..Concat_target_src
 tempstr              Targsrc_Concat_target_src( const algo::strptr& target ,const algo::strptr& src );

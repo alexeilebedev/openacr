@@ -1,0 +1,17 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Str9  comment:""
+amc <- dmmeta.field  field:algo_lib.Str9.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.Str9.ch  length:9  strtype:rightpad  pad:"' '"  strict:Y
+amc <- dmmeta.csize  ctype:algo_lib.Str9  size:9  alignment:1  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.TestBitset  comment:""
+amc <- dmmeta.field  field:algo_lib.TestBitset.bits  arg:algo_lib.Str9  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fbitset  field:algo_lib.TestBitset.bits  comment:""
+# eof amc
+amc -> amc.bitset_elem  fbitset:algo_lib.TestBitset.bits  arg:algo_lib.Str9  comment:"bitset element must be an unsigned builtin. Use u8,u16,u32,u64, or u128"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

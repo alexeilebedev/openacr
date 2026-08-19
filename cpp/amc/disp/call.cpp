@@ -83,7 +83,7 @@ static void Call_Raw(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
     Ins(&R, func.body        , "int ret = 0;");
     Ins(&R, func.body        , "switch(type) {" );
     ind_beg(amc::dispatch_c_dispatch_msg_curs, dispmsg,dispatch) {
-        bool strict = dispatch.strict && !VarlenQ(*dispmsg.p_ctype);
+        bool strict = dispatch.strict && !amc::RuntimeFrameLenQ(*dispmsg.p_ctype);
         Set(R, "$Msgtype", dispmsg.selector);
         Set(R, "$Msgname", StripNs("",ctype_Get(dispmsg)));
         Set(R, "$Ctype", amc::NsToCpp(ctype_Get(dispmsg)));

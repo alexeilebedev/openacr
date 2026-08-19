@@ -1,5 +1,5 @@
 ## amc Cross-References (xrefs)
-<a href="#amc-cross-references--xrefs-"></a>
+<a href="#amc-cross-references-xrefs-"></a>
 
 Cross-reference or an `xref` is an index formed to keep track of all references to a given record.
 Every time a new reference appears or disappears (because a record is added or removed),
@@ -56,4 +56,3 @@ inline-command: amc_vis amc.FTarget\|amc.FTargdep
                   |                   -               
                   -                                   
 ```
-

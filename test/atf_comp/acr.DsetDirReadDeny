@@ -1,0 +1,24 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir -p d/dmmeta && printf "dmmeta.dispsig  dispsig:xx.aa  signature:1\\n" > d/dmmeta/dispsig.ssim && ln -s d dlink && ln -s nowhere dangling && $$OLDPWD/$bindir/acr -in:dlink -schema:$$OLDPWD/data dispsig:% -print:N && echo symlinked_dir_ok && trap "chmod 755 d" EXIT && trap "exit 1" TERM && chmod 500 d && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -print:N && echo readable_dir_ok && chmod 100 d && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -print:N && echo searchonly_dir_ok; chmod 400 d; $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -print:N; test $$? != 0 && echo listonly_dir_failed; chmod 000 d; $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -print:N; test $$? != 0 && echo denied_dir_failed; $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data -check -print:N; test $$? != 0 && echo denied_dir_check_failed; chmod 755 d; $$OLDPWD/$bindir/acr -in:dangling -schema:$$OLDPWD/data dispsig:% -print:N; test $$? != 0 && echo dangling_symlink_failed\''
+# eof bash
+bash -> report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> symlinked_dir_ok
+bash -> report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> readable_dir_ok
+bash -> report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> searchonly_dir_ok
+bash -> acr.file_read  file:d  err:"Permission denied"  comment:"dataset directory could not be searched"
+bash -> acr.file_read  file:d/dmmeta/dispsig.ssim  err:"Permission denied"  comment:"ssimfile could not be read"
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> listonly_dir_failed
+bash -> acr.file_read  file:d  err:"Permission denied"  comment:"dataset directory could not be searched"
+bash -> acr.file_read  file:d/dmmeta/dispsig.ssim  err:"Permission denied"  comment:"ssimfile could not be read"
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> denied_dir_failed
+bash -> acr.file_read  file:d  err:"Permission denied"  comment:"dataset directory could not be searched"
+bash -> report.acr_check  records:0  n_err:0
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> denied_dir_check_failed
+bash -> acr.file_read  file:dangling  err:"No such file or directory"  comment:"input directory or file could not be read"
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> dangling_symlink_failed
+# exit bash code:0

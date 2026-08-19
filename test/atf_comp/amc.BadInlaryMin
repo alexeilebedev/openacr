@@ -1,0 +1,16 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.TestInlaryMin  comment:""
+amc <- dmmeta.field  field:algo_lib.TestInlaryMin.str  arg:char  reftype:Inlary  dflt:""  comment:""
+amc <- dmmeta.inlary  field:algo_lib.TestInlaryMin.str  min:2  max:8  comment:""
+amc <- dmmeta.field  field:algo_lib.TestInlaryMin.buf  arg:u8  reftype:Inlary  dflt:""  comment:""
+amc <- dmmeta.inlary  field:algo_lib.TestInlaryMin.buf  min:1  max:4  comment:""
+# eof amc
+amc -> amc.bad_inlary_min  inlary:algo_lib.TestInlaryMin.str  elem_type:char  comment:"a variable char/u8 inlary is read by copying the string, which cannot keep a minimum count; use min:0 or a fixed inlary"
+amc -> amc.bad_inlary_min  inlary:algo_lib.TestInlaryMin.buf  elem_type:u8  comment:"a variable char/u8 inlary is read by copying the string, which cannot keep a minimum count; use min:0 or a fixed inlary"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

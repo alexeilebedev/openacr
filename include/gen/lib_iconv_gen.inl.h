@@ -82,7 +82,7 @@ inline void lib_iconv::Icd_Init(lib_iconv::Icd& icd) {
 // --- lib_iconv.Icd..Uninit
 inline void lib_iconv::Icd_Uninit(lib_iconv::Icd& icd) {
     lib_iconv::Icd &row = icd; (void)row;
-    icd_Cleanup(icd); // dmmeta.fcleanup:lib_iconv.Icd.icd
+    icd_Cleanup(icd); // dmmeta.ffunc:lib_iconv.Icd.icd/Cleanup
 }
 
 // --- lib_iconv.Icd..Ctor

@@ -55,9 +55,10 @@ void algo_lib::IohookInit() {
 // -----------------------------------------------------------------------------
 
 // Register IOHOOK to be called whenever an IO operation is possible.
-// OK to add an fd twice with different flags. Subsequent calls override previous ones.
-// Add iohook to epoll in read, write or read/write mode
-// Optionally, add as edge triggered
+// Add iohook to epoll in read, write or read/write mode, edge triggered.
+// Re-registering the same iohook replaces its flag set, so a caller may widen
+// or narrow one hook's subscription at any time; a descriptor carries exactly
+// one registration, so two hooks may never claim the same fd.
 void algo_lib::IohookAdd(algo_lib::FIohook& iohook, algo::IOEvtFlags inflags) NOTHROW {
     bool isnew = !iohook.in_epoll;
     iohook.evt_flags = inflags;// flags we're now subscribed to
@@ -80,19 +81,41 @@ void algo_lib::IohookAdd(algo_lib::FIohook& iohook, algo::IOEvtFlags inflags) NO
     callback_Call(iohook,iohook);
 #else
     struct epoll_event ev;
-    ev.events                     = 0;
+    ev.events = 0;
     ev.events |= EPOLLET;// edge-trigger only
-    if (read_Get(inflags)) ev.events  |= EPOLLIN;
-    if (write_Get(inflags)) ev.events |= EPOLLOUT;
+    if (read_Get(inflags)) {
+        ev.events |= EPOLLIN;
+    }
+    if (write_Get(inflags)) {
+        ev.events |= EPOLLOUT;
+    }
     ev.data.ptr = (void*)&iohook;
-    int req     = isnew ? EPOLL_CTL_ADD : EPOLL_CTL_MOD;
-    int rc      = epoll_ctl(algo_lib::_db.epoll_fd, req, iohook.fildes.value, &ev);
-    int err     = errno;
-    (void)rc;// coverity
+    int req = isnew ? EPOLL_CTL_ADD : EPOLL_CTL_MOD;
+    int rc = epoll_ctl(algo_lib::_db.epoll_fd, req, iohook.fildes.value, &ev);
+    int err = rc < 0 ? errno : 0;
     // file descriptors cannot be added to epoll, linux returns EPERM.
     // we support such use, and immediately mark the file descriptor as "ready" -- why not?
     if (err == EPERM) {
         callback_Call(iohook,iohook);// immediate callback
+    } else if (err == EEXIST) {
+        // Consider a connection whose reader and writer each own an iohook and
+        // hand both the same socket.  The reader registers, the writer's
+        // registration is refused, and the writer's callback is never invoked
+        // again -- so its buffer fills and the connection stalls with no error
+        // anywhere, since the only report was the return value of this call.
+        //
+        // An epoll registration is keyed by descriptor, not by watcher: one fd
+        // admits one set of flags and one callback pointer, and a second claim
+        // cannot be honored under any flags.  Two hooks on one fd is therefore
+        // a construction error in the caller, not a condition to absorb.
+        //
+        // Report it here, where the offending fd is still known.  The check
+        // fires at registration -- connection setup or startup -- so it is
+        // deterministic rather than a load-dependent surprise, and a wedge
+        // that would have to be diagnosed from a hang becomes one line.
+        FatalErrorExit(Zeroterm(tempstr()<<"algo_lib.iohook_taken"
+                                <<Keyval("fd",iohook.fildes.value)
+                                <<Keyval("comment","fd already registered by another iohook; one fd carries one registration")));
     }
 #endif
     iohook.in_epoll = true;

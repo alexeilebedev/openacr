@@ -6,7 +6,6 @@ acr_ed -> dmmeta.ctype  ctype:ams.ChildTypeMsg  comment:""
 acr_ed -> dmmeta.field  field:ams.ChildTypeMsg.base  arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
 acr_ed -> dmmeta.pack  ctype:ams.ChildTypeMsg  comment:""
 acr_ed -> dmmeta.msgtype  ctype:ams.ChildTypeMsg  type:400
-acr_ed -> dmmeta.cpptype  ctype:ams.ChildTypeMsg  ctor:N  dtor:N  cheap_copy:N
 acr_ed -> dmmeta.cfmt  cfmt:ams.ChildTypeMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 acr_ed -> EOF
 acr_ed -> bin/amc

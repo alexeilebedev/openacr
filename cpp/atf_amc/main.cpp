@@ -144,7 +144,7 @@ void atf_amc::amctest_CopyOut2() {
 void atf_amc::amctest_CopyOut3() {
 }
 
-void atf_amc::amctest_TestInsertX2() {
+void atf_amc::amctest_TestInsertXref() {
     atf_amc::InsertStrptrMaybe("atf_amc.TypeS  types:33");
     atf_amc::FTypeS *types = atf_amc::ind_types_Find(33);// check that it's there
     vrfy_(types);
@@ -175,6 +175,49 @@ void atf_amc::amctest_TestInsertX3() {
     // cleanup
     atf_amc::types_RemoveAll();
     atf_amc::typet_RemoveAll();
+}
+
+// A pool whose finput carries update:Y takes an arriving row as a replacement
+// for the one it matches, and the row it replaces has to stay findable by every
+// index that reaches it.
+//
+// The second index is the whole point.  It is keyed by a field the update
+// changes, so the record cannot stay on it across the copy -- it is removed
+// first, and putting it back afterwards is what this pins.  Without that step
+// the record exists, answers to its primary key, and cannot be found by the
+// value it now holds: a keyed row that is updated stops resolving by
+// id, and every permission check that reaches it through the id index misses.
+void atf_amc::amctest_UpdateMaybe() {
+    atf_amc::TypeU in;
+    in.u = 1;
+    in.v = 10;
+    atf_amc::FTypeU *row = atf_amc::typeu_UpdateMaybe(in);
+    vrfy_(row);
+    vrfyeq_(atf_amc::typeu_N(), 1);
+    vrfy_(atf_amc::ind_typeu_v_Find(10) == row);
+
+    // the same key with a new value updates in place: one record, not two
+    in.v = 20;
+    atf_amc::FTypeU *again = atf_amc::typeu_UpdateMaybe(in);
+    vrfyeq_(atf_amc::typeu_N(), 1);
+    vrfy_(again == row);
+    vrfyeq_(row->v, 20);
+    vrfy_(atf_amc::ind_typeu_Find(1) == row);
+    // the second index followed the value: gone from where it was, present
+    // where it now is
+    vrfy_(atf_amc::ind_typeu_v_Find(10) == NULL);
+    vrfy_(atf_amc::ind_typeu_v_Find(20) == row);
+
+    // an unmatched key inserts
+    in.u = 2;
+    in.v = 30;
+    atf_amc::FTypeU *other = atf_amc::typeu_UpdateMaybe(in);
+    vrfy_(other);
+    vrfy_(other != row);
+    vrfyeq_(atf_amc::typeu_N(), 2);
+    vrfy_(atf_amc::ind_typeu_v_Find(30) == other);
+
+    atf_amc::typeu_RemoveAll();
 }
 
 void atf_amc::amctest_TestCstring1() {
@@ -296,6 +339,10 @@ void atf_amc::cs_t_typec_Step() {
 }
 
 void atf_amc::amctest_ImdXref() {
+    // start from an empty table: the keyed inserts below assume the
+    // empty-table precondition a forked run provides, and in a
+    // single-process run (-dofork:N) earlier tests leave typea rows behind
+    atf_amc::typea_RemoveAll();
     int n = 100000;
     // reserve room in index
     atf_amc::ind_typea_Reserve(n);
@@ -395,6 +442,24 @@ void atf_amc::amctest_LenfldScale() {
 void atf_amc::Phase(algo::strptr phase) {
     verblog("--- step: "<<phase);
 }
+
+// -----------------------------------------------------------------------------
+
+// True when this process runs exactly one of the selected amctest steps, so
+// no earlier test has mutated the db and it still holds the values Init gave
+// it. A test needs this to check a quantity that grows on demand and never
+// shrinks back: a Thash index emptied with RemoveAll keeps the bucket array
+// it grew, so its initial bucket count is only observable in a process where
+// nothing grew it. The forked run (-dofork:Y, the default) gives every test
+// its own process and satisfies this; a single-process run of more than one
+// test does not.
+bool atf_amc::PristineDbQ() {
+    int nselect = 0;
+    ind_beg(atf_amc::_db_amctest_curs,amctest, atf_amc::_db) {
+        nselect += amctest.select;
+    }ind_end;
+    return nselect == 1;
+}
 // -----------------------------------------------------------------------------
 
 void atf_amc::Main() {
@@ -408,6 +473,9 @@ void atf_amc::Main() {
         amctest.select = Regx_Match(atf_amc::_db.cmdline.amctest, amctest.amctest);
         nmatch += amctest.select;
     }ind_end;
+    vrfy(nmatch > 0, tempstr() << "atf_amc.nomatch"
+         << Keyval("amctest", _db.cmdline.amctest)
+         << Keyval("comment", "no matching amctests"));
     _db.dofork = _db.cmdline.dofork && nmatch>1;
     if (!_db.cmdline.q) {
         prlog("atf_amc.begin"
@@ -472,4 +540,12 @@ void atf_amc::Main() {
             }
         }ind_end;
     }
+}
+
+// --------------------------------------------------------------------------------
+
+// A field default that refers to the record itself (*this) resolves to
+// _db when the field's parent is the global FDb.
+void atf_amc::amctest_ValGlobalDfltThis() {
+    vrfyeq_(atf_amc::_db.fdbsize, u32(sizeof(atf_amc::FDb)));
 }

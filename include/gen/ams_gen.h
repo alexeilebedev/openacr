@@ -28,136 +28,117 @@
 //#pragma endinclude
 // gen:ns_enums
 
-// --- ams_FieldIdEnum
-
-enum ams_FieldIdEnum {                  // ams.FieldId.value
-     ams_FieldId_base             = 0
-    ,ams_FieldId_type             = 1
-    ,ams_FieldId_length           = 2
-    ,ams_FieldId_text             = 3
-    ,ams_FieldId_proc_id          = 4
-    ,ams_FieldId_payload          = 5
-    ,ams_FieldId_tstamp           = 6
-    ,ams_FieldId_logcat           = 7
-    ,ams_FieldId_proc             = 8
-    ,ams_FieldId_value            = 9
-    ,ams_FieldId_proctype         = 10
-    ,ams_FieldId_nodeidx          = 11
-    ,ams_FieldId_procidx          = 12
-    ,ams_FieldId_signal           = 13
-    ,ams_FieldId_until            = 14
-    ,ams_FieldId_pty              = 15
-    ,ams_FieldId_cmd              = 16
-    ,ams_FieldId_status           = 17
-    ,ams_FieldId_remove_topmost   = 18
-    ,ams_FieldId_pathname         = 19
-    ,ams_FieldId_write            = 20
-    ,ams_FieldId_read             = 21
-    ,ams_FieldId_nonblock         = 22
-    ,ams_FieldId_write_err        = 23
-    ,ams_FieldId_shmember         = 24
-    ,ams_FieldId_off              = 25
-    ,ams_FieldId_wbudget          = 26
-    ,ams_FieldId_shmtype          = 27
-    ,ams_FieldId_index            = 28
-    ,ams_FieldId_r                = 29
-    ,ams_FieldId_w                = 30
-    ,ams_FieldId_shm_id           = 31
-    ,ams_FieldId_flags            = 32
-};
-
-enum { ams_FieldIdEnum_N = 33 };
-
-
 // --- ams_ProctypeEnum
 
-enum ams_ProctypeEnum {                // ams.Proctype.value
-     ams_Proctype_               = 0   // No process
-    ,ams_Proctype_ams_sendtest   = 5   // Ams testing
+enum ams_ProctypeEnum {                 // ams.Proctype.value
+     ams_Proctype_               = 0    // No process
+    ,ams_Proctype_ams_sendtest   = 5    // Ams testing
+    ,ams_Proctype_ext            = 22   // External client connection
+    ,ams_Proctype_samp_meng      = 23   // Matching engine
+    ,ams_Proctype_user           = 21   // User process launched via userproc
 };
 
-enum { ams_ProctypeEnum_N = 2 };
+enum { ams_ProctypeEnum_N = 5 };
 
 
-// --- ams_MsgHeader_type_Enum
+// --- ams_GrptypeEnum
 
-enum ams_MsgHeader_type_Enum {                         // ams.MsgHeader.type
-     ams_MsgHeader_type_ams_ExpectMsg          = 395   // Pause reading until some output is produced
-    ,ams_MsgHeader_type_ams_InputLineMsg       = 22    // Unrecognized input line
-    ,ams_MsgHeader_type_ams_LogMsg             = 6     // Log message
-    ,ams_MsgHeader_type_ams_MsgBlock           = 1     // A block of messages from ams commit file
-    ,ams_MsgHeader_type_ams_ProcEofMsg         = 703   // EOF from/to a process
-    ,ams_MsgHeader_type_ams_ProcKillMsg        = 704   // Kill process
-    ,ams_MsgHeader_type_ams_ProcMsg            = 701   // Message from/to a process
-    ,ams_MsgHeader_type_ams_ProcReadMsg        = 702   // Read process output
-    ,ams_MsgHeader_type_ams_ProcStartMsg       = 700   // Start process
-    ,ams_MsgHeader_type_ams_ProcStatusMsg      = 705   // Process status
-    ,ams_MsgHeader_type_ams_RemDirRecurseMsg   = 633   // Message sent to process to terminate it
-    ,ams_MsgHeader_type_ams_ShmHbMsg           = 3     // Shm heartbeat
-    ,ams_MsgHeader_type_ams_Shmmsg             = 10    // Sequenced message on a shm
-    ,ams_MsgHeader_type_ams_TerminateMsg       = 352   // Message sent to process to terminate it
-    ,ams_MsgHeader_type_ams_UdpFrame           = 2     // sniffer-captured ethernet frame
-    ,ams_MsgHeader_type_fm_AlarmMsg            = 17
-    ,ams_MsgHeader_type_ws_CloseMsg            = 504
-    ,ams_MsgHeader_type_ws_ConnectMsg          = 502
-    ,ams_MsgHeader_type_ws_DataMsg             = 503
-    ,ams_MsgHeader_type_ws_ServerStartMsg      = 500
-    ,ams_MsgHeader_type_ws_ServerStopMsg       = 501
+enum ams_GrptypeEnum {            // ams.Grptype.value
+     ams_Grptype_board     = 24   // Message board: large payloads referenced from lane rings
+    ,ams_Grptype_log       = 9    // Log messages
+    ,ams_Grptype_netall    = 4    // Net process to all processes on node
+    ,ams_Grptype_nethb     = 22   // Net process to one process (unicast heartbeats)
+    ,ams_Grptype_netpr     = 3    // Net process to any process (unicast)
+    ,ams_Grptype_out       = 2    // Log messages, alarms
+    ,ams_Grptype_prmon     = 18   // Process to monitor
+    ,ams_Grptype_prnet     = 5    // Process to net
+    ,ams_Grptype_prsup     = 12   // Process to supervisor
+    ,ams_Grptype_prtxn     = 10   // Process to txn
+    ,ams_Grptype_pruser    = 21   // Parent process to user process
+    ,ams_Grptype_supall    = 11   // Supervisor to all
+    ,ams_Grptype_txncmt    = 13   // Net to commit gapfill fallback
+    ,ams_Grptype_txnpr     = 23   // Txn to process (per-partition send credit grants)
+    ,ams_Grptype_userpr    = 20   // User process to parent process
+    ,ams_Grptype_xbcast    = 16   // (x-node) Any to all
+    ,ams_Grptype_xinctl    = 8    // (x-node) Directed control: command and response envelopes
+    ,ams_Grptype_xindata   = 6    // (x-node) Directed data delivery to one node
+    ,ams_Grptype_xingf     = 7    // (x-node) Gapfill asks directed at a serving node, and its re-serves
+    ,ams_Grptype_xpart     = 1    // (x-node) Partition messages
 };
 
-enum { ams_MsgHeader_type_Enum_N = 21 };
+enum { ams_GrptypeEnum_N = 20 };
 
 
-// --- ams_MsgHeaderMsgsCaseEnum
+// --- ams_FieldIdEnum
 
-enum ams_MsgHeaderMsgsCaseEnum {                         // ams.MsgHeaderMsgsCase.value
-     ams_MsgHeaderMsgsCase_ams_ExpectMsg          = 395
-    ,ams_MsgHeaderMsgsCase_ams_InputLineMsg       = 22
-    ,ams_MsgHeaderMsgsCase_ams_LogMsg             = 6
-    ,ams_MsgHeaderMsgsCase_ams_MsgBlock           = 1
-    ,ams_MsgHeaderMsgsCase_ams_ProcEofMsg         = 703
-    ,ams_MsgHeaderMsgsCase_ams_ProcKillMsg        = 704
-    ,ams_MsgHeaderMsgsCase_ams_ProcMsg            = 701
-    ,ams_MsgHeaderMsgsCase_ams_ProcReadMsg        = 702
-    ,ams_MsgHeaderMsgsCase_ams_ProcStartMsg       = 700
-    ,ams_MsgHeaderMsgsCase_ams_ProcStatusMsg      = 705
-    ,ams_MsgHeaderMsgsCase_ams_RemDirRecurseMsg   = 633
-    ,ams_MsgHeaderMsgsCase_ams_ShmHbMsg           = 3
-    ,ams_MsgHeaderMsgsCase_ams_Shmmsg             = 10
-    ,ams_MsgHeaderMsgsCase_ams_TerminateMsg       = 352
-    ,ams_MsgHeaderMsgsCase_ams_UdpFrame           = 2
-    ,ams_MsgHeaderMsgsCase_fm_AlarmMsg            = 17
-    ,ams_MsgHeaderMsgsCase_ws_CloseMsg            = 504
-    ,ams_MsgHeaderMsgsCase_ws_ConnectMsg          = 502
-    ,ams_MsgHeaderMsgsCase_ws_DataMsg             = 503
-    ,ams_MsgHeaderMsgsCase_ws_ServerStartMsg      = 500
-    ,ams_MsgHeaderMsgsCase_ws_ServerStopMsg       = 501
+enum ams_FieldIdEnum {    // ams.FieldId.value
+     ams_FieldId_base
+    ,ams_FieldId_type
+    ,ams_FieldId_length
+    ,ams_FieldId_offset
+    ,ams_FieldId_payload_length
+    ,ams_FieldId_proc_id
+    ,ams_FieldId_in_grp
+    ,ams_FieldId_out_grp
+    ,ams_FieldId_grptype
+    ,ams_FieldId_index
+    ,ams_FieldId_grp_id
+    ,ams_FieldId_flags
+    ,ams_FieldId_value
+    ,ams_FieldId_payload
+    ,ams_FieldId_tstamp
+    ,ams_FieldId_logcat
+    ,ams_FieldId_text
+    ,ams_FieldId_proctype
+    ,ams_FieldId_nodeidx
+    ,ams_FieldId_procidx
+    ,ams_FieldId_hash
+    ,ams_FieldId_n_in
+    ,ams_FieldId_next_order_id
+    ,ams_FieldId_order
+    ,ams_FieldId_user
+    ,ams_FieldId_time
+    ,ams_FieldId_price
+    ,ams_FieldId_symbol
+    ,ams_FieldId_qty
+    ,ams_FieldId_ioc
+    ,ams_FieldId_buy
+    ,ams_FieldId_write
+    ,ams_FieldId_read
+    ,ams_FieldId_write_err
+    ,ams_FieldId_signaled
+    ,ams_FieldId_grpmember
+    ,ams_FieldId_off
+    ,ams_FieldId_wbudget
+    ,ams_FieldId_grpmember_id
+    ,ams_FieldId_pid
+    ,ams_FieldId_rate
+    ,ams_FieldId_last_hb
+    ,ams_FieldId_ignore2
+    ,ams_FieldId_sleeping
+    ,ams_FieldId_r
+    ,ams_FieldId_w
+    ,ams_FieldId_magic
+    ,ams_FieldId_tot_size
+    ,ams_FieldId_max_msg_size
+    ,ams_FieldId_offset_mask
+    ,ams_FieldId_woff
+    ,ams_FieldId_n_shmember
+    ,ams_FieldId_max_shmember
+    ,ams_FieldId_datastart
+    ,ams_FieldId_writer_pid
+    ,ams_FieldId_writer_sleeping
+    ,ams_FieldId_nnobudget
+    ,ams_FieldId_nblock
+    ,ams_FieldId_eof
+    ,ams_FieldId_creator_pid
+    ,ams_FieldId_seqno
+    ,ams_FieldId_first_seqno
+    ,ams_FieldId_last_seqno
+    ,ams_FieldId_name
 };
 
-enum { ams_MsgHeaderMsgsCaseEnum_N = 21 };
-
-
-// --- ams_ShmFlagsEnum
-
-enum ams_ShmFlagsEnum {                // ams.ShmFlags.value
-     ams_ShmFlags_write       = 0x2    // ams.ShmFlags.write
-    ,ams_ShmFlags_read        = 0x4    // ams.ShmFlags.read
-    ,ams_ShmFlags_nonblock    = 0x8    // ams.ShmFlags.nonblock
-    ,ams_ShmFlags_write_err   = 0x40   // ams.ShmFlags.write_err
-};
-
-enum { ams_ShmFlagsEnum_N = 4 };
-
-
-// --- ams_ShmtypeEnum
-
-enum ams_ShmtypeEnum {        // ams.Shmtype.value
-     ams_Shmtype_ctl    = 1   // AMS control messages
-    ,ams_Shmtype_log    = 9   // Log messages
-    ,ams_Shmtype_out    = 2   // Log messages, alarms
-};
-
-enum { ams_ShmtypeEnum_N = 3 };
+enum { ams_FieldIdEnum_N = 64 };
 
 
 // --- ams_ShmemberFlagsEnum
@@ -169,27 +150,132 @@ enum ams_ShmemberFlagsEnum {          // ams.ShmemberFlags.value
 
 enum { ams_ShmemberFlagsEnum_N = 2 };
 
+
+// --- ams_MsgHeader_type_Enum
+
+enum ams_MsgHeader_type_Enum {                                  // ams.MsgHeader.type
+     ams_MsgHeader_type_ams_BoardrefMsg                = 3001   // Reference to a payload on the writer's message board
+    ,ams_MsgHeader_type_ams_InputLineMsg               = 22     // Unrecognized input line
+    ,ams_MsgHeader_type_ams_LogMsg                     = 6      // Log message
+    ,ams_MsgHeader_type_ams_MsgBlock                   = 1      // A block of messages from ams commit file
+    ,ams_MsgHeader_type_ams_SampMengBookMsg            = 2011   // Matcher state: the book's scalars, opening its snapshot
+    ,ams_MsgHeader_type_ams_SampMengCancelOrderMsg     = 2000
+    ,ams_MsgHeader_type_ams_SampMengCancelReqMsg       = 2001
+    ,ams_MsgHeader_type_ams_SampMengMassCancelReqMsg   = 2002
+    ,ams_MsgHeader_type_ams_SampMengNewOrderMsg        = 2003
+    ,ams_MsgHeader_type_ams_SampMengNewOrderReqMsg     = 2004
+    ,ams_MsgHeader_type_ams_SampMengNewSymbolMsg       = 2005
+    ,ams_MsgHeader_type_ams_SampMengNewSymbolReqMsg    = 2006
+    ,ams_MsgHeader_type_ams_SampMengNewUserMsg         = 2007
+    ,ams_MsgHeader_type_ams_SampMengNewUserReqMsg      = 2008
+    ,ams_MsgHeader_type_ams_SampMengOrderTradeMsg      = 2009
+    ,ams_MsgHeader_type_ams_SampMengRestingMsg         = 2015   // Matcher state: one order resting on the book
+    ,ams_MsgHeader_type_ams_SampMengSymbolrowMsg       = 2013   // Matcher state: one symbol, in the order ids were assigned
+    ,ams_MsgHeader_type_ams_SampMengTextMsg            = 2010
+    ,ams_MsgHeader_type_ams_SampMengUserrowMsg         = 2014   // Matcher state: one user
+    ,ams_MsgHeader_type_ams_ShmHbMsg                   = 3      // Shm heartbeat
+    ,ams_MsgHeader_type_ams_TerminateMsg               = 352    // Message sent to process to terminate it
+    ,ams_MsgHeader_type_ams_UdpFrame                   = 2      // sniffer-captured ethernet frame
+    ,ams_MsgHeader_type_ams_UprocTextMsg               = 3000
+    ,ams_MsgHeader_type_fm_AlarmMsg                    = 17
+    ,ams_MsgHeader_type_ws_CloseMsg                    = 504
+    ,ams_MsgHeader_type_ws_ConnectMsg                  = 502
+    ,ams_MsgHeader_type_ws_DataMsg                     = 503
+    ,ams_MsgHeader_type_ws_ServerStartMsg              = 500
+    ,ams_MsgHeader_type_ws_ServerStopMsg               = 501
+};
+
+enum { ams_MsgHeader_type_Enum_N = 29 };
+
+
+// --- ams_MsgHeaderMsgsCaseEnum
+
+enum ams_MsgHeaderMsgsCaseEnum {                                  // ams.MsgHeaderMsgsCase.value
+     ams_MsgHeaderMsgsCase_ams_BoardrefMsg                = 3001
+    ,ams_MsgHeaderMsgsCase_ams_InputLineMsg               = 22
+    ,ams_MsgHeaderMsgsCase_ams_LogMsg                     = 6
+    ,ams_MsgHeaderMsgsCase_ams_MsgBlock                   = 1
+    ,ams_MsgHeaderMsgsCase_ams_SampMengBookMsg            = 2011
+    ,ams_MsgHeaderMsgsCase_ams_SampMengCancelOrderMsg     = 2000
+    ,ams_MsgHeaderMsgsCase_ams_SampMengCancelReqMsg       = 2001
+    ,ams_MsgHeaderMsgsCase_ams_SampMengMassCancelReqMsg   = 2002
+    ,ams_MsgHeaderMsgsCase_ams_SampMengNewOrderMsg        = 2003
+    ,ams_MsgHeaderMsgsCase_ams_SampMengNewOrderReqMsg     = 2004
+    ,ams_MsgHeaderMsgsCase_ams_SampMengNewSymbolMsg       = 2005
+    ,ams_MsgHeaderMsgsCase_ams_SampMengNewSymbolReqMsg    = 2006
+    ,ams_MsgHeaderMsgsCase_ams_SampMengNewUserMsg         = 2007
+    ,ams_MsgHeaderMsgsCase_ams_SampMengNewUserReqMsg      = 2008
+    ,ams_MsgHeaderMsgsCase_ams_SampMengOrderTradeMsg      = 2009
+    ,ams_MsgHeaderMsgsCase_ams_SampMengRestingMsg         = 2015
+    ,ams_MsgHeaderMsgsCase_ams_SampMengSymbolrowMsg       = 2013
+    ,ams_MsgHeaderMsgsCase_ams_SampMengTextMsg            = 2010
+    ,ams_MsgHeaderMsgsCase_ams_SampMengUserrowMsg         = 2014
+    ,ams_MsgHeaderMsgsCase_ams_ShmHbMsg                   = 3
+    ,ams_MsgHeaderMsgsCase_ams_TerminateMsg               = 352
+    ,ams_MsgHeaderMsgsCase_ams_UdpFrame                   = 2
+    ,ams_MsgHeaderMsgsCase_ams_UprocTextMsg               = 3000
+    ,ams_MsgHeaderMsgsCase_fm_AlarmMsg                    = 17
+    ,ams_MsgHeaderMsgsCase_ws_CloseMsg                    = 504
+    ,ams_MsgHeaderMsgsCase_ws_ConnectMsg                  = 502
+    ,ams_MsgHeaderMsgsCase_ws_DataMsg                     = 503
+    ,ams_MsgHeaderMsgsCase_ws_ServerStartMsg              = 500
+    ,ams_MsgHeaderMsgsCase_ws_ServerStopMsg               = 501
+};
+
+enum { ams_MsgHeaderMsgsCaseEnum_N = 29 };
+
+
+// --- ams_ShmFlagsEnum
+
+enum ams_ShmFlagsEnum {                // ams.ShmFlags.value
+     ams_ShmFlags_write       = 0x2    // ams.ShmFlags.write
+    ,ams_ShmFlags_read        = 0x4    // ams.ShmFlags.read
+    ,ams_ShmFlags_signaled    = 0x10   // ams.ShmFlags.signaled
+    ,ams_ShmFlags_write_err   = 0x40   // ams.ShmFlags.write_err
+};
+
+enum { ams_ShmFlagsEnum_N = 4 };
+
+
+// --- ams_Trafficclass_value_Enum
+
+enum ams_Trafficclass_value_Enum {          // ams.Trafficclass.value
+     ams_Trafficclass_value_control   = 2   // Cluster coordination: heartbeats, liveness, elections, eof tables, command envelopes; bounded by construction, never backpressured
+    ,ams_Trafficclass_value_data      = 0   // The sequenced flow: publish intake and record distribution; the only class that may wait (carries backpressure)
+    ,ams_Trafficclass_value_gapfill   = 1   // Recovery flow: refill asks and re-serves; paced by its own credit
+};
+
+enum { ams_Trafficclass_value_Enum_N = 3 };
+
 namespace ams { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace ams { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ams { struct MsgHeader; }
-namespace ams { struct ExpectMsg; }
+namespace ams { struct BoardrefMsg; }
 namespace ams { struct InputLineMsg; }
 namespace ams { struct LogMsg; }
 namespace ams { struct MsgBlock; }
-namespace ams { struct ProcEofMsg; }
-namespace ams { struct ProcKillMsg; }
-namespace ams { struct ProcMsg; }
-namespace ams { struct ProcReadMsg; }
-namespace ams { struct ProcStartMsg; }
-namespace ams { struct ProcStatusMsg; }
-namespace ams { struct RemDirRecurseMsg; }
+namespace ams { struct SampMengBookMsg; }
+namespace ams { struct SampMengCancelOrderMsg; }
+namespace ams { struct SampMengCancelReqMsg; }
+namespace ams { struct SampMengMassCancelReqMsg; }
+namespace ams { struct SampMengNewOrderMsg; }
+namespace ams { struct SampMengNewOrderReqMsg; }
+namespace ams { struct SampMengNewSymbolMsg; }
+namespace ams { struct SampMengNewSymbolReqMsg; }
+namespace ams { struct SampMengNewUserMsg; }
+namespace ams { struct SampMengNewUserReqMsg; }
+namespace ams { struct SampMengOrderTradeMsg; }
+namespace ams { struct SampMengRestingMsg; }
+namespace ams { struct SampMengSymbolrowMsg; }
+namespace ams { struct SampMengTextMsg; }
+namespace ams { struct SampMengUserrowMsg; }
 namespace ams { struct ShmHbMsg; }
-namespace ams { struct Shmmsg; }
 namespace ams { struct TerminateMsg; }
 namespace ams { struct UdpFrame; }
+namespace ams { struct UprocTextMsg; }
 namespace fm { struct AlarmMsg; }
 namespace ws { struct CloseMsg; }
 namespace ws { struct ConnectMsg; }
@@ -197,161 +283,74 @@ namespace ws { struct DataMsg; }
 namespace ws { struct ServerStartMsg; }
 namespace ws { struct ServerStopMsg; }
 namespace ams { struct ProcId; }
+namespace ams { struct GrpmemberId; }
 namespace ietf { struct Ipv4; }
-namespace ams { struct ExpectMsg_text_curs; }
 namespace ams { struct InputLineMsg_payload_curs; }
 namespace ams { struct LogMsg_logcat_curs; }
 namespace ams { struct LogMsg_text_curs; }
 namespace ams { struct MsgBlock_messages_curs; }
-namespace ams { struct ProcMsg_payload_curs; }
-namespace ams { struct ProcReadMsg_until_curs; }
-namespace ams { struct ProcStartMsg_cmd_curs; }
-namespace ams { struct RemDirRecurseMsg_pathname_curs; }
+namespace ams { struct SampMengTextMsg_text_curs; }
 namespace ams { struct UdpFrame_payload_curs; }
-namespace ams { struct FieldId; }
+namespace ams { struct UprocTextMsg_text_curs; }
 namespace ams { struct Proctype; }
+namespace ams { struct Grptype; }
+namespace ams { struct GrpId; }
+namespace ams { struct Bridge; }
+namespace ams { struct FieldId; }
+namespace ams { struct ShmemberFlags; }
+namespace ams { struct I64Price8; }
 namespace ams { struct MsgHeaderMsgsCase; }
 namespace ams { struct MsgHeader_curs; }
+namespace ams { struct SampFoldstate; }
+namespace ams { struct SampMengSymbol; }
 namespace ams { struct ShmFlags; }
-namespace ams { struct Shmtype; }
-namespace ams { struct ShmId; }
-namespace ams { struct ShmemberFlags; }
-namespace ams { struct ShmemberId; }
-namespace ams { // gen:ns_size_enums
-
-// sizes types appearing as Opt or Varlen; these need to be here
-// to allow inline implementations of _Get functions and avoid
-// a circular dependency between headers
-enum {
-    sizeof_ams_MsgHeader = 8
-};
-} // gen:ns_size_enums
+namespace ams { struct Shmember; }
+namespace ams { struct Shmhdr; }
+namespace ams { struct Trafficclass; }
 namespace ams { // gen:ns_print_struct
 
-// --- ams.ExpectMsg
+// --- ams.BoardrefMsg
 #pragma pack(push,1)
-struct ExpectMsg { // ams.ExpectMsg: Pause reading until some output is produced
-    u32   type;     //   395
-    u32   length;   //   ssizeof(parent) + (0)
-    // var-length field ams.ExpectMsg.text starts here. access it with text_Addr
-    // func:ams.ExpectMsg..Ctor
-    inline               ExpectMsg() __attribute__((nothrow));
+struct BoardrefMsg { // ams.BoardrefMsg: Reference to a payload on the writer's message board
+    u32   type;             //   3001
+    u32   length;           //   ssizeof(parent)
+    u64   offset;           //   0  Byte offset of the payload within the board segment
+    u32   payload_length;   //   0  Payload length, cross-checked against the header at the offset
+    // func:ams.BoardrefMsg..Ctor
+    inline               BoardrefMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
-// func:ams.ExpectMsg.base.CopyOut
-void                 parent_CopyOut(ams::ExpectMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
-// Check if ams::MsgHeader is an instance of ExpectMsg by checking the type field
+// func:ams.BoardrefMsg.base.CopyOut
+void                 parent_CopyOut(ams::BoardrefMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of BoardrefMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of ExpectMsg.
+// Additionally, check if the length field permits valid instance of BoardrefMsg.
 // If not successful, quietly return NULL.
-// func:ams.ExpectMsg.base.Castdown
-inline ams::ExpectMsg* ExpectMsg_Castdown(ams::MsgHeader &hdr);
-// func:ams.ExpectMsg.base.Castbase
-inline ams::MsgHeader& Castbase(ams::ExpectMsg& parent);
+// func:ams.BoardrefMsg.base.Castdown
+inline ams::BoardrefMsg* BoardrefMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.BoardrefMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::BoardrefMsg& parent);
 
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-// func:ams.ExpectMsg.text.Getary
-algo::aryptr<char>   text_Getary(ams::ExpectMsg& parent) __attribute__((nothrow));
-// func:ams.ExpectMsg.text.Addr
-char*                text_Addr(ams::ExpectMsg& parent);
-// Return number of elements in varlen field
-// func:ams.ExpectMsg.text.N
-inline u32           text_N(const ams::ExpectMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-// Convert string to field. Return success value
-// func:ams.ExpectMsg.text.ReadStrptrMaybe
-bool                 text_ReadStrptrMaybe(ams::ExpectMsg& parent, algo::strptr in_str) __attribute__((nothrow));
-// Convert text to a string.
-// Array is printed as a regular string.
-// func:ams.ExpectMsg.text.Print
-void                 text_Print(ams::ExpectMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
-
-// func:ams.ExpectMsg.text_curs.Reset
-inline void          ExpectMsg_text_curs_Reset(ExpectMsg_text_curs &curs, ams::ExpectMsg &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:ams.ExpectMsg.text_curs.ValidQ
-inline bool          ExpectMsg_text_curs_ValidQ(ExpectMsg_text_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:ams.ExpectMsg.text_curs.Next
-inline void          ExpectMsg_text_curs_Next(ExpectMsg_text_curs &curs) __attribute__((nothrow));
-// item access
-// func:ams.ExpectMsg.text_curs.Access
-inline char&         ExpectMsg_text_curs_Access(ExpectMsg_text_curs &curs) __attribute__((nothrow));
-// func:ams.ExpectMsg..ReadFieldMaybe
-bool                 ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::ExpectMsg from an ascii string.
+// func:ams.BoardrefMsg..ReadFieldMaybe
+bool                 BoardrefMsg_ReadFieldMaybe(ams::BoardrefMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::BoardrefMsg from an ascii string.
 // The format of the string is an ssim Tuple
-// func:ams.ExpectMsg..ReadStrptrMaybe
-bool                 ExpectMsg_ReadStrptrMaybe(ams::ExpectMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:ams.BoardrefMsg..ReadStrptrMaybe
+bool                 BoardrefMsg_ReadStrptrMaybe(ams::BoardrefMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
-// func:ams.ExpectMsg..GetMsgLength
-inline i32           GetMsgLength(const ams::ExpectMsg& parent) __attribute__((nothrow));
+// func:ams.BoardrefMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::BoardrefMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-// func:ams.ExpectMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const ams::ExpectMsg& row) __attribute__((nothrow));
+// func:ams.BoardrefMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::BoardrefMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:ams.ExpectMsg..Init
-inline void          ExpectMsg_Init(ams::ExpectMsg& parent);
+// func:ams.BoardrefMsg..Init
+inline void          BoardrefMsg_Init(ams::BoardrefMsg& parent);
 // print string representation of ROW to string STR
-// cfmt:ams.ExpectMsg.String  printfmt:Tuple
-// func:ams.ExpectMsg..Print
-void                 ExpectMsg_Print(ams::ExpectMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- ams.FieldId
-#pragma pack(push,1)
-struct FieldId { // ams.FieldId: Field read helper
-    i32   value;   //   -1
-    // func:ams.FieldId.value.Cast
-    inline               operator ams_FieldIdEnum() const __attribute__((nothrow));
-    // func:ams.FieldId..Ctor
-    inline               FieldId() __attribute__((nothrow));
-    // func:ams.FieldId..FieldwiseCtor
-    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
-    // func:ams.FieldId..EnumCtor
-    inline               FieldId(ams_FieldIdEnum arg) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Get value of field as enum type
-// func:ams.FieldId.value.GetEnum
-inline ams_FieldIdEnum value_GetEnum(const ams::FieldId& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:ams.FieldId.value.SetEnum
-inline void          value_SetEnum(ams::FieldId& parent, ams_FieldIdEnum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:ams.FieldId.value.ToCstr
-const char*          value_ToCstr(const ams::FieldId& parent) __attribute__((nothrow));
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-// func:ams.FieldId.value.Print
-void                 value_Print(const ams::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:ams.FieldId.value.SetStrptrMaybe
-bool                 value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:ams.FieldId.value.SetStrptr
-void                 value_SetStrptr(ams::FieldId& parent, algo::strptr rhs, ams_FieldIdEnum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:ams.FieldId.value.ReadStrptrMaybe
-bool                 value_ReadStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
-
-// Read fields of ams::FieldId from an ascii string.
-// The format of the string is the format of the ams::FieldId's only field
-// func:ams.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(ams::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:ams.FieldId..Init
-inline void          FieldId_Init(ams::FieldId& parent);
-// print string representation of ROW to string STR
-// cfmt:ams.FieldId.String  printfmt:Raw
-// func:ams.FieldId..Print
-void                 FieldId_Print(ams::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:ams.BoardrefMsg.String  printfmt:Tuple
+// func:ams.BoardrefMsg..Print
+void                 BoardrefMsg_Print(ams::BoardrefMsg& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ams.Proctype
 // create: ams.ProcId.proctype (Bitfld)
@@ -373,7 +372,6 @@ struct Proctype { // ams.Proctype
     inline               Proctype(ams_ProctypeEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ams.Proctype.value.GetEnum
 inline ams_ProctypeEnum value_GetEnum(const ams::Proctype& parent) __attribute__((nothrow));
@@ -421,7 +419,7 @@ void                 Proctype_Print(ams::Proctype row, algo::cstring& str) __att
 
 // --- ams.ProcId
 #pragma pack(push,1)
-struct ProcId { // ams.ProcId: Process ID within topology: type, node index, process index, e.g. proc-0-0
+struct ProcId { // ams.ProcId: Process ID within topology: type, node index, process index, e.g. samp_meng-0-0
     u32   value;   //   0  Process type
     // func:ams.ProcId..EqOp
     inline bool          operator ==(const ams::ProcId &rhs) const __attribute__((nothrow));
@@ -433,7 +431,6 @@ struct ProcId { // ams.ProcId: Process ID within topology: type, node index, pro
     explicit inline               ProcId(u32 in_value) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Retrieve bitfield from value of field value
 //    8 bits starting at bit 24.
 // func:ams.ProcId.proctype.Get
@@ -444,22 +441,22 @@ inline ams::Proctype proctype_Get(const ams::ProcId& parent) __attribute__((__wa
 inline void          proctype_Set(ams::ProcId& parent, ams::Proctype rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
-//    8 bits starting at bit 8.
+//    10 bits starting at bit 14.
 // func:ams.ProcId.nodeidx.Get
-inline u8            nodeidx_Get(const ams::ProcId& parent) __attribute__((__warn_unused_result__, nothrow));
+inline u16           nodeidx_Get(const ams::ProcId& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
-//    8 bits starting at bit 8.
+//    10 bits starting at bit 14.
 // func:ams.ProcId.nodeidx.Set
-inline void          nodeidx_Set(ams::ProcId& parent, u8 rhs) __attribute__((nothrow));
+inline void          nodeidx_Set(ams::ProcId& parent, u16 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
-//    4 bits starting at bit 0.
+//    14 bits starting at bit 0.
 // func:ams.ProcId.procidx.Get
-inline u8            procidx_Get(const ams::ProcId& parent) __attribute__((__warn_unused_result__, nothrow));
+inline u16           procidx_Get(const ams::ProcId& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
-//    4 bits starting at bit 0.
+//    14 bits starting at bit 0.
 // func:ams.ProcId.procidx.Set
-inline void          procidx_Set(ams::ProcId& parent, u8 rhs) __attribute__((nothrow));
+inline void          procidx_Set(ams::ProcId& parent, u16 rhs) __attribute__((nothrow));
 
 // func:ams.ProcId..Hash
 inline u32           ProcId_Hash(u32 prev, ams::ProcId rhs) __attribute__((nothrow));
@@ -481,11 +478,300 @@ inline bool          ProcId_Eq(ams::ProcId lhs, ams::ProcId rhs) __attribute__((
 // func:ams.ProcId..Print
 void                 ProcId_Print(ams::ProcId row, algo::cstring& str) __attribute__((nothrow));
 
+// --- ams.Grptype
+#pragma pack(push,1)
+struct Grptype { // ams.Grptype
+    u8   value;   //   0
+    // func:ams.Grptype..EqOp
+    inline bool          operator ==(const ams::Grptype &rhs) const __attribute__((nothrow));
+    // func:ams.Grptype..NeOp
+    inline bool          operator !=(const ams::Grptype &rhs) const __attribute__((nothrow));
+    // define enum comparison operator to avoid ambiguity
+    // func:ams.Grptype..EqEnum
+    inline bool          operator ==(ams_GrptypeEnum rhs) const __attribute__((nothrow));
+    // func:ams.Grptype..Ctor
+    inline               Grptype() __attribute__((nothrow));
+    // func:ams.Grptype..FieldwiseCtor
+    explicit inline               Grptype(u8 in_value) __attribute__((nothrow));
+    // func:ams.Grptype..EnumCtor
+    inline               Grptype(ams_GrptypeEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:ams.Grptype.value.GetEnum
+inline ams_GrptypeEnum value_GetEnum(const ams::Grptype& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ams.Grptype.value.SetEnum
+inline void          value_SetEnum(ams::Grptype& parent, ams_GrptypeEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ams.Grptype.value.ToCstr
+const char*          value_ToCstr(const ams::Grptype& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:ams.Grptype.value.Print
+void                 value_Print(const ams::Grptype& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ams.Grptype.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(ams::Grptype& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ams.Grptype.value.SetStrptr
+void                 value_SetStrptr(ams::Grptype& parent, algo::strptr rhs, ams_GrptypeEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:ams.Grptype.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(ams::Grptype& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// func:ams.Grptype..Hash
+inline u32           Grptype_Hash(u32 prev, ams::Grptype rhs) __attribute__((nothrow));
+// Read fields of ams::Grptype from an ascii string.
+// The format of the string is the format of the ams::Grptype's only field
+// func:ams.Grptype..ReadStrptrMaybe
+bool                 Grptype_ReadStrptrMaybe(ams::Grptype &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:ams.Grptype..Cmp
+inline i32           Grptype_Cmp(ams::Grptype lhs, ams::Grptype rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.Grptype..Init
+inline void          Grptype_Init(ams::Grptype& parent);
+// func:ams.Grptype..Eq
+inline bool          Grptype_Eq(ams::Grptype lhs, ams::Grptype rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams.Grptype.String  printfmt:Raw
+// func:ams.Grptype..Print
+void                 Grptype_Print(ams::Grptype row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.GrpId
+#pragma pack(push,1)
+struct GrpId { // ams.GrpId: Group id: proctype-nodeidx-procidx.grptype-grpidx
+    ams::ProcId    proc_id;   // Writer process ID
+    ams::Grptype   grptype;   // Stream type ID
+    u8             index;     //   0  Stream index
+    // func:ams.GrpId..EqOp
+    inline bool          operator ==(const ams::GrpId &rhs) const __attribute__((nothrow));
+    // func:ams.GrpId..NeOp
+    inline bool          operator !=(const ams::GrpId &rhs) const __attribute__((nothrow));
+    // func:ams.GrpId..Ctor
+    inline               GrpId() __attribute__((nothrow));
+    // func:ams.GrpId..FieldwiseCtor
+    explicit inline               GrpId(ams::ProcId in_proc_id, ams::Grptype in_grptype, u8 in_index) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:ams.GrpId..Hash
+inline u32           GrpId_Hash(u32 prev, ams::GrpId rhs) __attribute__((nothrow));
+// func:ams.GrpId..ReadFieldMaybe
+bool                 GrpId_ReadFieldMaybe(ams::GrpId& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::GrpId from an ascii string.
+// The format of the string is a string with separated values
+// func:ams.GrpId..ReadStrptrMaybe
+bool                 GrpId_ReadStrptrMaybe(ams::GrpId &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:ams.GrpId..Cmp
+inline i32           GrpId_Cmp(ams::GrpId lhs, ams::GrpId rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.GrpId..Init
+inline void          GrpId_Init(ams::GrpId& parent);
+// func:ams.GrpId..Eq
+inline bool          GrpId_Eq(ams::GrpId lhs, ams::GrpId rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams.GrpId.String  printfmt:Sep
+// func:ams.GrpId..Print
+void                 GrpId_Print(ams::GrpId row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.Bridge
+struct Bridge { // ams.Bridge: Bridge identifier: proc_id + grp pair
+    ams::ProcId   proc_id;   // Child proc id
+    ams::GrpId    in_grp;    // Inbound grp (child writes, parent reads)
+    ams::GrpId    out_grp;   // Outbound grp (parent writes, child reads)
+    // func:ams.Bridge..Ctor
+    inline               Bridge() __attribute__((nothrow));
+};
+// func:ams.Bridge..ReadFieldMaybe
+bool                 Bridge_ReadFieldMaybe(ams::Bridge& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::Bridge from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.Bridge..ReadStrptrMaybe
+bool                 Bridge_ReadStrptrMaybe(ams::Bridge &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams.Bridge.String  printfmt:Tuple
+// func:ams.Bridge..Print
+void                 Bridge_Print(ams::Bridge row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.FieldId
+#pragma pack(push,1)
+struct FieldId { // ams.FieldId: Field read helper
+    i32   value;   //   -1
+    // func:ams.FieldId.value.Cast
+    inline               operator ams_FieldIdEnum() const __attribute__((nothrow));
+    // func:ams.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:ams.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:ams.FieldId..EnumCtor
+    inline               FieldId(ams_FieldIdEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:ams.FieldId.value.GetEnum
+inline ams_FieldIdEnum value_GetEnum(const ams::FieldId& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ams.FieldId.value.SetEnum
+inline void          value_SetEnum(ams::FieldId& parent, ams_FieldIdEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ams.FieldId.value.ToCstr
+const char*          value_ToCstr(const ams::FieldId& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:ams.FieldId.value.Print
+void                 value_Print(const ams::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ams.FieldId.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ams.FieldId.value.SetStrptr
+void                 value_SetStrptr(ams::FieldId& parent, algo::strptr rhs, ams_FieldIdEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:ams.FieldId.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of ams::FieldId from an ascii string.
+// The format of the string is the format of the ams::FieldId's only field
+// func:ams.FieldId..ReadStrptrMaybe
+bool                 FieldId_ReadStrptrMaybe(ams::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.FieldId..Init
+inline void          FieldId_Init(ams::FieldId& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.FieldId.String  printfmt:Raw
+// func:ams.FieldId..Print
+void                 FieldId_Print(ams::FieldId row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.ShmemberFlags
+#pragma pack(push,1)
+struct ShmemberFlags { // ams.ShmemberFlags: Shm member flags
+    u16   value;   //   0  Shm member flags
+    // func:ams.ShmemberFlags..EqOp
+    inline bool          operator ==(const ams::ShmemberFlags &rhs) const __attribute__((nothrow));
+    // func:ams.ShmemberFlags..NeOp
+    inline bool          operator !=(const ams::ShmemberFlags &rhs) const __attribute__((nothrow));
+    // define enum comparison operator to avoid ambiguity
+    // func:ams.ShmemberFlags..EqEnum
+    inline bool          operator ==(ams_ShmemberFlagsEnum rhs) const __attribute__((nothrow));
+    // func:ams.ShmemberFlags..Ctor
+    inline               ShmemberFlags() __attribute__((nothrow));
+    // func:ams.ShmemberFlags..FieldwiseCtor
+    explicit inline               ShmemberFlags(u16 in_value) __attribute__((nothrow));
+    // func:ams.ShmemberFlags..EnumCtor
+    inline               ShmemberFlags(ams_ShmemberFlagsEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 0.
+// func:ams.ShmemberFlags.r.Get
+inline bool          r_Get(const ams::ShmemberFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 0.
+// func:ams.ShmemberFlags.r.Set
+inline void          r_Set(ams::ShmemberFlags& parent, bool rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 1.
+// func:ams.ShmemberFlags.w.Get
+inline bool          w_Get(const ams::ShmemberFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 1.
+// func:ams.ShmemberFlags.w.Set
+inline void          w_Set(ams::ShmemberFlags& parent, bool rhs) __attribute__((nothrow));
+
+// func:ams.ShmemberFlags..Hash
+inline u32           ShmemberFlags_Hash(u32 prev, ams::ShmemberFlags rhs) __attribute__((nothrow));
+// func:ams.ShmemberFlags..ReadFieldMaybe
+bool                 ShmemberFlags_ReadFieldMaybe(ams::ShmemberFlags& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::ShmemberFlags from an ascii string.
+// func:ams.ShmemberFlags..ReadStrptrMaybe
+bool                 ShmemberFlags_ReadStrptrMaybe(ams::ShmemberFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:ams.ShmemberFlags..Cmp
+inline i32           ShmemberFlags_Cmp(ams::ShmemberFlags lhs, ams::ShmemberFlags rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.ShmemberFlags..Init
+inline void          ShmemberFlags_Init(ams::ShmemberFlags& parent);
+// func:ams.ShmemberFlags..Eq
+inline bool          ShmemberFlags_Eq(ams::ShmemberFlags lhs, ams::ShmemberFlags rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams.ShmemberFlags.String  printfmt:Bitset
+// func:ams.ShmemberFlags..Print
+void                 ShmemberFlags_Print(ams::ShmemberFlags row, algo::cstring& str) __attribute__((nothrow));
+// func:ams.ShmemberFlags..GetAnon
+algo::strptr         ShmemberFlags_GetAnon(ams::ShmemberFlags &parent, i32 idx) __attribute__((nothrow));
+
+// --- ams.GrpmemberId
+#pragma pack(push,1)
+struct GrpmemberId { // ams.GrpmemberId: Shm/Process - member ID for AMS SHM
+    ams::GrpId           grp_id;    // Stream ID
+    ams::ProcId          proc_id;   // Process ID
+    ams::ShmemberFlags   flags;     //   0
+    // func:ams.GrpmemberId..EqOp
+    inline bool          operator ==(const ams::GrpmemberId &rhs) const __attribute__((nothrow));
+    // func:ams.GrpmemberId..NeOp
+    inline bool          operator !=(const ams::GrpmemberId &rhs) const __attribute__((nothrow));
+    // func:ams.GrpmemberId..Ctor
+    inline               GrpmemberId() __attribute__((nothrow));
+    // func:ams.GrpmemberId..FieldwiseCtor
+    explicit inline               GrpmemberId(ams::GrpId in_grp_id, ams::ProcId in_proc_id, ams::ShmemberFlags in_flags) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:ams.GrpmemberId..Hash
+inline u32           GrpmemberId_Hash(u32 prev, ams::GrpmemberId rhs) __attribute__((nothrow));
+// func:ams.GrpmemberId..ReadFieldMaybe
+bool                 GrpmemberId_ReadFieldMaybe(ams::GrpmemberId& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::GrpmemberId from an ascii string.
+// The format of the string is a string with separated values
+// func:ams.GrpmemberId..ReadStrptrMaybe
+bool                 GrpmemberId_ReadStrptrMaybe(ams::GrpmemberId &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:ams.GrpmemberId..Cmp
+inline i32           GrpmemberId_Cmp(ams::GrpmemberId lhs, ams::GrpmemberId rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.GrpmemberId..Init
+inline void          GrpmemberId_Init(ams::GrpmemberId& parent);
+// func:ams.GrpmemberId..Eq
+inline bool          GrpmemberId_Eq(ams::GrpmemberId lhs, ams::GrpmemberId rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams.GrpmemberId.String  printfmt:Sep
+// func:ams.GrpmemberId..Print
+void                 GrpmemberId_Print(ams::GrpmemberId row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.I64Price8
+#pragma pack(push,1)
+struct I64Price8 { // ams.I64Price8: Fixed-point price, 8 decimals
+    i64   value;   //   0
+    // func:ams.I64Price8..Ctor
+    inline               I64Price8() __attribute__((nothrow));
+    // func:ams.I64Price8..FieldwiseCtor
+    explicit inline               I64Price8(i64 in_value) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Read fields of ams::I64Price8 from an ascii string.
+// func:ams.I64Price8..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
+bool                 I64Price8_ReadStrptrMaybe(ams::I64Price8 &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.I64Price8..Init
+inline void          I64Price8_Init(ams::I64Price8& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.I64Price8.String  printfmt:Extern
+// func:ams.I64Price8..Print
+// this function is 'extrn' and implemented by user
+void                 I64Price8_Print(ams::I64Price8 row, algo::cstring& str) __attribute__((nothrow));
+
 // --- ams.InputLineMsg
 #pragma pack(push,1)
 struct InputLineMsg { // ams.InputLineMsg: Unrecognized input line
     u32           type;      //   22
-    u32           length;    //   ssizeof(parent) + (0)
+    u32           length;    //   ssizeof(parent)
     ams::ProcId   proc_id;   // Target process
     // var-length field ams.InputLineMsg.payload starts here. access it with payload_Addr
     // func:ams.InputLineMsg..Ctor
@@ -494,7 +780,6 @@ struct InputLineMsg { // ams.InputLineMsg: Unrecognized input line
     explicit inline               InputLineMsg(ams::ProcId in_proc_id) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ams.InputLineMsg.base.CopyOut
 void                 parent_CopyOut(ams::InputLineMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -559,7 +844,7 @@ void                 InputLineMsg_Print(ams::InputLineMsg& row, algo::cstring& s
 #pragma pack(push,1)
 struct LogMsg { // ams.LogMsg: Log message
     u32               type;         //   6
-    u32               length;       //   ssizeof(parent) + (0)
+    u32               length;       //   ssizeof(parent)
     ams::ProcId       proc_id;      //
     algo::SchedTime   tstamp;       // Local timestamp
     u32               logcat_end;   // end of logcat field
@@ -571,7 +856,6 @@ struct LogMsg { // ams.LogMsg: Log message
     explicit inline               LogMsg(ams::ProcId in_proc_id, algo::SchedTime in_tstamp) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ams.LogMsg.base.CopyOut
 void                 parent_CopyOut(ams::LogMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -663,7 +947,7 @@ void                 LogMsg_Print(ams::LogMsg& row, algo::cstring& str) __attrib
 #pragma pack(push,1)
 struct MsgBlock { // ams.MsgBlock: A block of messages from ams commit file
     u32   type;              //   1
-    u32   length;            //   ssizeof(parent) + (0)
+    u32   length;            //   ssizeof(parent)
     u64   first_seqno;       //   0  First sequence number
     u32   n_messages;        //   0  Number of messages
     u32   original_length;   //   0  Original (uncompressed length) of messages
@@ -672,7 +956,6 @@ struct MsgBlock { // ams.MsgBlock: A block of messages from ams commit file
     inline               MsgBlock() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ams.MsgBlock.header.CopyOut
 void                 parent_CopyOut(ams::MsgBlock &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -724,22 +1007,29 @@ inline void          MsgBlock_Init(ams::MsgBlock& parent);
 void                 MsgBlock_Print(ams::MsgBlock& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ams.MsgHeader
-// create: ams.Shmmsg.payload (Opt)
-// access: ams.ExpectMsg.base (Base)
+// access: ams.BoardrefMsg.base (Base)
 // access: ams.InputLineMsg.base (Base)
 // access: ams.LogMsg.base (Base)
 // access: ams.MsgBlock.header (Base)
-// access: ams.ProcEofMsg.base (Base)
-// access: ams.ProcKillMsg.base (Base)
-// access: ams.ProcMsg.base (Base)
-// access: ams.ProcReadMsg.base (Base)
-// access: ams.ProcStartMsg.base (Base)
-// access: ams.ProcStatusMsg.base (Base)
-// access: ams.RemDirRecurseMsg.base (Base)
+// access: ams.SampMengBookMsg.base (Base)
+// access: ams.SampMengCancelOrderMsg.base (Base)
+// access: ams.SampMengCancelReqMsg.base (Base)
+// access: ams.SampMengMassCancelReqMsg.base (Base)
+// access: ams.SampMengNewOrderMsg.base (Base)
+// access: ams.SampMengNewOrderReqMsg.base (Base)
+// access: ams.SampMengNewSymbolMsg.base (Base)
+// access: ams.SampMengNewSymbolReqMsg.base (Base)
+// access: ams.SampMengNewUserMsg.base (Base)
+// access: ams.SampMengNewUserReqMsg.base (Base)
+// access: ams.SampMengOrderTradeMsg.base (Base)
+// access: ams.SampMengRestingMsg.base (Base)
+// access: ams.SampMengSymbolrowMsg.base (Base)
+// access: ams.SampMengTextMsg.base (Base)
+// access: ams.SampMengUserrowMsg.base (Base)
 // access: ams.ShmHbMsg.base (Base)
-// access: ams.Shmmsg.base (Base)
 // access: ams.TerminateMsg.base (Base)
 // access: ams.UdpFrame.header (Base)
+// access: ams.UprocTextMsg.base (Base)
 // access: ams.MsgHeader_curs.msg (Ptr)
 #pragma pack(push,1)
 struct MsgHeader { // ams.MsgHeader
@@ -751,33 +1041,32 @@ struct MsgHeader { // ams.MsgHeader
     explicit inline               MsgHeader(u32 in_type, u32 in_length) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ams.MsgHeader.type.GetEnum
-inline ams_MsgHeader_type_Enum type_GetEnum(const ams::MsgHeader& payload) __attribute__((nothrow));
+inline ams_MsgHeader_type_Enum type_GetEnum(const ams::MsgHeader& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:ams.MsgHeader.type.SetEnum
-inline void          type_SetEnum(ams::MsgHeader& payload, ams_MsgHeader_type_Enum rhs) __attribute__((nothrow));
+inline void          type_SetEnum(ams::MsgHeader& parent, ams_MsgHeader_type_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:ams.MsgHeader.type.ToCstr
-const char*          type_ToCstr(const ams::MsgHeader& payload) __attribute__((nothrow));
+const char*          type_ToCstr(const ams::MsgHeader& parent) __attribute__((nothrow));
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
 // func:ams.MsgHeader.type.Print
-void                 type_Print(const ams::MsgHeader& payload, algo::cstring &lhs) __attribute__((nothrow));
+void                 type_Print(const ams::MsgHeader& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
 // func:ams.MsgHeader.type.SetStrptrMaybe
-bool                 type_SetStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) __attribute__((nothrow));
+bool                 type_SetStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
 // func:ams.MsgHeader.type.SetStrptr
-void                 type_SetStrptr(ams::MsgHeader& payload, algo::strptr rhs, ams_MsgHeader_type_Enum dflt) __attribute__((nothrow));
+void                 type_SetStrptr(ams::MsgHeader& parent, algo::strptr rhs, ams_MsgHeader_type_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
 // func:ams.MsgHeader.type.ReadStrptrMaybe
-bool                 type_ReadStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) __attribute__((nothrow));
+bool                 type_ReadStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:ams.MsgHeader..ReadFieldMaybe
 bool                 MsgHeader_ReadFieldMaybe(ams::MsgHeader& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -793,11 +1082,11 @@ inline i32           GetMsgLength(const ams::MsgHeader& parent) __attribute__((n
 inline algo::memptr  GetMsgMemptr(const ams::MsgHeader& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.MsgHeader..Init
-inline void          MsgHeader_Init(ams::MsgHeader& payload);
+inline void          MsgHeader_Init(ams::MsgHeader& parent);
 // print string representation of ROW to string STR
 // cfmt:ams.MsgHeader.String  printfmt:Tuple
 // func:ams.MsgHeader..Print
-void                 MsgHeader_Print(ams::MsgHeader& row, algo::cstring& str) __attribute__((nothrow));
+void                 MsgHeader_Print(ams::MsgHeader row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ams.MsgHeaderMsgsCase
 #pragma pack(push,1)
@@ -813,7 +1102,6 @@ struct MsgHeaderMsgsCase { // ams.MsgHeaderMsgsCase: Enum for dispatch ams.MsgHe
     inline               MsgHeaderMsgsCase(ams_MsgHeaderMsgsCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ams.MsgHeaderMsgsCase.value.GetEnum
 inline ams_MsgHeaderMsgsCaseEnum value_GetEnum(const ams::MsgHeaderMsgsCase& parent) __attribute__((nothrow));
@@ -861,7 +1149,6 @@ struct MsgHeader_curs { // ams.MsgHeader_curs: Cursor for scanning messages in a
     inline               MsgHeader_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:ams.MsgHeader_curs..ValidQ
 inline bool          MsgHeader_curs_ValidQ(ams::MsgHeader_curs& curs) __attribute__((nothrow));
 // func:ams.MsgHeader_curs..Reset
@@ -874,425 +1161,729 @@ inline void          MsgHeader_curs_Next(ams::MsgHeader_curs& curs) __attribute_
 // func:ams.MsgHeader_curs..Init
 inline void          MsgHeader_curs_Init(ams::MsgHeader_curs& parent);
 
-// --- ams.ProcEofMsg
-#pragma pack(push,1)
-struct ProcEofMsg { // ams.ProcEofMsg: EOF from/to a process
-    u32                type;     //   703
-    u32                length;   //   ssizeof(parent) + (0)
-    algo::RnullStr50   proc;     //
-    // func:ams.ProcEofMsg..Ctor
-    inline               ProcEofMsg() __attribute__((nothrow));
+// --- ams.SampFoldstate
+struct SampFoldstate { // ams.SampFoldstate: The sample fold's state: the chained hash and how many inputs it accounts for
+    u64   hash;   //   0  Every input up to the boundary, chained through Fnv1a64
+    u64   n_in;   //   0  Inputs the hash accounts for
+    // func:ams.SampFoldstate..Ctor
+    inline               SampFoldstate() __attribute__((nothrow));
 };
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:ams.ProcEofMsg.base.CopyOut
-void                 parent_CopyOut(ams::ProcEofMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
-// Check if ams::MsgHeader is an instance of ProcEofMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of ProcEofMsg.
-// If not successful, quietly return NULL.
-// func:ams.ProcEofMsg.base.Castdown
-inline ams::ProcEofMsg* ProcEofMsg_Castdown(ams::MsgHeader &hdr);
-// func:ams.ProcEofMsg.base.Castbase
-inline ams::MsgHeader& Castbase(ams::ProcEofMsg& parent);
-
-// func:ams.ProcEofMsg..ReadFieldMaybe
-bool                 ProcEofMsg_ReadFieldMaybe(ams::ProcEofMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of ams::ProcEofMsg from an ascii string.
+// func:ams.SampFoldstate..ReadFieldMaybe
+bool                 SampFoldstate_ReadFieldMaybe(ams::SampFoldstate& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampFoldstate from an ascii string.
 // The format of the string is an ssim Tuple
-// func:ams.ProcEofMsg..ReadStrptrMaybe
-bool                 ProcEofMsg_ReadStrptrMaybe(ams::ProcEofMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:ams.ProcEofMsg..GetMsgLength
-inline i32           GetMsgLength(const ams::ProcEofMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:ams.ProcEofMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const ams::ProcEofMsg& row) __attribute__((nothrow));
+// func:ams.SampFoldstate..ReadStrptrMaybe
+bool                 SampFoldstate_ReadStrptrMaybe(ams::SampFoldstate &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:ams.ProcEofMsg..Init
-inline void          ProcEofMsg_Init(ams::ProcEofMsg& parent);
+// func:ams.SampFoldstate..Init
+inline void          SampFoldstate_Init(ams::SampFoldstate& parent);
 // print string representation of ROW to string STR
-// cfmt:ams.ProcEofMsg.String  printfmt:Tuple
-// func:ams.ProcEofMsg..Print
-void                 ProcEofMsg_Print(ams::ProcEofMsg& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:ams.SampFoldstate.String  printfmt:Tuple
+// func:ams.SampFoldstate..Print
+void                 SampFoldstate_Print(ams::SampFoldstate row, algo::cstring& str) __attribute__((nothrow));
 
-// --- ams.ProcKillMsg
+// --- ams.SampMengBookMsg
 #pragma pack(push,1)
-struct ProcKillMsg { // ams.ProcKillMsg: Kill process
-    u32                type;     //   704
-    u32                length;   //   ssizeof(parent) + (0)
-    algo::RnullStr50   proc;     //
-    i32                signal;   //   15
-    // func:ams.ProcKillMsg..Ctor
-    inline               ProcKillMsg() __attribute__((nothrow));
+struct SampMengBookMsg { // ams.SampMengBookMsg: Matcher state: the book's scalars, opening its snapshot
+    u32   type;            //   2011
+    u32   length;          //   ssizeof(parent)
+    u64   next_order_id;   //   0  Order id the matcher will assign next
+    // func:ams.SampMengBookMsg..Ctor
+    inline               SampMengBookMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
-// func:ams.ProcKillMsg.base.CopyOut
-void                 parent_CopyOut(ams::ProcKillMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
-// Check if ams::MsgHeader is an instance of ProcKillMsg by checking the type field
+// func:ams.SampMengBookMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengBookMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengBookMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of ProcKillMsg.
+// Additionally, check if the length field permits valid instance of SampMengBookMsg.
 // If not successful, quietly return NULL.
-// func:ams.ProcKillMsg.base.Castdown
-inline ams::ProcKillMsg* ProcKillMsg_Castdown(ams::MsgHeader &hdr);
-// func:ams.ProcKillMsg.base.Castbase
-inline ams::MsgHeader& Castbase(ams::ProcKillMsg& parent);
+// func:ams.SampMengBookMsg.base.Castdown
+inline ams::SampMengBookMsg* SampMengBookMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengBookMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengBookMsg& parent);
 
-// func:ams.ProcKillMsg..ReadFieldMaybe
-bool                 ProcKillMsg_ReadFieldMaybe(ams::ProcKillMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of ams::ProcKillMsg from an ascii string.
+// func:ams.SampMengBookMsg..ReadFieldMaybe
+bool                 SampMengBookMsg_ReadFieldMaybe(ams::SampMengBookMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengBookMsg from an ascii string.
 // The format of the string is an ssim Tuple
-// func:ams.ProcKillMsg..ReadStrptrMaybe
-bool                 ProcKillMsg_ReadStrptrMaybe(ams::ProcKillMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:ams.SampMengBookMsg..ReadStrptrMaybe
+bool                 SampMengBookMsg_ReadStrptrMaybe(ams::SampMengBookMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
-// func:ams.ProcKillMsg..GetMsgLength
-inline i32           GetMsgLength(const ams::ProcKillMsg& parent) __attribute__((nothrow));
+// func:ams.SampMengBookMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengBookMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-// func:ams.ProcKillMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const ams::ProcKillMsg& row) __attribute__((nothrow));
+// func:ams.SampMengBookMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengBookMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:ams.ProcKillMsg..Init
-inline void          ProcKillMsg_Init(ams::ProcKillMsg& parent);
+// func:ams.SampMengBookMsg..Init
+inline void          SampMengBookMsg_Init(ams::SampMengBookMsg& parent);
 // print string representation of ROW to string STR
-// cfmt:ams.ProcKillMsg.String  printfmt:Tuple
-// func:ams.ProcKillMsg..Print
-void                 ProcKillMsg_Print(ams::ProcKillMsg& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:ams.SampMengBookMsg.String  printfmt:Tuple
+// func:ams.SampMengBookMsg..Print
+void                 SampMengBookMsg_Print(ams::SampMengBookMsg row, algo::cstring& str) __attribute__((nothrow));
 
-// --- ams.ProcMsg
+// --- ams.SampMengCancelOrderMsg
 #pragma pack(push,1)
-struct ProcMsg { // ams.ProcMsg: Message from/to a process
-    u32                type;     //   701
-    u32                length;   //   ssizeof(parent) + (0)
-    algo::RnullStr50   proc;     //
-    // var-length field ams.ProcMsg.payload starts here. access it with payload_Addr
-    // func:ams.ProcMsg..Ctor
-    inline               ProcMsg() __attribute__((nothrow));
+struct SampMengCancelOrderMsg { // ams.SampMengCancelOrderMsg
+    u32   type;     //   2000
+    u32   length;   //   ssizeof(parent)
+    u64   order;    //   0
+    // func:ams.SampMengCancelOrderMsg..Ctor
+    inline               SampMengCancelOrderMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
-// func:ams.ProcMsg.base.CopyOut
-void                 parent_CopyOut(ams::ProcMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
-// Check if ams::MsgHeader is an instance of ProcMsg by checking the type field
+// func:ams.SampMengCancelOrderMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengCancelOrderMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengCancelOrderMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of ProcMsg.
+// Additionally, check if the length field permits valid instance of SampMengCancelOrderMsg.
 // If not successful, quietly return NULL.
-// func:ams.ProcMsg.base.Castdown
-inline ams::ProcMsg* ProcMsg_Castdown(ams::MsgHeader &hdr);
-// func:ams.ProcMsg.base.Castbase
-inline ams::MsgHeader& Castbase(ams::ProcMsg& parent);
+// func:ams.SampMengCancelOrderMsg.base.Castdown
+inline ams::SampMengCancelOrderMsg* SampMengCancelOrderMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengCancelOrderMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengCancelOrderMsg& parent);
+
+// func:ams.SampMengCancelOrderMsg..ReadFieldMaybe
+bool                 SampMengCancelOrderMsg_ReadFieldMaybe(ams::SampMengCancelOrderMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengCancelOrderMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengCancelOrderMsg..ReadStrptrMaybe
+bool                 SampMengCancelOrderMsg_ReadStrptrMaybe(ams::SampMengCancelOrderMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengCancelOrderMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengCancelOrderMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengCancelOrderMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengCancelOrderMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengCancelOrderMsg..Init
+inline void          SampMengCancelOrderMsg_Init(ams::SampMengCancelOrderMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengCancelOrderMsg.String  printfmt:Tuple
+// func:ams.SampMengCancelOrderMsg..Print
+void                 SampMengCancelOrderMsg_Print(ams::SampMengCancelOrderMsg row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengCancelReqMsg
+#pragma pack(push,1)
+struct SampMengCancelReqMsg { // ams.SampMengCancelReqMsg
+    u32   type;     //   2001
+    u32   length;   //   ssizeof(parent)
+    u64   order;    //   0
+    // func:ams.SampMengCancelReqMsg..Ctor
+    inline               SampMengCancelReqMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengCancelReqMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengCancelReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengCancelReqMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengCancelReqMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengCancelReqMsg.base.Castdown
+inline ams::SampMengCancelReqMsg* SampMengCancelReqMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengCancelReqMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengCancelReqMsg& parent);
+
+// func:ams.SampMengCancelReqMsg..ReadFieldMaybe
+bool                 SampMengCancelReqMsg_ReadFieldMaybe(ams::SampMengCancelReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengCancelReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengCancelReqMsg..ReadStrptrMaybe
+bool                 SampMengCancelReqMsg_ReadStrptrMaybe(ams::SampMengCancelReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengCancelReqMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengCancelReqMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengCancelReqMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengCancelReqMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengCancelReqMsg..Init
+inline void          SampMengCancelReqMsg_Init(ams::SampMengCancelReqMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengCancelReqMsg.String  printfmt:Tuple
+// func:ams.SampMengCancelReqMsg..Print
+void                 SampMengCancelReqMsg_Print(ams::SampMengCancelReqMsg row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengMassCancelReqMsg
+#pragma pack(push,1)
+struct SampMengMassCancelReqMsg { // ams.SampMengMassCancelReqMsg
+    u32   type;     //   2002
+    u32   length;   //   ssizeof(parent)
+    u32   user;     //   0
+    // func:ams.SampMengMassCancelReqMsg..Ctor
+    inline               SampMengMassCancelReqMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengMassCancelReqMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengMassCancelReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengMassCancelReqMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengMassCancelReqMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengMassCancelReqMsg.base.Castdown
+inline ams::SampMengMassCancelReqMsg* SampMengMassCancelReqMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengMassCancelReqMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengMassCancelReqMsg& parent);
+
+// func:ams.SampMengMassCancelReqMsg..ReadFieldMaybe
+bool                 SampMengMassCancelReqMsg_ReadFieldMaybe(ams::SampMengMassCancelReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengMassCancelReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengMassCancelReqMsg..ReadStrptrMaybe
+bool                 SampMengMassCancelReqMsg_ReadStrptrMaybe(ams::SampMengMassCancelReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengMassCancelReqMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengMassCancelReqMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengMassCancelReqMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengMassCancelReqMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengMassCancelReqMsg..Init
+inline void          SampMengMassCancelReqMsg_Init(ams::SampMengMassCancelReqMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengMassCancelReqMsg.String  printfmt:Tuple
+// func:ams.SampMengMassCancelReqMsg..Print
+void                 SampMengMassCancelReqMsg_Print(ams::SampMengMassCancelReqMsg row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengSymbol
+#pragma pack(push,1)
+struct SampMengSymbol { // ams.SampMengSymbol: Symbol identifier
+    algo::RnullStr8   symbol;   //
+    // func:ams.SampMengSymbol..EqOp
+    inline bool          operator ==(const ams::SampMengSymbol &rhs) const __attribute__((nothrow));
+    // func:ams.SampMengSymbol..NeOp
+    inline bool          operator !=(const ams::SampMengSymbol &rhs) const __attribute__((nothrow));
+    // func:ams.SampMengSymbol..Ctor
+    inline               SampMengSymbol() __attribute__((nothrow));
+    // func:ams.SampMengSymbol..FieldwiseCtor
+    explicit inline               SampMengSymbol(const algo::strptr& in_symbol) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:ams.SampMengSymbol..Hash
+inline u32           SampMengSymbol_Hash(u32 prev, const ams::SampMengSymbol& rhs) __attribute__((nothrow));
+// Read fields of ams::SampMengSymbol from an ascii string.
+// The format of the string is the format of the ams::SampMengSymbol's only field
+// func:ams.SampMengSymbol..ReadStrptrMaybe
+bool                 SampMengSymbol_ReadStrptrMaybe(ams::SampMengSymbol &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:ams.SampMengSymbol..Cmp
+inline i32           SampMengSymbol_Cmp(ams::SampMengSymbol& lhs, ams::SampMengSymbol& rhs) __attribute__((nothrow));
+// func:ams.SampMengSymbol..Eq
+inline bool          SampMengSymbol_Eq(ams::SampMengSymbol& lhs, ams::SampMengSymbol& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengSymbol.String  printfmt:Raw
+// func:ams.SampMengSymbol..Print
+void                 SampMengSymbol_Print(ams::SampMengSymbol& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengNewOrderMsg
+#pragma pack(push,1)
+struct SampMengNewOrderMsg { // ams.SampMengNewOrderMsg
+    u32                   type;     //   2003
+    u32                   length;   //   ssizeof(parent)
+    algo::UnTime          time;     //
+    ams::I64Price8        price;    //
+    u64                   order;    //   0
+    ams::SampMengSymbol   symbol;   //
+    u32                   qty;      //   0
+    // func:ams.SampMengNewOrderMsg..Ctor
+    inline               SampMengNewOrderMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengNewOrderMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengNewOrderMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengNewOrderMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengNewOrderMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengNewOrderMsg.base.Castdown
+inline ams::SampMengNewOrderMsg* SampMengNewOrderMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengNewOrderMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengNewOrderMsg& parent);
+
+// func:ams.SampMengNewOrderMsg..ReadFieldMaybe
+bool                 SampMengNewOrderMsg_ReadFieldMaybe(ams::SampMengNewOrderMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengNewOrderMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengNewOrderMsg..ReadStrptrMaybe
+bool                 SampMengNewOrderMsg_ReadStrptrMaybe(ams::SampMengNewOrderMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengNewOrderMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengNewOrderMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengNewOrderMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengNewOrderMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengNewOrderMsg..Init
+inline void          SampMengNewOrderMsg_Init(ams::SampMengNewOrderMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewOrderMsg.String  printfmt:Tuple
+// func:ams.SampMengNewOrderMsg..Print
+void                 SampMengNewOrderMsg_Print(ams::SampMengNewOrderMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengNewOrderReqMsg
+#pragma pack(push,1)
+struct SampMengNewOrderReqMsg { // ams.SampMengNewOrderReqMsg
+    u32                   type;     //   2004
+    u32                   length;   //   ssizeof(parent)
+    bool                  ioc;      //   false
+    i32                   qty;      //   0  >0 = buy, <0 = sell
+    ams::I64Price8        price;    //
+    ams::SampMengSymbol   symbol;   //
+    u32                   user;     //   0
+    // func:ams.SampMengNewOrderReqMsg..Ctor
+    inline               SampMengNewOrderReqMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengNewOrderReqMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengNewOrderReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengNewOrderReqMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengNewOrderReqMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengNewOrderReqMsg.base.Castdown
+inline ams::SampMengNewOrderReqMsg* SampMengNewOrderReqMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengNewOrderReqMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengNewOrderReqMsg& parent);
+
+// func:ams.SampMengNewOrderReqMsg..ReadFieldMaybe
+bool                 SampMengNewOrderReqMsg_ReadFieldMaybe(ams::SampMengNewOrderReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengNewOrderReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengNewOrderReqMsg..ReadStrptrMaybe
+bool                 SampMengNewOrderReqMsg_ReadStrptrMaybe(ams::SampMengNewOrderReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengNewOrderReqMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengNewOrderReqMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengNewOrderReqMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengNewOrderReqMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengNewOrderReqMsg..Init
+inline void          SampMengNewOrderReqMsg_Init(ams::SampMengNewOrderReqMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewOrderReqMsg.String  printfmt:Tuple
+// func:ams.SampMengNewOrderReqMsg..Print
+void                 SampMengNewOrderReqMsg_Print(ams::SampMengNewOrderReqMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengNewSymbolMsg
+#pragma pack(push,1)
+struct SampMengNewSymbolMsg { // ams.SampMengNewSymbolMsg
+    u32                   type;     //   2005
+    u32                   length;   //   ssizeof(parent)
+    ams::SampMengSymbol   symbol;   //
+    // func:ams.SampMengNewSymbolMsg..Ctor
+    inline               SampMengNewSymbolMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengNewSymbolMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengNewSymbolMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengNewSymbolMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengNewSymbolMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengNewSymbolMsg.base.Castdown
+inline ams::SampMengNewSymbolMsg* SampMengNewSymbolMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengNewSymbolMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengNewSymbolMsg& parent);
+
+// func:ams.SampMengNewSymbolMsg..ReadFieldMaybe
+bool                 SampMengNewSymbolMsg_ReadFieldMaybe(ams::SampMengNewSymbolMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengNewSymbolMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengNewSymbolMsg..ReadStrptrMaybe
+bool                 SampMengNewSymbolMsg_ReadStrptrMaybe(ams::SampMengNewSymbolMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengNewSymbolMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengNewSymbolMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengNewSymbolMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengNewSymbolMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengNewSymbolMsg..Init
+inline void          SampMengNewSymbolMsg_Init(ams::SampMengNewSymbolMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewSymbolMsg.String  printfmt:Tuple
+// func:ams.SampMengNewSymbolMsg..Print
+void                 SampMengNewSymbolMsg_Print(ams::SampMengNewSymbolMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengNewSymbolReqMsg
+#pragma pack(push,1)
+struct SampMengNewSymbolReqMsg { // ams.SampMengNewSymbolReqMsg
+    u32                   type;     //   2006
+    u32                   length;   //   ssizeof(parent)
+    ams::SampMengSymbol   symbol;   //
+    // func:ams.SampMengNewSymbolReqMsg..Ctor
+    inline               SampMengNewSymbolReqMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengNewSymbolReqMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengNewSymbolReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengNewSymbolReqMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengNewSymbolReqMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengNewSymbolReqMsg.base.Castdown
+inline ams::SampMengNewSymbolReqMsg* SampMengNewSymbolReqMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengNewSymbolReqMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengNewSymbolReqMsg& parent);
+
+// func:ams.SampMengNewSymbolReqMsg..ReadFieldMaybe
+bool                 SampMengNewSymbolReqMsg_ReadFieldMaybe(ams::SampMengNewSymbolReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengNewSymbolReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengNewSymbolReqMsg..ReadStrptrMaybe
+bool                 SampMengNewSymbolReqMsg_ReadStrptrMaybe(ams::SampMengNewSymbolReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengNewSymbolReqMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengNewSymbolReqMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengNewSymbolReqMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengNewSymbolReqMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengNewSymbolReqMsg..Init
+inline void          SampMengNewSymbolReqMsg_Init(ams::SampMengNewSymbolReqMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewSymbolReqMsg.String  printfmt:Tuple
+// func:ams.SampMengNewSymbolReqMsg..Print
+void                 SampMengNewSymbolReqMsg_Print(ams::SampMengNewSymbolReqMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengNewUserMsg
+#pragma pack(push,1)
+struct SampMengNewUserMsg { // ams.SampMengNewUserMsg
+    u32   type;     //   2007
+    u32   length;   //   ssizeof(parent)
+    u32   user;     //   0
+    // func:ams.SampMengNewUserMsg..Ctor
+    inline               SampMengNewUserMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengNewUserMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengNewUserMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengNewUserMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengNewUserMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengNewUserMsg.base.Castdown
+inline ams::SampMengNewUserMsg* SampMengNewUserMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengNewUserMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengNewUserMsg& parent);
+
+// func:ams.SampMengNewUserMsg..ReadFieldMaybe
+bool                 SampMengNewUserMsg_ReadFieldMaybe(ams::SampMengNewUserMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengNewUserMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengNewUserMsg..ReadStrptrMaybe
+bool                 SampMengNewUserMsg_ReadStrptrMaybe(ams::SampMengNewUserMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengNewUserMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengNewUserMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengNewUserMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengNewUserMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengNewUserMsg..Init
+inline void          SampMengNewUserMsg_Init(ams::SampMengNewUserMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewUserMsg.String  printfmt:Tuple
+// func:ams.SampMengNewUserMsg..Print
+void                 SampMengNewUserMsg_Print(ams::SampMengNewUserMsg row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengNewUserReqMsg
+#pragma pack(push,1)
+struct SampMengNewUserReqMsg { // ams.SampMengNewUserReqMsg
+    u32   type;     //   2008
+    u32   length;   //   ssizeof(parent)
+    u32   user;     //   0
+    // func:ams.SampMengNewUserReqMsg..Ctor
+    inline               SampMengNewUserReqMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengNewUserReqMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengNewUserReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengNewUserReqMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengNewUserReqMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengNewUserReqMsg.base.Castdown
+inline ams::SampMengNewUserReqMsg* SampMengNewUserReqMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengNewUserReqMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengNewUserReqMsg& parent);
+
+// func:ams.SampMengNewUserReqMsg..ReadFieldMaybe
+bool                 SampMengNewUserReqMsg_ReadFieldMaybe(ams::SampMengNewUserReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengNewUserReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengNewUserReqMsg..ReadStrptrMaybe
+bool                 SampMengNewUserReqMsg_ReadStrptrMaybe(ams::SampMengNewUserReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengNewUserReqMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengNewUserReqMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengNewUserReqMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengNewUserReqMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengNewUserReqMsg..Init
+inline void          SampMengNewUserReqMsg_Init(ams::SampMengNewUserReqMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewUserReqMsg.String  printfmt:Tuple
+// func:ams.SampMengNewUserReqMsg..Print
+void                 SampMengNewUserReqMsg_Print(ams::SampMengNewUserReqMsg row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengOrderTradeMsg
+#pragma pack(push,1)
+struct SampMengOrderTradeMsg { // ams.SampMengOrderTradeMsg
+    u32              type;     //   2009
+    u32              length;   //   ssizeof(parent)
+    u64              order;    //   0
+    u32              qty;      //   0
+    ams::I64Price8   price;    //
+    // func:ams.SampMengOrderTradeMsg..Ctor
+    inline               SampMengOrderTradeMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengOrderTradeMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengOrderTradeMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengOrderTradeMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengOrderTradeMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengOrderTradeMsg.base.Castdown
+inline ams::SampMengOrderTradeMsg* SampMengOrderTradeMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengOrderTradeMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengOrderTradeMsg& parent);
+
+// func:ams.SampMengOrderTradeMsg..ReadFieldMaybe
+bool                 SampMengOrderTradeMsg_ReadFieldMaybe(ams::SampMengOrderTradeMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengOrderTradeMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengOrderTradeMsg..ReadStrptrMaybe
+bool                 SampMengOrderTradeMsg_ReadStrptrMaybe(ams::SampMengOrderTradeMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengOrderTradeMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengOrderTradeMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengOrderTradeMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengOrderTradeMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengOrderTradeMsg..Init
+inline void          SampMengOrderTradeMsg_Init(ams::SampMengOrderTradeMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengOrderTradeMsg.String  printfmt:Tuple
+// func:ams.SampMengOrderTradeMsg..Print
+void                 SampMengOrderTradeMsg_Print(ams::SampMengOrderTradeMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengRestingMsg
+#pragma pack(push,1)
+struct SampMengRestingMsg { // ams.SampMengRestingMsg: Matcher state: one order resting on the book
+    u32                   type;     //   2015
+    u32                   length;   //   ssizeof(parent)
+    i64                   order;    //   0
+    ams::SampMengSymbol   symbol;   //
+    ams::I64Price8        price;    //
+    u32                   qty;      //   0
+    algo::UnTime          time;     //
+    i32                   user;     //   0
+    bool                  buy;      //   false
+    // func:ams.SampMengRestingMsg..Ctor
+    inline               SampMengRestingMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengRestingMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengRestingMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengRestingMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengRestingMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengRestingMsg.base.Castdown
+inline ams::SampMengRestingMsg* SampMengRestingMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengRestingMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengRestingMsg& parent);
+
+// func:ams.SampMengRestingMsg..ReadFieldMaybe
+bool                 SampMengRestingMsg_ReadFieldMaybe(ams::SampMengRestingMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengRestingMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengRestingMsg..ReadStrptrMaybe
+bool                 SampMengRestingMsg_ReadStrptrMaybe(ams::SampMengRestingMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengRestingMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengRestingMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengRestingMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengRestingMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengRestingMsg..Init
+inline void          SampMengRestingMsg_Init(ams::SampMengRestingMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengRestingMsg.String  printfmt:Tuple
+// func:ams.SampMengRestingMsg..Print
+void                 SampMengRestingMsg_Print(ams::SampMengRestingMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengSymbolrowMsg
+#pragma pack(push,1)
+struct SampMengSymbolrowMsg { // ams.SampMengSymbolrowMsg: Matcher state: one symbol, in the order ids were assigned
+    u32                   type;     //   2013
+    u32                   length;   //   ssizeof(parent)
+    ams::SampMengSymbol   symbol;   // Symbol name
+    // func:ams.SampMengSymbolrowMsg..Ctor
+    inline               SampMengSymbolrowMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengSymbolrowMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengSymbolrowMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengSymbolrowMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengSymbolrowMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengSymbolrowMsg.base.Castdown
+inline ams::SampMengSymbolrowMsg* SampMengSymbolrowMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengSymbolrowMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengSymbolrowMsg& parent);
+
+// func:ams.SampMengSymbolrowMsg..ReadFieldMaybe
+bool                 SampMengSymbolrowMsg_ReadFieldMaybe(ams::SampMengSymbolrowMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengSymbolrowMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampMengSymbolrowMsg..ReadStrptrMaybe
+bool                 SampMengSymbolrowMsg_ReadStrptrMaybe(ams::SampMengSymbolrowMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampMengSymbolrowMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengSymbolrowMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampMengSymbolrowMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengSymbolrowMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampMengSymbolrowMsg..Init
+inline void          SampMengSymbolrowMsg_Init(ams::SampMengSymbolrowMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengSymbolrowMsg.String  printfmt:Tuple
+// func:ams.SampMengSymbolrowMsg..Print
+void                 SampMengSymbolrowMsg_Print(ams::SampMengSymbolrowMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampMengTextMsg
+#pragma pack(push,1)
+struct SampMengTextMsg { // ams.SampMengTextMsg
+    u32   type;     //   2010
+    u32   length;   //   ssizeof(parent)
+    // var-length field ams.SampMengTextMsg.text starts here. access it with text_Addr
+    // func:ams.SampMengTextMsg..Ctor
+    inline               SampMengTextMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampMengTextMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengTextMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengTextMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampMengTextMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampMengTextMsg.base.Castdown
+inline ams::SampMengTextMsg* SampMengTextMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengTextMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengTextMsg& parent);
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-// func:ams.ProcMsg.payload.Getary
-algo::aryptr<char>   payload_Getary(ams::ProcMsg& parent) __attribute__((nothrow));
-// func:ams.ProcMsg.payload.Addr
-char*                payload_Addr(ams::ProcMsg& parent);
+// func:ams.SampMengTextMsg.text.Getary
+algo::aryptr<char>   text_Getary(ams::SampMengTextMsg& parent) __attribute__((nothrow));
+// func:ams.SampMengTextMsg.text.Addr
+char*                text_Addr(ams::SampMengTextMsg& parent);
 // Return number of elements in varlen field
-// func:ams.ProcMsg.payload.N
-inline u32           payload_N(const ams::ProcMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:ams.SampMengTextMsg.text.N
+inline u32           text_N(const ams::SampMengTextMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Convert string to field. Return success value
-// func:ams.ProcMsg.payload.ReadStrptrMaybe
-bool                 payload_ReadStrptrMaybe(ams::ProcMsg& parent, algo::strptr in_str) __attribute__((nothrow));
-// Convert payload to a string.
+// func:ams.SampMengTextMsg.text.ReadStrptrMaybe
+bool                 text_ReadStrptrMaybe(ams::SampMengTextMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert text to a string.
 // Array is printed as a regular string.
-// func:ams.ProcMsg.payload.Print
-void                 payload_Print(ams::ProcMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+// func:ams.SampMengTextMsg.text.Print
+void                 text_Print(ams::SampMengTextMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
 
-// func:ams.ProcMsg.payload_curs.Reset
-inline void          ProcMsg_payload_curs_Reset(ProcMsg_payload_curs &curs, ams::ProcMsg &parent) __attribute__((nothrow));
+// func:ams.SampMengTextMsg.text_curs.Reset
+inline void          SampMengTextMsg_text_curs_Reset(SampMengTextMsg_text_curs &curs, ams::SampMengTextMsg &parent) __attribute__((nothrow));
 // cursor points to valid item
-// func:ams.ProcMsg.payload_curs.ValidQ
-inline bool          ProcMsg_payload_curs_ValidQ(ProcMsg_payload_curs &curs) __attribute__((nothrow));
+// func:ams.SampMengTextMsg.text_curs.ValidQ
+inline bool          SampMengTextMsg_text_curs_ValidQ(SampMengTextMsg_text_curs &curs) __attribute__((nothrow));
 // proceed to next item
-// func:ams.ProcMsg.payload_curs.Next
-inline void          ProcMsg_payload_curs_Next(ProcMsg_payload_curs &curs) __attribute__((nothrow));
+// func:ams.SampMengTextMsg.text_curs.Next
+inline void          SampMengTextMsg_text_curs_Next(SampMengTextMsg_text_curs &curs) __attribute__((nothrow));
 // item access
-// func:ams.ProcMsg.payload_curs.Access
-inline char&         ProcMsg_payload_curs_Access(ProcMsg_payload_curs &curs) __attribute__((nothrow));
-// func:ams.ProcMsg..ReadFieldMaybe
-bool                 ProcMsg_ReadFieldMaybe(ams::ProcMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:ams.SampMengTextMsg.text_curs.Access
+inline char&         SampMengTextMsg_text_curs_Access(SampMengTextMsg_text_curs &curs) __attribute__((nothrow));
+// func:ams.SampMengTextMsg..ReadFieldMaybe
+bool                 SampMengTextMsg_ReadFieldMaybe(ams::SampMengTextMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::ProcMsg from an ascii string.
+// Read fields of ams::SampMengTextMsg from an ascii string.
 // The format of the string is an ssim Tuple
-// func:ams.ProcMsg..ReadStrptrMaybe
-bool                 ProcMsg_ReadStrptrMaybe(ams::ProcMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:ams.SampMengTextMsg..ReadStrptrMaybe
+bool                 SampMengTextMsg_ReadStrptrMaybe(ams::SampMengTextMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
-// func:ams.ProcMsg..GetMsgLength
-inline i32           GetMsgLength(const ams::ProcMsg& parent) __attribute__((nothrow));
+// func:ams.SampMengTextMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengTextMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-// func:ams.ProcMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const ams::ProcMsg& row) __attribute__((nothrow));
+// func:ams.SampMengTextMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengTextMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:ams.ProcMsg..Init
-inline void          ProcMsg_Init(ams::ProcMsg& parent);
+// func:ams.SampMengTextMsg..Init
+inline void          SampMengTextMsg_Init(ams::SampMengTextMsg& parent);
 // print string representation of ROW to string STR
-// cfmt:ams.ProcMsg.String  printfmt:Tuple
-// func:ams.ProcMsg..Print
-void                 ProcMsg_Print(ams::ProcMsg& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:ams.SampMengTextMsg.String  printfmt:Tuple
+// func:ams.SampMengTextMsg..Print
+void                 SampMengTextMsg_Print(ams::SampMengTextMsg& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- ams.ProcReadMsg
+// --- ams.SampMengUserrowMsg
 #pragma pack(push,1)
-struct ProcReadMsg { // ams.ProcReadMsg: Read process output
-    u32                type;     //   702
-    u32                length;   //   ssizeof(parent) + (0)
-    algo::RnullStr50   proc;     //
-    // var-length field ams.ProcReadMsg.until starts here. access it with until_Addr
-    // func:ams.ProcReadMsg..Ctor
-    inline               ProcReadMsg() __attribute__((nothrow));
+struct SampMengUserrowMsg { // ams.SampMengUserrowMsg: Matcher state: one user
+    u32   type;     //   2014
+    u32   length;   //   ssizeof(parent)
+    i32   user;     //   0  User id
+    // func:ams.SampMengUserrowMsg..Ctor
+    inline               SampMengUserrowMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
-// func:ams.ProcReadMsg.base.CopyOut
-void                 parent_CopyOut(ams::ProcReadMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
-// Check if ams::MsgHeader is an instance of ProcReadMsg by checking the type field
+// func:ams.SampMengUserrowMsg.base.CopyOut
+void                 parent_CopyOut(ams::SampMengUserrowMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampMengUserrowMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of ProcReadMsg.
+// Additionally, check if the length field permits valid instance of SampMengUserrowMsg.
 // If not successful, quietly return NULL.
-// func:ams.ProcReadMsg.base.Castdown
-inline ams::ProcReadMsg* ProcReadMsg_Castdown(ams::MsgHeader &hdr);
-// func:ams.ProcReadMsg.base.Castbase
-inline ams::MsgHeader& Castbase(ams::ProcReadMsg& parent);
+// func:ams.SampMengUserrowMsg.base.Castdown
+inline ams::SampMengUserrowMsg* SampMengUserrowMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampMengUserrowMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampMengUserrowMsg& parent);
 
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-// func:ams.ProcReadMsg.until.Getary
-algo::aryptr<char>   until_Getary(ams::ProcReadMsg& parent) __attribute__((nothrow));
-// func:ams.ProcReadMsg.until.Addr
-char*                until_Addr(ams::ProcReadMsg& parent);
-// Return number of elements in varlen field
-// func:ams.ProcReadMsg.until.N
-inline u32           until_N(const ams::ProcReadMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-// Convert string to field. Return success value
-// func:ams.ProcReadMsg.until.ReadStrptrMaybe
-bool                 until_ReadStrptrMaybe(ams::ProcReadMsg& parent, algo::strptr in_str) __attribute__((nothrow));
-// Convert until to a string.
-// Array is printed as a regular string.
-// func:ams.ProcReadMsg.until.Print
-void                 until_Print(ams::ProcReadMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
-
-// func:ams.ProcReadMsg.until_curs.Reset
-inline void          ProcReadMsg_until_curs_Reset(ProcReadMsg_until_curs &curs, ams::ProcReadMsg &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:ams.ProcReadMsg.until_curs.ValidQ
-inline bool          ProcReadMsg_until_curs_ValidQ(ProcReadMsg_until_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:ams.ProcReadMsg.until_curs.Next
-inline void          ProcReadMsg_until_curs_Next(ProcReadMsg_until_curs &curs) __attribute__((nothrow));
-// item access
-// func:ams.ProcReadMsg.until_curs.Access
-inline char&         ProcReadMsg_until_curs_Access(ProcReadMsg_until_curs &curs) __attribute__((nothrow));
-// func:ams.ProcReadMsg..ReadFieldMaybe
-bool                 ProcReadMsg_ReadFieldMaybe(ams::ProcReadMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::ProcReadMsg from an ascii string.
+// func:ams.SampMengUserrowMsg..ReadFieldMaybe
+bool                 SampMengUserrowMsg_ReadFieldMaybe(ams::SampMengUserrowMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampMengUserrowMsg from an ascii string.
 // The format of the string is an ssim Tuple
-// func:ams.ProcReadMsg..ReadStrptrMaybe
-bool                 ProcReadMsg_ReadStrptrMaybe(ams::ProcReadMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:ams.SampMengUserrowMsg..ReadStrptrMaybe
+bool                 SampMengUserrowMsg_ReadStrptrMaybe(ams::SampMengUserrowMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
-// func:ams.ProcReadMsg..GetMsgLength
-inline i32           GetMsgLength(const ams::ProcReadMsg& parent) __attribute__((nothrow));
+// func:ams.SampMengUserrowMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampMengUserrowMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-// func:ams.ProcReadMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const ams::ProcReadMsg& row) __attribute__((nothrow));
+// func:ams.SampMengUserrowMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampMengUserrowMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:ams.ProcReadMsg..Init
-inline void          ProcReadMsg_Init(ams::ProcReadMsg& parent);
+// func:ams.SampMengUserrowMsg..Init
+inline void          SampMengUserrowMsg_Init(ams::SampMengUserrowMsg& parent);
 // print string representation of ROW to string STR
-// cfmt:ams.ProcReadMsg.String  printfmt:Tuple
-// func:ams.ProcReadMsg..Print
-void                 ProcReadMsg_Print(ams::ProcReadMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- ams.ProcStartMsg
-#pragma pack(push,1)
-struct ProcStartMsg { // ams.ProcStartMsg: Start process
-    u32                type;     //   700
-    u32                length;   //   ssizeof(parent) + (0)
-    algo::RnullStr50   proc;     //
-    bool               pty;      //   false
-    // var-length field ams.ProcStartMsg.cmd starts here. access it with cmd_Addr
-    // func:ams.ProcStartMsg..Ctor
-    inline               ProcStartMsg() __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:ams.ProcStartMsg.base.CopyOut
-void                 parent_CopyOut(ams::ProcStartMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
-// Check if ams::MsgHeader is an instance of ProcStartMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of ProcStartMsg.
-// If not successful, quietly return NULL.
-// func:ams.ProcStartMsg.base.Castdown
-inline ams::ProcStartMsg* ProcStartMsg_Castdown(ams::MsgHeader &hdr);
-// func:ams.ProcStartMsg.base.Castbase
-inline ams::MsgHeader& Castbase(ams::ProcStartMsg& parent);
-
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-// func:ams.ProcStartMsg.cmd.Getary
-algo::aryptr<char>   cmd_Getary(ams::ProcStartMsg& parent) __attribute__((nothrow));
-// func:ams.ProcStartMsg.cmd.Addr
-char*                cmd_Addr(ams::ProcStartMsg& parent);
-// Return number of elements in varlen field
-// func:ams.ProcStartMsg.cmd.N
-inline u32           cmd_N(const ams::ProcStartMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-// Convert string to field. Return success value
-// func:ams.ProcStartMsg.cmd.ReadStrptrMaybe
-bool                 cmd_ReadStrptrMaybe(ams::ProcStartMsg& parent, algo::strptr in_str) __attribute__((nothrow));
-// Convert cmd to a string.
-// Array is printed as a regular string.
-// func:ams.ProcStartMsg.cmd.Print
-void                 cmd_Print(ams::ProcStartMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
-
-// func:ams.ProcStartMsg.cmd_curs.Reset
-inline void          ProcStartMsg_cmd_curs_Reset(ProcStartMsg_cmd_curs &curs, ams::ProcStartMsg &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:ams.ProcStartMsg.cmd_curs.ValidQ
-inline bool          ProcStartMsg_cmd_curs_ValidQ(ProcStartMsg_cmd_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:ams.ProcStartMsg.cmd_curs.Next
-inline void          ProcStartMsg_cmd_curs_Next(ProcStartMsg_cmd_curs &curs) __attribute__((nothrow));
-// item access
-// func:ams.ProcStartMsg.cmd_curs.Access
-inline char&         ProcStartMsg_cmd_curs_Access(ProcStartMsg_cmd_curs &curs) __attribute__((nothrow));
-// func:ams.ProcStartMsg..ReadFieldMaybe
-bool                 ProcStartMsg_ReadFieldMaybe(ams::ProcStartMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::ProcStartMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:ams.ProcStartMsg..ReadStrptrMaybe
-bool                 ProcStartMsg_ReadStrptrMaybe(ams::ProcStartMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:ams.ProcStartMsg..GetMsgLength
-inline i32           GetMsgLength(const ams::ProcStartMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:ams.ProcStartMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const ams::ProcStartMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:ams.ProcStartMsg..Init
-inline void          ProcStartMsg_Init(ams::ProcStartMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:ams.ProcStartMsg.String  printfmt:Tuple
-// func:ams.ProcStartMsg..Print
-void                 ProcStartMsg_Print(ams::ProcStartMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- ams.ProcStatusMsg
-#pragma pack(push,1)
-struct ProcStatusMsg { // ams.ProcStatusMsg: Process status
-    u32                type;     //   705
-    u32                length;   //   ssizeof(parent) + (0)
-    algo::RnullStr50   proc;     //
-    algo::RnullStr50   status;   //
-    // func:ams.ProcStatusMsg..Ctor
-    inline               ProcStatusMsg() __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:ams.ProcStatusMsg.base.CopyOut
-void                 parent_CopyOut(ams::ProcStatusMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
-// Check if ams::MsgHeader is an instance of ProcStatusMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of ProcStatusMsg.
-// If not successful, quietly return NULL.
-// func:ams.ProcStatusMsg.base.Castdown
-inline ams::ProcStatusMsg* ProcStatusMsg_Castdown(ams::MsgHeader &hdr);
-// func:ams.ProcStatusMsg.base.Castbase
-inline ams::MsgHeader& Castbase(ams::ProcStatusMsg& parent);
-
-// func:ams.ProcStatusMsg..ReadFieldMaybe
-bool                 ProcStatusMsg_ReadFieldMaybe(ams::ProcStatusMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of ams::ProcStatusMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:ams.ProcStatusMsg..ReadStrptrMaybe
-bool                 ProcStatusMsg_ReadStrptrMaybe(ams::ProcStatusMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:ams.ProcStatusMsg..GetMsgLength
-inline i32           GetMsgLength(const ams::ProcStatusMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:ams.ProcStatusMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const ams::ProcStatusMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:ams.ProcStatusMsg..Init
-inline void          ProcStatusMsg_Init(ams::ProcStatusMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:ams.ProcStatusMsg.String  printfmt:Tuple
-// func:ams.ProcStatusMsg..Print
-void                 ProcStatusMsg_Print(ams::ProcStatusMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- ams.RemDirRecurseMsg
-#pragma pack(push,1)
-struct RemDirRecurseMsg { // ams.RemDirRecurseMsg: Message sent to process to terminate it
-    u32    type;             //   633
-    u32    length;           //   ssizeof(parent) + (0)
-    bool   remove_topmost;   //   false
-    // var-length field ams.RemDirRecurseMsg.pathname starts here. access it with pathname_Addr
-    // func:ams.RemDirRecurseMsg..Ctor
-    inline               RemDirRecurseMsg() __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:ams.RemDirRecurseMsg.base.CopyOut
-void                 parent_CopyOut(ams::RemDirRecurseMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
-// Check if ams::MsgHeader is an instance of RemDirRecurseMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of RemDirRecurseMsg.
-// If not successful, quietly return NULL.
-// func:ams.RemDirRecurseMsg.base.Castdown
-inline ams::RemDirRecurseMsg* RemDirRecurseMsg_Castdown(ams::MsgHeader &hdr);
-// func:ams.RemDirRecurseMsg.base.Castbase
-inline ams::MsgHeader& Castbase(ams::RemDirRecurseMsg& parent);
-
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-// func:ams.RemDirRecurseMsg.pathname.Getary
-algo::aryptr<char>   pathname_Getary(ams::RemDirRecurseMsg& parent) __attribute__((nothrow));
-// func:ams.RemDirRecurseMsg.pathname.Addr
-char*                pathname_Addr(ams::RemDirRecurseMsg& parent);
-// Return number of elements in varlen field
-// func:ams.RemDirRecurseMsg.pathname.N
-inline u32           pathname_N(const ams::RemDirRecurseMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-// Convert string to field. Return success value
-// func:ams.RemDirRecurseMsg.pathname.ReadStrptrMaybe
-bool                 pathname_ReadStrptrMaybe(ams::RemDirRecurseMsg& parent, algo::strptr in_str) __attribute__((nothrow));
-// Convert pathname to a string.
-// Array is printed as a regular string.
-// func:ams.RemDirRecurseMsg.pathname.Print
-void                 pathname_Print(ams::RemDirRecurseMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
-
-// func:ams.RemDirRecurseMsg.pathname_curs.Reset
-inline void          RemDirRecurseMsg_pathname_curs_Reset(RemDirRecurseMsg_pathname_curs &curs, ams::RemDirRecurseMsg &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:ams.RemDirRecurseMsg.pathname_curs.ValidQ
-inline bool          RemDirRecurseMsg_pathname_curs_ValidQ(RemDirRecurseMsg_pathname_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:ams.RemDirRecurseMsg.pathname_curs.Next
-inline void          RemDirRecurseMsg_pathname_curs_Next(RemDirRecurseMsg_pathname_curs &curs) __attribute__((nothrow));
-// item access
-// func:ams.RemDirRecurseMsg.pathname_curs.Access
-inline char&         RemDirRecurseMsg_pathname_curs_Access(RemDirRecurseMsg_pathname_curs &curs) __attribute__((nothrow));
-// func:ams.RemDirRecurseMsg..ReadFieldMaybe
-bool                 RemDirRecurseMsg_ReadFieldMaybe(ams::RemDirRecurseMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::RemDirRecurseMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:ams.RemDirRecurseMsg..ReadStrptrMaybe
-bool                 RemDirRecurseMsg_ReadStrptrMaybe(ams::RemDirRecurseMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:ams.RemDirRecurseMsg..GetMsgLength
-inline i32           GetMsgLength(const ams::RemDirRecurseMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:ams.RemDirRecurseMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const ams::RemDirRecurseMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:ams.RemDirRecurseMsg..Init
-inline void          RemDirRecurseMsg_Init(ams::RemDirRecurseMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:ams.RemDirRecurseMsg.String  printfmt:Tuple
-// func:ams.RemDirRecurseMsg..Print
-void                 RemDirRecurseMsg_Print(ams::RemDirRecurseMsg& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:ams.SampMengUserrowMsg.String  printfmt:Tuple
+// func:ams.SampMengUserrowMsg..Print
+void                 SampMengUserrowMsg_Print(ams::SampMengUserrowMsg row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ams.ShmFlags
 #pragma pack(push,1)
@@ -1306,7 +1897,6 @@ struct ShmFlags { // ams.ShmFlags
     inline               ShmFlags(ams_ShmFlagsEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
 // func:ams.ShmFlags.write.Get
@@ -1326,15 +1916,6 @@ inline bool          read_Get(const ams::ShmFlags& parent) __attribute__((__warn
 inline void          read_Set(ams::ShmFlags& parent, bool rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
-//    1 bits starting at bit 3.
-// func:ams.ShmFlags.nonblock.Get
-inline bool          nonblock_Get(const ams::ShmFlags& parent) __attribute__((__warn_unused_result__, nothrow));
-// Set bitfield in value of field 'value'
-//    1 bits starting at bit 3.
-// func:ams.ShmFlags.nonblock.Set
-inline void          nonblock_Set(ams::ShmFlags& parent, bool rhs) __attribute__((nothrow));
-
-// Retrieve bitfield from value of field value
 //    1 bits starting at bit 6.
 // func:ams.ShmFlags.write_err.Get
 inline bool          write_err_Get(const ams::ShmFlags& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -1342,6 +1923,15 @@ inline bool          write_err_Get(const ams::ShmFlags& parent) __attribute__((_
 //    1 bits starting at bit 6.
 // func:ams.ShmFlags.write_err.Set
 inline void          write_err_Set(ams::ShmFlags& parent, bool rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 4.
+// func:ams.ShmFlags.signaled.Get
+inline bool          signaled_Get(const ams::ShmFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 4.
+// func:ams.ShmFlags.signaled.Set
+inline void          signaled_Set(ams::ShmFlags& parent, bool rhs) __attribute__((nothrow));
 
 // func:ams.ShmFlags..ReadFieldMaybe
 bool                 ShmFlags_ReadFieldMaybe(ams::ShmFlags& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -1358,219 +1948,20 @@ void                 ShmFlags_Print(ams::ShmFlags row, algo::cstring& str) __att
 // func:ams.ShmFlags..GetAnon
 algo::strptr         ShmFlags_GetAnon(ams::ShmFlags &parent, i32 idx) __attribute__((nothrow));
 
-// --- ams.Shmtype
-#pragma pack(push,1)
-struct Shmtype { // ams.Shmtype
-    u8   value;   //   0
-    // func:ams.Shmtype..EqOp
-    inline bool          operator ==(const ams::Shmtype &rhs) const __attribute__((nothrow));
-    // func:ams.Shmtype..NeOp
-    inline bool          operator !=(const ams::Shmtype &rhs) const __attribute__((nothrow));
-    // define enum comparison operator to avoid ambiguity
-    // func:ams.Shmtype..EqEnum
-    inline bool          operator ==(ams_ShmtypeEnum rhs) const __attribute__((nothrow));
-    // func:ams.Shmtype..Ctor
-    inline               Shmtype() __attribute__((nothrow));
-    // func:ams.Shmtype..FieldwiseCtor
-    explicit inline               Shmtype(u8 in_value) __attribute__((nothrow));
-    // func:ams.Shmtype..EnumCtor
-    inline               Shmtype(ams_ShmtypeEnum arg) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Get value of field as enum type
-// func:ams.Shmtype.value.GetEnum
-inline ams_ShmtypeEnum value_GetEnum(const ams::Shmtype& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:ams.Shmtype.value.SetEnum
-inline void          value_SetEnum(ams::Shmtype& parent, ams_ShmtypeEnum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:ams.Shmtype.value.ToCstr
-const char*          value_ToCstr(const ams::Shmtype& parent) __attribute__((nothrow));
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-// func:ams.Shmtype.value.Print
-void                 value_Print(const ams::Shmtype& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:ams.Shmtype.value.SetStrptrMaybe
-bool                 value_SetStrptrMaybe(ams::Shmtype& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:ams.Shmtype.value.SetStrptr
-void                 value_SetStrptr(ams::Shmtype& parent, algo::strptr rhs, ams_ShmtypeEnum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:ams.Shmtype.value.ReadStrptrMaybe
-bool                 value_ReadStrptrMaybe(ams::Shmtype& parent, algo::strptr rhs) __attribute__((nothrow));
-
-// func:ams.Shmtype..Hash
-inline u32           Shmtype_Hash(u32 prev, ams::Shmtype rhs) __attribute__((nothrow));
-// Read fields of ams::Shmtype from an ascii string.
-// The format of the string is the format of the ams::Shmtype's only field
-// func:ams.Shmtype..ReadStrptrMaybe
-bool                 Shmtype_ReadStrptrMaybe(ams::Shmtype &parent, algo::strptr in_str) __attribute__((nothrow));
-// func:ams.Shmtype..Cmp
-inline i32           Shmtype_Cmp(ams::Shmtype lhs, ams::Shmtype rhs) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:ams.Shmtype..Init
-inline void          Shmtype_Init(ams::Shmtype& parent);
-// func:ams.Shmtype..Eq
-inline bool          Shmtype_Eq(ams::Shmtype lhs, ams::Shmtype rhs) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:ams.Shmtype.String  printfmt:Raw
-// func:ams.Shmtype..Print
-void                 Shmtype_Print(ams::Shmtype row, algo::cstring& str) __attribute__((nothrow));
-
-// --- ams.ShmId
-#pragma pack(push,1)
-struct ShmId { // ams.ShmId: Host-unique stream ID. E.g. proc1-0.out-0
-    ams::ProcId    proc_id;   // Writer process ID
-    ams::Shmtype   shmtype;   // Stream type ID
-    u8             index;     //   0  Stream index
-    // func:ams.ShmId..EqOp
-    inline bool          operator ==(const ams::ShmId &rhs) const __attribute__((nothrow));
-    // func:ams.ShmId..NeOp
-    inline bool          operator !=(const ams::ShmId &rhs) const __attribute__((nothrow));
-    // func:ams.ShmId..Ctor
-    inline               ShmId() __attribute__((nothrow));
-    // func:ams.ShmId..FieldwiseCtor
-    explicit inline               ShmId(ams::ProcId in_proc_id, ams::Shmtype in_shmtype, u8 in_index) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// func:ams.ShmId..Hash
-inline u32           ShmId_Hash(u32 prev, ams::ShmId rhs) __attribute__((nothrow));
-// func:ams.ShmId..ReadFieldMaybe
-bool                 ShmId_ReadFieldMaybe(ams::ShmId& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of ams::ShmId from an ascii string.
-// The format of the string is a string with separated values
-// func:ams.ShmId..ReadStrptrMaybe
-bool                 ShmId_ReadStrptrMaybe(ams::ShmId &parent, algo::strptr in_str) __attribute__((nothrow));
-// func:ams.ShmId..Cmp
-inline i32           ShmId_Cmp(ams::ShmId lhs, ams::ShmId rhs) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:ams.ShmId..Init
-inline void          ShmId_Init(ams::ShmId& parent);
-// func:ams.ShmId..Eq
-inline bool          ShmId_Eq(ams::ShmId lhs, ams::ShmId rhs) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:ams.ShmId.String  printfmt:Sep
-// func:ams.ShmId..Print
-void                 ShmId_Print(ams::ShmId row, algo::cstring& str) __attribute__((nothrow));
-
-// --- ams.ShmemberFlags
-#pragma pack(push,1)
-struct ShmemberFlags { // ams.ShmemberFlags: Shm member flags
-    u16   value;   //   0  Shm member flags
-    // func:ams.ShmemberFlags..EqOp
-    inline bool          operator ==(const ams::ShmemberFlags &rhs) const __attribute__((nothrow));
-    // func:ams.ShmemberFlags..NeOp
-    inline bool          operator !=(const ams::ShmemberFlags &rhs) const __attribute__((nothrow));
-    // define enum comparison operator to avoid ambiguity
-    // func:ams.ShmemberFlags..EqEnum
-    inline bool          operator ==(ams_ShmemberFlagsEnum rhs) const __attribute__((nothrow));
-    // func:ams.ShmemberFlags..Ctor
-    inline               ShmemberFlags() __attribute__((nothrow));
-    // func:ams.ShmemberFlags..FieldwiseCtor
-    explicit inline               ShmemberFlags(u16 in_value) __attribute__((nothrow));
-    // func:ams.ShmemberFlags..EnumCtor
-    inline               ShmemberFlags(ams_ShmemberFlagsEnum arg) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Retrieve bitfield from value of field value
-//    1 bits starting at bit 0.
-// func:ams.ShmemberFlags.r.Get
-inline bool          r_Get(const ams::ShmemberFlags& parent) __attribute__((__warn_unused_result__, nothrow));
-// Set bitfield in value of field 'value'
-//    1 bits starting at bit 0.
-// func:ams.ShmemberFlags.r.Set
-inline void          r_Set(ams::ShmemberFlags& parent, bool rhs) __attribute__((nothrow));
-
-// Retrieve bitfield from value of field value
-//    1 bits starting at bit 1.
-// func:ams.ShmemberFlags.w.Get
-inline bool          w_Get(const ams::ShmemberFlags& parent) __attribute__((__warn_unused_result__, nothrow));
-// Set bitfield in value of field 'value'
-//    1 bits starting at bit 1.
-// func:ams.ShmemberFlags.w.Set
-inline void          w_Set(ams::ShmemberFlags& parent, bool rhs) __attribute__((nothrow));
-
-// func:ams.ShmemberFlags..Hash
-inline u32           ShmemberFlags_Hash(u32 prev, ams::ShmemberFlags rhs) __attribute__((nothrow));
-// func:ams.ShmemberFlags..ReadFieldMaybe
-bool                 ShmemberFlags_ReadFieldMaybe(ams::ShmemberFlags& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of ams::ShmemberFlags from an ascii string.
-// func:ams.ShmemberFlags..ReadStrptrMaybe
-bool                 ShmemberFlags_ReadStrptrMaybe(ams::ShmemberFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-// func:ams.ShmemberFlags..Cmp
-inline i32           ShmemberFlags_Cmp(ams::ShmemberFlags lhs, ams::ShmemberFlags rhs) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:ams.ShmemberFlags..Init
-inline void          ShmemberFlags_Init(ams::ShmemberFlags& parent);
-// func:ams.ShmemberFlags..Eq
-inline bool          ShmemberFlags_Eq(ams::ShmemberFlags lhs, ams::ShmemberFlags rhs) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:ams.ShmemberFlags.String  printfmt:Bitset
-// func:ams.ShmemberFlags..Print
-void                 ShmemberFlags_Print(ams::ShmemberFlags row, algo::cstring& str) __attribute__((nothrow));
-// func:ams.ShmemberFlags..GetAnon
-algo::strptr         ShmemberFlags_GetAnon(ams::ShmemberFlags &parent, i32 idx) __attribute__((nothrow));
-
-// --- ams.ShmemberId
-#pragma pack(push,1)
-struct ShmemberId { // ams.ShmemberId: Shm/Process - member ID for AMS SHM
-    ams::ShmId           shm_id;    // Stream ID
-    ams::ProcId          proc_id;   // Process ID
-    ams::ShmemberFlags   flags;     //   0
-    // func:ams.ShmemberId..EqOp
-    inline bool          operator ==(const ams::ShmemberId &rhs) const __attribute__((nothrow));
-    // func:ams.ShmemberId..NeOp
-    inline bool          operator !=(const ams::ShmemberId &rhs) const __attribute__((nothrow));
-    // func:ams.ShmemberId..Ctor
-    inline               ShmemberId() __attribute__((nothrow));
-    // func:ams.ShmemberId..FieldwiseCtor
-    explicit inline               ShmemberId(ams::ShmId in_shm_id, ams::ProcId in_proc_id, ams::ShmemberFlags in_flags) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// func:ams.ShmemberId..Hash
-inline u32           ShmemberId_Hash(u32 prev, ams::ShmemberId rhs) __attribute__((nothrow));
-// func:ams.ShmemberId..ReadFieldMaybe
-bool                 ShmemberId_ReadFieldMaybe(ams::ShmemberId& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of ams::ShmemberId from an ascii string.
-// The format of the string is a string with separated values
-// func:ams.ShmemberId..ReadStrptrMaybe
-bool                 ShmemberId_ReadStrptrMaybe(ams::ShmemberId &parent, algo::strptr in_str) __attribute__((nothrow));
-// func:ams.ShmemberId..Cmp
-inline i32           ShmemberId_Cmp(ams::ShmemberId lhs, ams::ShmemberId rhs) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:ams.ShmemberId..Init
-inline void          ShmemberId_Init(ams::ShmemberId& parent);
-// func:ams.ShmemberId..Eq
-inline bool          ShmemberId_Eq(ams::ShmemberId lhs, ams::ShmemberId rhs) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:ams.ShmemberId.String  printfmt:Sep
-// func:ams.ShmemberId..Print
-void                 ShmemberId_Print(ams::ShmemberId row, algo::cstring& str) __attribute__((nothrow));
-
 // --- ams.ShmHbMsg
 #pragma pack(push,1)
 struct ShmHbMsg { // ams.ShmHbMsg: Shm heartbeat
-    u32               type;       //   3
-    u32               length;     //   ssizeof(parent) + (0)
-    ams::ShmemberId   shmember;   // Primary key
-    u64               off;        //   0  Read/write position
-    u32               wbudget;    //   0  Max. offset for writing
+    u32                type;        //   3
+    u32                length;      //   ssizeof(parent)
+    ams::GrpmemberId   grpmember;   // Primary key
+    u64                off;         //   0  Read/write position
+    u32                wbudget;     //   0  Max. offset for writing
     // func:ams.ShmHbMsg..Ctor
     inline               ShmHbMsg() __attribute__((nothrow));
     // func:ams.ShmHbMsg..FieldwiseCtor
-    explicit inline               ShmHbMsg(ams::ShmemberId in_shmember, u64 in_off, u32 in_wbudget) __attribute__((nothrow));
+    explicit inline               ShmHbMsg(ams::GrpmemberId in_grpmember, u64 in_off, u32 in_wbudget) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ams.ShmHbMsg.base.CopyOut
 void                 parent_CopyOut(ams::ShmHbMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -1603,82 +1994,77 @@ inline void          ShmHbMsg_Init(ams::ShmHbMsg& parent);
 // func:ams.ShmHbMsg..Print
 void                 ShmHbMsg_Print(ams::ShmHbMsg& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- ams.Shmmsg
-#pragma pack(push,1)
-struct Shmmsg { // ams.Shmmsg: Sequenced message on a shm
-    u32                    type;        //   10
-    u32                    length;      //   ssizeof(parent) + (0)
-    ams::ShmId             shm_id;      //
-    u64                    off;         //   0
-    u64                    tstamp;      //   0
-    // ams::MsgHeader      payload[];                                    optional field
-    // func:ams.Shmmsg..Ctor
-    inline               Shmmsg() __attribute__((nothrow));
-    // func:ams.Shmmsg..FieldwiseCtor
-    explicit inline               Shmmsg(ams::ShmId in_shm_id, u64 in_off, u64 in_tstamp) __attribute__((nothrow));
+// --- ams.Shmember
+struct Shmember { // ams.Shmember
+    ams::GrpmemberId   grpmember_id;   //
+    i32                pid;            //   0
+    u64                offset;         //   0
+    algo::I64Rate      rate;           //
+    algo::SchedTime    last_hb;        //
+    u64                ignore2;        //   0
+    u32                sleeping;       //   0  Set by reader before sleeping, cleared by writer before kill()
+    // func:ams.Shmember..Ctor
+    inline               Shmember() __attribute__((nothrow));
 };
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:ams.Shmmsg.base.CopyOut
-void                 parent_CopyOut(ams::Shmmsg &row, ams::MsgHeader &out) __attribute__((nothrow));
-// Check if ams::MsgHeader is an instance of Shmmsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of Shmmsg.
-// If not successful, quietly return NULL.
-// func:ams.Shmmsg.base.Castdown
-inline ams::Shmmsg*  Shmmsg_Castdown(ams::MsgHeader &hdr);
-// func:ams.Shmmsg.base.Castbase
-inline ams::MsgHeader& Castbase(ams::Shmmsg& parent);
-
-// Return pointer to optional last element (NULL if none)
-// The parent's length field is assumed to have already been checked for validity.
-// If the parent's lengthis too short to allow a full-sized payload, return NULL.
-// Since the last element is itself variable-length, two more checks are applied:
-// If payload's length field value is too short, return NULL.
-// If payload's length field value extends past parent's allowed length, return NULL.
-// func:ams.Shmmsg.payload.Get
-inline ams::MsgHeader* payload_Get(ams::Shmmsg& parent) __attribute__((__warn_unused_result__, nothrow));
-// Access optional portion as an array of bytes
-// func:ams.Shmmsg.payload.Getary
-algo::aryptr<u8>     payload_Getary(ams::Shmmsg& parent) __attribute__((nothrow));
-// func:ams.Shmmsg.payload.Print
-void                 payload_Print(ams::Shmmsg& parent, cstring &out) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:ams.Shmmsg.payload.ReadStrptrMaybe
-bool                 payload_ReadStrptrMaybe(ams::Shmmsg &parent, algo::strptr in_str) __attribute__((nothrow));
-
-// func:ams.Shmmsg..ReadFieldMaybe
-bool                 Shmmsg_ReadFieldMaybe(ams::Shmmsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::Shmmsg from an ascii string.
+// func:ams.Shmember..ReadFieldMaybe
+bool                 Shmember_ReadFieldMaybe(ams::Shmember& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::Shmember from an ascii string.
 // The format of the string is an ssim Tuple
-// func:ams.Shmmsg..ReadStrptrMaybe
-bool                 Shmmsg_ReadStrptrMaybe(ams::Shmmsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:ams.Shmmsg..GetMsgLength
-inline i32           GetMsgLength(const ams::Shmmsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:ams.Shmmsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const ams::Shmmsg& row) __attribute__((nothrow));
+// func:ams.Shmember..ReadStrptrMaybe
+bool                 Shmember_ReadStrptrMaybe(ams::Shmember &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:ams.Shmmsg..Init
-inline void          Shmmsg_Init(ams::Shmmsg& parent);
+// func:ams.Shmember..Init
+inline void          Shmember_Init(ams::Shmember& parent);
 // print string representation of ROW to string STR
-// cfmt:ams.Shmmsg.String  printfmt:Tuple
-// func:ams.Shmmsg..Print
-void                 Shmmsg_Print(ams::Shmmsg& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:ams.Shmember.String  printfmt:Tuple
+// func:ams.Shmember..Print
+void                 Shmember_Print(ams::Shmember& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.Shmhdr
+struct Shmhdr { // ams.Shmhdr: Shared memory segment header
+    u32          magic;             //   0xc001af01
+    ams::GrpId   grp_id;            // ID of this segment
+    u32          tot_size;          //   0  Total segment size
+    u32          max_msg_size;      //   0  Max message size
+    u32          offset_mask;       //   0  Offset mask for data
+    u64          woff;              //   0  Writer's offset (absolute)
+    u32          n_shmember;        //   0  Members registered so far; a reader beyond max_shmember gets no slot
+    u32          max_shmember;      //   0  Max allowed members
+    u32          datastart;         //   0  Beginning of data
+    i32          writer_pid;        //   0  Writer's pid
+    u32          writer_sleeping;   //   0  Set by writer before parking on no budget; cleared by reader before kill() (mirror of Shmember.sleeping)
+    u64          nnobudget;         //   0  Number of times we checked budget and it was isufficient
+    u64          nblock;            //   0  Number of times shm blocked on writing
+    bool         eof;               //   false  Writer exited; readers should drain and stop polling
+    bool         signaled;          //   false  Set by writer when in signaled mode; readers SetSignaledMode(true) on open
+    i32          creator_pid;       //   0  Pid of the process that created the segment; a sweep reclaims only what its creator no longer owns
+    // func:ams.Shmhdr..Ctor
+    inline               Shmhdr() __attribute__((nothrow));
+};
+// func:ams.Shmhdr..ReadFieldMaybe
+bool                 Shmhdr_ReadFieldMaybe(ams::Shmhdr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::Shmhdr from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.Shmhdr..ReadStrptrMaybe
+bool                 Shmhdr_ReadStrptrMaybe(ams::Shmhdr &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.Shmhdr..Init
+void                 Shmhdr_Init(ams::Shmhdr& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.Shmhdr.String  printfmt:Tuple
+// func:ams.Shmhdr..Print
+void                 Shmhdr_Print(ams::Shmhdr& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ams.TerminateMsg
 #pragma pack(push,1)
 struct TerminateMsg { // ams.TerminateMsg: Message sent to process to terminate it
-    u32   type;     //   352
-    u32   length;   //   ssizeof(parent) + (0)
+    u32           type;      //   352
+    u32           length;    //   ssizeof(parent)
+    ams::ProcId   proc_id;   // Target process (zero = all)
     // func:ams.TerminateMsg..Ctor
     inline               TerminateMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ams.TerminateMsg.base.CopyOut
 void                 parent_CopyOut(ams::TerminateMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -1709,13 +2095,62 @@ inline void          TerminateMsg_Init(ams::TerminateMsg& parent);
 // print string representation of ROW to string STR
 // cfmt:ams.TerminateMsg.String  printfmt:Tuple
 // func:ams.TerminateMsg..Print
-void                 TerminateMsg_Print(ams::TerminateMsg& row, algo::cstring& str) __attribute__((nothrow));
+void                 TerminateMsg_Print(ams::TerminateMsg row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.Trafficclass
+struct Trafficclass { // ams.Trafficclass: Backplane traffic class (see amsdb.trafficclass)
+    u8   value;   //   0
+    // func:ams.Trafficclass..EqOp
+    inline bool          operator ==(const ams::Trafficclass &rhs) const __attribute__((nothrow));
+    // func:ams.Trafficclass..NeOp
+    inline bool          operator !=(const ams::Trafficclass &rhs) const __attribute__((nothrow));
+    // define enum comparison operator to avoid ambiguity
+    // func:ams.Trafficclass..EqEnum
+    inline bool          operator ==(ams_Trafficclass_value_Enum rhs) const __attribute__((nothrow));
+    // func:ams.Trafficclass..Ctor
+    inline               Trafficclass() __attribute__((nothrow));
+    // func:ams.Trafficclass..FieldwiseCtor
+    explicit inline               Trafficclass(u8 in_value) __attribute__((nothrow));
+    // func:ams.Trafficclass..EnumCtor
+    inline               Trafficclass(ams_Trafficclass_value_Enum arg) __attribute__((nothrow));
+};
+// Get value of field as enum type
+// func:ams.Trafficclass.value.GetEnum
+inline ams_Trafficclass_value_Enum value_GetEnum(const ams::Trafficclass& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ams.Trafficclass.value.SetEnum
+inline void          value_SetEnum(ams::Trafficclass& parent, ams_Trafficclass_value_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ams.Trafficclass.value.ToCstr
+const char*          value_ToCstr(const ams::Trafficclass& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:ams.Trafficclass.value.Print
+void                 value_Print(const ams::Trafficclass& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ams.Trafficclass.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(ams::Trafficclass& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ams.Trafficclass.value.SetStrptr
+void                 value_SetStrptr(ams::Trafficclass& parent, algo::strptr rhs, ams_Trafficclass_value_Enum dflt) __attribute__((nothrow));
+
+// func:ams.Trafficclass..Cmp
+inline i32           Trafficclass_Cmp(ams::Trafficclass lhs, ams::Trafficclass rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.Trafficclass..Init
+inline void          Trafficclass_Init(ams::Trafficclass& parent);
+// func:ams.Trafficclass..Eq
+inline bool          Trafficclass_Eq(ams::Trafficclass lhs, ams::Trafficclass rhs) __attribute__((nothrow));
 
 // --- ams.UdpFrame
 #pragma pack(push,1)
 struct UdpFrame { // ams.UdpFrame: sniffer-captured ethernet frame
     u32            type;        //   2
-    u32            length;      //   ssizeof(parent) + (0)
+    u32            length;      //   ssizeof(parent)
     algo::UnTime   timestamp;   // Timestamp
     ietf::Ipv4     src_ip;      // Source IP
     ietf::Ipv4     dst_ip;      // Destination IP
@@ -1726,7 +2161,6 @@ struct UdpFrame { // ams.UdpFrame: sniffer-captured ethernet frame
     inline               UdpFrame() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:ams.UdpFrame.header.CopyOut
 void                 parent_CopyOut(ams::UdpFrame &row, ams::MsgHeader &out) __attribute__((nothrow));
@@ -1776,17 +2210,82 @@ inline void          UdpFrame_Init(ams::UdpFrame& parent);
 // cfmt:ams.UdpFrame.String  printfmt:Tuple
 // func:ams.UdpFrame..Print
 void                 UdpFrame_Print(ams::UdpFrame& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.UprocTextMsg
+#pragma pack(push,1)
+struct UprocTextMsg { // ams.UprocTextMsg
+    u32                type;          //   3000
+    u32                length;        //   ssizeof(parent)
+    u32                seqno;         //   0  sequence number of uproc message
+    u32                first_seqno;   //   0  First sequence number of uproc messages
+    u32                last_seqno;    //   0  Last sequence number of uproc messages
+    algo::RnullStr32   name;          // uproc instance name
+    // var-length field ams.UprocTextMsg.text starts here. access it with text_Addr
+    // func:ams.UprocTextMsg..Ctor
+    inline               UprocTextMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.UprocTextMsg.base.CopyOut
+void                 parent_CopyOut(ams::UprocTextMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of UprocTextMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of UprocTextMsg.
+// If not successful, quietly return NULL.
+// func:ams.UprocTextMsg.base.Castdown
+inline ams::UprocTextMsg* UprocTextMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.UprocTextMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::UprocTextMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.UprocTextMsg.text.Getary
+algo::aryptr<char>   text_Getary(ams::UprocTextMsg& parent) __attribute__((nothrow));
+// func:ams.UprocTextMsg.text.Addr
+char*                text_Addr(ams::UprocTextMsg& parent);
+// Return number of elements in varlen field
+// func:ams.UprocTextMsg.text.N
+inline u32           text_N(const ams::UprocTextMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.UprocTextMsg.text.ReadStrptrMaybe
+bool                 text_ReadStrptrMaybe(ams::UprocTextMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert text to a string.
+// Array is printed as a regular string.
+// func:ams.UprocTextMsg.text.Print
+void                 text_Print(ams::UprocTextMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.UprocTextMsg.text_curs.Reset
+inline void          UprocTextMsg_text_curs_Reset(UprocTextMsg_text_curs &curs, ams::UprocTextMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.UprocTextMsg.text_curs.ValidQ
+inline bool          UprocTextMsg_text_curs_ValidQ(UprocTextMsg_text_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.UprocTextMsg.text_curs.Next
+inline void          UprocTextMsg_text_curs_Next(UprocTextMsg_text_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.UprocTextMsg.text_curs.Access
+inline char&         UprocTextMsg_text_curs_Access(UprocTextMsg_text_curs &curs) __attribute__((nothrow));
+// func:ams.UprocTextMsg..ReadFieldMaybe
+bool                 UprocTextMsg_ReadFieldMaybe(ams::UprocTextMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::UprocTextMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.UprocTextMsg..ReadStrptrMaybe
+bool                 UprocTextMsg_ReadStrptrMaybe(ams::UprocTextMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.UprocTextMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::UprocTextMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.UprocTextMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::UprocTextMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.UprocTextMsg..Init
+inline void          UprocTextMsg_Init(ams::UprocTextMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.UprocTextMsg.String  printfmt:Tuple
+// func:ams.UprocTextMsg..Print
+void                 UprocTextMsg_Print(ams::UprocTextMsg& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace ams { // gen:ns_curstext
-
-struct ExpectMsg_text_curs {// cursor
-    typedef char ChildType;
-    u8 *ptr;
-    int length;
-    int index;
-    ExpectMsg_text_curs() { ptr=NULL; length=0; index=0; }
-};
-
 
 struct InputLineMsg_payload_curs {// cursor
     typedef char ChildType;
@@ -1824,39 +2323,12 @@ struct MsgBlock_messages_curs {// cursor
 };
 
 
-struct ProcMsg_payload_curs {// cursor
+struct SampMengTextMsg_text_curs {// cursor
     typedef char ChildType;
     u8 *ptr;
     int length;
     int index;
-    ProcMsg_payload_curs() { ptr=NULL; length=0; index=0; }
-};
-
-
-struct ProcReadMsg_until_curs {// cursor
-    typedef char ChildType;
-    u8 *ptr;
-    int length;
-    int index;
-    ProcReadMsg_until_curs() { ptr=NULL; length=0; index=0; }
-};
-
-
-struct ProcStartMsg_cmd_curs {// cursor
-    typedef char ChildType;
-    u8 *ptr;
-    int length;
-    int index;
-    ProcStartMsg_cmd_curs() { ptr=NULL; length=0; index=0; }
-};
-
-
-struct RemDirRecurseMsg_pathname_curs {// cursor
-    typedef char ChildType;
-    u8 *ptr;
-    int length;
-    int index;
-    RemDirRecurseMsg_pathname_curs() { ptr=NULL; length=0; index=0; }
+    SampMengTextMsg_text_curs() { ptr=NULL; length=0; index=0; }
 };
 
 
@@ -1866,6 +2338,15 @@ struct UdpFrame_payload_curs {// cursor
     int length;
     int index;
     UdpFrame_payload_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct UprocTextMsg_text_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    UprocTextMsg_text_curs() { ptr=NULL; length=0; index=0; }
 };
 
 } // gen:ns_curstext
@@ -1883,51 +2364,96 @@ ams::MsgHeaderMsgsCase MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteAry 
 // Parse ascii representation of message into binary, appending new data to BUF.
 // func:ams.MsgHeaderMsgs..ReadStrptrMaybe
 bool                 MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
+// Construct a new ams::InputLineMsg in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+// func:ams...InputLineMsg_FmtAlloc
+ams::InputLineMsg *  InputLineMsg_FmtAlloc(const algo::Alloc &alloc, ams::ProcId proc_id, algo::aryptr<char > payload);
+// Construct a new ams::LogMsg in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+// func:ams...LogMsg_FmtAlloc
+ams::LogMsg *        LogMsg_FmtAlloc(const algo::Alloc &alloc, ams::ProcId proc_id, algo::SchedTime tstamp, algo::aryptr<char > logcat, algo::aryptr<char > text);
 // Construct a new ams::LogMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:ams...LogMsg_FmtByteAry
 ams::LogMsg *        LogMsg_FmtByteAry(algo::ByteAry &buf, ams::ProcId proc_id, algo::SchedTime tstamp, algo::aryptr<char > logcat, algo::aryptr<char > text);
+// Construct a new ams::MsgBlock in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+// func:ams...MsgBlock_FmtAlloc
+ams::MsgBlock *      MsgBlock_FmtAlloc(const algo::Alloc &alloc, u64 first_seqno, u32 n_messages, u32 original_length, algo::aryptr<u8 > messages);
 // Construct a new ams::MsgBlock in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:ams...MsgBlock_FmtByteAry
 ams::MsgBlock *      MsgBlock_FmtByteAry(algo::ByteAry &buf, u64 first_seqno, u32 n_messages, u32 original_length, algo::aryptr<u8 > messages);
 // Construct a new ams::MsgBlock in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:ams...MsgBlock_FmtMemptr
 ams::MsgBlock *      MsgBlock_FmtMemptr(algo::memptr &buf, u64 first_seqno, u32 n_messages, u32 original_length, algo::aryptr<u8 > messages);
+// Construct a new ams::ShmHbMsg in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// func:ams...ShmHbMsg_FmtAlloc
+ams::ShmHbMsg *      ShmHbMsg_FmtAlloc(const algo::Alloc &alloc, ams::GrpmemberId grpmember, u64 off, u32 wbudget);
+// Construct a new ams::TerminateMsg in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// func:ams...TerminateMsg_FmtAlloc
+ams::TerminateMsg *  TerminateMsg_FmtAlloc(const algo::Alloc &alloc, ams::ProcId proc_id);
+// Construct a new ams::UdpFrame in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+// func:ams...UdpFrame_FmtAlloc
+ams::UdpFrame *      UdpFrame_FmtAlloc(const algo::Alloc &alloc, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload);
 // Construct a new ams::UdpFrame in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:ams...UdpFrame_FmtByteAry
 ams::UdpFrame *      UdpFrame_FmtByteAry(algo::ByteAry &buf, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload);
 // Construct a new ams::UdpFrame in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:ams...UdpFrame_FmtMemptr
 ams::UdpFrame *      UdpFrame_FmtMemptr(algo::memptr &buf, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload);
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ExpectMsg &row);// cfmt:ams.ExpectMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::FieldId &row);// cfmt:ams.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::BoardrefMsg &row);// cfmt:ams.BoardrefMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::Proctype &row);// cfmt:ams.Proctype.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::ProcId &row);// cfmt:ams.ProcId.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::Grptype &row);// cfmt:ams.Grptype.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::GrpId &row);// cfmt:ams.GrpId.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::Bridge &row);// cfmt:ams.Bridge.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::FieldId &row);// cfmt:ams.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::ShmemberFlags &row);// cfmt:ams.ShmemberFlags.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::GrpmemberId &row);// cfmt:ams.GrpmemberId.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::I64Price8 &row);// cfmt:ams.I64Price8.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::InputLineMsg &row);// cfmt:ams.InputLineMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::LogMsg &row);// cfmt:ams.LogMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::MsgBlock &row);// cfmt:ams.MsgBlock.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::MsgHeader &row);// cfmt:ams.MsgHeader.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ProcEofMsg &row);// cfmt:ams.ProcEofMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ProcKillMsg &row);// cfmt:ams.ProcKillMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ProcMsg &row);// cfmt:ams.ProcMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ProcReadMsg &row);// cfmt:ams.ProcReadMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ProcStartMsg &row);// cfmt:ams.ProcStartMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ProcStatusMsg &row);// cfmt:ams.ProcStatusMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampFoldstate &row);// cfmt:ams.SampFoldstate.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengBookMsg &row);// cfmt:ams.SampMengBookMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengCancelOrderMsg &row);// cfmt:ams.SampMengCancelOrderMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengCancelReqMsg &row);// cfmt:ams.SampMengCancelReqMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengMassCancelReqMsg &row);// cfmt:ams.SampMengMassCancelReqMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengSymbol &row);// cfmt:ams.SampMengSymbol.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengNewOrderMsg &row);// cfmt:ams.SampMengNewOrderMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengNewOrderReqMsg &row);// cfmt:ams.SampMengNewOrderReqMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengNewSymbolMsg &row);// cfmt:ams.SampMengNewSymbolMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengNewSymbolReqMsg &row);// cfmt:ams.SampMengNewSymbolReqMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengNewUserMsg &row);// cfmt:ams.SampMengNewUserMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengNewUserReqMsg &row);// cfmt:ams.SampMengNewUserReqMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengOrderTradeMsg &row);// cfmt:ams.SampMengOrderTradeMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengRestingMsg &row);// cfmt:ams.SampMengRestingMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengSymbolrowMsg &row);// cfmt:ams.SampMengSymbolrowMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengTextMsg &row);// cfmt:ams.SampMengTextMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengUserrowMsg &row);// cfmt:ams.SampMengUserrowMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::ShmFlags &row);// cfmt:ams.ShmFlags.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::Shmtype &row);// cfmt:ams.Shmtype.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ShmId &row);// cfmt:ams.ShmId.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ShmemberFlags &row);// cfmt:ams.ShmemberFlags.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::ShmemberId &row);// cfmt:ams.ShmemberId.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::ShmHbMsg &row);// cfmt:ams.ShmHbMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const ams::Shmmsg &row);// cfmt:ams.Shmmsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::Shmember &row);// cfmt:ams.Shmember.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::Shmhdr &row);// cfmt:ams.Shmhdr.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::UdpFrame &row);// cfmt:ams.UdpFrame.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::UprocTextMsg &row);// cfmt:ams.UprocTextMsg.String
 }

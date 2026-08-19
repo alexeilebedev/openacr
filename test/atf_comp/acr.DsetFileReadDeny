@@ -1,0 +1,27 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir -p d/dmmeta d/dev temp && printf "dmmeta.dispsig  dispsig:xx.aa  signature:1\\n" > d/dmmeta/dispsig.ssim && cp d/dmmeta/dispsig.ssim orig && printf "" > d/dmmeta/ctype.ssim && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data ctype:% -print:N && echo empty_ssimfile_ok && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data ssimfile:% -print:N && echo absent_ssimfile_ok && printf "dev.gitfile  gitfile:added_src\\n" | $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data -insert -write -g -print:N 2>giterr; test $$? = 1 && test -f added_src && echo git_script_failed; grep git_script giterr; cp d/dev/gitfile.ssim gitorig; chmod 000 d/dmmeta/dispsig.ssim d/dev/gitfile.ssim; $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -print:N; test $$? = 1 && echo query_failed; printf "dmmeta.dispsig  dispsig:xx.bb  signature:2\\n" | $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data -insert -write -print:N; test $$? = 1 && echo write_failed; EDITOR="touch editor_ran" $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -e -write -print:N; test $$? = 1 && test ! -f editor_ran && echo editor_not_launched; printf "dev.gitfile  gitfile:denied_src\\n" | $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data -insert -write -g -print:N; test $$? = 1 && test ! -f denied_src && echo git_script_not_run; chmod 644 d/dmmeta/dispsig.ssim d/dev/gitfile.ssim; cmp d/dmmeta/dispsig.ssim orig && echo ssimfile_unchanged; cmp d/dev/gitfile.ssim gitorig && echo gitfile_unchanged\''
+# eof bash
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> empty_ssimfile_ok
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> absent_ssimfile_ok
+bash -> report.acr  n_select:1  n_insert:1  n_delete:0  n_ignore:0  n_update:0  n_file_mod:1  n_badline:0
+bash -> git_script_failed
+bash -> acr.git_script  script:"touch added_src\ngit add added_src\n"  status:"exit code 1"  comment:"git script failed"
+bash -> acr.file_read  file:d/dmmeta/dispsig.ssim  err:"Permission denied"  comment:"ssimfile could not be read"
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> query_failed
+bash -> acr.file_read  file:d/dmmeta/dispsig.ssim  err:"Permission denied"  comment:"ssimfile could not be read"
+bash -> report.acr  n_select:1  n_insert:1  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> write_failed
+bash -> acr.file_read  file:d/dmmeta/dispsig.ssim  err:"Permission denied"  comment:"ssimfile could not be read"
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> editor_not_launched
+bash -> acr.file_read  file:d/dev/gitfile.ssim  err:"Permission denied"  comment:"ssimfile could not be read"
+bash -> # acr output script
+bash -> touch denied_src
+bash -> git add denied_src
+bash -> report.acr  n_select:1  n_insert:1  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> git_script_not_run
+bash -> ssimfile_unchanged
+bash -> gitfile_unchanged
+# exit bash code:0

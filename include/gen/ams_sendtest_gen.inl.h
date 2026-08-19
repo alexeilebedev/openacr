@@ -23,29 +23,13 @@
 
 
 #pragma once
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/ams_gen.inl.h"
 #include "include/gen/lib_ams_gen.inl.h"
+#include "include/gen/report_gen.inl.h"
+#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-
-// --- ams_sendtest.AmsSendTest..Init
-// Set all fields to initial values.
-inline void ams_sendtest::AmsSendTest_Init(ams_sendtest::AmsSendTest& parent) {
-    parent.n_msg_send = u64(0);
-    parent.off_send = u64(0);
-    parent.off_recv = u64(0);
-    parent.n_msg_recv = u64(0);
-    parent.n_write_wait = u64(0);
-    parent.n_msg_limit = u64(1000000);
-    parent.sum_recv_latency = u64(0);
-}
-
-// --- ams_sendtest.AmsSendTest..Ctor
-inline  ams_sendtest::AmsSendTest::AmsSendTest() {
-    ams_sendtest::AmsSendTest_Init(*this);
-}
 
 // --- ams_sendtest.FChild..Ctor
 inline  ams_sendtest::FChild::FChild() {
@@ -55,6 +39,23 @@ inline  ams_sendtest::FChild::FChild() {
 // --- ams_sendtest.FChild..Dtor
 inline  ams_sendtest::FChild::~FChild() {
     ams_sendtest::FChild_Uninit(*this);
+}
+
+// --- ams_sendtest.FTest..Init
+// Set all fields to initial values.
+inline void ams_sendtest::FTest_Init(ams_sendtest::FTest& parent) {
+    parent.n_msg_send = u64(0);
+    parent.off_send = u64(0);
+    parent.off_recv = u64(0);
+    parent.n_msg_recv = u64(0);
+    parent.n_write_wait = u64(0);
+    parent.n_msg_limit = u64(1000000);
+    parent.sum_recv_latency = u64(0);
+}
+
+// --- ams_sendtest.FTest..Ctor
+inline  ams_sendtest::FTest::FTest() {
+    ams_sendtest::FTest_Init(*this);
 }
 
 // --- ams_sendtest.trace..Ctor
@@ -89,7 +90,7 @@ inline ams_sendtest::FChild* ams_sendtest::child_Last() {
 
 // --- ams_sendtest.FDb.child.N
 // Return number of items in the pool
-inline i32 ams_sendtest::child_N() {
+inline i64 ams_sendtest::child_N() {
     return _db.child_n;
 }
 
@@ -167,8 +168,8 @@ inline  ams_sendtest::FieldId::FieldId(ams_sendtest_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams_sendtest::AmsSendTest &row) {// cfmt:ams_sendtest.AmsSendTest.String
-    ams_sendtest::AmsSendTest_Print(const_cast<ams_sendtest::AmsSendTest&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams_sendtest::FTest &row) {// cfmt:ams_sendtest.FTest.String
+    ams_sendtest::FTest_Print(const_cast<ams_sendtest::FTest&>(row), str);
     return str;
 }
 

@@ -48,35 +48,6 @@ algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
 ssimfilt::FDb    ssimfilt::_db;     // dependency found via dev.targdep
 
-namespace ssimfilt {
-const char *ssimfilt_help =
-"ssimfilt: Tuple utility\n"
-"Usage: ssimfilt [[-typetag:]<regx>] [[-match:]<string>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    [typetag]   regx    \"%\"     (filter) Match typetag. ^=first encountered typetag\n"
-"    [match]...  string          (filter) Select input tuple if value of key matches value (regx:regx)\n"
-"    -field...   string          (project) Select fields for output (regx)\n"
-"    -format     enum    ssim    Output format for selected tuples (ssim|csv|field|cmd|json|stablefld|table|mdtable)\n"
-"                                    ssim  Print selected/filtered tuples\n"
-"                                    csv  First tuple determines header. CSV quoting is used. Newlines are removed\n"
-"                                    field  Print selected fields, one per line\n"
-"                                    cmd  Emit command for each tuple (implied if -cmd is set)\n"
-"                                    json  Print JSON object for each tuple\n"
-"                                    stablefld  Filter unstable fields, leave the rest intact\n"
-"                                    table  ASCII table for each group of tuples\n"
-"                                    mdtable  ASCII Markdown table with | separators for each group of tuples\n"
-"    -t                          Alias for -format:table\n"
-"    -cmd        string  \"\"      Command to output\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace ssimfilt
 namespace ssimfilt { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:ssimfilt.FDb._db.InitReflection
@@ -103,116 +74,16 @@ void ssimfilt::trace_Print(ssimfilt::trace& row, algo::cstring& str) {
 }
 
 // --- ssimfilt.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     ssimfilt.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of ssimfilt.FDb.cmdline (and any base command line)
+// via ssimfilt_ReadArgv; then apply -help/-version and load floadtuples input.
 void ssimfilt::ReadArgv() {
     command::ssimfilt &cmd = ssimfilt::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::ssimfilt_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::ssimfilt_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"ssimfilt: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"ssimfilt: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::ssimfilt_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "ssimfilt: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::ssimfilt_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"ssimfilt: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::ssimfilt_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -235,9 +106,7 @@ void ssimfilt::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:ssimfilt.FDb.cmdline
+    // dmmeta.floadtuples:command.ssimfilt.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!ssimfilt::LoadTuplesMaybe(cmd.in,true)) {
@@ -250,7 +119,7 @@ void ssimfilt::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(ssimfilt_help);
+        prlog(command::ssimfilt_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -277,7 +146,13 @@ void ssimfilt::Step() {
 // --- ssimfilt.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void ssimfilt::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("ssimfilt", ssimfilt::InsertStrptrMaybe, NULL, ssimfilt::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "ssimfilt";
+    row.InsertStrptrMaybe  = ssimfilt::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = ssimfilt::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = ssimfilt::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "ssimfilt.trace";
@@ -402,6 +277,27 @@ void ssimfilt::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- ssimfilt.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool ssimfilt::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    ssimfilt::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case ssimfilt_TableId_dev_Unstablefld: { // finput:ssimfilt.FDb.unstablefld
+            // finput ssimfilt.FDb.unstablefld: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- ssimfilt.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -442,7 +338,7 @@ void* ssimfilt::tuple_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     algo::Tuple*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.tuple_lary[bsr];
         if (!lev) {
             lev=(algo::Tuple*)algo_lib::malloc_AllocMem(sizeof(algo::Tuple) * (u64(1)<<bsr));
@@ -451,7 +347,7 @@ void* ssimfilt::tuple_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tuple_n = i32(new_nelems);
+        _db.tuple_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -463,7 +359,7 @@ void ssimfilt::tuple_RemoveAll() {
     for (u64 n = _db.tuple_n; n>0; ) {
         n--;
         tuple_qFind(u64(n)).~Tuple(); // destroy last element
-        _db.tuple_n = i32(n);
+        _db.tuple_n = i64(n);
     }
 }
 
@@ -474,7 +370,7 @@ void ssimfilt::tuple_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tuple_qFind(u64(n)).~Tuple();
-        _db.tuple_n = i32(n);
+        _db.tuple_n = i64(n);
     }
 }
 
@@ -510,7 +406,7 @@ void* ssimfilt::matchfield_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssimfilt::KVRegx*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.matchfield_lary[bsr];
         if (!lev) {
             lev=(ssimfilt::KVRegx*)algo_lib::malloc_AllocMem(sizeof(ssimfilt::KVRegx) * (u64(1)<<bsr));
@@ -519,7 +415,7 @@ void* ssimfilt::matchfield_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.matchfield_n = i32(new_nelems);
+        _db.matchfield_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -531,7 +427,7 @@ void ssimfilt::matchfield_RemoveAll() {
     for (u64 n = _db.matchfield_n; n>0; ) {
         n--;
         matchfield_qFind(u64(n)).~KVRegx(); // destroy last element
-        _db.matchfield_n = i32(n);
+        _db.matchfield_n = i64(n);
     }
 }
 
@@ -542,7 +438,7 @@ void ssimfilt::matchfield_RemoveLast() {
     if (n > 0) {
         n -= 1;
         matchfield_qFind(u64(n)).~KVRegx();
-        _db.matchfield_n = i32(n);
+        _db.matchfield_n = i64(n);
     }
 }
 
@@ -587,7 +483,7 @@ void* ssimfilt::selfield_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssimfilt::KVRegx*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.selfield_lary[bsr];
         if (!lev) {
             lev=(ssimfilt::KVRegx*)algo_lib::malloc_AllocMem(sizeof(ssimfilt::KVRegx) * (u64(1)<<bsr));
@@ -596,7 +492,7 @@ void* ssimfilt::selfield_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.selfield_n = i32(new_nelems);
+        _db.selfield_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -608,7 +504,7 @@ void ssimfilt::selfield_RemoveAll() {
     for (u64 n = _db.selfield_n; n>0; ) {
         n--;
         selfield_qFind(u64(n)).~KVRegx(); // destroy last element
-        _db.selfield_n = i32(n);
+        _db.selfield_n = i64(n);
     }
 }
 
@@ -619,7 +515,7 @@ void ssimfilt::selfield_RemoveLast() {
     if (n > 0) {
         n -= 1;
         selfield_qFind(u64(n)).~KVRegx();
-        _db.selfield_n = i32(n);
+        _db.selfield_n = i64(n);
     }
 }
 
@@ -669,7 +565,7 @@ void* ssimfilt::unstablefld_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssimfilt::FUnstablefld*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.unstablefld_lary[bsr];
         if (!lev) {
             lev=(ssimfilt::FUnstablefld*)algo_lib::malloc_AllocMem(sizeof(ssimfilt::FUnstablefld) * (u64(1)<<bsr));
@@ -678,7 +574,7 @@ void* ssimfilt::unstablefld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.unstablefld_n = i32(new_nelems);
+        _db.unstablefld_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -690,7 +586,7 @@ void ssimfilt::unstablefld_RemoveAll() {
     for (u64 n = _db.unstablefld_n; n>0; ) {
         n--;
         unstablefld_qFind(u64(n)).~FUnstablefld(); // destroy last element
-        _db.unstablefld_n = i32(n);
+        _db.unstablefld_n = i64(n);
     }
 }
 
@@ -701,7 +597,7 @@ void ssimfilt::unstablefld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         unstablefld_qFind(u64(n)).~FUnstablefld();
-        _db.unstablefld_n = i32(n);
+        _db.unstablefld_n = i64(n);
     }
 }
 
@@ -733,7 +629,7 @@ bool ssimfilt::unstablefld_XrefMaybe(ssimfilt::FUnstablefld &row) {
 // --- ssimfilt.FDb.ind_unstablefld.Find
 // Find row by key. Return NULL if not found.
 ssimfilt::FUnstablefld* ssimfilt::ind_unstablefld_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_unstablefld_buckets_n - 1);
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_unstablefld_buckets_n - 1);
     ssimfilt::FUnstablefld *ret = _db.ind_unstablefld_buckets_elems[index];
     for (; ret && !((*ret).field == key); ret = ret->ind_unstablefld_next) {
     }
@@ -770,7 +666,7 @@ ssimfilt::FUnstablefld& ssimfilt::ind_unstablefld_GetOrCreate(const algo::strptr
 bool ssimfilt::ind_unstablefld_InsertMaybe(ssimfilt::FUnstablefld& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_unstablefld_next == (ssimfilt::FUnstablefld*)-1)) {// check if in hash already
-        row.ind_unstablefld_hashval = algo::Smallstr100_Hash(0, row.field);
+        row.ind_unstablefld_hashval = algo::Smallstr150_Hash(0, row.field);
         ind_unstablefld_Reserve(1);
         u32 index = row.ind_unstablefld_hashval & (_db.ind_unstablefld_buckets_n - 1);
         ssimfilt::FUnstablefld* *prev = &_db.ind_unstablefld_buckets_elems[index];
@@ -951,7 +847,7 @@ void ssimfilt::FDb_Uninit() {
 // Copy fields out of row
 void ssimfilt::unstablefld_CopyOut(ssimfilt::FUnstablefld &row, dev::Unstablefld &out) {
     out.field = row.field;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- ssimfilt.FUnstablefld.base.CopyIn
@@ -1039,7 +935,7 @@ bool ssimfilt::FieldId_ReadStrptrMaybe(ssimfilt::FieldId &parent, algo::strptr i
 // --- ssimfilt.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ssimfilt.FieldId.String  printfmt:Raw
-void ssimfilt::FieldId_Print(ssimfilt::FieldId& row, algo::cstring& str) {
+void ssimfilt::FieldId_Print(ssimfilt::FieldId row, algo::cstring& str) {
     ssimfilt::value_Print(row, str);
 }
 
@@ -1132,7 +1028,7 @@ bool ssimfilt::TableId_ReadStrptrMaybe(ssimfilt::TableId &parent, algo::strptr i
 // --- ssimfilt.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:ssimfilt.TableId.String  printfmt:Raw
-void ssimfilt::TableId_Print(ssimfilt::TableId& row, algo::cstring& str) {
+void ssimfilt::TableId_Print(ssimfilt::TableId row, algo::cstring& str) {
     ssimfilt::value_Print(row, str);
 }
 

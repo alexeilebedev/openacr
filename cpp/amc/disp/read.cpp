@@ -38,7 +38,17 @@ amc::FCfmt *amc::FindStringRead(amc::FCtype &ctype) {
 
 // -----------------------------------------------------------------------------
 
-// Generate Dispatch_Read function
+// Generate Dispatch_Read function.
+// A case whose ctype owns a varlen tail appends the tail's bytes to the
+// buffer and then stores the resulting total through the ctype's length
+// field. That total is a runtime one, so it can exceed what the length word
+// represents: reading a 260-byte tuple into a ctype whose length word is a
+// u8 counting the total minus 2 stores 2, and every walk over the buffer
+// afterwards reads the payload as the next message header. The store
+// therefore goes through the same three expressions as every other
+// runtime-total store (LenfldGuardNeededQ, LenfldCheckExpr, LenfldStoreExpr),
+// and a total the word cannot hold fails the read, leaving the caller to
+// discard the buffer on the false return.
 void amc::Disp_Read(amc::FDispatch &disp) {
     algo_lib::Replscope R;
     R.strict=2;
@@ -71,20 +81,11 @@ void amc::Disp_Read(amc::FDispatch &disp) {
     Ins(&R, func.body            , "switch (value_GetEnum(msgtype)) { // what message is it?");
 
     ind_beg(amc::dispatch_c_dispatch_msg_curs, msg,disp) {
-        bool is_varlen = VarlenQ(*msg.p_ctype);
+        bool runtime_len = amc::RuntimeFrameLenQ(*msg.p_ctype);
         amc::FLenfld *lenfld = msg.p_ctype->c_lenfld;
         Set(R, "$Msgname", name_Get(*msg.p_ctype));
         Set(R, "$msgns", ns_Get(*msg.p_ctype));
         Set(R, "$Ctype", amc::NsToCpp(ctype_Get(msg)));
-        cstring lenassign("len");
-        if (lenfld && lenfld->extra > 0) {
-            lenassign << "+" << lenfld->extra;
-        } else if (lenfld && lenfld->extra < 0) {
-            lenassign << lenfld->extra;
-        }
-        if (lenfld && lenfld->scale != 1) {
-            lenassign = tempstr() << "(" << lenassign << ") / " << lenfld->scale;
-        }
         Ins(&R, func.body        , "case $caseenumprefix_$msgns_$Msgname: {");
         amc::FCfmt *cfmt = FindStringRead(*msg.p_ctype);
         if (!cfmt) {
@@ -101,20 +102,24 @@ void amc::Disp_Read(amc::FDispatch &disp) {
             } else {
                 Ins(&R, func.body        , "    int len = sizeof($Ctype);");
                 Ins(&R, func.body        , "    $Ctype *ctype = new(ary_AllocN(buf, len).elems) $Ctype; // default values");
-                if (is_varlen) {
+                if (runtime_len) {
                     Ins(&R, func.body    , "    algo::ByteAry varlenbuf;");
                     Ins(&R, func.body    , "    algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;");
                     Ins(&R, func.body    , "    algo_lib::_db.varlenbuf = &varlenbuf;");
                 }
                 Ins(&R, func.body        , "    ok = $Msgname_ReadStrptrMaybe(*ctype, str); // now read attributes");
-                if (is_varlen) {
+                if (runtime_len) {
                     Ins(&R, func.body    , "    len += ary_N(varlenbuf);");
                 }
-                if (is_varlen && lenfld) {// for non-varlen, length is already valid
-                    Set(R, "$assignlen", AssignExpr(*lenfld->p_field, "*ctype", lenassign, true));
+                if (runtime_len && lenfld) {// for non-varlen, length is already valid
+                    if (amc::LenfldGuardNeededQ(*lenfld)) {
+                        Set(R, "$lenchk", LenfldCheckExpr(*lenfld, "len"));
+                        Ins(&R, func.body, "    ok = ok && ($lenchk); // only a total the length field can store round-trips");
+                    }
+                    Set(R, "$assignlen", AssignExpr(*lenfld->p_field, "*ctype", LenfldStoreExpr(*lenfld, "len"), true));
                     Ins(&R, func.body    , "    $assignlen;");
                 }
-                if (is_varlen) {
+                if (runtime_len) {
                     Ins(&R, func.body    , "    ary_Addary(buf, ary_Getary(varlenbuf));");
                     Ins(&R, func.body    , "    algo_lib::_db.varlenbuf = varlenbuf_save;");
                 }
@@ -140,12 +145,24 @@ void amc::Disp_Read(amc::FDispatch &disp) {
     read.ret = Subst(R,"bool");
     read.glob = true;
     Ins(&R, read.comment, "Parse ascii representation of message into binary, appending new data to BUF.");
+    // The message a parse produced is the evidence that it parsed, and the
+    // case it carries is not.  A dispatch may number a member zero -- kafka's
+    // api key for Produce is 0 -- and that member's case equals the
+    // default-constructed one, so a test against the default reports a message
+    // that parsed perfectly as a failure and the caller drops it in silence.
+    // A parse that failed leaves the pointer NULL whatever its case, so the
+    // pointer answers the question the case cannot.
+    //
+    // The buffer form has no such pointer to test and keeps the case test.  It
+    // carries the same flaw for a zero-numbered member, and no dispatch has one
+    // today.
     if (disp.dyn) {
         Ins(&R, read.proto, "$Dname_ReadStrptrMaybe(algo::strptr str, $Hdrtype **msg)", false);
-        Ins(&R, read.body            , "$Casetype msgtype = $Dname_ReadStrptr(str,msg);");
+        Ins(&R, read.body            , "$Dname_ReadStrptr(str,msg);");
+        Ins(&R, read.body            , "return *msg != NULL;");
     } else {
         Ins(&R, read.proto, "$Dname_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf)", false);
         Ins(&R, read.body            , "$Casetype msgtype = $Dname_ReadStrptr(str,buf);");
+        Ins(&R, read.body            , "return !(msgtype == $Casetype());");
     }
-    Ins(&R, read.body            , "return !(msgtype == $Casetype());");
 }

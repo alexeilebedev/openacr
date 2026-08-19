@@ -28,12 +28,12 @@
 
 // --- ietf_FieldIdEnum
 
-enum ietf_FieldIdEnum {        // ietf.FieldId.value
-     ietf_FieldId_ip      = 0
-    ,ietf_FieldId_port    = 1
-    ,ietf_FieldId_ipv4    = 2
-    ,ietf_FieldId_addr    = 3
-    ,ietf_FieldId_value   = 4
+enum ietf_FieldIdEnum {    // ietf.FieldId.value
+     ietf_FieldId_ip
+    ,ietf_FieldId_port
+    ,ietf_FieldId_ipv4
+    ,ietf_FieldId_addr
+    ,ietf_FieldId_value
 };
 
 enum { ietf_FieldIdEnum_N = 5 };
@@ -63,7 +63,6 @@ struct FieldId { // ietf.FieldId: Field read helper
     inline               FieldId(ietf_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ietf.FieldId.value.GetEnum
 inline ietf_FieldIdEnum value_GetEnum(const ietf::FieldId& parent) __attribute__((nothrow));
@@ -101,7 +100,7 @@ inline void          FieldId_Init(ietf::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:ietf.FieldId.String  printfmt:Raw
 // func:ietf.FieldId..Print
-void                 FieldId_Print(ietf::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(ietf::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ietf.Ipv4
 #pragma pack(push,1)
@@ -125,7 +124,6 @@ struct Ipv4 { // ietf.Ipv4
     explicit inline               Ipv4(u32 in_ipv4) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:ietf.Ipv4..Hash
 inline u32           Ipv4_Hash(u32 prev, ietf::Ipv4 rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipv4 from an ascii string.
@@ -173,7 +171,6 @@ struct Ipport { // ietf.Ipport: IP+Port: host format
     explicit inline               Ipport(ietf::Ipv4 in_ip, u16 in_port) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:ietf.Ipport..Hash
 inline u32           Ipport_Hash(u32 prev, ietf::Ipport rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipport from an ascii string.
@@ -220,7 +217,6 @@ struct Ipv4Addr { // ietf.Ipv4Addr
     explicit inline               Ipv4Addr(u32 in_addr) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:ietf.Ipv4Addr.addr.Get
 inline u32           addr_Get(const ietf::Ipv4Addr& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:ietf.Ipv4Addr.addr.Set

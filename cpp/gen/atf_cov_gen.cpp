@@ -33,6 +33,8 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/report_gen.h"
+#include "include/gen/report_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
@@ -43,34 +45,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_cov::FDb    atf_cov::_db;     // dependency found via dev.targdep
 
-namespace atf_cov {
-const char *atf_cov_help =
-"atf_cov: Line coverage\n"
-"Usage: atf_cov [options]\n"
-"    OPTION        TYPE    DFLT                              COMMENT\n"
-"    -in           string  \"data\"                            Input directory or filename, - for stdin\n"
-"    -covdir       string  \"temp/covdata\"                    Output directory to save coverage data\n"
-"    -logfile      string  \"\"                                Log file\n"
-"    -runcmd       string  \"\"                                command to run\n"
-"    -exclude      regx    \"(extern|include/gen|cpp/gen)/%\"  Exclude gitfiles (external, generated)\n"
-"    -mergepath    string  \"\"                                colon-separated dir list to load .cov.ssim files from\n"
-"    -gcov                                                   run gcov\n"
-"    -ssim                                                   write out ssim files\n"
-"    -report                                                 write out all reports\n"
-"    -capture                                                Write coverage information into tgtcov table\n"
-"    -xmlpretty                                              Generate pretty-formatted XML\n"
-"    -summary              Y                                 Show summary figures\n"
-"    -check                                                  Check coverage information against tgtcov table\n"
-"    -incremental                                            Keep *.gcda files from previous run\n"
-"    -verbose      flag                                      Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug        flag                                      Debug level (0..255); alias -d; cumulative\n"
-"    -help                                                   Print help and exit; alias -h\n"
-"    -version                                                Print version and exit\n"
-"    -signature                                              Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace atf_cov
 namespace atf_cov { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:atf_cov.FDb._db.InitReflection
@@ -151,9 +125,8 @@ void atf_cov::covline_CopyIn(atf_cov::FCovline &row, dev::Covline &in) {
 }
 
 // --- atf_cov.FCovline.src.Get
-algo::Smallstr200 atf_cov::src_Get(atf_cov::FCovline& covline) {
-    algo::Smallstr200 ret(algo::Pathcomp(covline.covline, ":RL"));
-    return ret;
+algo::strptr atf_cov::src_Get(atf_cov::FCovline& covline) {
+    return algo::Pathcomp(covline.covline, ":RL");
 }
 
 // --- atf_cov.FCovline.line.Get
@@ -240,99 +213,16 @@ void atf_cov::trace_Print(atf_cov::trace& row, algo::cstring& str) {
 }
 
 // --- atf_cov.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_cov.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_cov.FDb.cmdline (and any base command line)
+// via atf_cov_ReadArgv; then apply -help/-version and load floadtuples input.
 void atf_cov::ReadArgv() {
     command::atf_cov &cmd = atf_cov::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::atf_cov_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"atf_cov: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "atf_cov: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::atf_cov_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"atf_cov: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::atf_cov_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -355,9 +245,7 @@ void atf_cov::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:atf_cov.FDb.cmdline
+    // dmmeta.floadtuples:command.atf_cov.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!atf_cov::LoadTuplesMaybe(cmd.in,true)) {
@@ -370,7 +258,7 @@ void atf_cov::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(atf_cov_help);
+        prlog(command::atf_cov_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -397,7 +285,13 @@ void atf_cov::Step() {
 // --- atf_cov.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void atf_cov::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("atf_cov", atf_cov::InsertStrptrMaybe, NULL, atf_cov::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "atf_cov";
+    row.InsertStrptrMaybe  = atf_cov::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = atf_cov::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = atf_cov::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "atf_cov.trace";
@@ -411,7 +305,7 @@ static void atf_cov::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_cov.Input'  signature:'d66d21a3b569781c26e5ede79240bebe11ae80c4'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_cov.Input'  signature:'cc424298114c04dd5721a2a0d3d9b2f901fffa62'");
 }
 
 // --- atf_cov.FDb._db.InsertStrptrMaybe
@@ -552,6 +446,63 @@ void atf_cov::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- atf_cov.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool atf_cov::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    atf_cov::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case atf_cov_TableId_dev_Covline: { // finput:atf_cov.FDb.covline
+            // finput atf_cov.FDb.covline: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_cov_TableId_dev_Target: { // finput:atf_cov.FDb.target
+            // finput atf_cov.FDb.target: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_cov_TableId_dev_Targsrc: { // finput:atf_cov.FDb.targsrc
+            // finput atf_cov.FDb.targsrc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_cov_TableId_dev_Gitfile: { // finput:atf_cov.FDb.gitfile
+            // finput atf_cov.FDb.gitfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_cov_TableId_dev_Covtarget: { // finput:atf_cov.FDb.covtarget
+            // finput atf_cov.FDb.covtarget: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_cov_TableId_dev_Covfile: { // finput:atf_cov.FDb.covfile
+            // finput atf_cov.FDb.covfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_cov_TableId_dev_Tgtcov: { // finput:atf_cov.FDb.tgtcov
+            // finput atf_cov.FDb.tgtcov: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- atf_cov.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -606,7 +557,7 @@ void* atf_cov::covline_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_cov::FCovline*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.covline_lary[bsr];
         if (!lev) {
             lev=(atf_cov::FCovline*)algo_lib::malloc_AllocMem(sizeof(atf_cov::FCovline) * (u64(1)<<bsr));
@@ -615,7 +566,7 @@ void* atf_cov::covline_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.covline_n = i32(new_nelems);
+        _db.covline_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -627,7 +578,7 @@ void atf_cov::covline_RemoveAll() {
     for (u64 n = _db.covline_n; n>0; ) {
         n--;
         covline_qFind(u64(n)).~FCovline(); // destroy last element
-        _db.covline_n = i32(n);
+        _db.covline_n = i64(n);
     }
 }
 
@@ -638,7 +589,7 @@ void atf_cov::covline_RemoveLast() {
     if (n > 0) {
         n -= 1;
         covline_qFind(u64(n)).~FCovline();
-        _db.covline_n = i32(n);
+        _db.covline_n = i64(n);
     }
 }
 
@@ -696,6 +647,22 @@ atf_cov::FCovline& atf_cov::ind_covline_FindX(const algo::strptr& key) {
     atf_cov::FCovline* ret = ind_covline_Find(key);
     vrfy(ret, tempstr() << "atf_cov.key_error  table:ind_covline  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- atf_cov.FDb.ind_covline.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_cov::FCovline* atf_cov::ind_covline_GetOrCreate(const algo::strptr& key) {
+    atf_cov::FCovline* ret = ind_covline_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &covline_Alloc();
+        (*ret).covline = key;
+        bool good = covline_XrefMaybe(*ret);
+        if (!good) {
+            covline_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- atf_cov.FDb.ind_covline.InsertMaybe
@@ -833,7 +800,7 @@ void* atf_cov::target_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_cov::FTarget*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.target_lary[bsr];
         if (!lev) {
             lev=(atf_cov::FTarget*)algo_lib::malloc_AllocMem(sizeof(atf_cov::FTarget) * (u64(1)<<bsr));
@@ -842,7 +809,7 @@ void* atf_cov::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = i32(new_nelems);
+        _db.target_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -854,7 +821,7 @@ void atf_cov::target_RemoveAll() {
     for (u64 n = _db.target_n; n>0; ) {
         n--;
         target_qFind(u64(n)).~FTarget(); // destroy last element
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -865,7 +832,7 @@ void atf_cov::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -1064,7 +1031,7 @@ void* atf_cov::targsrc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_cov::FTargsrc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targsrc_lary[bsr];
         if (!lev) {
             lev=(atf_cov::FTargsrc*)algo_lib::malloc_AllocMem(sizeof(atf_cov::FTargsrc) * (u64(1)<<bsr));
@@ -1073,7 +1040,7 @@ void* atf_cov::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = i32(new_nelems);
+        _db.targsrc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1085,7 +1052,7 @@ void atf_cov::targsrc_RemoveAll() {
     for (u64 n = _db.targsrc_n; n>0; ) {
         n--;
         targsrc_qFind(u64(n)).~FTargsrc(); // destroy last element
-        _db.targsrc_n = i32(n);
+        _db.targsrc_n = i64(n);
     }
 }
 
@@ -1096,7 +1063,7 @@ void atf_cov::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = i32(n);
+        _db.targsrc_n = i64(n);
     }
 }
 
@@ -1172,6 +1139,22 @@ atf_cov::FTargsrc& atf_cov::ind_targsrc_FindX(const algo::strptr& key) {
     atf_cov::FTargsrc* ret = ind_targsrc_Find(key);
     vrfy(ret, tempstr() << "atf_cov.key_error  table:ind_targsrc  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- atf_cov.FDb.ind_targsrc.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_cov::FTargsrc* atf_cov::ind_targsrc_GetOrCreate(const algo::strptr& key) {
+    atf_cov::FTargsrc* ret = ind_targsrc_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &targsrc_Alloc();
+        (*ret).targsrc = key;
+        bool good = targsrc_XrefMaybe(*ret);
+        if (!good) {
+            targsrc_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- atf_cov.FDb.ind_targsrc.InsertMaybe
@@ -1309,7 +1292,7 @@ void* atf_cov::gitfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_cov::FGitfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.gitfile_lary[bsr];
         if (!lev) {
             lev=(atf_cov::FGitfile*)algo_lib::malloc_AllocMem(sizeof(atf_cov::FGitfile) * (u64(1)<<bsr));
@@ -1318,7 +1301,7 @@ void* atf_cov::gitfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.gitfile_n = i32(new_nelems);
+        _db.gitfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1330,7 +1313,7 @@ void atf_cov::gitfile_RemoveAll() {
     for (u64 n = _db.gitfile_n; n>0; ) {
         n--;
         gitfile_qFind(u64(n)).~FGitfile(); // destroy last element
-        _db.gitfile_n = i32(n);
+        _db.gitfile_n = i64(n);
     }
 }
 
@@ -1341,7 +1324,7 @@ void atf_cov::gitfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         gitfile_qFind(u64(n)).~FGitfile();
-        _db.gitfile_n = i32(n);
+        _db.gitfile_n = i64(n);
     }
 }
 
@@ -1540,7 +1523,7 @@ void* atf_cov::covtarget_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_cov::FCovtarget*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.covtarget_lary[bsr];
         if (!lev) {
             lev=(atf_cov::FCovtarget*)algo_lib::malloc_AllocMem(sizeof(atf_cov::FCovtarget) * (u64(1)<<bsr));
@@ -1549,7 +1532,7 @@ void* atf_cov::covtarget_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.covtarget_n = i32(new_nelems);
+        _db.covtarget_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1561,7 +1544,7 @@ void atf_cov::covtarget_RemoveAll() {
     for (u64 n = _db.covtarget_n; n>0; ) {
         n--;
         covtarget_qFind(u64(n)).~FCovtarget(); // destroy last element
-        _db.covtarget_n = i32(n);
+        _db.covtarget_n = i64(n);
     }
 }
 
@@ -1572,7 +1555,7 @@ void atf_cov::covtarget_RemoveLast() {
     if (n > 0) {
         n -= 1;
         covtarget_qFind(u64(n)).~FCovtarget();
-        _db.covtarget_n = i32(n);
+        _db.covtarget_n = i64(n);
     }
 }
 
@@ -1652,7 +1635,7 @@ void* atf_cov::covfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_cov::FCovfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.covfile_lary[bsr];
         if (!lev) {
             lev=(atf_cov::FCovfile*)algo_lib::malloc_AllocMem(sizeof(atf_cov::FCovfile) * (u64(1)<<bsr));
@@ -1661,7 +1644,7 @@ void* atf_cov::covfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.covfile_n = i32(new_nelems);
+        _db.covfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1673,7 +1656,7 @@ void atf_cov::covfile_RemoveAll() {
     for (u64 n = _db.covfile_n; n>0; ) {
         n--;
         covfile_qFind(u64(n)).~FCovfile(); // destroy last element
-        _db.covfile_n = i32(n);
+        _db.covfile_n = i64(n);
     }
 }
 
@@ -1684,7 +1667,7 @@ void atf_cov::covfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         covfile_qFind(u64(n)).~FCovfile();
-        _db.covfile_n = i32(n);
+        _db.covfile_n = i64(n);
     }
 }
 
@@ -1764,7 +1747,7 @@ void* atf_cov::tgtcov_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_cov::FTgtcov*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.tgtcov_lary[bsr];
         if (!lev) {
             lev=(atf_cov::FTgtcov*)algo_lib::malloc_AllocMem(sizeof(atf_cov::FTgtcov) * (u64(1)<<bsr));
@@ -1773,7 +1756,7 @@ void* atf_cov::tgtcov_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tgtcov_n = i32(new_nelems);
+        _db.tgtcov_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1785,7 +1768,7 @@ void atf_cov::tgtcov_RemoveAll() {
     for (u64 n = _db.tgtcov_n; n>0; ) {
         n--;
         tgtcov_qFind(u64(n)).~FTgtcov(); // destroy last element
-        _db.tgtcov_n = i32(n);
+        _db.tgtcov_n = i64(n);
     }
 }
 
@@ -1796,7 +1779,7 @@ void atf_cov::tgtcov_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tgtcov_qFind(u64(n)).~FTgtcov();
-        _db.tgtcov_n = i32(n);
+        _db.tgtcov_n = i64(n);
     }
 }
 
@@ -1855,6 +1838,22 @@ atf_cov::FTgtcov& atf_cov::ind_tgtcov_FindX(const algo::strptr& key) {
     atf_cov::FTgtcov* ret = ind_tgtcov_Find(key);
     vrfy(ret, tempstr() << "atf_cov.key_error  table:ind_tgtcov  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- atf_cov.FDb.ind_tgtcov.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_cov::FTgtcov* atf_cov::ind_tgtcov_GetOrCreate(const algo::strptr& key) {
+    atf_cov::FTgtcov* ret = ind_tgtcov_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &tgtcov_Alloc();
+        (*ret).target = key;
+        bool good = tgtcov_XrefMaybe(*ret);
+        if (!good) {
+            tgtcov_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- atf_cov.FDb.ind_tgtcov.InsertMaybe
@@ -1944,6 +1943,97 @@ void atf_cov::ind_tgtcov_AbsReserve(int n) {
         _db.ind_tgtcov_buckets_elems = new_buckets;
         _db.ind_tgtcov_buckets_n = new_nbuckets;
     }
+}
+
+// --- atf_cov.FDb.uncovfunc.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_cov::FUncovfunc& atf_cov::uncovfunc_Alloc() {
+    atf_cov::FUncovfunc* row = uncovfunc_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_cov.out_of_mem  field:atf_cov.FDb.uncovfunc  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_cov.FDb.uncovfunc.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_cov::FUncovfunc* atf_cov::uncovfunc_AllocMaybe() {
+    atf_cov::FUncovfunc *row = (atf_cov::FUncovfunc*)uncovfunc_AllocMem();
+    if (row) {
+        new (row) atf_cov::FUncovfunc; // call constructor
+    }
+    return row;
+}
+
+// --- atf_cov.FDb.uncovfunc.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_cov::FUncovfunc* atf_cov::uncovfunc_InsertMaybe(const dev::Uncovfunc &value) {
+    atf_cov::FUncovfunc *row = &uncovfunc_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    uncovfunc_CopyIn(*row,const_cast<dev::Uncovfunc&>(value));
+    bool ok = uncovfunc_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        uncovfunc_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_cov.FDb.uncovfunc.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_cov::uncovfunc_AllocMem() {
+    u64 new_nelems     = _db.uncovfunc_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_cov::FUncovfunc*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.uncovfunc_lary[bsr];
+        if (!lev) {
+            lev=(atf_cov::FUncovfunc*)algo_lib::malloc_AllocMem(sizeof(atf_cov::FUncovfunc) * (u64(1)<<bsr));
+            _db.uncovfunc_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.uncovfunc_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_cov.FDb.uncovfunc.RemoveAll
+// Remove all elements from Lary
+void atf_cov::uncovfunc_RemoveAll() {
+    for (u64 n = _db.uncovfunc_n; n>0; ) {
+        n--;
+        uncovfunc_qFind(u64(n)).~FUncovfunc(); // destroy last element
+        _db.uncovfunc_n = i64(n);
+    }
+}
+
+// --- atf_cov.FDb.uncovfunc.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_cov::uncovfunc_RemoveLast() {
+    u64 n = _db.uncovfunc_n;
+    if (n > 0) {
+        n -= 1;
+        uncovfunc_qFind(u64(n)).~FUncovfunc();
+        _db.uncovfunc_n = i64(n);
+    }
+}
+
+// --- atf_cov.FDb.uncovfunc.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_cov::uncovfunc_XrefMaybe(atf_cov::FUncovfunc &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
 }
 
 // --- atf_cov.FDb.trace.RowidFind
@@ -2078,6 +2168,17 @@ void atf_cov::FDb_Init() {
         FatalErrorExit("out of memory"); // (atf_cov.FDb.ind_tgtcov)
     }
     memset(_db.ind_tgtcov_buckets_elems, 0, sizeof(atf_cov::FTgtcov*)*_db.ind_tgtcov_buckets_n); // (atf_cov.FDb.ind_tgtcov)
+    // initialize LAry uncovfunc (atf_cov.FDb.uncovfunc)
+    _db.uncovfunc_n = 0;
+    memset(_db.uncovfunc_lary, 0, sizeof(_db.uncovfunc_lary)); // zero out all level pointers
+    atf_cov::FUncovfunc* uncovfunc_first = (atf_cov::FUncovfunc*)algo_lib::malloc_AllocMem(sizeof(atf_cov::FUncovfunc) * (u64(1)<<4));
+    if (!uncovfunc_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.uncovfunc_lary[i]  = uncovfunc_first;
+        uncovfunc_first    += 1ULL<<i;
+    }
 
     atf_cov::InitReflection();
 }
@@ -2085,6 +2186,9 @@ void atf_cov::FDb_Init() {
 // --- atf_cov.FDb..Uninit
 void atf_cov::FDb_Uninit() {
     atf_cov::FDb &row = _db; (void)row;
+
+    // atf_cov.FDb.uncovfunc.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // atf_cov.FDb.ind_tgtcov.Uninit (Thash)  //
     // skip destruction of ind_tgtcov in global scope
@@ -2136,18 +2240,17 @@ void atf_cov::gitfile_CopyIn(atf_cov::FGitfile &row, dev::Gitfile &in) {
 }
 
 // --- atf_cov.FGitfile.ext.Get
-algo::Smallstr50 atf_cov::ext_Get(atf_cov::FGitfile& gitfile) {
-    algo::Smallstr50 ret(algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR"));
-    return ret;
+algo::strptr atf_cov::ext_Get(atf_cov::FGitfile& gitfile) {
+    return algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR");
 }
 
 // --- atf_cov.FGitfile.c_covline.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void atf_cov::c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
     if (!row.gitfile_c_covline_in_ary) {
         c_covline_Reserve(gitfile, 1);
-        u32 n  = gitfile.c_covline_n++;
+        u64 n  = gitfile.c_covline_n++;
         gitfile.c_covline_elems[n] = &row;
         row.gitfile_c_covline_in_ary = true;
     }
@@ -2166,15 +2269,15 @@ bool atf_cov::c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovlin
 // --- atf_cov.FGitfile.c_covline.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void atf_cov::c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
-    int n = gitfile.c_covline_n;
+    i64 n = gitfile.c_covline_n;
     if (bool_Update(row.gitfile_c_covline_in_ary,false)) {
         atf_cov::FCovline* *elems = gitfile.c_covline_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             atf_cov::FCovline* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(atf_cov::FCovline*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 gitfile.c_covline_n = n - 1;
@@ -2186,12 +2289,12 @@ void atf_cov::c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& ro
 
 // --- atf_cov.FGitfile.c_covline.Reserve
 // Reserve space in index for N more elements;
-void atf_cov::c_covline_Reserve(atf_cov::FGitfile& gitfile, u32 n) {
-    u32 old_max = gitfile.c_covline_max;
+void atf_cov::c_covline_Reserve(atf_cov::FGitfile& gitfile, u64 n) {
+    u64 old_max = gitfile.c_covline_max;
     if (UNLIKELY(gitfile.c_covline_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(atf_cov::FCovline*);
-        u32 new_size = new_max * sizeof(atf_cov::FCovline*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, gitfile.c_covline_n + n), 4);
+        u64 old_size = old_max * sizeof(atf_cov::FCovline*);
+        u64 new_size = new_max * sizeof(atf_cov::FCovline*);
         void *new_mem = algo_lib::malloc_ReallocMem(gitfile.c_covline_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_cov.out_of_memory  field:atf_cov.FGitfile.c_covline");
@@ -2223,12 +2326,12 @@ void atf_cov::target_CopyIn(atf_cov::FTarget &row, dev::Target &in) {
 }
 
 // --- atf_cov.FTarget.c_targsrc.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void atf_cov::c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
     if (!row.target_c_targsrc_in_ary) {
         c_targsrc_Reserve(target, 1);
-        u32 n  = target.c_targsrc_n++;
+        u64 n  = target.c_targsrc_n++;
         target.c_targsrc_elems[n] = &row;
         row.target_c_targsrc_in_ary = true;
     }
@@ -2247,15 +2350,15 @@ bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc&
 // --- atf_cov.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void atf_cov::c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
-    int n = target.c_targsrc_n;
+    i64 n = target.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
         atf_cov::FTargsrc* *elems = target.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             atf_cov::FTargsrc* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(atf_cov::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 target.c_targsrc_n = n - 1;
@@ -2267,12 +2370,12 @@ void atf_cov::c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row)
 
 // --- atf_cov.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void atf_cov::c_targsrc_Reserve(atf_cov::FTarget& target, u32 n) {
-    u32 old_max = target.c_targsrc_max;
+void atf_cov::c_targsrc_Reserve(atf_cov::FTarget& target, u64 n) {
+    u64 old_max = target.c_targsrc_max;
     if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(atf_cov::FTargsrc*);
-        u32 new_size = new_max * sizeof(atf_cov::FTargsrc*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targsrc_n + n), 4);
+        u64 old_size = old_max * sizeof(atf_cov::FTargsrc*);
+        u64 new_size = new_max * sizeof(atf_cov::FTargsrc*);
         void *new_mem = algo_lib::malloc_ReallocMem(target.c_targsrc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_cov.out_of_memory  field:atf_cov.FTarget.c_targsrc");
@@ -2295,7 +2398,7 @@ void atf_cov::FTarget_Uninit(atf_cov::FTarget& target) {
 // Copy fields out of row
 void atf_cov::targsrc_CopyOut(atf_cov::FTargsrc &row, dev::Targsrc &out) {
     out.targsrc = row.targsrc;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_cov.FTargsrc.base.CopyIn
@@ -2306,21 +2409,18 @@ void atf_cov::targsrc_CopyIn(atf_cov::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- atf_cov.FTargsrc.target.Get
-algo::Smallstr16 atf_cov::target_Get(atf_cov::FTargsrc& targsrc) {
-    algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
-    return ret;
+algo::strptr atf_cov::target_Get(atf_cov::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LL");
 }
 
 // --- atf_cov.FTargsrc.src.Get
-algo::Smallstr200 atf_cov::src_Get(atf_cov::FTargsrc& targsrc) {
-    algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
-    return ret;
+algo::strptr atf_cov::src_Get(atf_cov::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LR");
 }
 
 // --- atf_cov.FTargsrc.ext.Get
-algo::Smallstr10 atf_cov::ext_Get(atf_cov::FTargsrc& targsrc) {
-    algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
-    return ret;
+algo::strptr atf_cov::ext_Get(atf_cov::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, ".RR");
 }
 
 // --- atf_cov.FTargsrc..Uninit
@@ -2342,8 +2442,7 @@ void atf_cov::FTargsrc_Uninit(atf_cov::FTargsrc& targsrc) {
 void atf_cov::tgtcov_CopyOut(atf_cov::FTgtcov &row, dev::Tgtcov &out) {
     out.target = row.target;
     out.cov_min = row.cov_min;
-    out.maxerr = row.maxerr;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_cov.FTgtcov.base.CopyIn
@@ -2351,7 +2450,6 @@ void atf_cov::tgtcov_CopyOut(atf_cov::FTgtcov &row, dev::Tgtcov &out) {
 void atf_cov::tgtcov_CopyIn(atf_cov::FTgtcov &row, dev::Tgtcov &in) {
     row.target = in.target;
     row.cov_min = in.cov_min;
-    row.maxerr = in.maxerr;
     row.comment = in.comment;
 }
 
@@ -2363,6 +2461,23 @@ void atf_cov::FTgtcov_Uninit(atf_cov::FTgtcov& tgtcov) {
     if (p_target)  {
         c_tgtcov_Remove(*p_target, row);// remove tgtcov from index c_tgtcov
     }
+}
+
+// --- atf_cov.FUncovfunc.base.CopyOut
+// Copy fields out of row
+void atf_cov::uncovfunc_CopyOut(atf_cov::FUncovfunc &row, dev::Uncovfunc &out) {
+    out.uncovfunc = row.uncovfunc;
+}
+
+// --- atf_cov.FUncovfunc.base.CopyIn
+// Copy fields in to row
+void atf_cov::uncovfunc_CopyIn(atf_cov::FUncovfunc &row, dev::Uncovfunc &in) {
+    row.uncovfunc = in.uncovfunc;
+}
+
+// --- atf_cov.FUncovfunc.name.Get
+algo::strptr atf_cov::name_Get(atf_cov::FUncovfunc& uncovfunc) {
+    return algo::Pathcomp(uncovfunc.uncovfunc, "(LL");
 }
 
 // --- atf_cov.FieldId.value.ToCstr
@@ -2437,7 +2552,7 @@ bool atf_cov::FieldId_ReadStrptrMaybe(atf_cov::FieldId &parent, algo::strptr in_
 // --- atf_cov.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cov.FieldId.String  printfmt:Raw
-void atf_cov::FieldId_Print(atf_cov::FieldId& row, algo::cstring& str) {
+void atf_cov::FieldId_Print(atf_cov::FieldId row, algo::cstring& str) {
     atf_cov::value_Print(row, str);
 }
 
@@ -2675,7 +2790,7 @@ bool atf_cov::TableId_ReadStrptrMaybe(atf_cov::TableId &parent, algo::strptr in_
 // --- atf_cov.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cov.TableId.String  printfmt:Raw
-void atf_cov::TableId_Print(atf_cov::TableId& row, algo::cstring& str) {
+void atf_cov::TableId_Print(atf_cov::TableId row, algo::cstring& str) {
     atf_cov::value_Print(row, str);
 }
 

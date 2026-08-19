@@ -115,7 +115,9 @@ bool algo_lib::LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::Fa
 bool algo_lib::WritePid(algo_lib::FLockfile &lockfile) {
     cstring &err = algo_lib::ResetErrtext();
     TruncateFile(lockfile.fildes.fd, 0);
-    tempstr str = tempstr() << getpid();
+    algo::SeekFile(lockfile.fildes.fd, 0);
+    tempstr str;
+    str << getpid();
     // write pid to file
     if (!WriteFile(lockfile.fildes.fd, (u8*)str.ch_elems, str.ch_n)) {
         err << "algo_lib.write_lockfile"

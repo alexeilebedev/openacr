@@ -65,7 +65,7 @@ namespace lib_sqlite { // gen:ns_print_proto
 // --- lib_sqlite.FConn..Uninit
 void lib_sqlite::FConn_Uninit(lib_sqlite::FConn& conn) {
     lib_sqlite::FConn &row = conn; (void)row;
-    db_Cleanup(conn); // dmmeta.fcleanup:lib_sqlite.FConn.db
+    db_Cleanup(conn); // dmmeta.ffunc:lib_sqlite.FConn.db/Cleanup
     ind_conn_Remove(row); // remove conn from index ind_conn
 }
 
@@ -73,7 +73,7 @@ void lib_sqlite::FConn_Uninit(lib_sqlite::FConn& conn) {
 // Copy fields out of row
 void lib_sqlite::ctype_CopyOut(lib_sqlite::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_sqlite.FCtype.base.CopyIn
@@ -84,24 +84,22 @@ void lib_sqlite::ctype_CopyIn(lib_sqlite::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- lib_sqlite.FCtype.ns.Get
-algo::Smallstr16 lib_sqlite::ns_Get(lib_sqlite::FCtype& ctype) {
-    algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
-    return ret;
+algo::strptr lib_sqlite::ns_Get(lib_sqlite::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RL");
 }
 
 // --- lib_sqlite.FCtype.name.Get
-algo::Smallstr100 lib_sqlite::name_Get(lib_sqlite::FCtype& ctype) {
-    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
-    return ret;
+algo::strptr lib_sqlite::name_Get(lib_sqlite::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RR");
 }
 
 // --- lib_sqlite.FCtype.c_field.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_sqlite::c_field_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) {
     if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n++;
+        u64 n  = ctype.c_field_n++;
         ctype.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
@@ -120,15 +118,15 @@ bool lib_sqlite::c_field_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FFie
 // --- lib_sqlite.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_sqlite::c_field_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) {
-    int n = ctype.c_field_n;
+    i64 n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
         lib_sqlite::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_sqlite::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_sqlite::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ctype.c_field_n = n - 1;
@@ -140,12 +138,12 @@ void lib_sqlite::c_field_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FField& r
 
 // --- lib_sqlite.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void lib_sqlite::c_field_Reserve(lib_sqlite::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_field_max;
+void lib_sqlite::c_field_Reserve(lib_sqlite::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_field_max;
     if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_sqlite::FField*);
-        u32 new_size = new_max * sizeof(lib_sqlite::FField*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_sqlite::FField*);
+        u64 new_size = new_max * sizeof(lib_sqlite::FField*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_sqlite.out_of_memory  field:lib_sqlite.FCtype.c_field");
@@ -158,7 +156,7 @@ void lib_sqlite::c_field_Reserve(lib_sqlite::FCtype& ctype, u32 n) {
 // --- lib_sqlite.FCtype.ind_field_name.Find
 // Find row by key. Return NULL if not found.
 lib_sqlite::FField* lib_sqlite::ind_field_name_Find(lib_sqlite::FCtype& ctype, const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (ctype.ind_field_name_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (ctype.ind_field_name_buckets_n - 1);
     lib_sqlite::FField *ret = ctype.ind_field_name_buckets_elems[index];
     for (; ret && !(name_Get((*ret)) == key); ret = ret->ctype_ind_field_name_next) {
     }
@@ -178,7 +176,7 @@ lib_sqlite::FField& lib_sqlite::ind_field_name_FindX(lib_sqlite::FCtype& ctype, 
 bool lib_sqlite::ind_field_name_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ctype_ind_field_name_next == (lib_sqlite::FField*)-1)) {// check if in hash already
-        row.ctype_ind_field_name_hashval = algo::Smallstr50_Hash(0, name_Get(row));
+        row.ctype_ind_field_name_hashval = algo::Smallstr100_Hash(0, name_Get(row));
         ind_field_name_Reserve(ctype, 1);
         u32 index = row.ctype_ind_field_name_hashval & (ctype.ind_field_name_buckets_n - 1);
         lib_sqlite::FField* *prev = &ctype.ind_field_name_buckets_elems[index];
@@ -334,6 +332,24 @@ lib_sqlite::FRow* lib_sqlite::zd_row_RemoveFirst(lib_sqlite::FCtype& ctype) {
     return row;
 }
 
+// --- lib_sqlite.FCtype.zd_row.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void lib_sqlite::zd_row_InsertBefore(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row, lib_sqlite::FRow* before) {
+    if (!ctype_zd_row_InLlistQ(row) && &row != before) {
+        lib_sqlite::FRow* next = before;
+        lib_sqlite::FRow* prev = next ? next->ctype_zd_row_prev : ctype.zd_row_tail;
+        row.ctype_zd_row_next = next;
+        row.ctype_zd_row_prev = prev;
+        lib_sqlite::FRow **prev_link_a = &prev->ctype_zd_row_next;
+        lib_sqlite::FRow **prev_link_b = &ctype.zd_row_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        lib_sqlite::FRow **next_link_a = &next->ctype_zd_row_prev;
+        lib_sqlite::FRow **next_link_b = &ctype.zd_row_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        ctype.zd_row_n++;
+    }
+}
+
 // --- lib_sqlite.FCtype.ind_pkey.Find
 // Find row by key. Return NULL if not found.
 lib_sqlite::FRow* lib_sqlite::ind_pkey_Find(lib_sqlite::FCtype& ctype, const algo::strptr& key) {
@@ -350,6 +366,22 @@ lib_sqlite::FRow& lib_sqlite::ind_pkey_FindX(lib_sqlite::FCtype& ctype, const al
     lib_sqlite::FRow* ret = ind_pkey_Find(ctype, key);
     vrfy(ret, tempstr() << "lib_sqlite.key_error  table:ind_pkey  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- lib_sqlite.FCtype.ind_pkey.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+lib_sqlite::FRow* lib_sqlite::ind_pkey_GetOrCreate(lib_sqlite::FCtype& ctype, const algo::strptr& key) {
+    lib_sqlite::FRow* ret = ind_pkey_Find(ctype, key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &trow_Alloc();
+        (*ret).pkey = key;
+        bool good = trow_XrefMaybe(*ret);
+        if (!good) {
+            trow_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- lib_sqlite.FCtype.ind_pkey.InsertMaybe
@@ -442,12 +474,12 @@ void lib_sqlite::ind_pkey_AbsReserve(lib_sqlite::FCtype& ctype, int n) {
 }
 
 // --- lib_sqlite.FCtype.c_row.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_sqlite::c_row_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) {
     if (!row.ctype_c_row_in_ary) {
         c_row_Reserve(ctype, 1);
-        u32 n  = ctype.c_row_n++;
+        u64 n  = ctype.c_row_n++;
         ctype.c_row_elems[n] = &row;
         row.ctype_c_row_in_ary = true;
     }
@@ -466,15 +498,15 @@ bool lib_sqlite::c_row_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& 
 // --- lib_sqlite.FCtype.c_row.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_sqlite::c_row_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) {
-    int n = ctype.c_row_n;
+    i64 n = ctype.c_row_n;
     if (bool_Update(row.ctype_c_row_in_ary,false)) {
         lib_sqlite::FRow* *elems = ctype.c_row_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_sqlite::FRow* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_sqlite::FRow*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ctype.c_row_n = n - 1;
@@ -486,12 +518,12 @@ void lib_sqlite::c_row_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) 
 
 // --- lib_sqlite.FCtype.c_row.Reserve
 // Reserve space in index for N more elements;
-void lib_sqlite::c_row_Reserve(lib_sqlite::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_row_max;
+void lib_sqlite::c_row_Reserve(lib_sqlite::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_row_max;
     if (UNLIKELY(ctype.c_row_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_sqlite::FRow*);
-        u32 new_size = new_max * sizeof(lib_sqlite::FRow*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_row_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_sqlite::FRow*);
+        u64 new_size = new_max * sizeof(lib_sqlite::FRow*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_row_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_sqlite.out_of_memory  field:lib_sqlite.FCtype.c_row");
@@ -565,7 +597,13 @@ void lib_sqlite::trace_Print(lib_sqlite::trace& row, algo::cstring& str) {
 // --- lib_sqlite.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_sqlite::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_sqlite", lib_sqlite::InsertStrptrMaybe, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_sqlite";
+    row.InsertStrptrMaybe  = lib_sqlite::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = lib_sqlite::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_sqlite.trace";
@@ -579,7 +617,7 @@ static void lib_sqlite::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_sqlite.Input'  signature:'e7e2e83db2db50f346988c3c118af552e9a8d444'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_sqlite.Input'  signature:'24a90c8e2158b71116d068e6394e9815e513740f'");
 }
 
 // --- lib_sqlite.FDb._db.InsertStrptrMaybe
@@ -711,6 +749,57 @@ bool lib_sqlite::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // Calls Step function of dependencies
 void lib_sqlite::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- lib_sqlite.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_sqlite::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    lib_sqlite::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case lib_sqlite_TableId_dmmeta_Substr: { // finput:lib_sqlite.FDb.substr
+            // finput lib_sqlite.FDb.substr: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_sqlite_TableId_dmmeta_Field: { // finput:lib_sqlite.FDb.field
+            // finput lib_sqlite.FDb.field: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_sqlite_TableId_dmmeta_Ctype: { // finput:lib_sqlite.FDb.ctype
+            // finput lib_sqlite.FDb.ctype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_sqlite_TableId_dmmeta_Ssimfile: { // finput:lib_sqlite.FDb.ssimfile
+            // finput lib_sqlite.FDb.ssimfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_sqlite_TableId_dmmeta_Sqltype: { // finput:lib_sqlite.FDb.sqltype
+            // finput lib_sqlite.FDb.sqltype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_sqlite_TableId_dmmeta_Ns: { // finput:lib_sqlite.FDb.ns
+            // finput lib_sqlite.FDb.ns: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
 }
 
 // --- lib_sqlite.FDb._db.XrefMaybe
@@ -995,7 +1084,7 @@ void* lib_sqlite::substr_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_sqlite::FSubstr*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.substr_lary[bsr];
         if (!lev) {
             lev=(lib_sqlite::FSubstr*)algo_lib::malloc_AllocMem(sizeof(lib_sqlite::FSubstr) * (u64(1)<<bsr));
@@ -1004,7 +1093,7 @@ void* lib_sqlite::substr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.substr_n = i32(new_nelems);
+        _db.substr_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1016,7 +1105,7 @@ void lib_sqlite::substr_RemoveAll() {
     for (u64 n = _db.substr_n; n>0; ) {
         n--;
         substr_qFind(u64(n)).~FSubstr(); // destroy last element
-        _db.substr_n = i32(n);
+        _db.substr_n = i64(n);
     }
 }
 
@@ -1027,7 +1116,7 @@ void lib_sqlite::substr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         substr_qFind(u64(n)).~FSubstr();
-        _db.substr_n = i32(n);
+        _db.substr_n = i64(n);
     }
 }
 
@@ -1116,7 +1205,7 @@ void* lib_sqlite::field_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_sqlite::FField*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.field_lary[bsr];
         if (!lev) {
             lev=(lib_sqlite::FField*)algo_lib::malloc_AllocMem(sizeof(lib_sqlite::FField) * (u64(1)<<bsr));
@@ -1125,7 +1214,7 @@ void* lib_sqlite::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = i32(new_nelems);
+        _db.field_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1137,7 +1226,7 @@ void lib_sqlite::field_RemoveAll() {
     for (u64 n = _db.field_n; n>0; ) {
         n--;
         field_qFind(u64(n)).~FField(); // destroy last element
-        _db.field_n = i32(n);
+        _db.field_n = i64(n);
     }
 }
 
@@ -1148,7 +1237,7 @@ void lib_sqlite::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = i32(n);
+        _db.field_n = i64(n);
     }
 }
 
@@ -1211,7 +1300,7 @@ bool lib_sqlite::field_XrefMaybe(lib_sqlite::FField &row) {
 // --- lib_sqlite.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 lib_sqlite::FField* lib_sqlite::ind_field_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     lib_sqlite::FField *ret = _db.ind_field_buckets_elems[index];
     for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
     }
@@ -1226,12 +1315,28 @@ lib_sqlite::FField& lib_sqlite::ind_field_FindX(const algo::strptr& key) {
     return *ret;
 }
 
+// --- lib_sqlite.FDb.ind_field.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+lib_sqlite::FField* lib_sqlite::ind_field_GetOrCreate(const algo::strptr& key) {
+    lib_sqlite::FField* ret = ind_field_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &field_Alloc();
+        (*ret).field = key;
+        bool good = field_XrefMaybe(*ret);
+        if (!good) {
+            field_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
 // --- lib_sqlite.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_sqlite::ind_field_InsertMaybe(lib_sqlite::FField& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (lib_sqlite::FField*)-1)) {// check if in hash already
-        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        row.ind_field_hashval = algo::Smallstr150_Hash(0, row.field);
         ind_field_Reserve(1);
         u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         lib_sqlite::FField* *prev = &_db.ind_field_buckets_elems[index];
@@ -1361,7 +1466,7 @@ void* lib_sqlite::ctype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_sqlite::FCtype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ctype_lary[bsr];
         if (!lev) {
             lev=(lib_sqlite::FCtype*)algo_lib::malloc_AllocMem(sizeof(lib_sqlite::FCtype) * (u64(1)<<bsr));
@@ -1370,7 +1475,7 @@ void* lib_sqlite::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = i32(new_nelems);
+        _db.ctype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1382,7 +1487,7 @@ void lib_sqlite::ctype_RemoveAll() {
     for (u64 n = _db.ctype_n; n>0; ) {
         n--;
         ctype_qFind(u64(n)).~FCtype(); // destroy last element
-        _db.ctype_n = i32(n);
+        _db.ctype_n = i64(n);
     }
 }
 
@@ -1393,7 +1498,7 @@ void lib_sqlite::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(u64(n)).~FCtype();
-        _db.ctype_n = i32(n);
+        _db.ctype_n = i64(n);
     }
 }
 
@@ -1592,7 +1697,7 @@ void* lib_sqlite::ssimfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_sqlite::FSsimfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ssimfile_lary[bsr];
         if (!lev) {
             lev=(lib_sqlite::FSsimfile*)algo_lib::malloc_AllocMem(sizeof(lib_sqlite::FSsimfile) * (u64(1)<<bsr));
@@ -1601,7 +1706,7 @@ void* lib_sqlite::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = i32(new_nelems);
+        _db.ssimfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1613,7 +1718,7 @@ void lib_sqlite::ssimfile_RemoveAll() {
     for (u64 n = _db.ssimfile_n; n>0; ) {
         n--;
         ssimfile_qFind(u64(n)).~FSsimfile(); // destroy last element
-        _db.ssimfile_n = i32(n);
+        _db.ssimfile_n = i64(n);
     }
 }
 
@@ -1624,7 +1729,7 @@ void lib_sqlite::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = i32(n);
+        _db.ssimfile_n = i64(n);
     }
 }
 
@@ -1700,6 +1805,22 @@ lib_sqlite::FSsimfile& lib_sqlite::ind_ssimfile_FindX(const algo::strptr& key) {
     lib_sqlite::FSsimfile* ret = ind_ssimfile_Find(key);
     vrfy(ret, tempstr() << "lib_sqlite.key_error  table:ind_ssimfile  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- lib_sqlite.FDb.ind_ssimfile.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+lib_sqlite::FSsimfile* lib_sqlite::ind_ssimfile_GetOrCreate(const algo::strptr& key) {
+    lib_sqlite::FSsimfile* ret = ind_ssimfile_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ssimfile_Alloc();
+        (*ret).ssimfile = key;
+        bool good = ssimfile_XrefMaybe(*ret);
+        if (!good) {
+            ssimfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- lib_sqlite.FDb.ind_ssimfile.InsertMaybe
@@ -1837,7 +1958,7 @@ void* lib_sqlite::sqltype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_sqlite::FSqltype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.sqltype_lary[bsr];
         if (!lev) {
             lev=(lib_sqlite::FSqltype*)algo_lib::malloc_AllocMem(sizeof(lib_sqlite::FSqltype) * (u64(1)<<bsr));
@@ -1846,7 +1967,7 @@ void* lib_sqlite::sqltype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.sqltype_n = i32(new_nelems);
+        _db.sqltype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1858,7 +1979,7 @@ void lib_sqlite::sqltype_RemoveAll() {
     for (u64 n = _db.sqltype_n; n>0; ) {
         n--;
         sqltype_qFind(u64(n)).~FSqltype(); // destroy last element
-        _db.sqltype_n = i32(n);
+        _db.sqltype_n = i64(n);
     }
 }
 
@@ -1869,7 +1990,7 @@ void lib_sqlite::sqltype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         sqltype_qFind(u64(n)).~FSqltype();
-        _db.sqltype_n = i32(n);
+        _db.sqltype_n = i64(n);
     }
 }
 
@@ -1912,10 +2033,10 @@ algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_Addary(algo::aryptr<lib_sqlit
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_sqlite.tary_alias  field:lib_sqlite.FDb.bestidx  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     bestidx_Reserve(nnew); // reserve space
-    int at = _db.bestidx_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = _db.bestidx_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (_db.bestidx_elems + at + i) lib_sqlite::FIdx(rhs[i]);
         _db.bestidx_n++;
     }
@@ -1927,8 +2048,8 @@ algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_Addary(algo::aryptr<lib_sqlit
 // The new element is initialized to a default value
 lib_sqlite::FIdx& lib_sqlite::bestidx_Alloc() {
     bestidx_Reserve(1);
-    int n  = _db.bestidx_n;
-    int at = n;
+    i64 n  = _db.bestidx_n;
+    i64 at = n;
     lib_sqlite::FIdx *elems = _db.bestidx_elems;
     new (elems + at) lib_sqlite::FIdx(); // construct new element, default initializer
     _db.bestidx_n = n+1;
@@ -1938,9 +2059,9 @@ lib_sqlite::FIdx& lib_sqlite::bestidx_Alloc() {
 // --- lib_sqlite.FDb.bestidx.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-lib_sqlite::FIdx& lib_sqlite::bestidx_AllocAt(int at) {
+lib_sqlite::FIdx& lib_sqlite::bestidx_AllocAt(i64 at) {
     bestidx_Reserve(1);
-    int n  = _db.bestidx_n;
+    i64 n  = _db.bestidx_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("lib_sqlite.bad_alloc_at  field:lib_sqlite.FDb.bestidx  comment:'index out of range'");
     }
@@ -1953,12 +2074,12 @@ lib_sqlite::FIdx& lib_sqlite::bestidx_AllocAt(int at) {
 
 // --- lib_sqlite.FDb.bestidx.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocN(int n_elems) {
+algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocN(i64 n_elems) {
     bestidx_Reserve(n_elems);
-    int old_n  = _db.bestidx_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.bestidx_n;
+    i64 new_n = old_n + n_elems;
     lib_sqlite::FIdx *elems = _db.bestidx_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) lib_sqlite::FIdx(); // construct new element, default initialize
     }
     _db.bestidx_n = new_n;
@@ -1969,15 +2090,15 @@ algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocN(int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocNAt(int n_elems, int at) {
+algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocNAt(i64 n_elems, i64 at) {
     bestidx_Reserve(n_elems);
-    int n  = _db.bestidx_n;
+    i64 n  = _db.bestidx_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("lib_sqlite.bad_alloc_n_at  field:lib_sqlite.FDb.bestidx  comment:'index out of range'");
     }
     lib_sqlite::FIdx *elems = _db.bestidx_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(lib_sqlite::FIdx));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) lib_sqlite::FIdx(); // construct new element, default initialize
     }
     _db.bestidx_n = n+n_elems;
@@ -1986,8 +2107,8 @@ algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocNAt(int n_elems, int at)
 
 // --- lib_sqlite.FDb.bestidx.Remove
 // Remove item by index. If index outside of range, do nothing.
-void lib_sqlite::bestidx_Remove(u32 i) {
-    u32 lim = _db.bestidx_n;
+void lib_sqlite::bestidx_Remove(u64 i) {
+    u64 lim = _db.bestidx_n;
     lib_sqlite::FIdx *elems = _db.bestidx_elems;
     if (i < lim) {
         elems[i].~FIdx(); // destroy element
@@ -1998,12 +2119,11 @@ void lib_sqlite::bestidx_Remove(u32 i) {
 
 // --- lib_sqlite.FDb.bestidx.RemoveAll
 void lib_sqlite::bestidx_RemoveAll() {
-    u32 n = _db.bestidx_n;
-    while (n > 0) {
-        n -= 1;
-        _db.bestidx_elems[n].~FIdx();
-        _db.bestidx_n = n;
+    u64 n = _db.bestidx_n;
+    for (u64 i=0; i<n; i++) {
+        _db.bestidx_elems[i].~FIdx();
     }
+    _db.bestidx_n = 0;
 }
 
 // --- lib_sqlite.FDb.bestidx.RemoveLast
@@ -2019,10 +2139,10 @@ void lib_sqlite::bestidx_RemoveLast() {
 
 // --- lib_sqlite.FDb.bestidx.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void lib_sqlite::bestidx_AbsReserve(int n) {
-    u32 old_max  = _db.bestidx_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void lib_sqlite::bestidx_AbsReserve(i64 n) {
+    u64 old_max  = _db.bestidx_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.bestidx_elems, old_max * sizeof(lib_sqlite::FIdx), new_max * sizeof(lib_sqlite::FIdx));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_sqlite.tary_nomem  field:lib_sqlite.FDb.bestidx  comment:'out of memory'");
@@ -2034,12 +2154,12 @@ void lib_sqlite::bestidx_AbsReserve(int n) {
 
 // --- lib_sqlite.FDb.bestidx.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocNVal(int n_elems, const lib_sqlite::FIdx& val) {
+algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocNVal(i64 n_elems, const lib_sqlite::FIdx& val) {
     bestidx_Reserve(n_elems);
-    int old_n  = _db.bestidx_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.bestidx_n;
+    i64 new_n = old_n + n_elems;
     lib_sqlite::FIdx *elems = _db.bestidx_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) lib_sqlite::FIdx(val);
     }
     _db.bestidx_n = new_n;
@@ -2049,25 +2169,43 @@ algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocNVal(int n_elems, const 
 // --- lib_sqlite.FDb.bestidx.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void lib_sqlite::bestidx_Insary(algo::aryptr<lib_sqlite::FIdx> rhs, int at) {
+void lib_sqlite::bestidx_Insary(algo::aryptr<lib_sqlite::FIdx> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.bestidx_elems && rhs.elems < _db.bestidx_elems + _db.bestidx_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_sqlite.tary_alias  field:lib_sqlite.FDb.bestidx  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(_db.bestidx_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(_db.bestidx_n+1))) {
         FatalErrorExit("lib_sqlite.bad_insary  field:lib_sqlite.FDb.bestidx  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = _db.bestidx_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = _db.bestidx_n - at;
     bestidx_Reserve(nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (_db.bestidx_elems + at + nnew + i) lib_sqlite::FIdx(_db.bestidx_elems[at + i]);
         _db.bestidx_elems[at + i].~FIdx(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (_db.bestidx_elems + at + i) lib_sqlite::FIdx(rhs[i]);
     }
     _db.bestidx_n += nnew;
+}
+
+// --- lib_sqlite.FDb.bestidx.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void lib_sqlite::bestidx_RemRegion(i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, _db.bestidx_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            _db.bestidx_elems[i].~FIdx();
+        }
+        memmove(_db.bestidx_elems+beg, _db.bestidx_elems+end, sizeof(lib_sqlite::FIdx) * (_db.bestidx_n-end));
+        _db.bestidx_n -= n;
+    }
 }
 
 // --- lib_sqlite.FDb.trow.Alloc
@@ -2102,7 +2240,7 @@ void* lib_sqlite::trow_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_sqlite::FRow*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.trow_lary[bsr];
         if (!lev) {
             lev=(lib_sqlite::FRow*)algo_lib::malloc_AllocMem(sizeof(lib_sqlite::FRow) * (u64(1)<<bsr));
@@ -2111,7 +2249,7 @@ void* lib_sqlite::trow_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.trow_n = i32(new_nelems);
+        _db.trow_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2123,7 +2261,7 @@ void lib_sqlite::trow_RemoveAll() {
     for (u64 n = _db.trow_n; n>0; ) {
         n--;
         trow_qFind(u64(n)).~FRow(); // destroy last element
-        _db.trow_n = i32(n);
+        _db.trow_n = i64(n);
     }
 }
 
@@ -2134,7 +2272,7 @@ void lib_sqlite::trow_RemoveLast() {
     if (n > 0) {
         n -= 1;
         trow_qFind(u64(n)).~FRow();
-        _db.trow_n = i32(n);
+        _db.trow_n = i64(n);
     }
 }
 
@@ -2215,7 +2353,7 @@ void* lib_sqlite::ns_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_sqlite::FNs*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ns_lary[bsr];
         if (!lev) {
             lev=(lib_sqlite::FNs*)algo_lib::malloc_AllocMem(sizeof(lib_sqlite::FNs) * (u64(1)<<bsr));
@@ -2224,7 +2362,7 @@ void* lib_sqlite::ns_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ns_n = i32(new_nelems);
+        _db.ns_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2236,7 +2374,7 @@ void lib_sqlite::ns_RemoveAll() {
     for (u64 n = _db.ns_n; n>0; ) {
         n--;
         ns_qFind(u64(n)).~FNs(); // destroy last element
-        _db.ns_n = i32(n);
+        _db.ns_n = i64(n);
     }
 }
 
@@ -2247,7 +2385,7 @@ void lib_sqlite::ns_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ns_qFind(u64(n)).~FNs();
-        _db.ns_n = i32(n);
+        _db.ns_n = i64(n);
     }
 }
 
@@ -2596,7 +2734,7 @@ void lib_sqlite::field_CopyOut(lib_sqlite::FField &row, dmmeta::Field &out) {
     out.arg = row.arg;
     out.reftype = row.reftype;
     out.dflt = row.dflt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_sqlite.FField.base.CopyIn
@@ -2610,21 +2748,18 @@ void lib_sqlite::field_CopyIn(lib_sqlite::FField &row, dmmeta::Field &in) {
 }
 
 // --- lib_sqlite.FField.ctype.Get
-algo::Smallstr100 lib_sqlite::ctype_Get(lib_sqlite::FField& field) {
-    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
-    return ret;
+algo::strptr lib_sqlite::ctype_Get(lib_sqlite::FField& field) {
+    return algo::Pathcomp(field.field, ".RL");
 }
 
 // --- lib_sqlite.FField.ns.Get
-algo::Smallstr16 lib_sqlite::ns_Get(lib_sqlite::FField& field) {
-    algo::Smallstr16 ret(algo::Pathcomp(field.field, ".RL.RL"));
-    return ret;
+algo::strptr lib_sqlite::ns_Get(lib_sqlite::FField& field) {
+    return algo::Pathcomp(field.field, ".RL.RL");
 }
 
 // --- lib_sqlite.FField.name.Get
-algo::Smallstr50 lib_sqlite::name_Get(lib_sqlite::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RR"));
-    return ret;
+algo::strptr lib_sqlite::name_Get(lib_sqlite::FField& field) {
+    return algo::Pathcomp(field.field, ".RR");
 }
 
 // --- lib_sqlite.FField..Init
@@ -2664,10 +2799,10 @@ algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_Addary(lib_sqlite::FIdx& parent,
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_sqlite.tary_alias  field:lib_sqlite.FIdx.cons  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     cons_Reserve(parent, nnew); // reserve space
-    int at = parent.cons_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.cons_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.cons_elems + at + i) lib_sqlite::Cons(rhs[i]);
         parent.cons_n++;
     }
@@ -2679,8 +2814,8 @@ algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_Addary(lib_sqlite::FIdx& parent,
 // The new element is initialized to a default value
 lib_sqlite::Cons& lib_sqlite::cons_Alloc(lib_sqlite::FIdx& parent) {
     cons_Reserve(parent, 1);
-    int n  = parent.cons_n;
-    int at = n;
+    i64 n  = parent.cons_n;
+    i64 at = n;
     lib_sqlite::Cons *elems = parent.cons_elems;
     new (elems + at) lib_sqlite::Cons(); // construct new element, default initializer
     parent.cons_n = n+1;
@@ -2690,9 +2825,9 @@ lib_sqlite::Cons& lib_sqlite::cons_Alloc(lib_sqlite::FIdx& parent) {
 // --- lib_sqlite.FIdx.cons.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-lib_sqlite::Cons& lib_sqlite::cons_AllocAt(lib_sqlite::FIdx& parent, int at) {
+lib_sqlite::Cons& lib_sqlite::cons_AllocAt(lib_sqlite::FIdx& parent, i64 at) {
     cons_Reserve(parent, 1);
-    int n  = parent.cons_n;
+    i64 n  = parent.cons_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("lib_sqlite.bad_alloc_at  field:lib_sqlite.FIdx.cons  comment:'index out of range'");
     }
@@ -2705,12 +2840,12 @@ lib_sqlite::Cons& lib_sqlite::cons_AllocAt(lib_sqlite::FIdx& parent, int at) {
 
 // --- lib_sqlite.FIdx.cons.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocN(lib_sqlite::FIdx& parent, int n_elems) {
+algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocN(lib_sqlite::FIdx& parent, i64 n_elems) {
     cons_Reserve(parent, n_elems);
-    int old_n  = parent.cons_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.cons_n;
+    i64 new_n = old_n + n_elems;
     lib_sqlite::Cons *elems = parent.cons_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) lib_sqlite::Cons(); // construct new element, default initialize
     }
     parent.cons_n = new_n;
@@ -2721,15 +2856,15 @@ algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocN(lib_sqlite::FIdx& parent,
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocNAt(lib_sqlite::FIdx& parent, int n_elems, int at) {
+algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocNAt(lib_sqlite::FIdx& parent, i64 n_elems, i64 at) {
     cons_Reserve(parent, n_elems);
-    int n  = parent.cons_n;
+    i64 n  = parent.cons_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("lib_sqlite.bad_alloc_n_at  field:lib_sqlite.FIdx.cons  comment:'index out of range'");
     }
     lib_sqlite::Cons *elems = parent.cons_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(lib_sqlite::Cons));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) lib_sqlite::Cons(); // construct new element, default initialize
     }
     parent.cons_n = n+n_elems;
@@ -2738,8 +2873,8 @@ algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocNAt(lib_sqlite::FIdx& paren
 
 // --- lib_sqlite.FIdx.cons.Remove
 // Remove item by index. If index outside of range, do nothing.
-void lib_sqlite::cons_Remove(lib_sqlite::FIdx& parent, u32 i) {
-    u32 lim = parent.cons_n;
+void lib_sqlite::cons_Remove(lib_sqlite::FIdx& parent, u64 i) {
+    u64 lim = parent.cons_n;
     lib_sqlite::Cons *elems = parent.cons_elems;
     if (i < lim) {
         elems[i].~Cons(); // destroy element
@@ -2750,12 +2885,11 @@ void lib_sqlite::cons_Remove(lib_sqlite::FIdx& parent, u32 i) {
 
 // --- lib_sqlite.FIdx.cons.RemoveAll
 void lib_sqlite::cons_RemoveAll(lib_sqlite::FIdx& parent) {
-    u32 n = parent.cons_n;
-    while (n > 0) {
-        n -= 1;
-        parent.cons_elems[n].~Cons();
-        parent.cons_n = n;
+    u64 n = parent.cons_n;
+    for (u64 i=0; i<n; i++) {
+        parent.cons_elems[i].~Cons();
     }
+    parent.cons_n = 0;
 }
 
 // --- lib_sqlite.FIdx.cons.RemoveLast
@@ -2771,10 +2905,10 @@ void lib_sqlite::cons_RemoveLast(lib_sqlite::FIdx& parent) {
 
 // --- lib_sqlite.FIdx.cons.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void lib_sqlite::cons_AbsReserve(lib_sqlite::FIdx& parent, int n) {
-    u32 old_max  = parent.cons_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void lib_sqlite::cons_AbsReserve(lib_sqlite::FIdx& parent, i64 n) {
+    u64 old_max  = parent.cons_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.cons_elems, old_max * sizeof(lib_sqlite::Cons), new_max * sizeof(lib_sqlite::Cons));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_sqlite.tary_nomem  field:lib_sqlite.FIdx.cons  comment:'out of memory'");
@@ -2788,9 +2922,9 @@ void lib_sqlite::cons_AbsReserve(lib_sqlite::FIdx& parent, int n) {
 // Copy contents of RHS to PARENT.
 void lib_sqlite::cons_Setary(lib_sqlite::FIdx& parent, lib_sqlite::FIdx &rhs) {
     cons_RemoveAll(parent);
-    int nnew = rhs.cons_n;
+    i64 nnew = rhs.cons_n;
     cons_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.cons_elems + i) lib_sqlite::Cons(cons_qFind(rhs, i));
         parent.cons_n = i + 1;
     }
@@ -2806,12 +2940,12 @@ void lib_sqlite::cons_Setary(lib_sqlite::FIdx& parent, const algo::aryptr<lib_sq
 
 // --- lib_sqlite.FIdx.cons.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocNVal(lib_sqlite::FIdx& parent, int n_elems, const lib_sqlite::Cons& val) {
+algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocNVal(lib_sqlite::FIdx& parent, i64 n_elems, const lib_sqlite::Cons& val) {
     cons_Reserve(parent, n_elems);
-    int old_n  = parent.cons_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.cons_n;
+    i64 new_n = old_n + n_elems;
     lib_sqlite::Cons *elems = parent.cons_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) lib_sqlite::Cons(val);
     }
     parent.cons_n = new_n;
@@ -2821,25 +2955,43 @@ algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocNVal(lib_sqlite::FIdx& pare
 // --- lib_sqlite.FIdx.cons.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void lib_sqlite::cons_Insary(lib_sqlite::FIdx& parent, algo::aryptr<lib_sqlite::Cons> rhs, int at) {
+void lib_sqlite::cons_Insary(lib_sqlite::FIdx& parent, algo::aryptr<lib_sqlite::Cons> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cons_elems && rhs.elems < parent.cons_elems + parent.cons_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_sqlite.tary_alias  field:lib_sqlite.FIdx.cons  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.cons_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.cons_n+1))) {
         FatalErrorExit("lib_sqlite.bad_insary  field:lib_sqlite.FIdx.cons  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.cons_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.cons_n - at;
     cons_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.cons_elems + at + nnew + i) lib_sqlite::Cons(parent.cons_elems[at + i]);
         parent.cons_elems[at + i].~Cons(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.cons_elems + at + i) lib_sqlite::Cons(rhs[i]);
     }
     parent.cons_n += nnew;
+}
+
+// --- lib_sqlite.FIdx.cons.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void lib_sqlite::cons_RemRegion(lib_sqlite::FIdx& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.cons_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            parent.cons_elems[i].~Cons();
+        }
+        memmove(parent.cons_elems+beg, parent.cons_elems+end, sizeof(lib_sqlite::Cons) * (parent.cons_n-end));
+        parent.cons_n -= n;
+    }
 }
 
 // --- lib_sqlite.FIdx..Uninit
@@ -2876,7 +3028,7 @@ void lib_sqlite::ns_CopyOut(lib_sqlite::FNs &row, dmmeta::Ns &out) {
     out.ns = row.ns;
     out.nstype = row.nstype;
     out.license = row.license;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_sqlite.FNs.base.CopyIn
@@ -2889,12 +3041,12 @@ void lib_sqlite::ns_CopyIn(lib_sqlite::FNs &row, dmmeta::Ns &in) {
 }
 
 // --- lib_sqlite.FNs.c_ssimfile.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_sqlite::c_ssimfile_Insert(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& row) {
     if (!row.ns_c_ssimfile_in_ary) {
         c_ssimfile_Reserve(ns, 1);
-        u32 n  = ns.c_ssimfile_n++;
+        u64 n  = ns.c_ssimfile_n++;
         ns.c_ssimfile_elems[n] = &row;
         row.ns_c_ssimfile_in_ary = true;
     }
@@ -2913,15 +3065,15 @@ bool lib_sqlite::c_ssimfile_InsertMaybe(lib_sqlite::FNs& ns, lib_sqlite::FSsimfi
 // --- lib_sqlite.FNs.c_ssimfile.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_sqlite::c_ssimfile_Remove(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& row) {
-    int n = ns.c_ssimfile_n;
+    i64 n = ns.c_ssimfile_n;
     if (bool_Update(row.ns_c_ssimfile_in_ary,false)) {
         lib_sqlite::FSsimfile* *elems = ns.c_ssimfile_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_sqlite::FSsimfile* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_sqlite::FSsimfile*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ns.c_ssimfile_n = n - 1;
@@ -2933,12 +3085,12 @@ void lib_sqlite::c_ssimfile_Remove(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& r
 
 // --- lib_sqlite.FNs.c_ssimfile.Reserve
 // Reserve space in index for N more elements;
-void lib_sqlite::c_ssimfile_Reserve(lib_sqlite::FNs& ns, u32 n) {
-    u32 old_max = ns.c_ssimfile_max;
+void lib_sqlite::c_ssimfile_Reserve(lib_sqlite::FNs& ns, u64 n) {
+    u64 old_max = ns.c_ssimfile_max;
     if (UNLIKELY(ns.c_ssimfile_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_sqlite::FSsimfile*);
-        u32 new_size = new_max * sizeof(lib_sqlite::FSsimfile*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_ssimfile_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_sqlite::FSsimfile*);
+        u64 new_size = new_max * sizeof(lib_sqlite::FSsimfile*);
         void *new_mem = algo_lib::malloc_ReallocMem(ns.c_ssimfile_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_sqlite.out_of_memory  field:lib_sqlite.FNs.c_ssimfile");
@@ -2977,7 +3129,7 @@ void lib_sqlite::FRow_Uninit(lib_sqlite::FRow& trow) {
 void lib_sqlite::sqltype_CopyOut(lib_sqlite::FSqltype &row, dmmeta::Sqltype &out) {
     out.ctype = row.ctype;
     out.expr = row.expr;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_sqlite.FSqltype.base.CopyIn
@@ -3012,21 +3164,18 @@ void lib_sqlite::ssimfile_CopyIn(lib_sqlite::FSsimfile &row, dmmeta::Ssimfile &i
 }
 
 // --- lib_sqlite.FSsimfile.ssimns.Get
-algo::Smallstr16 lib_sqlite::ssimns_Get(lib_sqlite::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr lib_sqlite::ssimns_Get(lib_sqlite::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- lib_sqlite.FSsimfile.ns.Get
-algo::Smallstr16 lib_sqlite::ns_Get(lib_sqlite::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr lib_sqlite::ns_Get(lib_sqlite::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- lib_sqlite.FSsimfile.name.Get
-algo::Smallstr50 lib_sqlite::name_Get(lib_sqlite::FSsimfile& ssimfile) {
-    algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
-    return ret;
+algo::strptr lib_sqlite::name_Get(lib_sqlite::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
 }
 
 // --- lib_sqlite.FSsimfile..Uninit
@@ -3140,7 +3289,7 @@ bool lib_sqlite::FieldId_ReadStrptrMaybe(lib_sqlite::FieldId &parent, algo::strp
 // --- lib_sqlite.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_sqlite.FieldId.String  printfmt:Raw
-void lib_sqlite::FieldId_Print(lib_sqlite::FieldId& row, algo::cstring& str) {
+void lib_sqlite::FieldId_Print(lib_sqlite::FieldId row, algo::cstring& str) {
     lib_sqlite::value_Print(row, str);
 }
 
@@ -3286,17 +3435,17 @@ bool lib_sqlite::TableId_ReadStrptrMaybe(lib_sqlite::TableId &parent, algo::strp
 // --- lib_sqlite.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_sqlite.TableId.String  printfmt:Raw
-void lib_sqlite::TableId_Print(lib_sqlite::TableId& row, algo::cstring& str) {
+void lib_sqlite::TableId_Print(lib_sqlite::TableId row, algo::cstring& str) {
     lib_sqlite::value_Print(row, str);
 }
 
 // --- lib_sqlite.Vtab.c_curs.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_sqlite::c_curs_Insert(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& row) {
     if (!row.parent_c_curs_in_ary) {
         c_curs_Reserve(parent, 1);
-        u32 n  = parent.c_curs_n++;
+        u64 n  = parent.c_curs_n++;
         parent.c_curs_elems[n] = &row;
         row.parent_c_curs_in_ary = true;
     }
@@ -3315,15 +3464,15 @@ bool lib_sqlite::c_curs_InsertMaybe(lib_sqlite::Vtab& parent, lib_sqlite::VtabCu
 // --- lib_sqlite.Vtab.c_curs.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_sqlite::c_curs_Remove(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& row) {
-    int n = parent.c_curs_n;
+    i64 n = parent.c_curs_n;
     if (bool_Update(row.parent_c_curs_in_ary,false)) {
         lib_sqlite::VtabCurs* *elems = parent.c_curs_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_sqlite::VtabCurs* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_sqlite::VtabCurs*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 parent.c_curs_n = n - 1;
@@ -3335,12 +3484,12 @@ void lib_sqlite::c_curs_Remove(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& r
 
 // --- lib_sqlite.Vtab.c_curs.Reserve
 // Reserve space in index for N more elements;
-void lib_sqlite::c_curs_Reserve(lib_sqlite::Vtab& parent, u32 n) {
-    u32 old_max = parent.c_curs_max;
+void lib_sqlite::c_curs_Reserve(lib_sqlite::Vtab& parent, u64 n) {
+    u64 old_max = parent.c_curs_max;
     if (UNLIKELY(parent.c_curs_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_sqlite::VtabCurs*);
-        u32 new_size = new_max * sizeof(lib_sqlite::VtabCurs*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_curs_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_sqlite::VtabCurs*);
+        u64 new_size = new_max * sizeof(lib_sqlite::VtabCurs*);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.c_curs_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_sqlite.out_of_memory  field:lib_sqlite.Vtab.c_curs");
@@ -3367,10 +3516,10 @@ algo::aryptr<algo::cstring> lib_sqlite::attrs_Addary(lib_sqlite::VtabCurs& paren
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_sqlite.tary_alias  field:lib_sqlite.VtabCurs.attrs  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     attrs_Reserve(parent, nnew); // reserve space
-    int at = parent.attrs_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.attrs_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.attrs_elems + at + i) algo::cstring(rhs[i]);
         parent.attrs_n++;
     }
@@ -3382,8 +3531,8 @@ algo::aryptr<algo::cstring> lib_sqlite::attrs_Addary(lib_sqlite::VtabCurs& paren
 // The new element is initialized to a default value
 algo::cstring& lib_sqlite::attrs_Alloc(lib_sqlite::VtabCurs& parent) {
     attrs_Reserve(parent, 1);
-    int n  = parent.attrs_n;
-    int at = n;
+    i64 n  = parent.attrs_n;
+    i64 at = n;
     algo::cstring *elems = parent.attrs_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
     parent.attrs_n = n+1;
@@ -3393,9 +3542,9 @@ algo::cstring& lib_sqlite::attrs_Alloc(lib_sqlite::VtabCurs& parent) {
 // --- lib_sqlite.VtabCurs.attrs.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& lib_sqlite::attrs_AllocAt(lib_sqlite::VtabCurs& parent, int at) {
+algo::cstring& lib_sqlite::attrs_AllocAt(lib_sqlite::VtabCurs& parent, i64 at) {
     attrs_Reserve(parent, 1);
-    int n  = parent.attrs_n;
+    i64 n  = parent.attrs_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("lib_sqlite.bad_alloc_at  field:lib_sqlite.VtabCurs.attrs  comment:'index out of range'");
     }
@@ -3408,12 +3557,12 @@ algo::cstring& lib_sqlite::attrs_AllocAt(lib_sqlite::VtabCurs& parent, int at) {
 
 // --- lib_sqlite.VtabCurs.attrs.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocN(lib_sqlite::VtabCurs& parent, int n_elems) {
+algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocN(lib_sqlite::VtabCurs& parent, i64 n_elems) {
     attrs_Reserve(parent, n_elems);
-    int old_n  = parent.attrs_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.attrs_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = parent.attrs_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
     parent.attrs_n = new_n;
@@ -3424,15 +3573,15 @@ algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocN(lib_sqlite::VtabCurs& paren
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocNAt(lib_sqlite::VtabCurs& parent, int n_elems, int at) {
+algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocNAt(lib_sqlite::VtabCurs& parent, i64 n_elems, i64 at) {
     attrs_Reserve(parent, n_elems);
-    int n  = parent.attrs_n;
+    i64 n  = parent.attrs_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("lib_sqlite.bad_alloc_n_at  field:lib_sqlite.VtabCurs.attrs  comment:'index out of range'");
     }
     algo::cstring *elems = parent.attrs_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
     parent.attrs_n = n+n_elems;
@@ -3441,8 +3590,8 @@ algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocNAt(lib_sqlite::VtabCurs& par
 
 // --- lib_sqlite.VtabCurs.attrs.Remove
 // Remove item by index. If index outside of range, do nothing.
-void lib_sqlite::attrs_Remove(lib_sqlite::VtabCurs& parent, u32 i) {
-    u32 lim = parent.attrs_n;
+void lib_sqlite::attrs_Remove(lib_sqlite::VtabCurs& parent, u64 i) {
+    u64 lim = parent.attrs_n;
     algo::cstring *elems = parent.attrs_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
@@ -3453,12 +3602,11 @@ void lib_sqlite::attrs_Remove(lib_sqlite::VtabCurs& parent, u32 i) {
 
 // --- lib_sqlite.VtabCurs.attrs.RemoveAll
 void lib_sqlite::attrs_RemoveAll(lib_sqlite::VtabCurs& parent) {
-    u32 n = parent.attrs_n;
-    while (n > 0) {
-        n -= 1;
-        parent.attrs_elems[n].~cstring();
-        parent.attrs_n = n;
+    u64 n = parent.attrs_n;
+    for (u64 i=0; i<n; i++) {
+        parent.attrs_elems[i].~cstring();
     }
+    parent.attrs_n = 0;
 }
 
 // --- lib_sqlite.VtabCurs.attrs.RemoveLast
@@ -3474,10 +3622,10 @@ void lib_sqlite::attrs_RemoveLast(lib_sqlite::VtabCurs& parent) {
 
 // --- lib_sqlite.VtabCurs.attrs.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void lib_sqlite::attrs_AbsReserve(lib_sqlite::VtabCurs& parent, int n) {
-    u32 old_max  = parent.attrs_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void lib_sqlite::attrs_AbsReserve(lib_sqlite::VtabCurs& parent, i64 n) {
+    u64 old_max  = parent.attrs_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.attrs_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_sqlite.tary_nomem  field:lib_sqlite.VtabCurs.attrs  comment:'out of memory'");
@@ -3491,9 +3639,9 @@ void lib_sqlite::attrs_AbsReserve(lib_sqlite::VtabCurs& parent, int n) {
 // Copy contents of RHS to PARENT.
 void lib_sqlite::attrs_Setary(lib_sqlite::VtabCurs& parent, lib_sqlite::VtabCurs &rhs) {
     attrs_RemoveAll(parent);
-    int nnew = rhs.attrs_n;
+    i64 nnew = rhs.attrs_n;
     attrs_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.attrs_elems + i) algo::cstring(attrs_qFind(rhs, i));
         parent.attrs_n = i + 1;
     }
@@ -3509,12 +3657,12 @@ void lib_sqlite::attrs_Setary(lib_sqlite::VtabCurs& parent, const algo::aryptr<a
 
 // --- lib_sqlite.VtabCurs.attrs.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocNVal(lib_sqlite::VtabCurs& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocNVal(lib_sqlite::VtabCurs& parent, i64 n_elems, const algo::cstring& val) {
     attrs_Reserve(parent, n_elems);
-    int old_n  = parent.attrs_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.attrs_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = parent.attrs_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
     parent.attrs_n = new_n;
@@ -3538,25 +3686,43 @@ bool lib_sqlite::attrs_ReadStrptrMaybe(lib_sqlite::VtabCurs& parent, algo::strpt
 // --- lib_sqlite.VtabCurs.attrs.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void lib_sqlite::attrs_Insary(lib_sqlite::VtabCurs& parent, algo::aryptr<algo::cstring> rhs, int at) {
+void lib_sqlite::attrs_Insary(lib_sqlite::VtabCurs& parent, algo::aryptr<algo::cstring> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.attrs_elems && rhs.elems < parent.attrs_elems + parent.attrs_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_sqlite.tary_alias  field:lib_sqlite.VtabCurs.attrs  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.attrs_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.attrs_n+1))) {
         FatalErrorExit("lib_sqlite.bad_insary  field:lib_sqlite.VtabCurs.attrs  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.attrs_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.attrs_n - at;
     attrs_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.attrs_elems + at + nnew + i) algo::cstring(parent.attrs_elems[at + i]);
         parent.attrs_elems[at + i].~cstring(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.attrs_elems + at + i) algo::cstring(rhs[i]);
     }
     parent.attrs_n += nnew;
+}
+
+// --- lib_sqlite.VtabCurs.attrs.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void lib_sqlite::attrs_RemRegion(lib_sqlite::VtabCurs& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.attrs_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            parent.attrs_elems[i].~cstring();
+        }
+        memmove(parent.attrs_elems+beg, parent.attrs_elems+end, sizeof(algo::cstring) * (parent.attrs_n-end));
+        parent.attrs_n -= n;
+    }
 }
 
 // --- lib_sqlite.VtabCurs..Init

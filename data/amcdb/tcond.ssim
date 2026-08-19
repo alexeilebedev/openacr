@@ -1,0 +1,3 @@
+amcdb.tcond  tcond:Fbuf.ready  comment:"the buffer has work: bytes to write out, or a message to read"
+amcdb.tcond  tcond:Fbuf.eof  comment:"the buffer reached end of life: no more data will ever pass through it"
+amcdb.tcond  tcond:Fbuf.space  comment:"a congested out buffer drained past its low-water mark"

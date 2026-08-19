@@ -34,6 +34,17 @@ namespace lib_curl { // update-hdr
     //
 
     // ----------------- Public API -----------------
+    // Perform the request synchronously.  Throws on transport failure (refused
+    // connection, timeout); returns true once a response arrived, whatever its
+    // HTTP status — the caller reads out_resp.code to judge the outcome.
     bool Curl(lib_curl::FRequest &req, lib_curl::FResponse &out_resp);
     tempstr PrintCurlResp(lib_curl::FResponse &resp, bool nodate = false);
+
+    // Start CALL's exchange and return without waiting.  The done hook fires when
+    // the response is complete or the transport gave up; that hook reads resp and
+    // err and disposes of the row.
+    //
+    // Until it fires, CALL must stay where it is: curl holds the body by address
+    // rather than copying it.
+    void CurlBegin(lib_curl::FCall &call);
 }

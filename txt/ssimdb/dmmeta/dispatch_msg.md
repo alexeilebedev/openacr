@@ -3,28 +3,24 @@
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.DispatchMsg
 
 * file:[data/dmmeta/dispatch_msg.ssim](/data/dmmeta/dispatch_msg.ssim)
 
-italicised fields: *dispatch, ctype* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+italicised fields: *dispatch, ctype* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|dispatch_msg|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*dispatch*|*[dmmeta.Dispatch](/txt/ssimdb/dmmeta/dispatch.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RL of dispatch_msg*|
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RR of dispatch_msg*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|dispatch_msg|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*dispatch*|*[dmmeta.Dispatch](/txt/ssimdb/dmmeta/dispatch.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RL of dispatch_msg*|
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RR of dispatch_msg*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+### Used In Commands
+<a href="#used-in-commands"></a>
+* [acr_ed -dispatch_msg](/txt/exe/acr_ed/README.md) - Add dispatch_msg record (-create); pkey is <dispatch>/<msgtype>
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FDispatchMsg](/txt/exe/abt_md/internals.md#abt_md-fdispatchmsg)
-* [amc](/txt/exe/amc/internals.md) as [amc.FDispatchmsg](/txt/exe/amc/internals.md#amc-fdispatchmsg)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [abt_md](/txt/gen/abt_md/abt_md.md) as [abt_md.FDispatchMsg](/txt/gen/abt_md/abt_md.md#abt_md-fdispatchmsg)
+* [amc](/txt/gen/amc/amc.md) as [amc.FDispatchmsg](/txt/gen/amc/amc.md#amc-fdispatchmsg)

@@ -141,7 +141,7 @@ bool atf::FieldId_ReadStrptrMaybe(atf::FieldId &parent, algo::strptr in_str) {
 // --- atf.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf.FieldId.String  printfmt:Raw
-void atf::FieldId_Print(atf::FieldId& row, algo::cstring& str) {
+void atf::FieldId_Print(atf::FieldId row, algo::cstring& str) {
     atf::value_Print(row, str);
 }
 
@@ -259,7 +259,7 @@ bool atf::Testresult_ReadStrptrMaybe(atf::Testresult &parent, algo::strptr in_st
 // --- atf.Testresult..Print
 // print string representation of ROW to string STR
 // cfmt:atf.Testresult.String  printfmt:Raw
-void atf::Testresult_Print(atf::Testresult& row, algo::cstring& str) {
+void atf::Testresult_Print(atf::Testresult row, algo::cstring& str) {
     atf::value_Print(row, str);
 }
 

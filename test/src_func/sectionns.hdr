@@ -1,0 +1,69 @@
+// A header whose update-hdr sections cover the shapes a marker line takes, one
+// section per shape.
+// Three sections open one, two and three namespaces on the marker line, and one
+// opens none there because its brace stands on the line below. Five name their
+// namespace in a spelling of its own: the C++17 scope operator, an attribute, an
+// attribute carrying a string argument, an attribute whose own name is qualified,
+// and a comment standing between the keyword and the name.
+// The last five carry text after the name that is not code. A comment spells a call
+// and a semicolon, a line comment mentions another namespace, a line comment ends on
+// the keyword itself, and a quoted and a raw string literal each spell a namespace
+// line of their own. The name each of those lines gives its namespace stands outside
+// that text.
+namespace solo { // update-hdr
+void OldSolo();
+}
+
+namespace outer { namespace inner { // update-hdr
+void OldInner();
+}
+}
+
+namespace deep1 { namespace deep2 { namespace deep3 { // update-hdr
+void OldDeep();
+}}}
+
+namespace twoline // update-hdr
+{
+void OldTwoline();
+}
+
+namespace scope1::scope2 { // update-hdr
+void OldScope();
+}
+
+namespace [[deprecated]] attr { // update-hdr
+void OldAttr();
+}
+
+namespace/*x*/cmt { // update-hdr
+void OldCmt();
+}
+
+namespace [[deprecated("use x")]] attrarg { // update-hdr
+void OldAttrarg();
+}
+
+namespace [[gnu::visibility("default")]] attrqual { // update-hdr
+void OldAttrqual();
+}
+
+namespace cmtparen /* see run(); */ { // update-hdr
+void OldCmtparen();
+}
+
+namespace cmtword { // see namespace bar for the rest // update-hdr
+void OldCmtword();
+}
+
+namespace lastword { // one namespace // update-hdr
+void OldLastword();
+}
+
+namespace litword { const char *s = "namespace bar"; // update-hdr
+void OldLitword();
+}
+
+namespace rawword { const char *r = R"(namespace bar { )"; // update-hdr
+void OldRawword();
+}

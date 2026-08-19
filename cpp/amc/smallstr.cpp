@@ -27,24 +27,73 @@
 
 // -----------------------------------------------------------------------------
 
-static bool ValidRnumPadQ(strptr pad) {
-    bool ret=true;
-    if (ch_N(pad)>0 && pad.elems[0]!='\'') {// non-string OK
-    } else {
-        for (int i=0;i<ch_N(pad); i++) {
-            if (ch_GetBit(amc::_db.ValidRnumPad,pad.elems[i])) {
-                ret= false;
-                break;
+// The strtype pad character of SMALLSTR: a quoted pad ("'x'") carries the
+// character between the quotes; any other spelling is the NUL byte.
+// The pad is substituted into the generated code as written, so it is a C++
+// character literal and its escaped spellings name the same bytes the
+// compiler will see: "'\0'" is the NUL byte and "'\x30'" is the digit zero,
+// not the backslash that begins them. Reading the second character verbatim
+// would judge every escaped pad against the backslash, and scanning the whole
+// spelling would judge it against the digits of its own escape body -- so a
+// NUL pad, no digit of any base and no part of any number, would be refused
+// for the '0' that spells it.
+char amc::PadChar(amc::FSmallstr &smallstr) {
+    strptr padval = smallstr.pad.value;
+    char retval = '\0';
+    if (elems_N(padval) >= 3 && padval.elems[0] == '\'') {
+        if (padval.elems[1] == '\\') {
+            // UnescapeC reads the escape body -- the characters between the
+            // backslash and the closing quote -- packed into a u32,
+            // first character in the low byte
+            int nch = i32_Min(4, elems_N(padval) - 3);
+            u32 esc = 0;
+            frep_(i,nch) {
+                esc |= u32(u8(padval.elems[2+i])) << (8*i);
             }
+            u8 ch = 0;
+            if (algo::UnescapeC(esc,nch,ch)) {
+                retval = char(ch);
+            }
+        } else {
+            retval = padval.elems[1];
         }
     }
-    return ret;
+    return retval;
+}
+
+// True when the right-pad byte of SMALLSTR cannot be read as part of a
+// number: a digit, a sign, a dot and the exponent character all can, and a
+// field padded with one of them cannot be told from a field whose stored
+// number ends in that character
+static bool GoodRnumPadQ(amc::FSmallstr &smallstr) {
+    return !ch_GetBit(amc::_db.ValidRnumPad,u8(amc::PadChar(smallstr)));
 }
 
 static bool GoodBaseQ(amc::FSmallstr &smallstr) {
     bool good = smallstr.c_numstr->base == 10
         || ParseI32(Pathcomp(ctype_Get(*smallstr.p_field),"eRR"),0)==smallstr.c_numstr->base;
     return good;
+}
+
+// -----------------------------------------------------------------------------
+
+// The numeric-type token of ctype name NAME: the first '_'-separated
+// component of the form I<digits> or U<digits> ("I16" in LspaceStr3_I16);
+// empty when the name carries none
+static strptr NumtypeToken(strptr name) {
+    strptr retval;
+    ind_beg(algo::Sep_curs, token, name, '_') {
+        if (!elems_N(retval) && elems_N(token) >= 2 && (token.elems[0] == 'I' || token.elems[0] == 'U')) {
+            bool digits = true;
+            for (int i = 1; i < elems_N(token); i++) {
+                digits = digits && algo_lib::DigitCharQ(token.elems[i]);
+            }
+            if (digits) {
+                retval = token;
+            }
+        }
+    }ind_end;
+    return retval;
 }
 
 // -----------------------------------------------------------------------------
@@ -58,7 +107,7 @@ static void CheckSmallstr(amc::FSmallstr &smallstr, amc::FNumstr *numstr) {
         algo::Smallstr50 suffix(Pathcomp(name_Get(*smallstr.p_field->p_ctype),"_LLBLLrRR"));
         int isuffix = ParseI32(suffix,0);
         if (isuffix != 0 && isuffix != smallstr.length) {
-            algo_lib::_db.exit_code=1;
+            algo_lib::_db.exit_code++;
             prerr("amc.badsuffix"
                   <<Keyval("field",smallstr.field)
                   <<Keyval("suffix",suffix)
@@ -75,34 +124,55 @@ static void CheckSmallstr(amc::FSmallstr &smallstr, amc::FNumstr *numstr) {
             : smallstr.strtype == dmmeta_Strtype_strtype_rightpad && smallstr.pad.value == "0" ? "RnullStr"
             : "";
         if (!StartsWithQ(name_Get(*smallstr.p_field->p_ctype),prefix)) {
-            algo_lib::_db.exit_code=1;
+            algo_lib::_db.exit_code++;
             prerr("amc.numstr_badprefix"
                   <<Keyval("field",smallstr.field)
                   <<Keyval("strtype",smallstr.strtype)
                   <<Keyval("requiredprefix",prefix)
                   <<Keyval("comment","Please use a consistent prefix"));
         }
+        // the numeric-type token in the ctype name must match the builtin the
+        // numstr numtype stands for: a name that says I16 over a u16 numtype
+        // misleads every reader about which sign regime the type stores. The
+        // numtype is judged by the builtin it stands for and not by the way it
+        // is spelled, because a numtype may name a wrapper ctype over the
+        // builtin (algo.Uint32 over u32), and a name stating that wrapper's
+        // width and sign is truthful. A numtype standing for no builtin leaves
+        // the token nothing to be judged against, and tclass_Numstr rejects
+        // such a field on its own
+        strptr numtok = NumtypeToken(name_Get(*smallstr.p_field->p_ctype));
+        amc::BltinId bltin_id(amc_BltinIdEnum(0));
+        bool numtype_known = amc::GetBltinId(*numstr->p_numtype, bltin_id);
+        tempstr numtype_tok;
+        if (numtype_known) {
+            strptr_ToUpper(value_ToCstr(bltin_id), numtype_tok);
+        }
+        if (numtype_known && elems_N(numtok) && numtok != numtype_tok) {
+            algo_lib::_db.exit_code++;
+            prerr("amc.numstr_badnumtype"
+                  <<Keyval("field",smallstr.field)
+                  <<Keyval("name_token",numtok)
+                  <<Keyval("numtype",numstr->numtype)
+                  <<Keyval("comment","ctype name and numstr numtype disagree"));
+        }
     }
-    // check that *no* digit character is used as a right-pad
-    if (smallstr.strtype == dmmeta_Strtype_strtype_rightpad && !ValidRnumPadQ(smallstr.pad.value)) {
-        algo_lib::_db.exit_code=1;
+    // check that *no* digit character is used as a right-pad: reading the
+    // field as a number cannot tell such a pad from a stored digit. A
+    // numstr field is exempt -- tclass_Numstr rejects exactly the pads
+    // that are digits of the field's own base
+    if (!numstr && smallstr.strtype == dmmeta_Strtype_strtype_rightpad && !GoodRnumPadQ(smallstr)) {
+        algo_lib::_db.exit_code++;
         prerr("amc.invalidpad"
               <<Keyval("field",smallstr.field)
               <<Keyval("pad",smallstr.pad)
               <<Keyval("comment","right-pad character cannot be confused with a number"));
     }
     if (numstr && smallstr.strict && !GoodBaseQ(smallstr)) {
-        algo_lib::_db.exit_code=1;
+        algo_lib::_db.exit_code++;
         prerr("amc.badbase"
               <<Keyval("field",smallstr.field)
               <<Keyval("base",numstr->base)
               <<Keyval("comment","mismatch between ctype name and numstr base"));
-    }
-    if (numstr && smallstr.pad.value=="'0'" && smallstr.strtype == dmmeta_Strtype_strtype_rightpad) {
-        algo_lib::_db.exit_code=1;
-        prerr("amc.rightpad_insanity"
-              <<Keyval("name",smallstr.field)
-              <<Keyval("comment","Numstr cannot be right-padded with digit '0'."));
     }
 }
 
@@ -119,12 +189,18 @@ void amc::tclass_Smallstr() {
 
     Set(R, "$max_length"   , tempstr() << smallstr.length);
     Set(R, "$pad"   , ch_N(smallstr.pad.value) ? strptr(smallstr.pad.value) : strptr("0"));
+    // an rpascal string keeps its length in a single byte, so 255 is the
+    // longest one whose length is representable. The count of errors the run
+    // exits with is the count of diagnostics it printed, so this check raises
+    // the count rather than setting it: assigning would discard whatever the
+    // fields examined before this one reported. test/atf_comp/amc.BadSmallstrToobig
+    // pins the count over a universe holding two oversize strings
     if (smallstr.strtype == dmmeta_Strtype_strtype_rpascal && smallstr.length >= 256) {
+        algo_lib::_db.exit_code++;
         prerr("smallstr.toobig"
               <<Keyval("field",field.field)
               <<Keyval("length",smallstr.length)
               <<Keyval("comment","smallstr length too large (must be <= 255)"));
-        algo_lib::_db.exit_code=1;
     }
 
     InsStruct(R, field.p_ctype, "enum { $name_max = $max_length };");
@@ -137,9 +213,8 @@ void amc::tclass_Smallstr() {
     //     algo_lib::_db.exit_code=1;
     // }
 
-    // #AL# declare fields
-    // make sure not to use char* because then it's tempting to use them where char*
-    // is expected -- but none of these are zero-terminated by construction.
+    // declare field as u8[]; not char* because none of these are
+    // zero-terminated by construction.
     if (smallstr.strtype == dmmeta_Strtype_strtype_rightpad || smallstr.strtype == dmmeta_Strtype_strtype_leftpad) {
         InsStruct(R, field.p_ctype, "u8 $name[$max_length];");
     } else {

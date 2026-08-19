@@ -1,0 +1,82 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N '%msgn.AllocExtraMaybe|%MsgN_FmtByteAry|%MsgW_FmtAlloc' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.MsgN  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgN.len  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgN.len  extra:0  scale:4
+amc <- dmmeta.field  field:algo_lib.MsgN.p1  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgN.p2  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgN.p3  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgN.data  arg:u32  reftype:Varlen  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.msgn  arg:algo_lib.MsgN  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.pnew  pnew:algo_lib/algo_lib.MsgN.ByteAry  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.MsgW  comment:""
+amc <- dmmeta.pack  ctype:algo_lib.MsgW  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgW.len  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgW.len  extra:0  scale:1
+amc <- dmmeta.field  field:algo_lib.MsgW.data  arg:u8  reftype:Varlen  dflt:""  comment:""
+amc <- dmmeta.pnew  pnew:algo_lib/algo_lib.MsgW.Alloc  comment:""
+# eof amc
+amc -> // --- algo_lib.FDb.msgn.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::MsgN* algo_lib::msgn_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::MsgN *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra % 4 == 0 && nbyte_extra <= 1020 - ssizeof(algo_lib::MsgN)) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; larger totals do not fit the length field
+amc ->         row = (algo_lib::MsgN*)msgn_AllocMem(sizeof(algo_lib::MsgN) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::MsgN; // call constructor
+amc ->         row->len = u8((sizeof(algo_lib::MsgN) + nbyte_extra) / 4);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::MsgN), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib...MsgN_FmtByteAry
+amc -> // Construct a new algo_lib::MsgN in the space provided by BUF.
+amc -> // A total the length field cannot store constructs nothing and returns NULL.
+amc -> algo_lib::MsgN * algo_lib::MsgN_FmtByteAry(algo::ByteAry &buf, u8 p1, u8 p2, u8 p3, algo::aryptr<u32 > data) {
+amc ->     algo_lib::MsgN  *msg = NULL;
+amc ->     size_t len = sizeof(algo_lib::MsgN);
+amc ->     u64 data_ary_len = u64(elems_N(data)) * sizeof(u32);
+amc ->     len += data_ary_len;
+amc ->     if (!((len) % 4 == 0 && (len) <= 1020)) {
+amc ->         return NULL; // total not representable in the length field
+amc ->     }
+amc ->     ary_RemoveAll(buf);
+amc ->     msg = (algo_lib::MsgN*)ary_AllocN(buf,len).elems;
+amc ->     msg->len = u8((len) / 4);
+amc ->     msg->p1 = p1;
+amc ->     msg->p2 = p2;
+amc ->     msg->p3 = p3;
+amc ->     memcpy(data_Addr(*msg), data.elems, data_ary_len);
+amc ->     return msg;
+amc -> }
+amc -> // --- algo_lib...MsgW_FmtAlloc
+amc -> // Construct a new algo_lib::MsgW in the space provided by ALLOC.
+amc -> // If ALLOC cannot provide the space, construct nothing and return NULL.
+amc -> // A total beyond the i32 frame length domain constructs nothing and returns NULL.
+amc -> algo_lib::MsgW * algo_lib::MsgW_FmtAlloc(const algo::Alloc &alloc, algo::aryptr<u8 > data) {
+amc ->     algo_lib::MsgW  *msg = NULL;
+amc ->     size_t len = sizeof(algo_lib::MsgW);
+amc ->     u64 data_ary_len = u64(elems_N(data)) * sizeof(u8);
+amc ->     len += data_ary_len;
+amc ->     if (len > 0x7fffffff) {
+amc ->         return NULL; // a frame length is an i32, and so is every buffer size argument
+amc ->     }
+amc ->     msg = (algo_lib::MsgW*)alloc.begin(alloc.ctx, int(len));
+amc ->     if (!msg) {
+amc ->         return NULL; // no room.
+amc ->     }
+amc ->     msg->len = u32(len);
+amc ->     memcpy(data_Addr(*msg), data.elems, data_ary_len);
+amc ->     if (alloc.end) {
+amc ->         alloc.end(alloc.ctx, msg, int(len)); // finalize
+amc ->     }
+amc ->     return msg;
+amc -> }
+# exit amc code:0

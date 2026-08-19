@@ -1,0 +1,8 @@
+# start acr_compl cmd:"$bindir/acr_compl -check_batch"
+acr_compl <- acr_compl.checkreq  id:1  line:'amc'
+acr_compl <- acr_compl.checkreq  id:2  line:'amc'
+acr_compl <- acr_compl.checkreq  id:3  line:'acr -write'
+acr_compl <- acr_compl.checkreq  id:4  line:'amc -write x'
+# eof acr_compl
+acr_compl -> acr_compl.checkerr  id:4  err:'acr_compl.check  error:"unknown option"  value:write  command:amc'
+# exit acr_compl code:1

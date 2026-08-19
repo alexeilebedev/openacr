@@ -25,6 +25,6 @@
     },
     "search.exclude": {
         "temp": true,
-        "build": true,
+        "build": true
     },
 }

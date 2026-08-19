@@ -1,0 +1,219 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Rec.(narrow|full|signed_full|flag|qos|sig|sig_edge|sig_full|dec|plain).ReadStrptrMaybe' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Qos  comment:"value wrapped in a single field"
+amc <- dmmeta.field  field:algo_lib.Qos.value  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Qos.String  printfmt:Raw  read:Y  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Rec  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Rec.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.field  field:algo_lib.Rec.value  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Rec.narrow  arg:u32  reftype:Bitfld  dflt:""  comment:"arg range exceeds the field's bits"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.narrow  offset:0  width:3  srcfield:algo_lib.Rec.value  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Rec.narrow/zero  value:0  comment:"a symbol puts the read on the path that bounds the value"
+amc <- dmmeta.field  field:algo_lib.Rec.full  arg:u8  reftype:Bitfld  dflt:""  comment:"field spans the whole arg type"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.full  offset:3  width:8  srcfield:algo_lib.Rec.value  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Rec.full/zero  value:0  comment:"same path, and the bits reach every value the arg type holds"
+amc <- dmmeta.field  field:algo_lib.Rec.signed_full  arg:i8  reftype:Bitfld  dflt:""  comment:"signed arg, whole width"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.signed_full  offset:11  width:8  srcfield:algo_lib.Rec.value  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Rec.signed_full/zero  value:0  comment:"same path, and the bits keep the sign"
+amc <- dmmeta.field  field:algo_lib.Rec.flag  arg:bool  reftype:Bitfld  dflt:""  comment:"bool holds no value past one bit"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.flag  offset:19  width:1  srcfield:algo_lib.Rec.value  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Rec.flag/zero  value:0  comment:"same path, and one bit is the whole of a bool"
+amc <- dmmeta.field  field:algo_lib.Rec.qos  arg:algo_lib.Qos  reftype:Bitfld  dflt:""  comment:"wrapped value, arg range exceeds the bits"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.qos  offset:20  width:4  srcfield:algo_lib.Rec.value  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Rec.qos/zero  value:0  comment:"same path, through the field the wrapper stores into"
+amc <- dmmeta.ctype  ctype:algo_lib.Sig  comment:"signed value wrapped in a single field"
+amc <- dmmeta.field  field:algo_lib.Sig.value  arg:i32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Sig.String  printfmt:Raw  read:Y  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.field  field:algo_lib.Rec.sig  arg:algo_lib.Sig  reftype:Bitfld  dflt:""  comment:"wrapped signed value, narrowed by the bits"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.sig  offset:24  width:4  srcfield:algo_lib.Rec.value  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Rec.sig/zero  value:0  comment:"same path, and the bits drop both ends of the wrapped range"
+amc <- dmmeta.field  field:algo_lib.Rec.dec  arg:u32  reftype:Bitfld  dflt:""  comment:"decimal value scaled into the field's bits"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.dec  offset:28  width:12  srcfield:algo_lib.Rec.value  comment:""
+amc <- dmmeta.fdec  field:algo_lib.Rec.dec  nplace:2  fixedfmt:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Sig8  comment:"signed 8-bit value wrapped in a single field"
+amc <- dmmeta.field  field:algo_lib.Sig8.value  arg:i8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Sig8.String  printfmt:Raw  read:Y  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.field  field:algo_lib.Rec.sig_edge  arg:algo_lib.Sig8  reftype:Bitfld  dflt:""  comment:"wrapped signed value, bits hold its whole positive half"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.sig_edge  offset:40  width:7  srcfield:algo_lib.Rec.value  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Rec.sig_edge/zero  value:0  comment:"same path, and the bits drop the sign alone"
+amc <- dmmeta.field  field:algo_lib.Rec.sig_full  arg:algo_lib.Sig8  reftype:Bitfld  dflt:""  comment:"wrapped signed value, bits span the whole arg type"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.sig_full  offset:47  width:8  srcfield:algo_lib.Rec.value  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.Rec.sig_full/zero  value:0  comment:"same path, and the bits span the wrapped arg type"
+amc <- dmmeta.field  field:algo_lib.Rec.plain  arg:u32  reftype:Bitfld  dflt:""  comment:"narrow again, with no symbol to read first"
+amc <- dmmeta.bitfld  field:algo_lib.Rec.plain  offset:55  width:3  srcfield:algo_lib.Rec.value  comment:""
+# eof amc
+amc -> // --- algo_lib.Rec.narrow.ReadStrptrMaybe
+amc -> // Convert string to field. Return success value
+amc -> bool algo_lib::narrow_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr rhs) {
+amc ->     bool retval = false;
+amc ->     retval = narrow_SetStrptrMaybe(parent,rhs); // try symbol conversion
+amc ->     if (!retval) { // didn't work? try reading as underlying type
+amc ->         u32 narrow_tmp;
+amc ->         retval = u32_ReadStrptrMaybe(narrow_tmp, rhs);
+amc ->         retval = retval && (narrow_tmp <= 0x07);// value must fit the field's store
+amc ->         if (retval) {
+amc ->             narrow_Set(parent, narrow_tmp);
+amc ->         }
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.Rec.full.ReadStrptrMaybe
+amc -> // Convert string to field. Return success value
+amc -> bool algo_lib::full_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr rhs) {
+amc ->     bool retval = false;
+amc ->     retval = full_SetStrptrMaybe(parent,rhs); // try symbol conversion
+amc ->     if (!retval) { // didn't work? try reading as underlying type
+amc ->         u8 full_tmp;
+amc ->         retval = u8_ReadStrptrMaybe(full_tmp, rhs);
+amc ->         if (retval) {
+amc ->             full_Set(parent, full_tmp);
+amc ->         }
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.Rec.signed_full.ReadStrptrMaybe
+amc -> // Convert string to field. Return success value
+amc -> bool algo_lib::signed_full_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr rhs) {
+amc ->     bool retval = false;
+amc ->     retval = signed_full_SetStrptrMaybe(parent,rhs); // try symbol conversion
+amc ->     if (!retval) { // didn't work? try reading as underlying type
+amc ->         i8 signed_full_tmp;
+amc ->         retval = i8_ReadStrptrMaybe(signed_full_tmp, rhs);
+amc ->         if (retval) {
+amc ->             signed_full_Set(parent, signed_full_tmp);
+amc ->         }
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.Rec.flag.ReadStrptrMaybe
+amc -> // Convert string to field. Return success value
+amc -> bool algo_lib::flag_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr rhs) {
+amc ->     bool retval = false;
+amc ->     retval = flag_SetStrptrMaybe(parent,rhs); // try symbol conversion
+amc ->     if (!retval) { // didn't work? try reading as underlying type
+amc ->         bool flag_tmp;
+amc ->         retval = bool_ReadStrptrMaybe(flag_tmp, rhs);
+amc ->         if (retval) {
+amc ->             flag_Set(parent, flag_tmp);
+amc ->         }
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.Rec.qos.ReadStrptrMaybe
+amc -> // Convert string to field. Return success value
+amc -> bool algo_lib::qos_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr rhs) {
+amc ->     bool retval = false;
+amc ->     retval = qos_SetStrptrMaybe(parent,rhs); // try symbol conversion
+amc ->     if (!retval) { // didn't work? try reading as underlying type
+amc ->         algo_lib::Qos qos_tmp;
+amc ->         retval = algo_lib::Qos_ReadStrptrMaybe(qos_tmp, rhs);
+amc ->         retval = retval && (qos_tmp.value <= 0x0f);// value must fit the field's store
+amc ->         if (retval) {
+amc ->             qos_Set(parent, qos_tmp);
+amc ->         }
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.Rec.sig.ReadStrptrMaybe
+amc -> // Convert string to field. Return success value
+amc -> bool algo_lib::sig_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr rhs) {
+amc ->     bool retval = false;
+amc ->     retval = sig_SetStrptrMaybe(parent,rhs); // try symbol conversion
+amc ->     if (!retval) { // didn't work? try reading as underlying type
+amc ->         algo_lib::Sig sig_tmp;
+amc ->         retval = algo_lib::Sig_ReadStrptrMaybe(sig_tmp, rhs);
+amc ->         retval = retval && (sig_tmp.value >= 0 && sig_tmp.value <= 0x0f);// value must fit the field's store
+amc ->         if (retval) {
+amc ->             sig_Set(parent, sig_tmp);
+amc ->         }
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.Rec.dec.ReadStrptrMaybe
+amc -> bool algo_lib::dec_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr in) {
+amc ->     int index = 0;
+amc ->     int neg = false;
+amc ->     // skip leading sign
+amc ->     if (index < in.n_elems && (in.elems[index] == '+' || in.elems[index] == '-')) {
+amc ->         neg = in.elems[index]=='-';
+amc ->         index++;
+amc ->     };
+amc ->     // parse digits
+amc ->     u64 val = 0;
+amc ->     int ndot = 0; // number of . encountered
+amc ->     int nfrac = 0; // read up to NFRAC digits after .; if not found, fill in
+amc ->     bool ok = true;// overflow or bad char
+amc ->     u64 limdiv = 409ULL;// largest magnitude the field holds for this sign, over 10
+amc ->     u64 limmod = 5ULL;// and that magnitude's last digit
+amc ->     for (; index < in.n_elems; index++) {
+amc ->         char c = in.elems[index];
+amc ->         if (c == '.') {
+amc ->             ok &= ndot == 0; // max 1 dot
+amc ->             ndot++;
+amc ->         } else if (algo_lib::DigitCharQ(c)) {
+amc ->             if (nfrac < 2) { // ignore digits after 2'th
+amc ->                 u64 digit = c - '0';
+amc ->                 ok &= val < limdiv || (val == limdiv && digit <= limmod);// val*10+digit must fit the field
+amc ->                 val = val*10 + digit;
+amc ->                 nfrac += ndot>0;
+amc ->             }
+amc ->         } else {
+amc ->             ok = false; // unknown char
+amc ->         }
+amc ->     }
+amc ->     while (nfrac < 2) {// insert missing
+amc ->         ok &= val <= limdiv;// val*10 must fit the field
+amc ->         val = val*10;
+amc ->         nfrac++;
+amc ->     }
+amc ->     u64 final_val = val;
+amc ->     ok &= !neg;
+amc ->     if (ok) {
+amc ->         dec_Set(parent, u32(final_val));// store value
+amc ->     }
+amc ->     return ok;
+amc -> }
+amc -> // --- algo_lib.Rec.sig_edge.ReadStrptrMaybe
+amc -> // Convert string to field. Return success value
+amc -> bool algo_lib::sig_edge_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr rhs) {
+amc ->     bool retval = false;
+amc ->     retval = sig_edge_SetStrptrMaybe(parent,rhs); // try symbol conversion
+amc ->     if (!retval) { // didn't work? try reading as underlying type
+amc ->         algo_lib::Sig8 sig_edge_tmp;
+amc ->         retval = algo_lib::Sig8_ReadStrptrMaybe(sig_edge_tmp, rhs);
+amc ->         retval = retval && (sig_edge_tmp.value >= 0);// value must fit the field's store
+amc ->         if (retval) {
+amc ->             sig_edge_Set(parent, sig_edge_tmp);
+amc ->         }
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.Rec.sig_full.ReadStrptrMaybe
+amc -> // Convert string to field. Return success value
+amc -> bool algo_lib::sig_full_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr rhs) {
+amc ->     bool retval = false;
+amc ->     retval = sig_full_SetStrptrMaybe(parent,rhs); // try symbol conversion
+amc ->     if (!retval) { // didn't work? try reading as underlying type
+amc ->         algo_lib::Sig8 sig_full_tmp;
+amc ->         retval = algo_lib::Sig8_ReadStrptrMaybe(sig_full_tmp, rhs);
+amc ->         if (retval) {
+amc ->             sig_full_Set(parent, sig_full_tmp);
+amc ->         }
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.Rec.plain.ReadStrptrMaybe
+amc -> inline static bool algo_lib::plain_ReadStrptrMaybe(algo_lib::Rec& parent, algo::strptr in_str) {
+amc ->     bool retval = true;
+amc ->     u32 plain_tmp;
+amc ->     retval = u32_ReadStrptrMaybe(plain_tmp, in_str);
+amc ->     if (retval) {
+amc ->         plain_Set(parent, plain_tmp);
+amc ->     }
+amc ->     return retval;
+amc -> }
+# exit amc code:0

@@ -1,0 +1,57 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.maxjobs.%|algo_lib.FDb..Print' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.pmask  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld  field:algo_lib.FDb.pmask  filter_print:Y  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.maxjobs  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.timeout  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
+# eof amc
+amc -> // --- algo_lib.FDb.maxjobs.PresentQ
+amc -> // Return true if the field is marked in the presence mask
+amc -> inline bool algo_lib::maxjobs_PresentQ() {
+amc ->     return pmask_qGetBit(1);
+amc -> }
+amc -> // --- algo_lib.FDb.maxjobs.SetPresent
+amc -> // Set presence bit for this field in the pmask
+amc -> inline void algo_lib::maxjobs_SetPresent() {
+amc ->     pmask_qSetBit(1); // mark presence in pmask
+amc -> }
+amc -> // --- algo_lib.FDb.maxjobs.Present_GetBit
+amc -> // Return field's bit number in the pmask
+amc -> inline int algo_lib::maxjobs_Present_GetBit() {
+amc ->     int retval = 1;
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.FDb.maxjobs.Set
+amc -> inline void algo_lib::maxjobs_Set(u32 rhs) {
+amc ->     _db.maxjobs = rhs;
+amc ->     pmask_qSetBit(1); // mark presence in pmask
+amc -> }
+amc -> // --- algo_lib.FDb..Print
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:algo_lib.FDb.String  printfmt:Tuple
+amc -> void algo_lib::FDb_Print(algo_lib::FDb& row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     str << "algo_lib.FDb";
+amc ->     if (malloc_PresentQ()) {
+amc ->         u64_Print(row.malloc, temp);
+amc ->         PrintAttrSpaceReset(str,"malloc", temp);
+amc ->     }
+amc ->     if (maxjobs_PresentQ()) {
+amc ->         u32_Print(row.maxjobs, temp);
+amc ->         PrintAttrSpaceReset(str,"maxjobs", temp);
+amc ->     }
+amc ->     if (timeout_PresentQ()) {
+amc ->         u32_Print(row.timeout, temp);
+amc ->         PrintAttrSpaceReset(str,"timeout", temp);
+amc ->     }
+amc ->     if (trace_PresentQ()) {
+amc ->         algo_lib::trace_Print(row.trace, temp);
+amc ->         PrintAttrSpaceReset(str,"trace", temp);
+amc ->     }
+amc -> }
+# exit amc code:0

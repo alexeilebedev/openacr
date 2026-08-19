@@ -24,241 +24,62 @@
 
 #pragma once
 #include "include/gen/command_gen.h"
-#include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_gen.h"
+#include "include/gen/ams_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
 // --- samp_meng_FieldIdEnum
 
-enum samp_meng_FieldIdEnum {          // samp_meng.FieldId.value
-     samp_meng_FieldId_base     = 0
-    ,samp_meng_FieldId_type     = 1
-    ,samp_meng_FieldId_length   = 2
-    ,samp_meng_FieldId_order    = 3
-    ,samp_meng_FieldId_value    = 4
-    ,samp_meng_FieldId_user     = 5
-    ,samp_meng_FieldId_time     = 6
-    ,samp_meng_FieldId_price    = 7
-    ,samp_meng_FieldId_symbol   = 8
-    ,samp_meng_FieldId_qty      = 9
-    ,samp_meng_FieldId_ioc      = 10
-    ,samp_meng_FieldId_text     = 11
+enum samp_meng_FieldIdEnum {    // samp_meng.FieldId.value
+     samp_meng_FieldId_value
 };
 
-enum { samp_meng_FieldIdEnum_N = 12 };
+enum { samp_meng_FieldIdEnum_N = 1 };
 
 
 // --- samp_meng_InCaseEnum
 
-enum samp_meng_InCaseEnum {                              // samp_meng.InCase.value
-     samp_meng_InCase_samp_meng_CancelReqMsg       = 11
-    ,samp_meng_InCase_samp_meng_MassCancelReqMsg   = 12
-    ,samp_meng_InCase_samp_meng_NewOrderReqMsg     = 10
-    ,samp_meng_InCase_samp_meng_NewSymbolReqMsg    = 13
-    ,samp_meng_InCase_samp_meng_NewUserReqMsg      = 14
-    ,samp_meng_InCase_samp_meng_TextMsg            = 7
+enum samp_meng_InCaseEnum {                                  // samp_meng.InCase.value
+     samp_meng_InCase_ams_SampMengCancelReqMsg       = 2001
+    ,samp_meng_InCase_ams_SampMengMassCancelReqMsg   = 2002
+    ,samp_meng_InCase_ams_SampMengNewOrderReqMsg     = 2004
+    ,samp_meng_InCase_ams_SampMengNewSymbolReqMsg    = 2006
+    ,samp_meng_InCase_ams_SampMengNewUserReqMsg      = 2008
+    ,samp_meng_InCase_ams_SampMengTextMsg            = 2010
 };
 
 enum { samp_meng_InCaseEnum_N = 6 };
 
-
-// --- samp_meng_MsgHeader_type_Enum
-
-enum samp_meng_MsgHeader_type_Enum {                              // samp_meng.MsgHeader.type
-     samp_meng_MsgHeader_type_samp_meng_CancelOrderMsg     = 3    // From matching engine: cancel order
-    ,samp_meng_MsgHeader_type_samp_meng_CancelReqMsg       = 11   // From user: cancel request
-    ,samp_meng_MsgHeader_type_samp_meng_MassCancelReqMsg   = 12   // From user: cancel mass request
-    ,samp_meng_MsgHeader_type_samp_meng_NewOrderMsg        = 2    // From matching engine: new order
-    ,samp_meng_MsgHeader_type_samp_meng_NewOrderReqMsg     = 10   // From user: new order request
-    ,samp_meng_MsgHeader_type_samp_meng_NewSymbolMsg       = 5    // From matching engine: new symbol
-    ,samp_meng_MsgHeader_type_samp_meng_NewSymbolReqMsg    = 13   // To matching engine: new symbol request
-    ,samp_meng_MsgHeader_type_samp_meng_NewUserMsg         = 6    // From matching engine: new user
-    ,samp_meng_MsgHeader_type_samp_meng_NewUserReqMsg      = 14   // To matching engine: new user request
-    ,samp_meng_MsgHeader_type_samp_meng_OrderTradeMsg      = 4    // From matching engine: trade order
-    ,samp_meng_MsgHeader_type_samp_meng_TextMsg            = 7    // Debug message
-};
-
-enum { samp_meng_MsgHeader_type_Enum_N = 11 };
-
-
-// --- samp_meng_MsgHeaderMsgsCaseEnum
-
-enum samp_meng_MsgHeaderMsgsCaseEnum {                              // samp_meng.MsgHeaderMsgsCase.value
-     samp_meng_MsgHeaderMsgsCase_samp_meng_CancelOrderMsg     = 3
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_CancelReqMsg       = 11
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_MassCancelReqMsg   = 12
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_NewOrderMsg        = 2
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_NewOrderReqMsg     = 10
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_NewSymbolMsg       = 5
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_NewSymbolReqMsg    = 13
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_NewUserMsg         = 6
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_NewUserReqMsg      = 14
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_OrderTradeMsg      = 4
-    ,samp_meng_MsgHeaderMsgsCase_samp_meng_TextMsg            = 7
-};
-
-enum { samp_meng_MsgHeaderMsgsCaseEnum_N = 11 };
-
 namespace samp_meng { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace samp_meng { // gen:ns_tclass_field
-extern const char *samp_meng_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
-namespace samp_meng { struct MsgHeader; }
 namespace samp_meng { struct FOrdq; }
 namespace samp_meng { struct FUser; }
 namespace samp_meng { struct FSymbol; }
-namespace samp_meng { struct CancelReqMsg; }
-namespace samp_meng { struct MassCancelReqMsg; }
-namespace samp_meng { struct NewOrderReqMsg; }
-namespace samp_meng { struct NewSymbolReqMsg; }
-namespace samp_meng { struct NewUserReqMsg; }
-namespace samp_meng { struct TextMsg; }
-namespace samp_meng { struct CancelOrderMsg; }
-namespace samp_meng { struct NewOrderMsg; }
-namespace samp_meng { struct NewSymbolMsg; }
-namespace samp_meng { struct NewUserMsg; }
-namespace samp_meng { struct OrderTradeMsg; }
-namespace samp_meng { struct _db_fdin_curs; }
-namespace samp_meng { struct _db_cd_fdin_eof_curs; }
 namespace samp_meng { struct _db_symbol_curs; }
-namespace samp_meng { struct _db_cd_fdin_read_curs; }
 namespace samp_meng { struct _db_user_curs; }
 namespace samp_meng { struct ordq_bh_order_curs; }
 namespace samp_meng { struct symbol_c_ordq_curs; }
 namespace samp_meng { struct user_zd_order_curs; }
-namespace samp_meng { struct TextMsg_text_curs; }
 namespace samp_meng { struct trace; }
 namespace samp_meng { struct FDb; }
-namespace samp_meng { struct FFdin; }
-namespace samp_meng { struct I64Price8; }
 namespace samp_meng { struct Ordkey; }
 namespace samp_meng { struct FOrder; }
-namespace samp_meng { struct Symbol; }
 namespace samp_meng { struct FieldId; }
 namespace samp_meng { struct InCase; }
-namespace samp_meng { struct MsgHeaderMsgsCase; }
-namespace samp_meng { struct MsgHeader_curs; }
 namespace samp_meng { extern struct samp_meng::FDb _db; }
 namespace samp_meng { // gen:ns_print_struct
-
-// --- samp_meng.CancelOrderMsg
-#pragma pack(push,1)
-struct CancelOrderMsg { // samp_meng.CancelOrderMsg: From matching engine: cancel order
-    u8    type;     //   3
-    u8    length;   //   ssizeof(parent) + (0)
-    u64   order;    //   0
-    // func:samp_meng.CancelOrderMsg..Ctor
-    inline               CancelOrderMsg() __attribute__((nothrow));
-    // func:samp_meng.CancelOrderMsg..FieldwiseCtor
-    explicit inline               CancelOrderMsg(u64 in_order) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.CancelOrderMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::CancelOrderMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of CancelOrderMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of CancelOrderMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.CancelOrderMsg.base.Castdown
-inline samp_meng::CancelOrderMsg* CancelOrderMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.CancelOrderMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::CancelOrderMsg& parent);
-
-// func:samp_meng.CancelOrderMsg..ReadFieldMaybe
-bool                 CancelOrderMsg_ReadFieldMaybe(samp_meng::CancelOrderMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::CancelOrderMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.CancelOrderMsg..ReadStrptrMaybe
-bool                 CancelOrderMsg_ReadStrptrMaybe(samp_meng::CancelOrderMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.CancelOrderMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::CancelOrderMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.CancelOrderMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::CancelOrderMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.CancelOrderMsg..Init
-inline void          CancelOrderMsg_Init(samp_meng::CancelOrderMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.CancelOrderMsg.String  printfmt:Tuple
-// func:samp_meng.CancelOrderMsg..Print
-void                 CancelOrderMsg_Print(samp_meng::CancelOrderMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.CancelReqMsg
-#pragma pack(push,1)
-struct CancelReqMsg { // samp_meng.CancelReqMsg: From user: cancel request
-    u8    type;     //   11
-    u8    length;   //   ssizeof(parent) + (0)
-    u64   order;    //   0
-    // func:samp_meng.CancelReqMsg..Ctor
-    inline               CancelReqMsg() __attribute__((nothrow));
-    // func:samp_meng.CancelReqMsg..FieldwiseCtor
-    explicit inline               CancelReqMsg(u64 in_order) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.CancelReqMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::CancelReqMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of CancelReqMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of CancelReqMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.CancelReqMsg.base.Castdown
-inline samp_meng::CancelReqMsg* CancelReqMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.CancelReqMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::CancelReqMsg& parent);
-
-// func:samp_meng.CancelReqMsg..ReadFieldMaybe
-bool                 CancelReqMsg_ReadFieldMaybe(samp_meng::CancelReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::CancelReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.CancelReqMsg..ReadStrptrMaybe
-bool                 CancelReqMsg_ReadStrptrMaybe(samp_meng::CancelReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.CancelReqMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::CancelReqMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.CancelReqMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::CancelReqMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.CancelReqMsg..Init
-inline void          CancelReqMsg_Init(samp_meng::CancelReqMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.CancelReqMsg.String  printfmt:Tuple
-// func:samp_meng.CancelReqMsg..Print
-void                 CancelReqMsg_Print(samp_meng::CancelReqMsg& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- samp_meng.trace
 #pragma pack(push,1)
 struct trace { // samp_meng.trace
-    u64   dispatch_In_CancelReqMsg;              //   0  Total number of CancelReqMsg processed by samp_meng
-    u64   dispatch_In_CancelReqMsg_cycles;       //   0
-    u64   dispatch_In_MassCancelReqMsg;          //   0  Total number of MassCancelReqMsg processed by samp_meng
-    u64   dispatch_In_MassCancelReqMsg_cycles;   //   0
-    u64   dispatch_In_NewOrderReqMsg;            //   0  Total number of NewOrderReqMsg processed by samp_meng
-    u64   dispatch_In_NewOrderReqMsg_cycles;     //   0
-    u64   dispatch_In_NewSymbolReqMsg;           //   0  Total number of NewSymbolReqMsg processed by samp_meng
-    u64   dispatch_In_NewSymbolReqMsg_cycles;    //   0
-    u64   dispatch_In_NewUserReqMsg;             //   0  Total number of NewUserReqMsg processed by samp_meng
-    u64   dispatch_In_NewUserReqMsg_cycles;      //   0
-    u64   dispatch_In_TextMsg;                   //   0  Total number of TextMsg processed by samp_meng
-    u64   dispatch_In_TextMsg_cycles;            //   0
-    u64   dispatch_In_Unkmsg;                    //   0
-    u64   dispatch_In_Unkmsg_cycles;             //   0
     // func:samp_meng.trace..Ctor
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
-// Set all fields to initial values.
-// func:samp_meng.trace..Init
-void                 trace_Init(samp_meng::trace& parent);
 // print string representation of ROW to string STR
 // cfmt:samp_meng.trace.String  printfmt:Tuple
 // func:samp_meng.trace..Print
@@ -267,15 +88,9 @@ void                 trace_Print(samp_meng::trace& row, algo::cstring& str) __at
 // --- samp_meng.FDb
 // create: samp_meng.FDb._db (Global)
 struct FDb { // samp_meng.FDb: In-memory database
-    samp_meng::FFdin*      fdin_lary[32];              // level array
-    i32                    fdin_n;                     // number of elements in array
     command::samp_meng     cmdline;                    //
-    samp_meng::FFdin*      cd_fdin_eof_head;           // zero-terminated doubly linked list
-    i32                    cd_fdin_eof_n;              // zero-terminated doubly linked list
-    samp_meng::FSymbol*    symbol_lary[32];            // level array
-    i32                    symbol_n;                   // number of elements in array
-    samp_meng::FFdin*      cd_fdin_read_head;          // zero-terminated doubly linked list
-    i32                    cd_fdin_read_n;             // zero-terminated doubly linked list
+    samp_meng::FSymbol*    symbol_lary[36];            // level array
+    i64                    symbol_n;                   // number of elements in array
     samp_meng::FSymbol**   ind_symbol_buckets_elems;   // pointer to bucket array
     i32                    ind_symbol_buckets_n;       // number of elements in bucket array
     i32                    ind_symbol_n;               // number of elements in the hash table
@@ -286,19 +101,18 @@ struct FDb { // samp_meng.FDb: In-memory database
     i32                    ind_order_n;                // number of elements in the hash table
     u64                    ordq_blocksize;             // # bytes per block
     samp_meng::FOrdq*      ordq_free;                  //
-    samp_meng::FUser*      user_lary[32];              // level array
-    i32                    user_n;                     // number of elements in array
+    samp_meng::FUser*      user_lary[36];              // level array
+    i64                    user_n;                     // number of elements in array
     samp_meng::FUser**     ind_user_buckets_elems;     // pointer to bucket array
     i32                    ind_user_buckets_n;         // number of elements in bucket array
     i32                    ind_user_n;                 // number of elements in the hash table
     u64                    next_order_id;              //   1
+    algo::UnTime           now;                        // Clock this matcher stamps orders with: the input record's sequencing time
+    u64                    n_in;                       //   0  Input records folded by this incarnation
     samp_meng::trace       trace;                      //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     samp_meng.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of samp_meng.FDb.cmdline (and any base command line)
+// via samp_meng_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:samp_meng.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -335,91 +149,14 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:samp_meng.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:samp_meng.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:samp_meng.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:samp_meng.FDb.fdin.Alloc
-samp_meng::FFdin&    fdin_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:samp_meng.FDb.fdin.AllocMaybe
-samp_meng::FFdin*    fdin_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-// func:samp_meng.FDb.fdin.AllocMem
-void*                fdin_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:samp_meng.FDb.fdin.EmptyQ
-inline bool          fdin_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-// func:samp_meng.FDb.fdin.Find
-inline samp_meng::FFdin* fdin_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-// func:samp_meng.FDb.fdin.Last
-inline samp_meng::FFdin* fdin_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-// func:samp_meng.FDb.fdin.N
-inline i32           fdin_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-// func:samp_meng.FDb.fdin.RemoveAll
-void                 fdin_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:samp_meng.FDb.fdin.RemoveLast
-void                 fdin_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:samp_meng.FDb.fdin.qFind
-inline samp_meng::FFdin& fdin_qFind(u64 t) __attribute__((nothrow, pure));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:samp_meng.FDb.fdin.XrefMaybe
-bool                 fdin_XrefMaybe(samp_meng::FFdin &row);
-
-// Return true if index is empty
-// func:samp_meng.FDb.cd_fdin_eof.EmptyQ
-inline bool          cd_fdin_eof_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:samp_meng.FDb.cd_fdin_eof.First
-inline samp_meng::FFdin* cd_fdin_eof_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:samp_meng.FDb.cd_fdin_eof.InLlistQ
-inline bool          cd_fdin_eof_InLlistQ(samp_meng::FFdin& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:samp_meng.FDb.cd_fdin_eof.Insert
-void                 cd_fdin_eof_Insert(samp_meng::FFdin& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:samp_meng.FDb.cd_fdin_eof.Last
-inline samp_meng::FFdin* cd_fdin_eof_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:samp_meng.FDb.cd_fdin_eof.N
-inline i32           cd_fdin_eof_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:samp_meng.FDb.cd_fdin_eof.Next
-inline samp_meng::FFdin* cd_fdin_eof_Next(samp_meng::FFdin &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:samp_meng.FDb.cd_fdin_eof.Prev
-inline samp_meng::FFdin* cd_fdin_eof_Prev(samp_meng::FFdin &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:samp_meng.FDb.cd_fdin_eof.Remove
-void                 cd_fdin_eof_Remove(samp_meng::FFdin& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:samp_meng.FDb.cd_fdin_eof.RemoveAll
-void                 cd_fdin_eof_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
-// func:samp_meng.FDb.cd_fdin_eof.RemoveFirst
-samp_meng::FFdin*    cd_fdin_eof_RemoveFirst() __attribute__((nothrow));
-// If linked list is empty, return NULL.
-// Otherwise return head item and advance head to the next item.
-// func:samp_meng.FDb.cd_fdin_eof.RotateFirst
-samp_meng::FFdin*    cd_fdin_eof_RotateFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:samp_meng.FDb.cd_fdin_eof.qLast
-inline samp_meng::FFdin& cd_fdin_eof_qLast() __attribute__((__warn_unused_result__, nothrow));
-// func:samp_meng.FDb.cd_fdin_eof.Step
-// this function is 'extrn' and implemented by user
-void                 cd_fdin_eof_Step() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -442,7 +179,7 @@ inline samp_meng::FSymbol* symbol_Find(u64 t) __attribute__((__warn_unused_resul
 inline samp_meng::FSymbol* symbol_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:samp_meng.FDb.symbol.N
-inline i32           symbol_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           symbol_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:samp_meng.FDb.symbol.RemoveAll
 void                 symbol_RemoveAll() __attribute__((nothrow));
@@ -457,63 +194,18 @@ inline samp_meng::FSymbol& symbol_qFind(u64 t) __attribute__((nothrow, pure));
 // func:samp_meng.FDb.symbol.XrefMaybe
 bool                 symbol_XrefMaybe(samp_meng::FSymbol &row);
 
-// Return true if index is empty
-// func:samp_meng.FDb.cd_fdin_read.EmptyQ
-inline bool          cd_fdin_read_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:samp_meng.FDb.cd_fdin_read.First
-inline samp_meng::FFdin* cd_fdin_read_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:samp_meng.FDb.cd_fdin_read.InLlistQ
-inline bool          cd_fdin_read_InLlistQ(samp_meng::FFdin& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:samp_meng.FDb.cd_fdin_read.Insert
-void                 cd_fdin_read_Insert(samp_meng::FFdin& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:samp_meng.FDb.cd_fdin_read.Last
-inline samp_meng::FFdin* cd_fdin_read_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:samp_meng.FDb.cd_fdin_read.N
-inline i32           cd_fdin_read_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:samp_meng.FDb.cd_fdin_read.Next
-inline samp_meng::FFdin* cd_fdin_read_Next(samp_meng::FFdin &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:samp_meng.FDb.cd_fdin_read.Prev
-inline samp_meng::FFdin* cd_fdin_read_Prev(samp_meng::FFdin &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:samp_meng.FDb.cd_fdin_read.Remove
-void                 cd_fdin_read_Remove(samp_meng::FFdin& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:samp_meng.FDb.cd_fdin_read.RemoveAll
-void                 cd_fdin_read_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
-// func:samp_meng.FDb.cd_fdin_read.RemoveFirst
-samp_meng::FFdin*    cd_fdin_read_RemoveFirst() __attribute__((nothrow));
-// If linked list is empty, return NULL.
-// Otherwise return head item and advance head to the next item.
-// func:samp_meng.FDb.cd_fdin_read.RotateFirst
-samp_meng::FFdin*    cd_fdin_read_RotateFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:samp_meng.FDb.cd_fdin_read.qLast
-inline samp_meng::FFdin& cd_fdin_read_qLast() __attribute__((__warn_unused_result__, nothrow));
-// func:samp_meng.FDb.cd_fdin_read.Step
-// this function is 'extrn' and implemented by user
-void                 cd_fdin_read_Step() __attribute__((nothrow));
-
 // Return true if hash is empty
 // func:samp_meng.FDb.ind_symbol.EmptyQ
 inline bool          ind_symbol_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:samp_meng.FDb.ind_symbol.Find
-samp_meng::FSymbol*  ind_symbol_Find(const samp_meng::Symbol& key) __attribute__((__warn_unused_result__, nothrow));
+samp_meng::FSymbol*  ind_symbol_Find(const ams::SampMengSymbol& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
 // func:samp_meng.FDb.ind_symbol.FindX
-samp_meng::FSymbol&  ind_symbol_FindX(const samp_meng::Symbol& key);
+samp_meng::FSymbol&  ind_symbol_FindX(const ams::SampMengSymbol& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:samp_meng.FDb.ind_symbol.GetOrCreate
-samp_meng::FSymbol&  ind_symbol_GetOrCreate(const samp_meng::Symbol& key) __attribute__((nothrow));
+samp_meng::FSymbol&  ind_symbol_GetOrCreate(const ams::SampMengSymbol& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:samp_meng.FDb.ind_symbol.N
 inline i32           ind_symbol_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -569,6 +261,9 @@ samp_meng::FOrder*   ind_order_Find(i64 key) __attribute__((__warn_unused_result
 // Look up row by key and return reference. Throw exception if not found
 // func:samp_meng.FDb.ind_order.FindX
 samp_meng::FOrder&   ind_order_FindX(i64 key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:samp_meng.FDb.ind_order.GetOrCreate
+samp_meng::FOrder*   ind_order_GetOrCreate(i64 key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:samp_meng.FDb.ind_order.N
 inline i32           ind_order_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -636,7 +331,7 @@ inline samp_meng::FUser* user_Find(u64 t) __attribute__((__warn_unused_result__,
 inline samp_meng::FUser* user_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:samp_meng.FDb.user.N
-inline i32           user_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           user_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:samp_meng.FDb.user.RemoveAll
 void                 user_RemoveAll() __attribute__((nothrow));
@@ -680,30 +375,6 @@ void                 ind_user_Reserve(int n) __attribute__((nothrow));
 void                 ind_user_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
-// func:samp_meng.FDb.fdin_curs.Reset
-inline void          _db_fdin_curs_Reset(_db_fdin_curs &curs, samp_meng::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.FDb.fdin_curs.ValidQ
-inline bool          _db_fdin_curs_ValidQ(_db_fdin_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:samp_meng.FDb.fdin_curs.Next
-inline void          _db_fdin_curs_Next(_db_fdin_curs &curs) __attribute__((nothrow));
-// item access
-// func:samp_meng.FDb.fdin_curs.Access
-inline samp_meng::FFdin& _db_fdin_curs_Access(_db_fdin_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.FDb.cd_fdin_eof_curs.Reset
-inline void          _db_cd_fdin_eof_curs_Reset(_db_cd_fdin_eof_curs &curs, samp_meng::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.FDb.cd_fdin_eof_curs.ValidQ
-inline bool          _db_cd_fdin_eof_curs_ValidQ(_db_cd_fdin_eof_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:samp_meng.FDb.cd_fdin_eof_curs.Next
-inline void          _db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs) __attribute__((nothrow));
-// item access
-// func:samp_meng.FDb.cd_fdin_eof_curs.Access
-inline samp_meng::FFdin& _db_cd_fdin_eof_curs_Access(_db_cd_fdin_eof_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
 // func:samp_meng.FDb.symbol_curs.Reset
 inline void          _db_symbol_curs_Reset(_db_symbol_curs &curs, samp_meng::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -715,18 +386,6 @@ inline void          _db_symbol_curs_Next(_db_symbol_curs &curs) __attribute__((
 // item access
 // func:samp_meng.FDb.symbol_curs.Access
 inline samp_meng::FSymbol& _db_symbol_curs_Access(_db_symbol_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.FDb.cd_fdin_read_curs.Reset
-inline void          _db_cd_fdin_read_curs_Reset(_db_cd_fdin_read_curs &curs, samp_meng::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.FDb.cd_fdin_read_curs.ValidQ
-inline bool          _db_cd_fdin_read_curs_ValidQ(_db_cd_fdin_read_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:samp_meng.FDb.cd_fdin_read_curs.Next
-inline void          _db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs) __attribute__((nothrow));
-// item access
-// func:samp_meng.FDb.cd_fdin_read_curs.Access
-inline samp_meng::FFdin& _db_cd_fdin_read_curs_Access(_db_cd_fdin_read_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:samp_meng.FDb.user_curs.Reset
 inline void          _db_user_curs_Reset(_db_user_curs &curs, samp_meng::FDb &parent) __attribute__((nothrow));
@@ -744,197 +403,6 @@ inline samp_meng::FUser& _db_user_curs_Access(_db_user_curs &curs) __attribute__
 void                 FDb_Init();
 // func:samp_meng.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
-
-// --- samp_meng.FFdin
-// create: samp_meng.FDb.fdin (Lary)
-// global access: fdin (Lary, by rowid)
-// global access: cd_fdin_eof (Llist)
-// global access: cd_fdin_read (Llist)
-struct FFdin { // samp_meng.FFdin: File descriptor input
-    samp_meng::FFdin*   cd_fdin_eof_next;    // zslist link; -1 means not-in-list
-    samp_meng::FFdin*   cd_fdin_eof_prev;    // previous element
-    samp_meng::FFdin*   cd_fdin_read_next;   // zslist link; -1 means not-in-list
-    samp_meng::FFdin*   cd_fdin_read_prev;   // previous element
-    algo_lib::FIohook   iohook;              //
-    u8*                 in_elems;            //   NULL  pointer to elements of indirect array
-    u32                 in_max;              //   0  current length of allocated array
-    i32                 in_start;            // beginning of valid bytes (in bytes)
-    i32                 in_end;              // end of valid bytes (in bytes)
-    i32                 in_msglen;           // current message length
-    algo::Errcode       in_err;              // system error code
-    algo_lib::FIohook   in_iohook;           // edge-triggered hook for the buffer
-    bool                in_eof;              // no more data will be written to buffer
-    bool                in_msgvalid;         // current message is valid
-    bool                in_epoll_enable;     // use epoll?
-    // value field samp_meng.FFdin.iohook is not copiable
-    // field samp_meng.FFdin.in prevents copy
-    // func:samp_meng.FFdin..AssignOp
-    inline samp_meng::FFdin& operator =(const samp_meng::FFdin &rhs) = delete;
-    // value field samp_meng.FFdin.iohook is not copiable
-    // field samp_meng.FFdin.in prevents copy
-    // func:samp_meng.FFdin..CopyCtor
-    inline               FFdin(const samp_meng::FFdin &rhs) = delete;
-private:
-    // func:samp_meng.FFdin..Ctor
-    inline               FFdin() __attribute__((nothrow));
-    // func:samp_meng.FFdin..Dtor
-    inline               ~FFdin() __attribute__((nothrow));
-    friend samp_meng::FFdin&    fdin_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend samp_meng::FFdin*    fdin_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 fdin_RemoveAll() __attribute__((nothrow));
-    friend void                 fdin_RemoveLast() __attribute__((nothrow));
-};
-
-// Attach fbuf to Iohook for reading
-// Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by samp_meng::FFdin.in via FIohook field.
-// Whenever the file descriptor becomes readable, insert fdin into cd_fdin_read.
-// func:samp_meng.FFdin.in.BeginRead
-void                 in_BeginRead(samp_meng::FFdin& fdin, algo::Fildes fd) __attribute__((nothrow));
-// Set EOF flag
-// func:samp_meng.FFdin.in.EndRead
-void                 in_EndRead(samp_meng::FFdin& fdin) __attribute__((nothrow));
-// Detect incoming message in buffer and return it
-// Look for valid message at current position in the buffer.
-// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
-// If there is no message, read once from underlying file descriptor and try again.
-// The message is found by looking for delimiter '\n'.
-// The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
-// If ret.elems is NULL, no message can be extracted from buffer.
-// The returned aryptr excludes the trailing deliminter.
-// SkipMsg will skip both the line and the deliminter.
-// A partial line at the end of input is NOT returned (TODO?)
-//
-// func:samp_meng.FFdin.in.GetMsg
-algo::aryptr<char>   in_GetMsg(samp_meng::FFdin& fdin) __attribute__((nothrow));
-// Set buffer size.
-// Unconditionally reallocate buffer to have size NEW_MAX
-// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
-// (best to call this before filling the buffer)
-// func:samp_meng.FFdin.in.Realloc
-void                 in_Realloc(samp_meng::FFdin& fdin, int new_max) __attribute__((nothrow));
-// Return max. number of bytes in the buffer.
-// func:samp_meng.FFdin.in.Max
-inline i32           in_Max(samp_meng::FFdin& fdin) __attribute__((nothrow));
-// Return number of bytes in the buffer.
-// func:samp_meng.FFdin.in.N
-inline i32           in_N(samp_meng::FFdin& fdin) __attribute__((__warn_unused_result__, nothrow, pure));
-// Refill buffer. Return false if no further refill possible (input buffer exhausted)
-// func:samp_meng.FFdin.in.Refill
-bool                 in_Refill(samp_meng::FFdin& fdin) __attribute__((nothrow));
-// Empty bfufer
-// Discard contents of the buffer.
-// func:samp_meng.FFdin.in.RemoveAll
-void                 in_RemoveAll(samp_meng::FFdin& fdin) __attribute__((nothrow));
-// Skip N bytes when reading
-// Mark some buffer contents as read.
-//
-// func:samp_meng.FFdin.in.SkipBytes
-void                 in_SkipBytes(samp_meng::FFdin& fdin, int n) __attribute__((nothrow));
-// Skip current message, if any
-// Skip current message, if any.
-// func:samp_meng.FFdin.in.SkipMsg
-void                 in_SkipMsg(samp_meng::FFdin& fdin) __attribute__((nothrow));
-// Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
-// Otherwise return false.
-// Bytes in the buffer are potentially shifted left to make room for the message.
-//
-// func:samp_meng.FFdin.in.WriteAll
-bool                 in_WriteAll(samp_meng::FFdin& fdin, u8 *in, i32 in_n) __attribute__((nothrow));
-// Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
-// func:samp_meng.FFdin.in.WriteReserve
-void                 in_WriteReserve(samp_meng::FFdin& fdin, u8 *in, i32 in_n) __attribute__((nothrow));
-
-// Set all fields to initial values.
-// func:samp_meng.FFdin..Init
-void                 FFdin_Init(samp_meng::FFdin& fdin);
-// func:samp_meng.FFdin..Uninit
-void                 FFdin_Uninit(samp_meng::FFdin& fdin) __attribute__((nothrow));
-
-// --- samp_meng.I64Price8
-#pragma pack(push,1)
-struct I64Price8 { // samp_meng.I64Price8: Price type (8 implied decimal places)
-    i64   value;   //   0
-    // func:samp_meng.I64Price8..EqOp
-    inline bool          operator ==(const samp_meng::I64Price8 &rhs) const __attribute__((nothrow));
-    // func:samp_meng.I64Price8..NeOp
-    inline bool          operator !=(const samp_meng::I64Price8 &rhs) const __attribute__((nothrow));
-    // func:samp_meng.I64Price8..LtOp
-    inline bool          operator <(const samp_meng::I64Price8 &rhs) const __attribute__((nothrow));
-    // func:samp_meng.I64Price8..GtOp
-    inline bool          operator >(const samp_meng::I64Price8 &rhs) const __attribute__((nothrow));
-    // func:samp_meng.I64Price8..LeOp
-    inline bool          operator <=(const samp_meng::I64Price8 &rhs) const __attribute__((nothrow));
-    // func:samp_meng.I64Price8..GeOp
-    inline bool          operator >=(const samp_meng::I64Price8 &rhs) const __attribute__((nothrow));
-    // func:samp_meng.I64Price8..Ctor
-    inline               I64Price8() __attribute__((nothrow));
-    // func:samp_meng.I64Price8..FieldwiseCtor
-    explicit inline               I64Price8(i64 in_value) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Set value of field value.
-// The value is rounded to the nearest integer.
-// This ensures that truncation of a near-integer value does not occur.
-// Example: 1.3 cannot be represented exactly as a double, the actual
-// stored value will be 1.29999999. when we apply C truncation,
-// we want to end up with 1.3, not 1.2.
-// func:samp_meng.I64Price8.value.qSetDouble
-inline void          value_qSetDouble(samp_meng::I64Price8& parent, double val) __attribute__((nothrow));
-// func:samp_meng.I64Price8.value.GetDouble
-inline double        value_GetDouble(const samp_meng::I64Price8& parent) __attribute__((nothrow));
-// Return integer portion (divide number by 100000000)
-// func:samp_meng.I64Price8.value.GetInt
-inline i64           value_GetInt(const samp_meng::I64Price8& parent) __attribute__((nothrow));
-// Return constant 100000000
-// func:samp_meng.I64Price8.value.GetScale
-inline i64           I64Price8_GetScale() __attribute__((nothrow));
-// Set value of field value, using rounding.
-// If value is out of range for the target type, return false.
-// func:samp_meng.I64Price8.value.SetDoubleMaybe
-bool                 value_SetDoubleMaybe(samp_meng::I64Price8& parent, double val) __attribute__((nothrow));
-// func:samp_meng.I64Price8.value.ReadStrptrMaybe
-bool                 value_ReadStrptrMaybe(samp_meng::I64Price8& parent, algo::strptr in) __attribute__((nothrow));
-// func:samp_meng.I64Price8.value.Print
-void                 value_Print(samp_meng::I64Price8& parent, cstring &outstr) __attribute__((nothrow));
-
-// func:samp_meng.I64Price8..Hash
-inline u32           I64Price8_Hash(u32 prev, samp_meng::I64Price8 rhs) __attribute__((nothrow));
-// Read fields of samp_meng::I64Price8 from an ascii string.
-// The format of the string is the format of the samp_meng::I64Price8's only field
-// func:samp_meng.I64Price8..ReadStrptrMaybe
-bool                 I64Price8_ReadStrptrMaybe(samp_meng::I64Price8 &parent, algo::strptr in_str) __attribute__((nothrow));
-// func:samp_meng.I64Price8..Lt
-inline bool          I64Price8_Lt(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) __attribute__((nothrow));
-// func:samp_meng.I64Price8..Cmp
-inline i32           I64Price8_Cmp(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.I64Price8..Init
-inline void          I64Price8_Init(samp_meng::I64Price8& parent);
-// Attempt to make LHS bigger. Return true if it was changed
-// func:samp_meng.I64Price8..UpdateMax
-inline bool          I64Price8_UpdateMax(samp_meng::I64Price8 &lhs, samp_meng::I64Price8 rhs) __attribute__((nothrow));
-// Return the lesser of two values
-// func:samp_meng.I64Price8..Min
-inline samp_meng::I64Price8 I64Price8_Min(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) __attribute__((nothrow));
-// Attempt to make LHS smaller. Return true if it was changed
-// func:samp_meng.I64Price8..UpdateMin
-inline bool          I64Price8_UpdateMin(samp_meng::I64Price8 &lhs, samp_meng::I64Price8 rhs) __attribute__((nothrow));
-// Return the greater of two values
-// func:samp_meng.I64Price8..Max
-inline samp_meng::I64Price8 I64Price8_Max(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) __attribute__((nothrow));
-// func:samp_meng.I64Price8..Eq
-inline bool          I64Price8_Eq(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) __attribute__((nothrow));
-// Set value. Return true if new value is different from old value.
-// func:samp_meng.I64Price8..Update
-inline bool          I64Price8_Update(samp_meng::I64Price8 &lhs, samp_meng::I64Price8 rhs) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:samp_meng.I64Price8.String  printfmt:Raw
-// func:samp_meng.I64Price8..Print
-void                 I64Price8_Print(samp_meng::I64Price8 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- samp_meng.Ordkey
 struct Ordkey { // samp_meng.Ordkey: Order key
@@ -955,19 +423,18 @@ struct Ordkey { // samp_meng.Ordkey: Order key
     // func:samp_meng.Ordkey..Ctor
     inline               Ordkey() __attribute__((nothrow));
 };
-
 // func:samp_meng.Ordkey..Lt
-inline bool          Ordkey_Lt(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs) __attribute__((nothrow));
+inline bool          Ordkey_Lt(samp_meng::Ordkey lhs, samp_meng::Ordkey rhs) __attribute__((nothrow));
 // func:samp_meng.Ordkey..Cmp
-inline i32           Ordkey_Cmp(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs) __attribute__((nothrow));
+inline i32           Ordkey_Cmp(samp_meng::Ordkey lhs, samp_meng::Ordkey rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:samp_meng.Ordkey..Init
 inline void          Ordkey_Init(samp_meng::Ordkey& parent);
 // func:samp_meng.Ordkey..Eq
-inline bool          Ordkey_Eq(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs) __attribute__((nothrow));
+inline bool          Ordkey_Eq(samp_meng::Ordkey lhs, samp_meng::Ordkey rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:samp_meng.Ordkey..Update
-inline bool          Ordkey_Update(samp_meng::Ordkey &lhs, samp_meng::Ordkey& rhs) __attribute__((nothrow));
+inline bool          Ordkey_Update(samp_meng::Ordkey &lhs, samp_meng::Ordkey rhs) __attribute__((nothrow));
 
 // --- samp_meng.FOrder
 // create: samp_meng.FDb.order (Tpool)
@@ -975,19 +442,19 @@ inline bool          Ordkey_Update(samp_meng::Ordkey &lhs, samp_meng::Ordkey& rh
 // access: samp_meng.FOrdq.bh_order (Bheap)
 // access: samp_meng.FUser.zd_order (Llist)
 struct FOrder { // samp_meng.FOrder: Order record
-    samp_meng::FOrder*     order_next;           // Pointer to next free element int tpool
-    samp_meng::FOrder*     ind_order_next;       // hash next
-    u32                    ind_order_hashval;    // hash value
-    i64                    order;                //   0
-    samp_meng::FOrdq*      p_ordq;               // reference to parent row
-    samp_meng::I64Price8   price;                //
-    algo::UnTime           time;                 //
-    u32                    qty;                  //   0
-    samp_meng::Ordkey      ordkey;               //
-    samp_meng::FUser*      p_user;               // reference to parent row
-    i32                    ordq_bh_order_idx;    // index in heap; -1 means not-in-heap
-    samp_meng::FOrder*     user_zd_order_next;   // zslist link; -1 means not-in-list
-    samp_meng::FOrder*     user_zd_order_prev;   // previous element
+    samp_meng::FOrder*   order_next;           // Pointer to next free element int tpool
+    samp_meng::FOrder*   ind_order_next;       // hash next
+    u32                  ind_order_hashval;    // hash value
+    i64                  order;                //   0
+    samp_meng::FOrdq*    p_ordq;               // reference to parent row
+    ams::I64Price8       price;                //
+    algo::UnTime         time;                 //
+    u32                  qty;                  //   0
+    samp_meng::Ordkey    ordkey;               //
+    samp_meng::FUser*    p_user;               // reference to parent row
+    i32                  ordq_bh_order_idx;    // index in heap; -1 means not-in-heap
+    samp_meng::FOrder*   user_zd_order_next;   // zslist link; -1 means not-in-list
+    samp_meng::FOrder*   user_zd_order_prev;   // previous element
     // func:samp_meng.FOrder..AssignOp
     inline samp_meng::FOrder& operator =(const samp_meng::FOrder &rhs) = delete;
     // func:samp_meng.FOrder..CopyCtor
@@ -1001,7 +468,6 @@ private:
     friend samp_meng::FOrder*   order_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 order_Delete(samp_meng::FOrder &row) __attribute__((nothrow));
 };
-
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:samp_meng.FOrder.ordkey.Lt
 inline bool          ordkey_Lt(samp_meng::FOrder& order, samp_meng::FOrder &rhs) __attribute__((nothrow));
@@ -1042,7 +508,6 @@ private:
     friend samp_meng::FOrdq*    ordq_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ordq_Delete(samp_meng::FOrdq &row) __attribute__((nothrow));
 };
-
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
 // func:samp_meng.FOrdq.bh_order.Cascdel
@@ -1109,34 +574,6 @@ inline bool          ordq_bh_order_curs_ValidQ(ordq_bh_order_curs &curs) __attri
 // func:samp_meng.FOrdq..Uninit
 void                 FOrdq_Uninit(samp_meng::FOrdq& ordq) __attribute__((nothrow));
 
-// --- samp_meng.Symbol
-#pragma pack(push,1)
-struct Symbol { // samp_meng.Symbol: Symbol name
-    algo::RnullStr8   symbol;   //
-    // func:samp_meng.Symbol..EqOp
-    inline bool          operator ==(const samp_meng::Symbol &rhs) const __attribute__((nothrow));
-    // func:samp_meng.Symbol..NeOp
-    inline bool          operator !=(const samp_meng::Symbol &rhs) const __attribute__((nothrow));
-    // func:samp_meng.Symbol..Ctor
-    inline               Symbol() __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// func:samp_meng.Symbol..Hash
-inline u32           Symbol_Hash(u32 prev, const samp_meng::Symbol& rhs) __attribute__((nothrow));
-// Read fields of samp_meng::Symbol from an ascii string.
-// The format of the string is the format of the samp_meng::Symbol's only field
-// func:samp_meng.Symbol..ReadStrptrMaybe
-bool                 Symbol_ReadStrptrMaybe(samp_meng::Symbol &parent, algo::strptr in_str) __attribute__((nothrow));
-// func:samp_meng.Symbol..Cmp
-inline i32           Symbol_Cmp(samp_meng::Symbol& lhs, samp_meng::Symbol& rhs) __attribute__((nothrow));
-// func:samp_meng.Symbol..Eq
-inline bool          Symbol_Eq(samp_meng::Symbol& lhs, samp_meng::Symbol& rhs) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:samp_meng.Symbol.String  printfmt:Raw
-// func:samp_meng.Symbol..Print
-void                 Symbol_Print(samp_meng::Symbol& row, algo::cstring& str) __attribute__((nothrow));
-
 // --- samp_meng.FSymbol
 // create: samp_meng.FDb.symbol (Lary)
 // global access: symbol (Lary, by rowid)
@@ -1145,11 +582,11 @@ void                 Symbol_Print(samp_meng::Symbol& row, algo::cstring& str) __
 struct FSymbol { // samp_meng.FSymbol: Symbol record
     samp_meng::FSymbol*   ind_symbol_next;      // hash next
     u32                   ind_symbol_hashval;   // hash value
-    samp_meng::Symbol     symbol;               //
+    ams::SampMengSymbol   symbol;               //
     i32                   id;                   //   0
     samp_meng::FOrdq**    c_ordq_elems;         // array of pointers
-    u32                   c_ordq_n;             // array of pointers
-    u32                   c_ordq_max;           // capacity of allocated array
+    u64                   c_ordq_n;             // current size
+    u64                   c_ordq_max;           // capacity of allocated array
     // reftype Ptrary of samp_meng.FSymbol.c_ordq prohibits copy
     // func:samp_meng.FSymbol..AssignOp
     inline samp_meng::FSymbol& operator =(const samp_meng::FSymbol &rhs) = delete;
@@ -1166,18 +603,17 @@ private:
     friend void                 symbol_RemoveAll() __attribute__((nothrow));
     friend void                 symbol_RemoveLast() __attribute__((nothrow));
 };
-
 // Return true if index is empty
 // func:samp_meng.FSymbol.c_ordq.EmptyQ
 inline bool          c_ordq_EmptyQ(samp_meng::FSymbol& symbol) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:samp_meng.FSymbol.c_ordq.Find
-inline samp_meng::FOrdq* c_ordq_Find(samp_meng::FSymbol& symbol, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline samp_meng::FOrdq* c_ordq_Find(samp_meng::FSymbol& symbol, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:samp_meng.FSymbol.c_ordq.Getary
 inline algo::aryptr<samp_meng::FOrdq*> c_ordq_Getary(samp_meng::FSymbol& symbol) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:samp_meng.FSymbol.c_ordq.Insert
 void                 c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -1187,7 +623,7 @@ void                 c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq&
 bool                 c_ordq_InsertMaybe(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:samp_meng.FSymbol.c_ordq.N
-inline i32           c_ordq_N(const samp_meng::FSymbol& symbol) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ordq_N(const samp_meng::FSymbol& symbol) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:samp_meng.FSymbol.c_ordq.Remove
 void                 c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) __attribute__((nothrow));
@@ -1196,10 +632,10 @@ void                 c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq&
 inline void          c_ordq_RemoveAll(samp_meng::FSymbol& symbol) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:samp_meng.FSymbol.c_ordq.Reserve
-void                 c_ordq_Reserve(samp_meng::FSymbol& symbol, u32 n) __attribute__((nothrow));
+void                 c_ordq_Reserve(samp_meng::FSymbol& symbol, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:samp_meng.FSymbol.c_ordq.qFind
-inline samp_meng::FOrdq& c_ordq_qFind(samp_meng::FSymbol& symbol, u32 idx) __attribute__((nothrow));
+inline samp_meng::FOrdq& c_ordq_qFind(samp_meng::FSymbol& symbol, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:samp_meng.FSymbol.c_ordq.InAryQ
 inline bool          symbol_c_ordq_InAryQ(samp_meng::FOrdq& row) __attribute__((nothrow));
@@ -1252,7 +688,6 @@ private:
     friend void                 user_RemoveAll() __attribute__((nothrow));
     friend void                 user_RemoveLast() __attribute__((nothrow));
 };
-
 // Return true if index is empty
 // func:samp_meng.FUser.zd_order.EmptyQ
 inline bool          zd_order_EmptyQ(samp_meng::FUser& user) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -1289,6 +724,9 @@ samp_meng::FOrder*   zd_order_RemoveFirst(samp_meng::FUser& user) __attribute__(
 // Return reference to last element in the index. No bounds checking.
 // func:samp_meng.FUser.zd_order.qLast
 inline samp_meng::FOrder& zd_order_qLast(samp_meng::FUser& user) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:samp_meng.FUser.zd_order.InsertBefore
+void                 zd_order_InsertBefore(samp_meng::FUser& user, samp_meng::FOrder& row, samp_meng::FOrder* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:samp_meng.FUser..Init
@@ -1322,7 +760,6 @@ struct FieldId { // samp_meng.FieldId: Field read helper
     inline               FieldId(samp_meng_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:samp_meng.FieldId.value.GetEnum
 inline samp_meng_FieldIdEnum value_GetEnum(const samp_meng::FieldId& parent) __attribute__((nothrow));
@@ -1360,7 +797,7 @@ inline void          FieldId_Init(samp_meng::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:samp_meng.FieldId.String  printfmt:Raw
 // func:samp_meng.FieldId..Print
-void                 FieldId_Print(samp_meng::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(samp_meng::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- samp_meng.InCase
 #pragma pack(push,1)
@@ -1376,7 +813,6 @@ struct InCase { // samp_meng.InCase: Enum for dispatch samp_meng.In
     inline               InCase(samp_meng_InCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:samp_meng.InCase.value.GetEnum
 inline samp_meng_InCaseEnum value_GetEnum(const samp_meng::InCase& parent) __attribute__((nothrow));
@@ -1411,631 +847,14 @@ bool                 InCase_ReadStrptrMaybe(samp_meng::InCase &parent, algo::str
 // Set all fields to initial values.
 // func:samp_meng.InCase..Init
 inline void          InCase_Init(samp_meng::InCase& parent);
-
-// --- samp_meng.MassCancelReqMsg
-#pragma pack(push,1)
-struct MassCancelReqMsg { // samp_meng.MassCancelReqMsg: From user: cancel mass request
-    u8    type;     //   12
-    u8    length;   //   ssizeof(parent) + (0)
-    u32   user;     //   0
-    // func:samp_meng.MassCancelReqMsg..Ctor
-    inline               MassCancelReqMsg() __attribute__((nothrow));
-    // func:samp_meng.MassCancelReqMsg..FieldwiseCtor
-    explicit inline               MassCancelReqMsg(u32 in_user) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.MassCancelReqMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::MassCancelReqMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of MassCancelReqMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of MassCancelReqMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.MassCancelReqMsg.base.Castdown
-inline samp_meng::MassCancelReqMsg* MassCancelReqMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.MassCancelReqMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::MassCancelReqMsg& parent);
-
-// func:samp_meng.MassCancelReqMsg..ReadFieldMaybe
-bool                 MassCancelReqMsg_ReadFieldMaybe(samp_meng::MassCancelReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::MassCancelReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.MassCancelReqMsg..ReadStrptrMaybe
-bool                 MassCancelReqMsg_ReadStrptrMaybe(samp_meng::MassCancelReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.MassCancelReqMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::MassCancelReqMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.MassCancelReqMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::MassCancelReqMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.MassCancelReqMsg..Init
-inline void          MassCancelReqMsg_Init(samp_meng::MassCancelReqMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.MassCancelReqMsg.String  printfmt:Tuple
-// func:samp_meng.MassCancelReqMsg..Print
-void                 MassCancelReqMsg_Print(samp_meng::MassCancelReqMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.MsgHeader
-// access: samp_meng.CancelOrderMsg.base (Base)
-// access: samp_meng.CancelReqMsg.base (Base)
-// access: samp_meng.MassCancelReqMsg.base (Base)
-// access: samp_meng.NewOrderMsg.base (Base)
-// access: samp_meng.NewOrderReqMsg.base (Base)
-// access: samp_meng.NewSymbolMsg.base (Base)
-// access: samp_meng.NewSymbolReqMsg.base (Base)
-// access: samp_meng.NewUserMsg.base (Base)
-// access: samp_meng.NewUserReqMsg.base (Base)
-// access: samp_meng.OrderTradeMsg.base (Base)
-// access: samp_meng.TextMsg.base (Base)
-// access: samp_meng.MsgHeader_curs.msg (Ptr)
-#pragma pack(push,1)
-struct MsgHeader { // samp_meng.MsgHeader: Message header
-    u8   type;     //   0
-    u8   length;   //   0
-    // func:samp_meng.MsgHeader..Ctor
-    inline               MsgHeader() __attribute__((nothrow));
-    // func:samp_meng.MsgHeader..FieldwiseCtor
-    explicit inline               MsgHeader(u8 in_type, u8 in_length) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Get value of field as enum type
-// func:samp_meng.MsgHeader.type.GetEnum
-inline samp_meng_MsgHeader_type_Enum type_GetEnum(const samp_meng::MsgHeader& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:samp_meng.MsgHeader.type.SetEnum
-inline void          type_SetEnum(samp_meng::MsgHeader& parent, samp_meng_MsgHeader_type_Enum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:samp_meng.MsgHeader.type.ToCstr
-const char*          type_ToCstr(const samp_meng::MsgHeader& parent) __attribute__((nothrow));
-// Convert type to a string. First, attempt conversion to a known string.
-// If no string matches, print type as a numeric value.
-// func:samp_meng.MsgHeader.type.Print
-void                 type_Print(const samp_meng::MsgHeader& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:samp_meng.MsgHeader.type.SetStrptrMaybe
-bool                 type_SetStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:samp_meng.MsgHeader.type.SetStrptr
-void                 type_SetStrptr(samp_meng::MsgHeader& parent, algo::strptr rhs, samp_meng_MsgHeader_type_Enum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:samp_meng.MsgHeader.type.ReadStrptrMaybe
-bool                 type_ReadStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr rhs) __attribute__((nothrow));
-
-// func:samp_meng.MsgHeader..ReadFieldMaybe
-bool                 MsgHeader_ReadFieldMaybe(samp_meng::MsgHeader& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::MsgHeader from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.MsgHeader..ReadStrptrMaybe
-bool                 MsgHeader_ReadStrptrMaybe(samp_meng::MsgHeader &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.MsgHeader..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::MsgHeader& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.MsgHeader..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::MsgHeader& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.MsgHeader..Init
-inline void          MsgHeader_Init(samp_meng::MsgHeader& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.MsgHeader.String  printfmt:Tuple
-// func:samp_meng.MsgHeader..Print
-void                 MsgHeader_Print(samp_meng::MsgHeader& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.MsgHeaderMsgsCase
-#pragma pack(push,1)
-struct MsgHeaderMsgsCase { // samp_meng.MsgHeaderMsgsCase: Enum for dispatch samp_meng.MsgHeaderMsgs
-    u32   value;   //   0
-    // func:samp_meng.MsgHeaderMsgsCase.value.Cast
-    inline               operator samp_meng_MsgHeaderMsgsCaseEnum() const __attribute__((nothrow));
-    // func:samp_meng.MsgHeaderMsgsCase..Ctor
-    inline               MsgHeaderMsgsCase() __attribute__((nothrow));
-    // func:samp_meng.MsgHeaderMsgsCase..FieldwiseCtor
-    explicit inline               MsgHeaderMsgsCase(u32 in_value) __attribute__((nothrow));
-    // func:samp_meng.MsgHeaderMsgsCase..EnumCtor
-    inline               MsgHeaderMsgsCase(samp_meng_MsgHeaderMsgsCaseEnum arg) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Get value of field as enum type
-// func:samp_meng.MsgHeaderMsgsCase.value.GetEnum
-inline samp_meng_MsgHeaderMsgsCaseEnum value_GetEnum(const samp_meng::MsgHeaderMsgsCase& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:samp_meng.MsgHeaderMsgsCase.value.SetEnum
-inline void          value_SetEnum(samp_meng::MsgHeaderMsgsCase& parent, samp_meng_MsgHeaderMsgsCaseEnum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:samp_meng.MsgHeaderMsgsCase.value.ToCstr
-const char*          value_ToCstr(const samp_meng::MsgHeaderMsgsCase& parent) __attribute__((nothrow));
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-// func:samp_meng.MsgHeaderMsgsCase.value.Print
-void                 value_Print(const samp_meng::MsgHeaderMsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:samp_meng.MsgHeaderMsgsCase.value.SetStrptrMaybe
-bool                 value_SetStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:samp_meng.MsgHeaderMsgsCase.value.SetStrptr
-void                 value_SetStrptr(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs, samp_meng_MsgHeaderMsgsCaseEnum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:samp_meng.MsgHeaderMsgsCase.value.ReadStrptrMaybe
-bool                 value_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
-
-// Read fields of samp_meng::MsgHeaderMsgsCase from an ascii string.
-// The format of the string is the format of the samp_meng::MsgHeaderMsgsCase's only field
-// func:samp_meng.MsgHeaderMsgsCase..ReadStrptrMaybe
-bool                 MsgHeaderMsgsCase_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.MsgHeaderMsgsCase..Init
-inline void          MsgHeaderMsgsCase_Init(samp_meng::MsgHeaderMsgsCase& parent);
-
-// --- samp_meng.MsgHeader_curs
-#pragma pack(push,1)
-struct MsgHeader_curs { // samp_meng.MsgHeader_curs: Cursor for scanning messages in a memptr
-    typedef samp_meng::MsgHeader *ChildType;
-    samp_meng::MsgHeader*   msg;      // Pointer to current message. optional pointer
-    u8*                     bytes;    // Beginning of region. optional pointer
-    i32                     limit;    //   0  # Of bytes in the region
-    i32                     msglen;   //   0  Length of current message (if any)
-    // func:samp_meng.MsgHeader_curs..Ctor
-    inline               MsgHeader_curs() __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// func:samp_meng.MsgHeader_curs..ValidQ
-inline bool          MsgHeader_curs_ValidQ(samp_meng::MsgHeader_curs& curs) __attribute__((nothrow));
-// func:samp_meng.MsgHeader_curs..Reset
-inline void          MsgHeader_curs_Reset(samp_meng::MsgHeader_curs& curs, algo::memptr buf) __attribute__((nothrow));
-// func:samp_meng.MsgHeader_curs..Access
-inline samp_meng::MsgHeader*& MsgHeader_curs_Access(samp_meng::MsgHeader_curs& curs) __attribute__((nothrow));
-// func:samp_meng.MsgHeader_curs..Next
-inline void          MsgHeader_curs_Next(samp_meng::MsgHeader_curs& curs) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.MsgHeader_curs..Init
-inline void          MsgHeader_curs_Init(samp_meng::MsgHeader_curs& parent);
-
-// --- samp_meng.NewOrderMsg
-#pragma pack(push,1)
-struct NewOrderMsg { // samp_meng.NewOrderMsg: From matching engine: new order
-    u8                     type;     //   2
-    u8                     length;   //   ssizeof(parent) + (0)
-    algo::UnTime           time;     //
-    samp_meng::I64Price8   price;    //
-    u64                    order;    //   0
-    samp_meng::Symbol      symbol;   //
-    u32                    qty;      //   0
-    // func:samp_meng.NewOrderMsg..Ctor
-    inline               NewOrderMsg() __attribute__((nothrow));
-    // func:samp_meng.NewOrderMsg..FieldwiseCtor
-    explicit inline               NewOrderMsg(algo::UnTime in_time, samp_meng::I64Price8 in_price, u64 in_order, const samp_meng::Symbol& in_symbol, u32 in_qty) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.NewOrderMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::NewOrderMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of NewOrderMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of NewOrderMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.NewOrderMsg.base.Castdown
-inline samp_meng::NewOrderMsg* NewOrderMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.NewOrderMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::NewOrderMsg& parent);
-
-// func:samp_meng.NewOrderMsg..ReadFieldMaybe
-bool                 NewOrderMsg_ReadFieldMaybe(samp_meng::NewOrderMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::NewOrderMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.NewOrderMsg..ReadStrptrMaybe
-bool                 NewOrderMsg_ReadStrptrMaybe(samp_meng::NewOrderMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.NewOrderMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::NewOrderMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.NewOrderMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::NewOrderMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.NewOrderMsg..Init
-inline void          NewOrderMsg_Init(samp_meng::NewOrderMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewOrderMsg.String  printfmt:Tuple
-// func:samp_meng.NewOrderMsg..Print
-void                 NewOrderMsg_Print(samp_meng::NewOrderMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.NewOrderReqMsg
-#pragma pack(push,1)
-struct NewOrderReqMsg { // samp_meng.NewOrderReqMsg: From user: new order request
-    u8                     type;     //   10
-    u8                     length;   //   ssizeof(parent) + (0)
-    bool                   ioc;      //   false
-    i32                    qty;      //   0  >0 = buy, <0 = sell
-    samp_meng::I64Price8   price;    //
-    samp_meng::Symbol      symbol;   //
-    u32                    user;     //   0
-    // func:samp_meng.NewOrderReqMsg..Ctor
-    inline               NewOrderReqMsg() __attribute__((nothrow));
-    // func:samp_meng.NewOrderReqMsg..FieldwiseCtor
-    explicit inline               NewOrderReqMsg(bool in_ioc, i32 in_qty, samp_meng::I64Price8 in_price, const samp_meng::Symbol& in_symbol, u32 in_user) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.NewOrderReqMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::NewOrderReqMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of NewOrderReqMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of NewOrderReqMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.NewOrderReqMsg.base.Castdown
-inline samp_meng::NewOrderReqMsg* NewOrderReqMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.NewOrderReqMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::NewOrderReqMsg& parent);
-
-// func:samp_meng.NewOrderReqMsg..ReadFieldMaybe
-bool                 NewOrderReqMsg_ReadFieldMaybe(samp_meng::NewOrderReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::NewOrderReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.NewOrderReqMsg..ReadStrptrMaybe
-bool                 NewOrderReqMsg_ReadStrptrMaybe(samp_meng::NewOrderReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.NewOrderReqMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::NewOrderReqMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.NewOrderReqMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::NewOrderReqMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.NewOrderReqMsg..Init
-inline void          NewOrderReqMsg_Init(samp_meng::NewOrderReqMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewOrderReqMsg.String  printfmt:Tuple
-// func:samp_meng.NewOrderReqMsg..Print
-void                 NewOrderReqMsg_Print(samp_meng::NewOrderReqMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.NewSymbolMsg
-#pragma pack(push,1)
-struct NewSymbolMsg { // samp_meng.NewSymbolMsg: From matching engine: new symbol
-    u8                  type;     //   5
-    u8                  length;   //   ssizeof(parent) + (0)
-    samp_meng::Symbol   symbol;   //
-    // func:samp_meng.NewSymbolMsg..Ctor
-    inline               NewSymbolMsg() __attribute__((nothrow));
-    // func:samp_meng.NewSymbolMsg..FieldwiseCtor
-    explicit inline               NewSymbolMsg(const samp_meng::Symbol& in_symbol) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.NewSymbolMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::NewSymbolMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of NewSymbolMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of NewSymbolMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.NewSymbolMsg.base.Castdown
-inline samp_meng::NewSymbolMsg* NewSymbolMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.NewSymbolMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::NewSymbolMsg& parent);
-
-// func:samp_meng.NewSymbolMsg..ReadFieldMaybe
-bool                 NewSymbolMsg_ReadFieldMaybe(samp_meng::NewSymbolMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::NewSymbolMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.NewSymbolMsg..ReadStrptrMaybe
-bool                 NewSymbolMsg_ReadStrptrMaybe(samp_meng::NewSymbolMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.NewSymbolMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::NewSymbolMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.NewSymbolMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::NewSymbolMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.NewSymbolMsg..Init
-inline void          NewSymbolMsg_Init(samp_meng::NewSymbolMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewSymbolMsg.String  printfmt:Tuple
-// func:samp_meng.NewSymbolMsg..Print
-void                 NewSymbolMsg_Print(samp_meng::NewSymbolMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.NewSymbolReqMsg
-#pragma pack(push,1)
-struct NewSymbolReqMsg { // samp_meng.NewSymbolReqMsg: To matching engine: new symbol request
-    u8                  type;     //   13
-    u8                  length;   //   ssizeof(parent) + (0)
-    samp_meng::Symbol   symbol;   //
-    // func:samp_meng.NewSymbolReqMsg..Ctor
-    inline               NewSymbolReqMsg() __attribute__((nothrow));
-    // func:samp_meng.NewSymbolReqMsg..FieldwiseCtor
-    explicit inline               NewSymbolReqMsg(const samp_meng::Symbol& in_symbol) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.NewSymbolReqMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::NewSymbolReqMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of NewSymbolReqMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of NewSymbolReqMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.NewSymbolReqMsg.base.Castdown
-inline samp_meng::NewSymbolReqMsg* NewSymbolReqMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.NewSymbolReqMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::NewSymbolReqMsg& parent);
-
-// func:samp_meng.NewSymbolReqMsg..ReadFieldMaybe
-bool                 NewSymbolReqMsg_ReadFieldMaybe(samp_meng::NewSymbolReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::NewSymbolReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.NewSymbolReqMsg..ReadStrptrMaybe
-bool                 NewSymbolReqMsg_ReadStrptrMaybe(samp_meng::NewSymbolReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.NewSymbolReqMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::NewSymbolReqMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.NewSymbolReqMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::NewSymbolReqMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.NewSymbolReqMsg..Init
-inline void          NewSymbolReqMsg_Init(samp_meng::NewSymbolReqMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewSymbolReqMsg.String  printfmt:Tuple
-// func:samp_meng.NewSymbolReqMsg..Print
-void                 NewSymbolReqMsg_Print(samp_meng::NewSymbolReqMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.NewUserMsg
-#pragma pack(push,1)
-struct NewUserMsg { // samp_meng.NewUserMsg: From matching engine: new user
-    u8    type;     //   6
-    u8    length;   //   ssizeof(parent) + (0)
-    u32   user;     //   0
-    // func:samp_meng.NewUserMsg..Ctor
-    inline               NewUserMsg() __attribute__((nothrow));
-    // func:samp_meng.NewUserMsg..FieldwiseCtor
-    explicit inline               NewUserMsg(u32 in_user) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.NewUserMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::NewUserMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of NewUserMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of NewUserMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.NewUserMsg.base.Castdown
-inline samp_meng::NewUserMsg* NewUserMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.NewUserMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::NewUserMsg& parent);
-
-// func:samp_meng.NewUserMsg..ReadFieldMaybe
-bool                 NewUserMsg_ReadFieldMaybe(samp_meng::NewUserMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::NewUserMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.NewUserMsg..ReadStrptrMaybe
-bool                 NewUserMsg_ReadStrptrMaybe(samp_meng::NewUserMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.NewUserMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::NewUserMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.NewUserMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::NewUserMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.NewUserMsg..Init
-inline void          NewUserMsg_Init(samp_meng::NewUserMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewUserMsg.String  printfmt:Tuple
-// func:samp_meng.NewUserMsg..Print
-void                 NewUserMsg_Print(samp_meng::NewUserMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.NewUserReqMsg
-#pragma pack(push,1)
-struct NewUserReqMsg { // samp_meng.NewUserReqMsg: To matching engine: new user request
-    u8    type;     //   14
-    u8    length;   //   ssizeof(parent) + (0)
-    u32   user;     //   0
-    // func:samp_meng.NewUserReqMsg..Ctor
-    inline               NewUserReqMsg() __attribute__((nothrow));
-    // func:samp_meng.NewUserReqMsg..FieldwiseCtor
-    explicit inline               NewUserReqMsg(u32 in_user) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.NewUserReqMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::NewUserReqMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of NewUserReqMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of NewUserReqMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.NewUserReqMsg.base.Castdown
-inline samp_meng::NewUserReqMsg* NewUserReqMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.NewUserReqMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::NewUserReqMsg& parent);
-
-// func:samp_meng.NewUserReqMsg..ReadFieldMaybe
-bool                 NewUserReqMsg_ReadFieldMaybe(samp_meng::NewUserReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::NewUserReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.NewUserReqMsg..ReadStrptrMaybe
-bool                 NewUserReqMsg_ReadStrptrMaybe(samp_meng::NewUserReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.NewUserReqMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::NewUserReqMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.NewUserReqMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::NewUserReqMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.NewUserReqMsg..Init
-inline void          NewUserReqMsg_Init(samp_meng::NewUserReqMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewUserReqMsg.String  printfmt:Tuple
-// func:samp_meng.NewUserReqMsg..Print
-void                 NewUserReqMsg_Print(samp_meng::NewUserReqMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.OrderTradeMsg
-#pragma pack(push,1)
-struct OrderTradeMsg { // samp_meng.OrderTradeMsg: From matching engine: trade order
-    u8                     type;     //   4
-    u8                     length;   //   ssizeof(parent) + (0)
-    u64                    order;    //   0
-    u32                    qty;      //   0
-    samp_meng::I64Price8   price;    //
-    // func:samp_meng.OrderTradeMsg..Ctor
-    inline               OrderTradeMsg() __attribute__((nothrow));
-    // func:samp_meng.OrderTradeMsg..FieldwiseCtor
-    explicit inline               OrderTradeMsg(u64 in_order, u32 in_qty, samp_meng::I64Price8 in_price) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.OrderTradeMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::OrderTradeMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of OrderTradeMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of OrderTradeMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.OrderTradeMsg.base.Castdown
-inline samp_meng::OrderTradeMsg* OrderTradeMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.OrderTradeMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::OrderTradeMsg& parent);
-
-// func:samp_meng.OrderTradeMsg..ReadFieldMaybe
-bool                 OrderTradeMsg_ReadFieldMaybe(samp_meng::OrderTradeMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::OrderTradeMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.OrderTradeMsg..ReadStrptrMaybe
-bool                 OrderTradeMsg_ReadStrptrMaybe(samp_meng::OrderTradeMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.OrderTradeMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::OrderTradeMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.OrderTradeMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::OrderTradeMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.OrderTradeMsg..Init
-inline void          OrderTradeMsg_Init(samp_meng::OrderTradeMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.OrderTradeMsg.String  printfmt:Tuple
-// func:samp_meng.OrderTradeMsg..Print
-void                 OrderTradeMsg_Print(samp_meng::OrderTradeMsg& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- samp_meng.TextMsg
-#pragma pack(push,1)
-struct TextMsg { // samp_meng.TextMsg: Debug message
-    u8   type;     //   7
-    u8   length;   //   ssizeof(parent) + (0)
-    // var-length field samp_meng.TextMsg.text starts here. access it with text_Addr
-    // func:samp_meng.TextMsg..Ctor
-    inline               TextMsg() __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Copy fields out of row
-// func:samp_meng.TextMsg.base.CopyOut
-void                 parent_CopyOut(samp_meng::TextMsg &row, samp_meng::MsgHeader &out) __attribute__((nothrow));
-// Check if samp_meng::MsgHeader is an instance of TextMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of TextMsg.
-// If not successful, quietly return NULL.
-// func:samp_meng.TextMsg.base.Castdown
-inline samp_meng::TextMsg* TextMsg_Castdown(samp_meng::MsgHeader &hdr);
-// func:samp_meng.TextMsg.base.Castbase
-inline samp_meng::MsgHeader& Castbase(samp_meng::TextMsg& parent);
-
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-// func:samp_meng.TextMsg.text.Getary
-algo::aryptr<char>   text_Getary(samp_meng::TextMsg& parent) __attribute__((nothrow));
-// func:samp_meng.TextMsg.text.Addr
-char*                text_Addr(samp_meng::TextMsg& parent);
-// Return number of elements in varlen field
-// func:samp_meng.TextMsg.text.N
-inline u32           text_N(const samp_meng::TextMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-// Convert string to field. Return success value
-// func:samp_meng.TextMsg.text.ReadStrptrMaybe
-bool                 text_ReadStrptrMaybe(samp_meng::TextMsg& parent, algo::strptr in_str) __attribute__((nothrow));
-// Convert text to a string.
-// Array is printed as a regular string.
-// func:samp_meng.TextMsg.text.Print
-void                 text_Print(samp_meng::TextMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
-
-// func:samp_meng.TextMsg.text_curs.Reset
-inline void          TextMsg_text_curs_Reset(TextMsg_text_curs &curs, samp_meng::TextMsg &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.TextMsg.text_curs.ValidQ
-inline bool          TextMsg_text_curs_ValidQ(TextMsg_text_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:samp_meng.TextMsg.text_curs.Next
-inline void          TextMsg_text_curs_Next(TextMsg_text_curs &curs) __attribute__((nothrow));
-// item access
-// func:samp_meng.TextMsg.text_curs.Access
-inline char&         TextMsg_text_curs_Access(TextMsg_text_curs &curs) __attribute__((nothrow));
-// func:samp_meng.TextMsg..ReadFieldMaybe
-bool                 TextMsg_ReadFieldMaybe(samp_meng::TextMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of samp_meng::TextMsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.TextMsg..ReadStrptrMaybe
-bool                 TextMsg_ReadStrptrMaybe(samp_meng::TextMsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:samp_meng.TextMsg..GetMsgLength
-inline i32           GetMsgLength(const samp_meng::TextMsg& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:samp_meng.TextMsg..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const samp_meng::TextMsg& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.TextMsg..Init
-inline void          TextMsg_Init(samp_meng::TextMsg& parent);
-// print string representation of ROW to string STR
-// cfmt:samp_meng.TextMsg.String  printfmt:Tuple
-// func:samp_meng.TextMsg..Print
-void                 TextMsg_Print(samp_meng::TextMsg& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace samp_meng { // gen:ns_curstext
-
-struct _db_fdin_curs {// cursor
-    typedef samp_meng::FFdin ChildType;
-    samp_meng::FDb *parent;
-    i64 index;
-    _db_fdin_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_cd_fdin_eof_curs {// fcurs:samp_meng.FDb.cd_fdin_eof/curs
-    typedef samp_meng::FFdin ChildType;
-    samp_meng::FFdin* row;
-    samp_meng::FFdin** head; // address of head element
-    _db_cd_fdin_eof_curs() {
-        row = NULL;
-        head = NULL;
-    }
-};
-
 
 struct _db_symbol_curs {// cursor
     typedef samp_meng::FSymbol ChildType;
     samp_meng::FDb *parent;
     i64 index;
     _db_symbol_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_cd_fdin_read_curs {// fcurs:samp_meng.FDb.cd_fdin_read/curs
-    typedef samp_meng::FFdin ChildType;
-    samp_meng::FFdin* row;
-    samp_meng::FFdin** head; // address of head element
-    _db_cd_fdin_read_curs() {
-        row = NULL;
-        head = NULL;
-    }
 };
 
 
@@ -2062,8 +881,8 @@ struct ordq_bh_order_curs {
 struct symbol_c_ordq_curs {// fcurs:samp_meng.FSymbol.c_ordq/curs
     typedef samp_meng::FOrdq ChildType;
     samp_meng::FOrdq** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     symbol_c_ordq_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -2076,72 +895,52 @@ struct user_zd_order_curs {// fcurs:samp_meng.FUser.zd_order/curs
     }
 };
 
-
-struct TextMsg_text_curs {// cursor
-    typedef char ChildType;
-    u8 *ptr;
-    int length;
-    int index;
-    TextMsg_text_curs() { ptr=NULL; length=0; index=0; }
-};
-
 } // gen:ns_curstext
 namespace samp_meng { // gen:ns_func
 // func:samp_meng...StaticCheck
 void                 StaticCheck();
 // User-implemented callback function for dispatch In
-// func:samp_meng.In.samp_meng.CancelReqMsg
+// func:samp_meng.In.ams.SampMengCancelReqMsg
 // this function is 'extrn' and implemented by user
-void                 In_CancelReqMsg(samp_meng::CancelReqMsg &msg);
+void                 In_SampMengCancelReqMsg(ams::SampMengCancelReqMsg &msg);
 // User-implemented callback function for dispatch In
-// func:samp_meng.In.samp_meng.MassCancelReqMsg
+// func:samp_meng.In.ams.SampMengMassCancelReqMsg
 // this function is 'extrn' and implemented by user
-void                 In_MassCancelReqMsg(samp_meng::MassCancelReqMsg &msg);
+void                 In_SampMengMassCancelReqMsg(ams::SampMengMassCancelReqMsg &msg);
 // User-implemented callback function for dispatch In
-// func:samp_meng.In.samp_meng.NewOrderReqMsg
+// func:samp_meng.In.ams.SampMengNewOrderReqMsg
 // this function is 'extrn' and implemented by user
-void                 In_NewOrderReqMsg(samp_meng::NewOrderReqMsg &msg);
+void                 In_SampMengNewOrderReqMsg(ams::SampMengNewOrderReqMsg &msg);
 // User-implemented callback function for dispatch In
-// func:samp_meng.In.samp_meng.NewSymbolReqMsg
+// func:samp_meng.In.ams.SampMengNewSymbolReqMsg
 // this function is 'extrn' and implemented by user
-void                 In_NewSymbolReqMsg(samp_meng::NewSymbolReqMsg &msg);
+void                 In_SampMengNewSymbolReqMsg(ams::SampMengNewSymbolReqMsg &msg);
 // User-implemented callback function for dispatch In
-// func:samp_meng.In.samp_meng.NewUserReqMsg
+// func:samp_meng.In.ams.SampMengNewUserReqMsg
 // this function is 'extrn' and implemented by user
-void                 In_NewUserReqMsg(samp_meng::NewUserReqMsg &msg);
+void                 In_SampMengNewUserReqMsg(ams::SampMengNewUserReqMsg &msg);
 // User-implemented callback function for dispatch In
-// func:samp_meng.In.samp_meng.TextMsg
+// func:samp_meng.In.ams.SampMengTextMsg
 // this function is 'extrn' and implemented by user
-void                 In_TextMsg(samp_meng::TextMsg &msg);
+void                 In_SampMengTextMsg(ams::SampMengTextMsg &msg);
 // func:samp_meng.In..DispatchRaw
 int                  InDispatchRaw(samp_meng::InCase type, u8 *msg, u32 len);
 // func:samp_meng.In..Dispatch
-int                  InDispatch(samp_meng::MsgHeader& msg);
+int                  InDispatch(ams::MsgHeader& msg);
 // void rettype useful for hooks
 // func:samp_meng.In..Dispatch2
-void                 vInDispatch(samp_meng::MsgHeader& msg);
+void                 vInDispatch(ams::MsgHeader& msg);
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len
 // func:samp_meng.In..Print
-bool                 In_Print(algo::cstring &str, samp_meng::MsgHeader &msg, u32 msg_len);
-// Print message to STR. If message is too short for MSG_LEN, print nothing.
-// MSG.LENGTH must have already been validated against msg_len.
-// This function will additionally validate that sizeof(Msg) <= msg_len
-// func:samp_meng.MsgHeaderMsgs..Print
-bool                 MsgHeaderMsgs_Print(algo::cstring &str, samp_meng::MsgHeader &msg, u32 msg_len);
+bool                 In_Print(algo::cstring &str, ams::MsgHeader &msg, u32 msg_len);
 // Parse ascii representation of message into binary, appending new data to BUF.
 // func:samp_meng.In..ReadStrptr
 samp_meng::InCase    In_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
 // func:samp_meng.In..ReadStrptrMaybe
 bool                 In_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
-// Parse ascii representation of message into binary, appending new data to BUF.
-// func:samp_meng.MsgHeaderMsgs..ReadStrptr
-samp_meng::MsgHeaderMsgsCase MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
-// Parse ascii representation of message into binary, appending new data to BUF.
-// func:samp_meng.MsgHeaderMsgs..ReadStrptrMaybe
-bool                 MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 } // gen:ns_func
 // func:samp_meng...main
 int                  main(int argc, char **argv);
@@ -2151,20 +950,6 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators
 namespace algo {
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::CancelOrderMsg &row);// cfmt:samp_meng.CancelOrderMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::CancelReqMsg &row);// cfmt:samp_meng.CancelReqMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::trace &row);// cfmt:samp_meng.trace.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::I64Price8 &row);// cfmt:samp_meng.I64Price8.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::Symbol &row);// cfmt:samp_meng.Symbol.String
 inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::FieldId &row);// cfmt:samp_meng.FieldId.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::MassCancelReqMsg &row);// cfmt:samp_meng.MassCancelReqMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::MsgHeader &row);// cfmt:samp_meng.MsgHeader.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::NewOrderMsg &row);// cfmt:samp_meng.NewOrderMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::NewOrderReqMsg &row);// cfmt:samp_meng.NewOrderReqMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::NewSymbolMsg &row);// cfmt:samp_meng.NewSymbolMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::NewSymbolReqMsg &row);// cfmt:samp_meng.NewSymbolReqMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::NewUserMsg &row);// cfmt:samp_meng.NewUserMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::NewUserReqMsg &row);// cfmt:samp_meng.NewUserReqMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::OrderTradeMsg &row);// cfmt:samp_meng.OrderTradeMsg.String
-inline algo::cstring &operator <<(algo::cstring &str, const samp_meng::TextMsg &row);// cfmt:samp_meng.TextMsg.String
 }

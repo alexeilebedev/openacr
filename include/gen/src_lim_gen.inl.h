@@ -72,7 +72,7 @@ inline src_lim::FInclude* src_lim::include_Last() {
 
 // --- src_lim.FDb.include.N
 // Return number of items in the pool
-inline i32 src_lim::include_N() {
+inline i64 src_lim::include_N() {
     return _db.include_n;
 }
 
@@ -114,7 +114,7 @@ inline src_lim::FLinelim* src_lim::linelim_Last() {
 
 // --- src_lim.FDb.linelim.N
 // Return number of items in the pool
-inline i32 src_lim::linelim_N() {
+inline i64 src_lim::linelim_N() {
     return _db.linelim_n;
 }
 
@@ -156,7 +156,7 @@ inline src_lim::FTargsrc* src_lim::targsrc_Last() {
 
 // --- src_lim.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 src_lim::targsrc_N() {
+inline i64 src_lim::targsrc_N() {
     return _db.targsrc_n;
 }
 
@@ -198,7 +198,7 @@ inline src_lim::FGitfile* src_lim::gitfile_Last() {
 
 // --- src_lim.FDb.gitfile.N
 // Return number of items in the pool
-inline i32 src_lim::gitfile_N() {
+inline i64 src_lim::gitfile_N() {
     return _db.gitfile_n;
 }
 
@@ -252,7 +252,7 @@ inline src_lim::FBadline* src_lim::badline_Last() {
 
 // --- src_lim.FDb.badline.N
 // Return number of items in the pool
-inline i32 src_lim::badline_N() {
+inline i64 src_lim::badline_N() {
     return _db.badline_n;
 }
 

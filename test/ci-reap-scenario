@@ -1,0 +1,54 @@
+#!/bin/bash
+# Build the two process shapes ci-reap has to tell apart, and report how it
+# classified each one.
+# Usage: test/ci-reap-scenario <ci-reap-path>
+#
+# The reaper's whole job is one distinction: a process the running job started
+# stays, a process left by an earlier job goes.  A test that only checked the
+# second half would pass on a script that reaped everything, which is the one
+# outcome that must never happen, so both shapes are built and both verdicts
+# are reported.
+#
+# The shapes are the two ends of the ancestry walk.  A plain background child
+# of this script descends from it, so its walk meets this script's own chain.
+# A child of setsid loses its parent as soon as setsid exits and is reparented
+# to init, so its walk reaches PID 1 -- which is what every process an earlier
+# job left behind looks like.
+#
+# Only -dry_run is ever exercised: a real sweep in a CI job would reap that
+# job's genuine leftovers, and the counts it reported would then depend on what
+# the runner happened to be carrying.
+set -u
+reap="$1"
+pidfile=temp/ci-reap-scenario.pid
+mkdir -p temp
+rm -f "$pidfile"
+
+sleep 60 &
+child=$!
+setsid --fork bash -c "echo \$\$ > $pidfile; exec sleep 60" >/dev/null 2>&1
+orphan=""
+for _ in $(seq 100); do
+    orphan=$(cat "$pidfile" 2>/dev/null)
+    if [ -n "$orphan" ] && [ -e "/proc/$orphan" ]; then
+        break
+    fi
+    sleep 0.1
+done
+
+out=$("$reap" -dry_run)
+
+case "$out" in
+    *"pid:$child "*) echo 'ci_reap_scenario.child  listed:Y  comment:"started by the running job"';;
+    *)               echo 'ci_reap_scenario.child  listed:N  comment:"started by the running job"';;
+esac
+case "$out" in
+    *"pid:$orphan "*) echo 'ci_reap_scenario.orphan  listed:Y  comment:"reparented to init"';;
+    *)                echo 'ci_reap_scenario.orphan  listed:N  comment:"reparented to init"';;
+esac
+
+kill "$child" 2>/dev/null
+if [ -n "$orphan" ]; then
+    kill "$orphan" 2>/dev/null
+fi
+rm -f "$pidfile"

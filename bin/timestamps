@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env perl
 # Copyright (C) 2023-2026 AlgoRND
 #
 # License: GPL
@@ -16,6 +16,25 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-while read line; do
-    echo "$(date +%Y/%m/%d-%H:%M:%S.%N) $line"
-done
+use strict;
+use warnings;
+use Time::HiRes qw(gettimeofday);
+use POSIX qw(strftime);
+
+my $delta = (defined $ARGV[0] && $ARGV[0] eq "-d");
+my $start = $delta ? gettimeofday() : 0;
+
+$SIG{INT} = 'IGNORE';
+$SIG{PIPE} = 'IGNORE';
+$| = 1;
+while (<STDIN>) {
+    chomp;
+    if ($delta) {
+        my $elapsed = gettimeofday() - $start;
+        printf "+%04d.%06d %s\n", int($elapsed), ($elapsed - int($elapsed)) * 1000000, $_;
+    } else {
+        my ($s, $us) = gettimeofday();
+        my $ts = strftime("%Y/%m/%d-%H:%M:%S", localtime($s));
+        printf "%s.%09d %s\n", $ts, $us * 1000, $_;
+    }
+}

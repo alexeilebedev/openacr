@@ -1,4 +1,12 @@
-# start acr_ed cmd:"$bindir/acr_ed -create -ctype x2.AbcMsg -subset ams.MsgHeader"
+# start acr_ed cmd:"$bindir/acr_ed -create -ctype ams.AbcMsg -subset ams.MsgHeader"
 # eof acr_ed
-acr_ed -> acr_ed.invalid_namespace  ns:x2  comment:"namespace doesn't exist"
-# exit acr_ed code:1
+acr_ed -> set -e
+acr_ed -> bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+acr_ed -> dmmeta.ctype  ctype:ams.AbcMsg  comment:""
+acr_ed -> dmmeta.field  field:ams.AbcMsg.base  arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
+acr_ed -> dmmeta.pack  ctype:ams.AbcMsg  comment:""
+acr_ed -> dmmeta.msgtype  ctype:ams.AbcMsg  type:***
+acr_ed -> dmmeta.cfmt  cfmt:ams.AbcMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+acr_ed -> EOF
+acr_ed -> bin/amc
+# exit acr_ed code:0

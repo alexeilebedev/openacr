@@ -24,6 +24,8 @@
 
 #include "include/atf_amc.h"
 
+#include <openssl/err.h>
+
 void atf_amc::cd_in_msg_Step() {
     // do nothing
 }
@@ -189,9 +191,8 @@ void atf_amc::amctest_msgbuf_test8() {
 
     atf_amc::Msgbuf msgbuf;
     in_buf_BeginRead(msgbuf, read_fd);// set up iohook
-    // #AL# on platforms like Windows, the pipe may be
-    // market readable in IoHookAdd. until this is fixed, normalize desired state.
-    // it doesn't affect correctness
+    // on some platforms (Windows) IoHookAdd marks the pipe readable up
+    // front; normalize to the not-readable state the asserts below expect
     cd_in_msg_Remove(msgbuf);
     msgbuf.in_buf_iohook.nodelete=true;
 
@@ -272,9 +273,9 @@ void atf_amc::amctest_msgbuf_test10() {
     bool phase1 = true;
     bool phase2 = true;
     bool phase3 = true;
+    srandom(12346);// fixed seed: the walk below is deterministic
     while (nmsg_written < 10000 || nmsg_read < nmsg_written) {
         // rarely switch phases -- this forces system to visit different states
-        srandom(12346);
         if (algo::i32_WeakRandom(100) < 5) phase1 = !phase1;
         if (algo::i32_WeakRandom(100) < 5) phase2 = !phase2;
         if (algo::i32_WeakRandom(100) < 5) phase3 = !phase3;
@@ -478,4 +479,227 @@ void atf_amc::amctest_msgbuf_custom() {
     vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr("bcde"));
     in_custom_SkipBytes(msgbuf,1);
     vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr("cdef"));
+}
+
+// --------------------------------------------------------------------------------
+
+// Read-direction fbuf on a global (FDb) ctype:
+// buffer state and trace counters live on _db, and every
+// generated member access must go through it.
+void atf_amc::amctest_FbufGlobalRead() {
+    atf_amc::in_fb_RemoveAll();
+    u64 byte0 = atf_amc::_db.in_fb_n_read_byte;
+    u64 msg0  = atf_amc::_db.in_fb_n_read_msg;
+    vrfy_(atf_amc::in_fb_WriteAll((u8*)"hello", 5));
+    algo::aryptr<char> msg = atf_amc::in_fb_GetMsg();
+    vrfyeq_(msg.n_elems, 5);
+    atf_amc::in_fb_SkipMsg();
+    vrfyeq_(atf_amc::_db.in_fb_n_read_byte - byte0, u64(5));
+    vrfyeq_(atf_amc::_db.in_fb_n_read_msg - msg0, u64(1));
+    vrfy_(atf_amc::in_fb_GetMsg().elems == NULL);
+}
+
+// --------------------------------------------------------------------------------
+
+// Write-direction fbuf on a global (FDb) ctype:
+// WriteAll counts written bytes and messages on _db.
+void atf_amc::amctest_FbufGlobalWrite() {
+    atf_amc::out_fb_RemoveAll();
+    u64 byte0 = atf_amc::_db.out_fb_n_write_byte;
+    u64 msg0  = atf_amc::_db.out_fb_n_write_msg;
+    vrfy_(atf_amc::out_fb_WriteAll((u8*)"hello", 5));
+    vrfyeq_(atf_amc::out_fb_N(), 5);
+    vrfyeq_(atf_amc::_db.out_fb_n_write_byte - byte0, u64(5));
+    vrfyeq_(atf_amc::_db.out_fb_n_write_msg - msg0, u64(1));
+}
+
+// --------------------------------------------------------------------------------
+
+// Out-direction flow control: the space condition.
+// A producer that keeps writing into a full out buffer has no event to wait
+// for -- it can only re-try and be refused, and a loop that re-judges a
+// condition it cannot bring about is what keeps a process awake for the whole
+// of a congestion episode.  The insight is that the room a producer waits for
+// can appear in exactly one place, the drain, so the drain is what announces
+// it.  An out fbuf therefore latches a congested flag on the write side and
+// arms the space condition once the buffer falls back to its low-water mark.
+// The marks are fractions of the buffer's own capacity: congestion latches at
+// three quarters full, and the wake comes at one quarter.
+void atf_amc::amctest_FbufSpaceDrain() {
+    atf_amc::FCondtest &condtest = atf_amc::condtest_Alloc();
+    vrfy_(atf_amc::condtest_XrefMaybe(condtest));
+    u8 fill[64];// the buffer's own capacity: a structural bound, not a guess
+    memset(fill, 'x', sizeof(fill));
+    i32 max = atf_amc::out_buf_Max(condtest);
+    vrfyeq_(max, 64);
+    vrfy_(!atf_amc::cd_condtest_space_InLlistQ(condtest));
+    // below the high-water mark: no congestion, so nothing to wake
+    vrfy_(atf_amc::out_buf_WriteAll(condtest, fill, 40));
+    vrfyeq_(atf_amc::out_buf_N(condtest), 40);
+    vrfy_(!condtest.out_buf_congested);
+    // crossing three quarters latches congestion; the space condition is the
+    // drain's to announce, so membership does not follow the write
+    vrfy_(atf_amc::out_buf_WriteAll(condtest, fill, 10));
+    vrfy_(condtest.out_buf_congested);
+    vrfy_(!atf_amc::cd_condtest_space_InLlistQ(condtest));
+    // a partial drain that stays above one quarter is not yet room
+    atf_amc::out_buf_SkipBytes(condtest, 20);
+    vrfyeq_(atf_amc::out_buf_N(condtest), 30);
+    vrfy_(condtest.out_buf_congested);
+    vrfy_(!atf_amc::cd_condtest_space_InLlistQ(condtest));
+    // falling to the low-water mark clears the latch and arms the producer
+    atf_amc::out_buf_SkipBytes(condtest, 20);
+    vrfyeq_(atf_amc::out_buf_N(condtest), 10);
+    vrfy_(!condtest.out_buf_congested);
+    vrfy_(atf_amc::cd_condtest_space_InLlistQ(condtest));
+    vrfyeq_(atf_amc::cd_condtest_space_N(), 1);
+    // the queue is armed on the rising edge only (rem:N), so draining further
+    // neither re-arms nor releases it -- the consumer owns the removal
+    atf_amc::out_buf_SkipBytes(condtest, 10);
+    vrfyeq_(atf_amc::out_buf_N(condtest), 0);
+    vrfy_(atf_amc::cd_condtest_space_InLlistQ(condtest));
+    atf_amc::cd_condtest_space_Remove(condtest);
+    // a write refused outright latches too: the message fits the buffer's
+    // capacity, so the producer has room to wait for rather than an
+    // impossible request
+    vrfy_(atf_amc::out_buf_WriteAll(condtest, fill, 64));
+    vrfy_(!atf_amc::out_buf_WriteAll(condtest, fill, 8));
+    vrfy_(condtest.out_buf_congested);
+    atf_amc::out_buf_SkipBytes(condtest, 64);
+    vrfy_(atf_amc::cd_condtest_space_InLlistQ(condtest));
+    atf_amc::cd_condtest_space_Remove(condtest);
+    atf_amc::condtest_Delete(condtest);
+}
+
+// --------------------------------------------------------------------------------
+
+// Discarding a congested out buffer is a drain like any other: the room
+// appears all at once, so the producer parked on the space condition is woken
+// rather than left waiting for a byte-by-byte drain that will never come.
+void atf_amc::amctest_FbufSpaceRemoveAll() {
+    atf_amc::FCondtest &condtest = atf_amc::condtest_Alloc();
+    vrfy_(atf_amc::condtest_XrefMaybe(condtest));
+    u8 fill[64];// the buffer's own capacity: a structural bound, not a guess
+    memset(fill, 'x', sizeof(fill));
+    vrfy_(atf_amc::out_buf_WriteAll(condtest, fill, 60));
+    vrfy_(condtest.out_buf_congested);
+    vrfy_(!atf_amc::cd_condtest_space_InLlistQ(condtest));
+    atf_amc::out_buf_RemoveAll(condtest);
+    vrfyeq_(atf_amc::out_buf_N(condtest), 0);
+    vrfy_(!condtest.out_buf_congested);
+    vrfy_(atf_amc::cd_condtest_space_InLlistQ(condtest));
+    // an uncongested buffer has no producer waiting, so discarding it arms
+    // nothing
+    atf_amc::cd_condtest_space_Remove(condtest);
+    vrfy_(atf_amc::out_buf_WriteAll(condtest, fill, 10));
+    vrfy_(!condtest.out_buf_congested);
+    atf_amc::out_buf_RemoveAll(condtest);
+    vrfy_(!atf_amc::cd_condtest_space_InLlistQ(condtest));
+    atf_amc::condtest_Delete(condtest);
+}
+
+// --------------------------------------------------------------------------------
+
+// Write-direction fbuf with iotype:openssl:
+// a TLS hard error (here: SSL_write on an SSL object with no connect/accept
+// role, which fails with SSL_ERROR_SSL) must record the error code and
+// unschedule the buffer from the outflow ready list, exactly like a plain
+// write() hard error does; a buffer left on the list would be re-run by the
+// scheduler forever.
+void atf_amc::amctest_sslbuf_outflow_error() {
+    atf_amc::Sslbuf sslbuf;
+    SSL_CTX *ctx = SSL_CTX_new(TLS_method());
+    SSL *ssl = ctx ? SSL_new(ctx) : NULL;
+    // observations are collected first and asserted after the teardown, so a
+    // regression this test catches does not also leak the SSL objects; each
+    // starts at the value its assertion expects, so an observation the ssl
+    // check preempts adds no second failure
+    bool wrote = true;
+    bool sched = true;
+    bool flushed = false;
+    bool errset = true;
+    bool unsched = false;
+    if (ssl) {
+        sslbuf.out_ssl = ssl;
+        wrote   = out_WriteAll(sslbuf, (u8*)"x", 1);
+        sched   = cd_sslbuf_out_InLlistQ(sslbuf);
+        flushed = out_Outflow(sslbuf);
+        errset  = sslbuf.out_err.value != 0;
+        unsched = cd_sslbuf_out_InLlistQ(sslbuf);
+    }
+    // the provoked SSL_ERROR_SSL entry stays on the thread's OpenSSL error
+    // queue; whatever runs next in the same process would read it as its own
+    ERR_clear_error();
+    SSL_free(ssl);
+    SSL_CTX_free(ctx);
+    vrfy_(ctx != NULL);
+    vrfy_(ssl != NULL);
+    vrfy_(wrote);
+    vrfyeq_(sched, true); // WriteAll schedules outflow
+    vrfyeq_(flushed, false); // hard error: nothing written
+    vrfy_(errset); // error code recorded
+    vrfyeq_(unsched, false); // buffer unscheduled
+}
+
+// --------------------------------------------------------------------------------
+
+// Write-direction fbuf with iotype:openssl and nothing buffered:
+// a TLS connection is scheduled for outflow as soon as its file descriptor is
+// writable, which on a fresh connection happens before anything has been
+// buffered, so Outflow runs with a byte count of zero. OpenSSL documents
+// SSL_write with num=0 as an error, and its return of zero as a failed write.
+// Outflow must therefore not reach SSL_write at all with an empty buffer: the
+// call would report a failure that did not happen, and an empty buffer's
+// Outflow has nothing to report. The empty buffer is unscheduled, exactly as a
+// fully drained one is.
+void atf_amc::amctest_sslbuf_outflow_zero() {
+    atf_amc::Sslbuf sslbuf;
+    SSL_CTX *ctx = SSL_CTX_new(TLS_method());
+    SSL *ssl = ctx ? SSL_new(ctx) : NULL;
+    // observations are collected first and asserted after the teardown, so a
+    // regression this test catches does not also leak the SSL objects; each
+    // starts at the value its assertion expects, so an observation the ssl
+    // check preempts adds no second failure
+    bool flushed = false;
+    bool errset = false;
+    bool sched = false;
+    if (ssl) {
+        sslbuf.out_ssl = ssl;
+        cd_sslbuf_out_Insert(sslbuf);// schedule an empty buffer
+        flushed = out_Outflow(sslbuf);
+        errset  = sslbuf.out_err.value != 0;
+        sched   = cd_sslbuf_out_InLlistQ(sslbuf);
+    }
+    ERR_clear_error();
+    SSL_free(ssl);
+    SSL_CTX_free(ctx);
+    vrfy_(ctx != NULL);
+    vrfy_(ssl != NULL);
+    vrfyeq_(flushed, false); // nothing was written
+    vrfyeq_(errset, false); // SSL_write was not called, so no error was recorded
+    vrfyeq_(sched, false); // empty buffer unscheduled
+}
+
+// --------------------------------------------------------------------------------
+
+// Fbuf backed by a private lpool:
+// Realloc allocates the buffer as plain bytes, and Uninit must return it to
+// the pool with that same byte size. The lpool files a freed block on a
+// freelist keyed by the free size, so an inflated size (sizeof(arg)*max)
+// would park the 8K record on the 32K freelist and a later 32K request
+// would be served only 8K of memory.
+void atf_amc::amctest_fbuf_lpool_free() {
+    void *elems = NULL;
+    {
+        atf_amc::Lpoolbuf lpoolbuf;
+        elems = lpoolbuf.in_elems;
+        vrfy_(elems != NULL);
+        vrfyeq_(lpoolbuf.in_max, u32(8192));
+    }
+    void *blk32 = atf_amc::lpool_AllocMem(sizeof(atf_amc::MsgHeader) * 8192);
+    vrfy_(blk32 != elems); // the 32K freelist must not hold the 8K record
+    void *rec8 = atf_amc::lpool_AllocMem(8192);
+    vrfy_(rec8 == elems); // the record is recycled within its own size class
+    atf_amc::lpool_FreeMem(rec8, 8192);
+    atf_amc::lpool_FreeMem(blk32, sizeof(atf_amc::MsgHeader) * 8192);
 }

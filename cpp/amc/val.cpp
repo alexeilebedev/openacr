@@ -24,20 +24,16 @@
 
 #include "include/amc.h"
 
+// Emit the member variable for a Val field, with the field default
+// retargeted from *this to the instance expression; a fldfunc-computed
+// field emits no variable. Rejects a non-extern finput on a Val field
+// and the fbigend+fldfunc combination.
 void amc::tclass_Val() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
 
-    // hack
-    // what is this crap???
-    tempstr dflt;
-    dflt << field.dflt;
-    Replace(dflt, "*this", Subst(R,"$pararg"));
-
-    // pick a default
-    if (field.p_arg->c_cextern && field.p_arg->c_cextern->initmemset && !ch_N(dflt)) {
-        dflt = "0";
-    }
+    tempstr dflt = DfltExprVal(field);
+    DfltRetarget(dflt, Subst(R,"$parname"));
     Set(R, "$dflt"   , dflt);
 
     Set(R, "$Fldtype", field.cpp_type);
@@ -48,13 +44,23 @@ void amc::tclass_Val() {
 
     if (field.c_fbigend) {
         Set(R, "$suffix", "_be");
+        // width of the byteswap primitive (be16toh/be32toh/be64toh) the
+        // accessors call; gen_check_bigend has verified the type is one of
+        // these widths, so the width comes from the type's size, not from
+        // a suffix of its name
+        Set(R, "$WID", tempstr()<<Ctype_Nbit(*field.p_arg));
     }
 
-    if (field.c_finput && !field.c_finput->extrn) {
-        prerr("amc.val_finput  "
-              <<Keyval("field",field.field)
-              <<Keyval("comment","Non-extern finput + val do not mix"));
-        algo_lib::_db.exit_code++;
+    if (field.c_finput) {
+        amc::FFfunc *ff_im = amc::FindFfunc(field, "InputMaybe");
+        amc::FFfunc *ff_in = amc::FindFfunc(field, "Input");
+        bool extern_input = (ff_im && ff_im->extrn) || (ff_in && ff_in->extrn);
+        if (!extern_input) {
+            prerr("amc.val_finput  "
+                  <<Keyval("field",field.field)
+                  <<Keyval("comment","Non-extern finput + val do not mix (need ffunc:<field>.Input or .InputMaybe extrn:Y)"));
+            algo_lib::_db.exit_code++;
+        }
     }
     if (field.c_fbigend && FldfuncQ(field)) {
         prerr("amc.bigend_fldfunc"
@@ -75,7 +81,6 @@ void amc::tfunc_Val_Get() {
 
     // retrieve big-endian value.
     if (field.c_fbigend) {
-        Set(R, "$WID",LastN(strptr(field.arg),2)); // two last digits
         amc::FFunc& get = amc::CreateCurFunc();
         Ins(&R, get.ret  , "$Fldtype", false);
         Ins(&R, get.proto, "$name_Get($Cparent)", false);
@@ -87,7 +92,7 @@ void amc::tfunc_Val_Get() {
 void amc::tfunc_Val_Set() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    bool need_set = (field.c_fbigend || c_pmaskfld_member_N(field))
+    bool need_set = (field.c_fbigend || c_pmaskfld_member_N(field) || c_fcond_N(field) > 0)
         && !PadQ(field)
         && !(field.arg == "algo_lib.Regx")
         && !(field.c_cppfunc && !field.c_cppfunc->set);
@@ -97,15 +102,17 @@ void amc::tfunc_Val_Set() {
         Ins(&R, set.ret  , "void", false);
         Ins(&R, set.proto, "$name_Set($Parent, $Fldargtype rhs)", false);
         set.inl = true;
-        if (field.c_fbigend) {
+        if (c_fcond_N(field) > 0) {
+            // fcond membership dispatch: list operations on value transitions
+            set.inl = false;
+            amc::AddFcondSetBody(set, field);
+        } else if (field.c_fbigend) {
             Ins(&R, set.body, "$parname.$name_be = htobe$WID(rhs); // write big-endian value to memory");
         } else {
             Ins(&R, set.body, "$parname.$name = rhs;");
         }
         ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
-            Set(R,"$pmask",name_Get(*pmaskfld_member.p_pmaskfld->p_field));
-            Set(R,"$bit",tempstr()<<pmaskfld_member.bit);
-            Ins(&R, set.body, "$pmask_qSetBit($pararg, $bit); // mark presence in pmask");
+            set.body << SetPresentForMember(field, pmaskfld_member, Subst(R,"$pararg"));
         }ind_end;
     }
 }

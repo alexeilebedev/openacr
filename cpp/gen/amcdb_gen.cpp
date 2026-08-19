@@ -42,6 +42,7 @@ const char *amcdb_Tclass_tclass_Base      = "Base";
 const char *amcdb_Tclass_tclass_Bheap     = "Bheap";
 const char *amcdb_Tclass_tclass_Bitfld    = "Bitfld";
 const char *amcdb_Tclass_tclass_Bitset    = "Bitset";
+const char *amcdb_Tclass_tclass_Blkhash   = "Blkhash";
 const char *amcdb_Tclass_tclass_Blkpool   = "Blkpool";
 const char *amcdb_Tclass_tclass_Charset   = "Charset";
 const char *amcdb_Tclass_tclass_Cmp       = "Cmp";
@@ -167,6 +168,55 @@ void amcdb::Bltin_Print(amcdb::Bltin& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- amcdb.Cbtype..ReadFieldMaybe
+bool amcdb::Cbtype_ReadFieldMaybe(amcdb::Cbtype& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    amcdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case amcdb_FieldId_cbtype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.cbtype, strval);
+        } break;
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- amcdb.Cbtype..ReadStrptrMaybe
+// Read fields of amcdb::Cbtype from an ascii string.
+// The format of the string is an ssim Tuple
+bool amcdb::Cbtype_ReadStrptrMaybe(amcdb::Cbtype &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "amcdb.cbtype") || algo::StripTypeTag(in_str, "amcdb.Cbtype");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Cbtype_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- amcdb.Cbtype..Print
+// print string representation of ROW to string STR
+// cfmt:amcdb.Cbtype.String  printfmt:Tuple
+void amcdb::Cbtype_Print(amcdb::Cbtype& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "amcdb.cbtype";
+
+    algo::Smallstr50_Print(row.cbtype, temp);
+    PrintAttrSpaceReset(str,"cbtype", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- amcdb.Curstype..ReadFieldMaybe
 bool amcdb::Curstype_ReadFieldMaybe(amcdb::Curstype& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -227,14 +277,23 @@ const char* amcdb::value_ToCstr(const amcdb::FieldId& parent) {
         case amcdb_FieldId_bigendok        : ret = "bigendok";  break;
         case amcdb_FieldId_issigned        : ret = "issigned";  break;
         case amcdb_FieldId_comment         : ret = "comment";  break;
+        case amcdb_FieldId_cbtype          : ret = "cbtype";  break;
         case amcdb_FieldId_curstype        : ret = "curstype";  break;
         case amcdb_FieldId_gen             : ret = "gen";  break;
         case amcdb_FieldId_perns           : ret = "perns";  break;
+        case amcdb_FieldId_pbtype          : ret = "pbtype";  break;
+        case amcdb_FieldId_wire_type       : ret = "wire_type";  break;
+        case amcdb_FieldId_suffix          : ret = "suffix";  break;
+        case amcdb_FieldId_encval          : ret = "encval";  break;
+        case amcdb_FieldId_decval          : ret = "decval";  break;
+        case amcdb_FieldId_nondflt         : ret = "nondflt";  break;
+        case amcdb_FieldId_argtype         : ret = "argtype";  break;
         case amcdb_FieldId_regxtype        : ret = "regxtype";  break;
         case amcdb_FieldId_tclass          : ret = "tclass";  break;
+        case amcdb_FieldId_tcond           : ret = "tcond";  break;
+        case amcdb_FieldId_name            : ret = "name";  break;
         case amcdb_FieldId_tfunc           : ret = "tfunc";  break;
         case amcdb_FieldId_dflt            : ret = "dflt";  break;
-        case amcdb_FieldId_name            : ret = "name";  break;
         case amcdb_FieldId_hasthrow        : ret = "hasthrow";  break;
         case amcdb_FieldId_leaf            : ret = "leaf";  break;
         case amcdb_FieldId_poolfunc        : ret = "poolfunc";  break;
@@ -305,6 +364,9 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('p','e','r','n','s'): {
                     value_SetEnum(parent,amcdb_FieldId_perns); ret = true; break;
                 }
+                case LE_STR5('t','c','o','n','d'): {
+                    value_SetEnum(parent,amcdb_FieldId_tcond); ret = true; break;
+                }
                 case LE_STR5('t','f','u','n','c'): {
                     value_SetEnum(parent,amcdb_FieldId_tfunc); ret = true; break;
                 }
@@ -316,6 +378,21 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
         }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('c','b','t','y','p','e'): {
+                    value_SetEnum(parent,amcdb_FieldId_cbtype); ret = true; break;
+                }
+                case LE_STR6('d','e','c','v','a','l'): {
+                    value_SetEnum(parent,amcdb_FieldId_decval); ret = true; break;
+                }
+                case LE_STR6('e','n','c','v','a','l'): {
+                    value_SetEnum(parent,amcdb_FieldId_encval); ret = true; break;
+                }
+                case LE_STR6('p','b','t','y','p','e'): {
+                    value_SetEnum(parent,amcdb_FieldId_pbtype); ret = true; break;
+                }
+                case LE_STR6('s','u','f','f','i','x'): {
+                    value_SetEnum(parent,amcdb_FieldId_suffix); ret = true; break;
+                }
                 case LE_STR6('t','c','l','a','s','s'): {
                     value_SetEnum(parent,amcdb_FieldId_tclass); ret = true; break;
                 }
@@ -324,6 +401,9 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
         }
         case 7: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('a','r','g','t','y','p','e'): {
+                    value_SetEnum(parent,amcdb_FieldId_argtype); ret = true; break;
+                }
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,amcdb_FieldId_comment); ret = true; break;
                 }
@@ -332,6 +412,9 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('l','i','k','e','u','6','4'): {
                     value_SetEnum(parent,amcdb_FieldId_likeu64); ret = true; break;
+                }
+                case LE_STR7('n','o','n','d','f','l','t'): {
+                    value_SetEnum(parent,amcdb_FieldId_nondflt); ret = true; break;
                 }
             }
             break;
@@ -355,6 +438,15 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('r','e','g','x','t','y','p','e'): {
                     value_SetEnum(parent,amcdb_FieldId_regxtype); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('w','i','r','e','_','t','y','p'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,amcdb_FieldId_wire_type); ret = true; break; }
+                    break;
                 }
             }
             break;
@@ -393,7 +485,7 @@ bool amcdb::FieldId_ReadStrptrMaybe(amcdb::FieldId &parent, algo::strptr in_str)
 // --- amcdb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:amcdb.FieldId.String  printfmt:Raw
-void amcdb::FieldId_Print(amcdb::FieldId& row, algo::cstring& str) {
+void amcdb::FieldId_Print(amcdb::FieldId row, algo::cstring& str) {
     amcdb::value_Print(row, str);
 }
 
@@ -447,6 +539,91 @@ void amcdb::Gen_Print(amcdb::Gen& row, algo::cstring& str) {
 
     bool_Print(row.perns, temp);
     PrintAttrSpaceReset(str,"perns", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- amcdb.Pbtype..ReadFieldMaybe
+bool amcdb::Pbtype_ReadFieldMaybe(amcdb::Pbtype& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    amcdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case amcdb_FieldId_pbtype: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.pbtype, strval);
+        } break;
+        case amcdb_FieldId_wire_type: {
+            retval = u8_ReadStrptrMaybe(parent.wire_type, strval);
+        } break;
+        case amcdb_FieldId_suffix: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.suffix, strval);
+        } break;
+        case amcdb_FieldId_encval: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.encval, strval);
+        } break;
+        case amcdb_FieldId_decval: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.decval, strval);
+        } break;
+        case amcdb_FieldId_nondflt: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.nondflt, strval);
+        } break;
+        case amcdb_FieldId_argtype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.argtype, strval);
+        } break;
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- amcdb.Pbtype..ReadStrptrMaybe
+// Read fields of amcdb::Pbtype from an ascii string.
+// The format of the string is an ssim Tuple
+bool amcdb::Pbtype_ReadStrptrMaybe(amcdb::Pbtype &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "amcdb.pbtype") || algo::StripTypeTag(in_str, "amcdb.Pbtype");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Pbtype_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- amcdb.Pbtype..Print
+// print string representation of ROW to string STR
+// cfmt:amcdb.Pbtype.String  printfmt:Tuple
+void amcdb::Pbtype_Print(amcdb::Pbtype& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "amcdb.pbtype";
+
+    algo::Smallstr20_Print(row.pbtype, temp);
+    PrintAttrSpaceReset(str,"pbtype", temp);
+
+    u8_Print(row.wire_type, temp);
+    PrintAttrSpaceReset(str,"wire_type", temp);
+
+    algo::Smallstr20_Print(row.suffix, temp);
+    PrintAttrSpaceReset(str,"suffix", temp);
+
+    algo::Smallstr50_Print(row.encval, temp);
+    PrintAttrSpaceReset(str,"encval", temp);
+
+    algo::Smallstr50_Print(row.decval, temp);
+    PrintAttrSpaceReset(str,"decval", temp);
+
+    algo::Smallstr50_Print(row.nondflt, temp);
+    PrintAttrSpaceReset(str,"nondflt", temp);
+
+    algo::Smallstr50_Print(row.argtype, temp);
+    PrintAttrSpaceReset(str,"argtype", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -550,16 +727,94 @@ void amcdb::Tclass_Print(amcdb::Tclass& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- amcdb.Tcond.tclass.Get
+algo::strptr amcdb::tclass_Get(amcdb::Tcond& parent) {
+    return algo::Pathcomp(parent.tcond, ".RL");
+}
+
+// --- amcdb.Tcond.tclass.Get2
+algo::strptr amcdb::Tcond_tclass_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
+}
+
+// --- amcdb.Tcond.name.Get
+algo::strptr amcdb::name_Get(amcdb::Tcond& parent) {
+    return algo::Pathcomp(parent.tcond, ".RR");
+}
+
+// --- amcdb.Tcond.name.Get2
+algo::strptr amcdb::Tcond_name_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
+}
+
+// --- amcdb.Tcond..Concat_tclass_name
+tempstr amcdb::Tcond_Concat_tclass_name( const algo::strptr& tclass ,const algo::strptr& name ) {
+    return tempstr() << tclass <<'.'<< name ;
+}
+
+// --- amcdb.Tcond..ReadFieldMaybe
+bool amcdb::Tcond_ReadFieldMaybe(amcdb::Tcond& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    amcdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case amcdb_FieldId_tcond: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.tcond, strval);
+        } break;
+        case amcdb_FieldId_tclass: {
+            retval = false;
+        } break;
+        case amcdb_FieldId_name: {
+            retval = false;
+        } break;
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- amcdb.Tcond..ReadStrptrMaybe
+// Read fields of amcdb::Tcond from an ascii string.
+// The format of the string is an ssim Tuple
+bool amcdb::Tcond_ReadStrptrMaybe(amcdb::Tcond &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "amcdb.tcond") || algo::StripTypeTag(in_str, "amcdb.Tcond");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Tcond_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- amcdb.Tcond..Print
+// print string representation of ROW to string STR
+// cfmt:amcdb.Tcond.String  printfmt:Tuple
+void amcdb::Tcond_Print(amcdb::Tcond& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "amcdb.tcond";
+
+    algo::Smallstr50_Print(row.tcond, temp);
+    PrintAttrSpaceReset(str,"tcond", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- amcdb.Tcurs.curstype.Get
-algo::Smallstr50 amcdb::curstype_Get(amcdb::Tcurs& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.tfunc, ".RR"));
-    return ret;
+algo::strptr amcdb::curstype_Get(amcdb::Tcurs& parent) {
+    return algo::Pathcomp(parent.tfunc, ".RR");
 }
 
 // --- amcdb.Tcurs.curstype.Get2
-algo::Smallstr50 amcdb::Tcurs_curstype_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr amcdb::Tcurs_curstype_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- amcdb.Tcurs..ReadFieldMaybe
@@ -621,27 +876,23 @@ void amcdb::Tcurs_Print(amcdb::Tcurs& row, algo::cstring& str) {
 }
 
 // --- amcdb.Tfunc.tclass.Get
-algo::Smallstr50 amcdb::tclass_Get(amcdb::Tfunc& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.tfunc, ".RL"));
-    return ret;
+algo::strptr amcdb::tclass_Get(amcdb::Tfunc& parent) {
+    return algo::Pathcomp(parent.tfunc, ".RL");
 }
 
 // --- amcdb.Tfunc.tclass.Get2
-algo::Smallstr50 amcdb::Tfunc_tclass_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr amcdb::Tfunc_tclass_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- amcdb.Tfunc.name.Get
-algo::Smallstr50 amcdb::name_Get(amcdb::Tfunc& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.tfunc, ".RR"));
-    return ret;
+algo::strptr amcdb::name_Get(amcdb::Tfunc& parent) {
+    return algo::Pathcomp(parent.tfunc, ".RR");
 }
 
 // --- amcdb.Tfunc.name.Get2
-algo::Smallstr50 amcdb::Tfunc_name_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr amcdb::Tfunc_name_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- amcdb.Tfunc..Concat_tclass_name

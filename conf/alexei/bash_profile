@@ -17,18 +17,7 @@ if [ "$PS1" != "" ]; then
     HOSTNAME=`hostname -f 2>/dev/null`
     PS1="\e[0;34m[\$? \D{%b %d %H:%M:%S}] \u@$HOSTNAME\e[0;32m:\w\e[m \n\$ "
     LS_OPTIONS='--color=auto --quoting-style=shell'
-
-    PREV="$PWD"
-    cd $(dirname $(dirname $(dirname "$(readlink -f ~/.bash_profile)"))) 2>/dev/null && $(bin/acr_compl -install) 
-    cd "$PREV"
 fi
-
-# acr_compl -install needs a list of executables to work
-# so it cannot be invoked until we switch to a particular directory
-function beginwork() {
-    cd "$1"
-    $(acr_compl -install)
-}
 
 # export section
 export PS1
@@ -41,3 +30,12 @@ export PROMPT_COMMAND
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export TERM=xterm-256color
+
+#
+# acr_compl -install needs a list of executables to work
+# so it cannot be invoked until we switch to a particular directory
+if [ -n "$AUTOSTART_DIR" ]; then
+    cd "$AUTOSTART_DIR"
+    eval $(acr_compl -install)
+    unset AUTOSTART_DIR
+fi

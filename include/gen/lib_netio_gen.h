@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -29,8 +20,8 @@
 
 // --- lib_netio_FieldIdEnum
 
-enum lib_netio_FieldIdEnum {        // lib_netio.FieldId.value
-     lib_netio_FieldId_value   = 0
+enum lib_netio_FieldIdEnum {    // lib_netio.FieldId.value
+     lib_netio_FieldId_value
 };
 
 enum { lib_netio_FieldIdEnum_N = 1 };
@@ -55,7 +46,6 @@ struct trace { // lib_netio.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:lib_netio.trace.String  printfmt:Tuple
 // func:lib_netio.trace..Print
@@ -64,14 +54,13 @@ void                 trace_Print(lib_netio::trace& row, algo::cstring& str) __at
 // --- lib_netio.FDb
 // create: lib_netio.FDb._db (Global)
 struct FDb { // lib_netio.FDb
-    lib_netio::FVar*    var_lary[32];            // level array
-    i32                 var_n;                   // number of elements in array
+    lib_netio::FVar*    var_lary[36];            // level array
+    i64                 var_n;                   // number of elements in array
     lib_netio::FVar**   ind_var_buckets_elems;   // pointer to bucket array
     i32                 ind_var_buckets_n;       // number of elements in bucket array
     i32                 ind_var_n;               // number of elements in the hash table
     lib_netio::trace    trace;                   //
 };
-
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_netio.FDb._db.InsertStrptrMaybe
@@ -96,6 +85,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_netio.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_netio.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_netio.FDb._db.XrefMaybe
@@ -122,7 +115,7 @@ inline lib_netio::FVar* var_Find(u64 t) __attribute__((__warn_unused_result__, n
 inline lib_netio::FVar* var_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_netio.FDb.var.N
-inline i32           var_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           var_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_netio.FDb.var.RemoveAll
 void                 var_RemoveAll() __attribute__((nothrow));
@@ -206,7 +199,6 @@ private:
     friend void                 var_RemoveAll() __attribute__((nothrow));
     friend void                 var_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:lib_netio.FVar..Init
 inline void          FVar_Init(lib_netio::FVar& var);
@@ -227,7 +219,6 @@ struct FieldId { // lib_netio.FieldId: Field read helper
     inline               FieldId(lib_netio_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_netio.FieldId.value.GetEnum
 inline lib_netio_FieldIdEnum value_GetEnum(const lib_netio::FieldId& parent) __attribute__((nothrow));
@@ -265,7 +256,7 @@ inline void          FieldId_Init(lib_netio::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_netio.FieldId.String  printfmt:Raw
 // func:lib_netio.FieldId..Print
-void                 FieldId_Print(lib_netio::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_netio::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_netio { // gen:ns_curstext
 

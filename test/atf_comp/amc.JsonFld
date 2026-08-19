@@ -1,0 +1,205 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.%.FmtJson < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.cfmt  cfmt:u32.Json  printfmt:Extern  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Str  comment:""
+amc <- dmmeta.field  field:algo_lib.Str.id  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Str.String  printfmt:Raw  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Multi  comment:""
+amc <- dmmeta.field  field:algo_lib.Multi.a  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Multi.s  arg:algo_lib.Str  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Multi.ja  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.Multi.ja  comment:""
+amc <- dmmeta.field  field:algo_lib.Multi.sa  arg:algo_lib.Str  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.Multi.sa  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Multi.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Computed  comment:""
+amc <- dmmeta.field  field:algo_lib.Computed.a  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Computed.derived  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.Computed.derived  comment:""
+amc <- dmmeta.cppfunc  field:algo_lib.Computed.derived  expr:""  print:N  set:N
+amc <- dmmeta.cfmt  cfmt:algo_lib.Computed.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.InlJson  comment:""
+amc <- dmmeta.field  field:algo_lib.InlJson.v  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.InlJson.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.InlPrint  comment:""
+amc <- dmmeta.field  field:algo_lib.InlPrint.v  arg:algo_lib.Str  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.InlPrint.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.InlAryJson  comment:""
+amc <- dmmeta.field  field:algo_lib.InlAryJson.v  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.InlAryJson.v  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.InlAryJson.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.InlAryPrint  comment:""
+amc <- dmmeta.field  field:algo_lib.InlAryPrint.v  arg:algo_lib.Str  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.InlAryPrint.v  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.InlAryPrint.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.PmFilter  comment:""
+amc <- dmmeta.field  field:algo_lib.PmFilter.a  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.PmFilter.s  arg:algo_lib.Str  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.PmFilter.ja  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.PmFilter.ja  comment:""
+amc <- dmmeta.field  field:algo_lib.PmFilter.pmask  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld  field:algo_lib.PmFilter.pmask  filter_print:Y  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.PmFilter.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.PmInlJson  comment:""
+amc <- dmmeta.field  field:algo_lib.PmInlJson.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.PmInlJson.pm  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.PmInlJson.pm  offset:0  width:8  srcfield:algo_lib.PmInlJson.word  comment:""
+amc <- dmmeta.pmaskfld  field:algo_lib.PmInlJson.pm  filter_print:Y  comment:""
+amc <- dmmeta.field  field:algo_lib.PmInlJson.flag  arg:bool  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.PmInlJson.flag  offset:8  width:1  srcfield:algo_lib.PmInlJson.word  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.PmInlJson.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.PmInlPrint  comment:""
+amc <- dmmeta.field  field:algo_lib.PmInlPrint.word  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.PmInlPrint.pm  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.PmInlPrint.pm  offset:0  width:8  srcfield:algo_lib.PmInlPrint.word  comment:""
+amc <- dmmeta.pmaskfld  field:algo_lib.PmInlPrint.pm  filter_print:Y  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.PmInlPrint.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.PmInlFree  comment:""
+amc <- dmmeta.field  field:algo_lib.PmInlFree.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.PmInlFree.pm  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.PmInlFree.pm  offset:0  width:8  srcfield:algo_lib.PmInlFree.word  comment:""
+amc <- dmmeta.pmaskfld  field:algo_lib.PmInlFree.pm  filter_print:Y  comment:""
+amc <- dmmeta.field  field:algo_lib.PmInlFree.flag  arg:bool  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.PmInlFree.flag  offset:8  width:1  srcfield:algo_lib.PmInlFree.word  comment:""
+amc <- dmmeta.pmaskfld_member  pmaskfld_member:algo_lib.PmInlFree.pm/algo_lib.PmInlFree.flag  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.PmInlFree.Json  printfmt:Auto  read:N  print:Y  sep:""  genop:Y  comment:""
+# eof amc
+amc -> // --- algo_lib.Computed..FmtJson
+amc -> // Create JSON representation of algo_lib::Computed under PARENT node
+amc -> // cfmt:algo_lib.Computed.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Computed_FmtJson(algo_lib::Computed& row, lib_json::FNode *parent) {
+amc ->     return u32_FmtJson(row.a,parent);
+amc -> }
+amc -> // --- algo_lib.InlAryJson..FmtJson
+amc -> // Create JSON representation of algo_lib::InlAryJson under PARENT node
+amc -> // cfmt:algo_lib.InlAryJson.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::InlAryJson_FmtJson(algo_lib::InlAryJson& row, lib_json::FNode *parent) {
+amc ->     algo::aryptr<u32> v_ary = v_Getary(row);
+amc ->     lib_json::FNode& v_node = lib_json::NewArrayNode(parent);
+amc ->     for (int i = 0; i < v_ary.n_elems; ++i) {
+amc ->         u32_FmtJson(v_ary[i], &v_node);
+amc ->     }
+amc ->     return &v_node;
+amc -> }
+amc -> // --- algo_lib.InlAryPrint..FmtJson
+amc -> // Create JSON representation of algo_lib::InlAryPrint under PARENT node
+amc -> // cfmt:algo_lib.InlAryPrint.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::InlAryPrint_FmtJson(algo_lib::InlAryPrint& row, lib_json::FNode *parent) {
+amc ->     algo::aryptr<algo_lib::Str> v_ary = v_Getary(row);
+amc ->     lib_json::FNode& v_node = lib_json::NewArrayNode(parent);
+amc ->     for (int i = 0; i < v_ary.n_elems; ++i) {
+amc ->         algo_lib::Str_Print(v_ary[i], lib_json::NewStringNode(&v_node).value);
+amc ->     }
+amc ->     return &v_node;
+amc -> }
+amc -> // --- algo_lib.InlJson..FmtJson
+amc -> // Create JSON representation of algo_lib::InlJson under PARENT node
+amc -> // cfmt:algo_lib.InlJson.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::InlJson_FmtJson(algo_lib::InlJson row, lib_json::FNode *parent) {
+amc ->     return u32_FmtJson(row.v,parent);
+amc -> }
+amc -> // --- algo_lib.InlPrint..FmtJson
+amc -> // Create JSON representation of algo_lib::InlPrint under PARENT node
+amc -> // cfmt:algo_lib.InlPrint.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::InlPrint_FmtJson(algo_lib::InlPrint row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode& v_node = lib_json::NewStringNode(parent);
+amc ->     algo_lib::Str_Print(row.v, v_node.value);
+amc ->     return &v_node;
+amc -> }
+amc -> // --- algo_lib.Multi..FmtJson
+amc -> // Create JSON representation of algo_lib::Multi under PARENT node
+amc -> // cfmt:algo_lib.Multi.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Multi_FmtJson(algo_lib::Multi& row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     lib_json::FNode *a_node = &lib_json::node_Alloc();
+amc ->     a_node->p_parent = objnode;
+amc ->     a_node->type   = lib_json_FNode_type_field;
+amc ->     a_node->value  = "a";
+amc ->     node_XrefMaybe(*a_node);
+amc ->     u32_FmtJson(row.a,a_node);
+amc ->     algo_lib::Str_Print(row.s, lib_json::NewStringNode(objnode, "s").value);
+amc ->     algo::aryptr<u32> ja_ary = ja_Getary(row);
+amc ->     lib_json::FNode& ja_node = lib_json::NewArrayNode(objnode, "ja");
+amc ->     for (int i = 0; i < ja_ary.n_elems; ++i) {
+amc ->         u32_FmtJson(ja_ary[i], &ja_node);
+amc ->     }
+amc ->     algo::aryptr<algo_lib::Str> sa_ary = sa_Getary(row);
+amc ->     lib_json::FNode& sa_node = lib_json::NewArrayNode(objnode, "sa");
+amc ->     for (int i = 0; i < sa_ary.n_elems; ++i) {
+amc ->         algo_lib::Str_Print(sa_ary[i], lib_json::NewStringNode(&sa_node).value);
+amc ->     }
+amc ->     return objnode;
+amc -> }
+amc -> // --- algo_lib.PmFilter..FmtJson
+amc -> // Create JSON representation of algo_lib::PmFilter under PARENT node
+amc -> // cfmt:algo_lib.PmFilter.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::PmFilter_FmtJson(algo_lib::PmFilter& row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     if (a_PresentQ(row)) {
+amc ->         lib_json::FNode *a_node = &lib_json::node_Alloc();
+amc ->         a_node->p_parent = objnode;
+amc ->         a_node->type   = lib_json_FNode_type_field;
+amc ->         a_node->value  = "a";
+amc ->         node_XrefMaybe(*a_node);
+amc ->         u32_FmtJson(row.a,a_node);
+amc ->     }
+amc ->     if (s_PresentQ(row)) {
+amc ->         algo_lib::Str_Print(row.s, lib_json::NewStringNode(objnode, "s").value);
+amc ->     }
+amc ->     if (ja_PresentQ(row)) {
+amc ->         algo::aryptr<u32> ja_ary = ja_Getary(row);
+amc ->         lib_json::FNode& ja_node = lib_json::NewArrayNode(objnode, "ja");
+amc ->         for (int i = 0; i < ja_ary.n_elems; ++i) {
+amc ->             u32_FmtJson(ja_ary[i], &ja_node);
+amc ->         }
+amc ->     }
+amc ->     return objnode;
+amc -> }
+amc -> // --- algo_lib.PmInlFree..FmtJson
+amc -> // Create JSON representation of algo_lib::PmInlFree under PARENT node
+amc -> // cfmt:algo_lib.PmInlFree.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::PmInlFree_FmtJson(algo_lib::PmInlFree row, lib_json::FNode *parent) {
+amc ->     return u32_FmtJson(row.word,parent);
+amc -> }
+amc -> // --- algo_lib.PmInlJson..FmtJson
+amc -> // Create JSON representation of algo_lib::PmInlJson under PARENT node
+amc -> // cfmt:algo_lib.PmInlJson.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::PmInlJson_FmtJson(algo_lib::PmInlJson row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     if (word_PmQ(row)) {
+amc ->         lib_json::FNode *word_node = &lib_json::node_Alloc();
+amc ->         word_node->p_parent = objnode;
+amc ->         word_node->type   = lib_json_FNode_type_field;
+amc ->         word_node->value  = "word";
+amc ->         node_XrefMaybe(*word_node);
+amc ->         u32_FmtJson(row.word,word_node);
+amc ->     }
+amc ->     return objnode;
+amc -> }
+amc -> // --- algo_lib.PmInlPrint..FmtJson
+amc -> // Create JSON representation of algo_lib::PmInlPrint under PARENT node
+amc -> // cfmt:algo_lib.PmInlPrint.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::PmInlPrint_FmtJson(algo_lib::PmInlPrint row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     if (word_PmQ(row)) {
+amc ->         u64_Print(row.word, lib_json::NewStringNode(objnode, "word").value);
+amc ->     }
+amc ->     return objnode;
+amc -> }
+# exit amc code:0

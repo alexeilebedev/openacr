@@ -31,13 +31,13 @@
 
 // --- orgfile_FieldIdEnum
 
-enum orgfile_FieldIdEnum {            // orgfile.FieldId.value
-     orgfile_FieldId_original    = 0
-    ,orgfile_FieldId_duplicate   = 1
-    ,orgfile_FieldId_comment     = 2
-    ,orgfile_FieldId_pathname    = 3
-    ,orgfile_FieldId_tgtfile     = 4
-    ,orgfile_FieldId_value       = 5
+enum orgfile_FieldIdEnum {    // orgfile.FieldId.value
+     orgfile_FieldId_original
+    ,orgfile_FieldId_duplicate
+    ,orgfile_FieldId_comment
+    ,orgfile_FieldId_pathname
+    ,orgfile_FieldId_tgtfile
+    ,orgfile_FieldId_value
 };
 
 enum { orgfile_FieldIdEnum_N = 6 };
@@ -56,7 +56,6 @@ namespace orgfile { // gen:ns_pkeytypedef
     typedef algo::Smallstr40 FFilehashPkey;
 } // gen:ns_pkeytypedef
 namespace orgfile { // gen:ns_tclass_field
-extern const char *orgfile_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace orgfile { struct FFilehash; }
@@ -81,7 +80,6 @@ struct trace { // orgfile.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:orgfile.trace.String  printfmt:Tuple
 // func:orgfile.trace..Print
@@ -96,20 +94,17 @@ struct FDb { // orgfile.FDb: In-memory database for orgfile
     orgfile::FFilename**   ind_filename_buckets_elems;   // pointer to bucket array
     i32                    ind_filename_buckets_n;       // number of elements in bucket array
     i32                    ind_filename_n;               // number of elements in the hash table
-    orgfile::FFilehash*    filehash_lary[32];            // level array
-    i32                    filehash_n;                   // number of elements in array
+    orgfile::FFilehash*    filehash_lary[36];            // level array
+    i64                    filehash_n;                   // number of elements in array
     orgfile::FFilehash**   ind_filehash_buckets_elems;   // pointer to bucket array
     i32                    ind_filehash_buckets_n;       // number of elements in bucket array
     i32                    ind_filehash_n;               // number of elements in the hash table
-    orgfile::FTimefmt*     timefmt_lary[32];             // level array
-    i32                    timefmt_n;                    // number of elements in array
+    orgfile::FTimefmt*     timefmt_lary[36];             // level array
+    i64                    timefmt_n;                    // number of elements in array
     orgfile::trace         trace;                        //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     orgfile.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of orgfile.FDb.cmdline (and any base command line)
+// via orgfile_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:orgfile.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -146,6 +141,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:orgfile.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:orgfile.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:orgfile.FDb._db.XrefMaybe
@@ -190,6 +189,9 @@ orgfile::FFilename*  ind_filename_Find(const algo::strptr& key) __attribute__((_
 // Look up row by key and return reference. Throw exception if not found
 // func:orgfile.FDb.ind_filename.FindX
 orgfile::FFilename&  ind_filename_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:orgfile.FDb.ind_filename.GetOrCreate
+orgfile::FFilename*  ind_filename_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:orgfile.FDb.ind_filename.N
 inline i32           ind_filename_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -227,7 +229,7 @@ inline orgfile::FFilehash* filehash_Find(u64 t) __attribute__((__warn_unused_res
 inline orgfile::FFilehash* filehash_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:orgfile.FDb.filehash.N
-inline i32           filehash_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           filehash_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:orgfile.FDb.filehash.RemoveAll
 void                 filehash_RemoveAll() __attribute__((nothrow));
@@ -295,7 +297,7 @@ inline orgfile::FTimefmt* timefmt_Find(u64 t) __attribute__((__warn_unused_resul
 inline orgfile::FTimefmt* timefmt_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:orgfile.FDb.timefmt.N
-inline i32           timefmt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           timefmt_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:orgfile.FDb.timefmt.RemoveAll
 void                 timefmt_RemoveAll() __attribute__((nothrow));
@@ -350,8 +352,8 @@ struct FFilehash { // orgfile.FFilehash
     u32                    ind_filehash_hashval;   // hash value
     algo::Smallstr40       filehash;               //
     orgfile::FFilename**   c_filename_elems;       // array of pointers
-    u32                    c_filename_n;           // array of pointers
-    u32                    c_filename_max;         // capacity of allocated array
+    u64                    c_filename_n;           // current size
+    u64                    c_filename_max;         // capacity of allocated array
     // reftype Ptrary of orgfile.FFilehash.c_filename prohibits copy
     // func:orgfile.FFilehash..AssignOp
     inline orgfile::FFilehash& operator =(const orgfile::FFilehash &rhs) = delete;
@@ -368,18 +370,17 @@ private:
     friend void                 filehash_RemoveAll() __attribute__((nothrow));
     friend void                 filehash_RemoveLast() __attribute__((nothrow));
 };
-
 // Return true if index is empty
 // func:orgfile.FFilehash.c_filename.EmptyQ
 inline bool          c_filename_EmptyQ(orgfile::FFilehash& filehash) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:orgfile.FFilehash.c_filename.Find
-inline orgfile::FFilename* c_filename_Find(orgfile::FFilehash& filehash, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline orgfile::FFilename* c_filename_Find(orgfile::FFilehash& filehash, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:orgfile.FFilehash.c_filename.Getary
 inline algo::aryptr<orgfile::FFilename*> c_filename_Getary(orgfile::FFilehash& filehash) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:orgfile.FFilehash.c_filename.Insert
 void                 c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -389,7 +390,7 @@ void                 c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FF
 bool                 c_filename_InsertMaybe(orgfile::FFilehash& filehash, orgfile::FFilename& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:orgfile.FFilehash.c_filename.N
-inline i32           c_filename_N(const orgfile::FFilehash& filehash) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_filename_N(const orgfile::FFilehash& filehash) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:orgfile.FFilehash.c_filename.Remove
 void                 c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename& row) __attribute__((nothrow));
@@ -398,10 +399,10 @@ void                 c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FF
 inline void          c_filename_RemoveAll(orgfile::FFilehash& filehash) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:orgfile.FFilehash.c_filename.Reserve
-void                 c_filename_Reserve(orgfile::FFilehash& filehash, u32 n) __attribute__((nothrow));
+void                 c_filename_Reserve(orgfile::FFilehash& filehash, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:orgfile.FFilehash.c_filename.qFind
-inline orgfile::FFilename& c_filename_qFind(orgfile::FFilehash& filehash, u32 idx) __attribute__((nothrow));
+inline orgfile::FFilename& c_filename_qFind(orgfile::FFilehash& filehash, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:orgfile.FFilehash.c_filename.InAryQ
 inline bool          filehash_c_filename_InAryQ(orgfile::FFilename& row) __attribute__((nothrow));
@@ -453,7 +454,6 @@ private:
     friend orgfile::FFilename*  filename_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 filename_Delete(orgfile::FFilename &row) __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:orgfile.FFilename..Init
 inline void          FFilename_Init(orgfile::FFilename& filename);
@@ -466,7 +466,7 @@ void                 FFilename_Uninit(orgfile::FFilename& filename) __attribute_
 struct FTimefmt { // orgfile.FTimefmt
     algo::Smallstr100   timefmt;   //
     bool                dirname;   //   false
-    algo::Comment       comment;   //
+    algo::cstring       comment;   //
 private:
     // func:orgfile.FTimefmt..Ctor
     inline               FTimefmt() __attribute__((nothrow));
@@ -475,7 +475,6 @@ private:
     friend void                 timefmt_RemoveAll() __attribute__((nothrow));
     friend void                 timefmt_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:orgfile.FTimefmt.base.CopyOut
 void                 timefmt_CopyOut(orgfile::FTimefmt &row, dev::Timefmt &out) __attribute__((nothrow));
@@ -501,7 +500,6 @@ struct FieldId { // orgfile.FieldId: Field read helper
     inline               FieldId(orgfile_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:orgfile.FieldId.value.GetEnum
 inline orgfile_FieldIdEnum value_GetEnum(const orgfile::FieldId& parent) __attribute__((nothrow));
@@ -539,7 +537,7 @@ inline void          FieldId_Init(orgfile::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:orgfile.FieldId.String  printfmt:Raw
 // func:orgfile.FieldId..Print
-void                 FieldId_Print(orgfile::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(orgfile::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- orgfile.TableId
 struct TableId { // orgfile.TableId: Index of table in this namespace
@@ -553,7 +551,6 @@ struct TableId { // orgfile.TableId: Index of table in this namespace
     // func:orgfile.TableId..EnumCtor
     inline               TableId(orgfile_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:orgfile.TableId.value.GetEnum
 inline orgfile_TableIdEnum value_GetEnum(const orgfile::TableId& parent) __attribute__((nothrow));
@@ -591,7 +588,7 @@ inline void          TableId_Init(orgfile::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:orgfile.TableId.String  printfmt:Raw
 // func:orgfile.TableId..Print
-void                 TableId_Print(orgfile::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(orgfile::TableId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- orgfile.dedup
 struct dedup { // orgfile.dedup
@@ -601,7 +598,6 @@ struct dedup { // orgfile.dedup
     // func:orgfile.dedup..Ctor
     inline               dedup() __attribute__((nothrow));
 };
-
 // func:orgfile.dedup..ReadFieldMaybe
 bool                 dedup_ReadFieldMaybe(orgfile::dedup& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of orgfile::dedup from an ascii string.
@@ -621,7 +617,6 @@ struct move { // orgfile.move
     // func:orgfile.move..Ctor
     inline               move() __attribute__((nothrow));
 };
-
 // func:orgfile.move..ReadFieldMaybe
 bool                 move_ReadFieldMaybe(orgfile::move& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of orgfile::move from an ascii string.
@@ -654,8 +649,8 @@ struct _db_timefmt_curs {// cursor
 struct filehash_c_filename_curs {// fcurs:orgfile.FFilehash.c_filename/curs
     typedef orgfile::FFilename ChildType;
     orgfile::FFilename** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     filehash_c_filename_curs() { elems=NULL; n_elems=0; index=0; }
 };
 

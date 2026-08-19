@@ -69,6 +69,12 @@ void amc::tfunc_Ptr_InsertMaybe() {
         Ins(&R, ins.body, "bool retval = (ptr == NULL) | (ptr == &row);");
         Ins(&R, ins.body, "if (retval) {");
         Ins(&R, ins.body, "    $parname.$name = &row;");
+        if (amc::FindFfunc(field, amcdb_cbtype_OnXref, true)) {
+            // only fire on transition NULL -> &row
+            Ins(&R, ins.body, "    if (ptr == NULL) {");
+            Ins(&R, ins.body, "        $name_OnXref($pararg, row); // dmmeta.ffunc:$field/OnXref");
+            Ins(&R, ins.body, "    }");
+        }
         Ins(&R, ins.body, "}");
         Ins(&R, ins.body, "return retval;");
     }
@@ -85,6 +91,9 @@ void amc::tfunc_Ptr_Remove() {
         Ins(&R, remove.body, "$Cpptype *ptr = $getfld;");
         Ins(&R, remove.body, "if (LIKELY(ptr == &row)) {");
         Ins(&R, remove.body, "    $parname.$name = NULL;");
+        if (amc::FindFfunc(field, amcdb_cbtype_OnUnref, true)) {
+            Ins(&R, remove.body, "    $name_OnUnref($pararg, row); // dmmeta.ffunc:$field/OnUnref");
+        }
         Ins(&R, remove.body, "}");
     }
 

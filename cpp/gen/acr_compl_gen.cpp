@@ -43,28 +43,6 @@ lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 acr_compl::FDb   acr_compl::_db;    // dependency found via dev.targdep
 
-namespace acr_compl {
-const char *acr_compl_help =
-"acr_compl: ACR shell auto-complete for all targets\n"
-"Usage: acr_compl [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -data       string  \"data\"  Source for completions (dir or file or -)\n"
-"    -schema     string  \"data\"  Source for schema information\n"
-"    -line       string  \"\"      Simulates COMP_LINE (debug)\n"
-"    -point      string  \"\"      Simulates COMP_POINT (debug). default: whole line\n"
-"    -type       string  \"9\"     Simulates COMP_TYPE (debug)\n"
-"    -install                    Produce bash commands to install the handler\n"
-"    -debug_log  string  \"\"      Log file for debug information, overrides ACR_COMPL_DEBUG_LOG\n"
-"    -check                      Check command line validity\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace acr_compl
 acr_compl::_db_bh_completion_curs::~_db_bh_completion_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
 
@@ -94,18 +72,22 @@ namespace acr_compl { // gen:ns_print_proto
     inline static bool   bh_completion_ElemLt(acr_compl::FCompletion &a, acr_compl::FCompletion &b) __attribute__((nothrow));
     // func:acr_compl.FDb.bh_completion_curs.Add
     static void          _db_bh_completion_curs_Add(_db_bh_completion_curs &curs, acr_compl::FCompletion& row);
-    // func:acr_compl.FDb.ns.InputMaybe
-    static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
     // func:acr_compl.FDb.fconst.InputMaybe
     static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
-    // func:acr_compl.FDb.fcmdline.InputMaybe
-    static bool          fcmdline_InputMaybe(dmmeta::Fcmdline &elem) __attribute__((nothrow));
     // func:acr_compl.FDb.fflag.InputMaybe
     static bool          fflag_InputMaybe(dmmeta::Fflag &elem) __attribute__((nothrow));
     // func:acr_compl.FDb.argvtype.InputMaybe
     static bool          argvtype_InputMaybe(dmmeta::Argvtype &elem) __attribute__((nothrow));
     // func:acr_compl.FDb.falias.InputMaybe
     static bool          falias_InputMaybe(dmmeta::Falias &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.finsertwhen.InputMaybe
+    static bool          finsertwhen_InputMaybe(dmmeta::Finsertwhen &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.substr.InputMaybe
+    static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.ccmdline.InputMaybe
+    static bool          ccmdline_InputMaybe(dmmeta::Ccmdline &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.floadtuples.InputMaybe
+    static bool          floadtuples_InputMaybe(dmmeta::Floadtuples &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:acr_compl.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -300,7 +282,7 @@ void acr_compl::Completion_Print(acr_compl::Completion& row, algo::cstring& str)
 // Copy fields out of row
 void acr_compl::anonfld_CopyOut(acr_compl::FAnonfld &row, dmmeta::Anonfld &out) {
     out.field = row.field;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr_compl.FAnonfld.msghdr.CopyIn
@@ -326,10 +308,10 @@ void acr_compl::FAnonfld_Print(acr_compl::FAnonfld& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_compl.FAnonfld";
 
-    algo::Smallstr100_Print(row.field, temp);
+    algo::Smallstr150_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
@@ -338,7 +320,7 @@ void acr_compl::FAnonfld_Print(acr_compl::FAnonfld& row, algo::cstring& str) {
 void acr_compl::argvtype_CopyOut(acr_compl::FArgvtype &row, dmmeta::Argvtype &out) {
     out.ctype = row.ctype;
     out.argvtype = row.argvtype;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr_compl.FArgvtype.base.CopyIn
@@ -356,6 +338,30 @@ void acr_compl::FArgvtype_Uninit(acr_compl::FArgvtype& argvtype) {
     if (p_ctype)  {
         c_argvtype_Remove(*p_ctype, row);// remove argvtype from index c_argvtype
     }
+}
+
+// --- acr_compl.FCcmdline.base.CopyOut
+// Copy fields out of row
+void acr_compl::ccmdline_CopyOut(acr_compl::FCcmdline &row, dmmeta::Ccmdline &out) {
+    out.ctype = row.ctype;
+    out.read = row.read;
+    out.basecmdline = row.basecmdline;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- acr_compl.FCcmdline.base.CopyIn
+// Copy fields in to row
+void acr_compl::ccmdline_CopyIn(acr_compl::FCcmdline &row, dmmeta::Ccmdline &in) {
+    row.ctype = in.ctype;
+    row.read = in.read;
+    row.basecmdline = in.basecmdline;
+    row.comment = in.comment;
+}
+
+// --- acr_compl.FCmd..Uninit
+void acr_compl::FCmd_Uninit(acr_compl::FCmd& cmd) {
+    acr_compl::FCmd &row = cmd; (void)row;
+    ind_cmd_Remove(row); // remove cmd from index ind_cmd
 }
 
 // --- acr_compl.FCompletion.msghdr.CopyOut
@@ -446,7 +452,7 @@ void acr_compl::FCompletion_Print(acr_compl::FCompletion& row, algo::cstring& st
 // Copy fields out of row
 void acr_compl::ctype_CopyOut(acr_compl::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr_compl.FCtype.msghdr.CopyIn
@@ -457,24 +463,22 @@ void acr_compl::ctype_CopyIn(acr_compl::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- acr_compl.FCtype.ns.Get
-algo::Smallstr16 acr_compl::ns_Get(acr_compl::FCtype& ctype) {
-    algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
-    return ret;
+algo::strptr acr_compl::ns_Get(acr_compl::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RL");
 }
 
 // --- acr_compl.FCtype.name.Get
-algo::Smallstr100 acr_compl::name_Get(acr_compl::FCtype& ctype) {
-    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
-    return ret;
+algo::strptr acr_compl::name_Get(acr_compl::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RR");
 }
 
 // --- acr_compl.FCtype.c_field.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr_compl::c_field_Insert(acr_compl::FCtype& ctype, acr_compl::FField& row) {
     if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n++;
+        u64 n  = ctype.c_field_n++;
         ctype.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
@@ -493,15 +497,15 @@ bool acr_compl::c_field_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FField&
 // --- acr_compl.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_compl::c_field_Remove(acr_compl::FCtype& ctype, acr_compl::FField& row) {
-    int n = ctype.c_field_n;
+    i64 n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
         acr_compl::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             acr_compl::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(acr_compl::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ctype.c_field_n = n - 1;
@@ -513,12 +517,12 @@ void acr_compl::c_field_Remove(acr_compl::FCtype& ctype, acr_compl::FField& row)
 
 // --- acr_compl.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void acr_compl::c_field_Reserve(acr_compl::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_field_max;
+void acr_compl::c_field_Reserve(acr_compl::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_field_max;
     if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr_compl::FField*);
-        u32 new_size = new_max * sizeof(acr_compl::FField*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+        u64 old_size = old_max * sizeof(acr_compl::FField*);
+        u64 new_size = new_max * sizeof(acr_compl::FField*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr_compl.out_of_memory  field:acr_compl.FCtype.c_field");
@@ -528,10 +532,73 @@ void acr_compl::c_field_Reserve(acr_compl::FCtype& ctype, u32 n) {
     }
 }
 
+// --- acr_compl.FCtype.c_floadtuples.Insert
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+void acr_compl::c_floadtuples_Insert(acr_compl::FCtype& ctype, acr_compl::FFloadtuples& row) {
+    if (!row.ctype_c_floadtuples_in_ary) {
+        c_floadtuples_Reserve(ctype, 1);
+        u64 n  = ctype.c_floadtuples_n++;
+        ctype.c_floadtuples_elems[n] = &row;
+        row.ctype_c_floadtuples_in_ary = true;
+    }
+}
+
+// --- acr_compl.FCtype.c_floadtuples.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool acr_compl::c_floadtuples_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FFloadtuples& row) {
+    bool retval = !ctype_c_floadtuples_InAryQ(row);
+    c_floadtuples_Insert(ctype,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- acr_compl.FCtype.c_floadtuples.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void acr_compl::c_floadtuples_Remove(acr_compl::FCtype& ctype, acr_compl::FFloadtuples& row) {
+    i64 n = ctype.c_floadtuples_n;
+    if (bool_Update(row.ctype_c_floadtuples_in_ary,false)) {
+        acr_compl::FFloadtuples* *elems = ctype.c_floadtuples_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (i64 i = n-1; i>=0; i--) {
+            acr_compl::FFloadtuples* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                i64 j = i + 1;
+                size_t nbytes = sizeof(acr_compl::FFloadtuples*) * (n - j);
+                memmove(elems + i, elems + j, nbytes);
+                ctype.c_floadtuples_n = n - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- acr_compl.FCtype.c_floadtuples.Reserve
+// Reserve space in index for N more elements;
+void acr_compl::c_floadtuples_Reserve(acr_compl::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_floadtuples_max;
+    if (UNLIKELY(ctype.c_floadtuples_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_floadtuples_n + n), 4);
+        u64 old_size = old_max * sizeof(acr_compl::FFloadtuples*);
+        u64 new_size = new_max * sizeof(acr_compl::FFloadtuples*);
+        void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_floadtuples_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_compl.out_of_memory  field:acr_compl.FCtype.c_floadtuples");
+        }
+        ctype.c_floadtuples_elems = (acr_compl::FFloadtuples**)new_mem;
+        ctype.c_floadtuples_max = new_max;
+    }
+}
+
 // --- acr_compl.FCtype..Uninit
 void acr_compl::FCtype_Uninit(acr_compl::FCtype& ctype) {
     acr_compl::FCtype &row = ctype; (void)row;
     ind_ctype_Remove(row); // remove ctype from index ind_ctype
+
+    // acr_compl.FCtype.c_floadtuples.Uninit (Ptrary)  //tuple sources this command loads at startup
+    algo_lib::malloc_FreeMem(ctype.c_floadtuples_elems, sizeof(acr_compl::FFloadtuples*)*ctype.c_floadtuples_max); // (acr_compl.FCtype.c_floadtuples)
 
     // acr_compl.FCtype.c_field.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(ctype.c_field_elems, sizeof(acr_compl::FField*)*ctype.c_field_max); // (acr_compl.FCtype.c_field)
@@ -547,7 +614,7 @@ void acr_compl::FCtype_Print(acr_compl::FCtype& row, algo::cstring& str) {
     algo::Smallstr100_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
     u64_PrintHex(u64(row.c_ssimfile), temp, 8, true);
@@ -567,99 +634,16 @@ void acr_compl::trace_Print(acr_compl::trace& row, algo::cstring& str) {
 }
 
 // --- acr_compl.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     acr_compl.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of acr_compl.FDb.cmdline (and any base command line)
+// via acr_compl_ReadArgv; then apply -help/-version and load floadtuples input.
 void acr_compl::ReadArgv() {
     command::acr_compl &cmd = acr_compl::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::acr_compl_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"acr_compl: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "acr_compl: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::acr_compl_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"acr_compl: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::acr_compl_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -682,15 +666,13 @@ void acr_compl::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
-        prlog(acr_compl_help);
+        prlog(command::acr_compl_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -717,7 +699,13 @@ void acr_compl::Step() {
 // --- acr_compl.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void acr_compl::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("acr_compl", acr_compl::InsertStrptrMaybe, NULL, acr_compl::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "acr_compl";
+    row.InsertStrptrMaybe  = acr_compl::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = acr_compl::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = acr_compl::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "acr_compl.trace";
@@ -731,7 +719,7 @@ static void acr_compl::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_compl.Input'  signature:'af49159b85d99a9b207d2eacdc5453c1f73d8e4b'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_compl.Input'  signature:'01ef0d9911f9bad5e527ff119c1174f88a3559b0'");
 }
 
 // --- acr_compl.FDb._db.InsertStrptrMaybe
@@ -770,24 +758,10 @@ bool acr_compl::InsertStrptrMaybe(algo::strptr str) {
             retval = true; // finput strict:N
             break;
         }
-        case acr_compl_TableId_dmmeta_Ns: { // finput:acr_compl.FDb.ns
-            dmmeta::Ns elem;
-            retval = dmmeta::Ns_ReadStrptrMaybe(elem, str);
-            retval = retval && ns_InputMaybe(elem);
-            retval = true; // finput strict:N
-            break;
-        }
         case acr_compl_TableId_dmmeta_Fconst: { // finput:acr_compl.FDb.fconst
             dmmeta::Fconst elem;
             retval = dmmeta::Fconst_ReadStrptrMaybe(elem, str);
             retval = retval && fconst_InputMaybe(elem);
-            retval = true; // finput strict:N
-            break;
-        }
-        case acr_compl_TableId_dmmeta_Fcmdline: { // finput:acr_compl.FDb.fcmdline
-            dmmeta::Fcmdline elem;
-            retval = dmmeta::Fcmdline_ReadStrptrMaybe(elem, str);
-            retval = retval && fcmdline_InputMaybe(elem);
             retval = true; // finput strict:N
             break;
         }
@@ -812,6 +786,30 @@ bool acr_compl::InsertStrptrMaybe(algo::strptr str) {
             retval = true; // finput strict:N
             break;
         }
+        case acr_compl_TableId_dmmeta_Finsertwhen: { // finput:acr_compl.FDb.finsertwhen
+            dmmeta::Finsertwhen elem;
+            retval = dmmeta::Finsertwhen_ReadStrptrMaybe(elem, str);
+            retval = retval && finsertwhen_InputMaybe(elem);
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Substr: { // finput:acr_compl.FDb.substr
+            dmmeta::Substr elem;
+            retval = dmmeta::Substr_ReadStrptrMaybe(elem, str);
+            retval = retval && substr_InputMaybe(elem);
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Ccmdline: { // finput:acr_compl.FDb.ccmdline
+            dmmeta::Ccmdline elem;
+            retval = dmmeta::Ccmdline_ReadStrptrMaybe(elem, str);
+            retval = retval && ccmdline_InputMaybe(elem);
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Floadtuples: { // finput:acr_compl.FDb.floadtuples
+            dmmeta::Floadtuples elem;
+            retval = dmmeta::Floadtuples_ReadStrptrMaybe(elem, str);
+            retval = retval && floadtuples_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -830,15 +828,17 @@ bool acr_compl::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = acr_compl::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.floadtuples"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finsertwhen"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fflag"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
-        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmdline"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.falias"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ccmdline"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.argvtype"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.anonfld"),recursive);
     } else {
@@ -903,6 +903,93 @@ void acr_compl::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- acr_compl.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool acr_compl::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    acr_compl::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case acr_compl_TableId_dmmeta_Ctype: { // finput:acr_compl.FDb.ctype
+            // finput acr_compl.FDb.ctype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Field: { // finput:acr_compl.FDb.field
+            // finput acr_compl.FDb.field: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Ssimfile: { // finput:acr_compl.FDb.ssimfile
+            // finput acr_compl.FDb.ssimfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Anonfld: { // finput:acr_compl.FDb.anonfld
+            // finput acr_compl.FDb.anonfld: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Fconst: { // finput:acr_compl.FDb.fconst
+            // finput acr_compl.FDb.fconst: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Fflag: { // finput:acr_compl.FDb.fflag
+            // finput acr_compl.FDb.fflag: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Argvtype: { // finput:acr_compl.FDb.argvtype
+            // finput acr_compl.FDb.argvtype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Falias: { // finput:acr_compl.FDb.falias
+            // finput acr_compl.FDb.falias: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Finsertwhen: { // finput:acr_compl.FDb.finsertwhen
+            // finput acr_compl.FDb.finsertwhen: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Substr: { // finput:acr_compl.FDb.substr
+            // finput acr_compl.FDb.substr: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Ccmdline: { // finput:acr_compl.FDb.ccmdline
+            // finput acr_compl.FDb.ccmdline: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Floadtuples: { // finput:acr_compl.FDb.floadtuples
+            // finput acr_compl.FDb.floadtuples: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- acr_compl.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -920,10 +1007,10 @@ algo::aryptr<algo::cstring> acr_compl::word_Addary(algo::aryptr<algo::cstring> r
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr_compl.tary_alias  field:acr_compl.FDb.word  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     word_Reserve(nnew); // reserve space
-    int at = _db.word_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = _db.word_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (_db.word_elems + at + i) algo::cstring(rhs[i]);
         _db.word_n++;
     }
@@ -935,8 +1022,8 @@ algo::aryptr<algo::cstring> acr_compl::word_Addary(algo::aryptr<algo::cstring> r
 // The new element is initialized to a default value
 algo::cstring& acr_compl::word_Alloc() {
     word_Reserve(1);
-    int n  = _db.word_n;
-    int at = n;
+    i64 n  = _db.word_n;
+    i64 at = n;
     algo::cstring *elems = _db.word_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
     _db.word_n = n+1;
@@ -946,9 +1033,9 @@ algo::cstring& acr_compl::word_Alloc() {
 // --- acr_compl.FDb.word.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& acr_compl::word_AllocAt(int at) {
+algo::cstring& acr_compl::word_AllocAt(i64 at) {
     word_Reserve(1);
-    int n  = _db.word_n;
+    i64 n  = _db.word_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("acr_compl.bad_alloc_at  field:acr_compl.FDb.word  comment:'index out of range'");
     }
@@ -961,12 +1048,12 @@ algo::cstring& acr_compl::word_AllocAt(int at) {
 
 // --- acr_compl.FDb.word.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_compl::word_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> acr_compl::word_AllocN(i64 n_elems) {
     word_Reserve(n_elems);
-    int old_n  = _db.word_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.word_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.word_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
     _db.word_n = new_n;
@@ -977,15 +1064,15 @@ algo::aryptr<algo::cstring> acr_compl::word_AllocN(int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> acr_compl::word_AllocNAt(int n_elems, int at) {
+algo::aryptr<algo::cstring> acr_compl::word_AllocNAt(i64 n_elems, i64 at) {
     word_Reserve(n_elems);
-    int n  = _db.word_n;
+    i64 n  = _db.word_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("acr_compl.bad_alloc_n_at  field:acr_compl.FDb.word  comment:'index out of range'");
     }
     algo::cstring *elems = _db.word_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
     _db.word_n = n+n_elems;
@@ -994,8 +1081,8 @@ algo::aryptr<algo::cstring> acr_compl::word_AllocNAt(int n_elems, int at) {
 
 // --- acr_compl.FDb.word.Remove
 // Remove item by index. If index outside of range, do nothing.
-void acr_compl::word_Remove(u32 i) {
-    u32 lim = _db.word_n;
+void acr_compl::word_Remove(u64 i) {
+    u64 lim = _db.word_n;
     algo::cstring *elems = _db.word_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
@@ -1006,12 +1093,11 @@ void acr_compl::word_Remove(u32 i) {
 
 // --- acr_compl.FDb.word.RemoveAll
 void acr_compl::word_RemoveAll() {
-    u32 n = _db.word_n;
-    while (n > 0) {
-        n -= 1;
-        _db.word_elems[n].~cstring();
-        _db.word_n = n;
+    u64 n = _db.word_n;
+    for (u64 i=0; i<n; i++) {
+        _db.word_elems[i].~cstring();
     }
+    _db.word_n = 0;
 }
 
 // --- acr_compl.FDb.word.RemoveLast
@@ -1027,10 +1113,10 @@ void acr_compl::word_RemoveLast() {
 
 // --- acr_compl.FDb.word.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void acr_compl::word_AbsReserve(int n) {
-    u32 old_max  = _db.word_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void acr_compl::word_AbsReserve(i64 n) {
+    u64 old_max  = _db.word_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.word_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr_compl.tary_nomem  field:acr_compl.FDb.word  comment:'out of memory'");
@@ -1042,12 +1128,12 @@ void acr_compl::word_AbsReserve(int n) {
 
 // --- acr_compl.FDb.word.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_compl::word_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> acr_compl::word_AllocNVal(i64 n_elems, const algo::cstring& val) {
     word_Reserve(n_elems);
-    int old_n  = _db.word_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.word_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.word_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
     _db.word_n = new_n;
@@ -1071,25 +1157,43 @@ bool acr_compl::word_ReadStrptrMaybe(algo::strptr in_str) {
 // --- acr_compl.FDb.word.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void acr_compl::word_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+void acr_compl::word_Insary(algo::aryptr<algo::cstring> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.word_elems && rhs.elems < _db.word_elems + _db.word_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr_compl.tary_alias  field:acr_compl.FDb.word  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(_db.word_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(_db.word_n+1))) {
         FatalErrorExit("acr_compl.bad_insary  field:acr_compl.FDb.word  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = _db.word_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = _db.word_n - at;
     word_Reserve(nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (_db.word_elems + at + nnew + i) algo::cstring(_db.word_elems[at + i]);
         _db.word_elems[at + i].~cstring(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (_db.word_elems + at + i) algo::cstring(rhs[i]);
     }
     _db.word_n += nnew;
+}
+
+// --- acr_compl.FDb.word.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void acr_compl::word_RemRegion(i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, _db.word_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            _db.word_elems[i].~cstring();
+        }
+        memmove(_db.word_elems+beg, _db.word_elems+end, sizeof(algo::cstring) * (_db.word_n-end));
+        _db.word_n -= n;
+    }
 }
 
 // --- acr_compl.FDb.ctype.Alloc
@@ -1138,7 +1242,7 @@ void* acr_compl::ctype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FCtype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ctype_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FCtype*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FCtype) * (u64(1)<<bsr));
@@ -1147,7 +1251,7 @@ void* acr_compl::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = i32(new_nelems);
+        _db.ctype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1160,7 +1264,7 @@ void acr_compl::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(u64(n)).~FCtype();
-        _db.ctype_n = i32(n);
+        _db.ctype_n = i64(n);
     }
 }
 
@@ -1351,7 +1455,7 @@ void* acr_compl::field_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FField*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.field_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FField*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FField) * (u64(1)<<bsr));
@@ -1360,7 +1464,7 @@ void* acr_compl::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = i32(new_nelems);
+        _db.field_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1373,7 +1477,7 @@ void acr_compl::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = i32(n);
+        _db.field_n = i64(n);
     }
 }
 
@@ -1427,9 +1531,25 @@ bool acr_compl::field_XrefMaybe(acr_compl::FField &row) {
 // --- acr_compl.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 acr_compl::FField* acr_compl::ind_field_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     acr_compl::FField *ret = _db.ind_field_buckets_elems[index];
     for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.ind_field.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_compl::FField* acr_compl::ind_field_GetOrCreate(const algo::strptr& key) {
+    acr_compl::FField* ret = ind_field_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &field_Alloc();
+        (*ret).field = key;
+        bool good = field_XrefMaybe(*ret);
+        if (!good) {
+            field_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
     }
     return ret;
 }
@@ -1439,7 +1559,7 @@ acr_compl::FField* acr_compl::ind_field_Find(const algo::strptr& key) {
 bool acr_compl::ind_field_InsertMaybe(acr_compl::FField& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (acr_compl::FField*)-1)) {// check if in hash already
-        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        row.ind_field_hashval = algo::Smallstr150_Hash(0, row.field);
         ind_field_Reserve(1);
         u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         acr_compl::FField* *prev = &_db.ind_field_buckets_elems[index];
@@ -1569,7 +1689,7 @@ void* acr_compl::ssimfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FSsimfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ssimfile_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FSsimfile*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FSsimfile) * (u64(1)<<bsr));
@@ -1578,7 +1698,7 @@ void* acr_compl::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = i32(new_nelems);
+        _db.ssimfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1591,7 +1711,7 @@ void acr_compl::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = i32(n);
+        _db.ssimfile_n = i64(n);
     }
 }
 
@@ -1644,6 +1764,22 @@ acr_compl::FSsimfile* acr_compl::ind_ssimfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
     acr_compl::FSsimfile *ret = _db.ind_ssimfile_buckets_elems[index];
     for (; ret && !((*ret).ssimfile == key); ret = ret->ind_ssimfile_next) {
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.ind_ssimfile.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_compl::FSsimfile* acr_compl::ind_ssimfile_GetOrCreate(const algo::strptr& key) {
+    acr_compl::FSsimfile* ret = ind_ssimfile_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ssimfile_Alloc();
+        (*ret).ssimfile = key;
+        bool good = ssimfile_XrefMaybe(*ret);
+        if (!good) {
+            ssimfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
     }
     return ret;
 }
@@ -1783,7 +1919,7 @@ void* acr_compl::completion_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FCompletion*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.completion_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FCompletion*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FCompletion) * (u64(1)<<bsr));
@@ -1792,7 +1928,7 @@ void* acr_compl::completion_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.completion_n = i32(new_nelems);
+        _db.completion_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1804,7 +1940,7 @@ void acr_compl::completion_RemoveAll() {
     for (u64 n = _db.completion_n; n>0; ) {
         n--;
         completion_qFind(u64(n)).~FCompletion(); // destroy last element
-        _db.completion_n = i32(n);
+        _db.completion_n = i64(n);
     }
 }
 
@@ -1815,7 +1951,7 @@ void acr_compl::completion_RemoveLast() {
     if (n > 0) {
         n -= 1;
         completion_qFind(u64(n)).~FCompletion();
-        _db.completion_n = i32(n);
+        _db.completion_n = i64(n);
     }
 }
 
@@ -1878,7 +2014,7 @@ void* acr_compl::anonfld_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FAnonfld*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.anonfld_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FAnonfld*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FAnonfld) * (u64(1)<<bsr));
@@ -1887,7 +2023,7 @@ void* acr_compl::anonfld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.anonfld_n = i32(new_nelems);
+        _db.anonfld_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1900,7 +2036,7 @@ void acr_compl::anonfld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         anonfld_qFind(u64(n)).~FAnonfld();
-        _db.anonfld_n = i32(n);
+        _db.anonfld_n = i64(n);
     }
 }
 
@@ -2109,113 +2245,6 @@ inline static bool acr_compl::bh_completion_ElemLt(acr_compl::FCompletion &a, ac
     return badness_Lt(a, b);
 }
 
-// --- acr_compl.FDb.ns.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-acr_compl::FNs& acr_compl::ns_Alloc() {
-    acr_compl::FNs* row = ns_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("acr_compl.out_of_mem  field:acr_compl.FDb.ns  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- acr_compl.FDb.ns.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-acr_compl::FNs* acr_compl::ns_AllocMaybe() {
-    acr_compl::FNs *row = (acr_compl::FNs*)ns_AllocMem();
-    if (row) {
-        new (row) acr_compl::FNs; // call constructor
-    }
-    return row;
-}
-
-// --- acr_compl.FDb.ns.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-acr_compl::FNs* acr_compl::ns_InsertMaybe(const dmmeta::Ns &value) {
-    acr_compl::FNs *row = &ns_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    ns_CopyIn(*row,const_cast<dmmeta::Ns&>(value));
-    bool ok = ns_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        ns_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- acr_compl.FDb.ns.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* acr_compl::ns_AllocMem() {
-    u64 new_nelems     = _db.ns_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    acr_compl::FNs*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.ns_lary[bsr];
-        if (!lev) {
-            lev=(acr_compl::FNs*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FNs) * (u64(1)<<bsr));
-            _db.ns_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.ns_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- acr_compl.FDb.ns.RemoveAll
-// Remove all elements from Lary
-void acr_compl::ns_RemoveAll() {
-    for (u64 n = _db.ns_n; n>0; ) {
-        n--;
-        ns_qFind(u64(n)).~FNs(); // destroy last element
-        _db.ns_n = i32(n);
-    }
-}
-
-// --- acr_compl.FDb.ns.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void acr_compl::ns_RemoveLast() {
-    u64 n = _db.ns_n;
-    if (n > 0) {
-        n -= 1;
-        ns_qFind(u64(n)).~FNs();
-        _db.ns_n = i32(n);
-    }
-}
-
-// --- acr_compl.FDb.ns.InputMaybe
-static bool acr_compl::ns_InputMaybe(dmmeta::Ns &elem) {
-    bool retval = true;
-    retval = ns_InsertMaybe(elem) != nullptr;
-    return retval;
-}
-
-// --- acr_compl.FDb.ns.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool acr_compl::ns_XrefMaybe(acr_compl::FNs &row) {
-    bool retval = true;
-    (void)row;
-    // insert ns into index ind_ns
-    if (true) { // user-defined insert condition
-        bool success = ind_ns_InsertMaybe(row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "acr_compl.duplicate_key  xref:acr_compl.FDb.ind_ns"; // check for duplicate key
-            return false;
-        }
-    }
-    return retval;
-}
-
 // --- acr_compl.FDb.fconst.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2262,7 +2291,7 @@ void* acr_compl::fconst_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FFconst*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.fconst_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FFconst*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFconst) * (u64(1)<<bsr));
@@ -2271,7 +2300,7 @@ void* acr_compl::fconst_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fconst_n = i32(new_nelems);
+        _db.fconst_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2283,7 +2312,7 @@ void acr_compl::fconst_RemoveAll() {
     for (u64 n = _db.fconst_n; n>0; ) {
         n--;
         fconst_qFind(u64(n)).~FFconst(); // destroy last element
-        _db.fconst_n = i32(n);
+        _db.fconst_n = i64(n);
     }
 }
 
@@ -2294,7 +2323,7 @@ void acr_compl::fconst_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fconst_qFind(u64(n)).~FFconst();
-        _db.fconst_n = i32(n);
+        _db.fconst_n = i64(n);
     }
 }
 
@@ -2319,136 +2348,6 @@ bool acr_compl::fconst_XrefMaybe(acr_compl::FFconst &row) {
     // insert fconst into index c_fconst
     if (true) { // user-defined insert condition
         c_fconst_Insert(*p_field, row);
-    }
-    return retval;
-}
-
-// --- acr_compl.FDb.fcmdline.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-acr_compl::FFcmdline& acr_compl::fcmdline_Alloc() {
-    acr_compl::FFcmdline* row = fcmdline_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("acr_compl.out_of_mem  field:acr_compl.FDb.fcmdline  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- acr_compl.FDb.fcmdline.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-acr_compl::FFcmdline* acr_compl::fcmdline_AllocMaybe() {
-    acr_compl::FFcmdline *row = (acr_compl::FFcmdline*)fcmdline_AllocMem();
-    if (row) {
-        new (row) acr_compl::FFcmdline; // call constructor
-    }
-    return row;
-}
-
-// --- acr_compl.FDb.fcmdline.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-acr_compl::FFcmdline* acr_compl::fcmdline_InsertMaybe(const dmmeta::Fcmdline &value) {
-    acr_compl::FFcmdline *row = &fcmdline_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    fcmdline_CopyIn(*row,const_cast<dmmeta::Fcmdline&>(value));
-    bool ok = fcmdline_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        fcmdline_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- acr_compl.FDb.fcmdline.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* acr_compl::fcmdline_AllocMem() {
-    u64 new_nelems     = _db.fcmdline_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    acr_compl::FFcmdline*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.fcmdline_lary[bsr];
-        if (!lev) {
-            lev=(acr_compl::FFcmdline*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFcmdline) * (u64(1)<<bsr));
-            _db.fcmdline_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.fcmdline_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- acr_compl.FDb.fcmdline.RemoveAll
-// Remove all elements from Lary
-void acr_compl::fcmdline_RemoveAll() {
-    for (u64 n = _db.fcmdline_n; n>0; ) {
-        n--;
-        fcmdline_qFind(u64(n)).~FFcmdline(); // destroy last element
-        _db.fcmdline_n = i32(n);
-    }
-}
-
-// --- acr_compl.FDb.fcmdline.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void acr_compl::fcmdline_RemoveLast() {
-    u64 n = _db.fcmdline_n;
-    if (n > 0) {
-        n -= 1;
-        fcmdline_qFind(u64(n)).~FFcmdline();
-        _db.fcmdline_n = i32(n);
-    }
-}
-
-// --- acr_compl.FDb.fcmdline.InputMaybe
-static bool acr_compl::fcmdline_InputMaybe(dmmeta::Fcmdline &elem) {
-    bool retval = true;
-    retval = fcmdline_InsertMaybe(elem) != nullptr;
-    return retval;
-}
-
-// --- acr_compl.FDb.fcmdline.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool acr_compl::fcmdline_XrefMaybe(acr_compl::FFcmdline &row) {
-    bool retval = true;
-    (void)row;
-    acr_compl::FField* p_field = acr_compl::ind_field_Find(row.field);
-    if (UNLIKELY(!p_field)) {
-        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_field" << Keyval("key", row.field);
-        return false;
-    }
-    // fcmdline: save pointer to field
-    if (true) { // user-defined insert condition
-        row.p_field = p_field;
-    }
-    acr_compl::FField* p_basecmdline = acr_compl::ind_field_Find(row.basecmdline);
-    if (UNLIKELY(!p_basecmdline)) {
-        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_field" << Keyval("key", row.basecmdline);
-        return false;
-    }
-    // fcmdline: save pointer to basecmdline
-    if (true) { // user-defined insert condition
-        row.p_basecmdline = p_basecmdline;
-    }
-    acr_compl::FNs* p_ns = acr_compl::ind_ns_Find(ns_Get(row));
-    if (UNLIKELY(!p_ns)) {
-        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_ns" << Keyval("key", ns_Get(row));
-        return false;
-    }
-    // insert fcmdline into index c_fcmdline
-    if (true) { // user-defined insert condition
-        bool success = c_fcmdline_InsertMaybe(*p_ns, row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "acr_compl.duplicate_key  xref:acr_compl.FNs.c_fcmdline"; // check for duplicate key
-            return false;
-        }
     }
     return retval;
 }
@@ -2499,7 +2398,7 @@ void* acr_compl::fflag_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FFflag*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.fflag_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FFflag*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFflag) * (u64(1)<<bsr));
@@ -2508,7 +2407,7 @@ void* acr_compl::fflag_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fflag_n = i32(new_nelems);
+        _db.fflag_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2520,7 +2419,7 @@ void acr_compl::fflag_RemoveAll() {
     for (u64 n = _db.fflag_n; n>0; ) {
         n--;
         fflag_qFind(u64(n)).~FFflag(); // destroy last element
-        _db.fflag_n = i32(n);
+        _db.fflag_n = i64(n);
     }
 }
 
@@ -2531,7 +2430,7 @@ void acr_compl::fflag_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fflag_qFind(u64(n)).~FFflag();
-        _db.fflag_n = i32(n);
+        _db.fflag_n = i64(n);
     }
 }
 
@@ -2637,126 +2536,28 @@ acr_compl::FField* acr_compl::zd_cmd_field_RemoveFirst() {
     return row;
 }
 
-// --- acr_compl.FDb.ind_ns.Find
-// Find row by key. Return NULL if not found.
-acr_compl::FNs* acr_compl::ind_ns_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
-    acr_compl::FNs *ret = _db.ind_ns_buckets_elems[index];
-    for (; ret && !((*ret).ns == key); ret = ret->ind_ns_next) {
-    }
-    return ret;
-}
-
-// --- acr_compl.FDb.ind_ns.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-acr_compl::FNs& acr_compl::ind_ns_GetOrCreate(const algo::strptr& key) {
-    acr_compl::FNs* ret = ind_ns_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &ns_Alloc();
-        (*ret).ns = key;
-        bool good = ns_XrefMaybe(*ret);
-        if (!good) {
-            ns_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    vrfy(ret, tempstr() << "acr_compl.create_error  table:ind_ns  key:'"<<key<<"'  comment:'bad xref'");
-    return *ret;
-}
-
-// --- acr_compl.FDb.ind_ns.InsertMaybe
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool acr_compl::ind_ns_InsertMaybe(acr_compl::FNs& row) {
-    bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_ns_next == (acr_compl::FNs*)-1)) {// check if in hash already
-        row.ind_ns_hashval = algo::Smallstr16_Hash(0, row.ns);
-        ind_ns_Reserve(1);
-        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
-        acr_compl::FNs* *prev = &_db.ind_ns_buckets_elems[index];
-        do {
-            acr_compl::FNs* ret = *prev;
-            if (!ret) { // exit condition 1: reached the end of the list
-                break;
-            }
-            if ((*ret).ns == row.ns) { // exit condition 2: found matching key
-                retval = false;
-                break;
-            }
-            prev = &ret->ind_ns_next;
-        } while (true);
-        if (retval) {
-            row.ind_ns_next = *prev;
-            _db.ind_ns_n++;
-            *prev = &row;
-        }
-    }
-    return retval;
-}
-
-// --- acr_compl.FDb.ind_ns.Remove
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void acr_compl::ind_ns_Remove(acr_compl::FNs& row) {
-    if (LIKELY(row.ind_ns_next != (acr_compl::FNs*)-1)) {// check if in hash already
-        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
-        acr_compl::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
-        while (acr_compl::FNs *next = *prev) {                          // scan the collision chain for our element
-            if (next == &row) {        // found it?
-                *prev = next->ind_ns_next; // unlink (singly linked list)
-                _db.ind_ns_n--;
-                row.ind_ns_next = (acr_compl::FNs*)-1;// not-in-hash
-                break;
-            }
-            prev = &next->ind_ns_next;
-        }
-    }
-}
-
-// --- acr_compl.FDb.ind_ns.Reserve
-// Reserve enough room in the hash for N more elements. Return success code.
-void acr_compl::ind_ns_Reserve(int n) {
-    ind_ns_AbsReserve(_db.ind_ns_n + n);
-}
-
-// --- acr_compl.FDb.ind_ns.AbsReserve
-// Reserve enough room for exacty N elements. Return success code.
-void acr_compl::ind_ns_AbsReserve(int n) {
-    u32 old_nbuckets = _db.ind_ns_buckets_n;
-    u32 new_nelems   = n;
-    // # of elements has to be roughly equal to the number of buckets
-    if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(acr_compl::FNs*);
-        u32 new_size = new_nbuckets * sizeof(acr_compl::FNs*);
-        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
-        // means new memory will have to be allocated anyway
-        acr_compl::FNs* *new_buckets = (acr_compl::FNs**)algo_lib::malloc_AllocMem(new_size);
-        if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("acr_compl.out_of_memory  field:acr_compl.FDb.ind_ns");
-        }
-        memset(new_buckets, 0, new_size); // clear pointers
-        // rehash all entries
-        for (int i = 0; i < _db.ind_ns_buckets_n; i++) {
-            acr_compl::FNs* elem = _db.ind_ns_buckets_elems[i];
-            while (elem) {
-                acr_compl::FNs &row        = *elem;
-                acr_compl::FNs* next       = row.ind_ns_next;
-                u32 index          = row.ind_ns_hashval & (new_nbuckets-1);
-                row.ind_ns_next     = new_buckets[index];
-                new_buckets[index] = &row;
-                elem               = next;
-            }
-        }
-        // free old array
-        algo_lib::malloc_FreeMem(_db.ind_ns_buckets_elems, old_size);
-        _db.ind_ns_buckets_elems = new_buckets;
-        _db.ind_ns_buckets_n = new_nbuckets;
+// --- acr_compl.FDb.zd_cmd_field.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void acr_compl::zd_cmd_field_InsertBefore(acr_compl::FField& row, acr_compl::FField* before) {
+    if (!zd_cmd_field_InLlistQ(row) && &row != before) {
+        acr_compl::FField* next = before;
+        acr_compl::FField* prev = next ? next->zd_cmd_field_prev : _db.zd_cmd_field_tail;
+        row.zd_cmd_field_next = next;
+        row.zd_cmd_field_prev = prev;
+        acr_compl::FField **prev_link_a = &prev->zd_cmd_field_next;
+        acr_compl::FField **prev_link_b = &_db.zd_cmd_field_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        acr_compl::FField **next_link_a = &next->zd_cmd_field_prev;
+        acr_compl::FField **next_link_b = &_db.zd_cmd_field_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_cmd_field_n++;
     }
 }
 
 // --- acr_compl.FDb.ind_cmd_field_name.Find
 // Find row by key. Return NULL if not found.
 acr_compl::FField* acr_compl::ind_cmd_field_name_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_cmd_field_name_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_cmd_field_name_buckets_n - 1);
     acr_compl::FField *ret = _db.ind_cmd_field_name_buckets_elems[index];
     for (; ret && !(name_Get((*ret)) == key); ret = ret->ind_cmd_field_name_next) {
     }
@@ -2768,7 +2569,7 @@ acr_compl::FField* acr_compl::ind_cmd_field_name_Find(const algo::strptr& key) {
 bool acr_compl::ind_cmd_field_name_InsertMaybe(acr_compl::FField& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cmd_field_name_next == (acr_compl::FField*)-1)) {// check if in hash already
-        row.ind_cmd_field_name_hashval = algo::Smallstr50_Hash(0, name_Get(row));
+        row.ind_cmd_field_name_hashval = algo::Smallstr100_Hash(0, name_Get(row));
         ind_cmd_field_name_Reserve(1);
         u32 index = row.ind_cmd_field_name_hashval & (_db.ind_cmd_field_name_buckets_n - 1);
         acr_compl::FField* *prev = &_db.ind_cmd_field_name_buckets_elems[index];
@@ -2887,7 +2688,7 @@ void* acr_compl::argvtype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FArgvtype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.argvtype_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FArgvtype*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FArgvtype) * (u64(1)<<bsr));
@@ -2896,7 +2697,7 @@ void* acr_compl::argvtype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.argvtype_n = i32(new_nelems);
+        _db.argvtype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2908,7 +2709,7 @@ void acr_compl::argvtype_RemoveAll() {
     for (u64 n = _db.argvtype_n; n>0; ) {
         n--;
         argvtype_qFind(u64(n)).~FArgvtype(); // destroy last element
-        _db.argvtype_n = i32(n);
+        _db.argvtype_n = i64(n);
     }
 }
 
@@ -2919,7 +2720,7 @@ void acr_compl::argvtype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         argvtype_qFind(u64(n)).~FArgvtype();
-        _db.argvtype_n = i32(n);
+        _db.argvtype_n = i64(n);
     }
 }
 
@@ -2999,7 +2800,7 @@ void* acr_compl::falias_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FFalias*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.falias_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FFalias*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFalias) * (u64(1)<<bsr));
@@ -3008,7 +2809,7 @@ void* acr_compl::falias_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.falias_n = i32(new_nelems);
+        _db.falias_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3020,7 +2821,7 @@ void acr_compl::falias_RemoveAll() {
     for (u64 n = _db.falias_n; n>0; ) {
         n--;
         falias_qFind(u64(n)).~FFalias(); // destroy last element
-        _db.falias_n = i32(n);
+        _db.falias_n = i64(n);
     }
 }
 
@@ -3031,7 +2832,7 @@ void acr_compl::falias_RemoveLast() {
     if (n > 0) {
         n -= 1;
         falias_qFind(u64(n)).~FFalias();
-        _db.falias_n = i32(n);
+        _db.falias_n = i64(n);
     }
 }
 
@@ -3114,7 +2915,7 @@ void* acr_compl::complsource_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_compl::FComplsource*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.complsource_lary[bsr];
         if (!lev) {
             lev=(acr_compl::FComplsource*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FComplsource) * (u64(1)<<bsr));
@@ -3123,7 +2924,7 @@ void* acr_compl::complsource_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.complsource_n = i32(new_nelems);
+        _db.complsource_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3135,7 +2936,7 @@ void acr_compl::complsource_RemoveAll() {
     for (u64 n = _db.complsource_n; n>0; ) {
         n--;
         complsource_qFind(u64(n)).~FComplsource(); // destroy last element
-        _db.complsource_n = i32(n);
+        _db.complsource_n = i64(n);
     }
 }
 
@@ -3146,7 +2947,7 @@ void acr_compl::complsource_RemoveLast() {
     if (n > 0) {
         n -= 1;
         complsource_qFind(u64(n)).~FComplsource();
-        _db.complsource_n = i32(n);
+        _db.complsource_n = i64(n);
     }
 }
 
@@ -3157,6 +2958,880 @@ bool acr_compl::complsource_XrefMaybe(acr_compl::FComplsource &row) {
     bool retval = true;
     (void)row;
     return retval;
+}
+
+// --- acr_compl.FDb.finsertwhen.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_compl::FFinsertwhen& acr_compl::finsertwhen_Alloc() {
+    acr_compl::FFinsertwhen* row = finsertwhen_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_compl.out_of_mem  field:acr_compl.FDb.finsertwhen  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_compl.FDb.finsertwhen.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_compl::FFinsertwhen* acr_compl::finsertwhen_AllocMaybe() {
+    acr_compl::FFinsertwhen *row = (acr_compl::FFinsertwhen*)finsertwhen_AllocMem();
+    if (row) {
+        new (row) acr_compl::FFinsertwhen; // call constructor
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.finsertwhen.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_compl::FFinsertwhen* acr_compl::finsertwhen_InsertMaybe(const dmmeta::Finsertwhen &value) {
+    acr_compl::FFinsertwhen *row = &finsertwhen_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    finsertwhen_CopyIn(*row,const_cast<dmmeta::Finsertwhen&>(value));
+    bool ok = finsertwhen_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        finsertwhen_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.finsertwhen.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_compl::finsertwhen_AllocMem() {
+    u64 new_nelems     = _db.finsertwhen_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_compl::FFinsertwhen*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.finsertwhen_lary[bsr];
+        if (!lev) {
+            lev=(acr_compl::FFinsertwhen*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFinsertwhen) * (u64(1)<<bsr));
+            _db.finsertwhen_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.finsertwhen_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.finsertwhen.RemoveAll
+// Remove all elements from Lary
+void acr_compl::finsertwhen_RemoveAll() {
+    for (u64 n = _db.finsertwhen_n; n>0; ) {
+        n--;
+        finsertwhen_qFind(u64(n)).~FFinsertwhen(); // destroy last element
+        _db.finsertwhen_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.finsertwhen.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_compl::finsertwhen_RemoveLast() {
+    u64 n = _db.finsertwhen_n;
+    if (n > 0) {
+        n -= 1;
+        finsertwhen_qFind(u64(n)).~FFinsertwhen();
+        _db.finsertwhen_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.finsertwhen.InputMaybe
+static bool acr_compl::finsertwhen_InputMaybe(dmmeta::Finsertwhen &elem) {
+    bool retval = true;
+    retval = finsertwhen_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_compl.FDb.finsertwhen.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_compl::finsertwhen_XrefMaybe(acr_compl::FFinsertwhen &row) {
+    bool retval = true;
+    (void)row;
+    // insert finsertwhen into index ind_finsertwhen
+    if (true) { // user-defined insert condition
+        bool success = ind_finsertwhen_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_compl.duplicate_key  xref:acr_compl.FDb.ind_finsertwhen"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_compl.FDb.ind_finsertwhen.Find
+// Find row by key. Return NULL if not found.
+acr_compl::FFinsertwhen* acr_compl::ind_finsertwhen_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_finsertwhen_buckets_n - 1);
+    acr_compl::FFinsertwhen *ret = _db.ind_finsertwhen_buckets_elems[index];
+    for (; ret && !((*ret).finsertwhen == key); ret = ret->ind_finsertwhen_next) {
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.ind_finsertwhen.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_compl::FFinsertwhen& acr_compl::ind_finsertwhen_GetOrCreate(const algo::strptr& key) {
+    acr_compl::FFinsertwhen* ret = ind_finsertwhen_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &finsertwhen_Alloc();
+        (*ret).finsertwhen = key;
+        bool good = finsertwhen_XrefMaybe(*ret);
+        if (!good) {
+            finsertwhen_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_compl.create_error  table:ind_finsertwhen  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_compl.FDb.ind_finsertwhen.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_compl::ind_finsertwhen_InsertMaybe(acr_compl::FFinsertwhen& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_finsertwhen_next == (acr_compl::FFinsertwhen*)-1)) {// check if in hash already
+        row.ind_finsertwhen_hashval = algo::Smallstr150_Hash(0, row.finsertwhen);
+        ind_finsertwhen_Reserve(1);
+        u32 index = row.ind_finsertwhen_hashval & (_db.ind_finsertwhen_buckets_n - 1);
+        acr_compl::FFinsertwhen* *prev = &_db.ind_finsertwhen_buckets_elems[index];
+        do {
+            acr_compl::FFinsertwhen* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).finsertwhen == row.finsertwhen) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_finsertwhen_next;
+        } while (true);
+        if (retval) {
+            row.ind_finsertwhen_next = *prev;
+            _db.ind_finsertwhen_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_compl.FDb.ind_finsertwhen.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_compl::ind_finsertwhen_Remove(acr_compl::FFinsertwhen& row) {
+    if (LIKELY(row.ind_finsertwhen_next != (acr_compl::FFinsertwhen*)-1)) {// check if in hash already
+        u32 index = row.ind_finsertwhen_hashval & (_db.ind_finsertwhen_buckets_n - 1);
+        acr_compl::FFinsertwhen* *prev = &_db.ind_finsertwhen_buckets_elems[index]; // addr of pointer to current element
+        while (acr_compl::FFinsertwhen *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_finsertwhen_next; // unlink (singly linked list)
+                _db.ind_finsertwhen_n--;
+                row.ind_finsertwhen_next = (acr_compl::FFinsertwhen*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_finsertwhen_next;
+        }
+    }
+}
+
+// --- acr_compl.FDb.ind_finsertwhen.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_compl::ind_finsertwhen_Reserve(int n) {
+    ind_finsertwhen_AbsReserve(_db.ind_finsertwhen_n + n);
+}
+
+// --- acr_compl.FDb.ind_finsertwhen.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_compl::ind_finsertwhen_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_finsertwhen_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_compl::FFinsertwhen*);
+        u32 new_size = new_nbuckets * sizeof(acr_compl::FFinsertwhen*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_compl::FFinsertwhen* *new_buckets = (acr_compl::FFinsertwhen**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_compl.out_of_memory  field:acr_compl.FDb.ind_finsertwhen");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_finsertwhen_buckets_n; i++) {
+            acr_compl::FFinsertwhen* elem = _db.ind_finsertwhen_buckets_elems[i];
+            while (elem) {
+                acr_compl::FFinsertwhen &row        = *elem;
+                acr_compl::FFinsertwhen* next       = row.ind_finsertwhen_next;
+                u32 index          = row.ind_finsertwhen_hashval & (new_nbuckets-1);
+                row.ind_finsertwhen_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_finsertwhen_buckets_elems, old_size);
+        _db.ind_finsertwhen_buckets_elems = new_buckets;
+        _db.ind_finsertwhen_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_compl.FDb.substr.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_compl::FSubstr& acr_compl::substr_Alloc() {
+    acr_compl::FSubstr* row = substr_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_compl.out_of_mem  field:acr_compl.FDb.substr  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_compl.FDb.substr.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_compl::FSubstr* acr_compl::substr_AllocMaybe() {
+    acr_compl::FSubstr *row = (acr_compl::FSubstr*)substr_AllocMem();
+    if (row) {
+        new (row) acr_compl::FSubstr; // call constructor
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.substr.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_compl::FSubstr* acr_compl::substr_InsertMaybe(const dmmeta::Substr &value) {
+    acr_compl::FSubstr *row = &substr_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    substr_CopyIn(*row,const_cast<dmmeta::Substr&>(value));
+    bool ok = substr_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        substr_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.substr.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_compl::substr_AllocMem() {
+    u64 new_nelems     = _db.substr_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_compl::FSubstr*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.substr_lary[bsr];
+        if (!lev) {
+            lev=(acr_compl::FSubstr*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FSubstr) * (u64(1)<<bsr));
+            _db.substr_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.substr_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.substr.RemoveAll
+// Remove all elements from Lary
+void acr_compl::substr_RemoveAll() {
+    _db.substr_n = 0;
+}
+
+// --- acr_compl.FDb.substr.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_compl::substr_RemoveLast() {
+    u64 n = _db.substr_n;
+    if (n > 0) {
+        n -= 1;
+        _db.substr_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.substr.InputMaybe
+static bool acr_compl::substr_InputMaybe(dmmeta::Substr &elem) {
+    bool retval = true;
+    retval = substr_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_compl.FDb.substr.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_compl::substr_XrefMaybe(acr_compl::FSubstr &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- acr_compl.FDb.ccmdline.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_compl::FCcmdline& acr_compl::ccmdline_Alloc() {
+    acr_compl::FCcmdline* row = ccmdline_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_compl.out_of_mem  field:acr_compl.FDb.ccmdline  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_compl.FDb.ccmdline.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_compl::FCcmdline* acr_compl::ccmdline_AllocMaybe() {
+    acr_compl::FCcmdline *row = (acr_compl::FCcmdline*)ccmdline_AllocMem();
+    if (row) {
+        new (row) acr_compl::FCcmdline; // call constructor
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.ccmdline.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_compl::FCcmdline* acr_compl::ccmdline_InsertMaybe(const dmmeta::Ccmdline &value) {
+    acr_compl::FCcmdline *row = &ccmdline_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    ccmdline_CopyIn(*row,const_cast<dmmeta::Ccmdline&>(value));
+    bool ok = ccmdline_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        ccmdline_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.ccmdline.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_compl::ccmdline_AllocMem() {
+    u64 new_nelems     = _db.ccmdline_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_compl::FCcmdline*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.ccmdline_lary[bsr];
+        if (!lev) {
+            lev=(acr_compl::FCcmdline*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FCcmdline) * (u64(1)<<bsr));
+            _db.ccmdline_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.ccmdline_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.ccmdline.RemoveAll
+// Remove all elements from Lary
+void acr_compl::ccmdline_RemoveAll() {
+    for (u64 n = _db.ccmdline_n; n>0; ) {
+        n--;
+        ccmdline_qFind(u64(n)).~FCcmdline(); // destroy last element
+        _db.ccmdline_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.ccmdline.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_compl::ccmdline_RemoveLast() {
+    u64 n = _db.ccmdline_n;
+    if (n > 0) {
+        n -= 1;
+        ccmdline_qFind(u64(n)).~FCcmdline();
+        _db.ccmdline_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.ccmdline.InputMaybe
+static bool acr_compl::ccmdline_InputMaybe(dmmeta::Ccmdline &elem) {
+    bool retval = true;
+    retval = ccmdline_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_compl.FDb.ccmdline.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_compl::ccmdline_XrefMaybe(acr_compl::FCcmdline &row) {
+    bool retval = true;
+    (void)row;
+    acr_compl::FCtype* p_ctype = acr_compl::ind_ctype_Find(row.ctype);
+    if (UNLIKELY(!p_ctype)) {
+        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_ctype" << Keyval("key", row.ctype);
+        return false;
+    }
+    // ccmdline: save pointer to ctype
+    if (true) { // user-defined insert condition
+        row.p_ctype = p_ctype;
+    }
+    acr_compl::FField* p_basecmdline = acr_compl::ind_field_Find(row.basecmdline);
+    if (UNLIKELY(!p_basecmdline)) {
+        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_field" << Keyval("key", row.basecmdline);
+        return false;
+    }
+    // ccmdline: save pointer to basecmdline
+    if (true) { // user-defined insert condition
+        row.p_basecmdline = p_basecmdline;
+    }
+    return retval;
+}
+
+// --- acr_compl.FDb.cmd.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_compl::FCmd& acr_compl::cmd_Alloc() {
+    acr_compl::FCmd* row = cmd_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_compl.out_of_mem  field:acr_compl.FDb.cmd  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_compl.FDb.cmd.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_compl::FCmd* acr_compl::cmd_AllocMaybe() {
+    acr_compl::FCmd *row = (acr_compl::FCmd*)cmd_AllocMem();
+    if (row) {
+        new (row) acr_compl::FCmd; // call constructor
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.cmd.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_compl::cmd_AllocMem() {
+    u64 new_nelems     = _db.cmd_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_compl::FCmd*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.cmd_lary[bsr];
+        if (!lev) {
+            lev=(acr_compl::FCmd*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FCmd) * (u64(1)<<bsr));
+            _db.cmd_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.cmd_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.cmd.RemoveAll
+// Remove all elements from Lary
+void acr_compl::cmd_RemoveAll() {
+    for (u64 n = _db.cmd_n; n>0; ) {
+        n--;
+        cmd_qFind(u64(n)).~FCmd(); // destroy last element
+        _db.cmd_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.cmd.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_compl::cmd_RemoveLast() {
+    u64 n = _db.cmd_n;
+    if (n > 0) {
+        n -= 1;
+        cmd_qFind(u64(n)).~FCmd();
+        _db.cmd_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.cmd.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_compl::cmd_XrefMaybe(acr_compl::FCmd &row) {
+    bool retval = true;
+    (void)row;
+    // insert cmd into index ind_cmd
+    if (true) { // user-defined insert condition
+        bool success = ind_cmd_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_compl.duplicate_key  xref:acr_compl.FDb.ind_cmd"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_compl.FDb.ind_cmd.Find
+// Find row by key. Return NULL if not found.
+acr_compl::FCmd* acr_compl::ind_cmd_Find(const algo::strptr& key) {
+    u32 index = algo::cstring_Hash(0, key) & (_db.ind_cmd_buckets_n - 1);
+    acr_compl::FCmd *ret = _db.ind_cmd_buckets_elems[index];
+    for (; ret && !((*ret).cmd == key); ret = ret->ind_cmd_next) {
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.ind_cmd.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_compl::FCmd& acr_compl::ind_cmd_GetOrCreate(const algo::strptr& key) {
+    acr_compl::FCmd* ret = ind_cmd_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &cmd_Alloc();
+        (*ret).cmd = key;
+        bool good = cmd_XrefMaybe(*ret);
+        if (!good) {
+            cmd_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_compl.create_error  table:ind_cmd  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_compl.FDb.ind_cmd.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_compl::ind_cmd_InsertMaybe(acr_compl::FCmd& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_cmd_next == (acr_compl::FCmd*)-1)) {// check if in hash already
+        row.ind_cmd_hashval = algo::cstring_Hash(0, row.cmd);
+        ind_cmd_Reserve(1);
+        u32 index = row.ind_cmd_hashval & (_db.ind_cmd_buckets_n - 1);
+        acr_compl::FCmd* *prev = &_db.ind_cmd_buckets_elems[index];
+        do {
+            acr_compl::FCmd* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).cmd == row.cmd) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_cmd_next;
+        } while (true);
+        if (retval) {
+            row.ind_cmd_next = *prev;
+            _db.ind_cmd_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_compl.FDb.ind_cmd.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_compl::ind_cmd_Remove(acr_compl::FCmd& row) {
+    if (LIKELY(row.ind_cmd_next != (acr_compl::FCmd*)-1)) {// check if in hash already
+        u32 index = row.ind_cmd_hashval & (_db.ind_cmd_buckets_n - 1);
+        acr_compl::FCmd* *prev = &_db.ind_cmd_buckets_elems[index]; // addr of pointer to current element
+        while (acr_compl::FCmd *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_cmd_next; // unlink (singly linked list)
+                _db.ind_cmd_n--;
+                row.ind_cmd_next = (acr_compl::FCmd*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_cmd_next;
+        }
+    }
+}
+
+// --- acr_compl.FDb.ind_cmd.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_compl::ind_cmd_Reserve(int n) {
+    ind_cmd_AbsReserve(_db.ind_cmd_n + n);
+}
+
+// --- acr_compl.FDb.ind_cmd.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_compl::ind_cmd_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_cmd_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_compl::FCmd*);
+        u32 new_size = new_nbuckets * sizeof(acr_compl::FCmd*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_compl::FCmd* *new_buckets = (acr_compl::FCmd**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_compl.out_of_memory  field:acr_compl.FDb.ind_cmd");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_cmd_buckets_n; i++) {
+            acr_compl::FCmd* elem = _db.ind_cmd_buckets_elems[i];
+            while (elem) {
+                acr_compl::FCmd &row        = *elem;
+                acr_compl::FCmd* next       = row.ind_cmd_next;
+                u32 index          = row.ind_cmd_hashval & (new_nbuckets-1);
+                row.ind_cmd_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_cmd_buckets_elems, old_size);
+        _db.ind_cmd_buckets_elems = new_buckets;
+        _db.ind_cmd_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_compl.FDb.floadtuples.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_compl::FFloadtuples& acr_compl::floadtuples_Alloc() {
+    acr_compl::FFloadtuples* row = floadtuples_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_compl.out_of_mem  field:acr_compl.FDb.floadtuples  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_compl.FDb.floadtuples.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_compl::FFloadtuples* acr_compl::floadtuples_AllocMaybe() {
+    acr_compl::FFloadtuples *row = (acr_compl::FFloadtuples*)floadtuples_AllocMem();
+    if (row) {
+        new (row) acr_compl::FFloadtuples; // call constructor
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.floadtuples.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_compl::FFloadtuples* acr_compl::floadtuples_InsertMaybe(const dmmeta::Floadtuples &value) {
+    acr_compl::FFloadtuples *row = &floadtuples_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    floadtuples_CopyIn(*row,const_cast<dmmeta::Floadtuples&>(value));
+    bool ok = floadtuples_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        floadtuples_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.floadtuples.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_compl::floadtuples_AllocMem() {
+    u64 new_nelems     = _db.floadtuples_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_compl::FFloadtuples*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.floadtuples_lary[bsr];
+        if (!lev) {
+            lev=(acr_compl::FFloadtuples*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFloadtuples) * (u64(1)<<bsr));
+            _db.floadtuples_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.floadtuples_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.floadtuples.RemoveAll
+// Remove all elements from Lary
+void acr_compl::floadtuples_RemoveAll() {
+    for (u64 n = _db.floadtuples_n; n>0; ) {
+        n--;
+        floadtuples_qFind(u64(n)).~FFloadtuples(); // destroy last element
+        _db.floadtuples_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.floadtuples.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_compl::floadtuples_RemoveLast() {
+    u64 n = _db.floadtuples_n;
+    if (n > 0) {
+        n -= 1;
+        floadtuples_qFind(u64(n)).~FFloadtuples();
+        _db.floadtuples_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.floadtuples.InputMaybe
+static bool acr_compl::floadtuples_InputMaybe(dmmeta::Floadtuples &elem) {
+    bool retval = true;
+    retval = floadtuples_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_compl.FDb.floadtuples.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_compl::floadtuples_XrefMaybe(acr_compl::FFloadtuples &row) {
+    bool retval = true;
+    (void)row;
+    acr_compl::FField* p_field = acr_compl::ind_field_Find(row.field);
+    if (UNLIKELY(!p_field)) {
+        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_field" << Keyval("key", row.field);
+        return false;
+    }
+    // floadtuples: save pointer to field
+    if (true) { // user-defined insert condition
+        row.p_field = p_field;
+    }
+    // insert floadtuples into index ind_floadtuples
+    if (true) { // user-defined insert condition
+        bool success = ind_floadtuples_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_compl.duplicate_key  xref:acr_compl.FDb.ind_floadtuples"; // check for duplicate key
+            return false;
+        }
+    }
+    acr_compl::FCtype* p_ctype = acr_compl::ind_ctype_Find(ctype_Get(row));
+    if (UNLIKELY(!p_ctype)) {
+        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_ctype" << Keyval("key", ctype_Get(row));
+        return false;
+    }
+    // insert floadtuples into index c_floadtuples
+    if (true) { // user-defined insert condition
+        c_floadtuples_Insert(*p_ctype, row);
+    }
+    return retval;
+}
+
+// --- acr_compl.FDb.ind_floadtuples.Find
+// Find row by key. Return NULL if not found.
+acr_compl::FFloadtuples* acr_compl::ind_floadtuples_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_floadtuples_buckets_n - 1);
+    acr_compl::FFloadtuples *ret = _db.ind_floadtuples_buckets_elems[index];
+    for (; ret && !((*ret).field == key); ret = ret->ind_floadtuples_next) {
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.ind_floadtuples.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_compl::FFloadtuples* acr_compl::ind_floadtuples_GetOrCreate(const algo::strptr& key) {
+    acr_compl::FFloadtuples* ret = ind_floadtuples_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &floadtuples_Alloc();
+        (*ret).field = key;
+        bool good = floadtuples_XrefMaybe(*ret);
+        if (!good) {
+            floadtuples_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.ind_floadtuples.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_compl::ind_floadtuples_InsertMaybe(acr_compl::FFloadtuples& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_floadtuples_next == (acr_compl::FFloadtuples*)-1)) {// check if in hash already
+        row.ind_floadtuples_hashval = algo::Smallstr150_Hash(0, row.field);
+        ind_floadtuples_Reserve(1);
+        u32 index = row.ind_floadtuples_hashval & (_db.ind_floadtuples_buckets_n - 1);
+        acr_compl::FFloadtuples* *prev = &_db.ind_floadtuples_buckets_elems[index];
+        do {
+            acr_compl::FFloadtuples* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).field == row.field) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_floadtuples_next;
+        } while (true);
+        if (retval) {
+            row.ind_floadtuples_next = *prev;
+            _db.ind_floadtuples_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_compl.FDb.ind_floadtuples.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_compl::ind_floadtuples_Remove(acr_compl::FFloadtuples& row) {
+    if (LIKELY(row.ind_floadtuples_next != (acr_compl::FFloadtuples*)-1)) {// check if in hash already
+        u32 index = row.ind_floadtuples_hashval & (_db.ind_floadtuples_buckets_n - 1);
+        acr_compl::FFloadtuples* *prev = &_db.ind_floadtuples_buckets_elems[index]; // addr of pointer to current element
+        while (acr_compl::FFloadtuples *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_floadtuples_next; // unlink (singly linked list)
+                _db.ind_floadtuples_n--;
+                row.ind_floadtuples_next = (acr_compl::FFloadtuples*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_floadtuples_next;
+        }
+    }
+}
+
+// --- acr_compl.FDb.ind_floadtuples.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_compl::ind_floadtuples_Reserve(int n) {
+    ind_floadtuples_AbsReserve(_db.ind_floadtuples_n + n);
+}
+
+// --- acr_compl.FDb.ind_floadtuples.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_compl::ind_floadtuples_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_floadtuples_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_compl::FFloadtuples*);
+        u32 new_size = new_nbuckets * sizeof(acr_compl::FFloadtuples*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_compl::FFloadtuples* *new_buckets = (acr_compl::FFloadtuples**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_compl.out_of_memory  field:acr_compl.FDb.ind_floadtuples");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_floadtuples_buckets_n; i++) {
+            acr_compl::FFloadtuples* elem = _db.ind_floadtuples_buckets_elems[i];
+            while (elem) {
+                acr_compl::FFloadtuples &row        = *elem;
+                acr_compl::FFloadtuples* next       = row.ind_floadtuples_next;
+                u32 index          = row.ind_floadtuples_hashval & (new_nbuckets-1);
+                row.ind_floadtuples_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_floadtuples_buckets_elems, old_size);
+        _db.ind_floadtuples_buckets_elems = new_buckets;
+        _db.ind_floadtuples_buckets_n = new_nbuckets;
+    }
 }
 
 // --- acr_compl.FDb.trace.RowidFind
@@ -3348,17 +4023,6 @@ void acr_compl::FDb_Init() {
     _db.bh_completion_max   	= 0; // (acr_compl.FDb.bh_completion)
     _db.bh_completion_n     	= 0; // (acr_compl.FDb.bh_completion)
     _db.bh_completion_elems 	= NULL; // (acr_compl.FDb.bh_completion)
-    // initialize LAry ns (acr_compl.FDb.ns)
-    _db.ns_n = 0;
-    memset(_db.ns_lary, 0, sizeof(_db.ns_lary)); // zero out all level pointers
-    acr_compl::FNs* ns_first = (acr_compl::FNs*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FNs) * (u64(1)<<4));
-    if (!ns_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.ns_lary[i]  = ns_first;
-        ns_first    += 1ULL<<i;
-    }
     // initialize LAry fconst (acr_compl.FDb.fconst)
     _db.fconst_n = 0;
     memset(_db.fconst_lary, 0, sizeof(_db.fconst_lary)); // zero out all level pointers
@@ -3369,17 +4033,6 @@ void acr_compl::FDb_Init() {
     for (int i = 0; i < 4; i++) {
         _db.fconst_lary[i]  = fconst_first;
         fconst_first    += 1ULL<<i;
-    }
-    // initialize LAry fcmdline (acr_compl.FDb.fcmdline)
-    _db.fcmdline_n = 0;
-    memset(_db.fcmdline_lary, 0, sizeof(_db.fcmdline_lary)); // zero out all level pointers
-    acr_compl::FFcmdline* fcmdline_first = (acr_compl::FFcmdline*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFcmdline) * (u64(1)<<4));
-    if (!fcmdline_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.fcmdline_lary[i]  = fcmdline_first;
-        fcmdline_first    += 1ULL<<i;
     }
     // initialize LAry fflag (acr_compl.FDb.fflag)
     _db.fflag_n = 0;
@@ -3395,14 +4048,6 @@ void acr_compl::FDb_Init() {
     _db.zd_cmd_field_head = NULL; // (acr_compl.FDb.zd_cmd_field)
     _db.zd_cmd_field_n = 0; // (acr_compl.FDb.zd_cmd_field)
     _db.zd_cmd_field_tail = NULL; // (acr_compl.FDb.zd_cmd_field)
-    // initialize hash table for acr_compl::FNs;
-    _db.ind_ns_n             	= 0; // (acr_compl.FDb.ind_ns)
-    _db.ind_ns_buckets_n     	= 4; // (acr_compl.FDb.ind_ns)
-    _db.ind_ns_buckets_elems 	= (acr_compl::FNs**)algo_lib::malloc_AllocMem(sizeof(acr_compl::FNs*)*_db.ind_ns_buckets_n); // initial buckets (acr_compl.FDb.ind_ns)
-    if (!_db.ind_ns_buckets_elems) {
-        FatalErrorExit("out of memory"); // (acr_compl.FDb.ind_ns)
-    }
-    memset(_db.ind_ns_buckets_elems, 0, sizeof(acr_compl::FNs*)*_db.ind_ns_buckets_n); // (acr_compl.FDb.ind_ns)
     // initialize hash table for acr_compl::FField;
     _db.ind_cmd_field_name_n             	= 0; // (acr_compl.FDb.ind_cmd_field_name)
     _db.ind_cmd_field_name_buckets_n     	= 4; // (acr_compl.FDb.ind_cmd_field_name)
@@ -3451,6 +4096,86 @@ void acr_compl::FDb_Init() {
     _db.is_data_dir = bool(false);
     _db.parse_error = algo::strptr("");
     _db.compl_output = algo::strptr("");
+    // initialize LAry finsertwhen (acr_compl.FDb.finsertwhen)
+    _db.finsertwhen_n = 0;
+    memset(_db.finsertwhen_lary, 0, sizeof(_db.finsertwhen_lary)); // zero out all level pointers
+    acr_compl::FFinsertwhen* finsertwhen_first = (acr_compl::FFinsertwhen*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFinsertwhen) * (u64(1)<<4));
+    if (!finsertwhen_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.finsertwhen_lary[i]  = finsertwhen_first;
+        finsertwhen_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_compl::FFinsertwhen;
+    _db.ind_finsertwhen_n             	= 0; // (acr_compl.FDb.ind_finsertwhen)
+    _db.ind_finsertwhen_buckets_n     	= 4; // (acr_compl.FDb.ind_finsertwhen)
+    _db.ind_finsertwhen_buckets_elems 	= (acr_compl::FFinsertwhen**)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFinsertwhen*)*_db.ind_finsertwhen_buckets_n); // initial buckets (acr_compl.FDb.ind_finsertwhen)
+    if (!_db.ind_finsertwhen_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_compl.FDb.ind_finsertwhen)
+    }
+    memset(_db.ind_finsertwhen_buckets_elems, 0, sizeof(acr_compl::FFinsertwhen*)*_db.ind_finsertwhen_buckets_n); // (acr_compl.FDb.ind_finsertwhen)
+    // initialize LAry substr (acr_compl.FDb.substr)
+    _db.substr_n = 0;
+    memset(_db.substr_lary, 0, sizeof(_db.substr_lary)); // zero out all level pointers
+    acr_compl::FSubstr* substr_first = (acr_compl::FSubstr*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FSubstr) * (u64(1)<<4));
+    if (!substr_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.substr_lary[i]  = substr_first;
+        substr_first    += 1ULL<<i;
+    }
+    // initialize LAry ccmdline (acr_compl.FDb.ccmdline)
+    _db.ccmdline_n = 0;
+    memset(_db.ccmdline_lary, 0, sizeof(_db.ccmdline_lary)); // zero out all level pointers
+    acr_compl::FCcmdline* ccmdline_first = (acr_compl::FCcmdline*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FCcmdline) * (u64(1)<<4));
+    if (!ccmdline_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.ccmdline_lary[i]  = ccmdline_first;
+        ccmdline_first    += 1ULL<<i;
+    }
+    // initialize LAry cmd (acr_compl.FDb.cmd)
+    _db.cmd_n = 0;
+    memset(_db.cmd_lary, 0, sizeof(_db.cmd_lary)); // zero out all level pointers
+    acr_compl::FCmd* cmd_first = (acr_compl::FCmd*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FCmd) * (u64(1)<<4));
+    if (!cmd_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.cmd_lary[i]  = cmd_first;
+        cmd_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_compl::FCmd;
+    _db.ind_cmd_n             	= 0; // (acr_compl.FDb.ind_cmd)
+    _db.ind_cmd_buckets_n     	= 4; // (acr_compl.FDb.ind_cmd)
+    _db.ind_cmd_buckets_elems 	= (acr_compl::FCmd**)algo_lib::malloc_AllocMem(sizeof(acr_compl::FCmd*)*_db.ind_cmd_buckets_n); // initial buckets (acr_compl.FDb.ind_cmd)
+    if (!_db.ind_cmd_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_compl.FDb.ind_cmd)
+    }
+    memset(_db.ind_cmd_buckets_elems, 0, sizeof(acr_compl::FCmd*)*_db.ind_cmd_buckets_n); // (acr_compl.FDb.ind_cmd)
+    // initialize LAry floadtuples (acr_compl.FDb.floadtuples)
+    _db.floadtuples_n = 0;
+    memset(_db.floadtuples_lary, 0, sizeof(_db.floadtuples_lary)); // zero out all level pointers
+    acr_compl::FFloadtuples* floadtuples_first = (acr_compl::FFloadtuples*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFloadtuples) * (u64(1)<<4));
+    if (!floadtuples_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.floadtuples_lary[i]  = floadtuples_first;
+        floadtuples_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_compl::FFloadtuples;
+    _db.ind_floadtuples_n             	= 0; // (acr_compl.FDb.ind_floadtuples)
+    _db.ind_floadtuples_buckets_n     	= 4; // (acr_compl.FDb.ind_floadtuples)
+    _db.ind_floadtuples_buckets_elems 	= (acr_compl::FFloadtuples**)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFloadtuples*)*_db.ind_floadtuples_buckets_n); // initial buckets (acr_compl.FDb.ind_floadtuples)
+    if (!_db.ind_floadtuples_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_compl.FDb.ind_floadtuples)
+    }
+    memset(_db.ind_floadtuples_buckets_elems, 0, sizeof(acr_compl::FFloadtuples*)*_db.ind_floadtuples_buckets_n); // (acr_compl.FDb.ind_floadtuples)
+    _db.p_cmd_ctype = NULL;
 
     acr_compl::InitReflection();
 }
@@ -3458,6 +4183,30 @@ void acr_compl::FDb_Init() {
 // --- acr_compl.FDb..Uninit
 void acr_compl::FDb_Uninit() {
     acr_compl::FDb &row = _db; (void)row;
+
+    // acr_compl.FDb.ind_floadtuples.Uninit (Thash)  //
+    // skip destruction of ind_floadtuples in global scope
+
+    // acr_compl.FDb.floadtuples.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_compl.FDb.ind_cmd.Uninit (Thash)  //
+    // skip destruction of ind_cmd in global scope
+
+    // acr_compl.FDb.cmd.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_compl.FDb.ccmdline.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_compl.FDb.substr.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_compl.FDb.ind_finsertwhen.Uninit (Thash)  //
+    // skip destruction of ind_finsertwhen in global scope
+
+    // acr_compl.FDb.finsertwhen.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_compl.FDb.complsource.Uninit (Lary)  //
     // skip destruction in global scope
@@ -3471,19 +4220,10 @@ void acr_compl::FDb_Uninit() {
     // acr_compl.FDb.ind_cmd_field_name.Uninit (Thash)  //
     // skip destruction of ind_cmd_field_name in global scope
 
-    // acr_compl.FDb.ind_ns.Uninit (Thash)  //
-    // skip destruction of ind_ns in global scope
-
     // acr_compl.FDb.fflag.Uninit (Lary)  //
     // skip destruction in global scope
 
-    // acr_compl.FDb.fcmdline.Uninit (Lary)  //
-    // skip destruction in global scope
-
     // acr_compl.FDb.fconst.Uninit (Lary)  //
-    // skip destruction in global scope
-
-    // acr_compl.FDb.ns.Uninit (Lary)  //
     // skip destruction in global scope
 
     // acr_compl.FDb.bh_completion.Uninit (Bheap)  //
@@ -3525,7 +4265,7 @@ void acr_compl::FDb_Uninit() {
 void acr_compl::falias_CopyOut(acr_compl::FFalias &row, dmmeta::Falias &out) {
     out.field = row.field;
     out.srcfield = row.srcfield;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr_compl.FFalias.base.CopyIn
@@ -3549,45 +4289,12 @@ void acr_compl::FFalias_Uninit(acr_compl::FFalias& falias) {
     }
 }
 
-// --- acr_compl.FFcmdline.base.CopyOut
-// Copy fields out of row
-void acr_compl::fcmdline_CopyOut(acr_compl::FFcmdline &row, dmmeta::Fcmdline &out) {
-    out.field = row.field;
-    out.read = row.read;
-    out.basecmdline = row.basecmdline;
-    out.comment = row.comment;
-}
-
-// --- acr_compl.FFcmdline.base.CopyIn
-// Copy fields in to row
-void acr_compl::fcmdline_CopyIn(acr_compl::FFcmdline &row, dmmeta::Fcmdline &in) {
-    row.field = in.field;
-    row.read = in.read;
-    row.basecmdline = in.basecmdline;
-    row.comment = in.comment;
-}
-
-// --- acr_compl.FFcmdline.ns.Get
-algo::Smallstr16 acr_compl::ns_Get(acr_compl::FFcmdline& fcmdline) {
-    algo::Smallstr16 ret(algo::Pathcomp(fcmdline.field, ".RL.RL"));
-    return ret;
-}
-
-// --- acr_compl.FFcmdline..Uninit
-void acr_compl::FFcmdline_Uninit(acr_compl::FFcmdline& fcmdline) {
-    acr_compl::FFcmdline &row = fcmdline; (void)row;
-    acr_compl::FNs* p_ns = acr_compl::ind_ns_Find(ns_Get(row));
-    if (p_ns)  {
-        c_fcmdline_Remove(*p_ns, row);// remove fcmdline from index c_fcmdline
-    }
-}
-
 // --- acr_compl.FFconst.base.CopyOut
 // Copy fields out of row
 void acr_compl::fconst_CopyOut(acr_compl::FFconst &row, dmmeta::Fconst &out) {
     out.fconst = row.fconst;
     out.value = row.value;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr_compl.FFconst.base.CopyIn
@@ -3599,15 +4306,13 @@ void acr_compl::fconst_CopyIn(acr_compl::FFconst &row, dmmeta::Fconst &in) {
 }
 
 // --- acr_compl.FFconst.field.Get
-algo::Smallstr100 acr_compl::field_Get(acr_compl::FFconst& fconst) {
-    algo::Smallstr100 ret(algo::Pathcomp(fconst.fconst, "/LL"));
-    return ret;
+algo::strptr acr_compl::field_Get(acr_compl::FFconst& fconst) {
+    return algo::Pathcomp(fconst.fconst, "/LL");
 }
 
 // --- acr_compl.FFconst.name.Get
-algo::Smallstr100 acr_compl::name_Get(acr_compl::FFconst& fconst) {
-    algo::Smallstr100 ret(algo::Pathcomp(fconst.fconst, "/LR"));
-    return ret;
+algo::strptr acr_compl::name_Get(acr_compl::FFconst& fconst) {
+    return algo::Pathcomp(fconst.fconst, "/LR");
 }
 
 // --- acr_compl.FFconst..Uninit
@@ -3625,7 +4330,7 @@ void acr_compl::fflag_CopyOut(acr_compl::FFflag &row, dmmeta::Fflag &out) {
     out.field = row.field;
     out.cumulative = row.cumulative;
     out.emptyval = row.emptyval;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr_compl.FFflag.base.CopyIn
@@ -3653,7 +4358,7 @@ void acr_compl::field_CopyOut(acr_compl::FField &row, dmmeta::Field &out) {
     out.arg = row.arg;
     out.reftype = row.reftype;
     out.dflt = row.dflt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr_compl.FField.msghdr.CopyIn
@@ -3667,30 +4372,27 @@ void acr_compl::field_CopyIn(acr_compl::FField &row, dmmeta::Field &in) {
 }
 
 // --- acr_compl.FField.ctype.Get
-algo::Smallstr100 acr_compl::ctype_Get(acr_compl::FField& field) {
-    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
-    return ret;
+algo::strptr acr_compl::ctype_Get(acr_compl::FField& field) {
+    return algo::Pathcomp(field.field, ".RL");
 }
 
 // --- acr_compl.FField.ns.Get
-algo::Smallstr16 acr_compl::ns_Get(acr_compl::FField& field) {
-    algo::Smallstr16 ret(algo::Pathcomp(field.field, ".RL.RL"));
-    return ret;
+algo::strptr acr_compl::ns_Get(acr_compl::FField& field) {
+    return algo::Pathcomp(field.field, ".RL.RL");
 }
 
 // --- acr_compl.FField.name.Get
-algo::Smallstr50 acr_compl::name_Get(acr_compl::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RR"));
-    return ret;
+algo::strptr acr_compl::name_Get(acr_compl::FField& field) {
+    return algo::Pathcomp(field.field, ".RR");
 }
 
 // --- acr_compl.FField.c_fconst.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr_compl::c_fconst_Insert(acr_compl::FField& field, acr_compl::FFconst& row) {
     if (!row.field_c_fconst_in_ary) {
         c_fconst_Reserve(field, 1);
-        u32 n  = field.c_fconst_n++;
+        u64 n  = field.c_fconst_n++;
         field.c_fconst_elems[n] = &row;
         row.field_c_fconst_in_ary = true;
     }
@@ -3709,15 +4411,15 @@ bool acr_compl::c_fconst_InsertMaybe(acr_compl::FField& field, acr_compl::FFcons
 // --- acr_compl.FField.c_fconst.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_compl::c_fconst_Remove(acr_compl::FField& field, acr_compl::FFconst& row) {
-    int n = field.c_fconst_n;
+    i64 n = field.c_fconst_n;
     if (bool_Update(row.field_c_fconst_in_ary,false)) {
         acr_compl::FFconst* *elems = field.c_fconst_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             acr_compl::FFconst* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(acr_compl::FFconst*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 field.c_fconst_n = n - 1;
@@ -3729,12 +4431,12 @@ void acr_compl::c_fconst_Remove(acr_compl::FField& field, acr_compl::FFconst& ro
 
 // --- acr_compl.FField.c_fconst.Reserve
 // Reserve space in index for N more elements;
-void acr_compl::c_fconst_Reserve(acr_compl::FField& field, u32 n) {
-    u32 old_max = field.c_fconst_max;
+void acr_compl::c_fconst_Reserve(acr_compl::FField& field, u64 n) {
+    u64 old_max = field.c_fconst_max;
     if (UNLIKELY(field.c_fconst_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr_compl::FFconst*);
-        u32 new_size = new_max * sizeof(acr_compl::FFconst*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, field.c_fconst_n + n), 4);
+        u64 old_size = old_max * sizeof(acr_compl::FFconst*);
+        u64 new_size = new_max * sizeof(acr_compl::FFconst*);
         void *new_mem = algo_lib::malloc_ReallocMem(field.c_fconst_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr_compl.out_of_memory  field:acr_compl.FField.c_fconst");
@@ -3745,11 +4447,11 @@ void acr_compl::c_fconst_Reserve(acr_compl::FField& field, u32 n) {
 }
 
 // --- acr_compl.FField.c_falias_srcfield.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void acr_compl::c_falias_srcfield_Insert(acr_compl::FField& field, acr_compl::FFalias& row) {
     c_falias_srcfield_Reserve(field, 1);
-    u32 n  = field.c_falias_srcfield_n++;
+    u64 n  = field.c_falias_srcfield_n++;
     field.c_falias_srcfield_elems[n] = &row;
 }
 
@@ -3760,18 +4462,15 @@ void acr_compl::c_falias_srcfield_Insert(acr_compl::FField& field, acr_compl::FF
 // Return value: whether element was inserted into array.
 bool acr_compl::c_falias_srcfield_ScanInsertMaybe(acr_compl::FField& field, acr_compl::FFalias& row) {
     bool retval = true;
-    u32 n  = field.c_falias_srcfield_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = field.c_falias_srcfield_n;
+    for (u64 i = 0; i < n; i++) {
         if (field.c_falias_srcfield_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_falias_srcfield_Reserve(field, 1);
-        field.c_falias_srcfield_elems[n] = &row;
-        field.c_falias_srcfield_n = n+1;
+        c_falias_srcfield_Insert(field,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -3779,9 +4478,9 @@ bool acr_compl::c_falias_srcfield_ScanInsertMaybe(acr_compl::FField& field, acr_
 // --- acr_compl.FField.c_falias_srcfield.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_compl::c_falias_srcfield_Remove(acr_compl::FField& field, acr_compl::FFalias& row) {
-    int n = field.c_falias_srcfield_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = field.c_falias_srcfield_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (field.c_falias_srcfield_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -3795,12 +4494,12 @@ void acr_compl::c_falias_srcfield_Remove(acr_compl::FField& field, acr_compl::FF
 
 // --- acr_compl.FField.c_falias_srcfield.Reserve
 // Reserve space in index for N more elements;
-void acr_compl::c_falias_srcfield_Reserve(acr_compl::FField& field, u32 n) {
-    u32 old_max = field.c_falias_srcfield_max;
+void acr_compl::c_falias_srcfield_Reserve(acr_compl::FField& field, u64 n) {
+    u64 old_max = field.c_falias_srcfield_max;
     if (UNLIKELY(field.c_falias_srcfield_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(acr_compl::FFalias*);
-        u32 new_size = new_max * sizeof(acr_compl::FFalias*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, field.c_falias_srcfield_n + n), 4);
+        u64 old_size = old_max * sizeof(acr_compl::FFalias*);
+        u64 new_size = new_max * sizeof(acr_compl::FFalias*);
         void *new_mem = algo_lib::malloc_ReallocMem(field.c_falias_srcfield_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr_compl.out_of_memory  field:acr_compl.FField.c_falias_srcfield");
@@ -3860,7 +4559,7 @@ void acr_compl::FField_Print(acr_compl::FField& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_compl.FField";
 
-    algo::Smallstr100_Print(row.field, temp);
+    algo::Smallstr150_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 
     algo::Smallstr100_Print(row.arg, temp);
@@ -3872,7 +4571,7 @@ void acr_compl::FField_Print(acr_compl::FField& row, algo::cstring& str) {
     algo::CppExpr_Print(row.dflt, temp);
     PrintAttrSpaceReset(str,"dflt", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
     u64_PrintHex(u64(row.c_anonfld), temp, 8, true);
@@ -3887,32 +4586,66 @@ void acr_compl::FField_Print(acr_compl::FField& row, algo::cstring& str) {
     u64_PrintHex(u64(row.c_falias), temp, 8, true);
     PrintAttrSpaceReset(str,"c_falias", temp);
 
+    algo::cstring_Print(row.typed_value, temp);
+    PrintAttrSpaceReset(str,"typed_value", temp);
+
     bool_Print(row.ctype_c_field_in_ary, temp);
     PrintAttrSpaceReset(str,"ctype_c_field_in_ary", temp);
 }
 
-// --- acr_compl.FNs.base.CopyOut
+// --- acr_compl.FFinsertwhen.base.CopyOut
 // Copy fields out of row
-void acr_compl::ns_CopyOut(acr_compl::FNs &row, dmmeta::Ns &out) {
-    out.ns = row.ns;
-    out.nstype = row.nstype;
-    out.license = row.license;
-    out.comment = row.comment;
+void acr_compl::finsertwhen_CopyOut(acr_compl::FFinsertwhen &row, dmmeta::Finsertwhen &out) {
+    out.finsertwhen = row.finsertwhen;
+    out.when = row.when;
+    out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_compl.FNs.base.CopyIn
+// --- acr_compl.FFinsertwhen.base.CopyIn
 // Copy fields in to row
-void acr_compl::ns_CopyIn(acr_compl::FNs &row, dmmeta::Ns &in) {
-    row.ns = in.ns;
-    row.nstype = in.nstype;
-    row.license = in.license;
+void acr_compl::finsertwhen_CopyIn(acr_compl::FFinsertwhen &row, dmmeta::Finsertwhen &in) {
+    row.finsertwhen = in.finsertwhen;
+    row.when = in.when;
     row.comment = in.comment;
 }
 
-// --- acr_compl.FNs..Uninit
-void acr_compl::FNs_Uninit(acr_compl::FNs& ns) {
-    acr_compl::FNs &row = ns; (void)row;
-    ind_ns_Remove(row); // remove ns from index ind_ns
+// --- acr_compl.FFinsertwhen..Uninit
+void acr_compl::FFinsertwhen_Uninit(acr_compl::FFinsertwhen& finsertwhen) {
+    acr_compl::FFinsertwhen &row = finsertwhen; (void)row;
+    ind_finsertwhen_Remove(row); // remove finsertwhen from index ind_finsertwhen
+}
+
+// --- acr_compl.FFloadtuples.base.CopyOut
+// Copy fields out of row
+void acr_compl::floadtuples_CopyOut(acr_compl::FFloadtuples &row, dmmeta::Floadtuples &out) {
+    out.field = row.field;
+    out.autoscan = row.autoscan;
+    out.optional = row.optional;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- acr_compl.FFloadtuples.base.CopyIn
+// Copy fields in to row
+void acr_compl::floadtuples_CopyIn(acr_compl::FFloadtuples &row, dmmeta::Floadtuples &in) {
+    row.field = in.field;
+    row.autoscan = in.autoscan;
+    row.optional = in.optional;
+    row.comment = in.comment;
+}
+
+// --- acr_compl.FFloadtuples.ctype.Get
+algo::strptr acr_compl::ctype_Get(acr_compl::FFloadtuples& floadtuples) {
+    return algo::Pathcomp(floadtuples.field, ".RL");
+}
+
+// --- acr_compl.FFloadtuples..Uninit
+void acr_compl::FFloadtuples_Uninit(acr_compl::FFloadtuples& floadtuples) {
+    acr_compl::FFloadtuples &row = floadtuples; (void)row;
+    ind_floadtuples_Remove(row); // remove floadtuples from index ind_floadtuples
+    acr_compl::FCtype* p_ctype = acr_compl::ind_ctype_Find(ctype_Get(row));
+    if (p_ctype)  {
+        c_floadtuples_Remove(*p_ctype, row);// remove floadtuples from index c_floadtuples
+    }
 }
 
 // --- acr_compl.FSsimfile.msghdr.CopyOut
@@ -3930,21 +4663,18 @@ void acr_compl::ssimfile_CopyIn(acr_compl::FSsimfile &row, dmmeta::Ssimfile &in)
 }
 
 // --- acr_compl.FSsimfile.ssimns.Get
-algo::Smallstr16 acr_compl::ssimns_Get(acr_compl::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr acr_compl::ssimns_Get(acr_compl::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- acr_compl.FSsimfile.ns.Get
-algo::Smallstr16 acr_compl::ns_Get(acr_compl::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr acr_compl::ns_Get(acr_compl::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- acr_compl.FSsimfile.name.Get
-algo::Smallstr50 acr_compl::name_Get(acr_compl::FSsimfile& ssimfile) {
-    algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
-    return ret;
+algo::strptr acr_compl::name_Get(acr_compl::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
 }
 
 // --- acr_compl.FSsimfile..Uninit
@@ -3971,6 +4701,22 @@ void acr_compl::FSsimfile_Print(acr_compl::FSsimfile& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"ctype", temp);
 }
 
+// --- acr_compl.FSubstr.base.CopyOut
+// Copy fields out of row
+void acr_compl::substr_CopyOut(acr_compl::FSubstr &row, dmmeta::Substr &out) {
+    out.field = row.field;
+    out.expr = row.expr;
+    out.srcfield = row.srcfield;
+}
+
+// --- acr_compl.FSubstr.base.CopyIn
+// Copy fields in to row
+void acr_compl::substr_CopyIn(acr_compl::FSubstr &row, dmmeta::Substr &in) {
+    row.field = in.field;
+    row.expr = in.expr;
+    row.srcfield = in.srcfield;
+}
+
 // --- acr_compl.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -3984,6 +4730,9 @@ const char* acr_compl::value_ToCstr(const acr_compl::FieldId& parent) {
         case acr_compl_FieldId_msghdr      : ret = "msghdr";  break;
         case acr_compl_FieldId_field       : ret = "field";  break;
         case acr_compl_FieldId_type        : ret = "type";  break;
+        case acr_compl_FieldId_id          : ret = "id";  break;
+        case acr_compl_FieldId_err         : ret = "err";  break;
+        case acr_compl_FieldId_line        : ret = "line";  break;
     }
     return ret;
 }
@@ -4007,8 +4756,27 @@ void acr_compl::value_Print(const acr_compl::FieldId& parent, algo::cstring &lhs
 bool acr_compl::value_SetStrptrMaybe(acr_compl::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 2: {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
+                case LE_STR2('i','d'): {
+                    value_SetEnum(parent,acr_compl_FieldId_id); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('e','r','r'): {
+                    value_SetEnum(parent,acr_compl_FieldId_err); ret = true; break;
+                }
+            }
+            break;
+        }
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('l','i','n','e'): {
+                    value_SetEnum(parent,acr_compl_FieldId_line); ret = true; break;
+                }
                 case LE_STR4('t','y','p','e'): {
                     value_SetEnum(parent,acr_compl_FieldId_type); ret = true; break;
                 }
@@ -4082,7 +4850,7 @@ bool acr_compl::FieldId_ReadStrptrMaybe(acr_compl::FieldId &parent, algo::strptr
 // --- acr_compl.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:acr_compl.FieldId.String  printfmt:Raw
-void acr_compl::FieldId_Print(acr_compl::FieldId& row, algo::cstring& str) {
+void acr_compl::FieldId_Print(acr_compl::FieldId row, algo::cstring& str) {
     acr_compl::value_Print(row, str);
 }
 
@@ -4192,14 +4960,16 @@ const char* acr_compl::value_ToCstr(const acr_compl::TableId& parent) {
     switch(value_GetEnum(parent)) {
         case acr_compl_TableId_dmmeta_Anonfld: ret = "dmmeta.Anonfld";  break;
         case acr_compl_TableId_dmmeta_Argvtype: ret = "dmmeta.Argvtype";  break;
+        case acr_compl_TableId_dmmeta_Ccmdline: ret = "dmmeta.Ccmdline";  break;
         case acr_compl_TableId_dmmeta_Ctype: ret = "dmmeta.Ctype";  break;
         case acr_compl_TableId_dmmeta_Falias: ret = "dmmeta.Falias";  break;
-        case acr_compl_TableId_dmmeta_Fcmdline: ret = "dmmeta.Fcmdline";  break;
         case acr_compl_TableId_dmmeta_Fconst: ret = "dmmeta.Fconst";  break;
         case acr_compl_TableId_dmmeta_Fflag: ret = "dmmeta.Fflag";  break;
         case acr_compl_TableId_dmmeta_Field: ret = "dmmeta.Field";  break;
-        case acr_compl_TableId_dmmeta_Ns   : ret = "dmmeta.Ns";  break;
+        case acr_compl_TableId_dmmeta_Finsertwhen: ret = "dmmeta.Finsertwhen";  break;
+        case acr_compl_TableId_dmmeta_Floadtuples: ret = "dmmeta.Floadtuples";  break;
         case acr_compl_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
+        case acr_compl_TableId_dmmeta_Substr: ret = "dmmeta.Substr";  break;
     }
     return ret;
 }
@@ -4223,19 +4993,6 @@ void acr_compl::value_Print(const acr_compl::TableId& parent, algo::cstring &lhs
 bool acr_compl::value_SetStrptrMaybe(acr_compl::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
-        case 9: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('d','m','m','e','t','a','.','N'): {
-                    if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Ns); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('d','m','m','e','t','a','.','n'): {
-                    if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_ns); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
         case 12: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
@@ -4266,9 +5023,17 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::TableId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"const",5)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Fconst); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','m','m','e','t','a','.','S'): {
+                    if (memcmp(rhs.elems+8,"ubstr",5)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Substr); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','f'): {
                     if (memcmp(rhs.elems+8,"alias",5)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_falias); ret = true; break; }
                     if (memcmp(rhs.elems+8,"const",5)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_fconst); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','s'): {
+                    if (memcmp(rhs.elems+8,"ubstr",5)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_substr); ret = true; break; }
                     break;
                 }
             }
@@ -4293,8 +5058,8 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::TableId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"rgvtype",7)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Argvtype); ret = true; break; }
                     break;
                 }
-                case LE_STR8('d','m','m','e','t','a','.','F'): {
-                    if (memcmp(rhs.elems+8,"cmdline",7)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Fcmdline); ret = true; break; }
+                case LE_STR8('d','m','m','e','t','a','.','C'): {
+                    if (memcmp(rhs.elems+8,"cmdline",7)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Ccmdline); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
@@ -4305,12 +5070,27 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::TableId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"rgvtype",7)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_argvtype); ret = true; break; }
                     break;
                 }
-                case LE_STR8('d','m','m','e','t','a','.','f'): {
-                    if (memcmp(rhs.elems+8,"cmdline",7)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_fcmdline); ret = true; break; }
+                case LE_STR8('d','m','m','e','t','a','.','c'): {
+                    if (memcmp(rhs.elems+8,"cmdline",7)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_ccmdline); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','m','m','e','t','a','.','s'): {
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_ssimfile); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 18: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','m','m','e','t','a','.','F'): {
+                    if (memcmp(rhs.elems+8,"insertwhen",10)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Finsertwhen); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"loadtuples",10)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Floadtuples); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','f'): {
+                    if (memcmp(rhs.elems+8,"insertwhen",10)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_finsertwhen); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"loadtuples",10)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_floadtuples); ret = true; break; }
                     break;
                 }
             }
@@ -4350,8 +5130,106 @@ bool acr_compl::TableId_ReadStrptrMaybe(acr_compl::TableId &parent, algo::strptr
 // --- acr_compl.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:acr_compl.TableId.String  printfmt:Raw
-void acr_compl::TableId_Print(acr_compl::TableId& row, algo::cstring& str) {
+void acr_compl::TableId_Print(acr_compl::TableId row, algo::cstring& str) {
     acr_compl::value_Print(row, str);
+}
+
+// --- acr_compl.checkerr..ReadFieldMaybe
+bool acr_compl::checkerr_ReadFieldMaybe(acr_compl::checkerr& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_compl::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_compl_FieldId_id: {
+            retval = u32_ReadStrptrMaybe(parent.id, strval);
+        } break;
+        case acr_compl_FieldId_err: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.err, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_compl.checkerr..ReadStrptrMaybe
+// Read fields of acr_compl::checkerr from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_compl::checkerr_ReadStrptrMaybe(acr_compl::checkerr &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_compl.checkerr");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && checkerr_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- acr_compl.checkerr..Print
+// print string representation of ROW to string STR
+// cfmt:acr_compl.checkerr.String  printfmt:Tuple
+void acr_compl::checkerr_Print(acr_compl::checkerr& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_compl.checkerr";
+
+    u32_Print(row.id, temp);
+    PrintAttrSpaceReset(str,"id", temp);
+
+    algo::cstring_Print(row.err, temp);
+    PrintAttrSpaceReset(str,"err", temp);
+}
+
+// --- acr_compl.checkreq..ReadFieldMaybe
+bool acr_compl::checkreq_ReadFieldMaybe(acr_compl::checkreq& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_compl::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_compl_FieldId_id: {
+            retval = u32_ReadStrptrMaybe(parent.id, strval);
+        } break;
+        case acr_compl_FieldId_line: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.line, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_compl.checkreq..ReadStrptrMaybe
+// Read fields of acr_compl::checkreq from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_compl::checkreq_ReadStrptrMaybe(acr_compl::checkreq &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_compl.checkreq");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && checkreq_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- acr_compl.checkreq..Print
+// print string representation of ROW to string STR
+// cfmt:acr_compl.checkreq.String  printfmt:Tuple
+void acr_compl::checkreq_Print(acr_compl::checkreq& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_compl.checkreq";
+
+    u32_Print(row.id, temp);
+    PrintAttrSpaceReset(str,"id", temp);
+
+    algo::cstring_Print(row.line, temp);
+    PrintAttrSpaceReset(str,"line", temp);
 }
 
 // --- acr_compl...SizeCheck

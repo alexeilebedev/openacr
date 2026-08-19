@@ -1,0 +1,4 @@
+amcdb.cbtype  cbtype:Cleanup  comment:"ctype dtor, before pool removal (was: fcleanup)"
+amcdb.cbtype  cbtype:OnUnref  comment:"record removed from this index"
+amcdb.cbtype  cbtype:OnXref  comment:"record inserted into this index"
+amcdb.cbtype  cbtype:Userinit  comment:"ctype ctor, before any xref (was: fuserinit)"

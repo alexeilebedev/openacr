@@ -1,0 +1,4 @@
+# start bash cmd:"bash -c 'seq -f \"a.b  key:%09g\" 0 99999 > $tempdir/new.ssim; : > $tempdir/empty.ssim; $bindir/acr_dm $tempdir/empty.ssim $tempdir/new.ssim $tempdir/new.ssim | wc -l'"
+# eof bash
+bash -> 100000
+# exit bash code:0

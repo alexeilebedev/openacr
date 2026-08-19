@@ -1,0 +1,5 @@
+dev.target  target:xx
+dev.gitfile  gitfile:src/y.cpp
+dev.gitfile  gitfile:hdr/x.h
+dev.targsrc  targsrc:xx/src/y.cpp  comment:""
+dev.targsrc  targsrc:xx/hdr/x.h  comment:""

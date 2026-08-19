@@ -24,6 +24,7 @@
 
 #pragma once
 #include "include/lib_json.h"
+#include <openssl/ssl.h>
 #include "include/gen/algo_gen.h"
 #include "include/gen/atfdb_gen.h"
 #include "include/gen/lib_exec_gen.h"
@@ -33,6 +34,16 @@
 //#pragma endinclude
 // gen:ns_enums
 
+// --- atf_amc_BitfldType1_bits5_Enum
+
+enum atf_amc_BitfldType1_bits5_Enum {          // atf_amc.BitfldType1.bits5
+     atf_amc_BitfldType1_bits5_low     = 1
+    ,atf_amc_BitfldType1_bits5_high    = 1000
+};
+
+enum { atf_amc_BitfldType1_bits5_Enum_N = 2 };
+
+
 // --- atf_amc_BitfldType2_value_Enum
 
 enum atf_amc_BitfldType2_value_Enum {          // atf_amc.BitfldType2.value
@@ -41,6 +52,17 @@ enum atf_amc_BitfldType2_value_Enum {          // atf_amc.BitfldType2.value
 };
 
 enum { atf_amc_BitfldType2_value_Enum_N = 2 };
+
+
+// --- atf_amc_Disp2CaseEnum
+
+enum atf_amc_Disp2CaseEnum {                    // atf_amc.Disp2Case.value
+     atf_amc_Disp2Case_atf_amc_DispType1   = 1
+    ,atf_amc_Disp2Case_atf_amc_DispType2   = 2
+    ,atf_amc_Disp2Case_atf_amc_DispType3   = 3
+};
+
+enum { atf_amc_Disp2CaseEnum_N = 3 };
 
 
 // --- atf_amc_DispCaseEnum
@@ -56,157 +78,201 @@ enum { atf_amc_DispCaseEnum_N = 3 };
 
 // --- atf_amc_FCascdel_type_Enum
 
-enum atf_amc_FCascdel_type_Enum {        // atf_amc.FCascdel.type
-     atf_amc_FCascdel_type_none     = 0
-    ,atf_amc_FCascdel_type_ptr      = 1
-    ,atf_amc_FCascdel_type_ptrary   = 2
-    ,atf_amc_FCascdel_type_thash    = 3
-    ,atf_amc_FCascdel_type_bheap    = 4
-    ,atf_amc_FCascdel_type_zdlist   = 6
-    ,atf_amc_FCascdel_type_atree    = 6
+enum atf_amc_FCascdel_type_Enum {    // atf_amc.FCascdel.type
+     atf_amc_FCascdel_type_none
+    ,atf_amc_FCascdel_type_ptr
+    ,atf_amc_FCascdel_type_ptrary
+    ,atf_amc_FCascdel_type_thash
+    ,atf_amc_FCascdel_type_bheap
+    ,atf_amc_FCascdel_type_zdlist
+    ,atf_amc_FCascdel_type_atree
+    ,atf_amc_FCascdel_type_heap
 };
 
-enum { atf_amc_FCascdel_type_Enum_N = 7 };
+enum { atf_amc_FCascdel_type_Enum_N = 8 };
+
+
+// --- atf_amc_FCondtest_state_Enum
+
+enum atf_amc_FCondtest_state_Enum {    // atf_amc.FCondtest.state
+     atf_amc_FCondtest_state_idle
+    ,atf_amc_FCondtest_state_run
+    ,atf_amc_FCondtest_state_done
+};
+
+enum { atf_amc_FCondtest_state_Enum_N = 3 };
 
 
 // --- atf_amc_FieldIdEnum
 
-enum atf_amc_FieldIdEnum {                  // atf_amc.FieldId.value
-     atf_amc_FieldId_value           = 0
-    ,atf_amc_FieldId_bit1            = 1
-    ,atf_amc_FieldId_bits5           = 2
-    ,atf_amc_FieldId_bit0            = 3
-    ,atf_amc_FieldId_freebool        = 4
-    ,atf_amc_FieldId_attr1           = 5
-    ,atf_amc_FieldId_attr2           = 6
-    ,atf_amc_FieldId_strval          = 7
-    ,atf_amc_FieldId_strval2         = 8
-    ,atf_amc_FieldId_dateval         = 9
-    ,atf_amc_FieldId_intval          = 10
-    ,atf_amc_FieldId_fixary          = 11
-    ,atf_amc_FieldId_inlary          = 12
-    ,atf_amc_FieldId_len             = 13
-    ,atf_amc_FieldId_type            = 14
-    ,atf_amc_FieldId_length          = 15
-    ,atf_amc_FieldId_base            = 16
-    ,atf_amc_FieldId_a               = 17
-    ,atf_amc_FieldId_b               = 18
-    ,atf_amc_FieldId_o               = 19
-    ,atf_amc_FieldId_v               = 20
-    ,atf_amc_FieldId_typeg           = 21
-    ,atf_amc_FieldId_optg            = 22
-    ,atf_amc_FieldId_present         = 23
-    ,atf_amc_FieldId_assigned        = 24
-    ,atf_amc_FieldId_nullable        = 25
-    ,atf_amc_FieldId_value1          = 26
-    ,atf_amc_FieldId_value2          = 27
-    ,atf_amc_FieldId_value3          = 28
-    ,atf_amc_FieldId_value4          = 29
-    ,atf_amc_FieldId_value5          = 30
-    ,atf_amc_FieldId_value6          = 31
-    ,atf_amc_FieldId_value7          = 32
-    ,atf_amc_FieldId_pmask           = 33
-    ,atf_amc_FieldId_value21         = 34
-    ,atf_amc_FieldId_value22         = 35
-    ,atf_amc_FieldId_value23         = 36
-    ,atf_amc_FieldId_value24         = 37
-    ,atf_amc_FieldId_value25         = 38
-    ,atf_amc_FieldId_value26         = 39
-    ,atf_amc_FieldId_value20         = 40
-    ,atf_amc_FieldId_value28         = 41
-    ,atf_amc_FieldId_value29         = 42
-    ,atf_amc_FieldId_value30         = 43
-    ,atf_amc_FieldId_value31         = 44
-    ,atf_amc_FieldId_value32         = 45
-    ,atf_amc_FieldId_value27         = 46
-    ,atf_amc_FieldId_value19         = 47
-    ,atf_amc_FieldId_value18         = 48
-    ,atf_amc_FieldId_value8          = 49
-    ,atf_amc_FieldId_value9          = 50
-    ,atf_amc_FieldId_value69         = 51
-    ,atf_amc_FieldId_value11         = 52
-    ,atf_amc_FieldId_value12         = 53
-    ,atf_amc_FieldId_value13         = 54
-    ,atf_amc_FieldId_value14         = 55
-    ,atf_amc_FieldId_value15         = 56
-    ,atf_amc_FieldId_value16         = 57
-    ,atf_amc_FieldId_value33         = 58
-    ,atf_amc_FieldId_value10         = 59
-    ,atf_amc_FieldId_value17         = 60
-    ,atf_amc_FieldId_value35         = 61
-    ,atf_amc_FieldId_value55         = 62
-    ,atf_amc_FieldId_value56         = 63
-    ,atf_amc_FieldId_value57         = 64
-    ,atf_amc_FieldId_value58         = 65
-    ,atf_amc_FieldId_value59         = 66
-    ,atf_amc_FieldId_value60         = 67
-    ,atf_amc_FieldId_value54         = 68
-    ,atf_amc_FieldId_value62         = 69
-    ,atf_amc_FieldId_value63         = 70
-    ,atf_amc_FieldId_value64         = 71
-    ,atf_amc_FieldId_value65         = 72
-    ,atf_amc_FieldId_value66         = 73
-    ,atf_amc_FieldId_value67         = 74
-    ,atf_amc_FieldId_value68         = 75
-    ,atf_amc_FieldId_value61         = 76
-    ,atf_amc_FieldId_value34         = 77
-    ,atf_amc_FieldId_value52         = 78
-    ,atf_amc_FieldId_value36         = 79
-    ,atf_amc_FieldId_value37         = 80
-    ,atf_amc_FieldId_value38         = 81
-    ,atf_amc_FieldId_value39         = 82
-    ,atf_amc_FieldId_value40         = 83
-    ,atf_amc_FieldId_value41         = 84
-    ,atf_amc_FieldId_value42         = 85
-    ,atf_amc_FieldId_value53         = 86
-    ,atf_amc_FieldId_value44         = 87
-    ,atf_amc_FieldId_value45         = 88
-    ,atf_amc_FieldId_value46         = 89
-    ,atf_amc_FieldId_value47         = 90
-    ,atf_amc_FieldId_value48         = 91
-    ,atf_amc_FieldId_value49         = 92
-    ,atf_amc_FieldId_value50         = 93
-    ,atf_amc_FieldId_value51         = 94
-    ,atf_amc_FieldId_value43         = 95
-    ,atf_amc_FieldId_value70         = 96
-    ,atf_amc_FieldId_value71         = 97
-    ,atf_amc_FieldId_ch              = 98
-    ,atf_amc_FieldId_val1            = 99
-    ,atf_amc_FieldId_val2            = 100
-    ,atf_amc_FieldId_val3            = 101
-    ,atf_amc_FieldId_msghdr          = 102
-    ,atf_amc_FieldId_payload         = 103
-    ,atf_amc_FieldId_val             = 104
-    ,atf_amc_FieldId_text            = 105
-    ,atf_amc_FieldId_typea           = 106
-    ,atf_amc_FieldId_j               = 107
-    ,atf_amc_FieldId_typec           = 108
-    ,atf_amc_FieldId_typeh           = 109
-    ,atf_amc_FieldId_types           = 110
-    ,atf_amc_FieldId_comment         = 111
-    ,atf_amc_FieldId_s1              = 112
-    ,atf_amc_FieldId_s2              = 113
-    ,atf_amc_FieldId_s3              = 114
-    ,atf_amc_FieldId_u1              = 115
-    ,atf_amc_FieldId_u2              = 116
-    ,atf_amc_FieldId_u3              = 117
-    ,atf_amc_FieldId_m1              = 118
-    ,atf_amc_FieldId_m2              = 119
-    ,atf_amc_FieldId_m3              = 120
-    ,atf_amc_FieldId_v1              = 121
-    ,atf_amc_FieldId_v2              = 122
-    ,atf_amc_FieldId_v3              = 123
-    ,atf_amc_FieldId_i               = 124
-    ,atf_amc_FieldId_k               = 125
-    ,atf_amc_FieldId_strval_regx     = 126
-    ,atf_amc_FieldId_strval2_regx    = 127
-    ,atf_amc_FieldId_start_dateval   = 128
-    ,atf_amc_FieldId_end_dateval     = 129
-    ,atf_amc_FieldId_start_intval    = 130
-    ,atf_amc_FieldId_end_intval      = 131
+enum atf_amc_FieldIdEnum {    // atf_amc.FieldId.value
+     atf_amc_FieldId_value
+    ,atf_amc_FieldId_bit1
+    ,atf_amc_FieldId_bits5
+    ,atf_amc_FieldId_bit0
+    ,atf_amc_FieldId_freebool
+    ,atf_amc_FieldId_id
+    ,atf_amc_FieldId_seq
+    ,atf_amc_FieldId_attr1
+    ,atf_amc_FieldId_attr2
+    ,atf_amc_FieldId_strval
+    ,atf_amc_FieldId_strval2
+    ,atf_amc_FieldId_dateval
+    ,atf_amc_FieldId_intval
+    ,atf_amc_FieldId_state
+    ,atf_amc_FieldId_ready
+    ,atf_amc_FieldId_p_parent
+    ,atf_amc_FieldId_out_buf
+    ,atf_amc_FieldId_ary
+    ,atf_amc_FieldId_fixary
+    ,atf_amc_FieldId_inlary
+    ,atf_amc_FieldId_len
+    ,atf_amc_FieldId_type
+    ,atf_amc_FieldId_length
+    ,atf_amc_FieldId_base
+    ,atf_amc_FieldId_a
+    ,atf_amc_FieldId_b
+    ,atf_amc_FieldId_o
+    ,atf_amc_FieldId_v
+    ,atf_amc_FieldId_val
+    ,atf_amc_FieldId_word
+    ,atf_amc_FieldId_kind
+    ,atf_amc_FieldId_entry
+    ,atf_amc_FieldId_typeg
+    ,atf_amc_FieldId_optg
+    ,atf_amc_FieldId_present
+    ,atf_amc_FieldId_assigned
+    ,atf_amc_FieldId_nullable
+    ,atf_amc_FieldId_value1
+    ,atf_amc_FieldId_value2
+    ,atf_amc_FieldId_value3
+    ,atf_amc_FieldId_value4
+    ,atf_amc_FieldId_value5
+    ,atf_amc_FieldId_value6
+    ,atf_amc_FieldId_value7
+    ,atf_amc_FieldId_pmask
+    ,atf_amc_FieldId_value21
+    ,atf_amc_FieldId_value22
+    ,atf_amc_FieldId_value23
+    ,atf_amc_FieldId_value24
+    ,atf_amc_FieldId_value25
+    ,atf_amc_FieldId_value26
+    ,atf_amc_FieldId_value20
+    ,atf_amc_FieldId_value28
+    ,atf_amc_FieldId_value29
+    ,atf_amc_FieldId_value30
+    ,atf_amc_FieldId_value31
+    ,atf_amc_FieldId_value32
+    ,atf_amc_FieldId_value27
+    ,atf_amc_FieldId_value19
+    ,atf_amc_FieldId_value18
+    ,atf_amc_FieldId_value8
+    ,atf_amc_FieldId_value9
+    ,atf_amc_FieldId_value69
+    ,atf_amc_FieldId_value11
+    ,atf_amc_FieldId_value12
+    ,atf_amc_FieldId_value13
+    ,atf_amc_FieldId_value14
+    ,atf_amc_FieldId_value15
+    ,atf_amc_FieldId_value16
+    ,atf_amc_FieldId_value33
+    ,atf_amc_FieldId_value10
+    ,atf_amc_FieldId_value17
+    ,atf_amc_FieldId_value35
+    ,atf_amc_FieldId_value55
+    ,atf_amc_FieldId_value56
+    ,atf_amc_FieldId_value57
+    ,atf_amc_FieldId_value58
+    ,atf_amc_FieldId_value59
+    ,atf_amc_FieldId_value60
+    ,atf_amc_FieldId_value54
+    ,atf_amc_FieldId_value62
+    ,atf_amc_FieldId_value63
+    ,atf_amc_FieldId_value64
+    ,atf_amc_FieldId_value65
+    ,atf_amc_FieldId_value66
+    ,atf_amc_FieldId_value67
+    ,atf_amc_FieldId_value68
+    ,atf_amc_FieldId_value61
+    ,atf_amc_FieldId_value34
+    ,atf_amc_FieldId_value52
+    ,atf_amc_FieldId_value36
+    ,atf_amc_FieldId_value37
+    ,atf_amc_FieldId_value38
+    ,atf_amc_FieldId_value39
+    ,atf_amc_FieldId_value40
+    ,atf_amc_FieldId_value41
+    ,atf_amc_FieldId_value42
+    ,atf_amc_FieldId_value53
+    ,atf_amc_FieldId_value44
+    ,atf_amc_FieldId_value45
+    ,atf_amc_FieldId_value46
+    ,atf_amc_FieldId_value47
+    ,atf_amc_FieldId_value48
+    ,atf_amc_FieldId_value49
+    ,atf_amc_FieldId_value50
+    ,atf_amc_FieldId_value51
+    ,atf_amc_FieldId_value43
+    ,atf_amc_FieldId_value70
+    ,atf_amc_FieldId_value71
+    ,atf_amc_FieldId_ch
+    ,atf_amc_FieldId_val1
+    ,atf_amc_FieldId_val2
+    ,atf_amc_FieldId_val3
+    ,atf_amc_FieldId_msghdr
+    ,atf_amc_FieldId_payload
+    ,atf_amc_FieldId_text
+    ,atf_amc_FieldId_typea
+    ,atf_amc_FieldId_j
+    ,atf_amc_FieldId_typec
+    ,atf_amc_FieldId_typeh
+    ,atf_amc_FieldId_types
+    ,atf_amc_FieldId_comment
+    ,atf_amc_FieldId_u
+    ,atf_amc_FieldId_s1
+    ,atf_amc_FieldId_s2
+    ,atf_amc_FieldId_s3
+    ,atf_amc_FieldId_u1
+    ,atf_amc_FieldId_u2
+    ,atf_amc_FieldId_u3
+    ,atf_amc_FieldId_m1
+    ,atf_amc_FieldId_m2
+    ,atf_amc_FieldId_m3
+    ,atf_amc_FieldId_v1
+    ,atf_amc_FieldId_v2
+    ,atf_amc_FieldId_v3
+    ,atf_amc_FieldId_c
+    ,atf_amc_FieldId_i
+    ,atf_amc_FieldId_k
+    ,atf_amc_FieldId_w
+    ,atf_amc_FieldId_strval_regx
+    ,atf_amc_FieldId_strval2_regx
+    ,atf_amc_FieldId_start_dateval
+    ,atf_amc_FieldId_end_dateval
+    ,atf_amc_FieldId_start_intval
+    ,atf_amc_FieldId_end_intval
 };
 
-enum { atf_amc_FieldIdEnum_N = 132 };
+enum { atf_amc_FieldIdEnum_N = 145 };
+
+
+// --- atf_amc_MsgTypeEnum
+
+enum atf_amc_MsgTypeEnum {                            // atf_amc.MsgType.value
+     atf_amc_MsgType_atf_amc_OptBMsg       = 0x1008   // Message whose optional trailing element has a scaled lenfld
+    ,atf_amc_MsgType_atf_amc_Seqmsg        = 0x0905   // Sequenced message for stream
+    ,atf_amc_MsgType_atf_amc_Text          = 0x0412
+    ,atf_amc_MsgType_atf_amc_Varlen2Msg    = 0x1001
+    ,atf_amc_MsgType_atf_amc_Varlen2aMsg   = 0x1002
+    ,atf_amc_MsgType_atf_amc_Varlen2mMsg   = 0x1004
+    ,atf_amc_MsgType_atf_amc_Varlen2vMsg   = 0x1003
+    ,atf_amc_MsgType_atf_amc_VarlenBMsg    = 0x1007   // Message whose Varlen element bytes may not land on a scale multiple
+    ,atf_amc_MsgType_atf_amc_VarlenMsg     = 0x1000
+    ,atf_amc_MsgType_atf_amc_VarlenVMsg    = 0x1006   // Message whose Varlen field has a one-letter name
+    ,atf_amc_MsgType_atf_amc_VarlenWMsg    = 0x1005   // Message whose Varlen elements carry a scaled lenfld
+};
+
+enum { atf_amc_MsgTypeEnum_N = 11 };
 
 
 // --- atf_amc_MsgHdrLT_type_Enum
@@ -235,44 +301,53 @@ enum { atf_amc_MsgHdrLTMsgsCaseEnum_N = 4 };
 
 // --- atf_amc_MsgHdrLTScale_type_Enum
 
-enum atf_amc_MsgHdrLTScale_type_Enum {                       // atf_amc.MsgHdrLTScale.type
+enum atf_amc_MsgHdrLTScale_type_Enum {                        // atf_amc.MsgHdrLTScale.type
      atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA   = 'S'
+    ,atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleV   = 'V'   // scaled length-type header with a varlen tail
 };
 
-enum { atf_amc_MsgHdrLTScale_type_Enum_N = 1 };
+enum { atf_amc_MsgHdrLTScale_type_Enum_N = 2 };
 
 
 // --- atf_amc_MsgHdrLTScaleMsgsCaseEnum
 
 enum atf_amc_MsgHdrLTScaleMsgsCaseEnum {                        // atf_amc.MsgHdrLTScaleMsgsCase.value
      atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleA   = 'S'
+    ,atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleV   = 'V'
 };
 
-enum { atf_amc_MsgHdrLTScaleMsgsCaseEnum_N = 1 };
-
-
-// --- atf_amc_MsgTypeEnum
-
-enum atf_amc_MsgTypeEnum {                            // atf_amc.MsgType.value
-     atf_amc_MsgType_atf_amc_Seqmsg        = 0x0905   // Sequenced message for stream
-    ,atf_amc_MsgType_atf_amc_Text          = 0x0412
-    ,atf_amc_MsgType_atf_amc_Varlen2Msg    = 0x1001
-    ,atf_amc_MsgType_atf_amc_Varlen2aMsg   = 0x1002
-    ,atf_amc_MsgType_atf_amc_Varlen2mMsg   = 0x1004
-    ,atf_amc_MsgType_atf_amc_Varlen2vMsg   = 0x1003
-    ,atf_amc_MsgType_atf_amc_VarlenMsg     = 0x1000
-};
-
-enum { atf_amc_MsgTypeEnum_N = 7 };
+enum { atf_amc_MsgHdrLTScaleMsgsCaseEnum_N = 2 };
 
 
 // --- atf_amc_MsgsCaseEnum
 
 enum atf_amc_MsgsCaseEnum {                  // atf_amc.MsgsCase.value
-     atf_amc_MsgsCase_atf_amc_VarlenK   = 1
+     atf_amc_MsgsCase_atf_amc_VarlenB   = 1
+    ,atf_amc_MsgsCase_atf_amc_VarlenK   = 2
 };
 
-enum { atf_amc_MsgsCaseEnum_N = 1 };
+enum { atf_amc_MsgsCaseEnum_N = 2 };
+
+
+// --- atf_amc_NetFrameHdr_kind_Enum
+
+enum atf_amc_NetFrameHdr_kind_Enum {                   // atf_amc.NetFrameHdr.kind
+     atf_amc_NetFrameHdr_kind_DATA               = 0
+    ,atf_amc_NetFrameHdr_kind_HEADERS            = 1
+    ,atf_amc_NetFrameHdr_kind_SETTINGS           = 4
+    ,atf_amc_NetFrameHdr_kind_atf_amc_NetFrame   = 4   // amc fixture: Base NetFrameHdr + Varlen NetEntry + String; locks in fbigend+bitfld+lenfld over Base/GetEnum/Init/cursor
+};
+
+enum { atf_amc_NetFrameHdr_kind_Enum_N = 4 };
+
+
+// --- atf_amc_NetFrameHdrMsgsCaseEnum
+
+enum atf_amc_NetFrameHdrMsgsCaseEnum {                   // atf_amc.NetFrameHdrMsgsCase.value
+     atf_amc_NetFrameHdrMsgsCase_atf_amc_NetFrame   = 4
+};
+
+enum { atf_amc_NetFrameHdrMsgsCaseEnum_N = 1 };
 
 
 // --- atf_amc_PooledBE64_value_Enum
@@ -283,6 +358,16 @@ enum atf_amc_PooledBE64_value_Enum {       // atf_amc.PooledBE64.value
 };
 
 enum { atf_amc_PooledBE64_value_Enum_N = 2 };
+
+
+// --- atf_amc_SentinelEnum_value_Enum
+
+enum atf_amc_SentinelEnum_value_Enum {                                                  // atf_amc.SentinelEnum.value
+     atf_amc_SentinelEnum_value_        // sentinel: what the empty string converts to
+    ,atf_amc_SentinelEnum_value_full
+};
+
+enum { atf_amc_SentinelEnum_value_Enum_N = 2 };
 
 
 // --- atf_amc_SsimfilesCaseEnum
@@ -297,12 +382,13 @@ enum { atf_amc_SsimfilesCaseEnum_N = 2 };
 
 // --- atf_amc_TableIdEnum
 
-enum atf_amc_TableIdEnum {                 // atf_amc.TableId.value
-     atf_amc_TableId_atf_amc_TypeS   = 0   // atf_amc.TypeS -> atf_amc.FTypeS
-    ,atf_amc_TableId_atf_amc_TypeT   = 1   // atf_amc.TypeT -> atf_amc.FTypeT
+enum atf_amc_TableIdEnum {                                               // atf_amc.TableId.value
+     atf_amc_TableId_atf_amc_TypeS   // atf_amc.TypeS -> atf_amc.FTypeS
+    ,atf_amc_TableId_atf_amc_TypeT   // atf_amc.TypeT -> atf_amc.FTypeT
+    ,atf_amc_TableId_atf_amc_TypeU   // atf_amc.TypeU -> atf_amc.FTypeU
 };
 
-enum { atf_amc_TableIdEnum_N = 2 };
+enum { atf_amc_TableIdEnum_N = 3 };
 
 
 // --- atf_amc_TypeBE32en_value_Enum
@@ -329,39 +415,152 @@ namespace atf_amc { // gen:ns_pkeytypedef
     typedef i32 TypeSPkey;
 } // gen:ns_pkeytypedef
 namespace atf_amc { // gen:ns_tclass_field
-extern const char *atf_amc_help;
 struct varlen_extern_Lpblock {
     varlen_extern_Lpblock* next;
+};
+
+struct varlen_extern_Lpblk { // blk: block dedicated to one size class
+    varlen_extern_Lpblk*   next;    // next blk of the class with free space
+    varlen_extern_Lpblk**  pprev;   // back link; NULL = not on the class list
+    varlen_extern_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
 };
 struct optalloc_Lpblock {
     optalloc_Lpblock* next;
 };
+
+struct optalloc_Lpblk { // blk: block dedicated to one size class
+    optalloc_Lpblk*   next;    // next blk of the class with free space
+    optalloc_Lpblk**  pprev;   // back link; NULL = not on the class list
+    optalloc_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
+};
 struct varlenalloc_Lpblock {
     varlenalloc_Lpblock* next;
 };
+
+struct varlenalloc_Lpblk { // blk: block dedicated to one size class
+    varlenalloc_Lpblk*   next;    // next blk of the class with free space
+    varlenalloc_Lpblk**  pprev;   // back link; NULL = not on the class list
+    varlenalloc_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
+};
 struct optg_Lpblock {
     optg_Lpblock* next;
+};
+
+struct optg_Lpblk { // blk: block dedicated to one size class
+    optg_Lpblk*   next;    // next blk of the class with free space
+    optg_Lpblk**  pprev;   // back link; NULL = not on the class list
+    optg_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
+};
+struct varlenallocscale_Lpblock {
+    varlenallocscale_Lpblock* next;
+};
+
+struct varlenallocscale_Lpblk { // blk: block dedicated to one size class
+    varlenallocscale_Lpblk*   next;    // next blk of the class with free space
+    varlenallocscale_Lpblk**  pprev;   // back link; NULL = not on the class list
+    varlenallocscale_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
+};
+struct msghdrltscale_Lpblock {
+    msghdrltscale_Lpblock* next;
+};
+
+struct msghdrltscale_Lpblk { // blk: block dedicated to one size class
+    msghdrltscale_Lpblk*   next;    // next blk of the class with free space
+    msghdrltscale_Lpblk**  pprev;   // back link; NULL = not on the class list
+    msghdrltscale_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
+};
+struct lpool_Lpblock {
+    lpool_Lpblock* next;
+};
+
+struct lpool_Lpblk { // blk: block dedicated to one size class
+    lpool_Lpblk*   next;    // next blk of the class with free space
+    lpool_Lpblk**  pprev;   // back link; NULL = not on the class list
+    lpool_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
+};
+struct optwide_Lpblock {
+    optwide_Lpblock* next;
+};
+
+struct optwide_Lpblk { // blk: block dedicated to one size class
+    optwide_Lpblk*   next;    // next blk of the class with free space
+    optwide_Lpblk**  pprev;   // back link; NULL = not on the class list
+    optwide_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
+};
+struct optsigned_Lpblock {
+    optsigned_Lpblock* next;
+};
+
+struct optsigned_Lpblk { // blk: block dedicated to one size class
+    optsigned_Lpblk*   next;    // next blk of the class with free space
+    optsigned_Lpblk**  pprev;   // back link; NULL = not on the class list
+    optsigned_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
 };
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atfdb { struct Amctest; }
 namespace atf_amc { struct FCascdel; }
+namespace atf_amc { struct FCondpar; }
 namespace atf_amc { struct Cstring; }
 namespace dmmeta { struct Listtype; }
 namespace atf_amc { struct FListtype; }
 namespace atf_amc { struct OptG; }
 namespace atf_amc { struct TypeG; }
+namespace atf_amc { struct OptSigned; }
+namespace atf_amc { struct OptWide; }
 namespace atf_amc { struct TypeA; }
 namespace atf_amc { struct TypeB; }
 namespace atf_amc { struct TypeC; }
 namespace atf_amc { struct TypeS; }
 namespace atf_amc { struct TypeT; }
+namespace atf_amc { struct TypeU; }
 namespace atf_amc { struct Hooktype; }
+namespace atf_amc { struct MsgHeader; }
 namespace atf_amc { struct MsgHdrLT; }
 namespace atf_amc { struct MsgHdrLTScale; }
-namespace atf_amc { struct MsgHeader; }
+namespace atf_amc { struct NetFrameHdr; }
+namespace atf_amc { struct NetEntry; }
+namespace atf_amc { struct VarlenB; }
+namespace atf_amc { struct FTypeA; }
 namespace atf_amc { struct VarlenK; }
 namespace atf_amc { struct TypeH; }
+namespace atf_amc { struct VarlenW; }
 namespace atf_amc { struct DispType1; }
 namespace atf_amc { struct DispType2; }
 namespace atf_amc { struct DispType3; }
@@ -371,26 +570,35 @@ namespace atf_amc { struct MsgLTB; }
 namespace atf_amc { struct MsgLTO; }
 namespace atf_amc { struct MsgLTV; }
 namespace atf_amc { struct MsgLTScaleA; }
+namespace atf_amc { struct MsgLTScaleV; }
+namespace atf_amc { struct OptBMsg; }
 namespace atf_amc { struct Seqmsg; }
 namespace atf_amc { struct Text; }
 namespace atf_amc { struct Varlen2Msg; }
 namespace atf_amc { struct Varlen2aMsg; }
 namespace atf_amc { struct Varlen2mMsg; }
 namespace atf_amc { struct Varlen2vMsg; }
+namespace atf_amc { struct VarlenBMsg; }
 namespace atf_amc { struct VarlenMsg; }
+namespace atf_amc { struct VarlenVMsg; }
+namespace atf_amc { struct VarlenWMsg; }
+namespace atf_amc { struct NetFrame; }
 namespace atf_amc { struct OptOptG; }
 namespace atf_amc { struct MsgType; }
 namespace atf_amc { struct MsgLength; }
+namespace atf_amc { struct VarlenLow; }
 namespace atf_amc { struct Bitset_fld1_bitcurs; }
 namespace atf_amc { struct Bitset_fld1_curs; }
 namespace atf_amc { struct Bitset_fld8_bitcurs; }
 namespace atf_amc { struct Bitset_fld64_bitcurs; }
 namespace atf_amc { struct Bitset_fld128_bitcurs; }
+namespace atf_amc { struct Disp2Filter_pmask_curs; }
 namespace atf_amc { struct DispFilter_pmask_curs; }
 namespace atf_amc { struct cascdel_c_child_ptrary_curs; }
 namespace atf_amc { struct cascdel_bh_child_bheap_curs; }
 namespace atf_amc { struct cascdel_zd_childlist_curs; }
 namespace atf_amc { struct cascdel_tr_child_atree_curs; }
+namespace atf_amc { struct cascdel_c_child_heap_curs; }
 namespace atf_amc { struct _db_bh_typec_curs; }
 namespace atf_amc { struct _db_zdl_h_typec_curs; }
 namespace atf_amc { struct _db_zd_t_typec_curs; }
@@ -416,6 +624,7 @@ namespace atf_amc { struct _db_amctest_curs; }
 namespace atf_amc { struct _db_c_typek_curs; }
 namespace atf_amc { struct _db_c_typek_oncecurs; }
 namespace atf_amc { struct _db_c_typel_curs; }
+namespace atf_amc { struct _db_c_typel_oncecurs; }
 namespace atf_amc { struct _db_c_typem_curs; }
 namespace atf_amc { struct _db_avl_curs; }
 namespace atf_amc { struct _db_tr_avl_curs; }
@@ -423,6 +632,16 @@ namespace atf_amc { struct _db_listtype_curs; }
 namespace atf_amc { struct _db_thash_elem_curs; }
 namespace atf_amc { struct _db_bh_time_entry_curs; }
 namespace atf_amc { struct _db_ind_linear_curs; }
+namespace atf_amc { struct _db_ind_blkhash_elem_Blk; }
+namespace atf_amc { struct _db_ind_blkhash_elem_curs; }
+namespace atf_amc { struct _db_charbuf_curs; }
+namespace atf_amc { struct _db_zd_condtest_run_curs; }
+namespace atf_amc { struct _db_zd_condtest_idle_curs; }
+namespace atf_amc { struct _db_cd_condtest_ready_curs; }
+namespace atf_amc { struct _db_zd_condpar_done_curs; }
+namespace atf_amc { struct _db_cd_condtest_space_curs; }
+namespace atf_amc { struct _db_cd_sslbuf_out_curs; }
+namespace atf_amc { struct _db_typeu_curs; }
 namespace atf_amc { struct FPerfSortString_orig_curs; }
 namespace atf_amc { struct FPerfSortString_sorted1_curs; }
 namespace atf_amc { struct typea_typec_curs; }
@@ -432,10 +651,14 @@ namespace atf_amc { struct types_zdl_typet_curs; }
 namespace atf_amc { struct FUnitSort_tary_curs; }
 namespace atf_amc { struct FUnitSort_c_ptrary_curs; }
 namespace atf_amc { struct FUnitSort_fixary_curs; }
+namespace atf_amc { struct InlaryMin_ary_curs; }
 namespace atf_amc { struct InlaryPrint_fixary_curs; }
 namespace atf_amc { struct InlaryPrint_inlary_curs; }
 namespace atf_amc { struct Lary32_lary_curs; }
+namespace atf_amc { struct MsgLTScaleV_v_curs; }
 namespace atf_amc { struct MsgLTV_v_curs; }
+namespace atf_amc { struct NetFrame_entry_curs; }
+namespace atf_amc { struct b_c_curs; }
 namespace atf_amc { struct PmaskU555_pmask_curs; }
 namespace atf_amc { struct TaryU32_tary_u32_curs; }
 namespace atf_amc { struct TaryU8_ary_curs; }
@@ -454,9 +677,18 @@ namespace atf_amc { struct Varlen2vMsg_v1_curs; }
 namespace atf_amc { struct Varlen2vMsg_v2_curs; }
 namespace atf_amc { struct Varlen2vMsg_v3_curs; }
 namespace atf_amc { struct varlenalloc_elem_curs; }
+namespace atf_amc { struct varlenallocscale_elem_curs; }
+namespace atf_amc { struct VarlenAllocU64_a_curs; }
+namespace atf_amc { struct VarlenAllocU64_b_curs; }
+namespace atf_amc { struct VarlenAllocU8_elem_curs; }
+namespace atf_amc { struct VarlenBMsg_b_curs; }
 namespace atf_amc { struct varlen_extern_varlen_curs; }
 namespace atf_amc { struct VarlenH_typeh_curs; }
+namespace atf_amc { struct VarlenLow_c_curs; }
 namespace atf_amc { struct VarlenMsg_k_curs; }
+namespace atf_amc { struct w_i_curs; }
+namespace atf_amc { struct VarlenVMsg_w_curs; }
+namespace atf_amc { struct VarlenWMsg_word_curs; }
 namespace atf_amc { struct AmcCleanup2; }
 namespace atf_amc { struct AmcSubstr1; }
 namespace atf_amc { struct BitfldType1; }
@@ -464,27 +696,36 @@ namespace atf_amc { struct BitfldType2; }
 namespace atf_amc { struct BitfldU128; }
 namespace atf_amc { struct BitfldU16; }
 namespace atf_amc { struct Bitset; }
+namespace atf_amc { struct BlkKey; }
 namespace atf_amc { struct Bytebuf; }
 namespace atf_amc { struct BytebufDyn; }
 namespace atf_amc { struct Cstr; }
 namespace atf_amc { struct Ctype1Attr; }
 namespace atf_amc { struct Ctype2Attr; }
 namespace atf_amc { struct Ctype2AttrAnon; }
+namespace atf_amc { struct DecQuote; }
 namespace atf_amc { struct DelType1; }
+namespace atf_amc { struct Disp2Case; }
+namespace atf_amc { struct Disp2Filter; }
 namespace atf_amc { struct DispCase; }
 namespace atf_amc { struct DispFilter; }
+namespace atf_amc { struct ErrcodeFldLt; }
+namespace atf_amc { struct ErrcodeLt; }
 namespace atf_amc { struct FAmctest; }
 namespace atf_amc { struct FAvl; }
+namespace atf_amc { struct FBlkhashElem; }
+namespace atf_amc { struct FCondtest; }
 namespace atf_amc { struct FCstring; }
 namespace atf_amc { struct trace; }
 namespace atf_amc { struct FDb; }
 namespace atf_amc { struct FHashableLinear; }
 namespace atf_amc { struct FOptG; }
+namespace atf_amc { struct FOptSigned; }
+namespace atf_amc { struct FOptWide; }
 namespace atf_amc { struct FPerfSortString; }
 namespace atf_amc { struct FThashElem; }
 namespace atf_amc { struct FTimeEntry; }
 namespace atf_amc { struct FTypeC; }
-namespace atf_amc { struct FTypeA; }
 namespace atf_amc { struct FTypeB; }
 namespace atf_amc { struct FTypeD; }
 namespace atf_amc { struct FTypeK; }
@@ -492,12 +733,18 @@ namespace atf_amc { struct FTypeL; }
 namespace atf_amc { struct FTypeM; }
 namespace atf_amc { struct FTypeS; }
 namespace atf_amc { struct FTypeT; }
+namespace atf_amc { struct FTypeU; }
 namespace atf_amc { struct FUnitSort; }
 namespace atf_amc { struct FieldId; }
 namespace atf_amc { struct Hashable; }
+namespace atf_amc { struct InlaryMin; }
 namespace atf_amc { struct InlaryPrint; }
 namespace atf_amc { struct Lary32; }
 namespace atf_amc { struct Linebuf; }
+namespace atf_amc { struct LnullStr4_U32_Base256; }
+namespace atf_amc { struct Lpoolbuf; }
+namespace atf_amc { struct LspaceStr5_U32_Base95; }
+namespace atf_amc { struct LspaceStr7_I32; }
 namespace atf_amc { struct MsgHdrLTMsgsCase; }
 namespace atf_amc { struct MsgHdrLTScaleMsgsCase; }
 namespace atf_amc { struct MsgHdrLTScale_curs; }
@@ -506,10 +753,15 @@ namespace atf_amc { struct MsgHeader_curs; }
 namespace atf_amc { struct Msgbuf; }
 namespace atf_amc { struct MsgsCase; }
 namespace atf_amc { struct NetBitfld1; }
+namespace atf_amc { struct NetFrameHdrMsgsCase; }
+namespace atf_amc { struct NetFrameHdr_curs; }
+namespace atf_amc { struct NovsStr9; }
 namespace atf_amc { struct OptAlloc; }
 namespace atf_amc { struct OptAlloc_curs; }
 namespace atf_amc { struct OptG_curs; }
 namespace atf_amc { struct OptOptG_curs; }
+namespace atf_amc { struct OptSigned_curs; }
+namespace atf_amc { struct OptWide_curs; }
 namespace atf_amc { struct PmaskMultiple; }
 namespace atf_amc { struct PmaskU128; }
 namespace atf_amc { struct PmaskU32; }
@@ -517,9 +769,12 @@ namespace atf_amc { struct PmaskU555; }
 namespace atf_amc { struct PooledBE64; }
 namespace atf_amc { struct RnullStr6_U32; }
 namespace atf_amc { struct RpasU32Str6; }
+namespace atf_amc { struct RspaceStr9; }
+namespace atf_amc { struct SentinelEnum; }
 namespace atf_amc { struct Sep1; }
 namespace atf_amc { struct SortedStr; }
 namespace atf_amc { struct SsimfilesCase; }
+namespace atf_amc { struct Sslbuf; }
 namespace atf_amc { struct Strkey; }
 namespace atf_amc { struct TableId; }
 namespace atf_amc { struct TaryU32; }
@@ -534,13 +789,24 @@ namespace atf_amc { struct TypeBE64dflt; }
 namespace atf_amc { struct TypeBE64sf; }
 namespace atf_amc { struct TypeTVal; }
 namespace atf_amc { struct Typefconst; }
+namespace atf_amc { struct UpptrLt; }
 namespace atf_amc { struct VarlenAlloc; }
+namespace atf_amc { struct VarlenAllocScale; }
+namespace atf_amc { struct VarlenAllocScale_curs; }
+namespace atf_amc { struct VarlenAllocU64; }
+namespace atf_amc { struct VarlenAllocU64_curs; }
+namespace atf_amc { struct VarlenAllocU8; }
+namespace atf_amc { struct VarlenAllocU8_curs; }
 namespace atf_amc { struct VarlenAlloc_curs; }
+namespace atf_amc { struct VarlenB_curs; }
 namespace atf_amc { struct VarlenExtern; }
 namespace atf_amc { struct VarlenExtern_curs; }
 namespace atf_amc { struct VarlenH; }
 namespace atf_amc { struct VarlenH_curs; }
 namespace atf_amc { struct VarlenK_curs; }
+namespace atf_amc { struct VarlenLow_curs; }
+namespace atf_amc { struct VarlenW_curs; }
+namespace atf_amc { struct VsortStr9; }
 namespace atf_amc { extern struct atf_amc::FDb _db; }
 namespace atf_amc { // hook_fcn_typedef
     typedef void (*amctest_step_hook)(); // hook:atf_amc.FAmctest.step
@@ -564,6 +830,7 @@ namespace atf_amc { // gen:ns_size_enums
 enum {
     sizeof_atf_amc_TypeG = 4
     , sizeof_atf_amc_MsgHdrLT = 2
+    , sizeof_atf_amc_VarlenB = 4
     , sizeof_atf_amc_OptG = 4
     , sizeof_atf_amc_MsgHeader = 4
 };
@@ -579,7 +846,6 @@ struct AmcCleanup2 { // atf_amc.AmcCleanup2
     // func:atf_amc.AmcCleanup2..Dtor
     inline               ~AmcCleanup2() __attribute__((nothrow));
 };
-
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field field1 of atf_amc::AmcCleanup2
 // func:atf_amc.AmcCleanup2.field1.Cleanup
@@ -604,7 +870,6 @@ struct AmcSubstr1 { // atf_amc.AmcSubstr1
     // func:atf_amc.AmcSubstr1..Ctor
     inline               AmcSubstr1() __attribute__((nothrow));
 };
-
 // func:atf_amc.AmcSubstr1.boolval.Get
 bool                 boolval_Get(atf_amc::AmcSubstr1& parent) __attribute__((__warn_unused_result__, nothrow));
 
@@ -618,7 +883,6 @@ struct BitfldType1 { // atf_amc.BitfldType1: Test type for testing reading/print
     // func:atf_amc.BitfldType1..Ctor
     inline               BitfldType1() __attribute__((nothrow));
 };
-
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
 // func:atf_amc.BitfldType1.bit1.Get
@@ -636,6 +900,32 @@ inline u64           bits5_Get(const atf_amc::BitfldType1& parent) __attribute__
 //    10 bits starting at bit 5.
 // func:atf_amc.BitfldType1.bits5.Set
 inline void          bits5_Set(atf_amc::BitfldType1& parent, u64 rhs) __attribute__((nothrow));
+// Get value of field as enum type
+// func:atf_amc.BitfldType1.bits5.GetEnum
+inline atf_amc_BitfldType1_bits5_Enum bits5_GetEnum(const atf_amc::BitfldType1& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.BitfldType1.bits5.SetEnum
+inline void          bits5_SetEnum(atf_amc::BitfldType1& parent, atf_amc_BitfldType1_bits5_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.BitfldType1.bits5.ToCstr
+const char*          bits5_ToCstr(const atf_amc::BitfldType1& parent) __attribute__((nothrow));
+// Convert bits5 to a string. First, attempt conversion to a known string.
+// If no string matches, print bits5 as a numeric value.
+// func:atf_amc.BitfldType1.bits5.Print
+void                 bits5_Print(const atf_amc::BitfldType1& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.BitfldType1.bits5.SetStrptrMaybe
+bool                 bits5_SetStrptrMaybe(atf_amc::BitfldType1& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.BitfldType1.bits5.SetStrptr
+void                 bits5_SetStrptr(atf_amc::BitfldType1& parent, algo::strptr rhs, atf_amc_BitfldType1_bits5_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.BitfldType1.bits5.ReadStrptrMaybe
+bool                 bits5_ReadStrptrMaybe(atf_amc::BitfldType1& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:atf_amc.BitfldType1..ReadFieldMaybe
 bool                 BitfldType1_ReadFieldMaybe(atf_amc::BitfldType1& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -649,7 +939,7 @@ inline void          BitfldType1_Init(atf_amc::BitfldType1& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.BitfldType1.String  printfmt:Tuple
 // func:atf_amc.BitfldType1..Print
-void                 BitfldType1_Print(atf_amc::BitfldType1& row, algo::cstring& str) __attribute__((nothrow));
+void                 BitfldType1_Print(atf_amc::BitfldType1 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.BitfldType2
 struct BitfldType2 { // atf_amc.BitfldType2: Test type 2 for testing reading/printing bitfields to tuple
@@ -658,7 +948,6 @@ struct BitfldType2 { // atf_amc.BitfldType2: Test type 2 for testing reading/pri
     // func:atf_amc.BitfldType2..Ctor
     inline               BitfldType2() __attribute__((nothrow));
 };
-
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 0.
 // func:atf_amc.BitfldType2.bit0.Get
@@ -688,7 +977,7 @@ inline void          BitfldType2_Init(atf_amc::BitfldType2& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.BitfldType2.String  printfmt:Bitset
 // func:atf_amc.BitfldType2..Print
-void                 BitfldType2_Print(atf_amc::BitfldType2& row, algo::cstring& str) __attribute__((nothrow));
+void                 BitfldType2_Print(atf_amc::BitfldType2 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.BitfldU128
 struct BitfldU128 { // atf_amc.BitfldU128: Test of bitfield functionality
@@ -696,7 +985,6 @@ struct BitfldU128 { // atf_amc.BitfldU128: Test of bitfield functionality
     // func:atf_amc.BitfldU128..Ctor
     inline               BitfldU128() __attribute__((nothrow));
 };
-
 // Retrieve bitfield from value of field value
 //    64 bits starting at bit 1.
 // func:atf_amc.BitfldU128.bits1_65.Get
@@ -725,7 +1013,6 @@ struct BitfldU16 { // atf_amc.BitfldU16: Test of bitfield functionality
     // func:atf_amc.BitfldU16..Ctor
     inline               BitfldU16() __attribute__((nothrow));
 };
-
 // Retrieve bitfield from value of field value
 //    4 bits starting at bit 0.
 // func:atf_amc.BitfldU16.bits0_4.Get
@@ -757,7 +1044,6 @@ struct Bitset { // atf_amc.Bitset: Test bitset
     // func:atf_amc.Bitset..Ctor
     inline               Bitset() __attribute__((nothrow));
 };
-
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
 // func:atf_amc.Bitset.fld1.NBits
@@ -989,6 +1275,9 @@ inline void          fld128_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &
 // (This function is not named Set.. to avoid triple entendre).
 // func:atf_amc.Bitset.fld128.OrBits
 inline void          fld128_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
+// Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.Bitset.fld128.Sup
+inline i32           fld128_Sup(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 // func:atf_amc.Bitset.fld1_bitcurs.Next
@@ -1035,9 +1324,53 @@ inline bool          Bitset_fld64_bitcurs_ValidQ(Bitset_fld64_bitcurs &curs) __a
 // item access
 // func:atf_amc.Bitset.fld64_bitcurs.Access
 inline int&          Bitset_fld64_bitcurs_Access(Bitset_fld64_bitcurs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.Bitset.fld128_bitcurs.Next
+void                 Bitset_fld128_bitcurs_Next(Bitset_fld128_bitcurs &curs);
+// func:atf_amc.Bitset.fld128_bitcurs.Reset
+inline void          Bitset_fld128_bitcurs_Reset(Bitset_fld128_bitcurs &curs, atf_amc::Bitset &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.Bitset.fld128_bitcurs.ValidQ
+inline bool          Bitset_fld128_bitcurs_ValidQ(Bitset_fld128_bitcurs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.Bitset.fld128_bitcurs.Access
+inline int&          Bitset_fld128_bitcurs_Access(Bitset_fld128_bitcurs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.Bitset..Init
 inline void          Bitset_Init(atf_amc::Bitset& parent);
+
+// --- atf_amc.BlkKey
+struct BlkKey { // atf_amc.BlkKey: Blkhash test key: spread id + dense seq
+    u32             id;    //   0  Spread component (stream-like id)
+    algo::SeqType   seq;   // Dense component
+    // func:atf_amc.BlkKey..EqOp
+    inline bool          operator ==(const atf_amc::BlkKey &rhs) const __attribute__((nothrow));
+    // func:atf_amc.BlkKey..NeOp
+    inline bool          operator !=(const atf_amc::BlkKey &rhs) const __attribute__((nothrow));
+    // func:atf_amc.BlkKey..Ctor
+    inline               BlkKey() __attribute__((nothrow));
+    // func:atf_amc.BlkKey..FieldwiseCtor
+    explicit inline               BlkKey(u32 in_id, algo::SeqType in_seq) __attribute__((nothrow));
+};
+// func:atf_amc.BlkKey..Hash
+inline u32           BlkKey_Hash(u32 prev, atf_amc::BlkKey rhs) __attribute__((nothrow));
+// func:atf_amc.BlkKey..ReadFieldMaybe
+bool                 BlkKey_ReadFieldMaybe(atf_amc::BlkKey& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::BlkKey from an ascii string.
+// The format of the string is a string with separated values
+// func:atf_amc.BlkKey..ReadStrptrMaybe
+bool                 BlkKey_ReadStrptrMaybe(atf_amc::BlkKey &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:atf_amc.BlkKey..Cmp
+inline i32           BlkKey_Cmp(atf_amc::BlkKey lhs, atf_amc::BlkKey rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.BlkKey..Init
+inline void          BlkKey_Init(atf_amc::BlkKey& parent);
+// func:atf_amc.BlkKey..Eq
+inline bool          BlkKey_Eq(atf_amc::BlkKey lhs, atf_amc::BlkKey rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.BlkKey.String  printfmt:Sep
+// func:atf_amc.BlkKey..Print
+void                 BlkKey_Print(atf_amc::BlkKey row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Bytebuf
 // create: atf_amc.FDb.bytebuf (Cppstack)
@@ -1056,7 +1389,18 @@ struct Bytebuf { // atf_amc.Bytebuf
     // func:atf_amc.Bytebuf..Dtor
     inline               ~Bytebuf() __attribute__((nothrow));
 };
-
+// func:atf_amc.Bytebuf.in.GetAlloc
+inline algo::Alloc   in_GetAlloc(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
+// func:atf_amc.Bytebuf.in.GetAllocReserve
+inline algo::Alloc   in_GetAllocReserve(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+// func:atf_amc.Bytebuf.in.BeginAlloc
+void*                in_BeginAlloc(atf_amc::Bytebuf &bytebuf, i32 in_n) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+// func:atf_amc.Bytebuf.in.BeginAllocReserve
+void*                in_BeginAllocReserve(atf_amc::Bytebuf &bytebuf, i32 in_n) __attribute__((nothrow));
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
@@ -1091,14 +1435,14 @@ void                 in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) __attribute_
 // func:atf_amc.Bytebuf.in.SkipMsg
 void                 in_SkipMsg(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:atf_amc.Bytebuf.in.WriteAll
 bool                 in_WriteAll(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 // func:atf_amc.Bytebuf.in.WriteReserve
 void                 in_WriteReserve(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
@@ -1129,7 +1473,18 @@ struct BytebufDyn { // atf_amc.BytebufDyn
     // func:atf_amc.BytebufDyn..Dtor
     inline               ~BytebufDyn() __attribute__((nothrow));
 };
-
+// func:atf_amc.BytebufDyn.in.GetAlloc
+inline algo::Alloc   in_GetAlloc(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
+// func:atf_amc.BytebufDyn.in.GetAllocReserve
+inline algo::Alloc   in_GetAllocReserve(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+// func:atf_amc.BytebufDyn.in.BeginAlloc
+void*                in_BeginAlloc(atf_amc::BytebufDyn &bytebuf_dyn, i32 in_n) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+// func:atf_amc.BytebufDyn.in.BeginAllocReserve
+void*                in_BeginAllocReserve(atf_amc::BytebufDyn &bytebuf_dyn, i32 in_n) __attribute__((nothrow));
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
@@ -1164,14 +1519,14 @@ void                 in_SkipBytes(atf_amc::BytebufDyn& bytebuf_dyn, int n) __att
 // func:atf_amc.BytebufDyn.in.SkipMsg
 void                 in_SkipMsg(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:atf_amc.BytebufDyn.in.WriteAll
 bool                 in_WriteAll(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 // func:atf_amc.BytebufDyn.in.WriteReserve
 void                 in_WriteReserve(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) __attribute__((nothrow));
 
@@ -1209,7 +1564,6 @@ struct Cstr { // atf_amc.Cstr
     // func:atf_amc.Cstr..FieldwiseCtor
     explicit inline               Cstr(const algo::strptr& in_val) __attribute__((nothrow));
 };
-
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:atf_amc.Cstr.val.Lt
 inline bool          val_Lt(atf_amc::Cstr& parent, atf_amc::Cstr &rhs) __attribute__((nothrow));
@@ -1241,7 +1595,6 @@ struct Cstring { // atf_amc.Cstring
     inline               Cstring() __attribute__((nothrow));
 };
 
-
 // --- atf_amc.Ctype1Attr
 struct Ctype1Attr { // atf_amc.Ctype1Attr
     u32   attr1;   //   0
@@ -1264,29 +1617,28 @@ struct Ctype1Attr { // atf_amc.Ctype1Attr
     // func:atf_amc.Ctype1Attr..FieldwiseCtor
     explicit inline               Ctype1Attr(u32 in_attr1) __attribute__((nothrow));
 };
-
 // func:atf_amc.Ctype1Attr..Hash
-inline u32           Ctype1Attr_Hash(u32 prev, const atf_amc::Ctype1Attr& rhs) __attribute__((nothrow));
+inline u32           Ctype1Attr_Hash(u32 prev, atf_amc::Ctype1Attr rhs) __attribute__((nothrow));
 // Read fields of atf_amc::Ctype1Attr from an ascii string.
 // The format of the string is the format of the atf_amc::Ctype1Attr's only field
 // func:atf_amc.Ctype1Attr..ReadStrptrMaybe
 bool                 Ctype1Attr_ReadStrptrMaybe(atf_amc::Ctype1Attr &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_amc.Ctype1Attr..Lt
-inline bool          Ctype1Attr_Lt(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) __attribute__((nothrow));
+inline bool          Ctype1Attr_Lt(atf_amc::Ctype1Attr lhs, atf_amc::Ctype1Attr rhs) __attribute__((nothrow));
 // func:atf_amc.Ctype1Attr..Cmp
-inline i32           Ctype1Attr_Cmp(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) __attribute__((nothrow));
+inline i32           Ctype1Attr_Cmp(atf_amc::Ctype1Attr lhs, atf_amc::Ctype1Attr rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.Ctype1Attr..Init
 inline void          Ctype1Attr_Init(atf_amc::Ctype1Attr& parent);
 // func:atf_amc.Ctype1Attr..Eq
-inline bool          Ctype1Attr_Eq(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) __attribute__((nothrow));
+inline bool          Ctype1Attr_Eq(atf_amc::Ctype1Attr lhs, atf_amc::Ctype1Attr rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_amc.Ctype1Attr..Update
-inline bool          Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1Attr& rhs) __attribute__((nothrow));
+inline bool          Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1Attr rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Ctype1Attr.String  printfmt:Raw
 // func:atf_amc.Ctype1Attr..Print
-void                 Ctype1Attr_Print(atf_amc::Ctype1Attr& row, algo::cstring& str) __attribute__((nothrow));
+void                 Ctype1Attr_Print(atf_amc::Ctype1Attr row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Ctype2Attr
 struct Ctype2Attr { // atf_amc.Ctype2Attr
@@ -1309,9 +1661,8 @@ struct Ctype2Attr { // atf_amc.Ctype2Attr
     // func:atf_amc.Ctype2Attr..FieldwiseCtor
     explicit inline               Ctype2Attr(u32 in_attr1, u32 in_attr2) __attribute__((nothrow));
 };
-
 // func:atf_amc.Ctype2Attr..Hash
-inline u32           Ctype2Attr_Hash(u32 prev, const atf_amc::Ctype2Attr& rhs) __attribute__((nothrow));
+inline u32           Ctype2Attr_Hash(u32 prev, atf_amc::Ctype2Attr rhs) __attribute__((nothrow));
 // func:atf_amc.Ctype2Attr..ReadFieldMaybe
 bool                 Ctype2Attr_ReadFieldMaybe(atf_amc::Ctype2Attr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::Ctype2Attr from an ascii string.
@@ -1322,21 +1673,21 @@ bool                 Ctype2Attr_ReadStrptrMaybe(atf_amc::Ctype2Attr &parent, alg
 // func:atf_amc.Ctype2Attr..ReadTupleMaybe
 bool                 Ctype2Attr_ReadTupleMaybe(atf_amc::Ctype2Attr &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // func:atf_amc.Ctype2Attr..Lt
-inline bool          Ctype2Attr_Lt(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) __attribute__((nothrow));
+inline bool          Ctype2Attr_Lt(atf_amc::Ctype2Attr lhs, atf_amc::Ctype2Attr rhs) __attribute__((nothrow));
 // func:atf_amc.Ctype2Attr..Cmp
-inline i32           Ctype2Attr_Cmp(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) __attribute__((nothrow));
+inline i32           Ctype2Attr_Cmp(atf_amc::Ctype2Attr lhs, atf_amc::Ctype2Attr rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.Ctype2Attr..Init
 inline void          Ctype2Attr_Init(atf_amc::Ctype2Attr& parent);
 // func:atf_amc.Ctype2Attr..Eq
-inline bool          Ctype2Attr_Eq(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) __attribute__((nothrow));
+inline bool          Ctype2Attr_Eq(atf_amc::Ctype2Attr lhs, atf_amc::Ctype2Attr rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_amc.Ctype2Attr..Update
-inline bool          Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2Attr& rhs) __attribute__((nothrow));
+inline bool          Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2Attr rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Ctype2Attr.String  printfmt:Tuple
 // func:atf_amc.Ctype2Attr..Print
-void                 Ctype2Attr_Print(atf_amc::Ctype2Attr& row, algo::cstring& str) __attribute__((nothrow));
+void                 Ctype2Attr_Print(atf_amc::Ctype2Attr row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Ctype2AttrAnon
 struct Ctype2AttrAnon { // atf_amc.Ctype2AttrAnon
@@ -1347,7 +1698,6 @@ struct Ctype2AttrAnon { // atf_amc.Ctype2AttrAnon
     // func:atf_amc.Ctype2AttrAnon..FieldwiseCtor
     explicit inline               Ctype2AttrAnon(u32 in_attr1, u32 in_attr2) __attribute__((nothrow));
 };
-
 // func:atf_amc.Ctype2AttrAnon..ReadFieldMaybe
 bool                 Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::Ctype2AttrAnon from an ascii string.
@@ -1360,9 +1710,56 @@ inline void          Ctype2AttrAnon_Init(atf_amc::Ctype2AttrAnon& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Ctype2AttrAnon.String  printfmt:Tuple
 // func:atf_amc.Ctype2AttrAnon..Print
-void                 Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon& row, algo::cstring& str) __attribute__((nothrow));
+void                 Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon row, algo::cstring& str) __attribute__((nothrow));
 // func:atf_amc.Ctype2AttrAnon..GetAnon
 algo::strptr         Ctype2AttrAnon_GetAnon(atf_amc::Ctype2AttrAnon &parent, i32 idx) __attribute__((nothrow));
+
+// --- atf_amc.DecQuote
+struct DecQuote { // atf_amc.DecQuote
+    u64   bid;   //   0
+    u64   ask;   //   0
+    // func:atf_amc.DecQuote..Ctor
+    inline               DecQuote() __attribute__((nothrow));
+};
+// Set value of field bid.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
+// Example: 1.3 cannot be represented exactly as a double, the actual
+// stored value will be 1.29999999. when we apply C truncation,
+// we want to end up with 1.3, not 1.2.
+// func:atf_amc.DecQuote.bid.qSetDouble
+inline void          bid_qSetDouble(atf_amc::DecQuote& parent, double val) __attribute__((nothrow));
+// func:atf_amc.DecQuote.bid.GetDouble
+inline double        bid_GetDouble(const atf_amc::DecQuote& parent) __attribute__((nothrow));
+// Return integer portion (divide number by 100)
+// func:atf_amc.DecQuote.bid.GetInt
+inline u64           bid_GetInt(const atf_amc::DecQuote& parent) __attribute__((nothrow));
+// Set value of field bid, using rounding.
+// If value is out of range for the target type, return false.
+// func:atf_amc.DecQuote.bid.SetDoubleMaybe
+bool                 bid_SetDoubleMaybe(atf_amc::DecQuote& parent, double val) __attribute__((nothrow));
+
+// Set value of field ask.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
+// Example: 1.3 cannot be represented exactly as a double, the actual
+// stored value will be 1.29999999. when we apply C truncation,
+// we want to end up with 1.3, not 1.2.
+// func:atf_amc.DecQuote.ask.qSetDouble
+inline void          ask_qSetDouble(atf_amc::DecQuote& parent, double val) __attribute__((nothrow));
+// func:atf_amc.DecQuote.ask.GetDouble
+inline double        ask_GetDouble(const atf_amc::DecQuote& parent) __attribute__((nothrow));
+// Return integer portion (divide number by 10000)
+// func:atf_amc.DecQuote.ask.GetInt
+inline u64           ask_GetInt(const atf_amc::DecQuote& parent) __attribute__((nothrow));
+// Set value of field ask, using rounding.
+// If value is out of range for the target type, return false.
+// func:atf_amc.DecQuote.ask.SetDoubleMaybe
+bool                 ask_SetDoubleMaybe(atf_amc::DecQuote& parent, double val) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.DecQuote..Init
+inline void          DecQuote_Init(atf_amc::DecQuote& parent);
 
 // --- atf_amc.DelType1
 struct DelType1 { // atf_amc.DelType1: Delptr test 1
@@ -1372,7 +1769,6 @@ struct DelType1 { // atf_amc.DelType1: Delptr test 1
     // func:atf_amc.DelType1..Dtor
     inline               ~DelType1() __attribute__((nothrow));
 };
-
 // Get or Create
 // Access value, creating it if necessary. Process dies if not successful.
 // func:atf_amc.DelType1.u32val.Access
@@ -1386,6 +1782,287 @@ void                 u32val_Delete(atf_amc::DelType1& parent) __attribute__((not
 inline void          DelType1_Init(atf_amc::DelType1& parent);
 // func:atf_amc.DelType1..Uninit
 void                 DelType1_Uninit(atf_amc::DelType1& parent) __attribute__((nothrow));
+
+// --- atf_amc.Disp2Case
+#pragma pack(push,1)
+struct Disp2Case { // atf_amc.Disp2Case: Enum for dispatch atf_amc.Disp2
+    u32   value;   //   0
+    // func:atf_amc.Disp2Case.value.Cast
+    inline               operator atf_amc_Disp2CaseEnum() const __attribute__((nothrow));
+    // func:atf_amc.Disp2Case..Ctor
+    inline               Disp2Case() __attribute__((nothrow));
+    // func:atf_amc.Disp2Case..FieldwiseCtor
+    explicit inline               Disp2Case(u32 in_value) __attribute__((nothrow));
+    // func:atf_amc.Disp2Case..EnumCtor
+    inline               Disp2Case(atf_amc_Disp2CaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:atf_amc.Disp2Case.value.GetEnum
+inline atf_amc_Disp2CaseEnum value_GetEnum(const atf_amc::Disp2Case& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.Disp2Case.value.SetEnum
+inline void          value_SetEnum(atf_amc::Disp2Case& parent, atf_amc_Disp2CaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.Disp2Case.value.ToCstr
+const char*          value_ToCstr(const atf_amc::Disp2Case& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:atf_amc.Disp2Case.value.Print
+void                 value_Print(const atf_amc::Disp2Case& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.Disp2Case.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(atf_amc::Disp2Case& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.Disp2Case.value.SetStrptr
+void                 value_SetStrptr(atf_amc::Disp2Case& parent, algo::strptr rhs, atf_amc_Disp2CaseEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.Disp2Case.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(atf_amc::Disp2Case& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of atf_amc::Disp2Case from an ascii string.
+// The format of the string is the format of the atf_amc::Disp2Case's only field
+// func:atf_amc.Disp2Case..ReadStrptrMaybe
+bool                 Disp2Case_ReadStrptrMaybe(atf_amc::Disp2Case &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.Disp2Case..Init
+inline void          Disp2Case_Init(atf_amc::Disp2Case& parent);
+
+// --- atf_amc.Disp2Filter
+struct Disp2Filter { // atf_amc.Disp2Filter
+    u64                pmask_elems[1];   //   0  fixed array
+    algo::Smallstr20   strval;           //
+    algo_lib::Regx     strval_regx;      //
+    algo::Smallstr20   strval2;          //
+    algo_lib::Regx     strval2_regx;     //
+    algo::UnTime       start_dateval;    //
+    algo::UnTime       end_dateval;      //
+    algo::UnTime       dateval;          //
+    u32                start_intval;     //   0
+    u32                end_intval;       //   0
+    u32                intval;           //   0
+    // func:atf_amc.Disp2Filter..Ctor
+    inline               Disp2Filter() __attribute__((nothrow));
+};
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+// func:atf_amc.Disp2Filter.pmask.NBits
+inline int           pmask_Nbits(atf_amc::Disp2Filter& parent) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Disp2Filter.pmask.qGetBit
+inline bool          pmask_qGetBit(atf_amc::Disp2Filter& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.Disp2Filter.pmask.GetBit
+inline bool          pmask_GetBit(atf_amc::Disp2Filter& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Check if all the bits in the bitset are equal to zero
+// func:atf_amc.Disp2Filter.pmask.BitsEmptyQ
+inline bool          pmask_BitsEmptyQ(atf_amc::Disp2Filter& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.Disp2Filter.pmask.Sum1s
+inline u64           pmask_Sum1s(atf_amc::Disp2Filter& parent) __attribute__((__warn_unused_result__, nothrow));
+// Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Disp2Filter.pmask.qClearBit
+inline void          pmask_qClearBit(atf_amc::Disp2Filter& parent, u32 bit_idx) __attribute__((nothrow));
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.Disp2Filter.pmask.ClearBit
+inline void          pmask_ClearBit(atf_amc::Disp2Filter& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Disp2Filter.pmask.qSetBit
+inline void          pmask_qSetBit(atf_amc::Disp2Filter& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.Disp2Filter.pmask.SetBit
+inline void          pmask_SetBit(atf_amc::Disp2Filter& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Disp2Filter.pmask.qSetBitVal
+inline void          pmask_qSetBitVal(atf_amc::Disp2Filter& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Disp2Filter.pmask.qOrBitVal
+inline void          pmask_qOrBitVal(atf_amc::Disp2Filter& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+// func:atf_amc.Disp2Filter.pmask.ClearBitsAll
+inline void          pmask_ClearBitsAll(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.Disp2Filter.pmask.ClearBits
+inline void          pmask_ClearBits(atf_amc::Disp2Filter& parent, atf_amc::Disp2Filter &rhs) __attribute__((nothrow));
+// Set PARENT to union of two bitsets.
+// (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.Disp2Filter.pmask.OrBits
+inline void          pmask_OrBits(atf_amc::Disp2Filter& parent, atf_amc::Disp2Filter &rhs) __attribute__((nothrow));
+// Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.Disp2Filter.pmask.Sup
+inline i32           pmask_Sup(atf_amc::Disp2Filter& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set all elements of fixed array to value RHS
+// func:atf_amc.Disp2Filter.pmask.Fill
+inline void          pmask_Fill(atf_amc::Disp2Filter& parent, const u64 &rhs) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:atf_amc.Disp2Filter.pmask.Find
+inline u64*          pmask_Find(atf_amc::Disp2Filter& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Access fixed array pmask as aryptr.
+// func:atf_amc.Disp2Filter.pmask.Getary
+inline algo::aryptr<u64> pmask_Getary(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return max number of items in the array
+// func:atf_amc.Disp2Filter.pmask.Max
+inline i32           pmask_Max(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:atf_amc.Disp2Filter.pmask.N
+inline i32           pmask_N(const atf_amc::Disp2Filter& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+// func:atf_amc.Disp2Filter.pmask.Setary
+inline void          pmask_Setary(atf_amc::Disp2Filter& parent, const algo::aryptr<u64> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.Disp2Filter.pmask.qFind
+inline u64&          pmask_qFind(atf_amc::Disp2Filter& parent, u64 t) __attribute__((nothrow));
+// Read array from string
+// Convert string to field. Return success value
+// func:atf_amc.Disp2Filter.pmask.ReadStrptrMaybe
+bool                 pmask_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.strval.PresentQ
+inline bool          strval_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.strval.SetPresent
+inline void          strval_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.strval.Present_GetBit
+inline int           strval_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// func:atf_amc.Disp2Filter.strval.Set
+inline void          strval_Set(atf_amc::Disp2Filter& parent, const algo::strptr& rhs) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.strval_regx.PresentQ
+inline bool          strval_regx_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.strval_regx.SetPresent
+inline void          strval_regx_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.strval_regx.Present_GetBit
+inline int           strval_regx_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.strval2.PresentQ
+inline bool          strval2_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.strval2.SetPresent
+inline void          strval2_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.strval2.Present_GetBit
+inline int           strval2_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// func:atf_amc.Disp2Filter.strval2.Set
+inline void          strval2_Set(atf_amc::Disp2Filter& parent, const algo::strptr& rhs) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.strval2_regx.PresentQ
+inline bool          strval2_regx_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.strval2_regx.SetPresent
+inline void          strval2_regx_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.strval2_regx.Present_GetBit
+inline int           strval2_regx_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.start_dateval.PresentQ
+inline bool          start_dateval_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.start_dateval.SetPresent
+inline void          start_dateval_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.start_dateval.Present_GetBit
+inline int           start_dateval_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// func:atf_amc.Disp2Filter.start_dateval.Set
+inline void          start_dateval_Set(atf_amc::Disp2Filter& parent, algo::UnTime rhs) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.end_dateval.PresentQ
+inline bool          end_dateval_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.end_dateval.SetPresent
+inline void          end_dateval_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.end_dateval.Present_GetBit
+inline int           end_dateval_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// func:atf_amc.Disp2Filter.end_dateval.Set
+inline void          end_dateval_Set(atf_amc::Disp2Filter& parent, algo::UnTime rhs) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.dateval.PresentQ
+inline bool          dateval_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.dateval.SetPresent
+inline void          dateval_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.dateval.Present_GetBit
+inline int           dateval_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// func:atf_amc.Disp2Filter.dateval.Set
+inline void          dateval_Set(atf_amc::Disp2Filter& parent, algo::UnTime rhs) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.start_intval.PresentQ
+inline bool          start_intval_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.start_intval.SetPresent
+inline void          start_intval_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.start_intval.Present_GetBit
+inline int           start_intval_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// func:atf_amc.Disp2Filter.start_intval.Set
+inline void          start_intval_Set(atf_amc::Disp2Filter& parent, u32 rhs) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.end_intval.PresentQ
+inline bool          end_intval_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.end_intval.SetPresent
+inline void          end_intval_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.end_intval.Present_GetBit
+inline int           end_intval_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// func:atf_amc.Disp2Filter.end_intval.Set
+inline void          end_intval_Set(atf_amc::Disp2Filter& parent, u32 rhs) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.Disp2Filter.intval.PresentQ
+inline bool          intval_PresentQ(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.Disp2Filter.intval.SetPresent
+inline void          intval_SetPresent(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.Disp2Filter.intval.Present_GetBit
+inline int           intval_Present_GetBit(atf_amc::Disp2Filter& parent) __attribute__((nothrow));
+// func:atf_amc.Disp2Filter.intval.Set
+inline void          intval_Set(atf_amc::Disp2Filter& parent, u32 rhs) __attribute__((nothrow));
+
+// cursor points to valid item
+// func:atf_amc.Disp2Filter.pmask_curs.Reset
+inline void          Disp2Filter_pmask_curs_Reset(Disp2Filter_pmask_curs &curs, atf_amc::Disp2Filter &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.Disp2Filter.pmask_curs.ValidQ
+inline bool          Disp2Filter_pmask_curs_ValidQ(Disp2Filter_pmask_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.Disp2Filter.pmask_curs.Next
+inline void          Disp2Filter_pmask_curs_Next(Disp2Filter_pmask_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.Disp2Filter.pmask_curs.Access
+inline u64&          Disp2Filter_pmask_curs_Access(Disp2Filter_pmask_curs &curs) __attribute__((nothrow));
+// func:atf_amc.Disp2Filter..ReadFieldMaybe
+bool                 Disp2Filter_ReadFieldMaybe(atf_amc::Disp2Filter& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::Disp2Filter from attributes of ascii tuple TUPLE
+// func:atf_amc.Disp2Filter..ReadTupleMaybe
+bool                 Disp2Filter_ReadTupleMaybe(atf_amc::Disp2Filter &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.Disp2Filter..Init
+void                 Disp2Filter_Init(atf_amc::Disp2Filter& parent);
+// func:atf_amc.Disp2Filter..MatchDispType1
+bool                 Disp2Filter_MatchDispType1(atf_amc::Disp2Filter &parent, atf_amc::DispType1 &msg);
+// func:atf_amc.Disp2Filter..MatchDispType2
+bool                 Disp2Filter_MatchDispType2(atf_amc::Disp2Filter &parent, atf_amc::DispType2 &msg);
+// func:atf_amc.Disp2Filter..MatchDispType3
+bool                 Disp2Filter_MatchDispType3(atf_amc::Disp2Filter &parent, atf_amc::DispType3 &msg);
 
 // --- atf_amc.DispCase
 #pragma pack(push,1)
@@ -1401,7 +2078,6 @@ struct DispCase { // atf_amc.DispCase: Enum for dispatch atf_amc.Disp
     inline               DispCase(atf_amc_DispCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_amc.DispCase.value.GetEnum
 inline atf_amc_DispCaseEnum value_GetEnum(const atf_amc::DispCase& parent) __attribute__((nothrow));
@@ -1453,7 +2129,6 @@ struct DispFilter { // atf_amc.DispFilter
     // func:atf_amc.DispFilter..Ctor
     inline               DispFilter() __attribute__((nothrow));
 };
-
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
 // func:atf_amc.DispFilter.pmask.NBits
@@ -1678,7 +2353,6 @@ struct DispType1 { // atf_amc.DispType1: Dispfilter test 1
     // func:atf_amc.DispType1..Ctor
     inline               DispType1() __attribute__((nothrow));
 };
-
 // func:atf_amc.DispType1..ReadFieldMaybe
 bool                 DispType1_ReadFieldMaybe(atf_amc::DispType1& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::DispType1 from an ascii string.
@@ -1696,7 +2370,6 @@ struct DispType2 { // atf_amc.DispType2: Dispfilter test 2
     // func:atf_amc.DispType2..Ctor
     inline               DispType2() __attribute__((nothrow));
 };
-
 // Read fields of atf_amc::DispType2 from an ascii string.
 // The format of the string is the format of the atf_amc::DispType2's only field
 // func:atf_amc.DispType2..ReadStrptrMaybe
@@ -1707,7 +2380,7 @@ inline void          DispType2_Init(atf_amc::DispType2& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.DispType2.String  printfmt:Raw
 // func:atf_amc.DispType2..Print
-void                 DispType2_Print(atf_amc::DispType2& row, algo::cstring& str) __attribute__((nothrow));
+void                 DispType2_Print(atf_amc::DispType2 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.DispType3
 struct DispType3 { // atf_amc.DispType3: Dispfilter test 3
@@ -1716,7 +2389,6 @@ struct DispType3 { // atf_amc.DispType3: Dispfilter test 3
     // func:atf_amc.DispType3..Ctor
     inline               DispType3() __attribute__((nothrow));
 };
-
 // func:atf_amc.DispType3..ReadFieldMaybe
 bool                 DispType3_ReadFieldMaybe(atf_amc::DispType3& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::DispType3 from an ascii string.
@@ -1731,12 +2403,42 @@ inline void          DispType3_Init(atf_amc::DispType3& parent);
 // func:atf_amc.DispType3..Print
 void                 DispType3_Print(atf_amc::DispType3& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- atf_amc.ErrcodeFldLt
+struct ErrcodeFldLt { // atf_amc.ErrcodeFldLt: Fcmp on a field whose arg type has Cmp but no Lt (ccmp order:N)
+    algo::Errcode   err;   //
+    // func:atf_amc.ErrcodeFldLt..Ctor
+    inline               ErrcodeFldLt() __attribute__((nothrow));
+};
+// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+// func:atf_amc.ErrcodeFldLt.err.Lt
+inline bool          err_Lt(atf_amc::ErrcodeFldLt& parent, atf_amc::ErrcodeFldLt &rhs) __attribute__((nothrow));
+// Compare two fields.
+// func:atf_amc.ErrcodeFldLt.err.Cmp
+inline i32           err_Cmp(atf_amc::ErrcodeFldLt& parent, atf_amc::ErrcodeFldLt &rhs) __attribute__((nothrow));
+
+
+// --- atf_amc.ErrcodeLt
+struct ErrcodeLt { // atf_amc.ErrcodeLt: Ordered ctype whose single field type has Cmp but no Lt (ccmp order:N)
+    algo::Errcode   err;   //
+    // func:atf_amc.ErrcodeLt..Ctor
+    inline               ErrcodeLt() __attribute__((nothrow));
+};
+// func:atf_amc.ErrcodeLt..Lt
+inline bool          ErrcodeLt_Lt(atf_amc::ErrcodeLt lhs, atf_amc::ErrcodeLt rhs) __attribute__((nothrow));
+// func:atf_amc.ErrcodeLt..Cmp
+inline i32           ErrcodeLt_Cmp(atf_amc::ErrcodeLt lhs, atf_amc::ErrcodeLt rhs) __attribute__((nothrow));
+// func:atf_amc.ErrcodeLt..Eq
+inline bool          ErrcodeLt_Eq(atf_amc::ErrcodeLt lhs, atf_amc::ErrcodeLt rhs) __attribute__((nothrow));
+// Set value. Return true if new value is different from old value.
+// func:atf_amc.ErrcodeLt..Update
+inline bool          ErrcodeLt_Update(atf_amc::ErrcodeLt &lhs, atf_amc::ErrcodeLt rhs) __attribute__((nothrow));
+
 // --- atf_amc.FAmctest
 // create: atf_amc.FDb.amctest (Lary)
 // global access: amctest (Lary, by rowid)
 struct FAmctest { // atf_amc.FAmctest: Test function
     algo::Smallstr50             amctest;    //
-    algo::Comment                comment;    //
+    algo::cstring                comment;    //
     bool                         select;     //   false  Select test for running?
     bool                         success;    //   false  Did it succeed?
     atf_amc::amctest_step_hook   step;       //   NULL  Pointer to a function
@@ -1749,7 +2451,6 @@ private:
     friend void                 amctest_RemoveAll() __attribute__((nothrow));
     friend void                 amctest_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_amc.FAmctest.msghdr.CopyOut
 void                 amctest_CopyOut(atf_amc::FAmctest &row, atfdb::Amctest &out) __attribute__((nothrow));
@@ -1793,12 +2494,40 @@ private:
     friend void                 avl_RemoveAll() __attribute__((nothrow));
     friend void                 avl_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:atf_amc.FAvl..Init
 inline void          FAvl_Init(atf_amc::FAvl& avl);
 // func:atf_amc.FAvl..Uninit
 void                 FAvl_Uninit(atf_amc::FAvl& avl) __attribute__((nothrow));
+
+// --- atf_amc.FBlkhashElem
+// create: atf_amc.FDb.blkhash_elem (Tpool)
+// global access: ind_blkhash_elem (Blkhash)
+// global access: ind_blkhash_elem_thash (Thash, hash field key)
+struct FBlkhashElem { // atf_amc.FBlkhashElem: Blkhash test element
+    atf_amc::BlkKey          key;                              //
+    u64                      val;                              //   0  Payload used to verify lookups
+    atf_amc::FBlkhashElem*   blkhash_elem_next;                // Pointer to next free element int tpool
+    atf_amc::FBlkhashElem*   ind_blkhash_elem_thash_next;      // hash next
+    u32                      ind_blkhash_elem_thash_hashval;   // hash value
+    // func:atf_amc.FBlkhashElem..AssignOp
+    inline atf_amc::FBlkhashElem& operator =(const atf_amc::FBlkhashElem &rhs) = delete;
+    // func:atf_amc.FBlkhashElem..CopyCtor
+    inline               FBlkhashElem(const atf_amc::FBlkhashElem &rhs) = delete;
+private:
+    // func:atf_amc.FBlkhashElem..Ctor
+    inline               FBlkhashElem() __attribute__((nothrow));
+    // func:atf_amc.FBlkhashElem..Dtor
+    inline               ~FBlkhashElem() __attribute__((nothrow));
+    friend atf_amc::FBlkhashElem& blkhash_elem_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::FBlkhashElem* blkhash_elem_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 blkhash_elem_Delete(atf_amc::FBlkhashElem &row) __attribute__((nothrow));
+};
+// Set all fields to initial values.
+// func:atf_amc.FBlkhashElem..Init
+inline void          FBlkhashElem_Init(atf_amc::FBlkhashElem& blkhash_elem);
+// func:atf_amc.FBlkhashElem..Uninit
+void                 FBlkhashElem_Uninit(atf_amc::FBlkhashElem& blkhash_elem) __attribute__((nothrow));
 
 // --- atf_amc.FCascdel
 // create: atf_amc.FDb.cascdel (Tpool)
@@ -1809,14 +2538,15 @@ void                 FAvl_Uninit(atf_amc::FAvl& avl) __attribute__((nothrow));
 // access: atf_amc.FCascdel.bh_child_bheap (Bheap)
 // access: atf_amc.FCascdel.zd_childlist (Llist)
 // access: atf_amc.FCascdel.tr_child_atree (Atree)
+// access: atf_amc.FCascdel.c_child_heap (Ptrary)
 struct FCascdel { // atf_amc.FCascdel: Test type for cascade delete
     atf_amc::FCascdel*    p_parent;                          // reference to parent row
     u32                   key;                               //   0
     u32                   type;                              //   0
     atf_amc::FCascdel*    child_ptr;                         // optional pointer
     atf_amc::FCascdel**   c_child_ptrary_elems;              // array of pointers
-    u32                   c_child_ptrary_n;                  // array of pointers
-    u32                   c_child_ptrary_max;                // capacity of allocated array
+    u64                   c_child_ptrary_n;                  // current size
+    u64                   c_child_ptrary_max;                // capacity of allocated array
     atf_amc::FCascdel**   ind_child_thash_buckets_elems;     // pointer to bucket array
     i32                   ind_child_thash_buckets_n;         // number of elements in bucket array
     i32                   ind_child_thash_n;                 // number of elements in the hash table
@@ -1837,6 +2567,10 @@ struct FCascdel { // atf_amc.FCascdel: Test type for cascade delete
     atf_amc::FCascdel*    cascdel_tr_child_atree_left;       // Left child
     atf_amc::FCascdel*    cascdel_tr_child_atree_right;      // Right child
     i32                   cascdel_tr_child_atree_depth;      // Depth
+    atf_amc::FCascdel**   c_child_heap_elems;                // array of pointers
+    u64                   c_child_heap_n;                    // current size
+    u64                   c_child_heap_max;                  // capacity of allocated array
+    i32                   cascdel_c_child_heap_idx;          //   -1  Array index (-1 = not in array)
     bool                  cascdel_c_child_ptrary_in_ary;     //   false  membership flag
     atf_amc::FCascdel*    cascdel_next;                      // Pointer to next free element int tpool
     // x-reference on atf_amc.FCascdel.child_ptr prevents copy
@@ -1845,6 +2579,7 @@ struct FCascdel { // atf_amc.FCascdel: Test type for cascade delete
     // reftype Bheap of atf_amc.FCascdel.bh_child_bheap prohibits copy
     // reftype Llist of atf_amc.FCascdel.zd_childlist prohibits copy
     // reftype Atree of atf_amc.FCascdel.tr_child_atree prohibits copy
+    // reftype Ptrary of atf_amc.FCascdel.c_child_heap prohibits copy
     // func:atf_amc.FCascdel..AssignOp
     atf_amc::FCascdel&   operator =(const atf_amc::FCascdel &rhs) = delete;
     // x-reference on atf_amc.FCascdel.child_ptr prevents copy
@@ -1853,6 +2588,7 @@ struct FCascdel { // atf_amc.FCascdel: Test type for cascade delete
     // reftype Bheap of atf_amc.FCascdel.bh_child_bheap prohibits copy
     // reftype Llist of atf_amc.FCascdel.zd_childlist prohibits copy
     // reftype Atree of atf_amc.FCascdel.tr_child_atree prohibits copy
+    // reftype Ptrary of atf_amc.FCascdel.c_child_heap prohibits copy
     // func:atf_amc.FCascdel..CopyCtor
     FCascdel(const atf_amc::FCascdel &rhs) = delete;
 private:
@@ -1864,7 +2600,6 @@ private:
     friend atf_amc::FCascdel*   cascdel_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 cascdel_Delete(atf_amc::FCascdel &row) __attribute__((nothrow));
 };
-
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field key of atf_amc::FCascdel
 // func:atf_amc.FCascdel.key.Cleanup
@@ -1914,12 +2649,12 @@ void                 c_child_ptrary_Cascdel(atf_amc::FCascdel& cascdel) __attrib
 inline bool          c_child_ptrary_EmptyQ(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_amc.FCascdel.c_child_ptrary.Find
-inline atf_amc::FCascdel* c_child_ptrary_Find(atf_amc::FCascdel& cascdel, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FCascdel* c_child_ptrary_Find(atf_amc::FCascdel& cascdel, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_amc.FCascdel.c_child_ptrary.Getary
 inline algo::aryptr<atf_amc::FCascdel*> c_child_ptrary_Getary(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_amc.FCascdel.c_child_ptrary.Insert
 void                 c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -1929,7 +2664,7 @@ void                 c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::
 bool                 c_child_ptrary_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_amc.FCascdel.c_child_ptrary.N
-inline i32           c_child_ptrary_N(const atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_child_ptrary_N(const atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_amc.FCascdel.c_child_ptrary.Remove
 void                 c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
@@ -1938,10 +2673,10 @@ void                 c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::
 inline void          c_child_ptrary_RemoveAll(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_amc.FCascdel.c_child_ptrary.Reserve
-void                 c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u32 n) __attribute__((nothrow));
+void                 c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_amc.FCascdel.c_child_ptrary.qFind
-inline atf_amc::FCascdel& c_child_ptrary_qFind(atf_amc::FCascdel& cascdel, u32 idx) __attribute__((nothrow));
+inline atf_amc::FCascdel& c_child_ptrary_qFind(atf_amc::FCascdel& cascdel, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_amc.FCascdel.c_child_ptrary.InAryQ
 inline bool          cascdel_c_child_ptrary_InAryQ(atf_amc::FCascdel& row) __attribute__((nothrow));
@@ -1961,6 +2696,9 @@ atf_amc::FCascdel*   ind_child_thash_Find(atf_amc::FCascdel& cascdel, u32 key) _
 // Look up row by key and return reference. Throw exception if not found
 // func:atf_amc.FCascdel.ind_child_thash.FindX
 atf_amc::FCascdel&   ind_child_thash_FindX(atf_amc::FCascdel& cascdel, u32 key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_amc.FCascdel.ind_child_thash.GetOrCreate
+atf_amc::FCascdel*   ind_child_thash_GetOrCreate(atf_amc::FCascdel& cascdel, u32 key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_amc.FCascdel.ind_child_thash.N
 inline i32           ind_child_thash_N(const atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -2071,6 +2809,9 @@ atf_amc::FCascdel*   zd_childlist_RemoveFirst(atf_amc::FCascdel& cascdel) __attr
 // Return reference to last element in the index. No bounds checking.
 // func:atf_amc.FCascdel.zd_childlist.qLast
 inline atf_amc::FCascdel& zd_childlist_qLast(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_amc.FCascdel.zd_childlist.InsertBefore
+void                 zd_childlist_InsertBefore(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, atf_amc::FCascdel* before) __attribute__((nothrow));
 
 // Delete all elements in the tree.
 // func:atf_amc.FCascdel.tr_child_atree.Cascdel
@@ -2131,6 +2872,61 @@ atf_amc::FCascdel*   tr_child_atree_FirstGe(atf_amc::FCascdel& cascdel, const u3
 // func:atf_amc.FCascdel.tr_child_atree.LastLt
 atf_amc::FCascdel*   tr_child_atree_LastLt(atf_amc::FCascdel& cascdel, const u32& val) __attribute__((nothrow));
 
+// Delete all elements pointed to by the index.
+// func:atf_amc.FCascdel.c_child_heap.Cascdel
+void                 c_child_heap_Cascdel(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+// Return true if index is empty
+// func:atf_amc.FCascdel.c_child_heap.EmptyQ
+inline bool          c_child_heap_EmptyQ(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:atf_amc.FCascdel.c_child_heap.Find
+inline atf_amc::FCascdel* c_child_heap_Find(atf_amc::FCascdel& cascdel, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:atf_amc.FCascdel.c_child_heap.Getary
+inline algo::aryptr<atf_amc::FCascdel*> c_child_heap_Getary(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+// func:atf_amc.FCascdel.c_child_heap.First
+inline atf_amc::FCascdel* c_child_heap_First(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.FCascdel.c_child_heap.Last
+inline atf_amc::FCascdel* c_child_heap_Last(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+// func:atf_amc.FCascdel.c_child_heap.Insert
+void                 c_child_heap_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:atf_amc.FCascdel.c_child_heap.InsertMaybe
+bool                 c_child_heap_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:atf_amc.FCascdel.c_child_heap.N
+inline i64           c_child_heap_N(const atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:atf_amc.FCascdel.c_child_heap.Remove
+void                 c_child_heap_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_amc.FCascdel.c_child_heap.RemoveAll
+inline void          c_child_heap_RemoveAll(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:atf_amc.FCascdel.c_child_heap.Reserve
+void                 c_child_heap_Reserve(atf_amc::FCascdel& cascdel, u64 n) __attribute__((nothrow));
+// Heap-like Ptrary: remove first element
+// If index is empty, return NULL. Otherwise remove and return first element in index.
+// func:atf_amc.FCascdel.c_child_heap.RemoveFirst
+atf_amc::FCascdel*   c_child_heap_RemoveFirst(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+// Ptrary: remove last element
+// If index is empty, return NULL. Otherwise remove and return last element in index.
+// func:atf_amc.FCascdel.c_child_heap.RemoveLast
+atf_amc::FCascdel*   c_child_heap_RemoveLast(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:atf_amc.FCascdel.c_child_heap.qFind
+inline atf_amc::FCascdel& c_child_heap_qFind(atf_amc::FCascdel& cascdel, u64 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:atf_amc.FCascdel.c_child_heap.InAryQ
+inline bool          cascdel_c_child_heap_InAryQ(atf_amc::FCascdel& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:atf_amc.FCascdel.c_child_heap.qLast
+inline atf_amc::FCascdel& c_child_heap_qLast(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+
 // func:atf_amc.FCascdel.c_child_ptrary_curs.Reset
 inline void          cascdel_c_child_ptrary_curs_Reset(cascdel_c_child_ptrary_curs &curs, atf_amc::FCascdel &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -2183,12 +2979,191 @@ inline void          cascdel_tr_child_atree_curs_Next(cascdel_tr_child_atree_cur
 // item access
 // func:atf_amc.FCascdel.tr_child_atree_curs.Access
 inline atf_amc::FCascdel& cascdel_tr_child_atree_curs_Access(cascdel_tr_child_atree_curs &curs) __attribute__((nothrow));
+// func:atf_amc.FCascdel.c_child_heap_curs.Reset
+inline void          cascdel_c_child_heap_curs_Reset(cascdel_c_child_heap_curs &curs, atf_amc::FCascdel &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FCascdel.c_child_heap_curs.ValidQ
+inline bool          cascdel_c_child_heap_curs_ValidQ(cascdel_c_child_heap_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FCascdel.c_child_heap_curs.Next
+inline void          cascdel_c_child_heap_curs_Next(cascdel_c_child_heap_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FCascdel.c_child_heap_curs.Access
+inline atf_amc::FCascdel& cascdel_c_child_heap_curs_Access(cascdel_c_child_heap_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FCascdel..Uninit
 void                 FCascdel_Uninit(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FCascdel.String  printfmt:Tuple
 // func:atf_amc.FCascdel..Print
 void                 FCascdel_Print(atf_amc::FCascdel& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.FCondpar
+// create: atf_amc.FDb.condpar (Tpool)
+// global access: zd_condpar_done (Llist)
+// access: atf_amc.FCondtest.p_parent (Upptr)
+struct FCondpar { // atf_amc.FCondpar: fcond test: via target
+    atf_amc::FCondpar*   condpar_next;           // Pointer to next free element int tpool
+    atf_amc::FCondpar*   zd_condpar_done_next;   // zslist link; -1 means not-in-list
+    atf_amc::FCondpar*   zd_condpar_done_prev;   // previous element
+    // func:atf_amc.FCondpar..AssignOp
+    inline atf_amc::FCondpar& operator =(const atf_amc::FCondpar &rhs) = delete;
+    // func:atf_amc.FCondpar..CopyCtor
+    inline               FCondpar(const atf_amc::FCondpar &rhs) = delete;
+private:
+    // func:atf_amc.FCondpar..Ctor
+    inline               FCondpar() __attribute__((nothrow));
+    // func:atf_amc.FCondpar..Dtor
+    inline               ~FCondpar() __attribute__((nothrow));
+    friend atf_amc::FCondpar&   condpar_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::FCondpar*   condpar_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 condpar_Delete(atf_amc::FCondpar &row) __attribute__((nothrow));
+};
+// Set all fields to initial values.
+// func:atf_amc.FCondpar..Init
+inline void          FCondpar_Init(atf_amc::FCondpar& condpar);
+// func:atf_amc.FCondpar..Uninit
+void                 FCondpar_Uninit(atf_amc::FCondpar& condpar) __attribute__((nothrow));
+
+// --- atf_amc.FCondtest
+// create: atf_amc.FDb.condtest (Tpool)
+// global access: zd_condtest_run (Llist)
+// global access: zd_condtest_idle (Llist)
+// global access: cd_condtest_ready (Llist)
+// global access: cd_condtest_space (Llist)
+struct FCondtest { // atf_amc.FCondtest: fcond test: record with watched fields
+    u32                   state;                    //   0  fcond test: enum-valued watched field
+    bool                  ready;                    //   false  fcond test: bool watched field
+    atf_amc::FCondpar*    p_parent;                 // reference to parent row
+    u8*                   out_buf_elems;            //   NULL  pointer to elements of indirect array
+    u32                   out_buf_max;              //   0  current length of allocated array
+    i32                   out_buf_start;            // beginning of valid bytes (in bytes)
+    i32                   out_buf_end;              // end of valid bytes (in bytes)
+    i32                   out_buf_msglen;           // current message length
+    algo::Errcode         out_buf_err;              // system error code
+    bool                  out_buf_eof;              // no more data will be written to buffer
+    bool                  out_buf_msgvalid;         // current message is valid
+    bool                  out_buf_epoll_enable;     // use epoll?
+    bool                  out_buf_congested;        // buffer reached the high-water mark; the drain past the low-water mark wakes the producer
+    atf_amc::FCondtest*   condtest_next;            // Pointer to next free element int tpool
+    atf_amc::FCondtest*   zd_condtest_run_next;     // zslist link; -1 means not-in-list
+    atf_amc::FCondtest*   zd_condtest_run_prev;     // previous element
+    atf_amc::FCondtest*   zd_condtest_idle_next;    // zslist link; -1 means not-in-list
+    atf_amc::FCondtest*   zd_condtest_idle_prev;    // previous element
+    atf_amc::FCondtest*   cd_condtest_ready_next;   // zslist link; -1 means not-in-list
+    atf_amc::FCondtest*   cd_condtest_ready_prev;   // previous element
+    atf_amc::FCondtest*   cd_condtest_space_next;   // zslist link; -1 means not-in-list
+    atf_amc::FCondtest*   cd_condtest_space_prev;   // previous element
+    // field atf_amc.FCondtest.out_buf prevents copy
+    // func:atf_amc.FCondtest..AssignOp
+    inline atf_amc::FCondtest& operator =(const atf_amc::FCondtest &rhs) = delete;
+    // field atf_amc.FCondtest.out_buf prevents copy
+    // func:atf_amc.FCondtest..CopyCtor
+    inline               FCondtest(const atf_amc::FCondtest &rhs) = delete;
+private:
+    // func:atf_amc.FCondtest..Ctor
+    inline               FCondtest() __attribute__((nothrow));
+    // func:atf_amc.FCondtest..Dtor
+    inline               ~FCondtest() __attribute__((nothrow));
+    friend atf_amc::FCondtest&  condtest_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::FCondtest*  condtest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 condtest_Delete(atf_amc::FCondtest &row) __attribute__((nothrow));
+};
+// func:atf_amc.FCondtest.state.Set
+void                 state_Set(atf_amc::FCondtest& condtest, u32 rhs) __attribute__((nothrow));
+// Get value of field as enum type
+// func:atf_amc.FCondtest.state.GetEnum
+inline atf_amc_FCondtest_state_Enum state_GetEnum(const atf_amc::FCondtest& condtest) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.FCondtest.state.SetEnum
+inline void          state_SetEnum(atf_amc::FCondtest& condtest, atf_amc_FCondtest_state_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.FCondtest.state.ToCstr
+const char*          state_ToCstr(const atf_amc::FCondtest& condtest) __attribute__((nothrow));
+// Convert state to a string. First, attempt conversion to a known string.
+// If no string matches, print state as a numeric value.
+// func:atf_amc.FCondtest.state.Print
+void                 state_Print(const atf_amc::FCondtest& condtest, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.FCondtest.state.SetStrptrMaybe
+bool                 state_SetStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.FCondtest.state.SetStrptr
+void                 state_SetStrptr(atf_amc::FCondtest& condtest, algo::strptr rhs, atf_amc_FCondtest_state_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.FCondtest.state.ReadStrptrMaybe
+bool                 state_ReadStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr rhs) __attribute__((nothrow));
+
+// func:atf_amc.FCondtest.ready.Set
+void                 ready_Set(atf_amc::FCondtest& condtest, bool rhs) __attribute__((nothrow));
+
+// func:atf_amc.FCondtest.out_buf.GetAlloc
+inline algo::Alloc   out_buf_GetAlloc(atf_amc::FCondtest& condtest) __attribute__((nothrow));
+// func:atf_amc.FCondtest.out_buf.GetAllocReserve
+inline algo::Alloc   out_buf_GetAllocReserve(atf_amc::FCondtest& condtest) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+// func:atf_amc.FCondtest.out_buf.BeginAlloc
+void*                out_buf_BeginAlloc(atf_amc::FCondtest &condtest, i32 in_n) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+// func:atf_amc.FCondtest.out_buf.BeginAllocReserve
+void*                out_buf_BeginAllocReserve(atf_amc::FCondtest &condtest, i32 in_n) __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+// func:atf_amc.FCondtest.out_buf.Realloc
+void                 out_buf_Realloc(atf_amc::FCondtest& condtest, int new_max) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+// func:atf_amc.FCondtest.out_buf.Max
+inline i32           out_buf_Max(atf_amc::FCondtest& condtest) __attribute__((nothrow));
+// Return number of bytes in the buffer.
+// func:atf_amc.FCondtest.out_buf.N
+inline i32           out_buf_N(atf_amc::FCondtest& condtest) __attribute__((__warn_unused_result__, nothrow, pure));
+// Empty bfufer
+// Discard contents of the buffer.
+// func:atf_amc.FCondtest.out_buf.RemoveAll
+void                 out_buf_RemoveAll(atf_amc::FCondtest& condtest) __attribute__((nothrow));
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+//
+// func:atf_amc.FCondtest.out_buf.SkipBytes
+void                 out_buf_SkipBytes(atf_amc::FCondtest& condtest, int n) __attribute__((nothrow));
+// Skip current message, if any
+// Skip current message, if any.
+// func:atf_amc.FCondtest.out_buf.SkipMsg
+void                 out_buf_SkipMsg(atf_amc::FCondtest& condtest) __attribute__((nothrow));
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+// func:atf_amc.FCondtest.out_buf.WriteAll
+bool                 out_buf_WriteAll(atf_amc::FCondtest& condtest, u8 *in, i32 in_n) __attribute__((nothrow));
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+// func:atf_amc.FCondtest.out_buf.WriteReserve
+void                 out_buf_WriteReserve(atf_amc::FCondtest& condtest, u8 *in, i32 in_n) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.FCondtest..Init
+void                 FCondtest_Init(atf_amc::FCondtest& condtest);
+// func:atf_amc.FCondtest..ReadFieldMaybe
+bool                 FCondtest_ReadFieldMaybe(atf_amc::FCondtest& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::FCondtest from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.FCondtest..ReadStrptrMaybe
+bool                 FCondtest_ReadStrptrMaybe(atf_amc::FCondtest &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:atf_amc.FCondtest..Uninit
+void                 FCondtest_Uninit(atf_amc::FCondtest& condtest) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FCondtest.String  printfmt:Tuple
+// func:atf_amc.FCondtest..Print
+void                 FCondtest_Print(atf_amc::FCondtest& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FCstring
 // create: atf_amc.FDb.cstring (Lary)
@@ -2212,7 +3187,6 @@ private:
     friend void                 cstring_RemoveAll() __attribute__((nothrow));
     friend void                 cstring_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_amc.FCstring.msghdr.CopyOut
 void                 cstring_CopyOut(atf_amc::FCstring &row, atf_amc::Cstring &out) __attribute__((nothrow));
@@ -2230,17 +3204,16 @@ void                 FCstring_Uninit(atf_amc::FCstring& cstring) __attribute__((
 // create: atf_amc.FDb.listtype (Inlary)
 // access: atf_amc.FListtype.step (Hook)
 struct FListtype { // atf_amc.FListtype
-    algo::Smallstr5               listtype;   //
+    algo::Smallstr5               listtype;   // Field-name prefix naming this list shape
     bool                          circular;   //   false  Circular list
     bool                          haveprev;   //   false  Previous link
     bool                          instail;    //   false  Queue
-    algo::Comment                 comment;    //
+    algo::cstring                 comment;    //
     atf_amc::listtype_step_hook   step;       //   NULL  Pointer to a function
     bool                          seen;       //   false
     // func:atf_amc.FListtype..Ctor
     inline               FListtype() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_amc.FListtype.base.CopyOut
 void                 listtype_CopyOut(atf_amc::FListtype &row, dmmeta::Listtype &out) __attribute__((nothrow));
@@ -2271,11 +3244,17 @@ struct trace { // atf_amc.trace
     u64   step_cs_t_typec_cycles;    //   0
     u64   step_cd_in_msg;            //   0
     u64   step_cd_in_msg_cycles;     //   0
+    u64   alloc__db_msghdrltscale;   //   0
+    u64   del__db_msghdrltscale;     //   0
+    u64   _db_in_fb_n_read_byte;     //   0
+    u64   _db_in_fb_n_read_msg;      //   0
+    u64   _db_out_fb_n_eagain;       //   0
+    u64   _db_out_fb_n_write_byte;   //   0
+    u64   _db_out_fb_n_write_msg;    //   0
     // func:atf_amc.trace..Ctor
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Set all fields to initial values.
 // func:atf_amc.trace..Init
 void                 trace_Init(atf_amc::trace& parent);
@@ -2287,137 +3266,223 @@ void                 trace_Print(atf_amc::trace& row, algo::cstring& str) __attr
 // --- atf_amc.FDb
 // create: atf_amc.FDb._db (Global)
 struct FDb { // atf_amc.FDb: In-memory database for atf_amc
-    command::atf_amc             cmdline;                                          //
-    atf_amc::FTypeC**            bh_typec_elems;                                   // binary heap by typec
-    i32                          bh_typec_n;                                       // number of elements in the heap
-    i32                          bh_typec_max;                                     // max elements in bh_typec_elems
-    atf_amc::FTypeC*             zdl_h_typec_head;                                 // zero-terminated doubly linked list
-    i32                          zdl_h_typec_n;                                    // zero-terminated doubly linked list
-    atf_amc::FTypeC*             zdl_h_typec_tail;                                 // pointer to last element
-    atf_amc::FTypeC*             zd_t_typec_head;                                  // zero-terminated doubly linked list
-    i32                          zd_t_typec_n;                                     // zero-terminated doubly linked list
-    atf_amc::FTypeC*             zd_t_typec_tail;                                  // pointer to last element
-    atf_amc::FTypeD*             zd_typed_head;                                    // zero-terminated doubly linked list
-    i32                          zd_typed_n;                                       // zero-terminated doubly linked list
-    atf_amc::FTypeD*             zd_typed_tail;                                    // pointer to last element
-    atf_amc::FTypeD*             zs_t_typed_head;                                  // zero-terminated singly linked list
-    i32                          zs_t_typed_n;                                     // zero-terminated singly linked list
-    atf_amc::FTypeD*             zs_t_typed_tail;                                  // pointer to last element
-    atf_amc::FTypeD*             cd_typed_head;                                    // zero-terminated doubly linked list
-    i32                          cd_typed_n;                                       // zero-terminated doubly linked list
-    atf_amc::FTypeC*             zsl_h_typec_head;                                 // zero-terminated singly linked list
-    i32                          zsl_h_typec_n;                                    // zero-terminated singly linked list
-    atf_amc::FTypeC*             zsl_h_typec_tail;                                 // pointer to last element
-    atf_amc::FTypeC*             zs_t_typec_head;                                  // zero-terminated singly linked list
-    i32                          zs_t_typec_n;                                     // zero-terminated singly linked list
-    atf_amc::FTypeC*             zs_t_typec_tail;                                  // pointer to last element
+    command::atf_amc                 cmdline;                                          //
+    atf_amc::FTypeC**                bh_typec_elems;                                   // binary heap by typec
+    i32                              bh_typec_n;                                       // number of elements in the heap
+    i32                              bh_typec_max;                                     // max elements in bh_typec_elems
+    atf_amc::FTypeC*                 zdl_h_typec_head;                                 // zero-terminated doubly linked list
+    i32                              zdl_h_typec_n;                                    // zero-terminated doubly linked list
+    atf_amc::FTypeC*                 zdl_h_typec_tail;                                 // pointer to last element
+    atf_amc::FTypeC*                 zd_t_typec_head;                                  // zero-terminated doubly linked list
+    i32                              zd_t_typec_n;                                     // zero-terminated doubly linked list
+    atf_amc::FTypeC*                 zd_t_typec_tail;                                  // pointer to last element
+    atf_amc::FTypeD*                 zd_typed_head;                                    // zero-terminated doubly linked list
+    i32                              zd_typed_n;                                       // zero-terminated doubly linked list
+    atf_amc::FTypeD*                 zd_typed_tail;                                    // pointer to last element
+    atf_amc::FTypeD*                 zs_t_typed_head;                                  // zero-terminated singly linked list
+    i32                              zs_t_typed_n;                                     // zero-terminated singly linked list
+    atf_amc::FTypeD*                 zs_t_typed_tail;                                  // pointer to last element
+    atf_amc::FTypeD*                 cd_typed_head;                                    // zero-terminated doubly linked list
+    i32                              cd_typed_n;                                       // zero-terminated doubly linked list
+    atf_amc::FTypeC*                 zsl_h_typec_head;                                 // zero-terminated singly linked list
+    i32                              zsl_h_typec_n;                                    // zero-terminated singly linked list
+    atf_amc::FTypeC*                 zsl_h_typec_tail;                                 // pointer to last element
+    atf_amc::FTypeC*                 zs_t_typec_head;                                  // zero-terminated singly linked list
+    i32                              zs_t_typec_n;                                     // zero-terminated singly linked list
+    atf_amc::FTypeC*                 zs_t_typec_tail;                                  // pointer to last element
 
-    atf_amc::FTypeC*             zs_mt_typec_head;                                 // ZSListMT - zero-terminated singly linked list -- read side
-    atf_amc::FTypeC*             zs_mt_typec_mt;                                   // elements inserted here from another thread -- write side
-    atf_amc::FTypeC*             zdl_hnt_typec_head;                               // zero-terminated doubly linked list
-    i32                          zdl_hnt_typec_n;                                  // zero-terminated doubly linked list
-    atf_amc::FTypeC*             cdl_h_typec_head;                                 // zero-terminated doubly linked list
-    i32                          cdl_h_typec_n;                                    // zero-terminated doubly linked list
-    atf_amc::FTypeC*             cd_t_typec_head;                                  // zero-terminated doubly linked list
-    i32                          cd_t_typec_n;                                     // zero-terminated doubly linked list
-    atf_amc::FTypeC*             csl_h_typec_head;                                 // zero-terminated singly linked list
-    i32                          csl_h_typec_n;                                    // zero-terminated singly linked list
-    atf_amc::FTypeC*             csl_h_typec_tail;                                 // pointer to last element
-    atf_amc::FTypeC*             cs_t_typec_head;                                  // zero-terminated singly linked list
-    i32                          cs_t_typec_n;                                     // zero-terminated singly linked list
-    atf_amc::FTypeC*             cs_t_typec_tail;                                  // pointer to last element
-    atf_amc::FTypeA*             typea_lary[32];                                   // level array
-    i32                          typea_n;                                          // number of elements in array
-    atf_amc::FTypeS*             types_lary[32];                                   // level array
-    i32                          types_n;                                          // number of elements in array
-    atf_amc::FTypeS**            ind_types_buckets_elems;                          // pointer to bucket array
-    i32                          ind_types_buckets_n;                              // number of elements in bucket array
-    i32                          ind_types_n;                                      // number of elements in the hash table
-    atf_amc::FTypeA**            ind_typea_buckets_elems;                          // pointer to bucket array
-    i32                          ind_typea_buckets_n;                              // number of elements in bucket array
-    i32                          ind_typea_n;                                      // number of elements in the hash table
-    i32                          cs_h_count;                                       //   0  FirstChanged trigger fire count
-    i32                          cs_t_count;                                       //   0  FirstChanged trigger fire count
-    i32                          zs_h_count;                                       //   0  FirstChanged trigger fire count
-    i32                          zs_t_count;                                       //   0  FirstChanged trigger fire count
-    i32                          zs_mt_count;                                      //   0  FirstChanged trigger fire count
-    i32                          bh_count;                                         //   0  FirstChanged trigger fire count
-    atf_amc::FTypeT*             typet_lary[32];                                   // level array
-    i32                          typet_n;                                          // number of elements in array
-    atf_amc::FCstring*           cstring_lary[32];                                 // level array
-    i32                          cstring_n;                                        // number of elements in array
-    atf_amc::FCstring**          ind_cstring_buckets_elems;                        // pointer to bucket array
-    i32                          ind_cstring_buckets_n;                            // number of elements in bucket array
-    i32                          ind_cstring_n;                                    // number of elements in the hash table
-    atf_amc::Msgbuf*             cd_in_msg_head;                                   // zero-terminated doubly linked list
-    u64                          typeb_blocksize;                                  // # bytes per block
-    atf_amc::FTypeB*             typeb_free;                                       //
-    u64                          pooledbe64_blocksize;                             // # bytes per block
-    atf_amc::PooledBE64*         pooledbe64_free;                                  //
-    i64                          varlen_extern_n;                                  // Number of elements
-    varlen_extern_Lpblock*       varlen_extern_free[36];                           // Lpool levels
-    atf_amc::FAmctest*           amctest_lary[32];                                 // level array
-    i32                          amctest_n;                                        // number of elements in array
-    u64                          cascdel_blocksize;                                // # bytes per block
-    atf_amc::FCascdel*           cascdel_free;                                     //
-    algo_lib::Bitset             cascdel_check;                                    // Bitset of FCascdel records in existence
-    u32                          cascdel_next_key;                                 //   0  Next sequence number for FCascdel record
-    i64                          optalloc_n;                                       // Number of elements
-    optalloc_Lpblock*            optalloc_free[36];                                // Lpool levels
-    i64                          varlenalloc_n;                                    // Number of elements
-    varlenalloc_Lpblock*         varlenalloc_free[36];                             // Lpool levels
-    i64                          optg_n;                                           // Number of elements
-    optg_Lpblock*                optg_free[36];                                    // Lpool levels
-    atf_amc::FTypeK**            c_typek_elems;                                    // array of pointers
-    u32                          c_typek_n;                                        // array of pointers
-    u32                          c_typek_max;                                      // capacity of allocated array
-    atf_amc::FTypeL**            c_typel_elems;                                    // array of pointers
-    u32                          c_typel_n;                                        // array of pointers
-    u32                          c_typel_max;                                      // capacity of allocated array
-    atf_amc::FTypeM**            c_typem_elems;                                    // array of pointers
-    u32                          c_typem_n;                                        // array of pointers
-    u32                          c_typem_max;                                      // capacity of allocated array
-    atf_amc::FAvl*               avl_lary[32];                                     // level array
-    i32                          avl_n;                                            // number of elements in array
-    atf_amc::FAvl*               tr_avl_root;                                      // Root of the tree
-    i32                          tr_avl_n;                                         // number of elements in the tree
-    u128                         listtype_data[sizeu128(atf_amc::FListtype,10)];   // place for data
-    i32                          listtype_n;                                       // number of elems current in existence
+    atf_amc::FTypeC*                 zs_mt_typec_head;                                 // ZSListMT - zero-terminated singly linked list -- read side
+    atf_amc::FTypeC*                 zs_mt_typec_mt;                                   // elements inserted here from another thread -- write side
+    atf_amc::FTypeC*                 zdl_hnt_typec_head;                               // zero-terminated doubly linked list
+    i32                              zdl_hnt_typec_n;                                  // zero-terminated doubly linked list
+    atf_amc::FTypeC*                 cdl_h_typec_head;                                 // zero-terminated doubly linked list
+    i32                              cdl_h_typec_n;                                    // zero-terminated doubly linked list
+    atf_amc::FTypeC*                 cd_t_typec_head;                                  // zero-terminated doubly linked list
+    i32                              cd_t_typec_n;                                     // zero-terminated doubly linked list
+    atf_amc::FTypeC*                 csl_h_typec_head;                                 // zero-terminated singly linked list
+    i32                              csl_h_typec_n;                                    // zero-terminated singly linked list
+    atf_amc::FTypeC*                 csl_h_typec_tail;                                 // pointer to last element
+    atf_amc::FTypeC*                 cs_t_typec_head;                                  // zero-terminated singly linked list
+    i32                              cs_t_typec_n;                                     // zero-terminated singly linked list
+    atf_amc::FTypeC*                 cs_t_typec_tail;                                  // pointer to last element
+    atf_amc::FTypeA*                 typea_lary[36];                                   // level array
+    i64                              typea_n;                                          // number of elements in array
+    atf_amc::FTypeS*                 types_lary[36];                                   // level array
+    i64                              types_n;                                          // number of elements in array
+    atf_amc::FTypeS**                ind_types_buckets_elems;                          // pointer to bucket array
+    i32                              ind_types_buckets_n;                              // number of elements in bucket array
+    i32                              ind_types_n;                                      // number of elements in the hash table
+    atf_amc::FTypeA**                ind_typea_buckets_elems;                          // pointer to bucket array
+    i32                              ind_typea_buckets_n;                              // number of elements in bucket array
+    i32                              ind_typea_n;                                      // number of elements in the hash table
+    i32                              cs_h_count;                                       //   0  FirstChanged trigger fire count
+    i32                              cs_t_count;                                       //   0  FirstChanged trigger fire count
+    i32                              zs_h_count;                                       //   0  FirstChanged trigger fire count
+    i32                              zs_t_count;                                       //   0  FirstChanged trigger fire count
+    i32                              zs_mt_count;                                      //   0  FirstChanged trigger fire count
+    i32                              bh_count;                                         //   0  FirstChanged trigger fire count
+    atf_amc::FTypeT*                 typet_lary[36];                                   // level array
+    i64                              typet_n;                                          // number of elements in array
+    atf_amc::FCstring*               cstring_lary[36];                                 // level array
+    i64                              cstring_n;                                        // number of elements in array
+    atf_amc::FCstring**              ind_cstring_buckets_elems;                        // pointer to bucket array
+    i32                              ind_cstring_buckets_n;                            // number of elements in bucket array
+    i32                              ind_cstring_n;                                    // number of elements in the hash table
+    atf_amc::Msgbuf*                 cd_in_msg_head;                                   // zero-terminated doubly linked list
+    u64                              typeb_blocksize;                                  // # bytes per block
+    atf_amc::FTypeB*                 typeb_free;                                       //
+    u64                              pooledbe64_blocksize;                             // # bytes per block
+    atf_amc::PooledBE64*             pooledbe64_free;                                  //
+    i64                              varlen_extern_n;                                  // Number of elements
+    varlen_extern_Lpblock*           varlen_extern_free[36];                           // Lpool levels
+    varlen_extern_Lpblk*             varlen_extern_blk[11];                            // Dedicated blks with free space, per class
+    atf_amc::FAmctest*               amctest_lary[36];                                 // level array
+    i64                              amctest_n;                                        // number of elements in array
+    u64                              cascdel_blocksize;                                // # bytes per block
+    atf_amc::FCascdel*               cascdel_free;                                     //
+    algo_lib::Bitset                 cascdel_check;                                    // Bitset of FCascdel records in existence
+    u32                              cascdel_next_key;                                 //   0  Next sequence number for FCascdel record
+    i64                              optalloc_n;                                       // Number of elements
+    optalloc_Lpblock*                optalloc_free[36];                                // Lpool levels
+    optalloc_Lpblk*                  optalloc_blk[11];                                 // Dedicated blks with free space, per class
+    i64                              varlenalloc_n;                                    // Number of elements
+    varlenalloc_Lpblock*             varlenalloc_free[36];                             // Lpool levels
+    varlenalloc_Lpblk*               varlenalloc_blk[11];                              // Dedicated blks with free space, per class
+    i64                              optg_n;                                           // Number of elements
+    optg_Lpblock*                    optg_free[36];                                    // Lpool levels
+    optg_Lpblk*                      optg_blk[11];                                     // Dedicated blks with free space, per class
+    atf_amc::FTypeK**                c_typek_elems;                                    // array of pointers
+    u64                              c_typek_n;                                        // current size
+    u64                              c_typek_max;                                      // capacity of allocated array
+    atf_amc::FTypeL**                c_typel_elems;                                    // array of pointers
+    u64                              c_typel_n;                                        // current size
+    u64                              c_typel_max;                                      // capacity of allocated array
+    atf_amc::FTypeM**                c_typem_elems;                                    // array of pointers
+    u64                              c_typem_n;                                        // current size
+    u64                              c_typem_max;                                      // capacity of allocated array
+    atf_amc::FAvl*                   avl_lary[36];                                     // level array
+    i64                              avl_n;                                            // number of elements in array
+    atf_amc::FAvl*                   tr_avl_root;                                      // Root of the tree
+    i32                              tr_avl_n;                                         // number of elements in the tree
+    alignas(atf_amc::FListtype) u8   listtype_data[sizeof(atf_amc::FListtype) * 10];   // place for data
+    i32                              listtype_n;                                       // number of elems current in existence
     enum { listtype_max = 10 };
-    bool                         dofork;                                           //   false
-    u64                          typed_blocksize;                                  // # bytes per block
-    atf_amc::FTypeD*             typed_free;                                       //
-    atf_amc::FThashElem**        ind_thash_elem_buckets_elems;                     // pointer to bucket array
-    i32                          ind_thash_elem_buckets_n;                         // number of elements in bucket array
-    i32                          ind_thash_elem_n;                                 // number of elements in the hash table
-    atf_amc::FThashElem*         thash_elem_lary[32];                              // level array
-    i32                          thash_elem_n;                                     // number of elements in array
-    u64                          hashable_blocksize;                               // # bytes per block
-    atf_amc::Hashable*           hashable_free;                                    //
-    atf_amc::Hashable**          ind_hashable_buckets_elems;                       // pointer to bucket array
-    i32                          ind_hashable_buckets_n;                           // number of elements in bucket array
-    i32                          ind_hashable_n;                                   // number of elements in the hash table
-    u64                          time_entry_blocksize;                             // # bytes per block
-    atf_amc::FTimeEntry*         time_entry_free;                                  //
-    atf_amc::FTimeEntry**        bh_time_entry_elems;                              // binary heap by time
-    i32                          bh_time_entry_n;                                  // number of elements in the heap
-    i32                          bh_time_entry_max;                                // max elements in bh_time_entry_elems
-    algo_lib::FTimehook          th_bh_time_entry;                                 // atf_amc.FDb.bh_time_entry                                   fstep time hook for atf_amc.FDb.bh_time_entry
-    u64                          timehook_recur_counter;                           //   0
-    u64                          timehook_once_counter;                            //   0
-    atf_amc::FHashableLinear**   ind_linear_buckets_elems;                         // pointer to bucket array
-    i32                          ind_linear_buckets_n;                             // number of elements in bucket array
-    i32                          ind_linear_n;                                     // number of elements in the hash table
-    u64                          hashable_linear_blocksize;                        // # bytes per block
-    atf_amc::FHashableLinear*    hashable_linear_free;                             //
-    u64                          strkey_blocksize;                                 // # bytes per block
-    atf_amc::Strkey*             strkey_free;                                      //
-    atf_amc::Strkey**            ind_strkey_buckets_elems;                         // pointer to bucket array
-    i32                          ind_strkey_buckets_n;                             // number of elements in bucket array
-    i32                          ind_strkey_n;                                     // number of elements in the hash table
-    atf_amc::trace               trace;                                            //
+    bool                             dofork;                                           //   false
+    u64                              typed_blocksize;                                  // # bytes per block
+    atf_amc::FTypeD*                 typed_free;                                       //
+    atf_amc::FThashElem**            ind_thash_elem_buckets_elems;                     // pointer to bucket array
+    i32                              ind_thash_elem_buckets_n;                         // number of elements in bucket array
+    i32                              ind_thash_elem_n;                                 // number of elements in the hash table
+    atf_amc::FThashElem*             thash_elem_lary[36];                              // level array
+    i64                              thash_elem_n;                                     // number of elements in array
+    u64                              hashable_blocksize;                               // # bytes per block
+    atf_amc::Hashable*               hashable_free;                                    //
+    atf_amc::Hashable**              ind_hashable_buckets_elems;                       // pointer to bucket array
+    i32                              ind_hashable_buckets_n;                           // number of elements in bucket array
+    i32                              ind_hashable_n;                                   // number of elements in the hash table
+    u64                              time_entry_blocksize;                             // # bytes per block
+    atf_amc::FTimeEntry*             time_entry_free;                                  //
+    atf_amc::FTimeEntry**            bh_time_entry_elems;                              // binary heap by time
+    i32                              bh_time_entry_n;                                  // number of elements in the heap
+    i32                              bh_time_entry_max;                                // max elements in bh_time_entry_elems
+    algo_lib::FTimehook              th_bh_time_entry;                                 // atf_amc.FDb.bh_time_entry                                           fstep time hook for atf_amc.FDb.bh_time_entry
+    u64                              timehook_recur_counter;                           //   0
+    u64                              timehook_once_counter;                            //   0
+    atf_amc::FHashableLinear**       ind_linear_buckets_elems;                         // pointer to bucket array
+    i32                              ind_linear_buckets_n;                             // number of elements in bucket array
+    i32                              ind_linear_n;                                     // number of elements in the hash table
+    u64                              hashable_linear_blocksize;                        // # bytes per block
+    atf_amc::FHashableLinear*        hashable_linear_free;                             //
+    u64                              strkey_blocksize;                                 // # bytes per block
+    atf_amc::Strkey*                 strkey_free;                                      //
+    atf_amc::Strkey**                ind_strkey_buckets_elems;                         // pointer to bucket array
+    i32                              ind_strkey_buckets_n;                             // number of elements in bucket array
+    i32                              ind_strkey_n;                                     // number of elements in the hash table
+    u64                              blkhash_elem_blocksize;                           // # bytes per block
+    atf_amc::FBlkhashElem*           blkhash_elem_free;                                //
+    _db_ind_blkhash_elem_Blk**       ind_blkhash_elem_buckets_elems;                   // pointer to bucket array (chains of blocks)
+    i32                              ind_blkhash_elem_buckets_n;                       // number of buckets (power of 2)
+    i32                              ind_blkhash_elem_nblk;                            // number of resident blocks
+    i32                              ind_blkhash_elem_n;                               // number of elements in the index
+    atf_amc::FBlkhashElem**          ind_blkhash_elem_thash_buckets_elems;             // pointer to bucket array
+    i32                              ind_blkhash_elem_thash_buckets_n;                 // number of elements in bucket array
+    i32                              ind_blkhash_elem_thash_n;                         // number of elements in the hash table
+    i64                              varlenallocscale_n;                               // Number of elements
+    varlenallocscale_Lpblock*        varlenallocscale_free[36];                        // Lpool levels
+    varlenallocscale_Lpblk*          varlenallocscale_blk[11];                         // Dedicated blks with free space, per class
+    i64                              msghdrltscale_n;                                  // Number of elements
+    msghdrltscale_Lpblock*           msghdrltscale_free[36];                           // Lpool levels
+    msghdrltscale_Lpblk*             msghdrltscale_blk[11];                            // Dedicated blks with free space, per class
+    alignas(char) u8                 charbuf_data[sizeof(char) * 10];                  // place for data
+    i32                              charbuf_n;                                        // number of elems current in existence
+    enum { charbuf_max = 10 };
+    u8*                              in_fb_elems;                                      //   NULL  pointer to elements of indirect array
+    u32                              in_fb_max;                                        //   0  current length of allocated array
+    i32                              in_fb_start;                                      // beginning of valid bytes (in bytes)
+    i32                              in_fb_end;                                        // end of valid bytes (in bytes)
+    i32                              in_fb_msglen;                                     // current message length
+    algo::Errcode                    in_fb_err;                                        // system error code
+    u64                              in_fb_n_read_byte;                                // read bytes
+    u64                              in_fb_n_read_msg;                                 // read messages
+    bool                             in_fb_eof;                                        // no more data will be written to buffer
+    bool                             in_fb_msgvalid;                                   // current message is valid
+    bool                             in_fb_epoll_enable;                               // use epoll?
+    u8*                              out_fb_elems;                                     //   NULL  pointer to elements of indirect array
+    u32                              out_fb_max;                                       //   0  current length of allocated array
+    i32                              out_fb_start;                                     // beginning of valid bytes (in bytes)
+    i32                              out_fb_end;                                       // end of valid bytes (in bytes)
+    i32                              out_fb_msglen;                                    // current message length
+    algo::Errcode                    out_fb_err;                                       // system error code
+    algo_lib::FIohook                out_fb_iohook;                                    // edge-triggered hook for the buffer
+    u64                              out_fb_n_eagain;                                  // eagain counter
+    u64                              out_fb_n_write_byte;                              // written bytes
+    u64                              out_fb_n_write_msg;                               // written messages
+    bool                             out_fb_eof;                                       // no more data will be written to buffer
+    bool                             out_fb_msgvalid;                                  // current message is valid
+    bool                             out_fb_epoll_enable;                              // use epoll?
+    bool                             out_fb_zerocopy;                                  // support zero-copy optimization
+    i64                              testdec;                                          //   0  Global decimal (2 places); accessors go through _db
+    u32                              flagbits;                                         //   0  Source field for global bitfld fields
+    u32                              fdbsize;                                          //   ssizeof(_db)  Byte size of FDb; dflt refers to the record itself
+    u32                              gpmask;                                           //   0
+    u32                              gpval;                                            //   0
+    u32                              gpval2;                                           //   0
+    u64                              condpar_blocksize;                                // # bytes per block
+    atf_amc::FCondpar*               condpar_free;                                     //
+    u64                              condtest_blocksize;                               // # bytes per block
+    atf_amc::FCondtest*              condtest_free;                                    //
+    atf_amc::FCondtest*              zd_condtest_run_head;                             // zero-terminated doubly linked list
+    i32                              zd_condtest_run_n;                                // zero-terminated doubly linked list
+    atf_amc::FCondtest*              zd_condtest_run_tail;                             // pointer to last element
+    atf_amc::FCondtest*              zd_condtest_idle_head;                            // zero-terminated doubly linked list
+    i32                              zd_condtest_idle_n;                               // zero-terminated doubly linked list
+    atf_amc::FCondtest*              zd_condtest_idle_tail;                            // pointer to last element
+    atf_amc::FCondtest*              cd_condtest_ready_head;                           // zero-terminated doubly linked list
+    i32                              cd_condtest_ready_n;                              // zero-terminated doubly linked list
+    atf_amc::FCondpar*               zd_condpar_done_head;                             // zero-terminated doubly linked list
+    i32                              zd_condpar_done_n;                                // zero-terminated doubly linked list
+    atf_amc::FCondpar*               zd_condpar_done_tail;                             // pointer to last element
+    atf_amc::FCondtest*              cd_condtest_space_head;                           // zero-terminated doubly linked list
+    i32                              cd_condtest_space_n;                              // zero-terminated doubly linked list
+    atf_amc::Sslbuf*                 cd_sslbuf_out_head;                               // zero-terminated doubly linked list
+    lpool_Lpblock*                   lpool_free[36];                                   // Lpool levels
+    lpool_Lpblk*                     lpool_blk[11];                                    // Dedicated blks with free space, per class
+    i64                              optwide_n;                                        // Number of elements
+    optwide_Lpblock*                 optwide_free[36];                                 // Lpool levels
+    optwide_Lpblk*                   optwide_blk[11];                                  // Dedicated blks with free space, per class
+    i64                              optsigned_n;                                      // Number of elements
+    optsigned_Lpblock*               optsigned_free[36];                               // Lpool levels
+    optsigned_Lpblk*                 optsigned_blk[11];                                // Dedicated blks with free space, per class
+    atf_amc::FTypeU*                 typeu_lary[36];                                   // level array
+    i64                              typeu_n;                                          // number of elements in array
+    atf_amc::FTypeU**                ind_typeu_buckets_elems;                          // pointer to bucket array
+    i32                              ind_typeu_buckets_n;                              // number of elements in bucket array
+    i32                              ind_typeu_n;                                      // number of elements in the hash table
+    atf_amc::FTypeU**                ind_typeu_v_buckets_elems;                        // pointer to bucket array
+    i32                              ind_typeu_v_buckets_n;                            // number of elements in bucket array
+    i32                              ind_typeu_v_n;                                    // number of elements in the hash table
+    atf_amc::trace                   trace;                                            //
 };
-
 // Remove all elements from heap and free memory used by the array.
 // func:atf_amc.FDb.bh_typec.Dealloc
 void                 bh_typec_Dealloc() __attribute__((nothrow));
@@ -2511,6 +3576,9 @@ atf_amc::FTypeC*     zdl_h_typec_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:atf_amc.FDb.zdl_h_typec.qLast
 inline atf_amc::FTypeC& zdl_h_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_amc.FDb.zdl_h_typec.InsertBefore
+void                 zdl_h_typec_InsertBefore(atf_amc::FTypeC& row, atf_amc::FTypeC* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:atf_amc.FDb.zd_t_typec.EmptyQ
@@ -2548,6 +3616,9 @@ atf_amc::FTypeC*     zd_t_typec_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:atf_amc.FDb.zd_t_typec.qLast
 inline atf_amc::FTypeC& zd_t_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_amc.FDb.zd_t_typec.InsertBefore
+void                 zd_t_typec_InsertBefore(atf_amc::FTypeC& row, atf_amc::FTypeC* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:atf_amc.FDb.zd_typed.EmptyQ
@@ -2585,6 +3656,9 @@ atf_amc::FTypeD*     zd_typed_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:atf_amc.FDb.zd_typed.qLast
 inline atf_amc::FTypeD& zd_typed_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_amc.FDb.zd_typed.InsertBefore
+void                 zd_typed_InsertBefore(atf_amc::FTypeD& row, atf_amc::FTypeD* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:atf_amc.FDb.zs_t_typed.EmptyQ
@@ -3025,7 +4099,7 @@ inline atf_amc::FTypeA* typea_Find(i32 t) __attribute__((__warn_unused_result__,
 inline atf_amc::FTypeA* typea_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_amc.FDb.typea.N
-inline i32           typea_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           typea_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_amc.FDb.typea.RemoveAll
 void                 typea_RemoveAll() __attribute__((nothrow));
@@ -3065,7 +4139,7 @@ inline atf_amc::FTypeS* types_Find(u64 t) __attribute__((__warn_unused_result__,
 inline atf_amc::FTypeS* types_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_amc.FDb.types.N
-inline i32           types_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           types_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_amc.FDb.types.RemoveAll
 void                 types_RemoveAll() __attribute__((nothrow));
@@ -3136,10 +4210,8 @@ void                 ind_typea_Reserve(int n) __attribute__((nothrow));
 // func:atf_amc.FDb.ind_typea.AbsReserve
 void                 ind_typea_AbsReserve(int n) __attribute__((nothrow));
 
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_amc.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_amc.FDb.cmdline (and any base command line)
+// via atf_amc_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:atf_amc.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -3176,6 +4248,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:atf_amc.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:atf_amc.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_amc.FDb._db.XrefMaybe
@@ -3206,7 +4282,7 @@ inline atf_amc::FTypeT* typet_Find(u64 t) __attribute__((__warn_unused_result__,
 inline atf_amc::FTypeT* typet_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_amc.FDb.typet.N
-inline i32           typet_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           typet_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_amc.FDb.typet.RemoveAll
 void                 typet_RemoveAll() __attribute__((nothrow));
@@ -3246,7 +4322,7 @@ inline atf_amc::FCstring* cstring_Find(u64 t) __attribute__((__warn_unused_resul
 inline atf_amc::FCstring* cstring_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_amc.FDb.cstring.N
-inline i32           cstring_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           cstring_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_amc.FDb.cstring.RemoveAll
 void                 cstring_RemoveAll() __attribute__((nothrow));
@@ -3411,6 +4487,7 @@ u64                  pooledbe64_ReserveMem(u64 size) __attribute__((nothrow));
 bool                 pooledbe64_XrefMaybe(atf_amc::PooledBE64 &row);
 
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 // func:atf_amc.FDb.varlen_extern.FreeMem
 void                 varlen_extern_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
@@ -3420,7 +4497,8 @@ void                 varlen_extern_FreeMem(void* mem, u64 size) __attribute__((n
 // func:atf_amc.FDb.varlen_extern.AllocMem
 void*                varlen_extern_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 // func:atf_amc.FDb.varlen_extern.ReserveBuffers
 bool                 varlen_extern_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
@@ -3485,7 +4563,7 @@ inline atf_amc::FAmctest* amctest_Find(u64 t) __attribute__((__warn_unused_resul
 inline atf_amc::FAmctest* amctest_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_amc.FDb.amctest.N
-inline i32           amctest_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           amctest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_amc.FDb.amctest.RemoveAll
 void                 amctest_RemoveAll() __attribute__((nothrow));
@@ -3531,6 +4609,7 @@ u64                  cascdel_ReserveMem(u64 size) __attribute__((nothrow));
 bool                 cascdel_XrefMaybe(atf_amc::FCascdel &row);
 
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 // func:atf_amc.FDb.optalloc.FreeMem
 void                 optalloc_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
@@ -3540,7 +4619,8 @@ void                 optalloc_FreeMem(void* mem, u64 size) __attribute__((nothro
 // func:atf_amc.FDb.optalloc.AllocMem
 void*                optalloc_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 // func:atf_amc.FDb.optalloc.ReserveBuffers
 bool                 optalloc_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
@@ -3566,6 +4646,7 @@ inline i64           optalloc_N() __attribute__((__warn_unused_result__, nothrow
 bool                 optalloc_XrefMaybe(atf_amc::OptAlloc &row);
 
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 // func:atf_amc.FDb.varlenalloc.FreeMem
 void                 varlenalloc_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
@@ -3575,7 +4656,8 @@ void                 varlenalloc_FreeMem(void* mem, u64 size) __attribute__((not
 // func:atf_amc.FDb.varlenalloc.AllocMem
 void*                varlenalloc_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 // func:atf_amc.FDb.varlenalloc.ReserveBuffers
 bool                 varlenalloc_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
@@ -3616,6 +4698,7 @@ inline i64           varlenalloc_N() __attribute__((__warn_unused_result__, noth
 bool                 varlenalloc_XrefMaybe(atf_amc::VarlenAlloc &row);
 
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 // func:atf_amc.FDb.optg.FreeMem
 void                 optg_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
@@ -3625,7 +4708,8 @@ void                 optg_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // func:atf_amc.FDb.optg.AllocMem
 void*                optg_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 // func:atf_amc.FDb.optg.ReserveBuffers
 bool                 optg_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
@@ -3659,12 +4743,12 @@ bool                 optg_XrefMaybe(atf_amc::FOptG &row);
 inline bool          c_typek_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_amc.FDb.c_typek.Find
-inline atf_amc::FTypeK* c_typek_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FTypeK* c_typek_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_amc.FDb.c_typek.Getary
 inline algo::aryptr<atf_amc::FTypeK*> c_typek_Getary() __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_amc.FDb.c_typek.Insert
 void                 c_typek_Insert(atf_amc::FTypeK& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -3674,7 +4758,7 @@ void                 c_typek_Insert(atf_amc::FTypeK& row) __attribute__((nothrow
 bool                 c_typek_InsertMaybe(atf_amc::FTypeK& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_amc.FDb.c_typek.N
-inline i32           c_typek_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_typek_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_amc.FDb.c_typek.Remove
 void                 c_typek_Remove(atf_amc::FTypeK& row) __attribute__((nothrow));
@@ -3683,10 +4767,10 @@ void                 c_typek_Remove(atf_amc::FTypeK& row) __attribute__((nothrow
 inline void          c_typek_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_amc.FDb.c_typek.Reserve
-void                 c_typek_Reserve(u32 n) __attribute__((nothrow));
+void                 c_typek_Reserve(u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_amc.FDb.c_typek.qFind
-inline atf_amc::FTypeK& c_typek_qFind(u32 idx) __attribute__((nothrow));
+inline atf_amc::FTypeK& c_typek_qFind(u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_amc.FDb.c_typek.InAryQ
 inline bool          c_typek_InAryQ(atf_amc::FTypeK& row) __attribute__((nothrow));
@@ -3699,7 +4783,7 @@ inline atf_amc::FTypeK& c_typek_qLast() __attribute__((nothrow));
 inline bool          c_typel_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_amc.FDb.c_typel.Find
-inline atf_amc::FTypeL* c_typel_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FTypeL* c_typel_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_amc.FDb.c_typel.Getary
 inline algo::aryptr<atf_amc::FTypeL*> c_typel_Getary() __attribute__((nothrow));
@@ -3707,8 +4791,8 @@ inline algo::aryptr<atf_amc::FTypeL*> c_typel_Getary() __attribute__((nothrow));
 inline atf_amc::FTypeL* c_typel_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // func:atf_amc.FDb.c_typel.Last
 inline atf_amc::FTypeL* c_typel_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_amc.FDb.c_typel.Insert
 void                 c_typel_Insert(atf_amc::FTypeL& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -3718,7 +4802,7 @@ void                 c_typel_Insert(atf_amc::FTypeL& row) __attribute__((nothrow
 bool                 c_typel_InsertMaybe(atf_amc::FTypeL& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_amc.FDb.c_typel.N
-inline i32           c_typel_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_typel_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_amc.FDb.c_typel.Remove
 void                 c_typel_Remove(atf_amc::FTypeL& row) __attribute__((nothrow));
@@ -3727,7 +4811,7 @@ void                 c_typel_Remove(atf_amc::FTypeL& row) __attribute__((nothrow
 inline void          c_typel_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_amc.FDb.c_typel.Reserve
-void                 c_typel_Reserve(u32 n) __attribute__((nothrow));
+void                 c_typel_Reserve(u64 n) __attribute__((nothrow));
 // Heap-like Ptrary: remove first element
 // If index is empty, return NULL. Otherwise remove and return first element in index.
 // func:atf_amc.FDb.c_typel.RemoveFirst
@@ -3738,7 +4822,7 @@ atf_amc::FTypeL*     c_typel_RemoveFirst() __attribute__((nothrow));
 atf_amc::FTypeL*     c_typel_RemoveLast() __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_amc.FDb.c_typel.qFind
-inline atf_amc::FTypeL& c_typel_qFind(u32 idx) __attribute__((nothrow));
+inline atf_amc::FTypeL& c_typel_qFind(u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_amc.FDb.c_typel.InAryQ
 inline bool          c_typel_InAryQ(atf_amc::FTypeL& row) __attribute__((nothrow));
@@ -3746,17 +4830,27 @@ inline bool          c_typel_InAryQ(atf_amc::FTypeL& row) __attribute__((nothrow
 // func:atf_amc.FDb.c_typel.qLast
 inline atf_amc::FTypeL& c_typel_qLast() __attribute__((nothrow));
 
+// User-defined function called when record is xref-inserted into this field
+// User-defined OnXref callback for field c_typem
+// func:atf_amc.FDb.c_typem.OnXref
+// this function is 'extrn' and implemented by user
+void                 c_typem_OnXref(atf_amc::FTypeM& row) __attribute__((nothrow));
+// User-defined function called when record is xref-removed from this field
+// User-defined OnUnref callback for field c_typem
+// func:atf_amc.FDb.c_typem.OnUnref
+// this function is 'extrn' and implemented by user
+void                 c_typem_OnUnref(atf_amc::FTypeM& row) __attribute__((nothrow));
 // Return true if index is empty
 // func:atf_amc.FDb.c_typem.EmptyQ
 inline bool          c_typem_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_amc.FDb.c_typem.Find
-inline atf_amc::FTypeM* c_typem_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FTypeM* c_typem_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_amc.FDb.c_typem.Getary
 inline algo::aryptr<atf_amc::FTypeM*> c_typem_Getary() __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_amc.FDb.c_typem.Insert
 void                 c_typem_Insert(atf_amc::FTypeM& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -3767,7 +4861,7 @@ void                 c_typem_Insert(atf_amc::FTypeM& row) __attribute__((nothrow
 bool                 c_typem_ScanInsertMaybe(atf_amc::FTypeM& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_amc.FDb.c_typem.N
-inline i32           c_typem_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_typem_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_amc.FDb.c_typem.Remove
 void                 c_typem_Remove(atf_amc::FTypeM& row) __attribute__((nothrow));
@@ -3776,10 +4870,10 @@ void                 c_typem_Remove(atf_amc::FTypeM& row) __attribute__((nothrow
 inline void          c_typem_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_amc.FDb.c_typem.Reserve
-void                 c_typem_Reserve(u32 n) __attribute__((nothrow));
+void                 c_typem_Reserve(u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_amc.FDb.c_typem.qFind
-inline atf_amc::FTypeM& c_typem_qFind(u32 idx) __attribute__((nothrow));
+inline atf_amc::FTypeM& c_typem_qFind(u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:atf_amc.FDb.c_typem.qLast
 inline atf_amc::FTypeM& c_typem_qLast() __attribute__((nothrow));
@@ -3805,7 +4899,7 @@ inline atf_amc::FAvl* avl_Find(u64 t) __attribute__((__warn_unused_result__, not
 inline atf_amc::FAvl* avl_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_amc.FDb.avl.N
-inline i32           avl_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           avl_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_amc.FDb.avl.RemoveAll
 void                 avl_RemoveAll() __attribute__((nothrow));
@@ -4012,7 +5106,7 @@ inline atf_amc::FThashElem* thash_elem_Find(u64 t) __attribute__((__warn_unused_
 inline atf_amc::FThashElem* thash_elem_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_amc.FDb.thash_elem.N
-inline i32           thash_elem_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           thash_elem_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_amc.FDb.thash_elem.RemoveAll
 void                 thash_elem_RemoveAll() __attribute__((nothrow));
@@ -4279,6 +5373,964 @@ void                 ind_strkey_Reserve(int n) __attribute__((nothrow));
 // Reserve enough room for exacty N elements. Return success code.
 // func:atf_amc.FDb.ind_strkey.AbsReserve
 void                 ind_strkey_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_amc.FDb.blkhash_elem.Alloc
+atf_amc::FBlkhashElem& blkhash_elem_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.blkhash_elem.AllocMaybe
+atf_amc::FBlkhashElem* blkhash_elem_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.blkhash_elem.Delete
+void                 blkhash_elem_Delete(atf_amc::FBlkhashElem &row) __attribute__((nothrow));
+// Allocate space for one element
+// If no memory available, return NULL.
+// func:atf_amc.FDb.blkhash_elem.AllocMem
+void*                blkhash_elem_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Remove mem from all global and cross indices, then deallocate mem
+// func:atf_amc.FDb.blkhash_elem.FreeMem
+void                 blkhash_elem_FreeMem(atf_amc::FBlkhashElem &row) __attribute__((nothrow));
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+// func:atf_amc.FDb.blkhash_elem.Reserve
+u64                  blkhash_elem_Reserve(u64 n_elems) __attribute__((nothrow));
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+// func:atf_amc.FDb.blkhash_elem.ReserveMem
+u64                  blkhash_elem_ReserveMem(u64 size) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.blkhash_elem.XrefMaybe
+bool                 blkhash_elem_XrefMaybe(atf_amc::FBlkhashElem &row);
+
+// Return true if index is empty
+// func:atf_amc.FDb.ind_blkhash_elem.EmptyQ
+inline bool          ind_blkhash_elem_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:atf_amc.FDb.ind_blkhash_elem.Find
+atf_amc::FBlkhashElem* ind_blkhash_elem_Find(atf_amc::BlkKey key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:atf_amc.FDb.ind_blkhash_elem.FindX
+atf_amc::FBlkhashElem& ind_blkhash_elem_FindX(atf_amc::BlkKey key);
+// Return number of items in the index
+// func:atf_amc.FDb.ind_blkhash_elem.N
+inline i32           ind_blkhash_elem_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into the index. Return true if row is reachable through the index after the function completes.
+// func:atf_amc.FDb.ind_blkhash_elem.InsertMaybe
+bool                 ind_blkhash_elem_InsertMaybe(atf_amc::FBlkhashElem& row) __attribute__((nothrow));
+// Remove reference to element from index. If element is not in index, do nothing
+// func:atf_amc.FDb.ind_blkhash_elem.Remove
+void                 ind_blkhash_elem_Remove(atf_amc::FBlkhashElem& row) __attribute__((nothrow));
+
+// Return true if hash is empty
+// func:atf_amc.FDb.ind_blkhash_elem_thash.EmptyQ
+inline bool          ind_blkhash_elem_thash_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:atf_amc.FDb.ind_blkhash_elem_thash.Find
+atf_amc::FBlkhashElem* ind_blkhash_elem_thash_Find(atf_amc::BlkKey key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:atf_amc.FDb.ind_blkhash_elem_thash.FindX
+atf_amc::FBlkhashElem& ind_blkhash_elem_thash_FindX(atf_amc::BlkKey key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_amc.FDb.ind_blkhash_elem_thash.GetOrCreate
+atf_amc::FBlkhashElem* ind_blkhash_elem_thash_GetOrCreate(atf_amc::BlkKey key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:atf_amc.FDb.ind_blkhash_elem_thash.N
+inline i32           ind_blkhash_elem_thash_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_amc.FDb.ind_blkhash_elem_thash.InsertMaybe
+bool                 ind_blkhash_elem_thash_InsertMaybe(atf_amc::FBlkhashElem& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_amc.FDb.ind_blkhash_elem_thash.Remove
+void                 ind_blkhash_elem_thash_Remove(atf_amc::FBlkhashElem& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_amc.FDb.ind_blkhash_elem_thash.Reserve
+void                 ind_blkhash_elem_thash_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_amc.FDb.ind_blkhash_elem_thash.AbsReserve
+void                 ind_blkhash_elem_thash_AbsReserve(int n) __attribute__((nothrow));
+
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+// func:atf_amc.FDb.varlenallocscale.FreeMem
+void                 varlenallocscale_FreeMem(void* mem, u64 size) __attribute__((nothrow));
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+// func:atf_amc.FDb.varlenallocscale.AllocMem
+void*                varlenallocscale_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+// func:atf_amc.FDb.varlenallocscale.ReserveBuffers
+bool                 varlenallocscale_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+// func:atf_amc.FDb.varlenallocscale.ReallocMem
+void*                varlenallocscale_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for a new row with N_VARFLD var-len elements
+// If out of memory, process is killed.
+// func:atf_amc.FDb.varlenallocscale.Alloc
+atf_amc::VarlenAllocScale& varlenallocscale_Alloc(i32 n_varfld) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.varlenallocscale.AllocMaybe
+inline atf_amc::VarlenAllocScale* varlenallocscale_AllocMaybe(i32 n_varfld) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FDb.varlenallocscale.AllocExtra
+atf_amc::VarlenAllocScale& varlenallocscale_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.varlenallocscale.AllocExtraMaybe
+atf_amc::VarlenAllocScale* varlenallocscale_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+// Allocate element & copy memory from input parameter. If out of memory, return NULL.
+// Allocate memory for a new row; Copy var-len portion from elem.
+// This is a convenience function that uses varlenallocscale_Alloc
+// func:atf_amc.FDb.varlenallocscale.AllocVarlenMaybe
+inline atf_amc::VarlenAllocScale* varlenallocscale_AllocVarlenMaybe(algo::aryptr<i32> elem) __attribute__((__warn_unused_result__, nothrow));
+// Allocate element & copy memory from input parameter. If out of memory, terminate process.
+// func:atf_amc.FDb.varlenallocscale.AllocVarlen
+inline atf_amc::VarlenAllocScale& varlenallocscale_AllocVarlen(algo::aryptr<i32> elem) __attribute__((__warn_unused_result__));
+// Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.varlenallocscale.Delete
+void                 varlenallocscale_Delete(atf_amc::VarlenAllocScale &row) __attribute__((nothrow));
+// Return number of items in the pool
+// func:atf_amc.FDb.varlenallocscale.N
+inline i64           varlenallocscale_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.varlenallocscale.XrefMaybe
+bool                 varlenallocscale_XrefMaybe(atf_amc::VarlenAllocScale &row);
+
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+// func:atf_amc.FDb.msghdrltscale.FreeMem
+void                 msghdrltscale_FreeMem(void* mem, u64 size) __attribute__((nothrow));
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+// func:atf_amc.FDb.msghdrltscale.AllocMem
+void*                msghdrltscale_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+// func:atf_amc.FDb.msghdrltscale.ReserveBuffers
+bool                 msghdrltscale_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+// func:atf_amc.FDb.msghdrltscale.ReallocMem
+void*                msghdrltscale_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_amc.FDb.msghdrltscale.Alloc
+atf_amc::MsgHdrLTScale& msghdrltscale_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.msghdrltscale.AllocMaybe
+atf_amc::MsgHdrLTScale* msghdrltscale_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.msghdrltscale.Delete
+void                 msghdrltscale_Delete(atf_amc::MsgHdrLTScale &row) __attribute__((nothrow));
+// Return number of items in the pool
+// func:atf_amc.FDb.msghdrltscale.N
+inline i64           msghdrltscale_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.msghdrltscale.XrefMaybe
+bool                 msghdrltscale_XrefMaybe(atf_amc::MsgHdrLTScale &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_amc.FDb.charbuf.Alloc
+char&                charbuf_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.charbuf.AllocMaybe
+char*                charbuf_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.charbuf.AllocMem
+inline void*         charbuf_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_amc.FDb.charbuf.EmptyQ
+inline bool          charbuf_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.charbuf.Find
+inline char*         charbuf_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:atf_amc.FDb.charbuf.Getary
+inline algo::aryptr<char> charbuf_Getary() __attribute__((nothrow));
+// Return constant 10 -- max. number of items in the pool
+// func:atf_amc.FDb.charbuf.Max
+inline i32           charbuf_Max() __attribute__((nothrow));
+// Return number of items in the array
+// func:atf_amc.FDb.charbuf.N
+inline i32           charbuf_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Destroy all elements of Inlary
+// func:atf_amc.FDb.charbuf.RemoveAll
+void                 charbuf_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.charbuf.RemoveLast
+void                 charbuf_RemoveLast() __attribute__((nothrow));
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+// func:atf_amc.FDb.charbuf.Setary
+inline void          charbuf_Setary(const algo::aryptr<char> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.FDb.charbuf.qFind
+inline char&         charbuf_qFind(u64 t) __attribute__((nothrow));
+// Compute row id of element given element's address
+// func:atf_amc.FDb.charbuf.rowid_Get
+inline u64           charbuf_rowid_Get(char &row) __attribute__((nothrow));
+// Convert charbuf to a string.
+// Array is printed as a regular string.
+// func:atf_amc.FDb.charbuf.Print
+void                 charbuf_Print(algo::cstring &rhs) __attribute__((nothrow));
+// Read array from string
+// Convert string to field. Return success value
+// func:atf_amc.FDb.charbuf.ReadStrptrMaybe
+bool                 charbuf_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+
+// func:atf_amc.FDb.in_fb.GetAlloc
+inline algo::Alloc   in_fb_GetAlloc() __attribute__((nothrow));
+// func:atf_amc.FDb.in_fb.GetAllocReserve
+inline algo::Alloc   in_fb_GetAllocReserve() __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+// func:atf_amc.FDb.in_fb.BeginAlloc
+void*                in_fb_BeginAlloc(atf_amc::FDb &_db, i32 in_n) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+// func:atf_amc.FDb.in_fb.BeginAllocReserve
+void*                in_fb_BeginAllocReserve(atf_amc::FDb &_db, i32 in_n) __attribute__((nothrow));
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is any number of bytes > 0
+//
+// func:atf_amc.FDb.in_fb.GetMsg
+algo::aryptr<char>   in_fb_GetMsg() __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+// func:atf_amc.FDb.in_fb.Realloc
+void                 in_fb_Realloc(int new_max) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+// func:atf_amc.FDb.in_fb.Max
+inline i32           in_fb_Max() __attribute__((nothrow));
+// Return number of bytes in the buffer.
+// func:atf_amc.FDb.in_fb.N
+inline i32           in_fb_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Empty bfufer
+// Discard contents of the buffer.
+// func:atf_amc.FDb.in_fb.RemoveAll
+void                 in_fb_RemoveAll() __attribute__((nothrow));
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+//
+// func:atf_amc.FDb.in_fb.SkipBytes
+void                 in_fb_SkipBytes(int n) __attribute__((nothrow));
+// Skip current message, if any
+// Skip current message, if any.
+// func:atf_amc.FDb.in_fb.SkipMsg
+void                 in_fb_SkipMsg() __attribute__((nothrow));
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+// func:atf_amc.FDb.in_fb.WriteAll
+bool                 in_fb_WriteAll(u8 *in, i32 in_n) __attribute__((nothrow));
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+// func:atf_amc.FDb.in_fb.WriteReserve
+void                 in_fb_WriteReserve(u8 *in, i32 in_n) __attribute__((nothrow));
+
+// func:atf_amc.FDb.out_fb.GetAlloc
+inline algo::Alloc   out_fb_GetAlloc() __attribute__((nothrow));
+// func:atf_amc.FDb.out_fb.GetAllocReserve
+inline algo::Alloc   out_fb_GetAllocReserve() __attribute__((nothrow));
+// Send zero-byte write
+// func:atf_amc.FDb.out_fb.EndWrite
+void                 out_fb_EndWrite() __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+// func:atf_amc.FDb.out_fb.BeginAlloc
+void*                out_fb_BeginAlloc(atf_amc::FDb &_db, i32 in_n) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+// func:atf_amc.FDb.out_fb.BeginAllocReserve
+void*                out_fb_BeginAllocReserve(atf_amc::FDb &_db, i32 in_n) __attribute__((nothrow));
+// Attach fbuf to Iohook for writing
+// Attach file descriptor and begin outflowing buffer reading using edge-triggered epoll.
+// User should implement a step function that calls out_fb_Outflow.
+// func:atf_amc.FDb.out_fb.BeginWrite
+void                 out_fb_BeginWrite(algo::Fildes fd, bool nodelete) __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+// func:atf_amc.FDb.out_fb.Realloc
+void                 out_fb_Realloc(int new_max) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+// func:atf_amc.FDb.out_fb.Max
+inline i32           out_fb_Max() __attribute__((nothrow));
+// Return number of bytes in the buffer.
+// func:atf_amc.FDb.out_fb.N
+inline i32           out_fb_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Transfer bytes from buffer to fd using write()
+// func:atf_amc.FDb.out_fb.Outflow
+bool                 out_fb_Outflow() __attribute__((nothrow));
+// Empty bfufer
+// Discard contents of the buffer.
+// func:atf_amc.FDb.out_fb.RemoveAll
+void                 out_fb_RemoveAll() __attribute__((nothrow));
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+//
+// func:atf_amc.FDb.out_fb.SkipBytes
+void                 out_fb_SkipBytes(int n) __attribute__((nothrow));
+// Skip current message, if any
+// Skip current message, if any.
+// func:atf_amc.FDb.out_fb.SkipMsg
+void                 out_fb_SkipMsg() __attribute__((nothrow));
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+// func:atf_amc.FDb.out_fb.WriteAll
+bool                 out_fb_WriteAll(u8 *in, i32 in_n) __attribute__((nothrow));
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+// func:atf_amc.FDb.out_fb.WriteReserve
+void                 out_fb_WriteReserve(u8 *in, i32 in_n) __attribute__((nothrow));
+
+// Set value of field testdec.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
+// Example: 1.3 cannot be represented exactly as a double, the actual
+// stored value will be 1.29999999. when we apply C truncation,
+// we want to end up with 1.3, not 1.2.
+// func:atf_amc.FDb.testdec.qSetDouble
+inline void          testdec_qSetDouble(double val) __attribute__((nothrow));
+// func:atf_amc.FDb.testdec.GetDouble
+inline double        testdec_GetDouble() __attribute__((nothrow));
+// Return integer portion (divide number by 100)
+// func:atf_amc.FDb.testdec.GetInt
+inline i64           testdec_GetInt() __attribute__((nothrow));
+// Return constant 100
+// func:atf_amc.FDb.testdec.GetScale
+inline i64           FDb_GetScale() __attribute__((nothrow));
+// Set value of field testdec, using rounding.
+// If value is out of range for the target type, return false.
+// func:atf_amc.FDb.testdec.SetDoubleMaybe
+bool                 testdec_SetDoubleMaybe(double val) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field flagbits
+//    4 bits starting at bit 0.
+// func:atf_amc.FDb.flaglo.Get
+inline u32           flaglo_Get() __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'flagbits'
+//    4 bits starting at bit 0.
+// func:atf_amc.FDb.flaglo.Set
+inline void          flaglo_Set(u32 rhs) __attribute__((nothrow));
+
+// Return constant 1
+// func:atf_amc.FDb.gpmask.N
+inline int           gpmask_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Access value
+// func:atf_amc.FDb.gpmask.qFind
+inline u32&          gpmask_qFind(int) __attribute__((__warn_unused_result__, nothrow));
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+// func:atf_amc.FDb.gpmask.NBits
+inline int           gpmask_Nbits() __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.FDb.gpmask.qGetBit
+inline bool          gpmask_qGetBit(u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.FDb.gpmask.GetBit
+inline bool          gpmask_GetBit(u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Check if all the bits in the bitset are equal to zero
+// func:atf_amc.FDb.gpmask.BitsEmptyQ
+inline bool          gpmask_BitsEmptyQ() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FDb.gpmask.Sum1s
+inline u64           gpmask_Sum1s() __attribute__((__warn_unused_result__, nothrow));
+// Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.FDb.gpmask.qClearBit
+inline void          gpmask_qClearBit(u32 bit_idx) __attribute__((nothrow));
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.FDb.gpmask.ClearBit
+inline void          gpmask_ClearBit(u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.FDb.gpmask.qSetBit
+inline void          gpmask_qSetBit(u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.FDb.gpmask.SetBit
+inline void          gpmask_SetBit(u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.FDb.gpmask.qSetBitVal
+inline void          gpmask_qSetBitVal(u32 bit_idx, bool val) __attribute__((nothrow));
+// Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.FDb.gpmask.qOrBitVal
+inline void          gpmask_qOrBitVal(u32 bit_idx, bool val) __attribute__((nothrow));
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+// func:atf_amc.FDb.gpmask.ClearBitsAll
+inline void          gpmask_ClearBitsAll() __attribute__((nothrow));
+// Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.FDb.gpmask.Sup
+inline i32           gpmask_Sup() __attribute__((__warn_unused_result__, nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.FDb.gpval.GpmaskQ
+inline bool          gpval_GpmaskQ() __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.FDb.gpval.SetGpmask
+inline void          gpval_SetGpmask() __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.FDb.gpval.Gpmask_GetBit
+inline int           gpval_Gpmask_GetBit() __attribute__((nothrow));
+// func:atf_amc.FDb.gpval.Set
+inline void          gpval_Set(u32 rhs) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.FDb.gpval2.GpmaskQ
+inline bool          gpval2_GpmaskQ() __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.FDb.gpval2.SetGpmask
+inline void          gpval2_SetGpmask() __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.FDb.gpval2.Gpmask_GetBit
+inline int           gpval2_Gpmask_GetBit() __attribute__((nothrow));
+// func:atf_amc.FDb.gpval2.Set
+inline void          gpval2_Set(u32 rhs) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_amc.FDb.condpar.Alloc
+atf_amc::FCondpar&   condpar_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.condpar.AllocMaybe
+atf_amc::FCondpar*   condpar_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.condpar.Delete
+void                 condpar_Delete(atf_amc::FCondpar &row) __attribute__((nothrow));
+// Allocate space for one element
+// If no memory available, return NULL.
+// func:atf_amc.FDb.condpar.AllocMem
+void*                condpar_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Remove mem from all global and cross indices, then deallocate mem
+// func:atf_amc.FDb.condpar.FreeMem
+void                 condpar_FreeMem(atf_amc::FCondpar &row) __attribute__((nothrow));
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+// func:atf_amc.FDb.condpar.Reserve
+u64                  condpar_Reserve(u64 n_elems) __attribute__((nothrow));
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+// func:atf_amc.FDb.condpar.ReserveMem
+u64                  condpar_ReserveMem(u64 size) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.condpar.XrefMaybe
+bool                 condpar_XrefMaybe(atf_amc::FCondpar &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_amc.FDb.condtest.Alloc
+atf_amc::FCondtest&  condtest_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.condtest.AllocMaybe
+atf_amc::FCondtest*  condtest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.condtest.Delete
+void                 condtest_Delete(atf_amc::FCondtest &row) __attribute__((nothrow));
+// Allocate space for one element
+// If no memory available, return NULL.
+// func:atf_amc.FDb.condtest.AllocMem
+void*                condtest_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Remove mem from all global and cross indices, then deallocate mem
+// func:atf_amc.FDb.condtest.FreeMem
+void                 condtest_FreeMem(atf_amc::FCondtest &row) __attribute__((nothrow));
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+// func:atf_amc.FDb.condtest.Reserve
+u64                  condtest_Reserve(u64 n_elems) __attribute__((nothrow));
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+// func:atf_amc.FDb.condtest.ReserveMem
+u64                  condtest_ReserveMem(u64 size) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.condtest.XrefMaybe
+bool                 condtest_XrefMaybe(atf_amc::FCondtest &row);
+
+// Return true if index is empty
+// func:atf_amc.FDb.zd_condtest_run.EmptyQ
+inline bool          zd_condtest_run_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zd_condtest_run.First
+inline atf_amc::FCondtest* zd_condtest_run_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zd_condtest_run.InLlistQ
+inline bool          zd_condtest_run_InLlistQ(atf_amc::FCondtest& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zd_condtest_run.Insert
+void                 zd_condtest_run_Insert(atf_amc::FCondtest& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.zd_condtest_run.Last
+inline atf_amc::FCondtest* zd_condtest_run_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:atf_amc.FDb.zd_condtest_run.N
+inline i32           zd_condtest_run_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:atf_amc.FDb.zd_condtest_run.Next
+inline atf_amc::FCondtest* zd_condtest_run_Next(atf_amc::FCondtest &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:atf_amc.FDb.zd_condtest_run.Prev
+inline atf_amc::FCondtest* zd_condtest_run_Prev(atf_amc::FCondtest &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.zd_condtest_run.Remove
+void                 zd_condtest_run_Remove(atf_amc::FCondtest& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zd_condtest_run.RemoveAll
+void                 zd_condtest_run_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.zd_condtest_run.RemoveFirst
+atf_amc::FCondtest*  zd_condtest_run_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.zd_condtest_run.qLast
+inline atf_amc::FCondtest& zd_condtest_run_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_amc.FDb.zd_condtest_run.InsertBefore
+void                 zd_condtest_run_InsertBefore(atf_amc::FCondtest& row, atf_amc::FCondtest* before) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:atf_amc.FDb.zd_condtest_idle.EmptyQ
+inline bool          zd_condtest_idle_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zd_condtest_idle.First
+inline atf_amc::FCondtest* zd_condtest_idle_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zd_condtest_idle.InLlistQ
+inline bool          zd_condtest_idle_InLlistQ(atf_amc::FCondtest& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zd_condtest_idle.Insert
+void                 zd_condtest_idle_Insert(atf_amc::FCondtest& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.zd_condtest_idle.Last
+inline atf_amc::FCondtest* zd_condtest_idle_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:atf_amc.FDb.zd_condtest_idle.N
+inline i32           zd_condtest_idle_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:atf_amc.FDb.zd_condtest_idle.Next
+inline atf_amc::FCondtest* zd_condtest_idle_Next(atf_amc::FCondtest &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:atf_amc.FDb.zd_condtest_idle.Prev
+inline atf_amc::FCondtest* zd_condtest_idle_Prev(atf_amc::FCondtest &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.zd_condtest_idle.Remove
+void                 zd_condtest_idle_Remove(atf_amc::FCondtest& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zd_condtest_idle.RemoveAll
+void                 zd_condtest_idle_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.zd_condtest_idle.RemoveFirst
+atf_amc::FCondtest*  zd_condtest_idle_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.zd_condtest_idle.qLast
+inline atf_amc::FCondtest& zd_condtest_idle_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_amc.FDb.zd_condtest_idle.InsertBefore
+void                 zd_condtest_idle_InsertBefore(atf_amc::FCondtest& row, atf_amc::FCondtest* before) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:atf_amc.FDb.cd_condtest_ready.EmptyQ
+inline bool          cd_condtest_ready_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.cd_condtest_ready.First
+inline atf_amc::FCondtest* cd_condtest_ready_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.cd_condtest_ready.InLlistQ
+inline bool          cd_condtest_ready_InLlistQ(atf_amc::FCondtest& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.cd_condtest_ready.Insert
+void                 cd_condtest_ready_Insert(atf_amc::FCondtest& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.cd_condtest_ready.Last
+inline atf_amc::FCondtest* cd_condtest_ready_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:atf_amc.FDb.cd_condtest_ready.N
+inline i32           cd_condtest_ready_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:atf_amc.FDb.cd_condtest_ready.Next
+inline atf_amc::FCondtest* cd_condtest_ready_Next(atf_amc::FCondtest &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:atf_amc.FDb.cd_condtest_ready.Prev
+inline atf_amc::FCondtest* cd_condtest_ready_Prev(atf_amc::FCondtest &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.cd_condtest_ready.Remove
+void                 cd_condtest_ready_Remove(atf_amc::FCondtest& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.cd_condtest_ready.RemoveAll
+void                 cd_condtest_ready_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.cd_condtest_ready.RemoveFirst
+atf_amc::FCondtest*  cd_condtest_ready_RemoveFirst() __attribute__((nothrow));
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+// func:atf_amc.FDb.cd_condtest_ready.RotateFirst
+atf_amc::FCondtest*  cd_condtest_ready_RotateFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.cd_condtest_ready.qLast
+inline atf_amc::FCondtest& cd_condtest_ready_qLast() __attribute__((__warn_unused_result__, nothrow));
+
+// Return true if index is empty
+// func:atf_amc.FDb.zd_condpar_done.EmptyQ
+inline bool          zd_condpar_done_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zd_condpar_done.First
+inline atf_amc::FCondpar* zd_condpar_done_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zd_condpar_done.InLlistQ
+inline bool          zd_condpar_done_InLlistQ(atf_amc::FCondpar& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zd_condpar_done.Insert
+void                 zd_condpar_done_Insert(atf_amc::FCondpar& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.zd_condpar_done.Last
+inline atf_amc::FCondpar* zd_condpar_done_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:atf_amc.FDb.zd_condpar_done.N
+inline i32           zd_condpar_done_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:atf_amc.FDb.zd_condpar_done.Next
+inline atf_amc::FCondpar* zd_condpar_done_Next(atf_amc::FCondpar &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:atf_amc.FDb.zd_condpar_done.Prev
+inline atf_amc::FCondpar* zd_condpar_done_Prev(atf_amc::FCondpar &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.zd_condpar_done.Remove
+void                 zd_condpar_done_Remove(atf_amc::FCondpar& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zd_condpar_done.RemoveAll
+void                 zd_condpar_done_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.zd_condpar_done.RemoveFirst
+atf_amc::FCondpar*   zd_condpar_done_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.zd_condpar_done.qLast
+inline atf_amc::FCondpar& zd_condpar_done_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_amc.FDb.zd_condpar_done.InsertBefore
+void                 zd_condpar_done_InsertBefore(atf_amc::FCondpar& row, atf_amc::FCondpar* before) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:atf_amc.FDb.cd_condtest_space.EmptyQ
+inline bool          cd_condtest_space_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.cd_condtest_space.First
+inline atf_amc::FCondtest* cd_condtest_space_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.cd_condtest_space.InLlistQ
+inline bool          cd_condtest_space_InLlistQ(atf_amc::FCondtest& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.cd_condtest_space.Insert
+void                 cd_condtest_space_Insert(atf_amc::FCondtest& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.cd_condtest_space.Last
+inline atf_amc::FCondtest* cd_condtest_space_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:atf_amc.FDb.cd_condtest_space.N
+inline i32           cd_condtest_space_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:atf_amc.FDb.cd_condtest_space.Next
+inline atf_amc::FCondtest* cd_condtest_space_Next(atf_amc::FCondtest &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:atf_amc.FDb.cd_condtest_space.Prev
+inline atf_amc::FCondtest* cd_condtest_space_Prev(atf_amc::FCondtest &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.cd_condtest_space.Remove
+void                 cd_condtest_space_Remove(atf_amc::FCondtest& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.cd_condtest_space.RemoveAll
+void                 cd_condtest_space_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.cd_condtest_space.RemoveFirst
+atf_amc::FCondtest*  cd_condtest_space_RemoveFirst() __attribute__((nothrow));
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+// func:atf_amc.FDb.cd_condtest_space.RotateFirst
+atf_amc::FCondtest*  cd_condtest_space_RotateFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.cd_condtest_space.qLast
+inline atf_amc::FCondtest& cd_condtest_space_qLast() __attribute__((__warn_unused_result__, nothrow));
+
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.sslbuf.XrefMaybe
+bool                 sslbuf_XrefMaybe(atf_amc::Sslbuf &row);
+
+// Return true if index is empty
+// func:atf_amc.FDb.cd_sslbuf_out.EmptyQ
+inline bool          cd_sslbuf_out_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.cd_sslbuf_out.First
+inline atf_amc::Sslbuf* cd_sslbuf_out_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.cd_sslbuf_out.InLlistQ
+inline bool          cd_sslbuf_out_InLlistQ(atf_amc::Sslbuf& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.cd_sslbuf_out.Insert
+void                 cd_sslbuf_out_Insert(atf_amc::Sslbuf& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.cd_sslbuf_out.Last
+inline atf_amc::Sslbuf* cd_sslbuf_out_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:atf_amc.FDb.cd_sslbuf_out.Next
+inline atf_amc::Sslbuf* cd_sslbuf_out_Next(atf_amc::Sslbuf &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:atf_amc.FDb.cd_sslbuf_out.Prev
+inline atf_amc::Sslbuf* cd_sslbuf_out_Prev(atf_amc::Sslbuf &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.cd_sslbuf_out.Remove
+void                 cd_sslbuf_out_Remove(atf_amc::Sslbuf& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.cd_sslbuf_out.RemoveAll
+void                 cd_sslbuf_out_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.cd_sslbuf_out.RemoveFirst
+atf_amc::Sslbuf*     cd_sslbuf_out_RemoveFirst() __attribute__((nothrow));
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+// func:atf_amc.FDb.cd_sslbuf_out.RotateFirst
+atf_amc::Sslbuf*     cd_sslbuf_out_RotateFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.cd_sslbuf_out.qLast
+inline atf_amc::Sslbuf& cd_sslbuf_out_qLast() __attribute__((__warn_unused_result__, nothrow));
+
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+// func:atf_amc.FDb.lpool.FreeMem
+void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+// func:atf_amc.FDb.lpool.AllocMem
+void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+// func:atf_amc.FDb.lpool.ReserveBuffers
+bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+// func:atf_amc.FDb.lpool.ReallocMem
+void*                lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_amc.FDb.lpool.Alloc
+u8&                  lpool_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.lpool.AllocMaybe
+u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.lpool.Delete
+void                 lpool_Delete(u8 &row) __attribute__((nothrow));
+
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.lpoolbuf.XrefMaybe
+bool                 lpoolbuf_XrefMaybe(atf_amc::Lpoolbuf &row);
+
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+// func:atf_amc.FDb.optwide.FreeMem
+void                 optwide_FreeMem(void* mem, u64 size) __attribute__((nothrow));
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+// func:atf_amc.FDb.optwide.AllocMem
+void*                optwide_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+// func:atf_amc.FDb.optwide.ReserveBuffers
+bool                 optwide_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+// func:atf_amc.FDb.optwide.ReallocMem
+void*                optwide_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// func:atf_amc.FDb.optwide.AllocExtra
+atf_amc::FOptWide&   optwide_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.optwide.AllocExtraMaybe
+atf_amc::FOptWide*   optwide_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.optwide.InsertMaybe
+atf_amc::FOptWide*   optwide_InsertMaybe(const atf_amc::OptWide &value) __attribute__((nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.optwide.Delete
+void                 optwide_Delete(atf_amc::FOptWide &row) __attribute__((nothrow));
+// Return number of items in the pool
+// func:atf_amc.FDb.optwide.N
+inline i64           optwide_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.optwide.XrefMaybe
+bool                 optwide_XrefMaybe(atf_amc::FOptWide &row);
+
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+// func:atf_amc.FDb.optsigned.FreeMem
+void                 optsigned_FreeMem(void* mem, u64 size) __attribute__((nothrow));
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+// func:atf_amc.FDb.optsigned.AllocMem
+void*                optsigned_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+// func:atf_amc.FDb.optsigned.ReserveBuffers
+bool                 optsigned_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+// func:atf_amc.FDb.optsigned.ReallocMem
+void*                optsigned_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// func:atf_amc.FDb.optsigned.AllocExtra
+atf_amc::FOptSigned& optsigned_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.optsigned.AllocExtraMaybe
+atf_amc::FOptSigned* optsigned_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.optsigned.InsertMaybe
+atf_amc::FOptSigned* optsigned_InsertMaybe(const atf_amc::OptSigned &value) __attribute__((nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.optsigned.Delete
+void                 optsigned_Delete(atf_amc::FOptSigned &row) __attribute__((nothrow));
+// Return number of items in the pool
+// func:atf_amc.FDb.optsigned.N
+inline i64           optsigned_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.optsigned.XrefMaybe
+bool                 optsigned_XrefMaybe(atf_amc::FOptSigned &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_amc.FDb.typeu.Alloc
+atf_amc::FTypeU&     typeu_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.typeu.AllocMaybe
+atf_amc::FTypeU*     typeu_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.typeu.InsertMaybe
+atf_amc::FTypeU*     typeu_InsertMaybe(const atf_amc::TypeU &value) __attribute__((nothrow));
+// Insert new value or update existing value
+// func:atf_amc.FDb.typeu.UpdateMaybe
+atf_amc::FTypeU*     typeu_UpdateMaybe(atf_amc::TypeU &value);
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.typeu.AllocMem
+void*                typeu_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_amc.FDb.typeu.EmptyQ
+inline bool          typeu_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.typeu.Find
+inline atf_amc::FTypeU* typeu_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FDb.typeu.Last
+inline atf_amc::FTypeU* typeu_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_amc.FDb.typeu.N
+inline i64           typeu_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_amc.FDb.typeu.RemoveAll
+void                 typeu_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.typeu.RemoveLast
+void                 typeu_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FDb.typeu.qFind
+inline atf_amc::FTypeU& typeu_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.typeu.XrefMaybe
+bool                 typeu_XrefMaybe(atf_amc::FTypeU &row);
+
+// Return true if hash is empty
+// func:atf_amc.FDb.ind_typeu.EmptyQ
+inline bool          ind_typeu_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:atf_amc.FDb.ind_typeu.Find
+atf_amc::FTypeU*     ind_typeu_Find(i32 key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:atf_amc.FDb.ind_typeu.FindX
+atf_amc::FTypeU&     ind_typeu_FindX(i32 key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_amc.FDb.ind_typeu.GetOrCreate
+atf_amc::FTypeU*     ind_typeu_GetOrCreate(i32 key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:atf_amc.FDb.ind_typeu.N
+inline i32           ind_typeu_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_amc.FDb.ind_typeu.InsertMaybe
+bool                 ind_typeu_InsertMaybe(atf_amc::FTypeU& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_amc.FDb.ind_typeu.Remove
+void                 ind_typeu_Remove(atf_amc::FTypeU& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_amc.FDb.ind_typeu.Reserve
+void                 ind_typeu_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_amc.FDb.ind_typeu.AbsReserve
+void                 ind_typeu_AbsReserve(int n) __attribute__((nothrow));
+
+// Return true if hash is empty
+// func:atf_amc.FDb.ind_typeu_v.EmptyQ
+inline bool          ind_typeu_v_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:atf_amc.FDb.ind_typeu_v.Find
+atf_amc::FTypeU*     ind_typeu_v_Find(i32 key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:atf_amc.FDb.ind_typeu_v.FindX
+atf_amc::FTypeU&     ind_typeu_v_FindX(i32 key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_amc.FDb.ind_typeu_v.GetOrCreate
+atf_amc::FTypeU*     ind_typeu_v_GetOrCreate(i32 key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:atf_amc.FDb.ind_typeu_v.N
+inline i32           ind_typeu_v_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_amc.FDb.ind_typeu_v.InsertMaybe
+bool                 ind_typeu_v_InsertMaybe(atf_amc::FTypeU& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_amc.FDb.ind_typeu_v.Remove
+void                 ind_typeu_v_Remove(atf_amc::FTypeU& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_amc.FDb.ind_typeu_v.Reserve
+void                 ind_typeu_v_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_amc.FDb.ind_typeu_v.AbsReserve
+void                 ind_typeu_v_AbsReserve(int n) __attribute__((nothrow));
 
 // func:atf_amc.FDb.bh_typec_curs.Reserve
 void                 _db_bh_typec_curs_Reserve(_db_bh_typec_curs &curs, int n);
@@ -4579,6 +6631,17 @@ inline void          _db_c_typel_curs_Next(_db_c_typel_curs &curs) __attribute__
 // item access
 // func:atf_amc.FDb.c_typel_curs.Access
 inline atf_amc::FTypeL& _db_c_typel_curs_Access(_db_c_typel_curs &curs) __attribute__((nothrow));
+// func:atf_amc.FDb.c_typel_oncecurs.Reset
+inline void          _db_c_typel_oncecurs_Reset(_db_c_typel_oncecurs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.c_typel_oncecurs.ValidQ
+inline bool          _db_c_typel_oncecurs_ValidQ(_db_c_typel_oncecurs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.c_typel_oncecurs.Next
+inline void          _db_c_typel_oncecurs_Next(_db_c_typel_oncecurs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.c_typel_oncecurs.Access
+inline atf_amc::FTypeL& _db_c_typel_oncecurs_Access(_db_c_typel_oncecurs &curs) __attribute__((nothrow));
 // func:atf_amc.FDb.c_typem_curs.Reset
 inline void          _db_c_typem_curs_Reset(_db_c_typem_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -4663,6 +6726,113 @@ inline void          _db_ind_linear_curs_Next(_db_ind_linear_curs &curs) __attri
 // item access
 // func:atf_amc.FDb.ind_linear_curs.Access
 inline atf_amc::FHashableLinear& _db_ind_linear_curs_Access(_db_ind_linear_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.ind_blkhash_elem_curs.Next
+void                 _db_ind_blkhash_elem_curs_Next(_db_ind_blkhash_elem_curs &curs) __attribute__((nothrow));
+// func:atf_amc.FDb.ind_blkhash_elem_curs.Reset
+void                 _db_ind_blkhash_elem_curs_Reset(_db_ind_blkhash_elem_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.ind_blkhash_elem_curs.ValidQ
+inline bool          _db_ind_blkhash_elem_curs_ValidQ(_db_ind_blkhash_elem_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.ind_blkhash_elem_curs.Access
+inline atf_amc::FBlkhashElem& _db_ind_blkhash_elem_curs_Access(_db_ind_blkhash_elem_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.charbuf_curs.Reset
+inline void          _db_charbuf_curs_Reset(_db_charbuf_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.charbuf_curs.ValidQ
+inline bool          _db_charbuf_curs_ValidQ(_db_charbuf_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.charbuf_curs.Next
+inline void          _db_charbuf_curs_Next(_db_charbuf_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.charbuf_curs.Access
+inline char&         _db_charbuf_curs_Access(_db_charbuf_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.zd_condtest_run_curs.Reset
+inline void          _db_zd_condtest_run_curs_Reset(_db_zd_condtest_run_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.zd_condtest_run_curs.ValidQ
+inline bool          _db_zd_condtest_run_curs_ValidQ(_db_zd_condtest_run_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.zd_condtest_run_curs.Next
+inline void          _db_zd_condtest_run_curs_Next(_db_zd_condtest_run_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.zd_condtest_run_curs.Access
+inline atf_amc::FCondtest& _db_zd_condtest_run_curs_Access(_db_zd_condtest_run_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.zd_condtest_idle_curs.Reset
+inline void          _db_zd_condtest_idle_curs_Reset(_db_zd_condtest_idle_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.zd_condtest_idle_curs.ValidQ
+inline bool          _db_zd_condtest_idle_curs_ValidQ(_db_zd_condtest_idle_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.zd_condtest_idle_curs.Next
+inline void          _db_zd_condtest_idle_curs_Next(_db_zd_condtest_idle_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.zd_condtest_idle_curs.Access
+inline atf_amc::FCondtest& _db_zd_condtest_idle_curs_Access(_db_zd_condtest_idle_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.cd_condtest_ready_curs.Reset
+inline void          _db_cd_condtest_ready_curs_Reset(_db_cd_condtest_ready_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.cd_condtest_ready_curs.ValidQ
+inline bool          _db_cd_condtest_ready_curs_ValidQ(_db_cd_condtest_ready_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.cd_condtest_ready_curs.Next
+inline void          _db_cd_condtest_ready_curs_Next(_db_cd_condtest_ready_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.cd_condtest_ready_curs.Access
+inline atf_amc::FCondtest& _db_cd_condtest_ready_curs_Access(_db_cd_condtest_ready_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.zd_condpar_done_curs.Reset
+inline void          _db_zd_condpar_done_curs_Reset(_db_zd_condpar_done_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.zd_condpar_done_curs.ValidQ
+inline bool          _db_zd_condpar_done_curs_ValidQ(_db_zd_condpar_done_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.zd_condpar_done_curs.Next
+inline void          _db_zd_condpar_done_curs_Next(_db_zd_condpar_done_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.zd_condpar_done_curs.Access
+inline atf_amc::FCondpar& _db_zd_condpar_done_curs_Access(_db_zd_condpar_done_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.cd_condtest_space_curs.Reset
+inline void          _db_cd_condtest_space_curs_Reset(_db_cd_condtest_space_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.cd_condtest_space_curs.ValidQ
+inline bool          _db_cd_condtest_space_curs_ValidQ(_db_cd_condtest_space_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.cd_condtest_space_curs.Next
+inline void          _db_cd_condtest_space_curs_Next(_db_cd_condtest_space_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.cd_condtest_space_curs.Access
+inline atf_amc::FCondtest& _db_cd_condtest_space_curs_Access(_db_cd_condtest_space_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.cd_sslbuf_out_curs.Reset
+inline void          _db_cd_sslbuf_out_curs_Reset(_db_cd_sslbuf_out_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.cd_sslbuf_out_curs.ValidQ
+inline bool          _db_cd_sslbuf_out_curs_ValidQ(_db_cd_sslbuf_out_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.cd_sslbuf_out_curs.Next
+inline void          _db_cd_sslbuf_out_curs_Next(_db_cd_sslbuf_out_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.cd_sslbuf_out_curs.Access
+inline atf_amc::Sslbuf& _db_cd_sslbuf_out_curs_Access(_db_cd_sslbuf_out_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.typeu_curs.Reset
+inline void          _db_typeu_curs_Reset(_db_typeu_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.FDb.typeu_curs.ValidQ
+inline bool          _db_typeu_curs_ValidQ(_db_typeu_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.FDb.typeu_curs.Next
+inline void          _db_typeu_curs_Next(_db_typeu_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.FDb.typeu_curs.Access
+inline atf_amc::FTypeU& _db_typeu_curs_Access(_db_typeu_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.FDb..Init
 void                 FDb_Init();
@@ -4690,7 +6860,6 @@ private:
     friend atf_amc::FHashableLinear* hashable_linear_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 hashable_linear_Delete(atf_amc::FHashableLinear &row) __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:atf_amc.FHashableLinear..Init
 inline void          FHashableLinear_Init(atf_amc::FHashableLinear& hashable_linear);
@@ -4700,7 +6869,11 @@ void                 FHashableLinear_Uninit(atf_amc::FHashableLinear& hashable_l
 // --- atf_amc.TypeG
 // create: atf_amc.OptAlloc.typeg (Opt)
 // create: atf_amc.OptG.typeg (Opt)
+// create: atf_amc.OptSigned.typeg (Opt)
+// create: atf_amc.OptWide.typeg (Opt)
 // create: atf_amc.FOptG.typeg (Opt)
+// create: atf_amc.FOptSigned.typeg (Opt)
+// create: atf_amc.FOptWide.typeg (Opt)
 #pragma pack(push,1)
 struct TypeG { // atf_amc.TypeG
     i32   typeg;   //   0
@@ -4720,29 +6893,28 @@ struct TypeG { // atf_amc.TypeG
     inline               TypeG() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.TypeG..Hash
-inline u32           TypeG_Hash(u32 prev, const atf_amc::TypeG& rhs) __attribute__((nothrow));
+inline u32           TypeG_Hash(u32 prev, atf_amc::TypeG rhs) __attribute__((nothrow));
 // Read fields of atf_amc::TypeG from an ascii string.
 // The format of the string is the format of the atf_amc::TypeG's only field
 // func:atf_amc.TypeG..ReadStrptrMaybe
 bool                 TypeG_ReadStrptrMaybe(atf_amc::TypeG &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_amc.TypeG..Lt
-inline bool          TypeG_Lt(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) __attribute__((nothrow));
+inline bool          TypeG_Lt(atf_amc::TypeG lhs, atf_amc::TypeG rhs) __attribute__((nothrow));
 // func:atf_amc.TypeG..Cmp
-inline i32           TypeG_Cmp(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) __attribute__((nothrow));
+inline i32           TypeG_Cmp(atf_amc::TypeG lhs, atf_amc::TypeG rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.TypeG..Init
 inline void          TypeG_Init(atf_amc::TypeG& typeg);
 // func:atf_amc.TypeG..Eq
-inline bool          TypeG_Eq(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) __attribute__((nothrow));
+inline bool          TypeG_Eq(atf_amc::TypeG lhs, atf_amc::TypeG rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_amc.TypeG..Update
-inline bool          TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG& rhs) __attribute__((nothrow));
+inline bool          TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeG.String  printfmt:Raw
 // func:atf_amc.TypeG..Print
-void                 TypeG_Print(atf_amc::TypeG& row, algo::cstring& str) __attribute__((nothrow));
+void                 TypeG_Print(atf_amc::TypeG row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FOptG
 // create: atf_amc.FDb.optg (Lpool)
@@ -4756,7 +6928,6 @@ private:
     friend atf_amc::FOptG*      optg_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
     friend void                 optg_Delete(atf_amc::FOptG &row) __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_amc.FOptG.optg.CopyOut
 void                 optg_CopyOut(atf_amc::FOptG &row, atf_amc::OptG &out) __attribute__((nothrow));
@@ -4783,14 +6954,90 @@ inline algo::memptr  GetMsgMemptr(const atf_amc::FOptG& row) __attribute__((noth
 // func:atf_amc.FOptG..Init
 inline void          FOptG_Init(atf_amc::FOptG& optg);
 
+// --- atf_amc.FOptSigned
+// create: atf_amc.FDb.optsigned (Lpool)
+struct FOptSigned { // atf_amc.FOptSigned: Something derived from OptSigned
+    i64                    length;    //   0
+    // atf_amc::TypeG      typeg[];                optional field
+private:
+    // func:atf_amc.FOptSigned..Ctor
+    inline               FOptSigned() __attribute__((nothrow));
+    friend atf_amc::FOptSigned& optsigned_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::FOptSigned* optsigned_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+    friend void                 optsigned_Delete(atf_amc::FOptSigned &row) __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_amc.FOptSigned.optsigned.CopyOut
+void                 optsigned_CopyOut(atf_amc::FOptSigned &row, atf_amc::OptSigned &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_amc.FOptSigned.optsigned.CopyIn
+void                 optsigned_CopyIn(atf_amc::FOptSigned &row, atf_amc::OptSigned &in) __attribute__((nothrow));
+
+// Return pointer to optional last element (NULL if none)
+// The parent's length field is assumed to have already been checked for validity.
+// If the parent's lengthis too short to allow a full-sized typeg, return NULL.
+// func:atf_amc.FOptSigned.typeg.Get
+inline atf_amc::TypeG* typeg_Get(atf_amc::FOptSigned& optsigned) __attribute__((__warn_unused_result__, nothrow));
+// Access optional portion as an array of bytes
+// func:atf_amc.FOptSigned.typeg.Getary
+algo::aryptr<u8>     typeg_Getary(atf_amc::FOptSigned& optsigned) __attribute__((nothrow));
+
+// Message length (uses length field)
+// func:atf_amc.FOptSigned..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::FOptSigned& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.FOptSigned..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::FOptSigned& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.FOptSigned..Init
+inline void          FOptSigned_Init(atf_amc::FOptSigned& optsigned);
+
+// --- atf_amc.FOptWide
+// create: atf_amc.FDb.optwide (Lpool)
+struct FOptWide { // atf_amc.FOptWide: Something derived from OptWide
+    u64                    length;    //   0
+    // atf_amc::TypeG      typeg[];                optional field
+private:
+    // func:atf_amc.FOptWide..Ctor
+    inline               FOptWide() __attribute__((nothrow));
+    friend atf_amc::FOptWide&   optwide_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::FOptWide*   optwide_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+    friend void                 optwide_Delete(atf_amc::FOptWide &row) __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_amc.FOptWide.optwide.CopyOut
+void                 optwide_CopyOut(atf_amc::FOptWide &row, atf_amc::OptWide &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_amc.FOptWide.optwide.CopyIn
+void                 optwide_CopyIn(atf_amc::FOptWide &row, atf_amc::OptWide &in) __attribute__((nothrow));
+
+// Return pointer to optional last element (NULL if none)
+// The parent's length field is assumed to have already been checked for validity.
+// If the parent's lengthis too short to allow a full-sized typeg, return NULL.
+// func:atf_amc.FOptWide.typeg.Get
+inline atf_amc::TypeG* typeg_Get(atf_amc::FOptWide& optwide) __attribute__((__warn_unused_result__, nothrow));
+// Access optional portion as an array of bytes
+// func:atf_amc.FOptWide.typeg.Getary
+algo::aryptr<u8>     typeg_Getary(atf_amc::FOptWide& optwide) __attribute__((nothrow));
+
+// Message length (uses length field)
+// func:atf_amc.FOptWide..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::FOptWide& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.FOptWide..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::FOptWide& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.FOptWide..Init
+inline void          FOptWide_Init(atf_amc::FOptWide& optwide);
+
 // --- atf_amc.FPerfSortString
 struct FPerfSortString { // atf_amc.FPerfSortString: Function to test string sorting
     atf_amc::Cstr*   orig_elems;      // pointer to elements
-    u32              orig_n;          // number of elements in array
-    u32              orig_max;        // max. capacity of array before realloc
+    u64              orig_n;          // number of elements in array
+    u64              orig_max;        // max. capacity of array before realloc
     atf_amc::Cstr*   sorted1_elems;   // pointer to elements
-    u32              sorted1_n;       // number of elements in array
-    u32              sorted1_max;     // max. capacity of array before realloc
+    u64              sorted1_n;       // number of elements in array
+    u64              sorted1_max;     // max. capacity of array before realloc
     // func:atf_amc.FPerfSortString..AssignOp
     atf_amc::FPerfSortString& operator =(const atf_amc::FPerfSortString &rhs) __attribute__((nothrow));
     // func:atf_amc.FPerfSortString..Ctor
@@ -4800,7 +7047,6 @@ struct FPerfSortString { // atf_amc.FPerfSortString: Function to test string sor
     // func:atf_amc.FPerfSortString..CopyCtor
     FPerfSortString(const atf_amc::FPerfSortString &rhs) __attribute__((nothrow));
 };
-
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
@@ -4813,15 +7059,15 @@ atf_amc::Cstr&       orig_Alloc(atf_amc::FPerfSortString& parent) __attribute__(
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.FPerfSortString.orig.AllocAt
-atf_amc::Cstr&       orig_AllocAt(atf_amc::FPerfSortString& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+atf_amc::Cstr&       orig_AllocAt(atf_amc::FPerfSortString& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.FPerfSortString.orig.AllocN
-algo::aryptr<atf_amc::Cstr> orig_AllocN(atf_amc::FPerfSortString& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_amc::Cstr> orig_AllocN(atf_amc::FPerfSortString& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.FPerfSortString.orig.AllocNAt
-algo::aryptr<atf_amc::Cstr> orig_AllocNAt(atf_amc::FPerfSortString& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_amc::Cstr> orig_AllocNAt(atf_amc::FPerfSortString& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_amc.FPerfSortString.orig.EmptyQ
 inline bool          orig_EmptyQ(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
@@ -4836,13 +7082,13 @@ inline algo::aryptr<atf_amc::Cstr> orig_Getary(const atf_amc::FPerfSortString& p
 inline atf_amc::Cstr* orig_Last(atf_amc::FPerfSortString& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:atf_amc.FPerfSortString.orig.Max
-inline i32           orig_Max(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
+inline i64           orig_Max(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_amc.FPerfSortString.orig.N
-inline i32           orig_N(const atf_amc::FPerfSortString& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           orig_N(const atf_amc::FPerfSortString& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:atf_amc.FPerfSortString.orig.Remove
-void                 orig_Remove(atf_amc::FPerfSortString& parent, u32 i) __attribute__((nothrow));
+void                 orig_Remove(atf_amc::FPerfSortString& parent, u64 i) __attribute__((nothrow));
 // func:atf_amc.FPerfSortString.orig.RemoveAll
 void                 orig_RemoveAll(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -4850,10 +7096,10 @@ void                 orig_RemoveAll(atf_amc::FPerfSortString& parent) __attribut
 void                 orig_RemoveLast(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:atf_amc.FPerfSortString.orig.Reserve
-inline void          orig_Reserve(atf_amc::FPerfSortString& parent, int n) __attribute__((nothrow));
+inline void          orig_Reserve(atf_amc::FPerfSortString& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:atf_amc.FPerfSortString.orig.AbsReserve
-void                 orig_AbsReserve(atf_amc::FPerfSortString& parent, int n) __attribute__((nothrow));
+void                 orig_AbsReserve(atf_amc::FPerfSortString& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:atf_amc.FPerfSortString.orig.Setary
 void                 orig_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) __attribute__((nothrow));
@@ -4872,11 +7118,17 @@ inline atf_amc::Cstr& orig_qLast(atf_amc::FPerfSortString& parent) __attribute__
 inline u64           orig_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.FPerfSortString.orig.AllocNVal
-algo::aryptr<atf_amc::Cstr> orig_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((nothrow));
+algo::aryptr<atf_amc::Cstr> orig_AllocNVal(atf_amc::FPerfSortString& parent, i64 n_elems, const atf_amc::Cstr& val) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:atf_amc.FPerfSortString.orig.Insary
-void                 orig_Insary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs, int at) __attribute__((nothrow));
+void                 orig_Insary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:atf_amc.FPerfSortString.orig.RemRegion
+void                 orig_RemRegion(atf_amc::FPerfSortString& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -4890,15 +7142,15 @@ atf_amc::Cstr&       sorted1_Alloc(atf_amc::FPerfSortString& parent) __attribute
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.FPerfSortString.sorted1.AllocAt
-atf_amc::Cstr&       sorted1_AllocAt(atf_amc::FPerfSortString& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+atf_amc::Cstr&       sorted1_AllocAt(atf_amc::FPerfSortString& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.FPerfSortString.sorted1.AllocN
-algo::aryptr<atf_amc::Cstr> sorted1_AllocN(atf_amc::FPerfSortString& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_amc::Cstr> sorted1_AllocN(atf_amc::FPerfSortString& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.FPerfSortString.sorted1.AllocNAt
-algo::aryptr<atf_amc::Cstr> sorted1_AllocNAt(atf_amc::FPerfSortString& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_amc::Cstr> sorted1_AllocNAt(atf_amc::FPerfSortString& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_amc.FPerfSortString.sorted1.EmptyQ
 inline bool          sorted1_EmptyQ(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
@@ -4913,13 +7165,13 @@ inline algo::aryptr<atf_amc::Cstr> sorted1_Getary(const atf_amc::FPerfSortString
 inline atf_amc::Cstr* sorted1_Last(atf_amc::FPerfSortString& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:atf_amc.FPerfSortString.sorted1.Max
-inline i32           sorted1_Max(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
+inline i64           sorted1_Max(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_amc.FPerfSortString.sorted1.N
-inline i32           sorted1_N(const atf_amc::FPerfSortString& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           sorted1_N(const atf_amc::FPerfSortString& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:atf_amc.FPerfSortString.sorted1.Remove
-void                 sorted1_Remove(atf_amc::FPerfSortString& parent, u32 i) __attribute__((nothrow));
+void                 sorted1_Remove(atf_amc::FPerfSortString& parent, u64 i) __attribute__((nothrow));
 // func:atf_amc.FPerfSortString.sorted1.RemoveAll
 void                 sorted1_RemoveAll(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -4927,10 +7179,10 @@ void                 sorted1_RemoveAll(atf_amc::FPerfSortString& parent) __attri
 void                 sorted1_RemoveLast(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:atf_amc.FPerfSortString.sorted1.Reserve
-inline void          sorted1_Reserve(atf_amc::FPerfSortString& parent, int n) __attribute__((nothrow));
+inline void          sorted1_Reserve(atf_amc::FPerfSortString& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:atf_amc.FPerfSortString.sorted1.AbsReserve
-void                 sorted1_AbsReserve(atf_amc::FPerfSortString& parent, int n) __attribute__((nothrow));
+void                 sorted1_AbsReserve(atf_amc::FPerfSortString& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:atf_amc.FPerfSortString.sorted1.Setary
 void                 sorted1_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) __attribute__((nothrow));
@@ -4949,11 +7201,17 @@ inline atf_amc::Cstr& sorted1_qLast(atf_amc::FPerfSortString& parent) __attribut
 inline u64           sorted1_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.FPerfSortString.sorted1.AllocNVal
-algo::aryptr<atf_amc::Cstr> sorted1_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((nothrow));
+algo::aryptr<atf_amc::Cstr> sorted1_AllocNVal(atf_amc::FPerfSortString& parent, i64 n_elems, const atf_amc::Cstr& val) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:atf_amc.FPerfSortString.sorted1.Insary
-void                 sorted1_Insary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs, int at) __attribute__((nothrow));
+void                 sorted1_Insary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:atf_amc.FPerfSortString.sorted1.RemRegion
+void                 sorted1_RemRegion(atf_amc::FPerfSortString& parent, i64 beg, i64 n) __attribute__((nothrow));
 // Verify whether array is sorted
 // func:atf_amc.FPerfSortString.sorted1.SortedQ
 bool                 sorted1_SortedQ(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
@@ -5017,7 +7275,6 @@ private:
     friend void                 thash_elem_RemoveAll() __attribute__((nothrow));
     friend void                 thash_elem_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:atf_amc.FThashElem..Init
 inline void          FThashElem_Init(atf_amc::FThashElem& thash_elem);
@@ -5044,7 +7301,6 @@ private:
     friend atf_amc::FTimeEntry* time_entry_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 time_entry_Delete(atf_amc::FTimeEntry &row) __attribute__((nothrow));
 };
-
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:atf_amc.FTimeEntry.time.Lt
 inline bool          time_Lt(atf_amc::FTimeEntry& time_entry, atf_amc::FTimeEntry &rhs) __attribute__((nothrow));
@@ -5098,7 +7354,6 @@ struct FTypeC { // atf_amc.FTypeC
     // func:atf_amc.FTypeC..CopyCtor
     inline               FTypeC(const atf_amc::FTypeC &rhs) = delete;
 };
-
 // Copy fields out of row
 // func:atf_amc.FTypeC.msghdr.CopyOut
 void                 typec_CopyOut(atf_amc::FTypeC &row, atf_amc::TypeC &out) __attribute__((nothrow));
@@ -5120,20 +7375,21 @@ void                 FTypeC_Print(atf_amc::FTypeC& row, algo::cstring& str) __at
 // create: atf_amc.FDb.typea (Lary)
 // global access: typea (Lary, by rowid)
 // global access: ind_typea (Thash, hash field typea)
+// access: atf_amc.UpptrLt.p_typea (Upptr)
 struct FTypeA { // atf_amc.FTypeA
-    atf_amc::FTypeA*    ind_typea_next;                             // hash next
-    u32                 ind_typea_hashval;                          // hash value
-    i32                 typea;                                      //   0
-    u128                typec_data[sizeu128(atf_amc::FTypeC,10)];   // place for data
-    i32                 typec_n;                                    // number of elems current in existence
+    atf_amc::FTypeA*              ind_typea_next;                             // hash next
+    u32                           ind_typea_hashval;                          // hash value
+    i32                           typea;                                      //   0
+    alignas(atf_amc::FTypeC) u8   typec_data[sizeof(atf_amc::FTypeC) * 10];   // place for data
+    i32                           typec_n;                                    // number of elems current in existence
     enum { typec_max = 10 };
-    atf_amc::FTypeB*    zdl_typeb_head;                             // zero-terminated doubly linked list
-    i32                 zdl_typeb_n;                                // zero-terminated doubly linked list
-    atf_amc::FTypeB*    zdl_typeb_tail;                             // pointer to last element
-    i32                 rowid;                                      //   0
-    atf_amc::FTypeB**   bh_typeb_elems;                             // binary heap by j
-    i32                 bh_typeb_n;                                 // number of elements in the heap
-    i32                 bh_typeb_max;                               // max elements in bh_typeb_elems
+    atf_amc::FTypeB*              zdl_typeb_head;                             // zero-terminated doubly linked list
+    i32                           zdl_typeb_n;                                // zero-terminated doubly linked list
+    atf_amc::FTypeB*              zdl_typeb_tail;                             // pointer to last element
+    i32                           rowid;                                      //   0
+    atf_amc::FTypeB**             bh_typeb_elems;                             // binary heap by j
+    i32                           bh_typeb_n;                                 // number of elements in the heap
+    i32                           bh_typeb_max;                               // max elements in bh_typeb_elems
     // reftype Llist of atf_amc.FTypeA.zdl_typeb prohibits copy
     // reftype Bheap of atf_amc.FTypeA.bh_typeb prohibits copy
     // func:atf_amc.FTypeA..AssignOp
@@ -5152,7 +7408,6 @@ private:
     friend void                 typea_RemoveAll() __attribute__((nothrow));
     friend void                 typea_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_amc.FTypeA.msghdr.CopyOut
 void                 typea_CopyOut(atf_amc::FTypeA &row, atf_amc::TypeA &out) __attribute__((nothrow));
@@ -5245,6 +7500,9 @@ atf_amc::FTypeB*     zdl_typeb_RemoveFirst(atf_amc::FTypeA& typea) __attribute__
 // Return reference to last element in the index. No bounds checking.
 // func:atf_amc.FTypeA.zdl_typeb.qLast
 inline atf_amc::FTypeB& zdl_typeb_qLast(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_amc.FTypeA.zdl_typeb.InsertBefore
+void                 zdl_typeb_InsertBefore(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, atf_amc::FTypeB* before) __attribute__((nothrow));
 
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
@@ -5364,7 +7622,6 @@ private:
     friend atf_amc::FTypeB*     typeb_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 typeb_Delete(atf_amc::FTypeB &row) __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_amc.FTypeB.msghdr.CopyOut
 void                 typeb_CopyOut(atf_amc::FTypeB &row, atf_amc::TypeB &out) __attribute__((nothrow));
@@ -5408,7 +7665,6 @@ private:
     friend atf_amc::FTypeD*     typed_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 typed_Delete(atf_amc::FTypeD &row) __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_amc.FTypeD.msghdr.CopyOut
 void                 typed_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) __attribute__((nothrow));
@@ -5434,7 +7690,6 @@ struct FTypeK { // atf_amc.FTypeK: Test element for Ptrary
     // func:atf_amc.FTypeK..Ctor
     inline               FTypeK() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:atf_amc.FTypeK..Init
 inline void          FTypeK_Init(atf_amc::FTypeK& parent);
@@ -5447,7 +7702,6 @@ struct FTypeL { // atf_amc.FTypeL: Test element for heap-like Ptrary
     // func:atf_amc.FTypeL..Ctor
     inline               FTypeL() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:atf_amc.FTypeL..Init
 inline void          FTypeL_Init(atf_amc::FTypeL& parent);
@@ -5455,11 +7709,12 @@ inline void          FTypeL_Init(atf_amc::FTypeL& parent);
 // --- atf_amc.FTypeM
 // global access: c_typem (Ptrary)
 struct FTypeM { // atf_amc.FTypeM: Test element for non-unique Ptrary
-    u32   value;   //   0
+    u32   value;     //   0
+    u32   n_unref;   //   0  Number of OnUnref callbacks fired for this row
+    u32   n_xref;    //   0  Number of OnXref callbacks fired for this row
     // func:atf_amc.FTypeM..Ctor
     inline               FTypeM() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:atf_amc.FTypeM..Init
 inline void          FTypeM_Init(atf_amc::FTypeM& parent);
@@ -5472,7 +7727,7 @@ struct FTypeS { // atf_amc.FTypeS
     atf_amc::FTypeS*   ind_types_next;      // hash next
     u32                ind_types_hashval;   // hash value
     i32                types;               //   0
-    algo::Comment      comment;             //
+    algo::cstring      comment;             //
     atf_amc::FTypeT*   zdl_typet_head;      // zero-terminated doubly linked list
     i32                zdl_typet_n;         // zero-terminated doubly linked list
     atf_amc::FTypeT*   zdl_typet_tail;      // pointer to last element
@@ -5492,7 +7747,6 @@ private:
     friend void                 types_RemoveAll() __attribute__((nothrow));
     friend void                 types_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_amc.FTypeS.msghdr.CopyOut
 void                 types_CopyOut(atf_amc::FTypeS &row, atf_amc::TypeS &out) __attribute__((nothrow));
@@ -5536,6 +7790,9 @@ atf_amc::FTypeT*     zdl_typet_RemoveFirst(atf_amc::FTypeS& types) __attribute__
 // Return reference to last element in the index. No bounds checking.
 // func:atf_amc.FTypeS.zdl_typet.qLast
 inline atf_amc::FTypeT& zdl_typet_qLast(atf_amc::FTypeS& types) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:atf_amc.FTypeS.zdl_typet.InsertBefore
+void                 zdl_typet_InsertBefore(atf_amc::FTypeS& types, atf_amc::FTypeT& row, atf_amc::FTypeT* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_amc.FTypeS..Init
@@ -5582,7 +7839,6 @@ private:
     friend void                 typet_RemoveAll() __attribute__((nothrow));
     friend void                 typet_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_amc.FTypeT.msghdr.CopyOut
 void                 typet_CopyOut(atf_amc::FTypeT &row, atf_amc::TypeT &out) __attribute__((nothrow));
@@ -5599,6 +7855,45 @@ void                 FTypeT_Uninit(atf_amc::FTypeT& typet) __attribute__((nothro
 // cfmt:atf_amc.FTypeT.String  printfmt:Tuple
 // func:atf_amc.FTypeT..Print
 void                 FTypeT_Print(atf_amc::FTypeT& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.FTypeU
+// create: atf_amc.FDb.typeu (Lary)
+// global access: typeu (Lary, by rowid)
+// global access: ind_typeu (Thash, hash field u)
+// global access: ind_typeu_v (Thash, hash field v)
+struct FTypeU { // atf_amc.FTypeU: In-memory row of atf_amc.TypeU
+    atf_amc::FTypeU*   ind_typeu_next;        // hash next
+    u32                ind_typeu_hashval;     // hash value
+    atf_amc::FTypeU*   ind_typeu_v_next;      // hash next
+    u32                ind_typeu_v_hashval;   // hash value
+    i32                u;                     //   0
+    i32                v;                     //   0
+    // func:atf_amc.FTypeU..AssignOp
+    inline atf_amc::FTypeU& operator =(const atf_amc::FTypeU &rhs) = delete;
+    // func:atf_amc.FTypeU..CopyCtor
+    inline               FTypeU(const atf_amc::FTypeU &rhs) = delete;
+private:
+    // func:atf_amc.FTypeU..Ctor
+    inline               FTypeU() __attribute__((nothrow));
+    // func:atf_amc.FTypeU..Dtor
+    inline               ~FTypeU() __attribute__((nothrow));
+    friend atf_amc::FTypeU&     typeu_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::FTypeU*     typeu_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 typeu_RemoveAll() __attribute__((nothrow));
+    friend void                 typeu_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_amc.FTypeU.base.CopyOut
+void                 typeu_CopyOut(atf_amc::FTypeU &row, atf_amc::TypeU &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_amc.FTypeU.base.CopyIn
+void                 typeu_CopyIn(atf_amc::FTypeU &row, atf_amc::TypeU &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.FTypeU..Init
+inline void          FTypeU_Init(atf_amc::FTypeU& typeu);
+// func:atf_amc.FTypeU..Uninit
+void                 FTypeU_Uninit(atf_amc::FTypeU& typeu) __attribute__((nothrow));
 
 // --- atf_amc.TypeA
 // create: atf_amc.FUnitSort.tary (Tary)
@@ -5622,42 +7917,41 @@ struct TypeA { // atf_amc.TypeA
     // func:atf_amc.TypeA..Ctor
     inline               TypeA() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeA..Hash
-inline u32           TypeA_Hash(u32 prev, const atf_amc::TypeA& rhs) __attribute__((nothrow));
+inline u32           TypeA_Hash(u32 prev, atf_amc::TypeA rhs) __attribute__((nothrow));
 // Read fields of atf_amc::TypeA from an ascii string.
 // The format of the string is the format of the atf_amc::TypeA's only field
 // func:atf_amc.TypeA..ReadStrptrMaybe
 bool                 TypeA_ReadStrptrMaybe(atf_amc::TypeA &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_amc.TypeA..Lt
-inline bool          TypeA_Lt(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) __attribute__((nothrow));
+inline bool          TypeA_Lt(atf_amc::TypeA lhs, atf_amc::TypeA rhs) __attribute__((nothrow));
 // func:atf_amc.TypeA..Cmp
-inline i32           TypeA_Cmp(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) __attribute__((nothrow));
+inline i32           TypeA_Cmp(atf_amc::TypeA lhs, atf_amc::TypeA rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.TypeA..Init
 inline void          TypeA_Init(atf_amc::TypeA& fixary);
 // func:atf_amc.TypeA..Eq
-inline bool          TypeA_Eq(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) __attribute__((nothrow));
+inline bool          TypeA_Eq(atf_amc::TypeA lhs, atf_amc::TypeA rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_amc.TypeA..Update
-inline bool          TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA& rhs) __attribute__((nothrow));
+inline bool          TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA rhs) __attribute__((nothrow));
 // Create JSON representation of atf_amc::TypeA under PARENT node
 // cfmt:atf_amc.TypeA.Json  printfmt:Auto
 // func:atf_amc.TypeA..FmtJson
-lib_json::FNode *    TypeA_FmtJson(atf_amc::TypeA& row, lib_json::FNode *parent) __attribute__((nothrow));
+lib_json::FNode *    TypeA_FmtJson(atf_amc::TypeA row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeA.String  printfmt:Raw
 // func:atf_amc.TypeA..Print
-void                 TypeA_Print(atf_amc::TypeA& row, algo::cstring& str) __attribute__((nothrow));
+void                 TypeA_Print(atf_amc::TypeA row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FUnitSort
 struct FUnitSort { // atf_amc.FUnitSort
     atf_amc::TypeA*    tary_elems;          // pointer to elements
-    u32                tary_n;              // number of elements in array
-    u32                tary_max;            // max. capacity of array before realloc
+    u64                tary_n;              // number of elements in array
+    u64                tary_max;            // max. capacity of array before realloc
     atf_amc::TypeA**   c_ptrary_elems;      // array of pointers
-    u32                c_ptrary_n;          // array of pointers
-    u32                c_ptrary_max;        // capacity of allocated array
+    u64                c_ptrary_n;          // current size
+    u64                c_ptrary_max;        // capacity of allocated array
     atf_amc::TypeA     fixary_elems[100];   // fixed array
     // reftype Ptrary of atf_amc.FUnitSort.c_ptrary prohibits copy
     // func:atf_amc.FUnitSort..AssignOp
@@ -5670,7 +7964,6 @@ struct FUnitSort { // atf_amc.FUnitSort
     // func:atf_amc.FUnitSort..CopyCtor
     FUnitSort(const atf_amc::FUnitSort &rhs) = delete;
 };
-
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
@@ -5683,15 +7976,15 @@ atf_amc::TypeA&      tary_Alloc(atf_amc::FUnitSort& parent) __attribute__((__war
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.FUnitSort.tary.AllocAt
-atf_amc::TypeA&      tary_AllocAt(atf_amc::FUnitSort& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+atf_amc::TypeA&      tary_AllocAt(atf_amc::FUnitSort& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.FUnitSort.tary.AllocN
-algo::aryptr<atf_amc::TypeA> tary_AllocN(atf_amc::FUnitSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_amc::TypeA> tary_AllocN(atf_amc::FUnitSort& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.FUnitSort.tary.AllocNAt
-algo::aryptr<atf_amc::TypeA> tary_AllocNAt(atf_amc::FUnitSort& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_amc::TypeA> tary_AllocNAt(atf_amc::FUnitSort& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_amc.FUnitSort.tary.EmptyQ
 inline bool          tary_EmptyQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
@@ -5706,24 +7999,24 @@ inline algo::aryptr<atf_amc::TypeA> tary_Getary(const atf_amc::FUnitSort& parent
 inline atf_amc::TypeA* tary_Last(atf_amc::FUnitSort& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:atf_amc.FUnitSort.tary.Max
-inline i32           tary_Max(atf_amc::FUnitSort& parent) __attribute__((nothrow));
+inline i64           tary_Max(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_amc.FUnitSort.tary.N
-inline i32           tary_N(const atf_amc::FUnitSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           tary_N(const atf_amc::FUnitSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:atf_amc.FUnitSort.tary.Remove
-void                 tary_Remove(atf_amc::FUnitSort& parent, u32 i) __attribute__((nothrow));
+void                 tary_Remove(atf_amc::FUnitSort& parent, u64 i) __attribute__((nothrow));
 // func:atf_amc.FUnitSort.tary.RemoveAll
-void                 tary_RemoveAll(atf_amc::FUnitSort& parent) __attribute__((nothrow));
+inline void          tary_RemoveAll(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:atf_amc.FUnitSort.tary.RemoveLast
 void                 tary_RemoveLast(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:atf_amc.FUnitSort.tary.Reserve
-inline void          tary_Reserve(atf_amc::FUnitSort& parent, int n) __attribute__((nothrow));
+inline void          tary_Reserve(atf_amc::FUnitSort& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:atf_amc.FUnitSort.tary.AbsReserve
-void                 tary_AbsReserve(atf_amc::FUnitSort& parent, int n) __attribute__((nothrow));
+void                 tary_AbsReserve(atf_amc::FUnitSort& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:atf_amc.FUnitSort.tary.Setary
 void                 tary_Setary(atf_amc::FUnitSort& parent, atf_amc::FUnitSort &rhs) __attribute__((nothrow));
@@ -5742,7 +8035,7 @@ inline atf_amc::TypeA& tary_qLast(atf_amc::FUnitSort& parent) __attribute__((not
 inline u64           tary_rowid_Get(atf_amc::FUnitSort& parent, atf_amc::TypeA &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.FUnitSort.tary.AllocNVal
-algo::aryptr<atf_amc::TypeA> tary_AllocNVal(atf_amc::FUnitSort& parent, int n_elems, const atf_amc::TypeA& val) __attribute__((nothrow));
+algo::aryptr<atf_amc::TypeA> tary_AllocNVal(atf_amc::FUnitSort& parent, i64 n_elems, const atf_amc::TypeA& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -5751,7 +8044,13 @@ bool                 tary_ReadStrptrMaybe(atf_amc::FUnitSort& parent, algo::strp
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:atf_amc.FUnitSort.tary.Insary
-void                 tary_Insary(atf_amc::FUnitSort& parent, algo::aryptr<atf_amc::TypeA> rhs, int at) __attribute__((nothrow));
+void                 tary_Insary(atf_amc::FUnitSort& parent, algo::aryptr<atf_amc::TypeA> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:atf_amc.FUnitSort.tary.RemRegion
+void                 tary_RemRegion(atf_amc::FUnitSort& parent, i64 beg, i64 n) __attribute__((nothrow));
 // Verify whether array is sorted
 // func:atf_amc.FUnitSort.tary.SortedQ
 bool                 tary_SortedQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
@@ -5770,12 +8069,12 @@ void                 tary_QuickSort(atf_amc::FUnitSort& parent) __attribute__((n
 inline bool          c_ptrary_EmptyQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_amc.FUnitSort.c_ptrary.Find
-inline atf_amc::TypeA* c_ptrary_Find(atf_amc::FUnitSort& parent, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::TypeA* c_ptrary_Find(atf_amc::FUnitSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_amc.FUnitSort.c_ptrary.Getary
 inline algo::aryptr<atf_amc::TypeA*> c_ptrary_Getary(atf_amc::FUnitSort& parent) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_amc.FUnitSort.c_ptrary.Insert
 void                 c_ptrary_Insert(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -5786,7 +8085,7 @@ void                 c_ptrary_Insert(atf_amc::FUnitSort& parent, atf_amc::TypeA&
 bool                 c_ptrary_ScanInsertMaybe(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_amc.FUnitSort.c_ptrary.N
-inline i32           c_ptrary_N(const atf_amc::FUnitSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ptrary_N(const atf_amc::FUnitSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_amc.FUnitSort.c_ptrary.Remove
 void                 c_ptrary_Remove(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) __attribute__((nothrow));
@@ -5795,10 +8094,10 @@ void                 c_ptrary_Remove(atf_amc::FUnitSort& parent, atf_amc::TypeA&
 inline void          c_ptrary_RemoveAll(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_amc.FUnitSort.c_ptrary.Reserve
-void                 c_ptrary_Reserve(atf_amc::FUnitSort& parent, u32 n) __attribute__((nothrow));
+void                 c_ptrary_Reserve(atf_amc::FUnitSort& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_amc.FUnitSort.c_ptrary.qFind
-inline atf_amc::TypeA& c_ptrary_qFind(atf_amc::FUnitSort& parent, u32 idx) __attribute__((nothrow));
+inline atf_amc::TypeA& c_ptrary_qFind(atf_amc::FUnitSort& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:atf_amc.FUnitSort.c_ptrary.qLast
 inline atf_amc::TypeA& c_ptrary_qLast(atf_amc::FUnitSort& parent) __attribute__((nothrow));
@@ -5911,7 +8210,6 @@ struct FieldId { // atf_amc.FieldId: Field read helper
     inline               FieldId(atf_amc_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_amc.FieldId.value.GetEnum
 inline atf_amc_FieldIdEnum value_GetEnum(const atf_amc::FieldId& parent) __attribute__((nothrow));
@@ -5949,7 +8247,7 @@ inline void          FieldId_Init(atf_amc::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FieldId.String  printfmt:Raw
 // func:atf_amc.FieldId..Print
-void                 FieldId_Print(atf_amc::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(atf_amc::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Hashable
 // create: atf_amc.FDb.hashable (Tpool)
@@ -5973,7 +8271,6 @@ private:
     friend atf_amc::Hashable*   hashable_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 hashable_Delete(atf_amc::Hashable &row) __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:atf_amc.Hashable..Init
 inline void          Hashable_Init(atf_amc::Hashable& hashable);
@@ -5989,7 +8286,6 @@ struct Hooktype { // atf_amc.Hooktype
     // func:atf_amc.Hooktype..Ctor
     inline               Hooktype() __attribute__((nothrow));
 };
-
 // Invoke function by pointer
 // func:atf_amc.Hooktype.callback.Call
 inline void          callback_Call(atf_amc::Hooktype& parent, atf_amc::Hooktype& arg) __attribute__((nothrow));
@@ -6007,11 +8303,102 @@ template<class T> inline void callback_Set2(atf_amc::Hooktype& parent, T& ctx, v
 // func:atf_amc.Hooktype..Init
 inline void          Hooktype_Init(atf_amc::Hooktype& parent);
 
+// --- atf_amc.InlaryMin
+struct InlaryMin { // atf_amc.InlaryMin: Variable inlary with a preallocated minimum of two elements
+    alignas(u32) u8   ary_data[sizeof(u32) * 5];   // place for data
+    i32               ary_n;                       // number of elems current in existence
+    enum { ary_max = 5 };
+    // func:atf_amc.InlaryMin..AssignOp
+    inline atf_amc::InlaryMin& operator =(const atf_amc::InlaryMin &rhs) __attribute__((nothrow));
+    // func:atf_amc.InlaryMin..Ctor
+    inline               InlaryMin() __attribute__((nothrow));
+    // func:atf_amc.InlaryMin..Dtor
+    inline               ~InlaryMin() __attribute__((nothrow));
+    // func:atf_amc.InlaryMin..CopyCtor
+    inline               InlaryMin(const atf_amc::InlaryMin &rhs) __attribute__((nothrow));
+};
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_amc.InlaryMin.ary.Alloc
+u32&                 ary_Alloc(atf_amc::InlaryMin& parent) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.InlaryMin.ary.AllocMaybe
+u32*                 ary_AllocMaybe(atf_amc::InlaryMin& parent) __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.InlaryMin.ary.AllocMem
+inline void*         ary_AllocMem(atf_amc::InlaryMin& parent) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_amc.InlaryMin.ary.EmptyQ
+inline bool          ary_EmptyQ(atf_amc::InlaryMin& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:atf_amc.InlaryMin.ary.Find
+inline u32*          ary_Find(atf_amc::InlaryMin& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:atf_amc.InlaryMin.ary.Getary
+inline algo::aryptr<u32> ary_Getary(atf_amc::InlaryMin& parent) __attribute__((nothrow));
+// Return constant 5 -- max. number of items in the pool
+// func:atf_amc.InlaryMin.ary.Max
+inline i32           ary_Max(atf_amc::InlaryMin& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:atf_amc.InlaryMin.ary.N
+inline i32           ary_N(const atf_amc::InlaryMin& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Destroy all elements of Inlary
+// func:atf_amc.InlaryMin.ary.RemoveAll
+void                 ary_RemoveAll(atf_amc::InlaryMin& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.InlaryMin.ary.RemoveLast
+void                 ary_RemoveLast(atf_amc::InlaryMin& parent) __attribute__((nothrow));
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+// func:atf_amc.InlaryMin.ary.Setary
+inline void          ary_Setary(atf_amc::InlaryMin& parent, const algo::aryptr<u32> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.InlaryMin.ary.qFind
+inline u32&          ary_qFind(atf_amc::InlaryMin& parent, u64 t) __attribute__((nothrow));
+// Compute row id of element given element's address
+// func:atf_amc.InlaryMin.ary.rowid_Get
+inline u64           ary_rowid_Get(atf_amc::InlaryMin& parent, u32 &row) __attribute__((nothrow));
+// Convert ary to a string.
+// The separator character is ' '.
+// func:atf_amc.InlaryMin.ary.Print
+void                 ary_Print(atf_amc::InlaryMin& parent, algo::cstring &rhs) __attribute__((nothrow));
+// Read array from string
+// Convert string to field. Return success value
+// func:atf_amc.InlaryMin.ary.ReadStrptrMaybe
+bool                 ary_ReadStrptrMaybe(atf_amc::InlaryMin& parent, algo::strptr in_str) __attribute__((nothrow));
+
+// cursor points to valid item
+// func:atf_amc.InlaryMin.ary_curs.Reset
+inline void          InlaryMin_ary_curs_Reset(InlaryMin_ary_curs &curs, atf_amc::InlaryMin &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.InlaryMin.ary_curs.ValidQ
+inline bool          InlaryMin_ary_curs_ValidQ(InlaryMin_ary_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.InlaryMin.ary_curs.Next
+inline void          InlaryMin_ary_curs_Next(InlaryMin_ary_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.InlaryMin.ary_curs.Access
+inline u32&          InlaryMin_ary_curs_Access(InlaryMin_ary_curs &curs) __attribute__((nothrow));
+// func:atf_amc.InlaryMin..ReadFieldMaybe
+bool                 InlaryMin_ReadFieldMaybe(atf_amc::InlaryMin& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::InlaryMin from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.InlaryMin..ReadStrptrMaybe
+bool                 InlaryMin_ReadStrptrMaybe(atf_amc::InlaryMin &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.InlaryMin..Init
+void                 InlaryMin_Init(atf_amc::InlaryMin& parent);
+// func:atf_amc.InlaryMin..Uninit
+void                 InlaryMin_Uninit(atf_amc::InlaryMin& parent) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.InlaryMin.String  printfmt:Tuple
+// func:atf_amc.InlaryMin..Print
+void                 InlaryMin_Print(atf_amc::InlaryMin& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- atf_amc.InlaryPrint
 struct InlaryPrint { // atf_amc.InlaryPrint
-    u32    fixary_elems[3];                 //   0  fixed array
-    u128   inlary_data[sizeu128(u32,10)];   // place for data
-    i32    inlary_n;                        // number of elems current in existence
+    u32               fixary_elems[3];                 //   0  fixed array
+    alignas(u32) u8   inlary_data[sizeof(u32) * 10];   // place for data
+    i32               inlary_n;                        // number of elems current in existence
     enum { inlary_max = 10 };
     // func:atf_amc.InlaryPrint..AssignOp
     inline atf_amc::InlaryPrint& operator =(const atf_amc::InlaryPrint &rhs) __attribute__((nothrow));
@@ -6022,7 +8409,6 @@ struct InlaryPrint { // atf_amc.InlaryPrint
     // func:atf_amc.InlaryPrint..CopyCtor
     inline               InlaryPrint(const atf_amc::InlaryPrint &rhs) __attribute__((nothrow));
 };
-
 // Set all elements of fixed array to value RHS
 // func:atf_amc.InlaryPrint.fixary.Fill
 inline void          fixary_Fill(atf_amc::InlaryPrint& parent, const u32 &rhs) __attribute__((nothrow));
@@ -6144,14 +8530,13 @@ void                 InlaryPrint_Print(atf_amc::InlaryPrint& row, algo::cstring&
 
 // --- atf_amc.Lary32
 struct Lary32 { // atf_amc.Lary32
-    u32*   lary_lary[32];   // level array
-    i32    lary_n;          // number of elements in array
+    u32*   lary_lary[36];   // level array
+    i64    lary_n;          // number of elements in array
     // func:atf_amc.Lary32..Ctor
     inline               Lary32() __attribute__((nothrow));
     // func:atf_amc.Lary32..Dtor
     inline               ~Lary32() __attribute__((nothrow));
 };
-
 // Allocate memory for new default row.
 // If out of memory, process is killed.
 // func:atf_amc.Lary32.lary.Alloc
@@ -6173,7 +8558,7 @@ inline u32*          lary_Find(atf_amc::Lary32& parent, u64 t) __attribute__((__
 inline u32*          lary_Last(atf_amc::Lary32& parent) __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_amc.Lary32.lary.N
-inline i32           lary_N(const atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           lary_N(const atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_amc.Lary32.lary.RemoveAll
 void                 lary_RemoveAll(atf_amc::Lary32& parent) __attribute__((nothrow));
@@ -6219,7 +8604,6 @@ struct Linebuf { // atf_amc.Linebuf
     // func:atf_amc.Linebuf..Dtor
     inline               ~Linebuf() __attribute__((nothrow));
 };
-
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
@@ -6227,9 +8611,9 @@ struct Linebuf { // atf_amc.Linebuf
 // The message is found by looking for delimiter '\n'.
 // The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
 // If ret.elems is NULL, no message can be extracted from buffer.
-// The returned aryptr excludes the trailing deliminter.
-// SkipMsg will skip both the line and the deliminter.
-// A partial line at the end of input is NOT returned (TODO?)
+// The returned aryptr excludes the trailing delimiter.
+// SkipMsg will skip both the line and the delimiter.
+// A partial line at the end of input is NOT returned.
 //
 // func:atf_amc.Linebuf.in.GetMsg
 algo::aryptr<char>   in_GetMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
@@ -6259,14 +8643,14 @@ void                 in_SkipBytes(atf_amc::Linebuf& linebuf, int n) __attribute_
 // func:atf_amc.Linebuf.in.SkipMsg
 void                 in_SkipMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:atf_amc.Linebuf.in.WriteAll
 bool                 in_WriteAll(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 // func:atf_amc.Linebuf.in.WriteReserve
 void                 in_WriteReserve(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
@@ -6280,282 +8664,64 @@ void                 Linebuf_Uninit(atf_amc::Linebuf& linebuf) __attribute__((no
 // func:atf_amc.Linebuf..Print
 void                 Linebuf_Print(atf_amc::Linebuf& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- atf_amc.MsgHdrLT
-// create: atf_amc.MsgLTO.o (Opt)
-// create: atf_amc.MsgLTV.v (Varlen)
-// create: atf_amc.Msgbuf.out_extra (Fbuf)
-// create: atf_amc.Msgbuf.in_extra (Fbuf)
-// access: atf_amc.MsgLTA.base (Base)
-// access: atf_amc.MsgLTB.base (Base)
-// access: atf_amc.MsgLTO.base (Base)
-// access: atf_amc.MsgLTV.base (Base)
-// access: atf_amc.MsgHdrLT_curs.msg (Ptr)
-#pragma pack(push,1)
-struct MsgHdrLT { // atf_amc.MsgHdrLT: length-type header
-    u8     len;    //   0
-    char   type;   //   0
-    // func:atf_amc.MsgHdrLT..Ctor
-    inline               MsgHdrLT() __attribute__((nothrow));
-    // func:atf_amc.MsgHdrLT..FieldwiseCtor
-    explicit inline               MsgHdrLT(u8 in_len, char in_type) __attribute__((nothrow));
+// --- atf_amc.LnullStr4_U32_Base256
+struct LnullStr4_U32_Base256 { // atf_amc.LnullStr4_U32_Base256: base-256 number, min 3 digits, left pad with NUL (the base's zero digit)
+    enum { ch_max = 4 };
+    u8 ch[4];
+    // Copy from strptr (operator=)
+    // func:atf_amc.LnullStr4_U32_Base256.ch.AssignStrptr
+    inline void          operator =(const algo::strptr &str) __attribute__((nothrow));
+    // func:atf_amc.LnullStr4_U32_Base256.ch.CtorStrptr
+    inline               LnullStr4_U32_Base256(const algo::strptr &rhs) __attribute__((nothrow));
+    // func:atf_amc.LnullStr4_U32_Base256..AssignOp
+    inline atf_amc::LnullStr4_U32_Base256& operator =(const atf_amc::LnullStr4_U32_Base256 &rhs) __attribute__((nothrow));
+    // func:atf_amc.LnullStr4_U32_Base256..Ctor
+    inline               LnullStr4_U32_Base256() __attribute__((nothrow));
+    // func:atf_amc.LnullStr4_U32_Base256..CopyCtor
+    inline               LnullStr4_U32_Base256(const atf_amc::LnullStr4_U32_Base256 &rhs) __attribute__((nothrow));
 };
-#pragma pack(pop)
+// Access string as array of chars
+// func:atf_amc.LnullStr4_U32_Base256.ch.Getary
+inline algo::aryptr<char> ch_Getary(const atf_amc::LnullStr4_U32_Base256& parent) __attribute__((nothrow));
+// func:atf_amc.LnullStr4_U32_Base256.ch.Init
+inline void          ch_Init(atf_amc::LnullStr4_U32_Base256 &parent) __attribute__((nothrow));
+// always return constant 4
+// func:atf_amc.LnullStr4_U32_Base256.ch.Max
+inline int           ch_Max(atf_amc::LnullStr4_U32_Base256& parent) __attribute__((nothrow));
+// func:atf_amc.LnullStr4_U32_Base256.ch.N
+inline int           ch_N(const atf_amc::LnullStr4_U32_Base256& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.LnullStr4_U32_Base256.ch.Print
+void                 ch_Print(atf_amc::LnullStr4_U32_Base256& parent, algo::cstring &out) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+// func:atf_amc.LnullStr4_U32_Base256.ch.SetStrptr
+void                 ch_SetStrptr(atf_amc::LnullStr4_U32_Base256& parent, const algo::strptr& rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+// func:atf_amc.LnullStr4_U32_Base256.ch.Getnum
+u32                  ch_Getnum(atf_amc::LnullStr4_U32_Base256& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, return default value.
+// Empty string is evaluated to zero.
+// func:atf_amc.LnullStr4_U32_Base256.ch.GetnumDflt
+u32                  ch_GetnumDflt(atf_amc::LnullStr4_U32_Base256& parent, u32 dflt) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, throw an exception.
+// Empty string is evaluated to zero.
+// func:atf_amc.LnullStr4_U32_Base256.ch.Geti64
+i64                  ch_Geti64(atf_amc::LnullStr4_U32_Base256& parent, bool &out_ok) __attribute__((nothrow));
+// Set string to number specified in RHS performing base-256 conversion.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
+// func:atf_amc.LnullStr4_U32_Base256.ch.SetnumMaybe
+bool                 ch_SetnumMaybe(atf_amc::LnullStr4_U32_Base256& parent, i64 rhs) __attribute__((nothrow));
 
-// Get value of field as enum type
-// func:atf_amc.MsgHdrLT.type.GetEnum
-inline atf_amc_MsgHdrLT_type_Enum type_GetEnum(const atf_amc::MsgHdrLT& o) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:atf_amc.MsgHdrLT.type.SetEnum
-inline void          type_SetEnum(atf_amc::MsgHdrLT& o, atf_amc_MsgHdrLT_type_Enum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:atf_amc.MsgHdrLT.type.ToCstr
-const char*          type_ToCstr(const atf_amc::MsgHdrLT& o) __attribute__((nothrow));
-// Convert type to a string. First, attempt conversion to a known string.
-// If no string matches, print type as a numeric value.
-// func:atf_amc.MsgHdrLT.type.Print
-void                 type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:atf_amc.MsgHdrLT.type.SetStrptrMaybe
-bool                 type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:atf_amc.MsgHdrLT.type.SetStrptr
-void                 type_SetStrptr(atf_amc::MsgHdrLT& o, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:atf_amc.MsgHdrLT.type.ReadStrptrMaybe
-bool                 type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) __attribute__((nothrow));
-
-// func:atf_amc.MsgHdrLT..ReadFieldMaybe
-bool                 MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of atf_amc::MsgHdrLT from an ascii string.
-// The format of the string is an ssim Tuple
-// func:atf_amc.MsgHdrLT..ReadStrptrMaybe
-bool                 MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:atf_amc.MsgHdrLT..GetMsgLength
-inline i32           GetMsgLength(const atf_amc::MsgHdrLT& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:atf_amc.MsgHdrLT..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const atf_amc::MsgHdrLT& row) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:atf_amc.MsgHdrLT..Init
-inline void          MsgHdrLT_Init(atf_amc::MsgHdrLT& o);
-// print string representation of ROW to string STR
-// cfmt:atf_amc.MsgHdrLT.String  printfmt:Tuple
-// func:atf_amc.MsgHdrLT..Print
-void                 MsgHdrLT_Print(atf_amc::MsgHdrLT& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- atf_amc.MsgHdrLTMsgsCase
-#pragma pack(push,1)
-struct MsgHdrLTMsgsCase { // atf_amc.MsgHdrLTMsgsCase: Enum for dispatch atf_amc.MsgHdrLTMsgs
-    u32   value;   //   0
-    // func:atf_amc.MsgHdrLTMsgsCase.value.Cast
-    inline               operator atf_amc_MsgHdrLTMsgsCaseEnum() const __attribute__((nothrow));
-    // func:atf_amc.MsgHdrLTMsgsCase..Ctor
-    inline               MsgHdrLTMsgsCase() __attribute__((nothrow));
-    // func:atf_amc.MsgHdrLTMsgsCase..FieldwiseCtor
-    explicit inline               MsgHdrLTMsgsCase(u32 in_value) __attribute__((nothrow));
-    // func:atf_amc.MsgHdrLTMsgsCase..EnumCtor
-    inline               MsgHdrLTMsgsCase(atf_amc_MsgHdrLTMsgsCaseEnum arg) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Get value of field as enum type
-// func:atf_amc.MsgHdrLTMsgsCase.value.GetEnum
-inline atf_amc_MsgHdrLTMsgsCaseEnum value_GetEnum(const atf_amc::MsgHdrLTMsgsCase& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:atf_amc.MsgHdrLTMsgsCase.value.SetEnum
-inline void          value_SetEnum(atf_amc::MsgHdrLTMsgsCase& parent, atf_amc_MsgHdrLTMsgsCaseEnum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:atf_amc.MsgHdrLTMsgsCase.value.ToCstr
-const char*          value_ToCstr(const atf_amc::MsgHdrLTMsgsCase& parent) __attribute__((nothrow));
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-// func:atf_amc.MsgHdrLTMsgsCase.value.Print
-void                 value_Print(const atf_amc::MsgHdrLTMsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:atf_amc.MsgHdrLTMsgsCase.value.SetStrptrMaybe
-bool                 value_SetStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:atf_amc.MsgHdrLTMsgsCase.value.SetStrptr
-void                 value_SetStrptr(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTMsgsCaseEnum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:atf_amc.MsgHdrLTMsgsCase.value.ReadStrptrMaybe
-bool                 value_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
-
-// Read fields of atf_amc::MsgHdrLTMsgsCase from an ascii string.
-// The format of the string is the format of the atf_amc::MsgHdrLTMsgsCase's only field
-// func:atf_amc.MsgHdrLTMsgsCase..ReadStrptrMaybe
-bool                 MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:atf_amc.MsgHdrLTMsgsCase..Init
-inline void          MsgHdrLTMsgsCase_Init(atf_amc::MsgHdrLTMsgsCase& parent);
-
-// --- atf_amc.MsgHdrLTScale
-// access: atf_amc.MsgLTScaleA.base (Base)
-// access: atf_amc.MsgHdrLTScale_curs.msg (Ptr)
-#pragma pack(push,1)
-struct MsgHdrLTScale { // atf_amc.MsgHdrLTScale
-    u8     len;    //   0  Length in 4-byte words
-    char   type;   //   0
-    // func:atf_amc.MsgHdrLTScale..Ctor
-    inline               MsgHdrLTScale() __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Get value of field as enum type
-// func:atf_amc.MsgHdrLTScale.type.GetEnum
-inline atf_amc_MsgHdrLTScale_type_Enum type_GetEnum(const atf_amc::MsgHdrLTScale& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:atf_amc.MsgHdrLTScale.type.SetEnum
-inline void          type_SetEnum(atf_amc::MsgHdrLTScale& parent, atf_amc_MsgHdrLTScale_type_Enum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:atf_amc.MsgHdrLTScale.type.ToCstr
-const char*          type_ToCstr(const atf_amc::MsgHdrLTScale& parent) __attribute__((nothrow));
-// Convert type to a string. First, attempt conversion to a known string.
-// If no string matches, print type as a numeric value.
-// func:atf_amc.MsgHdrLTScale.type.Print
-void                 type_Print(const atf_amc::MsgHdrLTScale& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:atf_amc.MsgHdrLTScale.type.SetStrptrMaybe
-bool                 type_SetStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:atf_amc.MsgHdrLTScale.type.SetStrptr
-void                 type_SetStrptr(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs, atf_amc_MsgHdrLTScale_type_Enum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:atf_amc.MsgHdrLTScale.type.ReadStrptrMaybe
-bool                 type_ReadStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) __attribute__((nothrow));
-
-// func:atf_amc.MsgHdrLTScale..ReadFieldMaybe
-bool                 MsgHdrLTScale_ReadFieldMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of atf_amc::MsgHdrLTScale from an ascii string.
-// The format of the string is an ssim Tuple
-// func:atf_amc.MsgHdrLTScale..ReadStrptrMaybe
-bool                 MsgHdrLTScale_ReadStrptrMaybe(atf_amc::MsgHdrLTScale &parent, algo::strptr in_str) __attribute__((nothrow));
-// Message length (uses length field)
-// func:atf_amc.MsgHdrLTScale..GetMsgLength
-inline i32           GetMsgLength(const atf_amc::MsgHdrLTScale& parent) __attribute__((nothrow));
-// Memptr encompassing the message (uses length field)
-// func:atf_amc.MsgHdrLTScale..GetMsgMemptr
-inline algo::memptr  GetMsgMemptr(const atf_amc::MsgHdrLTScale& row) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:atf_amc.MsgHdrLTScale..Init
-inline void          MsgHdrLTScale_Init(atf_amc::MsgHdrLTScale& parent);
-// print string representation of ROW to string STR
-// cfmt:atf_amc.MsgHdrLTScale.String  printfmt:Tuple
-// func:atf_amc.MsgHdrLTScale..Print
-void                 MsgHdrLTScale_Print(atf_amc::MsgHdrLTScale& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- atf_amc.MsgHdrLTScaleMsgsCase
-#pragma pack(push,1)
-struct MsgHdrLTScaleMsgsCase { // atf_amc.MsgHdrLTScaleMsgsCase: Enum for dispatch atf_amc.MsgHdrLTScaleMsgs
-    u32   value;   //   0
-    // func:atf_amc.MsgHdrLTScaleMsgsCase.value.Cast
-    inline               operator atf_amc_MsgHdrLTScaleMsgsCaseEnum() const __attribute__((nothrow));
-    // func:atf_amc.MsgHdrLTScaleMsgsCase..Ctor
-    inline               MsgHdrLTScaleMsgsCase() __attribute__((nothrow));
-    // func:atf_amc.MsgHdrLTScaleMsgsCase..FieldwiseCtor
-    explicit inline               MsgHdrLTScaleMsgsCase(u32 in_value) __attribute__((nothrow));
-    // func:atf_amc.MsgHdrLTScaleMsgsCase..EnumCtor
-    inline               MsgHdrLTScaleMsgsCase(atf_amc_MsgHdrLTScaleMsgsCaseEnum arg) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Get value of field as enum type
-// func:atf_amc.MsgHdrLTScaleMsgsCase.value.GetEnum
-inline atf_amc_MsgHdrLTScaleMsgsCaseEnum value_GetEnum(const atf_amc::MsgHdrLTScaleMsgsCase& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:atf_amc.MsgHdrLTScaleMsgsCase.value.SetEnum
-inline void          value_SetEnum(atf_amc::MsgHdrLTScaleMsgsCase& parent, atf_amc_MsgHdrLTScaleMsgsCaseEnum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:atf_amc.MsgHdrLTScaleMsgsCase.value.ToCstr
-const char*          value_ToCstr(const atf_amc::MsgHdrLTScaleMsgsCase& parent) __attribute__((nothrow));
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-// func:atf_amc.MsgHdrLTScaleMsgsCase.value.Print
-void                 value_Print(const atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptrMaybe
-bool                 value_SetStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptr
-void                 value_SetStrptr(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTScaleMsgsCaseEnum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:atf_amc.MsgHdrLTScaleMsgsCase.value.ReadStrptrMaybe
-bool                 value_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
-
-// Read fields of atf_amc::MsgHdrLTScaleMsgsCase from an ascii string.
-// The format of the string is the format of the atf_amc::MsgHdrLTScaleMsgsCase's only field
-// func:atf_amc.MsgHdrLTScaleMsgsCase..ReadStrptrMaybe
-bool                 MsgHdrLTScaleMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:atf_amc.MsgHdrLTScaleMsgsCase..Init
-inline void          MsgHdrLTScaleMsgsCase_Init(atf_amc::MsgHdrLTScaleMsgsCase& parent);
-
-// --- atf_amc.MsgHdrLTScale_curs
-#pragma pack(push,1)
-struct MsgHdrLTScale_curs { // atf_amc.MsgHdrLTScale_curs: Cursor for scanning messages in a memptr
-    typedef atf_amc::MsgHdrLTScale *ChildType;
-    atf_amc::MsgHdrLTScale*   msg;      // Pointer to current message. optional pointer
-    u8*                       bytes;    // Beginning of region. optional pointer
-    i32                       limit;    //   0  # Of bytes in the region
-    i32                       msglen;   //   0  Length of current message (if any)
-    // func:atf_amc.MsgHdrLTScale_curs..Ctor
-    inline               MsgHdrLTScale_curs() __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// func:atf_amc.MsgHdrLTScale_curs..ValidQ
-inline bool          MsgHdrLTScale_curs_ValidQ(atf_amc::MsgHdrLTScale_curs& curs) __attribute__((nothrow));
-// func:atf_amc.MsgHdrLTScale_curs..Reset
-inline void          MsgHdrLTScale_curs_Reset(atf_amc::MsgHdrLTScale_curs& curs, algo::memptr buf) __attribute__((nothrow));
-// func:atf_amc.MsgHdrLTScale_curs..Access
-inline atf_amc::MsgHdrLTScale*& MsgHdrLTScale_curs_Access(atf_amc::MsgHdrLTScale_curs& curs) __attribute__((nothrow));
-// func:atf_amc.MsgHdrLTScale_curs..Next
-inline void          MsgHdrLTScale_curs_Next(atf_amc::MsgHdrLTScale_curs& curs) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:atf_amc.MsgHdrLTScale_curs..Init
-inline void          MsgHdrLTScale_curs_Init(atf_amc::MsgHdrLTScale_curs& parent);
-
-// --- atf_amc.MsgHdrLT_curs
-#pragma pack(push,1)
-struct MsgHdrLT_curs { // atf_amc.MsgHdrLT_curs: Cursor for scanning messages in a memptr
-    typedef atf_amc::MsgHdrLT *ChildType;
-    atf_amc::MsgHdrLT*   msg;      // Pointer to current message. optional pointer
-    u8*                  bytes;    // Beginning of region. optional pointer
-    i32                  limit;    //   0  # Of bytes in the region
-    i32                  msglen;   //   0  Length of current message (if any)
-    // func:atf_amc.MsgHdrLT_curs..Ctor
-    inline               MsgHdrLT_curs() __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// func:atf_amc.MsgHdrLT_curs..ValidQ
-inline bool          MsgHdrLT_curs_ValidQ(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
-// func:atf_amc.MsgHdrLT_curs..Reset
-inline void          MsgHdrLT_curs_Reset(atf_amc::MsgHdrLT_curs& curs, algo::memptr buf) __attribute__((nothrow));
-// func:atf_amc.MsgHdrLT_curs..Access
-inline atf_amc::MsgHdrLT*& MsgHdrLT_curs_Access(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
-// func:atf_amc.MsgHdrLT_curs..Next
-inline void          MsgHdrLT_curs_Next(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:atf_amc.MsgHdrLT_curs..Init
-inline void          MsgHdrLT_curs_Init(atf_amc::MsgHdrLT_curs& parent);
+// func:atf_amc.LnullStr4_U32_Base256..Init
+inline void          LnullStr4_U32_Base256_Init(atf_amc::LnullStr4_U32_Base256& parent);
 
 // --- atf_amc.MsgType
 #pragma pack(push,1)
@@ -6586,7 +8752,6 @@ struct MsgType { // atf_amc.MsgType
     inline               MsgType(atf_amc_MsgTypeEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_amc.MsgType.value.GetEnum
 inline atf_amc_MsgTypeEnum value_GetEnum(const atf_amc::MsgType& parent) __attribute__((nothrow));
@@ -6649,7 +8814,6 @@ struct MsgLength { // atf_amc.MsgLength
     explicit inline               MsgLength(u16 in_value) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.MsgLength..Hash
 inline u32           MsgLength_Hash(u32 prev, atf_amc::MsgLength rhs) __attribute__((nothrow));
 // Read fields of atf_amc::MsgLength from an ascii string.
@@ -6674,18 +8838,23 @@ inline bool          MsgLength_Update(atf_amc::MsgLength &lhs, atf_amc::MsgLengt
 void                 MsgLength_Print(atf_amc::MsgLength row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgHeader
+// create: atf_amc.Lpoolbuf.in (Fbuf)
 // create: atf_amc.Msgbuf.in_buf (Fbuf)
 // create: atf_amc.Seqmsg.payload (Opt)
 // create: atf_amc.Varlen2mMsg.m1 (Varlen)
 // create: atf_amc.Varlen2mMsg.m2 (Varlen)
 // create: atf_amc.Varlen2mMsg.m3 (Varlen)
+// access: atf_amc.OptBMsg.base (Base)
 // access: atf_amc.Seqmsg.msghdr (Base)
 // access: atf_amc.Text.msghdr (Base)
 // access: atf_amc.Varlen2Msg.base (Base)
 // access: atf_amc.Varlen2aMsg.base (Base)
 // access: atf_amc.Varlen2mMsg.base (Base)
 // access: atf_amc.Varlen2vMsg.base (Base)
+// access: atf_amc.VarlenBMsg.base (Base)
 // access: atf_amc.VarlenMsg.base (Base)
+// access: atf_amc.VarlenVMsg.base (Base)
+// access: atf_amc.VarlenWMsg.base (Base)
 // access: atf_amc.MsgHeader_curs.msg (Ptr)
 #pragma pack(push,1)
 struct MsgHeader { // atf_amc.MsgHeader
@@ -6701,9 +8870,8 @@ struct MsgHeader { // atf_amc.MsgHeader
     explicit inline               MsgHeader(atf_amc::MsgType in_type, atf_amc::MsgLength in_length) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.MsgHeader..Hash
-inline u32           MsgHeader_Hash(u32 prev, const atf_amc::MsgHeader& rhs) __attribute__((nothrow));
+inline u32           MsgHeader_Hash(u32 prev, atf_amc::MsgHeader rhs) __attribute__((nothrow));
 // func:atf_amc.MsgHeader..ReadFieldMaybe
 bool                 MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::MsgHeader from an ascii string.
@@ -6717,13 +8885,475 @@ inline i32           GetMsgLength(const atf_amc::MsgHeader& parent) __attribute_
 // func:atf_amc.MsgHeader..GetMsgMemptr
 inline algo::memptr  GetMsgMemptr(const atf_amc::MsgHeader& row) __attribute__((nothrow));
 // func:atf_amc.MsgHeader..Cmp
-inline i32           MsgHeader_Cmp(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& rhs) __attribute__((nothrow));
+inline i32           MsgHeader_Cmp(atf_amc::MsgHeader lhs, atf_amc::MsgHeader rhs) __attribute__((nothrow));
 // func:atf_amc.MsgHeader..Eq
-inline bool          MsgHeader_Eq(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& rhs) __attribute__((nothrow));
+inline bool          MsgHeader_Eq(atf_amc::MsgHeader lhs, atf_amc::MsgHeader rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgHeader.String  printfmt:Tuple
 // func:atf_amc.MsgHeader..Print
-void                 MsgHeader_Print(atf_amc::MsgHeader& row, algo::cstring& str) __attribute__((nothrow));
+void                 MsgHeader_Print(atf_amc::MsgHeader row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.Lpoolbuf
+// create: atf_amc.FDb.lpoolbuf (Cppstack)
+struct Lpoolbuf { // atf_amc.Lpoolbuf: Fbuf drawing from an lpool basepool
+    u8*             in_elems;          //   NULL  pointer to elements of indirect array
+    u32             in_max;            //   0  current length of allocated array
+    i32             in_start;          // beginning of valid bytes (in bytes)
+    i32             in_end;            // end of valid bytes (in bytes)
+    i32             in_msglen;         // current message length
+    algo::Errcode   in_err;            // system error code
+    bool            in_eof;            // no more data will be written to buffer
+    bool            in_msgvalid;       // current message is valid
+    bool            in_epoll_enable;   // use epoll?
+    // func:atf_amc.Lpoolbuf..Ctor
+    inline               Lpoolbuf() __attribute__((nothrow));
+    // func:atf_amc.Lpoolbuf..Dtor
+    inline               ~Lpoolbuf() __attribute__((nothrow));
+};
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is length-delimited based on field length field
+//
+// func:atf_amc.Lpoolbuf.in.GetMsg
+atf_amc::MsgHeader*  in_GetMsg(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+// func:atf_amc.Lpoolbuf.in.Realloc
+void                 in_Realloc(atf_amc::Lpoolbuf& lpoolbuf, int new_max) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+// func:atf_amc.Lpoolbuf.in.Max
+inline i32           in_Max(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((nothrow));
+// Return number of bytes in the buffer.
+// func:atf_amc.Lpoolbuf.in.N
+inline i32           in_N(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((__warn_unused_result__, nothrow, pure));
+// Empty bfufer
+// Discard contents of the buffer.
+// func:atf_amc.Lpoolbuf.in.RemoveAll
+void                 in_RemoveAll(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((nothrow));
+// Skip current message, if any
+// Skip current message, if any.
+// func:atf_amc.Lpoolbuf.in.SkipMsg
+void                 in_SkipMsg(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((nothrow));
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+// func:atf_amc.Lpoolbuf.in.WriteAll
+bool                 in_WriteAll(atf_amc::Lpoolbuf& lpoolbuf, u8 *in, i32 in_n) __attribute__((nothrow));
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+// func:atf_amc.Lpoolbuf.in.WriteReserve
+void                 in_WriteReserve(atf_amc::Lpoolbuf& lpoolbuf, u8 *in, i32 in_n) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.Lpoolbuf.in.XrefMaybe
+bool                 in_XrefMaybe(atf_amc::MsgHeader &row);
+
+// Set all fields to initial values.
+// func:atf_amc.Lpoolbuf..Init
+void                 Lpoolbuf_Init(atf_amc::Lpoolbuf& lpoolbuf);
+// func:atf_amc.Lpoolbuf..Uninit
+void                 Lpoolbuf_Uninit(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((nothrow));
+
+// --- atf_amc.LspaceStr5_U32_Base95
+struct LspaceStr5_U32_Base95 { // atf_amc.LspaceStr5_U32_Base95: base-95 number, min 3 digits, left pad with ' ' (the base's zero digit)
+    enum { ch_max = 5 };
+    u8 ch[5];
+    // Copy from strptr (operator=)
+    // func:atf_amc.LspaceStr5_U32_Base95.ch.AssignStrptr
+    inline void          operator =(const algo::strptr &str) __attribute__((nothrow));
+    // func:atf_amc.LspaceStr5_U32_Base95.ch.CtorStrptr
+    inline               LspaceStr5_U32_Base95(const algo::strptr &rhs) __attribute__((nothrow));
+    // func:atf_amc.LspaceStr5_U32_Base95..AssignOp
+    inline atf_amc::LspaceStr5_U32_Base95& operator =(const atf_amc::LspaceStr5_U32_Base95 &rhs) __attribute__((nothrow));
+    // func:atf_amc.LspaceStr5_U32_Base95..Ctor
+    inline               LspaceStr5_U32_Base95() __attribute__((nothrow));
+    // func:atf_amc.LspaceStr5_U32_Base95..CopyCtor
+    inline               LspaceStr5_U32_Base95(const atf_amc::LspaceStr5_U32_Base95 &rhs) __attribute__((nothrow));
+};
+// Access string as array of chars
+// func:atf_amc.LspaceStr5_U32_Base95.ch.Getary
+inline algo::aryptr<char> ch_Getary(const atf_amc::LspaceStr5_U32_Base95& parent) __attribute__((nothrow));
+// func:atf_amc.LspaceStr5_U32_Base95.ch.Init
+inline void          ch_Init(atf_amc::LspaceStr5_U32_Base95 &parent) __attribute__((nothrow));
+// always return constant 5
+// func:atf_amc.LspaceStr5_U32_Base95.ch.Max
+inline int           ch_Max(atf_amc::LspaceStr5_U32_Base95& parent) __attribute__((nothrow));
+// func:atf_amc.LspaceStr5_U32_Base95.ch.N
+inline int           ch_N(const atf_amc::LspaceStr5_U32_Base95& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.LspaceStr5_U32_Base95.ch.Print
+void                 ch_Print(atf_amc::LspaceStr5_U32_Base95& parent, algo::cstring &out) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+// func:atf_amc.LspaceStr5_U32_Base95.ch.SetStrptr
+void                 ch_SetStrptr(atf_amc::LspaceStr5_U32_Base95& parent, const algo::strptr& rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+// func:atf_amc.LspaceStr5_U32_Base95.ch.Getnum
+u32                  ch_Getnum(atf_amc::LspaceStr5_U32_Base95& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, return default value.
+// Empty string is evaluated to zero.
+// func:atf_amc.LspaceStr5_U32_Base95.ch.GetnumDflt
+u32                  ch_GetnumDflt(atf_amc::LspaceStr5_U32_Base95& parent, u32 dflt) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, throw an exception.
+// Empty string is evaluated to zero.
+// func:atf_amc.LspaceStr5_U32_Base95.ch.Geti64
+i64                  ch_Geti64(atf_amc::LspaceStr5_U32_Base95& parent, bool &out_ok) __attribute__((nothrow));
+// Set string to number specified in RHS performing base-95 conversion.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
+// func:atf_amc.LspaceStr5_U32_Base95.ch.SetnumMaybe
+bool                 ch_SetnumMaybe(atf_amc::LspaceStr5_U32_Base95& parent, i64 rhs) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.LspaceStr5_U32_Base95..Init
+inline void          LspaceStr5_U32_Base95_Init(atf_amc::LspaceStr5_U32_Base95& parent);
+
+// --- atf_amc.LspaceStr7_I32
+struct LspaceStr7_I32 { // atf_amc.LspaceStr7_I32: signed number as ascii digits, min 3 digits, left pad with ' '
+    enum { ch_max = 7 };
+    u8 ch[7];
+    // Copy from strptr (operator=)
+    // func:atf_amc.LspaceStr7_I32.ch.AssignStrptr
+    inline void          operator =(const algo::strptr &str) __attribute__((nothrow));
+    // func:atf_amc.LspaceStr7_I32.ch.CtorStrptr
+    inline               LspaceStr7_I32(const algo::strptr &rhs) __attribute__((nothrow));
+    // func:atf_amc.LspaceStr7_I32..AssignOp
+    inline atf_amc::LspaceStr7_I32& operator =(const atf_amc::LspaceStr7_I32 &rhs) __attribute__((nothrow));
+    // func:atf_amc.LspaceStr7_I32..Ctor
+    inline               LspaceStr7_I32() __attribute__((nothrow));
+    // func:atf_amc.LspaceStr7_I32..CopyCtor
+    inline               LspaceStr7_I32(const atf_amc::LspaceStr7_I32 &rhs) __attribute__((nothrow));
+};
+// Access string as array of chars
+// func:atf_amc.LspaceStr7_I32.ch.Getary
+inline algo::aryptr<char> ch_Getary(const atf_amc::LspaceStr7_I32& parent) __attribute__((nothrow));
+// func:atf_amc.LspaceStr7_I32.ch.Init
+inline void          ch_Init(atf_amc::LspaceStr7_I32 &parent) __attribute__((nothrow));
+// always return constant 7
+// func:atf_amc.LspaceStr7_I32.ch.Max
+inline int           ch_Max(atf_amc::LspaceStr7_I32& parent) __attribute__((nothrow));
+// func:atf_amc.LspaceStr7_I32.ch.N
+inline int           ch_N(const atf_amc::LspaceStr7_I32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.LspaceStr7_I32.ch.Print
+void                 ch_Print(atf_amc::LspaceStr7_I32& parent, algo::cstring &out) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+// func:atf_amc.LspaceStr7_I32.ch.SetStrptr
+void                 ch_SetStrptr(atf_amc::LspaceStr7_I32& parent, const algo::strptr& rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+// func:atf_amc.LspaceStr7_I32.ch.Getnum
+i32                  ch_Getnum(atf_amc::LspaceStr7_I32& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, return default value.
+// Empty string is evaluated to zero.
+// func:atf_amc.LspaceStr7_I32.ch.GetnumDflt
+i32                  ch_GetnumDflt(atf_amc::LspaceStr7_I32& parent, i32 dflt) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, throw an exception.
+// Empty string is evaluated to zero.
+// func:atf_amc.LspaceStr7_I32.ch.Geti64
+i64                  ch_Geti64(atf_amc::LspaceStr7_I32& parent, bool &out_ok) __attribute__((nothrow));
+// Set string to number specified in RHS performing base-10 conversion.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
+// func:atf_amc.LspaceStr7_I32.ch.SetnumMaybe
+bool                 ch_SetnumMaybe(atf_amc::LspaceStr7_I32& parent, i64 rhs) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.LspaceStr7_I32..Init
+inline void          LspaceStr7_I32_Init(atf_amc::LspaceStr7_I32& parent);
+
+// --- atf_amc.MsgHdrLT
+// create: atf_amc.MsgLTO.o (Opt)
+// create: atf_amc.MsgLTV.v (Varlen)
+// create: atf_amc.Msgbuf.out_extra (Fbuf)
+// create: atf_amc.Msgbuf.in_extra (Fbuf)
+// access: atf_amc.MsgLTA.base (Base)
+// access: atf_amc.MsgLTB.base (Base)
+// access: atf_amc.MsgLTO.base (Base)
+// access: atf_amc.MsgLTV.base (Base)
+// access: atf_amc.MsgHdrLT_curs.msg (Ptr)
+#pragma pack(push,1)
+struct MsgHdrLT { // atf_amc.MsgHdrLT: length-type header
+    u8     len;    //   0
+    char   type;   //   0
+    // func:atf_amc.MsgHdrLT..Ctor
+    inline               MsgHdrLT() __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLT..FieldwiseCtor
+    explicit inline               MsgHdrLT(u8 in_len, char in_type) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:atf_amc.MsgHdrLT.type.GetEnum
+inline atf_amc_MsgHdrLT_type_Enum type_GetEnum(const atf_amc::MsgHdrLT& o) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.MsgHdrLT.type.SetEnum
+inline void          type_SetEnum(atf_amc::MsgHdrLT& o, atf_amc_MsgHdrLT_type_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgHdrLT.type.ToCstr
+const char*          type_ToCstr(const atf_amc::MsgHdrLT& o) __attribute__((nothrow));
+// Convert type to a string. First, attempt conversion to a known string.
+// If no string matches, print type as a numeric value.
+// func:atf_amc.MsgHdrLT.type.Print
+void                 type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.MsgHdrLT.type.SetStrptrMaybe
+bool                 type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgHdrLT.type.SetStrptr
+void                 type_SetStrptr(atf_amc::MsgHdrLT& o, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.MsgHdrLT.type.ReadStrptrMaybe
+bool                 type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) __attribute__((nothrow));
+
+// func:atf_amc.MsgHdrLT..ReadFieldMaybe
+bool                 MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::MsgHdrLT from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.MsgHdrLT..ReadStrptrMaybe
+bool                 MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.MsgHdrLT..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::MsgHdrLT& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.MsgHdrLT..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::MsgHdrLT& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgHdrLT..Init
+inline void          MsgHdrLT_Init(atf_amc::MsgHdrLT& o);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHdrLT.String  printfmt:Tuple
+// func:atf_amc.MsgHdrLT..Print
+void                 MsgHdrLT_Print(atf_amc::MsgHdrLT row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.MsgHdrLTMsgsCase
+#pragma pack(push,1)
+struct MsgHdrLTMsgsCase { // atf_amc.MsgHdrLTMsgsCase: Enum for dispatch atf_amc.MsgHdrLTMsgs
+    u32   value;   //   0
+    // func:atf_amc.MsgHdrLTMsgsCase.value.Cast
+    inline               operator atf_amc_MsgHdrLTMsgsCaseEnum() const __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLTMsgsCase..Ctor
+    inline               MsgHdrLTMsgsCase() __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLTMsgsCase..FieldwiseCtor
+    explicit inline               MsgHdrLTMsgsCase(u32 in_value) __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLTMsgsCase..EnumCtor
+    inline               MsgHdrLTMsgsCase(atf_amc_MsgHdrLTMsgsCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:atf_amc.MsgHdrLTMsgsCase.value.GetEnum
+inline atf_amc_MsgHdrLTMsgsCaseEnum value_GetEnum(const atf_amc::MsgHdrLTMsgsCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.MsgHdrLTMsgsCase.value.SetEnum
+inline void          value_SetEnum(atf_amc::MsgHdrLTMsgsCase& parent, atf_amc_MsgHdrLTMsgsCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgHdrLTMsgsCase.value.ToCstr
+const char*          value_ToCstr(const atf_amc::MsgHdrLTMsgsCase& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:atf_amc.MsgHdrLTMsgsCase.value.Print
+void                 value_Print(const atf_amc::MsgHdrLTMsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.MsgHdrLTMsgsCase.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgHdrLTMsgsCase.value.SetStrptr
+void                 value_SetStrptr(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTMsgsCaseEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.MsgHdrLTMsgsCase.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of atf_amc::MsgHdrLTMsgsCase from an ascii string.
+// The format of the string is the format of the atf_amc::MsgHdrLTMsgsCase's only field
+// func:atf_amc.MsgHdrLTMsgsCase..ReadStrptrMaybe
+bool                 MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgHdrLTMsgsCase..Init
+inline void          MsgHdrLTMsgsCase_Init(atf_amc::MsgHdrLTMsgsCase& parent);
+
+// --- atf_amc.MsgHdrLTScale
+// create: atf_amc.FDb.msghdrltscale (Lpool)
+// access: atf_amc.MsgLTScaleA.base (Base)
+// access: atf_amc.MsgLTScaleV.base (Base)
+// access: atf_amc.MsgHdrLTScale_curs.msg (Ptr)
+#pragma pack(push,1)
+struct MsgHdrLTScale { // atf_amc.MsgHdrLTScale
+    u8     len;    //   0  Length in 4-byte words
+    char   type;   //   0
+private:
+    // func:atf_amc.MsgHdrLTScale..Ctor
+    inline               MsgHdrLTScale() __attribute__((nothrow));
+    friend atf_amc::MsgHdrLTScale& msghdrltscale_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::MsgHdrLTScale* msghdrltscale_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 msghdrltscale_Delete(atf_amc::MsgHdrLTScale &row) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:atf_amc.MsgHdrLTScale.type.GetEnum
+inline atf_amc_MsgHdrLTScale_type_Enum type_GetEnum(const atf_amc::MsgHdrLTScale& msghdrltscale) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.MsgHdrLTScale.type.SetEnum
+inline void          type_SetEnum(atf_amc::MsgHdrLTScale& msghdrltscale, atf_amc_MsgHdrLTScale_type_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgHdrLTScale.type.ToCstr
+const char*          type_ToCstr(const atf_amc::MsgHdrLTScale& msghdrltscale) __attribute__((nothrow));
+// Convert type to a string. First, attempt conversion to a known string.
+// If no string matches, print type as a numeric value.
+// func:atf_amc.MsgHdrLTScale.type.Print
+void                 type_Print(const atf_amc::MsgHdrLTScale& msghdrltscale, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.MsgHdrLTScale.type.SetStrptrMaybe
+bool                 type_SetStrptrMaybe(atf_amc::MsgHdrLTScale& msghdrltscale, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgHdrLTScale.type.SetStrptr
+void                 type_SetStrptr(atf_amc::MsgHdrLTScale& msghdrltscale, algo::strptr rhs, atf_amc_MsgHdrLTScale_type_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.MsgHdrLTScale.type.ReadStrptrMaybe
+bool                 type_ReadStrptrMaybe(atf_amc::MsgHdrLTScale& msghdrltscale, algo::strptr rhs) __attribute__((nothrow));
+
+// func:atf_amc.MsgHdrLTScale..ReadFieldMaybe
+bool                 MsgHdrLTScale_ReadFieldMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::MsgHdrLTScale from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.MsgHdrLTScale..ReadStrptrMaybe
+bool                 MsgHdrLTScale_ReadStrptrMaybe(atf_amc::MsgHdrLTScale &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.MsgHdrLTScale..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::MsgHdrLTScale& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.MsgHdrLTScale..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::MsgHdrLTScale& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgHdrLTScale..Init
+inline void          MsgHdrLTScale_Init(atf_amc::MsgHdrLTScale& msghdrltscale);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHdrLTScale.String  printfmt:Tuple
+// func:atf_amc.MsgHdrLTScale..Print
+void                 MsgHdrLTScale_Print(atf_amc::MsgHdrLTScale row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase
+#pragma pack(push,1)
+struct MsgHdrLTScaleMsgsCase { // atf_amc.MsgHdrLTScaleMsgsCase: Enum for dispatch atf_amc.MsgHdrLTScaleMsgs
+    u32   value;   //   0
+    // func:atf_amc.MsgHdrLTScaleMsgsCase.value.Cast
+    inline               operator atf_amc_MsgHdrLTScaleMsgsCaseEnum() const __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLTScaleMsgsCase..Ctor
+    inline               MsgHdrLTScaleMsgsCase() __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLTScaleMsgsCase..FieldwiseCtor
+    explicit inline               MsgHdrLTScaleMsgsCase(u32 in_value) __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLTScaleMsgsCase..EnumCtor
+    inline               MsgHdrLTScaleMsgsCase(atf_amc_MsgHdrLTScaleMsgsCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.GetEnum
+inline atf_amc_MsgHdrLTScaleMsgsCaseEnum value_GetEnum(const atf_amc::MsgHdrLTScaleMsgsCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.SetEnum
+inline void          value_SetEnum(atf_amc::MsgHdrLTScaleMsgsCase& parent, atf_amc_MsgHdrLTScaleMsgsCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.ToCstr
+const char*          value_ToCstr(const atf_amc::MsgHdrLTScaleMsgsCase& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.Print
+void                 value_Print(const atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptr
+void                 value_SetStrptr(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTScaleMsgsCaseEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of atf_amc::MsgHdrLTScaleMsgsCase from an ascii string.
+// The format of the string is the format of the atf_amc::MsgHdrLTScaleMsgsCase's only field
+// func:atf_amc.MsgHdrLTScaleMsgsCase..ReadStrptrMaybe
+bool                 MsgHdrLTScaleMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgHdrLTScaleMsgsCase..Init
+inline void          MsgHdrLTScaleMsgsCase_Init(atf_amc::MsgHdrLTScaleMsgsCase& parent);
+
+// --- atf_amc.MsgHdrLTScale_curs
+#pragma pack(push,1)
+struct MsgHdrLTScale_curs { // atf_amc.MsgHdrLTScale_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::MsgHdrLTScale *ChildType;
+    atf_amc::MsgHdrLTScale*   msg;      // Pointer to current message. optional pointer
+    u8*                       bytes;    // Beginning of region. optional pointer
+    i32                       limit;    //   0  # Of bytes in the region
+    i32                       msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.MsgHdrLTScale_curs..Ctor
+    inline               MsgHdrLTScale_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.MsgHdrLTScale_curs..ValidQ
+inline bool          MsgHdrLTScale_curs_ValidQ(atf_amc::MsgHdrLTScale_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLTScale_curs..Reset
+inline void          MsgHdrLTScale_curs_Reset(atf_amc::MsgHdrLTScale_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLTScale_curs..Access
+inline atf_amc::MsgHdrLTScale*& MsgHdrLTScale_curs_Access(atf_amc::MsgHdrLTScale_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLTScale_curs..Next
+inline void          MsgHdrLTScale_curs_Next(atf_amc::MsgHdrLTScale_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgHdrLTScale_curs..Init
+inline void          MsgHdrLTScale_curs_Init(atf_amc::MsgHdrLTScale_curs& parent);
+
+// --- atf_amc.MsgHdrLT_curs
+#pragma pack(push,1)
+struct MsgHdrLT_curs { // atf_amc.MsgHdrLT_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::MsgHdrLT *ChildType;
+    atf_amc::MsgHdrLT*   msg;      // Pointer to current message. optional pointer
+    u8*                  bytes;    // Beginning of region. optional pointer
+    i32                  limit;    //   0  # Of bytes in the region
+    i32                  msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.MsgHdrLT_curs..Ctor
+    inline               MsgHdrLT_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.MsgHdrLT_curs..ValidQ
+inline bool          MsgHdrLT_curs_ValidQ(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLT_curs..Reset
+inline void          MsgHdrLT_curs_Reset(atf_amc::MsgHdrLT_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLT_curs..Access
+inline atf_amc::MsgHdrLT*& MsgHdrLT_curs_Access(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLT_curs..Next
+inline void          MsgHdrLT_curs_Next(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgHdrLT_curs..Init
+inline void          MsgHdrLT_curs_Init(atf_amc::MsgHdrLT_curs& parent);
 
 // --- atf_amc.MsgHeader_curs
 #pragma pack(push,1)
@@ -6737,7 +9367,6 @@ struct MsgHeader_curs { // atf_amc.MsgHeader_curs: Cursor for scanning messages 
     inline               MsgHeader_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.MsgHeader_curs..ValidQ
 inline bool          MsgHeader_curs_ValidQ(atf_amc::MsgHeader_curs& curs) __attribute__((nothrow));
 // func:atf_amc.MsgHeader_curs..Reset
@@ -6753,7 +9382,7 @@ inline void          MsgHeader_curs_Init(atf_amc::MsgHeader_curs& parent);
 // --- atf_amc.MsgLTA
 #pragma pack(push,1)
 struct MsgLTA { // atf_amc.MsgLTA
-    u8                 len;    //   ssizeof(parent) + (-2)
+    u8                 len;    //   ssizeof(parent)-2
     char               type;   //   'A'
     algo::RspaceStr4   a;      //
     // func:atf_amc.MsgLTA..Ctor
@@ -6762,7 +9391,6 @@ struct MsgLTA { // atf_amc.MsgLTA
     explicit inline               MsgLTA(const algo::strptr& in_a) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.MsgLTA.base.CopyOut
 void                 parent_CopyOut(atf_amc::MsgLTA &row, atf_amc::MsgHdrLT &out) __attribute__((nothrow));
@@ -6798,7 +9426,7 @@ void                 MsgLTA_Print(atf_amc::MsgLTA& row, algo::cstring& str) __at
 // --- atf_amc.MsgLTB
 #pragma pack(push,1)
 struct MsgLTB { // atf_amc.MsgLTB
-    u8                 len;    //   ssizeof(parent) + (-2)
+    u8                 len;    //   ssizeof(parent)-2
     char               type;   //   'B'
     algo::RspaceStr6   b;      //
     // func:atf_amc.MsgLTB..Ctor
@@ -6807,7 +9435,6 @@ struct MsgLTB { // atf_amc.MsgLTB
     explicit inline               MsgLTB(const algo::strptr& in_b) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.MsgLTB.base.CopyOut
 void                 parent_CopyOut(atf_amc::MsgLTB &row, atf_amc::MsgHdrLT &out) __attribute__((nothrow));
@@ -6843,14 +9470,13 @@ void                 MsgLTB_Print(atf_amc::MsgLTB& row, algo::cstring& str) __at
 // --- atf_amc.MsgLTO
 #pragma pack(push,1)
 struct MsgLTO { // atf_amc.MsgLTO
-    u8                        len;    //   ssizeof(parent) + (-2)
+    u8                        len;    //   ssizeof(parent)-2
     char                      type;   //   'O'
-    // atf_amc::MsgHdrLT      o[];                                      optional field
+    // atf_amc::MsgHdrLT      o[];                                 optional field
     // func:atf_amc.MsgLTO..Ctor
     inline               MsgLTO() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.MsgLTO.base.CopyOut
 void                 parent_CopyOut(atf_amc::MsgLTO &row, atf_amc::MsgHdrLT &out) __attribute__((nothrow));
@@ -6908,13 +9534,12 @@ void                 MsgLTO_Print(atf_amc::MsgLTO& row, algo::cstring& str) __at
 // --- atf_amc.MsgLTScaleA
 #pragma pack(push,1)
 struct MsgLTScaleA { // atf_amc.MsgLTScaleA
-    u8     len;    //   (ssizeof(parent) + (-2)) / 4  Length in 4-byte words
+    u8     len;    //   (ssizeof(parent)-2) / 4  Length in 4-byte words
     char   type;   //   'S'
     // func:atf_amc.MsgLTScaleA..Ctor
     inline               MsgLTScaleA() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.MsgLTScaleA.base.CopyOut
 void                 parent_CopyOut(atf_amc::MsgLTScaleA &row, atf_amc::MsgHdrLTScale &out) __attribute__((nothrow));
@@ -6945,19 +9570,88 @@ inline void          MsgLTScaleA_Init(atf_amc::MsgLTScaleA& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgLTScaleA.String  printfmt:Tuple
 // func:atf_amc.MsgLTScaleA..Print
-void                 MsgLTScaleA_Print(atf_amc::MsgLTScaleA& row, algo::cstring& str) __attribute__((nothrow));
+void                 MsgLTScaleA_Print(atf_amc::MsgLTScaleA row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.MsgLTScaleV
+#pragma pack(push,1)
+struct MsgLTScaleV { // atf_amc.MsgLTScaleV: scaled length-type header with a varlen tail
+    u8     len;    //   (ssizeof(parent)-2) / 4  Length in 4-byte words
+    char   type;   //   'V'
+    // var-length field atf_amc.MsgLTScaleV.v starts here. access it with v_Addr
+    // func:atf_amc.MsgLTScaleV..Ctor
+    inline               MsgLTScaleV() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:atf_amc.MsgLTScaleV.base.CopyOut
+void                 parent_CopyOut(atf_amc::MsgLTScaleV &row, atf_amc::MsgHdrLTScale &out) __attribute__((nothrow));
+// Check if atf_amc::MsgHdrLTScale is an instance of MsgLTScaleV by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTScaleV.
+// If not successful, quietly return NULL.
+// func:atf_amc.MsgLTScaleV.base.Castdown
+inline atf_amc::MsgLTScaleV* MsgLTScaleV_Castdown(atf_amc::MsgHdrLTScale &hdr);
+// func:atf_amc.MsgLTScaleV.base.Castbase
+inline atf_amc::MsgHdrLTScale& Castbase(atf_amc::MsgLTScaleV& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.MsgLTScaleV.v.Getary
+algo::aryptr<char>   v_Getary(atf_amc::MsgLTScaleV& parent) __attribute__((nothrow));
+// func:atf_amc.MsgLTScaleV.v.Addr
+char*                v_Addr(atf_amc::MsgLTScaleV& parent);
+// Return number of elements in varlen field
+// func:atf_amc.MsgLTScaleV.v.N
+inline u32           v_N(const atf_amc::MsgLTScaleV& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:atf_amc.MsgLTScaleV.v.ReadStrptrMaybe
+bool                 v_ReadStrptrMaybe(atf_amc::MsgLTScaleV& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert v to a string.
+// Array is printed as a regular string.
+// func:atf_amc.MsgLTScaleV.v.Print
+void                 v_Print(atf_amc::MsgLTScaleV& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:atf_amc.MsgLTScaleV.v_curs.Reset
+inline void          MsgLTScaleV_v_curs_Reset(MsgLTScaleV_v_curs &curs, atf_amc::MsgLTScaleV &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.MsgLTScaleV.v_curs.ValidQ
+inline bool          MsgLTScaleV_v_curs_ValidQ(MsgLTScaleV_v_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.MsgLTScaleV.v_curs.Next
+inline void          MsgLTScaleV_v_curs_Next(MsgLTScaleV_v_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.MsgLTScaleV.v_curs.Access
+inline char&         MsgLTScaleV_v_curs_Access(MsgLTScaleV_v_curs &curs) __attribute__((nothrow));
+// func:atf_amc.MsgLTScaleV..ReadFieldMaybe
+bool                 MsgLTScaleV_ReadFieldMaybe(atf_amc::MsgLTScaleV& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::MsgLTScaleV from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.MsgLTScaleV..ReadStrptrMaybe
+bool                 MsgLTScaleV_ReadStrptrMaybe(atf_amc::MsgLTScaleV &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.MsgLTScaleV..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::MsgLTScaleV& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.MsgLTScaleV..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::MsgLTScaleV& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgLTScaleV..Init
+inline void          MsgLTScaleV_Init(atf_amc::MsgLTScaleV& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTScaleV.String  printfmt:Tuple
+// func:atf_amc.MsgLTScaleV..Print
+void                 MsgLTScaleV_Print(atf_amc::MsgLTScaleV& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgLTV
 #pragma pack(push,1)
 struct MsgLTV { // atf_amc.MsgLTV
-    u8     len;    //   ssizeof(parent) + (-2)
+    u8     len;    //   ssizeof(parent)-2
     char   type;   //   'V'
     // var-length field atf_amc.MsgLTV.v starts here. access it with v_Addr
     // func:atf_amc.MsgLTV..Ctor
     inline               MsgLTV() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.MsgLTV.base.CopyOut
 void                 parent_CopyOut(atf_amc::MsgLTV &row, atf_amc::MsgHdrLT &out) __attribute__((nothrow));
@@ -7075,7 +9769,6 @@ struct Msgbuf { // atf_amc.Msgbuf
     // func:atf_amc.Msgbuf..CopyCtor
     inline               Msgbuf(const atf_amc::Msgbuf &rhs) = delete;
 };
-
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by atf_amc::Msgbuf.in_buf via FIohook field.
@@ -7117,20 +9810,16 @@ void                 in_buf_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((no
 // func:atf_amc.Msgbuf.in_buf.SkipMsg
 void                 in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:atf_amc.Msgbuf.in_buf.WriteAll
 bool                 in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 // func:atf_amc.Msgbuf.in_buf.WriteReserve
 void                 in_buf_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:atf_amc.Msgbuf.in_buf.XrefMaybe
-bool                 in_buf_XrefMaybe(atf_amc::MsgHeader &row);
 
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
@@ -7141,6 +9830,18 @@ void                 in_custom_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes f
 // Set EOF flag
 // func:atf_amc.Msgbuf.in_custom.EndRead
 void                 in_custom_EndRead(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_custom.GetAlloc
+inline algo::Alloc   in_custom_GetAlloc(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_custom.GetAllocReserve
+inline algo::Alloc   in_custom_GetAllocReserve(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+// func:atf_amc.Msgbuf.in_custom.BeginAlloc
+void*                in_custom_BeginAlloc(atf_amc::Msgbuf &msgbuf, i32 in_n) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+// func:atf_amc.Msgbuf.in_custom.BeginAllocReserve
+void*                in_custom_BeginAllocReserve(atf_amc::Msgbuf &msgbuf, i32 in_n) __attribute__((nothrow));
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
@@ -7183,14 +9884,14 @@ void                 in_custom_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) __attri
 // func:atf_amc.Msgbuf.in_custom.SkipMsg
 void                 in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:atf_amc.Msgbuf.in_custom.WriteAll
 bool                 in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 // func:atf_amc.Msgbuf.in_custom.WriteReserve
 void                 in_custom_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
@@ -7220,14 +9921,14 @@ void                 out_extra_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) __attri
 // func:atf_amc.Msgbuf.out_extra.SkipMsg
 void                 out_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:atf_amc.Msgbuf.out_extra.WriteAll
 bool                 out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 // func:atf_amc.Msgbuf.out_extra.WriteReserve
 void                 out_extra_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write message to buffer. If the entire message is written, return true, otherwise false.
@@ -7263,14 +9964,14 @@ void                 in_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((
 // func:atf_amc.Msgbuf.in_extra.SkipMsg
 void                 in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:atf_amc.Msgbuf.in_extra.WriteAll
 bool                 in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 // func:atf_amc.Msgbuf.in_extra.WriteReserve
 void                 in_extra_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
@@ -7298,7 +9999,6 @@ struct MsgsCase { // atf_amc.MsgsCase: Enum for dispatch atf_amc.Msgs
     inline               MsgsCase(atf_amc_MsgsCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_amc.MsgsCase.value.GetEnum
 inline atf_amc_MsgsCaseEnum value_GetEnum(const atf_amc::MsgsCase& parent) __attribute__((nothrow));
@@ -7340,7 +10040,6 @@ struct NetBitfld1 { // atf_amc.NetBitfld1
     // func:atf_amc.NetBitfld1..Ctor
     inline               NetBitfld1() __attribute__((nothrow));
 };
-
 // func:atf_amc.NetBitfld1.value.Get
 inline u16           value_Get(const atf_amc::NetBitfld1& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:atf_amc.NetBitfld1.value.Set
@@ -7380,7 +10079,347 @@ inline void          NetBitfld1_Init(atf_amc::NetBitfld1& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.NetBitfld1.String  printfmt:Raw
 // func:atf_amc.NetBitfld1..Print
-void                 NetBitfld1_Print(atf_amc::NetBitfld1& row, algo::cstring& str) __attribute__((nothrow));
+void                 NetBitfld1_Print(atf_amc::NetBitfld1 row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.NetEntry
+// create: atf_amc.NetFrame.entry (Varlen)
+#pragma pack(push,1)
+struct NetEntry { // atf_amc.NetEntry: amc fixture: 6-byte big-endian (id,val) entry; varlen element
+    u16   id_be;    //   0
+    u32   val_be;   //   0
+    // func:atf_amc.NetEntry..Ctor
+    inline               NetEntry() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.NetEntry.id.Get
+inline u16           id_Get(const atf_amc::NetEntry& entry) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.NetEntry.id.Set
+inline void          id_Set(atf_amc::NetEntry& entry, u16 rhs) __attribute__((nothrow));
+
+// func:atf_amc.NetEntry.val.Get
+inline u32           val_Get(const atf_amc::NetEntry& entry) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.NetEntry.val.Set
+inline void          val_Set(atf_amc::NetEntry& entry, u32 rhs) __attribute__((nothrow));
+
+// func:atf_amc.NetEntry..ReadFieldMaybe
+bool                 NetEntry_ReadFieldMaybe(atf_amc::NetEntry& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::NetEntry from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.NetEntry..ReadStrptrMaybe
+bool                 NetEntry_ReadStrptrMaybe(atf_amc::NetEntry &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.NetEntry..Init
+inline void          NetEntry_Init(atf_amc::NetEntry& entry);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.NetEntry.String  printfmt:Tuple
+// func:atf_amc.NetEntry..Print
+void                 NetEntry_Print(atf_amc::NetEntry row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.NetFrame
+#pragma pack(push,1)
+struct NetFrame { // atf_amc.NetFrame: amc fixture: Base NetFrameHdr + Varlen NetEntry + String; locks in fbigend+bitfld+lenfld over Base/GetEnum/Init/cursor
+    u32   word_be;   //   0
+    // var-length field atf_amc.NetFrame.entry starts here. access it with entry_Addr
+    // func:atf_amc.NetFrame..Ctor
+    inline               NetFrame() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:atf_amc.NetFrame.base.CopyOut
+void                 parent_CopyOut(atf_amc::NetFrame &row, atf_amc::NetFrameHdr &out) __attribute__((nothrow));
+// Check if atf_amc::NetFrameHdr is an instance of NetFrame by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of NetFrame.
+// If not successful, quietly return NULL.
+// func:atf_amc.NetFrame.base.Castdown
+inline atf_amc::NetFrame* NetFrame_Castdown(atf_amc::NetFrameHdr &hdr);
+// func:atf_amc.NetFrame.base.Castbase
+inline atf_amc::NetFrameHdr& Castbase(atf_amc::NetFrame& parent);
+
+// func:atf_amc.NetFrame.word.Get
+inline u32           word_Get(const atf_amc::NetFrame& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.NetFrame.word.Set
+inline void          word_Set(atf_amc::NetFrame& parent, u32 rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field word
+//    8 bits starting at bit 0.
+//    NOTE: bits correspond to the the integer value of the field.
+//    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetFrame.kind.Get
+inline u8            kind_Get(const atf_amc::NetFrame& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'word'
+//    8 bits starting at bit 0.
+//    NOTE: bits correspond to the integer value of 'word'.
+//    word is stored in memory as big-endian.
+//    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetFrame.kind.Set
+inline void          kind_Set(atf_amc::NetFrame& parent, u8 rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field word
+//    24 bits starting at bit 8.
+//    NOTE: bits correspond to the the integer value of the field.
+//    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetFrame.len.Get
+inline u32           len_Get(const atf_amc::NetFrame& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'word'
+//    24 bits starting at bit 8.
+//    NOTE: bits correspond to the integer value of 'word'.
+//    word is stored in memory as big-endian.
+//    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetFrame.len.Set
+inline void          len_Set(atf_amc::NetFrame& parent, u32 rhs) __attribute__((nothrow));
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.NetFrame.entry.Getary
+algo::aryptr<atf_amc::NetEntry> entry_Getary(atf_amc::NetFrame& parent) __attribute__((nothrow));
+// func:atf_amc.NetFrame.entry.Addr
+atf_amc::NetEntry*   entry_Addr(atf_amc::NetFrame& parent);
+// Return number of elements in varlen field
+// func:atf_amc.NetFrame.entry.N
+inline u32           entry_N(const atf_amc::NetFrame& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:atf_amc.NetFrame.entry.ReadStrptrMaybe
+bool                 entry_ReadStrptrMaybe(atf_amc::NetFrame& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.NetFrame.entry.XrefMaybe
+bool                 entry_XrefMaybe(atf_amc::NetEntry &row);
+
+// func:atf_amc.NetFrame.entry_curs.Reset
+inline void          NetFrame_entry_curs_Reset(NetFrame_entry_curs &curs, atf_amc::NetFrame &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.NetFrame.entry_curs.ValidQ
+inline bool          NetFrame_entry_curs_ValidQ(NetFrame_entry_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.NetFrame.entry_curs.Next
+inline void          NetFrame_entry_curs_Next(NetFrame_entry_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.NetFrame.entry_curs.Access
+inline atf_amc::NetEntry& NetFrame_entry_curs_Access(NetFrame_entry_curs &curs) __attribute__((nothrow));
+// func:atf_amc.NetFrame..ReadFieldMaybe
+bool                 NetFrame_ReadFieldMaybe(atf_amc::NetFrame& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::NetFrame from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.NetFrame..ReadStrptrMaybe
+bool                 NetFrame_ReadStrptrMaybe(atf_amc::NetFrame &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.NetFrame..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::NetFrame& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.NetFrame..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::NetFrame& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.NetFrame..Init
+inline void          NetFrame_Init(atf_amc::NetFrame& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.NetFrame.String  printfmt:Tuple
+// func:atf_amc.NetFrame..Print
+void                 NetFrame_Print(atf_amc::NetFrame& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.NetFrameHdr
+// access: atf_amc.NetFrame.base (Base)
+// access: atf_amc.NetFrameHdr_curs.msg (Ptr)
+#pragma pack(push,1)
+struct NetFrameHdr { // atf_amc.NetFrameHdr: amc fixture: fbigend header word split into kind(enum bitfld) + len(lenfld bitfld)
+    u32   word_be;   //   0
+    // func:atf_amc.NetFrameHdr..Ctor
+    inline               NetFrameHdr() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.NetFrameHdr.word.Get
+inline u32           word_Get(const atf_amc::NetFrameHdr& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.NetFrameHdr.word.Set
+inline void          word_Set(atf_amc::NetFrameHdr& parent, u32 rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field word
+//    8 bits starting at bit 0.
+//    NOTE: bits correspond to the the integer value of the field.
+//    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetFrameHdr.kind.Get
+inline u8            kind_Get(const atf_amc::NetFrameHdr& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'word'
+//    8 bits starting at bit 0.
+//    NOTE: bits correspond to the integer value of 'word'.
+//    word is stored in memory as big-endian.
+//    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetFrameHdr.kind.Set
+inline void          kind_Set(atf_amc::NetFrameHdr& parent, u8 rhs) __attribute__((nothrow));
+// Get value of field as enum type
+// func:atf_amc.NetFrameHdr.kind.GetEnum
+inline atf_amc_NetFrameHdr_kind_Enum kind_GetEnum(const atf_amc::NetFrameHdr& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.NetFrameHdr.kind.SetEnum
+inline void          kind_SetEnum(atf_amc::NetFrameHdr& parent, atf_amc_NetFrameHdr_kind_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.NetFrameHdr.kind.ToCstr
+const char*          kind_ToCstr(const atf_amc::NetFrameHdr& parent) __attribute__((nothrow));
+// Convert kind to a string. First, attempt conversion to a known string.
+// If no string matches, print kind as a numeric value.
+// func:atf_amc.NetFrameHdr.kind.Print
+void                 kind_Print(const atf_amc::NetFrameHdr& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.NetFrameHdr.kind.SetStrptrMaybe
+bool                 kind_SetStrptrMaybe(atf_amc::NetFrameHdr& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.NetFrameHdr.kind.SetStrptr
+void                 kind_SetStrptr(atf_amc::NetFrameHdr& parent, algo::strptr rhs, atf_amc_NetFrameHdr_kind_Enum dflt) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field word
+//    24 bits starting at bit 8.
+//    NOTE: bits correspond to the the integer value of the field.
+//    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetFrameHdr.len.Get
+inline u32           len_Get(const atf_amc::NetFrameHdr& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'word'
+//    24 bits starting at bit 8.
+//    NOTE: bits correspond to the integer value of 'word'.
+//    word is stored in memory as big-endian.
+//    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetFrameHdr.len.Set
+inline void          len_Set(atf_amc::NetFrameHdr& parent, u32 rhs) __attribute__((nothrow));
+
+// Message length (uses length field)
+// func:atf_amc.NetFrameHdr..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::NetFrameHdr& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.NetFrameHdr..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::NetFrameHdr& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.NetFrameHdr..Init
+inline void          NetFrameHdr_Init(atf_amc::NetFrameHdr& parent);
+
+// --- atf_amc.NetFrameHdrMsgsCase
+#pragma pack(push,1)
+struct NetFrameHdrMsgsCase { // atf_amc.NetFrameHdrMsgsCase: Enum for dispatch atf_amc.NetFrameHdrMsgs
+    u32   value;   //   0
+    // func:atf_amc.NetFrameHdrMsgsCase.value.Cast
+    inline               operator atf_amc_NetFrameHdrMsgsCaseEnum() const __attribute__((nothrow));
+    // func:atf_amc.NetFrameHdrMsgsCase..Ctor
+    inline               NetFrameHdrMsgsCase() __attribute__((nothrow));
+    // func:atf_amc.NetFrameHdrMsgsCase..FieldwiseCtor
+    explicit inline               NetFrameHdrMsgsCase(u32 in_value) __attribute__((nothrow));
+    // func:atf_amc.NetFrameHdrMsgsCase..EnumCtor
+    inline               NetFrameHdrMsgsCase(atf_amc_NetFrameHdrMsgsCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:atf_amc.NetFrameHdrMsgsCase.value.GetEnum
+inline atf_amc_NetFrameHdrMsgsCaseEnum value_GetEnum(const atf_amc::NetFrameHdrMsgsCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.NetFrameHdrMsgsCase.value.SetEnum
+inline void          value_SetEnum(atf_amc::NetFrameHdrMsgsCase& parent, atf_amc_NetFrameHdrMsgsCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.NetFrameHdrMsgsCase.value.ToCstr
+const char*          value_ToCstr(const atf_amc::NetFrameHdrMsgsCase& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:atf_amc.NetFrameHdrMsgsCase.value.Print
+void                 value_Print(const atf_amc::NetFrameHdrMsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.NetFrameHdrMsgsCase.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(atf_amc::NetFrameHdrMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.NetFrameHdrMsgsCase.value.SetStrptr
+void                 value_SetStrptr(atf_amc::NetFrameHdrMsgsCase& parent, algo::strptr rhs, atf_amc_NetFrameHdrMsgsCaseEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.NetFrameHdrMsgsCase.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(atf_amc::NetFrameHdrMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of atf_amc::NetFrameHdrMsgsCase from an ascii string.
+// The format of the string is the format of the atf_amc::NetFrameHdrMsgsCase's only field
+// func:atf_amc.NetFrameHdrMsgsCase..ReadStrptrMaybe
+bool                 NetFrameHdrMsgsCase_ReadStrptrMaybe(atf_amc::NetFrameHdrMsgsCase &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.NetFrameHdrMsgsCase..Init
+inline void          NetFrameHdrMsgsCase_Init(atf_amc::NetFrameHdrMsgsCase& parent);
+
+// --- atf_amc.NetFrameHdr_curs
+#pragma pack(push,1)
+struct NetFrameHdr_curs { // atf_amc.NetFrameHdr_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::NetFrameHdr *ChildType;
+    atf_amc::NetFrameHdr*   msg;      // Pointer to current message. optional pointer
+    u8*                     bytes;    // Beginning of region. optional pointer
+    i32                     limit;    //   0  # Of bytes in the region
+    i32                     msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.NetFrameHdr_curs..Ctor
+    inline               NetFrameHdr_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.NetFrameHdr_curs..ValidQ
+inline bool          NetFrameHdr_curs_ValidQ(atf_amc::NetFrameHdr_curs& curs) __attribute__((nothrow));
+// func:atf_amc.NetFrameHdr_curs..Reset
+inline void          NetFrameHdr_curs_Reset(atf_amc::NetFrameHdr_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.NetFrameHdr_curs..Access
+inline atf_amc::NetFrameHdr*& NetFrameHdr_curs_Access(atf_amc::NetFrameHdr_curs& curs) __attribute__((nothrow));
+// func:atf_amc.NetFrameHdr_curs..Next
+inline void          NetFrameHdr_curs_Next(atf_amc::NetFrameHdr_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.NetFrameHdr_curs..Init
+inline void          NetFrameHdr_curs_Init(atf_amc::NetFrameHdr_curs& parent);
+
+// --- atf_amc.NovsStr9
+struct NovsStr9 { // atf_amc.NovsStr9: Case-sensitive plain-compared string: fcmp on the Smallstr field
+    enum { ch_max = 9 };
+    u8 ch[9+1];
+    u8 n_ch;
+
+    // Copy from strptr (operator=)
+    // func:atf_amc.NovsStr9.ch.AssignStrptr
+    inline void          operator =(const algo::strptr &str) __attribute__((nothrow));
+    // func:atf_amc.NovsStr9.ch.CtorStrptr
+    inline               NovsStr9(const algo::strptr &rhs) __attribute__((nothrow));
+    // func:atf_amc.NovsStr9..AssignOp
+    inline atf_amc::NovsStr9& operator =(const atf_amc::NovsStr9 &rhs) __attribute__((nothrow));
+    // func:atf_amc.NovsStr9..Ctor
+    inline               NovsStr9() __attribute__((nothrow));
+    // func:atf_amc.NovsStr9..CopyCtor
+    inline               NovsStr9(const atf_amc::NovsStr9 &rhs) __attribute__((nothrow));
+};
+// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+// func:atf_amc.NovsStr9.ch.Lt
+inline bool          ch_Lt(atf_amc::NovsStr9& parent, atf_amc::NovsStr9 &rhs) __attribute__((nothrow));
+// Compare two fields.
+// func:atf_amc.NovsStr9.ch.Cmp
+i32                  ch_Cmp(atf_amc::NovsStr9& parent, atf_amc::NovsStr9 &rhs) __attribute__((nothrow));
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+// func:atf_amc.NovsStr9.ch.Add
+inline void          ch_Add(atf_amc::NovsStr9& parent, char c) __attribute__((nothrow));
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+// func:atf_amc.NovsStr9.ch.AddStrptr
+inline void          ch_AddStrptr(atf_amc::NovsStr9& parent, algo::strptr str) __attribute__((nothrow));
+// Access string as array of chars
+// func:atf_amc.NovsStr9.ch.Getary
+inline algo::aryptr<char> ch_Getary(const atf_amc::NovsStr9& parent) __attribute__((nothrow));
+// func:atf_amc.NovsStr9.ch.Init
+inline void          ch_Init(atf_amc::NovsStr9 &parent) __attribute__((nothrow));
+// always return constant 9
+// func:atf_amc.NovsStr9.ch.Max
+inline int           ch_Max(atf_amc::NovsStr9& parent) __attribute__((nothrow));
+// func:atf_amc.NovsStr9.ch.N
+inline int           ch_N(const atf_amc::NovsStr9& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.NovsStr9.ch.Print
+void                 ch_Print(atf_amc::NovsStr9& parent, algo::cstring &out) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+// func:atf_amc.NovsStr9.ch.SetStrptr
+void                 ch_SetStrptr(atf_amc::NovsStr9& parent, const algo::strptr& rhs) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.NovsStr9..Init
+inline void          NovsStr9_Init(atf_amc::NovsStr9& parent);
 
 // --- atf_amc.OptAlloc
 // create: atf_amc.FDb.optalloc (Lpool)
@@ -7397,7 +10436,6 @@ private:
     friend void                 optalloc_Delete(atf_amc::OptAlloc &row) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Return pointer to optional last element (NULL if none)
 // The parent's length field is assumed to have already been checked for validity.
 // If the parent's lengthis too short to allow a full-sized typeg, return NULL.
@@ -7449,7 +10487,6 @@ struct OptAlloc_curs { // atf_amc.OptAlloc_curs: Cursor for scanning messages in
     inline               OptAlloc_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.OptAlloc_curs..ValidQ
 inline bool          OptAlloc_curs_ValidQ(atf_amc::OptAlloc_curs& curs) __attribute__((nothrow));
 // func:atf_amc.OptAlloc_curs..Reset
@@ -7461,6 +10498,130 @@ inline void          OptAlloc_curs_Next(atf_amc::OptAlloc_curs& curs) __attribut
 // Set all fields to initial values.
 // func:atf_amc.OptAlloc_curs..Init
 inline void          OptAlloc_curs_Init(atf_amc::OptAlloc_curs& parent);
+
+// --- atf_amc.VarlenB
+// create: atf_amc.OptBMsg.b (Opt)
+// create: atf_amc.VarlenBMsg.b (Varlen)
+// access: atf_amc.VarlenB_curs.msg (Ptr)
+#pragma pack(push,1)
+struct VarlenB { // atf_amc.VarlenB: Varlen element: scaled lenfld over a byte-granular payload
+    u32   length;   //   0  Number of 4-byte varlen words (total = length*4 + 4)
+    // var-length field atf_amc.VarlenB.c starts here. access it with c_Addr
+    // func:atf_amc.VarlenB..Ctor
+    inline               VarlenB() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenB.c.Getary
+algo::aryptr<char>   c_Getary(atf_amc::VarlenB& b) __attribute__((nothrow));
+// func:atf_amc.VarlenB.c.Addr
+char*                c_Addr(atf_amc::VarlenB& b);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenB.c.N
+inline u32           c_N(const atf_amc::VarlenB& b) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:atf_amc.VarlenB.c.ReadStrptrMaybe
+bool                 c_ReadStrptrMaybe(atf_amc::VarlenB& b, algo::strptr in_str) __attribute__((nothrow));
+// Convert c to a string.
+// Array is printed as a regular string.
+// func:atf_amc.VarlenB.c.Print
+void                 c_Print(atf_amc::VarlenB& b, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:atf_amc.VarlenB.c_curs.Reset
+inline void          b_c_curs_Reset(b_c_curs &curs, atf_amc::VarlenB &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenB.c_curs.ValidQ
+inline bool          b_c_curs_ValidQ(b_c_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenB.c_curs.Next
+inline void          b_c_curs_Next(b_c_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenB.c_curs.Access
+inline char&         b_c_curs_Access(b_c_curs &curs) __attribute__((nothrow));
+// func:atf_amc.VarlenB..ReadFieldMaybe
+bool                 VarlenB_ReadFieldMaybe(atf_amc::VarlenB& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenB from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.VarlenB..ReadStrptrMaybe
+bool                 VarlenB_ReadStrptrMaybe(atf_amc::VarlenB &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.VarlenB..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::VarlenB& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.VarlenB..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenB& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenB..Init
+inline void          VarlenB_Init(atf_amc::VarlenB& b);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenB.String  printfmt:Tuple
+// func:atf_amc.VarlenB..Print
+void                 VarlenB_Print(atf_amc::VarlenB& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.OptBMsg
+#pragma pack(push,1)
+struct OptBMsg { // atf_amc.OptBMsg: Message whose optional trailing element has a scaled lenfld
+    atf_amc::MsgType         type;     //   0x1008  Message type
+    atf_amc::MsgLength       length;   //   ssizeof(parent)  Total message length, including this header
+    // atf_amc::VarlenB      b[];                                                                            optional field
+    // func:atf_amc.OptBMsg..Ctor
+    inline               OptBMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:atf_amc.OptBMsg.base.CopyOut
+void                 parent_CopyOut(atf_amc::OptBMsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
+// Check if atf_amc::MsgHeader is an instance of OptBMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of OptBMsg.
+// If not successful, quietly return NULL.
+// func:atf_amc.OptBMsg.base.Castdown
+inline atf_amc::OptBMsg* OptBMsg_Castdown(atf_amc::MsgHeader &hdr);
+// func:atf_amc.OptBMsg.base.Castbase
+inline atf_amc::MsgHeader& Castbase(atf_amc::OptBMsg& parent);
+
+// Return pointer to optional last element (NULL if none)
+// The parent's length field is assumed to have already been checked for validity.
+// If the parent's lengthis too short to allow a full-sized b, return NULL.
+// Since the last element is itself variable-length, two more checks are applied:
+// If b's length field value is too short, return NULL.
+// If b's length field value extends past parent's allowed length, return NULL.
+// func:atf_amc.OptBMsg.b.Get
+inline atf_amc::VarlenB* b_Get(atf_amc::OptBMsg& parent) __attribute__((__warn_unused_result__, nothrow));
+// Access optional portion as an array of bytes
+// func:atf_amc.OptBMsg.b.Getary
+algo::aryptr<u8>     b_Getary(atf_amc::OptBMsg& parent) __attribute__((nothrow));
+// func:atf_amc.OptBMsg.b.Print
+void                 b_Print(atf_amc::OptBMsg& parent, cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.OptBMsg.b.ReadStrptrMaybe
+bool                 b_ReadStrptrMaybe(atf_amc::OptBMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.OptBMsg.b.XrefMaybe
+bool                 b_XrefMaybe(atf_amc::VarlenB &row);
+
+// func:atf_amc.OptBMsg..ReadFieldMaybe
+bool                 OptBMsg_ReadFieldMaybe(atf_amc::OptBMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::OptBMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.OptBMsg..ReadStrptrMaybe
+bool                 OptBMsg_ReadStrptrMaybe(atf_amc::OptBMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.OptBMsg..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::OptBMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.OptBMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::OptBMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.OptBMsg..Init
+inline void          OptBMsg_Init(atf_amc::OptBMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.OptBMsg.String  printfmt:Tuple
+// func:atf_amc.OptBMsg..Print
+void                 OptBMsg_Print(atf_amc::OptBMsg& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.OptG
 // create: atf_amc.OptOptG.optg (Opt)
@@ -7474,7 +10635,6 @@ struct OptG { // atf_amc.OptG: An optional instance of atf_unit.A
     inline               OptG() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Return pointer to optional last element (NULL if none)
 // The parent's length field is assumed to have already been checked for validity.
 // If the parent's lengthis too short to allow a full-sized typeg, return NULL.
@@ -7522,7 +10682,6 @@ struct OptG_curs { // atf_amc.OptG_curs: Cursor for scanning messages in a mempt
     inline               OptG_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.OptG_curs..ValidQ
 inline bool          OptG_curs_ValidQ(atf_amc::OptG_curs& curs) __attribute__((nothrow));
 // func:atf_amc.OptG_curs..Reset
@@ -7545,7 +10704,6 @@ struct OptOptG { // atf_amc.OptOptG: An optional instance of atf_unit.Optg (recu
     inline               OptOptG() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Return pointer to optional last element (NULL if none)
 // The parent's length field is assumed to have already been checked for validity.
 // If the parent's lengthis too short to allow a full-sized optg, return NULL.
@@ -7600,7 +10758,6 @@ struct OptOptG_curs { // atf_amc.OptOptG_curs: Cursor for scanning messages in a
     inline               OptOptG_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.OptOptG_curs..ValidQ
 inline bool          OptOptG_curs_ValidQ(atf_amc::OptOptG_curs& curs) __attribute__((nothrow));
 // func:atf_amc.OptOptG_curs..Reset
@@ -7612,6 +10769,114 @@ inline void          OptOptG_curs_Next(atf_amc::OptOptG_curs& curs) __attribute_
 // Set all fields to initial values.
 // func:atf_amc.OptOptG_curs..Init
 inline void          OptOptG_curs_Init(atf_amc::OptOptG_curs& parent);
+
+// --- atf_amc.OptSigned
+// access: atf_amc.FOptSigned.optsigned (Base)
+// access: atf_amc.OptSigned_curs.msg (Ptr)
+#pragma pack(push,1)
+struct OptSigned { // atf_amc.OptSigned: Optional TypeG behind a signed length word
+    i64                    length;    //   0
+    // atf_amc::TypeG      typeg[];                optional field
+    // func:atf_amc.OptSigned..Ctor
+    inline               OptSigned() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Return pointer to optional last element (NULL if none)
+// The parent's length field is assumed to have already been checked for validity.
+// If the parent's lengthis too short to allow a full-sized typeg, return NULL.
+// func:atf_amc.OptSigned.typeg.Get
+inline atf_amc::TypeG* typeg_Get(atf_amc::OptSigned& parent) __attribute__((__warn_unused_result__, nothrow));
+// Access optional portion as an array of bytes
+// func:atf_amc.OptSigned.typeg.Getary
+algo::aryptr<u8>     typeg_Getary(atf_amc::OptSigned& parent) __attribute__((nothrow));
+
+// Message length (uses length field)
+// func:atf_amc.OptSigned..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::OptSigned& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.OptSigned..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::OptSigned& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.OptSigned..Init
+inline void          OptSigned_Init(atf_amc::OptSigned& parent);
+
+// --- atf_amc.OptSigned_curs
+#pragma pack(push,1)
+struct OptSigned_curs { // atf_amc.OptSigned_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::OptSigned *ChildType;
+    atf_amc::OptSigned*   msg;      // Pointer to current message. optional pointer
+    u8*                   bytes;    // Beginning of region. optional pointer
+    i32                   limit;    //   0  # Of bytes in the region
+    i32                   msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.OptSigned_curs..Ctor
+    inline               OptSigned_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.OptSigned_curs..ValidQ
+inline bool          OptSigned_curs_ValidQ(atf_amc::OptSigned_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptSigned_curs..Reset
+inline void          OptSigned_curs_Reset(atf_amc::OptSigned_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.OptSigned_curs..Access
+inline atf_amc::OptSigned*& OptSigned_curs_Access(atf_amc::OptSigned_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptSigned_curs..Next
+inline void          OptSigned_curs_Next(atf_amc::OptSigned_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.OptSigned_curs..Init
+inline void          OptSigned_curs_Init(atf_amc::OptSigned_curs& parent);
+
+// --- atf_amc.OptWide
+// access: atf_amc.FOptWide.optwide (Base)
+// access: atf_amc.OptWide_curs.msg (Ptr)
+#pragma pack(push,1)
+struct OptWide { // atf_amc.OptWide: Optional TypeG behind a length word wider than u32
+    u64                    length;    //   0
+    // atf_amc::TypeG      typeg[];                optional field
+    // func:atf_amc.OptWide..Ctor
+    inline               OptWide() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Return pointer to optional last element (NULL if none)
+// The parent's length field is assumed to have already been checked for validity.
+// If the parent's lengthis too short to allow a full-sized typeg, return NULL.
+// func:atf_amc.OptWide.typeg.Get
+inline atf_amc::TypeG* typeg_Get(atf_amc::OptWide& parent) __attribute__((__warn_unused_result__, nothrow));
+// Access optional portion as an array of bytes
+// func:atf_amc.OptWide.typeg.Getary
+algo::aryptr<u8>     typeg_Getary(atf_amc::OptWide& parent) __attribute__((nothrow));
+
+// Message length (uses length field)
+// func:atf_amc.OptWide..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::OptWide& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.OptWide..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::OptWide& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.OptWide..Init
+inline void          OptWide_Init(atf_amc::OptWide& parent);
+
+// --- atf_amc.OptWide_curs
+#pragma pack(push,1)
+struct OptWide_curs { // atf_amc.OptWide_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::OptWide *ChildType;
+    atf_amc::OptWide*   msg;      // Pointer to current message. optional pointer
+    u8*                 bytes;    // Beginning of region. optional pointer
+    i32                 limit;    //   0  # Of bytes in the region
+    i32                 msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.OptWide_curs..Ctor
+    inline               OptWide_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.OptWide_curs..ValidQ
+inline bool          OptWide_curs_ValidQ(atf_amc::OptWide_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptWide_curs..Reset
+inline void          OptWide_curs_Reset(atf_amc::OptWide_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.OptWide_curs..Access
+inline atf_amc::OptWide*& OptWide_curs_Access(atf_amc::OptWide_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptWide_curs..Next
+inline void          OptWide_curs_Next(atf_amc::OptWide_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.OptWide_curs..Init
+inline void          OptWide_curs_Init(atf_amc::OptWide_curs& parent);
 
 // --- atf_amc.PmaskMultiple
 #pragma pack(push,1)
@@ -7630,7 +10895,6 @@ struct PmaskMultiple { // atf_amc.PmaskMultiple: Ctype with 3 pmasks. One has an
     inline               PmaskMultiple() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Return constant 1
 // func:atf_amc.PmaskMultiple.present.N
 inline int           present_N(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -8060,7 +11324,6 @@ struct PmaskU128 { // atf_amc.PmaskU128: A field controlled by a bitmask.
     inline               PmaskU128() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Return constant 1
 // func:atf_amc.PmaskU128.pmask.N
 inline int           pmask_N(atf_amc::PmaskU128& parent) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -8111,6 +11374,9 @@ inline void          pmask_ClearBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU
 // (This function is not named Set.. to avoid triple entendre).
 // func:atf_amc.PmaskU128.pmask.OrBits
 inline void          pmask_OrBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU128 &rhs) __attribute__((nothrow));
+// Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.PmaskU128.pmask.Sup
+inline i32           pmask_Sup(atf_amc::PmaskU128& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if the field is marked in the presence mask
 // func:atf_amc.PmaskU128.value.PresentQ
@@ -8991,7 +12257,6 @@ struct PmaskU32 { // atf_amc.PmaskU32: A field controlled by a bitmask.
     inline               PmaskU32() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Return constant 1
 // func:atf_amc.PmaskU32.pmask.N
 inline int           pmask_N(atf_amc::PmaskU32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -9129,7 +12394,6 @@ struct PmaskU555 { // atf_amc.PmaskU555: Check pmask with 555 bits
     inline               PmaskU555() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Return true if the field is marked in the presence mask
 // func:atf_amc.PmaskU555.value.PresentQ
 inline bool          value_PresentQ(atf_amc::PmaskU555& parent) __attribute__((nothrow));
@@ -9245,7 +12509,6 @@ private:
     friend atf_amc::PooledBE64* pooledbe64_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 pooledbe64_Delete(atf_amc::PooledBE64 &row) __attribute__((nothrow));
 };
-
 // func:atf_amc.PooledBE64.value.Get
 inline u64           value_Get(const atf_amc::PooledBE64& pooledbe64) __attribute__((__warn_unused_result__, nothrow));
 // func:atf_amc.PooledBE64.value.Set
@@ -9289,7 +12552,7 @@ bool                 PooledBE64_ReadStrptrMaybe(atf_amc::PooledBE64 &parent, alg
 // print string representation of ROW to string STR
 // cfmt:atf_amc.PooledBE64.String  printfmt:Tuple
 // func:atf_amc.PooledBE64..Print
-void                 PooledBE64_Print(atf_amc::PooledBE64& row, algo::cstring& str) __attribute__((nothrow));
+void                 PooledBE64_Print(atf_amc::PooledBE64 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.RnullStr6_U32
 struct RnullStr6_U32 { // atf_amc.RnullStr6_U32: number stored as ascii digits, right pad with NUL
@@ -9321,7 +12584,6 @@ struct RnullStr6_U32 { // atf_amc.RnullStr6_U32: number stored as ascii digits, 
     // func:atf_amc.RnullStr6_U32..CopyCtor
     inline               RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs) __attribute__((nothrow));
 };
-
 // Access string as array of chars
 // func:atf_amc.RnullStr6_U32.ch.Getary
 inline algo::aryptr<char> ch_Getary(const atf_amc::RnullStr6_U32& parent) __attribute__((nothrow));
@@ -9359,7 +12621,8 @@ u32                  ch_GetnumDflt(atf_amc::RnullStr6_U32& parent, u32 dflt) __a
 // func:atf_amc.RnullStr6_U32.ch.Geti64
 i64                  ch_Geti64(atf_amc::RnullStr6_U32& parent, bool &out_ok) __attribute__((nothrow));
 // Set string to number specified in RHS performing base-10 conversion.
-// If the number is too large for the string, return false.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
 // func:atf_amc.RnullStr6_U32.ch.SetnumMaybe
 bool                 ch_SetnumMaybe(atf_amc::RnullStr6_U32& parent, i64 rhs) __attribute__((nothrow));
 
@@ -9418,7 +12681,6 @@ struct RpasU32Str6 { // atf_amc.RpasU32Str6: number stored as ascii digits, righ
     // func:atf_amc.RpasU32Str6..CopyCtor
     inline               RpasU32Str6(const atf_amc::RpasU32Str6 &rhs) __attribute__((nothrow));
 };
-
 // Append character to string.
 // If there is no space for an extra character, do nothing.
 // func:atf_amc.RpasU32Str6.ch.Add
@@ -9465,7 +12727,8 @@ u32                  ch_GetnumDflt(atf_amc::RpasU32Str6& parent, u32 dflt) __att
 // func:atf_amc.RpasU32Str6.ch.Geti64
 i64                  ch_Geti64(atf_amc::RpasU32Str6& parent, bool &out_ok) __attribute__((nothrow));
 // Set string to number specified in RHS performing base-10 conversion.
-// If the number is too large for the string, return false.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
 // func:atf_amc.RpasU32Str6.ch.SetnumMaybe
 bool                 ch_SetnumMaybe(atf_amc::RpasU32Str6& parent, i64 rhs) __attribute__((nothrow));
 
@@ -9492,6 +12755,87 @@ inline bool          RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::Rpas
 // func:atf_amc.RpasU32Str6..Print
 void                 RpasU32Str6_Print(atf_amc::RpasU32Str6& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- atf_amc.RspaceStr9
+struct RspaceStr9 { // atf_amc.RspaceStr9: Version-sorted right-space-padded string: fcmp on a padded Smallstr field
+    enum { ch_max = 9 };
+    u8 ch[9];
+    // Copy from strptr (operator=)
+    // func:atf_amc.RspaceStr9.ch.AssignStrptr
+    inline void          operator =(const algo::strptr &str) __attribute__((nothrow));
+    // func:atf_amc.RspaceStr9.ch.CtorStrptr
+    inline               RspaceStr9(const algo::strptr &rhs) __attribute__((nothrow));
+    // func:atf_amc.RspaceStr9..AssignOp
+    inline atf_amc::RspaceStr9& operator =(const atf_amc::RspaceStr9 &rhs) __attribute__((nothrow));
+    // func:atf_amc.RspaceStr9..Ctor
+    inline               RspaceStr9() __attribute__((nothrow));
+    // func:atf_amc.RspaceStr9..CopyCtor
+    inline               RspaceStr9(const atf_amc::RspaceStr9 &rhs) __attribute__((nothrow));
+};
+// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+// func:atf_amc.RspaceStr9.ch.Lt
+inline bool          ch_Lt(atf_amc::RspaceStr9& parent, atf_amc::RspaceStr9 &rhs) __attribute__((nothrow));
+// Compare two fields.
+// Comparison uses version sort (detect embedded integers).
+// func:atf_amc.RspaceStr9.ch.Cmp
+i32                  ch_Cmp(atf_amc::RspaceStr9& parent, atf_amc::RspaceStr9 &rhs) __attribute__((nothrow));
+// Access string as array of chars
+// func:atf_amc.RspaceStr9.ch.Getary
+inline algo::aryptr<char> ch_Getary(const atf_amc::RspaceStr9& parent) __attribute__((nothrow));
+// func:atf_amc.RspaceStr9.ch.Init
+inline void          ch_Init(atf_amc::RspaceStr9 &parent) __attribute__((nothrow));
+// always return constant 9
+// func:atf_amc.RspaceStr9.ch.Max
+inline int           ch_Max(atf_amc::RspaceStr9& parent) __attribute__((nothrow));
+// func:atf_amc.RspaceStr9.ch.N
+inline int           ch_N(const atf_amc::RspaceStr9& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.RspaceStr9.ch.Print
+void                 ch_Print(atf_amc::RspaceStr9& parent, algo::cstring &out) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+// func:atf_amc.RspaceStr9.ch.SetStrptr
+void                 ch_SetStrptr(atf_amc::RspaceStr9& parent, const algo::strptr& rhs) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.RspaceStr9..Init
+inline void          RspaceStr9_Init(atf_amc::RspaceStr9& parent);
+
+// --- atf_amc.SentinelEnum
+struct SentinelEnum { // atf_amc.SentinelEnum: Enum whose zero-length-named fconst is the sentinel member
+    u8   value;   //   0
+    // func:atf_amc.SentinelEnum..Ctor
+    inline               SentinelEnum() __attribute__((nothrow));
+    // func:atf_amc.SentinelEnum..EnumCtor
+    inline               SentinelEnum(atf_amc_SentinelEnum_value_Enum arg) __attribute__((nothrow));
+};
+// Get value of field as enum type
+// func:atf_amc.SentinelEnum.value.GetEnum
+inline atf_amc_SentinelEnum_value_Enum value_GetEnum(const atf_amc::SentinelEnum& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.SentinelEnum.value.SetEnum
+inline void          value_SetEnum(atf_amc::SentinelEnum& parent, atf_amc_SentinelEnum_value_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.SentinelEnum.value.ToCstr
+const char*          value_ToCstr(const atf_amc::SentinelEnum& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:atf_amc.SentinelEnum.value.Print
+void                 value_Print(const atf_amc::SentinelEnum& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.SentinelEnum.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(atf_amc::SentinelEnum& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.SentinelEnum.value.SetStrptr
+void                 value_SetStrptr(atf_amc::SentinelEnum& parent, algo::strptr rhs, atf_amc_SentinelEnum_value_Enum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.SentinelEnum..Init
+inline void          SentinelEnum_Init(atf_amc::SentinelEnum& parent);
+
 // --- atf_amc.Sep1
 struct Sep1 { // atf_amc.Sep1: Check printing/reading of types with separators
     u32   val1;   //   0
@@ -9514,9 +12858,8 @@ struct Sep1 { // atf_amc.Sep1: Check printing/reading of types with separators
     // func:atf_amc.Sep1..FieldwiseCtor
     explicit inline               Sep1(u32 in_val1, u32 in_val2, u32 in_val3) __attribute__((nothrow));
 };
-
 // func:atf_amc.Sep1..Hash
-inline u32           Sep1_Hash(u32 prev, const atf_amc::Sep1& rhs) __attribute__((nothrow));
+inline u32           Sep1_Hash(u32 prev, atf_amc::Sep1 rhs) __attribute__((nothrow));
 // func:atf_amc.Sep1..ReadFieldMaybe
 bool                 Sep1_ReadFieldMaybe(atf_amc::Sep1& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::Sep1 from an ascii string.
@@ -9524,33 +12867,32 @@ bool                 Sep1_ReadFieldMaybe(atf_amc::Sep1& parent, algo::strptr fie
 // func:atf_amc.Sep1..ReadStrptrMaybe
 bool                 Sep1_ReadStrptrMaybe(atf_amc::Sep1 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_amc.Sep1..Lt
-inline bool          Sep1_Lt(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) __attribute__((nothrow));
+inline bool          Sep1_Lt(atf_amc::Sep1 lhs, atf_amc::Sep1 rhs) __attribute__((nothrow));
 // func:atf_amc.Sep1..Cmp
-inline i32           Sep1_Cmp(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) __attribute__((nothrow));
+inline i32           Sep1_Cmp(atf_amc::Sep1 lhs, atf_amc::Sep1 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.Sep1..Init
 inline void          Sep1_Init(atf_amc::Sep1& parent);
 // func:atf_amc.Sep1..Eq
-inline bool          Sep1_Eq(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) __attribute__((nothrow));
+inline bool          Sep1_Eq(atf_amc::Sep1 lhs, atf_amc::Sep1 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_amc.Sep1..Update
-inline bool          Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1& rhs) __attribute__((nothrow));
+inline bool          Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1 rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Sep1.String  printfmt:Sep
 // func:atf_amc.Sep1..Print
-void                 Sep1_Print(atf_amc::Sep1& row, algo::cstring& str) __attribute__((nothrow));
+void                 Sep1_Print(atf_amc::Sep1 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Seqmsg
 #pragma pack(push,1)
 struct Seqmsg { // atf_amc.Seqmsg: Sequenced message for stream
     atf_amc::MsgType           type;        //   0x0905  Message type
-    atf_amc::MsgLength         length;      //   ssizeof(parent) + (0)  Total message length, including this header
-    // atf_amc::MsgHeader      payload[];                                                                               optional field
+    atf_amc::MsgLength         length;      //   ssizeof(parent)  Total message length, including this header
+    // atf_amc::MsgHeader      payload[];                                                                         optional field
     // func:atf_amc.Seqmsg..Ctor
     inline               Seqmsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.Seqmsg.msghdr.CopyOut
 void                 parent_CopyOut(atf_amc::Seqmsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
@@ -9622,7 +12964,6 @@ struct SortedStr { // atf_amc.SortedStr
     // func:atf_amc.SortedStr..FieldwiseCtor
     explicit inline               SortedStr(const algo::strptr& in_novs, const algo::strptr& in_vs) __attribute__((nothrow));
 };
-
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:atf_amc.SortedStr.novs.Lt
 inline bool          novs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) __attribute__((nothrow));
@@ -9635,7 +12976,6 @@ inline i32           novs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rh
 inline bool          vs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) __attribute__((nothrow));
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
-// Comparison is case-insensitive.
 // func:atf_amc.SortedStr.vs.Cmp
 i32                  vs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) __attribute__((nothrow));
 
@@ -9663,7 +13003,6 @@ struct SsimfilesCase { // atf_amc.SsimfilesCase: Enum for dispatch atf_amc.Ssimf
     inline               SsimfilesCase(atf_amc_SsimfilesCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_amc.SsimfilesCase.value.GetEnum
 inline atf_amc_SsimfilesCaseEnum value_GetEnum(const atf_amc::SsimfilesCase& parent) __attribute__((nothrow));
@@ -9699,6 +13038,105 @@ bool                 SsimfilesCase_ReadStrptrMaybe(atf_amc::SsimfilesCase &paren
 // func:atf_amc.SsimfilesCase..Init
 inline void          SsimfilesCase_Init(atf_amc::SsimfilesCase& parent);
 
+// --- atf_amc.Sslbuf
+// create: atf_amc.FDb.sslbuf (Cppstack)
+// global access: cd_sslbuf_out (Llist)
+struct Sslbuf { // atf_amc.Sslbuf: TLS write-buffer fixture
+    atf_amc::Sslbuf*    cd_sslbuf_out_next;   // zslist link; -1 means not-in-list
+    atf_amc::Sslbuf*    cd_sslbuf_out_prev;   // previous element
+    u8*                 out_elems;            //   NULL  pointer to elements of indirect array
+    u32                 out_max;              //   0  current length of allocated array
+    i32                 out_start;            // beginning of valid bytes (in bytes)
+    i32                 out_end;              // end of valid bytes (in bytes)
+    i32                 out_msglen;           // current message length
+    algo::Errcode       out_err;              // system error code
+    SSL*                out_ssl;              // TLS connection
+    algo_lib::FIohook   out_iohook;           // edge-triggered hook for the buffer
+    u64                 out_n_eagain;         // eagain counter
+    bool                out_eof;              // no more data will be written to buffer
+    bool                out_msgvalid;         // current message is valid
+    bool                out_epoll_enable;     // use epoll?
+    bool                out_zerocopy;         // support zero-copy optimization
+    // field atf_amc.Sslbuf.out prevents copy
+    // func:atf_amc.Sslbuf..AssignOp
+    inline atf_amc::Sslbuf& operator =(const atf_amc::Sslbuf &rhs) = delete;
+    // func:atf_amc.Sslbuf..Ctor
+    inline               Sslbuf() __attribute__((nothrow));
+    // func:atf_amc.Sslbuf..Dtor
+    inline               ~Sslbuf() __attribute__((nothrow));
+    // field atf_amc.Sslbuf.out prevents copy
+    // func:atf_amc.Sslbuf..CopyCtor
+    inline               Sslbuf(const atf_amc::Sslbuf &rhs) = delete;
+};
+// func:atf_amc.Sslbuf.out.GetAlloc
+inline algo::Alloc   out_GetAlloc(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
+// func:atf_amc.Sslbuf.out.GetAllocReserve
+inline algo::Alloc   out_GetAllocReserve(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
+// Send zero-byte write
+// func:atf_amc.Sslbuf.out.EndWrite
+void                 out_EndWrite(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+// func:atf_amc.Sslbuf.out.BeginAlloc
+void*                out_BeginAlloc(atf_amc::Sslbuf &sslbuf, i32 in_n) __attribute__((nothrow));
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+// func:atf_amc.Sslbuf.out.BeginAllocReserve
+void*                out_BeginAllocReserve(atf_amc::Sslbuf &sslbuf, i32 in_n) __attribute__((nothrow));
+// Attach fbuf to Iohook for writing
+// Attach file descriptor and begin outflowing buffer reading using edge-triggered epoll.
+// Whenever buffer is non-empty and fd is writable, insert sslbuf into cd_sslbuf_out.
+// User should implement a step function that calls out_Outflow.
+// func:atf_amc.Sslbuf.out.BeginWrite
+void                 out_BeginWrite(atf_amc::Sslbuf& sslbuf, algo::Fildes fd, bool nodelete) __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+// func:atf_amc.Sslbuf.out.Realloc
+void                 out_Realloc(atf_amc::Sslbuf& sslbuf, int new_max) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+// func:atf_amc.Sslbuf.out.Max
+inline i32           out_Max(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
+// Return number of bytes in the buffer.
+// func:atf_amc.Sslbuf.out.N
+inline i32           out_N(atf_amc::Sslbuf& sslbuf) __attribute__((__warn_unused_result__, nothrow, pure));
+// Transfer bytes from buffer to fd using write()
+// Once all bytes are written or when fd buffer is full, buffer is automatically removed from cd_sslbuf_out list.
+// Edge-triggered epoll will re-insert out into cd_sslbuf_out.
+// func:atf_amc.Sslbuf.out.Outflow
+bool                 out_Outflow(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
+// Empty bfufer
+// Discard contents of the buffer.
+// func:atf_amc.Sslbuf.out.RemoveAll
+void                 out_RemoveAll(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+//
+// func:atf_amc.Sslbuf.out.SkipBytes
+void                 out_SkipBytes(atf_amc::Sslbuf& sslbuf, int n) __attribute__((nothrow));
+// Skip current message, if any
+// Skip current message, if any.
+// func:atf_amc.Sslbuf.out.SkipMsg
+void                 out_SkipMsg(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+// func:atf_amc.Sslbuf.out.WriteAll
+bool                 out_WriteAll(atf_amc::Sslbuf& sslbuf, u8 *in, i32 in_n) __attribute__((nothrow));
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+// func:atf_amc.Sslbuf.out.WriteReserve
+void                 out_WriteReserve(atf_amc::Sslbuf& sslbuf, u8 *in, i32 in_n) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.Sslbuf..Init
+void                 Sslbuf_Init(atf_amc::Sslbuf& sslbuf);
+// func:atf_amc.Sslbuf..Uninit
+void                 Sslbuf_Uninit(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
+
 // --- atf_amc.Strkey
 // create: atf_amc.FDb.strkey (Tpool)
 // global access: ind_strkey (Thash, hash field strkey)
@@ -9720,7 +13158,6 @@ private:
     friend atf_amc::Strkey*     strkey_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 strkey_Delete(atf_amc::Strkey &row) __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:atf_amc.Strkey..Init
 inline void          Strkey_Init(atf_amc::Strkey& strkey);
@@ -9739,7 +13176,6 @@ struct TableId { // atf_amc.TableId: Index of table in this namespace
     // func:atf_amc.TableId..EnumCtor
     inline               TableId(atf_amc_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:atf_amc.TableId.value.GetEnum
 inline atf_amc_TableIdEnum value_GetEnum(const atf_amc::TableId& parent) __attribute__((nothrow));
@@ -9777,13 +13213,13 @@ inline void          TableId_Init(atf_amc::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TableId.String  printfmt:Raw
 // func:atf_amc.TableId..Print
-void                 TableId_Print(atf_amc::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(atf_amc::TableId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TaryU32
 struct TaryU32 { // atf_amc.TaryU32
     u32*   tary_u32_elems;   // pointer to elements
-    u32    tary_u32_n;       // number of elements in array
-    u32    tary_u32_max;     // max. capacity of array before realloc
+    u64    tary_u32_n;       // number of elements in array
+    u64    tary_u32_max;     // max. capacity of array before realloc
     // Copy from aryptr (operator=)
     // func:atf_amc.TaryU32.tary_u32.AssignAryptr
     inline void          operator =(const algo::aryptr<u32> &rhs) __attribute__((nothrow));
@@ -9798,7 +13234,6 @@ struct TaryU32 { // atf_amc.TaryU32
     // func:atf_amc.TaryU32..CopyCtor
     TaryU32(const atf_amc::TaryU32 &rhs) __attribute__((nothrow));
 };
-
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
@@ -9811,15 +13246,15 @@ u32&                 tary_u32_Alloc(atf_amc::TaryU32& parent) __attribute__((__w
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.TaryU32.tary_u32.AllocAt
-u32&                 tary_u32_AllocAt(atf_amc::TaryU32& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+u32&                 tary_u32_AllocAt(atf_amc::TaryU32& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.TaryU32.tary_u32.AllocN
-algo::aryptr<u32>    tary_u32_AllocN(atf_amc::TaryU32& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u32>    tary_u32_AllocN(atf_amc::TaryU32& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.TaryU32.tary_u32.AllocNAt
-algo::aryptr<u32>    tary_u32_AllocNAt(atf_amc::TaryU32& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u32>    tary_u32_AllocNAt(atf_amc::TaryU32& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_amc.TaryU32.tary_u32.EmptyQ
 inline bool          tary_u32_EmptyQ(atf_amc::TaryU32& parent) __attribute__((nothrow));
@@ -9834,13 +13269,13 @@ inline algo::aryptr<u32> tary_u32_Getary(const atf_amc::TaryU32& parent) __attri
 inline u32*          tary_u32_Last(atf_amc::TaryU32& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:atf_amc.TaryU32.tary_u32.Max
-inline i32           tary_u32_Max(atf_amc::TaryU32& parent) __attribute__((nothrow));
+inline i64           tary_u32_Max(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_amc.TaryU32.tary_u32.N
-inline i32           tary_u32_N(const atf_amc::TaryU32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           tary_u32_N(const atf_amc::TaryU32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:atf_amc.TaryU32.tary_u32.Remove
-void                 tary_u32_Remove(atf_amc::TaryU32& parent, u32 i) __attribute__((nothrow));
+void                 tary_u32_Remove(atf_amc::TaryU32& parent, u64 i) __attribute__((nothrow));
 // func:atf_amc.TaryU32.tary_u32.RemoveAll
 inline void          tary_u32_RemoveAll(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -9848,10 +13283,10 @@ inline void          tary_u32_RemoveAll(atf_amc::TaryU32& parent) __attribute__(
 void                 tary_u32_RemoveLast(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:atf_amc.TaryU32.tary_u32.Reserve
-inline void          tary_u32_Reserve(atf_amc::TaryU32& parent, int n) __attribute__((nothrow));
+inline void          tary_u32_Reserve(atf_amc::TaryU32& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:atf_amc.TaryU32.tary_u32.AbsReserve
-void                 tary_u32_AbsReserve(atf_amc::TaryU32& parent, int n) __attribute__((nothrow));
+void                 tary_u32_AbsReserve(atf_amc::TaryU32& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:atf_amc.TaryU32.tary_u32.Setary
 void                 tary_u32_Setary(atf_amc::TaryU32& parent, atf_amc::TaryU32 &rhs) __attribute__((nothrow));
@@ -9870,7 +13305,7 @@ inline u32&          tary_u32_qLast(atf_amc::TaryU32& parent) __attribute__((not
 inline u64           tary_u32_rowid_Get(atf_amc::TaryU32& parent, u32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.TaryU32.tary_u32.AllocNVal
-algo::aryptr<u32>    tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_elems, const u32& val) __attribute__((nothrow));
+algo::aryptr<u32>    tary_u32_AllocNVal(atf_amc::TaryU32& parent, i64 n_elems, const u32& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -9879,7 +13314,13 @@ bool                 tary_u32_ReadStrptrMaybe(atf_amc::TaryU32& parent, algo::st
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:atf_amc.TaryU32.tary_u32.Insary
-void                 tary_u32_Insary(atf_amc::TaryU32& parent, algo::aryptr<u32> rhs, int at) __attribute__((nothrow));
+void                 tary_u32_Insary(atf_amc::TaryU32& parent, algo::aryptr<u32> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:atf_amc.TaryU32.tary_u32.RemRegion
+void                 tary_u32_RemRegion(atf_amc::TaryU32& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:atf_amc.TaryU32.tary_u32_curs.Next
@@ -9901,8 +13342,8 @@ void                 TaryU32_Uninit(atf_amc::TaryU32& parent) __attribute__((not
 // --- atf_amc.TaryU8
 struct TaryU8 { // atf_amc.TaryU8
     u8*   ary_elems;   // pointer to elements
-    u32   ary_n;       // number of elements in array
-    u32   ary_max;     // max. capacity of array before realloc
+    u64   ary_n;       // number of elements in array
+    u64   ary_max;     // max. capacity of array before realloc
     // Copy from aryptr (operator=)
     // func:atf_amc.TaryU8.ary.AssignAryptr
     inline void          operator =(const algo::aryptr<u8> &rhs) __attribute__((nothrow));
@@ -9917,7 +13358,14 @@ struct TaryU8 { // atf_amc.TaryU8
     // func:atf_amc.TaryU8..CopyCtor
     TaryU8(const atf_amc::TaryU8 &rhs) __attribute__((nothrow));
 };
-
+// func:atf_amc.TaryU8.ary.GetAlloc
+inline algo::Alloc   ary_GetAlloc(atf_amc::TaryU8& parent) __attribute__((nothrow));
+// func:atf_amc.TaryU8.ary.GetAllocAppend
+inline algo::Alloc   ary_GetAllocAppend(atf_amc::TaryU8& parent) __attribute__((nothrow));
+// func:atf_amc.TaryU8.ary.BeginAlloc
+void*                ary_BeginAlloc(atf_amc::TaryU8 &parent, i64 len) __attribute__((nothrow));
+// func:atf_amc.TaryU8.ary.BeginAllocAppend
+void*                ary_BeginAllocAppend(atf_amc::TaryU8 &parent, i64 len) __attribute__((nothrow));
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
@@ -9930,15 +13378,15 @@ u8&                  ary_Alloc(atf_amc::TaryU8& parent) __attribute__((__warn_un
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.TaryU8.ary.AllocAt
-u8&                  ary_AllocAt(atf_amc::TaryU8& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+u8&                  ary_AllocAt(atf_amc::TaryU8& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.TaryU8.ary.AllocN
-algo::aryptr<u8>     ary_AllocN(atf_amc::TaryU8& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u8>     ary_AllocN(atf_amc::TaryU8& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:atf_amc.TaryU8.ary.AllocNAt
-algo::aryptr<u8>     ary_AllocNAt(atf_amc::TaryU8& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u8>     ary_AllocNAt(atf_amc::TaryU8& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_amc.TaryU8.ary.EmptyQ
 inline bool          ary_EmptyQ(atf_amc::TaryU8& parent) __attribute__((nothrow));
@@ -9953,13 +13401,13 @@ inline algo::aryptr<u8> ary_Getary(const atf_amc::TaryU8& parent) __attribute__(
 inline u8*           ary_Last(atf_amc::TaryU8& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:atf_amc.TaryU8.ary.Max
-inline i32           ary_Max(atf_amc::TaryU8& parent) __attribute__((nothrow));
+inline i64           ary_Max(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_amc.TaryU8.ary.N
-inline i32           ary_N(const atf_amc::TaryU8& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ary_N(const atf_amc::TaryU8& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:atf_amc.TaryU8.ary.Remove
-void                 ary_Remove(atf_amc::TaryU8& parent, u32 i) __attribute__((nothrow));
+void                 ary_Remove(atf_amc::TaryU8& parent, u64 i) __attribute__((nothrow));
 // func:atf_amc.TaryU8.ary.RemoveAll
 inline void          ary_RemoveAll(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -9967,10 +13415,10 @@ inline void          ary_RemoveAll(atf_amc::TaryU8& parent) __attribute__((nothr
 void                 ary_RemoveLast(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:atf_amc.TaryU8.ary.Reserve
-inline void          ary_Reserve(atf_amc::TaryU8& parent, int n) __attribute__((nothrow));
+inline void          ary_Reserve(atf_amc::TaryU8& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:atf_amc.TaryU8.ary.AbsReserve
-void                 ary_AbsReserve(atf_amc::TaryU8& parent, int n) __attribute__((nothrow));
+void                 ary_AbsReserve(atf_amc::TaryU8& parent, i64 n) __attribute__((nothrow));
 // Convert ary to a string.
 // Array is printed as a regular string.
 // func:atf_amc.TaryU8.ary.Print
@@ -9993,14 +13441,20 @@ inline u8&           ary_qLast(atf_amc::TaryU8& parent) __attribute__((nothrow))
 inline u64           ary_rowid_Get(atf_amc::TaryU8& parent, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_amc.TaryU8.ary.AllocNVal
-algo::aryptr<u8>     ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, const u8& val) __attribute__((nothrow));
+algo::aryptr<u8>     ary_AllocNVal(atf_amc::TaryU8& parent, i64 n_elems, const u8& val) __attribute__((nothrow));
 // The array is replaced with the input string. Function always succeeds.
 // func:atf_amc.TaryU8.ary.ReadStrptrMaybe
 bool                 ary_ReadStrptrMaybe(atf_amc::TaryU8& parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:atf_amc.TaryU8.ary.Insary
-void                 ary_Insary(atf_amc::TaryU8& parent, algo::aryptr<u8> rhs, int at) __attribute__((nothrow));
+void                 ary_Insary(atf_amc::TaryU8& parent, algo::aryptr<u8> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:atf_amc.TaryU8.ary.RemRegion
+void                 ary_RemRegion(atf_amc::TaryU8& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:atf_amc.TaryU8.ary_curs.Next
@@ -10025,7 +13479,6 @@ struct TestRegx1 { // atf_amc.TestRegx1: Test automatic reading of Regx
     // func:atf_amc.TestRegx1..Ctor
     inline               TestRegx1() __attribute__((nothrow));
 };
-
 // Print back to string
 // func:atf_amc.TestRegx1.val.Print
 void                 val_Print(atf_amc::TestRegx1& parent, algo::cstring &out) __attribute__((nothrow));
@@ -10050,7 +13503,6 @@ struct TestType { // atf_amc.TestType
     // func:atf_amc.TestType..Ctor
     inline               TestType() __attribute__((nothrow));
 };
-
 // Read fields of atf_amc::TestType from an ascii string.
 // func:atf_amc.TestType..ReadStrptrMaybe
 bool                 TestType_ReadStrptrMaybe(atf_amc::TestType &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -10063,13 +13515,12 @@ void                 TestType_Print(atf_amc::TestType& row, algo::cstring& str) 
 #pragma pack(push,1)
 struct Text { // atf_amc.Text
     atf_amc::MsgType     type;     //   0x0412  Message type
-    atf_amc::MsgLength   length;   //   ssizeof(parent) + (0)  Total message length, including this header
+    atf_amc::MsgLength   length;   //   ssizeof(parent)  Total message length, including this header
     // var-length field atf_amc.Text.text starts here. access it with text_Addr
     // func:atf_amc.Text..Ctor
     inline               Text() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.Text.msghdr.CopyOut
 void                 parent_CopyOut(atf_amc::Text &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
@@ -10150,9 +13601,8 @@ struct TypeB { // atf_amc.TypeB
     // func:atf_amc.TypeB..Ctor
     inline               TypeB() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeB..Hash
-inline u32           TypeB_Hash(u32 prev, const atf_amc::TypeB& rhs) __attribute__((nothrow));
+inline u32           TypeB_Hash(u32 prev, atf_amc::TypeB rhs) __attribute__((nothrow));
 // func:atf_amc.TypeB..ReadFieldMaybe
 bool                 TypeB_ReadFieldMaybe(atf_amc::TypeB& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeB from an ascii string.
@@ -10160,25 +13610,25 @@ bool                 TypeB_ReadFieldMaybe(atf_amc::TypeB& parent, algo::strptr f
 // func:atf_amc.TypeB..ReadStrptrMaybe
 bool                 TypeB_ReadStrptrMaybe(atf_amc::TypeB &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_amc.TypeB..Lt
-inline bool          TypeB_Lt(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) __attribute__((nothrow));
+inline bool          TypeB_Lt(atf_amc::TypeB lhs, atf_amc::TypeB rhs) __attribute__((nothrow));
 // func:atf_amc.TypeB..Cmp
-inline i32           TypeB_Cmp(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) __attribute__((nothrow));
+inline i32           TypeB_Cmp(atf_amc::TypeB lhs, atf_amc::TypeB rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.TypeB..Init
 inline void          TypeB_Init(atf_amc::TypeB& parent);
 // func:atf_amc.TypeB..Eq
-inline bool          TypeB_Eq(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) __attribute__((nothrow));
+inline bool          TypeB_Eq(atf_amc::TypeB lhs, atf_amc::TypeB rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_amc.TypeB..Update
-inline bool          TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB& rhs) __attribute__((nothrow));
+inline bool          TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB rhs) __attribute__((nothrow));
 // Create JSON representation of atf_amc::TypeB under PARENT node
 // cfmt:atf_amc.TypeB.Json  printfmt:Auto
 // func:atf_amc.TypeB..FmtJson
-lib_json::FNode *    TypeB_FmtJson(atf_amc::TypeB& row, lib_json::FNode *parent) __attribute__((nothrow));
+lib_json::FNode *    TypeB_FmtJson(atf_amc::TypeB row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeB.String  printfmt:Tuple
 // func:atf_amc.TypeB..Print
-void                 TypeB_Print(atf_amc::TypeB& row, algo::cstring& str) __attribute__((nothrow));
+void                 TypeB_Print(atf_amc::TypeB row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeBE16
 struct TypeBE16 { // atf_amc.TypeBE16
@@ -10186,7 +13636,6 @@ struct TypeBE16 { // atf_amc.TypeBE16
     // func:atf_amc.TypeBE16..Ctor
     inline               TypeBE16() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeBE16.value.Get
 inline u16           value_Get(const atf_amc::TypeBE16& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:atf_amc.TypeBE16.value.Set
@@ -10202,7 +13651,6 @@ struct TypeBE32 { // atf_amc.TypeBE32
     // func:atf_amc.TypeBE32..Ctor
     inline               TypeBE32() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeBE32.value.Get
 inline u32           value_Get(const atf_amc::TypeBE32& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:atf_amc.TypeBE32.value.Set
@@ -10224,7 +13672,6 @@ struct TypeBE32en { // atf_amc.TypeBE32en
     // func:atf_amc.TypeBE32en..EnumCtor
     inline               TypeBE32en(atf_amc_TypeBE32en_value_Enum arg) __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeBE32en.value.Get
 inline u32           value_Get(const atf_amc::TypeBE32en& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:atf_amc.TypeBE32en.value.Set
@@ -10257,7 +13704,7 @@ void                 value_SetStrptr(atf_amc::TypeBE32en& parent, algo::strptr r
 bool                 value_ReadStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:atf_amc.TypeBE32en..Hash
-inline u32           TypeBE32en_Hash(u32 prev, const atf_amc::TypeBE32en& rhs) __attribute__((nothrow));
+inline u32           TypeBE32en_Hash(u32 prev, atf_amc::TypeBE32en rhs) __attribute__((nothrow));
 // func:atf_amc.TypeBE32en..ReadFieldMaybe
 bool                 TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeBE32en from an ascii string.
@@ -10273,7 +13720,7 @@ inline void          TypeBE32en_Init(atf_amc::TypeBE32en& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeBE32en.String  printfmt:Raw
 // func:atf_amc.TypeBE32en..Print
-void                 TypeBE32en_Print(atf_amc::TypeBE32en& row, algo::cstring& str) __attribute__((nothrow));
+void                 TypeBE32en_Print(atf_amc::TypeBE32en row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeBE64
 struct TypeBE64 { // atf_amc.TypeBE64
@@ -10297,14 +13744,13 @@ struct TypeBE64 { // atf_amc.TypeBE64
     // func:atf_amc.TypeBE64..FieldwiseCtor
     explicit inline               TypeBE64(u64 in_value) __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeBE64.value.Get
 inline u64           value_Get(const atf_amc::TypeBE64& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:atf_amc.TypeBE64.value.Set
 inline void          value_Set(atf_amc::TypeBE64& parent, u64 rhs) __attribute__((nothrow));
 
 // func:atf_amc.TypeBE64..Hash
-inline u32           TypeBE64_Hash(u32 prev, const atf_amc::TypeBE64& rhs) __attribute__((nothrow));
+inline u32           TypeBE64_Hash(u32 prev, atf_amc::TypeBE64 rhs) __attribute__((nothrow));
 // func:atf_amc.TypeBE64..ReadFieldMaybe
 bool                 TypeBE64_ReadFieldMaybe(atf_amc::TypeBE64& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeBE64 from an ascii string.
@@ -10315,21 +13761,21 @@ bool                 TypeBE64_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::s
 // func:atf_amc.TypeBE64..ReadTupleMaybe
 bool                 TypeBE64_ReadTupleMaybe(atf_amc::TypeBE64 &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // func:atf_amc.TypeBE64..Lt
-inline bool          TypeBE64_Lt(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) __attribute__((nothrow));
+inline bool          TypeBE64_Lt(atf_amc::TypeBE64 lhs, atf_amc::TypeBE64 rhs) __attribute__((nothrow));
 // func:atf_amc.TypeBE64..Cmp
-inline i32           TypeBE64_Cmp(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) __attribute__((nothrow));
+inline i32           TypeBE64_Cmp(atf_amc::TypeBE64 lhs, atf_amc::TypeBE64 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.TypeBE64..Init
 inline void          TypeBE64_Init(atf_amc::TypeBE64& parent);
 // func:atf_amc.TypeBE64..Eq
-inline bool          TypeBE64_Eq(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) __attribute__((nothrow));
+inline bool          TypeBE64_Eq(atf_amc::TypeBE64 lhs, atf_amc::TypeBE64 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_amc.TypeBE64..Update
-inline bool          TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64& rhs) __attribute__((nothrow));
+inline bool          TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64 rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeBE64.String  printfmt:Raw
 // func:atf_amc.TypeBE64..Print
-void                 TypeBE64_Print(atf_amc::TypeBE64& row, algo::cstring& str) __attribute__((nothrow));
+void                 TypeBE64_Print(atf_amc::TypeBE64 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeBE64dflt
 struct TypeBE64dflt { // atf_amc.TypeBE64dflt
@@ -10341,7 +13787,6 @@ struct TypeBE64dflt { // atf_amc.TypeBE64dflt
     // func:atf_amc.TypeBE64dflt..FieldwiseCtor
     explicit inline               TypeBE64dflt(u64 in_value) __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeBE64dflt.value.Get
 inline u64           value_Get(const atf_amc::TypeBE64dflt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:atf_amc.TypeBE64dflt.value.Set
@@ -10357,7 +13802,6 @@ struct TypeBE64sf { // atf_amc.TypeBE64sf
     // func:atf_amc.TypeBE64sf..Ctor
     inline               TypeBE64sf() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeBE64sf.value.Get
 inline u64           value_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:atf_amc.TypeBE64sf.value.Set
@@ -10499,29 +13943,28 @@ struct TypeC { // atf_amc.TypeC
     // func:atf_amc.TypeC..Ctor
     inline               TypeC() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeC..Hash
-inline u32           TypeC_Hash(u32 prev, const atf_amc::TypeC& rhs) __attribute__((nothrow));
+inline u32           TypeC_Hash(u32 prev, atf_amc::TypeC rhs) __attribute__((nothrow));
 // Read fields of atf_amc::TypeC from an ascii string.
 // The format of the string is the format of the atf_amc::TypeC's only field
 // func:atf_amc.TypeC..ReadStrptrMaybe
 bool                 TypeC_ReadStrptrMaybe(atf_amc::TypeC &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_amc.TypeC..Lt
-inline bool          TypeC_Lt(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) __attribute__((nothrow));
+inline bool          TypeC_Lt(atf_amc::TypeC lhs, atf_amc::TypeC rhs) __attribute__((nothrow));
 // func:atf_amc.TypeC..Cmp
-inline i32           TypeC_Cmp(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) __attribute__((nothrow));
+inline i32           TypeC_Cmp(atf_amc::TypeC lhs, atf_amc::TypeC rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.TypeC..Init
 inline void          TypeC_Init(atf_amc::TypeC& parent);
 // func:atf_amc.TypeC..Eq
-inline bool          TypeC_Eq(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) __attribute__((nothrow));
+inline bool          TypeC_Eq(atf_amc::TypeC lhs, atf_amc::TypeC rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_amc.TypeC..Update
-inline bool          TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC& rhs) __attribute__((nothrow));
+inline bool          TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeC.String  printfmt:Raw
 // func:atf_amc.TypeC..Print
-void                 TypeC_Print(atf_amc::TypeC& row, algo::cstring& str) __attribute__((nothrow));
+void                 TypeC_Print(atf_amc::TypeC row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeH
 // create: atf_amc.VarlenH.typeh (Varlen)
@@ -10542,29 +13985,28 @@ struct TypeH { // atf_amc.TypeH
     // func:atf_amc.TypeH..Ctor
     inline               TypeH() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeH..Hash
-inline u32           TypeH_Hash(u32 prev, const atf_amc::TypeH& rhs) __attribute__((nothrow));
+inline u32           TypeH_Hash(u32 prev, atf_amc::TypeH rhs) __attribute__((nothrow));
 // Read fields of atf_amc::TypeH from an ascii string.
 // The format of the string is the format of the atf_amc::TypeH's only field
 // func:atf_amc.TypeH..ReadStrptrMaybe
 bool                 TypeH_ReadStrptrMaybe(atf_amc::TypeH &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_amc.TypeH..Lt
-inline bool          TypeH_Lt(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) __attribute__((nothrow));
+inline bool          TypeH_Lt(atf_amc::TypeH lhs, atf_amc::TypeH rhs) __attribute__((nothrow));
 // func:atf_amc.TypeH..Cmp
-inline i32           TypeH_Cmp(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) __attribute__((nothrow));
+inline i32           TypeH_Cmp(atf_amc::TypeH lhs, atf_amc::TypeH rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.TypeH..Init
 inline void          TypeH_Init(atf_amc::TypeH& typeh);
 // func:atf_amc.TypeH..Eq
-inline bool          TypeH_Eq(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) __attribute__((nothrow));
+inline bool          TypeH_Eq(atf_amc::TypeH lhs, atf_amc::TypeH rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_amc.TypeH..Update
-inline bool          TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH& rhs) __attribute__((nothrow));
+inline bool          TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeH.String  printfmt:Raw
 // func:atf_amc.TypeH..Print
-void                 TypeH_Print(atf_amc::TypeH& row, algo::cstring& str) __attribute__((nothrow));
+void                 TypeH_Print(atf_amc::TypeH row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeS
 // access: atf_amc.FTypeS.msghdr (Base)
@@ -10574,7 +14016,6 @@ struct TypeS { // atf_amc.TypeS
     // func:atf_amc.TypeS..Ctor
     inline               TypeS() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeS..ReadFieldMaybe
 bool                 TypeS_ReadFieldMaybe(atf_amc::TypeS& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeS from an ascii string.
@@ -10597,9 +14038,8 @@ struct TypeT { // atf_amc.TypeT: Refers to TypeS
     // func:atf_amc.TypeT..Ctor
     inline               TypeT() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeT..Hash
-inline u32           TypeT_Hash(u32 prev, const atf_amc::TypeT& rhs) __attribute__((nothrow));
+inline u32           TypeT_Hash(u32 prev, atf_amc::TypeT rhs) __attribute__((nothrow));
 // func:atf_amc.TypeT..ReadFieldMaybe
 bool                 TypeT_ReadFieldMaybe(atf_amc::TypeT& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeT from an ascii string.
@@ -10612,7 +14052,7 @@ inline void          TypeT_Init(atf_amc::TypeT& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeT.String  printfmt:Tuple
 // func:atf_amc.TypeT..Print
-void                 TypeT_Print(atf_amc::TypeT& row, algo::cstring& str) __attribute__((nothrow));
+void                 TypeT_Print(atf_amc::TypeT row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeTVal
 struct TypeTVal { // atf_amc.TypeTVal: Refers to TypeS as Val
@@ -10621,7 +14061,6 @@ struct TypeTVal { // atf_amc.TypeTVal: Refers to TypeS as Val
     // func:atf_amc.TypeTVal..Ctor
     inline               TypeTVal() __attribute__((nothrow));
 };
-
 // func:atf_amc.TypeTVal..ReadFieldMaybe
 bool                 TypeTVal_ReadFieldMaybe(atf_amc::TypeTVal& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeTVal from an ascii string.
@@ -10636,6 +14075,28 @@ inline void          TypeTVal_Init(atf_amc::TypeTVal& parent);
 // func:atf_amc.TypeTVal..Print
 void                 TypeTVal_Print(atf_amc::TypeTVal& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- atf_amc.TypeU
+// access: atf_amc.FTypeU.base (Base)
+struct TypeU { // atf_amc.TypeU: Update target: a keyed row with a value and a second index over it
+    i32   u;   //   0
+    i32   v;   //   0
+    // func:atf_amc.TypeU..Ctor
+    inline               TypeU() __attribute__((nothrow));
+};
+// func:atf_amc.TypeU..ReadFieldMaybe
+bool                 TypeU_ReadFieldMaybe(atf_amc::TypeU& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::TypeU from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.TypeU..ReadStrptrMaybe
+bool                 TypeU_ReadStrptrMaybe(atf_amc::TypeU &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.TypeU..Init
+inline void          TypeU_Init(atf_amc::TypeU& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeU.String  printfmt:Tuple
+// func:atf_amc.TypeU..Print
+void                 TypeU_Print(atf_amc::TypeU row, algo::cstring& str) __attribute__((nothrow));
+
 // --- atf_amc.Typefconst
 struct Typefconst { // atf_amc.Typefconst
     u32   value;   //   0
@@ -10648,7 +14109,6 @@ struct Typefconst { // atf_amc.Typefconst
     // func:atf_amc.Typefconst..EnumCtor
     inline               Typefconst(atf_amc_Typefconst_value_Enum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:atf_amc.Typefconst.value.GetEnum
 inline atf_amc_Typefconst_value_Enum value_GetEnum(const atf_amc::Typefconst& parent) __attribute__((nothrow));
@@ -10691,13 +14151,44 @@ inline void          Typefconst_Init(atf_amc::Typefconst& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Typefconst.String  printfmt:Raw
 // func:atf_amc.Typefconst..Print
-void                 Typefconst_Print(atf_amc::Typefconst& row, algo::cstring& str) __attribute__((nothrow));
+void                 Typefconst_Print(atf_amc::Typefconst row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.UpptrLt
+struct UpptrLt { // atf_amc.UpptrLt: Ordered ctype whose single field is an Upptr; Lt compares the pointer
+    atf_amc::FTypeA*   p_typea;   // reference to parent row
+    // func:atf_amc.UpptrLt..EqOp
+    inline bool          operator ==(const atf_amc::UpptrLt &rhs) const __attribute__((nothrow));
+    // func:atf_amc.UpptrLt..NeOp
+    inline bool          operator !=(const atf_amc::UpptrLt &rhs) const __attribute__((nothrow));
+    // func:atf_amc.UpptrLt..LtOp
+    inline bool          operator <(const atf_amc::UpptrLt &rhs) const __attribute__((nothrow));
+    // func:atf_amc.UpptrLt..GtOp
+    inline bool          operator >(const atf_amc::UpptrLt &rhs) const __attribute__((nothrow));
+    // func:atf_amc.UpptrLt..LeOp
+    inline bool          operator <=(const atf_amc::UpptrLt &rhs) const __attribute__((nothrow));
+    // func:atf_amc.UpptrLt..GeOp
+    inline bool          operator >=(const atf_amc::UpptrLt &rhs) const __attribute__((nothrow));
+    // func:atf_amc.UpptrLt..Ctor
+    inline               UpptrLt() __attribute__((nothrow));
+};
+// func:atf_amc.UpptrLt..Lt
+inline bool          UpptrLt_Lt(atf_amc::UpptrLt& lhs, atf_amc::UpptrLt& rhs) __attribute__((nothrow));
+// func:atf_amc.UpptrLt..Cmp
+inline i32           UpptrLt_Cmp(atf_amc::UpptrLt& lhs, atf_amc::UpptrLt& rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.UpptrLt..Init
+inline void          UpptrLt_Init(atf_amc::UpptrLt& parent);
+// func:atf_amc.UpptrLt..Eq
+inline bool          UpptrLt_Eq(atf_amc::UpptrLt& lhs, atf_amc::UpptrLt& rhs) __attribute__((nothrow));
+// Set value. Return true if new value is different from old value.
+// func:atf_amc.UpptrLt..Update
+inline bool          UpptrLt_Update(atf_amc::UpptrLt &lhs, atf_amc::UpptrLt& rhs) __attribute__((nothrow));
 
 // --- atf_amc.Varlen2Msg
 #pragma pack(push,1)
 struct Varlen2Msg { // atf_amc.Varlen2Msg
     atf_amc::MsgType     type;     //   0x1001  Message type
-    atf_amc::MsgLength   length;   //   ssizeof(parent) + (0)  Total message length, including this header
+    atf_amc::MsgLength   length;   //   ssizeof(parent)  Total message length, including this header
     atf_amc::MsgLength   s1_end;   // end of s1 field
     // var-length field atf_amc.Varlen2Msg.s1 starts here. access it with s1_Addr
     atf_amc::MsgLength   s2_end;   // end of s2 field
@@ -10707,7 +14198,6 @@ struct Varlen2Msg { // atf_amc.Varlen2Msg
     inline               Varlen2Msg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.Varlen2Msg.base.CopyOut
 void                 parent_CopyOut(atf_amc::Varlen2Msg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
@@ -10826,7 +14316,7 @@ void                 Varlen2Msg_Print(atf_amc::Varlen2Msg& row, algo::cstring& s
 #pragma pack(push,1)
 struct Varlen2aMsg { // atf_amc.Varlen2aMsg
     atf_amc::MsgType     type;     //   0x1002  Message type
-    atf_amc::MsgLength   length;   //   ssizeof(parent) + (0)  Total message length, including this header
+    atf_amc::MsgLength   length;   //   ssizeof(parent)  Total message length, including this header
     atf_amc::MsgLength   u1_end;   // end of u1 field
     // var-length field atf_amc.Varlen2aMsg.u1 starts here. access it with u1_Addr
     atf_amc::MsgLength   u2_end;   // end of u2 field
@@ -10836,7 +14326,6 @@ struct Varlen2aMsg { // atf_amc.Varlen2aMsg
     inline               Varlen2aMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.Varlen2aMsg.base.CopyOut
 void                 parent_CopyOut(atf_amc::Varlen2aMsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
@@ -10943,7 +14432,7 @@ void                 Varlen2aMsg_Print(atf_amc::Varlen2aMsg& row, algo::cstring&
 #pragma pack(push,1)
 struct Varlen2mMsg { // atf_amc.Varlen2mMsg
     atf_amc::MsgType     type;     //   0x1004  Message type
-    atf_amc::MsgLength   length;   //   ssizeof(parent) + (0)  Total message length, including this header
+    atf_amc::MsgLength   length;   //   ssizeof(parent)  Total message length, including this header
     atf_amc::MsgLength   m1_end;   // end of m1 field
     // var-length field atf_amc.Varlen2mMsg.m1 starts here. access it with m1_Addr
     atf_amc::MsgLength   m2_end;   // end of m2 field
@@ -10953,7 +14442,6 @@ struct Varlen2mMsg { // atf_amc.Varlen2mMsg
     inline               Varlen2mMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.Varlen2mMsg.base.CopyOut
 void                 parent_CopyOut(atf_amc::Varlen2mMsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
@@ -11070,7 +14558,6 @@ struct VarlenK { // atf_amc.VarlenK: An optional instance of atf_unit.A
     inline               VarlenK() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
 // func:atf_amc.VarlenK.i.Getary
 algo::aryptr<u32>    i_Getary(atf_amc::VarlenK& v1) __attribute__((nothrow));
@@ -11119,7 +14606,7 @@ void                 VarlenK_Print(atf_amc::VarlenK& row, algo::cstring& str) __
 #pragma pack(push,1)
 struct Varlen2vMsg { // atf_amc.Varlen2vMsg
     atf_amc::MsgType     type;     //   0x1003  Message type
-    atf_amc::MsgLength   length;   //   ssizeof(parent) + (0)  Total message length, including this header
+    atf_amc::MsgLength   length;   //   ssizeof(parent)  Total message length, including this header
     atf_amc::MsgLength   v1_end;   // end of v1 field
     // var-length field atf_amc.Varlen2vMsg.v1 starts here. access it with v1_Addr
     atf_amc::MsgLength   v2_end;   // end of v2 field
@@ -11129,7 +14616,6 @@ struct Varlen2vMsg { // atf_amc.Varlen2vMsg
     inline               Varlen2vMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.Varlen2vMsg.base.CopyOut
 void                 parent_CopyOut(atf_amc::Varlen2vMsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
@@ -11255,7 +14741,6 @@ private:
     friend void                 varlenalloc_Delete(atf_amc::VarlenAlloc &row) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
 // func:atf_amc.VarlenAlloc.elem.Getary
 algo::aryptr<i32>    elem_Getary(atf_amc::VarlenAlloc& varlenalloc) __attribute__((nothrow));
@@ -11286,6 +14771,241 @@ inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenAlloc& row) __attribute__
 // func:atf_amc.VarlenAlloc..Init
 inline void          VarlenAlloc_Init(atf_amc::VarlenAlloc& varlenalloc);
 
+// --- atf_amc.VarlenAllocScale
+// create: atf_amc.FDb.varlenallocscale (Lpool)
+// access: atf_amc.VarlenAllocScale_curs.msg (Ptr)
+#pragma pack(push,1)
+struct VarlenAllocScale { // atf_amc.VarlenAllocScale: Varlen record whose lenfld has scale:4 extra:-4
+    u32   length;   //   0  Number of 4-byte varlen words (total = length*4 + 4)
+    // var-length field atf_amc.VarlenAllocScale.elem starts here. access it with elem_Addr
+private:
+    // func:atf_amc.VarlenAllocScale..Ctor
+    inline               VarlenAllocScale() __attribute__((nothrow));
+    friend atf_amc::VarlenAllocScale& varlenallocscale_Alloc(i32 n_varfld) __attribute__((__warn_unused_result__, nothrow));
+    friend inline atf_amc::VarlenAllocScale* varlenallocscale_AllocMaybe(i32 n_varfld) __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::VarlenAllocScale& varlenallocscale_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::VarlenAllocScale* varlenallocscale_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
+    friend inline atf_amc::VarlenAllocScale* varlenallocscale_AllocVarlenMaybe(algo::aryptr<i32> elem) __attribute__((__warn_unused_result__, nothrow));
+    friend inline atf_amc::VarlenAllocScale& varlenallocscale_AllocVarlen(algo::aryptr<i32> elem) __attribute__((__warn_unused_result__));
+    friend void                 varlenallocscale_Delete(atf_amc::VarlenAllocScale &row) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenAllocScale.elem.Getary
+algo::aryptr<i32>    elem_Getary(atf_amc::VarlenAllocScale& varlenallocscale) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocScale.elem.Addr
+i32*                 elem_Addr(atf_amc::VarlenAllocScale& varlenallocscale);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenAllocScale.elem.N
+inline u32           elem_N(const atf_amc::VarlenAllocScale& varlenallocscale) __attribute__((__warn_unused_result__, nothrow, pure));
+
+// func:atf_amc.VarlenAllocScale.elem_curs.Reset
+inline void          varlenallocscale_elem_curs_Reset(varlenallocscale_elem_curs &curs, atf_amc::VarlenAllocScale &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenAllocScale.elem_curs.ValidQ
+inline bool          varlenallocscale_elem_curs_ValidQ(varlenallocscale_elem_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenAllocScale.elem_curs.Next
+inline void          varlenallocscale_elem_curs_Next(varlenallocscale_elem_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenAllocScale.elem_curs.Access
+inline i32&          varlenallocscale_elem_curs_Access(varlenallocscale_elem_curs &curs) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.VarlenAllocScale..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::VarlenAllocScale& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.VarlenAllocScale..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenAllocScale& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenAllocScale..Init
+inline void          VarlenAllocScale_Init(atf_amc::VarlenAllocScale& varlenallocscale);
+
+// --- atf_amc.VarlenAllocScale_curs
+#pragma pack(push,1)
+struct VarlenAllocScale_curs { // atf_amc.VarlenAllocScale_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenAllocScale *ChildType;
+    atf_amc::VarlenAllocScale*   msg;      // Pointer to current message. optional pointer
+    u8*                          bytes;    // Beginning of region. optional pointer
+    i32                          limit;    //   0  # Of bytes in the region
+    i32                          msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.VarlenAllocScale_curs..Ctor
+    inline               VarlenAllocScale_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.VarlenAllocScale_curs..ValidQ
+inline bool          VarlenAllocScale_curs_ValidQ(atf_amc::VarlenAllocScale_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocScale_curs..Reset
+inline void          VarlenAllocScale_curs_Reset(atf_amc::VarlenAllocScale_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocScale_curs..Access
+inline atf_amc::VarlenAllocScale*& VarlenAllocScale_curs_Access(atf_amc::VarlenAllocScale_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocScale_curs..Next
+inline void          VarlenAllocScale_curs_Next(atf_amc::VarlenAllocScale_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenAllocScale_curs..Init
+inline void          VarlenAllocScale_curs_Init(atf_amc::VarlenAllocScale_curs& parent);
+
+// --- atf_amc.VarlenAllocU64
+// access: atf_amc.VarlenAllocU64_curs.msg (Ptr)
+#pragma pack(push,1)
+struct VarlenAllocU64 { // atf_amc.VarlenAllocU64: Varlen record whose lenfld is u64 (bigint in TS)
+    u64   length;   //   0  Total frame byte count
+    u64   a_end;    // end of a field
+    // var-length field atf_amc.VarlenAllocU64.a starts here. access it with a_Addr
+    // var-length field atf_amc.VarlenAllocU64.b starts here. access it with b_Addr
+    // func:atf_amc.VarlenAllocU64..Ctor
+    inline               VarlenAllocU64() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenAllocU64.a.Getary
+algo::aryptr<char>   a_Getary(atf_amc::VarlenAllocU64& parent) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU64.a.Addr
+char*                a_Addr(atf_amc::VarlenAllocU64& parent);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenAllocU64.a.N
+inline u32           a_N(const atf_amc::VarlenAllocU64& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert a to a string.
+// Array is printed as a regular string.
+// func:atf_amc.VarlenAllocU64.a.Print
+void                 a_Print(atf_amc::VarlenAllocU64& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenAllocU64.b.Getary
+algo::aryptr<char>   b_Getary(atf_amc::VarlenAllocU64& parent) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU64.b.Addr
+char*                b_Addr(atf_amc::VarlenAllocU64& parent);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenAllocU64.b.N
+inline u32           b_N(const atf_amc::VarlenAllocU64& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert b to a string.
+// Array is printed as a regular string.
+// func:atf_amc.VarlenAllocU64.b.Print
+void                 b_Print(atf_amc::VarlenAllocU64& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:atf_amc.VarlenAllocU64.a_curs.Reset
+inline void          VarlenAllocU64_a_curs_Reset(VarlenAllocU64_a_curs &curs, atf_amc::VarlenAllocU64 &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenAllocU64.a_curs.ValidQ
+inline bool          VarlenAllocU64_a_curs_ValidQ(VarlenAllocU64_a_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenAllocU64.a_curs.Next
+inline void          VarlenAllocU64_a_curs_Next(VarlenAllocU64_a_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenAllocU64.a_curs.Access
+inline char&         VarlenAllocU64_a_curs_Access(VarlenAllocU64_a_curs &curs) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU64.b_curs.Reset
+inline void          VarlenAllocU64_b_curs_Reset(VarlenAllocU64_b_curs &curs, atf_amc::VarlenAllocU64 &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenAllocU64.b_curs.ValidQ
+inline bool          VarlenAllocU64_b_curs_ValidQ(VarlenAllocU64_b_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenAllocU64.b_curs.Next
+inline void          VarlenAllocU64_b_curs_Next(VarlenAllocU64_b_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenAllocU64.b_curs.Access
+inline char&         VarlenAllocU64_b_curs_Access(VarlenAllocU64_b_curs &curs) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.VarlenAllocU64..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::VarlenAllocU64& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.VarlenAllocU64..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenAllocU64& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenAllocU64..Init
+inline void          VarlenAllocU64_Init(atf_amc::VarlenAllocU64& parent);
+
+// --- atf_amc.VarlenAllocU64_curs
+#pragma pack(push,1)
+struct VarlenAllocU64_curs { // atf_amc.VarlenAllocU64_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenAllocU64 *ChildType;
+    atf_amc::VarlenAllocU64*   msg;      // Pointer to current message. optional pointer
+    u8*                        bytes;    // Beginning of region. optional pointer
+    i32                        limit;    //   0  # Of bytes in the region
+    i32                        msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.VarlenAllocU64_curs..Ctor
+    inline               VarlenAllocU64_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.VarlenAllocU64_curs..ValidQ
+inline bool          VarlenAllocU64_curs_ValidQ(atf_amc::VarlenAllocU64_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU64_curs..Reset
+inline void          VarlenAllocU64_curs_Reset(atf_amc::VarlenAllocU64_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU64_curs..Access
+inline atf_amc::VarlenAllocU64*& VarlenAllocU64_curs_Access(atf_amc::VarlenAllocU64_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU64_curs..Next
+inline void          VarlenAllocU64_curs_Next(atf_amc::VarlenAllocU64_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenAllocU64_curs..Init
+inline void          VarlenAllocU64_curs_Init(atf_amc::VarlenAllocU64_curs& parent);
+
+// --- atf_amc.VarlenAllocU8
+// access: atf_amc.VarlenAllocU8_curs.msg (Ptr)
+#pragma pack(push,1)
+struct VarlenAllocU8 { // atf_amc.VarlenAllocU8: Varlen record whose lenfld is a single byte
+    u8   length;   //   0  Total frame byte count
+    // var-length field atf_amc.VarlenAllocU8.elem starts here. access it with elem_Addr
+    // func:atf_amc.VarlenAllocU8..Ctor
+    inline               VarlenAllocU8() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenAllocU8.elem.Getary
+algo::aryptr<u8>     elem_Getary(atf_amc::VarlenAllocU8& parent) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU8.elem.Addr
+u8*                  elem_Addr(atf_amc::VarlenAllocU8& parent);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenAllocU8.elem.N
+inline u32           elem_N(const atf_amc::VarlenAllocU8& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert elem to a string.
+// Array is printed as a regular string.
+// func:atf_amc.VarlenAllocU8.elem.Print
+void                 elem_Print(atf_amc::VarlenAllocU8& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:atf_amc.VarlenAllocU8.elem_curs.Reset
+inline void          VarlenAllocU8_elem_curs_Reset(VarlenAllocU8_elem_curs &curs, atf_amc::VarlenAllocU8 &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenAllocU8.elem_curs.ValidQ
+inline bool          VarlenAllocU8_elem_curs_ValidQ(VarlenAllocU8_elem_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenAllocU8.elem_curs.Next
+inline void          VarlenAllocU8_elem_curs_Next(VarlenAllocU8_elem_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenAllocU8.elem_curs.Access
+inline u8&           VarlenAllocU8_elem_curs_Access(VarlenAllocU8_elem_curs &curs) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.VarlenAllocU8..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::VarlenAllocU8& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.VarlenAllocU8..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenAllocU8& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenAllocU8..Init
+inline void          VarlenAllocU8_Init(atf_amc::VarlenAllocU8& parent);
+
+// --- atf_amc.VarlenAllocU8_curs
+#pragma pack(push,1)
+struct VarlenAllocU8_curs { // atf_amc.VarlenAllocU8_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenAllocU8 *ChildType;
+    atf_amc::VarlenAllocU8*   msg;      // Pointer to current message. optional pointer
+    u8*                       bytes;    // Beginning of region. optional pointer
+    i32                       limit;    //   0  # Of bytes in the region
+    i32                       msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.VarlenAllocU8_curs..Ctor
+    inline               VarlenAllocU8_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.VarlenAllocU8_curs..ValidQ
+inline bool          VarlenAllocU8_curs_ValidQ(atf_amc::VarlenAllocU8_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU8_curs..Reset
+inline void          VarlenAllocU8_curs_Reset(atf_amc::VarlenAllocU8_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU8_curs..Access
+inline atf_amc::VarlenAllocU8*& VarlenAllocU8_curs_Access(atf_amc::VarlenAllocU8_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenAllocU8_curs..Next
+inline void          VarlenAllocU8_curs_Next(atf_amc::VarlenAllocU8_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenAllocU8_curs..Init
+inline void          VarlenAllocU8_curs_Init(atf_amc::VarlenAllocU8_curs& parent);
+
 // --- atf_amc.VarlenAlloc_curs
 #pragma pack(push,1)
 struct VarlenAlloc_curs { // atf_amc.VarlenAlloc_curs: Cursor for scanning messages in a memptr
@@ -11298,7 +15018,6 @@ struct VarlenAlloc_curs { // atf_amc.VarlenAlloc_curs: Cursor for scanning messa
     inline               VarlenAlloc_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.VarlenAlloc_curs..ValidQ
 inline bool          VarlenAlloc_curs_ValidQ(atf_amc::VarlenAlloc_curs& curs) __attribute__((nothrow));
 // func:atf_amc.VarlenAlloc_curs..Reset
@@ -11310,6 +15029,96 @@ inline void          VarlenAlloc_curs_Next(atf_amc::VarlenAlloc_curs& curs) __at
 // Set all fields to initial values.
 // func:atf_amc.VarlenAlloc_curs..Init
 inline void          VarlenAlloc_curs_Init(atf_amc::VarlenAlloc_curs& parent);
+
+// --- atf_amc.VarlenBMsg
+#pragma pack(push,1)
+struct VarlenBMsg { // atf_amc.VarlenBMsg: Message whose Varlen element bytes may not land on a scale multiple
+    atf_amc::MsgType     type;     //   0x1007  Message type
+    atf_amc::MsgLength   length;   //   ssizeof(parent)  Total message length, including this header
+    // var-length field atf_amc.VarlenBMsg.b starts here. access it with b_Addr
+    // func:atf_amc.VarlenBMsg..Ctor
+    inline               VarlenBMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:atf_amc.VarlenBMsg.base.CopyOut
+void                 parent_CopyOut(atf_amc::VarlenBMsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
+// Check if atf_amc::MsgHeader is an instance of VarlenBMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of VarlenBMsg.
+// If not successful, quietly return NULL.
+// func:atf_amc.VarlenBMsg.base.Castdown
+inline atf_amc::VarlenBMsg* VarlenBMsg_Castdown(atf_amc::MsgHeader &hdr);
+// func:atf_amc.VarlenBMsg.base.Castbase
+inline atf_amc::MsgHeader& Castbase(atf_amc::VarlenBMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenBMsg.b.Getary
+algo::aryptr<u8>     b_Getary(atf_amc::VarlenBMsg& parent) __attribute__((nothrow));
+// func:atf_amc.VarlenBMsg.b.Addr
+u8*                  b_Addr(atf_amc::VarlenBMsg& parent);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenBMsg.b.N
+inline u32           b_N(const atf_amc::VarlenBMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:atf_amc.VarlenBMsg.b.ReadStrptrMaybe
+bool                 b_ReadStrptrMaybe(atf_amc::VarlenBMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+
+// func:atf_amc.VarlenBMsg.b_curs.Reset
+inline void          VarlenBMsg_b_curs_Reset(VarlenBMsg_b_curs &curs, atf_amc::VarlenBMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenBMsg.b_curs.ValidQ
+inline bool          VarlenBMsg_b_curs_ValidQ(VarlenBMsg_b_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenBMsg.b_curs.Next
+inline void          VarlenBMsg_b_curs_Next(VarlenBMsg_b_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenBMsg.b_curs.Access
+inline atf_amc::VarlenB& VarlenBMsg_b_curs_Access(VarlenBMsg_b_curs &curs) __attribute__((nothrow));
+// func:atf_amc.VarlenBMsg..ReadFieldMaybe
+bool                 VarlenBMsg_ReadFieldMaybe(atf_amc::VarlenBMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenBMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.VarlenBMsg..ReadStrptrMaybe
+bool                 VarlenBMsg_ReadStrptrMaybe(atf_amc::VarlenBMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.VarlenBMsg..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::VarlenBMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.VarlenBMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenBMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenBMsg..Init
+inline void          VarlenBMsg_Init(atf_amc::VarlenBMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenBMsg.String  printfmt:Tuple
+// func:atf_amc.VarlenBMsg..Print
+void                 VarlenBMsg_Print(atf_amc::VarlenBMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.VarlenB_curs
+#pragma pack(push,1)
+struct VarlenB_curs { // atf_amc.VarlenB_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenB *ChildType;
+    atf_amc::VarlenB*   msg;      // Pointer to current message. optional pointer
+    u8*                 bytes;    // Beginning of region. optional pointer
+    i32                 limit;    //   0  # Of bytes in the region
+    i32                 msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.VarlenB_curs..Ctor
+    inline               VarlenB_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.VarlenB_curs..ValidQ
+inline bool          VarlenB_curs_ValidQ(atf_amc::VarlenB_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenB_curs..Reset
+inline void          VarlenB_curs_Reset(atf_amc::VarlenB_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenB_curs..Access
+inline atf_amc::VarlenB*& VarlenB_curs_Access(atf_amc::VarlenB_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenB_curs..Next
+inline void          VarlenB_curs_Next(atf_amc::VarlenB_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenB_curs..Init
+inline void          VarlenB_curs_Init(atf_amc::VarlenB_curs& parent);
 
 // --- atf_amc.VarlenExtern
 // create: atf_amc.FDb.varlen_extern (Lpool)
@@ -11330,7 +15139,6 @@ private:
     friend void                 varlen_extern_Delete(atf_amc::VarlenExtern &row) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.VarlenExtern.length.Get
 // this function is 'extrn' and implemented by user
 u32                  length_Get(atf_amc::VarlenExtern& varlen_extern) __attribute__((__warn_unused_result__, nothrow));
@@ -11380,7 +15188,6 @@ struct VarlenExtern_curs { // atf_amc.VarlenExtern_curs: Cursor for scanning mes
     inline               VarlenExtern_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.VarlenExtern_curs..ValidQ
 inline bool          VarlenExtern_curs_ValidQ(atf_amc::VarlenExtern_curs& curs) __attribute__((nothrow));
 // func:atf_amc.VarlenExtern_curs..Reset
@@ -11401,7 +15208,6 @@ struct VarlenH { // atf_amc.VarlenH
     // func:atf_amc.VarlenH..Ctor
     inline               VarlenH() __attribute__((nothrow));
 };
-
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
 // func:atf_amc.VarlenH.typeh.Getary
 algo::aryptr<atf_amc::TypeH> typeh_Getary(atf_amc::VarlenH& parent) __attribute__((nothrow));
@@ -11460,7 +15266,6 @@ struct VarlenH_curs { // atf_amc.VarlenH_curs: Cursor for scanning messages in a
     inline               VarlenH_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.VarlenH_curs..ValidQ
 inline bool          VarlenH_curs_ValidQ(atf_amc::VarlenH_curs& curs) __attribute__((nothrow));
 // func:atf_amc.VarlenH_curs..Reset
@@ -11485,7 +15290,6 @@ struct VarlenK_curs { // atf_amc.VarlenK_curs: Cursor for scanning messages in a
     inline               VarlenK_curs() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // func:atf_amc.VarlenK_curs..ValidQ
 inline bool          VarlenK_curs_ValidQ(atf_amc::VarlenK_curs& curs) __attribute__((nothrow));
 // func:atf_amc.VarlenK_curs..Reset
@@ -11498,17 +15302,82 @@ inline void          VarlenK_curs_Next(atf_amc::VarlenK_curs& curs) __attribute_
 // func:atf_amc.VarlenK_curs..Init
 inline void          VarlenK_curs_Init(atf_amc::VarlenK_curs& parent);
 
+// --- atf_amc.VarlenLow
+// access: atf_amc.VarlenLow_curs.msg (Ptr)
+struct VarlenLow { // atf_amc.VarlenLow: Varlen element whose lenfld extra exceeds its fixed size: a minimal frame has no length word
+    u8   length;   //   0  Frame total minus 8 (extra:-8): a total below 8 has no length word
+    // var-length field atf_amc.VarlenLow.c starts here. access it with c_Addr
+    // func:atf_amc.VarlenLow..Ctor
+    inline               VarlenLow() __attribute__((nothrow));
+};
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenLow.c.Getary
+algo::aryptr<char>   c_Getary(atf_amc::VarlenLow& parent) __attribute__((nothrow));
+// func:atf_amc.VarlenLow.c.Addr
+char*                c_Addr(atf_amc::VarlenLow& parent);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenLow.c.N
+inline u32           c_N(const atf_amc::VarlenLow& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert c to a string.
+// Array is printed as a regular string.
+// func:atf_amc.VarlenLow.c.Print
+void                 c_Print(atf_amc::VarlenLow& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:atf_amc.VarlenLow.c_curs.Reset
+inline void          VarlenLow_c_curs_Reset(VarlenLow_c_curs &curs, atf_amc::VarlenLow &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenLow.c_curs.ValidQ
+inline bool          VarlenLow_c_curs_ValidQ(VarlenLow_c_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenLow.c_curs.Next
+inline void          VarlenLow_c_curs_Next(VarlenLow_c_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenLow.c_curs.Access
+inline char&         VarlenLow_c_curs_Access(VarlenLow_c_curs &curs) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.VarlenLow..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::VarlenLow& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.VarlenLow..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenLow& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenLow..Init
+inline void          VarlenLow_Init(atf_amc::VarlenLow& parent);
+
+// --- atf_amc.VarlenLow_curs
+#pragma pack(push,1)
+struct VarlenLow_curs { // atf_amc.VarlenLow_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenLow *ChildType;
+    atf_amc::VarlenLow*   msg;      // Pointer to current message. optional pointer
+    u8*                   bytes;    // Beginning of region. optional pointer
+    i32                   limit;    //   0  # Of bytes in the region
+    i32                   msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.VarlenLow_curs..Ctor
+    inline               VarlenLow_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.VarlenLow_curs..ValidQ
+inline bool          VarlenLow_curs_ValidQ(atf_amc::VarlenLow_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenLow_curs..Reset
+inline void          VarlenLow_curs_Reset(atf_amc::VarlenLow_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenLow_curs..Access
+inline atf_amc::VarlenLow*& VarlenLow_curs_Access(atf_amc::VarlenLow_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenLow_curs..Next
+inline void          VarlenLow_curs_Next(atf_amc::VarlenLow_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenLow_curs..Init
+inline void          VarlenLow_curs_Init(atf_amc::VarlenLow_curs& parent);
+
 // --- atf_amc.VarlenMsg
 #pragma pack(push,1)
 struct VarlenMsg { // atf_amc.VarlenMsg
     atf_amc::MsgType     type;     //   0x1000  Message type
-    atf_amc::MsgLength   length;   //   ssizeof(parent) + (0)  Total message length, including this header
+    atf_amc::MsgLength   length;   //   ssizeof(parent)  Total message length, including this header
     // var-length field atf_amc.VarlenMsg.k starts here. access it with k_Addr
     // func:atf_amc.VarlenMsg..Ctor
     inline               VarlenMsg() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Copy fields out of row
 // func:atf_amc.VarlenMsg.base.CopyOut
 void                 parent_CopyOut(atf_amc::VarlenMsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
@@ -11564,6 +15433,279 @@ inline void          VarlenMsg_Init(atf_amc::VarlenMsg& parent);
 // cfmt:atf_amc.VarlenMsg.String  printfmt:Tuple
 // func:atf_amc.VarlenMsg..Print
 void                 VarlenMsg_Print(atf_amc::VarlenMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.VarlenW
+// create: atf_amc.VarlenVMsg.w (Varlen)
+// create: atf_amc.VarlenWMsg.word (Varlen)
+// access: atf_amc.VarlenW_curs.msg (Ptr)
+#pragma pack(push,1)
+struct VarlenW { // atf_amc.VarlenW: Varlen element whose lenfld scale/extra differ from the parent header's
+    u32   length;   //   0  Number of 4-byte varlen words (total = length*4 + 4)
+    // var-length field atf_amc.VarlenW.i starts here. access it with i_Addr
+    // func:atf_amc.VarlenW..Ctor
+    inline               VarlenW() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenW.i.Getary
+algo::aryptr<u32>    i_Getary(atf_amc::VarlenW& w) __attribute__((nothrow));
+// func:atf_amc.VarlenW.i.Addr
+u32*                 i_Addr(atf_amc::VarlenW& w);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenW.i.N
+inline u32           i_N(const atf_amc::VarlenW& w) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:atf_amc.VarlenW.i.ReadStrptrMaybe
+bool                 i_ReadStrptrMaybe(atf_amc::VarlenW& w, algo::strptr in_str) __attribute__((nothrow));
+
+// func:atf_amc.VarlenW.i_curs.Reset
+inline void          w_i_curs_Reset(w_i_curs &curs, atf_amc::VarlenW &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenW.i_curs.ValidQ
+inline bool          w_i_curs_ValidQ(w_i_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenW.i_curs.Next
+inline void          w_i_curs_Next(w_i_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenW.i_curs.Access
+inline u32&          w_i_curs_Access(w_i_curs &curs) __attribute__((nothrow));
+// func:atf_amc.VarlenW..ReadFieldMaybe
+bool                 VarlenW_ReadFieldMaybe(atf_amc::VarlenW& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenW from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.VarlenW..ReadStrptrMaybe
+bool                 VarlenW_ReadStrptrMaybe(atf_amc::VarlenW &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.VarlenW..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::VarlenW& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.VarlenW..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenW& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenW..Init
+inline void          VarlenW_Init(atf_amc::VarlenW& w);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenW.String  printfmt:Tuple
+// func:atf_amc.VarlenW..Print
+void                 VarlenW_Print(atf_amc::VarlenW& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.VarlenVMsg
+#pragma pack(push,1)
+struct VarlenVMsg { // atf_amc.VarlenVMsg: Message whose Varlen field has a one-letter name
+    atf_amc::MsgType     type;     //   0x1006  Message type
+    atf_amc::MsgLength   length;   //   ssizeof(parent)  Total message length, including this header
+    // var-length field atf_amc.VarlenVMsg.w starts here. access it with w_Addr
+    // func:atf_amc.VarlenVMsg..Ctor
+    inline               VarlenVMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:atf_amc.VarlenVMsg.base.CopyOut
+void                 parent_CopyOut(atf_amc::VarlenVMsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
+// Check if atf_amc::MsgHeader is an instance of VarlenVMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of VarlenVMsg.
+// If not successful, quietly return NULL.
+// func:atf_amc.VarlenVMsg.base.Castdown
+inline atf_amc::VarlenVMsg* VarlenVMsg_Castdown(atf_amc::MsgHeader &hdr);
+// func:atf_amc.VarlenVMsg.base.Castbase
+inline atf_amc::MsgHeader& Castbase(atf_amc::VarlenVMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenVMsg.w.Getary
+algo::aryptr<u8>     w_Getary(atf_amc::VarlenVMsg& parent) __attribute__((nothrow));
+// func:atf_amc.VarlenVMsg.w.Addr
+u8*                  w_Addr(atf_amc::VarlenVMsg& parent);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenVMsg.w.N
+inline u32           w_N(const atf_amc::VarlenVMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:atf_amc.VarlenVMsg.w.ReadStrptrMaybe
+bool                 w_ReadStrptrMaybe(atf_amc::VarlenVMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.VarlenVMsg.w.XrefMaybe
+bool                 w_XrefMaybe(atf_amc::VarlenW &row);
+
+// func:atf_amc.VarlenVMsg.w_curs.Reset
+inline void          VarlenVMsg_w_curs_Reset(VarlenVMsg_w_curs &curs, atf_amc::VarlenVMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenVMsg.w_curs.ValidQ
+inline bool          VarlenVMsg_w_curs_ValidQ(VarlenVMsg_w_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenVMsg.w_curs.Next
+inline void          VarlenVMsg_w_curs_Next(VarlenVMsg_w_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenVMsg.w_curs.Access
+inline atf_amc::VarlenW& VarlenVMsg_w_curs_Access(VarlenVMsg_w_curs &curs) __attribute__((nothrow));
+// func:atf_amc.VarlenVMsg..ReadFieldMaybe
+bool                 VarlenVMsg_ReadFieldMaybe(atf_amc::VarlenVMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenVMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.VarlenVMsg..ReadStrptrMaybe
+bool                 VarlenVMsg_ReadStrptrMaybe(atf_amc::VarlenVMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.VarlenVMsg..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::VarlenVMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.VarlenVMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenVMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenVMsg..Init
+inline void          VarlenVMsg_Init(atf_amc::VarlenVMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenVMsg.String  printfmt:Tuple
+// func:atf_amc.VarlenVMsg..Print
+void                 VarlenVMsg_Print(atf_amc::VarlenVMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.VarlenWMsg
+#pragma pack(push,1)
+struct VarlenWMsg { // atf_amc.VarlenWMsg: Message whose Varlen elements carry a scaled lenfld
+    atf_amc::MsgType     type;     //   0x1005  Message type
+    atf_amc::MsgLength   length;   //   ssizeof(parent)  Total message length, including this header
+    // var-length field atf_amc.VarlenWMsg.word starts here. access it with word_Addr
+    // func:atf_amc.VarlenWMsg..Ctor
+    inline               VarlenWMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:atf_amc.VarlenWMsg.base.CopyOut
+void                 parent_CopyOut(atf_amc::VarlenWMsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
+// Check if atf_amc::MsgHeader is an instance of VarlenWMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of VarlenWMsg.
+// If not successful, quietly return NULL.
+// func:atf_amc.VarlenWMsg.base.Castdown
+inline atf_amc::VarlenWMsg* VarlenWMsg_Castdown(atf_amc::MsgHeader &hdr);
+// func:atf_amc.VarlenWMsg.base.Castbase
+inline atf_amc::MsgHeader& Castbase(atf_amc::VarlenWMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenWMsg.word.Getary
+algo::aryptr<u8>     word_Getary(atf_amc::VarlenWMsg& parent) __attribute__((nothrow));
+// func:atf_amc.VarlenWMsg.word.Addr
+u8*                  word_Addr(atf_amc::VarlenWMsg& parent);
+// Return number of elements in varlen field
+// func:atf_amc.VarlenWMsg.word.N
+inline u32           word_N(const atf_amc::VarlenWMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:atf_amc.VarlenWMsg.word.ReadStrptrMaybe
+bool                 word_ReadStrptrMaybe(atf_amc::VarlenWMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+
+// func:atf_amc.VarlenWMsg.word_curs.Reset
+inline void          VarlenWMsg_word_curs_Reset(VarlenWMsg_word_curs &curs, atf_amc::VarlenWMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_amc.VarlenWMsg.word_curs.ValidQ
+inline bool          VarlenWMsg_word_curs_ValidQ(VarlenWMsg_word_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_amc.VarlenWMsg.word_curs.Next
+inline void          VarlenWMsg_word_curs_Next(VarlenWMsg_word_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_amc.VarlenWMsg.word_curs.Access
+inline atf_amc::VarlenW& VarlenWMsg_word_curs_Access(VarlenWMsg_word_curs &curs) __attribute__((nothrow));
+// func:atf_amc.VarlenWMsg..ReadFieldMaybe
+bool                 VarlenWMsg_ReadFieldMaybe(atf_amc::VarlenWMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenWMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.VarlenWMsg..ReadStrptrMaybe
+bool                 VarlenWMsg_ReadStrptrMaybe(atf_amc::VarlenWMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.VarlenWMsg..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::VarlenWMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.VarlenWMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::VarlenWMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenWMsg..Init
+inline void          VarlenWMsg_Init(atf_amc::VarlenWMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenWMsg.String  printfmt:Tuple
+// func:atf_amc.VarlenWMsg..Print
+void                 VarlenWMsg_Print(atf_amc::VarlenWMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.VarlenW_curs
+#pragma pack(push,1)
+struct VarlenW_curs { // atf_amc.VarlenW_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenW *ChildType;
+    atf_amc::VarlenW*   msg;      // Pointer to current message. optional pointer
+    u8*                 bytes;    // Beginning of region. optional pointer
+    i32                 limit;    //   0  # Of bytes in the region
+    i32                 msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.VarlenW_curs..Ctor
+    inline               VarlenW_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// func:atf_amc.VarlenW_curs..ValidQ
+inline bool          VarlenW_curs_ValidQ(atf_amc::VarlenW_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenW_curs..Reset
+inline void          VarlenW_curs_Reset(atf_amc::VarlenW_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenW_curs..Access
+inline atf_amc::VarlenW*& VarlenW_curs_Access(atf_amc::VarlenW_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenW_curs..Next
+inline void          VarlenW_curs_Next(atf_amc::VarlenW_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.VarlenW_curs..Init
+inline void          VarlenW_curs_Init(atf_amc::VarlenW_curs& parent);
+
+// --- atf_amc.VsortStr9
+struct VsortStr9 { // atf_amc.VsortStr9: Version-sorted case-insensitive string: fcmp on the Smallstr field
+    enum { ch_max = 9 };
+    u8 ch[9+1];
+    u8 n_ch;
+
+    // Copy from strptr (operator=)
+    // func:atf_amc.VsortStr9.ch.AssignStrptr
+    inline void          operator =(const algo::strptr &str) __attribute__((nothrow));
+    // func:atf_amc.VsortStr9.ch.CtorStrptr
+    inline               VsortStr9(const algo::strptr &rhs) __attribute__((nothrow));
+    // func:atf_amc.VsortStr9..AssignOp
+    inline atf_amc::VsortStr9& operator =(const atf_amc::VsortStr9 &rhs) __attribute__((nothrow));
+    // func:atf_amc.VsortStr9..Ctor
+    inline               VsortStr9() __attribute__((nothrow));
+    // func:atf_amc.VsortStr9..CopyCtor
+    inline               VsortStr9(const atf_amc::VsortStr9 &rhs) __attribute__((nothrow));
+};
+// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+// func:atf_amc.VsortStr9.ch.Lt
+inline bool          ch_Lt(atf_amc::VsortStr9& parent, atf_amc::VsortStr9 &rhs) __attribute__((nothrow));
+// Compare two fields.
+// Comparison uses version sort (detect embedded integers).
+// Comparison is case-insensitive.
+// func:atf_amc.VsortStr9.ch.Cmp
+i32                  ch_Cmp(atf_amc::VsortStr9& parent, atf_amc::VsortStr9 &rhs) __attribute__((nothrow));
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+// func:atf_amc.VsortStr9.ch.Add
+inline void          ch_Add(atf_amc::VsortStr9& parent, char c) __attribute__((nothrow));
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+// func:atf_amc.VsortStr9.ch.AddStrptr
+inline void          ch_AddStrptr(atf_amc::VsortStr9& parent, algo::strptr str) __attribute__((nothrow));
+// Access string as array of chars
+// func:atf_amc.VsortStr9.ch.Getary
+inline algo::aryptr<char> ch_Getary(const atf_amc::VsortStr9& parent) __attribute__((nothrow));
+// func:atf_amc.VsortStr9.ch.Init
+inline void          ch_Init(atf_amc::VsortStr9 &parent) __attribute__((nothrow));
+// always return constant 9
+// func:atf_amc.VsortStr9.ch.Max
+inline int           ch_Max(atf_amc::VsortStr9& parent) __attribute__((nothrow));
+// func:atf_amc.VsortStr9.ch.N
+inline int           ch_N(const atf_amc::VsortStr9& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.VsortStr9.ch.Print
+void                 ch_Print(atf_amc::VsortStr9& parent, algo::cstring &out) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+// func:atf_amc.VsortStr9.ch.SetStrptr
+void                 ch_SetStrptr(atf_amc::VsortStr9& parent, const algo::strptr& rhs) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_amc.VsortStr9..Init
+inline void          VsortStr9_Init(atf_amc::VsortStr9& parent);
 } // gen:ns_print_struct
 namespace atf_amc { // gen:ns_curstext
 
@@ -11602,6 +15744,23 @@ struct Bitset_fld64_bitcurs {// cursor
 };
 
 
+struct Bitset_fld128_bitcurs {// cursor
+    typedef int& ChildType;
+    u128* elems;
+    int n_elems;
+    int bit;
+    Bitset_fld128_bitcurs() : elems(0), n_elems(0), bit(0) {}
+};
+
+
+struct Disp2Filter_pmask_curs {// cursor
+    typedef u64 ChildType;
+    int index;
+    atf_amc::Disp2Filter *parent;
+    Disp2Filter_pmask_curs() { parent=NULL; index=0; }
+};
+
+
 struct DispFilter_pmask_curs {// cursor
     typedef u64 ChildType;
     int index;
@@ -11613,8 +15772,8 @@ struct DispFilter_pmask_curs {// cursor
 struct cascdel_c_child_ptrary_curs {// fcurs:atf_amc.FCascdel.c_child_ptrary/curs
     typedef atf_amc::FCascdel ChildType;
     atf_amc::FCascdel** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     cascdel_c_child_ptrary_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -11646,6 +15805,15 @@ struct cascdel_tr_child_atree_curs {// cursor
     cascdel_tr_child_atree_curs() {
         row = NULL;
     }
+};
+
+
+struct cascdel_c_child_heap_curs {// fcurs:atf_amc.FCascdel.c_child_heap/curs
+    typedef atf_amc::FCascdel ChildType;
+    atf_amc::FCascdel** elems;
+    u64 n_elems;
+    u64 index;
+    cascdel_c_child_heap_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 // Non-destructive heap cursor, returns heap elements in sorted order.
@@ -11868,8 +16036,8 @@ struct _db_amctest_curs {// cursor
 struct _db_c_typek_curs {// fcurs:atf_amc.FDb.c_typek/curs
     typedef atf_amc::FTypeK ChildType;
     atf_amc::FTypeK** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     _db_c_typek_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -11877,8 +16045,8 @@ struct _db_c_typek_curs {// fcurs:atf_amc.FDb.c_typek/curs
 struct _db_c_typek_oncecurs {// fcurs:atf_amc.FDb.c_typek/oncecurs
     typedef atf_amc::FTypeK ChildType;
     atf_amc::FTypeK** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     _db_c_typek_oncecurs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -11886,17 +16054,26 @@ struct _db_c_typek_oncecurs {// fcurs:atf_amc.FDb.c_typek/oncecurs
 struct _db_c_typel_curs {// fcurs:atf_amc.FDb.c_typel/curs
     typedef atf_amc::FTypeL ChildType;
     atf_amc::FTypeL** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     _db_c_typel_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct _db_c_typel_oncecurs {// fcurs:atf_amc.FDb.c_typel/oncecurs
+    typedef atf_amc::FTypeL ChildType;
+    atf_amc::FTypeL** elems;
+    u64 n_elems;
+    u64 index;
+    _db_c_typel_oncecurs() { elems=NULL; n_elems=0; index=0; }
 };
 
 
 struct _db_c_typem_curs {// fcurs:atf_amc.FDb.c_typem/curs
     typedef atf_amc::FTypeM ChildType;
     atf_amc::FTypeM** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     _db_c_typem_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -11955,11 +16132,105 @@ struct _db_ind_linear_curs {// cursor
 };
 
 
+struct _db_ind_blkhash_elem_Blk {// block of atf_amc.FDb.ind_blkhash_elem: masked key + 2^12 direct slots
+    atf_amc::BlkKey key;// key with the low 12 linfld bits zeroed; identifies the block
+    _db_ind_blkhash_elem_Blk* next;// bucket chain
+    atf_amc::FBlkhashElem** elem;// 4096 slot pointers; slot = linfld & 4095
+    u32 hashval;// hash of masked key
+    u32 n;// number of occupied slots; block is freed when it reaches zero
+};
+
+struct _db_ind_blkhash_elem_curs {// cursor
+    typedef atf_amc::FBlkhashElem ChildType;
+    atf_amc::FDb *parent;
+    i32 bucket;
+    _db_ind_blkhash_elem_Blk *blk;
+    i32 slot;
+    _db_ind_blkhash_elem_curs() { parent=NULL; bucket=0; blk=NULL; slot=0; }
+};
+
+
+struct _db_charbuf_curs {// cursor
+    typedef char ChildType;
+    int index;
+    atf_amc::FDb *parent;
+    _db_charbuf_curs() { parent=NULL; index=0; }
+};
+
+
+struct _db_zd_condtest_run_curs {// fcurs:atf_amc.FDb.zd_condtest_run/curs
+    typedef atf_amc::FCondtest ChildType;
+    atf_amc::FCondtest* row;
+    _db_zd_condtest_run_curs() {
+        row = NULL;
+    }
+};
+
+
+struct _db_zd_condtest_idle_curs {// fcurs:atf_amc.FDb.zd_condtest_idle/curs
+    typedef atf_amc::FCondtest ChildType;
+    atf_amc::FCondtest* row;
+    _db_zd_condtest_idle_curs() {
+        row = NULL;
+    }
+};
+
+
+struct _db_cd_condtest_ready_curs {// fcurs:atf_amc.FDb.cd_condtest_ready/curs
+    typedef atf_amc::FCondtest ChildType;
+    atf_amc::FCondtest* row;
+    atf_amc::FCondtest** head; // address of head element
+    _db_cd_condtest_ready_curs() {
+        row = NULL;
+        head = NULL;
+    }
+};
+
+
+struct _db_zd_condpar_done_curs {// fcurs:atf_amc.FDb.zd_condpar_done/curs
+    typedef atf_amc::FCondpar ChildType;
+    atf_amc::FCondpar* row;
+    _db_zd_condpar_done_curs() {
+        row = NULL;
+    }
+};
+
+
+struct _db_cd_condtest_space_curs {// fcurs:atf_amc.FDb.cd_condtest_space/curs
+    typedef atf_amc::FCondtest ChildType;
+    atf_amc::FCondtest* row;
+    atf_amc::FCondtest** head; // address of head element
+    _db_cd_condtest_space_curs() {
+        row = NULL;
+        head = NULL;
+    }
+};
+
+
+struct _db_cd_sslbuf_out_curs {// fcurs:atf_amc.FDb.cd_sslbuf_out/curs
+    typedef atf_amc::Sslbuf ChildType;
+    atf_amc::Sslbuf* row;
+    atf_amc::Sslbuf** head; // address of head element
+    _db_cd_sslbuf_out_curs() {
+        row = NULL;
+        head = NULL;
+    }
+};
+
+
+struct _db_typeu_curs {// cursor
+    typedef atf_amc::FTypeU ChildType;
+    atf_amc::FDb *parent;
+    i64 index;
+    _db_typeu_curs(){ parent=NULL; index=0; }
+};
+
+
 struct FPerfSortString_orig_curs {// cursor
     typedef atf_amc::Cstr ChildType;
     atf_amc::Cstr* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     FPerfSortString_orig_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -11967,8 +16238,8 @@ struct FPerfSortString_orig_curs {// cursor
 struct FPerfSortString_sorted1_curs {// cursor
     typedef atf_amc::Cstr ChildType;
     atf_amc::Cstr* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     FPerfSortString_sorted1_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -12014,8 +16285,8 @@ struct types_zdl_typet_curs {// fcurs:atf_amc.FTypeS.zdl_typet/curs
 struct FUnitSort_tary_curs {// cursor
     typedef atf_amc::TypeA ChildType;
     atf_amc::TypeA* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     FUnitSort_tary_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -12023,8 +16294,8 @@ struct FUnitSort_tary_curs {// cursor
 struct FUnitSort_c_ptrary_curs {// fcurs:atf_amc.FUnitSort.c_ptrary/curs
     typedef atf_amc::TypeA ChildType;
     atf_amc::TypeA** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     FUnitSort_c_ptrary_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -12034,6 +16305,14 @@ struct FUnitSort_fixary_curs {// cursor
     int index;
     atf_amc::FUnitSort *parent;
     FUnitSort_fixary_curs() { parent=NULL; index=0; }
+};
+
+
+struct InlaryMin_ary_curs {// cursor
+    typedef u32 ChildType;
+    int index;
+    atf_amc::InlaryMin *parent;
+    InlaryMin_ary_curs() { parent=NULL; index=0; }
 };
 
 
@@ -12061,12 +16340,39 @@ struct Lary32_lary_curs {// cursor
 };
 
 
+struct MsgLTScaleV_v_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    MsgLTScaleV_v_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
 struct MsgLTV_v_curs {// cursor
     typedef atf_amc::MsgHdrLT ChildType;
     u8 *ptr;
     int length;
     int index;
     MsgLTV_v_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct NetFrame_entry_curs {// cursor
+    typedef atf_amc::NetEntry ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    NetFrame_entry_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct b_c_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    b_c_curs() { ptr=NULL; length=0; index=0; }
 };
 
 
@@ -12081,8 +16387,8 @@ struct PmaskU555_pmask_curs {// cursor
 struct TaryU32_tary_u32_curs {// cursor
     typedef u32 ChildType;
     u32* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     TaryU32_tary_u32_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -12090,8 +16396,8 @@ struct TaryU32_tary_u32_curs {// cursor
 struct TaryU8_ary_curs {// cursor
     typedef u8 ChildType;
     u8* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     TaryU8_ary_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -12231,6 +16537,51 @@ struct varlenalloc_elem_curs {// cursor
 };
 
 
+struct varlenallocscale_elem_curs {// cursor
+    typedef i32 ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    varlenallocscale_elem_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct VarlenAllocU64_a_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    VarlenAllocU64_a_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct VarlenAllocU64_b_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    VarlenAllocU64_b_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct VarlenAllocU8_elem_curs {// cursor
+    typedef u8 ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    VarlenAllocU8_elem_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct VarlenBMsg_b_curs {// cursor
+    typedef atf_amc::VarlenB ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    VarlenBMsg_b_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
 struct varlen_extern_varlen_curs {// cursor
     typedef u32 ChildType;
     u8 *ptr;
@@ -12249,12 +16600,48 @@ struct VarlenH_typeh_curs {// cursor
 };
 
 
+struct VarlenLow_c_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    VarlenLow_c_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
 struct VarlenMsg_k_curs {// cursor
     typedef atf_amc::VarlenK ChildType;
     u8 *ptr;
     int length;
     int index;
     VarlenMsg_k_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct w_i_curs {// cursor
+    typedef u32 ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    w_i_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct VarlenVMsg_w_curs {// cursor
+    typedef atf_amc::VarlenW ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    VarlenVMsg_w_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct VarlenWMsg_word_curs {// cursor
+    typedef atf_amc::VarlenW ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    VarlenWMsg_word_curs() { ptr=NULL; length=0; index=0; }
 };
 
 } // gen:ns_curstext
@@ -12299,6 +16686,14 @@ void                 amctest_BigendFconst();
 // this function is 'extrn' and implemented by user
 void                 amctest_BitfldBitset();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitfldFconst
+// this function is 'extrn' and implemented by user
+void                 amctest_BitfldFconst();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitfldGlobal
+// this function is 'extrn' and implemented by user
+void                 amctest_BitfldGlobal();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_BitfldNet
 // this function is 'extrn' and implemented by user
 void                 amctest_BitfldNet();
@@ -12331,9 +16726,29 @@ void                 amctest_BitsetVal64();
 // this function is 'extrn' and implemented by user
 void                 amctest_BitsetVal8();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BlkhashCurs
+// this function is 'extrn' and implemented by user
+void                 amctest_BlkhashCurs();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BlkhashInsertMaybe
+// this function is 'extrn' and implemented by user
+void                 amctest_BlkhashInsertMaybe();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BlkhashRemove
+// this function is 'extrn' and implemented by user
+void                 amctest_BlkhashRemove();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BlkhashXref
+// this function is 'extrn' and implemented by user
+void                 amctest_BlkhashXref();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_CascdelAtree
 // this function is 'extrn' and implemented by user
 void                 amctest_CascdelAtree();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelAtreeChain
+// this function is 'extrn' and implemented by user
+void                 amctest_CascdelAtreeChain();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_CascdelBheap
 // this function is 'extrn' and implemented by user
@@ -12355,6 +16770,18 @@ void                 amctest_CascdelPtrary();
 // this function is 'extrn' and implemented by user
 void                 amctest_CascdelPtraryChain();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelPtraryHeap
+// this function is 'extrn' and implemented by user
+void                 amctest_CascdelPtraryHeap();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelPtraryHeapChain
+// this function is 'extrn' and implemented by user
+void                 amctest_CascdelPtraryHeapChain();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelPtraryHeapSibling
+// this function is 'extrn' and implemented by user
+void                 amctest_CascdelPtraryHeapSibling();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_CascdelThash
 // this function is 'extrn' and implemented by user
 void                 amctest_CascdelThash();
@@ -12370,14 +16797,6 @@ void                 amctest_CascdelZdlist();
 // func:atf_amc...amctest_CascdelZdlistChain
 // this function is 'extrn' and implemented by user
 void                 amctest_CascdelZdlistChain();
-// User-implemented function from gstatic:atf_amc.FDb.amctest
-// func:atf_amc...amctest_CascdelZslist
-// this function is 'extrn' and implemented by user
-void                 amctest_CascdelZslist();
-// User-implemented function from gstatic:atf_amc.FDb.amctest
-// func:atf_amc...amctest_CascdelZslistChain
-// this function is 'extrn' and implemented by user
-void                 amctest_CascdelZslistChain();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_CastDown
 // this function is 'extrn' and implemented by user
@@ -12523,6 +16942,18 @@ void                 amctest_CslistRemoveFirst();
 // this function is 'extrn' and implemented by user
 void                 amctest_CslistRotateFirst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_DecGlobal
+// this function is 'extrn' and implemented by user
+void                 amctest_DecGlobal();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_DecPrintMin
+// this function is 'extrn' and implemented by user
+void                 amctest_DecPrintMin();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_DecTwoFields
+// this function is 'extrn' and implemented by user
+void                 amctest_DecTwoFields();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_Delptr
 // this function is 'extrn' and implemented by user
 void                 amctest_Delptr();
@@ -12543,9 +16974,21 @@ void                 amctest_DispRead3();
 // this function is 'extrn' and implemented by user
 void                 amctest_DispRead4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_DispReadLenfldGuard
+// this function is 'extrn' and implemented by user
+void                 amctest_DispReadLenfldGuard();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_DispReadSsimfile
 // this function is 'extrn' and implemented by user
 void                 amctest_DispReadSsimfile();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ErrcodeLtField
+// this function is 'extrn' and implemented by user
+void                 amctest_ErrcodeLtField();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ErrcodeLtSingleField
+// this function is 'extrn' and implemented by user
+void                 amctest_ErrcodeLtSingleField();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_ExecSh
 // this function is 'extrn' and implemented by user
@@ -12559,13 +17002,53 @@ void                 amctest_ExecVerbose();
 // this function is 'extrn' and implemented by user
 void                 amctest_Exec_Status();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FbufGlobalRead
+// this function is 'extrn' and implemented by user
+void                 amctest_FbufGlobalRead();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FbufGlobalWrite
+// this function is 'extrn' and implemented by user
+void                 amctest_FbufGlobalWrite();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FbufSpaceDrain
+// this function is 'extrn' and implemented by user
+void                 amctest_FbufSpaceDrain();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FbufSpaceRemoveAll
+// this function is 'extrn' and implemented by user
+void                 amctest_FbufSpaceRemoveAll();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_Fcmp
 // this function is 'extrn' and implemented by user
 void                 amctest_Fcmp();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FcondInit
+// this function is 'extrn' and implemented by user
+void                 amctest_FcondInit();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FcondMirror
+// this function is 'extrn' and implemented by user
+void                 amctest_FcondMirror();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FcondQueue
+// this function is 'extrn' and implemented by user
+void                 amctest_FcondQueue();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FcondRead
+// this function is 'extrn' and implemented by user
+void                 amctest_FcondRead();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FcondVia
+// this function is 'extrn' and implemented by user
+void                 amctest_FcondVia();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_Fconst
 // this function is 'extrn' and implemented by user
 void                 amctest_Fconst();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_FconstEmptyName
+// this function is 'extrn' and implemented by user
+void                 amctest_FconstEmptyName();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_Gsymbol
 // this function is 'extrn' and implemented by user
@@ -12582,6 +17065,18 @@ void                 amctest_Hook2();
 // func:atf_amc...amctest_ImdXref
 // this function is 'extrn' and implemented by user
 void                 amctest_ImdXref();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_InlaryCharReadGlobal
+// this function is 'extrn' and implemented by user
+void                 amctest_InlaryCharReadGlobal();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_InlaryCopyCount
+// this function is 'extrn' and implemented by user
+void                 amctest_InlaryCopyCount();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_InlaryMinRead
+// this function is 'extrn' and implemented by user
+void                 amctest_InlaryMinRead();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_Inlary_ReadPrint
 // this function is 'extrn' and implemented by user
@@ -12603,9 +17098,17 @@ void                 amctest_LineIter();
 // this function is 'extrn' and implemented by user
 void                 amctest_Lpool();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_LpoolAllocTrace
+// this function is 'extrn' and implemented by user
+void                 amctest_LpoolAllocTrace();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_LpoolLockMem
 // this function is 'extrn' and implemented by user
 void                 amctest_LpoolLockMem();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_LpoolReserveBuffers
+// this function is 'extrn' and implemented by user
+void                 amctest_LpoolReserveBuffers();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_Minmax
 // this function is 'extrn' and implemented by user
@@ -12631,6 +17134,10 @@ void                 amctest_MsgCurs4();
 // this function is 'extrn' and implemented by user
 void                 amctest_MsgLength();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NetFrameVarlen
+// this function is 'extrn' and implemented by user
+void                 amctest_NetFrameVarlen();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_Numstr
 // this function is 'extrn' and implemented by user
 void                 amctest_Numstr();
@@ -12638,6 +17145,42 @@ void                 amctest_Numstr();
 // func:atf_amc...amctest_NumstrCorruption
 // this function is 'extrn' and implemented by user
 void                 amctest_NumstrCorruption();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrDigitHighBase
+// this function is 'extrn' and implemented by user
+void                 amctest_NumstrDigitHighBase();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrGeti64Range
+// this function is 'extrn' and implemented by user
+void                 amctest_NumstrGeti64Range();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrLetterDigit
+// this function is 'extrn' and implemented by user
+void                 amctest_NumstrLetterDigit();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrOverflowSigned
+// this function is 'extrn' and implemented by user
+void                 amctest_NumstrOverflowSigned();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrOverflowU64
+// this function is 'extrn' and implemented by user
+void                 amctest_NumstrOverflowU64();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrPadHighBase
+// this function is 'extrn' and implemented by user
+void                 amctest_NumstrPadHighBase();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrSetnumI64Min
+// this function is 'extrn' and implemented by user
+void                 amctest_NumstrSetnumI64Min();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrSetnumRange
+// this function is 'extrn' and implemented by user
+void                 amctest_NumstrSetnumRange();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrSignedMinLen
+// this function is 'extrn' and implemented by user
+void                 amctest_NumstrSignedMinLen();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_OptAlloc
 // this function is 'extrn' and implemented by user
@@ -12691,6 +17234,14 @@ void                 amctest_OptOptG8();
 // this function is 'extrn' and implemented by user
 void                 amctest_OptOptG9();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptScaleGuard
+// this function is 'extrn' and implemented by user
+void                 amctest_OptScaleGuard();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PerfBlkhashRolling
+// this function is 'extrn' and implemented by user
+void                 amctest_PerfBlkhashRolling();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_PerfSortString
 // this function is 'extrn' and implemented by user
 void                 amctest_PerfSortString();
@@ -12699,9 +17250,45 @@ void                 amctest_PerfSortString();
 // this function is 'extrn' and implemented by user
 void                 amctest_PerfThashRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PmaskGlobal
+// this function is 'extrn' and implemented by user
+void                 amctest_PmaskGlobal();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_PmaskMultiple
 // this function is 'extrn' and implemented by user
 void                 amctest_PmaskMultiple();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PnewLowGuard
+// this function is 'extrn' and implemented by user
+void                 amctest_PnewLowGuard();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PnewOptNegative
+// this function is 'extrn' and implemented by user
+void                 amctest_PnewOptNegative();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PnewScaleGuard
+// this function is 'extrn' and implemented by user
+void                 amctest_PnewScaleGuard();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PnewWideLen
+// this function is 'extrn' and implemented by user
+void                 amctest_PnewWideLen();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PoolAllocExtraNegative
+// this function is 'extrn' and implemented by user
+void                 amctest_PoolAllocExtraNegative();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PoolInsertMaybeBound
+// this function is 'extrn' and implemented by user
+void                 amctest_PoolInsertMaybeBound();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PoolInsertMaybeWideWord
+// this function is 'extrn' and implemented by user
+void                 amctest_PoolInsertMaybeWideWord();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PoolLenfldScale
+// this function is 'extrn' and implemented by user
+void                 amctest_PoolLenfldScale();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_PrintBase36
 // this function is 'extrn' and implemented by user
@@ -12726,6 +17313,26 @@ void                 amctest_PtraryInsert();
 // func:atf_amc...amctest_PtraryNonUnique
 // this function is 'extrn' and implemented by user
 void                 amctest_PtraryNonUnique();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PtraryNonUniqueOnUnref
+// this function is 'extrn' and implemented by user
+void                 amctest_PtraryNonUniqueOnUnref();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PtraryOnceCursEarlyExit
+// this function is 'extrn' and implemented by user
+void                 amctest_PtraryOnceCursEarlyExit();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PtraryOnceCursHeaplike
+// this function is 'extrn' and implemented by user
+void                 amctest_PtraryOnceCursHeaplike();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PtraryReserve
+// this function is 'extrn' and implemented by user
+void                 amctest_PtraryReserve();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PtraryScanInsertOnXref
+// this function is 'extrn' and implemented by user
+void                 amctest_PtraryScanInsertOnXref();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_ReadProc
 // this function is 'extrn' and implemented by user
@@ -12755,6 +17362,14 @@ void                 amctest_ReadTuple4();
 // this function is 'extrn' and implemented by user
 void                 amctest_ReadTuple5();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_SbrkHugeCeiling
+// this function is 'extrn' and implemented by user
+void                 amctest_SbrkHugeCeiling();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_SbrkMmapTrace
+// this function is 'extrn' and implemented by user
+void                 amctest_SbrkMmapTrace();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_Scratch
 // this function is 'extrn' and implemented by user
 void                 amctest_Scratch();
@@ -12762,6 +17377,14 @@ void                 amctest_Scratch();
 // func:atf_amc...amctest_SetGetnumBase10
 // this function is 'extrn' and implemented by user
 void                 amctest_SetGetnumBase10();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_SmallstrFcmp
+// this function is 'extrn' and implemented by user
+void                 amctest_SmallstrFcmp();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_SmallstrFcmpPad
+// this function is 'extrn' and implemented by user
+void                 amctest_SmallstrFcmpPad();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_SubstrDfltval
 // this function is 'extrn' and implemented by user
@@ -12794,6 +17417,18 @@ void                 amctest_TaryInit4();
 // func:atf_amc...amctest_TaryInsary
 // this function is 'extrn' and implemented by user
 void                 amctest_TaryInsary();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TaryInsaryBadIndex
+// this function is 'extrn' and implemented by user
+void                 amctest_TaryInsaryBadIndex();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TaryRemove
+// this function is 'extrn' and implemented by user
+void                 amctest_TaryRemove();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TaryRemove2
+// this function is 'extrn' and implemented by user
+void                 amctest_TaryRemove2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_TaryReserve
 // this function is 'extrn' and implemented by user
@@ -12831,13 +17466,13 @@ void                 amctest_TestDispFilter3();
 // this function is 'extrn' and implemented by user
 void                 amctest_TestDispFilter4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
-// func:atf_amc...amctest_TestInsertX2
-// this function is 'extrn' and implemented by user
-void                 amctest_TestInsertX2();
-// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_TestInsertX3
 // this function is 'extrn' and implemented by user
 void                 amctest_TestInsertX3();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestInsertXref
+// this function is 'extrn' and implemented by user
+void                 amctest_TestInsertXref();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_TestPmask1
 // this function is 'extrn' and implemented by user
@@ -12923,6 +17558,18 @@ void                 amctest_ThashXref();
 // this function is 'extrn' and implemented by user
 void                 amctest_Typetag();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_UpdateMaybe
+// this function is 'extrn' and implemented by user
+void                 amctest_UpdateMaybe();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_UpptrLtSingleField
+// this function is 'extrn' and implemented by user
+void                 amctest_UpptrLtSingleField();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ValGlobalDfltThis
+// this function is 'extrn' and implemented by user
+void                 amctest_ValGlobalDfltThis();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_Varlen2
 // this function is 'extrn' and implemented by user
 void                 amctest_Varlen2();
@@ -12955,6 +17602,18 @@ void                 amctest_VarlenMsgs();
 // this function is 'extrn' and implemented by user
 void                 amctest_VarlenMsgsPnew();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_VarlenNestScale
+// this function is 'extrn' and implemented by user
+void                 amctest_VarlenNestScale();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_VarlenNestScaleGuard
+// this function is 'extrn' and implemented by user
+void                 amctest_VarlenNestScaleGuard();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_VarlenShortName
+// this function is 'extrn' and implemented by user
+void                 amctest_VarlenShortName();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_ZdlistDelCurs
 // this function is 'extrn' and implemented by user
 void                 amctest_ZdlistDelCurs();
@@ -12982,6 +17641,10 @@ void                 amctest_ZdlistInsert2();
 // func:atf_amc...amctest_ZdlistInsert3
 // this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsert3();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsertBefore
+// this function is 'extrn' and implemented by user
+void                 amctest_ZdlistInsertBefore();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_ZdlistInsertHead1
 // this function is 'extrn' and implemented by user
@@ -13119,6 +17782,10 @@ void                 amctest_bytebuf_test1();
 // this function is 'extrn' and implemented by user
 void                 amctest_bytebuf_test2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_fbuf_lpool_free
+// this function is 'extrn' and implemented by user
+void                 amctest_fbuf_lpool_free();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_fstep_Inline
 // this function is 'extrn' and implemented by user
 void                 amctest_fstep_Inline();
@@ -13218,6 +17885,14 @@ void                 amctest_msgbuf_test8();
 // func:atf_amc...amctest_msgbuf_test9
 // this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test9();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_sslbuf_outflow_error
+// this function is 'extrn' and implemented by user
+void                 amctest_sslbuf_outflow_error();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_sslbuf_outflow_zero
+// this function is 'extrn' and implemented by user
+void                 amctest_sslbuf_outflow_zero();
 // User-implemented function from gstatic:atf_amc.FDb.listtype
 // func:atf_amc...listtype_cd
 // this function is 'extrn' and implemented by user
@@ -13267,6 +17942,11 @@ bool                 MsgHdrLTScaleMsgs_Print(algo::cstring &str, atf_amc::MsgHdr
 // This function will additionally validate that sizeof(Msg) <= msg_len
 // func:atf_amc.MsgHeaderMsgs..Print
 bool                 MsgHeaderMsgs_Print(algo::cstring &str, atf_amc::MsgHeader &msg, u32 msg_len);
+// Print message to STR. If message is too short for MSG_LEN, print nothing.
+// MSG.LENGTH must have already been validated against msg_len.
+// This function will additionally validate that sizeof(Msg) <= msg_len
+// func:atf_amc.NetFrameHdrMsgs..Print
+bool                 NetFrameHdrMsgs_Print(algo::cstring &str, atf_amc::NetFrameHdr &msg, u32 msg_len);
 // Parse ascii representation of message into binary, appending new data to BUF.
 // func:atf_amc.Msgs..ReadStrptr
 atf_amc::MsgsCase    Msgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
@@ -13297,61 +17977,89 @@ atf_amc::MsgType     MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &b
 // Parse ascii representation of message into binary, appending new data to BUF.
 // func:atf_amc.MsgHeaderMsgs..ReadStrptrMaybe
 bool                 MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
+// Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.NetFrameHdrMsgs..ReadStrptr
+atf_amc::NetFrameHdrMsgsCase NetFrameHdrMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
+// Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.NetFrameHdrMsgs..ReadStrptrMaybe
+bool                 NetFrameHdrMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 // Construct a new atf_amc::MsgLTO in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total the length field cannot store constructs nothing and returns NULL.
 // func:atf_amc...MsgLTO_FmtByteAry
 atf_amc::MsgLTO *    MsgLTO_FmtByteAry(algo::ByteAry &buf, atf_amc::MsgHdrLT* o);
 // Construct a new atf_amc::MsgLTV in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 // func:atf_amc...MsgLTV_FmtByteAry
 atf_amc::MsgLTV *    MsgLTV_FmtByteAry(algo::ByteAry &buf, algo::memptr v);
 // Construct a new atf_amc::OptG in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:atf_amc...OptG_FmtByteAry
 atf_amc::OptG *      OptG_FmtByteAry(algo::ByteAry &buf, atf_amc::TypeG* typeg, int opt_len);
 // Construct a new atf_amc::OptG in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:atf_amc...OptG_FmtMemptr
 atf_amc::OptG *      OptG_FmtMemptr(algo::memptr &buf, atf_amc::TypeG* typeg, int opt_len);
 // Construct a new atf_amc::OptOptG in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:atf_amc...OptOptG_FmtByteAry
 atf_amc::OptOptG *   OptOptG_FmtByteAry(algo::ByteAry &buf, atf_amc::OptG* optg);
 // Construct a new atf_amc::OptOptG in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:atf_amc...OptOptG_FmtMemptr
 atf_amc::OptOptG *   OptOptG_FmtMemptr(algo::memptr &buf, atf_amc::OptG* optg);
+// Construct a new atf_amc::Text in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total the length field cannot store constructs nothing and returns NULL.
+// func:atf_amc...Text_FmtAlloc
+atf_amc::Text *      Text_FmtAlloc(const algo::Alloc &alloc, algo::aryptr<char > text);
 // Construct a new atf_amc::Text in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 // func:atf_amc...Text_FmtByteAry
 atf_amc::Text *      Text_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > text);
 // Construct a new atf_amc::Varlen2Msg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 // func:atf_amc...Varlen2Msg_FmtByteAry
 atf_amc::Varlen2Msg * Varlen2Msg_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > s1, algo::aryptr<char > s2, algo::aryptr<char > s3);
 // Construct a new atf_amc::Varlen2aMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 // func:atf_amc...Varlen2aMsg_FmtByteAry
 atf_amc::Varlen2aMsg * Varlen2aMsg_FmtByteAry(algo::ByteAry &buf, algo::aryptr<u32 > u1, algo::aryptr<u32 > u2, algo::aryptr<u32 > u3);
 // Construct a new atf_amc::Varlen2mMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 // func:atf_amc...Varlen2mMsg_FmtByteAry
 atf_amc::Varlen2mMsg * Varlen2mMsg_FmtByteAry(algo::ByteAry &buf, algo::memptr m1, algo::memptr m2, algo::memptr m3);
 // Construct a new atf_amc::Varlen2vMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 // func:atf_amc...Varlen2vMsg_FmtByteAry
 atf_amc::Varlen2vMsg * Varlen2vMsg_FmtByteAry(algo::ByteAry &buf, algo::memptr v1, algo::memptr v2, algo::memptr v3);
+// Construct a new atf_amc::VarlenB in the space provided by BUF.
+// A total the length field cannot store constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+// func:atf_amc...VarlenB_FmtByteAry
+atf_amc::VarlenB *   VarlenB_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > c);
 // Construct a new atf_amc::VarlenK in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:atf_amc...VarlenK_FmtByteAry
 atf_amc::VarlenK *   VarlenK_FmtByteAry(algo::ByteAry &buf, algo::aryptr<u32 > i);
 // Construct a new atf_amc::VarlenK in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:atf_amc...VarlenK_FmtMemptr
 atf_amc::VarlenK *   VarlenK_FmtMemptr(algo::memptr &buf, algo::aryptr<u32 > i);
+// Construct a new atf_amc::VarlenLow in the space provided by BUF.
+// A total the length field cannot store constructs nothing and returns NULL.
+// func:atf_amc...VarlenLow_FmtByteAry
+atf_amc::VarlenLow * VarlenLow_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > c);
 } // gen:ns_func
 // func:atf_amc...main
 int                  main(int argc, char **argv);
@@ -13363,23 +18071,28 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType1 &row);// cfmt:atf_amc.BitfldType1.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType2 &row);// cfmt:atf_amc.BitfldType2.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BlkKey &row);// cfmt:atf_amc.BlkKey.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Ctype1Attr &row);// cfmt:atf_amc.Ctype1Attr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Ctype2Attr &row);// cfmt:atf_amc.Ctype2Attr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Ctype2AttrAnon &row);// cfmt:atf_amc.Ctype2AttrAnon.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::trace &row);// cfmt:atf_amc.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeG &row);// cfmt:atf_amc.TypeG.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::FieldId &row);// cfmt:atf_amc.FieldId.String
-inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHdrLT &row);// cfmt:atf_amc.MsgHdrLT.String
-inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHdrLTScale &row);// cfmt:atf_amc.MsgHdrLTScale.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgType &row);// cfmt:atf_amc.MsgType.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLength &row);// cfmt:atf_amc.MsgLength.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHeader &row);// cfmt:atf_amc.MsgHeader.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHdrLT &row);// cfmt:atf_amc.MsgHdrLT.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHdrLTScale &row);// cfmt:atf_amc.MsgHdrLTScale.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTA &row);// cfmt:atf_amc.MsgLTA.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTB &row);// cfmt:atf_amc.MsgLTB.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTO &row);// cfmt:atf_amc.MsgLTO.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTScaleA &row);// cfmt:atf_amc.MsgLTScaleA.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTScaleV &row);// cfmt:atf_amc.MsgLTScaleV.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTV &row);// cfmt:atf_amc.MsgLTV.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::NetEntry &row);// cfmt:atf_amc.NetEntry.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptAlloc &row);// cfmt:atf_amc.OptAlloc.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::VarlenB &row);// cfmt:atf_amc.VarlenB.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptBMsg &row);// cfmt:atf_amc.OptBMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptG &row);// cfmt:atf_amc.OptG.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptOptG &row);// cfmt:atf_amc.OptOptG.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::PmaskMultiple &row);// cfmt:atf_amc.PmaskMultiple.String
@@ -13390,10 +18103,14 @@ inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TableId &ro
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TestRegx1 &row);// cfmt:atf_amc.TestRegx1.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeBE32en &row);// cfmt:atf_amc.TypeBE32en.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeBE64 &row);// cfmt:atf_amc.TypeBE64.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeU &row);// cfmt:atf_amc.TypeU.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Typefconst &row);// cfmt:atf_amc.Typefconst.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Varlen2Msg &row);// cfmt:atf_amc.Varlen2Msg.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Varlen2aMsg &row);// cfmt:atf_amc.Varlen2aMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Varlen2mMsg &row);// cfmt:atf_amc.Varlen2mMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Varlen2vMsg &row);// cfmt:atf_amc.Varlen2vMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::VarlenBMsg &row);// cfmt:atf_amc.VarlenBMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::VarlenMsg &row);// cfmt:atf_amc.VarlenMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::VarlenVMsg &row);// cfmt:atf_amc.VarlenVMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::VarlenWMsg &row);// cfmt:atf_amc.VarlenWMsg.String
 }

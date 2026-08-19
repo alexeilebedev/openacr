@@ -107,7 +107,7 @@ static int DeleteRec(strptr line, strptr pkey) {
 // -----------------------------------------------------------------------------
 
 static int SandboxDeleteRec(strptr line, strptr pkey) {
-    algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_amc_gc));
+    algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_amc_gc));
     command::amc_proc amc;
     command::abt_proc abt;
 
@@ -150,10 +150,10 @@ static void Analyze(strptr line) {
     tempstr pkey=GetPkey(line);
     if (pkey != "") {
         bool eliminate=false;
-        command::sandbox_proc sandbox;
-        sandbox.cmd.name.expr = dev_Sandbox_sandbox_amc_gc;
-        sandbox.cmd.clean = true;
-        sandbox_ExecX(sandbox);
+        command::wt_proc wt;
+        wt.cmd.name.expr = dev_Sandbox_sandbox_amc_gc;
+        wt.cmd.clean = true;
+        wt_ExecX(wt);
         StringToFile("", amc_gc::_db.buildlog);
 
         int rc=SandboxDeleteRec(line,pkey);
@@ -197,10 +197,10 @@ static void Begin(strptr recs) {
 void amc_gc::Main() {
     tempstr recs = QueryRecords();
     Begin(recs);
-    command::sandbox_proc sandbox;
-    sandbox.cmd.name.expr = dev_Sandbox_sandbox_amc_gc;
-    sandbox.cmd.reset = true;
-    sandbox_ExecX(sandbox);
+    command::wt_proc wt;
+    wt.cmd.name.expr = dev_Sandbox_sandbox_amc_gc;
+    wt.cmd.reset = true;
+    wt_ExecX(wt);
 
     ind_beg(Line_curs,line,recs) {
         Analyze(line);

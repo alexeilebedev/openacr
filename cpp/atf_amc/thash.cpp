@@ -24,12 +24,20 @@
 // THASH SLL
 
 void atf_amc::amctest_ThashEmpty() {
+    thash_elem_RemoveAll();// establish the empty table the asserts below expect
     // predicates
     vrfyeq_(ind_thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_Find(0),NULL);
     vrfyeq_(ind_thash_elem_N(),0);
-    // internals
-    vrfyeq_(_db.ind_thash_elem_buckets_n,4);
+    // internals: the initial bucket count is 4, and every bucket count is a
+    // power of two at or above it. An emptied table keeps the bucket array it
+    // grew, so the exact initial count is only observable in a process that
+    // ran no earlier test -- which is every process of the forked run.
+    if (atf_amc::PristineDbQ()) {
+        vrfyeq_(_db.ind_thash_elem_buckets_n,4);
+    }
+    vrfy_(_db.ind_thash_elem_buckets_n >= 4);
+    vrfyeq_((_db.ind_thash_elem_buckets_n & (_db.ind_thash_elem_buckets_n-1)),0);
     vrfy_(_db.ind_thash_elem_buckets_elems);
     frep_(i,_db.ind_thash_elem_buckets_n) {
         vrfyeq_(_db.ind_thash_elem_buckets_elems[i],NULL);
@@ -49,6 +57,7 @@ void atf_amc::amctest_ThashEmpty() {
 
 void atf_amc::amctest_ThashInsertMaybe() {
     constexpr int N=100;
+    thash_elem_RemoveAll();// establish the empty table the asserts below expect
     vrfyeq_(thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_N(),0);
@@ -79,6 +88,7 @@ void atf_amc::amctest_ThashInsertMaybe() {
 
 void atf_amc::amctest_ThashRemove() {
     constexpr int N=100;
+    thash_elem_RemoveAll();// establish the empty table the asserts below expect
     vrfyeq_(thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_N(),0);
@@ -100,10 +110,13 @@ void atf_amc::amctest_ThashRemove() {
         vrfyeq_(ind_thash_elem_EmptyQ(),i==N-1);
         vrfyeq_(ind_thash_elem_N(),N-1-i);
     }
+    // cleanup
+    thash_elem_RemoveAll();
 }
 
 void atf_amc::amctest_ThashFindRemove() {
     constexpr int N=100;
+    thash_elem_RemoveAll();// establish the empty table the asserts below expect
     vrfyeq_(thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_N(),0);
@@ -125,10 +138,13 @@ void atf_amc::amctest_ThashFindRemove() {
         vrfyeq_(ind_thash_elem_EmptyQ(),i==N-1);
         vrfyeq_(ind_thash_elem_N(),N-1-i);
     }
+    // cleanup
+    thash_elem_RemoveAll();
 }
 
 void atf_amc::amctest_ThashGetOrCreate() {
     constexpr int N=100;
+    thash_elem_RemoveAll();// establish the empty table the asserts below expect
     vrfyeq_(thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_N(),0);
@@ -153,6 +169,7 @@ void atf_amc::amctest_ThashGetOrCreate() {
 
 void atf_amc::amctest_ThashXref() {
     constexpr int N=100;
+    thash_elem_RemoveAll();// establish the empty table the asserts below expect
     vrfyeq_(thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_EmptyQ(),true);
     vrfyeq_(ind_thash_elem_N(),0);
@@ -184,6 +201,13 @@ void atf_amc::amctest_PerfThashRemove() {
     constexpr u64 Modulo = 1000000;
     constexpr u64 Multiplier = 50001;
     constexpr int N = Modulo;
+    // establish the empty table the row-id addressing below expects:
+    // qFind(seq) resolves rows positionally, so leftover rows would
+    // misalign the removals
+    thash_elem_RemoveAll();
+    vrfyeq_(thash_elem_EmptyQ(),true);
+    vrfyeq_(ind_thash_elem_EmptyQ(),true);
+    vrfyeq_(ind_thash_elem_N(),0);
 
     // benchmark random deletion - singly linked
     frep_(i,N) {
@@ -201,6 +225,8 @@ void atf_amc::amctest_PerfThashRemove() {
 
     prlog("atf_amc.PerfThashRemove"
           << Keyval("sllist_cycles_per_elem",sllist_cycles_per_elem));
+    // cleanup
+    thash_elem_RemoveAll();
 }
 
 static u32 Lcg100Next(int prev) {

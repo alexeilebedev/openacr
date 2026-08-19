@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/field.cpp -- Generic field genrator
+// Source: cpp/amc/field.cpp -- Generic field generator
 //
 
 #include "include/amc.h"
@@ -57,9 +57,15 @@ static void CheckUnderscores(amc::FField &field) {
 
 // -----------------------------------------------------------------------------
 
+// A field's ffunc names are validated purely by the MarkUsed mechanism: every
+// emission site calls FindFfunc(...,true), so a name that no generator consumes
+// (a typo, or a name not applicable to the field's reftype/tclass) is left
+// unmarked and reported by gen_check_ffunc.  No upfront tclass-membership check
+// is needed -- the set of tfuncs that actually run for the field is the
+// authority (this replaced the old amcdb.tcb table).
 void amc::tclass_Field() {
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (algo_lib::_db.cmdline.verbose) {
-        amc::FField &field = *amc::_db.genctx.p_field;
         CheckUnderscores(field);
     }
 }
@@ -71,13 +77,13 @@ void amc::tfunc_Field_Cleanup() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
 
-    // cleanup function -- call user-defined function
-    // at destruct time
-    if (field.c_fcleanup) {
+    // cleanup function -- call user-defined function at destruct time.
+    // Cleanup is now an ffunc name (was dmmeta.fcleanup, then fcb/Cleanup).
+    if (amc::FindFfunc(field, amcdb_cbtype_Cleanup)) {
         amc::FFunc& cleanup = amc::CreateCurFunc(true); {
             AddRetval(cleanup, "void", "", "");
         }
-        cleanup.acrkey << "fcleanup:"<<field.field;
+        cleanup.acrkey << "ffunc:"<<field.field<<"."<<amcdb_cbtype_Cleanup;
         cleanup.extrn = true;
         Ins(&R, cleanup.comment, "User-defined cleanup function invoked for field $name of $Partype");
     }
@@ -86,13 +92,58 @@ void amc::tfunc_Field_Cleanup() {
 void amc::tfunc_Field_Userinit() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    if (field.c_fuserinit) {
+    // Userinit is now an ffunc name (was dmmeta.fuserinit, then fcb/Userinit).
+    if (amc::FindFfunc(field, amcdb_cbtype_Userinit)) {
         amc::FFunc& func = amc::CreateCurFunc(true); {
             AddRetval(func, "void", "", "");
         }
-        func.acrkey << "fuserinit:"<<field.field;
+        func.acrkey << "ffunc:"<<field.field<<"."<<amcdb_cbtype_Userinit;
         func.extrn = true;
         Ins(&R, func.comment, "User-defined init function invoked for field $name of $Partype");
+    }
+}
+
+// Find an ffunc of the given name declared on FIELD (via dmmeta.ffunc).
+// Returns NULL if none.  Pkey is '<field>.<name>'; build it via the
+// amc-generated concat helper and look up in the unique ind_ffunc hash.
+// If mark_used is true and the ffunc is found, set ffunc.used so gen_check_ffunc
+// does not warn about it.  Pass true at emission sites, false at
+// classification-only queries (e.g. PlaindataVisit).
+amc::FFfunc *amc::FindFfunc(amc::FField &field, algo::strptr name, bool mark_used DFLTVAL(false)) {
+    amc::FFfunc *ffunc = amc::ind_ffunc_Find(dmmeta::Ffunc_Concat_field_name(field.field, name));
+    if (ffunc && mark_used) {
+        ffunc->used = true;
+    }
+    return ffunc;
+}
+
+// Emit prototype for a user-defined OnXref/OnUnref callback on FIELD.
+// CreateCurFunc(true) auto-emits the parent arg only when the parent
+// ctype is non-global — so a groupby field gets <name>_OnXref(parent&,
+// row&), an FDb-pool field gets <name>_OnXref(row&).  Call sites use
+// "$pararg, row" which Replscope collapses to just "row" when the
+// parent is global.
+static void EmitFfuncProto(amc::FField &field, algo::strptr cbname) {
+    amc::FFunc& func = amc::CreateCurFunc(true); {
+        AddRetval(func, "void", "", "");
+    }
+    AddProtoArg(func, amc::Refto(field.p_arg->cpp_type), "row");
+    func.acrkey << "ffunc:" << field.field << "." << cbname;
+    func.extrn = true;
+    func.comment << "User-defined " << cbname << " callback for field " << name_Get(field);
+}
+
+void amc::tfunc_Field_OnXref() {
+    amc::FField &field = *amc::_db.genctx.p_field;
+    if (FindFfunc(field, amcdb_cbtype_OnXref)) {
+        EmitFfuncProto(field, amcdb_cbtype_OnXref);
+    }
+}
+
+void amc::tfunc_Field_OnUnref() {
+    amc::FField &field = *amc::_db.genctx.p_field;
+    if (FindFfunc(field, amcdb_cbtype_OnUnref)) {
+        EmitFfuncProto(field, amcdb_cbtype_OnUnref);
     }
 }
 
@@ -117,9 +168,9 @@ void amc::tfunc_Field_Cascdel() {
     }
 }
 
+// provide a read function for the field if it already has a Set function,
+// or if the underlying type supports read.
 void amc::tfunc_Field2_ReadStrptrMaybe() {
-    // provide a read function for the field if it already has a Set function,
-    // or if the underlying type supports read.
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     //amc::FCtype &ctype = *field.p_ctype;
@@ -149,7 +200,9 @@ void amc::tfunc_Field2_ReadStrptrMaybe() {
             doread.priv = true;
             Set(R, "$Fldcpptype", field.cpp_type);
             AddRetval(doread, "bool", "retval", "true");
-            Ins(&R, doread.proto  , "$name_ReadStrptrMaybe($Partype &parent, algo::strptr in_str)",false);
+            // $Parent collapses for a global ctype: the reader, like every
+            // field-level function of a global, takes no parent argument
+            Ins(&R, doread.proto  , "$name_ReadStrptrMaybe($Parent, algo::strptr in_str)",false);
             // remap empty value to something different
             if (field.c_fflag && field.c_fflag->emptyval != "") {
                 Set(R,"$emptyval",field.c_fflag->emptyval);
@@ -161,21 +214,23 @@ void amc::tfunc_Field2_ReadStrptrMaybe() {
                 Ins(&R, doread.body , "$Fldcpptype $name_tmp;");
                 Ins(&R, doread.body , "retval = $Cpptype_ReadStrptrMaybe($name_tmp, in_str);");
                 Ins(&R, doread.body , "if (retval) {");
-                Ins(&R, doread.body , "    $name_Set(parent, $name_tmp);");
+                Ins(&R, doread.body , tempstr()<<"    "<<AssignExpr(field,"$parname","$name_tmp",false)<<";");
                 Ins(&R, doread.body , "}");
                 // don't set present flag, the _Set function already does it
             } else if (field.c_fflag && field.c_fflag->cumulative) {
                 Ins(&R, doread.body , "$Fldcpptype $name_tmp;");
                 Ins(&R, doread.body , "retval = $Cpptype_ReadStrptrMaybe($name_tmp, in_str);");
                 Ins(&R, doread.body , "if (retval) {");
-                Ins(&R, doread.body , "    parent.$name += $name_tmp; // fflag:$field cumulative");
+                Ins(&R, doread.body , "    $parname.$name += $name_tmp; // fflag:$field cumulative");
                 Ins(&R, doread.body , "}");
-                SetPresent(doread,"parent",field);
+                SetPresent(doread,Subst(R,"$parname"),field);
             } else if (has_ctyperead) {
-                Ins(&R, doread.body , "retval = $Cpptype_ReadStrptrMaybe(parent.$name, in_str);");
-                SetPresent(doread,"parent",field);
+                Ins(&R, doread.body , "retval = $Cpptype_ReadStrptrMaybe($parname.$name, in_str);");
+                SetPresent(doread,Subst(R,"$parname"),field);
             } else {
-                MaybeUnused(doread, "parent");
+                if (!GlobalQ(*field.p_ctype)) {
+                    MaybeUnused(doread, Subst(R,"$parname"));
+                }
                 MaybeUnused(doread, "in_str");
                 Ins(&R, doread.body , "// don't know how to read field $field");
             }
@@ -228,7 +283,7 @@ tempstr amc::ReadFieldExpr(amc::FField &field, algo::strptr parent, algo::strptr
     if (field.ctype_read) {
         ret << field.cpp_type<<"_ReadStrptrMaybe("<<parent<<"."<<name_Get(field)<<", "<<strval<<")";
     } else if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"))) {
-        ret << name_Get(field)<<"_ReadStrptrMaybe("<<parent<<", "<<strval<<")";
+        ret << name_Get(field)<<"_ReadStrptrMaybe("<<ParentArgExpr(*field.p_ctype,parent,true)<<strval<<")";
     } else if (field.c_cppfunc && field.c_cppfunc->print) {
         ret << "true"; // TODO support set
     } else {

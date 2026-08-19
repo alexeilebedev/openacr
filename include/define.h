@@ -83,6 +83,18 @@
 #error only gcc
 #endif
 
+// On cygwin with clang 8 try/catch problem has been observed:
+// http://cygwin.1069669.n5.nabble.com/BUG-try-catch-does-not-work-if-compiled-with-clang-8-0-td148824.html
+//
+// Similar problem has been discovered on Linux clang++ 10.
+// Catch occasinally does not catch exceptions. Using -stdlib=libc++ does not help.
+//
+// Clang++ support has been discontinued until these issues will have been fixed
+//
+#ifdef __clang__
+#error clang++ is no longer supported
+#endif
+
 #define T_MAY_ALIAS                 __attribute__((__may_alias__))
 #define V_UNUSED                    __attribute__((unused))
 #define F_NONNULL                   __attribute__((nonnull))
@@ -112,17 +124,17 @@
 #define _offset_of(T,FLD)           (size_t)offsetof(T,FLD)
 #endif
 
-#define   rep_(i, max)   for (i32 i = 0              ;i < (max)   ; i++)  // rep from 0 to lim without caching
-#define  frep_(i, max)   for (i32 i = 0, i##lim=(max); i < i##lim ; i++)  // rep from 0 to lim with caching
-#define frep1_(i, max)   for (i32 i = 1, i##lim=(max); i < i##lim ; i++)  // rep from 1 to lim with caching
-#define  rrep_(i, max)   for (i32 i = (max)          ; i-->0      ;)      // reverse rep
-#define rrep1_(i, max)   for (i32 i = (max)          ; --i>0      ;)      // reverse rep down to 1
+#define   rep_(i, max)   for (i64 i = 0              ;i < (max)   ; i++)  // rep from 0 to lim without caching
+#define  frep_(i, max)   for (i64 i = 0, i##lim=(max); i < i##lim ; i++)  // rep from 0 to lim with caching
+#define frep1_(i, max)   for (i64 i = 1, i##lim=(max); i < i##lim ; i++)  // rep from 1 to lim with caching
+#define  rrep_(i, max)   for (i64 i = (max)          ; i-->0      ;)      // reverse rep
+#define rrep1_(i, max)   for (i64 i = (max)          ; --i>0      ;)      // reverse rep down to 1
 
 // Walk over array by reference
 #define ind_beg_aryptr(type,e,ary)                      \
     {                                                   \
     algo::aryptr<type> e##temp(ary);                    \
-    for (i32 e##i=0; e##i < e##temp.n_elems; e##i++) {  \
+    for (i64 e##i=0; e##i < e##temp.n_elems; e##i++) {  \
     type &e = e##temp.elems[e##i];
 
 #define ind_end_aryptr } }

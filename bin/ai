@@ -33,6 +33,33 @@ if ($clean) {
 my $F = shift @ARGV;
 $F = "%" if !$F;
 
+# cpp/lib/algo/arg.cpp includes build/gitinfo.h, the build identity abt stamps
+# there before scanning headers (cpp/abt/gitinfo.cpp).  A build/ directory left
+# behind by an abt that predates the stamp holds an abt which does not write the
+# file yet and reports the include as missing, so make sure an empty one is
+# present; arg.cpp falls back to reporting itself unversioned when the file
+# defines nothing, and the first real abt run replaces it.
+mkdir("build");
+if (! -f "build/gitinfo.h") {
+    open(my $fh, ">", "build/gitinfo.h") or Die("cannot create build/gitinfo.h: $!");
+    close($fh);
+}
+
+# build the header-writing tools from the current tree first, so the
+# regeneration below uses this checkout's src_hdr and src_func rather than
+# whatever binaries a shared, long-lived CI runner happens to have cached in
+# build/ from an earlier job.  src_hdr -write rewrites the tool headers and
+# shells out to src_func for prototypes; a branch that changes either tool's
+# output would otherwise have the stale cached binary rewrite headers into the
+# old shape, and the clean-tree gate would fail before the main build below
+# ever rebuilt the tool.
+#
+# This is the first build of the run, so its failure is the run's failure.
+# Whatever stops abt here stops it below as well -- another build holding
+# build/release/abt.lock is the common one -- and carrying on prints the same
+# error a second time before giving up, which reads as two problems and buries
+# the first.
+system("bin/abt", "-build", "-install", "src_hdr|src_func")==0 or Die("abt failed: $?");
 # update copyright headers, call src_func to update prototypes in headers
 # allow this one to fail
 system("bin/src_hdr", "-write", "-targsrc:%");

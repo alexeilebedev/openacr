@@ -1,0 +1,4 @@
+dmmeta.field  field:""  arg:""  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:algo_lib.FDb._db  arg:algo_lib.FDb  reftype:Global  dflt:""  comment:""
+dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:testdb.Color.color  arg:u64  reftype:Val  dflt:""  comment:""

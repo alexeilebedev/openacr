@@ -28,6 +28,7 @@
 static bool TrivialCmpQ(amc::FField &field) {
     bool retval =
         field.p_arg->c_ccmp
+        && field.reftype != dmmeta_Reftype_reftype_Smallstr// a Smallstr field's arg (char) is one element, not the value
         && (!field.c_fcmp || (!field.c_fcmp->versionsort && field.c_fcmp->casesens));
     return retval;
 }
@@ -36,11 +37,26 @@ static bool TrivialCmpQ(amc::FField &field) {
 void amc::tclass_Cmp() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
+    // A global ctype has exactly one instance, so a function comparing a
+    // field across two instances is meaningless. Worse, the generator would
+    // emit one silently: a global field's Get accessor takes no parent
+    // argument, so both operands of the generated Cmp/Lt body collapse to
+    // the singleton's value and the function compares the field with itself.
+    // The variables below are set for the rejected shape too: the Cmp tfuncs
+    // still consume them, and the failed run discards what they emit.
+    if (GlobalQ(*field.p_ctype)) {
+        prerr("amc.fcmp_global"
+              <<Keyval("fcmp",field.field)
+              <<Keyval("comment","fcmp on a global ctype's field: there is exactly one instance, nothing to compare"));
+        algo_lib::_db.exit_code++;
+    }
     Set(R,"$Chtype",TrivialCmpQ(field) ? "int" : "u64");
     if (field.p_arg->c_cstr && field.arg != "char") {// string comparison for target type
         vrfy(field.reftype==dmmeta_Reftype_reftype_Val, "fcmp implies Val");
         vrfy(c_datafld_N(*field.p_arg)==1, "versionsort/casesens requires 1 data field in target type");
         Set(R,"$ch", name_Get(*c_datafld_Find(*field.p_arg,0)));
+    } else if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {// a Smallstr field is itself the char array
+        Set(R,"$ch", name_Get(field));
     }
 }
 
@@ -49,7 +65,7 @@ void amc::tfunc_Cmp_Nextchar() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFcmp          &fcmp       = *field.c_fcmp;
-    if (field.p_arg->c_cstr && !fcmp.extrn) {
+    if ((field.p_arg->c_cstr || field.reftype == dmmeta_Reftype_reftype_Smallstr) && !fcmp.extrn) {
         amc::FFunc& nextch = amc::CreateCurFunc();
         nextch.priv = true;
         Ins(&R, nextch.comment, "Extract next character from STR and advance IDX");
@@ -92,7 +108,6 @@ void amc::tfunc_Cmp_Cmp() {
     amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFcmp          &fcmp       = *field.c_fcmp;
     amc::FFunc& cmp = amc::CreateCurFunc();
-
     Set(R, "$Fldtype", field.p_arg->cpp_type);
     Ins(&R, cmp.comment, "Compare two fields.");
     cmp.extrn=fcmp.extrn;
@@ -100,8 +115,13 @@ void amc::tfunc_Cmp_Cmp() {
     Ins(&R, cmp.proto, "$name_Cmp($Parent, $Partype &rhs)",false);
     if (!fcmp.extrn) {
         Ins(&R, cmp.body, "i32 retval = 0;");
-        Set(R, "$a_val", FieldvalExpr(field.p_ctype, field, "$parname"));
-        Set(R, "$b_val", FieldvalExpr(field.p_ctype, field, "rhs"));
+        if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {// the char-array accessor takes the string itself
+            Set(R, "$a_val", "$parname");
+            Set(R, "$b_val", "rhs");
+        } else {
+            Set(R, "$a_val", FieldvalExpr(field.p_ctype, field, "$parname"));
+            Set(R, "$b_val", FieldvalExpr(field.p_ctype, field, "rhs"));
+        }
         if (TrivialCmpQ(field)) {
             cmp.inl = true;
             Ins(&R, cmp.body, "retval = $Fldtype_Cmp($a_val, $b_val);");
@@ -109,7 +129,7 @@ void amc::tfunc_Cmp_Cmp() {
             if (fcmp.versionsort) {
                 Ins(&R, cmp.comment, "Comparison uses version sort (detect embedded integers).");
             }
-            if (fcmp.versionsort) {
+            if (!fcmp.casesens) {
                 Ins(&R, cmp.comment, "Comparison is case-insensitive.");
             }
             Ins(&R, cmp.body, "int idx_a = 0;");
@@ -144,18 +164,20 @@ void amc::tfunc_Cmp_Lt() {
     amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFcmp          &fcmp       = *field.c_fcmp;
     amc::FFunc& lt = amc::CreateCurFunc();
-
     Set(R, "$Fldtype", field.p_arg->cpp_type);
     Ins(&R, lt.comment, "Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).");
     lt.extrn=fcmp.extrn;
     Ins(&R, lt.ret  , "bool",false);
     Ins(&R, lt.proto, "$name_Lt($Parent, $Partype &rhs)",false);
-
     if (!fcmp.extrn) {
         if (TrivialCmpQ(field)) {
             Set(R, "$a_val", FieldvalExpr(field.p_ctype, field, "$parname"));
             Set(R, "$b_val", FieldvalExpr(field.p_ctype, field, "rhs"));
-            Ins(&R, lt.body, "return $Cpptype_Lt($a_val,$b_val);");
+            if (field.p_arg->c_ccmp->order) {
+                Ins(&R, lt.body, "return $Cpptype_Lt($a_val,$b_val);");
+            } else {// order:N generates Cmp but no Lt
+                Ins(&R, lt.body, "return $Cpptype_Cmp($a_val,$b_val) < 0;");
+            }
         } else {
             Ins(&R, lt.body, "return $name_Cmp($parname,rhs) < 0;");
         }

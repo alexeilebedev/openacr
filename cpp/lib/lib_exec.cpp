@@ -27,6 +27,14 @@
 #ifndef WIN32
 #include <sys/wait.h>
 #include <sys/resource.h>   // setrlimit()
+#include <sys/syscall.h>    // SYS_close_range
+#ifdef __APPLE__
+#include <util.h>           // openpty()
+#elif defined(__FreeBSD__)
+#include <libutil.h>        // openpty()
+#else
+#include <pty.h>            // openpty()
+#endif
 #endif
 
 i64 lib_exec::execkey_Get(lib_exec::FSyscmd &cmd) {
@@ -111,7 +119,55 @@ static void SetupRedirect(lib_exec::FSyscmd &cmd) {
 
 // -----------------------------------------------------------------------------
 
-static void Child(lib_exec::FSyscmd &cmd) {
+// Close every descriptor above stderr, leaving the exec'd program its three
+// standard streams and nothing else.
+//
+// A command that inherits a descriptor holds what the descriptor holds for as
+// long as it runs, without knowing it: a listening socket keeps its port
+// bound, an unlinked file keeps its blocks, a lock keeps its holder alive.  A
+// gateway's port outliving the gateway and reappearing as "address already in
+// use" under an unrelated process name is this leak read from the far end.
+// The child inherits whatever the parent had open, so the close belongs here,
+// once, rather than at each parent that happens to hold something.
+//
+// close_range does it in one syscall and skips no descriptor; walking the
+// table one close at a time stops at the first hole unless it is bounded by
+// the limit instead, which is what a kernel without the syscall gets.
+static void CloseInheritedFd() {
+    int rc = -1;
+#ifdef SYS_close_range
+    rc = int(syscall(SYS_close_range, 3, ~0U, 0));
+#endif
+    if (rc == -1) {
+        struct rlimit rlim;
+        u64 nfd = getrlimit(RLIMIT_NOFILE, &rlim) == 0 ? u64(rlim.rlim_cur) : 1024;
+        for (u64 i = 3; i < nfd && i < 65536; i++) {
+            (void)close(int(i));
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Open a pty pair for a command that must see a tty on stdin (e.g.
+// session-manager-plugin refuses to start without one, even non-interactively).
+// The slave becomes the child's stdin; the master is parked on the command,
+// never read or written, and closed when the command is reaped -- so the
+// child's stdin stays a live tty for exactly the child's lifetime.
+static void SetupPtyIn(lib_exec::FSyscmd &cmd, algo_lib::FFildes &pty_slave) {
+    int master = -1;
+    int slave = -1;
+    if (openpty(&master, &slave, NULL, NULL, NULL) == 0) {
+        cmd.pty_fd.fd = algo::Fildes(master);
+        pty_slave.fd = algo::Fildes(slave);
+    } else {
+        prerr("lib_exec.openpty_failure"<<Keyval("errno",strerror(errno)));
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void Child(lib_exec::FSyscmd &cmd, algo::Fildes pty_slave) {
     // show executing command before redirecting output
     verblog(cmd.command);
     if (cmd.maxtime > 0) {// alarm in child process
@@ -122,17 +178,18 @@ static void Child(lib_exec::FSyscmd &cmd) {
         alarm(cmd.maxtime);// limit physical time as well
     }
     algo_lib::DieWithParent();
+    if (ValidQ(pty_slave)) {
+        dup2(pty_slave.value, 0);// pty slave becomes stdin; the originals fall to CloseInheritedFd below
+    }
     // Redirect output of this shell command to make sure any output
     // by the shell itself becomes part of stderr.
     if (cmd.redir_out) {// child
         dup2(cmd.stdout_fd.fd.value, 1);  // closes 1 first if necessary
         dup2(lib_exec::_db.cmdline.merge_output ? cmd.stdout_fd.fd.value : cmd.stderr_fd.fd.value, 2);
-        for (int i=3; close(i)!=-1; i++) {// close fds above 2
-            // we assume fds are contiguous
-        }
         algo::Refurbish(cmd.stdout_fd);
         algo::Refurbish(cmd.stderr_fd);
     }
+    CloseInheritedFd();
     int ret=0;
     if (ary_N(cmd.args)) {
         char **argv = (char**)alloca((ary_N(cmd.args)+1)*sizeof(*argv));
@@ -171,9 +228,15 @@ void lib_exec::StartCmd(lib_exec::FSyscmd &cmd) {
         if (cmd.redir_out) {
             SetupRedirect(cmd);
         }
-        int pid = fork();
+        algo_lib::FFildes pty_slave;// parent's copy of the slave; closes on scope exit
+        if (cmd.pty_in) {
+            SetupPtyIn(cmd, pty_slave);
+        }
+        bool ok = !cmd.pty_in || ValidQ(pty_slave.fd);
+        // if openpty failed, don't spawn a child that would misbehave without its tty
+        int pid = ok ? fork() : -1;
         if (pid == 0) {
-            Child(cmd);
+            Child(cmd, pty_slave.fd);
         } else if (pid > 0) {// parent, good fork
             cmd.pid = pid;
             lib_exec::ind_running_InsertMaybe(cmd);
@@ -188,6 +251,7 @@ void lib_exec::StartCmd(lib_exec::FSyscmd &cmd) {
 
 static void MarkStopped(lib_exec::FSyscmd *syscmd) {
     ShowOutput(*syscmd);
+    algo::Refurbish(syscmd->pty_fd);// close the pty master; the child has exited
     lib_exec::zd_started_Remove(*syscmd);
 }
 

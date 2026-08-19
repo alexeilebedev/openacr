@@ -202,7 +202,9 @@ void jkv::Main() {
         PrintKv(*parser.root_node, "", out);
     }
     if (_db.cmdline.write && _db.cmdline.file != "-") {
-        SafeStringToFile(out,_db.cmdline.file);
+        // the edited file is the run's whole product, so a write nobody checked is a run that reports
+        // success and produced nothing
+        vrfy(algo::SaveFile(out,_db.cmdline.file,"jkv.error","edited file"), "jkv: nothing written");
     } else {
         prlog_(out);
     }

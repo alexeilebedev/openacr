@@ -30,8 +30,8 @@
 
 // --- jkv_FieldIdEnum
 
-enum jkv_FieldIdEnum {        // jkv.FieldId.value
-     jkv_FieldId_value   = 0
+enum jkv_FieldIdEnum {    // jkv.FieldId.value
+     jkv_FieldId_value
 };
 
 enum { jkv_FieldIdEnum_N = 1 };
@@ -39,7 +39,6 @@ enum { jkv_FieldIdEnum_N = 1 };
 namespace jkv { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace jkv { // gen:ns_tclass_field
-extern const char *jkv_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace jkv { struct trace; }
@@ -55,7 +54,6 @@ struct trace { // jkv.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:jkv.trace.String  printfmt:Tuple
 // func:jkv.trace..Print
@@ -68,11 +66,8 @@ struct FDb { // jkv.FDb
     algo::cstring   last_kv;   //
     jkv::trace      trace;     //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     jkv.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of jkv.FDb.cmdline (and any base command line)
+// via jkv_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:jkv.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -109,6 +104,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:jkv.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:jkv.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:jkv.FDb._db.XrefMaybe
@@ -134,7 +133,6 @@ struct FieldId { // jkv.FieldId: Field read helper
     inline               FieldId(jkv_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:jkv.FieldId.value.GetEnum
 inline jkv_FieldIdEnum value_GetEnum(const jkv::FieldId& parent) __attribute__((nothrow));
@@ -172,7 +170,7 @@ inline void          FieldId_Init(jkv::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:jkv.FieldId.String  printfmt:Raw
 // func:jkv.FieldId..Print
-void                 FieldId_Print(jkv::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(jkv::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace jkv { // gen:ns_func
 // func:jkv...StaticCheck

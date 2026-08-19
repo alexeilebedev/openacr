@@ -6,7 +6,8 @@ detects and uses it.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Enable and disable](#enable-and-disable)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Invocation](#invocation)<br/>
@@ -19,13 +20,14 @@ detects and uses it.
 &nbsp;&nbsp;&bull;&nbsp;  [Privacy](#privacy)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [gcache - Internals](/txt/exe/gcache/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [gcache - Internals](/txt/gen/gcache/gcache.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 gcache: Compiler cache
 Usage: gcache [[-cmd:]<string>] [options]
@@ -39,6 +41,7 @@ Usage: gcache [[-cmd:]<string>] [options]
     -gc                                Clean old files from .gcache
     -clean                             Clean the entire cache
     -dir        string  "/tmp/gcache"  (With -install,-enable) cache directory
+    -maxmb      int     10240          Cache size budget in MB; GC evicts oldest entries past it
     -hitrate                           Report hit rate (specify start time with -after)
     -after      string                 Start time for reporting
     -report                            Show end-of-run report
@@ -48,10 +51,7 @@ Usage: gcache [[-cmd:]<string>] [options]
     -help                              Print help and exit; alias -h
     -version                           Print version and exit
     -signature                         Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Enable and disable
 <a href="#enable-and-disable"></a>
@@ -95,6 +95,29 @@ First run invokes the compiler, and stores resulting object file under
 hash in the cache directory.
 
 On subsequent runs, the same command will copy saved object file to target location.
+
+A saved object file is copied to the target only when the cache holds it as a
+regular file with bytes in it.  A path under the cache directory can hold
+something else: an entry of no bytes, which is what a build that ran out of disk
+leaves behind, or a directory, which an earlier version of the cache wrote where
+this one writes a single file.  Neither can produce the object the run was asked
+for, and a run served from the cache writes nothing back to it, so such a path
+would answer every later build the same way.  A run that finds one compiles
+instead, and the publish that follows replaces whatever stood at the path.
+
+The exit code sums what the run has to report.  The wrapped command's own exit
+status is one term of the sum.  A failure that keeps the run from delivering the
+object it was asked for adds one more: a cache directory that does not exist, the
+`-install` marker that cannot be written, a cached file that cannot be written to
+its target.  A run whose command exits 1 beside one such failure exits 2, so
+neither of the two hides the other.
+
+A failure that costs only a future cache miss is reported and adds nothing.
+Publishing an entry is that case: the compile the entry came from has already
+produced the object the build asked for, and a read-only cache directory or a
+full disk takes nothing away from it.  Such a run prints a `gcache.warning` line
+naming the file and the errno, and exits 0.  So the exit code answers whether the
+run delivered its object, and it is not a count of the lines gcache printed.
 
 ### Precompiled header support
 <a href="#precompiled-header-support"></a>
@@ -153,12 +176,24 @@ where:
 <a href="#garbage-collection"></a>
 
 Tool automatically performs garbage collection daily.  The file
-`gm.time` serves this task, its mtime is the time when last garbage
+`gc.time` serves this task, its mtime is the time when last garbage
 collection occurred.
 
 Any cache files accessed within the last 2 days are kept.
 Any log file entries older than 2 days are discarded.
 The files older than one week are deleted.
+
+An entry is kept by moving its modification time up to now, because the
+age pass reads that time and not the log.  An entry a surviving log line
+names may be gone already, evicted for the byte budget or deleted by an
+earlier age pass, and no entry is created for such a line: an entry of no
+bytes is not something a later compile can use.
+
+Age alone does not bound the cache in bytes, so after the age pass the
+cache is held to a size budget (`-maxmb`, default 10240): entries are
+evicted oldest-last-use first until the total fits.  A cache shared by
+every checkout and build configuration on a machine thus manages its
+own disk footprint.
 
 The garbage collection can be forced with `gcache -gc`
 
@@ -192,8 +227,6 @@ If you are concerned about privacy, use `gcache -install -dir ~/.gcache` to keep
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -221,6 +254,9 @@ If you are concerned about privacy, use `gcache -install -dir ~/.gcache` to keep
 #### -dir -- (With -install,-enable) cache directory
 <a href="#-dir"></a>
 
+#### -maxmb -- Cache size budget in MB; GC evicts oldest entries past it
+<a href="#-maxmb"></a>
+
 #### -hitrate -- Report hit rate (specify start time with -after)
 <a href="#-hitrate"></a>
 
@@ -233,15 +269,9 @@ If you are concerned about privacy, use `gcache -install -dir ~/.gcache` to keep
 #### -force -- Force recompile and update cache
 <a href="#-force"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `gcache` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

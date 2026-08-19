@@ -3,43 +3,19 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [amc_vis - Internals](/txt/exe/amc_vis/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Syntax
-<a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
-```
-amc_vis: Draw access path diagrams
-Usage: amc_vis [[-ctype:]<regx>] [options]
-    OPTION      TYPE    DFLT    COMMENT
-    [ctype]     regx    "%"     Ctype regexp to compute access path diagram
-    -in         string  "data"  Input directory or filename, - for stdin
-    -dot        string  ""      Save dot file with specified filename
-    -xref                       Include all ctypes referenced by selected ones
-    -xns                Y       Cross namespace boundaries
-    -noinput                    Deselect module inputs
-    -check                      Check model for dependency problems
-    -render             Y       Produce an ascii drawing
-    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
-    -debug      flag            Debug level (0..255); alias -d; cumulative
-    -help                       Print help and exit; alias -h
-    -version                    Print version and exit
-    -signature                  Show signatures and exit; alias -sig
-
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+### Internals
+<a href="#internals"></a>
+&#128196; [amc_vis - Internals](/txt/gen/amc_vis/amc_vis.md)<br/>
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 The single parameter to `amc_vis` is a ctype regex,
 and whatever ctypes are matched by the regex will be shown
@@ -72,12 +48,8 @@ amc_vis can also output an dot file, which can then be viewed in a browser:
 
     $ firefox xyz.svg
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
-
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -ctype -- Ctype regexp to compute access path diagram
 <a href="#-ctype"></a>
 
@@ -102,11 +74,8 @@ amc_vis can also output an dot file, which can then be viewed in a browser:
 #### -render -- Produce an ascii drawing
 <a href="#-render"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `amc_vis` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
@@ -115,6 +84,3 @@ amc_vis can also output an dot file, which can then be viewed in a browser:
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|Describe input table of a program|
 |[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

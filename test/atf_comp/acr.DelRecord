@@ -9,5 +9,5 @@ acr -> acr.delete  dev.target  target:samp
 acr -> acr.delete  dev.targdep  targdep:samp.algo_lib  comment:""
 acr -> acr.delete  dev.targsrc  targsrc:samp/cpp/samp/1.cpp  comment:""
 acr -> acr.delete  dev.targsrc  targsrc:samp/cpp/samp/2.cpp  comment:""
-acr -> report.acr  n_select:4  n_insert:0  n_delete:4  n_ignore:0  n_update:0  n_file_mod:0
+acr -> report.acr  n_select:4  n_insert:0  n_delete:4  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 # exit acr code:0

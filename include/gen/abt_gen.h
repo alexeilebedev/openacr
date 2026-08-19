@@ -34,8 +34,8 @@
 
 // --- abt_FieldIdEnum
 
-enum abt_FieldIdEnum {        // abt.FieldId.value
-     abt_FieldId_value   = 0
+enum abt_FieldIdEnum {    // abt.FieldId.value
+     abt_FieldId_value
 };
 
 enum { abt_FieldIdEnum_N = 1 };
@@ -84,7 +84,16 @@ namespace abt { // gen:ns_tclass_field
 struct lpool_Lpblock {
     lpool_Lpblock* next;
 };
-extern const char *abt_help;
+
+struct lpool_Lpblk { // blk: block dedicated to one size class
+    lpool_Lpblk*   next;    // next blk of the class with free space
+    lpool_Lpblk**  pprev;   // back link; NULL = not on the class list
+    lpool_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
+};
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Arch; }
@@ -175,7 +184,7 @@ namespace abt { // gen:ns_print_struct
 // global access: ind_arch (Thash, hash field arch)
 struct FArch { // abt.FArch: Machine architecture
     algo::Smallstr50   arch;               //
-    algo::Comment      comment;            //
+    algo::cstring      comment;            //
     abt::FArch*        ind_arch_next;      // hash next
     u32                ind_arch_hashval;   // hash value
     // func:abt.FArch..AssignOp
@@ -191,7 +200,6 @@ private:
     friend abt::FArch*          arch_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 arch_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FArch.msghdr.CopyOut
 void                 arch_CopyOut(abt::FArch &row, dev::Arch &out) __attribute__((nothrow));
@@ -212,7 +220,7 @@ void                 FArch_Uninit(abt::FArch& arch) __attribute__((nothrow));
 // global access: c_builddir (Ptr)
 struct FBuilddir { // abt.FBuilddir
     algo::Smallstr50      builddir;               // Primary key - uname.compiler.cfg-arch
-    algo::Comment         comment;                //
+    algo::cstring         comment;                //
     bool                  select;                 //   false
     algo::cstring         path;                   // Path for this builddir
     algo_lib::FLockfile   lockfile;               //
@@ -238,7 +246,6 @@ private:
     friend void                 builddir_RemoveAll() __attribute__((nothrow));
     friend void                 builddir_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FBuilddir.base.CopyOut
 void                 builddir_CopyOut(abt::FBuilddir &row, dev::Builddir &out) __attribute__((nothrow));
@@ -247,16 +254,16 @@ void                 builddir_CopyOut(abt::FBuilddir &row, dev::Builddir &out) _
 void                 builddir_CopyIn(abt::FBuilddir &row, dev::Builddir &in) __attribute__((nothrow));
 
 // func:abt.FBuilddir.uname.Get
-algo::Smallstr50     uname_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         uname_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FBuilddir.compiler.Get
-algo::Smallstr50     compiler_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         compiler_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FBuilddir.cfg.Get
-algo::Smallstr50     cfg_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         cfg_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FBuilddir.arch.Get
-algo::Smallstr50     arch_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         arch_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt.FBuilddir..Init
@@ -271,7 +278,7 @@ void                 FBuilddir_Uninit(abt::FBuilddir& builddir) __attribute__((n
 struct FCfg { // abt.FCfg: Build configuration
     algo::Smallstr50   cfg;               //
     algo::Smallstr5    suffix;            //
-    algo::Comment      comment;           //
+    algo::cstring      comment;           //
     abt::FCfg*         ind_cfg_next;      // hash next
     u32                ind_cfg_hashval;   // hash value
     // func:abt.FCfg..AssignOp
@@ -287,7 +294,6 @@ private:
     friend abt::FCfg*           cfg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 cfg_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FCfg.msghdr.CopyOut
 void                 cfg_CopyOut(abt::FCfg &row, dev::Cfg &out) __attribute__((nothrow));
@@ -316,7 +322,7 @@ struct FCompiler { // abt.FCompiler: Compiler
     algo::Smallstr20   pchext;                 //
     algo::Smallstr20   objext;                 //
     algo::Smallstr50   rc;                     //
-    algo::Comment      comment;                //
+    algo::cstring      comment;                //
     abt::FCompiler*    ind_compiler_next;      // hash next
     u32                ind_compiler_hashval;   // hash value
     // func:abt.FCompiler..AssignOp
@@ -332,7 +338,6 @@ private:
     friend abt::FCompiler*      compiler_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 compiler_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FCompiler.msghdr.CopyOut
 void                 compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) __attribute__((nothrow));
@@ -353,7 +358,6 @@ struct trace { // abt.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:abt.trace.String  printfmt:Tuple
 // func:abt.trace..Print
@@ -363,27 +367,28 @@ void                 trace_Print(abt::trace& row, algo::cstring& str) __attribut
 // create: abt.FDb._db (Global)
 struct FDb { // abt.FDb: In-memory database for abt
     lpool_Lpblock*      lpool_free[36];               // Lpool levels
+    lpool_Lpblk*        lpool_blk[11];                // Dedicated blks with free space, per class
     command::abt        cmdline;                      //
-    abt::FSrcfile*      srcfile_lary[32];             // level array
-    i32                 srcfile_n;                    // number of elements in array
-    abt::FTargdep*      targdep_lary[32];             // level array
-    i32                 targdep_n;                    // number of elements in array
-    abt::FToolOpt*      tool_opt_lary[32];            // level array
-    i32                 tool_opt_n;                   // number of elements in array
+    abt::FSrcfile*      srcfile_lary[36];             // level array
+    i64                 srcfile_n;                    // number of elements in array
+    abt::FTargdep*      targdep_lary[36];             // level array
+    i64                 targdep_n;                    // number of elements in array
+    abt::FToolOpt*      tool_opt_lary[36];            // level array
+    i64                 tool_opt_n;                   // number of elements in array
     abt::FTarget**      ind_target_buckets_elems;     // pointer to bucket array
     i32                 ind_target_buckets_n;         // number of elements in bucket array
     i32                 ind_target_n;                 // number of elements in the hash table
-    abt::FTarget*       target_lary[32];              // level array
-    i32                 target_n;                     // number of elements in array
+    abt::FTarget*       target_lary[36];              // level array
+    i64                 target_n;                     // number of elements in array
     abt::FTargsrc**     ind_targsrc_buckets_elems;    // pointer to bucket array
     i32                 ind_targsrc_buckets_n;        // number of elements in bucket array
     i32                 ind_targsrc_n;                // number of elements in the hash table
-    abt::FTargsrc*      targsrc_lary[32];             // level array
-    i32                 targsrc_n;                    // number of elements in array
-    abt::FSyscmddep*    syscmddep_lary[32];           // level array
-    i32                 syscmddep_n;                  // number of elements in array
-    abt::FSyscmd*       syscmd_lary[32];              // level array
-    i32                 syscmd_n;                     // number of elements in array
+    abt::FTargsrc*      targsrc_lary[36];             // level array
+    i64                 targsrc_n;                    // number of elements in array
+    abt::FSyscmddep*    syscmddep_lary[36];           // level array
+    i64                 syscmddep_n;                  // number of elements in array
+    abt::FSyscmd*       syscmd_lary[36];              // level array
+    i64                 syscmd_n;                     // number of elements in array
     abt::FSyscmd**      ind_syscmd_buckets_elems;     // pointer to bucket array
     i32                 ind_syscmd_buckets_n;         // number of elements in bucket array
     i32                 ind_syscmd_n;                 // number of elements in the hash table
@@ -393,23 +398,23 @@ struct FDb { // abt.FDb: In-memory database for abt
     abt::FSrcfile**     ind_srcfile_buckets_elems;    // pointer to bucket array
     i32                 ind_srcfile_buckets_n;        // number of elements in bucket array
     i32                 ind_srcfile_n;                // number of elements in the hash table
-    abt::FCfg*          cfg_lary[32];                 // level array
-    i32                 cfg_n;                        // number of elements in array
+    abt::FCfg*          cfg_lary[36];                 // level array
+    i64                 cfg_n;                        // number of elements in array
     abt::FCfg**         ind_cfg_buckets_elems;        // pointer to bucket array
     i32                 ind_cfg_buckets_n;            // number of elements in bucket array
     i32                 ind_cfg_n;                    // number of elements in the hash table
-    abt::FUname*        uname_lary[32];               // level array
-    i32                 uname_n;                      // number of elements in array
+    abt::FUname*        uname_lary[36];               // level array
+    i64                 uname_n;                      // number of elements in array
     abt::FUname**       ind_uname_buckets_elems;      // pointer to bucket array
     i32                 ind_uname_buckets_n;          // number of elements in bucket array
     i32                 ind_uname_n;                  // number of elements in the hash table
-    abt::FCompiler*     compiler_lary[32];            // level array
-    i32                 compiler_n;                   // number of elements in array
+    abt::FCompiler*     compiler_lary[36];            // level array
+    i64                 compiler_n;                   // number of elements in array
     abt::FCompiler**    ind_compiler_buckets_elems;   // pointer to bucket array
     i32                 ind_compiler_buckets_n;       // number of elements in bucket array
     i32                 ind_compiler_n;               // number of elements in the hash table
-    abt::FArch*         arch_lary[32];                // level array
-    i32                 arch_n;                       // number of elements in array
+    abt::FArch*         arch_lary[36];                // level array
+    i64                 arch_n;                       // number of elements in array
     abt::FArch**        ind_arch_buckets_elems;       // pointer to bucket array
     i32                 ind_arch_buckets_n;           // number of elements in bucket array
     i32                 ind_arch_n;                   // number of elements in the hash table
@@ -422,37 +427,37 @@ struct FDb { // abt.FDb: In-memory database for abt
     i32                 zs_sel_target_n;              // zero-terminated singly linked list
     abt::FTarget*       zs_sel_target_tail;           // pointer to last element
     report::abt         report;                       // Final report
-    abt::FTargsyslib*   targsyslib_lary[32];          // level array
-    i32                 targsyslib_n;                 // number of elements in array
-    abt::FSyslib*       syslib_lary[32];              // level array
-    i32                 syslib_n;                     // number of elements in array
+    abt::FTargsyslib*   targsyslib_lary[36];          // level array
+    i64                 targsyslib_n;                 // number of elements in array
+    abt::FSyslib*       syslib_lary[36];              // level array
+    i64                 syslib_n;                     // number of elements in array
     abt::FSyslib**      ind_syslib_buckets_elems;     // pointer to bucket array
     i32                 ind_syslib_buckets_n;         // number of elements in bucket array
     i32                 ind_syslib_n;                 // number of elements in the hash table
-    abt::FInclude*      include_lary[32];             // level array
-    i32                 include_n;                    // number of elements in array
+    abt::FInclude*      include_lary[36];             // level array
+    i64                 include_n;                    // number of elements in array
     abt::FInclude**     ind_include_buckets_elems;    // pointer to bucket array
     i32                 ind_include_buckets_n;        // number of elements in bucket array
     i32                 ind_include_n;                // number of elements in the hash table
     algo::cstring*      sysincl_elems;                // pointer to elements
-    u32                 sysincl_n;                    // number of elements in array
-    u32                 sysincl_max;                  // max. capacity of array before realloc
+    u64                 sysincl_n;                    // number of elements in array
+    u64                 sysincl_max;                  // max. capacity of array before realloc
     abt::FTarget*       zs_origsel_target_head;       // zero-terminated singly linked list
     abt::FTarget*       zs_origsel_target_tail;       // pointer to last element
-    abt::FNs*           ns_lary[32];                  // level array
-    i32                 ns_n;                         // number of elements in array
+    abt::FNs*           ns_lary[36];                  // level array
+    i64                 ns_n;                         // number of elements in array
     abt::FNs**          ind_ns_buckets_elems;         // pointer to bucket array
     i32                 ind_ns_buckets_n;             // number of elements in bucket array
     i32                 ind_ns_n;                     // number of elements in the hash table
     bool                ccache;                       //   false
     bool                gcache;                       //   false
-    abt::FFilestat*     filestat_lary[32];            // level array
-    i32                 filestat_n;                   // number of elements in array
+    abt::FFilestat*     filestat_lary[36];            // level array
+    i64                 filestat_n;                   // number of elements in array
     abt::FFilestat**    ind_filestat_buckets_elems;   // pointer to bucket array
     i32                 ind_filestat_buckets_n;       // number of elements in bucket array
     i32                 ind_filestat_n;               // number of elements in the hash table
-    abt::FBuilddir*     builddir_lary[32];            // level array
-    i32                 builddir_n;                   // number of elements in array
+    abt::FBuilddir*     builddir_lary[36];            // level array
+    i64                 builddir_n;                   // number of elements in array
     abt::FBuilddir**    ind_builddir_buckets_elems;   // pointer to bucket array
     i32                 ind_builddir_buckets_n;       // number of elements in bucket array
     i32                 ind_builddir_n;               // number of elements in the hash table
@@ -463,8 +468,8 @@ struct FDb { // abt.FDb: In-memory database for abt
     bool                tty;                          //   false  Output
     abt::trace          trace;                        //
 };
-
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 // func:abt.FDb.lpool.FreeMem
 void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
@@ -474,7 +479,8 @@ void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow))
 // func:abt.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 // func:abt.FDb.lpool.ReserveBuffers
 bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
@@ -519,7 +525,7 @@ inline abt::FSrcfile* srcfile_Find(u64 t) __attribute__((__warn_unused_result__,
 inline abt::FSrcfile* srcfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.srcfile.N
-inline i32           srcfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           srcfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:abt.FDb.srcfile.RemoveAll
 void                 srcfile_RemoveAll() __attribute__((nothrow));
@@ -559,7 +565,7 @@ inline abt::FTargdep* targdep_Find(u64 t) __attribute__((__warn_unused_result__,
 inline abt::FTargdep* targdep_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.targdep.N
-inline i32           targdep_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           targdep_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.targdep.RemoveLast
 void                 targdep_RemoveLast() __attribute__((nothrow));
@@ -596,7 +602,7 @@ inline abt::FToolOpt* tool_opt_Find(u64 t) __attribute__((__warn_unused_result__
 inline abt::FToolOpt* tool_opt_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.tool_opt.N
-inline i32           tool_opt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           tool_opt_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.tool_opt.RemoveLast
 void                 tool_opt_RemoveLast() __attribute__((nothrow));
@@ -658,7 +664,7 @@ inline abt::FTarget* target_Find(u64 t) __attribute__((__warn_unused_result__, n
 inline abt::FTarget* target_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.target.N
-inline i32           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.target.RemoveLast
 void                 target_RemoveLast() __attribute__((nothrow));
@@ -720,7 +726,7 @@ inline abt::FTargsrc* targsrc_Find(u64 t) __attribute__((__warn_unused_result__,
 inline abt::FTargsrc* targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.targsrc.N
-inline i32           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.targsrc.RemoveLast
 void                 targsrc_RemoveLast() __attribute__((nothrow));
@@ -757,7 +763,7 @@ inline abt::FSyscmddep* syscmddep_Find(u64 t) __attribute__((__warn_unused_resul
 inline abt::FSyscmddep* syscmddep_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.syscmddep.N
-inline i32           syscmddep_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           syscmddep_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.syscmddep.RemoveLast
 void                 syscmddep_RemoveLast() __attribute__((nothrow));
@@ -794,7 +800,7 @@ inline abt::FSyscmd* syscmd_Find(i32 t) __attribute__((__warn_unused_result__, n
 inline abt::FSyscmd* syscmd_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.syscmd.N
-inline i32           syscmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           syscmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.syscmd.RemoveLast
 void                 syscmd_RemoveLast() __attribute__((nothrow));
@@ -806,10 +812,8 @@ inline abt::FSyscmd& syscmd_qFind(i32 t) __attribute__((nothrow, pure));
 // func:abt.FDb.syscmd.XrefMaybe
 bool                 syscmd_XrefMaybe(abt::FSyscmd &row);
 
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     abt.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of abt.FDb.cmdline (and any base command line)
+// via abt_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:abt.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -846,6 +850,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:abt.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:abt.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:abt.FDb._db.XrefMaybe
@@ -951,7 +959,7 @@ inline abt::FCfg*    cfg_Find(u64 t) __attribute__((__warn_unused_result__, noth
 inline abt::FCfg*    cfg_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.cfg.N
-inline i32           cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.cfg.RemoveLast
 void                 cfg_RemoveLast() __attribute__((nothrow));
@@ -1013,7 +1021,7 @@ inline abt::FUname*  uname_Find(u64 t) __attribute__((__warn_unused_result__, no
 inline abt::FUname*  uname_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.uname.N
-inline i32           uname_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           uname_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.uname.RemoveLast
 void                 uname_RemoveLast() __attribute__((nothrow));
@@ -1075,7 +1083,7 @@ inline abt::FCompiler* compiler_Find(u64 t) __attribute__((__warn_unused_result_
 inline abt::FCompiler* compiler_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.compiler.N
-inline i32           compiler_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           compiler_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.compiler.RemoveLast
 void                 compiler_RemoveLast() __attribute__((nothrow));
@@ -1137,7 +1145,7 @@ inline abt::FArch*   arch_Find(u64 t) __attribute__((__warn_unused_result__, not
 inline abt::FArch*   arch_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.arch.N
-inline i32           arch_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           arch_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.arch.RemoveLast
 void                 arch_RemoveLast() __attribute__((nothrow));
@@ -1308,7 +1316,7 @@ inline abt::FTargsyslib* targsyslib_Find(u64 t) __attribute__((__warn_unused_res
 inline abt::FTargsyslib* targsyslib_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.targsyslib.N
-inline i32           targsyslib_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           targsyslib_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.targsyslib.RemoveLast
 void                 targsyslib_RemoveLast() __attribute__((nothrow));
@@ -1345,7 +1353,7 @@ inline abt::FSyslib* syslib_Find(u64 t) __attribute__((__warn_unused_result__, n
 inline abt::FSyslib* syslib_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.syslib.N
-inline i32           syslib_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           syslib_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.syslib.RemoveLast
 void                 syslib_RemoveLast() __attribute__((nothrow));
@@ -1407,7 +1415,7 @@ inline abt::FInclude* include_Find(u64 t) __attribute__((__warn_unused_result__,
 inline abt::FInclude* include_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.include.N
-inline i32           include_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           include_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.include.RemoveLast
 void                 include_RemoveLast() __attribute__((nothrow));
@@ -1456,15 +1464,15 @@ algo::cstring&       sysincl_Alloc() __attribute__((__warn_unused_result__, noth
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:abt.FDb.sysincl.AllocAt
-algo::cstring&       sysincl_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       sysincl_AllocAt(i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:abt.FDb.sysincl.AllocN
-algo::aryptr<algo::cstring> sysincl_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> sysincl_AllocN(i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:abt.FDb.sysincl.AllocNAt
-algo::aryptr<algo::cstring> sysincl_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> sysincl_AllocNAt(i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:abt.FDb.sysincl.EmptyQ
 inline bool          sysincl_EmptyQ() __attribute__((nothrow));
@@ -1479,13 +1487,13 @@ inline algo::aryptr<algo::cstring> sysincl_Getary() __attribute__((nothrow));
 inline algo::cstring* sysincl_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:abt.FDb.sysincl.Max
-inline i32           sysincl_Max() __attribute__((nothrow));
+inline i64           sysincl_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:abt.FDb.sysincl.N
-inline i32           sysincl_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           sysincl_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:abt.FDb.sysincl.Remove
-void                 sysincl_Remove(u32 i) __attribute__((nothrow));
+void                 sysincl_Remove(u64 i) __attribute__((nothrow));
 // func:abt.FDb.sysincl.RemoveAll
 void                 sysincl_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -1493,10 +1501,10 @@ void                 sysincl_RemoveAll() __attribute__((nothrow));
 void                 sysincl_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:abt.FDb.sysincl.Reserve
-inline void          sysincl_Reserve(int n) __attribute__((nothrow));
+inline void          sysincl_Reserve(i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:abt.FDb.sysincl.AbsReserve
-void                 sysincl_AbsReserve(int n) __attribute__((nothrow));
+void                 sysincl_AbsReserve(i64 n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:abt.FDb.sysincl.qFind
 inline algo::cstring& sysincl_qFind(u64 t) __attribute__((nothrow));
@@ -1508,7 +1516,7 @@ inline algo::cstring& sysincl_qLast() __attribute__((nothrow));
 inline u64           sysincl_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:abt.FDb.sysincl.AllocNVal
-algo::aryptr<algo::cstring> sysincl_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+algo::aryptr<algo::cstring> sysincl_AllocNVal(i64 n_elems, const algo::cstring& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -1517,7 +1525,13 @@ bool                 sysincl_ReadStrptrMaybe(algo::strptr in_str) __attribute__(
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:abt.FDb.sysincl.Insary
-void                 sysincl_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
+void                 sysincl_Insary(algo::aryptr<algo::cstring> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:abt.FDb.sysincl.RemRegion
+void                 sysincl_RemRegion(i64 beg, i64 n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt.FDb.zs_origsel_target.EmptyQ
@@ -1576,7 +1590,7 @@ inline abt::FNs*     ns_Find(u64 t) __attribute__((__warn_unused_result__, nothr
 inline abt::FNs*     ns_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.ns.N
-inline i32           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt.FDb.ns.RemoveLast
 void                 ns_RemoveLast() __attribute__((nothrow));
@@ -1634,7 +1648,7 @@ inline abt::FFilestat* filestat_Find(u64 t) __attribute__((__warn_unused_result_
 inline abt::FFilestat* filestat_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.filestat.N
-inline i32           filestat_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           filestat_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:abt.FDb.filestat.RemoveAll
 void                 filestat_RemoveAll() __attribute__((nothrow));
@@ -1699,7 +1713,7 @@ inline abt::FBuilddir* builddir_Find(u64 t) __attribute__((__warn_unused_result_
 inline abt::FBuilddir* builddir_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:abt.FDb.builddir.N
-inline i32           builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:abt.FDb.builddir.RemoveAll
 void                 builddir_RemoveAll() __attribute__((nothrow));
@@ -1775,6 +1789,9 @@ abt::FSrcfile*       zd_inclstack_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:abt.FDb.zd_inclstack.qLast
 inline abt::FSrcfile& zd_inclstack_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:abt.FDb.zd_inclstack.InsertBefore
+void                 zd_inclstack_InsertBefore(abt::FSrcfile& row, abt::FSrcfile* before) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:abt.FDb.srcfile_curs.Reset
@@ -2085,7 +2102,6 @@ private:
     friend void                 filestat_RemoveAll() __attribute__((nothrow));
     friend void                 filestat_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:abt.FFilestat..Init
 inline void          FFilestat_Init(abt::FFilestat& filestat);
@@ -2102,7 +2118,7 @@ struct FInclude { // abt.FInclude
     u32                 ind_include_hashval;       // hash value
     algo::Smallstr200   include;                   //
     bool                sys;                       //   false
-    algo::Comment       comment;                   //
+    algo::cstring       comment;                   //
     abt::FSrcfile*      p_header;                  // reference to parent row
     bool                wantprint;                 //   false
     abt::FInclude*      srcfile_zd_include_next;   // zslist link; -1 means not-in-list
@@ -2122,7 +2138,6 @@ private:
     friend abt::FInclude*       include_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 include_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FInclude.msghdr.CopyOut
 void                 include_CopyOut(abt::FInclude &row, dev::Include &out) __attribute__((nothrow));
@@ -2131,10 +2146,10 @@ void                 include_CopyOut(abt::FInclude &row, dev::Include &out) __at
 void                 include_CopyIn(abt::FInclude &row, dev::Include &in) __attribute__((nothrow));
 
 // func:abt.FInclude.srcfile.Get
-algo::Smallstr200    srcfile_Get(abt::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         srcfile_Get(abt::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FInclude.filename.Get
-algo::Smallstr200    filename_Get(abt::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         filename_Get(abt::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt.FInclude..Init
@@ -2153,7 +2168,7 @@ struct FNs { // abt.FNs
     algo::Smallstr16   ns;               // Namespace name (primary key)
     algo::Smallstr50   nstype;           // Namespace type
     algo::Smallstr50   license;          // Associated license
-    algo::Comment      comment;          //
+    algo::cstring      comment;          //
     // func:abt.FNs..AssignOp
     inline abt::FNs&     operator =(const abt::FNs &rhs) = delete;
     // func:abt.FNs..CopyCtor
@@ -2167,7 +2182,6 @@ private:
     friend abt::FNs*            ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ns_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FNs.base.CopyOut
 void                 ns_CopyOut(abt::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
@@ -2224,7 +2238,6 @@ private:
     friend void                 srcfile_RemoveAll() __attribute__((nothrow));
     friend void                 srcfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FSrcfile.msghdr.CopyOut
 void                 srcfile_CopyOut(abt::FSrcfile &row, dev::Srcfile &out) __attribute__((nothrow));
@@ -2233,7 +2246,7 @@ void                 srcfile_CopyOut(abt::FSrcfile &row, dev::Srcfile &out) __at
 void                 srcfile_CopyIn(abt::FSrcfile &row, dev::Srcfile &in) __attribute__((nothrow));
 
 // func:abt.FSrcfile.ext.Get
-algo::Smallstr10     ext_Get(abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:abt.FSrcfile.zd_include.EmptyQ
@@ -2271,6 +2284,9 @@ abt::FInclude*       zd_include_RemoveFirst(abt::FSrcfile& srcfile) __attribute_
 // Return reference to last element in the index. No bounds checking.
 // func:abt.FSrcfile.zd_include.qLast
 inline abt::FInclude& zd_include_qLast(abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:abt.FSrcfile.zd_include.InsertBefore
+void                 zd_include_InsertBefore(abt::FSrcfile& srcfile, abt::FInclude& row, abt::FInclude* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:abt.FSrcfile..Init
@@ -2319,11 +2335,11 @@ struct FSyscmd { // abt.FSyscmd: A build command
     algo::cstring       fstdout;               // filename for stdout output
     algo::cstring       fstderr;               // filename for stderr output
     abt::FSyscmddep**   c_prior_elems;         // array of pointers
-    u32                 c_prior_n;             // array of pointers
-    u32                 c_prior_max;           // capacity of allocated array
+    u64                 c_prior_n;             // current size
+    u64                 c_prior_max;           // capacity of allocated array
     abt::FSyscmddep**   c_next_elems;          // array of pointers
-    u32                 c_next_n;              // array of pointers
-    u32                 c_next_max;            // capacity of allocated array
+    u64                 c_next_n;              // current size
+    u64                 c_next_max;            // capacity of allocated array
     i32                 rowid;                 //   0
     algo_lib::FFildes   fd_stdout;             // fd for stdout
     algo_lib::FFildes   fd_stderr;             // fd for stderr
@@ -2347,7 +2363,6 @@ private:
     friend abt::FSyscmd*        syscmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 syscmd_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FSyscmd.msghdr.CopyOut
 void                 syscmd_CopyOut(abt::FSyscmd &row, dev::Syscmd &out) __attribute__((nothrow));
@@ -2364,12 +2379,12 @@ i64                  execkey_Get(abt::FSyscmd& syscmd) __attribute__((__warn_unu
 inline bool          c_prior_EmptyQ(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt.FSyscmd.c_prior.Find
-inline abt::FSyscmddep* c_prior_Find(abt::FSyscmd& syscmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt::FSyscmddep* c_prior_Find(abt::FSyscmd& syscmd, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt.FSyscmd.c_prior.Getary
 inline algo::aryptr<abt::FSyscmddep*> c_prior_Getary(abt::FSyscmd& syscmd) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt.FSyscmd.c_prior.Insert
 void                 c_prior_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -2379,7 +2394,7 @@ void                 c_prior_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) 
 bool                 c_prior_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt.FSyscmd.c_prior.N
-inline i32           c_prior_N(const abt::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_prior_N(const abt::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt.FSyscmd.c_prior.Remove
 void                 c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
@@ -2388,10 +2403,10 @@ void                 c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) 
 inline void          c_prior_RemoveAll(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt.FSyscmd.c_prior.Reserve
-void                 c_prior_Reserve(abt::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
+void                 c_prior_Reserve(abt::FSyscmd& syscmd, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt.FSyscmd.c_prior.qFind
-inline abt::FSyscmddep& c_prior_qFind(abt::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
+inline abt::FSyscmddep& c_prior_qFind(abt::FSyscmd& syscmd, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt.FSyscmd.c_prior.InAryQ
 inline bool          syscmd_c_prior_InAryQ(abt::FSyscmddep& row) __attribute__((nothrow));
@@ -2404,12 +2419,12 @@ inline abt::FSyscmddep& c_prior_qLast(abt::FSyscmd& syscmd) __attribute__((nothr
 inline bool          c_next_EmptyQ(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt.FSyscmd.c_next.Find
-inline abt::FSyscmddep* c_next_Find(abt::FSyscmd& syscmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt::FSyscmddep* c_next_Find(abt::FSyscmd& syscmd, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt.FSyscmd.c_next.Getary
 inline algo::aryptr<abt::FSyscmddep*> c_next_Getary(abt::FSyscmd& syscmd) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt.FSyscmd.c_next.Insert
 void                 c_next_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -2419,7 +2434,7 @@ void                 c_next_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) _
 bool                 c_next_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt.FSyscmd.c_next.N
-inline i32           c_next_N(const abt::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_next_N(const abt::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt.FSyscmd.c_next.Remove
 void                 c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
@@ -2428,10 +2443,10 @@ void                 c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) _
 inline void          c_next_RemoveAll(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt.FSyscmd.c_next.Reserve
-void                 c_next_Reserve(abt::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
+void                 c_next_Reserve(abt::FSyscmd& syscmd, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt.FSyscmd.c_next.qFind
-inline abt::FSyscmddep& c_next_qFind(abt::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
+inline abt::FSyscmddep& c_next_qFind(abt::FSyscmd& syscmd, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt.FSyscmd.c_next.InAryQ
 inline bool          syscmd_c_next_InAryQ(abt::FSyscmddep& row) __attribute__((nothrow));
@@ -2496,7 +2511,6 @@ private:
     friend abt::FSyscmddep*     syscmddep_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 syscmddep_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FSyscmddep.msghdr.CopyOut
 void                 syscmddep_CopyOut(abt::FSyscmddep &row, dev::Syscmddep &out) __attribute__((nothrow));
@@ -2519,7 +2533,7 @@ struct FSyslib { // abt.FSyslib: System library
     abt::FSyslib*      ind_syslib_next;      // hash next
     u32                ind_syslib_hashval;   // hash value
     algo::Smallstr50   syslib;               //
-    algo::Comment      comment;              //
+    algo::cstring      comment;              //
     // func:abt.FSyslib..AssignOp
     inline abt::FSyslib& operator =(const abt::FSyslib &rhs) = delete;
     // func:abt.FSyslib..CopyCtor
@@ -2533,7 +2547,6 @@ private:
     friend abt::FSyslib*        syslib_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 syslib_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FSyslib.msghdr.CopyOut
 void                 syslib_CopyOut(abt::FSyslib &row, dev::Syslib &out) __attribute__((nothrow));
@@ -2553,7 +2566,7 @@ void                 FSyslib_Uninit(abt::FSyslib& syslib) __attribute__((nothrow
 // access: abt.FTarget.c_targdep (Ptrary)
 struct FTargdep { // abt.FTargdep: Dependency between targets
     algo::Smallstr50   targdep;                   // Primary key - target.parent
-    algo::Comment      comment;                   //
+    algo::cstring      comment;                   //
     abt::FTarget*      p_parent;                  // reference to parent row
     bool               target_c_targdep_in_ary;   //   false  membership flag
     // x-reference on abt.FTargdep.p_parent prevents copy
@@ -2571,7 +2584,6 @@ private:
     friend abt::FTargdep*       targdep_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 targdep_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FTargdep.msghdr.CopyOut
 void                 targdep_CopyOut(abt::FTargdep &row, dev::Targdep &out) __attribute__((nothrow));
@@ -2580,10 +2592,10 @@ void                 targdep_CopyOut(abt::FTargdep &row, dev::Targdep &out) __at
 void                 targdep_CopyIn(abt::FTargdep &row, dev::Targdep &in) __attribute__((nothrow));
 
 // func:abt.FTargdep.target.Get
-algo::Smallstr16     target_Get(abt::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(abt::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FTargdep.parent.Get
-algo::Smallstr16     parent_Get(abt::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_Get(abt::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt.FTargdep..Init
@@ -2614,21 +2626,21 @@ struct FTarget { // abt.FTarget: Build target
     abt::FSyscmd*        syscmd_link;              // optional pointer
     abt::FSyscmd*        syscmd_end;               // optional pointer
     abt::FTargsrc**      c_targsrc_elems;          // array of pointers
-    u32                  c_targsrc_n;              // array of pointers
-    u32                  c_targsrc_max;            // capacity of allocated array
+    u64                  c_targsrc_n;              // current size
+    u64                  c_targsrc_max;            // capacity of allocated array
     abt::FSrcfile**      c_srcfile_elems;          // array of pointers
-    u32                  c_srcfile_n;              // array of pointers
-    u32                  c_srcfile_max;            // capacity of allocated array
+    u64                  c_srcfile_n;              // current size
+    u64                  c_srcfile_max;            // capacity of allocated array
     abt::FTargdep**      c_targdep_elems;          // array of pointers
-    u32                  c_targdep_n;              // array of pointers
-    u32                  c_targdep_max;            // capacity of allocated array
+    u64                  c_targdep_n;              // current size
+    u64                  c_targdep_max;            // capacity of allocated array
     bool                 ood_visited;              //   false  Lockout for topo sort
     abt::FTargsyslib**   c_targsyslib_elems;       // array of pointers
-    u32                  c_targsyslib_n;           // array of pointers
-    u32                  c_targsyslib_max;         // capacity of allocated array
+    u64                  c_targsyslib_n;           // current size
+    u64                  c_targsyslib_max;         // capacity of allocated array
     abt::FTarget**       c_alldep_elems;           // array of pointers
-    u32                  c_alldep_n;               // array of pointers
-    u32                  c_alldep_max;             // capacity of allocated array
+    u64                  c_alldep_n;               // current size
+    u64                  c_alldep_max;             // capacity of allocated array
     abt::FNs*            p_ns;                     // reference to parent row
     bool                 libdep_visited;           //   false
     algo::UnTime         out_modtime;              //
@@ -2658,7 +2670,6 @@ private:
     friend abt::FTarget*        target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 target_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FTarget.msghdr.CopyOut
 void                 target_CopyOut(abt::FTarget &row, dev::Target &out) __attribute__((nothrow));
@@ -2671,12 +2682,12 @@ void                 target_CopyIn(abt::FTarget &row, dev::Target &in) __attribu
 inline bool          c_targsrc_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt.FTarget.c_targsrc.Find
-inline abt::FTargsrc* c_targsrc_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt::FTargsrc* c_targsrc_Find(abt::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt.FTarget.c_targsrc.Getary
 inline algo::aryptr<abt::FTargsrc*> c_targsrc_Getary(abt::FTarget& target) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt.FTarget.c_targsrc.Insert
 void                 c_targsrc_Insert(abt::FTarget& target, abt::FTargsrc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -2686,7 +2697,7 @@ void                 c_targsrc_Insert(abt::FTarget& target, abt::FTargsrc& row) 
 bool                 c_targsrc_InsertMaybe(abt::FTarget& target, abt::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt.FTarget.c_targsrc.N
-inline i32           c_targsrc_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targsrc_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt.FTarget.c_targsrc.Remove
 void                 c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) __attribute__((nothrow));
@@ -2695,10 +2706,10 @@ void                 c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) 
 inline void          c_targsrc_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt.FTarget.c_targsrc.Reserve
-void                 c_targsrc_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+void                 c_targsrc_Reserve(abt::FTarget& target, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt.FTarget.c_targsrc.qFind
-inline abt::FTargsrc& c_targsrc_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+inline abt::FTargsrc& c_targsrc_qFind(abt::FTarget& target, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt.FTarget.c_targsrc.InAryQ
 inline bool          target_c_targsrc_InAryQ(abt::FTargsrc& row) __attribute__((nothrow));
@@ -2711,12 +2722,12 @@ inline abt::FTargsrc& c_targsrc_qLast(abt::FTarget& target) __attribute__((nothr
 inline bool          c_srcfile_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt.FTarget.c_srcfile.Find
-inline abt::FSrcfile* c_srcfile_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt::FSrcfile* c_srcfile_Find(abt::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt.FTarget.c_srcfile.Getary
 inline algo::aryptr<abt::FSrcfile*> c_srcfile_Getary(abt::FTarget& target) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt.FTarget.c_srcfile.Insert
 void                 c_srcfile_Insert(abt::FTarget& target, abt::FSrcfile& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -2727,7 +2738,7 @@ void                 c_srcfile_Insert(abt::FTarget& target, abt::FSrcfile& row) 
 bool                 c_srcfile_ScanInsertMaybe(abt::FTarget& target, abt::FSrcfile& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt.FTarget.c_srcfile.N
-inline i32           c_srcfile_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_srcfile_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt.FTarget.c_srcfile.Remove
 void                 c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) __attribute__((nothrow));
@@ -2736,10 +2747,10 @@ void                 c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) 
 inline void          c_srcfile_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt.FTarget.c_srcfile.Reserve
-void                 c_srcfile_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+void                 c_srcfile_Reserve(abt::FTarget& target, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt.FTarget.c_srcfile.qFind
-inline abt::FSrcfile& c_srcfile_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+inline abt::FSrcfile& c_srcfile_qFind(abt::FTarget& target, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt.FTarget.c_srcfile.qLast
 inline abt::FSrcfile& c_srcfile_qLast(abt::FTarget& target) __attribute__((nothrow));
@@ -2749,12 +2760,12 @@ inline abt::FSrcfile& c_srcfile_qLast(abt::FTarget& target) __attribute__((nothr
 inline bool          c_targdep_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt.FTarget.c_targdep.Find
-inline abt::FTargdep* c_targdep_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt::FTargdep* c_targdep_Find(abt::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt.FTarget.c_targdep.Getary
 inline algo::aryptr<abt::FTargdep*> c_targdep_Getary(abt::FTarget& target) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt.FTarget.c_targdep.Insert
 void                 c_targdep_Insert(abt::FTarget& target, abt::FTargdep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -2764,7 +2775,7 @@ void                 c_targdep_Insert(abt::FTarget& target, abt::FTargdep& row) 
 bool                 c_targdep_InsertMaybe(abt::FTarget& target, abt::FTargdep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt.FTarget.c_targdep.N
-inline i32           c_targdep_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targdep_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt.FTarget.c_targdep.Remove
 void                 c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) __attribute__((nothrow));
@@ -2773,10 +2784,10 @@ void                 c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) 
 inline void          c_targdep_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt.FTarget.c_targdep.Reserve
-void                 c_targdep_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+void                 c_targdep_Reserve(abt::FTarget& target, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt.FTarget.c_targdep.qFind
-inline abt::FTargdep& c_targdep_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+inline abt::FTargdep& c_targdep_qFind(abt::FTarget& target, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt.FTarget.c_targdep.InAryQ
 inline bool          target_c_targdep_InAryQ(abt::FTargdep& row) __attribute__((nothrow));
@@ -2789,12 +2800,12 @@ inline abt::FTargdep& c_targdep_qLast(abt::FTarget& target) __attribute__((nothr
 inline bool          c_targsyslib_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt.FTarget.c_targsyslib.Find
-inline abt::FTargsyslib* c_targsyslib_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt::FTargsyslib* c_targsyslib_Find(abt::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt.FTarget.c_targsyslib.Getary
 inline algo::aryptr<abt::FTargsyslib*> c_targsyslib_Getary(abt::FTarget& target) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt.FTarget.c_targsyslib.Insert
 void                 c_targsyslib_Insert(abt::FTarget& target, abt::FTargsyslib& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -2804,7 +2815,7 @@ void                 c_targsyslib_Insert(abt::FTarget& target, abt::FTargsyslib&
 bool                 c_targsyslib_InsertMaybe(abt::FTarget& target, abt::FTargsyslib& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt.FTarget.c_targsyslib.N
-inline i32           c_targsyslib_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targsyslib_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt.FTarget.c_targsyslib.Remove
 void                 c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib& row) __attribute__((nothrow));
@@ -2813,10 +2824,10 @@ void                 c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib&
 inline void          c_targsyslib_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt.FTarget.c_targsyslib.Reserve
-void                 c_targsyslib_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+void                 c_targsyslib_Reserve(abt::FTarget& target, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt.FTarget.c_targsyslib.qFind
-inline abt::FTargsyslib& c_targsyslib_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+inline abt::FTargsyslib& c_targsyslib_qFind(abt::FTarget& target, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt.FTarget.c_targsyslib.InAryQ
 inline bool          target_c_targsyslib_InAryQ(abt::FTargsyslib& row) __attribute__((nothrow));
@@ -2829,12 +2840,12 @@ inline abt::FTargsyslib& c_targsyslib_qLast(abt::FTarget& target) __attribute__(
 inline bool          c_alldep_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt.FTarget.c_alldep.Find
-inline abt::FTarget* c_alldep_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt::FTarget* c_alldep_Find(abt::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt.FTarget.c_alldep.Getary
 inline algo::aryptr<abt::FTarget*> c_alldep_Getary(abt::FTarget& target) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt.FTarget.c_alldep.Insert
 void                 c_alldep_Insert(abt::FTarget& target, abt::FTarget& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -2845,7 +2856,7 @@ void                 c_alldep_Insert(abt::FTarget& target, abt::FTarget& row) __
 bool                 c_alldep_ScanInsertMaybe(abt::FTarget& target, abt::FTarget& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt.FTarget.c_alldep.N
-inline i32           c_alldep_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_alldep_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt.FTarget.c_alldep.Remove
 void                 c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) __attribute__((nothrow));
@@ -2854,10 +2865,10 @@ void                 c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) __
 inline void          c_alldep_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt.FTarget.c_alldep.Reserve
-void                 c_alldep_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+void                 c_alldep_Reserve(abt::FTarget& target, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt.FTarget.c_alldep.qFind
-inline abt::FTarget& c_alldep_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+inline abt::FTarget& c_alldep_qFind(abt::FTarget& target, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt.FTarget.c_alldep.qLast
 inline abt::FTarget& c_alldep_qLast(abt::FTarget& target) __attribute__((nothrow));
@@ -2932,7 +2943,7 @@ struct FTargsrc { // abt.FTargsrc: Source file for specific target
     abt::FTargsrc*      ind_targsrc_next;          // hash next
     u32                 ind_targsrc_hashval;       // hash value
     algo::Smallstr100   targsrc;                   //
-    algo::Comment       comment;                   //
+    algo::cstring       comment;                   //
     abt::FTarget*       p_target;                  // reference to parent row
     bool                target_c_targsrc_in_ary;   //   false  membership flag
     // x-reference on abt.FTargsrc.p_target prevents copy
@@ -2950,7 +2961,6 @@ private:
     friend abt::FTargsrc*       targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 targsrc_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FTargsrc.msghdr.CopyOut
 void                 targsrc_CopyOut(abt::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
@@ -2959,13 +2969,13 @@ void                 targsrc_CopyOut(abt::FTargsrc &row, dev::Targsrc &out) __at
 void                 targsrc_CopyIn(abt::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:abt.FTargsrc.target.Get
-algo::Smallstr16     target_Get(abt::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(abt::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FTargsrc.src.Get
-algo::Smallstr200    src_Get(abt::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(abt::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FTargsrc.ext.Get
-algo::Smallstr10     ext_Get(abt::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(abt::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt.FTargsrc..Init
@@ -2979,7 +2989,7 @@ void                 FTargsrc_Uninit(abt::FTargsrc& targsrc) __attribute__((noth
 // access: abt.FTarget.c_targsyslib (Ptrary)
 struct FTargsyslib { // abt.FTargsyslib: Target -> system library dependency
     algo::Smallstr50   targsyslib;                   //
-    algo::Comment      comment;                      //
+    algo::cstring      comment;                      //
     abt::FSyslib*      p_syslib;                     // reference to parent row
     bool               target_c_targsyslib_in_ary;   //   false  membership flag
     // x-reference on abt.FTargsyslib.p_syslib prevents copy
@@ -2997,7 +3007,6 @@ private:
     friend abt::FTargsyslib*    targsyslib_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 targsyslib_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FTargsyslib.msghdr.CopyOut
 void                 targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) __attribute__((nothrow));
@@ -3006,16 +3015,16 @@ void                 targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &
 void                 targsyslib_CopyIn(abt::FTargsyslib &row, dev::Targsyslib &in) __attribute__((nothrow));
 
 // func:abt.FTargsyslib.target.Get
-algo::Smallstr16     target_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FTargsyslib.syslib.Get
-algo::Smallstr50     syslib_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         syslib_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FTargsyslib.uname.Get
-algo::Smallstr50     uname_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         uname_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FTargsyslib.prefix.Get
-algo::Smallstr50     prefix_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         prefix_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt.FTargsyslib..Init
@@ -3028,7 +3037,7 @@ void                 FTargsyslib_Uninit(abt::FTargsyslib& targsyslib) __attribut
 // global access: tool_opt (Lary, by rowid)
 struct FToolOpt { // abt.FToolOpt: Single tool option
     algo::Smallstr100   tool_opt;      // Primary key - uname.compiler-cfg.arch/target-opt_type:opt
-    algo::Comment       comment;       //
+    algo::cstring       comment;       //
     algo_lib::Regx      regx_opt;      // Sql Regx
     algo_lib::Regx      regx_target;   // Sql Regx
 private:
@@ -3038,7 +3047,6 @@ private:
     friend abt::FToolOpt*       tool_opt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 tool_opt_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FToolOpt.msghdr.CopyOut
 void                 tool_opt_CopyOut(abt::FToolOpt &row, dev::ToolOpt &out) __attribute__((nothrow));
@@ -3047,28 +3055,28 @@ void                 tool_opt_CopyOut(abt::FToolOpt &row, dev::ToolOpt &out) __a
 void                 tool_opt_CopyIn(abt::FToolOpt &row, dev::ToolOpt &in) __attribute__((nothrow));
 
 // func:abt.FToolOpt.uname.Get
-algo::Smallstr50     uname_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         uname_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FToolOpt.compiler.Get
-algo::Smallstr50     compiler_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         compiler_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FToolOpt.cfg.Get
-algo::Smallstr50     cfg_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         cfg_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FToolOpt.arch.Get
-algo::Smallstr50     arch_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         arch_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FToolOpt.target.Get
-algo::Smallstr50     target_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FToolOpt.opt_type.Get
-algo::Smallstr50     opt_type_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         opt_type_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FToolOpt.opt.Get
-algo::Smallstr100    opt_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         opt_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt.FToolOpt.sortfld.Get
-algo::Smallstr50     sortfld_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         sortfld_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
 // Print back to string
 // func:abt.FToolOpt.regx_opt.Print
@@ -3087,7 +3095,7 @@ struct FUname { // abt.FUname: Unix name
     abt::FUname*       ind_uname_next;      // hash next
     u32                ind_uname_hashval;   // hash value
     algo::Smallstr50   uname;               //
-    algo::Comment      comment;             //
+    algo::cstring      comment;             //
     // func:abt.FUname..AssignOp
     inline abt::FUname&  operator =(const abt::FUname &rhs) = delete;
     // func:abt.FUname..CopyCtor
@@ -3101,7 +3109,6 @@ private:
     friend abt::FUname*         uname_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 uname_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:abt.FUname.msghdr.CopyOut
 void                 uname_CopyOut(abt::FUname &row, dev::Uname &out) __attribute__((nothrow));
@@ -3129,7 +3136,6 @@ struct FieldId { // abt.FieldId: Field read helper
     inline               FieldId(abt_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:abt.FieldId.value.GetEnum
 inline abt_FieldIdEnum value_GetEnum(const abt::FieldId& parent) __attribute__((nothrow));
@@ -3167,7 +3173,7 @@ inline void          FieldId_Init(abt::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:abt.FieldId.String  printfmt:Raw
 // func:abt.FieldId..Print
-void                 FieldId_Print(abt::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(abt::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- abt.TableId
 struct TableId { // abt.TableId: Index of table in this namespace
@@ -3181,7 +3187,6 @@ struct TableId { // abt.TableId: Index of table in this namespace
     // func:abt.TableId..EnumCtor
     inline               TableId(abt_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:abt.TableId.value.GetEnum
 inline abt_TableIdEnum value_GetEnum(const abt::TableId& parent) __attribute__((nothrow));
@@ -3219,7 +3224,7 @@ inline void          TableId_Init(abt::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:abt.TableId.String  printfmt:Raw
 // func:abt.TableId..Print
-void                 TableId_Print(abt::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(abt::TableId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- abt.config
 struct config { // abt.config: Breadcrumbs printed by abt when executing
@@ -3232,7 +3237,6 @@ struct config { // abt.config: Breadcrumbs printed by abt when executing
     // func:abt.config..FieldwiseCtor
     explicit inline               config(const algo::strptr& in_builddir, i32 in_ood_src, i32 in_ood_target, const algo::strptr& in_cache) __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:abt.config..Init
 inline void          config_Init(abt::config& parent);
@@ -3388,8 +3392,8 @@ struct _db_include_curs {// cursor
 struct _db_sysincl_curs {// cursor
     typedef algo::cstring ChildType;
     algo::cstring* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     _db_sysincl_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -3448,8 +3452,8 @@ struct srcfile_zd_include_curs {// fcurs:abt.FSrcfile.zd_include/curs
 struct syscmd_c_prior_curs {// fcurs:abt.FSyscmd.c_prior/curs
     typedef abt::FSyscmddep ChildType;
     abt::FSyscmddep** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     syscmd_c_prior_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -3457,8 +3461,8 @@ struct syscmd_c_prior_curs {// fcurs:abt.FSyscmd.c_prior/curs
 struct syscmd_c_next_curs {// fcurs:abt.FSyscmd.c_next/curs
     typedef abt::FSyscmddep ChildType;
     abt::FSyscmddep** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     syscmd_c_next_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -3466,8 +3470,8 @@ struct syscmd_c_next_curs {// fcurs:abt.FSyscmd.c_next/curs
 struct target_c_targsrc_curs {// fcurs:abt.FTarget.c_targsrc/curs
     typedef abt::FTargsrc ChildType;
     abt::FTargsrc** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     target_c_targsrc_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -3475,8 +3479,8 @@ struct target_c_targsrc_curs {// fcurs:abt.FTarget.c_targsrc/curs
 struct target_c_srcfile_curs {// fcurs:abt.FTarget.c_srcfile/curs
     typedef abt::FSrcfile ChildType;
     abt::FSrcfile** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     target_c_srcfile_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -3484,8 +3488,8 @@ struct target_c_srcfile_curs {// fcurs:abt.FTarget.c_srcfile/curs
 struct target_c_targdep_curs {// fcurs:abt.FTarget.c_targdep/curs
     typedef abt::FTargdep ChildType;
     abt::FTargdep** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     target_c_targdep_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -3493,8 +3497,8 @@ struct target_c_targdep_curs {// fcurs:abt.FTarget.c_targdep/curs
 struct target_c_targsyslib_curs {// fcurs:abt.FTarget.c_targsyslib/curs
     typedef abt::FTargsyslib ChildType;
     abt::FTargsyslib** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     target_c_targsyslib_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -3502,8 +3506,8 @@ struct target_c_targsyslib_curs {// fcurs:abt.FTarget.c_targsyslib/curs
 struct target_c_alldep_curs {// fcurs:abt.FTarget.c_alldep/curs
     typedef abt::FTarget ChildType;
     abt::FTarget** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     target_c_alldep_curs() { elems=NULL; n_elems=0; index=0; }
 };
 

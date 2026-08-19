@@ -58,7 +58,9 @@ void acr_ed::RegisterFile(algo::strptr fname, algo::strptr comment) {
     if (StartsWithQ(fname, "bin/")) {
         dev::Scriptfile scriptfile;
         scriptfile.gitfile = gitfile.gitfile;
-        scriptfile.license = "GPL";
+        scriptfile.license = acr_ed::_db.cmdline.license != ""
+            ? algo::strptr(acr_ed::_db.cmdline.license)
+            : algo::strptr("GPL");
         scriptfile.comment.value = comment;
         acr_ed::_db.out_ssim << scriptfile << eol;
     }
@@ -176,6 +178,15 @@ static void SelectCreate() {
     if (ch_N(acr_ed::_db.cmdline.field) > 0) {
         acr_ed_edaction_Create_Field.select=true;
     }
+    if (ch_N(acr_ed::_db.cmdline.fstep) > 0) {
+        acr_ed_edaction_Create_Fstep.select=true;
+    }
+    if (ch_N(acr_ed::_db.cmdline.fcurs) > 0) {
+        acr_ed_edaction_Create_Fcurs.select=true;
+    }
+    if (ch_N(acr_ed::_db.cmdline.dispatch_msg) > 0) {
+        acr_ed_edaction_Create_DispatchMsg.select=true;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -255,7 +266,7 @@ static void ExecuteTransaction() {
     }
     // append accumulated script to 'script'
     final_script << acr_ed::_db.script;
-    if (acr_ed::_db.need_amc && acr_ed::_db.cmdline.amc) {
+    if (acr_ed::_db.need_amc) {
         final_script <<  "bin/amc" << eol;
     }
     algo_lib::FTempfile tempfile;
@@ -276,22 +287,6 @@ static void ExecuteTransaction() {
     int rc=SysCmd(final_script, FailokQ(true));
     if (rc!=0) {
         algo_lib::_db.exit_code++;
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-void acr_ed::BuildTest() {
-    command::abt_proc abt;
-    abt.cmd.install = true;
-    abt.cmd.cfg.expr = dev_Cfg_cfg_debug;
-    abt.cmd.target.expr = "atf%|amc%|abt%|acr%";
-    if (abt_Exec(abt)!=0) {
-        algo_lib::_db.exit_code=1;
-    }
-    command::atf_amc_proc atf_amc;
-    if (atf_amc_Exec(atf_amc)!=0) {
-        algo_lib::_db.exit_code=1;
     }
 }
 
@@ -377,28 +372,25 @@ void acr_ed::Main() {
 
         // BEGIN SANDBOX (if requested)
         if (acr_ed::_db.cmdline.sandbox) {
-            command::sandbox_proc sandbox;
-            sandbox.cmd.name.expr = dev_Sandbox_sandbox_acr_ed;
-            sandbox.cmd.reset = true;
-            sandbox_ExecX(sandbox);
-            algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_acr_ed));
+            command::wt_proc wt;
+            wt.cmd.name.expr = dev_Sandbox_sandbox_acr_ed;
+            wt.cmd.reset = true;
+            wt_ExecX(wt);
+            algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_acr_ed));
             acr_ed::_db.cmdline.write = true;// !!! enable write mode from now on
             NeedAmc();
         }
 
         // execute/show proposed transaction
         ExecuteTransaction();
-        if (acr_ed::_db.cmdline.test) {
-            BuildTest();
-        }
 
         // END SANDBOX (if requested)
         if (acr_ed::_db.cmdline.sandbox) {
             algo_lib::PopDir();
-            command::sandbox_proc sandbox;
-            sandbox.cmd.name.expr = dev_Sandbox_sandbox_acr_ed;
-            sandbox.cmd.diff = true;
-            sandbox_ExecX(sandbox);
+            command::wt_proc wt;
+            wt.cmd.name.expr = dev_Sandbox_sandbox_acr_ed;
+            wt.cmd.diff = true;
+            wt_ExecX(wt);
         }
     }
 }

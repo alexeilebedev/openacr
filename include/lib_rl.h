@@ -67,6 +67,9 @@ namespace lib_rl { // update-hdr
     // whether realine in substate - not bare chars
     bool SubstateQ();
 
+    // Cancel current readline substate (reverse-i-search, completion, etc.)
+    void CancelSubstate();
+
     // whether mode is readline or normal
     bool ReadlineQ();
     void SetPrompt(algo::strptr prompt);
@@ -94,5 +97,8 @@ namespace lib_rl { // update-hdr
 
     // restore terminal settings
     //     (user-implemented function, prototype is in amc-generated header)
-    // void iohook_Cleanup(); // fcleanup:lib_rl.FDb.iohook
+    // void iohook_Cleanup(); // ffunc:lib_rl.FDb.iohook.Cleanup
+
+    // flush unread input, so it will not go to shell
+    void FlushInput();
 }

@@ -29,129 +29,142 @@
 #include "include/gen/amsdb_gen.inl.h"
 //#pragma endinclude
 
-// --- lib_ams.CtlConnCase.value.GetEnum
-// Get value of field as enum type
-inline lib_ams_CtlConnCaseEnum lib_ams::value_GetEnum(const lib_ams::CtlConnCase& parent) {
-    return lib_ams_CtlConnCaseEnum(parent.value);
-}
-
-// --- lib_ams.CtlConnCase.value.SetEnum
-// Set value of field from enum type.
-inline void lib_ams::value_SetEnum(lib_ams::CtlConnCase& parent, lib_ams_CtlConnCaseEnum rhs) {
-    parent.value = u32(rhs);
-}
-
-// --- lib_ams.CtlConnCase.value.Cast
-inline  lib_ams::CtlConnCase::operator lib_ams_CtlConnCaseEnum() const {
-    return lib_ams_CtlConnCaseEnum((*this).value);
-}
-
-// --- lib_ams.CtlConnCase..Init
+// --- lib_ams.Boardent..Init
 // Set all fields to initial values.
-inline void lib_ams::CtlConnCase_Init(lib_ams::CtlConnCase& parent) {
-    parent.value = u32(0);
+inline void lib_ams::Boardent_Init(lib_ams::Boardent& parent) {
+    parent.ring_pos = u64(0);
+    parent.slot = u32(0);
 }
 
-// --- lib_ams.CtlConnCase..Ctor
-inline  lib_ams::CtlConnCase::CtlConnCase() {
-    lib_ams::CtlConnCase_Init(*this);
+// --- lib_ams.Boardent..Ctor
+inline  lib_ams::Boardent::Boardent() {
+    lib_ams::Boardent_Init(*this);
 }
 
-// --- lib_ams.CtlConnCase..FieldwiseCtor
-inline  lib_ams::CtlConnCase::CtlConnCase(u32 in_value)
-    : value(in_value)
- {
+// --- lib_ams.FBoardq.boardent.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::boardent_EmptyQ(lib_ams::FBoardq& boardq) {
+    return boardq.boardent_n == 0;
 }
 
-// --- lib_ams.CtlConnCase..EnumCtor
-inline  lib_ams::CtlConnCase::CtlConnCase(lib_ams_CtlConnCaseEnum arg) {
-    this->value = u32(arg);
+// --- lib_ams.FBoardq.boardent.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_ams::Boardent* lib_ams::boardent_Find(lib_ams::FBoardq& boardq, u64 t) {
+    u64 idx = t;
+    u64 lim = boardq.boardent_n;
+    if (idx >= lim) return NULL;
+    return boardq.boardent_elems + idx;
 }
 
-// --- lib_ams.CtlMsgCase.value.GetEnum
-// Get value of field as enum type
-inline lib_ams_CtlMsgCaseEnum lib_ams::value_GetEnum(const lib_ams::CtlMsgCase& parent) {
-    return lib_ams_CtlMsgCaseEnum(parent.value);
+// --- lib_ams.FBoardq.boardent.Getary
+// Return array pointer by value
+inline algo::aryptr<lib_ams::Boardent> lib_ams::boardent_Getary(const lib_ams::FBoardq& boardq) {
+    return algo::aryptr<lib_ams::Boardent>(boardq.boardent_elems, boardq.boardent_n);
 }
 
-// --- lib_ams.CtlMsgCase.value.SetEnum
-// Set value of field from enum type.
-inline void lib_ams::value_SetEnum(lib_ams::CtlMsgCase& parent, lib_ams_CtlMsgCaseEnum rhs) {
-    parent.value = u32(rhs);
+// --- lib_ams.FBoardq.boardent.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_ams::Boardent* lib_ams::boardent_Last(lib_ams::FBoardq& boardq) {
+    return boardent_Find(boardq, u64(boardq.boardent_n-1));
 }
 
-// --- lib_ams.CtlMsgCase.value.Cast
-inline  lib_ams::CtlMsgCase::operator lib_ams_CtlMsgCaseEnum() const {
-    return lib_ams_CtlMsgCaseEnum((*this).value);
+// --- lib_ams.FBoardq.boardent.Max
+// Return max. number of items in the array
+inline i64 lib_ams::boardent_Max(lib_ams::FBoardq& boardq) {
+    (void)boardq;
+    return boardq.boardent_max;
 }
 
-// --- lib_ams.CtlMsgCase..Init
+// --- lib_ams.FBoardq.boardent.N
+// Return number of items in the array
+inline i64 lib_ams::boardent_N(const lib_ams::FBoardq& boardq) {
+    return boardq.boardent_n;
+}
+
+// --- lib_ams.FBoardq.boardent.RemoveAll
+inline void lib_ams::boardent_RemoveAll(lib_ams::FBoardq& boardq) {
+    boardq.boardent_n = 0;
+}
+
+// --- lib_ams.FBoardq.boardent.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void lib_ams::boardent_Reserve(lib_ams::FBoardq& boardq, i64 n) {
+    u64 new_n = boardq.boardent_n + n;
+    if (UNLIKELY(new_n > boardq.boardent_max)) {
+        boardent_AbsReserve(boardq, new_n);
+    }
+}
+
+// --- lib_ams.FBoardq.boardent.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_ams::Boardent& lib_ams::boardent_qFind(lib_ams::FBoardq& boardq, u64 t) {
+    return boardq.boardent_elems[t];
+}
+
+// --- lib_ams.FBoardq.boardent.qLast
+// Return reference to last element of array. No bounds checking
+inline lib_ams::Boardent& lib_ams::boardent_qLast(lib_ams::FBoardq& boardq) {
+    return boardent_qFind(boardq, u64(boardq.boardent_n-1));
+}
+
+// --- lib_ams.FBoardq.boardent.rowid_Get
+// Return row id of specified element
+inline u64 lib_ams::boardent_rowid_Get(lib_ams::FBoardq& boardq, lib_ams::Boardent &elem) {
+    u64 id = &elem - boardq.boardent_elems;
+    return u64(id);
+}
+
+// --- lib_ams.FBoardq.boardent_curs.Next
+// proceed to next item
+inline void lib_ams::boardq_boardent_curs_Next(boardq_boardent_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_ams.FBoardq.boardent_curs.Reset
+inline void lib_ams::boardq_boardent_curs_Reset(boardq_boardent_curs &curs, lib_ams::FBoardq &parent) {
+    curs.elems = parent.boardent_elems;
+    curs.n_elems = parent.boardent_n;
+    curs.index = 0;
+}
+
+// --- lib_ams.FBoardq.boardent_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::boardq_boardent_curs_ValidQ(boardq_boardent_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_ams.FBoardq.boardent_curs.Access
+// item access
+inline lib_ams::Boardent& lib_ams::boardq_boardent_curs_Access(boardq_boardent_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- lib_ams.FBoardq..Init
 // Set all fields to initial values.
-inline void lib_ams::CtlMsgCase_Init(lib_ams::CtlMsgCase& parent) {
-    parent.value = u32(0);
+inline void lib_ams::FBoardq_Init(lib_ams::FBoardq& boardq) {
+    boardq.memberidx = u32(0);
+    boardq.head = u64(0);
+    boardq.tail = u64(0);
+    boardq.p_shm = NULL;
+    boardq.boardent_elems 	= 0; // (lib_ams.FBoardq.boardent)
+    boardq.boardent_n     	= 0; // (lib_ams.FBoardq.boardent)
+    boardq.boardent_max   	= 0; // (lib_ams.FBoardq.boardent)
+    boardq.shm_c_boardq_in_ary = bool(false);
 }
 
-// --- lib_ams.CtlMsgCase..Ctor
-inline  lib_ams::CtlMsgCase::CtlMsgCase() {
-    lib_ams::CtlMsgCase_Init(*this);
+// --- lib_ams.FBoardq..Ctor
+inline  lib_ams::FBoardq::FBoardq() {
+    lib_ams::FBoardq_Init(*this);
 }
 
-// --- lib_ams.CtlMsgCase..FieldwiseCtor
-inline  lib_ams::CtlMsgCase::CtlMsgCase(u32 in_value)
-    : value(in_value)
- {
-}
-
-// --- lib_ams.CtlMsgCase..EnumCtor
-inline  lib_ams::CtlMsgCase::CtlMsgCase(lib_ams_CtlMsgCaseEnum arg) {
-    this->value = u32(arg);
+// --- lib_ams.FBoardq..Dtor
+inline  lib_ams::FBoardq::~FBoardq() {
+    lib_ams::FBoardq_Uninit(*this);
 }
 
 // --- lib_ams.trace..Ctor
 inline  lib_ams::trace::trace() {
     lib_ams::trace_Init(*this);
-}
-
-// --- lib_ams.FDb.fdin.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::fdin_EmptyQ() {
-    return _db.fdin_n == 0;
-}
-
-// --- lib_ams.FDb.fdin.Find
-// Look up row by row id. Return NULL if out of range
-inline lib_ams::FFdin* lib_ams::fdin_Find(u64 t) {
-    lib_ams::FFdin *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.fdin_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.fdin_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- lib_ams.FDb.fdin.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline lib_ams::FFdin* lib_ams::fdin_Last() {
-    return fdin_Find(u64(_db.fdin_n-1));
-}
-
-// --- lib_ams.FDb.fdin.N
-// Return number of items in the pool
-inline i32 lib_ams::fdin_N() {
-    return _db.fdin_n;
-}
-
-// --- lib_ams.FDb.fdin.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline lib_ams::FFdin& lib_ams::fdin_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.fdin_lary[bsr][index];
 }
 
 // --- lib_ams.FDb.cd_fdin_eof.EmptyQ
@@ -266,62 +279,6 @@ inline lib_ams::FFdin& lib_ams::cd_fdin_read_qLast() {
     return *row;
 }
 
-// --- lib_ams.FDb.zd_flush.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::zd_flush_EmptyQ() {
-    return _db.zd_flush_head == NULL;
-}
-
-// --- lib_ams.FDb.zd_flush.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FWritefile* lib_ams::zd_flush_First() {
-    lib_ams::FWritefile *row = NULL;
-    row = _db.zd_flush_head;
-    return row;
-}
-
-// --- lib_ams.FDb.zd_flush.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool lib_ams::zd_flush_InLlistQ(lib_ams::FWritefile& row) {
-    bool result = false;
-    result = !(row.zd_flush_next == (lib_ams::FWritefile*)-1);
-    return result;
-}
-
-// --- lib_ams.FDb.zd_flush.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FWritefile* lib_ams::zd_flush_Last() {
-    lib_ams::FWritefile *row = NULL;
-    row = _db.zd_flush_tail;
-    return row;
-}
-
-// --- lib_ams.FDb.zd_flush.N
-// Return number of items in the linked list
-inline i32 lib_ams::zd_flush_N() {
-    return _db.zd_flush_n;
-}
-
-// --- lib_ams.FDb.zd_flush.Next
-// Return pointer to next element in the list
-inline lib_ams::FWritefile* lib_ams::zd_flush_Next(lib_ams::FWritefile &row) {
-    return row.zd_flush_next;
-}
-
-// --- lib_ams.FDb.zd_flush.Prev
-// Return pointer to previous element in the list
-inline lib_ams::FWritefile* lib_ams::zd_flush_Prev(lib_ams::FWritefile &row) {
-    return row.zd_flush_prev;
-}
-
-// --- lib_ams.FDb.zd_flush.qLast
-// Return reference to last element in the index. No bounds checking.
-inline lib_ams::FWritefile& lib_ams::zd_flush_qLast() {
-    lib_ams::FWritefile *row = NULL;
-    row = _db.zd_flush_tail;
-    return *row;
-}
-
 // --- lib_ams.FDb.shm.EmptyQ
 // Return true if index is empty
 inline bool lib_ams::shm_EmptyQ() {
@@ -350,7 +307,7 @@ inline lib_ams::FShm* lib_ams::shm_Last() {
 
 // --- lib_ams.FDb.shm.N
 // Return number of items in the pool
-inline i32 lib_ams::shm_N() {
+inline i64 lib_ams::shm_N() {
     return _db.shm_n;
 }
 
@@ -376,62 +333,6 @@ inline i32 lib_ams::ind_shm_N() {
     return _db.ind_shm_n;
 }
 
-// --- lib_ams.FDb.cd_hb.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::cd_hb_EmptyQ() {
-    return _db.cd_hb_head == NULL;
-}
-
-// --- lib_ams.FDb.cd_hb.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FShmember* lib_ams::cd_hb_First() {
-    lib_ams::FShmember *row = NULL;
-    row = _db.cd_hb_head;
-    return row;
-}
-
-// --- lib_ams.FDb.cd_hb.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool lib_ams::cd_hb_InLlistQ(lib_ams::FShmember& row) {
-    bool result = false;
-    result = !(row.cd_hb_next == (lib_ams::FShmember*)-1);
-    return result;
-}
-
-// --- lib_ams.FDb.cd_hb.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FShmember* lib_ams::cd_hb_Last() {
-    lib_ams::FShmember *row = NULL;
-    row = _db.cd_hb_head ? _db.cd_hb_head->cd_hb_prev : NULL;
-    return row;
-}
-
-// --- lib_ams.FDb.cd_hb.N
-// Return number of items in the linked list
-inline i32 lib_ams::cd_hb_N() {
-    return _db.cd_hb_n;
-}
-
-// --- lib_ams.FDb.cd_hb.Next
-// Return pointer to next element in the list
-inline lib_ams::FShmember* lib_ams::cd_hb_Next(lib_ams::FShmember &row) {
-    return row.cd_hb_next;
-}
-
-// --- lib_ams.FDb.cd_hb.Prev
-// Return pointer to previous element in the list
-inline lib_ams::FShmember* lib_ams::cd_hb_Prev(lib_ams::FShmember &row) {
-    return row.cd_hb_prev;
-}
-
-// --- lib_ams.FDb.cd_hb.qLast
-// Return reference to last element in the index. No bounds checking.
-inline lib_ams::FShmember& lib_ams::cd_hb_qLast() {
-    lib_ams::FShmember *row = NULL;
-    row = _db.cd_hb_head ? _db.cd_hb_head->cd_hb_prev : NULL;
-    return *row;
-}
-
 // --- lib_ams.FDb.cd_poll_read.EmptyQ
 // Return true if index is empty
 inline bool lib_ams::cd_poll_read_EmptyQ() {
@@ -440,24 +341,24 @@ inline bool lib_ams::cd_poll_read_EmptyQ() {
 
 // --- lib_ams.FDb.cd_poll_read.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FShmember* lib_ams::cd_poll_read_First() {
-    lib_ams::FShmember *row = NULL;
+inline lib_ams::FShm* lib_ams::cd_poll_read_First() {
+    lib_ams::FShm *row = NULL;
     row = _db.cd_poll_read_head;
     return row;
 }
 
 // --- lib_ams.FDb.cd_poll_read.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::cd_poll_read_InLlistQ(lib_ams::FShmember& row) {
+inline bool lib_ams::cd_poll_read_InLlistQ(lib_ams::FShm& row) {
     bool result = false;
-    result = !(row.cd_poll_read_next == (lib_ams::FShmember*)-1);
+    result = !(row.cd_poll_read_next == (lib_ams::FShm*)-1);
     return result;
 }
 
 // --- lib_ams.FDb.cd_poll_read.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FShmember* lib_ams::cd_poll_read_Last() {
-    lib_ams::FShmember *row = NULL;
+inline lib_ams::FShm* lib_ams::cd_poll_read_Last() {
+    lib_ams::FShm *row = NULL;
     row = _db.cd_poll_read_head ? _db.cd_poll_read_head->cd_poll_read_prev : NULL;
     return row;
 }
@@ -470,77 +371,21 @@ inline i32 lib_ams::cd_poll_read_N() {
 
 // --- lib_ams.FDb.cd_poll_read.Next
 // Return pointer to next element in the list
-inline lib_ams::FShmember* lib_ams::cd_poll_read_Next(lib_ams::FShmember &row) {
+inline lib_ams::FShm* lib_ams::cd_poll_read_Next(lib_ams::FShm &row) {
     return row.cd_poll_read_next;
 }
 
 // --- lib_ams.FDb.cd_poll_read.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FShmember* lib_ams::cd_poll_read_Prev(lib_ams::FShmember &row) {
+inline lib_ams::FShm* lib_ams::cd_poll_read_Prev(lib_ams::FShm &row) {
     return row.cd_poll_read_prev;
 }
 
 // --- lib_ams.FDb.cd_poll_read.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FShmember& lib_ams::cd_poll_read_qLast() {
-    lib_ams::FShmember *row = NULL;
+inline lib_ams::FShm& lib_ams::cd_poll_read_qLast() {
+    lib_ams::FShm *row = NULL;
     row = _db.cd_poll_read_head ? _db.cd_poll_read_head->cd_poll_read_prev : NULL;
-    return *row;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::cd_slow_poll_read_EmptyQ() {
-    return _db.cd_slow_poll_read_head == NULL;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FShmember* lib_ams::cd_slow_poll_read_First() {
-    lib_ams::FShmember *row = NULL;
-    row = _db.cd_slow_poll_read_head;
-    return row;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool lib_ams::cd_slow_poll_read_InLlistQ(lib_ams::FShmember& row) {
-    bool result = false;
-    result = !(row.cd_slow_poll_read_next == (lib_ams::FShmember*)-1);
-    return result;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FShmember* lib_ams::cd_slow_poll_read_Last() {
-    lib_ams::FShmember *row = NULL;
-    row = _db.cd_slow_poll_read_head ? _db.cd_slow_poll_read_head->cd_slow_poll_read_prev : NULL;
-    return row;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read.N
-// Return number of items in the linked list
-inline i32 lib_ams::cd_slow_poll_read_N() {
-    return _db.cd_slow_poll_read_n;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read.Next
-// Return pointer to next element in the list
-inline lib_ams::FShmember* lib_ams::cd_slow_poll_read_Next(lib_ams::FShmember &row) {
-    return row.cd_slow_poll_read_next;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read.Prev
-// Return pointer to previous element in the list
-inline lib_ams::FShmember* lib_ams::cd_slow_poll_read_Prev(lib_ams::FShmember &row) {
-    return row.cd_slow_poll_read_prev;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read.qLast
-// Return reference to last element in the index. No bounds checking.
-inline lib_ams::FShmember& lib_ams::cd_slow_poll_read_qLast() {
-    lib_ams::FShmember *row = NULL;
-    row = _db.cd_slow_poll_read_head ? _db.cd_slow_poll_read_head->cd_slow_poll_read_prev : NULL;
     return *row;
 }
 
@@ -556,141 +401,58 @@ inline i32 lib_ams::ind_proc_N() {
     return _db.ind_proc_n;
 }
 
-// --- lib_ams.FDb.ind_shmember.EmptyQ
-// Return true if hash is empty
-inline bool lib_ams::ind_shmember_EmptyQ() {
-    return _db.ind_shmember_n == 0;
-}
-
-// --- lib_ams.FDb.ind_shmember.N
-// Return number of items in the hash
-inline i32 lib_ams::ind_shmember_N() {
-    return _db.ind_shmember_n;
-}
-
-// --- lib_ams.FDb.shmtype.EmptyQ
+// --- lib_ams.FDb.grptype.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::shmtype_EmptyQ() {
-    return _db.shmtype_n == 0;
+inline bool lib_ams::grptype_EmptyQ() {
+    return _db.grptype_n == 0;
 }
 
-// --- lib_ams.FDb.shmtype.Find
+// --- lib_ams.FDb.grptype.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_ams::FShmtype* lib_ams::shmtype_Find(u64 t) {
-    lib_ams::FShmtype *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.shmtype_n))) {
+inline lib_ams::FGrptype* lib_ams::grptype_Find(u64 t) {
+    lib_ams::FGrptype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.grptype_n))) {
         u64 x = t + 1;
         u64 bsr   = algo::u64_BitScanReverse(x);
         u64 base  = u64(1)<<bsr;
         u64 index = x-base;
-        retval = &_db.shmtype_lary[bsr][index];
+        retval = &_db.grptype_lary[bsr][index];
     }
     return retval;
 }
 
-// --- lib_ams.FDb.shmtype.Last
+// --- lib_ams.FDb.grptype.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_ams::FShmtype* lib_ams::shmtype_Last() {
-    return shmtype_Find(u64(_db.shmtype_n-1));
+inline lib_ams::FGrptype* lib_ams::grptype_Last() {
+    return grptype_Find(u64(_db.grptype_n-1));
 }
 
-// --- lib_ams.FDb.shmtype.N
+// --- lib_ams.FDb.grptype.N
 // Return number of items in the pool
-inline i32 lib_ams::shmtype_N() {
-    return _db.shmtype_n;
+inline i64 lib_ams::grptype_N() {
+    return _db.grptype_n;
 }
 
-// --- lib_ams.FDb.shmtype.qFind
+// --- lib_ams.FDb.grptype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_ams::FShmtype& lib_ams::shmtype_qFind(u64 t) {
+inline lib_ams::FGrptype& lib_ams::grptype_qFind(u64 t) {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
-    return _db.shmtype_lary[bsr][index];
+    return _db.grptype_lary[bsr][index];
 }
 
-// --- lib_ams.FDb.ind_shmtype.EmptyQ
+// --- lib_ams.FDb.ind_grptype.EmptyQ
 // Return true if hash is empty
-inline bool lib_ams::ind_shmtype_EmptyQ() {
-    return _db.ind_shmtype_n == 0;
+inline bool lib_ams::ind_grptype_EmptyQ() {
+    return _db.ind_grptype_n == 0;
 }
 
-// --- lib_ams.FDb.ind_shmtype.N
+// --- lib_ams.FDb.ind_grptype.N
 // Return number of items in the hash
-inline i32 lib_ams::ind_shmtype_N() {
-    return _db.ind_shmtype_n;
-}
-
-// --- lib_ams.FDb.c_ctlin.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::c_ctlin_EmptyQ() {
-    return _db.c_ctlin_n == 0;
-}
-
-// --- lib_ams.FDb.c_ctlin.Find
-// Look up row by row id. Return NULL if out of range
-inline lib_ams::FShmember* lib_ams::c_ctlin_Find(u32 t) {
-    lib_ams::FShmember *retval = NULL;
-    u64 idx = t;
-    u64 lim = _db.c_ctlin_n;
-    if (idx < lim) {
-        retval = _db.c_ctlin_elems[idx];
-    }
-    return retval;
-}
-
-// --- lib_ams.FDb.c_ctlin.Getary
-// Return array of pointers
-inline algo::aryptr<lib_ams::FShmember*> lib_ams::c_ctlin_Getary() {
-    return algo::aryptr<lib_ams::FShmember*>(_db.c_ctlin_elems, _db.c_ctlin_n);
-}
-
-// --- lib_ams.FDb.c_ctlin.First
-inline lib_ams::FShmember* lib_ams::c_ctlin_First() {
-    lib_ams::FShmember *row = NULL;
-    row = _db.c_ctlin_n ? _db.c_ctlin_elems[0] : NULL;
-    return row;
-}
-
-// --- lib_ams.FDb.c_ctlin.Last
-inline lib_ams::FShmember* lib_ams::c_ctlin_Last() {
-    lib_ams::FShmember *row = NULL;
-    row = _db.c_ctlin_n ? _db.c_ctlin_elems[_db.c_ctlin_n-1] : NULL;
-    return row;
-}
-
-// --- lib_ams.FDb.c_ctlin.N
-// Return number of items in the pointer array
-inline i32 lib_ams::c_ctlin_N() {
-    return _db.c_ctlin_n;
-}
-
-// --- lib_ams.FDb.c_ctlin.RemoveAll
-// Empty the index. (The rows are not deleted)
-inline void lib_ams::c_ctlin_RemoveAll() {
-    for (u32 i = 0; i < _db.c_ctlin_n; i++) {
-        _db.c_ctlin_elems[i]->c_ctlin_idx = -1;
-    }
-    _db.c_ctlin_n = 0;
-}
-
-// --- lib_ams.FDb.c_ctlin.qFind
-// Return reference without bounds checking
-inline lib_ams::FShmember& lib_ams::c_ctlin_qFind(u32 idx) {
-    return *_db.c_ctlin_elems[idx];
-}
-
-// --- lib_ams.FDb.c_ctlin.InAryQ
-// True if row is in any ptrary instance
-inline bool lib_ams::c_ctlin_InAryQ(lib_ams::FShmember& row) {
-    return row.c_ctlin_idx != -1;
-}
-
-// --- lib_ams.FDb.c_ctlin.qLast
-// Reference to last element without bounds checking
-inline lib_ams::FShmember& lib_ams::c_ctlin_qLast() {
-    return *_db.c_ctlin_elems[_db.c_ctlin_n-1];
+inline i32 lib_ams::ind_grptype_N() {
+    return _db.ind_grptype_n;
 }
 
 // --- lib_ams.FDb.zd_proc.EmptyQ
@@ -749,59 +511,434 @@ inline lib_ams::FProc& lib_ams::zd_proc_qLast() {
     return *row;
 }
 
-// --- lib_ams.FDb.bh_shmember_read.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::bh_shmember_read_EmptyQ() {
-    return _db.bh_shmember_read_n == 0;
+// --- lib_ams.FDb.c_cur_shm.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool lib_ams::c_cur_shm_InsertMaybe(lib_ams::FShm& row) {
+    lib_ams::FShm* ptr = _db.c_cur_shm;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        _db.c_cur_shm = &row;
+    }
+    return retval;
 }
 
-// --- lib_ams.FDb.bh_shmember_read.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FShmember* lib_ams::bh_shmember_read_First() {
-    lib_ams::FShmember *row = NULL;
-    if (_db.bh_shmember_read_n > 0) {
-        row = _db.bh_shmember_read_elems[0];
+// --- lib_ams.FDb.c_cur_shm.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void lib_ams::c_cur_shm_Remove(lib_ams::FShm& row) {
+    lib_ams::FShm *ptr = _db.c_cur_shm;
+    if (LIKELY(ptr == &row)) {
+        _db.c_cur_shm = NULL;
     }
+}
+
+// --- lib_ams.FDb.c_shm_stdout.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool lib_ams::c_shm_stdout_InsertMaybe(lib_ams::FShm& row) {
+    lib_ams::FShm* ptr = _db.c_shm_stdout;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        _db.c_shm_stdout = &row;
+    }
+    return retval;
+}
+
+// --- lib_ams.FDb.c_shm_stdout.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void lib_ams::c_shm_stdout_Remove(lib_ams::FShm& row) {
+    lib_ams::FShm *ptr = _db.c_shm_stdout;
+    if (LIKELY(ptr == &row)) {
+        _db.c_shm_stdout = NULL;
+    }
+}
+
+// --- lib_ams.FDb.c_shm_stdin.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool lib_ams::c_shm_stdin_InsertMaybe(lib_ams::FShm& row) {
+    lib_ams::FShm* ptr = _db.c_shm_stdin;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        _db.c_shm_stdin = &row;
+    }
+    return retval;
+}
+
+// --- lib_ams.FDb.c_shm_stdin.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void lib_ams::c_shm_stdin_Remove(lib_ams::FShm& row) {
+    lib_ams::FShm *ptr = _db.c_shm_stdin;
+    if (LIKELY(ptr == &row)) {
+        _db.c_shm_stdin = NULL;
+    }
+}
+
+// --- lib_ams.FDb.h_amsmsg.Call
+// Invoke function by pointer
+inline void lib_ams::h_amsmsg_Call(ams::MsgHeader& arg) {
+    if (_db.h_amsmsg) {
+        _db.h_amsmsg((void*)_db.h_amsmsg_ctx, arg);
+    }
+}
+
+// --- lib_ams.FDb.h_amsmsg.Set0
+// Assign 0-argument hook with no context pointer
+inline void lib_ams::h_amsmsg_Set0(void (*fcn)() ) {
+    _db.h_amsmsg_ctx = 0;
+    _db.h_amsmsg = (lib_ams::_db_h_amsmsg_hook)fcn;
+}
+
+// --- lib_ams.FDb.h_amsmsg.Set1
+// Assign 1-argument hook with context pointer
+template<class T> inline void lib_ams::h_amsmsg_Set1(T& ctx, void (*fcn)(T&) ) {
+    _db.h_amsmsg_ctx = (u64)&ctx;
+    _db.h_amsmsg = (lib_ams::_db_h_amsmsg_hook)fcn;
+}
+
+// --- lib_ams.FDb.h_amsmsg.Set2
+// Assign 2-argument hook with context pointer
+template<class T> inline void lib_ams::h_amsmsg_Set2(T& ctx, void (*fcn)(T&, ams::MsgHeader& arg) ) {
+    _db.h_amsmsg_ctx = (u64)&ctx;
+    _db.h_amsmsg = (lib_ams::_db_h_amsmsg_hook)fcn;
+}
+
+// --- lib_ams.FDb.zd_fdin.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::zd_fdin_EmptyQ() {
+    return _db.zd_fdin_head == NULL;
+}
+
+// --- lib_ams.FDb.zd_fdin.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline lib_ams::FFdin* lib_ams::zd_fdin_First() {
+    lib_ams::FFdin *row = NULL;
+    row = _db.zd_fdin_head;
     return row;
 }
 
-// --- lib_ams.FDb.bh_shmember_read.InBheapQ
-// Return true if row is in index, false otherwise
-inline bool lib_ams::bh_shmember_read_InBheapQ(lib_ams::FShmember& row) {
+// --- lib_ams.FDb.zd_fdin.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool lib_ams::zd_fdin_InLlistQ(lib_ams::FFdin& row) {
     bool result = false;
-    result = row.bh_shmember_read_idx != -1;
+    result = !(row.zd_fdin_next == (lib_ams::FFdin*)-1);
     return result;
 }
 
-// --- lib_ams.FDb.bh_shmember_read.N
-// Return number of items in the heap
-inline i32 lib_ams::bh_shmember_read_N() {
-    return _db.bh_shmember_read_n;
+// --- lib_ams.FDb.zd_fdin.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline lib_ams::FFdin* lib_ams::zd_fdin_Last() {
+    lib_ams::FFdin *row = NULL;
+    row = _db.zd_fdin_tail;
+    return row;
 }
 
-// --- lib_ams.FDb.fdin_curs.Reset
-// cursor points to valid item
-inline void lib_ams::_db_fdin_curs_Reset(_db_fdin_curs &curs, lib_ams::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
+// --- lib_ams.FDb.zd_fdin.N
+// Return number of items in the linked list
+inline i32 lib_ams::zd_fdin_N() {
+    return _db.zd_fdin_n;
 }
 
-// --- lib_ams.FDb.fdin_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::_db_fdin_curs_ValidQ(_db_fdin_curs &curs) {
-    return curs.index < _db.fdin_n;
+// --- lib_ams.FDb.zd_fdin.Next
+// Return pointer to next element in the list
+inline lib_ams::FFdin* lib_ams::zd_fdin_Next(lib_ams::FFdin &row) {
+    return row.zd_fdin_next;
 }
 
-// --- lib_ams.FDb.fdin_curs.Next
-// proceed to next item
-inline void lib_ams::_db_fdin_curs_Next(_db_fdin_curs &curs) {
-    curs.index++;
+// --- lib_ams.FDb.zd_fdin.Prev
+// Return pointer to previous element in the list
+inline lib_ams::FFdin* lib_ams::zd_fdin_Prev(lib_ams::FFdin &row) {
+    return row.zd_fdin_prev;
 }
 
-// --- lib_ams.FDb.fdin_curs.Access
-// item access
-inline lib_ams::FFdin& lib_ams::_db_fdin_curs_Access(_db_fdin_curs &curs) {
-    return fdin_qFind(u64(curs.index));
+// --- lib_ams.FDb.zd_fdin.qLast
+// Return reference to last element in the index. No bounds checking.
+inline lib_ams::FFdin& lib_ams::zd_fdin_qLast() {
+    lib_ams::FFdin *row = NULL;
+    row = _db.zd_fdin_tail;
+    return *row;
+}
+
+// --- lib_ams.FDb.proctype.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::proctype_EmptyQ() {
+    return _db.proctype_n == 0;
+}
+
+// --- lib_ams.FDb.proctype.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_ams::FProctype* lib_ams::proctype_Find(u64 t) {
+    lib_ams::FProctype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.proctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.proctype_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_ams.FDb.proctype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_ams::FProctype* lib_ams::proctype_Last() {
+    return proctype_Find(u64(_db.proctype_n-1));
+}
+
+// --- lib_ams.FDb.proctype.N
+// Return number of items in the pool
+inline i64 lib_ams::proctype_N() {
+    return _db.proctype_n;
+}
+
+// --- lib_ams.FDb.proctype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_ams::FProctype& lib_ams::proctype_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.proctype_lary[bsr][index];
+}
+
+// --- lib_ams.FDb.ind_proctype.EmptyQ
+// Return true if hash is empty
+inline bool lib_ams::ind_proctype_EmptyQ() {
+    return _db.ind_proctype_n == 0;
+}
+
+// --- lib_ams.FDb.ind_proctype.N
+// Return number of items in the hash
+inline i32 lib_ams::ind_proctype_N() {
+    return _db.ind_proctype_n;
+}
+
+// --- lib_ams.FDb.zd_park_read.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::zd_park_read_EmptyQ() {
+    return _db.zd_park_read_head == NULL;
+}
+
+// --- lib_ams.FDb.zd_park_read.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline lib_ams::FShm* lib_ams::zd_park_read_First() {
+    lib_ams::FShm *row = NULL;
+    row = _db.zd_park_read_head;
+    return row;
+}
+
+// --- lib_ams.FDb.zd_park_read.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool lib_ams::zd_park_read_InLlistQ(lib_ams::FShm& row) {
+    bool result = false;
+    result = !(row.zd_park_read_next == (lib_ams::FShm*)-1);
+    return result;
+}
+
+// --- lib_ams.FDb.zd_park_read.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline lib_ams::FShm* lib_ams::zd_park_read_Last() {
+    lib_ams::FShm *row = NULL;
+    row = _db.zd_park_read_tail;
+    return row;
+}
+
+// --- lib_ams.FDb.zd_park_read.N
+// Return number of items in the linked list
+inline i32 lib_ams::zd_park_read_N() {
+    return _db.zd_park_read_n;
+}
+
+// --- lib_ams.FDb.zd_park_read.Next
+// Return pointer to next element in the list
+inline lib_ams::FShm* lib_ams::zd_park_read_Next(lib_ams::FShm &row) {
+    return row.zd_park_read_next;
+}
+
+// --- lib_ams.FDb.zd_park_read.Prev
+// Return pointer to previous element in the list
+inline lib_ams::FShm* lib_ams::zd_park_read_Prev(lib_ams::FShm &row) {
+    return row.zd_park_read_prev;
+}
+
+// --- lib_ams.FDb.zd_park_read.qLast
+// Return reference to last element in the index. No bounds checking.
+inline lib_ams::FShm& lib_ams::zd_park_read_qLast() {
+    lib_ams::FShm *row = NULL;
+    row = _db.zd_park_read_tail;
+    return *row;
+}
+
+// --- lib_ams.FDb.h_terminate.Call
+// Invoke function by pointer
+inline void lib_ams::h_terminate_Call() {
+    if (_db.h_terminate) {
+        _db.h_terminate((void*)_db.h_terminate_ctx);
+    }
+}
+
+// --- lib_ams.FDb.h_terminate.Set0
+// Assign 0-argument hook with no context pointer
+inline void lib_ams::h_terminate_Set0(void (*fcn)() ) {
+    _db.h_terminate_ctx = 0;
+    _db.h_terminate = (lib_ams::_db_h_terminate_hook)fcn;
+}
+
+// --- lib_ams.FDb.h_terminate.Set1
+// Assign 1-argument hook with context pointer
+template<class T> inline void lib_ams::h_terminate_Set1(T& ctx, void (*fcn)(T&) ) {
+    _db.h_terminate_ctx = (u64)&ctx;
+    _db.h_terminate = (lib_ams::_db_h_terminate_hook)fcn;
+}
+
+// --- lib_ams.FDb.h_terminate.Set2
+// Assign 2-argument hook with context pointer
+template<class T> inline void lib_ams::h_terminate_Set2(T& ctx, void (*fcn)(T&) ) {
+    _db.h_terminate_ctx = (u64)&ctx;
+    _db.h_terminate = (lib_ams::_db_h_terminate_hook)fcn;
+}
+
+// --- lib_ams.FDb.boardq.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::boardq_EmptyQ() {
+    return _db.boardq_n == 0;
+}
+
+// --- lib_ams.FDb.boardq.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_ams::FBoardq* lib_ams::boardq_Find(u64 t) {
+    lib_ams::FBoardq *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.boardq_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.boardq_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_ams.FDb.boardq.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_ams::FBoardq* lib_ams::boardq_Last() {
+    return boardq_Find(u64(_db.boardq_n-1));
+}
+
+// --- lib_ams.FDb.boardq.N
+// Return number of items in the pool
+inline i64 lib_ams::boardq_N() {
+    return _db.boardq_n;
+}
+
+// --- lib_ams.FDb.boardq.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_ams::FBoardq& lib_ams::boardq_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.boardq_lary[bsr][index];
+}
+
+// --- lib_ams.FDb.c_postlane.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::c_postlane_EmptyQ() {
+    return _db.c_postlane_n == 0;
+}
+
+// --- lib_ams.FDb.c_postlane.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_ams::FShm* lib_ams::c_postlane_Find(u64 t) {
+    lib_ams::FShm *retval = NULL;
+    u64 idx = t;
+    u64 lim = _db.c_postlane_n;
+    if (idx < lim) {
+        retval = _db.c_postlane_elems[idx];
+    }
+    return retval;
+}
+
+// --- lib_ams.FDb.c_postlane.Getary
+// Return array of pointers
+inline algo::aryptr<lib_ams::FShm*> lib_ams::c_postlane_Getary() {
+    return algo::aryptr<lib_ams::FShm*>(_db.c_postlane_elems, _db.c_postlane_n);
+}
+
+// --- lib_ams.FDb.c_postlane.N
+// Return number of items in the pointer array
+inline i64 lib_ams::c_postlane_N() {
+    return _db.c_postlane_n;
+}
+
+// --- lib_ams.FDb.c_postlane.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void lib_ams::c_postlane_RemoveAll() {
+    _db.c_postlane_n = 0;
+}
+
+// --- lib_ams.FDb.c_postlane.qFind
+// Return reference without bounds checking
+inline lib_ams::FShm& lib_ams::c_postlane_qFind(u64 idx) {
+    return *_db.c_postlane_elems[idx];
+}
+
+// --- lib_ams.FDb.c_postlane.qLast
+// Reference to last element without bounds checking
+inline lib_ams::FShm& lib_ams::c_postlane_qLast() {
+    return *_db.c_postlane_elems[_db.c_postlane_n-1];
+}
+
+// --- lib_ams.FDb.zd_outshm.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::zd_outshm_EmptyQ() {
+    return _db.zd_outshm_head == NULL;
+}
+
+// --- lib_ams.FDb.zd_outshm.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline lib_ams::FShm* lib_ams::zd_outshm_First() {
+    lib_ams::FShm *row = NULL;
+    row = _db.zd_outshm_head;
+    return row;
+}
+
+// --- lib_ams.FDb.zd_outshm.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool lib_ams::zd_outshm_InLlistQ(lib_ams::FShm& row) {
+    bool result = false;
+    result = !(row.zd_outshm_next == (lib_ams::FShm*)-1);
+    return result;
+}
+
+// --- lib_ams.FDb.zd_outshm.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline lib_ams::FShm* lib_ams::zd_outshm_Last() {
+    lib_ams::FShm *row = NULL;
+    row = _db.zd_outshm_tail;
+    return row;
+}
+
+// --- lib_ams.FDb.zd_outshm.N
+// Return number of items in the linked list
+inline i32 lib_ams::zd_outshm_N() {
+    return _db.zd_outshm_n;
+}
+
+// --- lib_ams.FDb.zd_outshm.Next
+// Return pointer to next element in the list
+inline lib_ams::FShm* lib_ams::zd_outshm_Next(lib_ams::FShm &row) {
+    return row.zd_outshm_next;
+}
+
+// --- lib_ams.FDb.zd_outshm.Prev
+// Return pointer to previous element in the list
+inline lib_ams::FShm* lib_ams::zd_outshm_Prev(lib_ams::FShm &row) {
+    return row.zd_outshm_prev;
+}
+
+// --- lib_ams.FDb.zd_outshm.qLast
+// Return reference to last element in the index. No bounds checking.
+inline lib_ams::FShm& lib_ams::zd_outshm_qLast() {
+    lib_ams::FShm *row = NULL;
+    row = _db.zd_outshm_tail;
+    return *row;
 }
 
 // --- lib_ams.FDb.cd_fdin_eof_curs.Reset
@@ -862,31 +999,6 @@ inline lib_ams::FFdin& lib_ams::_db_cd_fdin_read_curs_Access(_db_cd_fdin_read_cu
     return *curs.row;
 }
 
-// --- lib_ams.FDb.zd_flush_curs.Reset
-// cursor points to valid item
-inline void lib_ams::_db_zd_flush_curs_Reset(_db_zd_flush_curs &curs, lib_ams::FDb &parent) {
-    curs.row = parent.zd_flush_head;
-}
-
-// --- lib_ams.FDb.zd_flush_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::_db_zd_flush_curs_ValidQ(_db_zd_flush_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- lib_ams.FDb.zd_flush_curs.Next
-// proceed to next item
-inline void lib_ams::_db_zd_flush_curs_Next(_db_zd_flush_curs &curs) {
-    lib_ams::FWritefile *next = (*curs.row).zd_flush_next;
-    curs.row = next;
-}
-
-// --- lib_ams.FDb.zd_flush_curs.Access
-// item access
-inline lib_ams::FWritefile& lib_ams::_db_zd_flush_curs_Access(_db_zd_flush_curs &curs) {
-    return *curs.row;
-}
-
 // --- lib_ams.FDb.shm_curs.Reset
 // cursor points to valid item
 inline void lib_ams::_db_shm_curs_Reset(_db_shm_curs &curs, lib_ams::FDb &parent) {
@@ -912,35 +1024,6 @@ inline lib_ams::FShm& lib_ams::_db_shm_curs_Access(_db_shm_curs &curs) {
     return shm_qFind(u64(curs.index));
 }
 
-// --- lib_ams.FDb.cd_hb_curs.Reset
-// cursor points to valid item
-inline void lib_ams::_db_cd_hb_curs_Reset(_db_cd_hb_curs &curs, lib_ams::FDb &parent) {
-    curs.row = parent.cd_hb_head;
-    curs.head = &parent.cd_hb_head;
-}
-
-// --- lib_ams.FDb.cd_hb_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::_db_cd_hb_curs_ValidQ(_db_cd_hb_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- lib_ams.FDb.cd_hb_curs.Next
-// proceed to next item
-inline void lib_ams::_db_cd_hb_curs_Next(_db_cd_hb_curs &curs) {
-    lib_ams::FShmember *next = (*curs.row).cd_hb_next;
-    curs.row = next;
-    if (curs.row == *curs.head) {
-        curs.row = NULL;
-    }
-}
-
-// --- lib_ams.FDb.cd_hb_curs.Access
-// item access
-inline lib_ams::FShmember& lib_ams::_db_cd_hb_curs_Access(_db_cd_hb_curs &curs) {
-    return *curs.row;
-}
-
 // --- lib_ams.FDb.cd_poll_read_curs.Reset
 // cursor points to valid item
 inline void lib_ams::_db_cd_poll_read_curs_Reset(_db_cd_poll_read_curs &curs, lib_ams::FDb &parent) {
@@ -957,7 +1040,7 @@ inline bool lib_ams::_db_cd_poll_read_curs_ValidQ(_db_cd_poll_read_curs &curs) {
 // --- lib_ams.FDb.cd_poll_read_curs.Next
 // proceed to next item
 inline void lib_ams::_db_cd_poll_read_curs_Next(_db_cd_poll_read_curs &curs) {
-    lib_ams::FShmember *next = (*curs.row).cd_poll_read_next;
+    lib_ams::FShm *next = (*curs.row).cd_poll_read_next;
     curs.row = next;
     if (curs.row == *curs.head) {
         curs.row = NULL;
@@ -966,110 +1049,33 @@ inline void lib_ams::_db_cd_poll_read_curs_Next(_db_cd_poll_read_curs &curs) {
 
 // --- lib_ams.FDb.cd_poll_read_curs.Access
 // item access
-inline lib_ams::FShmember& lib_ams::_db_cd_poll_read_curs_Access(_db_cd_poll_read_curs &curs) {
+inline lib_ams::FShm& lib_ams::_db_cd_poll_read_curs_Access(_db_cd_poll_read_curs &curs) {
     return *curs.row;
 }
 
-// --- lib_ams.FDb.cd_slow_poll_read_curs.Reset
+// --- lib_ams.FDb.grptype_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_cd_slow_poll_read_curs_Reset(_db_cd_slow_poll_read_curs &curs, lib_ams::FDb &parent) {
-    curs.row = parent.cd_slow_poll_read_head;
-    curs.head = &parent.cd_slow_poll_read_head;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::_db_cd_slow_poll_read_curs_ValidQ(_db_cd_slow_poll_read_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read_curs.Next
-// proceed to next item
-inline void lib_ams::_db_cd_slow_poll_read_curs_Next(_db_cd_slow_poll_read_curs &curs) {
-    lib_ams::FShmember *next = (*curs.row).cd_slow_poll_read_next;
-    curs.row = next;
-    if (curs.row == *curs.head) {
-        curs.row = NULL;
-    }
-}
-
-// --- lib_ams.FDb.cd_slow_poll_read_curs.Access
-// item access
-inline lib_ams::FShmember& lib_ams::_db_cd_slow_poll_read_curs_Access(_db_cd_slow_poll_read_curs &curs) {
-    return *curs.row;
-}
-
-// --- lib_ams.FDb.ind_shmember_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::_db_ind_shmember_curs_ValidQ(_db_ind_shmember_curs &curs) {
-    return *curs.prow != NULL;
-}
-
-// --- lib_ams.FDb.ind_shmember_curs.Next
-// proceed to next item
-inline void lib_ams::_db_ind_shmember_curs_Next(_db_ind_shmember_curs &curs) {
-    curs.prow = &(*curs.prow)->ind_shmember_next;
-    while (!*curs.prow) {
-        curs.bucket += 1;
-        if (curs.bucket >= curs.parent->ind_shmember_buckets_n) break;
-        curs.prow = &curs.parent->ind_shmember_buckets_elems[curs.bucket];
-    }
-}
-
-// --- lib_ams.FDb.ind_shmember_curs.Access
-// item access
-inline lib_ams::FShmember& lib_ams::_db_ind_shmember_curs_Access(_db_ind_shmember_curs &curs) {
-    return **curs.prow;
-}
-
-// --- lib_ams.FDb.shmtype_curs.Reset
-// cursor points to valid item
-inline void lib_ams::_db_shmtype_curs_Reset(_db_shmtype_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_grptype_curs_Reset(_db_grptype_curs &curs, lib_ams::FDb &parent) {
     curs.parent = &parent;
     curs.index = 0;
 }
 
-// --- lib_ams.FDb.shmtype_curs.ValidQ
+// --- lib_ams.FDb.grptype_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_shmtype_curs_ValidQ(_db_shmtype_curs &curs) {
-    return curs.index < _db.shmtype_n;
+inline bool lib_ams::_db_grptype_curs_ValidQ(_db_grptype_curs &curs) {
+    return curs.index < _db.grptype_n;
 }
 
-// --- lib_ams.FDb.shmtype_curs.Next
+// --- lib_ams.FDb.grptype_curs.Next
 // proceed to next item
-inline void lib_ams::_db_shmtype_curs_Next(_db_shmtype_curs &curs) {
+inline void lib_ams::_db_grptype_curs_Next(_db_grptype_curs &curs) {
     curs.index++;
 }
 
-// --- lib_ams.FDb.shmtype_curs.Access
+// --- lib_ams.FDb.grptype_curs.Access
 // item access
-inline lib_ams::FShmtype& lib_ams::_db_shmtype_curs_Access(_db_shmtype_curs &curs) {
-    return shmtype_qFind(u64(curs.index));
-}
-
-// --- lib_ams.FDb.c_ctlin_curs.Reset
-inline void lib_ams::_db_c_ctlin_curs_Reset(_db_c_ctlin_curs &curs, lib_ams::FDb &parent) {
-    curs.elems = parent.c_ctlin_elems;
-    curs.n_elems = parent.c_ctlin_n;
-    curs.index = 0;
-}
-
-// --- lib_ams.FDb.c_ctlin_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::_db_c_ctlin_curs_ValidQ(_db_c_ctlin_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- lib_ams.FDb.c_ctlin_curs.Next
-// proceed to next item
-inline void lib_ams::_db_c_ctlin_curs_Next(_db_c_ctlin_curs &curs) {
-    curs.index++;
-}
-
-// --- lib_ams.FDb.c_ctlin_curs.Access
-// item access
-inline lib_ams::FShmember& lib_ams::_db_c_ctlin_curs_Access(_db_c_ctlin_curs &curs) {
-    return *curs.elems[curs.index];
+inline lib_ams::FGrptype& lib_ams::_db_grptype_curs_Access(_db_grptype_curs &curs) {
+    return grptype_qFind(u64(curs.index));
 }
 
 // --- lib_ams.FDb.zd_proc_curs.Reset
@@ -1097,16 +1103,185 @@ inline lib_ams::FProc& lib_ams::_db_zd_proc_curs_Access(_db_zd_proc_curs &curs) 
     return *curs.row;
 }
 
-// --- lib_ams.FDb.bh_shmember_read_curs.Access
-// Access current element. If not more elements, return NULL
-inline lib_ams::FShmember& lib_ams::_db_bh_shmember_read_curs_Access(_db_bh_shmember_read_curs &curs) {
-    return *curs.temp_elems[0];
+// --- lib_ams.FDb.zd_fdin_curs.Reset
+// cursor points to valid item
+inline void lib_ams::_db_zd_fdin_curs_Reset(_db_zd_fdin_curs &curs, lib_ams::FDb &parent) {
+    curs.row = parent.zd_fdin_head;
 }
 
-// --- lib_ams.FDb.bh_shmember_read_curs.ValidQ
-// Return true if Access() will return non-NULL.
-inline bool lib_ams::_db_bh_shmember_read_curs_ValidQ(_db_bh_shmember_read_curs &curs) {
-    return curs.temp_n > 0;
+// --- lib_ams.FDb.zd_fdin_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::_db_zd_fdin_curs_ValidQ(_db_zd_fdin_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- lib_ams.FDb.zd_fdin_curs.Next
+// proceed to next item
+inline void lib_ams::_db_zd_fdin_curs_Next(_db_zd_fdin_curs &curs) {
+    lib_ams::FFdin *next = (*curs.row).zd_fdin_next;
+    curs.row = next;
+}
+
+// --- lib_ams.FDb.zd_fdin_curs.Access
+// item access
+inline lib_ams::FFdin& lib_ams::_db_zd_fdin_curs_Access(_db_zd_fdin_curs &curs) {
+    return *curs.row;
+}
+
+// --- lib_ams.FDb.proctype_curs.Reset
+// cursor points to valid item
+inline void lib_ams::_db_proctype_curs_Reset(_db_proctype_curs &curs, lib_ams::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_ams.FDb.proctype_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::_db_proctype_curs_ValidQ(_db_proctype_curs &curs) {
+    return curs.index < _db.proctype_n;
+}
+
+// --- lib_ams.FDb.proctype_curs.Next
+// proceed to next item
+inline void lib_ams::_db_proctype_curs_Next(_db_proctype_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_ams.FDb.proctype_curs.Access
+// item access
+inline lib_ams::FProctype& lib_ams::_db_proctype_curs_Access(_db_proctype_curs &curs) {
+    return proctype_qFind(u64(curs.index));
+}
+
+// --- lib_ams.FDb.zd_park_read_curs.Reset
+// cursor points to valid item
+inline void lib_ams::_db_zd_park_read_curs_Reset(_db_zd_park_read_curs &curs, lib_ams::FDb &parent) {
+    curs.row = parent.zd_park_read_head;
+}
+
+// --- lib_ams.FDb.zd_park_read_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::_db_zd_park_read_curs_ValidQ(_db_zd_park_read_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- lib_ams.FDb.zd_park_read_curs.Next
+// proceed to next item
+inline void lib_ams::_db_zd_park_read_curs_Next(_db_zd_park_read_curs &curs) {
+    lib_ams::FShm *next = (*curs.row).zd_park_read_next;
+    curs.row = next;
+}
+
+// --- lib_ams.FDb.zd_park_read_curs.Access
+// item access
+inline lib_ams::FShm& lib_ams::_db_zd_park_read_curs_Access(_db_zd_park_read_curs &curs) {
+    return *curs.row;
+}
+
+// --- lib_ams.FDb.zd_park_read_delcurs.Reset
+// cursor points to valid item
+inline void lib_ams::_db_zd_park_read_delcurs_Reset(_db_zd_park_read_delcurs &curs, lib_ams::FDb &parent) {
+    curs.row = parent.zd_park_read_head;
+    if (curs.row) {
+        curs.next = (*curs.row).zd_park_read_next;
+    }
+}
+
+// --- lib_ams.FDb.zd_park_read_delcurs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::_db_zd_park_read_delcurs_ValidQ(_db_zd_park_read_delcurs &curs) {
+    return curs.row != NULL;
+}
+
+// --- lib_ams.FDb.zd_park_read_delcurs.Next
+// proceed to next item
+inline void lib_ams::_db_zd_park_read_delcurs_Next(_db_zd_park_read_delcurs &curs) {
+    lib_ams::FShm *next = curs.next;
+    curs.row = next;
+    if (curs.row) {
+        curs.next = (*curs.row).zd_park_read_next;
+    }
+}
+
+// --- lib_ams.FDb.zd_park_read_delcurs.Access
+// item access
+inline lib_ams::FShm& lib_ams::_db_zd_park_read_delcurs_Access(_db_zd_park_read_delcurs &curs) {
+    return *curs.row;
+}
+
+// --- lib_ams.FDb.boardq_curs.Reset
+// cursor points to valid item
+inline void lib_ams::_db_boardq_curs_Reset(_db_boardq_curs &curs, lib_ams::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_ams.FDb.boardq_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::_db_boardq_curs_ValidQ(_db_boardq_curs &curs) {
+    return curs.index < _db.boardq_n;
+}
+
+// --- lib_ams.FDb.boardq_curs.Next
+// proceed to next item
+inline void lib_ams::_db_boardq_curs_Next(_db_boardq_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_ams.FDb.boardq_curs.Access
+// item access
+inline lib_ams::FBoardq& lib_ams::_db_boardq_curs_Access(_db_boardq_curs &curs) {
+    return boardq_qFind(u64(curs.index));
+}
+
+// --- lib_ams.FDb.c_postlane_curs.Reset
+inline void lib_ams::_db_c_postlane_curs_Reset(_db_c_postlane_curs &curs, lib_ams::FDb &parent) {
+    curs.elems = parent.c_postlane_elems;
+    curs.n_elems = parent.c_postlane_n;
+    curs.index = 0;
+}
+
+// --- lib_ams.FDb.c_postlane_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::_db_c_postlane_curs_ValidQ(_db_c_postlane_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_ams.FDb.c_postlane_curs.Next
+// proceed to next item
+inline void lib_ams::_db_c_postlane_curs_Next(_db_c_postlane_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_ams.FDb.c_postlane_curs.Access
+// item access
+inline lib_ams::FShm& lib_ams::_db_c_postlane_curs_Access(_db_c_postlane_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- lib_ams.FDb.zd_outshm_curs.Reset
+// cursor points to valid item
+inline void lib_ams::_db_zd_outshm_curs_Reset(_db_zd_outshm_curs &curs, lib_ams::FDb &parent) {
+    curs.row = parent.zd_outshm_head;
+}
+
+// --- lib_ams.FDb.zd_outshm_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::_db_zd_outshm_curs_ValidQ(_db_zd_outshm_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- lib_ams.FDb.zd_outshm_curs.Next
+// proceed to next item
+inline void lib_ams::_db_zd_outshm_curs_Next(_db_zd_outshm_curs &curs) {
+    lib_ams::FShm *next = (*curs.row).zd_outshm_next;
+    curs.row = next;
+}
+
+// --- lib_ams.FDb.zd_outshm_curs.Access
+// item access
+inline lib_ams::FShm& lib_ams::_db_zd_outshm_curs_Access(_db_zd_outshm_curs &curs) {
+    return *curs.row;
 }
 
 // --- lib_ams.FFdin.in.Max
@@ -1133,6 +1308,42 @@ inline  lib_ams::FFdin::~FFdin() {
     lib_ams::FFdin_Uninit(*this);
 }
 
+// --- lib_ams.FGrptype..Init
+// Set all fields to initial values.
+inline void lib_ams::FGrptype_Init(lib_ams::FGrptype& grptype) {
+    grptype.ind_grptype_next = (lib_ams::FGrptype*)-1; // (lib_ams.FDb.ind_grptype) not-in-hash
+    grptype.ind_grptype_hashval = 0; // stored hash value
+}
+
+// --- lib_ams.FGrptype..Ctor
+inline  lib_ams::FGrptype::FGrptype() {
+    lib_ams::FGrptype_Init(*this);
+}
+
+// --- lib_ams.FGrptype..Dtor
+inline  lib_ams::FGrptype::~FGrptype() {
+    lib_ams::FGrptype_Uninit(*this);
+}
+
+// --- lib_ams.FOutmsg..Init
+// Set all fields to initial values.
+inline void lib_ams::FOutmsg_Init(lib_ams::FOutmsg& outmsg) {
+    outmsg.p_shm = NULL;
+    outmsg.outmsg_next = (lib_ams::FOutmsg*)-1; // (lib_ams.FDb.outmsg) not-in-tpool's freelist
+    outmsg.shm_zd_outmsg_next = (lib_ams::FOutmsg*)-1; // (lib_ams.FShm.zd_outmsg) not-in-list
+    outmsg.shm_zd_outmsg_prev = NULL; // (lib_ams.FShm.zd_outmsg)
+}
+
+// --- lib_ams.FOutmsg..Ctor
+inline  lib_ams::FOutmsg::FOutmsg() {
+    lib_ams::FOutmsg_Init(*this);
+}
+
+// --- lib_ams.FOutmsg..Dtor
+inline  lib_ams::FOutmsg::~FOutmsg() {
+    lib_ams::FOutmsg_Uninit(*this);
+}
+
 // --- lib_ams.FProc.c_shm.EmptyQ
 // Return true if index is empty
 inline bool lib_ams::c_shm_EmptyQ(lib_ams::FProc& proc) {
@@ -1141,7 +1352,7 @@ inline bool lib_ams::c_shm_EmptyQ(lib_ams::FProc& proc) {
 
 // --- lib_ams.FProc.c_shm.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_ams::FShm* lib_ams::c_shm_Find(lib_ams::FProc& proc, u32 t) {
+inline lib_ams::FShm* lib_ams::c_shm_Find(lib_ams::FProc& proc, u64 t) {
     lib_ams::FShm *retval = NULL;
     u64 idx = t;
     u64 lim = proc.c_shm_n;
@@ -1173,14 +1384,14 @@ inline lib_ams::FShm* lib_ams::c_shm_Last(lib_ams::FProc& proc) {
 
 // --- lib_ams.FProc.c_shm.N
 // Return number of items in the pointer array
-inline i32 lib_ams::c_shm_N(const lib_ams::FProc& proc) {
+inline i64 lib_ams::c_shm_N(const lib_ams::FProc& proc) {
     return proc.c_shm_n;
 }
 
 // --- lib_ams.FProc.c_shm.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_ams::c_shm_RemoveAll(lib_ams::FProc& proc) {
-    for (u32 i = 0; i < proc.c_shm_n; i++) {
+    for (u64 i = 0; i < proc.c_shm_n; i++) {
         proc.c_shm_elems[i]->proc_c_shm_idx = -1;
     }
     proc.c_shm_n = 0;
@@ -1188,7 +1399,7 @@ inline void lib_ams::c_shm_RemoveAll(lib_ams::FProc& proc) {
 
 // --- lib_ams.FProc.c_shm.qFind
 // Return reference without bounds checking
-inline lib_ams::FShm& lib_ams::c_shm_qFind(lib_ams::FProc& proc, u32 idx) {
+inline lib_ams::FShm& lib_ams::c_shm_qFind(lib_ams::FProc& proc, u64 idx) {
     return *proc.c_shm_elems[idx];
 }
 
@@ -1204,89 +1415,14 @@ inline lib_ams::FShm& lib_ams::c_shm_qLast(lib_ams::FProc& proc) {
     return *proc.c_shm_elems[proc.c_shm_n-1];
 }
 
-// --- lib_ams.FProc.c_shmember.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::c_shmember_EmptyQ(lib_ams::FProc& proc) {
-    return proc.c_shmember_n == 0;
-}
-
-// --- lib_ams.FProc.c_shmember.Find
-// Look up row by row id. Return NULL if out of range
-inline lib_ams::FShmember* lib_ams::c_shmember_Find(lib_ams::FProc& proc, u32 t) {
-    lib_ams::FShmember *retval = NULL;
-    u64 idx = t;
-    u64 lim = proc.c_shmember_n;
-    if (idx < lim) {
-        retval = proc.c_shmember_elems[idx];
-    }
-    return retval;
-}
-
-// --- lib_ams.FProc.c_shmember.Getary
-// Return array of pointers
-inline algo::aryptr<lib_ams::FShmember*> lib_ams::c_shmember_Getary(lib_ams::FProc& proc) {
-    return algo::aryptr<lib_ams::FShmember*>(proc.c_shmember_elems, proc.c_shmember_n);
-}
-
-// --- lib_ams.FProc.c_shmember.First
-inline lib_ams::FShmember* lib_ams::c_shmember_First(lib_ams::FProc& proc) {
-    lib_ams::FShmember *row = NULL;
-    row = proc.c_shmember_n ? proc.c_shmember_elems[0] : NULL;
-    return row;
-}
-
-// --- lib_ams.FProc.c_shmember.Last
-inline lib_ams::FShmember* lib_ams::c_shmember_Last(lib_ams::FProc& proc) {
-    lib_ams::FShmember *row = NULL;
-    row = proc.c_shmember_n ? proc.c_shmember_elems[proc.c_shmember_n-1] : NULL;
-    return row;
-}
-
-// --- lib_ams.FProc.c_shmember.N
-// Return number of items in the pointer array
-inline i32 lib_ams::c_shmember_N(const lib_ams::FProc& proc) {
-    return proc.c_shmember_n;
-}
-
-// --- lib_ams.FProc.c_shmember.RemoveAll
-// Empty the index. (The rows are not deleted)
-inline void lib_ams::c_shmember_RemoveAll(lib_ams::FProc& proc) {
-    for (u32 i = 0; i < proc.c_shmember_n; i++) {
-        proc.c_shmember_elems[i]->proc_c_shmember_idx = -1;
-    }
-    proc.c_shmember_n = 0;
-}
-
-// --- lib_ams.FProc.c_shmember.qFind
-// Return reference without bounds checking
-inline lib_ams::FShmember& lib_ams::c_shmember_qFind(lib_ams::FProc& proc, u32 idx) {
-    return *proc.c_shmember_elems[idx];
-}
-
-// --- lib_ams.FProc.c_shmember.InAryQ
-// True if row is in any ptrary instance
-inline bool lib_ams::proc_c_shmember_InAryQ(lib_ams::FShmember& row) {
-    return row.proc_c_shmember_idx != -1;
-}
-
-// --- lib_ams.FProc.c_shmember.qLast
-// Reference to last element without bounds checking
-inline lib_ams::FShmember& lib_ams::c_shmember_qLast(lib_ams::FProc& proc) {
-    return *proc.c_shmember_elems[proc.c_shmember_n-1];
-}
-
 // --- lib_ams.FProc..Init
 // Set all fields to initial values.
 inline void lib_ams::FProc_Init(lib_ams::FProc& proc) {
     proc.c_shm_elems = NULL; // (lib_ams.FProc.c_shm)
     proc.c_shm_n = 0; // (lib_ams.FProc.c_shm)
     proc.c_shm_max = 0; // (lib_ams.FProc.c_shm)
-    proc.c_shmember_elems = NULL; // (lib_ams.FProc.c_shmember)
-    proc.c_shmember_n = 0; // (lib_ams.FProc.c_shmember)
-    proc.c_shmember_max = 0; // (lib_ams.FProc.c_shmember)
     proc.pid = i32(0);
     proc.status = i32(0);
-    proc.hbtimeout = u32(0);
     proc.critical = bool(false);
     proc.proc_next = (lib_ams::FProc*)-1; // (lib_ams.FDb.proc) not-in-tpool's freelist
     proc.ind_proc_next = (lib_ams::FProc*)-1; // (lib_ams.FDb.ind_proc) not-in-hash
@@ -1320,31 +1456,6 @@ inline lib_ams::FShm& lib_ams::proc_c_shm_curs_Access(proc_c_shm_curs &curs) {
     return *curs.elems[curs.index];
 }
 
-// --- lib_ams.FProc.c_shmember_curs.Reset
-inline void lib_ams::proc_c_shmember_curs_Reset(proc_c_shmember_curs &curs, lib_ams::FProc &parent) {
-    curs.elems = parent.c_shmember_elems;
-    curs.n_elems = parent.c_shmember_n;
-    curs.index = 0;
-}
-
-// --- lib_ams.FProc.c_shmember_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::proc_c_shmember_curs_ValidQ(proc_c_shmember_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- lib_ams.FProc.c_shmember_curs.Next
-// proceed to next item
-inline void lib_ams::proc_c_shmember_curs_Next(proc_c_shmember_curs &curs) {
-    curs.index++;
-}
-
-// --- lib_ams.FProc.c_shmember_curs.Access
-// item access
-inline lib_ams::FShmember& lib_ams::proc_c_shmember_curs_Access(proc_c_shmember_curs &curs) {
-    return *curs.elems[curs.index];
-}
-
 // --- lib_ams.FProc..Ctor
 inline  lib_ams::FProc::FProc() {
     lib_ams::FProc_Init(*this);
@@ -1355,395 +1466,14 @@ inline  lib_ams::FProc::~FProc() {
     lib_ams::FProc_Uninit(*this);
 }
 
-// --- lib_ams.FReadfile.buf.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::buf_EmptyQ(lib_ams::FReadfile& parent) {
-    return parent.buf_n == 0;
+// --- lib_ams.FProctype..Ctor
+inline  lib_ams::FProctype::FProctype() {
+    lib_ams::FProctype_Init(*this);
 }
 
-// --- lib_ams.FReadfile.buf.Find
-// Look up row by row id. Return NULL if out of range
-inline u8* lib_ams::buf_Find(lib_ams::FReadfile& parent, u64 t) {
-    u64 idx = t;
-    u64 lim = parent.buf_n;
-    if (idx >= lim) return NULL;
-    return parent.buf_elems + idx;
-}
-
-// --- lib_ams.FReadfile.buf.Getary
-// Return array pointer by value
-inline algo::aryptr<u8> lib_ams::buf_Getary(const lib_ams::FReadfile& parent) {
-    return algo::aryptr<u8>(parent.buf_elems, parent.buf_n);
-}
-
-// --- lib_ams.FReadfile.buf.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline u8* lib_ams::buf_Last(lib_ams::FReadfile& parent) {
-    return buf_Find(parent, u64(parent.buf_n-1));
-}
-
-// --- lib_ams.FReadfile.buf.Max
-// Return max. number of items in the array
-inline i32 lib_ams::buf_Max(lib_ams::FReadfile& parent) {
-    (void)parent;
-    return parent.buf_max;
-}
-
-// --- lib_ams.FReadfile.buf.N
-// Return number of items in the array
-inline i32 lib_ams::buf_N(const lib_ams::FReadfile& parent) {
-    return parent.buf_n;
-}
-
-// --- lib_ams.FReadfile.buf.RemoveAll
-inline void lib_ams::buf_RemoveAll(lib_ams::FReadfile& parent) {
-    parent.buf_n = 0;
-}
-
-// --- lib_ams.FReadfile.buf.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::buf_Reserve(lib_ams::FReadfile& parent, int n) {
-    u32 new_n = parent.buf_n + n;
-    if (UNLIKELY(new_n > parent.buf_max)) {
-        buf_AbsReserve(parent, new_n);
-    }
-}
-
-// --- lib_ams.FReadfile.buf.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline u8& lib_ams::buf_qFind(lib_ams::FReadfile& parent, u64 t) {
-    return parent.buf_elems[t];
-}
-
-// --- lib_ams.FReadfile.buf.qLast
-// Return reference to last element of array. No bounds checking
-inline u8& lib_ams::buf_qLast(lib_ams::FReadfile& parent) {
-    return buf_qFind(parent, u64(parent.buf_n-1));
-}
-
-// --- lib_ams.FReadfile.buf.rowid_Get
-// Return row id of specified element
-inline u64 lib_ams::buf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) {
-    u64 id = &elem - parent.buf_elems;
-    return u64(id);
-}
-
-// --- lib_ams.FReadfile.cbuf.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::cbuf_EmptyQ(lib_ams::FReadfile& parent) {
-    return parent.cbuf_n == 0;
-}
-
-// --- lib_ams.FReadfile.cbuf.Find
-// Look up row by row id. Return NULL if out of range
-inline u8* lib_ams::cbuf_Find(lib_ams::FReadfile& parent, u64 t) {
-    u64 idx = t;
-    u64 lim = parent.cbuf_n;
-    if (idx >= lim) return NULL;
-    return parent.cbuf_elems + idx;
-}
-
-// --- lib_ams.FReadfile.cbuf.Getary
-// Return array pointer by value
-inline algo::aryptr<u8> lib_ams::cbuf_Getary(const lib_ams::FReadfile& parent) {
-    return algo::aryptr<u8>(parent.cbuf_elems, parent.cbuf_n);
-}
-
-// --- lib_ams.FReadfile.cbuf.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline u8* lib_ams::cbuf_Last(lib_ams::FReadfile& parent) {
-    return cbuf_Find(parent, u64(parent.cbuf_n-1));
-}
-
-// --- lib_ams.FReadfile.cbuf.Max
-// Return max. number of items in the array
-inline i32 lib_ams::cbuf_Max(lib_ams::FReadfile& parent) {
-    (void)parent;
-    return parent.cbuf_max;
-}
-
-// --- lib_ams.FReadfile.cbuf.N
-// Return number of items in the array
-inline i32 lib_ams::cbuf_N(const lib_ams::FReadfile& parent) {
-    return parent.cbuf_n;
-}
-
-// --- lib_ams.FReadfile.cbuf.RemoveAll
-inline void lib_ams::cbuf_RemoveAll(lib_ams::FReadfile& parent) {
-    parent.cbuf_n = 0;
-}
-
-// --- lib_ams.FReadfile.cbuf.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::cbuf_Reserve(lib_ams::FReadfile& parent, int n) {
-    u32 new_n = parent.cbuf_n + n;
-    if (UNLIKELY(new_n > parent.cbuf_max)) {
-        cbuf_AbsReserve(parent, new_n);
-    }
-}
-
-// --- lib_ams.FReadfile.cbuf.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline u8& lib_ams::cbuf_qFind(lib_ams::FReadfile& parent, u64 t) {
-    return parent.cbuf_elems[t];
-}
-
-// --- lib_ams.FReadfile.cbuf.qLast
-// Return reference to last element of array. No bounds checking
-inline u8& lib_ams::cbuf_qLast(lib_ams::FReadfile& parent) {
-    return cbuf_qFind(parent, u64(parent.cbuf_n-1));
-}
-
-// --- lib_ams.FReadfile.cbuf.rowid_Get
-// Return row id of specified element
-inline u64 lib_ams::cbuf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) {
-    u64 id = &elem - parent.cbuf_elems;
-    return u64(id);
-}
-
-// --- lib_ams.FReadfile.offset.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::offset_EmptyQ(lib_ams::FReadfile& parent) {
-    return parent.offset_n == 0;
-}
-
-// --- lib_ams.FReadfile.offset.Find
-// Look up row by row id. Return NULL if out of range
-inline u32* lib_ams::offset_Find(lib_ams::FReadfile& parent, u64 t) {
-    u64 idx = t;
-    u64 lim = parent.offset_n;
-    if (idx >= lim) return NULL;
-    return parent.offset_elems + idx;
-}
-
-// --- lib_ams.FReadfile.offset.Getary
-// Return array pointer by value
-inline algo::aryptr<u32> lib_ams::offset_Getary(const lib_ams::FReadfile& parent) {
-    return algo::aryptr<u32>(parent.offset_elems, parent.offset_n);
-}
-
-// --- lib_ams.FReadfile.offset.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline u32* lib_ams::offset_Last(lib_ams::FReadfile& parent) {
-    return offset_Find(parent, u64(parent.offset_n-1));
-}
-
-// --- lib_ams.FReadfile.offset.Max
-// Return max. number of items in the array
-inline i32 lib_ams::offset_Max(lib_ams::FReadfile& parent) {
-    (void)parent;
-    return parent.offset_max;
-}
-
-// --- lib_ams.FReadfile.offset.N
-// Return number of items in the array
-inline i32 lib_ams::offset_N(const lib_ams::FReadfile& parent) {
-    return parent.offset_n;
-}
-
-// --- lib_ams.FReadfile.offset.RemoveAll
-inline void lib_ams::offset_RemoveAll(lib_ams::FReadfile& parent) {
-    parent.offset_n = 0;
-}
-
-// --- lib_ams.FReadfile.offset.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::offset_Reserve(lib_ams::FReadfile& parent, int n) {
-    u32 new_n = parent.offset_n + n;
-    if (UNLIKELY(new_n > parent.offset_max)) {
-        offset_AbsReserve(parent, new_n);
-    }
-}
-
-// --- lib_ams.FReadfile.offset.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline u32& lib_ams::offset_qFind(lib_ams::FReadfile& parent, u64 t) {
-    return parent.offset_elems[t];
-}
-
-// --- lib_ams.FReadfile.offset.qLast
-// Return reference to last element of array. No bounds checking
-inline u32& lib_ams::offset_qLast(lib_ams::FReadfile& parent) {
-    return offset_qFind(parent, u64(parent.offset_n-1));
-}
-
-// --- lib_ams.FReadfile.offset.rowid_Get
-// Return row id of specified element
-inline u64 lib_ams::offset_rowid_Get(lib_ams::FReadfile& parent, u32 &elem) {
-    u64 id = &elem - parent.offset_elems;
-    return u64(id);
-}
-
-// --- lib_ams.FReadfile.buf_curs.Next
-// proceed to next item
-inline void lib_ams::FReadfile_buf_curs_Next(FReadfile_buf_curs &curs) {
-    curs.index++;
-}
-
-// --- lib_ams.FReadfile.buf_curs.Reset
-inline void lib_ams::FReadfile_buf_curs_Reset(FReadfile_buf_curs &curs, lib_ams::FReadfile &parent) {
-    curs.elems = parent.buf_elems;
-    curs.n_elems = parent.buf_n;
-    curs.index = 0;
-}
-
-// --- lib_ams.FReadfile.buf_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::FReadfile_buf_curs_ValidQ(FReadfile_buf_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- lib_ams.FReadfile.buf_curs.Access
-// item access
-inline u8& lib_ams::FReadfile_buf_curs_Access(FReadfile_buf_curs &curs) {
-    return curs.elems[curs.index];
-}
-
-// --- lib_ams.FReadfile.cbuf_curs.Next
-// proceed to next item
-inline void lib_ams::FReadfile_cbuf_curs_Next(FReadfile_cbuf_curs &curs) {
-    curs.index++;
-}
-
-// --- lib_ams.FReadfile.cbuf_curs.Reset
-inline void lib_ams::FReadfile_cbuf_curs_Reset(FReadfile_cbuf_curs &curs, lib_ams::FReadfile &parent) {
-    curs.elems = parent.cbuf_elems;
-    curs.n_elems = parent.cbuf_n;
-    curs.index = 0;
-}
-
-// --- lib_ams.FReadfile.cbuf_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::FReadfile_cbuf_curs_ValidQ(FReadfile_cbuf_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- lib_ams.FReadfile.cbuf_curs.Access
-// item access
-inline u8& lib_ams::FReadfile_cbuf_curs_Access(FReadfile_cbuf_curs &curs) {
-    return curs.elems[curs.index];
-}
-
-// --- lib_ams.FReadfile.offset_curs.Next
-// proceed to next item
-inline void lib_ams::FReadfile_offset_curs_Next(FReadfile_offset_curs &curs) {
-    curs.index++;
-}
-
-// --- lib_ams.FReadfile.offset_curs.Reset
-inline void lib_ams::FReadfile_offset_curs_Reset(FReadfile_offset_curs &curs, lib_ams::FReadfile &parent) {
-    curs.elems = parent.offset_elems;
-    curs.n_elems = parent.offset_n;
-    curs.index = 0;
-}
-
-// --- lib_ams.FReadfile.offset_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::FReadfile_offset_curs_ValidQ(FReadfile_offset_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- lib_ams.FReadfile.offset_curs.Access
-// item access
-inline u32& lib_ams::FReadfile_offset_curs_Access(FReadfile_offset_curs &curs) {
-    return curs.elems[curs.index];
-}
-
-// --- lib_ams.FReadfile..Init
-// Set all fields to initial values.
-inline void lib_ams::FReadfile_Init(lib_ams::FReadfile& parent) {
-    parent.eof = bool(false);
-    parent.fail = bool(false);
-    parent.buf_elems 	= 0; // (lib_ams.FReadfile.buf)
-    parent.buf_n     	= 0; // (lib_ams.FReadfile.buf)
-    parent.buf_max   	= 0; // (lib_ams.FReadfile.buf)
-    parent.cbuf_elems 	= 0; // (lib_ams.FReadfile.cbuf)
-    parent.cbuf_n     	= 0; // (lib_ams.FReadfile.cbuf)
-    parent.cbuf_max   	= 0; // (lib_ams.FReadfile.cbuf)
-    parent.offset_elems 	= 0; // (lib_ams.FReadfile.offset)
-    parent.offset_n     	= 0; // (lib_ams.FReadfile.offset)
-    parent.offset_max   	= 0; // (lib_ams.FReadfile.offset)
-}
-
-// --- lib_ams.FReadfile..Ctor
-inline  lib_ams::FReadfile::FReadfile() {
-    lib_ams::FReadfile_Init(*this);
-}
-
-// --- lib_ams.FReadfile..Dtor
-inline  lib_ams::FReadfile::~FReadfile() {
-    lib_ams::FReadfile_Uninit(*this);
-}
-
-// --- lib_ams.FShm.c_shmember.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::c_shmember_EmptyQ(lib_ams::FShm& shm) {
-    return shm.c_shmember_n == 0;
-}
-
-// --- lib_ams.FShm.c_shmember.Find
-// Look up row by row id. Return NULL if out of range
-inline lib_ams::FShmember* lib_ams::c_shmember_Find(lib_ams::FShm& shm, u32 t) {
-    lib_ams::FShmember *retval = NULL;
-    u64 idx = t;
-    u64 lim = shm.c_shmember_n;
-    if (idx < lim) {
-        retval = shm.c_shmember_elems[idx];
-    }
-    return retval;
-}
-
-// --- lib_ams.FShm.c_shmember.Getary
-// Return array of pointers
-inline algo::aryptr<lib_ams::FShmember*> lib_ams::c_shmember_Getary(lib_ams::FShm& shm) {
-    return algo::aryptr<lib_ams::FShmember*>(shm.c_shmember_elems, shm.c_shmember_n);
-}
-
-// --- lib_ams.FShm.c_shmember.First
-inline lib_ams::FShmember* lib_ams::c_shmember_First(lib_ams::FShm& shm) {
-    lib_ams::FShmember *row = NULL;
-    row = shm.c_shmember_n ? shm.c_shmember_elems[0] : NULL;
-    return row;
-}
-
-// --- lib_ams.FShm.c_shmember.Last
-inline lib_ams::FShmember* lib_ams::c_shmember_Last(lib_ams::FShm& shm) {
-    lib_ams::FShmember *row = NULL;
-    row = shm.c_shmember_n ? shm.c_shmember_elems[shm.c_shmember_n-1] : NULL;
-    return row;
-}
-
-// --- lib_ams.FShm.c_shmember.N
-// Return number of items in the pointer array
-inline i32 lib_ams::c_shmember_N(const lib_ams::FShm& shm) {
-    return shm.c_shmember_n;
-}
-
-// --- lib_ams.FShm.c_shmember.RemoveAll
-// Empty the index. (The rows are not deleted)
-inline void lib_ams::c_shmember_RemoveAll(lib_ams::FShm& shm) {
-    for (u32 i = 0; i < shm.c_shmember_n; i++) {
-        shm.c_shmember_elems[i]->shm_c_shmember_idx = -1;
-    }
-    shm.c_shmember_n = 0;
-}
-
-// --- lib_ams.FShm.c_shmember.qFind
-// Return reference without bounds checking
-inline lib_ams::FShmember& lib_ams::c_shmember_qFind(lib_ams::FShm& shm, u32 idx) {
-    return *shm.c_shmember_elems[idx];
-}
-
-// --- lib_ams.FShm.c_shmember.InAryQ
-// True if row is in any ptrary instance
-inline bool lib_ams::shm_c_shmember_InAryQ(lib_ams::FShmember& row) {
-    return row.shm_c_shmember_idx != -1;
-}
-
-// --- lib_ams.FShm.c_shmember.qLast
-// Reference to last element without bounds checking
-inline lib_ams::FShmember& lib_ams::c_shmember_qLast(lib_ams::FShm& shm) {
-    return *shm.c_shmember_elems[shm.c_shmember_n-1];
+// --- lib_ams.FProctype..Dtor
+inline  lib_ams::FProctype::~FProctype() {
+    lib_ams::FProctype_Uninit(*this);
 }
 
 // --- lib_ams.FShm.h_amsmsg.Call
@@ -1775,58 +1505,364 @@ template<class T> inline void lib_ams::h_amsmsg_Set2(lib_ams::FShm& shm, T& ctx,
     shm.h_amsmsg = (lib_ams::shm_h_amsmsg_hook)fcn;
 }
 
-// --- lib_ams.FShm.h_msg_orig.Call
-// Invoke function by pointer
-inline void lib_ams::h_msg_orig_Call(lib_ams::FShm& shm, ams::MsgHeader& arg) {
-    if (shm.h_msg_orig) {
-        shm.h_msg_orig((void*)shm.h_msg_orig_ctx, arg);
+// --- lib_ams.FShm.c_boardq.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::c_boardq_EmptyQ(lib_ams::FShm& shm) {
+    return shm.c_boardq_n == 0;
+}
+
+// --- lib_ams.FShm.c_boardq.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_ams::FBoardq* lib_ams::c_boardq_Find(lib_ams::FShm& shm, u64 t) {
+    lib_ams::FBoardq *retval = NULL;
+    u64 idx = t;
+    u64 lim = shm.c_boardq_n;
+    if (idx < lim) {
+        retval = shm.c_boardq_elems[idx];
+    }
+    return retval;
+}
+
+// --- lib_ams.FShm.c_boardq.Getary
+// Return array of pointers
+inline algo::aryptr<lib_ams::FBoardq*> lib_ams::c_boardq_Getary(lib_ams::FShm& shm) {
+    return algo::aryptr<lib_ams::FBoardq*>(shm.c_boardq_elems, shm.c_boardq_n);
+}
+
+// --- lib_ams.FShm.c_boardq.N
+// Return number of items in the pointer array
+inline i64 lib_ams::c_boardq_N(const lib_ams::FShm& shm) {
+    return shm.c_boardq_n;
+}
+
+// --- lib_ams.FShm.c_boardq.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void lib_ams::c_boardq_RemoveAll(lib_ams::FShm& shm) {
+    for (u64 i = 0; i < shm.c_boardq_n; i++) {
+        // mark all elements as not-in-array
+        shm.c_boardq_elems[i]->shm_c_boardq_in_ary = false;
+    }
+    shm.c_boardq_n = 0;
+}
+
+// --- lib_ams.FShm.c_boardq.qFind
+// Return reference without bounds checking
+inline lib_ams::FBoardq& lib_ams::c_boardq_qFind(lib_ams::FShm& shm, u64 idx) {
+    return *shm.c_boardq_elems[idx];
+}
+
+// --- lib_ams.FShm.c_boardq.InAryQ
+// True if row is in any ptrary instance
+inline bool lib_ams::shm_c_boardq_InAryQ(lib_ams::FBoardq& row) {
+    return row.shm_c_boardq_in_ary;
+}
+
+// --- lib_ams.FShm.c_boardq.qLast
+// Reference to last element without bounds checking
+inline lib_ams::FBoardq& lib_ams::c_boardq_qLast(lib_ams::FShm& shm) {
+    return *shm.c_boardq_elems[shm.c_boardq_n-1];
+}
+
+// --- lib_ams.FShm.free_slot.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::free_slot_EmptyQ(lib_ams::FShm& shm) {
+    return shm.free_slot_n == 0;
+}
+
+// --- lib_ams.FShm.free_slot.Find
+// Look up row by row id. Return NULL if out of range
+inline u32* lib_ams::free_slot_Find(lib_ams::FShm& shm, u64 t) {
+    u64 idx = t;
+    u64 lim = shm.free_slot_n;
+    if (idx >= lim) return NULL;
+    return shm.free_slot_elems + idx;
+}
+
+// --- lib_ams.FShm.free_slot.Getary
+// Return array pointer by value
+inline algo::aryptr<u32> lib_ams::free_slot_Getary(const lib_ams::FShm& shm) {
+    return algo::aryptr<u32>(shm.free_slot_elems, shm.free_slot_n);
+}
+
+// --- lib_ams.FShm.free_slot.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline u32* lib_ams::free_slot_Last(lib_ams::FShm& shm) {
+    return free_slot_Find(shm, u64(shm.free_slot_n-1));
+}
+
+// --- lib_ams.FShm.free_slot.Max
+// Return max. number of items in the array
+inline i64 lib_ams::free_slot_Max(lib_ams::FShm& shm) {
+    (void)shm;
+    return shm.free_slot_max;
+}
+
+// --- lib_ams.FShm.free_slot.N
+// Return number of items in the array
+inline i64 lib_ams::free_slot_N(const lib_ams::FShm& shm) {
+    return shm.free_slot_n;
+}
+
+// --- lib_ams.FShm.free_slot.RemoveAll
+inline void lib_ams::free_slot_RemoveAll(lib_ams::FShm& shm) {
+    shm.free_slot_n = 0;
+}
+
+// --- lib_ams.FShm.free_slot.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void lib_ams::free_slot_Reserve(lib_ams::FShm& shm, i64 n) {
+    u64 new_n = shm.free_slot_n + n;
+    if (UNLIKELY(new_n > shm.free_slot_max)) {
+        free_slot_AbsReserve(shm, new_n);
     }
 }
 
-// --- lib_ams.FShm.h_msg_orig.Set0
-// Assign 0-argument hook with no context pointer
-inline void lib_ams::h_msg_orig_Set0(lib_ams::FShm& shm, void (*fcn)() ) {
-    shm.h_msg_orig_ctx = 0;
-    shm.h_msg_orig = (lib_ams::shm_h_msg_orig_hook)fcn;
+// --- lib_ams.FShm.free_slot.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline u32& lib_ams::free_slot_qFind(lib_ams::FShm& shm, u64 t) {
+    return shm.free_slot_elems[t];
 }
 
-// --- lib_ams.FShm.h_msg_orig.Set1
-// Assign 1-argument hook with context pointer
-template<class T> inline void lib_ams::h_msg_orig_Set1(lib_ams::FShm& shm, T& ctx, void (*fcn)(T&) ) {
-    shm.h_msg_orig_ctx = (u64)&ctx;
-    shm.h_msg_orig = (lib_ams::shm_h_msg_orig_hook)fcn;
+// --- lib_ams.FShm.free_slot.qLast
+// Return reference to last element of array. No bounds checking
+inline u32& lib_ams::free_slot_qLast(lib_ams::FShm& shm) {
+    return free_slot_qFind(shm, u64(shm.free_slot_n-1));
 }
 
-// --- lib_ams.FShm.h_msg_orig.Set2
-// Assign 2-argument hook with context pointer
-template<class T> inline void lib_ams::h_msg_orig_Set2(lib_ams::FShm& shm, T& ctx, void (*fcn)(T&, ams::MsgHeader& arg) ) {
-    shm.h_msg_orig_ctx = (u64)&ctx;
-    shm.h_msg_orig = (lib_ams::shm_h_msg_orig_hook)fcn;
+// --- lib_ams.FShm.free_slot.rowid_Get
+// Return row id of specified element
+inline u64 lib_ams::free_slot_rowid_Get(lib_ams::FShm& shm, u32 &elem) {
+    u64 id = &elem - shm.free_slot_elems;
+    return u64(id);
 }
 
-// --- lib_ams.FShm.c_shmember_curs.Reset
-inline void lib_ams::shm_c_shmember_curs_Reset(shm_c_shmember_curs &curs, lib_ams::FShm &parent) {
-    curs.elems = parent.c_shmember_elems;
-    curs.n_elems = parent.c_shmember_n;
+// --- lib_ams.FShm.slot_nref.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::slot_nref_EmptyQ(lib_ams::FShm& shm) {
+    return shm.slot_nref_n == 0;
+}
+
+// --- lib_ams.FShm.slot_nref.Find
+// Look up row by row id. Return NULL if out of range
+inline u32* lib_ams::slot_nref_Find(lib_ams::FShm& shm, u64 t) {
+    u64 idx = t;
+    u64 lim = shm.slot_nref_n;
+    if (idx >= lim) return NULL;
+    return shm.slot_nref_elems + idx;
+}
+
+// --- lib_ams.FShm.slot_nref.Getary
+// Return array pointer by value
+inline algo::aryptr<u32> lib_ams::slot_nref_Getary(const lib_ams::FShm& shm) {
+    return algo::aryptr<u32>(shm.slot_nref_elems, shm.slot_nref_n);
+}
+
+// --- lib_ams.FShm.slot_nref.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline u32* lib_ams::slot_nref_Last(lib_ams::FShm& shm) {
+    return slot_nref_Find(shm, u64(shm.slot_nref_n-1));
+}
+
+// --- lib_ams.FShm.slot_nref.Max
+// Return max. number of items in the array
+inline i64 lib_ams::slot_nref_Max(lib_ams::FShm& shm) {
+    (void)shm;
+    return shm.slot_nref_max;
+}
+
+// --- lib_ams.FShm.slot_nref.N
+// Return number of items in the array
+inline i64 lib_ams::slot_nref_N(const lib_ams::FShm& shm) {
+    return shm.slot_nref_n;
+}
+
+// --- lib_ams.FShm.slot_nref.RemoveAll
+inline void lib_ams::slot_nref_RemoveAll(lib_ams::FShm& shm) {
+    shm.slot_nref_n = 0;
+}
+
+// --- lib_ams.FShm.slot_nref.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void lib_ams::slot_nref_Reserve(lib_ams::FShm& shm, i64 n) {
+    u64 new_n = shm.slot_nref_n + n;
+    if (UNLIKELY(new_n > shm.slot_nref_max)) {
+        slot_nref_AbsReserve(shm, new_n);
+    }
+}
+
+// --- lib_ams.FShm.slot_nref.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline u32& lib_ams::slot_nref_qFind(lib_ams::FShm& shm, u64 t) {
+    return shm.slot_nref_elems[t];
+}
+
+// --- lib_ams.FShm.slot_nref.qLast
+// Return reference to last element of array. No bounds checking
+inline u32& lib_ams::slot_nref_qLast(lib_ams::FShm& shm) {
+    return slot_nref_qFind(shm, u64(shm.slot_nref_n-1));
+}
+
+// --- lib_ams.FShm.slot_nref.rowid_Get
+// Return row id of specified element
+inline u64 lib_ams::slot_nref_rowid_Get(lib_ams::FShm& shm, u32 &elem) {
+    u64 id = &elem - shm.slot_nref_elems;
+    return u64(id);
+}
+
+// --- lib_ams.FShm.zd_outmsg.EmptyQ
+// Return true if index is empty
+inline bool lib_ams::zd_outmsg_EmptyQ(lib_ams::FShm& shm) {
+    return shm.zd_outmsg_head == NULL;
+}
+
+// --- lib_ams.FShm.zd_outmsg.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline lib_ams::FOutmsg* lib_ams::zd_outmsg_First(lib_ams::FShm& shm) {
+    lib_ams::FOutmsg *row = NULL;
+    row = shm.zd_outmsg_head;
+    return row;
+}
+
+// --- lib_ams.FShm.zd_outmsg.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool lib_ams::shm_zd_outmsg_InLlistQ(lib_ams::FOutmsg& row) {
+    bool result = false;
+    result = !(row.shm_zd_outmsg_next == (lib_ams::FOutmsg*)-1);
+    return result;
+}
+
+// --- lib_ams.FShm.zd_outmsg.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline lib_ams::FOutmsg* lib_ams::zd_outmsg_Last(lib_ams::FShm& shm) {
+    lib_ams::FOutmsg *row = NULL;
+    row = shm.zd_outmsg_tail;
+    return row;
+}
+
+// --- lib_ams.FShm.zd_outmsg.N
+// Return number of items in the linked list
+inline i32 lib_ams::zd_outmsg_N(const lib_ams::FShm& shm) {
+    return shm.zd_outmsg_n;
+}
+
+// --- lib_ams.FShm.zd_outmsg.Next
+// Return pointer to next element in the list
+inline lib_ams::FOutmsg* lib_ams::shm_zd_outmsg_Next(lib_ams::FOutmsg &row) {
+    return row.shm_zd_outmsg_next;
+}
+
+// --- lib_ams.FShm.zd_outmsg.Prev
+// Return pointer to previous element in the list
+inline lib_ams::FOutmsg* lib_ams::shm_zd_outmsg_Prev(lib_ams::FOutmsg &row) {
+    return row.shm_zd_outmsg_prev;
+}
+
+// --- lib_ams.FShm.zd_outmsg.qLast
+// Return reference to last element in the index. No bounds checking.
+inline lib_ams::FOutmsg& lib_ams::zd_outmsg_qLast(lib_ams::FShm& shm) {
+    lib_ams::FOutmsg *row = NULL;
+    row = shm.zd_outmsg_tail;
+    return *row;
+}
+
+// --- lib_ams.FShm.c_boardq_curs.Reset
+inline void lib_ams::shm_c_boardq_curs_Reset(shm_c_boardq_curs &curs, lib_ams::FShm &parent) {
+    curs.elems = parent.c_boardq_elems;
+    curs.n_elems = parent.c_boardq_n;
     curs.index = 0;
 }
 
-// --- lib_ams.FShm.c_shmember_curs.ValidQ
+// --- lib_ams.FShm.c_boardq_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::shm_c_shmember_curs_ValidQ(shm_c_shmember_curs &curs) {
+inline bool lib_ams::shm_c_boardq_curs_ValidQ(shm_c_boardq_curs &curs) {
     return curs.index < curs.n_elems;
 }
 
-// --- lib_ams.FShm.c_shmember_curs.Next
+// --- lib_ams.FShm.c_boardq_curs.Next
 // proceed to next item
-inline void lib_ams::shm_c_shmember_curs_Next(shm_c_shmember_curs &curs) {
+inline void lib_ams::shm_c_boardq_curs_Next(shm_c_boardq_curs &curs) {
     curs.index++;
 }
 
-// --- lib_ams.FShm.c_shmember_curs.Access
+// --- lib_ams.FShm.c_boardq_curs.Access
 // item access
-inline lib_ams::FShmember& lib_ams::shm_c_shmember_curs_Access(shm_c_shmember_curs &curs) {
+inline lib_ams::FBoardq& lib_ams::shm_c_boardq_curs_Access(shm_c_boardq_curs &curs) {
     return *curs.elems[curs.index];
+}
+
+// --- lib_ams.FShm.free_slot_curs.Next
+// proceed to next item
+inline void lib_ams::shm_free_slot_curs_Next(shm_free_slot_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_ams.FShm.free_slot_curs.Reset
+inline void lib_ams::shm_free_slot_curs_Reset(shm_free_slot_curs &curs, lib_ams::FShm &parent) {
+    curs.elems = parent.free_slot_elems;
+    curs.n_elems = parent.free_slot_n;
+    curs.index = 0;
+}
+
+// --- lib_ams.FShm.free_slot_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::shm_free_slot_curs_ValidQ(shm_free_slot_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_ams.FShm.free_slot_curs.Access
+// item access
+inline u32& lib_ams::shm_free_slot_curs_Access(shm_free_slot_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- lib_ams.FShm.slot_nref_curs.Next
+// proceed to next item
+inline void lib_ams::shm_slot_nref_curs_Next(shm_slot_nref_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_ams.FShm.slot_nref_curs.Reset
+inline void lib_ams::shm_slot_nref_curs_Reset(shm_slot_nref_curs &curs, lib_ams::FShm &parent) {
+    curs.elems = parent.slot_nref_elems;
+    curs.n_elems = parent.slot_nref_n;
+    curs.index = 0;
+}
+
+// --- lib_ams.FShm.slot_nref_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::shm_slot_nref_curs_ValidQ(shm_slot_nref_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_ams.FShm.slot_nref_curs.Access
+// item access
+inline u32& lib_ams::shm_slot_nref_curs_Access(shm_slot_nref_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- lib_ams.FShm.zd_outmsg_curs.Reset
+// cursor points to valid item
+inline void lib_ams::shm_zd_outmsg_curs_Reset(shm_zd_outmsg_curs &curs, lib_ams::FShm &parent) {
+    curs.row = parent.zd_outmsg_head;
+}
+
+// --- lib_ams.FShm.zd_outmsg_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ams::shm_zd_outmsg_curs_ValidQ(shm_zd_outmsg_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- lib_ams.FShm.zd_outmsg_curs.Next
+// proceed to next item
+inline void lib_ams::shm_zd_outmsg_curs_Next(shm_zd_outmsg_curs &curs) {
+    lib_ams::FOutmsg *next = (*curs.row).shm_zd_outmsg_next;
+    curs.row = next;
+}
+
+// --- lib_ams.FShm.zd_outmsg_curs.Access
+// item access
+inline lib_ams::FOutmsg& lib_ams::shm_zd_outmsg_curs_Access(shm_zd_outmsg_curs &curs) {
+    return *curs.row;
 }
 
 // --- lib_ams.FShm..Ctor
@@ -1837,255 +1873,6 @@ inline  lib_ams::FShm::FShm() {
 // --- lib_ams.FShm..Dtor
 inline  lib_ams::FShm::~FShm() {
     lib_ams::FShm_Uninit(*this);
-}
-
-// --- lib_ams.FShmember..Ctor
-inline  lib_ams::FShmember::FShmember() {
-    lib_ams::FShmember_Init(*this);
-}
-
-// --- lib_ams.FShmember..Dtor
-inline  lib_ams::FShmember::~FShmember() {
-    lib_ams::FShmember_Uninit(*this);
-}
-
-// --- lib_ams.FShmtype..Init
-// Set all fields to initial values.
-inline void lib_ams::FShmtype_Init(lib_ams::FShmtype& shmtype) {
-    shmtype.nonblock = bool(false);
-    shmtype.ind_shmtype_next = (lib_ams::FShmtype*)-1; // (lib_ams.FDb.ind_shmtype) not-in-hash
-    shmtype.ind_shmtype_hashval = 0; // stored hash value
-}
-
-// --- lib_ams.FShmtype..Ctor
-inline  lib_ams::FShmtype::FShmtype() {
-    lib_ams::FShmtype_Init(*this);
-}
-
-// --- lib_ams.FShmtype..Dtor
-inline  lib_ams::FShmtype::~FShmtype() {
-    lib_ams::FShmtype_Uninit(*this);
-}
-
-// --- lib_ams.FWritefile.buf.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::buf_EmptyQ(lib_ams::FWritefile& writefile) {
-    return writefile.buf_n == 0;
-}
-
-// --- lib_ams.FWritefile.buf.Find
-// Look up row by row id. Return NULL if out of range
-inline u8* lib_ams::buf_Find(lib_ams::FWritefile& writefile, u64 t) {
-    u64 idx = t;
-    u64 lim = writefile.buf_n;
-    if (idx >= lim) return NULL;
-    return writefile.buf_elems + idx;
-}
-
-// --- lib_ams.FWritefile.buf.Getary
-// Return array pointer by value
-inline algo::aryptr<u8> lib_ams::buf_Getary(const lib_ams::FWritefile& writefile) {
-    return algo::aryptr<u8>(writefile.buf_elems, writefile.buf_n);
-}
-
-// --- lib_ams.FWritefile.buf.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline u8* lib_ams::buf_Last(lib_ams::FWritefile& writefile) {
-    return buf_Find(writefile, u64(writefile.buf_n-1));
-}
-
-// --- lib_ams.FWritefile.buf.Max
-// Return max. number of items in the array
-inline i32 lib_ams::buf_Max(lib_ams::FWritefile& writefile) {
-    (void)writefile;
-    return writefile.buf_max;
-}
-
-// --- lib_ams.FWritefile.buf.N
-// Return number of items in the array
-inline i32 lib_ams::buf_N(const lib_ams::FWritefile& writefile) {
-    return writefile.buf_n;
-}
-
-// --- lib_ams.FWritefile.buf.RemoveAll
-inline void lib_ams::buf_RemoveAll(lib_ams::FWritefile& writefile) {
-    writefile.buf_n = 0;
-}
-
-// --- lib_ams.FWritefile.buf.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::buf_Reserve(lib_ams::FWritefile& writefile, int n) {
-    u32 new_n = writefile.buf_n + n;
-    if (UNLIKELY(new_n > writefile.buf_max)) {
-        buf_AbsReserve(writefile, new_n);
-    }
-}
-
-// --- lib_ams.FWritefile.buf.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline u8& lib_ams::buf_qFind(lib_ams::FWritefile& writefile, u64 t) {
-    return writefile.buf_elems[t];
-}
-
-// --- lib_ams.FWritefile.buf.qLast
-// Return reference to last element of array. No bounds checking
-inline u8& lib_ams::buf_qLast(lib_ams::FWritefile& writefile) {
-    return buf_qFind(writefile, u64(writefile.buf_n-1));
-}
-
-// --- lib_ams.FWritefile.buf.rowid_Get
-// Return row id of specified element
-inline u64 lib_ams::buf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) {
-    u64 id = &elem - writefile.buf_elems;
-    return u64(id);
-}
-
-// --- lib_ams.FWritefile.cbuf.EmptyQ
-// Return true if index is empty
-inline bool lib_ams::cbuf_EmptyQ(lib_ams::FWritefile& writefile) {
-    return writefile.cbuf_n == 0;
-}
-
-// --- lib_ams.FWritefile.cbuf.Find
-// Look up row by row id. Return NULL if out of range
-inline u8* lib_ams::cbuf_Find(lib_ams::FWritefile& writefile, u64 t) {
-    u64 idx = t;
-    u64 lim = writefile.cbuf_n;
-    if (idx >= lim) return NULL;
-    return writefile.cbuf_elems + idx;
-}
-
-// --- lib_ams.FWritefile.cbuf.Getary
-// Return array pointer by value
-inline algo::aryptr<u8> lib_ams::cbuf_Getary(const lib_ams::FWritefile& writefile) {
-    return algo::aryptr<u8>(writefile.cbuf_elems, writefile.cbuf_n);
-}
-
-// --- lib_ams.FWritefile.cbuf.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline u8* lib_ams::cbuf_Last(lib_ams::FWritefile& writefile) {
-    return cbuf_Find(writefile, u64(writefile.cbuf_n-1));
-}
-
-// --- lib_ams.FWritefile.cbuf.Max
-// Return max. number of items in the array
-inline i32 lib_ams::cbuf_Max(lib_ams::FWritefile& writefile) {
-    (void)writefile;
-    return writefile.cbuf_max;
-}
-
-// --- lib_ams.FWritefile.cbuf.N
-// Return number of items in the array
-inline i32 lib_ams::cbuf_N(const lib_ams::FWritefile& writefile) {
-    return writefile.cbuf_n;
-}
-
-// --- lib_ams.FWritefile.cbuf.RemoveAll
-inline void lib_ams::cbuf_RemoveAll(lib_ams::FWritefile& writefile) {
-    writefile.cbuf_n = 0;
-}
-
-// --- lib_ams.FWritefile.cbuf.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::cbuf_Reserve(lib_ams::FWritefile& writefile, int n) {
-    u32 new_n = writefile.cbuf_n + n;
-    if (UNLIKELY(new_n > writefile.cbuf_max)) {
-        cbuf_AbsReserve(writefile, new_n);
-    }
-}
-
-// --- lib_ams.FWritefile.cbuf.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline u8& lib_ams::cbuf_qFind(lib_ams::FWritefile& writefile, u64 t) {
-    return writefile.cbuf_elems[t];
-}
-
-// --- lib_ams.FWritefile.cbuf.qLast
-// Return reference to last element of array. No bounds checking
-inline u8& lib_ams::cbuf_qLast(lib_ams::FWritefile& writefile) {
-    return cbuf_qFind(writefile, u64(writefile.cbuf_n-1));
-}
-
-// --- lib_ams.FWritefile.cbuf.rowid_Get
-// Return row id of specified element
-inline u64 lib_ams::cbuf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) {
-    u64 id = &elem - writefile.cbuf_elems;
-    return u64(id);
-}
-
-// --- lib_ams.FWritefile..Init
-// Set all fields to initial values.
-inline void lib_ams::FWritefile_Init(lib_ams::FWritefile& writefile) {
-    writefile.fail = bool(false);
-    writefile.buf_elems 	= 0; // (lib_ams.FWritefile.buf)
-    writefile.buf_n     	= 0; // (lib_ams.FWritefile.buf)
-    writefile.buf_max   	= 0; // (lib_ams.FWritefile.buf)
-    writefile.cbuf_elems 	= 0; // (lib_ams.FWritefile.cbuf)
-    writefile.cbuf_n     	= 0; // (lib_ams.FWritefile.cbuf)
-    writefile.cbuf_max   	= 0; // (lib_ams.FWritefile.cbuf)
-    writefile.buf_thr = u32(1024*64);
-    writefile.zd_flush_next = (lib_ams::FWritefile*)-1; // (lib_ams.FDb.zd_flush) not-in-list
-    writefile.zd_flush_prev = NULL; // (lib_ams.FDb.zd_flush)
-}
-
-// --- lib_ams.FWritefile.buf_curs.Next
-// proceed to next item
-inline void lib_ams::writefile_buf_curs_Next(writefile_buf_curs &curs) {
-    curs.index++;
-}
-
-// --- lib_ams.FWritefile.buf_curs.Reset
-inline void lib_ams::writefile_buf_curs_Reset(writefile_buf_curs &curs, lib_ams::FWritefile &parent) {
-    curs.elems = parent.buf_elems;
-    curs.n_elems = parent.buf_n;
-    curs.index = 0;
-}
-
-// --- lib_ams.FWritefile.buf_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::writefile_buf_curs_ValidQ(writefile_buf_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- lib_ams.FWritefile.buf_curs.Access
-// item access
-inline u8& lib_ams::writefile_buf_curs_Access(writefile_buf_curs &curs) {
-    return curs.elems[curs.index];
-}
-
-// --- lib_ams.FWritefile.cbuf_curs.Next
-// proceed to next item
-inline void lib_ams::writefile_cbuf_curs_Next(writefile_cbuf_curs &curs) {
-    curs.index++;
-}
-
-// --- lib_ams.FWritefile.cbuf_curs.Reset
-inline void lib_ams::writefile_cbuf_curs_Reset(writefile_cbuf_curs &curs, lib_ams::FWritefile &parent) {
-    curs.elems = parent.cbuf_elems;
-    curs.n_elems = parent.cbuf_n;
-    curs.index = 0;
-}
-
-// --- lib_ams.FWritefile.cbuf_curs.ValidQ
-// cursor points to valid item
-inline bool lib_ams::writefile_cbuf_curs_ValidQ(writefile_cbuf_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- lib_ams.FWritefile.cbuf_curs.Access
-// item access
-inline u8& lib_ams::writefile_cbuf_curs_Access(writefile_cbuf_curs &curs) {
-    return curs.elems[curs.index];
-}
-
-// --- lib_ams.FWritefile..Ctor
-inline  lib_ams::FWritefile::FWritefile() {
-    lib_ams::FWritefile_Init(*this);
-}
-
-// --- lib_ams.FWritefile..Dtor
-inline  lib_ams::FWritefile::~FWritefile() {
-    lib_ams::FWritefile_Uninit(*this);
 }
 
 // --- lib_ams.FieldId.value.GetEnum
@@ -2188,16 +1975,6 @@ inline  lib_ams::MsgFmt::MsgFmt() {
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_ams::trace &row) {// cfmt:lib_ams.trace.String
     lib_ams::trace_Print(const_cast<lib_ams::trace&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_ams::FReadfile &row) {// cfmt:lib_ams.FReadfile.String
-    lib_ams::FReadfile_Print(const_cast<lib_ams::FReadfile&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_ams::FWritefile &row) {// cfmt:lib_ams.FWritefile.String
-    lib_ams::FWritefile_Print(const_cast<lib_ams::FWritefile&>(row), str);
     return str;
 }
 

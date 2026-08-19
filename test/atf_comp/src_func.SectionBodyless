@@ -1,0 +1,27 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir hdr && try(){ printf "$$2" > hdr/x.h; cp hdr/x.h orig; $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/unterminated.ssim -updateproto; echo $$1_code:$$?; cmp -s hdr/x.h orig && echo $$1_header:unchanged || echo $$1_header:rewritten; }; try selfclose "namespace foo { void A(); } // update-hdr\\nvoid KeepMe();\\n"; try closeouter "namespace outer {\\nnamespace inner { void A(); }} // update-hdr\\nnamespace zz {\\nstruct S {\\n    int a;\\n};\\n}\\n"; try structopen "namespace foo { struct S { // update-hdr\\n    int a;\\n};\\nvoid Old();\\n}\\n"; try innerclosed "namespace one { namespace two { } // update-hdr\\nvoid Old();\\n}\\n"; try control "namespace foo { // update-hdr\\nvoid A();\\n}\\n"; try innerbrace "namespace foo { struct S {}; // update-hdr\\nvoid A();\\n}\\nvoid KeepMe();\\n"; cat hdr/x.h\''
+# eof bash
+bash -> src_func.bodyless_section  file:hdr/x.h  ns:foo  comment:"update-hdr section opens and closes on one line; file not rewritten"
+bash -> selfclose_code:1
+bash -> selfclose_header:unchanged
+bash -> src_func.bodyless_section  file:hdr/x.h  ns:inner  comment:"update-hdr section opens and closes on one line; file not rewritten"
+bash -> closeouter_code:1
+bash -> closeouter_header:unchanged
+bash -> src_func.foreign_brace  file:hdr/x.h  ns:foo  comment:"update-hdr section opens a brace that none of its namespaces opened; file not rewritten"
+bash -> structopen_code:1
+bash -> structopen_header:unchanged
+bash -> src_func.foreign_brace  file:hdr/x.h  ns:two  comment:"update-hdr section opens a brace that none of its namespaces opened; file not rewritten"
+bash -> innerclosed_code:1
+bash -> innerclosed_header:unchanged
+bash -> control_code:0
+bash -> control_header:rewritten
+bash -> innerbrace_code:0
+bash -> innerbrace_header:rewritten
+bash -> namespace foo { struct S {}; // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash -> }
+bash -> void KeepMe();
+# exit bash code:0

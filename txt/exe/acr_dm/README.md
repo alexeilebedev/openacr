@@ -12,39 +12,20 @@ adds a column, another removes a column.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Limitations](#limitations)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [A delete and a change are not a conflict](#a-delete-and-a-change-are-not-a-conflict)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Algorithm](#algorithm)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Git integration](#git-integration)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [acr_dm - Internals](/txt/exe/acr_dm/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Syntax
-<a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
-```
-acr_dm: ACR Diff/Merge
-Usage: acr_dm [[-arg:]<string>] [options]
-    OPTION       TYPE    DFLT    COMMENT
-    -in          string  "data"  Input directory or filename, - for stdin
-    [arg]...     string          Files to merge: older ours theirs...
-    -write_ours                  Write result to ours file
-    -msize       int     7       Conflict marker size
-    -rowid                       Output 'ours' rowid for merging into original ssimfiles
-    -verbose     flag            Verbosity level (0..255); alias -v; cumulative
-    -debug       flag            Debug level (0..255); alias -d; cumulative
-    -help                        Print help and exit; alias -h
-    -version                     Print version and exit
-    -signature                   Show signatures and exit; alias -sig
-
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+### Internals
+<a href="#internals"></a>
+&#128196; [acr_dm - Internals](/txt/gen/acr_dm/acr_dm.md)<br/>
 
 ### Limitations
 <a href="#limitations"></a>
@@ -163,20 +144,60 @@ garden.flower  flower:daisy  color:orange  leaf:spatula
 
 Merge results in conflict.
 
+### A delete and a change are not a conflict
+<a href="#a-delete-and-a-change-are-not-a-conflict"></a>
+
+Say one branch deletes the row `garden.flower  flower:rose`, and the other
+branch changes that same row's color to blue.  A line-based merge tool stops
+here and asks a human, and it is right to: it does not know what the line
+means, so it cannot know whether the change mattered.
+
+A set is different.  The key names a role, and deleting the row says that the
+role no longer exists.  Once the role is gone, no attribute of it has a value
+any more, so there is nothing left for the other branch's change to disagree
+with.  The change describes an attribute of a row that is not there.
+
+`acr_dm` therefore takes the delete and prints no marker.  What makes this
+sound is that a row has an identity and a known meaning here, which a line of
+code does not, and that is what lets the merge settle a case a text merge has
+to hand back.
+
 ### Algorithm
 <a href="#algorithm"></a>
 
-As `acr_dm` reads files, it assigns each tuple a 2-component rowid.
-The rowids are assigned as follows:
+Rows that a file adds one after another form a run, and the run is what gets
+placed.  As `acr_dm` reads a file it remembers the last row that file had in
+common with what the merge already knew, and a run of new rows hangs off that
+row — the run's anchor.  Before the first shared row there is no such row, so a
+run at the top of a file hangs off a virtual row standing for the start of the
+file.
 
-First, look up the key in the tuple table.
-- If the entry exists, update next rowid to the rowid of this entry
-- If the entry doesn't exist, and we're reading the first (base) file, assign the next number.
-- If the entry doesn't exist, and we're reading a subsequent file, then
-take the previous existing rowid and assign the next number to the 2nd position.
+A run is read for the first time in exactly one file, so its anchor is written
+once and never revised.
 
-The tuples are then written out in rowid order.
-This has the effect of placing all new tuples after the last known location.
+The output is the runs hanging off the virtual start row, printed in order, each
+row followed by the runs hanging off it.  Rows that share an anchor are ordered
+by three rules:
+
+- Rows a branch added come before the row the base file had there, which is how
+an insertion lands between the two rows it was written between.
+- Two runs from different branches are ordered by the key of the first row of
+each run.
+- Within one run, rows keep the order the branch wrote them in.
+
+Two properties follow.  A branch's run prints without interruption, because the
+run is placed as a unit and another branch's run cannot be threaded through it.
+And the only comparison ever made between two branches is a comparison of keys,
+which cannot tell which branch was passed second — so a rebase, which swaps
+*ours* and *theirs*, produces the same file the merge did.
+
+Placing runs rather than rows also keeps the walk over the result shallow.  It
+descends once per run nested inside a run, never once per row, so a file that
+one branch adds whole is walked at a single level instead of at as many levels
+as the file has rows.
+
+Use `-anchor` to see the anchor each row was given, and `-rowid` to print each
+row's position in the merged file.
 
 ### Git integration
 <a href="#git-integration"></a>
@@ -197,8 +218,6 @@ inline-command: grep acr_dm .gitattributes
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -211,18 +230,15 @@ inline-command: grep acr_dm .gitattributes
 #### -msize -- Conflict marker size
 <a href="#-msize"></a>
 
-#### -rowid -- Output 'ours' rowid for merging into original ssimfiles
-<a href="#-rowid"></a>
+#### -anchor -- Print each row's anchor, the row it was placed after
+<a href="#-anchor"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
+#### -rowid -- Print acr.rowid, each row's position in the merged file
+<a href="#-rowid"></a>
 
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `acr_dm` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

@@ -87,6 +87,337 @@ void atf_amc::amctest_VarlenAlloc() {
     }
 }
 
+// Pool alloc must store the exact inverse of the lenfld read formula.
+// VarlenAllocScale's lenfld has scale:4 extra:-4, so the reader computes
+// total = length*4 + 4, and the alloc must store length = (total - 4)/4,
+// i.e. the number of 4-byte varlen words.
+void atf_amc::amctest_PoolLenfldScale() {
+    // AllocExtra path: total = sizeof(header) + extra bytes
+    {
+        i32 temp[8];
+        for (int i=0; i<8; i++) {
+            temp[i]=i+1;
+        }
+        atf_amc::VarlenAllocScale *rec = atf_amc::varlenallocscale_AllocExtraMaybe(temp,sizeof(temp));
+        vrfy_(rec != NULL);
+        vrfyeq_(i32(rec->length)*4 + 4, i32(sizeof(atf_amc::VarlenAllocScale) + sizeof(temp)));
+        vrfyeq_(elem_Getary(*rec).n_elems, 8);
+        for (int i=0; i<8; i++) {
+            vrfyeq_(elem_Getary(*rec)[i], i+1);// the payload bytes round-trip
+        }
+        varlenallocscale_Delete(*rec);
+    }
+    // AllocExtraMaybe with a byte count that is not a multiple of scale:
+    // no length word can represent the total, so the alloc fails (NULL)
+    // like any other alloc failure, instead of storing a truncated length
+    // the reader would reconstruct short
+    {
+        i32 temp[2];
+        temp[0]=1;
+        temp[1]=2;
+        atf_amc::VarlenAllocScale *rec = atf_amc::varlenallocscale_AllocExtraMaybe(temp,6);
+        vrfy_(rec == NULL);
+    }
+    // plain Alloc path: MsgHdrLTScale's lenfld has scale:4 extra:-2,
+    // so the reader computes total = len*4 + 2, which must equal sizeof (2)
+    {
+        atf_amc::MsgHdrLTScale &hdr = atf_amc::msghdrltscale_Alloc();
+        vrfyeq_(GetMsgLength(hdr), i32(sizeof(atf_amc::MsgHdrLTScale)));
+        msghdrltscale_Delete(hdr);
+    }
+}
+
+// A negative Opt byte count -- passed by the caller, or read off a corrupt
+// payload's own length word -- underallocates the fixed portion (the header
+// stores already overflow the buffer), and the Opt memcpy converts the count
+// to a huge size_t. Construction must refuse the count (NULL) before any
+// buffer space is taken: the caller-passed arm (OptG) and the payload-derived
+// arm (OptOptG, whose length word 0xFFFFFFFC reads as -4).
+void atf_amc::amctest_PnewOptNegative() {
+    {
+        u8 store[64];
+        memset(store,0,sizeof(store));
+        algo::memptr buf(store, 64);
+        atf_amc::TypeG typeg;
+        typeg.typeg = 1;
+        atf_amc::OptG *msg = atf_amc::OptG_FmtMemptr(buf, &typeg, -2);
+        vrfy_(msg == NULL);
+    }
+    {
+        u8 store[64];
+        memset(store,0,sizeof(store));
+        algo::memptr buf(store, 64);
+        atf_amc::OptG optg;
+        optg.length = 0xFFFFFFFC;
+        atf_amc::OptOptG *msg = atf_amc::OptOptG_FmtMemptr(buf, &optg);
+        vrfy_(msg == NULL);
+    }
+}
+
+// A message constructor over a scaled lenfld: VarlenB counts 4-byte words
+// past the first (scale:4 extra:-4) over a byte-granular payload, so only
+// a total landing on a scale multiple has a representable length word.
+// FmtByteAry with a 4-byte payload round-trips; a 3-byte payload must fail
+// (NULL) before allocation, rather than store a truncated length word the
+// reader would reconstruct short.
+void atf_amc::amctest_PnewScaleGuard() {
+    algo::ByteAry buf;
+    atf_amc::VarlenB *msg = atf_amc::VarlenB_FmtByteAry(buf, "abcd");
+    vrfy_(msg != NULL);
+    vrfyeq_(c_Getary(*msg), "abcd");
+    vrfyeq_(msg->length, u32(1));
+    atf_amc::VarlenB *msg2 = atf_amc::VarlenB_FmtByteAry(buf, "abc");
+    vrfy_(msg2 == NULL);
+}
+
+// A message constructor whose lenfld extra exceeds the ctype's fixed size:
+// VarlenLow's u8 length word carries the total minus 8 (extra:-8) over a
+// 1-byte fixed part, so a total below 8 has no representable length word --
+// the store would go negative and wrap through the unsigned word, and the
+// reader would reconstruct a frame 256 bytes longer than was written. An
+// 8-byte total (7 payload bytes) round-trips; a 1-byte total (empty payload)
+// must fail (NULL) before allocation.
+void atf_amc::amctest_PnewLowGuard() {
+    algo::ByteAry buf;
+    atf_amc::VarlenLow *msg = atf_amc::VarlenLow_FmtByteAry(buf, "abcdefg");
+    vrfy_(msg != NULL);
+    vrfyeq_(c_Getary(*msg), "abcdefg");
+    vrfyeq_(msg->length, u8(0));
+    vrfyeq_(c_N(*msg), u32(7));
+    atf_amc::VarlenLow *msg2 = atf_amc::VarlenLow_FmtByteAry(buf, "");
+    vrfy_(msg2 == NULL);
+}
+
+// Pnew length arithmetic carries the buffer capacity and the varlen byte
+// count in u64, so neither wraps at 4GiB: a capacity beyond 4GiB is compared
+// at its true value rather than mod 2^32, and a varlen portion beyond 4GiB
+// is compared at its true value rather than framing a truncated message.
+// A total the frame length cannot express is refused outright: every buffer
+// takes its size as an i32 (algo::Alloc and lib_ams::BeginWrite narrow len
+// to int, and the reader reconstructs the total as an i32), so a total above
+// i32 max would allocate the low bits while the payload copy moves the whole
+// count. The first case is the accepted control; the accepted edge itself, a
+// total of exactly i32 max, is pinned in the emitted text (comptest
+// amc.LenfldNarrow) because accepting it would move 2GiB of payload.
+// None of these cases needs real gigabytes: capacity and element count only
+// feed comparisons, and bytes move only after the checks pass.
+void atf_amc::amctest_PnewWideLen() {
+    // capacity beyond 4GiB whose low 32 bits are small, small message:
+    // must construct, not refuse
+    {
+        u8 store[64];
+        memset(store,0,sizeof(store));
+        u32 elem[2] = {1,2};
+        algo::memptr buf(store, i64(1ULL<<32) + 8);
+        atf_amc::VarlenK *msg = atf_amc::VarlenK_FmtMemptr(buf, algo::aryptr<u32>(elem,2));
+        vrfy_(msg != NULL);
+        vrfyeq_(i_N(*msg), u32(2));
+    }
+    // varlen portion beyond 4GiB whose byte count wraps to 4, small buffer:
+    // must refuse (NULL), not construct a 4-byte portion
+    {
+        u8 store[64];
+        memset(store,0,sizeof(store));
+        u32 elem[2] = {1,2};
+        algo::memptr buf(store, 64);
+        atf_amc::VarlenK *msg = atf_amc::VarlenK_FmtMemptr(buf, algo::aryptr<u32>(elem, i64(1ULL<<30) + 1));
+        vrfy_(msg == NULL);
+    }
+    // total one byte past i32 max, buffer roomy enough to admit it:
+    // must refuse (NULL) before the payload copy, because the buffer size
+    // argument would carry only the low 32 bits of the total
+    {
+        u8 store[64];
+        memset(store,0,sizeof(store));
+        u32 elem[2] = {1,2};
+        algo::memptr buf(store, i64(1ULL<<33));
+        atf_amc::VarlenK *msg = atf_amc::VarlenK_FmtMemptr(buf, algo::aryptr<u32>(elem, i64(1) << 29));
+        vrfy_(msg == NULL);
+    }
+}
+
+// An Opt element with a scaled lenfld: OptBMsg's optional trailing element
+// is a VarlenB, and reading the message from a string stores the element's
+// length through the element's own lenfld formula. A 4-byte payload
+// round-trips; a 3-byte payload has no representable length word -- the
+// read must fail rather than store a truncated word that makes b_Get
+// reconstruct a short element.
+void atf_amc::amctest_OptScaleGuard() {
+    algo::ByteAry buf;
+    bool ok = atf_amc::MsgHeaderMsgs_ReadStrptrMaybe("atf_amc.OptBMsg  b:'atf_amc.VarlenB  c:abcd'", buf);
+    vrfy_(ok);
+    atf_amc::OptBMsg *msg = (atf_amc::OptBMsg*)buf.ary_elems;
+    atf_amc::VarlenB *b = b_Get(*msg);
+    vrfy_(b != NULL);
+    vrfyeq_(c_Getary(*b), "abcd");
+    algo::ByteAry buf2;
+    bool ok2 = atf_amc::MsgHeaderMsgs_ReadStrptrMaybe("atf_amc.OptBMsg  b:'atf_amc.VarlenB  c:abc'", buf2);
+    vrfy_(!ok2);
+}
+
+// Ascii form of a message MSGTYPE whose varlen field FIELD carries NCHAR
+// payload bytes.
+static tempstr LongTuple(algo::strptr msgtype, algo::strptr field, int nchar) {
+    tempstr ret;
+    ret << msgtype << "  " << field << ":";
+    for (int i = 0; i < nchar; i++) {
+        ch_Alloc(ret) = 'a';
+    }
+    return ret;
+}
+
+// Reading a message from its ascii form appends the varlen tail to the buffer
+// and stores the resulting total through the message's length field, and that
+// total is a runtime one: nothing about the tuple bounds it to what the length
+// word represents. Text's word is a u16 counting the total, so a total of
+// 65535 is the largest that round-trips and 65536 stores 0 -- a length word
+// that frames the payload as the next message header. MsgLTScaleV's word is a
+// u8 counting (total - 2) / 4, which adds two more ways to miss: a total that
+// is not 2 above a multiple of 4 truncates in the division, and a total past
+// 1022 exceeds the word. Each accepted edge is read back through the length
+// field to confirm the stored word reconstructs the total; each rejected one
+// must fail the read rather than store a word the reader misinterprets.
+// (A total below the word's low end is the one shape this path cannot reach:
+// no in-tree dispatch-read header subtracts more than its own fixed size,
+// and the low-end term comes from the same expression amctest PnewLowGuard
+// pins.)
+void atf_amc::amctest_DispReadLenfldGuard() {
+    // u16 word counting the total: the largest total it stores, and one past
+    {
+        algo::ByteAry buf;
+        tempstr str = LongTuple("atf_amc.Text", "text", 65531);
+        vrfy_(atf_amc::MsgHeaderMsgs_ReadStrptrMaybe(str, buf));
+        atf_amc::Text *msg = (atf_amc::Text*)buf.ary_elems;
+        vrfyeq_(i32(msg->length), 65535);
+        vrfyeq_(text_N(*msg), u32(65531));
+    }
+    {
+        algo::ByteAry buf;
+        tempstr str = LongTuple("atf_amc.Text", "text", 65532);
+        vrfy_(!atf_amc::MsgHeaderMsgs_ReadStrptrMaybe(str, buf));
+    }
+    // u8 word counting (total-2)/4: a total on the scale, and one off it
+    {
+        algo::ByteAry buf;
+        vrfy_(atf_amc::MsgHdrLTScaleMsgs_ReadStrptrMaybe("atf_amc.MsgLTScaleV  v:abcd", buf));
+        atf_amc::MsgLTScaleV *msg = (atf_amc::MsgLTScaleV*)buf.ary_elems;
+        vrfyeq_(u32(msg->len), u32(1));
+        vrfyeq_(v_N(*msg), u32(4));
+    }
+    {
+        algo::ByteAry buf;
+        vrfy_(!atf_amc::MsgHdrLTScaleMsgs_ReadStrptrMaybe("atf_amc.MsgLTScaleV  v:abc", buf));
+    }
+    // same word: the largest total it stores, and the next total on the scale
+    {
+        algo::ByteAry buf;
+        tempstr str = LongTuple("atf_amc.MsgLTScaleV", "v", 1020);
+        vrfy_(atf_amc::MsgHdrLTScaleMsgs_ReadStrptrMaybe(str, buf));
+        atf_amc::MsgLTScaleV *msg = (atf_amc::MsgLTScaleV*)buf.ary_elems;
+        vrfyeq_(u32(msg->len), u32(255));
+        vrfyeq_(v_N(*msg), u32(1020));
+    }
+    {
+        algo::ByteAry buf;
+        tempstr str = LongTuple("atf_amc.MsgLTScaleV", "v", 1024);
+        vrfy_(!atf_amc::MsgHdrLTScaleMsgs_ReadStrptrMaybe(str, buf));
+    }
+}
+
+// AllocExtraMaybe takes the varlen byte count as a signed i32, and a caller
+// can arrive at a negative one: InsertMaybe computes the count as the total
+// length minus the fixed size, so a corrupt length word smaller than the
+// fixed size goes negative. An unguarded negative count underallocates the
+// fixed portion, and the extra-bytes memcpy converts it to a huge size_t.
+// The alloc must refuse the count (NULL) like any other alloc failure --
+// on the unscaled path (VarlenAlloc) and on the scaled path
+// (VarlenAllocScale, where -8 passes the multiple-of-scale test).
+void atf_amc::amctest_PoolAllocExtraNegative() {
+    {
+        atf_amc::VarlenAlloc *rec = atf_amc::varlenalloc_AllocExtraMaybe(NULL, -4);
+        vrfy_(rec == NULL);
+    }
+    {
+        atf_amc::VarlenAllocScale *rec = atf_amc::varlenallocscale_AllocExtraMaybe(NULL, -8);
+        vrfy_(rec == NULL);
+    }
+}
+
+// InsertMaybe computes the varlen byte count as the inserted value's length
+// word minus the fixed size, and hands that count to the allocator as an
+// i32. A word smaller than the fixed size (a zeroed struct, a corrupt wire
+// message) makes the count negative, and one past 2^31-1 makes it exceed
+// what the allocator's argument holds; both fail as NULL per the function's
+// contract, rather than dying inside the die-on-fail AllocExtra with a
+// diagnostic blaming memory for an input error.  Out-of-memory keeps dying.
+// A word equal to the fixed size is a record with no trailing element and
+// is accepted, as is any word between that and 2^31-1.
+//
+// The length word is a u32, so the accept/reject table runs: 0 and every
+// word below the fixed size reject, the fixed size itself and larger words
+// accept, and words from 0x80000000 up reject. The accepted upper edge --
+// the word that makes the count exactly 2^31-1 minus the fixed size -- is
+// not exercised here, because reaching it means asking the allocator for
+// two gigabytes.
+void atf_amc::amctest_PoolInsertMaybeBound() {
+    atf_amc::OptG value;
+    // below the fixed size: a zeroed word, and the word one short of it
+    value.length = 0;
+    vrfy_(atf_amc::optg_InsertMaybe(value) == NULL);
+    value.length = u32(sizeof(atf_amc::OptG)) - 1;
+    vrfy_(atf_amc::optg_InsertMaybe(value) == NULL);
+    // exactly the fixed size: no trailing element, and the row is stored
+    value.length = u32(sizeof(atf_amc::OptG));
+    atf_amc::FOptG *row = atf_amc::optg_InsertMaybe(value);
+    vrfy_(row != NULL);
+    vrfyeq_(row->length, u32(sizeof(atf_amc::FOptG)));
+    atf_amc::optg_Delete(*row);
+    // past what the allocator's i32 byte count holds
+    value.length = 0x80000000;
+    vrfy_(atf_amc::optg_InsertMaybe(value) == NULL);
+    value.length = 0xffffffff;
+    vrfy_(atf_amc::optg_InsertMaybe(value) == NULL);
+}
+
+// A length word whose range runs past u32 cannot be expanded to a byte
+// total first: the scaled multiply, and at scale 1 the extra adjustment
+// after the u64->i64 wrap, would overflow inside the very expression meant
+// to keep the corrupt word visible. InsertMaybe therefore bounds the raw
+// word by a generation-time constant -- the largest value whose expanded
+// total still fits the i32 frame-length domain -- and refuses anything
+// above it. OptWide is the unsigned scaled case: a u64 word, scale 2 and
+// extra -8 put that constant at 1073741819. OptSigned is the signed case,
+// where the bound is what rejects a negative stored length, through the
+// u64 conversion in the emitted test; the addon-count test below it never
+// sees the value. Each ctype's smallest frame -- the word whose total is
+// exactly the fixed size -- is the control that still inserts.
+void atf_amc::amctest_PoolInsertMaybeWideWord() {
+    {
+        atf_amc::OptWide value;
+        value.length = 0;// smallest frame: total is exactly the fixed size
+        atf_amc::FOptWide *row = atf_amc::optwide_InsertMaybe(value);
+        vrfy_(row != NULL);
+        atf_amc::optwide_Delete(*row);
+        value.length = 1073741820;// one past the bound
+        vrfy_(atf_amc::optwide_InsertMaybe(value) == NULL);
+        value.length = 0x8000000000000000;// the scaled multiply would overflow
+        vrfy_(atf_amc::optwide_InsertMaybe(value) == NULL);
+    }
+    {
+        atf_amc::OptSigned value;
+        value.length = ssizeof(atf_amc::OptSigned);// smallest frame
+        atf_amc::FOptSigned *row = atf_amc::optsigned_InsertMaybe(value);
+        vrfy_(row != NULL);
+        atf_amc::optsigned_Delete(*row);
+        value.length = 2147483648;// one past the bound
+        vrfy_(atf_amc::optsigned_InsertMaybe(value) == NULL);
+        value.length = -1;// negative: rejected by the u64 conversion
+        vrfy_(atf_amc::optsigned_InsertMaybe(value) == NULL);
+        value.length = -0x7fffffffffffffff - 1;// the fixed-size subtraction would underflow
+        vrfy_(atf_amc::optsigned_InsertMaybe(value) == NULL);
+    }
+}
+
 // template is needed for string literal in order
 // to get correct length for NUL char inside
 template <typename T> static void Check(T &bin_literal, strptr str) {
@@ -391,4 +722,159 @@ void atf_amc::amctest_Varlen2v() {
         "\014\000\000\000\013\000\000\000\014\000\000\000"
         "\020\000\000\000\015\000\000\000\016\000\000\000\017\000\000\000";
     vrfyeq_(ToStrPtr(ary_Getary(buf)), Bytes(str2));
+}
+
+// Fixture: VarlenWMsg's header counts total bytes (MsgHeader.length, scale:1),
+// but each VarlenW element counts 4-byte words past the first (scale:4
+// extra:-4). Reading an element from a string must store the element's length
+// through the element's own lenfld formula -- an element of 12 bytes stores
+// length 2, not 12. A raw byte count would make the element cursor stride
+// past the element and misread everything that follows.
+void atf_amc::amctest_VarlenNestScale() {
+    algo::ByteAry buf;
+    const char *str = "atf_amc.VarlenWMsg"
+        "  word:'atf_amc.VarlenW  i:1  i:2'"
+        "  word:'atf_amc.VarlenW  i:3'";
+    atf_amc::MsgHeaderMsgs_ReadStrptr(str,buf);
+    VarlenWMsg *msg = (VarlenWMsg*)buf.ary_elems;
+
+    const char *str1 = "atf_amc.VarlenWMsg"
+        "  word.0:\"atf_amc.VarlenW  i.0:1  i.1:2\""
+        "  word.1:\"atf_amc.VarlenW  i.0:3\"";
+    vrfyeq_(tempstr()<<*msg, str1);
+
+    const char str2[] = "\005\020\030\000"
+        "\002\000\000\000\001\000\000\000\002\000\000\000"
+        "\001\000\000\000\003\000\000\000";
+    vrfyeq_(ToStrPtr(ary_Getary(buf)), Bytes(str2));
+}
+
+// A varlen element with a scaled lenfld over a byte-granular payload: only
+// a byte count that lands on a scale multiple has a representable length
+// word. VarlenB counts 4-byte words past the first (scale:4 extra:-4), and
+// its payload is a char array, so any payload length is expressible in the
+// input. A 4-byte payload round-trips; a 3-byte payload has no length word
+// that reconstructs it -- the read must fail rather than store a truncated
+// word that makes the element cursor stride into the element's middle.
+void atf_amc::amctest_VarlenNestScaleGuard() {
+    algo::ByteAry buf;
+    const char *str = "atf_amc.VarlenBMsg"
+        "  b:'atf_amc.VarlenB  c:abcd'";
+    atf_amc::MsgHeaderMsgs_ReadStrptr(str,buf);
+    VarlenBMsg *msg = (VarlenBMsg*)buf.ary_elems;
+    vrfyeq_(tempstr()<<*msg, "atf_amc.VarlenBMsg  b.0:\"atf_amc.VarlenB  c:abcd\"");
+
+    algo::ByteAry buf2;
+    bool ok = atf_amc::MsgHeaderMsgs_ReadStrptrMaybe("atf_amc.VarlenBMsg  b:'atf_amc.VarlenB  c:abc'", buf2);
+    vrfy_(!ok);
+}
+
+// A varlen field with a one-letter name: the field name becomes the element
+// ctype's reference name, so the generated readers take a parameter named w;
+// where the parameter is unused, the (void) suppression must still be
+// emitted even though the body contains w inside another token (new()).
+void atf_amc::amctest_VarlenShortName() {
+    algo::ByteAry buf;
+    const char *str = "atf_amc.VarlenVMsg"
+        "  w:'atf_amc.VarlenW  i:7'";
+    atf_amc::MsgHeaderMsgs_ReadStrptr(str,buf);
+    VarlenVMsg *msg = (VarlenVMsg*)buf.ary_elems;
+    vrfyeq_(tempstr()<<*msg, "atf_amc.VarlenVMsg  w.0:\"atf_amc.VarlenW  i.0:7\"");
+}
+
+// Fixture: a wire frame combining fbigend storage, bitfield views (a typefld
+// enum + a lenfld), Base inheritance, a Varlen array of a ctype, and a String.
+// The shape pins three generator obligations:
+//  - Base CopyOut/CopyIn reference an fbigend field by its _be member
+//  - GetEnum on a bitfield field reads via the _Get accessor, not parent.<f>
+//  - the lenfld default (ssizeof) uses the parent arg, not *this, in the
+//    free _Init function generated for a bitfield lenfld.
+void atf_amc::amctest_NetFrameVarlen() {
+    // header word is big-endian: kind = SETTINGS(4) in low 8 bits, len = 12 in
+    // the high 24 bits -> word 0x00000c04 -> bytes 00 00 0c 04. Then two 6-byte
+    // big-endian (id,val) entries (12 bytes of payload, matching len).
+    u8 wire[] = {
+        0x00,0x00,0x0c,0x04,                // len=12, kind=4 (SETTINGS)
+        0x01,0x02, 0x03,0x04,0x05,0x06,     // entry0: id=0x0102 val=0x03040506
+        0x11,0x12, 0x13,0x14,0x15,0x16      // entry1: id=0x1112 val=0x13141516
+    };
+    atf_amc::NetFrame &frame = *(atf_amc::NetFrame*)wire;
+
+    // fbigend word decoded, then bitfield views extracted
+    vrfyeq_(kind_Get(frame), atf_amc_NetFrameHdr_kind_SETTINGS);
+    vrfyeq_(len_Get(frame), u32(12));
+
+    // generated _N from the lenfld: 12 payload bytes / 6 = 2 entries
+    vrfyeq_(entry_N(frame), u32(2));
+
+    // cursor over a Varlen-of-ctype; each entry's fields are big-endian
+    int i = 0;
+    ind_beg(atf_amc::NetFrame_entry_curs, e, frame) {
+        if (i == 0) {
+            vrfyeq_(id_Get(e), u16(0x0102));
+            vrfyeq_(val_Get(e), u32(0x03040506));
+        } else {
+            vrfyeq_(id_Get(e), u16(0x1112));
+            vrfyeq_(val_Get(e), u32(0x13141516));
+        }
+        ++i;
+    }ind_end;
+    vrfyeq_(i, 2);
+
+    // Base CopyOut copies the fbigend storage word by its _be member
+    atf_amc::NetFrameHdr hdr;
+    parent_CopyOut(frame, hdr);
+    vrfyeq_(kind_Get(hdr), atf_amc_NetFrameHdr_kind_SETTINGS);
+    vrfyeq_(len_Get(hdr), u32(12));
+
+    // GetEnum on the bitfield typefld reads through kind_Get
+    vrfyeq_(int(kind_GetEnum(hdr)), int(atf_amc_NetFrameHdr_kind_SETTINGS));
+
+    // default-constructed frame: msgtype default kind=SETTINGS, lenfld default len=0
+    // (ssizeof(NetFrame) - 4). This is the path whose Init used *this.
+    atf_amc::NetFrame fresh;
+    vrfyeq_(kind_Get(fresh), atf_amc_NetFrameHdr_kind_SETTINGS);
+    vrfyeq_(len_Get(fresh), u32(0));
+    vrfyeq_(entry_N(fresh), u32(0));
+
+    // String formatting. The NetFrame Tuple printer walks the Varlen cursor and
+    // prints each NetEntry; the typefld (kind) and lenfld (len) are framing, not
+    // printed. Entry values are the big-endian-decoded fields.
+    cstring framestr;
+    atf_amc::NetFrame_Print(frame, framestr);
+    vrfyeq_(framestr,
+            "atf_amc.NetFrame"
+            "  entry.0:\"atf_amc.NetEntry  id:258  val:50595078\""
+            "  entry.1:\"atf_amc.NetEntry  id:4370  val:320083222\"");
+
+    // Read the whole frame back from its string form. A NetFrame is variable-size,
+    // so the read goes through the msgtype dispatch reader into a ByteAry: it sets
+    // kind from the "atf_amc.NetFrame" type tag, parses each entry, and recomputes
+    // the bitfield lenfld. The reconstructed bytes must equal the original wire frame.
+    algo::ByteAry rbuf;
+    atf_amc::NetFrameHdrMsgsCase rcase = atf_amc::NetFrameHdrMsgs_ReadStrptr(framestr, rbuf);
+    vrfyeq_(int(rcase), int(atf_amc_NetFrameHdrMsgsCase_atf_amc_NetFrame));
+    atf_amc::NetFrame &rd = *(atf_amc::NetFrame*)rbuf.ary_elems;
+    vrfyeq_(kind_Get(rd), atf_amc_NetFrameHdr_kind_SETTINGS);
+    vrfyeq_(len_Get(rd), u32(12));
+    vrfyeq_(entry_N(rd), u32(2));
+    vrfyeq_(id_Get(entry_Getary(rd)[0]),  u16(0x0102));
+    vrfyeq_(val_Get(entry_Getary(rd)[0]), u32(0x03040506));
+    vrfyeq_(id_Get(entry_Getary(rd)[1]),  u16(0x1112));
+    vrfyeq_(val_Get(entry_Getary(rd)[1]), u32(0x13141516));
+    vrfyeq_(ToStrPtr(ary_Getary(rbuf)), algo::strptr((char*)wire, sizeof(wire)));
+
+    // NetEntry print + read round-trip (read:Y print:Y on an fbigend ctype):
+    // printing decodes big-endian, reading re-encodes it, so the storage bytes match.
+    atf_amc::NetEntry e0;
+    id_Set(e0, u16(0x0102));
+    val_Set(e0, u32(0x03040506));
+    vrfyeq_(tempstr() << e0, "atf_amc.NetEntry  id:258  val:50595078");
+
+    atf_amc::NetEntry e1;
+    vrfy_(atf_amc::NetEntry_ReadStrptrMaybe(e1, "atf_amc.NetEntry  id:258  val:50595078"));
+    vrfyeq_(id_Get(e1), u16(0x0102));
+    vrfyeq_(val_Get(e1), u32(0x03040506));
+    vrfyeq_(e1.id_be, e0.id_be);
+    vrfyeq_(e1.val_be, e0.val_be);
 }

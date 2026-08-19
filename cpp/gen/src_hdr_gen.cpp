@@ -48,26 +48,6 @@ algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_git::FDb    lib_git::_db;     // dependency found via dev.targdep
 src_hdr::FDb    src_hdr::_db;     // dependency found via dev.targdep
 
-namespace src_hdr {
-const char *src_hdr_help =
-"src_hdr: Manage source copyright+license header in source files and scripts\n"
-"Usage: src_hdr [options]\n"
-"    OPTION             TYPE    DFLT    COMMENT\n"
-"    -in                string  \"data\"  Input directory or filename, - for stdin\n"
-"    -targsrc           regx    \"\"      Regx of targsrc to update\n"
-"    -write                             Update files in-place\n"
-"    -indent                            Indent source files\n"
-"    -update_copyright                  Update copyright year for current company\n"
-"    -scriptfile        regx    \"\"      Regx of scripts to update header\n"
-"    -verbose           flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug             flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                              Print help and exit; alias -h\n"
-"    -version                           Print version and exit\n"
-"    -signature                         Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace src_hdr
 src_hdr::_db_bh_copyright_curs::~_db_bh_copyright_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
 
@@ -124,7 +104,7 @@ void src_hdr::FCopyline_Uninit(src_hdr::FCopyline& fcopyline) {
 void src_hdr::copyright_CopyOut(src_hdr::FCopyright &row, dev::Copyright &out) {
     out.copyright = row.copyright;
     out.dflt = row.dflt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_hdr.FCopyright.base.CopyIn
@@ -153,99 +133,16 @@ void src_hdr::trace_Print(src_hdr::trace& row, algo::cstring& str) {
 }
 
 // --- src_hdr.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     src_hdr.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of src_hdr.FDb.cmdline (and any base command line)
+// via src_hdr_ReadArgv; then apply -help/-version and load floadtuples input.
 void src_hdr::ReadArgv() {
     command::src_hdr &cmd = src_hdr::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::src_hdr_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"src_hdr: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "src_hdr: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::src_hdr_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"src_hdr: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::src_hdr_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -268,9 +165,7 @@ void src_hdr::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:src_hdr.FDb.cmdline
+    // dmmeta.floadtuples:command.src_hdr.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!src_hdr::LoadTuplesMaybe(cmd.in,true)) {
@@ -283,7 +178,7 @@ void src_hdr::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(src_hdr_help);
+        prlog(command::src_hdr_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -310,7 +205,13 @@ void src_hdr::Step() {
 // --- src_hdr.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void src_hdr::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("src_hdr", src_hdr::InsertStrptrMaybe, NULL, src_hdr::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "src_hdr";
+    row.InsertStrptrMaybe  = src_hdr::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = src_hdr::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = src_hdr::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "src_hdr.trace";
@@ -465,6 +366,63 @@ void src_hdr::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- src_hdr.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool src_hdr::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    src_hdr::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case src_hdr_TableId_dev_Targsrc: { // finput:src_hdr.FDb.targsrc
+            // finput src_hdr.FDb.targsrc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_hdr_TableId_dmmeta_Ns: { // finput:src_hdr.FDb.ns
+            // finput src_hdr.FDb.ns: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_hdr_TableId_dmmeta_Nsx: { // finput:src_hdr.FDb.nsx
+            // finput src_hdr.FDb.nsx: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_hdr_TableId_dev_License: { // finput:src_hdr.FDb.license
+            // finput src_hdr.FDb.license: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_hdr_TableId_dev_Target: { // finput:src_hdr.FDb.target
+            // finput src_hdr.FDb.target: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_hdr_TableId_dev_Scriptfile: { // finput:src_hdr.FDb.scriptfile
+            // finput src_hdr.FDb.scriptfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_hdr_TableId_dev_Copyright: { // finput:src_hdr.FDb.copyright
+            // finput src_hdr.FDb.copyright: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- src_hdr.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -519,7 +477,7 @@ void* src_hdr::targsrc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_hdr::FTargsrc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targsrc_lary[bsr];
         if (!lev) {
             lev=(src_hdr::FTargsrc*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FTargsrc) * (u64(1)<<bsr));
@@ -528,7 +486,7 @@ void* src_hdr::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = i32(new_nelems);
+        _db.targsrc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -541,7 +499,7 @@ void src_hdr::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = i32(n);
+        _db.targsrc_n = i64(n);
     }
 }
 
@@ -620,7 +578,7 @@ void* src_hdr::ns_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_hdr::FNs*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ns_lary[bsr];
         if (!lev) {
             lev=(src_hdr::FNs*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FNs) * (u64(1)<<bsr));
@@ -629,7 +587,7 @@ void* src_hdr::ns_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ns_n = i32(new_nelems);
+        _db.ns_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -642,7 +600,7 @@ void src_hdr::ns_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ns_qFind(u64(n)).~FNs();
-        _db.ns_n = i32(n);
+        _db.ns_n = i64(n);
     }
 }
 
@@ -696,6 +654,22 @@ src_hdr::FNs& src_hdr::ind_ns_FindX(const algo::strptr& key) {
     src_hdr::FNs* ret = ind_ns_Find(key);
     vrfy(ret, tempstr() << "src_hdr.key_error  table:ind_ns  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- src_hdr.FDb.ind_ns.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+src_hdr::FNs* src_hdr::ind_ns_GetOrCreate(const algo::strptr& key) {
+    src_hdr::FNs* ret = ind_ns_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ns_Alloc();
+        (*ret).ns = key;
+        bool good = ns_XrefMaybe(*ret);
+        if (!good) {
+            ns_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- src_hdr.FDb.ind_ns.InsertMaybe
@@ -833,7 +807,7 @@ void* src_hdr::nsx_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_hdr::FNsx*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.nsx_lary[bsr];
         if (!lev) {
             lev=(src_hdr::FNsx*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FNsx) * (u64(1)<<bsr));
@@ -842,7 +816,7 @@ void* src_hdr::nsx_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nsx_n = i32(new_nelems);
+        _db.nsx_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -855,7 +829,7 @@ void src_hdr::nsx_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nsx_qFind(u64(n)).~FNsx();
-        _db.nsx_n = i32(n);
+        _db.nsx_n = i64(n);
     }
 }
 
@@ -935,7 +909,7 @@ void* src_hdr::license_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_hdr::FLicense*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.license_lary[bsr];
         if (!lev) {
             lev=(src_hdr::FLicense*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FLicense) * (u64(1)<<bsr));
@@ -944,7 +918,7 @@ void* src_hdr::license_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.license_n = i32(new_nelems);
+        _db.license_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -956,7 +930,7 @@ void src_hdr::license_RemoveAll() {
     for (u64 n = _db.license_n; n>0; ) {
         n--;
         license_qFind(u64(n)).~FLicense(); // destroy last element
-        _db.license_n = i32(n);
+        _db.license_n = i64(n);
     }
 }
 
@@ -967,7 +941,7 @@ void src_hdr::license_RemoveLast() {
     if (n > 0) {
         n -= 1;
         license_qFind(u64(n)).~FLicense();
-        _db.license_n = i32(n);
+        _db.license_n = i64(n);
     }
 }
 
@@ -1166,7 +1140,7 @@ void* src_hdr::target_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_hdr::FTarget*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.target_lary[bsr];
         if (!lev) {
             lev=(src_hdr::FTarget*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FTarget) * (u64(1)<<bsr));
@@ -1175,7 +1149,7 @@ void* src_hdr::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = i32(new_nelems);
+        _db.target_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1187,7 +1161,7 @@ void src_hdr::target_RemoveAll() {
     for (u64 n = _db.target_n; n>0; ) {
         n--;
         target_qFind(u64(n)).~FTarget(); // destroy last element
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -1198,7 +1172,7 @@ void src_hdr::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -1252,6 +1226,22 @@ src_hdr::FTarget& src_hdr::ind_target_FindX(const algo::strptr& key) {
     src_hdr::FTarget* ret = ind_target_Find(key);
     vrfy(ret, tempstr() << "src_hdr.key_error  table:ind_target  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- src_hdr.FDb.ind_target.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+src_hdr::FTarget* src_hdr::ind_target_GetOrCreate(const algo::strptr& key) {
+    src_hdr::FTarget* ret = ind_target_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &target_Alloc();
+        (*ret).target = key;
+        bool good = target_XrefMaybe(*ret);
+        if (!good) {
+            target_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- src_hdr.FDb.ind_target.InsertMaybe
@@ -1389,7 +1379,7 @@ void* src_hdr::scriptfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_hdr::FScriptfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.scriptfile_lary[bsr];
         if (!lev) {
             lev=(src_hdr::FScriptfile*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FScriptfile) * (u64(1)<<bsr));
@@ -1398,7 +1388,7 @@ void* src_hdr::scriptfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.scriptfile_n = i32(new_nelems);
+        _db.scriptfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1410,7 +1400,7 @@ void src_hdr::scriptfile_RemoveAll() {
     for (u64 n = _db.scriptfile_n; n>0; ) {
         n--;
         scriptfile_qFind(u64(n)).~FScriptfile(); // destroy last element
-        _db.scriptfile_n = i32(n);
+        _db.scriptfile_n = i64(n);
     }
 }
 
@@ -1421,7 +1411,7 @@ void src_hdr::scriptfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         scriptfile_qFind(u64(n)).~FScriptfile();
-        _db.scriptfile_n = i32(n);
+        _db.scriptfile_n = i64(n);
     }
 }
 
@@ -1724,7 +1714,7 @@ void* src_hdr::copyright_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_hdr::FCopyright*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.copyright_lary[bsr];
         if (!lev) {
             lev=(src_hdr::FCopyright*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FCopyright) * (u64(1)<<bsr));
@@ -1733,7 +1723,7 @@ void* src_hdr::copyright_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.copyright_n = i32(new_nelems);
+        _db.copyright_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1745,7 +1735,7 @@ void src_hdr::copyright_RemoveAll() {
     for (u64 n = _db.copyright_n; n>0; ) {
         n--;
         copyright_qFind(u64(n)).~FCopyright(); // destroy last element
-        _db.copyright_n = i32(n);
+        _db.copyright_n = i64(n);
     }
 }
 
@@ -1756,7 +1746,7 @@ void src_hdr::copyright_RemoveLast() {
     if (n > 0) {
         n -= 1;
         copyright_qFind(u64(n)).~FCopyright();
-        _db.copyright_n = i32(n);
+        _db.copyright_n = i64(n);
     }
 }
 
@@ -1814,6 +1804,22 @@ src_hdr::FCopyright& src_hdr::ind_copyright_FindX(const algo::strptr& key) {
     src_hdr::FCopyright* ret = ind_copyright_Find(key);
     vrfy(ret, tempstr() << "src_hdr.key_error  table:ind_copyright  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- src_hdr.FDb.ind_copyright.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+src_hdr::FCopyright* src_hdr::ind_copyright_GetOrCreate(const algo::strptr& key) {
+    src_hdr::FCopyright* ret = ind_copyright_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &copyright_Alloc();
+        (*ret).copyright = key;
+        bool good = copyright_XrefMaybe(*ret);
+        if (!good) {
+            copyright_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- src_hdr.FDb.ind_copyright.InsertMaybe
@@ -2359,7 +2365,7 @@ void src_hdr::FDb_Uninit() {
 // Copy fields out of row
 void src_hdr::license_CopyOut(src_hdr::FLicense &row, dev::License &out) {
     out.license = row.license;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_hdr.FLicense.base.CopyIn
@@ -2381,7 +2387,7 @@ void src_hdr::ns_CopyOut(src_hdr::FNs &row, dmmeta::Ns &out) {
     out.ns = row.ns;
     out.nstype = row.nstype;
     out.license = row.license;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_hdr.FNs.base.CopyIn
@@ -2408,7 +2414,7 @@ void src_hdr::nsx_CopyOut(src_hdr::FNsx &row, dmmeta::Nsx &out) {
     out.pool = row.pool;
     out.sortxref = row.sortxref;
     out.pack = row.pack;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_hdr.FNsx.base.CopyIn
@@ -2437,7 +2443,7 @@ void src_hdr::FNsx_Uninit(src_hdr::FNsx& nsx) {
 void src_hdr::scriptfile_CopyOut(src_hdr::FScriptfile &row, dev::Scriptfile &out) {
     out.gitfile = row.gitfile;
     out.license = row.license;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_hdr.FScriptfile.base.CopyIn
@@ -2449,9 +2455,8 @@ void src_hdr::scriptfile_CopyIn(src_hdr::FScriptfile &row, dev::Scriptfile &in) 
 }
 
 // --- src_hdr.FScriptfile.name.Get
-algo::Smallstr50 src_hdr::name_Get(src_hdr::FScriptfile& scriptfile) {
-    algo::Smallstr50 ret(algo::Pathcomp(scriptfile.gitfile, "/RR"));
-    return ret;
+algo::strptr src_hdr::name_Get(src_hdr::FScriptfile& scriptfile) {
+    return algo::Pathcomp(scriptfile.gitfile, "/RR");
 }
 
 // --- src_hdr.FSrc..Init
@@ -2475,12 +2480,12 @@ void src_hdr::target_CopyIn(src_hdr::FTarget &row, dev::Target &in) {
 }
 
 // --- src_hdr.FTarget.c_targsrc.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void src_hdr::c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
     if (!row.target_c_targsrc_in_ary) {
         c_targsrc_Reserve(target, 1);
-        u32 n  = target.c_targsrc_n++;
+        u64 n  = target.c_targsrc_n++;
         target.c_targsrc_elems[n] = &row;
         row.target_c_targsrc_in_ary = true;
     }
@@ -2499,15 +2504,15 @@ bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc&
 // --- src_hdr.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
-    int n = target.c_targsrc_n;
+    i64 n = target.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
         src_hdr::FTargsrc* *elems = target.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             src_hdr::FTargsrc* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(src_hdr::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 target.c_targsrc_n = n - 1;
@@ -2519,12 +2524,12 @@ void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row)
 
 // --- src_hdr.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void src_hdr::c_targsrc_Reserve(src_hdr::FTarget& target, u32 n) {
-    u32 old_max = target.c_targsrc_max;
+void src_hdr::c_targsrc_Reserve(src_hdr::FTarget& target, u64 n) {
+    u64 old_max = target.c_targsrc_max;
     if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(src_hdr::FTargsrc*);
-        u32 new_size = new_max * sizeof(src_hdr::FTargsrc*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targsrc_n + n), 4);
+        u64 old_size = old_max * sizeof(src_hdr::FTargsrc*);
+        u64 new_size = new_max * sizeof(src_hdr::FTargsrc*);
         void *new_mem = algo_lib::malloc_ReallocMem(target.c_targsrc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("src_hdr.out_of_memory  field:src_hdr.FTarget.c_targsrc");
@@ -2547,7 +2552,7 @@ void src_hdr::FTarget_Uninit(src_hdr::FTarget& target) {
 // Copy fields out of row
 void src_hdr::targsrc_CopyOut(src_hdr::FTargsrc &row, dev::Targsrc &out) {
     out.targsrc = row.targsrc;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_hdr.FTargsrc.base.CopyIn
@@ -2558,21 +2563,18 @@ void src_hdr::targsrc_CopyIn(src_hdr::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- src_hdr.FTargsrc.target.Get
-algo::Smallstr16 src_hdr::target_Get(src_hdr::FTargsrc& targsrc) {
-    algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
-    return ret;
+algo::strptr src_hdr::target_Get(src_hdr::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LL");
 }
 
 // --- src_hdr.FTargsrc.src.Get
-algo::Smallstr200 src_hdr::src_Get(src_hdr::FTargsrc& targsrc) {
-    algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
-    return ret;
+algo::strptr src_hdr::src_Get(src_hdr::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LR");
 }
 
 // --- src_hdr.FTargsrc.ext.Get
-algo::Smallstr10 src_hdr::ext_Get(src_hdr::FTargsrc& targsrc) {
-    algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
-    return ret;
+algo::strptr src_hdr::ext_Get(src_hdr::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, ".RR");
 }
 
 // --- src_hdr.FTargsrc..Uninit
@@ -2656,7 +2658,7 @@ bool src_hdr::FieldId_ReadStrptrMaybe(src_hdr::FieldId &parent, algo::strptr in_
 // --- src_hdr.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:src_hdr.FieldId.String  printfmt:Raw
-void src_hdr::FieldId_Print(src_hdr::FieldId& row, algo::cstring& str) {
+void src_hdr::FieldId_Print(src_hdr::FieldId row, algo::cstring& str) {
     src_hdr::value_Print(row, str);
 }
 
@@ -2811,7 +2813,7 @@ bool src_hdr::TableId_ReadStrptrMaybe(src_hdr::TableId &parent, algo::strptr in_
 // --- src_hdr.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:src_hdr.TableId.String  printfmt:Raw
-void src_hdr::TableId_Print(src_hdr::TableId& row, algo::cstring& str) {
+void src_hdr::TableId_Print(src_hdr::TableId row, algo::cstring& str) {
     src_hdr::value_Print(row, str);
 }
 

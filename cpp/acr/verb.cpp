@@ -122,7 +122,7 @@ void acr::Main_Mysql() {
     acr_my.cmd.in = acr::_db.cmdline.in;
     int rc = acr_my_Exec(acr_my);
     if (rc!=0) {
-        algo_lib::_db.exit_code=rc;
+        algo_lib::ExportWaitStatus(rc);
     }
     acr::_db.cmdline.print  = false;
     acr::_db.cmdline.report = false;

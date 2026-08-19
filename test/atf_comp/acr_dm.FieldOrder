@@ -1,0 +1,9 @@
+# start acr_dm cmd:"$bindir/acr_dm test/acr_dm/fieldorder1.ssim test/acr_dm/fieldorder2.ssim test/acr_dm/fieldorder3.ssim"
+# eof acr_dm
+acr_dm -> dmmeta.field  field:ns.Alpha.a0  arg:i32  reftype:Val  dflt:""  comment:""
+acr_dm -> dmmeta.field  field:ns.Alpha.a  arg:i32  reftype:Val  dflt:""  comment:""
+acr_dm -> dmmeta.field  field:ns.Alpha.b  arg:i32  reftype:Val  dflt:""  comment:""
+acr_dm -> dmmeta.field  field:ns.Beta.x  arg:i32  reftype:Val  dflt:""  comment:""
+acr_dm -> dmmeta.field  field:ns.Beta.y  arg:i32  reftype:Val  dflt:""  comment:""
+acr_dm -> dmmeta.field  field:ns.Beta.z  arg:i32  reftype:Val  dflt:""  comment:""
+# exit acr_dm code:0

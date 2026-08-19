@@ -31,10 +31,10 @@
 
 // --- acr_compl_BadnessEnum
 
-enum acr_compl_BadnessEnum {             // acr_compl.Badness.badness
-     acr_compl_Badness_first       = 0   // prefix match
-    ,acr_compl_Badness_last_word   = 1   // last word prefix match
-    ,acr_compl_Badness_substring   = 2   // substrgng match
+enum acr_compl_BadnessEnum {                                  // acr_compl.Badness.badness
+     acr_compl_Badness_first       // prefix match
+    ,acr_compl_Badness_last_word   // last word prefix match
+    ,acr_compl_Badness_substring   // substrgng match
 };
 
 enum { acr_compl_BadnessEnum_N = 3 };
@@ -42,26 +42,29 @@ enum { acr_compl_BadnessEnum_N = 3 };
 
 // --- acr_compl_FieldIdEnum
 
-enum acr_compl_FieldIdEnum {          // acr_compl.FieldId.value
-     acr_compl_FieldId_badness   = 0
-    ,acr_compl_FieldId_strkey    = 1
-    ,acr_compl_FieldId_value     = 2
-    ,acr_compl_FieldId_nospace   = 3
-    ,acr_compl_FieldId_msghdr    = 4
-    ,acr_compl_FieldId_field     = 5
-    ,acr_compl_FieldId_type      = 6
+enum acr_compl_FieldIdEnum {    // acr_compl.FieldId.value
+     acr_compl_FieldId_badness
+    ,acr_compl_FieldId_strkey
+    ,acr_compl_FieldId_value
+    ,acr_compl_FieldId_nospace
+    ,acr_compl_FieldId_msghdr
+    ,acr_compl_FieldId_field
+    ,acr_compl_FieldId_type
+    ,acr_compl_FieldId_id
+    ,acr_compl_FieldId_err
+    ,acr_compl_FieldId_line
 };
 
-enum { acr_compl_FieldIdEnum_N = 7 };
+enum { acr_compl_FieldIdEnum_N = 10 };
 
 
 // --- acr_compl_ShellqtypeEnum
 
-enum acr_compl_ShellqtypeEnum {          // acr_compl.Shellqtype.type
-     acr_compl_Shellqtype_none     = 0   // no quoting
-    ,acr_compl_Shellqtype_squote   = 1   // strong quoting
-    ,acr_compl_Shellqtype_dquote   = 2   // weak quoting
-    ,acr_compl_Shellqtype_error    = 3   // unrecognized
+enum acr_compl_ShellqtypeEnum {                       // acr_compl.Shellqtype.type
+     acr_compl_Shellqtype_none     // no quoting
+    ,acr_compl_Shellqtype_squote   // strong quoting
+    ,acr_compl_Shellqtype_dquote   // weak quoting
+    ,acr_compl_Shellqtype_error    // unrecognized
 };
 
 enum { acr_compl_ShellqtypeEnum_N = 4 };
@@ -69,51 +72,57 @@ enum { acr_compl_ShellqtypeEnum_N = 4 };
 
 // --- acr_compl_TableIdEnum
 
-enum acr_compl_TableIdEnum {                   // acr_compl.TableId.value
-     acr_compl_TableId_dmmeta_Anonfld    = 0   // dmmeta.Anonfld -> acr_compl.FAnonfld
-    ,acr_compl_TableId_dmmeta_anonfld    = 0   // dmmeta.anonfld -> acr_compl.FAnonfld
-    ,acr_compl_TableId_dmmeta_Argvtype   = 1   // dmmeta.Argvtype -> acr_compl.FArgvtype
-    ,acr_compl_TableId_dmmeta_argvtype   = 1   // dmmeta.argvtype -> acr_compl.FArgvtype
-    ,acr_compl_TableId_dmmeta_Ctype      = 2   // dmmeta.Ctype -> acr_compl.FCtype
-    ,acr_compl_TableId_dmmeta_ctype      = 2   // dmmeta.ctype -> acr_compl.FCtype
-    ,acr_compl_TableId_dmmeta_Falias     = 3   // dmmeta.Falias -> acr_compl.FFalias
-    ,acr_compl_TableId_dmmeta_falias     = 3   // dmmeta.falias -> acr_compl.FFalias
-    ,acr_compl_TableId_dmmeta_Fcmdline   = 4   // dmmeta.Fcmdline -> acr_compl.FFcmdline
-    ,acr_compl_TableId_dmmeta_fcmdline   = 4   // dmmeta.fcmdline -> acr_compl.FFcmdline
-    ,acr_compl_TableId_dmmeta_Fconst     = 5   // dmmeta.Fconst -> acr_compl.FFconst
-    ,acr_compl_TableId_dmmeta_fconst     = 5   // dmmeta.fconst -> acr_compl.FFconst
-    ,acr_compl_TableId_dmmeta_Fflag      = 6   // dmmeta.Fflag -> acr_compl.FFflag
-    ,acr_compl_TableId_dmmeta_fflag      = 6   // dmmeta.fflag -> acr_compl.FFflag
-    ,acr_compl_TableId_dmmeta_Field      = 7   // dmmeta.Field -> acr_compl.FField
-    ,acr_compl_TableId_dmmeta_field      = 7   // dmmeta.field -> acr_compl.FField
-    ,acr_compl_TableId_dmmeta_Ns         = 8   // dmmeta.Ns -> acr_compl.FNs
-    ,acr_compl_TableId_dmmeta_ns         = 8   // dmmeta.ns -> acr_compl.FNs
-    ,acr_compl_TableId_dmmeta_Ssimfile   = 9   // dmmeta.Ssimfile -> acr_compl.FSsimfile
-    ,acr_compl_TableId_dmmeta_ssimfile   = 9   // dmmeta.ssimfile -> acr_compl.FSsimfile
+enum acr_compl_TableIdEnum {                       // acr_compl.TableId.value
+     acr_compl_TableId_dmmeta_Anonfld       = 0    // dmmeta.Anonfld -> acr_compl.FAnonfld
+    ,acr_compl_TableId_dmmeta_anonfld       = 0    // dmmeta.anonfld -> acr_compl.FAnonfld
+    ,acr_compl_TableId_dmmeta_Argvtype      = 1    // dmmeta.Argvtype -> acr_compl.FArgvtype
+    ,acr_compl_TableId_dmmeta_argvtype      = 1    // dmmeta.argvtype -> acr_compl.FArgvtype
+    ,acr_compl_TableId_dmmeta_Ccmdline      = 2    // dmmeta.Ccmdline -> acr_compl.FCcmdline
+    ,acr_compl_TableId_dmmeta_ccmdline      = 2    // dmmeta.ccmdline -> acr_compl.FCcmdline
+    ,acr_compl_TableId_dmmeta_Ctype         = 3    // dmmeta.Ctype -> acr_compl.FCtype
+    ,acr_compl_TableId_dmmeta_ctype         = 3    // dmmeta.ctype -> acr_compl.FCtype
+    ,acr_compl_TableId_dmmeta_Falias        = 4    // dmmeta.Falias -> acr_compl.FFalias
+    ,acr_compl_TableId_dmmeta_falias        = 4    // dmmeta.falias -> acr_compl.FFalias
+    ,acr_compl_TableId_dmmeta_Fconst        = 5    // dmmeta.Fconst -> acr_compl.FFconst
+    ,acr_compl_TableId_dmmeta_fconst        = 5    // dmmeta.fconst -> acr_compl.FFconst
+    ,acr_compl_TableId_dmmeta_Fflag         = 6    // dmmeta.Fflag -> acr_compl.FFflag
+    ,acr_compl_TableId_dmmeta_fflag         = 6    // dmmeta.fflag -> acr_compl.FFflag
+    ,acr_compl_TableId_dmmeta_Field         = 7    // dmmeta.Field -> acr_compl.FField
+    ,acr_compl_TableId_dmmeta_field         = 7    // dmmeta.field -> acr_compl.FField
+    ,acr_compl_TableId_dmmeta_Finsertwhen   = 8    // dmmeta.Finsertwhen -> acr_compl.FFinsertwhen
+    ,acr_compl_TableId_dmmeta_finsertwhen   = 8    // dmmeta.finsertwhen -> acr_compl.FFinsertwhen
+    ,acr_compl_TableId_dmmeta_Floadtuples   = 9    // dmmeta.Floadtuples -> acr_compl.FFloadtuples
+    ,acr_compl_TableId_dmmeta_floadtuples   = 9    // dmmeta.floadtuples -> acr_compl.FFloadtuples
+    ,acr_compl_TableId_dmmeta_Ssimfile      = 10   // dmmeta.Ssimfile -> acr_compl.FSsimfile
+    ,acr_compl_TableId_dmmeta_ssimfile      = 10   // dmmeta.ssimfile -> acr_compl.FSsimfile
+    ,acr_compl_TableId_dmmeta_Substr        = 11   // dmmeta.Substr -> acr_compl.FSubstr
+    ,acr_compl_TableId_dmmeta_substr        = 11   // dmmeta.substr -> acr_compl.FSubstr
 };
 
-enum { acr_compl_TableIdEnum_N = 20 };
+enum { acr_compl_TableIdEnum_N = 24 };
 
 namespace acr_compl { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace acr_compl { // gen:ns_tclass_field
-extern const char *acr_compl_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Anonfld; }
 namespace dmmeta { struct Argvtype; }
+namespace dmmeta { struct Ccmdline; }
+namespace acr_compl { struct FCtype; }
+namespace acr_compl { struct FField; }
 namespace acr_compl { struct Completion; }
 namespace dmmeta { struct Ctype; }
 namespace dmmeta { struct Falias; }
-namespace acr_compl { struct FField; }
-namespace dmmeta { struct Fcmdline; }
 namespace dmmeta { struct Fconst; }
 namespace dmmeta { struct Fflag; }
 namespace dmmeta { struct Field; }
-namespace acr_compl { struct FCtype; }
-namespace dmmeta { struct Ns; }
+namespace dmmeta { struct Finsertwhen; }
+namespace dmmeta { struct Floadtuples; }
 namespace dmmeta { struct Ssimfile; }
+namespace dmmeta { struct Substr; }
 namespace acr_compl { struct ctype_c_field_curs; }
+namespace acr_compl { struct ctype_c_floadtuples_curs; }
 namespace acr_compl { struct _db_word_curs; }
 namespace acr_compl { struct _db_ctype_curs; }
 namespace acr_compl { struct _db_field_curs; }
@@ -121,32 +130,40 @@ namespace acr_compl { struct _db_ssimfile_curs; }
 namespace acr_compl { struct _db_completion_curs; }
 namespace acr_compl { struct _db_anonfld_curs; }
 namespace acr_compl { struct _db_bh_completion_curs; }
-namespace acr_compl { struct _db_ns_curs; }
 namespace acr_compl { struct _db_fconst_curs; }
-namespace acr_compl { struct _db_fcmdline_curs; }
 namespace acr_compl { struct _db_fflag_curs; }
 namespace acr_compl { struct _db_zd_cmd_field_curs; }
 namespace acr_compl { struct _db_argvtype_curs; }
 namespace acr_compl { struct _db_falias_curs; }
 namespace acr_compl { struct _db_complsource_curs; }
+namespace acr_compl { struct _db_finsertwhen_curs; }
+namespace acr_compl { struct _db_substr_curs; }
+namespace acr_compl { struct _db_ccmdline_curs; }
+namespace acr_compl { struct _db_cmd_curs; }
+namespace acr_compl { struct _db_floadtuples_curs; }
 namespace acr_compl { struct field_c_fconst_curs; }
 namespace acr_compl { struct field_c_falias_srcfield_curs; }
 namespace acr_compl { struct Badness; }
 namespace acr_compl { struct FAnonfld; }
 namespace acr_compl { struct FArgvtype; }
+namespace acr_compl { struct FCcmdline; }
+namespace acr_compl { struct FCmd; }
 namespace acr_compl { struct FCompletion; }
 namespace acr_compl { struct FComplsource; }
 namespace acr_compl { struct trace; }
 namespace acr_compl { struct FDb; }
 namespace acr_compl { struct FFalias; }
-namespace acr_compl { struct FFcmdline; }
 namespace acr_compl { struct FFconst; }
 namespace acr_compl { struct FFflag; }
-namespace acr_compl { struct FNs; }
+namespace acr_compl { struct FFinsertwhen; }
+namespace acr_compl { struct FFloadtuples; }
 namespace acr_compl { struct FSsimfile; }
+namespace acr_compl { struct FSubstr; }
 namespace acr_compl { struct FieldId; }
 namespace acr_compl { struct Shellqtype; }
 namespace acr_compl { struct TableId; }
+namespace acr_compl { struct checkerr; }
+namespace acr_compl { struct checkreq; }
 namespace acr_compl { extern struct acr_compl::FDb _db; }
 namespace acr_compl { // gen:ns_print_struct
 
@@ -173,7 +190,6 @@ struct Badness { // acr_compl.Badness: Trading Session
     // func:acr_compl.Badness..FieldwiseCtor
     explicit inline               Badness(u8 in_badness, const algo::strptr& in_strkey) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:acr_compl.Badness.badness.GetEnum
 inline acr_compl_BadnessEnum badness_GetEnum(const acr_compl::Badness& parent) __attribute__((nothrow));
@@ -234,7 +250,6 @@ struct Completion { // acr_compl.Completion
     // func:acr_compl.Completion..Ctor
     inline               Completion() __attribute__((nothrow));
 };
-
 // func:acr_compl.Completion..ReadFieldMaybe
 bool                 Completion_ReadFieldMaybe(acr_compl::Completion& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of acr_compl::Completion from an ascii string.
@@ -254,8 +269,8 @@ void                 Completion_Print(acr_compl::Completion& row, algo::cstring&
 // global access: anonfld (Lary, by rowid)
 // access: acr_compl.FField.c_anonfld (Ptr)
 struct FAnonfld { // acr_compl.FAnonfld
-    algo::Smallstr100   field;     //
-    algo::Comment       comment;   //
+    algo::Smallstr150   field;     //
+    algo::cstring       comment;   //
     // func:acr_compl.FAnonfld..AssignOp
     inline acr_compl::FAnonfld& operator =(const acr_compl::FAnonfld &rhs) = delete;
     // func:acr_compl.FAnonfld..CopyCtor
@@ -269,7 +284,6 @@ private:
     friend acr_compl::FAnonfld* anonfld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 anonfld_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:acr_compl.FAnonfld.msghdr.CopyOut
 void                 anonfld_CopyOut(acr_compl::FAnonfld &row, dmmeta::Anonfld &out) __attribute__((nothrow));
@@ -291,7 +305,7 @@ void                 FAnonfld_Print(acr_compl::FAnonfld& row, algo::cstring& str
 struct FArgvtype { // acr_compl.FArgvtype
     algo::Smallstr100   ctype;      //
     algo::Smallstr50    argvtype;   //
-    algo::Comment       comment;    //
+    algo::cstring       comment;    //
     // func:acr_compl.FArgvtype..AssignOp
     inline acr_compl::FArgvtype& operator =(const acr_compl::FArgvtype &rhs) = delete;
     // func:acr_compl.FArgvtype..CopyCtor
@@ -306,7 +320,6 @@ private:
     friend void                 argvtype_RemoveAll() __attribute__((nothrow));
     friend void                 argvtype_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:acr_compl.FArgvtype.base.CopyOut
 void                 argvtype_CopyOut(acr_compl::FArgvtype &row, dmmeta::Argvtype &out) __attribute__((nothrow));
@@ -316,6 +329,65 @@ void                 argvtype_CopyIn(acr_compl::FArgvtype &row, dmmeta::Argvtype
 
 // func:acr_compl.FArgvtype..Uninit
 void                 FArgvtype_Uninit(acr_compl::FArgvtype& argvtype) __attribute__((nothrow));
+
+// --- acr_compl.FCcmdline
+// create: acr_compl.FDb.ccmdline (Lary)
+// global access: ccmdline (Lary, by rowid)
+struct FCcmdline { // acr_compl.FCcmdline
+    algo::Smallstr100    ctype;           //
+    bool                 read;            //   true  Read the command line automatically from main?
+    algo::Smallstr150    basecmdline;     // Optional command line to merge with this one
+    algo::cstring        comment;         //
+    acr_compl::FCtype*   p_ctype;         // reference to parent row
+    acr_compl::FField*   p_basecmdline;   // reference to parent row
+private:
+    // func:acr_compl.FCcmdline..Ctor
+    inline               FCcmdline() __attribute__((nothrow));
+    friend acr_compl::FCcmdline& ccmdline_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FCcmdline* ccmdline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ccmdline_RemoveAll() __attribute__((nothrow));
+    friend void                 ccmdline_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:acr_compl.FCcmdline.base.CopyOut
+void                 ccmdline_CopyOut(acr_compl::FCcmdline &row, dmmeta::Ccmdline &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_compl.FCcmdline.base.CopyIn
+void                 ccmdline_CopyIn(acr_compl::FCcmdline &row, dmmeta::Ccmdline &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_compl.FCcmdline..Init
+inline void          FCcmdline_Init(acr_compl::FCcmdline& ccmdline);
+
+// --- acr_compl.FCmd
+// create: acr_compl.FDb.cmd (Lary)
+// global access: cmd (Lary, by rowid)
+// global access: ind_cmd (Thash, hash field cmd)
+struct FCmd { // acr_compl.FCmd: commands that can autocomplete
+    algo::cstring        cmd;               //
+    acr_compl::FCtype*   p_ctype;           // reference to parent row
+    acr_compl::FCtype*   p_basectype;       // reference to parent row
+    acr_compl::FCmd*     ind_cmd_next;      // hash next
+    u32                  ind_cmd_hashval;   // hash value
+    // func:acr_compl.FCmd..AssignOp
+    inline acr_compl::FCmd& operator =(const acr_compl::FCmd &rhs) = delete;
+    // func:acr_compl.FCmd..CopyCtor
+    inline               FCmd(const acr_compl::FCmd &rhs) = delete;
+private:
+    // func:acr_compl.FCmd..Ctor
+    inline               FCmd() __attribute__((nothrow));
+    // func:acr_compl.FCmd..Dtor
+    inline               ~FCmd() __attribute__((nothrow));
+    friend acr_compl::FCmd&     cmd_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FCmd*     cmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 cmd_RemoveAll() __attribute__((nothrow));
+    friend void                 cmd_RemoveLast() __attribute__((nothrow));
+};
+// Set all fields to initial values.
+// func:acr_compl.FCmd..Init
+inline void          FCmd_Init(acr_compl::FCmd& cmd);
+// func:acr_compl.FCmd..Uninit
+void                 FCmd_Uninit(acr_compl::FCmd& cmd) __attribute__((nothrow));
 
 // --- acr_compl.FCompletion
 // create: acr_compl.FDb.completion (Lary)
@@ -341,7 +413,6 @@ private:
     friend void                 completion_RemoveAll() __attribute__((nothrow));
     friend void                 completion_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:acr_compl.FCompletion.msghdr.CopyOut
 void                 completion_CopyOut(acr_compl::FCompletion &row, acr_compl::Completion &out) __attribute__((nothrow));
@@ -386,32 +457,40 @@ private:
     friend void                 complsource_RemoveLast() __attribute__((nothrow));
 };
 
-
 // --- acr_compl.FCtype
 // create: acr_compl.FDb.ctype (Lary)
 // global access: ctype (Lary, by rowid)
 // global access: ind_ctype (Thash, hash field ctype)
+// global access: p_cmd_ctype (Ptr)
+// access: acr_compl.FCcmdline.p_ctype (Upptr)
+// access: acr_compl.FCmd.p_ctype (Upptr)
+// access: acr_compl.FCmd.p_basectype (Upptr)
 // access: acr_compl.FField.p_arg (Upptr)
 // access: acr_compl.FField.p_ctype (Upptr)
 // access: acr_compl.FSsimfile.p_ctype (Upptr)
 struct FCtype { // acr_compl.FCtype
-    algo::Smallstr100       ctype;               // Identifier. must be ns.typename
-    algo::Comment           comment;             //
-    acr_compl::FField**     c_field_elems;       // array of pointers
-    u32                     c_field_n;           // array of pointers
-    u32                     c_field_max;         // capacity of allocated array
-    acr_compl::FSsimfile*   c_ssimfile;          // optional pointer
-    acr_compl::FArgvtype*   c_argvtype;          // optional pointer
-    acr_compl::FCtype*      ind_ctype_next;      // hash next
-    u32                     ind_ctype_hashval;   // hash value
+    algo::Smallstr100           ctype;                 // Identifier. must be ns.typename
+    algo::cstring               comment;               //
+    acr_compl::FField**         c_field_elems;         // array of pointers
+    u64                         c_field_n;             // current size
+    u64                         c_field_max;           // capacity of allocated array
+    acr_compl::FSsimfile*       c_ssimfile;            // optional pointer
+    acr_compl::FArgvtype*       c_argvtype;            // optional pointer
+    acr_compl::FFloadtuples**   c_floadtuples_elems;   // array of pointers
+    u64                         c_floadtuples_n;       // current size
+    u64                         c_floadtuples_max;     // capacity of allocated array
+    acr_compl::FCtype*          ind_ctype_next;        // hash next
+    u32                         ind_ctype_hashval;     // hash value
     // reftype Ptrary of acr_compl.FCtype.c_field prohibits copy
     // x-reference on acr_compl.FCtype.c_ssimfile prevents copy
     // x-reference on acr_compl.FCtype.c_argvtype prevents copy
+    // reftype Ptrary of acr_compl.FCtype.c_floadtuples prohibits copy
     // func:acr_compl.FCtype..AssignOp
     inline acr_compl::FCtype& operator =(const acr_compl::FCtype &rhs) = delete;
     // reftype Ptrary of acr_compl.FCtype.c_field prohibits copy
     // x-reference on acr_compl.FCtype.c_ssimfile prevents copy
     // x-reference on acr_compl.FCtype.c_argvtype prevents copy
+    // reftype Ptrary of acr_compl.FCtype.c_floadtuples prohibits copy
     // func:acr_compl.FCtype..CopyCtor
     inline               FCtype(const acr_compl::FCtype &rhs) = delete;
 private:
@@ -423,7 +502,6 @@ private:
     friend acr_compl::FCtype*   ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:acr_compl.FCtype.msghdr.CopyOut
 void                 ctype_CopyOut(acr_compl::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
@@ -432,22 +510,22 @@ void                 ctype_CopyOut(acr_compl::FCtype &row, dmmeta::Ctype &out) _
 void                 ctype_CopyIn(acr_compl::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:acr_compl.FCtype.ns.Get
-algo::Smallstr16     ns_Get(acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FCtype.name.Get
-algo::Smallstr100    name_Get(acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:acr_compl.FCtype.c_field.EmptyQ
 inline bool          c_field_EmptyQ(acr_compl::FCtype& ctype) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_compl.FCtype.c_field.Find
-inline acr_compl::FField* c_field_Find(acr_compl::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_compl::FField* c_field_Find(acr_compl::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr_compl.FCtype.c_field.Getary
 inline algo::aryptr<acr_compl::FField*> c_field_Getary(acr_compl::FCtype& ctype) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:acr_compl.FCtype.c_field.Insert
 void                 c_field_Insert(acr_compl::FCtype& ctype, acr_compl::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -457,7 +535,7 @@ void                 c_field_Insert(acr_compl::FCtype& ctype, acr_compl::FField&
 bool                 c_field_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr_compl.FCtype.c_field.N
-inline i32           c_field_N(const acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_N(const acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr_compl.FCtype.c_field.Remove
 void                 c_field_Remove(acr_compl::FCtype& ctype, acr_compl::FField& row) __attribute__((nothrow));
@@ -466,10 +544,10 @@ void                 c_field_Remove(acr_compl::FCtype& ctype, acr_compl::FField&
 inline void          c_field_RemoveAll(acr_compl::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr_compl.FCtype.c_field.Reserve
-void                 c_field_Reserve(acr_compl::FCtype& ctype, u32 n) __attribute__((nothrow));
+void                 c_field_Reserve(acr_compl::FCtype& ctype, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr_compl.FCtype.c_field.qFind
-inline acr_compl::FField& c_field_qFind(acr_compl::FCtype& ctype, u32 idx) __attribute__((nothrow));
+inline acr_compl::FField& c_field_qFind(acr_compl::FCtype& ctype, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr_compl.FCtype.c_field.InAryQ
 inline bool          ctype_c_field_InAryQ(acr_compl::FField& row) __attribute__((nothrow));
@@ -491,6 +569,46 @@ inline bool          c_argvtype_InsertMaybe(acr_compl::FCtype& ctype, acr_compl:
 // func:acr_compl.FCtype.c_argvtype.Remove
 inline void          c_argvtype_Remove(acr_compl::FCtype& ctype, acr_compl::FArgvtype& row) __attribute__((nothrow));
 
+// Return true if index is empty
+// func:acr_compl.FCtype.c_floadtuples.EmptyQ
+inline bool          c_floadtuples_EmptyQ(acr_compl::FCtype& ctype) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:acr_compl.FCtype.c_floadtuples.Find
+inline acr_compl::FFloadtuples* c_floadtuples_Find(acr_compl::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:acr_compl.FCtype.c_floadtuples.Getary
+inline algo::aryptr<acr_compl::FFloadtuples*> c_floadtuples_Getary(acr_compl::FCtype& ctype) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+// func:acr_compl.FCtype.c_floadtuples.Insert
+void                 c_floadtuples_Insert(acr_compl::FCtype& ctype, acr_compl::FFloadtuples& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:acr_compl.FCtype.c_floadtuples.InsertMaybe
+bool                 c_floadtuples_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FFloadtuples& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:acr_compl.FCtype.c_floadtuples.N
+inline i64           c_floadtuples_N(const acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:acr_compl.FCtype.c_floadtuples.Remove
+void                 c_floadtuples_Remove(acr_compl::FCtype& ctype, acr_compl::FFloadtuples& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:acr_compl.FCtype.c_floadtuples.RemoveAll
+inline void          c_floadtuples_RemoveAll(acr_compl::FCtype& ctype) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:acr_compl.FCtype.c_floadtuples.Reserve
+void                 c_floadtuples_Reserve(acr_compl::FCtype& ctype, u64 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:acr_compl.FCtype.c_floadtuples.qFind
+inline acr_compl::FFloadtuples& c_floadtuples_qFind(acr_compl::FCtype& ctype, u64 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:acr_compl.FCtype.c_floadtuples.InAryQ
+inline bool          ctype_c_floadtuples_InAryQ(acr_compl::FFloadtuples& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:acr_compl.FCtype.c_floadtuples.qLast
+inline acr_compl::FFloadtuples& c_floadtuples_qLast(acr_compl::FCtype& ctype) __attribute__((nothrow));
+
 // func:acr_compl.FCtype.c_field_curs.Reset
 inline void          ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_compl::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -502,6 +620,17 @@ inline void          ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribu
 // item access
 // func:acr_compl.FCtype.c_field_curs.Access
 inline acr_compl::FField& ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
+// func:acr_compl.FCtype.c_floadtuples_curs.Reset
+inline void          ctype_c_floadtuples_curs_Reset(ctype_c_floadtuples_curs &curs, acr_compl::FCtype &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FCtype.c_floadtuples_curs.ValidQ
+inline bool          ctype_c_floadtuples_curs_ValidQ(ctype_c_floadtuples_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_compl.FCtype.c_floadtuples_curs.Next
+inline void          ctype_c_floadtuples_curs_Next(ctype_c_floadtuples_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_compl.FCtype.c_floadtuples_curs.Access
+inline acr_compl::FFloadtuples& ctype_c_floadtuples_curs_Access(ctype_c_floadtuples_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_compl.FCtype..Init
 inline void          FCtype_Init(acr_compl::FCtype& ctype);
@@ -519,7 +648,6 @@ struct trace { // acr_compl.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:acr_compl.trace.String  printfmt:Tuple
 // func:acr_compl.trace..Print
@@ -528,73 +656,83 @@ void                 trace_Print(acr_compl::trace& row, algo::cstring& str) __at
 // --- acr_compl.FDb
 // create: acr_compl.FDb._db (Global)
 struct FDb { // acr_compl.FDb: In-memory database for acr_compl
-    command::acr_compl         cmdline;                            //
-    i32                        point;                              //   0
-    algo::cstring              line;                               //
-    algo::cstring*             word_elems;                         // pointer to elements
-    u32                        word_n;                             // number of elements in array
-    u32                        word_max;                           // max. capacity of array before realloc
-    acr_compl::FCtype*         ctype_lary[32];                     // level array
-    i32                        ctype_n;                            // number of elements in array
-    acr_compl::FCtype**        ind_ctype_buckets_elems;            // pointer to bucket array
-    i32                        ind_ctype_buckets_n;                // number of elements in bucket array
-    i32                        ind_ctype_n;                        // number of elements in the hash table
-    acr_compl::FField*         field_lary[32];                     // level array
-    i32                        field_n;                            // number of elements in array
-    acr_compl::FField**        ind_field_buckets_elems;            // pointer to bucket array
-    i32                        ind_field_buckets_n;                // number of elements in bucket array
-    i32                        ind_field_n;                        // number of elements in the hash table
-    acr_compl::FSsimfile*      ssimfile_lary[32];                  // level array
-    i32                        ssimfile_n;                         // number of elements in array
-    acr_compl::FSsimfile**     ind_ssimfile_buckets_elems;         // pointer to bucket array
-    i32                        ind_ssimfile_buckets_n;             // number of elements in bucket array
-    i32                        ind_ssimfile_n;                     // number of elements in the hash table
-    acr_compl::FCompletion*    completion_lary[32];                // level array
-    i32                        completion_n;                       // number of elements in array
-    acr_compl::FAnonfld*       anonfld_lary[32];                   // level array
-    i32                        anonfld_n;                          // number of elements in array
-    acr_compl::FCompletion**   bh_completion_elems;                // binary heap by badness
-    i32                        bh_completion_n;                    // number of elements in the heap
-    i32                        bh_completion_max;                  // max elements in bh_completion_elems
-    acr_compl::FNs*            ns_lary[32];                        // level array
-    i32                        ns_n;                               // number of elements in array
-    acr_compl::FFconst*        fconst_lary[32];                    // level array
-    i32                        fconst_n;                           // number of elements in array
-    acr_compl::FFcmdline*      fcmdline_lary[32];                  // level array
-    i32                        fcmdline_n;                         // number of elements in array
-    acr_compl::FFflag*         fflag_lary[32];                     // level array
-    i32                        fflag_n;                            // number of elements in array
-    acr_compl::FField*         zd_cmd_field_head;                  // zero-terminated doubly linked list
-    i32                        zd_cmd_field_n;                     // zero-terminated doubly linked list
-    acr_compl::FField*         zd_cmd_field_tail;                  // pointer to last element
-    acr_compl::FNs**           ind_ns_buckets_elems;               // pointer to bucket array
-    i32                        ind_ns_buckets_n;                   // number of elements in bucket array
-    i32                        ind_ns_n;                           // number of elements in the hash table
-    acr_compl::FField**        ind_cmd_field_name_buckets_elems;   // pointer to bucket array
-    i32                        ind_cmd_field_name_buckets_n;       // number of elements in bucket array
-    i32                        ind_cmd_field_name_n;               // number of elements in the hash table
-    algo::strptr               name;                               // option name
-    algo::strptr               value;                              // option value
-    bool                       need_value;                         //   false  next word is value
-    i32                        anon_index;                         //   0  current index of anon argument
-    bool                       exact;                              //   false  whether option name is considered as exact
-    bool                       anon;                               //   false
-    acr_compl::FArgvtype*      argvtype_lary[32];                  // level array
-    i32                        argvtype_n;                         // number of elements in array
-    acr_compl::FFalias*        falias_lary[32];                    // level array
-    i32                        falias_n;                           // number of elements in array
-    acr_compl::FComplsource*   complsource_lary[32];               // level array
-    i32                        complsource_n;                      // number of elements in array
-    bool                       is_data_dir;                        //   false  Input is a directory of ssimfiles
-    algo::cstring              parse_error;                        //   ""  Error from command line parsing
-    algo::cstring              compl_output;                       //   ""  Collected completion output
-    acr_compl::trace           trace;                              //
+    command::acr_compl          cmdline;                            //
+    i32                         point;                              //   0
+    algo::cstring               line;                               //
+    algo::cstring*              word_elems;                         // pointer to elements
+    u64                         word_n;                             // number of elements in array
+    u64                         word_max;                           // max. capacity of array before realloc
+    acr_compl::FCtype*          ctype_lary[36];                     // level array
+    i64                         ctype_n;                            // number of elements in array
+    acr_compl::FCtype**         ind_ctype_buckets_elems;            // pointer to bucket array
+    i32                         ind_ctype_buckets_n;                // number of elements in bucket array
+    i32                         ind_ctype_n;                        // number of elements in the hash table
+    acr_compl::FField*          field_lary[36];                     // level array
+    i64                         field_n;                            // number of elements in array
+    acr_compl::FField**         ind_field_buckets_elems;            // pointer to bucket array
+    i32                         ind_field_buckets_n;                // number of elements in bucket array
+    i32                         ind_field_n;                        // number of elements in the hash table
+    acr_compl::FSsimfile*       ssimfile_lary[36];                  // level array
+    i64                         ssimfile_n;                         // number of elements in array
+    acr_compl::FSsimfile**      ind_ssimfile_buckets_elems;         // pointer to bucket array
+    i32                         ind_ssimfile_buckets_n;             // number of elements in bucket array
+    i32                         ind_ssimfile_n;                     // number of elements in the hash table
+    acr_compl::FCompletion*     completion_lary[36];                // level array
+    i64                         completion_n;                       // number of elements in array
+    acr_compl::FAnonfld*        anonfld_lary[36];                   // level array
+    i64                         anonfld_n;                          // number of elements in array
+    acr_compl::FCompletion**    bh_completion_elems;                // binary heap by badness
+    i32                         bh_completion_n;                    // number of elements in the heap
+    i32                         bh_completion_max;                  // max elements in bh_completion_elems
+    acr_compl::FFconst*         fconst_lary[36];                    // level array
+    i64                         fconst_n;                           // number of elements in array
+    acr_compl::FFflag*          fflag_lary[36];                     // level array
+    i64                         fflag_n;                            // number of elements in array
+    acr_compl::FField*          zd_cmd_field_head;                  // zero-terminated doubly linked list
+    i32                         zd_cmd_field_n;                     // zero-terminated doubly linked list
+    acr_compl::FField*          zd_cmd_field_tail;                  // pointer to last element
+    acr_compl::FField**         ind_cmd_field_name_buckets_elems;   // pointer to bucket array
+    i32                         ind_cmd_field_name_buckets_n;       // number of elements in bucket array
+    i32                         ind_cmd_field_name_n;               // number of elements in the hash table
+    algo::strptr                name;                               // option name
+    algo::strptr                value;                              // option value
+    bool                        need_value;                         //   false  next word is value
+    i32                         anon_index;                         //   0  current index of anon argument
+    bool                        exact;                              //   false  whether option name is considered as exact
+    bool                        anon;                               //   false
+    acr_compl::FArgvtype*       argvtype_lary[36];                  // level array
+    i64                         argvtype_n;                         // number of elements in array
+    acr_compl::FFalias*         falias_lary[36];                    // level array
+    i64                         falias_n;                           // number of elements in array
+    acr_compl::FComplsource*    complsource_lary[36];               // level array
+    i64                         complsource_n;                      // number of elements in array
+    bool                        is_data_dir;                        //   false  Input is a directory of ssimfiles
+    algo::cstring               parse_error;                        //   ""  Error from command line parsing
+    algo::cstring               compl_output;                       //   ""  Collected completion output
+    acr_compl::FFinsertwhen*    finsertwhen_lary[36];               // level array
+    i64                         finsertwhen_n;                      // number of elements in array
+    acr_compl::FFinsertwhen**   ind_finsertwhen_buckets_elems;      // pointer to bucket array
+    i32                         ind_finsertwhen_buckets_n;          // number of elements in bucket array
+    i32                         ind_finsertwhen_n;                  // number of elements in the hash table
+    acr_compl::FSubstr*         substr_lary[36];                    // level array
+    i64                         substr_n;                           // number of elements in array
+    acr_compl::FCcmdline*       ccmdline_lary[36];                  // level array
+    i64                         ccmdline_n;                         // number of elements in array
+    acr_compl::FCmd*            cmd_lary[36];                       // level array
+    i64                         cmd_n;                              // number of elements in array
+    acr_compl::FCmd**           ind_cmd_buckets_elems;              // pointer to bucket array
+    i32                         ind_cmd_buckets_n;                  // number of elements in bucket array
+    i32                         ind_cmd_n;                          // number of elements in the hash table
+    acr_compl::FFloadtuples*    floadtuples_lary[36];               // level array
+    i64                         floadtuples_n;                      // number of elements in array
+    acr_compl::FFloadtuples**   ind_floadtuples_buckets_elems;      // pointer to bucket array
+    i32                         ind_floadtuples_buckets_n;          // number of elements in bucket array
+    i32                         ind_floadtuples_n;                  // number of elements in the hash table
+    acr_compl::FCtype*          p_cmd_ctype;                        // cmdline ctype of the command being completed. optional pointer
+    acr_compl::trace            trace;                              //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     acr_compl.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of acr_compl.FDb.cmdline (and any base command line)
+// via acr_compl_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:acr_compl.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -631,6 +769,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:acr_compl.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:acr_compl.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr_compl.FDb._db.XrefMaybe
@@ -648,15 +790,15 @@ algo::cstring&       word_Alloc() __attribute__((__warn_unused_result__, nothrow
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:acr_compl.FDb.word.AllocAt
-algo::cstring&       word_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       word_AllocAt(i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_compl.FDb.word.AllocN
-algo::aryptr<algo::cstring> word_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> word_AllocN(i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:acr_compl.FDb.word.AllocNAt
-algo::aryptr<algo::cstring> word_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> word_AllocNAt(i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr_compl.FDb.word.EmptyQ
 inline bool          word_EmptyQ() __attribute__((nothrow));
@@ -671,13 +813,13 @@ inline algo::aryptr<algo::cstring> word_Getary() __attribute__((nothrow));
 inline algo::cstring* word_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:acr_compl.FDb.word.Max
-inline i32           word_Max() __attribute__((nothrow));
+inline i64           word_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:acr_compl.FDb.word.N
-inline i32           word_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           word_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:acr_compl.FDb.word.Remove
-void                 word_Remove(u32 i) __attribute__((nothrow));
+void                 word_Remove(u64 i) __attribute__((nothrow));
 // func:acr_compl.FDb.word.RemoveAll
 void                 word_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
@@ -685,10 +827,10 @@ void                 word_RemoveAll() __attribute__((nothrow));
 void                 word_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:acr_compl.FDb.word.Reserve
-inline void          word_Reserve(int n) __attribute__((nothrow));
+inline void          word_Reserve(i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:acr_compl.FDb.word.AbsReserve
-void                 word_AbsReserve(int n) __attribute__((nothrow));
+void                 word_AbsReserve(i64 n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr_compl.FDb.word.qFind
 inline algo::cstring& word_qFind(u64 t) __attribute__((nothrow));
@@ -700,7 +842,7 @@ inline algo::cstring& word_qLast() __attribute__((nothrow));
 inline u64           word_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_compl.FDb.word.AllocNVal
-algo::aryptr<algo::cstring> word_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+algo::aryptr<algo::cstring> word_AllocNVal(i64 n_elems, const algo::cstring& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
@@ -709,7 +851,13 @@ bool                 word_ReadStrptrMaybe(algo::strptr in_str) __attribute__((no
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:acr_compl.FDb.word.Insary
-void                 word_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
+void                 word_Insary(algo::aryptr<algo::cstring> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:acr_compl.FDb.word.RemRegion
+void                 word_RemRegion(i64 beg, i64 n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -736,7 +884,7 @@ inline acr_compl::FCtype* ctype_Find(u64 t) __attribute__((__warn_unused_result_
 inline acr_compl::FCtype* ctype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.ctype.N
-inline i32           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr_compl.FDb.ctype.RemoveLast
 void                 ctype_RemoveLast() __attribute__((nothrow));
@@ -798,7 +946,7 @@ inline acr_compl::FField* field_Find(u64 t) __attribute__((__warn_unused_result_
 inline acr_compl::FField* field_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.field.N
-inline i32           field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           field_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr_compl.FDb.field.RemoveLast
 void                 field_RemoveLast() __attribute__((nothrow));
@@ -816,6 +964,9 @@ inline bool          ind_field_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr_compl.FDb.ind_field.Find
 acr_compl::FField*   ind_field_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_compl.FDb.ind_field.GetOrCreate
+acr_compl::FField*   ind_field_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:acr_compl.FDb.ind_field.N
 inline i32           ind_field_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -857,7 +1008,7 @@ inline acr_compl::FSsimfile* ssimfile_Find(u64 t) __attribute__((__warn_unused_r
 inline acr_compl::FSsimfile* ssimfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.ssimfile.N
-inline i32           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr_compl.FDb.ssimfile.RemoveLast
 void                 ssimfile_RemoveLast() __attribute__((nothrow));
@@ -875,6 +1026,9 @@ inline bool          ind_ssimfile_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr_compl.FDb.ind_ssimfile.Find
 acr_compl::FSsimfile* ind_ssimfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_compl.FDb.ind_ssimfile.GetOrCreate
+acr_compl::FSsimfile* ind_ssimfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:acr_compl.FDb.ind_ssimfile.N
 inline i32           ind_ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -916,7 +1070,7 @@ inline acr_compl::FCompletion* completion_Find(u64 t) __attribute__((__warn_unus
 inline acr_compl::FCompletion* completion_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.completion.N
-inline i32           completion_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           completion_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr_compl.FDb.completion.RemoveAll
 void                 completion_RemoveAll() __attribute__((nothrow));
@@ -956,7 +1110,7 @@ inline acr_compl::FAnonfld* anonfld_Find(u64 t) __attribute__((__warn_unused_res
 inline acr_compl::FAnonfld* anonfld_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.anonfld.N
-inline i32           anonfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           anonfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr_compl.FDb.anonfld.RemoveLast
 void                 anonfld_RemoveLast() __attribute__((nothrow));
@@ -1012,46 +1166,6 @@ void                 bh_completion_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-// func:acr_compl.FDb.ns.Alloc
-acr_compl::FNs&      ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:acr_compl.FDb.ns.AllocMaybe
-acr_compl::FNs*      ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-// func:acr_compl.FDb.ns.InsertMaybe
-acr_compl::FNs*      ns_InsertMaybe(const dmmeta::Ns &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-// func:acr_compl.FDb.ns.AllocMem
-void*                ns_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:acr_compl.FDb.ns.EmptyQ
-inline bool          ns_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-// func:acr_compl.FDb.ns.Find
-inline acr_compl::FNs* ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-// func:acr_compl.FDb.ns.Last
-inline acr_compl::FNs* ns_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-// func:acr_compl.FDb.ns.N
-inline i32           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-// func:acr_compl.FDb.ns.RemoveAll
-void                 ns_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:acr_compl.FDb.ns.RemoveLast
-void                 ns_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:acr_compl.FDb.ns.qFind
-inline acr_compl::FNs& ns_qFind(u64 t) __attribute__((nothrow, pure));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:acr_compl.FDb.ns.XrefMaybe
-bool                 ns_XrefMaybe(acr_compl::FNs &row);
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
 // func:acr_compl.FDb.fconst.Alloc
 acr_compl::FFconst&  fconst_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
@@ -1075,7 +1189,7 @@ inline acr_compl::FFconst* fconst_Find(u64 t) __attribute__((__warn_unused_resul
 inline acr_compl::FFconst* fconst_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.fconst.N
-inline i32           fconst_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           fconst_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr_compl.FDb.fconst.RemoveAll
 void                 fconst_RemoveAll() __attribute__((nothrow));
@@ -1089,46 +1203,6 @@ inline acr_compl::FFconst& fconst_qFind(u64 t) __attribute__((nothrow, pure));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr_compl.FDb.fconst.XrefMaybe
 bool                 fconst_XrefMaybe(acr_compl::FFconst &row);
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:acr_compl.FDb.fcmdline.Alloc
-acr_compl::FFcmdline& fcmdline_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:acr_compl.FDb.fcmdline.AllocMaybe
-acr_compl::FFcmdline* fcmdline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-// func:acr_compl.FDb.fcmdline.InsertMaybe
-acr_compl::FFcmdline* fcmdline_InsertMaybe(const dmmeta::Fcmdline &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-// func:acr_compl.FDb.fcmdline.AllocMem
-void*                fcmdline_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:acr_compl.FDb.fcmdline.EmptyQ
-inline bool          fcmdline_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-// func:acr_compl.FDb.fcmdline.Find
-inline acr_compl::FFcmdline* fcmdline_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-// func:acr_compl.FDb.fcmdline.Last
-inline acr_compl::FFcmdline* fcmdline_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-// func:acr_compl.FDb.fcmdline.N
-inline i32           fcmdline_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-// func:acr_compl.FDb.fcmdline.RemoveAll
-void                 fcmdline_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:acr_compl.FDb.fcmdline.RemoveLast
-void                 fcmdline_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:acr_compl.FDb.fcmdline.qFind
-inline acr_compl::FFcmdline& fcmdline_qFind(u64 t) __attribute__((nothrow, pure));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:acr_compl.FDb.fcmdline.XrefMaybe
-bool                 fcmdline_XrefMaybe(acr_compl::FFcmdline &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1155,7 +1229,7 @@ inline acr_compl::FFflag* fflag_Find(u64 t) __attribute__((__warn_unused_result_
 inline acr_compl::FFflag* fflag_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.fflag.N
-inline i32           fflag_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           fflag_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr_compl.FDb.fflag.RemoveAll
 void                 fflag_RemoveAll() __attribute__((nothrow));
@@ -1206,31 +1280,9 @@ acr_compl::FField*   zd_cmd_field_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr_compl.FDb.zd_cmd_field.qLast
 inline acr_compl::FField& zd_cmd_field_qLast() __attribute__((__warn_unused_result__, nothrow));
-
-// Return true if hash is empty
-// func:acr_compl.FDb.ind_ns.EmptyQ
-inline bool          ind_ns_EmptyQ() __attribute__((nothrow));
-// Find row by key. Return NULL if not found.
-// func:acr_compl.FDb.ind_ns.Find
-acr_compl::FNs*      ind_ns_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
-// Find row by key. If not found, create and x-reference a new row with with this key.
-// func:acr_compl.FDb.ind_ns.GetOrCreate
-acr_compl::FNs&      ind_ns_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
-// Return number of items in the hash
-// func:acr_compl.FDb.ind_ns.N
-inline i32           ind_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-// func:acr_compl.FDb.ind_ns.InsertMaybe
-bool                 ind_ns_InsertMaybe(acr_compl::FNs& row) __attribute__((nothrow));
-// Remove reference to element from hash index. If element is not in hash, do nothing
-// func:acr_compl.FDb.ind_ns.Remove
-void                 ind_ns_Remove(acr_compl::FNs& row) __attribute__((nothrow));
-// Reserve enough room in the hash for N more elements. Return success code.
-// func:acr_compl.FDb.ind_ns.Reserve
-void                 ind_ns_Reserve(int n) __attribute__((nothrow));
-// Reserve enough room for exacty N elements. Return success code.
-// func:acr_compl.FDb.ind_ns.AbsReserve
-void                 ind_ns_AbsReserve(int n) __attribute__((nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:acr_compl.FDb.zd_cmd_field.InsertBefore
+void                 zd_cmd_field_InsertBefore(acr_compl::FField& row, acr_compl::FField* before) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:acr_compl.FDb.ind_cmd_field_name.EmptyQ
@@ -1279,7 +1331,7 @@ inline acr_compl::FArgvtype* argvtype_Find(u64 t) __attribute__((__warn_unused_r
 inline acr_compl::FArgvtype* argvtype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.argvtype.N
-inline i32           argvtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           argvtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr_compl.FDb.argvtype.RemoveAll
 void                 argvtype_RemoveAll() __attribute__((nothrow));
@@ -1319,7 +1371,7 @@ inline acr_compl::FFalias* falias_Find(u64 t) __attribute__((__warn_unused_resul
 inline acr_compl::FFalias* falias_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.falias.N
-inline i32           falias_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           falias_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr_compl.FDb.falias.RemoveAll
 void                 falias_RemoveAll() __attribute__((nothrow));
@@ -1355,7 +1407,7 @@ inline acr_compl::FComplsource* complsource_Find(u64 t) __attribute__((__warn_un
 inline acr_compl::FComplsource* complsource_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr_compl.FDb.complsource.N
-inline i32           complsource_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           complsource_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr_compl.FDb.complsource.RemoveAll
 void                 complsource_RemoveAll() __attribute__((nothrow));
@@ -1369,6 +1421,277 @@ inline acr_compl::FComplsource& complsource_qFind(u64 t) __attribute__((nothrow,
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr_compl.FDb.complsource.XrefMaybe
 bool                 complsource_XrefMaybe(acr_compl::FComplsource &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_compl.FDb.finsertwhen.Alloc
+acr_compl::FFinsertwhen& finsertwhen_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_compl.FDb.finsertwhen.AllocMaybe
+acr_compl::FFinsertwhen* finsertwhen_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_compl.FDb.finsertwhen.InsertMaybe
+acr_compl::FFinsertwhen* finsertwhen_InsertMaybe(const dmmeta::Finsertwhen &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_compl.FDb.finsertwhen.AllocMem
+void*                finsertwhen_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_compl.FDb.finsertwhen.EmptyQ
+inline bool          finsertwhen_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_compl.FDb.finsertwhen.Find
+inline acr_compl::FFinsertwhen* finsertwhen_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_compl.FDb.finsertwhen.Last
+inline acr_compl::FFinsertwhen* finsertwhen_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_compl.FDb.finsertwhen.N
+inline i64           finsertwhen_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_compl.FDb.finsertwhen.RemoveAll
+void                 finsertwhen_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_compl.FDb.finsertwhen.RemoveLast
+void                 finsertwhen_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_compl.FDb.finsertwhen.qFind
+inline acr_compl::FFinsertwhen& finsertwhen_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_compl.FDb.finsertwhen.XrefMaybe
+bool                 finsertwhen_XrefMaybe(acr_compl::FFinsertwhen &row);
+
+// Return true if hash is empty
+// func:acr_compl.FDb.ind_finsertwhen.EmptyQ
+inline bool          ind_finsertwhen_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_compl.FDb.ind_finsertwhen.Find
+acr_compl::FFinsertwhen* ind_finsertwhen_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_compl.FDb.ind_finsertwhen.GetOrCreate
+acr_compl::FFinsertwhen& ind_finsertwhen_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_compl.FDb.ind_finsertwhen.N
+inline i32           ind_finsertwhen_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_compl.FDb.ind_finsertwhen.InsertMaybe
+bool                 ind_finsertwhen_InsertMaybe(acr_compl::FFinsertwhen& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_compl.FDb.ind_finsertwhen.Remove
+void                 ind_finsertwhen_Remove(acr_compl::FFinsertwhen& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_compl.FDb.ind_finsertwhen.Reserve
+void                 ind_finsertwhen_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_compl.FDb.ind_finsertwhen.AbsReserve
+void                 ind_finsertwhen_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_compl.FDb.substr.Alloc
+acr_compl::FSubstr&  substr_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_compl.FDb.substr.AllocMaybe
+acr_compl::FSubstr*  substr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_compl.FDb.substr.InsertMaybe
+acr_compl::FSubstr*  substr_InsertMaybe(const dmmeta::Substr &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_compl.FDb.substr.AllocMem
+void*                substr_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_compl.FDb.substr.EmptyQ
+inline bool          substr_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_compl.FDb.substr.Find
+inline acr_compl::FSubstr* substr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_compl.FDb.substr.Last
+inline acr_compl::FSubstr* substr_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_compl.FDb.substr.N
+inline i64           substr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_compl.FDb.substr.RemoveAll
+void                 substr_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_compl.FDb.substr.RemoveLast
+void                 substr_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_compl.FDb.substr.qFind
+inline acr_compl::FSubstr& substr_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_compl.FDb.substr.XrefMaybe
+bool                 substr_XrefMaybe(acr_compl::FSubstr &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_compl.FDb.ccmdline.Alloc
+acr_compl::FCcmdline& ccmdline_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_compl.FDb.ccmdline.AllocMaybe
+acr_compl::FCcmdline* ccmdline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_compl.FDb.ccmdline.InsertMaybe
+acr_compl::FCcmdline* ccmdline_InsertMaybe(const dmmeta::Ccmdline &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_compl.FDb.ccmdline.AllocMem
+void*                ccmdline_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_compl.FDb.ccmdline.EmptyQ
+inline bool          ccmdline_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_compl.FDb.ccmdline.Find
+inline acr_compl::FCcmdline* ccmdline_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_compl.FDb.ccmdline.Last
+inline acr_compl::FCcmdline* ccmdline_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_compl.FDb.ccmdline.N
+inline i64           ccmdline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_compl.FDb.ccmdline.RemoveAll
+void                 ccmdline_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_compl.FDb.ccmdline.RemoveLast
+void                 ccmdline_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_compl.FDb.ccmdline.qFind
+inline acr_compl::FCcmdline& ccmdline_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_compl.FDb.ccmdline.XrefMaybe
+bool                 ccmdline_XrefMaybe(acr_compl::FCcmdline &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_compl.FDb.cmd.Alloc
+acr_compl::FCmd&     cmd_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_compl.FDb.cmd.AllocMaybe
+acr_compl::FCmd*     cmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_compl.FDb.cmd.AllocMem
+void*                cmd_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_compl.FDb.cmd.EmptyQ
+inline bool          cmd_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_compl.FDb.cmd.Find
+inline acr_compl::FCmd* cmd_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_compl.FDb.cmd.Last
+inline acr_compl::FCmd* cmd_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_compl.FDb.cmd.N
+inline i64           cmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_compl.FDb.cmd.RemoveAll
+void                 cmd_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_compl.FDb.cmd.RemoveLast
+void                 cmd_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_compl.FDb.cmd.qFind
+inline acr_compl::FCmd& cmd_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_compl.FDb.cmd.XrefMaybe
+bool                 cmd_XrefMaybe(acr_compl::FCmd &row);
+
+// Return true if hash is empty
+// func:acr_compl.FDb.ind_cmd.EmptyQ
+inline bool          ind_cmd_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_compl.FDb.ind_cmd.Find
+acr_compl::FCmd*     ind_cmd_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_compl.FDb.ind_cmd.GetOrCreate
+acr_compl::FCmd&     ind_cmd_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_compl.FDb.ind_cmd.N
+inline i32           ind_cmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_compl.FDb.ind_cmd.InsertMaybe
+bool                 ind_cmd_InsertMaybe(acr_compl::FCmd& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_compl.FDb.ind_cmd.Remove
+void                 ind_cmd_Remove(acr_compl::FCmd& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_compl.FDb.ind_cmd.Reserve
+void                 ind_cmd_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_compl.FDb.ind_cmd.AbsReserve
+void                 ind_cmd_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_compl.FDb.floadtuples.Alloc
+acr_compl::FFloadtuples& floadtuples_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_compl.FDb.floadtuples.AllocMaybe
+acr_compl::FFloadtuples* floadtuples_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_compl.FDb.floadtuples.InsertMaybe
+acr_compl::FFloadtuples* floadtuples_InsertMaybe(const dmmeta::Floadtuples &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_compl.FDb.floadtuples.AllocMem
+void*                floadtuples_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_compl.FDb.floadtuples.EmptyQ
+inline bool          floadtuples_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_compl.FDb.floadtuples.Find
+inline acr_compl::FFloadtuples* floadtuples_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_compl.FDb.floadtuples.Last
+inline acr_compl::FFloadtuples* floadtuples_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_compl.FDb.floadtuples.N
+inline i64           floadtuples_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_compl.FDb.floadtuples.RemoveAll
+void                 floadtuples_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_compl.FDb.floadtuples.RemoveLast
+void                 floadtuples_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_compl.FDb.floadtuples.qFind
+inline acr_compl::FFloadtuples& floadtuples_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_compl.FDb.floadtuples.XrefMaybe
+bool                 floadtuples_XrefMaybe(acr_compl::FFloadtuples &row);
+
+// Return true if hash is empty
+// func:acr_compl.FDb.ind_floadtuples.EmptyQ
+inline bool          ind_floadtuples_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_compl.FDb.ind_floadtuples.Find
+acr_compl::FFloadtuples* ind_floadtuples_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_compl.FDb.ind_floadtuples.GetOrCreate
+acr_compl::FFloadtuples* ind_floadtuples_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_compl.FDb.ind_floadtuples.N
+inline i32           ind_floadtuples_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_compl.FDb.ind_floadtuples.InsertMaybe
+bool                 ind_floadtuples_InsertMaybe(acr_compl::FFloadtuples& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_compl.FDb.ind_floadtuples.Remove
+void                 ind_floadtuples_Remove(acr_compl::FFloadtuples& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_compl.FDb.ind_floadtuples.Reserve
+void                 ind_floadtuples_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_compl.FDb.ind_floadtuples.AbsReserve
+void                 ind_floadtuples_AbsReserve(int n) __attribute__((nothrow));
 
 // proceed to next item
 // func:acr_compl.FDb.word_curs.Next
@@ -1456,18 +1779,6 @@ inline acr_compl::FCompletion& _db_bh_completion_curs_Access(_db_bh_completion_c
 // func:acr_compl.FDb.bh_completion_curs.ValidQ
 inline bool          _db_bh_completion_curs_ValidQ(_db_bh_completion_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
-// func:acr_compl.FDb.ns_curs.Reset
-inline void          _db_ns_curs_Reset(_db_ns_curs &curs, acr_compl::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:acr_compl.FDb.ns_curs.ValidQ
-inline bool          _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:acr_compl.FDb.ns_curs.Next
-inline void          _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
-// item access
-// func:acr_compl.FDb.ns_curs.Access
-inline acr_compl::FNs& _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
 // func:acr_compl.FDb.fconst_curs.Reset
 inline void          _db_fconst_curs_Reset(_db_fconst_curs &curs, acr_compl::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -1479,18 +1790,6 @@ inline void          _db_fconst_curs_Next(_db_fconst_curs &curs) __attribute__((
 // item access
 // func:acr_compl.FDb.fconst_curs.Access
 inline acr_compl::FFconst& _db_fconst_curs_Access(_db_fconst_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:acr_compl.FDb.fcmdline_curs.Reset
-inline void          _db_fcmdline_curs_Reset(_db_fcmdline_curs &curs, acr_compl::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:acr_compl.FDb.fcmdline_curs.ValidQ
-inline bool          _db_fcmdline_curs_ValidQ(_db_fcmdline_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:acr_compl.FDb.fcmdline_curs.Next
-inline void          _db_fcmdline_curs_Next(_db_fcmdline_curs &curs) __attribute__((nothrow));
-// item access
-// func:acr_compl.FDb.fcmdline_curs.Access
-inline acr_compl::FFcmdline& _db_fcmdline_curs_Access(_db_fcmdline_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_compl.FDb.fflag_curs.Reset
 inline void          _db_fflag_curs_Reset(_db_fflag_curs &curs, acr_compl::FDb &parent) __attribute__((nothrow));
@@ -1551,6 +1850,66 @@ inline void          _db_complsource_curs_Next(_db_complsource_curs &curs) __att
 // item access
 // func:acr_compl.FDb.complsource_curs.Access
 inline acr_compl::FComplsource& _db_complsource_curs_Access(_db_complsource_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.finsertwhen_curs.Reset
+inline void          _db_finsertwhen_curs_Reset(_db_finsertwhen_curs &curs, acr_compl::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.finsertwhen_curs.ValidQ
+inline bool          _db_finsertwhen_curs_ValidQ(_db_finsertwhen_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_compl.FDb.finsertwhen_curs.Next
+inline void          _db_finsertwhen_curs_Next(_db_finsertwhen_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_compl.FDb.finsertwhen_curs.Access
+inline acr_compl::FFinsertwhen& _db_finsertwhen_curs_Access(_db_finsertwhen_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.substr_curs.Reset
+inline void          _db_substr_curs_Reset(_db_substr_curs &curs, acr_compl::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.substr_curs.ValidQ
+inline bool          _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_compl.FDb.substr_curs.Next
+inline void          _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_compl.FDb.substr_curs.Access
+inline acr_compl::FSubstr& _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.ccmdline_curs.Reset
+inline void          _db_ccmdline_curs_Reset(_db_ccmdline_curs &curs, acr_compl::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.ccmdline_curs.ValidQ
+inline bool          _db_ccmdline_curs_ValidQ(_db_ccmdline_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_compl.FDb.ccmdline_curs.Next
+inline void          _db_ccmdline_curs_Next(_db_ccmdline_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_compl.FDb.ccmdline_curs.Access
+inline acr_compl::FCcmdline& _db_ccmdline_curs_Access(_db_ccmdline_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.cmd_curs.Reset
+inline void          _db_cmd_curs_Reset(_db_cmd_curs &curs, acr_compl::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.cmd_curs.ValidQ
+inline bool          _db_cmd_curs_ValidQ(_db_cmd_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_compl.FDb.cmd_curs.Next
+inline void          _db_cmd_curs_Next(_db_cmd_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_compl.FDb.cmd_curs.Access
+inline acr_compl::FCmd& _db_cmd_curs_Access(_db_cmd_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.floadtuples_curs.Reset
+inline void          _db_floadtuples_curs_Reset(_db_floadtuples_curs &curs, acr_compl::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_compl.FDb.floadtuples_curs.ValidQ
+inline bool          _db_floadtuples_curs_ValidQ(_db_floadtuples_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_compl.FDb.floadtuples_curs.Next
+inline void          _db_floadtuples_curs_Next(_db_floadtuples_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_compl.FDb.floadtuples_curs.Access
+inline acr_compl::FFloadtuples& _db_floadtuples_curs_Access(_db_floadtuples_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_compl.FDb..Init
 void                 FDb_Init();
@@ -1563,9 +1922,9 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // access: acr_compl.FField.c_falias (Ptr)
 // access: acr_compl.FField.c_falias_srcfield (Ptrary)
 struct FFalias { // acr_compl.FFalias
-    algo::Smallstr100    field;        //
-    algo::Smallstr100    srcfield;     //
-    algo::Comment        comment;      //
+    algo::Smallstr150    field;        //
+    algo::Smallstr150    srcfield;     //
+    algo::cstring        comment;      //
     acr_compl::FField*   p_srcfield;   // reference to parent row
     acr_compl::FField*   p_field;      // reference to parent row
     // x-reference on acr_compl.FFalias.p_srcfield prevents copy
@@ -1586,7 +1945,6 @@ private:
     friend void                 falias_RemoveAll() __attribute__((nothrow));
     friend void                 falias_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:acr_compl.FFalias.base.CopyOut
 void                 falias_CopyOut(acr_compl::FFalias &row, dmmeta::Falias &out) __attribute__((nothrow));
@@ -1600,60 +1958,14 @@ inline void          FFalias_Init(acr_compl::FFalias& falias);
 // func:acr_compl.FFalias..Uninit
 void                 FFalias_Uninit(acr_compl::FFalias& falias) __attribute__((nothrow));
 
-// --- acr_compl.FFcmdline
-// create: acr_compl.FDb.fcmdline (Lary)
-// global access: fcmdline (Lary, by rowid)
-// access: acr_compl.FNs.c_fcmdline (Ptr)
-struct FFcmdline { // acr_compl.FFcmdline
-    algo::Smallstr100    field;           // Parent field
-    bool                 read;            //   true  Read the command line automatically from main?
-    algo::Smallstr100    basecmdline;     // Optional command line to merge with this one
-    algo::Comment        comment;         //
-    acr_compl::FField*   p_field;         // reference to parent row
-    acr_compl::FField*   p_basecmdline;   // reference to parent row
-    // x-reference on acr_compl.FFcmdline.p_field prevents copy
-    // x-reference on acr_compl.FFcmdline.p_basecmdline prevents copy
-    // func:acr_compl.FFcmdline..AssignOp
-    inline acr_compl::FFcmdline& operator =(const acr_compl::FFcmdline &rhs) = delete;
-    // x-reference on acr_compl.FFcmdline.p_field prevents copy
-    // x-reference on acr_compl.FFcmdline.p_basecmdline prevents copy
-    // func:acr_compl.FFcmdline..CopyCtor
-    inline               FFcmdline(const acr_compl::FFcmdline &rhs) = delete;
-private:
-    // func:acr_compl.FFcmdline..Ctor
-    inline               FFcmdline() __attribute__((nothrow));
-    // func:acr_compl.FFcmdline..Dtor
-    inline               ~FFcmdline() __attribute__((nothrow));
-    friend acr_compl::FFcmdline& fcmdline_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend acr_compl::FFcmdline* fcmdline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 fcmdline_RemoveAll() __attribute__((nothrow));
-    friend void                 fcmdline_RemoveLast() __attribute__((nothrow));
-};
-
-// Copy fields out of row
-// func:acr_compl.FFcmdline.base.CopyOut
-void                 fcmdline_CopyOut(acr_compl::FFcmdline &row, dmmeta::Fcmdline &out) __attribute__((nothrow));
-// Copy fields in to row
-// func:acr_compl.FFcmdline.base.CopyIn
-void                 fcmdline_CopyIn(acr_compl::FFcmdline &row, dmmeta::Fcmdline &in) __attribute__((nothrow));
-
-// func:acr_compl.FFcmdline.ns.Get
-algo::Smallstr16     ns_Get(acr_compl::FFcmdline& fcmdline) __attribute__((__warn_unused_result__, nothrow));
-
-// Set all fields to initial values.
-// func:acr_compl.FFcmdline..Init
-inline void          FFcmdline_Init(acr_compl::FFcmdline& fcmdline);
-// func:acr_compl.FFcmdline..Uninit
-void                 FFcmdline_Uninit(acr_compl::FFcmdline& fcmdline) __attribute__((nothrow));
-
 // --- acr_compl.FFconst
 // create: acr_compl.FDb.fconst (Lary)
 // global access: fconst (Lary, by rowid)
 // access: acr_compl.FField.c_fconst (Ptrary)
 struct FFconst { // acr_compl.FFconst
-    algo::Smallstr100   fconst;                  //
+    algo::Smallstr150   fconst;                  //
     algo::CppExpr       value;                   //
-    algo::Comment       comment;                 //
+    algo::cstring       comment;                 //
     bool                field_c_fconst_in_ary;   //   false  membership flag
     // func:acr_compl.FFconst..AssignOp
     inline acr_compl::FFconst& operator =(const acr_compl::FFconst &rhs) = delete;
@@ -1669,7 +1981,6 @@ private:
     friend void                 fconst_RemoveAll() __attribute__((nothrow));
     friend void                 fconst_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:acr_compl.FFconst.base.CopyOut
 void                 fconst_CopyOut(acr_compl::FFconst &row, dmmeta::Fconst &out) __attribute__((nothrow));
@@ -1678,10 +1989,10 @@ void                 fconst_CopyOut(acr_compl::FFconst &row, dmmeta::Fconst &out
 void                 fconst_CopyIn(acr_compl::FFconst &row, dmmeta::Fconst &in) __attribute__((nothrow));
 
 // func:acr_compl.FFconst.field.Get
-algo::Smallstr100    field_Get(acr_compl::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(acr_compl::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FFconst.name.Get
-algo::Smallstr100    name_Get(acr_compl::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_compl::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_compl.FFconst..Init
@@ -1694,10 +2005,10 @@ void                 FFconst_Uninit(acr_compl::FFconst& fconst) __attribute__((n
 // global access: fflag (Lary, by rowid)
 // access: acr_compl.FField.c_fflag (Ptr)
 struct FFflag { // acr_compl.FFflag
-    algo::Smallstr100   field;        //
+    algo::Smallstr150   field;        //
     bool                cumulative;   //   false  Accumulate on every read
     algo::cstring       emptyval;     //   ""
-    algo::Comment       comment;      //
+    algo::cstring       comment;      //
     // func:acr_compl.FFflag..AssignOp
     inline acr_compl::FFflag& operator =(const acr_compl::FFflag &rhs) = delete;
     // func:acr_compl.FFflag..CopyCtor
@@ -1712,7 +2023,6 @@ private:
     friend void                 fflag_RemoveAll() __attribute__((nothrow));
     friend void                 fflag_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:acr_compl.FFflag.base.CopyOut
 void                 fflag_CopyOut(acr_compl::FFflag &row, dmmeta::Fflag &out) __attribute__((nothrow));
@@ -1732,12 +2042,12 @@ void                 FFflag_Uninit(acr_compl::FFflag& fflag) __attribute__((noth
 // global access: ind_field (Thash, hash field field)
 // global access: zd_cmd_field (Llist)
 // global access: ind_cmd_field_name (Thash, hash field name)
+// access: acr_compl.FCcmdline.p_basecmdline (Upptr)
 // access: acr_compl.FCompletion.field (Ptr)
 // access: acr_compl.FCtype.c_field (Ptrary)
 // access: acr_compl.FFalias.p_srcfield (Upptr)
 // access: acr_compl.FFalias.p_field (Upptr)
-// access: acr_compl.FFcmdline.p_field (Upptr)
-// access: acr_compl.FFcmdline.p_basecmdline (Upptr)
+// access: acr_compl.FFloadtuples.p_field (Upptr)
 struct FField { // acr_compl.FField
     acr_compl::FField*     ind_field_next;               // hash next
     u32                    ind_field_hashval;            // hash value
@@ -1745,23 +2055,24 @@ struct FField { // acr_compl.FField
     acr_compl::FField*     zd_cmd_field_prev;            // previous element
     acr_compl::FField*     ind_cmd_field_name_next;      // hash next
     u32                    ind_cmd_field_name_hashval;   // hash value
-    algo::Smallstr100      field;                        // Primary key, as ctype.name
+    algo::Smallstr150      field;                        // Primary key, as ctype.name
     algo::Smallstr100      arg;                          // Type of field
     algo::Smallstr50       reftype;                      //   "Val"  Type constructor
     algo::CppExpr          dflt;                         // Default value (c++ expression)
-    algo::Comment          comment;                      //
+    algo::cstring          comment;                      //
     acr_compl::FCtype*     p_arg;                        // reference to parent row
     acr_compl::FAnonfld*   c_anonfld;                    // optional pointer
     acr_compl::FFconst**   c_fconst_elems;               // array of pointers
-    u32                    c_fconst_n;                   // array of pointers
-    u32                    c_fconst_max;                 // capacity of allocated array
+    u64                    c_fconst_n;                   // current size
+    u64                    c_fconst_max;                 // capacity of allocated array
     bool                   seen;                         //   false
     acr_compl::FFflag*     c_fflag;                      // optional pointer
     acr_compl::FCtype*     p_ctype;                      // reference to parent row
     acr_compl::FFalias*    c_falias;                     // optional pointer
     acr_compl::FFalias**   c_falias_srcfield_elems;      // array of pointers
-    u32                    c_falias_srcfield_n;          // array of pointers
-    u32                    c_falias_srcfield_max;        // capacity of allocated array
+    u64                    c_falias_srcfield_n;          // current size
+    u64                    c_falias_srcfield_max;        // capacity of allocated array
+    algo::cstring          typed_value;                  // value supplied for this option on the line being completed
     bool                   ctype_c_field_in_ary;         //   false  membership flag
     // x-reference on acr_compl.FField.p_arg prevents copy
     // x-reference on acr_compl.FField.c_anonfld prevents copy
@@ -1790,7 +2101,6 @@ private:
     friend acr_compl::FField*   field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 field_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:acr_compl.FField.msghdr.CopyOut
 void                 field_CopyOut(acr_compl::FField &row, dmmeta::Field &out) __attribute__((nothrow));
@@ -1799,13 +2109,13 @@ void                 field_CopyOut(acr_compl::FField &row, dmmeta::Field &out) _
 void                 field_CopyIn(acr_compl::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:acr_compl.FField.ctype.Get
-algo::Smallstr100    ctype_Get(acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FField.ns.Get
-algo::Smallstr16     ns_Get(acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FField.name.Get
-algo::Smallstr50     name_Get(acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_compl.FField.c_anonfld.InsertMaybe
@@ -1819,12 +2129,12 @@ inline void          c_anonfld_Remove(acr_compl::FField& field, acr_compl::FAnon
 inline bool          c_fconst_EmptyQ(acr_compl::FField& field) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_compl.FField.c_fconst.Find
-inline acr_compl::FFconst* c_fconst_Find(acr_compl::FField& field, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_compl::FFconst* c_fconst_Find(acr_compl::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr_compl.FField.c_fconst.Getary
 inline algo::aryptr<acr_compl::FFconst*> c_fconst_Getary(acr_compl::FField& field) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:acr_compl.FField.c_fconst.Insert
 void                 c_fconst_Insert(acr_compl::FField& field, acr_compl::FFconst& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -1834,7 +2144,7 @@ void                 c_fconst_Insert(acr_compl::FField& field, acr_compl::FFcons
 bool                 c_fconst_InsertMaybe(acr_compl::FField& field, acr_compl::FFconst& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr_compl.FField.c_fconst.N
-inline i32           c_fconst_N(const acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fconst_N(const acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr_compl.FField.c_fconst.Remove
 void                 c_fconst_Remove(acr_compl::FField& field, acr_compl::FFconst& row) __attribute__((nothrow));
@@ -1843,10 +2153,10 @@ void                 c_fconst_Remove(acr_compl::FField& field, acr_compl::FFcons
 inline void          c_fconst_RemoveAll(acr_compl::FField& field) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr_compl.FField.c_fconst.Reserve
-void                 c_fconst_Reserve(acr_compl::FField& field, u32 n) __attribute__((nothrow));
+void                 c_fconst_Reserve(acr_compl::FField& field, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr_compl.FField.c_fconst.qFind
-inline acr_compl::FFconst& c_fconst_qFind(acr_compl::FField& field, u32 idx) __attribute__((nothrow));
+inline acr_compl::FFconst& c_fconst_qFind(acr_compl::FField& field, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr_compl.FField.c_fconst.InAryQ
 inline bool          field_c_fconst_InAryQ(acr_compl::FFconst& row) __attribute__((nothrow));
@@ -1873,12 +2183,12 @@ inline void          c_falias_Remove(acr_compl::FField& field, acr_compl::FFalia
 inline bool          c_falias_srcfield_EmptyQ(acr_compl::FField& field) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_compl.FField.c_falias_srcfield.Find
-inline acr_compl::FFalias* c_falias_srcfield_Find(acr_compl::FField& field, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_compl::FFalias* c_falias_srcfield_Find(acr_compl::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr_compl.FField.c_falias_srcfield.Getary
 inline algo::aryptr<acr_compl::FFalias*> c_falias_srcfield_Getary(acr_compl::FField& field) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:acr_compl.FField.c_falias_srcfield.Insert
 void                 c_falias_srcfield_Insert(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -1889,7 +2199,7 @@ void                 c_falias_srcfield_Insert(acr_compl::FField& field, acr_comp
 bool                 c_falias_srcfield_ScanInsertMaybe(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr_compl.FField.c_falias_srcfield.N
-inline i32           c_falias_srcfield_N(const acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_falias_srcfield_N(const acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr_compl.FField.c_falias_srcfield.Remove
 void                 c_falias_srcfield_Remove(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
@@ -1898,10 +2208,10 @@ void                 c_falias_srcfield_Remove(acr_compl::FField& field, acr_comp
 inline void          c_falias_srcfield_RemoveAll(acr_compl::FField& field) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr_compl.FField.c_falias_srcfield.Reserve
-void                 c_falias_srcfield_Reserve(acr_compl::FField& field, u32 n) __attribute__((nothrow));
+void                 c_falias_srcfield_Reserve(acr_compl::FField& field, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr_compl.FField.c_falias_srcfield.qFind
-inline acr_compl::FFalias& c_falias_srcfield_qFind(acr_compl::FField& field, u32 idx) __attribute__((nothrow));
+inline acr_compl::FFalias& c_falias_srcfield_qFind(acr_compl::FField& field, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr_compl.FField.c_falias_srcfield.qLast
 inline acr_compl::FFalias& c_falias_srcfield_qLast(acr_compl::FField& field) __attribute__((nothrow));
@@ -1938,54 +2248,88 @@ void                 FField_Uninit(acr_compl::FField& field) __attribute__((noth
 // func:acr_compl.FField..Print
 void                 FField_Print(acr_compl::FField& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- acr_compl.FNs
-// create: acr_compl.FDb.ns (Lary)
-// global access: ns (Lary, by rowid)
-// global access: ind_ns (Thash, hash field ns)
-struct FNs { // acr_compl.FNs
-    acr_compl::FNs*         ind_ns_next;      // hash next
-    u32                     ind_ns_hashval;   // hash value
-    algo::Smallstr16        ns;               // Namespace name (primary key)
-    algo::Smallstr50        nstype;           // Namespace type
-    algo::Smallstr50        license;          // Associated license
-    algo::Comment           comment;          //
-    acr_compl::FFcmdline*   c_fcmdline;       // optional pointer
-    // x-reference on acr_compl.FNs.c_fcmdline prevents copy
-    // func:acr_compl.FNs..AssignOp
-    inline acr_compl::FNs& operator =(const acr_compl::FNs &rhs) = delete;
-    // x-reference on acr_compl.FNs.c_fcmdline prevents copy
-    // func:acr_compl.FNs..CopyCtor
-    inline               FNs(const acr_compl::FNs &rhs) = delete;
+// --- acr_compl.FFinsertwhen
+// create: acr_compl.FDb.finsertwhen (Lary)
+// global access: finsertwhen (Lary, by rowid)
+// global access: ind_finsertwhen (Thash, hash field finsertwhen)
+struct FFinsertwhen { // acr_compl.FFinsertwhen
+    acr_compl::FFinsertwhen*   ind_finsertwhen_next;      // hash next
+    u32                        ind_finsertwhen_hashval;   // hash value
+    algo::Smallstr150          finsertwhen;               // Field that gets insert-completion
+    algo::Smallstr150          when;                      // When this flag is also set on the cmdline, use insert-completion for finsertwhen.field
+    algo::cstring              comment;                   //
+    // func:acr_compl.FFinsertwhen..AssignOp
+    inline acr_compl::FFinsertwhen& operator =(const acr_compl::FFinsertwhen &rhs) = delete;
+    // func:acr_compl.FFinsertwhen..CopyCtor
+    inline               FFinsertwhen(const acr_compl::FFinsertwhen &rhs) = delete;
 private:
-    // func:acr_compl.FNs..Ctor
-    inline               FNs() __attribute__((nothrow));
-    // func:acr_compl.FNs..Dtor
-    inline               ~FNs() __attribute__((nothrow));
-    friend acr_compl::FNs&      ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend acr_compl::FNs*      ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 ns_RemoveAll() __attribute__((nothrow));
-    friend void                 ns_RemoveLast() __attribute__((nothrow));
+    // func:acr_compl.FFinsertwhen..Ctor
+    inline               FFinsertwhen() __attribute__((nothrow));
+    // func:acr_compl.FFinsertwhen..Dtor
+    inline               ~FFinsertwhen() __attribute__((nothrow));
+    friend acr_compl::FFinsertwhen& finsertwhen_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FFinsertwhen* finsertwhen_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 finsertwhen_RemoveAll() __attribute__((nothrow));
+    friend void                 finsertwhen_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
-// func:acr_compl.FNs.base.CopyOut
-void                 ns_CopyOut(acr_compl::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
+// func:acr_compl.FFinsertwhen.base.CopyOut
+void                 finsertwhen_CopyOut(acr_compl::FFinsertwhen &row, dmmeta::Finsertwhen &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_compl.FNs.base.CopyIn
-void                 ns_CopyIn(acr_compl::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
-
-// Insert row into pointer index. Return final membership status.
-// func:acr_compl.FNs.c_fcmdline.InsertMaybe
-inline bool          c_fcmdline_InsertMaybe(acr_compl::FNs& ns, acr_compl::FFcmdline& row) __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:acr_compl.FNs.c_fcmdline.Remove
-inline void          c_fcmdline_Remove(acr_compl::FNs& ns, acr_compl::FFcmdline& row) __attribute__((nothrow));
+// func:acr_compl.FFinsertwhen.base.CopyIn
+void                 finsertwhen_CopyIn(acr_compl::FFinsertwhen &row, dmmeta::Finsertwhen &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
-// func:acr_compl.FNs..Init
-inline void          FNs_Init(acr_compl::FNs& ns);
-// func:acr_compl.FNs..Uninit
-void                 FNs_Uninit(acr_compl::FNs& ns) __attribute__((nothrow));
+// func:acr_compl.FFinsertwhen..Init
+inline void          FFinsertwhen_Init(acr_compl::FFinsertwhen& finsertwhen);
+// func:acr_compl.FFinsertwhen..Uninit
+void                 FFinsertwhen_Uninit(acr_compl::FFinsertwhen& finsertwhen) __attribute__((nothrow));
+
+// --- acr_compl.FFloadtuples
+// create: acr_compl.FDb.floadtuples (Lary)
+// global access: floadtuples (Lary, by rowid)
+// global access: ind_floadtuples (Thash, hash field field)
+// access: acr_compl.FCtype.c_floadtuples (Ptrary)
+struct FFloadtuples { // acr_compl.FFloadtuples
+    acr_compl::FFloadtuples*   ind_floadtuples_next;         // hash next
+    u32                        ind_floadtuples_hashval;      // hash value
+    algo::Smallstr150          field;                        //
+    bool                       autoscan;                     //   true  acr_compl scans this location for completion candidates
+    bool                       optional;                     //   false  a layer beyond the primary source: absent means skip, not fail
+    algo::cstring              comment;                      //
+    acr_compl::FField*         p_field;                      // reference to parent row
+    bool                       ctype_c_floadtuples_in_ary;   //   false  membership flag
+    // x-reference on acr_compl.FFloadtuples.p_field prevents copy
+    // func:acr_compl.FFloadtuples..AssignOp
+    inline acr_compl::FFloadtuples& operator =(const acr_compl::FFloadtuples &rhs) = delete;
+    // x-reference on acr_compl.FFloadtuples.p_field prevents copy
+    // func:acr_compl.FFloadtuples..CopyCtor
+    inline               FFloadtuples(const acr_compl::FFloadtuples &rhs) = delete;
+private:
+    // func:acr_compl.FFloadtuples..Ctor
+    inline               FFloadtuples() __attribute__((nothrow));
+    // func:acr_compl.FFloadtuples..Dtor
+    inline               ~FFloadtuples() __attribute__((nothrow));
+    friend acr_compl::FFloadtuples& floadtuples_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FFloadtuples* floadtuples_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 floadtuples_RemoveAll() __attribute__((nothrow));
+    friend void                 floadtuples_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:acr_compl.FFloadtuples.base.CopyOut
+void                 floadtuples_CopyOut(acr_compl::FFloadtuples &row, dmmeta::Floadtuples &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_compl.FFloadtuples.base.CopyIn
+void                 floadtuples_CopyIn(acr_compl::FFloadtuples &row, dmmeta::Floadtuples &in) __attribute__((nothrow));
+
+// func:acr_compl.FFloadtuples.ctype.Get
+algo::strptr         ctype_Get(acr_compl::FFloadtuples& floadtuples) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:acr_compl.FFloadtuples..Init
+inline void          FFloadtuples_Init(acr_compl::FFloadtuples& floadtuples);
+// func:acr_compl.FFloadtuples..Uninit
+void                 FFloadtuples_Uninit(acr_compl::FFloadtuples& floadtuples) __attribute__((nothrow));
 
 // --- acr_compl.FSsimfile
 // create: acr_compl.FDb.ssimfile (Lary)
@@ -2013,7 +2357,6 @@ private:
     friend acr_compl::FSsimfile* ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:acr_compl.FSsimfile.msghdr.CopyOut
 void                 ssimfile_CopyOut(acr_compl::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
@@ -2022,13 +2365,13 @@ void                 ssimfile_CopyOut(acr_compl::FSsimfile &row, dmmeta::Ssimfil
 void                 ssimfile_CopyIn(acr_compl::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:acr_compl.FSsimfile.ssimns.Get
-algo::Smallstr16     ssimns_Get(acr_compl::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(acr_compl::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FSsimfile.ns.Get
-algo::Smallstr16     ns_Get(acr_compl::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_compl::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FSsimfile.name.Get
-algo::Smallstr50     name_Get(acr_compl::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_compl::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_compl.FSsimfile..Init
@@ -2039,6 +2382,29 @@ void                 FSsimfile_Uninit(acr_compl::FSsimfile& ssimfile) __attribut
 // cfmt:acr_compl.FSsimfile.String  printfmt:Tuple
 // func:acr_compl.FSsimfile..Print
 void                 FSsimfile_Print(acr_compl::FSsimfile& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_compl.FSubstr
+// create: acr_compl.FDb.substr (Lary)
+// global access: substr (Lary, by rowid)
+struct FSubstr { // acr_compl.FSubstr
+    algo::Smallstr150   field;      //
+    algo::CppExpr       expr;       //
+    algo::Smallstr150   srcfield;   //
+private:
+    // func:acr_compl.FSubstr..Ctor
+    inline               FSubstr() __attribute__((nothrow));
+    friend acr_compl::FSubstr&  substr_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FSubstr*  substr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 substr_RemoveAll() __attribute__((nothrow));
+    friend void                 substr_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:acr_compl.FSubstr.base.CopyOut
+void                 substr_CopyOut(acr_compl::FSubstr &row, dmmeta::Substr &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_compl.FSubstr.base.CopyIn
+void                 substr_CopyIn(acr_compl::FSubstr &row, dmmeta::Substr &in) __attribute__((nothrow));
+
 
 // --- acr_compl.FieldId
 #pragma pack(push,1)
@@ -2054,7 +2420,6 @@ struct FieldId { // acr_compl.FieldId: Field read helper
     inline               FieldId(acr_compl_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:acr_compl.FieldId.value.GetEnum
 inline acr_compl_FieldIdEnum value_GetEnum(const acr_compl::FieldId& parent) __attribute__((nothrow));
@@ -2092,7 +2457,7 @@ inline void          FieldId_Init(acr_compl::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_compl.FieldId.String  printfmt:Raw
 // func:acr_compl.FieldId..Print
-void                 FieldId_Print(acr_compl::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(acr_compl::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_compl.Shellqtype
 struct Shellqtype { // acr_compl.Shellqtype
@@ -2104,7 +2469,6 @@ struct Shellqtype { // acr_compl.Shellqtype
     // func:acr_compl.Shellqtype..EnumCtor
     inline               Shellqtype(acr_compl_ShellqtypeEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:acr_compl.Shellqtype.type.GetEnum
 inline acr_compl_ShellqtypeEnum type_GetEnum(const acr_compl::Shellqtype& parent) __attribute__((nothrow));
@@ -2156,7 +2520,6 @@ struct TableId { // acr_compl.TableId: Index of table in this namespace
     // func:acr_compl.TableId..EnumCtor
     inline               TableId(acr_compl_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:acr_compl.TableId.value.GetEnum
 inline acr_compl_TableIdEnum value_GetEnum(const acr_compl::TableId& parent) __attribute__((nothrow));
@@ -2194,24 +2557,75 @@ inline void          TableId_Init(acr_compl::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_compl.TableId.String  printfmt:Raw
 // func:acr_compl.TableId..Print
-void                 TableId_Print(acr_compl::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(acr_compl::TableId row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_compl.checkerr
+struct checkerr { // acr_compl.checkerr: Batch check failure
+    u32             id;    //   0  Echoed from checkreq
+    algo::cstring   err;   // Validation error text
+    // func:acr_compl.checkerr..Ctor
+    inline               checkerr() __attribute__((nothrow));
+};
+// func:acr_compl.checkerr..ReadFieldMaybe
+bool                 checkerr_ReadFieldMaybe(acr_compl::checkerr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_compl::checkerr from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_compl.checkerr..ReadStrptrMaybe
+bool                 checkerr_ReadStrptrMaybe(acr_compl::checkerr &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_compl.checkerr..Init
+inline void          checkerr_Init(acr_compl::checkerr& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_compl.checkerr.String  printfmt:Tuple
+// func:acr_compl.checkerr..Print
+void                 checkerr_Print(acr_compl::checkerr& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_compl.checkreq
+struct checkreq { // acr_compl.checkreq: Batch check request
+    u32             id;     //   0  Echoed in checkerr
+    algo::cstring   line;   // Command line to validate
+    // func:acr_compl.checkreq..Ctor
+    inline               checkreq() __attribute__((nothrow));
+};
+// func:acr_compl.checkreq..ReadFieldMaybe
+bool                 checkreq_ReadFieldMaybe(acr_compl::checkreq& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_compl::checkreq from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_compl.checkreq..ReadStrptrMaybe
+bool                 checkreq_ReadStrptrMaybe(acr_compl::checkreq &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_compl.checkreq..Init
+inline void          checkreq_Init(acr_compl::checkreq& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_compl.checkreq.String  printfmt:Tuple
+// func:acr_compl.checkreq..Print
+void                 checkreq_Print(acr_compl::checkreq& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace acr_compl { // gen:ns_curstext
 
 struct ctype_c_field_curs {// fcurs:acr_compl.FCtype.c_field/curs
     typedef acr_compl::FField ChildType;
     acr_compl::FField** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     ctype_c_field_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct ctype_c_floadtuples_curs {// fcurs:acr_compl.FCtype.c_floadtuples/curs
+    typedef acr_compl::FFloadtuples ChildType;
+    acr_compl::FFloadtuples** elems;
+    u64 n_elems;
+    u64 index;
+    ctype_c_floadtuples_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 
 struct _db_word_curs {// cursor
     typedef algo::cstring ChildType;
     algo::cstring* elems;
-    int n_elems;
-    int index;
+    i64 n_elems;
+    i64 index;
     _db_word_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -2268,27 +2682,11 @@ struct _db_bh_completion_curs {
 };
 
 
-struct _db_ns_curs {// cursor
-    typedef acr_compl::FNs ChildType;
-    acr_compl::FDb *parent;
-    i64 index;
-    _db_ns_curs(){ parent=NULL; index=0; }
-};
-
-
 struct _db_fconst_curs {// cursor
     typedef acr_compl::FFconst ChildType;
     acr_compl::FDb *parent;
     i64 index;
     _db_fconst_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_fcmdline_curs {// cursor
-    typedef acr_compl::FFcmdline ChildType;
-    acr_compl::FDb *parent;
-    i64 index;
-    _db_fcmdline_curs(){ parent=NULL; index=0; }
 };
 
 
@@ -2333,11 +2731,51 @@ struct _db_complsource_curs {// cursor
 };
 
 
+struct _db_finsertwhen_curs {// cursor
+    typedef acr_compl::FFinsertwhen ChildType;
+    acr_compl::FDb *parent;
+    i64 index;
+    _db_finsertwhen_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_substr_curs {// cursor
+    typedef acr_compl::FSubstr ChildType;
+    acr_compl::FDb *parent;
+    i64 index;
+    _db_substr_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ccmdline_curs {// cursor
+    typedef acr_compl::FCcmdline ChildType;
+    acr_compl::FDb *parent;
+    i64 index;
+    _db_ccmdline_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_cmd_curs {// cursor
+    typedef acr_compl::FCmd ChildType;
+    acr_compl::FDb *parent;
+    i64 index;
+    _db_cmd_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_floadtuples_curs {// cursor
+    typedef acr_compl::FFloadtuples ChildType;
+    acr_compl::FDb *parent;
+    i64 index;
+    _db_floadtuples_curs(){ parent=NULL; index=0; }
+};
+
+
 struct field_c_fconst_curs {// fcurs:acr_compl.FField.c_fconst/curs
     typedef acr_compl::FFconst ChildType;
     acr_compl::FFconst** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     field_c_fconst_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -2345,8 +2783,8 @@ struct field_c_fconst_curs {// fcurs:acr_compl.FField.c_fconst/curs
 struct field_c_falias_srcfield_curs {// fcurs:acr_compl.FField.c_falias_srcfield/curs
     typedef acr_compl::FFalias ChildType;
     acr_compl::FFalias** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     field_c_falias_srcfield_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -2368,4 +2806,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::trace &ro
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::FField &row);// cfmt:acr_compl.FField.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::FieldId &row);// cfmt:acr_compl.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::TableId &row);// cfmt:acr_compl.TableId.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::checkerr &row);// cfmt:acr_compl.checkerr.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::checkreq &row);// cfmt:acr_compl.checkreq.String
 }

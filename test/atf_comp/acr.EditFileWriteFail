@@ -1,0 +1,5 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir temp d && touch d/dmmeta && printf "dmmeta.dispsig  dispsig:xx.yy  signature:9\\n" > edited.ssim && EDITOR="cp edited.ssim" $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -e -print:N\''
+# eof bash
+bash -> acr.file_write  file:d/dmmeta/dispsig.ssim  err:"Not a directory"  comment:"output file could not be written"
+bash -> report.acr  n_select:0  n_insert:1  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+# exit bash code:1

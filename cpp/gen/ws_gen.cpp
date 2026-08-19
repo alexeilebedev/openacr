@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -32,89 +23,89 @@
 //#pragma endinclude
 namespace ws { // gen:ns_print_proto
     // func:ws.Frame.fin.ReadStrptrMaybe
-    inline static bool   fin_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   fin_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame.rsv1.ReadStrptrMaybe
-    inline static bool   rsv1_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv1_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame.rsv2.ReadStrptrMaybe
-    inline static bool   rsv2_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv2_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame.rsv3.ReadStrptrMaybe
-    inline static bool   rsv3_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv3_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame.opcode.ReadStrptrMaybe
-    inline static bool   opcode_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   opcode_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame.mask.ReadStrptrMaybe
-    inline static bool   mask_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   mask_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame.payload_len.ReadStrptrMaybe
-    inline static bool   payload_len_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   payload_len_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame16.fin.ReadStrptrMaybe
-    inline static bool   fin_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   fin_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame16.rsv1.ReadStrptrMaybe
-    inline static bool   rsv1_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv1_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame16.rsv2.ReadStrptrMaybe
-    inline static bool   rsv2_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv2_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame16.rsv3.ReadStrptrMaybe
-    inline static bool   rsv3_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv3_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame16.opcode.ReadStrptrMaybe
-    inline static bool   opcode_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   opcode_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame16.mask.ReadStrptrMaybe
-    inline static bool   mask_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   mask_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame16.payload_len.ReadStrptrMaybe
-    inline static bool   payload_len_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   payload_len_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame64.fin.ReadStrptrMaybe
-    inline static bool   fin_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   fin_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame64.rsv1.ReadStrptrMaybe
-    inline static bool   rsv1_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv1_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame64.rsv2.ReadStrptrMaybe
-    inline static bool   rsv2_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv2_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame64.rsv3.ReadStrptrMaybe
-    inline static bool   rsv3_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv3_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame64.opcode.ReadStrptrMaybe
-    inline static bool   opcode_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   opcode_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame64.mask.ReadStrptrMaybe
-    inline static bool   mask_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   mask_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.Frame64.payload_len.ReadStrptrMaybe
-    inline static bool   payload_len_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   payload_len_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked.fin.ReadStrptrMaybe
-    inline static bool   fin_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   fin_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked.rsv1.ReadStrptrMaybe
-    inline static bool   rsv1_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv1_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked.rsv2.ReadStrptrMaybe
-    inline static bool   rsv2_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv2_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked.rsv3.ReadStrptrMaybe
-    inline static bool   rsv3_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv3_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked.opcode.ReadStrptrMaybe
-    inline static bool   opcode_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   opcode_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked.mask.ReadStrptrMaybe
-    inline static bool   mask_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   mask_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked.payload_len.ReadStrptrMaybe
-    inline static bool   payload_len_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   payload_len_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked16.fin.ReadStrptrMaybe
-    inline static bool   fin_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   fin_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked16.rsv1.ReadStrptrMaybe
-    inline static bool   rsv1_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv1_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked16.rsv2.ReadStrptrMaybe
-    inline static bool   rsv2_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv2_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked16.rsv3.ReadStrptrMaybe
-    inline static bool   rsv3_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv3_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked16.opcode.ReadStrptrMaybe
-    inline static bool   opcode_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   opcode_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked16.mask.ReadStrptrMaybe
-    inline static bool   mask_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   mask_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked16.payload_len.ReadStrptrMaybe
-    inline static bool   payload_len_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   payload_len_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked64.fin.ReadStrptrMaybe
-    inline static bool   fin_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   fin_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked64.rsv1.ReadStrptrMaybe
-    inline static bool   rsv1_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv1_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked64.rsv2.ReadStrptrMaybe
-    inline static bool   rsv2_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv2_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked64.rsv3.ReadStrptrMaybe
-    inline static bool   rsv3_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   rsv3_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked64.opcode.ReadStrptrMaybe
-    inline static bool   opcode_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   opcode_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked64.mask.ReadStrptrMaybe
-    inline static bool   mask_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   mask_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws.FrameMasked64.payload_len.ReadStrptrMaybe
-    inline static bool   payload_len_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   payload_len_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ws...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
@@ -946,7 +937,7 @@ bool ws::FieldId_ReadStrptrMaybe(ws::FieldId &parent, algo::strptr in_str) {
 // --- ws.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ws.FieldId.String  printfmt:Raw
-void ws::FieldId_Print(ws::FieldId& row, algo::cstring& str) {
+void ws::FieldId_Print(ws::FieldId row, algo::cstring& str) {
     ws::value_Print(row, str);
 }
 
@@ -965,7 +956,7 @@ void ws::parent_CopyOut(ws::Frame &row, ws::FrameHeader &out) {
 }
 
 // --- ws.Frame.fin.ReadStrptrMaybe
-inline static bool ws::fin_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) {
+inline static bool ws::fin_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) {
     bool retval = true;
     bool fin_tmp;
     retval = bool_ReadStrptrMaybe(fin_tmp, in_str);
@@ -976,7 +967,7 @@ inline static bool ws::fin_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_st
 }
 
 // --- ws.Frame.rsv1.ReadStrptrMaybe
-inline static bool ws::rsv1_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) {
+inline static bool ws::rsv1_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv1_tmp;
     retval = bool_ReadStrptrMaybe(rsv1_tmp, in_str);
@@ -987,7 +978,7 @@ inline static bool ws::rsv1_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_s
 }
 
 // --- ws.Frame.rsv2.ReadStrptrMaybe
-inline static bool ws::rsv2_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) {
+inline static bool ws::rsv2_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv2_tmp;
     retval = bool_ReadStrptrMaybe(rsv2_tmp, in_str);
@@ -998,7 +989,7 @@ inline static bool ws::rsv2_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_s
 }
 
 // --- ws.Frame.rsv3.ReadStrptrMaybe
-inline static bool ws::rsv3_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) {
+inline static bool ws::rsv3_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv3_tmp;
     retval = bool_ReadStrptrMaybe(rsv3_tmp, in_str);
@@ -1009,7 +1000,7 @@ inline static bool ws::rsv3_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_s
 }
 
 // --- ws.Frame.opcode.ReadStrptrMaybe
-inline static bool ws::opcode_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) {
+inline static bool ws::opcode_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) {
     bool retval = true;
     ws::Opcode opcode_tmp;
     retval = ws::Opcode_ReadStrptrMaybe(opcode_tmp, in_str);
@@ -1020,7 +1011,7 @@ inline static bool ws::opcode_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in
 }
 
 // --- ws.Frame.mask.ReadStrptrMaybe
-inline static bool ws::mask_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) {
+inline static bool ws::mask_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) {
     bool retval = true;
     bool mask_tmp;
     retval = bool_ReadStrptrMaybe(mask_tmp, in_str);
@@ -1031,7 +1022,7 @@ inline static bool ws::mask_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_s
 }
 
 // --- ws.Frame.payload_len.ReadStrptrMaybe
-inline static bool ws::payload_len_ReadStrptrMaybe(ws::Frame &parent, algo::strptr in_str) {
+inline static bool ws::payload_len_ReadStrptrMaybe(ws::Frame& parent, algo::strptr in_str) {
     bool retval = true;
     u8 payload_len_tmp;
     retval = u8_ReadStrptrMaybe(payload_len_tmp, in_str);
@@ -1187,7 +1178,7 @@ void ws::parent_CopyOut(ws::Frame16 &row, ws::FrameHeader &out) {
 }
 
 // --- ws.Frame16.fin.ReadStrptrMaybe
-inline static bool ws::fin_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) {
+inline static bool ws::fin_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) {
     bool retval = true;
     bool fin_tmp;
     retval = bool_ReadStrptrMaybe(fin_tmp, in_str);
@@ -1198,7 +1189,7 @@ inline static bool ws::fin_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_
 }
 
 // --- ws.Frame16.rsv1.ReadStrptrMaybe
-inline static bool ws::rsv1_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) {
+inline static bool ws::rsv1_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv1_tmp;
     retval = bool_ReadStrptrMaybe(rsv1_tmp, in_str);
@@ -1209,7 +1200,7 @@ inline static bool ws::rsv1_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in
 }
 
 // --- ws.Frame16.rsv2.ReadStrptrMaybe
-inline static bool ws::rsv2_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) {
+inline static bool ws::rsv2_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv2_tmp;
     retval = bool_ReadStrptrMaybe(rsv2_tmp, in_str);
@@ -1220,7 +1211,7 @@ inline static bool ws::rsv2_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in
 }
 
 // --- ws.Frame16.rsv3.ReadStrptrMaybe
-inline static bool ws::rsv3_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) {
+inline static bool ws::rsv3_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv3_tmp;
     retval = bool_ReadStrptrMaybe(rsv3_tmp, in_str);
@@ -1231,7 +1222,7 @@ inline static bool ws::rsv3_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in
 }
 
 // --- ws.Frame16.opcode.ReadStrptrMaybe
-inline static bool ws::opcode_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) {
+inline static bool ws::opcode_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) {
     bool retval = true;
     ws::Opcode opcode_tmp;
     retval = ws::Opcode_ReadStrptrMaybe(opcode_tmp, in_str);
@@ -1242,7 +1233,7 @@ inline static bool ws::opcode_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr 
 }
 
 // --- ws.Frame16.mask.ReadStrptrMaybe
-inline static bool ws::mask_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) {
+inline static bool ws::mask_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) {
     bool retval = true;
     bool mask_tmp;
     retval = bool_ReadStrptrMaybe(mask_tmp, in_str);
@@ -1253,7 +1244,7 @@ inline static bool ws::mask_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in
 }
 
 // --- ws.Frame16.payload_len.ReadStrptrMaybe
-inline static bool ws::payload_len_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) {
+inline static bool ws::payload_len_ReadStrptrMaybe(ws::Frame16& parent, algo::strptr in_str) {
     bool retval = true;
     u8 payload_len_tmp;
     retval = u8_ReadStrptrMaybe(payload_len_tmp, in_str);
@@ -1363,7 +1354,7 @@ bool ws::Frame16_ReadStrptrMaybe(ws::Frame16 &parent, algo::strptr in_str) {
 void ws::Frame16_Init(ws::Frame16& parent) {
     parent.byte0 = u8(0);
     parent.byte1 = u8(126);
-    parent.ext_payload_len_be = htobe16(ssizeof(parent) + (-4)); // write big-endian value to memory
+    parent.ext_payload_len_be = htobe16(ssizeof(parent)-4); // write big-endian value to memory
 }
 
 // --- ws.Frame16..Print
@@ -1413,7 +1404,7 @@ void ws::parent_CopyOut(ws::Frame64 &row, ws::FrameHeader &out) {
 }
 
 // --- ws.Frame64.fin.ReadStrptrMaybe
-inline static bool ws::fin_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) {
+inline static bool ws::fin_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) {
     bool retval = true;
     bool fin_tmp;
     retval = bool_ReadStrptrMaybe(fin_tmp, in_str);
@@ -1424,7 +1415,7 @@ inline static bool ws::fin_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_
 }
 
 // --- ws.Frame64.rsv1.ReadStrptrMaybe
-inline static bool ws::rsv1_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) {
+inline static bool ws::rsv1_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv1_tmp;
     retval = bool_ReadStrptrMaybe(rsv1_tmp, in_str);
@@ -1435,7 +1426,7 @@ inline static bool ws::rsv1_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in
 }
 
 // --- ws.Frame64.rsv2.ReadStrptrMaybe
-inline static bool ws::rsv2_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) {
+inline static bool ws::rsv2_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv2_tmp;
     retval = bool_ReadStrptrMaybe(rsv2_tmp, in_str);
@@ -1446,7 +1437,7 @@ inline static bool ws::rsv2_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in
 }
 
 // --- ws.Frame64.rsv3.ReadStrptrMaybe
-inline static bool ws::rsv3_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) {
+inline static bool ws::rsv3_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv3_tmp;
     retval = bool_ReadStrptrMaybe(rsv3_tmp, in_str);
@@ -1457,7 +1448,7 @@ inline static bool ws::rsv3_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in
 }
 
 // --- ws.Frame64.opcode.ReadStrptrMaybe
-inline static bool ws::opcode_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) {
+inline static bool ws::opcode_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) {
     bool retval = true;
     ws::Opcode opcode_tmp;
     retval = ws::Opcode_ReadStrptrMaybe(opcode_tmp, in_str);
@@ -1468,7 +1459,7 @@ inline static bool ws::opcode_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr 
 }
 
 // --- ws.Frame64.mask.ReadStrptrMaybe
-inline static bool ws::mask_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) {
+inline static bool ws::mask_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) {
     bool retval = true;
     bool mask_tmp;
     retval = bool_ReadStrptrMaybe(mask_tmp, in_str);
@@ -1479,7 +1470,7 @@ inline static bool ws::mask_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in
 }
 
 // --- ws.Frame64.payload_len.ReadStrptrMaybe
-inline static bool ws::payload_len_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) {
+inline static bool ws::payload_len_ReadStrptrMaybe(ws::Frame64& parent, algo::strptr in_str) {
     bool retval = true;
     u8 payload_len_tmp;
     retval = u8_ReadStrptrMaybe(payload_len_tmp, in_str);
@@ -1589,7 +1580,7 @@ bool ws::Frame64_ReadStrptrMaybe(ws::Frame64 &parent, algo::strptr in_str) {
 void ws::Frame64_Init(ws::Frame64& parent) {
     parent.byte0 = u8(0);
     parent.byte1 = u8(127);
-    parent.ext_payload_len_be = htobe64(ssizeof(parent) + (-10)); // write big-endian value to memory
+    parent.ext_payload_len_be = htobe64(ssizeof(parent)-10); // write big-endian value to memory
 }
 
 // --- ws.Frame64..Print
@@ -1723,7 +1714,7 @@ void ws::parent_CopyOut(ws::FrameMasked &row, ws::FrameHeader &out) {
 }
 
 // --- ws.FrameMasked.fin.ReadStrptrMaybe
-inline static bool ws::fin_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) {
+inline static bool ws::fin_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) {
     bool retval = true;
     bool fin_tmp;
     retval = bool_ReadStrptrMaybe(fin_tmp, in_str);
@@ -1734,7 +1725,7 @@ inline static bool ws::fin_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr
 }
 
 // --- ws.FrameMasked.rsv1.ReadStrptrMaybe
-inline static bool ws::rsv1_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) {
+inline static bool ws::rsv1_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv1_tmp;
     retval = bool_ReadStrptrMaybe(rsv1_tmp, in_str);
@@ -1745,7 +1736,7 @@ inline static bool ws::rsv1_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strpt
 }
 
 // --- ws.FrameMasked.rsv2.ReadStrptrMaybe
-inline static bool ws::rsv2_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) {
+inline static bool ws::rsv2_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv2_tmp;
     retval = bool_ReadStrptrMaybe(rsv2_tmp, in_str);
@@ -1756,7 +1747,7 @@ inline static bool ws::rsv2_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strpt
 }
 
 // --- ws.FrameMasked.rsv3.ReadStrptrMaybe
-inline static bool ws::rsv3_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) {
+inline static bool ws::rsv3_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv3_tmp;
     retval = bool_ReadStrptrMaybe(rsv3_tmp, in_str);
@@ -1767,7 +1758,7 @@ inline static bool ws::rsv3_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strpt
 }
 
 // --- ws.FrameMasked.opcode.ReadStrptrMaybe
-inline static bool ws::opcode_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) {
+inline static bool ws::opcode_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) {
     bool retval = true;
     ws::Opcode opcode_tmp;
     retval = ws::Opcode_ReadStrptrMaybe(opcode_tmp, in_str);
@@ -1778,7 +1769,7 @@ inline static bool ws::opcode_ReadStrptrMaybe(ws::FrameMasked &parent, algo::str
 }
 
 // --- ws.FrameMasked.mask.ReadStrptrMaybe
-inline static bool ws::mask_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) {
+inline static bool ws::mask_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) {
     bool retval = true;
     bool mask_tmp;
     retval = bool_ReadStrptrMaybe(mask_tmp, in_str);
@@ -1789,7 +1780,7 @@ inline static bool ws::mask_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strpt
 }
 
 // --- ws.FrameMasked.payload_len.ReadStrptrMaybe
-inline static bool ws::payload_len_ReadStrptrMaybe(ws::FrameMasked &parent, algo::strptr in_str) {
+inline static bool ws::payload_len_ReadStrptrMaybe(ws::FrameMasked& parent, algo::strptr in_str) {
     bool retval = true;
     u8 payload_len_tmp;
     retval = u8_ReadStrptrMaybe(payload_len_tmp, in_str);
@@ -1952,7 +1943,7 @@ void ws::parent_CopyOut(ws::FrameMasked16 &row, ws::FrameHeader &out) {
 }
 
 // --- ws.FrameMasked16.fin.ReadStrptrMaybe
-inline static bool ws::fin_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) {
+inline static bool ws::fin_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) {
     bool retval = true;
     bool fin_tmp;
     retval = bool_ReadStrptrMaybe(fin_tmp, in_str);
@@ -1963,7 +1954,7 @@ inline static bool ws::fin_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strp
 }
 
 // --- ws.FrameMasked16.rsv1.ReadStrptrMaybe
-inline static bool ws::rsv1_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) {
+inline static bool ws::rsv1_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv1_tmp;
     retval = bool_ReadStrptrMaybe(rsv1_tmp, in_str);
@@ -1974,7 +1965,7 @@ inline static bool ws::rsv1_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::str
 }
 
 // --- ws.FrameMasked16.rsv2.ReadStrptrMaybe
-inline static bool ws::rsv2_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) {
+inline static bool ws::rsv2_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv2_tmp;
     retval = bool_ReadStrptrMaybe(rsv2_tmp, in_str);
@@ -1985,7 +1976,7 @@ inline static bool ws::rsv2_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::str
 }
 
 // --- ws.FrameMasked16.rsv3.ReadStrptrMaybe
-inline static bool ws::rsv3_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) {
+inline static bool ws::rsv3_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv3_tmp;
     retval = bool_ReadStrptrMaybe(rsv3_tmp, in_str);
@@ -1996,7 +1987,7 @@ inline static bool ws::rsv3_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::str
 }
 
 // --- ws.FrameMasked16.opcode.ReadStrptrMaybe
-inline static bool ws::opcode_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) {
+inline static bool ws::opcode_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) {
     bool retval = true;
     ws::Opcode opcode_tmp;
     retval = ws::Opcode_ReadStrptrMaybe(opcode_tmp, in_str);
@@ -2007,7 +1998,7 @@ inline static bool ws::opcode_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::s
 }
 
 // --- ws.FrameMasked16.mask.ReadStrptrMaybe
-inline static bool ws::mask_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) {
+inline static bool ws::mask_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) {
     bool retval = true;
     bool mask_tmp;
     retval = bool_ReadStrptrMaybe(mask_tmp, in_str);
@@ -2018,7 +2009,7 @@ inline static bool ws::mask_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::str
 }
 
 // --- ws.FrameMasked16.payload_len.ReadStrptrMaybe
-inline static bool ws::payload_len_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr in_str) {
+inline static bool ws::payload_len_ReadStrptrMaybe(ws::FrameMasked16& parent, algo::strptr in_str) {
     bool retval = true;
     u8 payload_len_tmp;
     retval = u8_ReadStrptrMaybe(payload_len_tmp, in_str);
@@ -2131,7 +2122,7 @@ bool ws::FrameMasked16_ReadStrptrMaybe(ws::FrameMasked16 &parent, algo::strptr i
 void ws::FrameMasked16_Init(ws::FrameMasked16& parent) {
     parent.byte0 = u8(0);
     parent.byte1 = u8(254);
-    parent.ext_payload_len_be = htobe16(ssizeof(parent) + (-8)); // write big-endian value to memory
+    parent.ext_payload_len_be = htobe16(ssizeof(parent)-8); // write big-endian value to memory
     parent.masking_key = u32(0);
 }
 
@@ -2185,7 +2176,7 @@ void ws::parent_CopyOut(ws::FrameMasked64 &row, ws::FrameHeader &out) {
 }
 
 // --- ws.FrameMasked64.fin.ReadStrptrMaybe
-inline static bool ws::fin_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) {
+inline static bool ws::fin_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) {
     bool retval = true;
     bool fin_tmp;
     retval = bool_ReadStrptrMaybe(fin_tmp, in_str);
@@ -2196,7 +2187,7 @@ inline static bool ws::fin_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strp
 }
 
 // --- ws.FrameMasked64.rsv1.ReadStrptrMaybe
-inline static bool ws::rsv1_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) {
+inline static bool ws::rsv1_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv1_tmp;
     retval = bool_ReadStrptrMaybe(rsv1_tmp, in_str);
@@ -2207,7 +2198,7 @@ inline static bool ws::rsv1_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::str
 }
 
 // --- ws.FrameMasked64.rsv2.ReadStrptrMaybe
-inline static bool ws::rsv2_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) {
+inline static bool ws::rsv2_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv2_tmp;
     retval = bool_ReadStrptrMaybe(rsv2_tmp, in_str);
@@ -2218,7 +2209,7 @@ inline static bool ws::rsv2_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::str
 }
 
 // --- ws.FrameMasked64.rsv3.ReadStrptrMaybe
-inline static bool ws::rsv3_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) {
+inline static bool ws::rsv3_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) {
     bool retval = true;
     bool rsv3_tmp;
     retval = bool_ReadStrptrMaybe(rsv3_tmp, in_str);
@@ -2229,7 +2220,7 @@ inline static bool ws::rsv3_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::str
 }
 
 // --- ws.FrameMasked64.opcode.ReadStrptrMaybe
-inline static bool ws::opcode_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) {
+inline static bool ws::opcode_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) {
     bool retval = true;
     ws::Opcode opcode_tmp;
     retval = ws::Opcode_ReadStrptrMaybe(opcode_tmp, in_str);
@@ -2240,7 +2231,7 @@ inline static bool ws::opcode_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::s
 }
 
 // --- ws.FrameMasked64.mask.ReadStrptrMaybe
-inline static bool ws::mask_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) {
+inline static bool ws::mask_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) {
     bool retval = true;
     bool mask_tmp;
     retval = bool_ReadStrptrMaybe(mask_tmp, in_str);
@@ -2251,7 +2242,7 @@ inline static bool ws::mask_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::str
 }
 
 // --- ws.FrameMasked64.payload_len.ReadStrptrMaybe
-inline static bool ws::payload_len_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr in_str) {
+inline static bool ws::payload_len_ReadStrptrMaybe(ws::FrameMasked64& parent, algo::strptr in_str) {
     bool retval = true;
     u8 payload_len_tmp;
     retval = u8_ReadStrptrMaybe(payload_len_tmp, in_str);
@@ -2364,7 +2355,7 @@ bool ws::FrameMasked64_ReadStrptrMaybe(ws::FrameMasked64 &parent, algo::strptr i
 void ws::FrameMasked64_Init(ws::FrameMasked64& parent) {
     parent.byte0 = u8(0);
     parent.byte1 = u8(255);
-    parent.ext_payload_len_be = htobe64(ssizeof(parent) + (-14)); // write big-endian value to memory
+    parent.ext_payload_len_be = htobe64(ssizeof(parent)-14); // write big-endian value to memory
     parent.masking_key = u32(0);
 }
 
@@ -2793,6 +2784,7 @@ ws::FrameHeaderMsgsCase ws::FrameHeaderMsgs_ReadStrptr(algo::strptr str, algo::B
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = Frame16_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65539); // only a total the length field can store round-trips
             ext_payload_len_Set(*ctype, u16(len-4));
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
@@ -2819,6 +2811,7 @@ ws::FrameHeaderMsgsCase ws::FrameHeaderMsgs_ReadStrptr(algo::strptr str, algo::B
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = FrameMasked16_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65543); // only a total the length field can store round-trips
             ext_payload_len_Set(*ctype, u16(len-8));
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;

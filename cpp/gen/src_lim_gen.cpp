@@ -43,28 +43,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 src_lim::FDb    src_lim::_db;     // dependency found via dev.targdep
 
-namespace src_lim {
-const char *src_lim_help =
-"src_lim: Enforce line length, function length, and indentation limits\n"
-"Usage: src_lim [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -linelim                    Check various file limits (line length, function length, etc)\n"
-"    -srcfile    regx    \"%\"     Filter for source files to process\n"
-"    -strayfile                  Check for unregistered source files\n"
-"    -capture                    Generate new dev.linelim records\n"
-"    -write                      Update ssim database (with -capture)\n"
-"    -badchar                    Check for bad chars in source files\n"
-"    -badline    regx    \"\"      Check badline (acr badline)\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace src_lim
 namespace src_lim { // gen:ns_print_proto
     // func:src_lim.FDb.include.InputMaybe
     static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
@@ -95,7 +73,7 @@ void src_lim::badline_CopyOut(src_lim::FBadline &row, dev::Badline &out) {
     out.badline = row.badline;
     out.expr = row.expr;
     out.targsrc_regx = row.targsrc_regx;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_lim.FBadline.base.CopyIn
@@ -162,7 +140,7 @@ void* src_lim::include_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_lim::FInclude*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.include_lary[bsr];
         if (!lev) {
             lev=(src_lim::FInclude*)algo_lib::malloc_AllocMem(sizeof(src_lim::FInclude) * (u64(1)<<bsr));
@@ -171,7 +149,7 @@ void* src_lim::include_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.include_n = i32(new_nelems);
+        _db.include_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -184,7 +162,7 @@ void src_lim::include_RemoveLast() {
     if (n > 0) {
         n -= 1;
         include_qFind(u64(n)).~FInclude();
-        _db.include_n = i32(n);
+        _db.include_n = i64(n);
     }
 }
 
@@ -250,7 +228,7 @@ void* src_lim::linelim_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_lim::FLinelim*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.linelim_lary[bsr];
         if (!lev) {
             lev=(src_lim::FLinelim*)algo_lib::malloc_AllocMem(sizeof(src_lim::FLinelim) * (u64(1)<<bsr));
@@ -259,7 +237,7 @@ void* src_lim::linelim_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.linelim_n = i32(new_nelems);
+        _db.linelim_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -272,7 +250,7 @@ void src_lim::linelim_RemoveLast() {
     if (n > 0) {
         n -= 1;
         linelim_qFind(u64(n)).~FLinelim();
-        _db.linelim_n = i32(n);
+        _db.linelim_n = i64(n);
     }
 }
 
@@ -307,99 +285,16 @@ bool src_lim::linelim_XrefMaybe(src_lim::FLinelim &row) {
 }
 
 // --- src_lim.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     src_lim.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of src_lim.FDb.cmdline (and any base command line)
+// via src_lim_ReadArgv; then apply -help/-version and load floadtuples input.
 void src_lim::ReadArgv() {
     command::src_lim &cmd = src_lim::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::src_lim_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"src_lim: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "src_lim: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::src_lim_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"src_lim: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::src_lim_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -422,9 +317,7 @@ void src_lim::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:src_lim.FDb.cmdline
+    // dmmeta.floadtuples:command.src_lim.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!src_lim::LoadTuplesMaybe(cmd.in,true)) {
@@ -437,7 +330,7 @@ void src_lim::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(src_lim_help);
+        prlog(command::src_lim_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -464,7 +357,13 @@ void src_lim::Step() {
 // --- src_lim.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void src_lim::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("src_lim", src_lim::InsertStrptrMaybe, NULL, src_lim::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "src_lim";
+    row.InsertStrptrMaybe  = src_lim::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = src_lim::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = src_lim::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "src_lim.trace";
@@ -478,7 +377,7 @@ static void src_lim::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_lim.Input'  signature:'224e271405f3446891ae5d77a84627cf985aff9f'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_lim.Input'  signature:'9e513c2367288902b5b540ab22363dcd67609c11'");
 }
 
 // --- src_lim.FDb._db.InsertStrptrMaybe
@@ -609,6 +508,51 @@ void src_lim::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- src_lim.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool src_lim::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    src_lim::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case src_lim_TableId_dev_Include: { // finput:src_lim.FDb.include
+            // finput src_lim.FDb.include: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_lim_TableId_dev_Linelim: { // finput:src_lim.FDb.linelim
+            // finput src_lim.FDb.linelim: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_lim_TableId_dev_Targsrc: { // finput:src_lim.FDb.targsrc
+            // finput src_lim.FDb.targsrc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_lim_TableId_dev_Gitfile: { // finput:src_lim.FDb.gitfile
+            // finput src_lim.FDb.gitfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_lim_TableId_dev_Badline: { // finput:src_lim.FDb.badline
+            // finput src_lim.FDb.badline: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- src_lim.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -663,7 +607,7 @@ void* src_lim::targsrc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_lim::FTargsrc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targsrc_lary[bsr];
         if (!lev) {
             lev=(src_lim::FTargsrc*)algo_lib::malloc_AllocMem(sizeof(src_lim::FTargsrc) * (u64(1)<<bsr));
@@ -672,7 +616,7 @@ void* src_lim::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = i32(new_nelems);
+        _db.targsrc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -685,7 +629,7 @@ void src_lim::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = i32(n);
+        _db.targsrc_n = i64(n);
     }
 }
 
@@ -769,7 +713,7 @@ void* src_lim::gitfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_lim::FGitfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.gitfile_lary[bsr];
         if (!lev) {
             lev=(src_lim::FGitfile*)algo_lib::malloc_AllocMem(sizeof(src_lim::FGitfile) * (u64(1)<<bsr));
@@ -778,7 +722,7 @@ void* src_lim::gitfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.gitfile_n = i32(new_nelems);
+        _db.gitfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -791,7 +735,7 @@ void src_lim::gitfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         gitfile_qFind(u64(n)).~FGitfile();
-        _db.gitfile_n = i32(n);
+        _db.gitfile_n = i64(n);
     }
 }
 
@@ -990,7 +934,7 @@ void* src_lim::badline_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_lim::FBadline*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.badline_lary[bsr];
         if (!lev) {
             lev=(src_lim::FBadline*)algo_lib::malloc_AllocMem(sizeof(src_lim::FBadline) * (u64(1)<<bsr));
@@ -999,7 +943,7 @@ void* src_lim::badline_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.badline_n = i32(new_nelems);
+        _db.badline_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1011,7 +955,7 @@ void src_lim::badline_RemoveAll() {
     for (u64 n = _db.badline_n; n>0; ) {
         n--;
         badline_qFind(u64(n)).~FBadline(); // destroy last element
-        _db.badline_n = i32(n);
+        _db.badline_n = i64(n);
     }
 }
 
@@ -1022,7 +966,7 @@ void src_lim::badline_RemoveLast() {
     if (n > 0) {
         n -= 1;
         badline_qFind(u64(n)).~FBadline();
-        _db.badline_n = i32(n);
+        _db.badline_n = i64(n);
     }
 }
 
@@ -1160,9 +1104,8 @@ void src_lim::gitfile_CopyIn(src_lim::FGitfile &row, dev::Gitfile &in) {
 }
 
 // --- src_lim.FGitfile.ext.Get
-algo::Smallstr50 src_lim::ext_Get(src_lim::FGitfile& gitfile) {
-    algo::Smallstr50 ret(algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR"));
-    return ret;
+algo::strptr src_lim::ext_Get(src_lim::FGitfile& gitfile) {
+    return algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR");
 }
 
 // --- src_lim.FGitfile.zd_include.Insert
@@ -1237,6 +1180,24 @@ src_lim::FInclude* src_lim::zd_include_RemoveFirst(src_lim::FGitfile& gitfile) {
     return row;
 }
 
+// --- src_lim.FGitfile.zd_include.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void src_lim::zd_include_InsertBefore(src_lim::FGitfile& gitfile, src_lim::FInclude& row, src_lim::FInclude* before) {
+    if (!gitfile_zd_include_InLlistQ(row) && &row != before) {
+        src_lim::FInclude* next = before;
+        src_lim::FInclude* prev = next ? next->gitfile_zd_include_prev : gitfile.zd_include_tail;
+        row.gitfile_zd_include_next = next;
+        row.gitfile_zd_include_prev = prev;
+        src_lim::FInclude **prev_link_a = &prev->gitfile_zd_include_next;
+        src_lim::FInclude **prev_link_b = &gitfile.zd_include_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        src_lim::FInclude **next_link_a = &next->gitfile_zd_include_prev;
+        src_lim::FInclude **next_link_b = &gitfile.zd_include_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        gitfile.zd_include_n++;
+    }
+}
+
 // --- src_lim.FGitfile..Uninit
 void src_lim::FGitfile_Uninit(src_lim::FGitfile& gitfile) {
     src_lim::FGitfile &row = gitfile; (void)row;
@@ -1248,7 +1209,7 @@ void src_lim::FGitfile_Uninit(src_lim::FGitfile& gitfile) {
 void src_lim::include_CopyOut(src_lim::FInclude &row, dev::Include &out) {
     out.include = row.include;
     out.sys = row.sys;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_lim.FInclude.base.CopyIn
@@ -1260,15 +1221,13 @@ void src_lim::include_CopyIn(src_lim::FInclude &row, dev::Include &in) {
 }
 
 // --- src_lim.FInclude.srcfile.Get
-algo::Smallstr200 src_lim::srcfile_Get(src_lim::FInclude& include) {
-    algo::Smallstr200 ret(algo::Pathcomp(include.include, ":LL"));
-    return ret;
+algo::strptr src_lim::srcfile_Get(src_lim::FInclude& include) {
+    return algo::Pathcomp(include.include, ":LL");
 }
 
 // --- src_lim.FInclude.filename.Get
-algo::Smallstr200 src_lim::filename_Get(src_lim::FInclude& include) {
-    algo::Smallstr200 ret(algo::Pathcomp(include.include, ":LR"));
-    return ret;
+algo::strptr src_lim::filename_Get(src_lim::FInclude& include) {
+    return algo::Pathcomp(include.include, ":LR");
 }
 
 // --- src_lim.FInclude..Uninit
@@ -1321,7 +1280,7 @@ void src_lim::FLinelim_Uninit(src_lim::FLinelim& linelim) {
 // Copy fields out of row
 void src_lim::targsrc_CopyOut(src_lim::FTargsrc &row, dev::Targsrc &out) {
     out.targsrc = row.targsrc;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_lim.FTargsrc.base.CopyIn
@@ -1332,21 +1291,18 @@ void src_lim::targsrc_CopyIn(src_lim::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- src_lim.FTargsrc.target.Get
-algo::Smallstr16 src_lim::target_Get(src_lim::FTargsrc& targsrc) {
-    algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
-    return ret;
+algo::strptr src_lim::target_Get(src_lim::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LL");
 }
 
 // --- src_lim.FTargsrc.src.Get
-algo::Smallstr200 src_lim::src_Get(src_lim::FTargsrc& targsrc) {
-    algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
-    return ret;
+algo::strptr src_lim::src_Get(src_lim::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LR");
 }
 
 // --- src_lim.FTargsrc.ext.Get
-algo::Smallstr10 src_lim::ext_Get(src_lim::FTargsrc& targsrc) {
-    algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
-    return ret;
+algo::strptr src_lim::ext_Get(src_lim::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, ".RR");
 }
 
 // --- src_lim.FTargsrc..Uninit
@@ -1430,7 +1386,7 @@ bool src_lim::FieldId_ReadStrptrMaybe(src_lim::FieldId &parent, algo::strptr in_
 // --- src_lim.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:src_lim.FieldId.String  printfmt:Raw
-void src_lim::FieldId_Print(src_lim::FieldId& row, algo::cstring& str) {
+void src_lim::FieldId_Print(src_lim::FieldId row, algo::cstring& str) {
     src_lim::value_Print(row, str);
 }
 
@@ -1547,7 +1503,7 @@ bool src_lim::TableId_ReadStrptrMaybe(src_lim::TableId &parent, algo::strptr in_
 // --- src_lim.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:src_lim.TableId.String  printfmt:Raw
-void src_lim::TableId_Print(src_lim::TableId& row, algo::cstring& str) {
+void src_lim::TableId_Print(src_lim::TableId row, algo::cstring& str) {
     src_lim::value_Print(row, str);
 }
 

@@ -6,5 +6,5 @@ acr <- dmmeta.field  field:ns1.c.d arg:i32 reftype:Val comment:"Will be deleted 
 acr -> acr.delete  dmmeta.ns  ns:ns1  nstype:exe  license:GPL  comment:""
 acr -> acr.delete  dmmeta.ctype  ctype:ns1.c  comment:"Will be deleted as well"
 acr -> acr.delete  dmmeta.field  field:ns1.c.d  arg:i32  reftype:Val  dflt:""  comment:"Will be deleted as well"
-acr -> report.acr  n_select:3  n_insert:0  n_delete:3  n_ignore:0  n_update:0  n_file_mod:0
+acr -> report.acr  n_select:3  n_insert:0  n_delete:3  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 # exit acr code:0

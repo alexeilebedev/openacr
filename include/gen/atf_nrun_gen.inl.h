@@ -59,7 +59,7 @@ inline atf_nrun::FEntry* atf_nrun::fentry_Last() {
 
 // --- atf_nrun.FDb.fentry.N
 // Return number of items in the pool
-inline i32 atf_nrun::fentry_N() {
+inline i64 atf_nrun::fentry_N() {
     return _db.fentry_n;
 }
 

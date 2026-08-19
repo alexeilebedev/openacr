@@ -3,8 +3,8 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Test coverage](#test-coverage)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Code coverage](#code-coverage)<br/>
@@ -20,54 +20,23 @@
 &nbsp;&nbsp;&bull;&nbsp;  [Merging data from multiple runs](#merging-data-from-multiple-runs)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Loading ssim coverage data from prevous run](#loading-ssim-coverage-data-from-prevous-run)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Checking and capturing coverage](#checking-and-capturing-coverage)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Code a kill test reaches scores zero](#code-a-kill-test-reaches-scores-zero)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Viewing coverage summary](#viewing-coverage-summary)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Output files](#output-files)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [atf_cov - Internals](/txt/exe/atf_cov/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Syntax
-<a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
-```
-atf_cov: Line coverage
-Usage: atf_cov [options]
-    OPTION        TYPE    DFLT                              COMMENT
-    -in           string  "data"                            Input directory or filename, - for stdin
-    -covdir       string  "temp/covdata"                    Output directory to save coverage data
-    -logfile      string  ""                                Log file
-    -runcmd       string  ""                                command to run
-    -exclude      regx    "(extern|include/gen|cpp/gen)/%"  Exclude gitfiles (external, generated)
-    -mergepath    string  ""                                colon-separated dir list to load .cov.ssim files from
-    -gcov                                                   run gcov
-    -ssim                                                   write out ssim files
-    -report                                                 write out all reports
-    -capture                                                Write coverage information into tgtcov table
-    -xmlpretty                                              Generate pretty-formatted XML
-    -summary              Y                                 Show summary figures
-    -check                                                  Check coverage information against tgtcov table
-    -incremental                                            Keep *.gcda files from previous run
-    -verbose      flag                                      Verbosity level (0..255); alias -v; cumulative
-    -debug        flag                                      Debug level (0..255); alias -d; cumulative
-    -help                                                   Print help and exit; alias -h
-    -version                                                Print version and exit
-    -signature                                              Show signatures and exit; alias -sig
-
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+### Internals
+<a href="#internals"></a>
+&#128196; [atf_cov - Internals](/txt/gen/atf_cov/atf_cov.md)<br/>
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 Atf_cov is a coverage measurement tool, which is aimed at measuring test coverage for source code lines.
 It runs instrumented executable, gathers and processes coverage data, and produces coverage reports.
 Atf_cov provides a utility for GNU Gcov-based code coverage measurement.
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
 
 ### Test coverage
 <a href="#test-coverage"></a>
@@ -277,7 +246,7 @@ dmmeta.field  field:dev.Covtarget.exe        arg:u32           reftype:Val   dfl
 dmmeta.field  field:dev.Covtarget.exer       arg:algo.U32Dec2  reftype:Val   dflt:""  comment:"Percentage of executable lines"
 dmmeta.field  field:dev.Covtarget.hit        arg:u32           reftype:Val   dflt:""  comment:"Exercised lines"
 dmmeta.field  field:dev.Covtarget.cov        arg:algo.U32Dec2  reftype:Val   dflt:""  comment:"Line coverage"
-report.acr  n_select:7  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+report.acr  n_select:7  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 For total figures hard-coded keyword 'TOTAL' is used as target name.
 
@@ -292,7 +261,7 @@ dmmeta.field  field:dev.Covfile.exe      arg:u32           reftype:Val   dflt:""
 dmmeta.field  field:dev.Covfile.exer     arg:algo.U32Dec2  reftype:Val   dflt:""  comment:"Percentage of executable lines"
 dmmeta.field  field:dev.Covfile.hit      arg:u32           reftype:Val   dflt:""  comment:"Exercised lines"
 dmmeta.field  field:dev.Covfile.cov      arg:algo.U32Dec2  reftype:Val   dflt:""  comment:"Line coverage"
-report.acr  n_select:7  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+report.acr  n_select:7  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
 Txt format is human-friendly tabulated version of ssim data.
@@ -320,7 +289,7 @@ dmmeta.field  field:dev.Covline.line     arg:u32           reftype:Val   dflt:""
 dmmeta.field  field:dev.Covline.flag     arg:char          reftype:Val   dflt:"'N'"  comment:Flag
 dmmeta.field  field:dev.Covline.hit      arg:u32           reftype:Val   dflt:""     comment:"Number of hits"
 dmmeta.field  field:dev.Covline.text     arg:algo.cstring  reftype:Val   dflt:""     comment:"Line text"
-report.acr  n_select:6  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+report.acr  n_select:6  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
 Key of this table is colon-separated pair (source file, source line).
@@ -331,7 +300,7 @@ inline-command: acr dmmeta.fconst:dev.Covline.%
 dmmeta.fconst  fconst:dev.Covline.flag/N  value:"'N'"  comment:Non-executable
 dmmeta.fconst  fconst:dev.Covline.flag/E  value:"'E'"  comment:Executable
 dmmeta.fconst  fconst:dev.Covline.flag/P  value:"'P'"  comment:"Executable, partially executed"
-report.acr  n_select:3  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+report.acr  n_select:3  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
 ### Merging data from multiple runs
@@ -380,6 +349,29 @@ atf_cov -check
 
 If measured coverage falls lower than saved one, error message is displayed, and check fails.
 
+### Code a kill test reaches scores zero
+<a href="#code-a-kill-test-reaches-scores-zero"></a>
+
+`lib_x2cli` holds its floor at 45.71 and `samp_meng` at 51.93, well under
+their neighbours, and neither is neglected: the code under the floor is the
+checkpoint sequence, and the tests that exercise it kill the process.
+
+An instrumented executable accumulates its counters in memory and writes the
+`.gcda` file as it exits.  `SIGKILL` gives it no exit to write from, so
+everything the run executed is lost — not attributed to the wrong line,
+simply absent.  The checkpoint sequence exists for the case where a client
+dies without warning, so the only test that can drive it is one that kills
+the client, and that test contributes nothing to the measurement by
+construction.
+
+Two consequences are worth knowing before reading such a figure.  A floor
+this far below its neighbours is a statement about how the code is reached,
+not about whether it is tested, and the `dev.tgtcov` row's comment says which
+of the two it is — read it before treating the gap as work.  And covering
+that code by raising the figure is not available: a test that lets the
+process exit cleanly is a different test, exercising the ordinary shutdown
+path rather than the recovery the floor is low for.
+
 ### Viewing coverage summary
 <a href="#viewing-coverage-summary"></a>
 
@@ -401,8 +393,6 @@ Atf_cov generates output files on `-covdata` directory;
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -445,11 +435,8 @@ Atf_cov generates output files on `-covdata` directory;
 #### -incremental -- Keep *.gcda files from previous run
 <a href="#-incremental"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `atf_cov` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
@@ -461,6 +448,3 @@ Atf_cov generates output files on `-covdata` directory;
 |[dev.target](/txt/ssimdb/dev/target.md)|Build target|
 |[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
 |[dev.tgtcov](/txt/ssimdb/dev/tgtcov.md)|Captured line coverate information by target|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

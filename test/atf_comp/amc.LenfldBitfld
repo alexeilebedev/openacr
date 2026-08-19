@@ -1,0 +1,23 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.nsjs  ns:algo_lib  typescript:Y  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.MsgIndiv  comment:""
+amc <- dmmeta.jstype  ctype:algo_lib.MsgIndiv  comment:""
+amc <- dmmeta.pack  ctype:algo_lib.MsgIndiv  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgIndiv.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgIndiv.len  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.MsgIndiv.len  offset:8  width:24  srcfield:algo_lib.MsgIndiv.word  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgIndiv.len  extra:0  scale:8
+amc <- dmmeta.ctype  ctype:algo_lib.MsgRange  comment:""
+amc <- dmmeta.jstype  ctype:algo_lib.MsgRange  comment:""
+amc <- dmmeta.pack  ctype:algo_lib.MsgRange  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgRange.word  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgRange.len  arg:u8  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.MsgRange.len  offset:0  width:8  srcfield:algo_lib.MsgRange.word  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgRange.len  extra:252  scale:1
+# eof amc
+# exit amc code:0

@@ -42,7 +42,7 @@ static void CsvPrint(algo::aryptr<cstring> in, cstring &out) {
         if (ssim2csv::_db.cmdline.ignoreQuote) {
             out<<ls<<tok;
         } else {
-            out<<ls<<"'"<<tok<<"'";
+            out<<ls<<"'"<<tok<<"'"; // ignore:hand_quote
         }
     }
     out<<eol;

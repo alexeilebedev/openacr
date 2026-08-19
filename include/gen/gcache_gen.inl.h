@@ -23,11 +23,42 @@
 
 
 #pragma once
+#include "include/gen/algo_gen.inl.h"
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
+
+// --- gcache.FCachefile.mtime.Lt
+// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+inline bool gcache::mtime_Lt(gcache::FCachefile& cachefile, gcache::FCachefile &rhs) {
+    return algo::UnTime_Lt(cachefile.mtime,rhs.mtime);
+}
+
+// --- gcache.FCachefile.mtime.Cmp
+// Compare two fields.
+inline i32 gcache::mtime_Cmp(gcache::FCachefile& cachefile, gcache::FCachefile &rhs) {
+    i32 retval = 0;
+    retval = algo::UnTime_Cmp(cachefile.mtime, rhs.mtime);
+    return retval;
+}
+
+// --- gcache.FCachefile..Init
+// Set all fields to initial values.
+inline void gcache::FCachefile_Init(gcache::FCachefile& cachefile) {
+    cachefile.size = i64(0);
+    cachefile.bh_cachefile_idx = -1; // (gcache.FDb.bh_cachefile) not-in-heap
+}
+
+// --- gcache.FCachefile..Ctor
+inline  gcache::FCachefile::FCachefile() {
+    gcache::FCachefile_Init(*this);
+}
+
+// --- gcache.FCachefile..Dtor
+inline  gcache::FCachefile::~FCachefile() {
+    gcache::FCachefile_Uninit(*this);
+}
 
 // --- gcache.cleanreport..Init
 // Set all fields to initial values.
@@ -35,6 +66,7 @@ inline void gcache::cleanreport_Init(gcache::cleanreport& parent) {
     parent.n_cachefile = i32(0);
     parent.n_cachefile_del = i32(0);
     parent.n_cachefile_recent = i32(0);
+    parent.n_cachefile_evict = i32(0);
     parent.n_logline = i32(0);
     parent.n_logline_del = i32(0);
     parent.new_cachesize_mb = i64(0);
@@ -46,10 +78,11 @@ inline  gcache::cleanreport::cleanreport() {
 }
 
 // --- gcache.cleanreport..FieldwiseCtor
-inline  gcache::cleanreport::cleanreport(i32 in_n_cachefile, i32 in_n_cachefile_del, i32 in_n_cachefile_recent, i32 in_n_logline, i32 in_n_logline_del, i64 in_new_cachesize_mb)
+inline  gcache::cleanreport::cleanreport(i32 in_n_cachefile, i32 in_n_cachefile_del, i32 in_n_cachefile_recent, i32 in_n_cachefile_evict, i32 in_n_logline, i32 in_n_logline_del, i64 in_new_cachesize_mb)
     : n_cachefile(in_n_cachefile)
     , n_cachefile_del(in_n_cachefile_del)
     , n_cachefile_recent(in_n_cachefile_recent)
+    , n_cachefile_evict(in_n_cachefile_evict)
     , n_logline(in_n_logline)
     , n_logline_del(in_n_logline_del)
     , new_cachesize_mb(in_new_cachesize_mb)
@@ -88,7 +121,7 @@ inline gcache::FHeader* gcache::header_Last() {
 
 // --- gcache.FDb.header.N
 // Return number of items in the pool
-inline i32 gcache::header_N() {
+inline i64 gcache::header_N() {
     return _db.header_n;
 }
 
@@ -100,6 +133,78 @@ inline gcache::FHeader& gcache::header_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.header_lary[bsr][index];
+}
+
+// --- gcache.FDb.cachefile.EmptyQ
+// Return true if index is empty
+inline bool gcache::cachefile_EmptyQ() {
+    return _db.cachefile_n == 0;
+}
+
+// --- gcache.FDb.cachefile.Find
+// Look up row by row id. Return NULL if out of range
+inline gcache::FCachefile* gcache::cachefile_Find(u64 t) {
+    gcache::FCachefile *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.cachefile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.cachefile_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- gcache.FDb.cachefile.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline gcache::FCachefile* gcache::cachefile_Last() {
+    return cachefile_Find(u64(_db.cachefile_n-1));
+}
+
+// --- gcache.FDb.cachefile.N
+// Return number of items in the pool
+inline i64 gcache::cachefile_N() {
+    return _db.cachefile_n;
+}
+
+// --- gcache.FDb.cachefile.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline gcache::FCachefile& gcache::cachefile_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.cachefile_lary[bsr][index];
+}
+
+// --- gcache.FDb.bh_cachefile.EmptyQ
+// Return true if index is empty
+inline bool gcache::bh_cachefile_EmptyQ() {
+    return _db.bh_cachefile_n == 0;
+}
+
+// --- gcache.FDb.bh_cachefile.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline gcache::FCachefile* gcache::bh_cachefile_First() {
+    gcache::FCachefile *row = NULL;
+    if (_db.bh_cachefile_n > 0) {
+        row = _db.bh_cachefile_elems[0];
+    }
+    return row;
+}
+
+// --- gcache.FDb.bh_cachefile.InBheapQ
+// Return true if row is in index, false otherwise
+inline bool gcache::bh_cachefile_InBheapQ(gcache::FCachefile& row) {
+    bool result = false;
+    result = row.bh_cachefile_idx != -1;
+    return result;
+}
+
+// --- gcache.FDb.bh_cachefile.N
+// Return number of items in the heap
+inline i32 gcache::bh_cachefile_N() {
+    return _db.bh_cachefile_n;
 }
 
 // --- gcache.FDb.header_curs.Reset
@@ -125,6 +230,43 @@ inline void gcache::_db_header_curs_Next(_db_header_curs &curs) {
 // item access
 inline gcache::FHeader& gcache::_db_header_curs_Access(_db_header_curs &curs) {
     return header_qFind(u64(curs.index));
+}
+
+// --- gcache.FDb.cachefile_curs.Reset
+// cursor points to valid item
+inline void gcache::_db_cachefile_curs_Reset(_db_cachefile_curs &curs, gcache::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- gcache.FDb.cachefile_curs.ValidQ
+// cursor points to valid item
+inline bool gcache::_db_cachefile_curs_ValidQ(_db_cachefile_curs &curs) {
+    return curs.index < _db.cachefile_n;
+}
+
+// --- gcache.FDb.cachefile_curs.Next
+// proceed to next item
+inline void gcache::_db_cachefile_curs_Next(_db_cachefile_curs &curs) {
+    curs.index++;
+}
+
+// --- gcache.FDb.cachefile_curs.Access
+// item access
+inline gcache::FCachefile& gcache::_db_cachefile_curs_Access(_db_cachefile_curs &curs) {
+    return cachefile_qFind(u64(curs.index));
+}
+
+// --- gcache.FDb.bh_cachefile_curs.Access
+// Access current element. If not more elements, return NULL
+inline gcache::FCachefile& gcache::_db_bh_cachefile_curs_Access(_db_bh_cachefile_curs &curs) {
+    return *curs.temp_elems[0];
+}
+
+// --- gcache.FDb.bh_cachefile_curs.ValidQ
+// Return true if Access() will return non-NULL.
+inline bool gcache::_db_bh_cachefile_curs_ValidQ(_db_bh_cachefile_curs &curs) {
+    return curs.temp_n > 0;
 }
 
 // --- gcache.FHeader..Init

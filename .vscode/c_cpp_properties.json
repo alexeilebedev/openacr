@@ -4,6 +4,10 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
+                // "${workspaceFolder}/cpp/**",
+                // "${workspaceFolder}/include/**",
+                // "/home/avorovich/arnd/cpp/**",
+                // "/home/avorovich/arnd/include/**",
                 "/usr/include",
                 "/usr/local/include"
             ],

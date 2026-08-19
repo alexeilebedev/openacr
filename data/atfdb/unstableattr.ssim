@@ -1,1 +1,29 @@
-atfdb.unstableattr  unstableattr:samp_meng.NewOrderMsg.time  comment:Timestamp
+atfdb.unstableattr  unstableattr:%.builddate  comment:"When the build ran"
+atfdb.unstableattr  unstableattr:%.clear_time  comment:"Alarm clear time"
+atfdb.unstableattr  unstableattr:%.client  comment:"Client address contains ephemeral port"
+atfdb.unstableattr  unstableattr:%.cluster_id  comment:"Cluster UUID varies between runs"
+atfdb.unstableattr  unstableattr:%.crc  comment:"CRC varies"
+atfdb.unstableattr  unstableattr:%.event_time  comment:Timestamp
+atfdb.unstableattr  unstableattr:%.filename  comment:"Shm backing file embeds the supervisor pid"
+atfdb.unstableattr  unstableattr:%.first_time  comment:"Alarm first-occurrence time"
+atfdb.unstableattr  unstableattr:%.free  comment:"A lease free time is set from the clock"
+atfdb.unstableattr  unstableattr:%.fsid  comment:"Filesystem ID varies between runs"
+atfdb.unstableattr  unstableattr:%.gitinfo  comment:"Build label moves with every commit"
+atfdb.unstableattr  unstableattr:%.gitref  comment:"Commit the build was made from"
+atfdb.unstableattr  unstableattr:%.gw  comment:"Gateway address contains random port"
+atfdb.unstableattr  unstableattr:%.id  comment:UUID
+atfdb.unstableattr  unstableattr:%.last_time  comment:"Alarm last-occurrence time"
+atfdb.unstableattr  unstableattr:%.pid  comment:"OS process id varies between runs"
+atfdb.unstableattr  unstableattr:%.port  comment:"Port number varies"
+atfdb.unstableattr  unstableattr:%.root_id  comment:UUID
+atfdb.unstableattr  unstableattr:%.seq_time  comment:Timestamp
+atfdb.unstableattr  unstableattr:%.settle  comment:"Partition settle floor drifts with shared /sys/cmd traffic"
+atfdb.unstableattr  unstableattr:%.signature  comment:"Signature varies between builds"
+atfdb.unstableattr  unstableattr:%.tend  comment:"End time"
+atfdb.unstableattr  unstableattr:%.timestamp  comment:Timestamp
+atfdb.unstableattr  unstableattr:%.tlast  comment:Timestamp
+atfdb.unstableattr  unstableattr:%.topic_id  comment:"Topic UUID varies between runs"
+atfdb.unstableattr  unstableattr:%.tsc  comment:"Timestamp counter"
+atfdb.unstableattr  unstableattr:%.tstamp  comment:"Alarm transition time"
+atfdb.unstableattr  unstableattr:%.update_time  comment:"Alarm last-update time"
+atfdb.unstableattr  unstableattr:dmmeta.msgtype.type  comment:"Next message-type id grows as ams.MsgHeader messages are added"

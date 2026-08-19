@@ -26,7 +26,7 @@
 
 // -----------------------------------------------------------------------------
 
-static void CheckBuf(algo::ByteAry &buf, strptr result) {
+static void CheckBuf(algo::ByteAry &buf, strptr expect) {
     cstring out;
     ind_beg(atf_amc::MsgHeader_curs,hdr,ary_Getary(buf)) {
         if (atf_amc::Text *msg = atf_amc::Text_Castdown(*hdr)) {
@@ -34,7 +34,10 @@ static void CheckBuf(algo::ByteAry &buf, strptr result) {
         }
     }ind_end;
     prlog(out);
-    vrfy_(out == result);
+    vrfy(out == expect,
+         tempstr("failure")
+         <<Keyval("expect",expect)
+         <<Keyval("got",out));
 }
 
 // -----------------------------------------------------------------------------
@@ -47,6 +50,12 @@ void atf_amc::amctest_MsgCurs() {
     ary_Addary(bigbuf, ary_Getary(buf));
     Text_FmtByteAry(buf, "msg2;");
     ary_Addary(bigbuf, ary_Getary(buf));
+    CheckBuf(bigbuf,"msg1;msg2;");
+
+    // Now do the same thing with GetAlloc / GetAllocAppend
+    ary_RemoveAll(bigbuf);
+    Text_FmtAlloc(ary_GetAlloc(bigbuf), "msg1;");
+    Text_FmtAlloc(ary_GetAllocAppend(bigbuf), "msg2;");
     CheckBuf(bigbuf,"msg1;msg2;");
 }
 

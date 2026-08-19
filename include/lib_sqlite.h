@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: lib_sqlite (lib)
+// Target: lib_sqlite (lib) -- SQLite binding: connections and a virtual table over ssimfiles
 // Exceptions: yes
 // Header: include/lib_sqlite.h
 //
@@ -40,7 +40,7 @@ namespace lib_sqlite { // update-hdr
     //
     int Open(lib_sqlite::FConn& conn);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void db_Cleanup(lib_sqlite::FConn &parent); // fcleanup:lib_sqlite.FConn.db
+    // void db_Cleanup(lib_sqlite::FConn &parent); // ffunc:lib_sqlite.FConn.db.Cleanup
     void Init();
 
     // -------------------------------------------------------------------

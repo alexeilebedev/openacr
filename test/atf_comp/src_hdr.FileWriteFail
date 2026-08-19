@@ -1,0 +1,4 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir ro && echo "echo hi" > ro/x.sh && trap "chmod 755 ro" EXIT && trap "exit 1" TERM && chmod 555 ro && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:%\''
+# eof bash
+bash -> src_hdr.file_write  file:ro/x.sh  err:"Permission denied"  comment:"source file could not be written"
+# exit bash code:1

@@ -1,0 +1,5 @@
+curl -k 'https://192.168.1.45:1010/api/graphql' -X POST -H "Authorization: Bearer glpat-EXAMPLE0000000000000" -H "Content-Type: application/json" --data \
+'{"query":"mutation {mergeRequestSetDraft(input:{iid:\"9\",projectPath:\"algornd/glpat\",draft:true}){mergeRequest{title,draft}}}"}' \
+| jq
+
+#'{"query":"mutation {convertPullRequestToDraft(input:{pullRequestId:\"PR_kwDOKLbbec5a7JY4\"}){pullRequest{isDraft}}}"}' \

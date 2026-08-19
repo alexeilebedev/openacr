@@ -25,12 +25,12 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/gcache_gen.h"
 #include "include/gen/gcache_gen.inl.h"
+#include "include/gen/algo_gen.h"
+#include "include/gen/algo_gen.inl.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/algo_gen.h"
-#include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
@@ -43,37 +43,27 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 gcache::FDb     gcache::_db;      // dependency found via dev.targdep
 
-namespace gcache {
-const char *gcache_help =
-"gcache: Compiler cache\n"
-"Usage: gcache [[-cmd:]<string>] [options]\n"
-"    OPTION      TYPE    DFLT           COMMENT\n"
-"    -in         string  \"data\"         Input directory or filename, - for stdin\n"
-"    [cmd]...    string                 Command to execute\n"
-"    -install                           Create gcache directory and enable gcache\n"
-"    -stats                             Show cache stats\n"
-"    -enable                            Create .gcache link to enable gcache use\n"
-"    -disable                           Remove .gcache link to disable gcache\n"
-"    -gc                                Clean old files from .gcache\n"
-"    -clean                             Clean the entire cache\n"
-"    -dir        string  \"/tmp/gcache\"  (With -install,-enable) cache directory\n"
-"    -hitrate                           Report hit rate (specify start time with -after)\n"
-"    -after      string                 Start time for reporting\n"
-"    -report                            Show end-of-run report\n"
-"    -force                             Force recompile and update cache\n"
-"    -verbose    flag                   Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag                   Debug level (0..255); alias -d; cumulative\n"
-"    -help                              Print help and exit; alias -h\n"
-"    -version                           Print version and exit\n"
-"    -signature                         Show signatures and exit; alias -sig\n"
-;
+gcache::_db_bh_cachefile_curs::~_db_bh_cachefile_curs() {
+    algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
 
+}
 
-} // namespace gcache
 namespace gcache { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:gcache.FDb._db.InitReflection
     static void          InitReflection();
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:gcache.FDb.bh_cachefile.Downheap
+    static int           bh_cachefile_Downheap(gcache::FCachefile& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    // func:gcache.FDb.bh_cachefile.Upheap
+    static int           bh_cachefile_Upheap(gcache::FCachefile& row, int idx) __attribute__((nothrow));
+    // func:gcache.FDb.bh_cachefile.ElemLt
+    inline static bool   bh_cachefile_ElemLt(gcache::FCachefile &a, gcache::FCachefile &b) __attribute__((nothrow));
+    // func:gcache.FDb.bh_cachefile_curs.Add
+    static void          _db_bh_cachefile_curs_Add(_db_bh_cachefile_curs &curs, gcache::FCachefile& row);
     // find trace by row id (used to implement reflection)
     // func:gcache.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -83,6 +73,12 @@ namespace gcache { // gen:ns_print_proto
     // func:gcache...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
+
+// --- gcache.FCachefile..Uninit
+void gcache::FCachefile_Uninit(gcache::FCachefile& cachefile) {
+    gcache::FCachefile &row = cachefile; (void)row;
+    bh_cachefile_Remove(row); // remove cachefile from index bh_cachefile
+}
 
 // --- gcache.cleanreport..ReadFieldMaybe
 bool gcache::cleanreport_ReadFieldMaybe(gcache::cleanreport& parent, algo::strptr field, algo::strptr strval) {
@@ -98,6 +94,9 @@ bool gcache::cleanreport_ReadFieldMaybe(gcache::cleanreport& parent, algo::strpt
         } break;
         case gcache_FieldId_n_cachefile_recent: {
             retval = i32_ReadStrptrMaybe(parent.n_cachefile_recent, strval);
+        } break;
+        case gcache_FieldId_n_cachefile_evict: {
+            retval = i32_ReadStrptrMaybe(parent.n_cachefile_evict, strval);
         } break;
         case gcache_FieldId_n_logline: {
             retval = i32_ReadStrptrMaybe(parent.n_logline, strval);
@@ -147,6 +146,9 @@ void gcache::cleanreport_Print(gcache::cleanreport& row, algo::cstring& str) {
     i32_Print(row.n_cachefile_recent, temp);
     PrintAttrSpaceReset(str,"n_cachefile_recent", temp);
 
+    i32_Print(row.n_cachefile_evict, temp);
+    PrintAttrSpaceReset(str,"n_cachefile_evict", temp);
+
     i32_Print(row.n_logline, temp);
     PrintAttrSpaceReset(str,"n_logline", temp);
 
@@ -167,116 +169,16 @@ void gcache::trace_Print(gcache::trace& row, algo::cstring& str) {
 }
 
 // --- gcache.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     gcache.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of gcache.FDb.cmdline (and any base command line)
+// via gcache_ReadArgv; then apply -help/-version and load floadtuples input.
 void gcache::ReadArgv() {
     command::gcache &cmd = gcache::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::gcache_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::gcache_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"gcache: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"gcache: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::gcache_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "gcache: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::gcache_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"gcache: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::gcache_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -299,9 +201,7 @@ void gcache::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:gcache.FDb.cmdline
+    // dmmeta.floadtuples:command.gcache.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!gcache::LoadTuplesMaybe(cmd.in,true)) {
@@ -314,7 +214,7 @@ void gcache::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(gcache_help);
+        prlog(command::gcache_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -341,7 +241,13 @@ void gcache::Step() {
 // --- gcache.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void gcache::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("gcache", NULL, NULL, gcache::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "gcache";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = gcache::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "gcache.trace";
@@ -437,6 +343,15 @@ void gcache::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- gcache.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool gcache::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
+}
+
 // --- gcache.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -477,7 +392,7 @@ void* gcache::header_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     gcache::FHeader*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.header_lary[bsr];
         if (!lev) {
             lev=(gcache::FHeader*)algo_lib::malloc_AllocMem(sizeof(gcache::FHeader) * (u64(1)<<bsr));
@@ -486,7 +401,7 @@ void* gcache::header_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.header_n = i32(new_nelems);
+        _db.header_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -498,7 +413,7 @@ void gcache::header_RemoveAll() {
     for (u64 n = _db.header_n; n>0; ) {
         n--;
         header_qFind(u64(n)).~FHeader(); // destroy last element
-        _db.header_n = i32(n);
+        _db.header_n = i64(n);
     }
 }
 
@@ -509,7 +424,7 @@ void gcache::header_RemoveLast() {
     if (n > 0) {
         n -= 1;
         header_qFind(u64(n)).~FHeader();
-        _db.header_n = i32(n);
+        _db.header_n = i64(n);
     }
 }
 
@@ -522,6 +437,262 @@ bool gcache::header_XrefMaybe(gcache::FHeader &row) {
     return retval;
 }
 
+// --- gcache.FDb.cachefile.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gcache::FCachefile& gcache::cachefile_Alloc() {
+    gcache::FCachefile* row = cachefile_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("gcache.out_of_mem  field:gcache.FDb.cachefile  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- gcache.FDb.cachefile.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+gcache::FCachefile* gcache::cachefile_AllocMaybe() {
+    gcache::FCachefile *row = (gcache::FCachefile*)cachefile_AllocMem();
+    if (row) {
+        new (row) gcache::FCachefile; // call constructor
+    }
+    return row;
+}
+
+// --- gcache.FDb.cachefile.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* gcache::cachefile_AllocMem() {
+    u64 new_nelems     = _db.cachefile_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    gcache::FCachefile*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.cachefile_lary[bsr];
+        if (!lev) {
+            lev=(gcache::FCachefile*)algo_lib::malloc_AllocMem(sizeof(gcache::FCachefile) * (u64(1)<<bsr));
+            _db.cachefile_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.cachefile_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- gcache.FDb.cachefile.RemoveAll
+// Remove all elements from Lary
+void gcache::cachefile_RemoveAll() {
+    for (u64 n = _db.cachefile_n; n>0; ) {
+        n--;
+        cachefile_qFind(u64(n)).~FCachefile(); // destroy last element
+        _db.cachefile_n = i64(n);
+    }
+}
+
+// --- gcache.FDb.cachefile.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void gcache::cachefile_RemoveLast() {
+    u64 n = _db.cachefile_n;
+    if (n > 0) {
+        n -= 1;
+        cachefile_qFind(u64(n)).~FCachefile();
+        _db.cachefile_n = i64(n);
+    }
+}
+
+// --- gcache.FDb.cachefile.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool gcache::cachefile_XrefMaybe(gcache::FCachefile &row) {
+    bool retval = true;
+    (void)row;
+    // insert cachefile into index bh_cachefile
+    if (true) { // user-defined insert condition
+        bh_cachefile_Insert(row);
+    }
+    return retval;
+}
+
+// --- gcache.FDb.bh_cachefile.Dealloc
+// Remove all elements from heap and free memory used by the array.
+void gcache::bh_cachefile_Dealloc() {
+    bh_cachefile_RemoveAll();
+    algo_lib::malloc_FreeMem(_db.bh_cachefile_elems, sizeof(gcache::FCachefile*)*_db.bh_cachefile_max);
+    _db.bh_cachefile_max   = 0;
+    _db.bh_cachefile_elems = NULL;
+}
+
+// --- gcache.FDb.bh_cachefile.Downheap
+// Find new location for ROW starting at IDX
+// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+static int gcache::bh_cachefile_Downheap(gcache::FCachefile& row, int idx) {
+    gcache::FCachefile* *elems = _db.bh_cachefile_elems;
+    int n = _db.bh_cachefile_n;
+    int child = idx*2+1;
+    while (child < n) {
+        gcache::FCachefile* p = elems[child]; // left child
+        int rchild = child+1;
+        if (rchild < n) {
+            gcache::FCachefile* q = elems[rchild]; // right child
+            if (bh_cachefile_ElemLt(*q,*p)) {
+                child = rchild;
+                p     = q;
+            }
+        }
+        if (!bh_cachefile_ElemLt(*p,row)) {
+            break;
+        }
+        p->bh_cachefile_idx   = idx;
+        elems[idx]     = p;
+        idx            = child;
+        child          = idx*2+1;
+    }
+    return idx;
+}
+
+// --- gcache.FDb.bh_cachefile.Insert
+// Insert row. Row must not already be in index. If row is already in index, do nothing.
+void gcache::bh_cachefile_Insert(gcache::FCachefile& row) {
+    if (LIKELY(row.bh_cachefile_idx == -1)) {
+        bh_cachefile_Reserve(1);
+        int n = _db.bh_cachefile_n;
+        _db.bh_cachefile_n = n + 1;
+        int new_idx = bh_cachefile_Upheap(row, n);
+        row.bh_cachefile_idx = new_idx;
+        _db.bh_cachefile_elems[new_idx] = &row;
+    }
+}
+
+// --- gcache.FDb.bh_cachefile.Reheap
+// If row is in heap, update its position. If row is not in heap, insert it.
+// Return new position of item in the heap (0=top)
+i32 gcache::bh_cachefile_Reheap(gcache::FCachefile& row) {
+    int old_idx = row.bh_cachefile_idx;
+    bool isnew = old_idx == -1;
+    if (isnew) {
+        bh_cachefile_Reserve(1);
+        old_idx = _db.bh_cachefile_n++;
+    }
+    int new_idx = bh_cachefile_Upheap(row, old_idx);
+    if (!isnew && new_idx == old_idx) {
+        new_idx = bh_cachefile_Downheap(row, old_idx);
+    }
+    row.bh_cachefile_idx = new_idx;
+    _db.bh_cachefile_elems[new_idx] = &row;
+    return new_idx;
+}
+
+// --- gcache.FDb.bh_cachefile.ReheapFirst
+// Key of first element in the heap changed. Move it.
+// This function does not check the insert condition.
+// Return new position of item in the heap (0=top).
+// Heap must be non-empty or behavior is undefined.
+i32 gcache::bh_cachefile_ReheapFirst() {
+    gcache::FCachefile &row = *_db.bh_cachefile_elems[0];
+    i32 new_idx = bh_cachefile_Downheap(row, 0);
+    row.bh_cachefile_idx = new_idx;
+    _db.bh_cachefile_elems[new_idx] = &row;
+    return new_idx;
+}
+
+// --- gcache.FDb.bh_cachefile.Remove
+// Remove element from index. If element is not in index, do nothing.
+void gcache::bh_cachefile_Remove(gcache::FCachefile& row) {
+    if (bh_cachefile_InBheapQ(row)) {
+        int old_idx = row.bh_cachefile_idx;
+        if (_db.bh_cachefile_elems[old_idx] == &row) { // sanity check: heap points back to row
+            row.bh_cachefile_idx = -1;           // mark not in heap
+            i32 n = _db.bh_cachefile_n - 1; // index of last element in heap
+            _db.bh_cachefile_n = n;         // decrease count
+            if (old_idx != n) {
+                gcache::FCachefile *elem = _db.bh_cachefile_elems[n];
+                int new_idx = bh_cachefile_Upheap(*elem, old_idx);
+                if (new_idx == old_idx) {
+                    new_idx = bh_cachefile_Downheap(*elem, old_idx);
+                }
+                elem->bh_cachefile_idx = new_idx;
+                _db.bh_cachefile_elems[new_idx] = elem;
+            }
+        }
+    }
+}
+
+// --- gcache.FDb.bh_cachefile.RemoveAll
+// Remove all elements from binary heap
+void gcache::bh_cachefile_RemoveAll() {
+    int n = _db.bh_cachefile_n;
+    for (int i = n - 1; i>=0; i--) {
+        _db.bh_cachefile_elems[i]->bh_cachefile_idx = -1; // mark not-in-heap
+    }
+    _db.bh_cachefile_n = 0;
+}
+
+// --- gcache.FDb.bh_cachefile.RemoveFirst
+// If index is empty, return NULL. Otherwise remove and return first key in index.
+//  Call 'head changed' trigger.
+gcache::FCachefile* gcache::bh_cachefile_RemoveFirst() {
+    gcache::FCachefile *row = NULL;
+    if (_db.bh_cachefile_n > 0) {
+        row = _db.bh_cachefile_elems[0];
+        row->bh_cachefile_idx = -1;           // mark not in heap
+        i32 n = _db.bh_cachefile_n - 1; // index of last element in heap
+        _db.bh_cachefile_n = n;         // decrease count
+        if (n) {
+            gcache::FCachefile &elem = *_db.bh_cachefile_elems[n];
+            int new_idx = bh_cachefile_Downheap(elem, 0);
+            elem.bh_cachefile_idx = new_idx;
+            _db.bh_cachefile_elems[new_idx] = &elem;
+        }
+    }
+    return row;
+}
+
+// --- gcache.FDb.bh_cachefile.Reserve
+// Reserve space in index for N more elements
+void gcache::bh_cachefile_Reserve(int n) {
+    i32 old_max = _db.bh_cachefile_max;
+    if (UNLIKELY(_db.bh_cachefile_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(gcache::FCachefile*);
+        u32 new_size = new_max * sizeof(gcache::FCachefile*);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.bh_cachefile_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("gcache.out_of_memory  field:gcache.FDb.bh_cachefile");
+        }
+        _db.bh_cachefile_elems = (gcache::FCachefile**)new_mem;
+        _db.bh_cachefile_max = new_max;
+    }
+}
+
+// --- gcache.FDb.bh_cachefile.Upheap
+// Find and return index of new location for element ROW in the heap, starting at index IDX.
+// Move any elements along the way but do not modify ROW.
+static int gcache::bh_cachefile_Upheap(gcache::FCachefile& row, int idx) {
+    gcache::FCachefile* *elems = _db.bh_cachefile_elems;
+    while (idx>0) {
+        int j = (idx-1)/2;
+        gcache::FCachefile* p = elems[j];
+        if (!bh_cachefile_ElemLt(row, *p)) {
+            break;
+        }
+        p->bh_cachefile_idx = idx;
+        elems[idx] = p;
+        idx = j;
+    }
+    return idx;
+}
+
+// --- gcache.FDb.bh_cachefile.ElemLt
+inline static bool gcache::bh_cachefile_ElemLt(gcache::FCachefile &a, gcache::FCachefile &b) {
+    (void)_db;
+    return mtime_Lt(a, b);
+}
+
 // --- gcache.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr gcache::trace_RowidFind(int t) {
@@ -532,6 +703,94 @@ static algo::ImrowPtr gcache::trace_RowidFind(int t) {
 // Function return 1
 inline static i32 gcache::trace_N() {
     return 1;
+}
+
+// --- gcache.FDb.bh_cachefile_curs.Add
+static void gcache::_db_bh_cachefile_curs_Add(_db_bh_cachefile_curs &curs, gcache::FCachefile& row) {
+    u32 n = curs.temp_n;
+    int i = n;
+    curs.temp_n = n+1;
+    gcache::FCachefile* *elems = curs.temp_elems;
+    while (i>0) {
+        int j = (i-1)/2;
+        gcache::FCachefile* p = elems[j];
+        if (!bh_cachefile_ElemLt(row,*p)) {
+            break;
+        }
+        elems[i]=p;
+        i=j;
+    }
+    elems[i]=&row;
+}
+
+// --- gcache.FDb.bh_cachefile_curs.Reserve
+void gcache::_db_bh_cachefile_curs_Reserve(_db_bh_cachefile_curs &curs, int n) {
+    if (n > curs.temp_max) {
+        size_t old_size   = sizeof(void*) * curs.temp_max;
+        size_t new_size   = sizeof(void*) * bh_cachefile_N();
+        curs.temp_elems   = (gcache::FCachefile**)algo_lib::malloc_ReallocMem(curs.temp_elems, old_size, new_size);
+        if (!curs.temp_elems) {
+            algo::FatalErrorExit("gcache.cursor_out_of_memory  func:gcache.FDb.bh_cachefile_curs.Reserve");
+        }
+        curs.temp_max       = bh_cachefile_N();
+    }
+}
+
+// --- gcache.FDb.bh_cachefile_curs.Reset
+// Reset cursor. If HEAP is non-empty, add its top element to CURS.
+void gcache::_db_bh_cachefile_curs_Reset(_db_bh_cachefile_curs &curs, gcache::FDb &parent) {
+    curs.parent       = &parent;
+    _db_bh_cachefile_curs_Reserve(curs, bh_cachefile_N());
+    curs.temp_n = 0;
+    if (parent.bh_cachefile_n > 0) {
+        gcache::FCachefile &first = *parent.bh_cachefile_elems[0];
+        curs.temp_elems[0] = &first; // insert first element in heap
+        curs.temp_n = 1;
+    }
+}
+
+// --- gcache.FDb.bh_cachefile_curs.Next
+// Advance cursor.
+void gcache::_db_bh_cachefile_curs_Next(_db_bh_cachefile_curs &curs) {
+    gcache::FCachefile* *elems = curs.temp_elems;
+    int n = curs.temp_n;
+    if (n > 0) {
+        // remove top element from heap
+        gcache::FCachefile* dead = elems[0];
+        int i       = 0;
+        gcache::FCachefile* last = curs.temp_elems[n-1];
+        // downheap last elem
+        do {
+            gcache::FCachefile* choose = last;
+            int l         = i*2+1;
+            if (l<n) {
+                gcache::FCachefile* el = elems[l];
+                int r     = l+1;
+                r        -= r==n;
+                gcache::FCachefile* er = elems[r];
+                if (bh_cachefile_ElemLt(*er,*el)) {
+                    el  = er;
+                    l   = r;
+                }
+                bool b = bh_cachefile_ElemLt(*el,*last);
+                if (b) choose = el;
+                if (!b) l = n;
+            }
+            elems[i] = choose;
+            i = l;
+        } while (i < n);
+        curs.temp_n = n-1;
+        int index = dead->bh_cachefile_idx;
+        i = (index*2+1);
+        if (i < bh_cachefile_N()) {
+            gcache::FCachefile &elem = *curs.parent->bh_cachefile_elems[i];
+            _db_bh_cachefile_curs_Add(curs, elem);
+        }
+        if (i+1 < bh_cachefile_N()) {
+            gcache::FCachefile &elem = *curs.parent->bh_cachefile_elems[i + 1];
+            _db_bh_cachefile_curs_Add(curs, elem);
+        }
+    }
 }
 
 // --- gcache.FDb..Init
@@ -551,6 +810,20 @@ void gcache::FDb_Init() {
         _db.header_lary[i]  = header_first;
         header_first    += 1ULL<<i;
     }
+    // initialize LAry cachefile (gcache.FDb.cachefile)
+    _db.cachefile_n = 0;
+    memset(_db.cachefile_lary, 0, sizeof(_db.cachefile_lary)); // zero out all level pointers
+    gcache::FCachefile* cachefile_first = (gcache::FCachefile*)algo_lib::malloc_AllocMem(sizeof(gcache::FCachefile) * (u64(1)<<4));
+    if (!cachefile_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.cachefile_lary[i]  = cachefile_first;
+        cachefile_first    += 1ULL<<i;
+    }
+    _db.bh_cachefile_max   	= 0; // (gcache.FDb.bh_cachefile)
+    _db.bh_cachefile_n     	= 0; // (gcache.FDb.bh_cachefile)
+    _db.bh_cachefile_elems 	= NULL; // (gcache.FDb.bh_cachefile)
 
     gcache::InitReflection();
 }
@@ -558,6 +831,12 @@ void gcache::FDb_Init() {
 // --- gcache.FDb..Uninit
 void gcache::FDb_Uninit() {
     gcache::FDb &row = _db; (void)row;
+
+    // gcache.FDb.bh_cachefile.Uninit (Bheap)  //Cache files ordered by last use, for size-budget eviction
+    // skip destruction in global scope
+
+    // gcache.FDb.cachefile.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // gcache.FDb.header.Uninit (Lary)  //
     // skip destruction in global scope
@@ -598,6 +877,7 @@ const char* gcache::value_ToCstr(const gcache::FieldId& parent) {
         case gcache_FieldId_n_cachefile    : ret = "n_cachefile";  break;
         case gcache_FieldId_n_cachefile_del: ret = "n_cachefile_del";  break;
         case gcache_FieldId_n_cachefile_recent: ret = "n_cachefile_recent";  break;
+        case gcache_FieldId_n_cachefile_evict: ret = "n_cachefile_evict";  break;
         case gcache_FieldId_n_logline      : ret = "n_logline";  break;
         case gcache_FieldId_n_logline_del  : ret = "n_logline_del";  break;
         case gcache_FieldId_new_cachesize_mb: ret = "new_cachesize_mb";  break;
@@ -678,6 +958,15 @@ bool gcache::value_SetStrptrMaybe(gcache::FieldId& parent, algo::strptr rhs) {
             }
             break;
         }
+        case 17: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('n','_','c','a','c','h','e','f'): {
+                    if (memcmp(rhs.elems+8,"ile_evict",9)==0) { value_SetEnum(parent,gcache_FieldId_n_cachefile_evict); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
         case 18: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','_','c','a','c','h','e','f'): {
@@ -721,7 +1010,7 @@ bool gcache::FieldId_ReadStrptrMaybe(gcache::FieldId &parent, algo::strptr in_st
 // --- gcache.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:gcache.FieldId.String  printfmt:Raw
-void gcache::FieldId_Print(gcache::FieldId& row, algo::cstring& str) {
+void gcache::FieldId_Print(gcache::FieldId row, algo::cstring& str) {
     gcache::value_Print(row, str);
 }
 

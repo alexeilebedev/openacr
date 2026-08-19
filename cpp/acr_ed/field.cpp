@@ -118,18 +118,23 @@ static tempstr GuessXreffld(dmmeta::Field &field, acr_ed::FCtype &parent, acr_ed
 // - If there is no special prefix for the field name, pick either Val or Pkey as the reftype
 // depending on whether both field and arg belong to a relational table
 static void GuessReftype(dmmeta::Field &field) {
-    dmmeta::FprefixPkey key(Pathcomp(name_Get(field),"_LL"));
-    acr_ed::FFprefix *fprefix=acr_ed::ind_fprefix_Find(key);
+    strptr prefix = Pathcomp(name_Get(field),"_LL");
     acr_ed::FCtype &arg=acr_ed::ind_ctype_FindX(field.arg);
     acr_ed::FCtype &ctype=acr_ed::ind_ctype_FindX(ctype_Get(field));
-    if (fprefix) {
-        acr_ed::_db.cmdline.reftype = fprefix->reftype;
-    }
+    bool ptr_pairing = false;
+    ind_beg(acr_ed::_db_fprefix_curs, fprefix, acr_ed::_db) {
+        if (prefix_Get(fprefix)==prefix) {
+            if (fprefix.dflt) {
+                acr_ed::_db.cmdline.reftype = reftype_Get(fprefix);
+            }
+            ptr_pairing |= reftype_Get(fprefix) == dmmeta_Reftype_reftype_Ptr;
+        }
+    }ind_end;
     if (!ch_N(acr_ed::_db.cmdline.reftype)) {
         acr_ed::_db.cmdline.reftype = (ctype.c_ssimfile && arg.c_ssimfile)
             ? dmmeta_Reftype_reftype_Pkey : dmmeta_Reftype_reftype_Val;
     }
-    acr_ed::_db.could_be_ptr = acr_ed::_db.cmdline.reftype == dmmeta_Reftype_reftype_Ptrary;
+    acr_ed::_db.could_be_ptr = acr_ed::_db.cmdline.reftype == dmmeta_Reftype_reftype_Ptrary && ptr_pairing;
 }
 
 // -----------------------------------------------------------------------------
@@ -295,6 +300,13 @@ void acr_ed::edaction_Create_Field() {
     if (ch_N(acr_ed::_db.cmdline.via) > 0) {
         acr_ed::_db.cmdline.xref = true;
     }
+    // xref is also implied when the chosen reftype cannot go without one
+    // (Thash, Llist, Bheap, Atree, Blkhash).
+    if (acr_ed::FReftype *rt = acr_ed::ind_reftype_Find(field.reftype)) {
+        if (rt->needxref) {
+            acr_ed::_db.cmdline.xref = true;
+        }
+    }
     if (acr_ed::_db.cmdline.xref) {
         acr_ed::_db.keyfld = dmmeta::Xref_keyfld_Get(acr_ed::_db.cmdline.via);
         acr_ed::_db.viafld = dmmeta::Xref_viafld_Get(acr_ed::_db.cmdline.via);
@@ -314,14 +326,6 @@ void acr_ed::edaction_Create_Field() {
     // output the computed field
     if (!existing_field) {
         PrintNewField(field);
-    }
-
-    // create fstep should be a separate thing.
-    if (ch_N(acr_ed::_db.cmdline.fstep) > 0) {
-        dmmeta::Fstep fstep;
-        fstep.fstep = tempstr() << ns_Get(*parent) << ".FDb." << name_Get(field);
-        fstep.steptype = acr_ed::_db.cmdline.fstep;
-        acr_ed::_db.out_ssim << fstep << eol;
     }
 
     if (ch_N(acr_ed::_db.cmdline.substr) > 0) {
@@ -503,4 +507,43 @@ void acr_ed::CreateHashIndex(dmmeta::Field &field) {
     xref.field     = hash.field;
     xref.inscond.value = "true";
     acr_ed::_db.out_ssim << xref    << eol;
+}
+
+// -----------------------------------------------------------------------------
+
+// Add a dmmeta.fstep record on an existing field with the chosen steptype
+// (default Inline).
+void acr_ed::edaction_Create_Fstep() {
+    acr_ed::FField *fld = acr_ed::ind_field_Find(acr_ed::_db.cmdline.fstep);
+    vrfy(fld, tempstr()<<"acr_ed.no_field  field:"<<acr_ed::_db.cmdline.fstep);
+
+    dmmeta::Fstep fstep;
+    fstep.fstep    = fld->field;
+    fstep.steptype = acr_ed::_db.cmdline.steptype;
+    fstep.comment.value = acr_ed::_db.cmdline.comment;
+    acr_ed::_db.out_ssim << fstep << eol;
+
+    acr_ed::vis_Alloc() << dmmeta::Field_ctype_Get(fld->field);
+}
+
+// -----------------------------------------------------------------------------
+
+// Add a dmmeta.fcurs record for a custom cursor on an existing field.
+// The fcurs pkey is "<field>/<curstype-name>", e.g. "ns.FDb.ind_x/curs".
+void acr_ed::edaction_Create_Fcurs() {
+    tempstr key(acr_ed::_db.cmdline.fcurs);
+    tempstr field_pkey(dmmeta::Fcurs_field_Get(key));
+    tempstr curstype(dmmeta::Fcurs_curstype_Get(key));
+    vrfy(field_pkey != "" && curstype != "",
+         tempstr()<<"acr_ed.bad_fcurs  fcurs:"<<key
+         <<"  comment:'expected <field>/<curstype>'");
+    vrfy(acr_ed::ind_field_Find(field_pkey),
+         tempstr()<<"acr_ed.no_field  field:"<<field_pkey);
+
+    dmmeta::Fcurs fcurs;
+    fcurs.fcurs = key;
+    fcurs.comment.value = acr_ed::_db.cmdline.comment;
+    acr_ed::_db.out_ssim << fcurs << eol;
+
+    acr_ed::vis_Alloc() << dmmeta::Field_ctype_Get(field_pkey);
 }

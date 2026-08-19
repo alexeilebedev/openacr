@@ -60,7 +60,7 @@ inline algo::Tuple* ssimfilt::tuple_Last() {
 
 // --- ssimfilt.FDb.tuple.N
 // Return number of items in the pool
-inline i32 ssimfilt::tuple_N() {
+inline i64 ssimfilt::tuple_N() {
     return _db.tuple_n;
 }
 
@@ -102,7 +102,7 @@ inline ssimfilt::KVRegx* ssimfilt::matchfield_Last() {
 
 // --- ssimfilt.FDb.matchfield.N
 // Return number of items in the pool
-inline i32 ssimfilt::matchfield_N() {
+inline i64 ssimfilt::matchfield_N() {
     return _db.matchfield_n;
 }
 
@@ -144,7 +144,7 @@ inline ssimfilt::KVRegx* ssimfilt::selfield_Last() {
 
 // --- ssimfilt.FDb.selfield.N
 // Return number of items in the pool
-inline i32 ssimfilt::selfield_N() {
+inline i64 ssimfilt::selfield_N() {
     return _db.selfield_n;
 }
 
@@ -186,7 +186,7 @@ inline ssimfilt::FUnstablefld* ssimfilt::unstablefld_Last() {
 
 // --- ssimfilt.FDb.unstablefld.N
 // Return number of items in the pool
-inline i32 ssimfilt::unstablefld_N() {
+inline i64 ssimfilt::unstablefld_N() {
     return _db.unstablefld_n;
 }
 

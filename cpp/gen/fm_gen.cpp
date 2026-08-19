@@ -217,6 +217,7 @@ const char* fm::value_ToCstr(const fm::Flag& parent) {
     switch(value_GetEnum(parent)) {
         case fm_Flag_value_cleared         : ret = "cleared";  break;
         case fm_Flag_value_raised          : ret = "raised";  break;
+        case fm_Flag_value_purge           : ret = "purge";  break;
     }
     return ret;
 }
@@ -240,6 +241,14 @@ void fm::value_Print(const fm::Flag& parent, algo::cstring &lhs) {
 bool fm::value_SetStrptrMaybe(fm::Flag& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('p','u','r','g','e'): {
+                    value_SetEnum(parent,fm_Flag_value_purge); ret = true; break;
+                }
+            }
+            break;
+        }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('r','a','i','s','e','d'): {
@@ -499,64 +508,6 @@ void fm::Description_Print(fm::Description& row, algo::cstring& str) {
     fm::ch_Print(row, str);
 }
 
-// --- fm.Source.ch.Print
-void fm::ch_Print(fm::Source& parent, algo::cstring &out) {
-    ch_Addary(out, ch_Getary(parent));
-}
-
-// --- fm.Source.ch.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool fm::ch_ReadStrptrMaybe(fm::Source& parent, algo::strptr rhs) {
-    bool retval = false;
-    if (rhs.n_elems <= 32) {
-        ch_SetStrptr(parent, rhs);
-        retval = true;
-    } else {
-        algo_lib::AppendErrtext("comment","text too long, limit 32");
-    }
-    return retval;
-}
-
-// --- fm.Source.ch.SetStrptr
-// Copy from strptr, clipping length
-// Set string to the value provided by RHS.
-// If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Source& parent, const algo::strptr& rhs) {
-    int len = i32_Min(rhs.n_elems, 32);
-    char *rhs_elems = rhs.elems;
-    int i = 0;
-    int j = 0;
-    for (; i < len; i++, j++) {
-        parent.ch[j] = rhs_elems[i];
-    }
-    for (; j < 32; j++) {
-        parent.ch[j] = ' ';
-    }
-}
-
-// --- fm.Source..Hash
-u32 fm::Source_Hash(u32 prev, const fm::Source& rhs) {
-    algo::strptr ch_strptr = ch_Getary(rhs);
-    prev = ::strptr_Hash(prev, ch_strptr);
-    return prev;
-}
-
-// --- fm.Source..ReadStrptrMaybe
-// Read fields of fm::Source from an ascii string.
-// The format of the string is the format of the fm::Source's only field
-bool fm::Source_ReadStrptrMaybe(fm::Source &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && ch_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- fm.Source..Print
-// print string representation of ROW to string STR
-// cfmt:fm.Source.String  printfmt:Raw
-void fm::Source_Print(fm::Source& row, algo::cstring& str) {
-    fm::ch_Print(row, str);
-}
-
 // --- fm.AlarmMsg.base.CopyOut
 // Copy fields out of row
 void fm::parent_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) {
@@ -620,8 +571,11 @@ bool fm::AlarmMsg_ReadFieldMaybe(fm::AlarmMsg& parent, algo::strptr field, algo:
         case fm_FieldId_description: {
             retval = fm::Description_ReadStrptrMaybe(parent.description, strval);
         } break;
-        case fm_FieldId_source: {
-            retval = fm::Source_ReadStrptrMaybe(parent.source, strval);
+        case fm_FieldId_shelved: {
+            retval = bool_ReadStrptrMaybe(parent.shelved, strval);
+        } break;
+        case fm_FieldId_n_flap: {
+            retval = u32_ReadStrptrMaybe(parent.n_flap, strval);
         } break;
         default: {
             retval = false;
@@ -650,8 +604,10 @@ bool fm::AlarmMsg_ReadStrptrMaybe(fm::AlarmMsg &parent, algo::strptr in_str) {
 // Set all fields to initial values.
 void fm::AlarmMsg_Init(fm::AlarmMsg& parent) {
     parent.type = u32(17);
-    parent.length = u32(ssizeof(parent) + (0));
+    parent.length = u32(ssizeof(parent));
     parent.n_occurred = i32(0);
+    parent.shelved = bool(false);
+    parent.n_flap = u32(0);
 }
 
 // --- fm.AlarmMsg..Print
@@ -700,8 +656,11 @@ void fm::AlarmMsg_Print(fm::AlarmMsg& row, algo::cstring& str) {
     fm::Description_Print(row.description, temp);
     PrintAttrSpaceReset(str,"description", temp);
 
-    fm::Source_Print(row.source, temp);
-    PrintAttrSpaceReset(str,"source", temp);
+    bool_Print(row.shelved, temp);
+    PrintAttrSpaceReset(str,"shelved", temp);
+
+    u32_Print(row.n_flap, temp);
+    PrintAttrSpaceReset(str,"n_flap", temp);
 }
 
 // --- fm.FieldId.value.ToCstr
@@ -726,7 +685,8 @@ const char* fm::value_ToCstr(const fm::FieldId& parent) {
         case fm_FieldId_objtype_summary    : ret = "objtype_summary";  break;
         case fm_FieldId_summary            : ret = "summary";  break;
         case fm_FieldId_description        : ret = "description";  break;
-        case fm_FieldId_source             : ret = "source";  break;
+        case fm_FieldId_shelved            : ret = "shelved";  break;
+        case fm_FieldId_n_flap             : ret = "n_flap";  break;
         case fm_FieldId_ch                 : ret = "ch";  break;
         case fm_FieldId_value              : ret = "value";  break;
     }
@@ -790,8 +750,8 @@ bool fm::value_SetStrptrMaybe(fm::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('l','e','n','g','t','h'): {
                     value_SetEnum(parent,fm_FieldId_length); ret = true; break;
                 }
-                case LE_STR6('s','o','u','r','c','e'): {
-                    value_SetEnum(parent,fm_FieldId_source); ret = true; break;
+                case LE_STR6('n','_','f','l','a','p'): {
+                    value_SetEnum(parent,fm_FieldId_n_flap); ret = true; break;
                 }
             }
             break;
@@ -803,6 +763,9 @@ bool fm::value_SetStrptrMaybe(fm::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('o','b','j','t','y','p','e'): {
                     value_SetEnum(parent,fm_FieldId_objtype); ret = true; break;
+                }
+                case LE_STR7('s','h','e','l','v','e','d'): {
+                    value_SetEnum(parent,fm_FieldId_shelved); ret = true; break;
                 }
                 case LE_STR7('s','u','m','m','a','r','y'): {
                     value_SetEnum(parent,fm_FieldId_summary); ret = true; break;
@@ -900,7 +863,7 @@ bool fm::FieldId_ReadStrptrMaybe(fm::FieldId &parent, algo::strptr in_str) {
 // --- fm.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:fm.FieldId.String  printfmt:Raw
-void fm::FieldId_Print(fm::FieldId& row, algo::cstring& str) {
+void fm::FieldId_Print(fm::FieldId row, algo::cstring& str) {
     fm::value_Print(row, str);
 }
 
@@ -912,6 +875,6 @@ inline static void fm::SizeCheck() {
 void fm::StaticCheck() {
     algo_assert(_offset_of(fm::Flag, value) + sizeof(((fm::Flag*)0)->value) == sizeof(fm::Flag));
     algo_assert(_offset_of(fm::Severity, value) + sizeof(((fm::Severity*)0)->value) == sizeof(fm::Severity));
-    algo_assert(_offset_of(fm::AlarmMsg, source) + sizeof(((fm::AlarmMsg*)0)->source) == sizeof(fm::AlarmMsg));
+    algo_assert(_offset_of(fm::AlarmMsg, n_flap) + sizeof(((fm::AlarmMsg*)0)->n_flap) == sizeof(fm::AlarmMsg));
     algo_assert(_offset_of(fm::FieldId, value) + sizeof(((fm::FieldId*)0)->value) == sizeof(fm::FieldId));
 }

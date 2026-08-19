@@ -84,7 +84,7 @@ inline src_func::FTargsrc* src_func::targsrc_Last() {
 
 // --- src_func.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 src_func::targsrc_N() {
+inline i64 src_func::targsrc_N() {
     return _db.targsrc_n;
 }
 
@@ -126,7 +126,7 @@ inline src_func::FTarget* src_func::target_Last() {
 
 // --- src_func.FDb.target.N
 // Return number of items in the pool
-inline i32 src_func::target_N() {
+inline i64 src_func::target_N() {
     return _db.target_n;
 }
 
@@ -180,7 +180,7 @@ inline src_func::FFunc* src_func::func_Last() {
 
 // --- src_func.FDb.func.N
 // Return number of items in the pool
-inline i32 src_func::func_N() {
+inline i64 src_func::func_N() {
     return _db.func_n;
 }
 
@@ -264,7 +264,7 @@ inline src_func::FCtypelen* src_func::ctypelen_Last() {
 
 // --- src_func.FDb.ctypelen.N
 // Return number of items in the pool
-inline i32 src_func::ctypelen_N() {
+inline i64 src_func::ctypelen_N() {
     return _db.ctypelen_n;
 }
 
@@ -318,7 +318,7 @@ inline src_func::FUserfunc* src_func::userfunc_Last() {
 
 // --- src_func.FDb.userfunc.N
 // Return number of items in the pool
-inline i32 src_func::userfunc_N() {
+inline i64 src_func::userfunc_N() {
     return _db.userfunc_n;
 }
 
@@ -384,7 +384,7 @@ inline src_func::FGenaffix* src_func::genaffix_Last() {
 
 // --- src_func.FDb.genaffix.N
 // Return number of items in the pool
-inline i32 src_func::genaffix_N() {
+inline i64 src_func::genaffix_N() {
     return _db.genaffix_n;
 }
 
@@ -408,6 +408,60 @@ inline bool src_func::ind_genaffix_EmptyQ() {
 // Return number of items in the hash
 inline i32 src_func::ind_genaffix_N() {
     return _db.ind_genaffix_n;
+}
+
+// --- src_func.FDb.gitfile.EmptyQ
+// Return true if index is empty
+inline bool src_func::gitfile_EmptyQ() {
+    return _db.gitfile_n == 0;
+}
+
+// --- src_func.FDb.gitfile.Find
+// Look up row by row id. Return NULL if out of range
+inline src_func::FGitfile* src_func::gitfile_Find(u64 t) {
+    src_func::FGitfile *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.gitfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.gitfile_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- src_func.FDb.gitfile.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline src_func::FGitfile* src_func::gitfile_Last() {
+    return gitfile_Find(u64(_db.gitfile_n-1));
+}
+
+// --- src_func.FDb.gitfile.N
+// Return number of items in the pool
+inline i64 src_func::gitfile_N() {
+    return _db.gitfile_n;
+}
+
+// --- src_func.FDb.gitfile.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline src_func::FGitfile& src_func::gitfile_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.gitfile_lary[bsr][index];
+}
+
+// --- src_func.FDb.ind_gitfile.EmptyQ
+// Return true if hash is empty
+inline bool src_func::ind_gitfile_EmptyQ() {
+    return _db.ind_gitfile_n == 0;
+}
+
+// --- src_func.FDb.ind_gitfile.N
+// Return number of items in the hash
+inline i32 src_func::ind_gitfile_N() {
+    return _db.ind_gitfile_n;
 }
 
 // --- src_func.FDb.targsrc_curs.Reset
@@ -572,6 +626,31 @@ inline src_func::FGenaffix& src_func::_db_genaffix_curs_Access(_db_genaffix_curs
     return genaffix_qFind(u64(curs.index));
 }
 
+// --- src_func.FDb.gitfile_curs.Reset
+// cursor points to valid item
+inline void src_func::_db_gitfile_curs_Reset(_db_gitfile_curs &curs, src_func::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- src_func.FDb.gitfile_curs.ValidQ
+// cursor points to valid item
+inline bool src_func::_db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) {
+    return curs.index < _db.gitfile_n;
+}
+
+// --- src_func.FDb.gitfile_curs.Next
+// proceed to next item
+inline void src_func::_db_gitfile_curs_Next(_db_gitfile_curs &curs) {
+    curs.index++;
+}
+
+// --- src_func.FDb.gitfile_curs.Access
+// item access
+inline src_func::FGitfile& src_func::_db_gitfile_curs_Access(_db_gitfile_curs &curs) {
+    return gitfile_qFind(u64(curs.index));
+}
+
 // --- src_func.FFunc.sortkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 inline bool src_func::sortkey_Lt(src_func::FFunc& func, src_func::FFunc &rhs) {
@@ -603,6 +682,23 @@ inline  src_func::FGenaffix::FGenaffix() {
 // --- src_func.FGenaffix..Dtor
 inline  src_func::FGenaffix::~FGenaffix() {
     src_func::FGenaffix_Uninit(*this);
+}
+
+// --- src_func.FGitfile..Init
+// Set all fields to initial values.
+inline void src_func::FGitfile_Init(src_func::FGitfile& gitfile) {
+    gitfile.ind_gitfile_next = (src_func::FGitfile*)-1; // (src_func.FDb.ind_gitfile) not-in-hash
+    gitfile.ind_gitfile_hashval = 0; // stored hash value
+}
+
+// --- src_func.FGitfile..Ctor
+inline  src_func::FGitfile::FGitfile() {
+    src_func::FGitfile_Init(*this);
+}
+
+// --- src_func.FGitfile..Dtor
+inline  src_func::FGitfile::~FGitfile() {
+    src_func::FGitfile_Uninit(*this);
 }
 
 // --- src_func.FTarget.cd_targsrc.EmptyQ
@@ -875,6 +971,7 @@ inline void src_func::FUserfunc_Init(src_func::FUserfunc& userfunc) {
     userfunc.zd_func_head = NULL; // (src_func.FUserfunc.zd_func)
     userfunc.zd_func_n = 0; // (src_func.FUserfunc.zd_func)
     userfunc.zd_func_tail = NULL; // (src_func.FUserfunc.zd_func)
+    userfunc.proto = algo::strptr("");
     userfunc.ind_userfunc_next = (src_func::FUserfunc*)-1; // (src_func.FDb.ind_userfunc) not-in-hash
     userfunc.ind_userfunc_hashval = 0; // stored hash value
     userfunc.ind_userfunc_cppname_next = (src_func::FUserfunc*)-1; // (src_func.FDb.ind_userfunc_cppname) not-in-hash

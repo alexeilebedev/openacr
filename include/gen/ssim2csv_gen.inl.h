@@ -60,7 +60,7 @@ inline ssim2csv::FExpand* ssim2csv::expand_Last() {
 
 // --- ssim2csv.FDb.expand.N
 // Return number of items in the pool
-inline i32 ssim2csv::expand_N() {
+inline i64 ssim2csv::expand_N() {
     return _db.expand_n;
 }
 
@@ -114,7 +114,7 @@ inline ssim2csv::FOutfile* ssim2csv::outfile_Last() {
 
 // --- ssim2csv.FDb.outfile.N
 // Return number of items in the pool
-inline i32 ssim2csv::outfile_N() {
+inline i64 ssim2csv::outfile_N() {
     return _db.outfile_n;
 }
 
@@ -169,20 +169,20 @@ inline algo::cstring* ssim2csv::name_Last() {
 
 // --- ssim2csv.FDb.name.Max
 // Return max. number of items in the array
-inline i32 ssim2csv::name_Max() {
+inline i64 ssim2csv::name_Max() {
     return _db.name_max;
 }
 
 // --- ssim2csv.FDb.name.N
 // Return number of items in the array
-inline i32 ssim2csv::name_N() {
+inline i64 ssim2csv::name_N() {
     return _db.name_n;
 }
 
 // --- ssim2csv.FDb.name.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void ssim2csv::name_Reserve(int n) {
-    u32 new_n = _db.name_n + n;
+inline void ssim2csv::name_Reserve(i64 n) {
+    u64 new_n = _db.name_n + n;
     if (UNLIKELY(new_n > _db.name_max)) {
         name_AbsReserve(new_n);
     }
@@ -236,20 +236,20 @@ inline algo::cstring* ssim2csv::value_Last() {
 
 // --- ssim2csv.FDb.value.Max
 // Return max. number of items in the array
-inline i32 ssim2csv::value_Max() {
+inline i64 ssim2csv::value_Max() {
     return _db.value_max;
 }
 
 // --- ssim2csv.FDb.value.N
 // Return number of items in the array
-inline i32 ssim2csv::value_N() {
+inline i64 ssim2csv::value_N() {
     return _db.value_n;
 }
 
 // --- ssim2csv.FDb.value.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void ssim2csv::value_Reserve(int n) {
-    u32 new_n = _db.value_n + n;
+inline void ssim2csv::value_Reserve(i64 n) {
+    u64 new_n = _db.value_n + n;
     if (UNLIKELY(new_n > _db.value_max)) {
         value_AbsReserve(new_n);
     }
@@ -303,20 +303,20 @@ inline ssim2csv::FFlatten* ssim2csv::flatten_Last() {
 
 // --- ssim2csv.FDb.flatten.Max
 // Return max. number of items in the array
-inline i32 ssim2csv::flatten_Max() {
+inline i64 ssim2csv::flatten_Max() {
     return _db.flatten_max;
 }
 
 // --- ssim2csv.FDb.flatten.N
 // Return number of items in the array
-inline i32 ssim2csv::flatten_N() {
+inline i64 ssim2csv::flatten_N() {
     return _db.flatten_n;
 }
 
 // --- ssim2csv.FDb.flatten.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void ssim2csv::flatten_Reserve(int n) {
-    u32 new_n = _db.flatten_n + n;
+inline void ssim2csv::flatten_Reserve(i64 n) {
+    u64 new_n = _db.flatten_n + n;
     if (UNLIKELY(new_n > _db.flatten_max)) {
         flatten_AbsReserve(new_n);
     }
