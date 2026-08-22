@@ -254,7 +254,7 @@ void atf_comp::ProcWrite(atf_comp::FProc &proc, strptr msg) {
     Log(tempstr() << proc.proc << " <- " << msg);
     tempstr line;
     line << Trimmed(Subst(msg)) << "\n";
-    sighandler_t prior = signal(SIGPIPE, SIG_IGN);
+    auto prior = signal(SIGPIPE, SIG_IGN);
     ssize_t nwrite = write(proc.stdin_fd.value, line.ch_elems, line.ch_n);
     int err = errno;
     signal(SIGPIPE, prior);

@@ -31,7 +31,7 @@ inline void pad_byte_Init(pad_byte& parent) {
 
 // --- bool..Hash
 inline u32 bool_Hash(u32 prev, bool rhs) {
-    prev = _mm_crc32_u8(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -66,7 +66,7 @@ inline bool bool_Update(bool &lhs, bool rhs) {
 
 // --- char..Hash
 inline u32 char_Hash(u32 prev, char rhs) {
-    prev = _mm_crc32_u8(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -101,11 +101,7 @@ inline bool char_Update(char &lhs, char rhs) {
 
 // --- double..Hash
 inline u32 double_Hash(u32 prev, double rhs) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
-    u64 val0 = *(u64*)((u8*)&rhs + 0);
-    prev = _mm_crc32_u64(prev, val0);
-#pragma GCC diagnostic pop
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -172,11 +168,7 @@ inline bool double_Update(double &lhs, double rhs) {
 
 // --- float..Hash
 inline u32 float_Hash(u32 prev, float rhs) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
-    u32 val0 = *(u32*)((u8*)&rhs + 0);
-    prev = _mm_crc32_u32(prev, val0);
-#pragma GCC diagnostic pop
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -243,7 +235,7 @@ inline bool float_Update(float &lhs, float rhs) {
 
 // --- i16..Hash
 inline u32 i16_Hash(u32 prev, i16 rhs) {
-    prev = _mm_crc32_u16(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -310,7 +302,7 @@ inline bool i16_Update(i16 &lhs, i16 rhs) {
 
 // --- i32..Hash
 inline u32 i32_Hash(u32 prev, i32 rhs) {
-    prev = _mm_crc32_u32(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -377,7 +369,7 @@ inline bool i32_Update(i32 &lhs, i32 rhs) {
 
 // --- i64..Hash
 inline u32 i64_Hash(u32 prev, i64 rhs) {
-    prev = _mm_crc32_u64(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -444,7 +436,7 @@ inline bool i64_Update(i64 &lhs, i64 rhs) {
 
 // --- i8..Hash
 inline u32 i8_Hash(u32 prev, i8 rhs) {
-    prev = _mm_crc32_u8(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -511,7 +503,7 @@ inline bool i8_Update(i8 &lhs, i8 rhs) {
 
 // --- u8..Hash
 inline u32 u8_Hash(u32 prev, u8 rhs) {
-    prev = _mm_crc32_u8(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -578,13 +570,7 @@ inline bool u8_Update(u8 &lhs, u8 rhs) {
 
 // --- u128..Hash
 inline u32 u128_Hash(u32 prev, u128 rhs) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
-    u64 val0 = *(u64*)((u8*)&rhs + 0);
-    prev = _mm_crc32_u64(prev, val0);
-    u64 val8 = *(u64*)((u8*)&rhs + 8);
-    prev = _mm_crc32_u64(prev, val8);
-#pragma GCC diagnostic pop
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -651,7 +637,7 @@ inline bool u128_Update(u128 &lhs, u128 rhs) {
 
 // --- u16..Hash
 inline u32 u16_Hash(u32 prev, u16 rhs) {
-    prev = _mm_crc32_u16(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -718,7 +704,7 @@ inline bool u16_Update(u16 &lhs, u16 rhs) {
 
 // --- u32..Hash
 inline u32 u32_Hash(u32 prev, u32 rhs) {
-    prev = _mm_crc32_u32(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 
@@ -785,7 +771,7 @@ inline bool u32_Update(u32 &lhs, u32 rhs) {
 
 // --- u64..Hash
 inline u32 u64_Hash(u32 prev, u64 rhs) {
-    prev = _mm_crc32_u64(prev,rhs);
+    prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));
     return prev;
 }
 

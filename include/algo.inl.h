@@ -234,22 +234,16 @@ inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     return (u32)h;
 }
 
-#else
+#elif defined(__aarch64__)
 
-inline u32 _mm_crc32_u64(u32 prev, u64 val) {
-    return CRC32Step(prev, &val, sizeof(val));
-}
-
-inline u32 _mm_crc32_u32(u32 prev, u32 val) {
-    return CRC32Step(prev, &val, sizeof(val));
-}
-
-inline u32 _mm_crc32_u16(u32 prev, u16 val) {
-    return CRC32Step(prev, &val, sizeof(val));
-}
-
-inline u32 _mm_crc32_u8 (u32 prev, u8  val) {
-    return CRC32Step(prev, &val, sizeof(val));
+inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
+    frep_(i,len) {
+        old ^= x[i];
+        frep_(bit,8) {
+            old = (old >> 1) ^ (0xedb88320U & u32(0 - (old & 1)));
+        }
+    }
+    return old;
 }
 
 #endif
@@ -576,51 +570,46 @@ inline u64 algo::ReadLE64(const void *val) {
 // Forward:  returns 0-based index of least significant bit that is set
 // Reverse:  returns 0-based index of most  significant bit that is set.
 // input argument must not be zero.
-// input result in 0 is undefined (see Intel manual)
-// http://www.intel.com/content/dam/doc/manual/64-ia-32-architectures-software-developer-vol-2a-2b-instruction-set-a-z-manual.pdf
+// input result in 0 is undefined.
 
 inline u32 algo::u32_BitScanForward(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward(&r,v);
-#else
-    u32 r;
-    asm ("bsfl %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return u32(__builtin_ctz(v));
+#endif
 }
 
 inline u64 algo::u64_BitScanForward(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward64(&r,v);
-#else
-    u64 r;
-    asm ("bsfq %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return u64(__builtin_ctzll(v));
+#endif
 }
 
 inline u32 algo::u32_BitScanReverse(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse(&r,v);
-#else
-    u32 r;
-    asm ("bsrl %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return u32(31 - __builtin_clz(v));
+#endif
 }
 
 inline u64 algo::u64_BitScanReverse(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse64(&r,v);
-#else
-    u64 r;
-    asm ("bsrq %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return u64(63 - __builtin_clzll(v));
+#endif
 }
 
 inline u32 algo::u16_BitScanForward(u16 v) {
@@ -724,6 +713,10 @@ inline double algo::get_cpu_hz() {
 inline u64 algo::get_cycles() {
 #ifdef WIN32
     return __rdtsc();
+#elif defined(__MACH__) && defined(__aarch64__)
+    return mach_absolute_time();
+#elif defined(__aarch64__)
+    return __builtin_readcyclecounter();
 #else
     unsigned low, high;
     asm volatile (
@@ -778,6 +771,9 @@ inline algo::UnixTime algo::CurrUnixTime(){
 inline u64 algo::rdtscp() {
 #ifdef WIN32
     _ReadBarrier();
+    return get_cycles();
+#elif defined(__aarch64__)
+    asm volatile ("isb" ::: "memory");
     return get_cycles();
 #else
     unsigned low, high;

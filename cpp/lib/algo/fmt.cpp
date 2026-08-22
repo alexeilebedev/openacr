@@ -976,7 +976,7 @@ bool algo::I32RangeAry_ReadStrptrMaybe(algo::I32RangeAry &parent, algo::strptr i
 
 void double_Print(double d, algo::cstring &str) {
     char c[128];
-    ch_Addary(str, strptr(c,sprintf(c,"%g",d)));
+    ch_Addary(str, strptr(c,snprintf(c,sizeof(c),"%g",d)));
 }
 
 void float_Print(float d, algo::cstring &str) {
@@ -1486,6 +1486,24 @@ void algo::strptr_PrintSql(algo::strptr str, algo::cstring &out) {
 
 void algo::Attr_Print(algo::Attr &attr, algo::cstring &str) {
     PrintAttr(str, attr.name, attr.value);
+}
+
+bool algo::Attr_ReadStrptrMaybe(algo::Attr &parent, algo::strptr in_str) {
+    algo::Attr temp;
+    algo::StringIter iter(in_str);
+    bool ok = !iter.Ws().EofQ();
+    if (ok) {
+        ok = algo::cstring_ReadCmdarg(temp.value, iter, false);
+        if (algo::SkipChar(iter, ':')) {
+            algo::TSwap(temp.name,temp.value);
+            ok &= algo::cstring_ReadCmdarg(temp.value, iter, true);
+        }
+        ok &= iter.Ws().EofQ();
+    }
+    if (ok) {
+        algo::TSwap(parent,temp);
+    }
+    return ok;
 }
 
 // Print a string suitable for parsing with Tuple

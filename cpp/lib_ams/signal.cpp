@@ -37,10 +37,10 @@
 
 #include "include/algo.h"
 #include "include/lib_ams.h"
-#ifdef WIN32
-#include <windows.h>
-#else
+#ifdef __linux__
 #include <sys/signalfd.h>
+#elif defined(WIN32)
+#include <windows.h>
 #endif
 
 #ifdef _COVERAGE
@@ -127,9 +127,11 @@ void lib_ams::UnparkReaderSet() {
 // Drain the signalfd (coalesced SIGRTMIN wakeups read as one event) and move
 // every parked reader back into the poll loop.
 void lib_ams::SignalReadStep() {
+#ifdef __linux__
     struct signalfd_siginfo info;
     while (read(_db.signal_fd.value, &info, sizeof(info)) == sizeof(info)) {
     }
+#endif
     UnparkReaderSet();
 }
 
@@ -139,6 +141,7 @@ void lib_ams::SignalReadStep() {
 // every parked reader back into the poll loop; the SIGRTMIN block stays in
 // place for the rest of the process lifetime.
 void lib_ams::SetSignaledMode(bool enable) {
+#ifdef __linux__
     if (enable && !_db.signaled) {
         sigset_t mask;
         sigemptyset(&mask);
@@ -171,6 +174,13 @@ void lib_ams::SetSignaledMode(bool enable) {
         UnparkReaderSet();
         _db.signaled = false;
     }
+#else
+    // signalfd and real-time signals are Linux-specific.  Other platforms
+    // retain the normal busy-poll mode until a native wakeup backend exists.
+    (void)enable;
+    UnparkReaderSet();
+    _db.signaled = false;
+#endif
 }
 
 // After publishing data to SHM, wake any reader parked on it.  Full barrier
@@ -179,12 +189,16 @@ void lib_ams::SetSignaledMode(bool enable) {
 // store-load fence on both sides is required -- without it each can miss the
 // other and the wakeup is lost.
 void lib_ams::WakeReader(lib_ams::FShm &shm) {
+#ifdef __linux__
     mfence();
     ind_beg(shm_c_shmember_curs, member, shm) {
         if (member.sleeping && member.pid > 0) {
             kill(member.pid, SIGRTMIN);
         }
     }ind_end;
+#else
+    (void)shm;
+#endif
 }
 
 // After draining SHM, wake a writer parked on its budget -- but only once the
@@ -193,6 +207,7 @@ void lib_ams::WakeReader(lib_ams::FShm &shm) {
 // offset store must be globally visible before this re-read, else the writer's
 // own re-check and this one can both miss.
 void lib_ams::WakeWriter(lib_ams::FShm &shm) {
+#ifdef __linux__
     if (shm.c_shmhdr->writer_sleeping) {
         mfence();
         u64 unread = shm.c_shmhdr->woff - shm.c_reader->offset;
@@ -202,6 +217,9 @@ void lib_ams::WakeWriter(lib_ams::FShm &shm) {
             kill(shm.c_shmhdr->writer_pid, SIGRTMIN);
         }
     }
+#else
+    (void)shm;
+#endif
 }
 
 // Park the reader on SHM: set its sleeping flag, then under a full barrier

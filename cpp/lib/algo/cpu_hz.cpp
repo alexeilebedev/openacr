@@ -151,11 +151,18 @@ void algo_lib::InitCpuHz() {
         hz = freq;
     }
 #elif defined(__MACH__)
+#ifdef __aarch64__
+    mach_timebase_info_data_t timebase;
+    if (mach_timebase_info(&timebase) == KERN_SUCCESS && timebase.numer != 0) {
+        hz = 1e9 * double(timebase.denom) / double(timebase.numer);
+    }
+#else
     uint64_t freq = 0;
     size_t size = sizeof(freq);
     if (sysctlbyname("hw.cpufrequency", &freq, &size, NULL, 0) == 0) {
         hz = freq;
     }
+#endif
 #elif defined(__CYGWIN__)
     // sampling /proc/cpuinfo on a windows machine under cygwin
     // can take a unnaturally long time, such as 13 seconds.

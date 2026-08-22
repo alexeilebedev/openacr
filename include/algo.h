@@ -1080,6 +1080,7 @@ namespace algo { // update-hdr
     void strptr_PrintSql(algo::strptr str, algo::cstring &out);
     //     (user-implemented function, prototype is in amc-generated header)
     // void Attr_Print(algo::Attr &attr, algo::cstring &str); // cfmt:algo.Attr.String
+    // bool Attr_ReadStrptrMaybe(algo::Attr &parent, algo::strptr in_str); // cfmt:algo.Attr.String
 
     // Print a string suitable for parsing with Tuple
     // If the string doesn't need quotes, it is printed as-is.
@@ -1926,8 +1927,7 @@ namespace algo { // update-hdr
     // Forward:  returns 0-based index of least significant bit that is set
     // Reverse:  returns 0-based index of most  significant bit that is set.
     // input argument must not be zero.
-    // input result in 0 is undefined (see Intel manual)
-    // http://www.intel.com/content/dam/doc/manual/64-ia-32-architectures-software-developer-vol-2a-2b-instruction-set-a-z-manual.pdf
+    // input result in 0 is undefined.
     inline u32 u32_BitScanForward(u32 v);
     inline u64 u64_BitScanForward(u64 v);
     inline u32 u32_BitScanReverse(u32 v);

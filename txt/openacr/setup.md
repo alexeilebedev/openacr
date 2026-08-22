@@ -3,19 +3,20 @@
 Presently, this project has been tested with the following distributions / compilers:
 
 * g++ on Linux
+* Apple Clang on macOS (Apple Silicon)
 
 The following combinations have been tested at some point but are no longer maintained
 and are most likely broken:
 
-* clang on MacOS (a.k.a. Darwin)
 * clang on FreeBSD
 * clang on Linux (RHEL, CentOS, Ubuntu, Debian)
 * g++ on Cygwin
 * g++-9 on Linux
 
-The MariaDB and OpenSSL packages are the main external dependencies.
+MariaDB, OpenSSL, and GNU Readline are the main external dependencies.
 MariaDB (formerly MySQL) is not really required, but it's used by `acr_my`, `ssim2mysql` and
-`mysql2ssim` utilities. OpenSSL provides `libcrypto` which is for SHA1 functions.
+`mysql2ssim` utilities. OpenSSL provides `libcrypto` for SHA1 functions, and
+Readline provides interactive command-line editing.
 
 ### Pre-requisites: CentOS:
 <a href="#pre-requisites-centos"></a>
@@ -27,27 +28,31 @@ MariaDB (formerly MySQL) is not really required, but it's used by `acr_my`, `ssi
         libssl-dev libcurl4-openssl-dev liblz4-dev libpq-dev cppcheck
     apt install llvm llvm-dev  # to enable abt -compiler llvm
 
-### Pre-requisites: MacOS
+### Prerequisites: macOS (Apple Silicon)
 <a href="#pre-requisites-macos"></a>
 Install [Homebrew](https://brew.sh/). Then install the dependencies and make
 their headers and libraries visible to the compiler:
 
-    brew install mariadb openssl
-    HOMEBREW_PREFIX="$(brew --prefix)"
-    OPENSSL_PREFIX="$(brew --prefix openssl)"
-    MARIADB_PREFIX="$(brew --prefix mariadb)"
+    brew install mariadb openssl readline
     mkdir -p temp/homebrew-include
-    ln -sfn "$MARIADB_PREFIX/include/mysql" temp/homebrew-include/mariadb
-    export CPATH="$OPENSSL_PREFIX/include:$PWD/temp/homebrew-include:$HOMEBREW_PREFIX/include${CPATH:+:$CPATH}"
-    export LIBRARY_PATH="$OPENSSL_PREFIX/lib:$MARIADB_PREFIX/lib:$HOMEBREW_PREFIX/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
+    ln -sfn /opt/homebrew/opt/mariadb/include/mysql temp/homebrew-include/mariadb
+    export CPATH="$PWD/temp/homebrew-include:/opt/homebrew/include${CPATH:+:$CPATH}"
+    export LIBRARY_PATH="/opt/homebrew/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
 
-These commands work with both Apple Silicon Homebrew (`/opt/homebrew`) and
-Intel Homebrew (`/usr/local`). They replace the old `/usr/local` symlink
-instructions, which fail when that directory does not exist and do not expose
-the OpenSSL headers. The local MariaDB link provides the include layout expected
-by OpenACR without changing system directories. Run these commands from the
-OpenACR top-level directory; the exported paths affect only the current shell
-session.
+Homebrew uses `/opt/homebrew` on Apple Silicon. The local MariaDB link provides
+the include layout expected by OpenACR without changing system directories.
+Run these commands from the OpenACR top-level directory; the exported paths
+affect only the current shell session.
+
+TODO: Update OpenACR to recognize Homebrew's `<mysql/mysql.h>` header layout.
+OpenACR currently expects `<mariadb/mysql.h>`, so `temp/homebrew-include` acts
+as a compatibility shim by exposing Homebrew's `mysql` include directory as
+`mariadb`. Remove the temporary directory and symlink from these instructions
+after the source supports the Homebrew layout directly.
+
+TODO: Add a native macOS wakeup backend for `lib_ams` signaled mode. Linux uses
+`signalfd` and real-time signals, which macOS does not provide. Regular
+busy-poll mode is supported on macOS; the optional signaled sleep mode is not.
 
 ### Path
 <a href="#path"></a>

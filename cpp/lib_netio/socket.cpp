@@ -16,8 +16,10 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
 
+#ifdef __linux__
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
+#endif
 
 //------------------------------------------------------------------------------
 
@@ -37,7 +39,12 @@ algo::Fildes lib_netio::CreateUdpSocket() {
 
 // Create Netlink socket
 algo::Fildes lib_netio::CreateNetlinkSocket() {
+#ifdef __linux__
     return algo::Fildes(socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE));
+#else
+    errno = ENOTSUP;
+    return algo::Fildes(-1);
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -70,15 +77,22 @@ bool lib_netio::Bind(algo::Fildes sock, strptr addr) {
 
 //  Wrapper for bind to netlink
 bool lib_netio::BindNetlink(algo::Fildes sock) {
+#ifdef __linux__
     sockaddr_nl sa;
     algo::ZeroBytes(sa);
     sa.nl_family = AF_NETLINK;
     sa.nl_groups = RTMGRP_LINK;
     return bind(sock.value, (sockaddr *)&sa, sizeof sa) == 0;
+#else
+    (void)sock;
+    errno = ENOTSUP;
+    return false;
+#endif
 };
 
 // send GETLINK netlink request
 bool lib_netio::RequestLinkDump(algo::Fildes sock) {
+#ifdef __linux__
     // address
     sockaddr_nl sa;
     algo::ZeroBytes(sa);
@@ -95,6 +109,11 @@ bool lib_netio::RequestLinkDump(algo::Fildes sock) {
     req.nlh.nlmsg_flags = NLM_F_REQUEST | NLM_F_DUMP;
     req.ifm.ifi_family = AF_UNSPEC;
     return sendto(sock.value, buf, sizeof buf, 0, (sockaddr*)&sa, sizeof sa) == sizeof buf;
+#else
+    (void)sock;
+    errno = ENOTSUP;
+    return false;
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -189,7 +208,11 @@ bool lib_netio::SetLinger(algo::Fildes sock, algo::UnixDiff timeout DFLTVAL(algo
 // Set TCP keepalive
 bool lib_netio::SetTcpKeepalive(algo::Fildes sock, bool on DFLTVAL(true), algo::UnixDiff idle DFLTVAL(algo::UnixDiff(2)), algo::UnixDiff interval DFLTVAL(algo::UnixDiff(2)), int max_probes DFLTVAL(5)) {
     return SetSocketOption<int>(sock, SOL_SOCKET, SO_KEEPALIVE, on)
+#ifdef __APPLE__
+        && SetSocketOption<int>(sock, IPPROTO_TCP, TCP_KEEPALIVE, idle.value)
+#else
         && SetSocketOption<int>(sock, IPPROTO_TCP, TCP_KEEPIDLE, idle.value)
+#endif
         && SetSocketOption<int>(sock, IPPROTO_TCP, TCP_KEEPINTVL, interval.value)
         && SetSocketOption<int>(sock, IPPROTO_TCP, TCP_KEEPCNT, max_probes);
 }
@@ -330,10 +353,18 @@ bool lib_netio::Ioctl(algo::Fildes sock, strptr name, u32 request, ifreq &ifr) {
 
 // get hardware address for intrface
 bool lib_netio::GetHwAddrFamily(algo::Fildes sock, strptr name, sa_family_t &result) {
+#ifdef __linux__
     ifreq ifr;
     bool ok = Ioctl(sock, name, SIOCGIFHWADDR, ifr);
     result = ok ? ifr.ifr_hwaddr.sa_family : ARPHRD_VOID;
     return ok;
+#else
+    (void)sock;
+    (void)name;
+    result = AF_UNSPEC;
+    errno = ENOTSUP;
+    return false;
+#endif
 }
 
 // get ip address of interface

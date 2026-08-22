@@ -93,6 +93,7 @@
 
 #ifdef __MACH__
 #include <libkern/OSByteOrder.h>
+#include <mach/mach_time.h>
 #endif
 
 #ifndef WIN32
