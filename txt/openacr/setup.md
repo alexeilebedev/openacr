@@ -29,19 +29,43 @@ MariaDB (formerly MySQL) is not really required, but it's used by `acr_my`, `ssi
 
 ### Pre-requisites: MacOS
 <a href="#pre-requisites-macos"></a>
-Install brew. Then,
+Install [Homebrew](https://brew.sh/). Then install the dependencies and make
+their headers and libraries visible to the compiler:
 
     brew install mariadb openssl
-    ln -s /usr/local/opt/openssl/lib/libcrypto.a /usr/local/lib/
-    ln -s /usr/local/opt/openssl/lib/libssl.a /usr/local/lib/
+    HOMEBREW_PREFIX="$(brew --prefix)"
+    OPENSSL_PREFIX="$(brew --prefix openssl)"
+    MARIADB_PREFIX="$(brew --prefix mariadb)"
+    mkdir -p temp/homebrew-include
+    ln -sfn "$MARIADB_PREFIX/include/mysql" temp/homebrew-include/mariadb
+    export CPATH="$OPENSSL_PREFIX/include:$PWD/temp/homebrew-include:$HOMEBREW_PREFIX/include${CPATH:+:$CPATH}"
+    export LIBRARY_PATH="$OPENSSL_PREFIX/lib:$MARIADB_PREFIX/lib:$HOMEBREW_PREFIX/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
+
+These commands work with both Apple Silicon Homebrew (`/opt/homebrew`) and
+Intel Homebrew (`/usr/local`). They replace the old `/usr/local` symlink
+instructions, which fail when that directory does not exist and do not expose
+the OpenSSL headers. The local MariaDB link provides the include layout expected
+by OpenACR without changing system directories. Run these commands from the
+OpenACR top-level directory; the exported paths affect only the current shell
+session.
 
 ### Path
 <a href="#path"></a>
-Add the relative path bin to your path.
-All commands are issued from this, top-level directory. This normalizes all 
-pathnames to a single form.
+Add the relative path `bin` to your `PATH`.
+All commands are issued from this top-level directory. This normalizes all
+pathnames to a single form. In macOS's default shell (`zsh`), and in `bash`, use:
 
-    set PATH=$PATH:bin
+    export PATH="$PATH:bin"
+
+`set PATH=$PATH:bin` does not assign `PATH` in `zsh` or `bash`. The `export`
+command above affects only the current shell session. For a persistent macOS
+configuration, add an absolute path to `~/.zshrc` and reload it:
+
+    export PATH="$PATH:/absolute/path/to/openacr/bin"
+    source ~/.zshrc
+
+Using an absolute path is more reliable because the relative `bin` entry is
+resolved against the current working directory.
 
 ### Building
 <a href="#building"></a>
