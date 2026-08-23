@@ -91,7 +91,7 @@
 //
 // Clang++ support has been discontinued until these issues will have been fixed
 //
-#if defined(__clang__) && !defined(__APPLE__)
+#if defined(__clang__) && !(defined(__APPLE__) && defined(__aarch64__))
 #error clang++ is no longer supported
 #endif
 

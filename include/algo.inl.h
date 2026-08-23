@@ -223,8 +223,8 @@ inline u32 algo::cstring_Hash(u32 prev, const algo::strptr &val) {
 
 #ifdef AOS_SSE42
 
-// When compiled with AOS_SSE42, use intrinsics.
-// Otherwise, the function is defined in crc32.cpp and uses a software implementation
+// Use hardware CRC32C intrinsics on supported x86 and Apple Silicon builds.
+// Otherwise, the function is defined in crc32.cpp and uses a software implementation.
 inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     u64 h = old;
     while (len>=8) { h = _mm_crc32_u64(h,*(u64 T_MAY_ALIAS*)x); x = (u8*)x + 8; len -= 8; }
@@ -234,15 +234,16 @@ inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     return (u32)h;
 }
 
-#elif defined(__aarch64__)
+#elif defined(__APPLE__) && defined(__aarch64__)
 
 inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
-    frep_(i,len) {
-        old ^= x[i];
-        frep_(bit,8) {
-            old = (old >> 1) ^ (0xedb88320U & u32(0 - (old & 1)));
-        }
-    }
+    u64 val64;
+    u32 val32;
+    u16 val16;
+    while (len >= 8) { memcpy(&val64, x, sizeof(val64)); old = __crc32cd(old, val64); x += 8; len -= 8; }
+    if    (len >= 4) { memcpy(&val32, x, sizeof(val32)); old = __crc32cw(old, val32); x += 4; len -= 4; }
+    if    (len >= 2) { memcpy(&val16, x, sizeof(val16)); old = __crc32ch(old, val16); x += 2; len -= 2; }
+    if    (len >= 1) {                                      old = __crc32cb(old, *x);                         }
     return old;
 }
 

@@ -1871,8 +1871,8 @@ namespace algo { // update-hdr
     // inline u32 strptr_Hash(u32 prev, algo::strptr val);
     inline u32 cstring_Hash(u32 prev, const algo::strptr &val);
 
-    // When compiled with AOS_SSE42, use intrinsics.
-    // Otherwise, the function is defined in crc32.cpp and uses a software implementation
+    // Use hardware CRC32C intrinsics on supported x86 and Apple Silicon builds.
+    // Otherwise, the function is defined in crc32.cpp and uses a software implementation.
     inline u32 CRC32Step(u32 old, const u8 *x, size_t len);
     inline int P1Mod(int a, int b);
     inline u32 u32_Count1s(u32 x);

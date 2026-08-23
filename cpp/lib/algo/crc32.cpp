@@ -81,7 +81,7 @@ u32 algo::CRC32IEEE(u32 old, const u8 *data, size_t len) {
     return old;
 }
 
-#if !defined(AOS_SSE42) && !defined(__aarch64__)
+#if !defined(AOS_SSE42) && !(defined(__APPLE__) && defined(__aarch64__))
 u32 algo::CRC32Step(u32 old, const u8 *data, size_t len) {
     rep_(i,int(len)) {
         old = UPDC32(data[i], old);

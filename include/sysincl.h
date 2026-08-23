@@ -96,6 +96,10 @@
 #include <mach/mach_time.h>
 #endif
 
+#if defined(__APPLE__) && defined(__aarch64__)
+#include <arm_acle.h>
+#endif
+
 #ifndef WIN32
 #include <sys/time.h>
 #include <sys/ioctl.h>
