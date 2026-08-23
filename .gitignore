@@ -23,6 +23,7 @@ vmlinux*
 compile_commands.json
 .cache/
 .vscode/
+.idea/
 compile_flags.txt
 .openacr/
 .ccls
