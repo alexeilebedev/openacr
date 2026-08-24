@@ -127,7 +127,6 @@ dev.tool_opt  tool_opt:Darwin-clang++.%-arm64/atf_amc-CC:-Wno-shadow  comment:"A
 dev.tool_opt  tool_opt:Darwin-clang++.%-arm64/%-CC:-Wno-cast-function-type-mismatch  comment:""
 dev.tool_opt  tool_opt:Darwin-clang++.%-arm64/%-CC:-Wno-implicit-exception-spec-mismatch  comment:""
 dev.tool_opt  tool_opt:Darwin-clang++.%-arm64/%-CC:-Wno-nontrivial-memcall  comment:""
-dev.tool_opt  tool_opt:Darwin-clang++.%-arm64/%-CC:-Wno-undefined-inline  comment:""
 dev.tool_opt  tool_opt:Darwin-g++.%-%/%-CC:-Wno-cast-function-type  comment:""
 dev.tool_opt  tool_opt:"FreeBSD-%.%-%/%-CC:-I /usr/local/include"  comment:""
 dev.tool_opt  tool_opt:"FreeBSD-%.%-%/mysql2ssim-LINK:-L /usr/local/lib/mysql"  comment:""

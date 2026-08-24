@@ -77,6 +77,10 @@ resolved against the current working directory.
 Run `ai`.
 See also [ai](/txt/script/ai.md) and [abt](/txt/exe/abt/README.md)
 
+On Apple Silicon, Clang's undefined-inline diagnostic remains enabled. An inline
+function declared without a definition is a source error and should be fixed
+rather than hidden with `-Wno-undefined-inline`.
+
 ### Editor configuration files
 <a href="#editor-configuration-files"></a>
 See files in `conf/` for sample config files that provide ssim syntax highlighting, etc.
