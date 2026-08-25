@@ -577,40 +577,52 @@ inline u32 algo::u32_BitScanForward(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward(&r,v);
-    return r;
+#elif defined(__aarch64__)
+    u32 r = u32(__builtin_ctz(v));
 #else
-    return u32(__builtin_ctz(v));
+    u32 r;
+    asm ("bsfl %1, %0" : "=r"(r) : "rm"(v) );
 #endif
+    return r;
 }
 
 inline u64 algo::u64_BitScanForward(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward64(&r,v);
-    return r;
+#elif defined(__aarch64__)
+    u64 r = u64(__builtin_ctzll(v));
 #else
-    return u64(__builtin_ctzll(v));
+    u64 r;
+    asm ("bsfq %1, %0" : "=r"(r) : "rm"(v) );
 #endif
+    return r;
 }
 
 inline u32 algo::u32_BitScanReverse(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse(&r,v);
-    return r;
+#elif defined(__aarch64__)
+    u32 r = u32(31 - __builtin_clz(v));
 #else
-    return u32(31 - __builtin_clz(v));
+    u32 r;
+    asm ("bsrl %1, %0" : "=r"(r) : "rm"(v) );
 #endif
+    return r;
 }
 
 inline u64 algo::u64_BitScanReverse(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse64(&r,v);
-    return r;
+#elif defined(__aarch64__)
+    u64 r = u64(63 - __builtin_clzll(v));
 #else
-    return u64(63 - __builtin_clzll(v));
+    u64 r;
+    asm ("bsrq %1, %0" : "=r"(r) : "rm"(v) );
 #endif
+    return r;
 }
 
 inline u32 algo::u16_BitScanForward(u16 v) {
