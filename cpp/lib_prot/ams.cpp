@@ -21,6 +21,16 @@
 
 #include "include/algo.h"
 #include "include/gen/ams_gen.h"
+#include "include/gen/ws_gen.h"
+#include "include/gen/ws_gen.inl.h"
+
+u32 ws::payload_N(const ws::Frame& parent) {
+    return payload_len_Get(parent);
+}
+
+u32 ws::payload_N(const ws::FrameMasked& parent) {
+    return payload_len_Get(parent);
+}
 
 // I64Price8: fixed-point price with 8 decimal places
 void ams::I64Price8_Print(ams::I64Price8 row, algo::cstring &str) {

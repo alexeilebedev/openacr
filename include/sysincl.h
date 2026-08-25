@@ -93,6 +93,11 @@
 
 #ifdef __MACH__
 #include <libkern/OSByteOrder.h>
+#include <mach/mach_time.h>
+#endif
+
+#if defined(__APPLE__) && defined(__aarch64__)
+#include <arm_acle.h>
 #endif
 
 #ifndef WIN32

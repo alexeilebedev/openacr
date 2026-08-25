@@ -28,14 +28,6 @@ template<typename T> ws::FrameHeader *CastbasePtr(T *ptr) {
     return ret;
 }
 
-u32 ws::payload_N(const ws::Frame& parent) {
-    return payload_len_Get(parent);
-}
-
-u32 ws::payload_N(const ws::FrameMasked& parent) {
-    return payload_len_Get(parent);
-}
-
 ws::FrameHeader *lib_ws::FrameHeader_FmtByteAry(algo::ByteAry &buf, bool fin, bool rsv1, bool rsv2, bool rsv3,  ws::Opcode opcode, bool mask, u32 masking_key, strptr payload) {
     ws::FrameHeader header;
     fin_Set(header,fin);

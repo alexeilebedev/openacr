@@ -223,8 +223,8 @@ inline u32 algo::cstring_Hash(u32 prev, const algo::strptr &val) {
 
 #ifdef AOS_SSE42
 
-// When compiled with AOS_SSE42, use intrinsics.
-// Otherwise, the function is defined in crc32.cpp and uses a software implementation
+// Use hardware CRC32C intrinsics on supported x86 and Apple Silicon builds.
+// Otherwise, the function is defined in crc32.cpp and uses a software implementation.
 inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     u64 h = old;
     while (len>=8) { h = _mm_crc32_u64(h,*(u64 T_MAY_ALIAS*)x); x = (u8*)x + 8; len -= 8; }
@@ -234,22 +234,17 @@ inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     return (u32)h;
 }
 
-#else
+#elif defined(__APPLE__) && defined(__aarch64__)
 
-inline u32 _mm_crc32_u64(u32 prev, u64 val) {
-    return CRC32Step(prev, &val, sizeof(val));
-}
-
-inline u32 _mm_crc32_u32(u32 prev, u32 val) {
-    return CRC32Step(prev, &val, sizeof(val));
-}
-
-inline u32 _mm_crc32_u16(u32 prev, u16 val) {
-    return CRC32Step(prev, &val, sizeof(val));
-}
-
-inline u32 _mm_crc32_u8 (u32 prev, u8  val) {
-    return CRC32Step(prev, &val, sizeof(val));
+inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
+    u64 val64;
+    u32 val32;
+    u16 val16;
+    while (len >= 8) { memcpy(&val64, x, sizeof(val64)); old = __crc32cd(old, val64); x += 8; len -= 8; }
+    if    (len >= 4) { memcpy(&val32, x, sizeof(val32)); old = __crc32cw(old, val32); x += 4; len -= 4; }
+    if    (len >= 2) { memcpy(&val16, x, sizeof(val16)); old = __crc32ch(old, val16); x += 2; len -= 2; }
+    if    (len >= 1) {                                      old = __crc32cb(old, *x);                         }
+    return old;
 }
 
 #endif
@@ -576,51 +571,46 @@ inline u64 algo::ReadLE64(const void *val) {
 // Forward:  returns 0-based index of least significant bit that is set
 // Reverse:  returns 0-based index of most  significant bit that is set.
 // input argument must not be zero.
-// input result in 0 is undefined (see Intel manual)
-// http://www.intel.com/content/dam/doc/manual/64-ia-32-architectures-software-developer-vol-2a-2b-instruction-set-a-z-manual.pdf
+// input result in 0 is undefined.
 
 inline u32 algo::u32_BitScanForward(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward(&r,v);
-#else
-    u32 r;
-    asm ("bsfl %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return u32(__builtin_ctz(v));
+#endif
 }
 
 inline u64 algo::u64_BitScanForward(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward64(&r,v);
-#else
-    u64 r;
-    asm ("bsfq %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return u64(__builtin_ctzll(v));
+#endif
 }
 
 inline u32 algo::u32_BitScanReverse(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse(&r,v);
-#else
-    u32 r;
-    asm ("bsrl %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return u32(31 - __builtin_clz(v));
+#endif
 }
 
 inline u64 algo::u64_BitScanReverse(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse64(&r,v);
-#else
-    u64 r;
-    asm ("bsrq %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return u64(63 - __builtin_clzll(v));
+#endif
 }
 
 inline u32 algo::u16_BitScanForward(u16 v) {
@@ -724,6 +714,10 @@ inline double algo::get_cpu_hz() {
 inline u64 algo::get_cycles() {
 #ifdef WIN32
     return __rdtsc();
+#elif defined(__MACH__) && defined(__aarch64__)
+    return mach_absolute_time();
+#elif defined(__aarch64__)
+    return __builtin_readcyclecounter();
 #else
     unsigned low, high;
     asm volatile (
@@ -778,6 +772,9 @@ inline algo::UnixTime algo::CurrUnixTime(){
 inline u64 algo::rdtscp() {
 #ifdef WIN32
     _ReadBarrier();
+    return get_cycles();
+#elif defined(__aarch64__)
+    asm volatile ("isb" ::: "memory");
     return get_cycles();
 #else
     unsigned low, high;

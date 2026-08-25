@@ -574,18 +574,17 @@ bool gcache::FdToFile(algo::Fildes from, algo::cstring &to_fname) {
     algo::tempstr temp;
     to.fd = CreateReplacementFile(to_fname,temp,0644);
     if (ValidQ(to.fd)) {
-        bool use_cfr = true;
         bool ok =false;
+#ifdef __linux__
         // try using in-kernel copy
-        if (use_cfr) {
-            struct stat stat;
-            errno_vrfy(fstat(from.value, &stat)==0,"fstat");
-            ssize_t res= copy_file_range(from.value, NULL, to.fd.value, NULL, stat.st_size, 0);
-            ok = res==stat.st_size;
-            if (ok) {
-                _db.report.copy_file_range=true;
-            }
+        struct stat stat;
+        errno_vrfy(fstat(from.value, &stat)==0,"fstat");
+        ssize_t res= copy_file_range(from.value, NULL, to.fd.value, NULL, stat.st_size, 0);
+        ok = res==stat.st_size;
+        if (ok) {
+            _db.report.copy_file_range=true;
         }
+#endif
         // try the old-fashioned way
         if (!ok) {
             char buf[BUFSIZ];

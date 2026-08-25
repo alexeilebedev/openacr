@@ -139,7 +139,7 @@ void atf_unit::unittest_lib_exec_DebugForward() {
     algo_lib::_db.cmdline.verbose = 2;
 
     command::atf_unit_proc cmd;
-    cmd.path = "/proc/self/exe";
+    cmd.path = algo_lib::_db.argv[0];
 
     lib_exec::syscmd_RemoveAll();
     lib_exec::FSyscmd &syscmd = lib_exec::NewCmd(NULL, NULL);

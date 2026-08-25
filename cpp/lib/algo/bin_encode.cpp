@@ -82,7 +82,7 @@ void algo::EncodeLEI64(algo::ByteAry &buf, i64 value) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void algo::EncodeBEF64(algo::ByteAry &buf, double value) {
-#ifdef __STDC_IEC_559__
+#if defined(__STDC_IEC_559__) || defined(__APPLE__)
     char *ptr = (char*)&value;
     EncodeBEU64(buf,*(u64*)ptr);
 #else
@@ -91,7 +91,7 @@ void algo::EncodeBEF64(algo::ByteAry &buf, double value) {
 }
 
 void algo::EncodeLEF32(algo::ByteAry &buf, float value) {
-#ifdef __STDC_IEC_559__
+#if defined(__STDC_IEC_559__) || defined(__APPLE__)
     u32 tmp;
     memcpy(&tmp,&value,sizeof tmp);
     EncodeLEU32(buf,tmp);
@@ -101,7 +101,7 @@ void algo::EncodeLEF32(algo::ByteAry &buf, float value) {
 }
 
 void algo::EncodeLEF64(algo::ByteAry &buf, double value) {
-#ifdef __STDC_IEC_559__
+#if defined(__STDC_IEC_559__) || defined(__APPLE__)
     u64 tmp;
     memcpy(&tmp,&value,sizeof tmp);
     EncodeLEU64(buf,tmp);

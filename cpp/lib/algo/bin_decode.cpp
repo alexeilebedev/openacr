@@ -179,7 +179,7 @@ bool algo::DecodeLEI64(algo::memptr &buf, i64 &result) {
 ////////////////////////////////////////////////////////////////////////////////
 
 bool algo::DecodeBEF64(algo::memptr &buf, double &result) {
-#ifdef __STDC_IEC_559__
+#if defined(__STDC_IEC_559__) || defined(__APPLE__)
     u64 tmp;
     bool ok = algo::DecodeBEU64(buf,tmp);
     char *ptr = (char*)&tmp;
@@ -191,7 +191,7 @@ bool algo::DecodeBEF64(algo::memptr &buf, double &result) {
 }
 
 bool algo::DecodeLEF32(algo::memptr &buf, float &result) {
-#ifdef __STDC_IEC_559__
+#if defined(__STDC_IEC_559__) || defined(__APPLE__)
     u32 tmp;
     bool ok = algo::DecodeLEU32(buf,tmp);
     memcpy(&result,&tmp,sizeof result);
@@ -202,7 +202,7 @@ bool algo::DecodeLEF32(algo::memptr &buf, float &result) {
 }
 
 bool algo::DecodeLEF64(algo::memptr &buf, double &result) {
-#ifdef __STDC_IEC_559__
+#if defined(__STDC_IEC_559__) || defined(__APPLE__)
     u64 tmp;
     bool ok = algo::DecodeLEU64(buf,tmp);
     memcpy(&result,&tmp,sizeof result);

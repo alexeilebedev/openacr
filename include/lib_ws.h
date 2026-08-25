@@ -30,9 +30,6 @@ namespace ws { // update-hdr
     // cpp/lib_ws/lib_ws.cpp
     //
     cstring &operator<<(cstring &lhs, const ws::FrameHeader &rhs);
-    //     (user-implemented function, prototype is in amc-generated header)
-    // u32 payload_N(const ws::Frame& parent); // field:ws.FrameMasked.payload
-    // u32 payload_N(const ws::FrameMasked& parent); // field:ws.FrameMasked.payload
     ws::Frame *Frame_Castdown(ws::FrameHeader &hdr);
     ws::FrameMasked *FrameMasked_Castdown(ws::FrameHeader &hdr);
     bool FrameHeaderMsgs_ReadStrptrMaybe2(algo::strptr str, algo::ByteAry &buf);

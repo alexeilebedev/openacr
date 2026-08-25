@@ -355,26 +355,7 @@ void amc::tfunc_Ctype_Hash() {
         hash.inl = c_datafld_N(ctype) < 5;
         if (ctype.c_bltin) {
             vrfy(ctype.c_csize, tempstr()<<"csize record missing for bltin "<<ctype.ctype);
-            int size = ctype.c_csize->size;
-            if (size <= 8 && ctype.c_bltin->likeu64) {
-                // use an intrinsic without taking address
-                Set(R, "$wordsize", tempstr()<<ctype.c_csize->size*8);
-                Ins(&R, hash.body, "prev = _mm_crc32_u$wordsize(prev,rhs);");
-            } else {
-                // go over the bytes
-                int offset=0;
-                Ins(&R, hash.body, "#pragma GCC diagnostic push");
-                Ins(&R, hash.body, "#pragma GCC diagnostic ignored \"-Wstrict-aliasing\"");
-                for (int wordsize=8; wordsize >= 1; wordsize = wordsize/2) {
-                    for (; size >= wordsize; size -= wordsize, offset += wordsize) {
-                        Set(R, "$offset", tempstr()<<offset);
-                        Set(R, "$wordsize", tempstr()<<wordsize*8);
-                        Ins(&R, hash.body, "u$wordsize val$offset = *(u$wordsize*)((u8*)&rhs + $offset);");
-                        Ins(&R, hash.body, "prev = _mm_crc32_u$wordsize(prev, val$offset);");
-                    }
-                }
-                Ins(&R, hash.body, "#pragma GCC diagnostic pop");
-            }
+            Ins(&R, hash.body, "prev = algo::CRC32Step(prev, reinterpret_cast<const u8*>(&rhs), sizeof(rhs));");
         } else {
             ind_beg(amc::ctype_c_field_curs, field, ctype) {
                 Set(R, "$name", name_Get(field));

@@ -91,7 +91,7 @@
 //
 // Clang++ support has been discontinued until these issues will have been fixed
 //
-#ifdef __clang__
+#if defined(__clang__) && !(defined(__APPLE__) && defined(__aarch64__))
 #error clang++ is no longer supported
 #endif
 
@@ -218,10 +218,14 @@
 
 // compiler instructions for reordering
 // not processor instructions!!!
-#if  WIN32
+#if WIN32
 #define sfence() __faststorefence()
 #define lfence()
 #define mfence() sfence()
+#elif defined(__aarch64__)
+#define sfence() asm volatile("dmb ishst" ::: "memory")
+#define lfence() asm volatile("dmb ishld" ::: "memory")
+#define mfence() asm volatile("dmb ish" ::: "memory")
 #else
 #define sfence() asm volatile("sfence" ::: "memory")
 #define lfence() asm volatile("lfence" ::: "memory")
