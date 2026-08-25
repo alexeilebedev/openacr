@@ -177,12 +177,12 @@ The default is obtained by reading the soft link `build/$cfg`.
 Possible values are
 ```
 inline-command: acr compiler -report:N | ssimfilt -t
-COMPILER  RANLIB       AR       LINK      LIBEXT  EXEEXT  PCHEXT  OBJEXT  RC      COMMENT
-                                                                                  all
-cl                     LIB.EXE  LINK.EXE  .lib    .exe    .pch    .obj    RC.EXE
-clang++   llvm-ranlib  llvm-ar  clang++   .a              .gch    .o
-g++       ranlib       ar       g++       .a              .gch    .o
-g++-9     ranlib       ar       g++-9     .a              .gch    .o
+COMPILER  RANLIB  AR       LINK      LIBEXT  EXEEXT  PCHEXT  OBJEXT  RC      COMMENT
+                                                                             all
+cl                LIB.EXE  LINK.EXE  .lib    .exe    .pch    .obj    RC.EXE
+clang++   ranlib  ar       clang++   .a              .gch    .o
+g++       ranlib  ar       g++       .a              .gch    .o
+g++-9     ranlib  ar       g++-9     .a              .gch    .o
 
 ```
 
@@ -217,6 +217,7 @@ inline-command: acr arch -report:N | ssimfilt -t
 ARCH    COMMENT
         all
 amd64   64-bit mode on FreeBSD
+arm64   64-bit mode on Apple Silicon
 i686    Cygwin 64-bit mode
 i86pc   Solaris 64-bit mode
 x64     64-bit mode on windows (under cygwin)

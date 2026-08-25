@@ -136,10 +136,6 @@ inline algo::UnixTime operator -  (const algo::UnixTime &a, algo::UnixDiff d)
 ```
 
 ```c++
-inline u32 _mm_crc32_u8 (u32 prev, u8  val)
-```
-
-```c++
 U128 U128::operator /(const U128 &val) const
 ```
 
@@ -831,18 +827,6 @@ tempstr algo_lib::WtDir(algo::strptr name)
 
 ```c++
 template<class T> inline T &algo::aryptr<T>::operator [](u64 idx) const
-```
-
-```c++
-inline u32 _mm_crc32_u16(u32 prev, u16 val)
-```
-
-```c++
-inline u32 _mm_crc32_u32(u32 prev, u32 val)
-```
-
-```c++
-inline u32 _mm_crc32_u64(u32 prev, u64 val)
 ```
 
 ```c++

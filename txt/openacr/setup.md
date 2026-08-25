@@ -29,7 +29,7 @@ Readline provides interactive command-line editing.
     apt install llvm llvm-dev  # to enable abt -compiler llvm
 
 ### Prerequisites: macOS (Apple Silicon)
-<a href="#pre-requisites-macos"></a>
+<a href="#prerequisites-macos-apple-silicon-"></a>
 Install [Homebrew](https://brew.sh/). Then install the dependencies and make
 their headers and libraries visible to the compiler:
 

@@ -1397,6 +1397,10 @@ void algo::Attr_Print(algo::Attr &attr, algo::cstring &str)
 ```
 
 ```c++
+bool algo::Attr_ReadStrptrMaybe(algo::Attr &parent, algo::strptr in_str)
+```
+
+```c++
 inline algo::Attr_curs &algo::Attr_curs_Access(Attr_curs &curs)
 ```
 
@@ -1453,8 +1457,8 @@ u32 algo::CRC32IEEE(u32 old, const u8 *data, size_t len)
 ```
 
 ```c++
-// When compiled with AOS_SSE42, use intrinsics.
-// Otherwise, the function is defined in crc32.cpp and uses a software implementation
+// Use hardware CRC32C intrinsics on supported x86 and Apple Silicon builds.
+// Otherwise, the function is defined in crc32.cpp and uses a software implementation.
 inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len)
 ```
 
@@ -4185,8 +4189,7 @@ inline u16 algo::u16_SubClip( u16 a, u16 b)
 // Forward:  returns 0-based index of least significant bit that is set
 // Reverse:  returns 0-based index of most  significant bit that is set.
 // input argument must not be zero.
-// input result in 0 is undefined (see Intel manual)
-// http://www.intel.com/content/dam/doc/manual/64-ia-32-architectures-software-developer-vol-2a-2b-instruction-set-a-z-manual.pdf
+// input result in 0 is undefined.
 inline u32 algo::u32_BitScanForward(u32 v)
 ```
 
