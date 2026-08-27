@@ -83,6 +83,9 @@ enum report_FieldIdEnum {    // report.FieldId.value
     ,report_FieldId_cache_write
     ,report_FieldId_usd
     ,report_FieldId_priced
+    ,report_FieldId_n_page
+    ,report_FieldId_n_orphan
+    ,report_FieldId_n_badfence
     ,report_FieldId_n_line
     ,report_FieldId_n_static
     ,report_FieldId_n_inline
@@ -92,7 +95,7 @@ enum report_FieldIdEnum {    // report.FieldId.value
     ,report_FieldId_value
 };
 
-enum { report_FieldIdEnum_N = 60 };
+enum { report_FieldIdEnum_N = 63 };
 
 namespace report { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -110,6 +113,7 @@ namespace report { struct atf_unit; }
 namespace report { struct gcache; }
 namespace report { struct gcache_hitrate; }
 namespace report { struct llmtool_model; }
+namespace report { struct spnx_check; }
 namespace report { struct src_func; }
 namespace report { // gen:ns_print_struct
 
@@ -420,6 +424,28 @@ inline void          llmtool_model_Init(report::llmtool_model& parent);
 // func:report.llmtool_model..Print
 void                 llmtool_model_Print(report::llmtool_model& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- report.spnx_check
+struct spnx_check { // report.spnx_check: What one reference-graph check of a site examined and rejected
+    u32   n_page;       //   0  Number of pages the site would publish
+    u32   n_orphan;     //   0  Pages the site publishes that no toctree holds
+    u32   n_badfence;   //   0  Fenced blocks naming a language spnxdb.fence does not carry
+    // func:report.spnx_check..Ctor
+    inline               spnx_check() __attribute__((nothrow));
+};
+// func:report.spnx_check..ReadFieldMaybe
+bool                 spnx_check_ReadFieldMaybe(report::spnx_check& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of report::spnx_check from an ascii string.
+// The format of the string is an ssim Tuple
+// func:report.spnx_check..ReadStrptrMaybe
+bool                 spnx_check_ReadStrptrMaybe(report::spnx_check &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:report.spnx_check..Init
+inline void          spnx_check_Init(report::spnx_check& parent);
+// print string representation of ROW to string STR
+// cfmt:report.spnx_check.String  printfmt:Tuple
+// func:report.spnx_check..Print
+void                 spnx_check_Print(report::spnx_check row, algo::cstring& str) __attribute__((nothrow));
+
 // --- report.src_func
 struct src_func { // report.src_func
     u32             n_func;          //   0  Number of functions
@@ -464,5 +490,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const report::atf_unit &ro
 inline algo::cstring &operator <<(algo::cstring &str, const report::gcache &row);// cfmt:report.gcache.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::gcache_hitrate &row);// cfmt:report.gcache_hitrate.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::llmtool_model &row);// cfmt:report.llmtool_model.String
+inline algo::cstring &operator <<(algo::cstring &str, const report::spnx_check &row);// cfmt:report.spnx_check.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::src_func &row);// cfmt:report.src_func.String
 }

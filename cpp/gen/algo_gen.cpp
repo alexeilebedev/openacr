@@ -305,7 +305,6 @@ void algo::ch_RemRegion(algo::cstring& parent, i64 beg, i64 n) {
 
 // --- algo.cstring..Uninit
 void algo::cstring_Uninit(algo::cstring& parent) {
-    algo::cstring &row = parent; (void)row;
 
     // algo.cstring.ch.Uninit (Tary)  //
     // remove all elements from algo.cstring.ch
@@ -629,7 +628,6 @@ void algo::ary_RemRegion(algo::ByteAry& parent, i64 beg, i64 n) {
 
 // --- algo.ByteAry..Uninit
 void algo::ByteAry_Uninit(algo::ByteAry& parent) {
-    algo::ByteAry &row = parent; (void)row;
 
     // algo.ByteAry.ary.Uninit (Tary)  //
     // remove all elements from algo.ByteAry.ary
@@ -837,7 +835,6 @@ void algo::DirEntry_Init(algo::DirEntry& parent) {
 
 // --- algo.DirEntry..Uninit
 void algo::DirEntry_Uninit(algo::DirEntry& parent) {
-    algo::DirEntry &row = parent; (void)row;
     dir_handle_Cleanup(parent); // dmmeta.ffunc:algo.DirEntry.dir_handle/Cleanup
 }
 
@@ -1072,7 +1069,7 @@ const char* algo::value_ToCstr(const algo::FieldId& parent) {
         case algo_FieldId_neg              : ret = "neg";  break;
         case algo_FieldId_overflow         : ret = "overflow";  break;
         case algo_FieldId_hex              : ret = "hex";  break;
-        case algo_FieldId_sha1sig          : ret = "sha1sig";  break;
+        case algo_FieldId_signature        : ret = "signature";  break;
         case algo_FieldId_attrs            : ret = "attrs";  break;
         case algo_FieldId_head             : ret = "head";  break;
         case algo_FieldId_protocol         : ret = "protocol";  break;
@@ -1222,9 +1219,6 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('o','v','e','r','l','a','p'): {
                     value_SetEnum(parent,algo_FieldId_overlap); ret = true; break;
                 }
-                case LE_STR7('s','h','a','1','s','i','g'): {
-                    value_SetEnum(parent,algo_FieldId_sha1sig); ret = true; break;
-                }
             }
             break;
         }
@@ -1250,6 +1244,15 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('u','s','e','r','n','a','m','e'): {
                     value_SetEnum(parent,algo_FieldId_username); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('s','i','g','n','a','t','u','r'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,algo_FieldId_signature); ret = true; break; }
+                    break;
                 }
             }
             break;
@@ -2350,7 +2353,6 @@ void algo::ary_QuickSort(algo::I32RangeAry& parent) {
 
 // --- algo.I32RangeAry..Uninit
 void algo::I32RangeAry_Uninit(algo::I32RangeAry& parent) {
-    algo::I32RangeAry &row = parent; (void)row;
 
     // algo.I32RangeAry.ary.Uninit (Tary)  //
     // remove all elements from algo.I32RangeAry.ary
@@ -3862,7 +3864,6 @@ void algo::buf_RemRegion(algo::LineBuf& parent, i64 beg, i64 n) {
 
 // --- algo.LineBuf..Uninit
 void algo::LineBuf_Uninit(algo::LineBuf& parent) {
-    algo::LineBuf &row = parent; (void)row;
 
     // algo.LineBuf.buf.Uninit (Tary)  //
     // remove all elements from algo.LineBuf.buf
@@ -12566,23 +12567,23 @@ void algo::SeqType_Print(algo::SeqType row, algo::cstring& str) {
     u64_Print(row.value, str);
 }
 
-// --- algo.Sha1sig.sha1sig.Eq
-bool algo::sha1sig_Eq(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
+// --- algo.Signature.signature.Eq
+bool algo::signature_Eq(algo::Signature& parent, algo::Signature &rhs) {
     int len = 20;
     for (int i = 0; i < len; i++) {
-        if (!(parent.sha1sig_elems[i] == sha1sig_qFind(rhs,i))) {
+        if (!(parent.signature_elems[i] == signature_qFind(rhs,i))) {
             return false;
         }
     }
     return true;
 }
 
-// --- algo.Sha1sig.sha1sig.Cmp
-int algo::sha1sig_Cmp(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
+// --- algo.Signature.signature.Cmp
+int algo::signature_Cmp(algo::Signature& parent, algo::Signature &rhs) {
     int len = 20;
     int retval = 0;
     for (int i = 0; i < len; i++) {
-        retval = u8_Cmp(parent.sha1sig_elems[i], sha1sig_qFind(rhs,i));
+        retval = u8_Cmp(parent.signature_elems[i], signature_qFind(rhs,i));
         if (retval != 0) {
             return retval;
         }
@@ -12590,20 +12591,20 @@ int algo::sha1sig_Cmp(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
     return 0;
 }
 
-// --- algo.Sha1sig.sha1sig.Print
-// Convert sha1sig to a string.
+// --- algo.Signature.signature.Print
+// Convert signature to a string.
 // Array is printed as a regular string.
-void algo::sha1sig_Print(algo::Sha1sig& parent, algo::cstring &rhs) {
-    rhs << algo::memptr_ToStrptr(sha1sig_Getary(parent));
+void algo::signature_Print(algo::Signature& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(signature_Getary(parent));
 }
 
-// --- algo.Sha1sig.sha1sig.ReadStrptrMaybe
+// --- algo.Signature.signature.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool algo::sha1sig_ReadStrptrMaybe(algo::Sha1sig& parent, algo::strptr in_str) {
+bool algo::signature_ReadStrptrMaybe(algo::Signature& parent, algo::strptr in_str) {
     bool retval = true;
     i32 newlen = i32_Min(in_str.n_elems, 20);
-    memcpy(parent.sha1sig_elems, in_str.elems, newlen);
+    memcpy(parent.signature_elems, in_str.elems, newlen);
     return retval;
 }
 
@@ -13676,7 +13677,6 @@ bool algo::StringAry_ReadStrptrMaybe(algo::StringAry &parent, algo::strptr in_st
 
 // --- algo.StringAry..Uninit
 void algo::StringAry_Uninit(algo::StringAry& parent) {
-    algo::StringAry &row = parent; (void)row;
 
     // algo.StringAry.ary.Uninit (Tary)  //
     // remove all elements from algo.StringAry.ary
@@ -14174,7 +14174,6 @@ void algo::attrs_RemRegion(algo::Tuple& parent, i64 beg, i64 n) {
 
 // --- algo.Tuple..Uninit
 void algo::Tuple_Uninit(algo::Tuple& parent) {
-    algo::Tuple &row = parent; (void)row;
 
     // algo.Tuple.attrs.Uninit (Tary)  //Array of attributes
     // remove all elements from algo.Tuple.attrs
@@ -14426,7 +14425,6 @@ void algo::ary_RemRegion(algo::U16Ary& parent, i64 beg, i64 n) {
 
 // --- algo.U16Ary..Uninit
 void algo::U16Ary_Uninit(algo::U16Ary& parent) {
-    algo::U16Ary &row = parent; (void)row;
 
     // algo.U16Ary.ary.Uninit (Tary)  //Array of u16 values
     // remove all elements from algo.U16Ary.ary
@@ -14776,7 +14774,6 @@ void algo::ary_RemRegion(algo::U32Ary& parent, i64 beg, i64 n) {
 
 // --- algo.U32Ary..Uninit
 void algo::U32Ary_Uninit(algo::U32Ary& parent) {
-    algo::U32Ary &row = parent; (void)row;
 
     // algo.U32Ary.ary.Uninit (Tary)  //Array of u16 values
     // remove all elements from algo.U32Ary.ary
@@ -15482,7 +15479,6 @@ void algo::ary_RemRegion(algo::U64Ary& parent, i64 beg, i64 n) {
 
 // --- algo.U64Ary..Uninit
 void algo::U64Ary_Uninit(algo::U64Ary& parent) {
-    algo::U64Ary &row = parent; (void)row;
 
     // algo.U64Ary.ary.Uninit (Tary)  //Array of u64 values
     // remove all elements from algo.U64Ary.ary
@@ -16752,6 +16748,7 @@ void algo::StaticCheck() {
     algo_assert(_offset_of(algo::FieldId, value) + sizeof(((algo::FieldId*)0)->value) == sizeof(algo::FieldId));
     // check that bitfield fits width
     algo_assert(sizeof(((algo::FileFlags*)0)->value)*8 >= 10);
+    algo_assert(_offset_of(algo::FileFlags, value) + sizeof(((algo::FileFlags*)0)->value) == sizeof(algo::FileFlags));
     algo_assert(_offset_of(algo::I64Dec4, value) + sizeof(((algo::I64Dec4*)0)->value) == sizeof(algo::I64Dec4));
     algo_assert(_offset_of(algo::I64Dec5, value) + sizeof(((algo::I64Dec5*)0)->value) == sizeof(algo::I64Dec5));
     algo_assert(_offset_of(algo::I64Dec8, value) + sizeof(((algo::I64Dec8*)0)->value) == sizeof(algo::I64Dec8));

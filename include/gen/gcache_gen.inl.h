@@ -31,23 +31,23 @@
 
 // --- gcache.FCachefile.mtime.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool gcache::mtime_Lt(gcache::FCachefile& cachefile, gcache::FCachefile &rhs) {
-    return algo::UnTime_Lt(cachefile.mtime,rhs.mtime);
+inline bool gcache::mtime_Lt(gcache::FCachefile& parent, gcache::FCachefile &rhs) {
+    return algo::UnTime_Lt(parent.mtime,rhs.mtime);
 }
 
 // --- gcache.FCachefile.mtime.Cmp
 // Compare two fields.
-inline i32 gcache::mtime_Cmp(gcache::FCachefile& cachefile, gcache::FCachefile &rhs) {
+inline i32 gcache::mtime_Cmp(gcache::FCachefile& parent, gcache::FCachefile &rhs) {
     i32 retval = 0;
-    retval = algo::UnTime_Cmp(cachefile.mtime, rhs.mtime);
+    retval = algo::UnTime_Cmp(parent.mtime, rhs.mtime);
     return retval;
 }
 
 // --- gcache.FCachefile..Init
 // Set all fields to initial values.
-inline void gcache::FCachefile_Init(gcache::FCachefile& cachefile) {
-    cachefile.size = i64(0);
-    cachefile.bh_cachefile_idx = -1; // (gcache.FDb.bh_cachefile) not-in-heap
+inline void gcache::FCachefile_Init(gcache::FCachefile& parent) {
+    parent.size = i64(0);
+    parent.bh_cachefile_idx = -1; // (gcache.FDb.bh_cachefile) not-in-heap
 }
 
 // --- gcache.FCachefile..Ctor
@@ -271,12 +271,12 @@ inline bool gcache::_db_bh_cachefile_curs_ValidQ(_db_bh_cachefile_curs &curs) {
 
 // --- gcache.FHeader..Init
 // Set all fields to initial values.
-inline void gcache::FHeader_Init(gcache::FHeader& header) {
-    header.parent = NULL;
-    header.begin = i32(0);
-    header.inner_end = i32(0);
-    header.outer_end = i32(0);
-    header.mlines_before = bool(false);
+inline void gcache::FHeader_Init(gcache::FHeader& parent) {
+    parent.parent = NULL;
+    parent.begin = i32(0);
+    parent.inner_end = i32(0);
+    parent.outer_end = i32(0);
+    parent.mlines_before = bool(false);
 }
 
 // --- gcache.FHeader..Ctor

@@ -1459,7 +1459,6 @@ void http::Request_Init(http::Request& parent) {
 
 // --- http.Request..Uninit
 void http::Request_Uninit(http::Request& parent) {
-    http::Request &row = parent; (void)row;
 
     // http.Request.extension_header.Uninit (Tary)  //
     // remove all elements from http.Request.extension_header
@@ -2102,7 +2101,6 @@ void http::Response_Init(http::Response& parent) {
 
 // --- http.Response..Uninit
 void http::Response_Uninit(http::Response& parent) {
-    http::Response &row = parent; (void)row;
 
     // http.Response.extension_header.Uninit (Tary)  //
     // remove all elements from http.Response.extension_header

@@ -9,10 +9,10 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Ctype in question|
-|initmemset|bool|[Val](/txt/exe/amc/reftype.md#val)||Initialize using memset? (set this to Y for all C structs)|
-|isstruct|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|plaindata|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Ctype in question|
+|initmemset|bool|[Val](/txt/exe/amc/reftype/Val.md)||Initialize using memset? (set this to Y for all C structs)|
+|isstruct|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|plaindata|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

@@ -641,9 +641,31 @@ void abt_md::mdsection_Dependencies(abt_md::FFileSection &section) {
     }
 }
 
+// Point an internals document at the usage document for the same namespace.
+//
+// Land on txt/gen/acr/acr.md and what you get is acr's structs, its access
+// paths and its build inputs, which is rarely what a reader arrived for; the
+// usage README next door is.  So the internals document opens with one line
+// naming it, titled the way mdsection_Title titles that file, and a reader who
+// wanted the other document is one link away rather than back at a search.
+//
+// Under txt/gen the line is derived, so it is rewritten on every pass and a
+// namespace whose nstype has no README gets an empty section rather than a link
+// to a file that is not there.  Everywhere else -- every README.md in the tree
+// -- the section is prose somebody wrote, and this leaves it alone.
 void abt_md::mdsection_Description(abt_md::FFileSection &section) {
-    (void)section;
-    // user-defined content
+    abt_md::FReadmefile &readmefile = *_db.c_readmefile;
+    if (StartsWithQ(readmefile.gitfile,"txt/gen/") && readmefile.p_ns) {
+        abt_md::FNs &ns = *readmefile.p_ns;
+        tempstr path;
+        path << "txt/" << ns.nstype << "/" << ns.ns << "/README.md";
+        section.text = "";
+        if (FileQ(path)) {
+            tempstr title;
+            title << ns.ns << " - " << ns.comment;
+            section.text << "for usage, see " << LinkToFileAbs(title,path) << eol;
+        }
+    }
 }
 
 void abt_md::mdsection_Content(abt_md::FFileSection &) {

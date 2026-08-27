@@ -223,6 +223,19 @@ export interface ReportLlmtoolModelRow {
   readonly priced: boolean;
 }
 
+// report.spnx_check: What one reference-graph check of a site examined and rejected
+export const ReportSpnxCheck = {
+  n_page: "number",
+  n_orphan: "number",
+  n_badfence: "number",
+} as const;
+
+export interface ReportSpnxCheckRow {
+  readonly n_page: number;
+  readonly n_orphan: number;
+  readonly n_badfence: number;
+}
+
 // report.src_func: 
 export const ReportSrcFunc = {
   n_func: "number",

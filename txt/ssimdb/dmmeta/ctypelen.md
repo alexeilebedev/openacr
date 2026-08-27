@@ -9,11 +9,11 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Identifies the Ctype|
-|len|u32|[Val](/txt/exe/amc/reftype.md#val)||(calculated) length of the C++ struct in bytes|
-|alignment|i32|[Val](/txt/exe/amc/reftype.md#val)||(calculated) alignment for the struct|
-|padbytes|i32|[Val](/txt/exe/amc/reftype.md#val)||(calculated) total # of pad bytes|
-|plaindata|bool|[Val](/txt/exe/amc/reftype.md#val)||(calculated) can safely call memcpy on this struct|
+|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Identifies the Ctype|
+|len|u32|[Val](/txt/exe/amc/reftype/Val.md)||(calculated) length of the C++ struct in bytes|
+|alignment|i32|[Val](/txt/exe/amc/reftype/Val.md)||(calculated) alignment for the struct|
+|padbytes|i32|[Val](/txt/exe/amc/reftype/Val.md)||(calculated) total # of pad bytes|
+|plaindata|bool|[Val](/txt/exe/amc/reftype/Val.md)||(calculated) can safely call memcpy on this struct|
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

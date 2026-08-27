@@ -1,6 +1,21 @@
 ## lib_rl - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_rl - GNU readline support library](/txt/lib/lib_rl/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -164,10 +179,10 @@ All allocations are done through global `lib_rl::_db` [lib_rl.FDb](#lib_rl-fdb) 
 <a href="#lib_rl-cmdline-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_rl.Cmdline.app|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Application name|
-|lib_rl.Cmdline.prompt|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Application name|
-|lib_rl.Cmdline.add_history|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Automatically add to history|
-|lib_rl.Cmdline.max_history|i32|[Val](/txt/exe/amc/reftype.md#val)|1000|Number to history entries to keep|
+|lib_rl.Cmdline.app|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Application name|
+|lib_rl.Cmdline.prompt|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Application name|
+|lib_rl.Cmdline.add_history|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Automatically add to history|
+|lib_rl.Cmdline.max_history|i32|[Val](/txt/exe/amc/reftype/Val.md)|1000|Number to history entries to keep|
 
 #### Struct Cmdline
 <a href="#struct-cmdline"></a>
@@ -190,16 +205,16 @@ struct Cmdline { // lib_rl.Cmdline
 <a href="#lib_rl-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_rl.FDb._db|[lib_rl.FDb](/txt/gen/lib_rl/lib_rl.md#lib_rl-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_rl.FDb.cmdline|[lib_rl.Cmdline](/txt/gen/lib_rl/lib_rl.md#lib_rl-cmdline)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_rl.FDb.Prlog|[algo.PrlogFcn](/txt/protocol/algo/PrlogFcn.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_rl.FDb.history_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_rl.FDb.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_rl.FDb.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_rl.FDb.line_valid|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_rl.FDb.eof|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_rl.FDb.err|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_rl.FDb.isatty|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_rl.FDb._db|[lib_rl.FDb](/txt/gen/lib_rl/lib_rl.md#lib_rl-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_rl.FDb.cmdline|[lib_rl.Cmdline](/txt/gen/lib_rl/lib_rl.md#lib_rl-cmdline)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_rl.FDb.Prlog|[algo.PrlogFcn](/txt/protocol/algo/PrlogFcn.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_rl.FDb.history_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_rl.FDb.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_rl.FDb.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_rl.FDb.line_valid|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_rl.FDb.eof|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_rl.FDb.err|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_rl.FDb.isatty|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

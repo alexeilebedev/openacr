@@ -41,13 +41,20 @@ void algo_lib::mem_Cleanup(algo_lib::Mmap &mmap) {
 
 // Attach mmapfile MMAPFILE to FD.
 // Return success code.
+//
+// The mapping is MAP_SHARED, so it tracks the file and a write another handle
+// makes shows through it.  MAP_PRIVATE would leave that unsaid: the standard
+// does not decide whether a later write to the file reaches a private mapping,
+// Linux lets it through and Darwin does not, so the same call would answer two
+// different things.  Nothing is written through the mapping -- it is PROT_READ
+// -- so sharing costs nothing and the behavior is the same everywhere.
 bool algo_lib::MmapFile_LoadFd(MmapFile &mmapfile, algo::Fildes fd) {
     mmapfile.fd.fd = fd;
     i64 n = GetFileSize(mmapfile.fd.fd);
     // Linux: do not attempt to map zero bytes -- it will fail.
     void *addr = NULL;
     if (n > 0) {
-        addr = mmap(NULL,n,PROT_READ,MAP_PRIVATE,mmapfile.fd.fd.value,0);
+        addr = mmap(NULL,n,PROT_READ,MAP_SHARED,mmapfile.fd.fd.value,0);
     }
     if (addr == (void*)-1) {
         addr = NULL;

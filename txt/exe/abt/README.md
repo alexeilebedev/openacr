@@ -163,9 +163,10 @@ inline-command: acr cfg -report:N | ssimfilt -t
 CFG       SUFFIX  COMMENT
                   all
 coverage  c       coverage measurement
-debug     d       bounds-checked build
+debug     d       unoptimized, with symbols
+memcheck  m       release with memory checks
 profile   p       release with various debug options still on
-release   r       all bound-checking disabled
+release   r       optimized, without symbols
 
 ```
 
@@ -262,7 +263,7 @@ dev.include  include:cpp/abt/ood.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/opt.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/scan.cpp:include/algo.h  sys:N  comment:""
 dev.include  include:cpp/abt/scan.cpp:include/abt.h  sys:N  comment:""
-abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
+abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 ```
 

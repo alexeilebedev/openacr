@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -48,11 +50,11 @@ All allocations are done through global `atf_nrun::_db` [atf_nrun.FDb](#atf_nrun
 <a href="#atf_nrun-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_nrun.FDb._db|[atf_nrun.FDb](/txt/gen/atf_nrun/atf_nrun.md#atf_nrun-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|atf_nrun.FDb.cmdline|[command.atf_nrun](/txt/protocol/command/README.md#command-atf_nrun)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_nrun.FDb.fentry|[atf_nrun.FEntry](/txt/gen/atf_nrun/atf_nrun.md#atf_nrun-fentry)|[Lary](/txt/exe/amc/reftype.md#lary)||List of jobs|
-|atf_nrun.FDb.ind_running|[atf_nrun.FEntry](/txt/gen/atf_nrun/atf_nrun.md#atf_nrun-fentry)|[Thash](/txt/exe/amc/reftype.md#thash)||Running job|
-|atf_nrun.FDb.zd_todo|[atf_nrun.FEntry](/txt/gen/atf_nrun/atf_nrun.md#atf_nrun-fentry)|[Llist](/txt/exe/amc/reftype.md#llist)||Remaining to dos|
+|atf_nrun.FDb._db|[atf_nrun.FDb](/txt/gen/atf_nrun/atf_nrun.md#atf_nrun-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|atf_nrun.FDb.cmdline|[command.atf_nrun](/txt/protocol/command/README.md#command-atf_nrun)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_nrun.FDb.fentry|[atf_nrun.FEntry](/txt/gen/atf_nrun/atf_nrun.md#atf_nrun-fentry)|[Lary](/txt/exe/amc/reftype/Lary.md)||List of jobs|
+|atf_nrun.FDb.ind_running|[atf_nrun.FEntry](/txt/gen/atf_nrun/atf_nrun.md#atf_nrun-fentry)|[Thash](/txt/exe/amc/reftype/Thash.md)||Running job|
+|atf_nrun.FDb.zd_todo|[atf_nrun.FEntry](/txt/gen/atf_nrun/atf_nrun.md#atf_nrun-fentry)|[Llist](/txt/exe/amc/reftype/Llist.md)||Remaining to dos|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -83,9 +85,9 @@ struct FDb { // atf_nrun.FDb: In-memory database for atf_nrun
 <a href="#atf_nrun-fentry-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_nrun.FEntry.command|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Command to execute|
-|atf_nrun.FEntry.pid|i32|[Val](/txt/exe/amc/reftype.md#val)||Pid of running bash job|
-|atf_nrun.FEntry.job|[command.bash](/txt/protocol/command/README.md#command-bash)|[Exec](/txt/exe/amc/reftype.md#exec)||Subprocess|
+|atf_nrun.FEntry.command|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Command to execute|
+|atf_nrun.FEntry.pid|i32|[Val](/txt/exe/amc/reftype/Val.md)||Pid of running bash job|
+|atf_nrun.FEntry.job|[command.bash](/txt/protocol/command/README.md#command-bash)|[Exec](/txt/exe/amc/reftype/Exec.md)||Subprocess|
 
 #### Struct FEntry
 <a href="#struct-fentry"></a>

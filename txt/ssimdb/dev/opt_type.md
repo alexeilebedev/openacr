@@ -9,9 +9,9 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|opt_type|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|sep|[algo.RspaceStr4](/txt/protocol/algo/README.md#algo-rspacestr4)|[Val](/txt/exe/amc/reftype.md#val)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|opt_type|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|sep|[algo.RspaceStr4](/txt/protocol/algo/README.md#algo-rspacestr4)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Related
 <a href="#related"></a>

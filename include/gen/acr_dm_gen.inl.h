@@ -29,15 +29,15 @@
 
 // --- acr_dm.FAttr.zs_value.EmptyQ
 // Return true if index is empty
-inline bool acr_dm::zs_value_EmptyQ(acr_dm::FAttr& attr) {
-    return attr.zs_value_head == NULL;
+inline bool acr_dm::zs_value_EmptyQ(acr_dm::FAttr& parent) {
+    return parent.zs_value_head == NULL;
 }
 
 // --- acr_dm.FAttr.zs_value.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline acr_dm::FValue* acr_dm::zs_value_First(acr_dm::FAttr& attr) {
+inline acr_dm::FValue* acr_dm::zs_value_First(acr_dm::FAttr& parent) {
     acr_dm::FValue *row = NULL;
-    row = attr.zs_value_head;
+    row = parent.zs_value_head;
     return row;
 }
 
@@ -51,16 +51,16 @@ inline bool acr_dm::attr_zs_value_InLlistQ(acr_dm::FValue& row) {
 
 // --- acr_dm.FAttr.zs_value.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline acr_dm::FValue* acr_dm::zs_value_Last(acr_dm::FAttr& attr) {
+inline acr_dm::FValue* acr_dm::zs_value_Last(acr_dm::FAttr& parent) {
     acr_dm::FValue *row = NULL;
-    row = attr.zs_value_tail;
+    row = parent.zs_value_tail;
     return row;
 }
 
 // --- acr_dm.FAttr.zs_value.N
 // Return number of items in the linked list
-inline i32 acr_dm::zs_value_N(const acr_dm::FAttr& attr) {
-    return attr.zs_value_n;
+inline i32 acr_dm::zs_value_N(const acr_dm::FAttr& parent) {
+    return parent.zs_value_n;
 }
 
 // --- acr_dm.FAttr.zs_value.Next
@@ -71,9 +71,9 @@ inline acr_dm::FValue* acr_dm::attr_zs_value_Next(acr_dm::FValue &row) {
 
 // --- acr_dm.FAttr.zs_value.qLast
 // Return reference to last element in the index. No bounds checking.
-inline acr_dm::FValue& acr_dm::zs_value_qLast(acr_dm::FAttr& attr) {
+inline acr_dm::FValue& acr_dm::zs_value_qLast(acr_dm::FAttr& parent) {
     acr_dm::FValue *row = NULL;
-    row = attr.zs_value_tail;
+    row = parent.zs_value_tail;
     return *row;
 }
 
@@ -104,12 +104,12 @@ inline acr_dm::FValue& acr_dm::attr_zs_value_curs_Access(attr_zs_value_curs &cur
 
 // --- acr_dm.FAttr..Init
 // Set all fields to initial values.
-inline void acr_dm::FAttr_Init(acr_dm::FAttr& attr) {
-    attr.p_tuple = NULL;
-    attr.zs_value_head = NULL; // (acr_dm.FAttr.zs_value)
-    attr.zs_value_n = 0; // (acr_dm.FAttr.zs_value)
-    attr.zs_value_tail = NULL; // (acr_dm.FAttr.zs_value)
-    attr.tuple_zs_attr_next = (acr_dm::FAttr*)-1; // (acr_dm.FTuple.zs_attr) not-in-list
+inline void acr_dm::FAttr_Init(acr_dm::FAttr& parent) {
+    parent.p_tuple = NULL;
+    parent.zs_value_head = NULL; // (acr_dm.FAttr.zs_value)
+    parent.zs_value_n = 0; // (acr_dm.FAttr.zs_value)
+    parent.zs_value_tail = NULL; // (acr_dm.FAttr.zs_value)
+    parent.tuple_zs_attr_next = (acr_dm::FAttr*)-1; // (acr_dm.FTuple.zs_attr) not-in-list
 }
 
 // --- acr_dm.FAttr..Ctor
@@ -611,15 +611,15 @@ inline  acr_dm::Sortkey::Sortkey() {
 
 // --- acr_dm.FTuple.zs_attr.EmptyQ
 // Return true if index is empty
-inline bool acr_dm::zs_attr_EmptyQ(acr_dm::FTuple& tuple) {
-    return tuple.zs_attr_head == NULL;
+inline bool acr_dm::zs_attr_EmptyQ(acr_dm::FTuple& parent) {
+    return parent.zs_attr_head == NULL;
 }
 
 // --- acr_dm.FTuple.zs_attr.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline acr_dm::FAttr* acr_dm::zs_attr_First(acr_dm::FTuple& tuple) {
+inline acr_dm::FAttr* acr_dm::zs_attr_First(acr_dm::FTuple& parent) {
     acr_dm::FAttr *row = NULL;
-    row = tuple.zs_attr_head;
+    row = parent.zs_attr_head;
     return row;
 }
 
@@ -633,16 +633,16 @@ inline bool acr_dm::tuple_zs_attr_InLlistQ(acr_dm::FAttr& row) {
 
 // --- acr_dm.FTuple.zs_attr.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline acr_dm::FAttr* acr_dm::zs_attr_Last(acr_dm::FTuple& tuple) {
+inline acr_dm::FAttr* acr_dm::zs_attr_Last(acr_dm::FTuple& parent) {
     acr_dm::FAttr *row = NULL;
-    row = tuple.zs_attr_tail;
+    row = parent.zs_attr_tail;
     return row;
 }
 
 // --- acr_dm.FTuple.zs_attr.N
 // Return number of items in the linked list
-inline i32 acr_dm::zs_attr_N(const acr_dm::FTuple& tuple) {
-    return tuple.zs_attr_n;
+inline i32 acr_dm::zs_attr_N(const acr_dm::FTuple& parent) {
+    return parent.zs_attr_n;
 }
 
 // --- acr_dm.FTuple.zs_attr.Next
@@ -653,38 +653,38 @@ inline acr_dm::FAttr* acr_dm::tuple_zs_attr_Next(acr_dm::FAttr &row) {
 
 // --- acr_dm.FTuple.zs_attr.qLast
 // Return reference to last element in the index. No bounds checking.
-inline acr_dm::FAttr& acr_dm::zs_attr_qLast(acr_dm::FTuple& tuple) {
+inline acr_dm::FAttr& acr_dm::zs_attr_qLast(acr_dm::FTuple& parent) {
     acr_dm::FAttr *row = NULL;
-    row = tuple.zs_attr_tail;
+    row = parent.zs_attr_tail;
     return *row;
 }
 
 // --- acr_dm.FTuple.sortkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool acr_dm::sortkey_Lt(acr_dm::FTuple& tuple, acr_dm::FTuple &rhs) {
-    return acr_dm::Sortkey_Lt(tuple.sortkey,rhs.sortkey);
+inline bool acr_dm::sortkey_Lt(acr_dm::FTuple& parent, acr_dm::FTuple &rhs) {
+    return acr_dm::Sortkey_Lt(parent.sortkey,rhs.sortkey);
 }
 
 // --- acr_dm.FTuple.sortkey.Cmp
 // Compare two fields.
-inline i32 acr_dm::sortkey_Cmp(acr_dm::FTuple& tuple, acr_dm::FTuple &rhs) {
+inline i32 acr_dm::sortkey_Cmp(acr_dm::FTuple& parent, acr_dm::FTuple &rhs) {
     i32 retval = 0;
-    retval = acr_dm::Sortkey_Cmp(tuple.sortkey, rhs.sortkey);
+    retval = acr_dm::Sortkey_Cmp(parent.sortkey, rhs.sortkey);
     return retval;
 }
 
 // --- acr_dm.FTuple.bh_child.EmptyQ
 // Return true if index is empty
-inline bool acr_dm::bh_child_EmptyQ(acr_dm::FTuple& tuple) {
-    return tuple.bh_child_n == 0;
+inline bool acr_dm::bh_child_EmptyQ(acr_dm::FTuple& parent) {
+    return parent.bh_child_n == 0;
 }
 
 // --- acr_dm.FTuple.bh_child.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline acr_dm::FTuple* acr_dm::bh_child_First(acr_dm::FTuple& tuple) {
+inline acr_dm::FTuple* acr_dm::bh_child_First(acr_dm::FTuple& parent) {
     acr_dm::FTuple *row = NULL;
-    if (tuple.bh_child_n > 0) {
-        row = tuple.bh_child_elems[0];
+    if (parent.bh_child_n > 0) {
+        row = parent.bh_child_elems[0];
     }
     return row;
 }
@@ -699,23 +699,8 @@ inline bool acr_dm::bh_child_InBheapQ(acr_dm::FTuple& row) {
 
 // --- acr_dm.FTuple.bh_child.N
 // Return number of items in the heap
-inline i32 acr_dm::bh_child_N(const acr_dm::FTuple& tuple) {
-    return tuple.bh_child_n;
-}
-
-// --- acr_dm.FTuple..Init
-// Set all fields to initial values.
-inline void acr_dm::FTuple_Init(acr_dm::FTuple& tuple) {
-    tuple.zs_attr_head = NULL; // (acr_dm.FTuple.zs_attr)
-    tuple.zs_attr_n = 0; // (acr_dm.FTuple.zs_attr)
-    tuple.zs_attr_tail = NULL; // (acr_dm.FTuple.zs_attr)
-    tuple.p_anchor = NULL;
-    tuple.bh_child_max   	= 0; // (acr_dm.FTuple.bh_child)
-    tuple.bh_child_n     	= 0; // (acr_dm.FTuple.bh_child)
-    tuple.bh_child_elems 	= NULL; // (acr_dm.FTuple.bh_child)
-    tuple.ind_tuple_next = (acr_dm::FTuple*)-1; // (acr_dm.FDb.ind_tuple) not-in-hash
-    tuple.ind_tuple_hashval = 0; // stored hash value
-    tuple.tuple_bh_child_idx = -1; // (acr_dm.FTuple.bh_child) not-in-heap
+inline i32 acr_dm::bh_child_N(const acr_dm::FTuple& parent) {
+    return parent.bh_child_n;
 }
 
 // --- acr_dm.FTuple.zs_attr_curs.Reset
@@ -767,9 +752,9 @@ inline  acr_dm::FTuple::~FTuple() {
 
 // --- acr_dm.FValue..Init
 // Set all fields to initial values.
-inline void acr_dm::FValue_Init(acr_dm::FValue& value) {
-    value.p_attr = NULL;
-    value.attr_zs_value_next = (acr_dm::FValue*)-1; // (acr_dm.FAttr.zs_value) not-in-list
+inline void acr_dm::FValue_Init(acr_dm::FValue& parent) {
+    parent.p_attr = NULL;
+    parent.attr_zs_value_next = (acr_dm::FValue*)-1; // (acr_dm.FAttr.zs_value) not-in-list
 }
 
 // --- acr_dm.FValue..Ctor

@@ -1942,7 +1942,7 @@ void kafka::Header_Print(kafka::Header& row, algo::cstring& str) {
 
 // --- kafka.OffsetCommitKey.base.CopyOut
 // Copy fields out of row
-void kafka::parent_CopyOut(kafka::OffsetCommitKey &row, kafka::GroupRecordKeyHeader &out) {
+void kafka::offset_commit_key_CopyOut(kafka::OffsetCommitKey &row, kafka::GroupRecordKeyHeader &out) {
     // type: field value is computed
     out.version = row.version;
 }
@@ -2016,7 +2016,7 @@ void kafka::OffsetCommitKey_Print(kafka::OffsetCommitKey& row, algo::cstring& st
 
 // --- kafka.OffsetCommitValue.base.CopyOut
 // Copy fields out of row
-void kafka::parent_CopyOut(kafka::OffsetCommitValue &row, kafka::GroupRecordValueHeader &out) {
+void kafka::offset_commit_value_CopyOut(kafka::OffsetCommitValue &row, kafka::GroupRecordValueHeader &out) {
     // type: field value is computed
     out.version = row.version;
 }
@@ -2438,7 +2438,6 @@ bool kafka::Record_ReadStrptrMaybe(kafka::Record &parent, algo::strptr in_str) {
 
 // --- kafka.Record..Uninit
 void kafka::Record_Uninit(kafka::Record& parent) {
-    kafka::Record &row = parent; (void)row;
 
     // kafka.Record.headers.Uninit (Tary)  //
     // remove all elements from kafka.Record.headers
@@ -2811,7 +2810,6 @@ void kafka::RecordBatch_Init(kafka::RecordBatch& parent) {
 
 // --- kafka.RecordBatch..Uninit
 void kafka::RecordBatch_Uninit(kafka::RecordBatch& parent) {
-    kafka::RecordBatch &row = parent; (void)row;
 
     // kafka.RecordBatch.records.Uninit (Tary)  //
     // remove all elements from kafka.RecordBatch.records

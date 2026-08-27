@@ -49,9 +49,11 @@ enum atf_comp_TableIdEnum {                      // atf_comp.TableId.value
     ,atf_comp_TableId_atfdb_tfilt          = 1   // atfdb.tfilt -> atf_comp.FTfilt
     ,atf_comp_TableId_atfdb_Unstableattr   = 2   // atfdb.Unstableattr -> atf_comp.FUnstableattr
     ,atf_comp_TableId_atfdb_unstableattr   = 2   // atfdb.unstableattr -> atf_comp.FUnstableattr
+    ,atf_comp_TableId_atfdb_Unstableline   = 3   // atfdb.Unstableline -> atf_comp.FUnstableline
+    ,atf_comp_TableId_atfdb_unstableline   = 3   // atfdb.unstableline -> atf_comp.FUnstableline
 };
 
-enum { atf_comp_TableIdEnum_N = 6 };
+enum { atf_comp_TableIdEnum_N = 8 };
 
 namespace atf_comp { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -63,12 +65,14 @@ namespace atfdb { struct Testenv; }
 namespace atfdb { struct Tfilt; }
 namespace atfdb { struct Unstableattr; }
 namespace dev { struct Unstablefld; }
+namespace atfdb { struct Unstableline; }
 namespace atf_comp { struct _db_comptest_curs; }
 namespace atf_comp { struct _db_tfilt_curs; }
 namespace atf_comp { struct _db_proc_curs; }
 namespace atf_comp { struct _db_unstableattr_curs; }
 namespace atf_comp { struct _db_zd_select_curs; }
 namespace atf_comp { struct _db_testenv_curs; }
+namespace atf_comp { struct _db_unstableline_curs; }
 namespace atf_comp { struct FComptest; }
 namespace atf_comp { struct trace; }
 namespace atf_comp { struct FDb; }
@@ -77,6 +81,7 @@ namespace atf_comp { struct FTestenv; }
 namespace atf_comp { struct FTfilt; }
 namespace atf_comp { struct FUnstableattr; }
 namespace atf_comp { struct FUnstablefld; }
+namespace atf_comp { struct FUnstableline; }
 namespace atf_comp { struct FieldId; }
 namespace atf_comp { struct TableId; }
 namespace atf_comp { extern struct atf_comp::FDb _db; }
@@ -130,27 +135,27 @@ void                 comptest_CopyOut(atf_comp::FComptest &row, atfdb::Comptest 
 void                 comptest_CopyIn(atf_comp::FComptest &row, atfdb::Comptest &in) __attribute__((nothrow));
 
 // func:atf_comp.FComptest.target.Get
-algo::strptr         target_Get(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(atf_comp::FComptest& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_comp.FComptest.testname.Get
-algo::strptr         testname_Get(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         testname_Get(atf_comp::FComptest& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Invoke function by pointer
 // func:atf_comp.FComptest.step.Call
-inline void          step_Call(atf_comp::FComptest& comptest) __attribute__((nothrow));
+inline void          step_Call(atf_comp::FComptest& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_comp.FComptest.c_tfilt.InsertMaybe
-inline bool          c_tfilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTfilt& row) __attribute__((nothrow));
+inline bool          c_tfilt_InsertMaybe(atf_comp::FComptest& parent, atf_comp::FTfilt& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_comp.FComptest.c_tfilt.Remove
-inline void          c_tfilt_Remove(atf_comp::FComptest& comptest, atf_comp::FTfilt& row) __attribute__((nothrow));
+inline void          c_tfilt_Remove(atf_comp::FComptest& parent, atf_comp::FTfilt& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_comp.FComptest..Init
-void                 FComptest_Init(atf_comp::FComptest& comptest);
+void                 FComptest_Init(atf_comp::FComptest& parent);
 // func:atf_comp.FComptest..Uninit
-void                 FComptest_Uninit(atf_comp::FComptest& comptest) __attribute__((nothrow));
+void                 FComptest_Uninit(atf_comp::FComptest& parent) __attribute__((nothrow));
 
 // --- atf_comp.trace
 #pragma pack(push,1)
@@ -196,6 +201,11 @@ struct FDb { // atf_comp.FDb
     i32                         n_capture;                        //   0  Number of files captured
     atf_comp::FTestenv*         testenv_lary[36];                 // level array
     i64                         testenv_n;                        // number of elements in array
+    atf_comp::FUnstableline*    unstableline_lary[36];            // level array
+    i64                         unstableline_n;                   // number of elements in array
+    atf_comp::FUnstableline**   ind_unstableline_buckets_elems;   // pointer to bucket array
+    i32                         ind_unstableline_buckets_n;       // number of elements in bucket array
+    i32                         ind_unstableline_n;               // number of elements in the hash table
     atf_comp::trace             trace;                            //
 };
 // Read argc,argv into the fields of atf_comp.FDb.cmdline (and any base command line)
@@ -565,6 +575,74 @@ inline atf_comp::FTestenv& testenv_qFind(u64 t) __attribute__((nothrow, pure));
 // func:atf_comp.FDb.testenv.XrefMaybe
 bool                 testenv_XrefMaybe(atf_comp::FTestenv &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_comp.FDb.unstableline.Alloc
+atf_comp::FUnstableline& unstableline_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_comp.FDb.unstableline.AllocMaybe
+atf_comp::FUnstableline* unstableline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_comp.FDb.unstableline.InsertMaybe
+atf_comp::FUnstableline* unstableline_InsertMaybe(const atfdb::Unstableline &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_comp.FDb.unstableline.AllocMem
+void*                unstableline_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_comp.FDb.unstableline.EmptyQ
+inline bool          unstableline_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_comp.FDb.unstableline.Find
+inline atf_comp::FUnstableline* unstableline_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_comp.FDb.unstableline.Last
+inline atf_comp::FUnstableline* unstableline_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_comp.FDb.unstableline.N
+inline i64           unstableline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_comp.FDb.unstableline.RemoveAll
+void                 unstableline_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_comp.FDb.unstableline.RemoveLast
+void                 unstableline_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_comp.FDb.unstableline.qFind
+inline atf_comp::FUnstableline& unstableline_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_comp.FDb.unstableline.XrefMaybe
+bool                 unstableline_XrefMaybe(atf_comp::FUnstableline &row);
+
+// Return true if hash is empty
+// func:atf_comp.FDb.ind_unstableline.EmptyQ
+inline bool          ind_unstableline_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:atf_comp.FDb.ind_unstableline.Find
+atf_comp::FUnstableline* ind_unstableline_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:atf_comp.FDb.ind_unstableline.FindX
+atf_comp::FUnstableline& ind_unstableline_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_comp.FDb.ind_unstableline.GetOrCreate
+atf_comp::FUnstableline& ind_unstableline_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:atf_comp.FDb.ind_unstableline.N
+inline i32           ind_unstableline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_comp.FDb.ind_unstableline.InsertMaybe
+bool                 ind_unstableline_InsertMaybe(atf_comp::FUnstableline& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_comp.FDb.ind_unstableline.Remove
+void                 ind_unstableline_Remove(atf_comp::FUnstableline& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_comp.FDb.ind_unstableline.Reserve
+void                 ind_unstableline_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_comp.FDb.ind_unstableline.AbsReserve
+void                 ind_unstableline_AbsReserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:atf_comp.FDb.comptest_curs.Reset
 inline void          _db_comptest_curs_Reset(_db_comptest_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
@@ -637,6 +715,18 @@ inline void          _db_testenv_curs_Next(_db_testenv_curs &curs) __attribute__
 // item access
 // func:atf_comp.FDb.testenv_curs.Access
 inline atf_comp::FTestenv& _db_testenv_curs_Access(_db_testenv_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_comp.FDb.unstableline_curs.Reset
+inline void          _db_unstableline_curs_Reset(_db_unstableline_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_comp.FDb.unstableline_curs.ValidQ
+inline bool          _db_unstableline_curs_ValidQ(_db_unstableline_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_comp.FDb.unstableline_curs.Next
+inline void          _db_unstableline_curs_Next(_db_unstableline_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_comp.FDb.unstableline_curs.Access
+inline atf_comp::FUnstableline& _db_unstableline_curs_Access(_db_unstableline_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_comp.FDb..Init
 void                 FDb_Init();
@@ -686,10 +776,10 @@ private:
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by atf_comp::FProc.in via FIohook field.
 // func:atf_comp.FProc.in.BeginRead
-void                 in_BeginRead(atf_comp::FProc& proc, algo::Fildes fd) __attribute__((nothrow));
+void                 in_BeginRead(atf_comp::FProc& parent, algo::Fildes fd) __attribute__((nothrow));
 // Set EOF flag
 // func:atf_comp.FProc.in.EndRead
-void                 in_EndRead(atf_comp::FProc& proc) __attribute__((nothrow));
+void                 in_EndRead(atf_comp::FProc& parent) __attribute__((nothrow));
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
@@ -702,52 +792,52 @@ void                 in_EndRead(atf_comp::FProc& proc) __attribute__((nothrow));
 // A partial line at the end of input is NOT returned.
 //
 // func:atf_comp.FProc.in.GetMsg
-algo::aryptr<char>   in_GetMsg(atf_comp::FProc& proc) __attribute__((nothrow));
+algo::aryptr<char>   in_GetMsg(atf_comp::FProc& parent) __attribute__((nothrow));
 // Set buffer size.
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
 // func:atf_comp.FProc.in.Realloc
-void                 in_Realloc(atf_comp::FProc& proc, int new_max) __attribute__((nothrow));
+void                 in_Realloc(atf_comp::FProc& parent, int new_max) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 // func:atf_comp.FProc.in.Max
-inline i32           in_Max(atf_comp::FProc& proc) __attribute__((nothrow));
+inline i32           in_Max(atf_comp::FProc& parent) __attribute__((nothrow));
 // Return number of bytes in the buffer.
 // func:atf_comp.FProc.in.N
-inline i32           in_N(atf_comp::FProc& proc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           in_N(atf_comp::FProc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
 // func:atf_comp.FProc.in.Refill
-bool                 in_Refill(atf_comp::FProc& proc) __attribute__((nothrow));
+bool                 in_Refill(atf_comp::FProc& parent) __attribute__((nothrow));
 // Empty bfufer
 // Discard contents of the buffer.
 // func:atf_comp.FProc.in.RemoveAll
-void                 in_RemoveAll(atf_comp::FProc& proc) __attribute__((nothrow));
+void                 in_RemoveAll(atf_comp::FProc& parent) __attribute__((nothrow));
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 //
 // func:atf_comp.FProc.in.SkipBytes
-void                 in_SkipBytes(atf_comp::FProc& proc, int n) __attribute__((nothrow));
+void                 in_SkipBytes(atf_comp::FProc& parent, int n) __attribute__((nothrow));
 // Skip current message, if any
 // Skip current message, if any.
 // func:atf_comp.FProc.in.SkipMsg
-void                 in_SkipMsg(atf_comp::FProc& proc) __attribute__((nothrow));
+void                 in_SkipMsg(atf_comp::FProc& parent) __attribute__((nothrow));
 // Attempt to write buffer contents to fbuf, return success
 // Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:atf_comp.FProc.in.WriteAll
-bool                 in_WriteAll(atf_comp::FProc& proc, u8 *in, i32 in_n) __attribute__((nothrow));
+bool                 in_WriteAll(atf_comp::FProc& parent, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
 // func:atf_comp.FProc.in.WriteReserve
-void                 in_WriteReserve(atf_comp::FProc& proc, u8 *in, i32 in_n) __attribute__((nothrow));
+void                 in_WriteReserve(atf_comp::FProc& parent, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_comp.FProc..Init
-void                 FProc_Init(atf_comp::FProc& proc);
+void                 FProc_Init(atf_comp::FProc& parent);
 // func:atf_comp.FProc..Uninit
-void                 FProc_Uninit(atf_comp::FProc& proc) __attribute__((nothrow));
+void                 FProc_Uninit(atf_comp::FProc& parent) __attribute__((nothrow));
 
 // --- atf_comp.FTestenv
 // create: atf_comp.FDb.testenv (Lary)
@@ -775,7 +865,7 @@ void                 testenv_CopyIn(atf_comp::FTestenv &row, atfdb::Testenv &in)
 
 // Set all fields to initial values.
 // func:atf_comp.FTestenv..Init
-inline void          FTestenv_Init(atf_comp::FTestenv& testenv);
+inline void          FTestenv_Init(atf_comp::FTestenv& parent);
 
 // --- atf_comp.FTfilt
 // create: atf_comp.FDb.tfilt (Lary)
@@ -807,7 +897,7 @@ void                 tfilt_CopyOut(atf_comp::FTfilt &row, atfdb::Tfilt &out) __a
 void                 tfilt_CopyIn(atf_comp::FTfilt &row, atfdb::Tfilt &in) __attribute__((nothrow));
 
 // func:atf_comp.FTfilt..Uninit
-void                 FTfilt_Uninit(atf_comp::FTfilt& tfilt) __attribute__((nothrow));
+void                 FTfilt_Uninit(atf_comp::FTfilt& parent) __attribute__((nothrow));
 
 // --- atf_comp.FUnstableattr
 // create: atf_comp.FDb.unstableattr (Lary)
@@ -841,9 +931,9 @@ void                 unstableattr_CopyIn(atf_comp::FUnstableattr &row, atfdb::Un
 
 // Set all fields to initial values.
 // func:atf_comp.FUnstableattr..Init
-inline void          FUnstableattr_Init(atf_comp::FUnstableattr& unstableattr);
+inline void          FUnstableattr_Init(atf_comp::FUnstableattr& parent);
 // func:atf_comp.FUnstableattr..Uninit
-void                 FUnstableattr_Uninit(atf_comp::FUnstableattr& unstableattr) __attribute__((nothrow));
+void                 FUnstableattr_Uninit(atf_comp::FUnstableattr& parent) __attribute__((nothrow));
 
 // --- atf_comp.FUnstablefld
 struct FUnstablefld { // atf_comp.FUnstablefld
@@ -854,8 +944,44 @@ struct FUnstablefld { // atf_comp.FUnstablefld
 };
 // Copy fields out of row
 // func:atf_comp.FUnstablefld.base.CopyOut
-void                 parent_CopyOut(atf_comp::FUnstablefld &row, dev::Unstablefld &out) __attribute__((nothrow));
+void                 unstablefld_CopyOut(atf_comp::FUnstablefld &row, dev::Unstablefld &out) __attribute__((nothrow));
 
+
+// --- atf_comp.FUnstableline
+// create: atf_comp.FDb.unstableline (Lary)
+// global access: unstableline (Lary, by rowid)
+// global access: ind_unstableline (Thash, hash field unstableline)
+struct FUnstableline { // atf_comp.FUnstableline
+    atf_comp::FUnstableline*   ind_unstableline_next;      // hash next
+    u32                        ind_unstableline_hashval;   // hash value
+    algo::Smallstr50           unstableline;               //
+    algo::cstring              comment;                    //
+    // func:atf_comp.FUnstableline..AssignOp
+    inline atf_comp::FUnstableline& operator =(const atf_comp::FUnstableline &rhs) = delete;
+    // func:atf_comp.FUnstableline..CopyCtor
+    inline               FUnstableline(const atf_comp::FUnstableline &rhs) = delete;
+private:
+    // func:atf_comp.FUnstableline..Ctor
+    inline               FUnstableline() __attribute__((nothrow));
+    // func:atf_comp.FUnstableline..Dtor
+    inline               ~FUnstableline() __attribute__((nothrow));
+    friend atf_comp::FUnstableline& unstableline_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_comp::FUnstableline* unstableline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 unstableline_RemoveAll() __attribute__((nothrow));
+    friend void                 unstableline_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_comp.FUnstableline.base.CopyOut
+void                 unstableline_CopyOut(atf_comp::FUnstableline &row, atfdb::Unstableline &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_comp.FUnstableline.base.CopyIn
+void                 unstableline_CopyIn(atf_comp::FUnstableline &row, atfdb::Unstableline &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_comp.FUnstableline..Init
+inline void          FUnstableline_Init(atf_comp::FUnstableline& parent);
+// func:atf_comp.FUnstableline..Uninit
+void                 FUnstableline_Uninit(atf_comp::FUnstableline& parent) __attribute__((nothrow));
 
 // --- atf_comp.FieldId
 #pragma pack(push,1)
@@ -1009,6 +1135,14 @@ struct _db_testenv_curs {// cursor
     atf_comp::FDb *parent;
     i64 index;
     _db_testenv_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_unstableline_curs {// cursor
+    typedef atf_comp::FUnstableline ChildType;
+    atf_comp::FDb *parent;
+    i64 index;
+    _db_unstableline_curs(){ parent=NULL; index=0; }
 };
 
 } // gen:ns_curstext
@@ -1778,6 +1912,10 @@ void                 comptest_acr_compl_T09();
 // this function is 'extrn' and implemented by user
 void                 comptest_acr_compl_T10();
 // User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_dm_Comment
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_dm_Comment();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
 // func:atf_comp...comptest_acr_dm_Conflict
 // this function is 'extrn' and implemented by user
 void                 comptest_acr_dm_Conflict();
@@ -1794,9 +1932,21 @@ void                 comptest_acr_dm_FieldOrder();
 // this function is 'extrn' and implemented by user
 void                 comptest_acr_dm_Merge();
 // User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_dm_MergeFail
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_dm_MergeFail();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_dm_MoveConflict
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_dm_MoveConflict();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
 // func:atf_comp...comptest_acr_dm_RenameTuple
 // this function is 'extrn' and implemented by user
 void                 comptest_acr_dm_RenameTuple();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_dm_Reorder
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_dm_Reorder();
 // User-implemented function from gstatic:atf_comp.FDb.comptest
 // func:atf_comp...comptest_acr_dm_Symmetry
 // this function is 'extrn' and implemented by user
@@ -1825,6 +1975,14 @@ void                 comptest_acr_ed_CreateSsimfileBadNs();
 // func:atf_comp...comptest_acr_ed_CreateTarget
 // this function is 'extrn' and implemented by user
 void                 comptest_acr_ed_CreateTarget();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_ed_DelField
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_ed_DelField();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_ed_RenameField
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_ed_RenameField();
 // User-implemented function from gstatic:atf_comp.FDb.comptest
 // func:atf_comp...comptest_acr_in_Reverse
 // this function is 'extrn' and implemented by user

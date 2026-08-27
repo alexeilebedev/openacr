@@ -180,11 +180,11 @@ inline wt::FSbpath& wt::_db_sbpath_curs_Access(_db_sbpath_curs &curs) {
 
 // --- wt.FSandbox..Init
 // Set all fields to initial values.
-inline void wt::FSandbox_Init(wt::FSandbox& sandbox) {
-    sandbox.cow = bool(false);
-    sandbox.select = bool(false);
-    sandbox.ind_sandbox_next = (wt::FSandbox*)-1; // (wt.FDb.ind_sandbox) not-in-hash
-    sandbox.ind_sandbox_hashval = 0; // stored hash value
+inline void wt::FSandbox_Init(wt::FSandbox& parent) {
+    parent.cow = bool(false);
+    parent.select = bool(false);
+    parent.ind_sandbox_next = (wt::FSandbox*)-1; // (wt.FDb.ind_sandbox) not-in-hash
+    parent.ind_sandbox_hashval = 0; // stored hash value
 }
 
 // --- wt.FSandbox..Ctor

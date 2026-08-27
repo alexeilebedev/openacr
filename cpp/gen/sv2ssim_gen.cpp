@@ -33,8 +33,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
@@ -43,7 +41,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 sv2ssim::FDb    sv2ssim::_db;     // dependency found via dev.targdep
 
@@ -86,9 +83,8 @@ void sv2ssim::bltin_CopyIn(sv2ssim::FBltin &row, amcdb::Bltin &in) {
 }
 
 // --- sv2ssim.FBltin..Uninit
-void sv2ssim::FBltin_Uninit(sv2ssim::FBltin& bltin) {
-    sv2ssim::FBltin &row = bltin; (void)row;
-    ind_bltin_Remove(row); // remove bltin from index ind_bltin
+void sv2ssim::FBltin_Uninit(sv2ssim::FBltin& parent) {
+    ind_bltin_Remove(parent); // remove bltin from index ind_bltin
 }
 
 // --- sv2ssim.trace..Print
@@ -1240,7 +1236,6 @@ void sv2ssim::FDb_Init() {
 
 // --- sv2ssim.FDb..Uninit
 void sv2ssim::FDb_Uninit() {
-    sv2ssim::FDb &row = _db; (void)row;
 
     // sv2ssim.FDb.ind_bltin.Uninit (Thash)  //
     // skip destruction of ind_bltin in global scope
@@ -1266,23 +1261,23 @@ void sv2ssim::FDb_Uninit() {
 
 // --- sv2ssim.FField..Init
 // Set all fields to initial values.
-void sv2ssim::FField_Init(sv2ssim::FField& field) {
-    field.maxwid = i32(0);
-    field.minval = double(1e300);
-    field.maxval = double(-1e300);
-    field.minwid_fix1 = i32(100000);
-    field.maxwid_fix1 = i32(0);
-    field.minwid_fix2 = i32(100000);
-    field.maxwid_fix2 = i32(0);
-    field.couldbe_int = bool(true);
-    field.couldbe_bool = bool(true);
-    field.couldbe_fixwid = bool(true);
-    field.couldbe_double = bool(true);
-    field.rowid = i32(0);
-    field.ind_field_next = (sv2ssim::FField*)-1; // (sv2ssim.FDb.ind_field) not-in-hash
-    field.ind_field_hashval = 0; // stored hash value
-    field.zd_selfield_next = (sv2ssim::FField*)-1; // (sv2ssim.FDb.zd_selfield) not-in-list
-    field.zd_selfield_prev = NULL; // (sv2ssim.FDb.zd_selfield)
+void sv2ssim::FField_Init(sv2ssim::FField& parent) {
+    parent.maxwid = i32(0);
+    parent.minval = double(1e300);
+    parent.maxval = double(-1e300);
+    parent.minwid_fix1 = i32(100000);
+    parent.maxwid_fix1 = i32(0);
+    parent.minwid_fix2 = i32(100000);
+    parent.maxwid_fix2 = i32(0);
+    parent.couldbe_int = bool(true);
+    parent.couldbe_bool = bool(true);
+    parent.couldbe_fixwid = bool(true);
+    parent.couldbe_double = bool(true);
+    parent.rowid = i32(0);
+    parent.ind_field_next = (sv2ssim::FField*)-1; // (sv2ssim.FDb.ind_field) not-in-hash
+    parent.ind_field_hashval = 0; // stored hash value
+    parent.zd_selfield_next = (sv2ssim::FField*)-1; // (sv2ssim.FDb.zd_selfield) not-in-list
+    parent.zd_selfield_prev = NULL; // (sv2ssim.FDb.zd_selfield)
 }
 
 // --- sv2ssim.FField..ReadFieldMaybe
@@ -1357,10 +1352,9 @@ bool sv2ssim::FField_ReadStrptrMaybe(sv2ssim::FField &parent, algo::strptr in_st
 }
 
 // --- sv2ssim.FField..Uninit
-void sv2ssim::FField_Uninit(sv2ssim::FField& field) {
-    sv2ssim::FField &row = field; (void)row;
-    ind_field_Remove(row); // remove field from index ind_field
-    zd_selfield_Remove(row); // remove field from index zd_selfield
+void sv2ssim::FField_Uninit(sv2ssim::FField& parent) {
+    ind_field_Remove(parent); // remove field from index ind_field
+    zd_selfield_Remove(parent); // remove field from index zd_selfield
 }
 
 // --- sv2ssim.FField..Print
@@ -1696,7 +1690,6 @@ void sv2ssim::StaticCheck() {
 // --- sv2ssim...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         sv2ssim::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1715,7 +1708,6 @@ int main(int argc, char **argv) {
     try {
         sv2ssim::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -1,7 +1,7 @@
 ## dmmeta.thash - Hash index, required for fields with reftype Thash
 <a href="#dmmeta-thash"></a>
 
-This record is required on fields with [reftype:Thash](/txt/exe/amc/reftype.md#thash)
+This record is required on fields with [reftype:Thash](/txt/exe/amc/reftype/Thash.md)
 
 A hash table is implemented as a Tary of pointers.
 Collisions are implemented as a singly linked list.
@@ -30,10 +30,10 @@ amc -report:N atf_amc.FDb.ind_typea.% -proto
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|hashfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Field on which hash function is computed|
-|unique|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Enforce uniqueness of member elements|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|hashfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Field on which hash function is computed|
+|unique|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Enforce uniqueness of member elements|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

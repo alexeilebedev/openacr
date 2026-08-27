@@ -51,10 +51,10 @@ Set it to `Y` to disable scientific notation.
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Target field|
-|nplace|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of implied decimal places: 1..17, and 10^nplace must fit the field storage|
-|fixedfmt|bool|[Val](/txt/exe/amc/reftype.md#val)||Print exactly SCALE chars after decimal point|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Target field|
+|nplace|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of implied decimal places: 1..17, and 10^nplace must fit the field storage|
+|fixedfmt|bool|[Val](/txt/exe/amc/reftype/Val.md)||Print exactly SCALE chars after decimal point|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

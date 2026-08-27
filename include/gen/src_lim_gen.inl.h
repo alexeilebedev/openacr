@@ -31,8 +31,8 @@
 
 // --- src_lim.FBadline..Init
 // Set all fields to initial values.
-inline void src_lim::FBadline_Init(src_lim::FBadline& badline) {
-    badline.select = bool(false);
+inline void src_lim::FBadline_Init(src_lim::FBadline& parent) {
+    parent.select = bool(false);
 }
 
 // --- src_lim.FBadline..Ctor
@@ -393,15 +393,15 @@ inline src_lim::FBadline& src_lim::_db_badline_curs_Access(_db_badline_curs &cur
 
 // --- src_lim.FGitfile.zd_include.EmptyQ
 // Return true if index is empty
-inline bool src_lim::zd_include_EmptyQ(src_lim::FGitfile& gitfile) {
-    return gitfile.zd_include_head == NULL;
+inline bool src_lim::zd_include_EmptyQ(src_lim::FGitfile& parent) {
+    return parent.zd_include_head == NULL;
 }
 
 // --- src_lim.FGitfile.zd_include.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline src_lim::FInclude* src_lim::zd_include_First(src_lim::FGitfile& gitfile) {
+inline src_lim::FInclude* src_lim::zd_include_First(src_lim::FGitfile& parent) {
     src_lim::FInclude *row = NULL;
-    row = gitfile.zd_include_head;
+    row = parent.zd_include_head;
     return row;
 }
 
@@ -415,16 +415,16 @@ inline bool src_lim::gitfile_zd_include_InLlistQ(src_lim::FInclude& row) {
 
 // --- src_lim.FGitfile.zd_include.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline src_lim::FInclude* src_lim::zd_include_Last(src_lim::FGitfile& gitfile) {
+inline src_lim::FInclude* src_lim::zd_include_Last(src_lim::FGitfile& parent) {
     src_lim::FInclude *row = NULL;
-    row = gitfile.zd_include_tail;
+    row = parent.zd_include_tail;
     return row;
 }
 
 // --- src_lim.FGitfile.zd_include.N
 // Return number of items in the linked list
-inline i32 src_lim::zd_include_N(const src_lim::FGitfile& gitfile) {
-    return gitfile.zd_include_n;
+inline i32 src_lim::zd_include_N(const src_lim::FGitfile& parent) {
+    return parent.zd_include_n;
 }
 
 // --- src_lim.FGitfile.zd_include.Next
@@ -441,62 +441,62 @@ inline src_lim::FInclude* src_lim::gitfile_zd_include_Prev(src_lim::FInclude &ro
 
 // --- src_lim.FGitfile.zd_include.qLast
 // Return reference to last element in the index. No bounds checking.
-inline src_lim::FInclude& src_lim::zd_include_qLast(src_lim::FGitfile& gitfile) {
+inline src_lim::FInclude& src_lim::zd_include_qLast(src_lim::FGitfile& parent) {
     src_lim::FInclude *row = NULL;
-    row = gitfile.zd_include_tail;
+    row = parent.zd_include_tail;
     return *row;
 }
 
 // --- src_lim.FGitfile.c_linelim.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool src_lim::c_linelim_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) {
-    src_lim::FLinelim* ptr = gitfile.c_linelim;
+inline bool src_lim::c_linelim_InsertMaybe(src_lim::FGitfile& parent, src_lim::FLinelim& row) {
+    src_lim::FLinelim* ptr = parent.c_linelim;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        gitfile.c_linelim = &row;
+        parent.c_linelim = &row;
     }
     return retval;
 }
 
 // --- src_lim.FGitfile.c_linelim.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void src_lim::c_linelim_Remove(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) {
-    src_lim::FLinelim *ptr = gitfile.c_linelim;
+inline void src_lim::c_linelim_Remove(src_lim::FGitfile& parent, src_lim::FLinelim& row) {
+    src_lim::FLinelim *ptr = parent.c_linelim;
     if (LIKELY(ptr == &row)) {
-        gitfile.c_linelim = NULL;
+        parent.c_linelim = NULL;
     }
 }
 
 // --- src_lim.FGitfile.c_targsrc.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool src_lim::c_targsrc_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) {
-    src_lim::FTargsrc* ptr = gitfile.c_targsrc;
+inline bool src_lim::c_targsrc_InsertMaybe(src_lim::FGitfile& parent, src_lim::FTargsrc& row) {
+    src_lim::FTargsrc* ptr = parent.c_targsrc;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        gitfile.c_targsrc = &row;
+        parent.c_targsrc = &row;
     }
     return retval;
 }
 
 // --- src_lim.FGitfile.c_targsrc.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void src_lim::c_targsrc_Remove(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) {
-    src_lim::FTargsrc *ptr = gitfile.c_targsrc;
+inline void src_lim::c_targsrc_Remove(src_lim::FGitfile& parent, src_lim::FTargsrc& row) {
+    src_lim::FTargsrc *ptr = parent.c_targsrc;
     if (LIKELY(ptr == &row)) {
-        gitfile.c_targsrc = NULL;
+        parent.c_targsrc = NULL;
     }
 }
 
 // --- src_lim.FGitfile..Init
 // Set all fields to initial values.
-inline void src_lim::FGitfile_Init(src_lim::FGitfile& gitfile) {
-    gitfile.zd_include_head = NULL; // (src_lim.FGitfile.zd_include)
-    gitfile.zd_include_n = 0; // (src_lim.FGitfile.zd_include)
-    gitfile.zd_include_tail = NULL; // (src_lim.FGitfile.zd_include)
-    gitfile.c_linelim = NULL;
-    gitfile.c_targsrc = NULL;
-    gitfile.ind_gitfile_next = (src_lim::FGitfile*)-1; // (src_lim.FDb.ind_gitfile) not-in-hash
-    gitfile.ind_gitfile_hashval = 0; // stored hash value
+inline void src_lim::FGitfile_Init(src_lim::FGitfile& parent) {
+    parent.zd_include_head = NULL; // (src_lim.FGitfile.zd_include)
+    parent.zd_include_n = 0; // (src_lim.FGitfile.zd_include)
+    parent.zd_include_tail = NULL; // (src_lim.FGitfile.zd_include)
+    parent.c_linelim = NULL;
+    parent.c_targsrc = NULL;
+    parent.ind_gitfile_next = (src_lim::FGitfile*)-1; // (src_lim.FDb.ind_gitfile) not-in-hash
+    parent.ind_gitfile_hashval = 0; // stored hash value
 }
 
 // --- src_lim.FGitfile.zd_include_curs.Reset
@@ -536,10 +536,10 @@ inline  src_lim::FGitfile::~FGitfile() {
 
 // --- src_lim.FInclude..Init
 // Set all fields to initial values.
-inline void src_lim::FInclude_Init(src_lim::FInclude& include) {
-    include.sys = bool(false);
-    include.gitfile_zd_include_next = (src_lim::FInclude*)-1; // (src_lim.FGitfile.zd_include) not-in-list
-    include.gitfile_zd_include_prev = NULL; // (src_lim.FGitfile.zd_include)
+inline void src_lim::FInclude_Init(src_lim::FInclude& parent) {
+    parent.sys = bool(false);
+    parent.gitfile_zd_include_next = (src_lim::FInclude*)-1; // (src_lim.FGitfile.zd_include) not-in-list
+    parent.gitfile_zd_include_prev = NULL; // (src_lim.FGitfile.zd_include)
 }
 
 // --- src_lim.FInclude..Ctor
@@ -554,14 +554,14 @@ inline  src_lim::FInclude::~FInclude() {
 
 // --- src_lim.FLinelim..Init
 // Set all fields to initial values.
-inline void src_lim::FLinelim_Init(src_lim::FLinelim& linelim) {
-    linelim.nlongline = u32(0);
-    linelim.longestline = u32(0);
-    linelim.nbadws = u32(0);
-    linelim.maxws = u32(0);
-    linelim.nlongfunc = u32(0);
-    linelim.longestfunc = u32(0);
-    linelim.nmysteryfunc = u32(0);
+inline void src_lim::FLinelim_Init(src_lim::FLinelim& parent) {
+    parent.nlongline = u32(0);
+    parent.longestline = u32(0);
+    parent.nbadws = u32(0);
+    parent.maxws = u32(0);
+    parent.nlongfunc = u32(0);
+    parent.longestfunc = u32(0);
+    parent.nmysteryfunc = u32(0);
 }
 
 // --- src_lim.FLinelim..Ctor
@@ -576,9 +576,9 @@ inline  src_lim::FLinelim::~FLinelim() {
 
 // --- src_lim.FTargsrc..Init
 // Set all fields to initial values.
-inline void src_lim::FTargsrc_Init(src_lim::FTargsrc& targsrc) {
-    targsrc.p_gitfile = NULL;
-    targsrc.select = bool(false);
+inline void src_lim::FTargsrc_Init(src_lim::FTargsrc& parent) {
+    parent.p_gitfile = NULL;
+    parent.select = bool(false);
 }
 
 // --- src_lim.FTargsrc..Ctor

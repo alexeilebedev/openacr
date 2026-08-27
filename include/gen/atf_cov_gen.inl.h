@@ -32,11 +32,11 @@
 
 // --- atf_cov.FCovfile..Init
 // Set all fields to initial values.
-inline void atf_cov::FCovfile_Init(atf_cov::FCovfile& covfile) {
-    covfile.total = u32(0);
-    covfile.nonexe = u32(0);
-    covfile.exe = u32(0);
-    covfile.hit = u32(0);
+inline void atf_cov::FCovfile_Init(atf_cov::FCovfile& parent) {
+    parent.total = u32(0);
+    parent.nonexe = u32(0);
+    parent.exe = u32(0);
+    parent.hit = u32(0);
 }
 
 // --- atf_cov.FCovfile..Ctor
@@ -51,13 +51,13 @@ inline  atf_cov::FCovfile::~FCovfile() {
 
 // --- atf_cov.FCovline..Init
 // Set all fields to initial values.
-inline void atf_cov::FCovline_Init(atf_cov::FCovline& covline) {
-    covline.flag = char('N');
-    covline.hit = u32(0);
-    covline.p_gitfile = NULL;
-    covline.gitfile_c_covline_in_ary = bool(false);
-    covline.ind_covline_next = (atf_cov::FCovline*)-1; // (atf_cov.FDb.ind_covline) not-in-hash
-    covline.ind_covline_hashval = 0; // stored hash value
+inline void atf_cov::FCovline_Init(atf_cov::FCovline& parent) {
+    parent.flag = char('N');
+    parent.hit = u32(0);
+    parent.p_gitfile = NULL;
+    parent.gitfile_c_covline_in_ary = bool(false);
+    parent.ind_covline_next = (atf_cov::FCovline*)-1; // (atf_cov.FDb.ind_covline) not-in-hash
+    parent.ind_covline_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FCovline..Ctor
@@ -72,11 +72,11 @@ inline  atf_cov::FCovline::~FCovline() {
 
 // --- atf_cov.FCovtarget..Init
 // Set all fields to initial values.
-inline void atf_cov::FCovtarget_Init(atf_cov::FCovtarget& covtarget) {
-    covtarget.total = u32(0);
-    covtarget.nonexe = u32(0);
-    covtarget.exe = u32(0);
-    covtarget.hit = u32(0);
+inline void atf_cov::FCovtarget_Init(atf_cov::FCovtarget& parent) {
+    parent.total = u32(0);
+    parent.nonexe = u32(0);
+    parent.exe = u32(0);
+    parent.hit = u32(0);
 }
 
 // --- atf_cov.FCovtarget..Ctor
@@ -691,68 +691,68 @@ inline atf_cov::FUncovfunc& atf_cov::_db_uncovfunc_curs_Access(_db_uncovfunc_cur
 
 // --- atf_cov.FGitfile.c_targsrc.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FTargsrc& row) {
-    atf_cov::FTargsrc* ptr = gitfile.c_targsrc;
+inline bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FGitfile& parent, atf_cov::FTargsrc& row) {
+    atf_cov::FTargsrc* ptr = parent.c_targsrc;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        gitfile.c_targsrc = &row;
+        parent.c_targsrc = &row;
     }
     return retval;
 }
 
 // --- atf_cov.FGitfile.c_targsrc.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void atf_cov::c_targsrc_Remove(atf_cov::FGitfile& gitfile, atf_cov::FTargsrc& row) {
-    atf_cov::FTargsrc *ptr = gitfile.c_targsrc;
+inline void atf_cov::c_targsrc_Remove(atf_cov::FGitfile& parent, atf_cov::FTargsrc& row) {
+    atf_cov::FTargsrc *ptr = parent.c_targsrc;
     if (LIKELY(ptr == &row)) {
-        gitfile.c_targsrc = NULL;
+        parent.c_targsrc = NULL;
     }
 }
 
 // --- atf_cov.FGitfile.c_covline.EmptyQ
 // Return true if index is empty
-inline bool atf_cov::c_covline_EmptyQ(atf_cov::FGitfile& gitfile) {
-    return gitfile.c_covline_n == 0;
+inline bool atf_cov::c_covline_EmptyQ(atf_cov::FGitfile& parent) {
+    return parent.c_covline_n == 0;
 }
 
 // --- atf_cov.FGitfile.c_covline.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_cov::FCovline* atf_cov::c_covline_Find(atf_cov::FGitfile& gitfile, u64 t) {
+inline atf_cov::FCovline* atf_cov::c_covline_Find(atf_cov::FGitfile& parent, u64 t) {
     atf_cov::FCovline *retval = NULL;
     u64 idx = t;
-    u64 lim = gitfile.c_covline_n;
+    u64 lim = parent.c_covline_n;
     if (idx < lim) {
-        retval = gitfile.c_covline_elems[idx];
+        retval = parent.c_covline_elems[idx];
     }
     return retval;
 }
 
 // --- atf_cov.FGitfile.c_covline.Getary
 // Return array of pointers
-inline algo::aryptr<atf_cov::FCovline*> atf_cov::c_covline_Getary(atf_cov::FGitfile& gitfile) {
-    return algo::aryptr<atf_cov::FCovline*>(gitfile.c_covline_elems, gitfile.c_covline_n);
+inline algo::aryptr<atf_cov::FCovline*> atf_cov::c_covline_Getary(atf_cov::FGitfile& parent) {
+    return algo::aryptr<atf_cov::FCovline*>(parent.c_covline_elems, parent.c_covline_n);
 }
 
 // --- atf_cov.FGitfile.c_covline.N
 // Return number of items in the pointer array
-inline i64 atf_cov::c_covline_N(const atf_cov::FGitfile& gitfile) {
-    return gitfile.c_covline_n;
+inline i64 atf_cov::c_covline_N(const atf_cov::FGitfile& parent) {
+    return parent.c_covline_n;
 }
 
 // --- atf_cov.FGitfile.c_covline.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_cov::c_covline_RemoveAll(atf_cov::FGitfile& gitfile) {
-    for (u64 i = 0; i < gitfile.c_covline_n; i++) {
+inline void atf_cov::c_covline_RemoveAll(atf_cov::FGitfile& parent) {
+    for (u64 i = 0; i < parent.c_covline_n; i++) {
         // mark all elements as not-in-array
-        gitfile.c_covline_elems[i]->gitfile_c_covline_in_ary = false;
+        parent.c_covline_elems[i]->gitfile_c_covline_in_ary = false;
     }
-    gitfile.c_covline_n = 0;
+    parent.c_covline_n = 0;
 }
 
 // --- atf_cov.FGitfile.c_covline.qFind
 // Return reference without bounds checking
-inline atf_cov::FCovline& atf_cov::c_covline_qFind(atf_cov::FGitfile& gitfile, u64 idx) {
-    return *gitfile.c_covline_elems[idx];
+inline atf_cov::FCovline& atf_cov::c_covline_qFind(atf_cov::FGitfile& parent, u64 idx) {
+    return *parent.c_covline_elems[idx];
 }
 
 // --- atf_cov.FGitfile.c_covline.InAryQ
@@ -763,40 +763,40 @@ inline bool atf_cov::gitfile_c_covline_InAryQ(atf_cov::FCovline& row) {
 
 // --- atf_cov.FGitfile.c_covline.qLast
 // Reference to last element without bounds checking
-inline atf_cov::FCovline& atf_cov::c_covline_qLast(atf_cov::FGitfile& gitfile) {
-    return *gitfile.c_covline_elems[gitfile.c_covline_n-1];
+inline atf_cov::FCovline& atf_cov::c_covline_qLast(atf_cov::FGitfile& parent) {
+    return *parent.c_covline_elems[parent.c_covline_n-1];
 }
 
 // --- atf_cov.FGitfile.c_covfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool atf_cov::c_covfile_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) {
-    atf_cov::FCovfile* ptr = gitfile.c_covfile;
+inline bool atf_cov::c_covfile_InsertMaybe(atf_cov::FGitfile& parent, atf_cov::FCovfile& row) {
+    atf_cov::FCovfile* ptr = parent.c_covfile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        gitfile.c_covfile = &row;
+        parent.c_covfile = &row;
     }
     return retval;
 }
 
 // --- atf_cov.FGitfile.c_covfile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void atf_cov::c_covfile_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) {
-    atf_cov::FCovfile *ptr = gitfile.c_covfile;
+inline void atf_cov::c_covfile_Remove(atf_cov::FGitfile& parent, atf_cov::FCovfile& row) {
+    atf_cov::FCovfile *ptr = parent.c_covfile;
     if (LIKELY(ptr == &row)) {
-        gitfile.c_covfile = NULL;
+        parent.c_covfile = NULL;
     }
 }
 
 // --- atf_cov.FGitfile..Init
 // Set all fields to initial values.
-inline void atf_cov::FGitfile_Init(atf_cov::FGitfile& gitfile) {
-    gitfile.c_targsrc = NULL;
-    gitfile.c_covline_elems = NULL; // (atf_cov.FGitfile.c_covline)
-    gitfile.c_covline_n = 0; // (atf_cov.FGitfile.c_covline)
-    gitfile.c_covline_max = 0; // (atf_cov.FGitfile.c_covline)
-    gitfile.c_covfile = NULL;
-    gitfile.ind_gitfile_next = (atf_cov::FGitfile*)-1; // (atf_cov.FDb.ind_gitfile) not-in-hash
-    gitfile.ind_gitfile_hashval = 0; // stored hash value
+inline void atf_cov::FGitfile_Init(atf_cov::FGitfile& parent) {
+    parent.c_targsrc = NULL;
+    parent.c_covline_elems = NULL; // (atf_cov.FGitfile.c_covline)
+    parent.c_covline_n = 0; // (atf_cov.FGitfile.c_covline)
+    parent.c_covline_max = 0; // (atf_cov.FGitfile.c_covline)
+    parent.c_covfile = NULL;
+    parent.ind_gitfile_next = (atf_cov::FGitfile*)-1; // (atf_cov.FDb.ind_gitfile) not-in-hash
+    parent.ind_gitfile_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FGitfile.c_covline_curs.Reset
@@ -836,48 +836,48 @@ inline  atf_cov::FGitfile::~FGitfile() {
 
 // --- atf_cov.FTarget.c_targsrc.EmptyQ
 // Return true if index is empty
-inline bool atf_cov::c_targsrc_EmptyQ(atf_cov::FTarget& target) {
-    return target.c_targsrc_n == 0;
+inline bool atf_cov::c_targsrc_EmptyQ(atf_cov::FTarget& parent) {
+    return parent.c_targsrc_n == 0;
 }
 
 // --- atf_cov.FTarget.c_targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_cov::FTargsrc* atf_cov::c_targsrc_Find(atf_cov::FTarget& target, u64 t) {
+inline atf_cov::FTargsrc* atf_cov::c_targsrc_Find(atf_cov::FTarget& parent, u64 t) {
     atf_cov::FTargsrc *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_targsrc_n;
+    u64 lim = parent.c_targsrc_n;
     if (idx < lim) {
-        retval = target.c_targsrc_elems[idx];
+        retval = parent.c_targsrc_elems[idx];
     }
     return retval;
 }
 
 // --- atf_cov.FTarget.c_targsrc.Getary
 // Return array of pointers
-inline algo::aryptr<atf_cov::FTargsrc*> atf_cov::c_targsrc_Getary(atf_cov::FTarget& target) {
-    return algo::aryptr<atf_cov::FTargsrc*>(target.c_targsrc_elems, target.c_targsrc_n);
+inline algo::aryptr<atf_cov::FTargsrc*> atf_cov::c_targsrc_Getary(atf_cov::FTarget& parent) {
+    return algo::aryptr<atf_cov::FTargsrc*>(parent.c_targsrc_elems, parent.c_targsrc_n);
 }
 
 // --- atf_cov.FTarget.c_targsrc.N
 // Return number of items in the pointer array
-inline i64 atf_cov::c_targsrc_N(const atf_cov::FTarget& target) {
-    return target.c_targsrc_n;
+inline i64 atf_cov::c_targsrc_N(const atf_cov::FTarget& parent) {
+    return parent.c_targsrc_n;
 }
 
 // --- atf_cov.FTarget.c_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_cov::c_targsrc_RemoveAll(atf_cov::FTarget& target) {
-    for (u64 i = 0; i < target.c_targsrc_n; i++) {
+inline void atf_cov::c_targsrc_RemoveAll(atf_cov::FTarget& parent) {
+    for (u64 i = 0; i < parent.c_targsrc_n; i++) {
         // mark all elements as not-in-array
-        target.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
+        parent.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
     }
-    target.c_targsrc_n = 0;
+    parent.c_targsrc_n = 0;
 }
 
 // --- atf_cov.FTarget.c_targsrc.qFind
 // Return reference without bounds checking
-inline atf_cov::FTargsrc& atf_cov::c_targsrc_qFind(atf_cov::FTarget& target, u64 idx) {
-    return *target.c_targsrc_elems[idx];
+inline atf_cov::FTargsrc& atf_cov::c_targsrc_qFind(atf_cov::FTarget& parent, u64 idx) {
+    return *parent.c_targsrc_elems[idx];
 }
 
 // --- atf_cov.FTarget.c_targsrc.InAryQ
@@ -888,60 +888,60 @@ inline bool atf_cov::target_c_targsrc_InAryQ(atf_cov::FTargsrc& row) {
 
 // --- atf_cov.FTarget.c_targsrc.qLast
 // Reference to last element without bounds checking
-inline atf_cov::FTargsrc& atf_cov::c_targsrc_qLast(atf_cov::FTarget& target) {
-    return *target.c_targsrc_elems[target.c_targsrc_n-1];
+inline atf_cov::FTargsrc& atf_cov::c_targsrc_qLast(atf_cov::FTarget& parent) {
+    return *parent.c_targsrc_elems[parent.c_targsrc_n-1];
 }
 
 // --- atf_cov.FTarget.c_covtarget.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool atf_cov::c_covtarget_InsertMaybe(atf_cov::FTarget& target, atf_cov::FCovtarget& row) {
-    atf_cov::FCovtarget* ptr = target.c_covtarget;
+inline bool atf_cov::c_covtarget_InsertMaybe(atf_cov::FTarget& parent, atf_cov::FCovtarget& row) {
+    atf_cov::FCovtarget* ptr = parent.c_covtarget;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        target.c_covtarget = &row;
+        parent.c_covtarget = &row;
     }
     return retval;
 }
 
 // --- atf_cov.FTarget.c_covtarget.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void atf_cov::c_covtarget_Remove(atf_cov::FTarget& target, atf_cov::FCovtarget& row) {
-    atf_cov::FCovtarget *ptr = target.c_covtarget;
+inline void atf_cov::c_covtarget_Remove(atf_cov::FTarget& parent, atf_cov::FCovtarget& row) {
+    atf_cov::FCovtarget *ptr = parent.c_covtarget;
     if (LIKELY(ptr == &row)) {
-        target.c_covtarget = NULL;
+        parent.c_covtarget = NULL;
     }
 }
 
 // --- atf_cov.FTarget.c_tgtcov.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool atf_cov::c_tgtcov_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTgtcov& row) {
-    atf_cov::FTgtcov* ptr = target.c_tgtcov;
+inline bool atf_cov::c_tgtcov_InsertMaybe(atf_cov::FTarget& parent, atf_cov::FTgtcov& row) {
+    atf_cov::FTgtcov* ptr = parent.c_tgtcov;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        target.c_tgtcov = &row;
+        parent.c_tgtcov = &row;
     }
     return retval;
 }
 
 // --- atf_cov.FTarget.c_tgtcov.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void atf_cov::c_tgtcov_Remove(atf_cov::FTarget& target, atf_cov::FTgtcov& row) {
-    atf_cov::FTgtcov *ptr = target.c_tgtcov;
+inline void atf_cov::c_tgtcov_Remove(atf_cov::FTarget& parent, atf_cov::FTgtcov& row) {
+    atf_cov::FTgtcov *ptr = parent.c_tgtcov;
     if (LIKELY(ptr == &row)) {
-        target.c_tgtcov = NULL;
+        parent.c_tgtcov = NULL;
     }
 }
 
 // --- atf_cov.FTarget..Init
 // Set all fields to initial values.
-inline void atf_cov::FTarget_Init(atf_cov::FTarget& target) {
-    target.c_targsrc_elems = NULL; // (atf_cov.FTarget.c_targsrc)
-    target.c_targsrc_n = 0; // (atf_cov.FTarget.c_targsrc)
-    target.c_targsrc_max = 0; // (atf_cov.FTarget.c_targsrc)
-    target.c_covtarget = NULL;
-    target.c_tgtcov = NULL;
-    target.ind_target_next = (atf_cov::FTarget*)-1; // (atf_cov.FDb.ind_target) not-in-hash
-    target.ind_target_hashval = 0; // stored hash value
+inline void atf_cov::FTarget_Init(atf_cov::FTarget& parent) {
+    parent.c_targsrc_elems = NULL; // (atf_cov.FTarget.c_targsrc)
+    parent.c_targsrc_n = 0; // (atf_cov.FTarget.c_targsrc)
+    parent.c_targsrc_max = 0; // (atf_cov.FTarget.c_targsrc)
+    parent.c_covtarget = NULL;
+    parent.c_tgtcov = NULL;
+    parent.ind_target_next = (atf_cov::FTarget*)-1; // (atf_cov.FDb.ind_target) not-in-hash
+    parent.ind_target_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FTarget.c_targsrc_curs.Reset
@@ -981,12 +981,12 @@ inline  atf_cov::FTarget::~FTarget() {
 
 // --- atf_cov.FTargsrc..Init
 // Set all fields to initial values.
-inline void atf_cov::FTargsrc_Init(atf_cov::FTargsrc& targsrc) {
-    targsrc.p_gitfile = NULL;
-    targsrc.p_target = NULL;
-    targsrc.target_c_targsrc_in_ary = bool(false);
-    targsrc.ind_targsrc_next = (atf_cov::FTargsrc*)-1; // (atf_cov.FDb.ind_targsrc) not-in-hash
-    targsrc.ind_targsrc_hashval = 0; // stored hash value
+inline void atf_cov::FTargsrc_Init(atf_cov::FTargsrc& parent) {
+    parent.p_gitfile = NULL;
+    parent.p_target = NULL;
+    parent.target_c_targsrc_in_ary = bool(false);
+    parent.ind_targsrc_next = (atf_cov::FTargsrc*)-1; // (atf_cov.FDb.ind_targsrc) not-in-hash
+    parent.ind_targsrc_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FTargsrc..Ctor
@@ -1001,9 +1001,9 @@ inline  atf_cov::FTargsrc::~FTargsrc() {
 
 // --- atf_cov.FTgtcov..Init
 // Set all fields to initial values.
-inline void atf_cov::FTgtcov_Init(atf_cov::FTgtcov& tgtcov) {
-    tgtcov.ind_tgtcov_next = (atf_cov::FTgtcov*)-1; // (atf_cov.FDb.ind_tgtcov) not-in-hash
-    tgtcov.ind_tgtcov_hashval = 0; // stored hash value
+inline void atf_cov::FTgtcov_Init(atf_cov::FTgtcov& parent) {
+    parent.ind_tgtcov_next = (atf_cov::FTgtcov*)-1; // (atf_cov.FDb.ind_tgtcov) not-in-hash
+    parent.ind_tgtcov_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FTgtcov..Ctor

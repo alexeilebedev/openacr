@@ -9,15 +9,15 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gitfile|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|nlongline|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|longestline|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|nbadws|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|maxws|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|nlongfunc|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|longestfunc|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|nmysteryfunc|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|badness|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gitfile|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|nlongline|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|longestline|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|nbadws|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|maxws|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|nlongfunc|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|longestfunc|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|nmysteryfunc|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|badness|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

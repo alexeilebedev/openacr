@@ -33,10 +33,10 @@ italicised fields: *tclass, name* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|tcond|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*tclass*|*[amcdb.Tclass](/txt/ssimdb/amcdb/tclass.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.RL of tcond*|
-|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>.RR of tcond*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|tcond|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*tclass*|*[amcdb.Tclass](/txt/ssimdb/amcdb/tclass.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.RL of tcond*|
+|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>.RR of tcond*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

@@ -3,13 +3,16 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
-for operations description see [samp_make - sample program for Makefile management](/txt/exe/samp_make/README.md)
+for usage, see [samp_make - sample program for Makefile management](/txt/exe/samp_make/README.md)
 
 ### Sources
 <a href="#sources"></a>
@@ -57,19 +60,19 @@ All allocations are done through global `samp_make::_db` [samp_make.FDb](#samp_m
 <a href="#samp_make-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|samp_make.FDb._db|[samp_make.FDb](/txt/gen/samp_make/samp_make.md#samp_make-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|samp_make.FDb.cmdline|[command.samp_make](/txt/protocol/command/README.md#command-samp_make)|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_make.FDb.gitfile|[samp_make.FGitfile](/txt/gen/samp_make/samp_make.md#samp_make-fgitfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|samp_make.FDb.ind_gitfile|[samp_make.FGitfile](/txt/gen/samp_make/samp_make.md#samp_make-fgitfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|samp_make.FDb.target|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|samp_make.FDb.ind_target|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|samp_make.FDb.targdep|[samp_make.FTargdep](/txt/gen/samp_make/samp_make.md#samp_make-ftargdep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|samp_make.FDb.ind_targdep|[samp_make.FTargdep](/txt/gen/samp_make/samp_make.md#samp_make-ftargdep)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|samp_make.FDb.targsrc|[samp_make.FTargsrc](/txt/gen/samp_make/samp_make.md#samp_make-ftargsrc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|samp_make.FDb.ind_targsrc|[samp_make.FTargsrc](/txt/gen/samp_make/samp_make.md#samp_make-ftargsrc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|samp_make.FDb.targrec|[samp_make.FTargrec](/txt/gen/samp_make/samp_make.md#samp_make-ftargrec)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|samp_make.FDb.ind_targrec|[samp_make.FTargrec](/txt/gen/samp_make/samp_make.md#samp_make-ftargrec)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|samp_make.FDb.c_target|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|samp_make.FDb._db|[samp_make.FDb](/txt/gen/samp_make/samp_make.md#samp_make-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|samp_make.FDb.cmdline|[command.samp_make](/txt/protocol/command/README.md#command-samp_make)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_make.FDb.gitfile|[samp_make.FGitfile](/txt/gen/samp_make/samp_make.md#samp_make-fgitfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|samp_make.FDb.ind_gitfile|[samp_make.FGitfile](/txt/gen/samp_make/samp_make.md#samp_make-fgitfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|samp_make.FDb.target|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|samp_make.FDb.ind_target|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|samp_make.FDb.targdep|[samp_make.FTargdep](/txt/gen/samp_make/samp_make.md#samp_make-ftargdep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|samp_make.FDb.ind_targdep|[samp_make.FTargdep](/txt/gen/samp_make/samp_make.md#samp_make-ftargdep)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|samp_make.FDb.targsrc|[samp_make.FTargsrc](/txt/gen/samp_make/samp_make.md#samp_make-ftargsrc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|samp_make.FDb.ind_targsrc|[samp_make.FTargsrc](/txt/gen/samp_make/samp_make.md#samp_make-ftargsrc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|samp_make.FDb.targrec|[samp_make.FTargrec](/txt/gen/samp_make/samp_make.md#samp_make-ftargrec)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|samp_make.FDb.ind_targrec|[samp_make.FTargrec](/txt/gen/samp_make/samp_make.md#samp_make-ftargrec)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|samp_make.FDb.c_target|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -153,8 +156,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |samp_make.FTargdep.base|[sampdb.Targdep](/txt/ssimdb/sampdb/targdep.md)|[Base](/txt/ssimdb/sampdb/targdep.md)|||
-|samp_make.FTargdep.p_parent|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|samp_make.FTargdep.p_target|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|samp_make.FTargdep.p_parent|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|samp_make.FTargdep.p_target|[samp_make.FTarget](/txt/gen/samp_make/samp_make.md#samp_make-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTargdep
 <a href="#struct-ftargdep"></a>
@@ -200,12 +203,12 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |samp_make.FTarget.base|[sampdb.Target](/txt/ssimdb/sampdb/target.md)|[Base](/txt/ssimdb/sampdb/target.md)|||
-|samp_make.FTarget.prereq|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||collection of make prereq lines|
-|samp_make.FTarget.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_make.FTarget.recipe|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||collection of make recipe lines|
-|samp_make.FTarget.c_targsrc|[samp_make.FTargsrc](/txt/gen/samp_make/samp_make.md#samp_make-ftargsrc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|samp_make.FTarget.c_targdep|[samp_make.FTargdep](/txt/gen/samp_make/samp_make.md#samp_make-ftargdep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|samp_make.FTarget.c_targrec|[samp_make.FTargrec](/txt/gen/samp_make/samp_make.md#samp_make-ftargrec)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|samp_make.FTarget.prereq|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||collection of make prereq lines|
+|samp_make.FTarget.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_make.FTarget.recipe|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||collection of make recipe lines|
+|samp_make.FTarget.c_targsrc|[samp_make.FTargsrc](/txt/gen/samp_make/samp_make.md#samp_make-ftargsrc)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|samp_make.FTarget.c_targdep|[samp_make.FTargdep](/txt/gen/samp_make/samp_make.md#samp_make-ftargdep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|samp_make.FTarget.c_targrec|[samp_make.FTargrec](/txt/gen/samp_make/samp_make.md#samp_make-ftargrec)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FTarget
 <a href="#struct-ftarget"></a>

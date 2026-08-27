@@ -1,6 +1,21 @@
 ## lib_sqlite - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_sqlite - SQLite binding: connections and a virtual table over ssimfiles](/txt/lib/lib_sqlite/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -114,10 +129,10 @@ All allocations are done through global `lib_sqlite::_db` [lib_sqlite.FDb](#lib_
 <a href="#lib_sqlite-cons-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_sqlite.Cons.p_field|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_sqlite.Cons.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sqlite.Cons.icol|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sqlite.Cons.op|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_sqlite.Cons.p_field|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_sqlite.Cons.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sqlite.Cons.icol|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sqlite.Cons.op|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Cons
 <a href="#struct-cons"></a>
@@ -140,8 +155,8 @@ struct Cons { // lib_sqlite.Cons
 <a href="#lib_sqlite-fconn-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_sqlite.FConn.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sqlite.FConn.db|sqlite3|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|lib_sqlite.FConn.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sqlite.FConn.db|sqlite3|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FConn
 <a href="#struct-fconn"></a>
@@ -178,13 +193,13 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_sqlite.FCtype.base|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|lib_sqlite.FCtype.c_field|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|lib_sqlite.FCtype.c_sqltype|[lib_sqlite.FSqltype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fsqltype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_sqlite.FCtype.ind_field_name|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_sqlite.FCtype.c_ssimfile|[lib_sqlite.FSsimfile](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fssimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_sqlite.FCtype.zd_row|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|lib_sqlite.FCtype.ind_pkey|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_sqlite.FCtype.c_row|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|lib_sqlite.FCtype.c_field|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|lib_sqlite.FCtype.c_sqltype|[lib_sqlite.FSqltype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fsqltype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_sqlite.FCtype.ind_field_name|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_sqlite.FCtype.c_ssimfile|[lib_sqlite.FSsimfile](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fssimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_sqlite.FCtype.zd_row|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|lib_sqlite.FCtype.ind_pkey|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_sqlite.FCtype.c_row|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -251,21 +266,21 @@ private:
 <a href="#lib_sqlite-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_sqlite.FDb._db|[lib_sqlite.FDb](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_sqlite.FDb.conn|[lib_sqlite.FConn](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fconn)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|lib_sqlite.FDb.ind_conn|[lib_sqlite.FConn](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fconn)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_sqlite.FDb.substr|[lib_sqlite.FSubstr](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fsubstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_sqlite.FDb.field|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_sqlite.FDb.ind_field|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_sqlite.FDb.ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_sqlite.FDb.ind_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_sqlite.FDb.ssimfile|[lib_sqlite.FSsimfile](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_sqlite.FDb.ind_ssimfile|[lib_sqlite.FSsimfile](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_sqlite.FDb.sqltype|[lib_sqlite.FSqltype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fsqltype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_sqlite.FDb.bestidx|[lib_sqlite.FIdx](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fidx)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|lib_sqlite.FDb.trow|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_sqlite.FDb.ns|[lib_sqlite.FNs](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fns)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_sqlite.FDb.ind_ns|[lib_sqlite.FNs](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fns)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|lib_sqlite.FDb._db|[lib_sqlite.FDb](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_sqlite.FDb.conn|[lib_sqlite.FConn](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fconn)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|lib_sqlite.FDb.ind_conn|[lib_sqlite.FConn](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fconn)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_sqlite.FDb.substr|[lib_sqlite.FSubstr](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fsubstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_sqlite.FDb.field|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_sqlite.FDb.ind_field|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_sqlite.FDb.ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_sqlite.FDb.ind_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_sqlite.FDb.ssimfile|[lib_sqlite.FSsimfile](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_sqlite.FDb.ind_ssimfile|[lib_sqlite.FSsimfile](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_sqlite.FDb.sqltype|[lib_sqlite.FSqltype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fsqltype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_sqlite.FDb.bestidx|[lib_sqlite.FIdx](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fidx)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|lib_sqlite.FDb.trow|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_sqlite.FDb.ns|[lib_sqlite.FNs](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fns)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_sqlite.FDb.ind_ns|[lib_sqlite.FNs](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fns)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -318,10 +333,10 @@ struct FDb { // lib_sqlite.FDb
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_sqlite.FField.base|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|lib_sqlite.FField.c_substr|[lib_sqlite.FSubstr](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fsubstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_sqlite.FField.p_arg|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_sqlite.FField.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_sqlite.FField.id|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_sqlite.FField.c_substr|[lib_sqlite.FSubstr](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fsubstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_sqlite.FField.p_arg|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_sqlite.FField.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_sqlite.FField.id|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -373,8 +388,8 @@ private:
 <a href="#lib_sqlite-fidx-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_sqlite.FIdx.cons|[lib_sqlite.Cons](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-cons)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|lib_sqlite.FIdx.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_sqlite.FIdx.cons|[lib_sqlite.Cons](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-cons)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|lib_sqlite.FIdx.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FIdx
 <a href="#struct-fidx"></a>
@@ -404,7 +419,7 @@ struct FIdx { // lib_sqlite.FIdx
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_sqlite.FNs.base|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Base](/txt/ssimdb/dmmeta/ns.md)|||
-|lib_sqlite.FNs.c_ssimfile|[lib_sqlite.FSsimfile](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fssimfile)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|lib_sqlite.FNs.c_ssimfile|[lib_sqlite.FSsimfile](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fssimfile)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FNs
 <a href="#struct-fns"></a>
@@ -447,10 +462,10 @@ private:
 <a href="#lib_sqlite-frow-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_sqlite.FRow.pkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sqlite.FRow.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sqlite.FRow.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_sqlite.FRow.rowid|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_sqlite.FRow.pkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sqlite.FRow.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sqlite.FRow.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_sqlite.FRow.rowid|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FRow
 <a href="#struct-frow"></a>
@@ -525,8 +540,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_sqlite.FSsimfile.base|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
-|lib_sqlite.FSsimfile.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_sqlite.FSsimfile.p_ns|[lib_sqlite.FNs](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|lib_sqlite.FSsimfile.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_sqlite.FSsimfile.p_ns|[lib_sqlite.FNs](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSsimfile
 <a href="#struct-fssimfile"></a>
@@ -570,7 +585,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_sqlite.FSubstr.base|[dmmeta.Substr](/txt/ssimdb/dmmeta/substr.md)|[Base](/txt/ssimdb/dmmeta/substr.md)|||
-|lib_sqlite.FSubstr.p_srcfield|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|lib_sqlite.FSubstr.p_srcfield|[lib_sqlite.FField](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSubstr
 <a href="#struct-fsubstr"></a>
@@ -608,11 +623,11 @@ private:
 <a href="#lib_sqlite-vtab-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_sqlite.Vtab.base|sqlite3_vtab|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sqlite.Vtab.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sqlite.Vtab.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_sqlite.Vtab.c_curs|[lib_sqlite.VtabCurs](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-vtabcurs)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|lib_sqlite.Vtab.loaded|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_sqlite.Vtab.base|sqlite3_vtab|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sqlite.Vtab.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sqlite.Vtab.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_sqlite.Vtab.c_curs|[lib_sqlite.VtabCurs](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-vtabcurs)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|lib_sqlite.Vtab.loaded|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Vtab
 <a href="#struct-vtab"></a>
@@ -640,33 +655,33 @@ struct Vtab { // lib_sqlite.Vtab: An instance of the virtual table
 <a href="#lib_sqlite-vtabcurs-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_sqlite.VtabCurs.base|sqlite3_vtab_cursor|[Val](/txt/exe/amc/reftype.md#val)||Base class. Must be first|
-|lib_sqlite.VtabCurs.eof|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sqlite.VtabCurs.p_vtab|[lib_sqlite.Vtab](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-vtab)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_sqlite.VtabCurs.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_sqlite.VtabCurs.c_row|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_sqlite.VtabCurs.c_pkey|[lib_sqlite.Cons](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-cons)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_sqlite.VtabCurs.c_idx|[lib_sqlite.FIdx](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fidx)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_sqlite.VtabCurs.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sqlite.VtabCurs.attrs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
+|lib_sqlite.VtabCurs.base|sqlite3_vtab_cursor|[Val](/txt/exe/amc/reftype/Val.md)||Base class. Must be first|
+|lib_sqlite.VtabCurs.eof|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sqlite.VtabCurs.p_vtab|[lib_sqlite.Vtab](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-vtab)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_sqlite.VtabCurs.p_ctype|[lib_sqlite.FCtype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_sqlite.VtabCurs.c_row|[lib_sqlite.FRow](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-frow)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_sqlite.VtabCurs.c_pkey|[lib_sqlite.Cons](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-cons)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_sqlite.VtabCurs.c_idx|[lib_sqlite.FIdx](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fidx)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_sqlite.VtabCurs.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sqlite.VtabCurs.attrs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
 
 #### Struct VtabCurs
 <a href="#struct-vtabcurs"></a>
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_sqlite_gen.h](/include/gen/lib_sqlite_gen.h)
 ```
 struct VtabCurs { // lib_sqlite.VtabCurs: A cursor for the virtual table
-    sqlite3_vtab_cursor   base;                   // Base class. Must be first
-    bool                  eof;                    //   false
-    lib_sqlite::Vtab*     p_vtab;                 // reference to parent row
-    lib_sqlite::FCtype*   p_ctype;                // reference to parent row
-    lib_sqlite::FRow*     c_row;                  // optional pointer
-    lib_sqlite::Cons*     c_pkey;                 // optional pointer
-    lib_sqlite::FIdx*     c_idx;                  // optional pointer
-    i32                   rowid;                  //   0
-    algo::cstring*        attrs_elems;            // pointer to elements
-    u64                   attrs_n;                // number of elements in array
-    u64                   attrs_max;              // max. capacity of array before realloc
-    bool                  parent_c_curs_in_ary;   //   false  membership flag
+    sqlite3_vtab_cursor   base;                 // Base class. Must be first
+    bool                  eof;                  //   false
+    lib_sqlite::Vtab*     p_vtab;               // reference to parent row
+    lib_sqlite::FCtype*   p_ctype;              // reference to parent row
+    lib_sqlite::FRow*     c_row;                // optional pointer
+    lib_sqlite::Cons*     c_pkey;               // optional pointer
+    lib_sqlite::FIdx*     c_idx;                // optional pointer
+    i32                   rowid;                //   0
+    algo::cstring*        attrs_elems;          // pointer to elements
+    u64                   attrs_n;              // number of elements in array
+    u64                   attrs_max;            // max. capacity of array before realloc
+    bool                  vtab_c_curs_in_ary;   //   false  membership flag
     // func:lib_sqlite.VtabCurs..AssignOp
     lib_sqlite::VtabCurs& operator =(const lib_sqlite::VtabCurs &rhs) __attribute__((nothrow));
     // func:lib_sqlite.VtabCurs..Ctor

@@ -397,9 +397,9 @@ void                 unstablefld_CopyIn(ssimfilt::FUnstablefld &row, dev::Unstab
 
 // Set all fields to initial values.
 // func:ssimfilt.FUnstablefld..Init
-inline void          FUnstablefld_Init(ssimfilt::FUnstablefld& unstablefld);
+inline void          FUnstablefld_Init(ssimfilt::FUnstablefld& parent);
 // func:ssimfilt.FUnstablefld..Uninit
-void                 FUnstablefld_Uninit(ssimfilt::FUnstablefld& unstablefld) __attribute__((nothrow));
+void                 FUnstablefld_Uninit(ssimfilt::FUnstablefld& parent) __attribute__((nothrow));
 
 // --- ssimfilt.FieldId
 #pragma pack(push,1)
@@ -476,11 +476,11 @@ private:
 };
 // Print back to string
 // func:ssimfilt.KVRegx.key.Print
-void                 key_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) __attribute__((nothrow));
+void                 key_Print(ssimfilt::KVRegx& parent, algo::cstring &out) __attribute__((nothrow));
 
 // Print back to string
 // func:ssimfilt.KVRegx.value.Print
-void                 value_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) __attribute__((nothrow));
+void                 value_Print(ssimfilt::KVRegx& parent, algo::cstring &out) __attribute__((nothrow));
 
 
 // --- ssimfilt.TableId

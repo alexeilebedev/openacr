@@ -1792,26 +1792,37 @@ void algo::strptr_PrintDot(strptr s, algo::cstring &out) {
 // -----------------------------------------------------------------------------
 
 // print binary octet string as hex
-void algo::Sha1sig_Print(algo::Sha1sig &sha1sig, algo::cstring &out) {
-    ind_beg(algo::Sha1sig_sha1sig_curs,_byte,const_cast<algo::Sha1sig&>(sha1sig)) {
+void algo::Signature_Print(algo::Signature &signature, algo::cstring &out) {
+    ind_beg(algo::Signature_signature_curs,_byte,const_cast<algo::Signature&>(signature)) {
         u64_PrintHex(_byte,out,2,false/*prefix*/,false/*caps*/);
     }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
-bool algo::Sha1sig_ReadStrptrMaybe(algo::Sha1sig &sha1sig, algo::strptr str) {
+// TRUE when SIGNATURE is the zero digest, which is what an absent signature
+// reads as: a message whose sender filled none in, or a binary carrying no such
+// dispatch.  Absence and disagreement are different answers -- a party that
+// states no signature is making no claim -- so every comparison that may face an
+// unstated one asks this first.
+bool algo::NullSignatureQ(const algo::Signature &signature) {
+    return signature == algo::Signature();
+}
+
+// -----------------------------------------------------------------------------
+
+bool algo::Signature_ReadStrptrMaybe(algo::Signature &signature, algo::strptr str) {
     int len = i32_Min(elems_N(str)/2, 20);
     bool retval = len == 20;
-    algo::Sha1sig temp;
+    algo::Signature temp;
     frep_(i,len) {
-        retval = retval && ParseHex2(str[i*2+1] << 8 | str[i*2], 2, sha1sig_qFind(temp, i));
+        retval = retval && ParseHex2(str[i*2+1] << 8 | str[i*2], 2, signature_qFind(temp, i));
     }
     if (retval) {    // if signature cannot be read correctly, zero it out.
-        sha1sig=temp;
+        signature=temp;
     } else {
         retval = false;
-        algo_lib::AppendErrtext("comment", "invalid sha1sig format");
+        algo_lib::AppendErrtext("comment", "invalid signature format");
     }
     return retval;
 }

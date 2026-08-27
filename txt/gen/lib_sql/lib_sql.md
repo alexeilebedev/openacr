@@ -1,6 +1,21 @@
 ## lib_sql - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_sql - SQL formatting functions](/txt/lib/lib_sql/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -87,8 +102,8 @@ All allocations are done through global `lib_sql::_db` [lib_sql.FDb](#lib_sql-fd
 <a href="#lib_sql-fattr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_sql.FAttr.attr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_sql.FAttr.isbool|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_sql.FAttr.attr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_sql.FAttr.isbool|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FAttr
 <a href="#struct-fattr"></a>
@@ -122,9 +137,9 @@ private:
 <a href="#lib_sql-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_sql.FDb._db|[lib_sql.FDb](/txt/gen/lib_sql/lib_sql.md#lib_sql-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_sql.FDb.attr|[lib_sql.FAttr](/txt/gen/lib_sql/lib_sql.md#lib_sql-fattr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_sql.FDb.ind_attr|[lib_sql.FAttr](/txt/gen/lib_sql/lib_sql.md#lib_sql-fattr)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|lib_sql.FDb._db|[lib_sql.FDb](/txt/gen/lib_sql/lib_sql.md#lib_sql-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_sql.FDb.attr|[lib_sql.FAttr](/txt/gen/lib_sql/lib_sql.md#lib_sql-fattr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_sql.FDb.ind_attr|[lib_sql.FAttr](/txt/gen/lib_sql/lib_sql.md#lib_sql-fattr)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

@@ -1,4 +1,4 @@
-## algo.Sha1sig - SHA1 signature
+## algo.Signature - SHA1 signature
 
 
 ### Attributes

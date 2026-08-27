@@ -3,11 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
-* [Tests](#tests)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -91,17 +93,17 @@ private:
 <a href="#sv2ssim-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|sv2ssim.FDb._db|[sv2ssim.FDb](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|sv2ssim.FDb.cmdline|[command.sv2ssim](/txt/protocol/command/README.md#command-sv2ssim)|[Val](/txt/exe/amc/reftype.md#val)|||
-|sv2ssim.FDb.field|[sv2ssim.FField](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|sv2ssim.FDb.linetok|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)||Current line, tokenized|
-|sv2ssim.FDb.n_wideline|i32|[Val](/txt/exe/amc/reftype.md#val)|true|Number of lines wider than header|
-|sv2ssim.FDb.svtype|[sv2ssim.FSvtype](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-fsvtype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|sv2ssim.FDb.ind_field|[sv2ssim.FField](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|sv2ssim.FDb.zd_selfield|[sv2ssim.FField](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-ffield)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|sv2ssim.FDb.bltin|[sv2ssim.FBltin](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-fbltin)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|sv2ssim.FDb.ind_bltin|[sv2ssim.FBltin](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-fbltin)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|sv2ssim.FDb.cmt2fld_ok|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|sv2ssim.FDb._db|[sv2ssim.FDb](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|sv2ssim.FDb.cmdline|[command.sv2ssim](/txt/protocol/command/README.md#command-sv2ssim)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|sv2ssim.FDb.field|[sv2ssim.FField](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|sv2ssim.FDb.linetok|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)||Current line, tokenized|
+|sv2ssim.FDb.n_wideline|i32|[Val](/txt/exe/amc/reftype/Val.md)|true|Number of lines wider than header|
+|sv2ssim.FDb.svtype|[sv2ssim.FSvtype](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-fsvtype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|sv2ssim.FDb.ind_field|[sv2ssim.FField](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|sv2ssim.FDb.zd_selfield|[sv2ssim.FField](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-ffield)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|sv2ssim.FDb.bltin|[sv2ssim.FBltin](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-fbltin)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|sv2ssim.FDb.ind_bltin|[sv2ssim.FBltin](/txt/gen/sv2ssim/sv2ssim.md#sv2ssim-fbltin)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|sv2ssim.FDb.cmt2fld_ok|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -140,20 +142,20 @@ struct FDb { // sv2ssim.FDb: In-memory database for sv2ssim
 <a href="#sv2ssim-ffield-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|sv2ssim.FField.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Field name|
-|sv2ssim.FField.ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Determined type|
-|sv2ssim.FField.maxwid|i32|[Val](/txt/exe/amc/reftype.md#val)||Max field width in chars|
-|sv2ssim.FField.minval|double|[Val](/txt/exe/amc/reftype.md#val)|1e300|Min numeric value|
-|sv2ssim.FField.maxval|double|[Val](/txt/exe/amc/reftype.md#val)|-1e300|Max numeric value|
-|sv2ssim.FField.minwid_fix1|i32|[Val](/txt/exe/amc/reftype.md#val)|100000|Min digits before .|
-|sv2ssim.FField.maxwid_fix1|i32|[Val](/txt/exe/amc/reftype.md#val)||Max digits before .|
-|sv2ssim.FField.minwid_fix2|i32|[Val](/txt/exe/amc/reftype.md#val)|100000|Min digits after .|
-|sv2ssim.FField.maxwid_fix2|i32|[Val](/txt/exe/amc/reftype.md#val)||Max digits after .|
-|sv2ssim.FField.couldbe_int|bool|[Val](/txt/exe/amc/reftype.md#val)|true||
-|sv2ssim.FField.couldbe_bool|bool|[Val](/txt/exe/amc/reftype.md#val)|true||
-|sv2ssim.FField.couldbe_fixwid|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Fixed width char|
-|sv2ssim.FField.couldbe_double|bool|[Val](/txt/exe/amc/reftype.md#val)|true||
-|sv2ssim.FField.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)|0||
+|sv2ssim.FField.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Field name|
+|sv2ssim.FField.ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Determined type|
+|sv2ssim.FField.maxwid|i32|[Val](/txt/exe/amc/reftype/Val.md)||Max field width in chars|
+|sv2ssim.FField.minval|double|[Val](/txt/exe/amc/reftype/Val.md)|1e300|Min numeric value|
+|sv2ssim.FField.maxval|double|[Val](/txt/exe/amc/reftype/Val.md)|-1e300|Max numeric value|
+|sv2ssim.FField.minwid_fix1|i32|[Val](/txt/exe/amc/reftype/Val.md)|100000|Min digits before .|
+|sv2ssim.FField.maxwid_fix1|i32|[Val](/txt/exe/amc/reftype/Val.md)||Max digits before .|
+|sv2ssim.FField.minwid_fix2|i32|[Val](/txt/exe/amc/reftype/Val.md)|100000|Min digits after .|
+|sv2ssim.FField.maxwid_fix2|i32|[Val](/txt/exe/amc/reftype/Val.md)||Max digits after .|
+|sv2ssim.FField.couldbe_int|bool|[Val](/txt/exe/amc/reftype/Val.md)|true||
+|sv2ssim.FField.couldbe_bool|bool|[Val](/txt/exe/amc/reftype/Val.md)|true||
+|sv2ssim.FField.couldbe_fixwid|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Fixed width char|
+|sv2ssim.FField.couldbe_double|bool|[Val](/txt/exe/amc/reftype/Val.md)|true||
+|sv2ssim.FField.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)|0||
 
 #### Struct FField
 <a href="#struct-ffield"></a>

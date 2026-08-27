@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -98,6 +100,22 @@ All allocations are done through global `atf_amc::_db` [atf_amc.FDb](#atf_amc-fd
 |[atf_amc.Ctype2AttrAnon](#atf_amc-ctype2attranon)||
 |[atf_amc.DecQuote](#atf_amc-decquote)||
 |[atf_amc.DelType1](#atf_amc-deltype1)||
+|[atf_amc.MsgType](#atf_amc-msgtype)||
+|[atf_amc.MsgLength](#atf_amc-msglength)||
+|[atf_amc.MsgHeader](#atf_amc-msgheader)||Dgrambuf.in (Fbuf)|Lpoolbuf.in (Fbuf)|Msgbuf.in_buf (Fbuf)|Seqmsg.payload (Opt)|Varlen2mMsg.m1 (Varlen)|Varlen2mMsg.m2 (Varlen)|Varlen2mMsg.m3 (Varlen)|
+||||OptBMsg.base (Base)|
+||||Seqmsg.msghdr (Base)|
+||||Text.msghdr (Base)|
+||||Varlen2Msg.base (Base)|
+||||Varlen2aMsg.base (Base)|
+||||Varlen2mMsg.base (Base)|
+||||Varlen2vMsg.base (Base)|
+||||VarlenBMsg.base (Base)|
+||||VarlenMsg.base (Base)|
+||||VarlenVMsg.base (Base)|
+||||VarlenWMsg.base (Base)|
+||||MsgHeader_curs.msg (Ptr)|
+|[atf_amc.Dgrambuf](#atf_amc-dgrambuf)||
 |[atf_amc.DispType1](#atf_amc-disptype1)||
 |[atf_amc.DispType2](#atf_amc-disptype2)||
 |[atf_amc.DispType3](#atf_amc-disptype3)||
@@ -156,21 +174,6 @@ All allocations are done through global `atf_amc::_db` [atf_amc.FDb](#atf_amc-fd
 |[atf_amc.Lary32](#atf_amc-lary32)||
 |[atf_amc.Linebuf](#atf_amc-linebuf)||FDb.linebuf (Cppstack)|
 |[atf_amc.LnullStr4_U32_Base256](#atf_amc-lnullstr4_u32_base256)||
-|[atf_amc.MsgType](#atf_amc-msgtype)||
-|[atf_amc.MsgLength](#atf_amc-msglength)||
-|[atf_amc.MsgHeader](#atf_amc-msgheader)||Lpoolbuf.in (Fbuf)|Msgbuf.in_buf (Fbuf)|Seqmsg.payload (Opt)|Varlen2mMsg.m1 (Varlen)|Varlen2mMsg.m2 (Varlen)|Varlen2mMsg.m3 (Varlen)|
-||||OptBMsg.base (Base)|
-||||Seqmsg.msghdr (Base)|
-||||Text.msghdr (Base)|
-||||Varlen2Msg.base (Base)|
-||||Varlen2aMsg.base (Base)|
-||||Varlen2mMsg.base (Base)|
-||||Varlen2vMsg.base (Base)|
-||||VarlenBMsg.base (Base)|
-||||VarlenMsg.base (Base)|
-||||VarlenVMsg.base (Base)|
-||||VarlenWMsg.base (Base)|
-||||MsgHeader_curs.msg (Ptr)|
 |[atf_amc.Lpoolbuf](#atf_amc-lpoolbuf)||FDb.lpoolbuf (Cppstack)|
 |[atf_amc.LspaceStr5_U32_Base95](#atf_amc-lspacestr5_u32_base95)||
 |[atf_amc.LspaceStr7_I32](#atf_amc-lspacestr7_i32)||
@@ -289,8 +292,8 @@ All allocations are done through global `atf_amc::_db` [atf_amc.FDb](#atf_amc-fd
 <a href="#atf_amc-amccleanup2-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.AmcCleanup2.field1|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.AmcCleanup2.field2|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.AmcCleanup2.field1|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.AmcCleanup2.field2|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct AmcCleanup2
 <a href="#struct-amccleanup2"></a>
@@ -313,9 +316,9 @@ struct AmcCleanup2 { // atf_amc.AmcCleanup2
 <a href="#atf_amc-amcsubstr1-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.AmcSubstr1.strval|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*atf_amc.AmcSubstr1.boolval (.LR)*|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|*atf_amc.AmcSubstr1.intval (.LR)*|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.AmcSubstr1.strval|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*atf_amc.AmcSubstr1.boolval (.LR)*|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*atf_amc.AmcSubstr1.intval (.LR)*|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct AmcSubstr1
 <a href="#struct-amcsubstr1"></a>
@@ -335,9 +338,9 @@ struct AmcSubstr1 { // atf_amc.AmcSubstr1
 <a href="#atf_amc-bitfldtype1-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.BitfldType1.value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.BitfldType1.bit1|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.BitfldType1.bits5|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
+|atf_amc.BitfldType1.value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.BitfldType1.bit1|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.BitfldType1.bits5|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
 
 #### Struct BitfldType1
 <a href="#struct-bitfldtype1"></a>
@@ -357,10 +360,10 @@ struct BitfldType1 { // atf_amc.BitfldType1: Test type for testing reading/print
 <a href="#atf_amc-bitfldtype2-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.BitfldType2.value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.BitfldType2.bit0|bool|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.BitfldType2.bit1|bool|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.BitfldType2.freebool|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.BitfldType2.value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.BitfldType2.bit0|bool|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.BitfldType2.bit1|bool|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.BitfldType2.freebool|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct BitfldType2
 <a href="#struct-bitfldtype2"></a>
@@ -381,9 +384,9 @@ struct BitfldType2 { // atf_amc.BitfldType2: Test type 2 for testing reading/pri
 <a href="#atf_amc-bitfldu128-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.BitfldU128.value|u128|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.BitfldU128.bits1_65|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.BitfldU128.bits65_128|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
+|atf_amc.BitfldU128.value|u128|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.BitfldU128.bits1_65|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.BitfldU128.bits65_128|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
 
 #### Struct BitfldU128
 <a href="#struct-bitfldu128"></a>
@@ -403,9 +406,9 @@ struct BitfldU128 { // atf_amc.BitfldU128: Test of bitfield functionality
 <a href="#atf_amc-bitfldu16-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.BitfldU16.value|u16|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.BitfldU16.bits0_4|u8|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.BitfldU16.bits8_12|u8|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
+|atf_amc.BitfldU16.value|u16|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.BitfldU16.bits0_4|u8|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.BitfldU16.bits8_12|u8|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
 
 #### Struct BitfldU16
 <a href="#struct-bitfldu16"></a>
@@ -425,10 +428,10 @@ struct BitfldU16 { // atf_amc.BitfldU16: Test of bitfield functionality
 <a href="#atf_amc-bitset-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Bitset.fld1|u16|[Inlary](/txt/exe/amc/reftype.md#inlary)||Bitset array|
-|atf_amc.Bitset.fld8|u8|[Val](/txt/exe/amc/reftype.md#val)||Bitset field|
-|atf_amc.Bitset.fld64|u64|[Val](/txt/exe/amc/reftype.md#val)||Bitset field|
-|atf_amc.Bitset.fld128|u128|[Val](/txt/exe/amc/reftype.md#val)||Bitset field 128 bits|
+|atf_amc.Bitset.fld1|u16|[Inlary](/txt/exe/amc/reftype/Inlary.md)||Bitset array|
+|atf_amc.Bitset.fld8|u8|[Val](/txt/exe/amc/reftype/Val.md)||Bitset field|
+|atf_amc.Bitset.fld64|u64|[Val](/txt/exe/amc/reftype/Val.md)||Bitset field|
+|atf_amc.Bitset.fld128|u128|[Val](/txt/exe/amc/reftype/Val.md)||Bitset field 128 bits|
 
 #### Struct Bitset
 <a href="#struct-bitset"></a>
@@ -451,8 +454,8 @@ struct Bitset { // atf_amc.Bitset: Test bitset
 <a href="#atf_amc-blkkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.BlkKey.id|u32|[Val](/txt/exe/amc/reftype.md#val)||Spread component (stream-like id)|
-|atf_amc.BlkKey.seq|[algo.SeqType](/txt/protocol/algo/SeqType.md)|[Val](/txt/exe/amc/reftype.md#val)||Dense component|
+|atf_amc.BlkKey.id|u32|[Val](/txt/exe/amc/reftype/Val.md)||Spread component (stream-like id)|
+|atf_amc.BlkKey.seq|[algo.SeqType](/txt/protocol/algo/SeqType.md)|[Val](/txt/exe/amc/reftype/Val.md)||Dense component|
 
 #### Struct BlkKey
 <a href="#struct-blkkey"></a>
@@ -479,7 +482,7 @@ struct BlkKey { // atf_amc.BlkKey: Blkhash test key: spread id + dense seq
 <a href="#atf_amc-bytebuf-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Bytebuf.in|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Streaming buffer|
+|atf_amc.Bytebuf.in|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Streaming buffer|
 
 #### Struct Bytebuf
 <a href="#struct-bytebuf"></a>
@@ -509,7 +512,7 @@ struct Bytebuf { // atf_amc.Bytebuf
 <a href="#atf_amc-bytebufdyn-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.BytebufDyn.in|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Streaming buffer|
+|atf_amc.BytebufDyn.in|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Streaming buffer|
 
 #### Struct BytebufDyn
 <a href="#struct-bytebufdyn"></a>
@@ -539,7 +542,7 @@ struct BytebufDyn { // atf_amc.BytebufDyn
 <a href="#atf_amc-cstr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Cstr.val|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Cstr.val|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Cstr
 <a href="#struct-cstr"></a>
@@ -575,7 +578,7 @@ struct Cstr { // atf_amc.Cstr
 <a href="#atf_amc-cstring-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Cstring.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Cstring.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Cstring
 <a href="#struct-cstring"></a>
@@ -595,7 +598,7 @@ struct Cstring { // atf_amc.Cstring
 <a href="#atf_amc-ctype1attr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Ctype1Attr.attr1|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Ctype1Attr.attr1|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Ctype1Attr
 <a href="#struct-ctype1attr"></a>
@@ -631,8 +634,8 @@ struct Ctype1Attr { // atf_amc.Ctype1Attr
 <a href="#atf_amc-ctype2attr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Ctype2Attr.attr1|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.Ctype2Attr.attr2|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Ctype2Attr.attr1|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.Ctype2Attr.attr2|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Ctype2Attr
 <a href="#struct-ctype2attr"></a>
@@ -667,8 +670,8 @@ struct Ctype2Attr { // atf_amc.Ctype2Attr
 <a href="#atf_amc-ctype2attranon-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Ctype2AttrAnon.attr1|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.Ctype2AttrAnon.attr2|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Ctype2AttrAnon.attr1|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.Ctype2AttrAnon.attr2|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Ctype2AttrAnon
 <a href="#struct-ctype2attranon"></a>
@@ -691,8 +694,8 @@ struct Ctype2AttrAnon { // atf_amc.Ctype2AttrAnon
 <a href="#atf_amc-decquote-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.DecQuote.bid|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.DecQuote.ask|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.DecQuote.bid|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.DecQuote.ask|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct DecQuote
 <a href="#struct-decquote"></a>
@@ -713,7 +716,7 @@ struct DecQuote { // atf_amc.DecQuote
 <a href="#atf_amc-deltype1-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.DelType1.u32val|u32|[Delptr](/txt/exe/amc/reftype.md#delptr)|34||
+|atf_amc.DelType1.u32val|u32|[Delptr](/txt/exe/amc/reftype/Delptr.md)|34||
 
 #### Struct DelType1
 <a href="#struct-deltype1"></a>
@@ -728,6 +731,132 @@ struct DelType1 { // atf_amc.DelType1: Delptr test 1
 };
 ```
 
+#### atf_amc.MsgType
+<a href="#atf_amc-msgtype"></a>
+
+#### atf_amc.MsgType Fields
+<a href="#atf_amc-msgtype-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|atf_amc.MsgType.value|u16|[Val](/txt/exe/amc/reftype/Val.md)|||
+
+#### Struct MsgType
+<a href="#struct-msgtype"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
+```
+#pragma pack(push,1)
+struct MsgType { // atf_amc.MsgType
+    u16   value;   //   0
+    // func:atf_amc.MsgType.value.Cast
+    inline               operator atf_amc_MsgTypeEnum() const __attribute__((nothrow));
+    // func:atf_amc.MsgType..EqOp
+    inline bool          operator ==(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
+    // func:atf_amc.MsgType..NeOp
+    inline bool          operator !=(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
+    // func:atf_amc.MsgType..LtOp
+    inline bool          operator <(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
+    // func:atf_amc.MsgType..GtOp
+    inline bool          operator >(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
+    // func:atf_amc.MsgType..LeOp
+    inline bool          operator <=(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
+    // func:atf_amc.MsgType..GeOp
+    inline bool          operator >=(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
+    // define enum comparison operator to avoid ambiguity
+    // func:atf_amc.MsgType..EqEnum
+    inline bool          operator ==(atf_amc_MsgTypeEnum rhs) const __attribute__((nothrow));
+    // func:atf_amc.MsgType..Ctor
+    inline               MsgType() __attribute__((nothrow));
+    // func:atf_amc.MsgType..FieldwiseCtor
+    explicit inline               MsgType(u16 in_value) __attribute__((nothrow));
+    // func:atf_amc.MsgType..EnumCtor
+    inline               MsgType(atf_amc_MsgTypeEnum arg) __attribute__((nothrow));
+};
+```
+
+#### atf_amc.MsgLength
+<a href="#atf_amc-msglength"></a>
+
+#### atf_amc.MsgLength Fields
+<a href="#atf_amc-msglength-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|atf_amc.MsgLength.value|u16|[Val](/txt/exe/amc/reftype/Val.md)|||
+
+#### Struct MsgLength
+<a href="#struct-msglength"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
+```
+#pragma pack(push,1)
+struct MsgLength { // atf_amc.MsgLength
+    u16   value;   //   0
+    // func:atf_amc.MsgLength.value.Cast
+    inline               operator u16() const __attribute__((nothrow));
+    // func:atf_amc.MsgLength..Ctor
+    inline               MsgLength() __attribute__((nothrow));
+    // func:atf_amc.MsgLength..FieldwiseCtor
+    explicit inline               MsgLength(u16 in_value) __attribute__((nothrow));
+};
+```
+
+#### atf_amc.MsgHeader
+<a href="#atf_amc-msgheader"></a>
+
+#### atf_amc.MsgHeader Fields
+<a href="#atf_amc-msgheader-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
+
+#### Struct MsgHeader
+<a href="#struct-msgheader"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
+```
+#pragma pack(push,1)
+struct MsgHeader { // atf_amc.MsgHeader
+    atf_amc::MsgType     type;     // Message type
+    atf_amc::MsgLength   length;   // Total message length, including this header
+    // func:atf_amc.MsgHeader..EqOp
+    inline bool          operator ==(const atf_amc::MsgHeader &rhs) const __attribute__((nothrow));
+    // func:atf_amc.MsgHeader..NeOp
+    inline bool          operator !=(const atf_amc::MsgHeader &rhs) const __attribute__((nothrow));
+    // func:atf_amc.MsgHeader..Ctor
+    inline               MsgHeader() __attribute__((nothrow));
+    // func:atf_amc.MsgHeader..FieldwiseCtor
+    explicit inline               MsgHeader(atf_amc::MsgType in_type, atf_amc::MsgLength in_length) __attribute__((nothrow));
+};
+```
+
+#### atf_amc.Dgrambuf - Datagram message buffer: framing is per-datagram, nothing carries across
+<a href="#atf_amc-dgrambuf"></a>
+
+#### atf_amc.Dgrambuf Fields
+<a href="#atf_amc-dgrambuf-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|atf_amc.Dgrambuf.in|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Datagram-based buffer|
+
+#### Struct Dgrambuf
+<a href="#struct-dgrambuf"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
+```
+struct Dgrambuf { // atf_amc.Dgrambuf: Datagram message buffer: framing is per-datagram, nothing carries across
+    u8*             in_elems;          //   NULL  pointer to elements of indirect array
+    u32             in_max;            //   0  current length of allocated array
+    i32             in_start;          // beginning of valid bytes (in bytes)
+    i32             in_end;            // end of valid bytes (in bytes)
+    i32             in_msglen;         // current message length
+    algo::Errcode   in_err;            // system error code
+    bool            in_eof;            // no more data will be written to buffer
+    bool            in_msgvalid;       // current message is valid
+    bool            in_epoll_enable;   // use epoll?
+    // func:atf_amc.Dgrambuf..Ctor
+    inline               Dgrambuf() __attribute__((nothrow));
+    // func:atf_amc.Dgrambuf..Dtor
+    inline               ~Dgrambuf() __attribute__((nothrow));
+};
+```
+
 #### atf_amc.DispType1 - Dispfilter test 1
 <a href="#atf_amc-disptype1"></a>
 
@@ -735,9 +864,9 @@ struct DelType1 { // atf_amc.DelType1: Delptr test 1
 <a href="#atf_amc-disptype1-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.DispType1.strval|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.DispType1.strval2|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.DispType1.dateval|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.DispType1.strval|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.DispType1.strval2|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.DispType1.dateval|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct DispType1
 <a href="#struct-disptype1"></a>
@@ -759,7 +888,7 @@ struct DispType1 { // atf_amc.DispType1: Dispfilter test 1
 <a href="#atf_amc-disptype2-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.DispType2.intval|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.DispType2.intval|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct DispType2
 <a href="#struct-disptype2"></a>
@@ -779,8 +908,8 @@ struct DispType2 { // atf_amc.DispType2: Dispfilter test 2
 <a href="#atf_amc-disptype3-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.DispType3.intval|u32|[Val](/txt/exe/amc/reftype.md#val)||Repeats type in DispType2|
-|atf_amc.DispType3.strval|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype.md#val)||Repeats type in DispType1|
+|atf_amc.DispType3.intval|u32|[Val](/txt/exe/amc/reftype/Val.md)||Repeats type in DispType2|
+|atf_amc.DispType3.strval|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype/Val.md)||Repeats type in DispType1|
 
 #### Struct DispType3
 <a href="#struct-disptype3"></a>
@@ -801,7 +930,7 @@ struct DispType3 { // atf_amc.DispType3: Dispfilter test 3
 <a href="#atf_amc-errcodefldlt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.ErrcodeFldLt.err|[algo.Errcode](/txt/protocol/algo/Errcode.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.ErrcodeFldLt.err|[algo.Errcode](/txt/protocol/algo/Errcode.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct ErrcodeFldLt
 <a href="#struct-errcodefldlt"></a>
@@ -821,7 +950,7 @@ struct ErrcodeFldLt { // atf_amc.ErrcodeFldLt: Fcmp on a field whose arg type ha
 <a href="#atf_amc-errcodelt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.ErrcodeLt.err|[algo.Errcode](/txt/protocol/algo/Errcode.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.ErrcodeLt.err|[algo.Errcode](/txt/protocol/algo/Errcode.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct ErrcodeLt
 <a href="#struct-errcodelt"></a>
@@ -842,10 +971,10 @@ struct ErrcodeLt { // atf_amc.ErrcodeLt: Ordered ctype whose single field type h
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.FAmctest.msghdr|[atfdb.Amctest](/txt/ssimdb/atfdb/amctest.md)|[Base](/txt/ssimdb/atfdb/amctest.md)|||
-|atf_amc.FAmctest.select|bool|[Val](/txt/exe/amc/reftype.md#val)||Select test for running?|
-|atf_amc.FAmctest.success|bool|[Val](/txt/exe/amc/reftype.md#val)||Did it succeed?|
-|atf_amc.FAmctest.step||[Hook](/txt/exe/amc/reftype.md#hook)|||
-|atf_amc.FAmctest.c_syscmd|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|atf_amc.FAmctest.select|bool|[Val](/txt/exe/amc/reftype/Val.md)||Select test for running?|
+|atf_amc.FAmctest.success|bool|[Val](/txt/exe/amc/reftype/Val.md)||Did it succeed?|
+|atf_amc.FAmctest.step||[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|atf_amc.FAmctest.c_syscmd|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FAmctest
 <a href="#struct-famctest"></a>
@@ -877,7 +1006,7 @@ private:
 <a href="#atf_amc-favl-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FAvl.n|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.FAvl.n|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FAvl
 <a href="#struct-favl"></a>
@@ -912,8 +1041,8 @@ private:
 <a href="#atf_amc-fblkhashelem-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FBlkhashElem.key|[atf_amc.BlkKey](/txt/gen/atf_amc/atf_amc.md#atf_amc-blkkey)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FBlkhashElem.val|u64|[Val](/txt/exe/amc/reftype.md#val)||Payload used to verify lookups|
+|atf_amc.FBlkhashElem.key|[atf_amc.BlkKey](/txt/gen/atf_amc/atf_amc.md#atf_amc-blkkey)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FBlkhashElem.val|u64|[Val](/txt/exe/amc/reftype/Val.md)||Payload used to verify lookups|
 
 #### Struct FBlkhashElem
 <a href="#struct-fblkhashelem"></a>
@@ -947,16 +1076,16 @@ private:
 <a href="#atf_amc-fcascdel-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FCascdel.p_parent|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Parent for xref|
-|atf_amc.FCascdel.key|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FCascdel.type|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FCascdel.child_ptr|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|atf_amc.FCascdel.c_child_ptrary|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|atf_amc.FCascdel.ind_child_thash|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_amc.FCascdel.bh_child_bheap|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|atf_amc.FCascdel.zd_childlist|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FCascdel.tr_child_atree|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Atree](/txt/exe/amc/reftype.md#atree)|||
-|atf_amc.FCascdel.c_child_heap|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|atf_amc.FCascdel.p_parent|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Parent for xref|
+|atf_amc.FCascdel.key|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FCascdel.type|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FCascdel.child_ptr|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|atf_amc.FCascdel.c_child_ptrary|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|atf_amc.FCascdel.ind_child_thash|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_amc.FCascdel.bh_child_bheap|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|atf_amc.FCascdel.zd_childlist|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FCascdel.tr_child_atree|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Atree](/txt/exe/amc/reftype/Atree.md)|||
+|atf_amc.FCascdel.c_child_heap|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FCascdel
 <a href="#struct-fcascdel"></a>
@@ -1063,10 +1192,10 @@ private:
 <a href="#atf_amc-fcondtest-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FCondtest.state|u32|[Val](/txt/exe/amc/reftype.md#val)|0|fcond test: enum-valued watched field|
-|atf_amc.FCondtest.ready|bool|[Val](/txt/exe/amc/reftype.md#val)|false|fcond test: bool watched field|
-|atf_amc.FCondtest.p_parent|[atf_amc.FCondpar](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondpar)|[Upptr](/txt/exe/amc/reftype.md#upptr)||fcond test: via pointer, set manually|
-|atf_amc.FCondtest.out_buf|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||fcond test: out-direction buffer whose drain arms the space condition|
+|atf_amc.FCondtest.state|u32|[Val](/txt/exe/amc/reftype/Val.md)|0|fcond test: enum-valued watched field|
+|atf_amc.FCondtest.ready|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|fcond test: bool watched field|
+|atf_amc.FCondtest.p_parent|[atf_amc.FCondpar](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondpar)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||fcond test: via pointer, set manually|
+|atf_amc.FCondtest.out_buf|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||fcond test: out-direction buffer whose drain arms the space condition|
 
 #### Struct FCondtest
 <a href="#struct-fcondtest"></a>
@@ -1124,7 +1253,7 @@ private:
 <a href="#atf_amc-cstring-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Cstring.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Cstring.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FCstring
 <a href="#struct-fcstring"></a>
@@ -1158,8 +1287,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.FListtype.base|[dmmeta.Listtype](/txt/ssimdb/dmmeta/listtype.md)|[Base](/txt/ssimdb/dmmeta/listtype.md)|||
-|atf_amc.FListtype.step|[atf_amc.FListtype](/txt/gen/atf_amc/atf_amc.md#atf_amc-flisttype)|[Hook](/txt/exe/amc/reftype.md#hook)|||
-|atf_amc.FListtype.seen|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.FListtype.step|[atf_amc.FListtype](/txt/gen/atf_amc/atf_amc.md#atf_amc-flisttype)|[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|atf_amc.FListtype.seen|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FListtype
 <a href="#struct-flisttype"></a>
@@ -1187,101 +1316,101 @@ struct FListtype { // atf_amc.FListtype
 <a href="#atf_amc-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FDb.cmdline|[command.atf_amc](/txt/protocol/command/README.md#command-atf_amc)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FDb.bh_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|atf_amc.FDb.zdl_h_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.zd_t_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.zd_typed|[atf_amc.FTypeD](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftyped)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.zs_t_typed|[atf_amc.FTypeD](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftyped)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.cd_typed|[atf_amc.FTypeD](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftyped)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.zsl_h_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.zs_t_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.zs_mt_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[ZSListMT](/txt/exe/amc/reftype.md#zslistmt)||dummy (instance name), for Ptr type gen|
-|atf_amc.FDb.zdl_hnt_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.cdl_h_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.cd_t_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.csl_h_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.cs_t_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.typea|[atf_amc.FTypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypea)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_amc.FDb.types|[atf_amc.FTypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypes)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_amc.FDb.ind_types|[atf_amc.FTypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypes)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_amc.FDb.ind_typea|[atf_amc.FTypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypea)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_amc.FDb._db|[atf_amc.FDb](/txt/gen/atf_amc/atf_amc.md#atf_amc-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|atf_amc.FDb.cs_h_count|i32|[Val](/txt/exe/amc/reftype.md#val)||FirstChanged trigger fire count|
-|atf_amc.FDb.cs_t_count|i32|[Val](/txt/exe/amc/reftype.md#val)||FirstChanged trigger fire count|
-|atf_amc.FDb.zs_h_count|i32|[Val](/txt/exe/amc/reftype.md#val)||FirstChanged trigger fire count|
-|atf_amc.FDb.zs_t_count|i32|[Val](/txt/exe/amc/reftype.md#val)||FirstChanged trigger fire count|
-|atf_amc.FDb.zs_mt_count|i32|[Val](/txt/exe/amc/reftype.md#val)||FirstChanged trigger fire count|
-|atf_amc.FDb.bh_count|i32|[Val](/txt/exe/amc/reftype.md#val)||FirstChanged trigger fire count|
-|atf_amc.FDb.typet|[atf_amc.FTypeT](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypet)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_amc.FDb.cstring|[atf_amc.FCstring](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcstring)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_amc.FDb.ind_cstring|[atf_amc.FCstring](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcstring)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_amc.FDb.msgbuf|[atf_amc.Msgbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgbuf)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|atf_amc.FDb.bytebuf|[atf_amc.Bytebuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-bytebuf)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|atf_amc.FDb.linebuf|[atf_amc.Linebuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-linebuf)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|atf_amc.FDb.cd_in_msg|[atf_amc.Msgbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgbuf)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_amc.FDb.typeb|[atf_amc.FTypeB](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeb)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.pooledbe64|[atf_amc.PooledBE64](/txt/gen/atf_amc/atf_amc.md#atf_amc-pooledbe64)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.varlen_extern|[atf_amc.VarlenExtern](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenextern)|[Lpool](/txt/exe/amc/reftype.md#lpool)|||
-|atf_amc.FDb.amctest|[atf_amc.FAmctest](/txt/gen/atf_amc/atf_amc.md#atf_amc-famctest)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_amc.FDb.cascdel|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Tpool](/txt/exe/amc/reftype.md#tpool)||Pool of cascdel records|
-|atf_amc.FDb.cascdel_check|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype.md#val)||Bitset of FCascdel records in existence|
-|atf_amc.FDb.cascdel_next_key|u32|[Val](/txt/exe/amc/reftype.md#val)||Next sequence number for FCascdel record|
-|atf_amc.FDb.optalloc|[atf_amc.OptAlloc](/txt/gen/atf_amc/atf_amc.md#atf_amc-optalloc)|[Lpool](/txt/exe/amc/reftype.md#lpool)|||
-|atf_amc.FDb.varlenalloc|[atf_amc.VarlenAlloc](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenalloc)|[Lpool](/txt/exe/amc/reftype.md#lpool)|||
-|atf_amc.FDb.optg|[atf_amc.FOptG](/txt/gen/atf_amc/atf_amc.md#atf_amc-foptg)|[Lpool](/txt/exe/amc/reftype.md#lpool)|||
-|atf_amc.FDb.c_typek|[atf_amc.FTypeK](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypek)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|atf_amc.FDb.c_typel|[atf_amc.FTypeL](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypel)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|atf_amc.FDb.c_typem|[atf_amc.FTypeM](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypem)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|atf_amc.FDb.avl|[atf_amc.FAvl](/txt/gen/atf_amc/atf_amc.md#atf_amc-favl)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_amc.FDb.tr_avl|[atf_amc.FAvl](/txt/gen/atf_amc/atf_amc.md#atf_amc-favl)|[Atree](/txt/exe/amc/reftype.md#atree)|||
-|atf_amc.FDb.listtype|[atf_amc.FListtype](/txt/gen/atf_amc/atf_amc.md#atf_amc-flisttype)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|atf_amc.FDb.dofork|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FDb.typed|[atf_amc.FTypeD](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftyped)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.bytebuf_dyn|[atf_amc.BytebufDyn](/txt/gen/atf_amc/atf_amc.md#atf_amc-bytebufdyn)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|atf_amc.FDb.ind_thash_elem|[atf_amc.FThashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fthashelem)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_amc.FDb.thash_elem|[atf_amc.FThashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fthashelem)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_amc.FDb.hashable|[atf_amc.Hashable](/txt/gen/atf_amc/atf_amc.md#atf_amc-hashable)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.ind_hashable|[atf_amc.Hashable](/txt/gen/atf_amc/atf_amc.md#atf_amc-hashable)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_amc.FDb.time_entry|[atf_amc.FTimeEntry](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftimeentry)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.bh_time_entry|[atf_amc.FTimeEntry](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftimeentry)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|atf_amc.FDb.timehook_recur_counter|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FDb.timehook_once_counter|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FDb.ind_linear|[atf_amc.FHashableLinear](/txt/gen/atf_amc/atf_amc.md#atf_amc-fhashablelinear)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_amc.FDb.hashable_linear|[atf_amc.FHashableLinear](/txt/gen/atf_amc/atf_amc.md#atf_amc-fhashablelinear)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.strkey|[atf_amc.Strkey](/txt/gen/atf_amc/atf_amc.md#atf_amc-strkey)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.ind_strkey|[atf_amc.Strkey](/txt/gen/atf_amc/atf_amc.md#atf_amc-strkey)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_amc.FDb.blkhash_elem|[atf_amc.FBlkhashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fblkhashelem)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.ind_blkhash_elem|[atf_amc.FBlkhashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fblkhashelem)|[Blkhash](/txt/exe/amc/reftype.md#blkhash)|||
-|atf_amc.FDb.ind_blkhash_elem_thash|[atf_amc.FBlkhashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fblkhashelem)|[Thash](/txt/exe/amc/reftype.md#thash)||Thash twin of ind_blkhash_elem for A/B measurement|
-|atf_amc.FDb.varlenallocscale|[atf_amc.VarlenAllocScale](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenallocscale)|[Lpool](/txt/exe/amc/reftype.md#lpool)|||
-|atf_amc.FDb.msghdrltscale|[atf_amc.MsgHdrLTScale](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrltscale)|[Lpool](/txt/exe/amc/reftype.md#lpool)|||
-|atf_amc.FDb.charbuf|char|[Inlary](/txt/exe/amc/reftype.md#inlary)||Variable-length inline char buffer|
-|atf_amc.FDb.in_fb|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Global read-direction byte stream with trace counters|
-|atf_amc.FDb.out_fb|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Global write-direction byte stream with trace counters|
-|atf_amc.FDb.testdec|i64|[Val](/txt/exe/amc/reftype.md#val)||Global decimal (2 places); accessors go through _db|
-|atf_amc.FDb.flagbits|u32|[Val](/txt/exe/amc/reftype.md#val)||Source field for global bitfld fields|
-|atf_amc.FDb.flaglo|u32|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|3|Low nibble of flagbits; nonzero default set at init|
-|atf_amc.FDb.fdbsize|u32|[Val](/txt/exe/amc/reftype.md#val)|ssizeof(*this)|Byte size of FDb; dflt refers to the record itself|
-|atf_amc.FDb.gpmask|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FDb.gpval|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FDb.gpval2|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FDb.condpar|[atf_amc.FCondpar](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondpar)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.condtest|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_amc.FDb.zd_condtest_run|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Llist](/txt/exe/amc/reftype.md#llist)||fcond test: mirror of state==run|
-|atf_amc.FDb.zd_condtest_idle|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Llist](/txt/exe/amc/reftype.md#llist)||fcond test: mirror of state==idle, entered at birth|
-|atf_amc.FDb.cd_condtest_ready|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Llist](/txt/exe/amc/reftype.md#llist)||fcond test: queue armed by ready rising edge|
-|atf_amc.FDb.zd_condpar_done|[atf_amc.FCondpar](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondpar)|[Llist](/txt/exe/amc/reftype.md#llist)||fcond test: via mirror, parent of a done child|
-|atf_amc.FDb.cd_condtest_space|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Llist](/txt/exe/amc/reftype.md#llist)||fcond test: queue armed when a congested out buffer drains|
-|atf_amc.FDb.sslbuf|[atf_amc.Sslbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-sslbuf)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|atf_amc.FDb.cd_sslbuf_out|[atf_amc.Sslbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-sslbuf)|[Llist](/txt/exe/amc/reftype.md#llist)||Sslbuf rows with buffered bytes to write|
-|atf_amc.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype.md#lpool)||private memory pool|
-|atf_amc.FDb.lpoolbuf|[atf_amc.Lpoolbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-lpoolbuf)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|atf_amc.FDb.optwide|[atf_amc.FOptWide](/txt/gen/atf_amc/atf_amc.md#atf_amc-foptwide)|[Lpool](/txt/exe/amc/reftype.md#lpool)|||
-|atf_amc.FDb.optsigned|[atf_amc.FOptSigned](/txt/gen/atf_amc/atf_amc.md#atf_amc-foptsigned)|[Lpool](/txt/exe/amc/reftype.md#lpool)|||
-|atf_amc.FDb.typeu|[atf_amc.FTypeU](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeu)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_amc.FDb.ind_typeu|[atf_amc.FTypeU](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeu)|[Thash](/txt/exe/amc/reftype.md#thash)||Primary index, keyed by u|
-|atf_amc.FDb.ind_typeu_v|[atf_amc.FTypeU](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeu)|[Thash](/txt/exe/amc/reftype.md#thash)||Second index, keyed by the value an update changes|
+|atf_amc.FDb.cmdline|[command.atf_amc](/txt/protocol/command/README.md#command-atf_amc)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FDb.bh_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|atf_amc.FDb.zdl_h_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.zd_t_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.zd_typed|[atf_amc.FTypeD](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftyped)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.zs_t_typed|[atf_amc.FTypeD](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftyped)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.cd_typed|[atf_amc.FTypeD](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftyped)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.zsl_h_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.zs_t_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.zs_mt_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[ZSListMT](/txt/exe/amc/reftype/ZSListMT.md)||dummy (instance name), for Ptr type gen|
+|atf_amc.FDb.zdl_hnt_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.cdl_h_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.cd_t_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.csl_h_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.cs_t_typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.typea|[atf_amc.FTypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypea)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_amc.FDb.types|[atf_amc.FTypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypes)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_amc.FDb.ind_types|[atf_amc.FTypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypes)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_amc.FDb.ind_typea|[atf_amc.FTypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypea)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_amc.FDb._db|[atf_amc.FDb](/txt/gen/atf_amc/atf_amc.md#atf_amc-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|atf_amc.FDb.cs_h_count|i32|[Val](/txt/exe/amc/reftype/Val.md)||FirstChanged trigger fire count|
+|atf_amc.FDb.cs_t_count|i32|[Val](/txt/exe/amc/reftype/Val.md)||FirstChanged trigger fire count|
+|atf_amc.FDb.zs_h_count|i32|[Val](/txt/exe/amc/reftype/Val.md)||FirstChanged trigger fire count|
+|atf_amc.FDb.zs_t_count|i32|[Val](/txt/exe/amc/reftype/Val.md)||FirstChanged trigger fire count|
+|atf_amc.FDb.zs_mt_count|i32|[Val](/txt/exe/amc/reftype/Val.md)||FirstChanged trigger fire count|
+|atf_amc.FDb.bh_count|i32|[Val](/txt/exe/amc/reftype/Val.md)||FirstChanged trigger fire count|
+|atf_amc.FDb.typet|[atf_amc.FTypeT](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypet)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_amc.FDb.cstring|[atf_amc.FCstring](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcstring)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_amc.FDb.ind_cstring|[atf_amc.FCstring](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcstring)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_amc.FDb.msgbuf|[atf_amc.Msgbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgbuf)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|atf_amc.FDb.bytebuf|[atf_amc.Bytebuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-bytebuf)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|atf_amc.FDb.linebuf|[atf_amc.Linebuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-linebuf)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|atf_amc.FDb.cd_in_msg|[atf_amc.Msgbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgbuf)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_amc.FDb.typeb|[atf_amc.FTypeB](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeb)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.pooledbe64|[atf_amc.PooledBE64](/txt/gen/atf_amc/atf_amc.md#atf_amc-pooledbe64)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.varlen_extern|[atf_amc.VarlenExtern](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenextern)|[Lpool](/txt/exe/amc/reftype/Lpool.md)|||
+|atf_amc.FDb.amctest|[atf_amc.FAmctest](/txt/gen/atf_amc/atf_amc.md#atf_amc-famctest)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_amc.FDb.cascdel|[atf_amc.FCascdel](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcascdel)|[Tpool](/txt/exe/amc/reftype/Tpool.md)||Pool of cascdel records|
+|atf_amc.FDb.cascdel_check|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype/Val.md)||Bitset of FCascdel records in existence|
+|atf_amc.FDb.cascdel_next_key|u32|[Val](/txt/exe/amc/reftype/Val.md)||Next sequence number for FCascdel record|
+|atf_amc.FDb.optalloc|[atf_amc.OptAlloc](/txt/gen/atf_amc/atf_amc.md#atf_amc-optalloc)|[Lpool](/txt/exe/amc/reftype/Lpool.md)|||
+|atf_amc.FDb.varlenalloc|[atf_amc.VarlenAlloc](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenalloc)|[Lpool](/txt/exe/amc/reftype/Lpool.md)|||
+|atf_amc.FDb.optg|[atf_amc.FOptG](/txt/gen/atf_amc/atf_amc.md#atf_amc-foptg)|[Lpool](/txt/exe/amc/reftype/Lpool.md)|||
+|atf_amc.FDb.c_typek|[atf_amc.FTypeK](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypek)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|atf_amc.FDb.c_typel|[atf_amc.FTypeL](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypel)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|atf_amc.FDb.c_typem|[atf_amc.FTypeM](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypem)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|atf_amc.FDb.avl|[atf_amc.FAvl](/txt/gen/atf_amc/atf_amc.md#atf_amc-favl)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_amc.FDb.tr_avl|[atf_amc.FAvl](/txt/gen/atf_amc/atf_amc.md#atf_amc-favl)|[Atree](/txt/exe/amc/reftype/Atree.md)|||
+|atf_amc.FDb.listtype|[atf_amc.FListtype](/txt/gen/atf_amc/atf_amc.md#atf_amc-flisttype)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|atf_amc.FDb.dofork|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FDb.typed|[atf_amc.FTypeD](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftyped)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.bytebuf_dyn|[atf_amc.BytebufDyn](/txt/gen/atf_amc/atf_amc.md#atf_amc-bytebufdyn)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|atf_amc.FDb.ind_thash_elem|[atf_amc.FThashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fthashelem)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_amc.FDb.thash_elem|[atf_amc.FThashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fthashelem)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_amc.FDb.hashable|[atf_amc.Hashable](/txt/gen/atf_amc/atf_amc.md#atf_amc-hashable)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.ind_hashable|[atf_amc.Hashable](/txt/gen/atf_amc/atf_amc.md#atf_amc-hashable)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_amc.FDb.time_entry|[atf_amc.FTimeEntry](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftimeentry)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.bh_time_entry|[atf_amc.FTimeEntry](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftimeentry)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|atf_amc.FDb.timehook_recur_counter|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FDb.timehook_once_counter|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FDb.ind_linear|[atf_amc.FHashableLinear](/txt/gen/atf_amc/atf_amc.md#atf_amc-fhashablelinear)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_amc.FDb.hashable_linear|[atf_amc.FHashableLinear](/txt/gen/atf_amc/atf_amc.md#atf_amc-fhashablelinear)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.strkey|[atf_amc.Strkey](/txt/gen/atf_amc/atf_amc.md#atf_amc-strkey)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.ind_strkey|[atf_amc.Strkey](/txt/gen/atf_amc/atf_amc.md#atf_amc-strkey)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_amc.FDb.blkhash_elem|[atf_amc.FBlkhashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fblkhashelem)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.ind_blkhash_elem|[atf_amc.FBlkhashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fblkhashelem)|[Blkhash](/txt/exe/amc/reftype/Blkhash.md)|||
+|atf_amc.FDb.ind_blkhash_elem_thash|[atf_amc.FBlkhashElem](/txt/gen/atf_amc/atf_amc.md#atf_amc-fblkhashelem)|[Thash](/txt/exe/amc/reftype/Thash.md)||Thash twin of ind_blkhash_elem for A/B measurement|
+|atf_amc.FDb.varlenallocscale|[atf_amc.VarlenAllocScale](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenallocscale)|[Lpool](/txt/exe/amc/reftype/Lpool.md)|||
+|atf_amc.FDb.msghdrltscale|[atf_amc.MsgHdrLTScale](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrltscale)|[Lpool](/txt/exe/amc/reftype/Lpool.md)|||
+|atf_amc.FDb.charbuf|char|[Inlary](/txt/exe/amc/reftype/Inlary.md)||Variable-length inline char buffer|
+|atf_amc.FDb.in_fb|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Global read-direction byte stream with trace counters|
+|atf_amc.FDb.out_fb|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Global write-direction byte stream with trace counters|
+|atf_amc.FDb.testdec|i64|[Val](/txt/exe/amc/reftype/Val.md)||Global decimal (2 places); accessors go through _db|
+|atf_amc.FDb.flagbits|u32|[Val](/txt/exe/amc/reftype/Val.md)||Source field for global bitfld fields|
+|atf_amc.FDb.flaglo|u32|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|3|Low nibble of flagbits; nonzero default set at init|
+|atf_amc.FDb.fdbsize|u32|[Val](/txt/exe/amc/reftype/Val.md)|ssizeof(*this)|Byte size of FDb; dflt refers to the record itself|
+|atf_amc.FDb.gpmask|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FDb.gpval|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FDb.gpval2|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FDb.condpar|[atf_amc.FCondpar](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondpar)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.condtest|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_amc.FDb.zd_condtest_run|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Llist](/txt/exe/amc/reftype/Llist.md)||fcond test: mirror of state==run|
+|atf_amc.FDb.zd_condtest_idle|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Llist](/txt/exe/amc/reftype/Llist.md)||fcond test: mirror of state==idle, entered at birth|
+|atf_amc.FDb.cd_condtest_ready|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Llist](/txt/exe/amc/reftype/Llist.md)||fcond test: queue armed by ready rising edge|
+|atf_amc.FDb.zd_condpar_done|[atf_amc.FCondpar](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondpar)|[Llist](/txt/exe/amc/reftype/Llist.md)||fcond test: via mirror, parent of a done child|
+|atf_amc.FDb.cd_condtest_space|[atf_amc.FCondtest](/txt/gen/atf_amc/atf_amc.md#atf_amc-fcondtest)|[Llist](/txt/exe/amc/reftype/Llist.md)||fcond test: queue armed when a congested out buffer drains|
+|atf_amc.FDb.sslbuf|[atf_amc.Sslbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-sslbuf)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|atf_amc.FDb.cd_sslbuf_out|[atf_amc.Sslbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-sslbuf)|[Llist](/txt/exe/amc/reftype/Llist.md)||Sslbuf rows with buffered bytes to write|
+|atf_amc.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype/Lpool.md)||private memory pool|
+|atf_amc.FDb.lpoolbuf|[atf_amc.Lpoolbuf](/txt/gen/atf_amc/atf_amc.md#atf_amc-lpoolbuf)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|atf_amc.FDb.optwide|[atf_amc.FOptWide](/txt/gen/atf_amc/atf_amc.md#atf_amc-foptwide)|[Lpool](/txt/exe/amc/reftype/Lpool.md)|||
+|atf_amc.FDb.optsigned|[atf_amc.FOptSigned](/txt/gen/atf_amc/atf_amc.md#atf_amc-foptsigned)|[Lpool](/txt/exe/amc/reftype/Lpool.md)|||
+|atf_amc.FDb.typeu|[atf_amc.FTypeU](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeu)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_amc.FDb.ind_typeu|[atf_amc.FTypeU](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeu)|[Thash](/txt/exe/amc/reftype/Thash.md)||Primary index, keyed by u|
+|atf_amc.FDb.ind_typeu_v|[atf_amc.FTypeU](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeu)|[Thash](/txt/exe/amc/reftype/Thash.md)||Second index, keyed by the value an update changes|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -1514,7 +1643,7 @@ struct FDb { // atf_amc.FDb: In-memory database for atf_amc
 <a href="#atf_amc-fhashablelinear-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FHashableLinear.key|[algo.U32LinearKey](/txt/protocol/algo/README.md#algo-u32linearkey)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.FHashableLinear.key|[algo.U32LinearKey](/txt/protocol/algo/README.md#algo-u32linearkey)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FHashableLinear
 <a href="#struct-fhashablelinear"></a>
@@ -1547,7 +1676,7 @@ private:
 <a href="#atf_amc-typeg-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeG.typeg|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeG.typeg|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeG
 <a href="#struct-typeg"></a>
@@ -1585,8 +1714,8 @@ struct TypeG { // atf_amc.TypeG
 <a href="#atf_amc-optg-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.OptG.length|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.OptG.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.OptG.length|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.OptG.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 
 #### Struct FOptG
 <a href="#struct-foptg"></a>
@@ -1616,8 +1745,8 @@ private:
 <a href="#atf_amc-optsigned-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.OptSigned.length|i64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.OptSigned.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.OptSigned.length|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.OptSigned.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 
 #### Struct FOptSigned
 <a href="#struct-foptsigned"></a>
@@ -1647,8 +1776,8 @@ private:
 <a href="#atf_amc-optwide-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.OptWide.length|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.OptWide.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.OptWide.length|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.OptWide.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 
 #### Struct FOptWide
 <a href="#struct-foptwide"></a>
@@ -1673,8 +1802,8 @@ private:
 <a href="#atf_amc-fperfsortstring-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FPerfSortString.orig|[atf_amc.Cstr](/txt/gen/atf_amc/atf_amc.md#atf_amc-cstr)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|atf_amc.FPerfSortString.sorted1|[atf_amc.Cstr](/txt/gen/atf_amc/atf_amc.md#atf_amc-cstr)|[Tary](/txt/exe/amc/reftype.md#tary)|||
+|atf_amc.FPerfSortString.orig|[atf_amc.Cstr](/txt/gen/atf_amc/atf_amc.md#atf_amc-cstr)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|atf_amc.FPerfSortString.sorted1|[atf_amc.Cstr](/txt/gen/atf_amc/atf_amc.md#atf_amc-cstr)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
 
 #### Struct FPerfSortString
 <a href="#struct-fperfsortstring"></a>
@@ -1705,7 +1834,7 @@ struct FPerfSortString { // atf_amc.FPerfSortString: Function to test string sor
 <a href="#atf_amc-fthashelem-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FThashElem.key|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.FThashElem.key|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FThashElem
 <a href="#struct-fthashelem"></a>
@@ -1738,7 +1867,7 @@ private:
 <a href="#atf_amc-ftimeentry-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FTimeEntry.time|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.FTimeEntry.time|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTimeEntry
 <a href="#struct-ftimeentry"></a>
@@ -1775,7 +1904,7 @@ private:
 <a href="#atf_amc-typec-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeC.typec|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeC.typec|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTypeC
 <a href="#struct-ftypec"></a>
@@ -1818,15 +1947,15 @@ struct FTypeC { // atf_amc.FTypeC
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.FTypeA.msghdr|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Base](#atf_amc-typea-fields)|||
-|atf_amc.FTypeA.typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|atf_amc.FTypeA.zdl_typeb|[atf_amc.FTypeB](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeb)|[Llist](/txt/exe/amc/reftype.md#llist)||List of TypeBs|
-|atf_amc.FTypeA.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FTypeA.bh_typeb|[atf_amc.FTypeB](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeb)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
+|atf_amc.FTypeA.typec|[atf_amc.FTypeC](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypec)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|atf_amc.FTypeA.zdl_typeb|[atf_amc.FTypeB](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeb)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of TypeBs|
+|atf_amc.FTypeA.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FTypeA.bh_typeb|[atf_amc.FTypeB](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypeb)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
 #### atf_amc.TypeA Fields
 <a href="#atf_amc-typea-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeA.typea|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeA.typea|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTypeA
 <a href="#struct-ftypea"></a>
@@ -1878,20 +2007,20 @@ private:
 <a href="#atf_amc-typeb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeB.typea|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|atf_amc.TypeB.j|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeB.typea|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|atf_amc.TypeB.j|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTypeB
 <a href="#struct-ftypeb"></a>
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
 ```
 struct FTypeB { // atf_amc.FTypeB
-    atf_amc::FTypeB*   typeb_next;             // Pointer to next free element int tpool
-    atf_amc::FTypeB*   typea_zdl_typeb_next;   // zslist link; -1 means not-in-list
-    atf_amc::FTypeB*   typea_zdl_typeb_prev;   // previous element
-    i32                typea_bh_typeb_idx;     // index in heap; -1 means not-in-heap
-    i32                typea;                  //   0
-    i32                j;                      //   0
+    atf_amc::FTypeB*   typeb_next;              // Pointer to next free element int tpool
+    atf_amc::FTypeB*   type_a_zdl_typeb_next;   // zslist link; -1 means not-in-list
+    atf_amc::FTypeB*   type_a_zdl_typeb_prev;   // previous element
+    i32                type_a_bh_typeb_idx;     // index in heap; -1 means not-in-heap
+    i32                typea;                   //   0
+    i32                j;                       //   0
     // func:atf_amc.FTypeB..AssignOp
     inline atf_amc::FTypeB& operator =(const atf_amc::FTypeB &rhs) = delete;
     // func:atf_amc.FTypeB..CopyCtor
@@ -1919,7 +2048,7 @@ private:
 <a href="#atf_amc-typec-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeC.typec|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeC.typec|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTypeD
 <a href="#struct-ftyped"></a>
@@ -1955,7 +2084,7 @@ private:
 <a href="#atf_amc-ftypek-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FTypeK.value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.FTypeK.value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTypeK
 <a href="#struct-ftypek"></a>
@@ -1976,7 +2105,7 @@ struct FTypeK { // atf_amc.FTypeK: Test element for Ptrary
 <a href="#atf_amc-ftypel-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FTypeL.value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.FTypeL.value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTypeL
 <a href="#struct-ftypel"></a>
@@ -1997,9 +2126,9 @@ struct FTypeL { // atf_amc.FTypeL: Test element for heap-like Ptrary
 <a href="#atf_amc-ftypem-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FTypeM.value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.FTypeM.n_unref|u32|[Val](/txt/exe/amc/reftype.md#val)||Number of OnUnref callbacks fired for this row|
-|atf_amc.FTypeM.n_xref|u32|[Val](/txt/exe/amc/reftype.md#val)||Number of OnXref callbacks fired for this row|
+|atf_amc.FTypeM.value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.FTypeM.n_unref|u32|[Val](/txt/exe/amc/reftype/Val.md)||Number of OnUnref callbacks fired for this row|
+|atf_amc.FTypeM.n_xref|u32|[Val](/txt/exe/amc/reftype/Val.md)||Number of OnXref callbacks fired for this row|
 
 #### Struct FTypeM
 <a href="#struct-ftypem"></a>
@@ -2022,13 +2151,13 @@ struct FTypeM { // atf_amc.FTypeM: Test element for non-unique Ptrary
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.FTypeS.msghdr|[atf_amc.TypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-types)|[Base](#atf_amc-types-fields)|||
-|atf_amc.FTypeS.zdl_typet|[atf_amc.FTypeT](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypet)|[Llist](/txt/exe/amc/reftype.md#llist)||List of TypeTs|
+|atf_amc.FTypeS.zdl_typet|[atf_amc.FTypeT](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypet)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of TypeTs|
 #### atf_amc.TypeS Fields
 <a href="#atf_amc-types-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeS.types|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.TypeS.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeS.types|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.TypeS.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTypeS
 <a href="#struct-ftypes"></a>
@@ -2072,18 +2201,18 @@ private:
 <a href="#atf_amc-typet-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeT.types|[atf_amc.TypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-types)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|atf_amc.TypeT.j|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeT.types|[atf_amc.TypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-types)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|atf_amc.TypeT.j|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTypeT
 <a href="#struct-ftypet"></a>
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
 ```
 struct FTypeT { // atf_amc.FTypeT
-    atf_amc::FTypeT*   types_zdl_typet_next;   // zslist link; -1 means not-in-list
-    atf_amc::FTypeT*   types_zdl_typet_prev;   // previous element
-    i32                types;                  //   0
-    i32                j;                      //   0
+    atf_amc::FTypeT*   type_s_zdl_typet_next;   // zslist link; -1 means not-in-list
+    atf_amc::FTypeT*   type_s_zdl_typet_prev;   // previous element
+    i32                types;                   //   0
+    i32                j;                       //   0
     // func:atf_amc.FTypeT..AssignOp
     inline atf_amc::FTypeT& operator =(const atf_amc::FTypeT &rhs) = delete;
     // func:atf_amc.FTypeT..CopyCtor
@@ -2112,8 +2241,8 @@ private:
 <a href="#atf_amc-typeu-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeU.u|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.TypeU.v|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeU.u|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.TypeU.v|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTypeU
 <a href="#struct-ftypeu"></a>
@@ -2149,7 +2278,7 @@ private:
 <a href="#atf_amc-typea-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeA.typea|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeA.typea|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeA
 <a href="#struct-typea"></a>
@@ -2181,9 +2310,9 @@ struct TypeA { // atf_amc.TypeA
 <a href="#atf_amc-funitsort-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.FUnitSort.tary|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|atf_amc.FUnitSort.c_ptrary|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|atf_amc.FUnitSort.fixary|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
+|atf_amc.FUnitSort.tary|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|atf_amc.FUnitSort.c_ptrary|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|atf_amc.FUnitSort.fixary|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
 
 #### Struct FUnitSort
 <a href="#struct-funitsort"></a>
@@ -2217,8 +2346,8 @@ struct FUnitSort { // atf_amc.FUnitSort
 <a href="#atf_amc-hashable-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Hashable.hashable|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.Hashable.key|[algo.U64Ary](/txt/protocol/algo/README.md#algo-u64ary)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Hashable.hashable|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.Hashable.key|[algo.U64Ary](/txt/protocol/algo/README.md#algo-u64ary)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Hashable
 <a href="#struct-hashable"></a>
@@ -2252,17 +2381,17 @@ private:
 <a href="#atf_amc-hooktype-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Hooktype.callback|[atf_amc.Hooktype](/txt/gen/atf_amc/atf_amc.md#atf_amc-hooktype)|[Hook](/txt/exe/amc/reftype.md#hook)|||
-|atf_amc.Hooktype.value|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Hooktype.callback|[atf_amc.Hooktype](/txt/gen/atf_amc/atf_amc.md#atf_amc-hooktype)|[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|atf_amc.Hooktype.value|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Hooktype
 <a href="#struct-hooktype"></a>
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
 ```
 struct Hooktype { // atf_amc.Hooktype
-    atf_amc::parent_callback_hook   callback;       //   NULL  Pointer to a function
-    u64                             callback_ctx;   //   0  Callback context
-    i32                             value;          //   0
+    atf_amc::hooktype_callback_hook   callback;       //   NULL  Pointer to a function
+    u64                               callback_ctx;   //   0  Callback context
+    i32                               value;          //   0
     // func:atf_amc.Hooktype..Ctor
     inline               Hooktype() __attribute__((nothrow));
 };
@@ -2275,7 +2404,7 @@ struct Hooktype { // atf_amc.Hooktype
 <a href="#atf_amc-inlarymin-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.InlaryMin.ary|u32|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
+|atf_amc.InlaryMin.ary|u32|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
 
 #### Struct InlaryMin
 <a href="#struct-inlarymin"></a>
@@ -2303,8 +2432,8 @@ struct InlaryMin { // atf_amc.InlaryMin: Variable inlary with a preallocated min
 <a href="#atf_amc-inlaryprint-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.InlaryPrint.fixary|u32|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|atf_amc.InlaryPrint.inlary|u32|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
+|atf_amc.InlaryPrint.fixary|u32|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|atf_amc.InlaryPrint.inlary|u32|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
 
 #### Struct InlaryPrint
 <a href="#struct-inlaryprint"></a>
@@ -2333,7 +2462,7 @@ struct InlaryPrint { // atf_amc.InlaryPrint
 <a href="#atf_amc-lary32-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Lary32.lary|u32|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|atf_amc.Lary32.lary|u32|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct Lary32
 <a href="#struct-lary32"></a>
@@ -2356,7 +2485,7 @@ struct Lary32 { // atf_amc.Lary32
 <a href="#atf_amc-linebuf-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Linebuf.in|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)|'\n'|Delimited buffer|
+|atf_amc.Linebuf.in|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)|'\n'|Delimited buffer|
 
 #### Struct Linebuf
 <a href="#struct-linebuf"></a>
@@ -2386,7 +2515,7 @@ struct Linebuf { // atf_amc.Linebuf
 <a href="#atf_amc-lnullstr4_u32_base256-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.LnullStr4_U32_Base256.ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|atf_amc.LnullStr4_U32_Base256.ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### Struct LnullStr4_U32_Base256
 <a href="#struct-lnullstr4_u32_base256"></a>
@@ -2409,102 +2538,6 @@ struct LnullStr4_U32_Base256 { // atf_amc.LnullStr4_U32_Base256: base-256 number
 };
 ```
 
-#### atf_amc.MsgType
-<a href="#atf_amc-msgtype"></a>
-
-#### atf_amc.MsgType Fields
-<a href="#atf_amc-msgtype-fields"></a>
-|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|atf_amc.MsgType.value|u16|[Val](/txt/exe/amc/reftype.md#val)|||
-
-#### Struct MsgType
-<a href="#struct-msgtype"></a>
-Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
-```
-#pragma pack(push,1)
-struct MsgType { // atf_amc.MsgType
-    u16   value;   //   0
-    // func:atf_amc.MsgType.value.Cast
-    inline               operator atf_amc_MsgTypeEnum() const __attribute__((nothrow));
-    // func:atf_amc.MsgType..EqOp
-    inline bool          operator ==(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
-    // func:atf_amc.MsgType..NeOp
-    inline bool          operator !=(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
-    // func:atf_amc.MsgType..LtOp
-    inline bool          operator <(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
-    // func:atf_amc.MsgType..GtOp
-    inline bool          operator >(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
-    // func:atf_amc.MsgType..LeOp
-    inline bool          operator <=(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
-    // func:atf_amc.MsgType..GeOp
-    inline bool          operator >=(const atf_amc::MsgType &rhs) const __attribute__((nothrow));
-    // define enum comparison operator to avoid ambiguity
-    // func:atf_amc.MsgType..EqEnum
-    inline bool          operator ==(atf_amc_MsgTypeEnum rhs) const __attribute__((nothrow));
-    // func:atf_amc.MsgType..Ctor
-    inline               MsgType() __attribute__((nothrow));
-    // func:atf_amc.MsgType..FieldwiseCtor
-    explicit inline               MsgType(u16 in_value) __attribute__((nothrow));
-    // func:atf_amc.MsgType..EnumCtor
-    inline               MsgType(atf_amc_MsgTypeEnum arg) __attribute__((nothrow));
-};
-```
-
-#### atf_amc.MsgLength
-<a href="#atf_amc-msglength"></a>
-
-#### atf_amc.MsgLength Fields
-<a href="#atf_amc-msglength-fields"></a>
-|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|atf_amc.MsgLength.value|u16|[Val](/txt/exe/amc/reftype.md#val)|||
-
-#### Struct MsgLength
-<a href="#struct-msglength"></a>
-Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
-```
-#pragma pack(push,1)
-struct MsgLength { // atf_amc.MsgLength
-    u16   value;   //   0
-    // func:atf_amc.MsgLength.value.Cast
-    inline               operator u16() const __attribute__((nothrow));
-    // func:atf_amc.MsgLength..Ctor
-    inline               MsgLength() __attribute__((nothrow));
-    // func:atf_amc.MsgLength..FieldwiseCtor
-    explicit inline               MsgLength(u16 in_value) __attribute__((nothrow));
-};
-```
-
-#### atf_amc.MsgHeader
-<a href="#atf_amc-msgheader"></a>
-
-#### atf_amc.MsgHeader Fields
-<a href="#atf_amc-msgheader-fields"></a>
-|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
-
-#### Struct MsgHeader
-<a href="#struct-msgheader"></a>
-Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)
-```
-#pragma pack(push,1)
-struct MsgHeader { // atf_amc.MsgHeader
-    atf_amc::MsgType     type;     // Message type
-    atf_amc::MsgLength   length;   // Total message length, including this header
-    // func:atf_amc.MsgHeader..EqOp
-    inline bool          operator ==(const atf_amc::MsgHeader &rhs) const __attribute__((nothrow));
-    // func:atf_amc.MsgHeader..NeOp
-    inline bool          operator !=(const atf_amc::MsgHeader &rhs) const __attribute__((nothrow));
-    // func:atf_amc.MsgHeader..Ctor
-    inline               MsgHeader() __attribute__((nothrow));
-    // func:atf_amc.MsgHeader..FieldwiseCtor
-    explicit inline               MsgHeader(atf_amc::MsgType in_type, atf_amc::MsgLength in_length) __attribute__((nothrow));
-};
-```
-
 #### atf_amc.Lpoolbuf - Fbuf drawing from an lpool basepool
 <a href="#atf_amc-lpoolbuf"></a>
 
@@ -2512,7 +2545,7 @@ struct MsgHeader { // atf_amc.MsgHeader
 <a href="#atf_amc-lpoolbuf-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Lpoolbuf.in|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Message buffer allocated from the lpool|
+|atf_amc.Lpoolbuf.in|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Message buffer allocated from the lpool|
 
 #### Struct Lpoolbuf
 <a href="#struct-lpoolbuf"></a>
@@ -2542,7 +2575,7 @@ struct Lpoolbuf { // atf_amc.Lpoolbuf: Fbuf drawing from an lpool basepool
 <a href="#atf_amc-lspacestr5_u32_base95-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.LspaceStr5_U32_Base95.ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|atf_amc.LspaceStr5_U32_Base95.ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### Struct LspaceStr5_U32_Base95
 <a href="#struct-lspacestr5_u32_base95"></a>
@@ -2572,7 +2605,7 @@ struct LspaceStr5_U32_Base95 { // atf_amc.LspaceStr5_U32_Base95: base-95 number,
 <a href="#atf_amc-lspacestr7_i32-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.LspaceStr7_I32.ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|atf_amc.LspaceStr7_I32.ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### Struct LspaceStr7_I32
 <a href="#struct-lspacestr7_i32"></a>
@@ -2602,8 +2635,8 @@ struct LspaceStr7_I32 { // atf_amc.LspaceStr7_I32: signed number as ascii digits
 <a href="#atf_amc-msghdrlt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct MsgHdrLT
 <a href="#struct-msghdrlt"></a>
@@ -2627,8 +2660,8 @@ struct MsgHdrLT { // atf_amc.MsgHdrLT: length-type header
 <a href="#atf_amc-msghdrltscale-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHdrLTScale.len|u8|[Val](/txt/exe/amc/reftype.md#val)||Length in 4-byte words|
-|atf_amc.MsgHdrLTScale.type|char|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgHdrLTScale.len|u8|[Val](/txt/exe/amc/reftype/Val.md)||Length in 4-byte words|
+|atf_amc.MsgHdrLTScale.type|char|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct MsgHdrLTScale
 <a href="#struct-msghdrltscale"></a>
@@ -2655,13 +2688,13 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.MsgLTA.base|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Base](#atf_amc-msghdrlt-fields)|||
-|atf_amc.MsgLTA.a|[algo.RspaceStr4](/txt/protocol/algo/README.md#algo-rspacestr4)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgLTA.a|[algo.RspaceStr4](/txt/protocol/algo/README.md#algo-rspacestr4)|[Val](/txt/exe/amc/reftype/Val.md)|||
 #### atf_amc.MsgHdrLT Fields
 <a href="#atf_amc-msghdrlt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct MsgLTA
 <a href="#struct-msglta"></a>
@@ -2687,13 +2720,13 @@ struct MsgLTA { // atf_amc.MsgLTA
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.MsgLTB.base|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Base](#atf_amc-msghdrlt-fields)|||
-|atf_amc.MsgLTB.b|[algo.RspaceStr6](/txt/protocol/algo/README.md#algo-rspacestr6)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgLTB.b|[algo.RspaceStr6](/txt/protocol/algo/README.md#algo-rspacestr6)|[Val](/txt/exe/amc/reftype/Val.md)|||
 #### atf_amc.MsgHdrLT Fields
 <a href="#atf_amc-msghdrlt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct MsgLTB
 <a href="#struct-msgltb"></a>
@@ -2719,13 +2752,13 @@ struct MsgLTB { // atf_amc.MsgLTB
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.MsgLTO.base|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Base](#atf_amc-msghdrlt-fields)|||
-|atf_amc.MsgLTO.o|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.MsgLTO.o|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 #### atf_amc.MsgHdrLT Fields
 <a href="#atf_amc-msghdrlt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct MsgLTO
 <a href="#struct-msglto"></a>
@@ -2753,8 +2786,8 @@ struct MsgLTO { // atf_amc.MsgLTO
 <a href="#atf_amc-msghdrltscale-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHdrLTScale.len|u8|[Val](/txt/exe/amc/reftype.md#val)||Length in 4-byte words|
-|atf_amc.MsgHdrLTScale.type|char|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgHdrLTScale.len|u8|[Val](/txt/exe/amc/reftype/Val.md)||Length in 4-byte words|
+|atf_amc.MsgHdrLTScale.type|char|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct MsgLTScaleA
 <a href="#struct-msgltscalea"></a>
@@ -2777,13 +2810,13 @@ struct MsgLTScaleA { // atf_amc.MsgLTScaleA
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.MsgLTScaleV.base|[atf_amc.MsgHdrLTScale](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrltscale)|[Base](#atf_amc-msghdrltscale-fields)|||
-|atf_amc.MsgLTScaleV.v|char|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.MsgLTScaleV.v|char|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHdrLTScale Fields
 <a href="#atf_amc-msghdrltscale-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHdrLTScale.len|u8|[Val](/txt/exe/amc/reftype.md#val)||Length in 4-byte words|
-|atf_amc.MsgHdrLTScale.type|char|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgHdrLTScale.len|u8|[Val](/txt/exe/amc/reftype/Val.md)||Length in 4-byte words|
+|atf_amc.MsgHdrLTScale.type|char|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct MsgLTScaleV
 <a href="#struct-msgltscalev"></a>
@@ -2807,13 +2840,13 @@ struct MsgLTScaleV { // atf_amc.MsgLTScaleV: scaled length-type header with a va
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.MsgLTV.base|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Base](#atf_amc-msghdrlt-fields)|||
-|atf_amc.MsgLTV.v|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.MsgLTV.v|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHdrLT Fields
 <a href="#atf_amc-msghdrlt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.MsgHdrLT.len|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.MsgHdrLT.type|char|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct MsgLTV
 <a href="#struct-msgltv"></a>
@@ -2836,10 +2869,10 @@ struct MsgLTV { // atf_amc.MsgLTV
 <a href="#atf_amc-msgbuf-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Msgbuf.in_buf|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Message-based buffer|
-|atf_amc.Msgbuf.in_custom|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Message-based buffer|
-|atf_amc.Msgbuf.out_extra|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Message-based buffer|
-|atf_amc.Msgbuf.in_extra|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Message-based buffer|
+|atf_amc.Msgbuf.in_buf|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Message-based buffer|
+|atf_amc.Msgbuf.in_custom|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Message-based buffer|
+|atf_amc.Msgbuf.out_extra|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Message-based buffer|
+|atf_amc.Msgbuf.in_extra|[atf_amc.MsgHdrLT](/txt/gen/atf_amc/atf_amc.md#atf_amc-msghdrlt)|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Message-based buffer|
 
 #### Struct Msgbuf
 <a href="#struct-msgbuf"></a>
@@ -2912,9 +2945,9 @@ struct Msgbuf { // atf_amc.Msgbuf
 <a href="#atf_amc-netbitfld1-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.NetBitfld1.value|u16|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.NetBitfld1.bits0_4|u8|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.NetBitfld1.bits8_12|u8|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
+|atf_amc.NetBitfld1.value|u16|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.NetBitfld1.bits0_4|u8|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.NetBitfld1.bits8_12|u8|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
 
 #### Struct NetBitfld1
 <a href="#struct-netbitfld1"></a>
@@ -2934,8 +2967,8 @@ struct NetBitfld1 { // atf_amc.NetBitfld1
 <a href="#atf_amc-netentry-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.NetEntry.id|u16|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.NetEntry.val|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.NetEntry.id|u16|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.NetEntry.val|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct NetEntry
 <a href="#struct-netentry"></a>
@@ -2958,14 +2991,14 @@ struct NetEntry { // atf_amc.NetEntry: amc fixture: 6-byte big-endian (id,val) e
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.NetFrame.base|[atf_amc.NetFrameHdr](/txt/gen/atf_amc/atf_amc.md#atf_amc-netframehdr)|[Base](#atf_amc-netframehdr-fields)|||
-|atf_amc.NetFrame.entry|[atf_amc.NetEntry](/txt/gen/atf_amc/atf_amc.md#atf_amc-netentry)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.NetFrame.entry|[atf_amc.NetEntry](/txt/gen/atf_amc/atf_amc.md#atf_amc-netentry)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.NetFrameHdr Fields
 <a href="#atf_amc-netframehdr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.NetFrameHdr.word|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.NetFrameHdr.kind|u8|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.NetFrameHdr.len|u32|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
+|atf_amc.NetFrameHdr.word|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.NetFrameHdr.kind|u8|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.NetFrameHdr.len|u32|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
 
 #### Struct NetFrame
 <a href="#struct-netframe"></a>
@@ -2987,9 +3020,9 @@ struct NetFrame { // atf_amc.NetFrame: amc fixture: Base NetFrameHdr + Varlen Ne
 <a href="#atf_amc-netframehdr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.NetFrameHdr.word|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.NetFrameHdr.kind|u8|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.NetFrameHdr.len|u32|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
+|atf_amc.NetFrameHdr.word|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.NetFrameHdr.kind|u8|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.NetFrameHdr.len|u32|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
 
 #### Struct NetFrameHdr
 <a href="#struct-netframehdr"></a>
@@ -3010,7 +3043,7 @@ struct NetFrameHdr { // atf_amc.NetFrameHdr: amc fixture: fbigend header word sp
 <a href="#atf_amc-novsstr9-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.NovsStr9.ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|atf_amc.NovsStr9.ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### Struct NovsStr9
 <a href="#struct-novsstr9"></a>
@@ -3042,8 +3075,8 @@ struct NovsStr9 { // atf_amc.NovsStr9: Case-sensitive plain-compared string: fcm
 <a href="#atf_amc-optalloc-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.OptAlloc.length|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.OptAlloc.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.OptAlloc.length|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.OptAlloc.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 
 #### Struct OptAlloc
 <a href="#struct-optalloc"></a>
@@ -3069,8 +3102,8 @@ private:
 <a href="#atf_amc-varlenb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenB.length|u32|[Val](/txt/exe/amc/reftype.md#val)||Number of 4-byte varlen words (total = length*4 + 4)|
-|atf_amc.VarlenB.c|char|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenB.length|u32|[Val](/txt/exe/amc/reftype/Val.md)||Number of 4-byte varlen words (total = length*4 + 4)|
+|atf_amc.VarlenB.c|char|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenB
 <a href="#struct-varlenb"></a>
@@ -3093,13 +3126,13 @@ struct VarlenB { // atf_amc.VarlenB: Varlen element: scaled lenfld over a byte-g
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.OptBMsg.base|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.OptBMsg.b|[atf_amc.VarlenB](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenb)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.OptBMsg.b|[atf_amc.VarlenB](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenb)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct OptBMsg
 <a href="#struct-optbmsg"></a>
@@ -3122,8 +3155,8 @@ struct OptBMsg { // atf_amc.OptBMsg: Message whose optional trailing element has
 <a href="#atf_amc-optg-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.OptG.length|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.OptG.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.OptG.length|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.OptG.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 
 #### Struct OptG
 <a href="#struct-optg"></a>
@@ -3145,8 +3178,8 @@ struct OptG { // atf_amc.OptG: An optional instance of atf_unit.A
 <a href="#atf_amc-optoptg-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.OptOptG.length|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.OptOptG.optg|[atf_amc.OptG](/txt/gen/atf_amc/atf_amc.md#atf_amc-optg)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.OptOptG.length|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.OptOptG.optg|[atf_amc.OptG](/txt/gen/atf_amc/atf_amc.md#atf_amc-optg)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 
 #### Struct OptOptG
 <a href="#struct-optoptg"></a>
@@ -3168,8 +3201,8 @@ struct OptOptG { // atf_amc.OptOptG: An optional instance of atf_unit.Optg (recu
 <a href="#atf_amc-optsigned-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.OptSigned.length|i64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.OptSigned.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.OptSigned.length|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.OptSigned.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 
 #### Struct OptSigned
 <a href="#struct-optsigned"></a>
@@ -3191,8 +3224,8 @@ struct OptSigned { // atf_amc.OptSigned: Optional TypeG behind a signed length w
 <a href="#atf_amc-optwide-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.OptWide.length|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.OptWide.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype.md#opt)|||
+|atf_amc.OptWide.length|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.OptWide.typeg|[atf_amc.TypeG](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeg)|[Opt](/txt/exe/amc/reftype/Opt.md)|||
 
 #### Struct OptWide
 <a href="#struct-optwide"></a>
@@ -3214,16 +3247,16 @@ struct OptWide { // atf_amc.OptWide: Optional TypeG behind a length word wider t
 <a href="#atf_amc-pmaskmultiple-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.PmaskMultiple.present|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskMultiple.assigned|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskMultiple.nullable|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskMultiple.value1|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskMultiple.value2|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskMultiple.value3|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskMultiple.value4|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskMultiple.value5|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskMultiple.value6|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskMultiple.value7|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.PmaskMultiple.present|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskMultiple.assigned|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskMultiple.nullable|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskMultiple.value1|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskMultiple.value2|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskMultiple.value3|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskMultiple.value4|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskMultiple.value5|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskMultiple.value6|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskMultiple.value7|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct PmaskMultiple
 <a href="#struct-pmaskmultiple"></a>
@@ -3253,78 +3286,78 @@ struct PmaskMultiple { // atf_amc.PmaskMultiple: Ctype with 3 pmasks. One has an
 <a href="#atf_amc-pmasku128-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.PmaskU128.pmask|u128|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value2|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value3|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value21|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value22|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value23|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value24|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value25|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value26|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value20|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value28|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value29|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value30|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value31|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value32|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value27|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value19|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value18|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value4|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value5|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value6|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value7|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value8|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value9|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value69|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value11|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value12|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value13|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value14|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value15|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value16|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value33|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value10|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value17|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value35|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value55|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value56|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value57|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value58|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value59|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value60|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value54|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value62|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value63|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value64|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value65|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value66|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value67|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value68|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value61|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value34|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value52|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value36|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value37|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value38|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value39|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value40|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value41|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value42|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value53|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value44|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value45|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value46|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value47|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value48|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value49|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value50|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value51|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value43|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value70|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU128.value71|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.PmaskU128.pmask|u128|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value2|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value3|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value21|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value22|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value23|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value24|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value25|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value26|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value20|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value28|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value29|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value30|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value31|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value32|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value27|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value19|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value18|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value4|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value5|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value6|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value7|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value8|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value9|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value69|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value11|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value12|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value13|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value14|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value15|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value16|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value33|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value10|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value17|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value35|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value55|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value56|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value57|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value58|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value59|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value60|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value54|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value62|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value63|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value64|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value65|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value66|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value67|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value68|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value61|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value34|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value52|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value36|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value37|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value38|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value39|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value40|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value41|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value42|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value53|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value44|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value45|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value46|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value47|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value48|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value49|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value50|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value51|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value43|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value70|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU128.value71|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct PmaskU128
 <a href="#struct-pmasku128"></a>
@@ -3416,12 +3449,12 @@ struct PmaskU128 { // atf_amc.PmaskU128: A field controlled by a bitmask.
 <a href="#atf_amc-pmasku32-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.PmaskU32.pmask|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU32.value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU32.value2|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU32.value3|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU32.value4|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU32.value5|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.PmaskU32.pmask|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU32.value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU32.value2|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU32.value3|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU32.value4|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU32.value5|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct PmaskU32
 <a href="#struct-pmasku32"></a>
@@ -3447,8 +3480,8 @@ struct PmaskU32 { // atf_amc.PmaskU32: A field controlled by a bitmask.
 <a href="#atf_amc-pmasku555-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.PmaskU555.value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.PmaskU555.pmask|u64|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
+|atf_amc.PmaskU555.value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.PmaskU555.pmask|u64|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
 
 #### Struct PmaskU555
 <a href="#struct-pmasku555"></a>
@@ -3470,7 +3503,7 @@ struct PmaskU555 { // atf_amc.PmaskU555: Check pmask with 555 bits
 <a href="#atf_amc-pooledbe64-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.PooledBE64.value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.PooledBE64.value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct PooledBE64
 <a href="#struct-pooledbe64"></a>
@@ -3497,7 +3530,7 @@ private:
 <a href="#atf_amc-rnullstr6_u32-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.RnullStr6_U32.ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|atf_amc.RnullStr6_U32.ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### Struct RnullStr6_U32
 <a href="#struct-rnullstr6_u32"></a>
@@ -3541,7 +3574,7 @@ struct RnullStr6_U32 { // atf_amc.RnullStr6_U32: number stored as ascii digits, 
 <a href="#atf_amc-rpasu32str6-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.RpasU32Str6.ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|atf_amc.RpasU32Str6.ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### Struct RpasU32Str6
 <a href="#struct-rpasu32str6"></a>
@@ -3587,7 +3620,7 @@ struct RpasU32Str6 { // atf_amc.RpasU32Str6: number stored as ascii digits, righ
 <a href="#atf_amc-rspacestr9-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.RspaceStr9.ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|atf_amc.RspaceStr9.ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### Struct RspaceStr9
 <a href="#struct-rspacestr9"></a>
@@ -3617,7 +3650,7 @@ struct RspaceStr9 { // atf_amc.RspaceStr9: Version-sorted right-space-padded str
 <a href="#atf_amc-sentinelenum-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.SentinelEnum.value|u8|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.SentinelEnum.value|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct SentinelEnum
 <a href="#struct-sentinelenum"></a>
@@ -3639,9 +3672,9 @@ struct SentinelEnum { // atf_amc.SentinelEnum: Enum whose zero-length-named fcon
 <a href="#atf_amc-sep1-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Sep1.val1|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.Sep1.val2|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.Sep1.val3|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Sep1.val1|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.Sep1.val2|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.Sep1.val3|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Sep1
 <a href="#struct-sep1"></a>
@@ -3678,13 +3711,13 @@ struct Sep1 { // atf_amc.Sep1: Check printing/reading of types with separators
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.Seqmsg.msghdr|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.Seqmsg.payload|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Opt](/txt/exe/amc/reftype.md#opt)||Message header for the payload|
+|atf_amc.Seqmsg.payload|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Opt](/txt/exe/amc/reftype/Opt.md)||Message header for the payload|
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct Seqmsg
 <a href="#struct-seqmsg"></a>
@@ -3707,8 +3740,8 @@ struct Seqmsg { // atf_amc.Seqmsg: Sequenced message for stream
 <a href="#atf_amc-sortedstr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.SortedStr.novs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.SortedStr.vs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.SortedStr.novs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.SortedStr.vs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct SortedStr
 <a href="#struct-sortedstr"></a>
@@ -3743,7 +3776,7 @@ struct SortedStr { // atf_amc.SortedStr
 <a href="#atf_amc-sslbuf-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Sslbuf.out|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)||Outbound byte buffer over TLS|
+|atf_amc.Sslbuf.out|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)||Outbound byte buffer over TLS|
 
 #### Struct Sslbuf
 <a href="#struct-sslbuf"></a>
@@ -3785,7 +3818,7 @@ struct Sslbuf { // atf_amc.Sslbuf: TLS write-buffer fixture
 <a href="#atf_amc-strkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Strkey.strkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Strkey.strkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Strkey
 <a href="#struct-strkey"></a>
@@ -3818,7 +3851,7 @@ private:
 <a href="#atf_amc-taryu32-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TaryU32.tary_u32|u32|[Tary](/txt/exe/amc/reftype.md#tary)|44||
+|atf_amc.TaryU32.tary_u32|u32|[Tary](/txt/exe/amc/reftype/Tary.md)|44||
 
 #### Struct TaryU32
 <a href="#struct-taryu32"></a>
@@ -3851,7 +3884,7 @@ struct TaryU32 { // atf_amc.TaryU32
 <a href="#atf_amc-taryu8-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TaryU8.ary|u8|[Tary](/txt/exe/amc/reftype.md#tary)|44||
+|atf_amc.TaryU8.ary|u8|[Tary](/txt/exe/amc/reftype/Tary.md)|44||
 
 #### Struct TaryU8
 <a href="#struct-taryu8"></a>
@@ -3884,7 +3917,7 @@ struct TaryU8 { // atf_amc.TaryU8
 <a href="#atf_amc-testregx1-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TestRegx1.val|[dev.Target](/txt/ssimdb/dev/target.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|||
+|atf_amc.TestRegx1.val|[dev.Target](/txt/ssimdb/dev/target.md)|[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|||
 
 #### Struct TestRegx1
 <a href="#struct-testregx1"></a>
@@ -3923,13 +3956,13 @@ struct TestType { // atf_amc.TestType
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.Text.msghdr|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.Text.text|char|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.Text.text|char|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct Text
 <a href="#struct-text"></a>
@@ -3952,8 +3985,8 @@ struct Text { // atf_amc.Text
 <a href="#atf_amc-typeb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeB.typea|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|atf_amc.TypeB.j|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeB.typea|[atf_amc.TypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-typea)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|atf_amc.TypeB.j|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeB
 <a href="#struct-typeb"></a>
@@ -3986,7 +4019,7 @@ struct TypeB { // atf_amc.TypeB
 <a href="#atf_amc-typebe16-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeBE16.value|u16|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeBE16.value|u16|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeBE16
 <a href="#struct-typebe16"></a>
@@ -4006,7 +4039,7 @@ struct TypeBE16 { // atf_amc.TypeBE16
 <a href="#atf_amc-typebe32-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeBE32.value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeBE32.value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeBE32
 <a href="#struct-typebe32"></a>
@@ -4026,7 +4059,7 @@ struct TypeBE32 { // atf_amc.TypeBE32
 <a href="#atf_amc-typebe32en-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeBE32en.value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeBE32en.value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeBE32en
 <a href="#struct-typebe32en"></a>
@@ -4052,7 +4085,7 @@ struct TypeBE32en { // atf_amc.TypeBE32en
 <a href="#atf_amc-typebe64-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeBE64.value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeBE64.value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeBE64
 <a href="#struct-typebe64"></a>
@@ -4088,7 +4121,7 @@ struct TypeBE64 { // atf_amc.TypeBE64
 <a href="#atf_amc-typebe64dflt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeBE64dflt.value|u64|[Val](/txt/exe/amc/reftype.md#val)|0xfedcba9876543210||
+|atf_amc.TypeBE64dflt.value|u64|[Val](/txt/exe/amc/reftype/Val.md)|0xfedcba9876543210||
 
 #### Struct TypeBE64dflt
 <a href="#struct-typebe64dflt"></a>
@@ -4112,15 +4145,15 @@ struct TypeBE64dflt { // atf_amc.TypeBE64dflt
 <a href="#atf_amc-typebe64sf-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeBE64sf.value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.TypeBE64sf.bit63|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.TypeBE64sf.bits62_61|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.TypeBE64sf.bits60_58|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.TypeBE64sf.bits57_53|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.TypeBE64sf.bits52_45|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.TypeBE64sf.bits44_32|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.TypeBE64sf.bits31_11|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
-|atf_amc.TypeBE64sf.bits10_0|u64|[Bitfld](/txt/exe/amc/reftype.md#bitfld)|||
+|atf_amc.TypeBE64sf.value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.TypeBE64sf.bit63|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.TypeBE64sf.bits62_61|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.TypeBE64sf.bits60_58|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.TypeBE64sf.bits57_53|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.TypeBE64sf.bits52_45|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.TypeBE64sf.bits44_32|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.TypeBE64sf.bits31_11|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
+|atf_amc.TypeBE64sf.bits10_0|u64|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|||
 
 #### Struct TypeBE64sf
 <a href="#struct-typebe64sf"></a>
@@ -4140,7 +4173,7 @@ struct TypeBE64sf { // atf_amc.TypeBE64sf
 <a href="#atf_amc-typec-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeC.typec|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeC.typec|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeC
 <a href="#struct-typec"></a>
@@ -4172,7 +4205,7 @@ struct TypeC { // atf_amc.TypeC
 <a href="#atf_amc-typeh-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeH.typeh|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeH.typeh|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeH
 <a href="#struct-typeh"></a>
@@ -4204,8 +4237,8 @@ struct TypeH { // atf_amc.TypeH
 <a href="#atf_amc-types-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeS.types|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.TypeS.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeS.types|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.TypeS.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeS
 <a href="#struct-types"></a>
@@ -4226,8 +4259,8 @@ struct TypeS { // atf_amc.TypeS
 <a href="#atf_amc-typet-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeT.types|[atf_amc.TypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-types)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|atf_amc.TypeT.j|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeT.types|[atf_amc.TypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-types)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|atf_amc.TypeT.j|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeT
 <a href="#struct-typet"></a>
@@ -4248,8 +4281,8 @@ struct TypeT { // atf_amc.TypeT: Refers to TypeS
 <a href="#atf_amc-typetval-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeTVal.types|[atf_amc.TypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-types)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.TypeTVal.j|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeTVal.types|[atf_amc.TypeS](/txt/gen/atf_amc/atf_amc.md#atf_amc-types)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.TypeTVal.j|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeTVal
 <a href="#struct-typetval"></a>
@@ -4270,8 +4303,8 @@ struct TypeTVal { // atf_amc.TypeTVal: Refers to TypeS as Val
 <a href="#atf_amc-typeu-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.TypeU.u|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.TypeU.v|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.TypeU.u|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.TypeU.v|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeU
 <a href="#struct-typeu"></a>
@@ -4292,7 +4325,7 @@ struct TypeU { // atf_amc.TypeU: Update target: a keyed row with a value and a s
 <a href="#atf_amc-typefconst-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.Typefconst.value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_amc.Typefconst.value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Typefconst
 <a href="#struct-typefconst"></a>
@@ -4318,7 +4351,7 @@ struct Typefconst { // atf_amc.Typefconst
 <a href="#atf_amc-upptrlt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.UpptrLt.p_typea|[atf_amc.FTypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypea)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Pointer whose address is the sort key|
+|atf_amc.UpptrLt.p_typea|[atf_amc.FTypeA](/txt/gen/atf_amc/atf_amc.md#atf_amc-ftypea)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Pointer whose address is the sort key|
 
 #### Struct UpptrLt
 <a href="#struct-upptrlt"></a>
@@ -4351,15 +4384,15 @@ struct UpptrLt { // atf_amc.UpptrLt: Ordered ctype whose single field is an Uppt
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.Varlen2Msg.base|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.Varlen2Msg.s1|char|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
-|atf_amc.Varlen2Msg.s2|char|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
-|atf_amc.Varlen2Msg.s3|char|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.Varlen2Msg.s1|char|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
+|atf_amc.Varlen2Msg.s2|char|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
+|atf_amc.Varlen2Msg.s3|char|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct Varlen2Msg
 <a href="#struct-varlen2msg"></a>
@@ -4387,15 +4420,15 @@ struct Varlen2Msg { // atf_amc.Varlen2Msg
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.Varlen2aMsg.base|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.Varlen2aMsg.u1|u32|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
-|atf_amc.Varlen2aMsg.u2|u32|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
-|atf_amc.Varlen2aMsg.u3|u32|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.Varlen2aMsg.u1|u32|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
+|atf_amc.Varlen2aMsg.u2|u32|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
+|atf_amc.Varlen2aMsg.u3|u32|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct Varlen2aMsg
 <a href="#struct-varlen2amsg"></a>
@@ -4423,15 +4456,15 @@ struct Varlen2aMsg { // atf_amc.Varlen2aMsg
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.Varlen2mMsg.base|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.Varlen2mMsg.m1|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
-|atf_amc.Varlen2mMsg.m2|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
-|atf_amc.Varlen2mMsg.m3|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.Varlen2mMsg.m1|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
+|atf_amc.Varlen2mMsg.m2|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
+|atf_amc.Varlen2mMsg.m3|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct Varlen2mMsg
 <a href="#struct-varlen2mmsg"></a>
@@ -4458,8 +4491,8 @@ struct Varlen2mMsg { // atf_amc.Varlen2mMsg
 <a href="#atf_amc-varlenk-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenK.length|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.VarlenK.i|u32|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenK.length|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.VarlenK.i|u32|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenK
 <a href="#struct-varlenk"></a>
@@ -4482,15 +4515,15 @@ struct VarlenK { // atf_amc.VarlenK: An optional instance of atf_unit.A
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.Varlen2vMsg.base|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.Varlen2vMsg.v1|[atf_amc.VarlenK](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenk)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
-|atf_amc.Varlen2vMsg.v2|[atf_amc.VarlenK](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenk)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
-|atf_amc.Varlen2vMsg.v3|[atf_amc.VarlenK](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenk)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.Varlen2vMsg.v1|[atf_amc.VarlenK](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenk)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
+|atf_amc.Varlen2vMsg.v2|[atf_amc.VarlenK](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenk)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
+|atf_amc.Varlen2vMsg.v3|[atf_amc.VarlenK](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenk)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct Varlen2vMsg
 <a href="#struct-varlen2vmsg"></a>
@@ -4517,8 +4550,8 @@ struct Varlen2vMsg { // atf_amc.Varlen2vMsg
 <a href="#atf_amc-varlenalloc-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenAlloc.length|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.VarlenAlloc.elem|i32|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenAlloc.length|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.VarlenAlloc.elem|i32|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenAlloc
 <a href="#struct-varlenalloc"></a>
@@ -4548,8 +4581,8 @@ private:
 <a href="#atf_amc-varlenallocscale-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenAllocScale.length|u32|[Val](/txt/exe/amc/reftype.md#val)||Number of 4-byte varlen words (total = length*4 + 4)|
-|atf_amc.VarlenAllocScale.elem|i32|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenAllocScale.length|u32|[Val](/txt/exe/amc/reftype/Val.md)||Number of 4-byte varlen words (total = length*4 + 4)|
+|atf_amc.VarlenAllocScale.elem|i32|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenAllocScale
 <a href="#struct-varlenallocscale"></a>
@@ -4579,9 +4612,9 @@ private:
 <a href="#atf_amc-varlenallocu64-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenAllocU64.length|u64|[Val](/txt/exe/amc/reftype.md#val)||Total frame byte count|
-|atf_amc.VarlenAllocU64.a|char|[Varlen](/txt/exe/amc/reftype.md#varlen)||First varlen tail; its end offset rides a u64 end word|
-|atf_amc.VarlenAllocU64.b|char|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenAllocU64.length|u64|[Val](/txt/exe/amc/reftype/Val.md)||Total frame byte count|
+|atf_amc.VarlenAllocU64.a|char|[Varlen](/txt/exe/amc/reftype/Varlen.md)||First varlen tail; its end offset rides a u64 end word|
+|atf_amc.VarlenAllocU64.b|char|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenAllocU64
 <a href="#struct-varlenallocu64"></a>
@@ -4605,8 +4638,8 @@ struct VarlenAllocU64 { // atf_amc.VarlenAllocU64: Varlen record whose lenfld is
 <a href="#atf_amc-varlenallocu8-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenAllocU8.length|u8|[Val](/txt/exe/amc/reftype.md#val)||Total frame byte count|
-|atf_amc.VarlenAllocU8.elem|u8|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenAllocU8.length|u8|[Val](/txt/exe/amc/reftype/Val.md)||Total frame byte count|
+|atf_amc.VarlenAllocU8.elem|u8|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenAllocU8
 <a href="#struct-varlenallocu8"></a>
@@ -4629,13 +4662,13 @@ struct VarlenAllocU8 { // atf_amc.VarlenAllocU8: Varlen record whose lenfld is a
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.VarlenBMsg.base|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.VarlenBMsg.b|[atf_amc.VarlenB](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenb)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenBMsg.b|[atf_amc.VarlenB](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenb)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct VarlenBMsg
 <a href="#struct-varlenbmsg"></a>
@@ -4658,9 +4691,9 @@ struct VarlenBMsg { // atf_amc.VarlenBMsg: Message whose Varlen element bytes ma
 <a href="#atf_amc-varlenextern-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenExtern.length|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.VarlenExtern.n_elems|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.VarlenExtern.varlen|u32|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenExtern.length|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.VarlenExtern.n_elems|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.VarlenExtern.varlen|u32|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenExtern
 <a href="#struct-varlenextern"></a>
@@ -4690,8 +4723,8 @@ private:
 <a href="#atf_amc-varlenh-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenH.length|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_amc.VarlenH.typeh|[atf_amc.TypeH](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeh)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenH.length|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_amc.VarlenH.typeh|[atf_amc.TypeH](/txt/gen/atf_amc/atf_amc.md#atf_amc-typeh)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenH
 <a href="#struct-varlenh"></a>
@@ -4712,8 +4745,8 @@ struct VarlenH { // atf_amc.VarlenH
 <a href="#atf_amc-varlenlow-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenLow.length|u8|[Val](/txt/exe/amc/reftype.md#val)||Frame total minus 8 (extra:-8): a total below 8 has no length word|
-|atf_amc.VarlenLow.c|char|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenLow.length|u8|[Val](/txt/exe/amc/reftype/Val.md)||Frame total minus 8 (extra:-8): a total below 8 has no length word|
+|atf_amc.VarlenLow.c|char|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenLow
 <a href="#struct-varlenlow"></a>
@@ -4735,13 +4768,13 @@ struct VarlenLow { // atf_amc.VarlenLow: Varlen element whose lenfld extra excee
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.VarlenMsg.base|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.VarlenMsg.k|[atf_amc.VarlenK](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenk)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenMsg.k|[atf_amc.VarlenK](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenk)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct VarlenMsg
 <a href="#struct-varlenmsg"></a>
@@ -4764,8 +4797,8 @@ struct VarlenMsg { // atf_amc.VarlenMsg
 <a href="#atf_amc-varlenw-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VarlenW.length|u32|[Val](/txt/exe/amc/reftype.md#val)||Number of 4-byte varlen words (total = length*4 + 4)|
-|atf_amc.VarlenW.i|u32|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenW.length|u32|[Val](/txt/exe/amc/reftype/Val.md)||Number of 4-byte varlen words (total = length*4 + 4)|
+|atf_amc.VarlenW.i|u32|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct VarlenW
 <a href="#struct-varlenw"></a>
@@ -4788,13 +4821,13 @@ struct VarlenW { // atf_amc.VarlenW: Varlen element whose lenfld scale/extra dif
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.VarlenVMsg.base|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.VarlenVMsg.w|[atf_amc.VarlenW](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenw)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenVMsg.w|[atf_amc.VarlenW](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenw)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct VarlenVMsg
 <a href="#struct-varlenvmsg"></a>
@@ -4818,13 +4851,13 @@ struct VarlenVMsg { // atf_amc.VarlenVMsg: Message whose Varlen field has a one-
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_amc.VarlenWMsg.base|[atf_amc.MsgHeader](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgheader)|[Base](#atf_amc-msgheader-fields)|||
-|atf_amc.VarlenWMsg.word|[atf_amc.VarlenW](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenw)|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_amc.VarlenWMsg.word|[atf_amc.VarlenW](/txt/gen/atf_amc/atf_amc.md#atf_amc-varlenw)|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 #### atf_amc.MsgHeader Fields
 <a href="#atf_amc-msgheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype.md#val)||Message type|
-|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype.md#val)||Total message length, including this header|
+|atf_amc.MsgHeader.type|[atf_amc.MsgType](/txt/gen/atf_amc/atf_amc.md#atf_amc-msgtype)|[Val](/txt/exe/amc/reftype/Val.md)||Message type|
+|atf_amc.MsgHeader.length|[atf_amc.MsgLength](/txt/gen/atf_amc/atf_amc.md#atf_amc-msglength)|[Val](/txt/exe/amc/reftype/Val.md)||Total message length, including this header|
 
 #### Struct VarlenWMsg
 <a href="#struct-varlenwmsg"></a>
@@ -4847,7 +4880,7 @@ struct VarlenWMsg { // atf_amc.VarlenWMsg: Message whose Varlen elements carry a
 <a href="#atf_amc-vsortstr9-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_amc.VsortStr9.ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|atf_amc.VsortStr9.ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### Struct VsortStr9
 <a href="#struct-vsortstr9"></a>

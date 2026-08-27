@@ -154,7 +154,9 @@ void ws::Disconnect_To_lib_ws_Reason(ws::Disconnect& rhs, lib_ws::Reason& lhs) {
         default:                      lhs.code = lib_ws_Reason_code_other;      break;
     }
 }
-void ws::Disconnect_From_lib_ws_Reason(const lib_ws::Reason& rhs, ws::Disconnect& lhs) { … }
+void ws::Disconnect_From_lib_ws_Reason(const lib_ws::Reason& rhs, ws::Disconnect& lhs) {
+    // the same switch, read right to left
+}
 ```
 
 Calls in user code:

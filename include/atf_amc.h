@@ -499,6 +499,23 @@ namespace atf_amc { // update-hdr
     // would be served only 8K of memory.
     // void amctest_fbuf_lpool_free(); // gstatic/atfdb.amctest:fbuf_lpool_free
 
+    // A datagram buffer walks the whole messages one datagram packed, in order.
+    // void amctest_dgrambuf_walk(); // gstatic/atfdb.amctest:dgrambuf_walk
+
+    // A length the datagram cannot satisfy ends the datagram and raises no eof.
+    //
+    // This is the property the whole datagram framing exists for.  A stream framer
+    // answers an unframeable length by setting eof, which for a datagram socket is
+    // a lie -- there is no end of input -- and it strands the bad header at the
+    // buffer's start, where it is re-scanned forever.  A datagram buffer reports no
+    // message and leaves eof alone, so the next refill drops the bad bytes with the
+    // datagram they came in and the interface keeps serving.
+    // void amctest_dgrambuf_badlen(); // gstatic/atfdb.amctest:dgrambuf_badlen
+
+    // A message whose declared length runs past the datagram is not returned, and
+    // it too raises no eof: the bytes are a truncated tail, not an error.
+    // void amctest_dgrambuf_overrun(); // gstatic/atfdb.amctest:dgrambuf_overrun
+
     // -------------------------------------------------------------------
     // cpp/atf_amc/fcond.cpp
     //
@@ -572,6 +589,23 @@ namespace atf_amc { // update-hdr
     // void amctest_fstep_Inline(); // gstatic/atfdb.amctest:fstep_Inline
     // void amctest_fstep_InlineOnce(); // gstatic/atfdb.amctest:fstep_InlineOnce
     // void amctest_fstep_InlineRecur(); // gstatic/atfdb.amctest:fstep_InlineRecur
+
+    // Check that a TimeHookRecur keeps calling its callback, and never faster than
+    // the period it was given.
+    //
+    // How many times it fires in a window measures the platform's sleep as much as
+    // it measures this mechanism.  bh_timehook_Step reschedules the hook from the
+    // loop's own clock rather than from the deadline it just met, so the period is a
+    // floor: a cycle that returns late pushes the next firing out by however late it
+    // was, and the rate that results is whatever nanosleep manages.  A tenth of a
+    // second at a hundredth-second period fires ten times on Linux and three times
+    // on a macOS runner, and neither of those is the mechanism misbehaving.
+    //
+    // So the window is a whole second, long enough that even a coarse sleep leaves
+    // plenty of firings, and the two bounds state what the mechanism does promise.
+    // It keeps firing, which a count of five will not reach if recurrence stops
+    // after the first call.  And it never outruns its period, which is a hundred
+    // firings in the window plus the immediate one at the start.
     // void amctest_fstep_TimeHookRecur(); // gstatic/atfdb.amctest:fstep_TimeHookRecur
     // void bh_time_entry_Step(); // fstep:atf_amc.FDb.bh_time_entry
     // void amctest_fstep_TimeHookOnce(); // gstatic/atfdb.amctest:fstep_TimeHookOnce

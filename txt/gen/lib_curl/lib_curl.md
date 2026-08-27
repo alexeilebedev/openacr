@@ -1,6 +1,21 @@
 ## lib_curl - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_curl - covers curl_easy](/txt/lib/lib_curl/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -75,17 +90,17 @@ All allocations are done through global `lib_curl::_db` [lib_curl.FDb](#lib_curl
 <a href="#lib_curl-frequest-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_curl.FRequest.method|[httpdb.Method](/txt/ssimdb/httpdb/method.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|"GET"|HTTP verb: GET, POST, PUT, PATCH, DELETE|
-|lib_curl.FRequest.curlrc_only|bool|[Val](/txt/exe/amc/reftype.md#val)||Generate curlrc info, do not call curl|
-|lib_curl.FRequest.url|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Absolute URL (e.g., https://api.example.com/v1/data)|
-|lib_curl.FRequest.headers|[algo.cstring](/txt/protocol/algo/cstring.md)|[Lary](/txt/exe/amc/reftype.md#lary)||Arbitrary headers: "Authorization: Bearer ...", "Content-Type: ..."|
-|lib_curl.FRequest.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Optional request body (sent as-is, often JSON string)|
-|lib_curl.FRequest.insecure_tls|bool|[Val](/txt/exe/amc/reftype.md#val)||Skip TLS verification if true|
-|lib_curl.FRequest.connect_timeout_sec|u32|[Val](/txt/exe/amc/reftype.md#val)|5|connect_timeout_sec|
-|lib_curl.FRequest.total_timeout_sec|u32|[Val](/txt/exe/amc/reftype.md#val)|120|Total request timeout (s)|
-|lib_curl.FRequest.aws_sigv4|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|AWS SigV4 scope (aws:amz:<region>:<service>); empty = no SigV4 signing|
-|lib_curl.FRequest.username|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Basic auth / AWS access key id (with aws_sigv4)|
-|lib_curl.FRequest.password|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Basic auth / AWS secret access key (with aws_sigv4)|
+|lib_curl.FRequest.method|[httpdb.Method](/txt/ssimdb/httpdb/method.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|"GET"|HTTP verb: GET, POST, PUT, PATCH, DELETE|
+|lib_curl.FRequest.curlrc_only|bool|[Val](/txt/exe/amc/reftype/Val.md)||Generate curlrc info, do not call curl|
+|lib_curl.FRequest.url|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Absolute URL (e.g., https://api.example.com/v1/data)|
+|lib_curl.FRequest.headers|[algo.cstring](/txt/protocol/algo/cstring.md)|[Lary](/txt/exe/amc/reftype/Lary.md)||Arbitrary headers: "Authorization: Bearer ...", "Content-Type: ..."|
+|lib_curl.FRequest.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Optional request body (sent as-is, often JSON string)|
+|lib_curl.FRequest.insecure_tls|bool|[Val](/txt/exe/amc/reftype/Val.md)||Skip TLS verification if true|
+|lib_curl.FRequest.connect_timeout_sec|u32|[Val](/txt/exe/amc/reftype/Val.md)|5|connect_timeout_sec|
+|lib_curl.FRequest.total_timeout_sec|u32|[Val](/txt/exe/amc/reftype/Val.md)|120|Total request timeout (s)|
+|lib_curl.FRequest.aws_sigv4|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|AWS SigV4 scope (aws:amz:<region>:<service>); empty = no SigV4 signing|
+|lib_curl.FRequest.username|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Basic auth / AWS access key id (with aws_sigv4)|
+|lib_curl.FRequest.password|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Basic auth / AWS secret access key (with aws_sigv4)|
 
 #### Struct FRequest
 <a href="#struct-frequest"></a>
@@ -118,13 +133,13 @@ struct FRequest { // lib_curl.FRequest: curl request structure
 <a href="#lib_curl-fresponse-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_curl.FResponse.code|u16|[Val](/txt/exe/amc/reftype.md#val)||HTTP status code|
-|lib_curl.FResponse.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||raw response body|
-|lib_curl.FResponse.content_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||parsed Content-Type (no params)|
-|lib_curl.FResponse.status_line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||e.g., HTTP/1.1 200 OK|
-|lib_curl.FResponse.reason|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||parsed reason phrase, if available|
-|lib_curl.FResponse.headers|[algo.cstring](/txt/protocol/algo/cstring.md)|[Lary](/txt/exe/amc/reftype.md#lary)||raw header lines (trimmed)|
-|lib_curl.FResponse.curlrc|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||curlrc content|
+|lib_curl.FResponse.code|u16|[Val](/txt/exe/amc/reftype/Val.md)||HTTP status code|
+|lib_curl.FResponse.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||raw response body|
+|lib_curl.FResponse.content_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||parsed Content-Type (no params)|
+|lib_curl.FResponse.status_line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||e.g., HTTP/1.1 200 OK|
+|lib_curl.FResponse.reason|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||parsed reason phrase, if available|
+|lib_curl.FResponse.headers|[algo.cstring](/txt/protocol/algo/cstring.md)|[Lary](/txt/exe/amc/reftype/Lary.md)||raw header lines (trimmed)|
+|lib_curl.FResponse.curlrc|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||curlrc content|
 
 #### Struct FResponse
 <a href="#struct-fresponse"></a>
@@ -153,11 +168,11 @@ struct FResponse { // lib_curl.FResponse: curl response structure
 <a href="#lib_curl-fcall-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_curl.FCall.req|[lib_curl.FRequest](/txt/gen/lib_curl/lib_curl.md#lib_curl-frequest)|[Val](/txt/exe/amc/reftype.md#val)||What to send|
-|lib_curl.FCall.resp|[lib_curl.FResponse](/txt/gen/lib_curl/lib_curl.md#lib_curl-fresponse)|[Val](/txt/exe/amc/reftype.md#val)||What came back|
-|lib_curl.FCall.hdrs|u64|[Val](/txt/exe/amc/reftype.md#val)|0|curl_slist of request headers, freed at completion|
-|lib_curl.FCall.err|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Transport error text; empty when the exchange completed|
-|lib_curl.FCall.done|[lib_curl.FCall](/txt/gen/lib_curl/lib_curl.md#lib_curl-fcall)|[Hook](/txt/exe/amc/reftype.md#hook)||Fired once, when the exchange completes or fails|
+|lib_curl.FCall.req|[lib_curl.FRequest](/txt/gen/lib_curl/lib_curl.md#lib_curl-frequest)|[Val](/txt/exe/amc/reftype/Val.md)||What to send|
+|lib_curl.FCall.resp|[lib_curl.FResponse](/txt/gen/lib_curl/lib_curl.md#lib_curl-fresponse)|[Val](/txt/exe/amc/reftype/Val.md)||What came back|
+|lib_curl.FCall.hdrs|u64|[Val](/txt/exe/amc/reftype/Val.md)|0|curl_slist of request headers, freed at completion|
+|lib_curl.FCall.err|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Transport error text; empty when the exchange completed|
+|lib_curl.FCall.done|[lib_curl.FCall](/txt/gen/lib_curl/lib_curl.md#lib_curl-fcall)|[Hook](/txt/exe/amc/reftype/Hook.md)||Fired once, when the exchange completes or fails|
 
 #### Struct FCall
 <a href="#struct-fcall"></a>
@@ -187,13 +202,13 @@ private:
 <a href="#lib_curl-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_curl.FDb._db|[lib_curl.FDb](/txt/gen/lib_curl/lib_curl.md#lib_curl-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_curl.FDb.curl|u64|[Val](/txt/exe/amc/reftype.md#val)|0|persistent curl easy handle; keeps the connection cache across requests|
-|lib_curl.FDb.call|[lib_curl.FCall](/txt/gen/lib_curl/lib_curl.md#lib_curl-fcall)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|lib_curl.FDb.sock|[lib_curl.FSock](/txt/gen/lib_curl/lib_curl.md#lib_curl-fsock)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|lib_curl.FDb.curlm|u64|[Val](/txt/exe/amc/reftype.md#val)|0|curl multi handle driving every asynchronous exchange|
-|lib_curl.FDb.th_curl|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftype.md#val)||Fires when curl's own timeout expires|
-|lib_curl.FDb.zd_sock_free|[lib_curl.FSock](/txt/gen/lib_curl/lib_curl.md#lib_curl-fsock)|[Llist](/txt/exe/amc/reftype.md#llist)||Socket rows curl no longer watches, kept for reuse|
+|lib_curl.FDb._db|[lib_curl.FDb](/txt/gen/lib_curl/lib_curl.md#lib_curl-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_curl.FDb.curl|u64|[Val](/txt/exe/amc/reftype/Val.md)|0|persistent curl easy handle; keeps the connection cache across requests|
+|lib_curl.FDb.call|[lib_curl.FCall](/txt/gen/lib_curl/lib_curl.md#lib_curl-fcall)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|lib_curl.FDb.sock|[lib_curl.FSock](/txt/gen/lib_curl/lib_curl.md#lib_curl-fsock)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|lib_curl.FDb.curlm|u64|[Val](/txt/exe/amc/reftype/Val.md)|0|curl multi handle driving every asynchronous exchange|
+|lib_curl.FDb.th_curl|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftype/Val.md)||Fires when curl's own timeout expires|
+|lib_curl.FDb.zd_sock_free|[lib_curl.FSock](/txt/gen/lib_curl/lib_curl.md#lib_curl-fsock)|[Llist](/txt/exe/amc/reftype/Llist.md)||Socket rows curl no longer watches, kept for reuse|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -221,7 +236,7 @@ struct FDb { // lib_curl.FDb
 <a href="#lib_curl-fsock-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_curl.FSock.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Val](/txt/exe/amc/reftype.md#val)||Epoll registration for the socket curl owns|
+|lib_curl.FSock.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Val](/txt/exe/amc/reftype/Val.md)||Epoll registration for the socket curl owns|
 
 #### Struct FSock
 <a href="#struct-fsock"></a>

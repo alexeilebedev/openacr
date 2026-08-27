@@ -3,11 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
-* [Tests](#tests)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -50,10 +52,10 @@ All allocations are done through global `aqlite::_db` [aqlite.FDb](#aqlite-fdb) 
 <a href="#aqlite-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|aqlite.FDb._db|[aqlite.FDb](/txt/gen/aqlite/aqlite.md#aqlite-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|aqlite.FDb.cmdline|[command.aqlite](/txt/protocol/command/README.md#command-aqlite)|[Val](/txt/exe/amc/reftype.md#val)|||
-|aqlite.FDb.last_cols|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|aqlite.FDb.stmt|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|aqlite.FDb._db|[aqlite.FDb](/txt/gen/aqlite/aqlite.md#aqlite-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|aqlite.FDb.cmdline|[command.aqlite](/txt/protocol/command/README.md#command-aqlite)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|aqlite.FDb.last_cols|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|aqlite.FDb.stmt|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

@@ -81,7 +81,30 @@ namespace apm { // update-hdr
     // package nobody asked for. The failure is reported here, naming the sandbox and
     // the ref, and the status is returned for the caller to act on.
     int CreatePackageSandbox(algo::strptr sandbox_name, algo::strptr baseref);
-    tempstr FetchPackageOrigin(algo::strptr origin, algo::strptr ref);
+
+    // Return the commit REV names, or the empty string when it names nothing here.
+    // Rev-parse is quiet and verifying, so an unknown name is an empty answer
+    // rather than a message on stderr the caller has no use for.
+    tempstr RevParseMaybe(algo::strptr rev);
+
+    // Bring PACKAGE's origin into this repo and resolve REF to a commit id there.
+    // Return the commit, or the empty string when the origin cannot be reached or
+    // REF names nothing in it.
+    //
+    // A baseref has to survive being written down, so it is a commit id rather than
+    // a branch name.  But `git fetch <origin> <commit>` fails: both the local
+    // transport and an ordinary server match a refspec by name against the refs the
+    // origin advertises, and a commit id is not one of them.  Fetching a stored
+    // baseref directly therefore dies with "couldn't find remote ref" on the one
+    // value the field is supposed to hold.
+    //
+    // The origin's heads come across as a set instead, into a ref namespace of this
+    // package's own, and REF is resolved locally afterwards.  Any commit an origin
+    // branch reaches is then in this repo's object store and rev-parse finds it, so
+    // a commit id, a branch name and HEAD all resolve through one path.  The
+    // namespace is consulted before the repo, because REF names something in the
+    // origin and a local branch of the same spelling is a different commit.
+    tempstr FetchPackageOrigin(algo::strptr pkgname, algo::strptr origin, algo::strptr ref);
 
     // Execute any commands accumulated in _DB.SCRIPT
     // if -dry_run, print it to the screen
@@ -150,6 +173,31 @@ namespace apm { // update-hdr
     // This structure allows full analysis of package composition and checking
     void LoadRecs();
 
+    // Whether PKGKEY names REC outright, rather than matching it.
+    // A pkgkey and a record are spelled the same way, `<ssimfile>:<pkey>`, so the
+    // test is that the two strings agree and that the key holds no pattern.
+    // Reaching a record through the reference closure of a literal key does not
+    // count: `dmmeta.ns:abt_md` names a namespace and nothing else, whatever its
+    // closure goes on to visit.
+    bool NamesRecQ(apm::FPkgkey &pkgkey, apm::FRec &rec);
+
+    // Remove from PACKAGE every pkgrec whose record is currently in zd_selrec.
+    // With KEEP_LITERAL, a record the package names outright is kept.
+    //
+    // The two callers want opposite things of a record both a package and one of
+    // its extenders capture.  An exclusion key is the package's own statement that
+    // the record is not its, so it removes whatever it matches.  The subtraction a
+    // relation derives is a statement about the extender instead, and the extender
+    // reaches records it never meant to claim: a downstream package asks for one of
+    // its own tables, the reference closure follows those rows into a table the base
+    // owns, and the base's rows would leave with them.  Naming a record outright is
+    // how a package says the record is its regardless, so that claim survives, and a
+    // blanket like `dev.%:%` does not.
+    //
+    // The walk is by hand rather than by cursor because it deletes the rows it
+    // visits, and a cursor over a list may not outlive the removal of its own node.
+    void DropSelectedPkgrec(apm::FPackage &package, bool keep_literal = false);
+
     // Select records belonging to package PACKAGE by adding them to zd_selrec.
     // These are all the records that the package references via zd_pkgrec.
     void SelectPkgRecs(apm::FPackage &package);
@@ -169,6 +217,12 @@ namespace apm { // update-hdr
     // -------------------------------------------------------------------
     // cpp/apm/reset.cpp
     //
+
+    // Set the selected package's origin and baseref from the command line.
+    // A ref given with -ref is resolved against the origin before it is stored, so
+    // what lands in the record is a commit id.  Storing the name instead would let
+    // the origin move the branch afterwards, and the record would then describe a
+    // version this tree has never merged while still reading as the version it has.
     void Main_Reset();
 
     // -------------------------------------------------------------------

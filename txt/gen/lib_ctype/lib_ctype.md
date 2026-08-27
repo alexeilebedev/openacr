@@ -1,6 +1,21 @@
 ## lib_ctype - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_ctype - Helpful library for reading/writing ctypes as text tuples](/txt/lib/lib_ctype/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -191,7 +206,7 @@ All allocations are done through global `lib_ctype::_db` [lib_ctype.FDb](#lib_ct
 <a href="#lib_ctype-cmdline-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ctype.Cmdline.in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|"data"|Input directory or filename, - for stdin|
+|lib_ctype.Cmdline.in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|"data"|Input directory or filename, - for stdin|
 
 #### Struct Cmdline
 <a href="#struct-cmdline"></a>
@@ -362,12 +377,12 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_ctype.FCtype.msghdr|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|lib_ctype.FCtype.c_field|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|lib_ctype.FCtype.printfmt|[dmmeta.Printfmt](/txt/ssimdb/dmmeta/printfmt.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|lib_ctype.FCtype.c_cdflt|[lib_ctype.FCdflt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcdflt)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ctype.FCtype.c_cfmt|[lib_ctype.FCfmt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcfmt)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|lib_ctype.FCtype.c_bltin|[lib_ctype.FBltin](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fbltin)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ctype.FCtype.c_sqltype|[lib_ctype.FSqltype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsqltype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|lib_ctype.FCtype.c_field|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|lib_ctype.FCtype.printfmt|[dmmeta.Printfmt](/txt/ssimdb/dmmeta/printfmt.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|lib_ctype.FCtype.c_cdflt|[lib_ctype.FCdflt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcdflt)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ctype.FCtype.c_cfmt|[lib_ctype.FCfmt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcfmt)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|lib_ctype.FCtype.c_bltin|[lib_ctype.FBltin](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fbltin)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ctype.FCtype.c_sqltype|[lib_ctype.FSqltype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsqltype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -422,28 +437,28 @@ private:
 <a href="#lib_ctype-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ctype.FDb.fconst|[lib_ctype.FFconst](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffconst)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.ind_fconst_key|[lib_ctype.FFconst](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffconst)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_ctype.FDb.ind_fconst|[lib_ctype.FFconst](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffconst)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_ctype.FDb.ssimfile|[lib_ctype.FSsimfile](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.ind_ssimfile|[lib_ctype.FSsimfile](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_ctype.FDb.ftuple|[lib_ctype.FFtuple](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fftuple)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.ctype|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.ind_ctype|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_ctype.FDb.field|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.ind_field|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_ctype.FDb.cdflt|[lib_ctype.FCdflt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcdflt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb._db|[lib_ctype.FDb](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_ctype.FDb.cfmt|[lib_ctype.FCfmt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcfmt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.ind_cfmt|[lib_ctype.FCfmt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcfmt)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_ctype.FDb.cppfunc|[lib_ctype.FCppfunc](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcppfunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.substr|[lib_ctype.FSubstr](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsubstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.c_axprice|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ctype.FDb.c_fixmsg|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ctype.FDb.c_bool|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ctype.FDb.unstablefld|[lib_ctype.FUnstablefld](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-funstablefld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.bltin|[lib_ctype.FBltin](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fbltin)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ctype.FDb.sqltype|[lib_ctype.FSqltype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsqltype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|lib_ctype.FDb.fconst|[lib_ctype.FFconst](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffconst)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.ind_fconst_key|[lib_ctype.FFconst](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffconst)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_ctype.FDb.ind_fconst|[lib_ctype.FFconst](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffconst)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_ctype.FDb.ssimfile|[lib_ctype.FSsimfile](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.ind_ssimfile|[lib_ctype.FSsimfile](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_ctype.FDb.ftuple|[lib_ctype.FFtuple](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fftuple)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.ctype|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.ind_ctype|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_ctype.FDb.field|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.ind_field|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_ctype.FDb.cdflt|[lib_ctype.FCdflt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcdflt)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb._db|[lib_ctype.FDb](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_ctype.FDb.cfmt|[lib_ctype.FCfmt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcfmt)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.ind_cfmt|[lib_ctype.FCfmt](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcfmt)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_ctype.FDb.cppfunc|[lib_ctype.FCppfunc](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcppfunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.substr|[lib_ctype.FSubstr](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsubstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.c_axprice|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ctype.FDb.c_fixmsg|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ctype.FDb.c_bool|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ctype.FDb.unstablefld|[lib_ctype.FUnstablefld](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-funstablefld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.bltin|[lib_ctype.FBltin](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fbltin)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ctype.FDb.sqltype|[lib_ctype.FSqltype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsqltype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -507,7 +522,7 @@ struct FDb { // lib_ctype.FDb: In-memory database for lib_ctype
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_ctype.FFconst.msghdr|[dmmeta.Fconst](/txt/ssimdb/dmmeta/fconst.md)|[Base](/txt/ssimdb/dmmeta/fconst.md)|||
-|lib_ctype.FFconst.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_ctype.FFconst.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FFconst
 <a href="#struct-ffconst"></a>
@@ -549,16 +564,16 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_ctype.FField.msghdr|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|lib_ctype.FField.istuple_computed|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ctype.FField.c_ftuple|[lib_ctype.FFtuple](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fftuple)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ctype.FField.p_arg|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_ctype.FField.has_fconst|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ctype.FField.istuple|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ctype.FField.zd_fconst|[lib_ctype.FFconst](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffconst)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|lib_ctype.FField.c_cppfunc|[lib_ctype.FCppfunc](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcppfunc)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ctype.FField.c_substr|[lib_ctype.FSubstr](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsubstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ctype.FField.c_unstablefld|[lib_ctype.FUnstablefld](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-funstablefld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ctype.FField.c_substr_srcfield|[lib_ctype.FSubstr](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsubstr)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|lib_ctype.FField.istuple_computed|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ctype.FField.c_ftuple|[lib_ctype.FFtuple](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fftuple)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ctype.FField.p_arg|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_ctype.FField.has_fconst|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ctype.FField.istuple|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ctype.FField.zd_fconst|[lib_ctype.FFconst](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffconst)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|lib_ctype.FField.c_cppfunc|[lib_ctype.FCppfunc](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fcppfunc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ctype.FField.c_substr|[lib_ctype.FSubstr](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsubstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ctype.FField.c_unstablefld|[lib_ctype.FUnstablefld](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-funstablefld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ctype.FField.c_substr_srcfield|[lib_ctype.FSubstr](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsubstr)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -694,7 +709,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_ctype.FSsimfile.msghdr|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
-|lib_ctype.FSsimfile.p_ctype|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|lib_ctype.FSsimfile.p_ctype|[lib_ctype.FCtype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSsimfile
 <a href="#struct-fssimfile"></a>
@@ -733,7 +748,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_ctype.FSubstr.base|[dmmeta.Substr](/txt/ssimdb/dmmeta/substr.md)|[Base](/txt/ssimdb/dmmeta/substr.md)|||
-|lib_ctype.FSubstr.p_field|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|lib_ctype.FSubstr.p_field|[lib_ctype.FField](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSubstr
 <a href="#struct-fsubstr"></a>
@@ -806,12 +821,12 @@ private:
 <a href="#lib_ctype-match-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ctype.Match.distance|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Mismatch distance (0 = match)|
-|lib_ctype.Match.maxdist|i32|[Val](/txt/exe/amc/reftype.md#val)|1|Don't match beyond this distance|
-|lib_ctype.Match.nattr|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Number of attributes compared|
-|lib_ctype.Match.save_unmatched|bool|[Val](/txt/exe/amc/reftype.md#val)|false|If set, accumulate match errors in 'err'|
-|lib_ctype.Match.n_unmatched|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of unmatched tuples found|
-|lib_ctype.Match.err|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype.md#val)||List of errors (key:val format)|
+|lib_ctype.Match.distance|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Mismatch distance (0 = match)|
+|lib_ctype.Match.maxdist|i32|[Val](/txt/exe/amc/reftype/Val.md)|1|Don't match beyond this distance|
+|lib_ctype.Match.nattr|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Number of attributes compared|
+|lib_ctype.Match.save_unmatched|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|If set, accumulate match errors in 'err'|
+|lib_ctype.Match.n_unmatched|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of unmatched tuples found|
+|lib_ctype.Match.err|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype/Val.md)||List of errors (key:val format)|
 
 #### Struct Match
 <a href="#struct-match"></a>

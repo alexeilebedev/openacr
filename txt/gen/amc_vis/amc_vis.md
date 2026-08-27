@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -79,13 +81,13 @@ All allocations are done through global `amc_vis::_db` [amc_vis.FDb](#amc_vis-fd
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc_vis.FCtype.msghdr|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|amc_vis.FCtype.cpp_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||type name to use in c++|
-|amc_vis.FCtype.p_base|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc_vis.FCtype.c_field|[amc_vis.FField](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc_vis.FCtype.mm_id|i32|[Val](/txt/exe/amc/reftype.md#val)||Model matrix ID|
-|amc_vis.FCtype.isinput|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FCtype.userselect|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FCtype.color|u16|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc_vis.FCtype.cpp_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||type name to use in c++|
+|amc_vis.FCtype.p_base|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc_vis.FCtype.c_field|[amc_vis.FField](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc_vis.FCtype.mm_id|i32|[Val](/txt/exe/amc/reftype/Val.md)||Model matrix ID|
+|amc_vis.FCtype.isinput|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FCtype.userselect|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FCtype.color|u16|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -133,31 +135,31 @@ private:
 <a href="#amc_vis-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc_vis.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype.md#lpool)||private memory pool|
-|amc_vis.FDb.cmdline|[command.amc_vis](/txt/protocol/command/README.md#command-amc_vis)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FDb.ctype|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc_vis.FDb.field|[amc_vis.FField](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc_vis.FDb._db|[amc_vis.FDb](/txt/gen/amc_vis/amc_vis.md#amc_vis-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|amc_vis.FDb.ind_ctype|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc_vis.FDb.ind_field|[amc_vis.FField](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc_vis.FDb.node|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc_vis.FDb.ind_node|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc_vis.FDb.link|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc_vis.FDb.ind_link|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc_vis.FDb.linkdep|[amc_vis.FLinkdep](/txt/gen/amc_vis/amc_vis.md#amc_vis-flinkdep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc_vis.FDb.c_linklist|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc_vis.FDb.bh_node|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Bheap](/txt/exe/amc/reftype.md#bheap)||Heap of ctypes, used to compute columns|
-|amc_vis.FDb.bh_link|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Bheap](/txt/exe/amc/reftype.md#bheap)||Heap of links, used to place links|
-|amc_vis.FDb.reftype|[amc_vis.FReftype](/txt/gen/amc_vis/amc_vis.md#amc_vis-freftype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc_vis.FDb.ind_reftype|[amc_vis.FReftype](/txt/gen/amc_vis/amc_vis.md#amc_vis-freftype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc_vis.FDb.nodedep|[amc_vis.FNodedep](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnodedep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc_vis.FDb.outrow|[amc_vis.FOutrow](/txt/gen/amc_vis/amc_vis.md#amc_vis-foutrow)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc_vis.FDb.zd_select|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc_vis.FDb.finput|[amc_vis.FFinput](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffinput)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc_vis.FDb.term_hei|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FDb.term_wid|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FDb.usecolor|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FDb.hastty|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc_vis.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype/Lpool.md)||private memory pool|
+|amc_vis.FDb.cmdline|[command.amc_vis](/txt/protocol/command/README.md#command-amc_vis)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FDb.ctype|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc_vis.FDb.field|[amc_vis.FField](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc_vis.FDb._db|[amc_vis.FDb](/txt/gen/amc_vis/amc_vis.md#amc_vis-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|amc_vis.FDb.ind_ctype|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc_vis.FDb.ind_field|[amc_vis.FField](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc_vis.FDb.node|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc_vis.FDb.ind_node|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc_vis.FDb.link|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc_vis.FDb.ind_link|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc_vis.FDb.linkdep|[amc_vis.FLinkdep](/txt/gen/amc_vis/amc_vis.md#amc_vis-flinkdep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc_vis.FDb.c_linklist|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc_vis.FDb.bh_node|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Bheap](/txt/exe/amc/reftype/Bheap.md)||Heap of ctypes, used to compute columns|
+|amc_vis.FDb.bh_link|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Bheap](/txt/exe/amc/reftype/Bheap.md)||Heap of links, used to place links|
+|amc_vis.FDb.reftype|[amc_vis.FReftype](/txt/gen/amc_vis/amc_vis.md#amc_vis-freftype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc_vis.FDb.ind_reftype|[amc_vis.FReftype](/txt/gen/amc_vis/amc_vis.md#amc_vis-freftype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc_vis.FDb.nodedep|[amc_vis.FNodedep](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnodedep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc_vis.FDb.outrow|[amc_vis.FOutrow](/txt/gen/amc_vis/amc_vis.md#amc_vis-foutrow)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc_vis.FDb.zd_select|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc_vis.FDb.finput|[amc_vis.FFinput](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffinput)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc_vis.FDb.term_hei|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FDb.term_wid|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FDb.usecolor|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FDb.hastty|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -228,10 +230,10 @@ struct FDb { // amc_vis.FDb: In-memory database for amc_vis
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc_vis.FField.msghdr|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|amc_vis.FField.p_ctype|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc_vis.FField.p_arg|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc_vis.FField.p_reftype|[amc_vis.FReftype](/txt/gen/amc_vis/amc_vis.md#amc_vis-freftype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc_vis.FField.c_finput|[amc_vis.FFinput](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffinput)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|amc_vis.FField.p_ctype|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc_vis.FField.p_arg|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc_vis.FField.p_reftype|[amc_vis.FReftype](/txt/gen/amc_vis/amc_vis.md#amc_vis-freftype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc_vis.FField.c_finput|[amc_vis.FFinput](/txt/gen/amc_vis/amc_vis.md#amc_vis-ffinput)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -317,9 +319,9 @@ private:
 <a href="#amc_vis-linkkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc_vis.Linkkey.n_link_in|u32|[Val](/txt/exe/amc/reftype.md#val)||Number of incoming dependencies|
-|amc_vis.Linkkey.samecol|i32|[Val](/txt/exe/amc/reftype.md#val)||Set on links that lead to the same column|
-|amc_vis.Linkkey.colweight|i32|[Val](/txt/exe/amc/reftype.md#val)||Heavier columns are scheduled first|
+|amc_vis.Linkkey.n_link_in|u32|[Val](/txt/exe/amc/reftype/Val.md)||Number of incoming dependencies|
+|amc_vis.Linkkey.samecol|i32|[Val](/txt/exe/amc/reftype/Val.md)||Set on links that lead to the same column|
+|amc_vis.Linkkey.colweight|i32|[Val](/txt/exe/amc/reftype/Val.md)||Heavier columns are scheduled first|
 
 #### Struct Linkkey
 <a href="#struct-linkkey"></a>
@@ -355,16 +357,16 @@ struct Linkkey { // amc_vis.Linkkey: Heap key for selecting next link to render 
 <a href="#amc_vis-flink-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc_vis.FLink.link|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Primary key|
-|amc_vis.FLink.label1|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Label in column 1|
-|amc_vis.FLink.label2|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Label in column 2|
-|amc_vis.FLink.linkkey|[amc_vis.Linkkey](/txt/gen/amc_vis/amc_vis.md#amc_vis-linkkey)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FLink.outrow|i32|[Val](/txt/exe/amc/reftype.md#val)||Outrow #|
-|amc_vis.FLink.p_node1|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc_vis.FLink.p_node2|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc_vis.FLink.upptr|bool|[Val](/txt/exe/amc/reftype.md#val)||Up-arrow (not a constraint)|
-|amc_vis.FLink.zd_linkdep_out|[amc_vis.FLinkdep](/txt/gen/amc_vis/amc_vis.md#amc_vis-flinkdep)|[Llist](/txt/exe/amc/reftype.md#llist)||Arrow from this ctype|
-|amc_vis.FLink.zd_linkdep_in|[amc_vis.FLinkdep](/txt/gen/amc_vis/amc_vis.md#amc_vis-flinkdep)|[Llist](/txt/exe/amc/reftype.md#llist)||Arrows to this ctype|
+|amc_vis.FLink.link|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Primary key|
+|amc_vis.FLink.label1|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Label in column 1|
+|amc_vis.FLink.label2|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Label in column 2|
+|amc_vis.FLink.linkkey|[amc_vis.Linkkey](/txt/gen/amc_vis/amc_vis.md#amc_vis-linkkey)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FLink.outrow|i32|[Val](/txt/exe/amc/reftype/Val.md)||Outrow #|
+|amc_vis.FLink.p_node1|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc_vis.FLink.p_node2|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc_vis.FLink.upptr|bool|[Val](/txt/exe/amc/reftype/Val.md)||Up-arrow (not a constraint)|
+|amc_vis.FLink.zd_linkdep_out|[amc_vis.FLinkdep](/txt/gen/amc_vis/amc_vis.md#amc_vis-flinkdep)|[Llist](/txt/exe/amc/reftype/Llist.md)||Arrow from this ctype|
+|amc_vis.FLink.zd_linkdep_in|[amc_vis.FLinkdep](/txt/gen/amc_vis/amc_vis.md#amc_vis-flinkdep)|[Llist](/txt/exe/amc/reftype/Llist.md)||Arrows to this ctype|
 
 #### Struct FLink
 <a href="#struct-flink"></a>
@@ -418,12 +420,12 @@ private:
 <a href="#amc_vis-flinkdep-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc_vis.FLinkdep.row|[amc_vis.FOutrow](/txt/gen/amc_vis/amc_vis.md#amc_vis-foutrow)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|amc_vis.FLinkdep.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)||Id|
-|amc_vis.FLinkdep.up|bool|[Val](/txt/exe/amc/reftype.md#val)||Points up|
-|amc_vis.FLinkdep.inst|bool|[Val](/txt/exe/amc/reftype.md#val)||Instance (vs. index)|
-|amc_vis.FLinkdep.p_link_from|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Source ctype|
-|amc_vis.FLinkdep.p_link_to|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Target ctype|
+|amc_vis.FLinkdep.row|[amc_vis.FOutrow](/txt/gen/amc_vis/amc_vis.md#amc_vis-foutrow)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|amc_vis.FLinkdep.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)||Id|
+|amc_vis.FLinkdep.up|bool|[Val](/txt/exe/amc/reftype/Val.md)||Points up|
+|amc_vis.FLinkdep.inst|bool|[Val](/txt/exe/amc/reftype/Val.md)||Instance (vs. index)|
+|amc_vis.FLinkdep.p_link_from|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Source ctype|
+|amc_vis.FLinkdep.p_link_to|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Target ctype|
 
 #### Struct FLinkdep
 <a href="#struct-flinkdep"></a>
@@ -465,8 +467,8 @@ private:
 <a href="#amc_vis-nodekey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc_vis.Nodekey.n_ct_in|u32|[Val](/txt/exe/amc/reftype.md#val)||Number of incoming dependencies|
-|amc_vis.Nodekey.idx|i32|[Val](/txt/exe/amc/reftype.md#val)||Set to -rowid|
+|amc_vis.Nodekey.n_ct_in|u32|[Val](/txt/exe/amc/reftype/Val.md)||Number of incoming dependencies|
+|amc_vis.Nodekey.idx|i32|[Val](/txt/exe/amc/reftype/Val.md)||Set to -rowid|
 
 #### Struct Nodekey
 <a href="#struct-nodekey"></a>
@@ -501,19 +503,19 @@ struct Nodekey { // amc_vis.Nodekey: Correspodns to a ctype
 <a href="#amc_vis-fnode-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc_vis.FNode.node|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FNode.nodekey|[amc_vis.Nodekey](/txt/gen/amc_vis/amc_vis.md#amc_vis-nodekey)|[Val](/txt/exe/amc/reftype.md#val)||Sort key for columns|
-|amc_vis.FNode.label|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)||Display label|
-|amc_vis.FNode.xpos|i32|[Val](/txt/exe/amc/reftype.md#val)|0||
-|amc_vis.FNode.label2|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)||Display label|
-|amc_vis.FNode.c_bottom|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Bottom|
-|amc_vis.FNode.c_top|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Top|
-|amc_vis.FNode.p_ctype|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc_vis.FNode.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FNode.zd_nodedep_out|[amc_vis.FNodedep](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnodedep)|[Llist](/txt/exe/amc/reftype.md#llist)||Arrow from this ctype|
-|amc_vis.FNode.zd_nodedep_in|[amc_vis.FNodedep](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnodedep)|[Llist](/txt/exe/amc/reftype.md#llist)||Arrows to this ctype|
-|amc_vis.FNode.zd_link_out|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Llist](/txt/exe/amc/reftype.md#llist)||Arrow from this ctype|
-|amc_vis.FNode.zd_link_in|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Llist](/txt/exe/amc/reftype.md#llist)||Arrow from this ctype|
+|amc_vis.FNode.node|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FNode.nodekey|[amc_vis.Nodekey](/txt/gen/amc_vis/amc_vis.md#amc_vis-nodekey)|[Val](/txt/exe/amc/reftype/Val.md)||Sort key for columns|
+|amc_vis.FNode.label|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)||Display label|
+|amc_vis.FNode.xpos|i32|[Val](/txt/exe/amc/reftype/Val.md)|0||
+|amc_vis.FNode.label2|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)||Display label|
+|amc_vis.FNode.c_bottom|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Bottom|
+|amc_vis.FNode.c_top|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Top|
+|amc_vis.FNode.p_ctype|[amc_vis.FCtype](/txt/gen/amc_vis/amc_vis.md#amc_vis-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc_vis.FNode.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FNode.zd_nodedep_out|[amc_vis.FNodedep](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnodedep)|[Llist](/txt/exe/amc/reftype/Llist.md)||Arrow from this ctype|
+|amc_vis.FNode.zd_nodedep_in|[amc_vis.FNodedep](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnodedep)|[Llist](/txt/exe/amc/reftype/Llist.md)||Arrows to this ctype|
+|amc_vis.FNode.zd_link_out|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Llist](/txt/exe/amc/reftype/Llist.md)||Arrow from this ctype|
+|amc_vis.FNode.zd_link_in|[amc_vis.FLink](/txt/gen/amc_vis/amc_vis.md#amc_vis-flink)|[Llist](/txt/exe/amc/reftype/Llist.md)||Arrow from this ctype|
 
 #### Struct FNode
 <a href="#struct-fnode"></a>
@@ -574,14 +576,14 @@ private:
 <a href="#amc_vis-fnodedep-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc_vis.FNodedep.row|[amc_vis.FOutrow](/txt/gen/amc_vis/amc_vis.md#amc_vis-foutrow)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|amc_vis.FNodedep.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)||Id|
-|amc_vis.FNodedep.up|bool|[Val](/txt/exe/amc/reftype.md#val)||Points up|
-|amc_vis.FNodedep.inst|bool|[Val](/txt/exe/amc/reftype.md#val)||Instance (vs. index)|
-|amc_vis.FNodedep.p_node1|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Source ctype|
-|amc_vis.FNodedep.p_node2|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Target ctype|
-|amc_vis.FNodedep.name|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_vis.FNodedep.reftype|[dmmeta.Reftype](/txt/ssimdb/dmmeta/reftype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|amc_vis.FNodedep.row|[amc_vis.FOutrow](/txt/gen/amc_vis/amc_vis.md#amc_vis-foutrow)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|amc_vis.FNodedep.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)||Id|
+|amc_vis.FNodedep.up|bool|[Val](/txt/exe/amc/reftype/Val.md)||Points up|
+|amc_vis.FNodedep.inst|bool|[Val](/txt/exe/amc/reftype/Val.md)||Instance (vs. index)|
+|amc_vis.FNodedep.p_node1|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Source ctype|
+|amc_vis.FNodedep.p_node2|[amc_vis.FNode](/txt/gen/amc_vis/amc_vis.md#amc_vis-fnode)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Target ctype|
+|amc_vis.FNodedep.name|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_vis.FNodedep.reftype|[dmmeta.Reftype](/txt/ssimdb/dmmeta/reftype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
 
 #### Struct FNodedep
 <a href="#struct-fnodedep"></a>
@@ -625,8 +627,8 @@ private:
 <a href="#amc_vis-foutrow-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc_vis.FOutrow.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)||FOutrow pkey|
-|amc_vis.FOutrow.text|u16|[Tary](/txt/exe/amc/reftype.md#tary)||Lower byte=text; Upper byte=color|
+|amc_vis.FOutrow.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)||FOutrow pkey|
+|amc_vis.FOutrow.text|u16|[Tary](/txt/exe/amc/reftype/Tary.md)||Lower byte=text; Upper byte=color|
 
 #### Struct FOutrow
 <a href="#struct-foutrow"></a>

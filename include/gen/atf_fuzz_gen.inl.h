@@ -181,16 +181,16 @@ inline atf_fuzz::FTarget& atf_fuzz::_db_target_curs_Access(_db_target_curs &curs
 
 // --- atf_fuzz.FFuzzstrat.step.Call
 // Invoke function by pointer
-inline void atf_fuzz::step_Call(atf_fuzz::FFuzzstrat& fuzzstrat) {
-    if (fuzzstrat.step) {
-        fuzzstrat.step();
+inline void atf_fuzz::step_Call(atf_fuzz::FFuzzstrat& parent) {
+    if (parent.step) {
+        parent.step();
     }
 }
 
 // --- atf_fuzz.FFuzzstrat..Init
 // Set all fields to initial values.
-inline void atf_fuzz::FFuzzstrat_Init(atf_fuzz::FFuzzstrat& fuzzstrat) {
-    fuzzstrat.step = NULL;
+inline void atf_fuzz::FFuzzstrat_Init(atf_fuzz::FFuzzstrat& parent) {
+    parent.step = NULL;
 }
 
 // --- atf_fuzz.FFuzzstrat..Ctor
@@ -200,9 +200,9 @@ inline  atf_fuzz::FFuzzstrat::FFuzzstrat() {
 
 // --- atf_fuzz.FTarget..Init
 // Set all fields to initial values.
-inline void atf_fuzz::FTarget_Init(atf_fuzz::FTarget& target) {
-    target.ind_target_next = (atf_fuzz::FTarget*)-1; // (atf_fuzz.FDb.ind_target) not-in-hash
-    target.ind_target_hashval = 0; // stored hash value
+inline void atf_fuzz::FTarget_Init(atf_fuzz::FTarget& parent) {
+    parent.ind_target_next = (atf_fuzz::FTarget*)-1; // (atf_fuzz.FDb.ind_target) not-in-hash
+    parent.ind_target_hashval = 0; // stored hash value
 }
 
 // --- atf_fuzz.FTarget..Ctor

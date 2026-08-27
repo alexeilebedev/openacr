@@ -3,11 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
-* [Tests](#tests)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -88,7 +90,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |mdbg.FCfg.base|[dev.Cfg](/txt/ssimdb/dev/cfg.md)|[Base](/txt/ssimdb/dev/cfg.md)|||
-|mdbg.FCfg.c_builddir|[mdbg.FBuilddir](/txt/gen/mdbg/mdbg.md#mdbg-fbuilddir)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|mdbg.FCfg.c_builddir|[mdbg.FBuilddir](/txt/gen/mdbg/mdbg.md#mdbg-fbuilddir)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FCfg
 <a href="#struct-fcfg"></a>
@@ -130,17 +132,17 @@ private:
 <a href="#mdbg-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|mdbg.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype.md#lpool)||private memory pool|
-|mdbg.FDb._db|[mdbg.FDb](/txt/gen/mdbg/mdbg.md#mdbg-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|mdbg.FDb.cmdline|[command.mdbg](/txt/protocol/command/README.md#command-mdbg)|[Val](/txt/exe/amc/reftype.md#val)|||
-|mdbg.FDb.script|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Output script|
-|mdbg.FDb.gdbscript|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||GDB script|
-|mdbg.FDb.cfg|[mdbg.FCfg](/txt/gen/mdbg/mdbg.md#mdbg-fcfg)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|mdbg.FDb.ind_cfg|[mdbg.FCfg](/txt/gen/mdbg/mdbg.md#mdbg-fcfg)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|mdbg.FDb.builddir|[mdbg.FBuilddir](/txt/gen/mdbg/mdbg.md#mdbg-fbuilddir)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|mdbg.FDb.break_main|bool|[Val](/txt/exe/amc/reftype.md#val)||Breakpoint in main was requested at command line|
-|mdbg.FDb.bnum|i32|[Val](/txt/exe/amc/reftype.md#val)|1|Breakpoint number for gdb|
-|mdbg.FDb.dbgtarget|[mdbg.FDbgtarget](/txt/gen/mdbg/mdbg.md#mdbg-fdbgtarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|mdbg.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype/Lpool.md)||private memory pool|
+|mdbg.FDb._db|[mdbg.FDb](/txt/gen/mdbg/mdbg.md#mdbg-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|mdbg.FDb.cmdline|[command.mdbg](/txt/protocol/command/README.md#command-mdbg)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|mdbg.FDb.script|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Output script|
+|mdbg.FDb.gdbscript|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||GDB script|
+|mdbg.FDb.cfg|[mdbg.FCfg](/txt/gen/mdbg/mdbg.md#mdbg-fcfg)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|mdbg.FDb.ind_cfg|[mdbg.FCfg](/txt/gen/mdbg/mdbg.md#mdbg-fcfg)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|mdbg.FDb.builddir|[mdbg.FBuilddir](/txt/gen/mdbg/mdbg.md#mdbg-fbuilddir)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|mdbg.FDb.break_main|bool|[Val](/txt/exe/amc/reftype/Val.md)||Breakpoint in main was requested at command line|
+|mdbg.FDb.bnum|i32|[Val](/txt/exe/amc/reftype/Val.md)|1|Breakpoint number for gdb|
+|mdbg.FDb.dbgtarget|[mdbg.FDbgtarget](/txt/gen/mdbg/mdbg.md#mdbg-fdbgtarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

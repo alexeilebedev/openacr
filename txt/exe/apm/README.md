@@ -24,6 +24,34 @@ Packages can have dependencies, as described in the `dev.pkgdep` table.
 When installing a package, its dependencies are installed as well. When removing a package, its dependent packages
 are removed as part of the transaction.
 
+Each dependency also names *how* the two packages stand to each other, through
+`dev.pkgdeptype`:
+
+|`pkgdeptype`|Meaning|
+|---|---|
+|`contain`|The parent distributes this package, so the parent's content covers it.|
+|`extend`|This package builds on the parent without shipping in it, so the parent's content excludes whatever this package captures.|
+|`require`|This package needs the parent built first, and neither one's content touches the other's.|
+
+`extend` is what keeps a downstream tree out of an upstream distribution. A
+package that declares itself an extension of a base is not published as part of
+that base, and that holds without the base's definition listing the downstream
+package's namespaces one by one. The exclusion follows from the relation, and
+the records follow from whatever the extending package claims.
+
+Two rules decide the edges. A record a package **names outright** -- a pkgkey
+with no pattern in its value, such as `dev.netproto:https` -- stays with that
+package even when an extender's reference closure reaches it; a blanket like
+`dev.%:%` does not override the relation. And the subtraction runs after every
+package has been evaluated, because packages are evaluated parents first and an
+extender's records do not exist yet while its parent is being built.
+
+`apm -check` reports a namespace claimed by both a package and one of its
+extenders as `apm.doubleclaim`. That is a modelling error rather than a
+preference: one of the two packages does not own the namespace, and until it is
+settled the extender's claim quietly removes the parent's records from the
+distribution.
+
 Logically, ssimfiles are just collections of set elements. Thus, one ssimfile may contain records from
 different packages, as determined by `pkgkey` table.
 `apm` takes care of merging changes made to ssimfiles, reducing merge conflicts to a minimum.
@@ -42,7 +70,6 @@ in the package repo corresponding to the last synchronization point.
 &nbsp;&nbsp;&bull;&nbsp;  [Sandboxes](#sandboxes)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [apm - Internals](/txt/exe/apm/internals.md)<br/>
 <!-- abt_md.toc_end -->
 
 ### Internals
@@ -166,11 +193,24 @@ apm <packagename> -showrec
 #### -reset -- Reset package baseref/origin to those provided by the command line
 <a href="#-reset"></a>
 
-The reset command can be used to change the dev.package record to
-update the package origin URL or the baseref. Use with caution.
+The reset command changes the `dev.package` record, so that a package can be
+pointed at a different origin, or declared to match a different version of it.
+Use with caution: the baseref is what every later merge is computed against,
+and moving it declares a synchronization that may not have happened.
 
 ```
 apm <packagename> -reset [-origin <URL>] [-ref <baseref>]
+```
+
+`-ref` is resolved against the origin before it is stored, and the commit it
+resolves to is what lands in the record. So `-ref:HEAD` records the origin's
+current commit rather than the word `HEAD`, which is how the baseref is set
+after a push has been committed on the far side:
+
+```
+apm <packagename> -push -origin:<dir>
+(cd <dir> && git commit -m "...")
+apm <packagename> -reset -ref:HEAD -origin:<URL>
 ```
 
 #### -checkclean -- Ensure that changes are applied to a clean directory
@@ -208,7 +248,17 @@ acr ctype:command.xyz -t | apm -annotate
 
 A package is defined by the `dev.package` record. The record specifies package name, git commit
 corresponding to the base version of the package. The ref DOES NOT refer to the git history
-of the current repo, it refers to the history of the ORIGIN's repo. The table `dev.pkgkey` specifies
+of the current repo, it refers to the history of the ORIGIN's repo.
+
+That commit is fetched by bringing the origin's heads into `refs/apm/<package>/`
+and resolving the ref there. Fetching the commit id on its own does not work:
+a refspec is matched by name against the refs the origin advertises, and a
+commit id is not one of them.
+
+The `origin` and `baseref` fields describe where this repo stands with respect
+to the package, so they are meaningless in any other repo. When `-push` sends
+the package's own `dev.package` record to the origin, it rewrites those two
+fields to `.` and `HEAD` -- what a publisher says about a package it defines. The table `dev.pkgkey` specifies
 which files and records are part of the package.
 
 You can define a new package by manually creating these records, then commit the changes. Use "." for origin,
@@ -363,7 +413,8 @@ when evaluating package contents on the remote side.
 <a href="#-reset"></a>
 
 This option updates the local `package` record with values provided in
-`-ref` and `-origin`.
+`-ref` and `-origin`. The ref is resolved against the origin first, so the
+record ends up holding a commit id.
 
 #### -checkclean -- Ensure that changes are applied to a clean directory
 <a href="#-checkclean"></a>

@@ -11,15 +11,15 @@ italicised fields: *ctype, strfmt* are [**fldfunc**](/txt/openacr/ssim.md#fldfun
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|cfmt|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.RL of cfmt*|
-|*strfmt*|*[dmmeta.Strfmt](/txt/ssimdb/dmmeta/strfmt.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.RR of cfmt*|
-|printfmt|[dmmeta.Printfmt](/txt/ssimdb/dmmeta/printfmt.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|read|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|print|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|sep|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype.md#val)|||
-|genop|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|cfmt|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.RL of cfmt*|
+|*strfmt*|*[dmmeta.Strfmt](/txt/ssimdb/dmmeta/strfmt.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.RR of cfmt*|
+|printfmt|[dmmeta.Printfmt](/txt/ssimdb/dmmeta/printfmt.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|read|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|print|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|sep|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|genop|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

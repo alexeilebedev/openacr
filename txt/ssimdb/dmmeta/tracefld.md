@@ -11,10 +11,10 @@ italicised fields: *tracerec, name* are [**fldfunc**](/txt/openacr/ssim.md#fldfu
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|tracefld|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*tracerec*|*[dmmeta.Tracerec](/txt/ssimdb/dmmeta/tracerec.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*Struct of trace<br>.RL of tracefld*|
-|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype.md#val)*||*Field of trace<br>.RR of tracefld*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|tracefld|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*tracerec*|*[dmmeta.Tracerec](/txt/ssimdb/dmmeta/tracerec.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*Struct of trace<br>.RL of tracefld*|
+|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*Field of trace<br>.RR of tracefld*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Subsets
 <a href="#subsets"></a>

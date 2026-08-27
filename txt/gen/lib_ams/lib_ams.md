@@ -1,6 +1,21 @@
 ## lib_ams - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_ams - Library for AMS middleware, supporting file format & messaging](/txt/lib/lib_ams/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -850,8 +865,8 @@ All allocations are done through global `lib_ams::_db` [lib_ams.FDb](#lib_ams-fd
 <a href="#lib_ams-boardent-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ams.Boardent.ring_pos|u64|[Val](/txt/exe/amc/reftype.md#val)||Lane ring position the reader must pass to release the slot|
-|lib_ams.Boardent.slot|u32|[Val](/txt/exe/amc/reftype.md#val)||Board slot index holding the payload|
+|lib_ams.Boardent.ring_pos|u64|[Val](/txt/exe/amc/reftype/Val.md)||Lane ring position the reader must pass to release the slot|
+|lib_ams.Boardent.slot|u32|[Val](/txt/exe/amc/reftype/Val.md)||Board slot index holding the payload|
 
 #### Struct Boardent
 <a href="#struct-boardent"></a>
@@ -872,11 +887,11 @@ struct Boardent { // lib_ams.Boardent: One outstanding board reference posted to
 <a href="#lib_ams-fboardq-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ams.FBoardq.memberidx|u32|[Val](/txt/exe/amc/reftype.md#val)||Index of this reader in the lane segment member table|
-|lib_ams.FBoardq.head|u64|[Val](/txt/exe/amc/reftype.md#val)||Absolute position of the oldest entry not yet released|
-|lib_ams.FBoardq.tail|u64|[Val](/txt/exe/amc/reftype.md#val)||Absolute position one past the newest entry|
-|lib_ams.FBoardq.p_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Lane whose reader this queue tracks|
-|lib_ams.FBoardq.boardent|[lib_ams.Boardent](/txt/gen/lib_ams/lib_ams.md#lib_ams-boardent)|[Tary](/txt/exe/amc/reftype.md#tary)||Fixed power-of-two ring of outstanding references|
+|lib_ams.FBoardq.memberidx|u32|[Val](/txt/exe/amc/reftype/Val.md)||Index of this reader in the lane segment member table|
+|lib_ams.FBoardq.head|u64|[Val](/txt/exe/amc/reftype/Val.md)||Absolute position of the oldest entry not yet released|
+|lib_ams.FBoardq.tail|u64|[Val](/txt/exe/amc/reftype/Val.md)||Absolute position one past the newest entry|
+|lib_ams.FBoardq.p_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Lane whose reader this queue tracks|
+|lib_ams.FBoardq.boardent|[lib_ams.Boardent](/txt/gen/lib_ams/lib_ams.md#lib_ams-boardent)|[Tary](/txt/exe/amc/reftype/Tary.md)||Fixed power-of-two ring of outstanding references|
 
 #### Struct FBoardq
 <a href="#struct-fboardq"></a>
@@ -914,54 +929,54 @@ private:
 <a href="#lib_ams-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ams.FDb.fdin|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Tpool](/txt/exe/amc/reftype.md#tpool)||ams control messages on stdin|
-|lib_ams.FDb.cd_fdin_eof|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Llist](/txt/exe/amc/reftype.md#llist)||End reading from stdin|
-|lib_ams.FDb.cd_fdin_read|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Llist](/txt/exe/amc/reftype.md#llist)||Read next message from file descriptor|
-|lib_ams.FDb._db|[lib_ams.FDb](/txt/gen/lib_ams/lib_ams.md#lib_ams-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_ams.FDb.shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Lary](/txt/exe/amc/reftype.md#lary)||Table of streams|
-|lib_ams.FDb.ind_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Thash](/txt/exe/amc/reftype.md#thash)||Index of streams by stream id|
-|lib_ams.FDb.proc_id|[ams.ProcId](/txt/protocol/ams/ProcId.md)|[Val](/txt/exe/amc/reftype.md#val)||Process id, e.g. amstest-0|
-|lib_ams.FDb.shmem_size|i32|[Val](/txt/exe/amc/reftype.md#val)|32768|Default stream shared memory size|
-|lib_ams.FDb.max_msg_size|i32|[Val](/txt/exe/amc/reftype.md#val)|4096|Frame size: largest message this process builds for itself and carries whole|
-|lib_ams.FDb.cd_poll_read|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Llist](/txt/exe/amc/reftype.md#llist)||Hot poll input stream for reading|
-|lib_ams.FDb.file_prefix|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|File prefix for all streams|
-|lib_ams.FDb.proc|[lib_ams.FProc](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproc)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|lib_ams.FDb.ind_proc|[lib_ams.FProc](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_ams.FDb.grptype|[lib_ams.FGrptype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fgrptype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ams.FDb.ind_grptype|[lib_ams.FGrptype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fgrptype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_ams.FDb.shm_files_cleaned|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ams.FDb.fdin_buf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ams.FDb.zd_proc|[lib_ams.FProc](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproc)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|lib_ams.FDb.expect_buf|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Buffer containing outputs produced since last input|
-|lib_ams.FDb.expect_str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||If non-empty, pause reading inputs until this string is non-empty|
-|lib_ams.FDb.expect_pos|i32|[Val](/txt/exe/amc/reftype.md#val)||Match position within expect buf|
-|lib_ams.FDb.expect_timeout|double|[Val](/txt/exe/amc/reftype.md#val)|10.0|Default expect timeout|
-|lib_ams.FDb.fmt_buf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ams.FDb.c_thisproc|[lib_ams.FProc](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproc)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ams.FDb.c_cur_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ams.FDb.signaled|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Signaled mode enabled|
-|lib_ams.FDb.signal_fd|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype.md#val)||signalfd file descriptor|
-|lib_ams.FDb.signal_iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Val](/txt/exe/amc/reftype.md#val)||Iohook for signalfd, registered with epoll|
-|lib_ams.FDb.io_print|u64|[Val](/txt/exe/amc/reftype.md#val)||IO print callback (lib_ams::PrintCb cast to u64)|
-|lib_ams.FDb.c_shm_stdout|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Output shm for IO pub (set by InitIO in shm mode)|
-|lib_ams.FDb.c_shm_stdin|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Loopback input shm for IO (stdio mode)|
-|lib_ams.FDb.h_amsmsg|[ams.MsgHeader](/txt/protocol/ams/MsgHeader.md)|[Hook](/txt/exe/amc/reftype.md#hook)||Default message callback|
-|lib_ams.FDb.c_loopback_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype.md#ptr)||In-process shm carrying messages parsed from stdin in stdio mode|
-|lib_ams.FDb.zd_fdin|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|lib_ams.FDb.exit_on_fdin_eof|bool|[Val](/txt/exe/amc/reftype.md#val)||force process exit when stdin (FFdin) reaches EOF; set by procs spawned over a parent-held pipe|
-|lib_ams.FDb.nickname|[algo.Smallstr30](/txt/protocol/algo/README.md#algo-smallstr30)|[Val](/txt/exe/amc/reftype.md#val)|""|Human-facing name for this process (userproc name); prefixes published metrics when set|
-|lib_ams.FDb.proctype|[lib_ams.FProctype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ams.FDb.ind_proctype|[lib_ams.FProctype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_ams.FDb.zd_park_read|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Llist](/txt/exe/amc/reftype.md#llist)||Streams whose reader is parked awaiting a wakeup|
-|lib_ams.FDb.h_terminate||[Hook](/txt/exe/amc/reftype.md#hook)||What a stop request means for this process; default exits the main loop, a supervisor shuts its node down|
-|lib_ams.FDb.c_fdin_stdin|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Ptr](/txt/exe/amc/reftype.md#ptr)||The reader of stdin, when stdin is being read|
-|lib_ams.FDb.boardq|[lib_ams.FBoardq](/txt/gen/lib_ams/lib_ams.md#lib_ams-fboardq)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_ams.FDb.board_slot_size|i32|[Val](/txt/exe/amc/reftype.md#val)|1048576|Slot size of a board this process creates; the largest message it carries|
-|lib_ams.FDb.board_max_pin|i64|[Val](/txt/exe/amc/reftype.md#val)|8388608|Board bytes one reader may pin before the sender withholds from it|
-|lib_ams.FDb.c_postlane|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Scratch: lanes the next board post reaches|
-|lib_ams.FDb.outmsg|[lib_ams.FOutmsg](/txt/gen/lib_ams/lib_ams.md#lib_ams-foutmsg)|[Tpool](/txt/exe/amc/reftype.md#tpool)||Pool of messages queued for a ring|
-|lib_ams.FDb.zd_outshm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Llist](/txt/exe/amc/reftype.md#llist)||Rings holding a queued message; the step writes them as budget appears|
-|lib_ams.FDb.c_cur_outmsg|[lib_ams.FOutmsg](/txt/gen/lib_ams/lib_ams.md#lib_ams-foutmsg)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Scratch: the queued message the current format call is building|
+|lib_ams.FDb.fdin|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Tpool](/txt/exe/amc/reftype/Tpool.md)||ams control messages on stdin|
+|lib_ams.FDb.cd_fdin_eof|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Llist](/txt/exe/amc/reftype/Llist.md)||End reading from stdin|
+|lib_ams.FDb.cd_fdin_read|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Llist](/txt/exe/amc/reftype/Llist.md)||Read next message from file descriptor|
+|lib_ams.FDb._db|[lib_ams.FDb](/txt/gen/lib_ams/lib_ams.md#lib_ams-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_ams.FDb.shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Lary](/txt/exe/amc/reftype/Lary.md)||Table of streams|
+|lib_ams.FDb.ind_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Thash](/txt/exe/amc/reftype/Thash.md)||Index of streams by stream id|
+|lib_ams.FDb.proc_id|[ams.ProcId](/txt/protocol/ams/ProcId.md)|[Val](/txt/exe/amc/reftype/Val.md)||Process id, e.g. amstest-0|
+|lib_ams.FDb.shmem_size|i32|[Val](/txt/exe/amc/reftype/Val.md)|32768|Default stream shared memory size|
+|lib_ams.FDb.max_msg_size|i32|[Val](/txt/exe/amc/reftype/Val.md)|4096|Frame size: largest message this process builds for itself and carries whole|
+|lib_ams.FDb.cd_poll_read|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Llist](/txt/exe/amc/reftype/Llist.md)||Hot poll input stream for reading|
+|lib_ams.FDb.file_prefix|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|File prefix for all streams|
+|lib_ams.FDb.proc|[lib_ams.FProc](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproc)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|lib_ams.FDb.ind_proc|[lib_ams.FProc](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_ams.FDb.grptype|[lib_ams.FGrptype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fgrptype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ams.FDb.ind_grptype|[lib_ams.FGrptype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fgrptype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_ams.FDb.shm_files_cleaned|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ams.FDb.fdin_buf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ams.FDb.zd_proc|[lib_ams.FProc](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproc)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|lib_ams.FDb.expect_buf|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Buffer containing outputs produced since last input|
+|lib_ams.FDb.expect_str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||If non-empty, pause reading inputs until this string is non-empty|
+|lib_ams.FDb.expect_pos|i32|[Val](/txt/exe/amc/reftype/Val.md)||Match position within expect buf|
+|lib_ams.FDb.expect_timeout|double|[Val](/txt/exe/amc/reftype/Val.md)|10.0|Default expect timeout|
+|lib_ams.FDb.fmt_buf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ams.FDb.c_thisproc|[lib_ams.FProc](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ams.FDb.c_cur_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ams.FDb.signaled|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Signaled mode enabled|
+|lib_ams.FDb.signal_fd|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype/Val.md)||signalfd file descriptor|
+|lib_ams.FDb.signal_iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Val](/txt/exe/amc/reftype/Val.md)||Iohook for signalfd, registered with epoll|
+|lib_ams.FDb.io_print|u64|[Val](/txt/exe/amc/reftype/Val.md)||IO print callback (lib_ams::PrintCb cast to u64)|
+|lib_ams.FDb.c_shm_stdout|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Output shm for IO pub (set by InitIO in shm mode)|
+|lib_ams.FDb.c_shm_stdin|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Loopback input shm for IO (stdio mode)|
+|lib_ams.FDb.h_amsmsg|[ams.MsgHeader](/txt/protocol/ams/MsgHeader.md)|[Hook](/txt/exe/amc/reftype/Hook.md)||Default message callback|
+|lib_ams.FDb.c_loopback_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||In-process shm carrying messages parsed from stdin in stdio mode|
+|lib_ams.FDb.zd_fdin|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|lib_ams.FDb.exit_on_fdin_eof|bool|[Val](/txt/exe/amc/reftype/Val.md)||force process exit when stdin (FFdin) reaches EOF; set by procs spawned over a parent-held pipe|
+|lib_ams.FDb.nickname|[algo.Smallstr30](/txt/protocol/algo/README.md#algo-smallstr30)|[Val](/txt/exe/amc/reftype/Val.md)|""|Human-facing name for this process (userproc name); prefixes published metrics when set|
+|lib_ams.FDb.proctype|[lib_ams.FProctype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ams.FDb.ind_proctype|[lib_ams.FProctype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fproctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_ams.FDb.zd_park_read|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Llist](/txt/exe/amc/reftype/Llist.md)||Streams whose reader is parked awaiting a wakeup|
+|lib_ams.FDb.h_terminate||[Hook](/txt/exe/amc/reftype/Hook.md)||What a stop request means for this process; default exits the main loop, a supervisor shuts its node down|
+|lib_ams.FDb.c_fdin_stdin|[lib_ams.FFdin](/txt/gen/lib_ams/lib_ams.md#lib_ams-ffdin)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||The reader of stdin, when stdin is being read|
+|lib_ams.FDb.boardq|[lib_ams.FBoardq](/txt/gen/lib_ams/lib_ams.md#lib_ams-fboardq)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_ams.FDb.board_slot_size|i32|[Val](/txt/exe/amc/reftype/Val.md)|1048576|Slot size of a board this process creates; the largest message it carries|
+|lib_ams.FDb.board_max_pin|i64|[Val](/txt/exe/amc/reftype/Val.md)|8388608|Board bytes one reader may pin before the sender withholds from it|
+|lib_ams.FDb.c_postlane|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Scratch: lanes the next board post reaches|
+|lib_ams.FDb.outmsg|[lib_ams.FOutmsg](/txt/gen/lib_ams/lib_ams.md#lib_ams-foutmsg)|[Tpool](/txt/exe/amc/reftype/Tpool.md)||Pool of messages queued for a ring|
+|lib_ams.FDb.zd_outshm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Llist](/txt/exe/amc/reftype/Llist.md)||Rings holding a queued message; the step writes them as budget appears|
+|lib_ams.FDb.c_cur_outmsg|[lib_ams.FOutmsg](/txt/gen/lib_ams/lib_ams.md#lib_ams-foutmsg)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Scratch: the queued message the current format call is building|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -1056,8 +1071,8 @@ struct FDb { // lib_ams.FDb: In-memory database for lib_ams
 <a href="#lib_ams-ffdin-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ams.FFdin.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ams.FFdin.in|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)|'\n'||
+|lib_ams.FFdin.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ams.FFdin.in|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)|'\n'||
 
 #### Struct FFdin
 <a href="#struct-ffdin"></a>
@@ -1145,8 +1160,8 @@ private:
 <a href="#lib_ams-foutmsg-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ams.FOutmsg.data|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype.md#val)||The formatted message, byte for byte as it will enter the ring|
-|lib_ams.FOutmsg.p_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Ring this message is queued for|
+|lib_ams.FOutmsg.data|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype/Val.md)||The formatted message, byte for byte as it will enter the ring|
+|lib_ams.FOutmsg.p_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Ring this message is queued for|
 
 #### Struct FOutmsg
 <a href="#struct-foutmsg"></a>
@@ -1180,11 +1195,11 @@ private:
 <a href="#lib_ams-fproc-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ams.FProc.proc_id|[ams.ProcId](/txt/protocol/ams/ProcId.md)|[Val](/txt/exe/amc/reftype.md#val)||Unique ID|
-|lib_ams.FProc.c_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|lib_ams.FProc.pid|i32|[Val](/txt/exe/amc/reftype.md#val)||Current PID|
-|lib_ams.FProc.status|i32|[Val](/txt/exe/amc/reftype.md#val)||Exit status|
-|lib_ams.FProc.critical|bool|[Val](/txt/exe/amc/reftype.md#val)||Exit if process dies?|
+|lib_ams.FProc.proc_id|[ams.ProcId](/txt/protocol/ams/ProcId.md)|[Val](/txt/exe/amc/reftype/Val.md)||Unique ID|
+|lib_ams.FProc.c_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|lib_ams.FProc.pid|i32|[Val](/txt/exe/amc/reftype/Val.md)||Current PID|
+|lib_ams.FProc.status|i32|[Val](/txt/exe/amc/reftype/Val.md)||Exit status|
+|lib_ams.FProc.critical|bool|[Val](/txt/exe/amc/reftype/Val.md)||Exit if process dies?|
 
 #### Struct FProc
 <a href="#struct-fproc"></a>
@@ -1243,16 +1258,12 @@ struct FProctype { // lib_ams.FProctype
     algo::cstring         ns;                     // dmmeta.ns can be missing if the module is external, don't set it as xref
     u32                   overheadmb;             //   0  Measured base memory overhead MB (10^6) beyond topo budgets; 0=no derived proc limit
     u32                   hugemb;                 //   0  Huge-page heap ceiling MB (10^6); 0 = maps none, as a forking supervisor must
-    u32                   pathbyte;               //   0  Measured bytes of address space per path entry; times topo maxpath it is the path term of the derived proc limit (0=no term)
-    u32                   userbyte;               //   0  Measured bytes of address space per user; times topo maxuser it is the user term of the derived proc limit (0=no term)
-    u32                   openbyte;               //   0  Measured bytes of address space per open-stream row; times topo maxopen it is the open term of the derived proc limit (0=no term)
-    u32                   connbyte;               //   0  Measured bytes of address space per client connection; times topo maxconn it is the conn term of the derived proc limit (0=no term)
-    algo::cstring         comment;                //
     i32                   hbtimeout;              //   30  Heartbeat timeout sec: the supervisor kills a module silent this long
+    algo::cstring         comment;                //
     // func:lib_ams.FProctype..AssignOp
-    lib_ams::FProctype&  operator =(const lib_ams::FProctype &rhs) = delete;
+    inline lib_ams::FProctype& operator =(const lib_ams::FProctype &rhs) = delete;
     // func:lib_ams.FProctype..CopyCtor
-    FProctype(const lib_ams::FProctype &rhs) = delete;
+    inline               FProctype(const lib_ams::FProctype &rhs) = delete;
 private:
     // func:lib_ams.FProctype..Ctor
     inline               FProctype() __attribute__((nothrow));
@@ -1272,35 +1283,35 @@ private:
 <a href="#lib_ams-fshm-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ams.FShm.grp_id|[ams.GrpId](/txt/protocol/ams/README.md#ams-grpid)|[Val](/txt/exe/amc/reftype.md#val)||Stream ID (primary key)|
-|lib_ams.FShm.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Name of the file (if opened)|
-|lib_ams.FShm.shm_file|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)||Associated file|
-|lib_ams.FShm.flags|[ams.ShmFlags](/txt/protocol/ams/README.md#ams-shmflags)|[Val](/txt/exe/amc/reftype.md#val)||Shim flags (r, w, etc)|
-|lib_ams.FShm.shm_handle|u8|[Ptr](/txt/exe/amc/reftype.md#ptr)||Associated memory segment handle (windows only)|
-|lib_ams.FShm.c_cur_msg|[ams.MsgHeader](/txt/protocol/ams/MsgHeader.md)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Current message|
-|lib_ams.FShm.c_shmhdr|[ams.Shmhdr](/txt/protocol/ams/README.md#ams-shmhdr)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Control block for this segment|
-|lib_ams.FShm.c_data|u8|[Ptr](/txt/exe/amc/reftype.md#ptr)||Pointer to data|
-|lib_ams.FShm.c_reader|[ams.Shmember](/txt/protocol/ams/README.md#ams-shmember)|[Ptr](/txt/exe/amc/reftype.md#ptr)||If we are reading this shm, heartbeat area|
-|lib_ams.FShm.shm_region|[algo.memptr](/txt/protocol/algo/memptr.md)|[Val](/txt/exe/amc/reftype.md#val)||Shared memory region|
-|lib_ams.FShm.writelimit|u64|[Val](/txt/exe/amc/reftype.md#val)||Write limit, based on all read members|
-|lib_ams.FShm.cached_woff|u64|[Val](/txt/exe/amc/reftype.md#val)||Cached woff from previous poll|
-|lib_ams.FShm.offset_mask|u64|[Val](/txt/exe/amc/reftype.md#val)||Mask for byte eof|
-|lib_ams.FShm.h_amsmsg|[ams.MsgHeader](/txt/protocol/ams/MsgHeader.md)|[Hook](/txt/exe/amc/reftype.md#hook)||Message processing hook|
-|lib_ams.FShm.p_grptype|[lib_ams.FGrptype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fgrptype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_ams.FShm.error|bool|[Val](/txt/exe/amc/reftype.md#val)||Error was detected|
-|lib_ams.FShm.created|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ams.FShm.locked|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ams.FShm.n_unread|u64|[Val](/txt/exe/amc/reftype.md#val)||Number of messages unread with UnreadMsg|
-|lib_ams.FShm.burst|i32|[Val](/txt/exe/amc/reftype.md#val)|10|Read this many messages at a time|
-|lib_ams.FShm.lowbudget|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Low budget counter|
-|lib_ams.FShm.max_msg_size|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Largest message this ring carries; 0 until declared, when the process ceiling applies|
-|lib_ams.FShm.n_wlim_update|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_ams.FShm.size|i64|[Val](/txt/exe/amc/reftype.md#val)||Segment size in bytes; 0 = the process-wide default|
-|lib_ams.FShm.c_boardq|[lib_ams.FBoardq](/txt/gen/lib_ams/lib_ams.md#lib_ams-fboardq)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Per-reader board queues of this lane|
-|lib_ams.FShm.p_board|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Board this lane posts large payloads to|
-|lib_ams.FShm.free_slot|u32|[Tary](/txt/exe/amc/reftype.md#tary)||Stack of free board slot indices, board segment only|
-|lib_ams.FShm.slot_nref|u32|[Tary](/txt/exe/amc/reftype.md#tary)||Per-slot count of readers yet to release it, board only|
-|lib_ams.FShm.zd_outmsg|[lib_ams.FOutmsg](/txt/gen/lib_ams/lib_ams.md#lib_ams-foutmsg)|[Llist](/txt/exe/amc/reftype.md#llist)||This ring's queued messages, oldest first|
+|lib_ams.FShm.grp_id|[ams.GrpId](/txt/protocol/ams/README.md#ams-grpid)|[Val](/txt/exe/amc/reftype/Val.md)||Stream ID (primary key)|
+|lib_ams.FShm.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Name of the file (if opened)|
+|lib_ams.FShm.shm_file|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)||Associated file|
+|lib_ams.FShm.flags|[ams.ShmFlags](/txt/protocol/ams/README.md#ams-shmflags)|[Val](/txt/exe/amc/reftype/Val.md)||Shim flags (r, w, etc)|
+|lib_ams.FShm.shm_handle|u8|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Associated memory segment handle (windows only)|
+|lib_ams.FShm.c_cur_msg|[ams.MsgHeader](/txt/protocol/ams/MsgHeader.md)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Current message|
+|lib_ams.FShm.c_shmhdr|[ams.Shmhdr](/txt/protocol/ams/README.md#ams-shmhdr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Control block for this segment|
+|lib_ams.FShm.c_data|u8|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Pointer to data|
+|lib_ams.FShm.c_reader|[ams.Shmember](/txt/protocol/ams/README.md#ams-shmember)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||If we are reading this shm, heartbeat area|
+|lib_ams.FShm.shm_region|[algo.memptr](/txt/protocol/algo/memptr.md)|[Val](/txt/exe/amc/reftype/Val.md)||Shared memory region|
+|lib_ams.FShm.writelimit|u64|[Val](/txt/exe/amc/reftype/Val.md)||Write limit, based on all read members|
+|lib_ams.FShm.cached_woff|u64|[Val](/txt/exe/amc/reftype/Val.md)||Cached woff from previous poll|
+|lib_ams.FShm.offset_mask|u64|[Val](/txt/exe/amc/reftype/Val.md)||Mask for byte eof|
+|lib_ams.FShm.h_amsmsg|[ams.MsgHeader](/txt/protocol/ams/MsgHeader.md)|[Hook](/txt/exe/amc/reftype/Hook.md)||Message processing hook|
+|lib_ams.FShm.p_grptype|[lib_ams.FGrptype](/txt/gen/lib_ams/lib_ams.md#lib_ams-fgrptype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_ams.FShm.error|bool|[Val](/txt/exe/amc/reftype/Val.md)||Error was detected|
+|lib_ams.FShm.created|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ams.FShm.locked|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ams.FShm.n_unread|u64|[Val](/txt/exe/amc/reftype/Val.md)||Number of messages unread with UnreadMsg|
+|lib_ams.FShm.burst|i32|[Val](/txt/exe/amc/reftype/Val.md)|10|Read this many messages at a time|
+|lib_ams.FShm.lowbudget|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Low budget counter|
+|lib_ams.FShm.max_msg_size|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Largest message this ring carries; 0 until declared, when the process ceiling applies|
+|lib_ams.FShm.n_wlim_update|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_ams.FShm.size|i64|[Val](/txt/exe/amc/reftype/Val.md)||Segment size in bytes; 0 = the process-wide default|
+|lib_ams.FShm.c_boardq|[lib_ams.FBoardq](/txt/gen/lib_ams/lib_ams.md#lib_ams-fboardq)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Per-reader board queues of this lane|
+|lib_ams.FShm.p_board|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Board this lane posts large payloads to|
+|lib_ams.FShm.free_slot|u32|[Tary](/txt/exe/amc/reftype/Tary.md)||Stack of free board slot indices, board segment only|
+|lib_ams.FShm.slot_nref|u32|[Tary](/txt/exe/amc/reftype/Tary.md)||Per-slot count of readers yet to release it, board only|
+|lib_ams.FShm.zd_outmsg|[lib_ams.FOutmsg](/txt/gen/lib_ams/lib_ams.md#lib_ams-foutmsg)|[Llist](/txt/exe/amc/reftype/Llist.md)||This ring's queued messages, oldest first|
 
 #### Struct FShm
 <a href="#struct-fshm"></a>
@@ -1385,31 +1396,31 @@ private:
 <a href="#lib_ams-msgfmt-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ams.MsgFmt.payload_lim|i32|[Val](/txt/exe/amc/reftype.md#val)|1024000|Print up to this many chars from payload|
-|lib_ams.MsgFmt.indent|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Print indentation (with -pretty)|
-|lib_ams.MsgFmt.format|u8|[Val](/txt/exe/amc/reftype.md#val)|0|Output format|
-|lib_ams.MsgFmt.strip|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of headers to strip|
-|lib_ams.MsgFmt.pretty|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Use structured and indented printing|
-|lib_ams.MsgFmt.showlen|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Show message length|
-|lib_ams.MsgFmt.h_convert|[lib_ams.MsgFmt](/txt/gen/lib_ams/lib_ams.md#lib_ams-msgfmt)|[Hook](/txt/exe/amc/reftype.md#hook)|||
-|lib_ams.MsgFmt.convert_key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||conversion key|
-|lib_ams.MsgFmt.convert_val|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||conversion value - overwritten by the return|
+|lib_ams.MsgFmt.payload_lim|i32|[Val](/txt/exe/amc/reftype/Val.md)|1024000|Print up to this many chars from payload|
+|lib_ams.MsgFmt.indent|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Print indentation (with -pretty)|
+|lib_ams.MsgFmt.format|u8|[Val](/txt/exe/amc/reftype/Val.md)|0|Output format|
+|lib_ams.MsgFmt.strip|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of headers to strip|
+|lib_ams.MsgFmt.pretty|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Use structured and indented printing|
+|lib_ams.MsgFmt.showlen|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Show message length|
+|lib_ams.MsgFmt.h_convert|[lib_ams.MsgFmt](/txt/gen/lib_ams/lib_ams.md#lib_ams-msgfmt)|[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|lib_ams.MsgFmt.convert_key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||conversion key|
+|lib_ams.MsgFmt.convert_val|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||conversion value - overwritten by the return|
 
 #### Struct MsgFmt
 <a href="#struct-msgfmt"></a>
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ams_gen.h](/include/gen/lib_ams_gen.h)
 ```
 struct MsgFmt { // lib_ams.MsgFmt
-    i32                              payload_lim;     //   1024000  Print up to this many chars from payload
-    i32                              indent;          //   0  Print indentation (with -pretty)
-    u8                               format;          //   0  Output format
-    i32                              strip;           //   0  Number of headers to strip
-    bool                             pretty;          //   true  Use structured and indented printing
-    bool                             showlen;         //   false  Show message length
-    lib_ams::parent_h_convert_hook   h_convert;       //   NULL  Pointer to a function
-    u64                              h_convert_ctx;   //   0  Callback context
-    algo::cstring                    convert_key;     // conversion key
-    algo::cstring                    convert_val;     // conversion value - overwritten by the return
+    i32                               payload_lim;     //   1024000  Print up to this many chars from payload
+    i32                               indent;          //   0  Print indentation (with -pretty)
+    u8                                format;          //   0  Output format
+    i32                               strip;           //   0  Number of headers to strip
+    bool                              pretty;          //   true  Use structured and indented printing
+    bool                              showlen;         //   false  Show message length
+    lib_ams::msg_fmt_h_convert_hook   h_convert;       //   NULL  Pointer to a function
+    u64                               h_convert_ctx;   //   0  Callback context
+    algo::cstring                     convert_key;     // conversion key
+    algo::cstring                     convert_val;     // conversion value - overwritten by the return
     // func:lib_ams.MsgFmt..Ctor
     inline               MsgFmt() __attribute__((nothrow));
 };

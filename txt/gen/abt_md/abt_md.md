@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -80,6 +82,7 @@ All allocations are done through global `abt_md::_db` [abt_md.FDb](#abt_md-fdb) 
 ||||FNs.zd_finput (Llist)|
 |[abt_md.FGconst](#abt_md-fgconst)|[dmmeta.gconst](/txt/ssimdb/dmmeta/gconst.md)|FDb.gconst (Lary)|gconst (Lary, by rowid)|
 ||||FField.c_gconst (Ptr)|
+|[abt_md.FGitfile](#abt_md-fgitfile)|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|FDb.gitfile (Lary)|gitfile (Lary, by rowid)|ind_gitfile (Thash, hash field gitfile)|
 |[abt_md.FGstatic](#abt_md-fgstatic)|[dmmeta.gstatic](/txt/ssimdb/dmmeta/gstatic.md)|FDb.gstatic (Lary)|gstatic (Lary, by rowid)|ind_gstatic (Thash, hash field field)|
 |[abt_md.FHumanText](#abt_md-fhumantext)||FDb.human_text (Tpool)|ind_human_text (Thash, hash field key)|
 |[abt_md.FLink](#abt_md-flink)||FDb.link (Lary)|link (Lary, by rowid)|
@@ -116,7 +119,7 @@ All allocations are done through global `abt_md::_db` [abt_md.FDb](#abt_md-fdb) 
 <a href="#abt_md-fanchor-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FAnchor.anchor|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt_md.FAnchor.anchor|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FAnchor
 <a href="#struct-fanchor"></a>
@@ -149,7 +152,7 @@ private:
 <a href="#abt_md-fbadlevel-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FBadlevel.badlevel|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt_md.FBadlevel.badlevel|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FBadlevel
 <a href="#struct-fbadlevel"></a>
@@ -182,10 +185,10 @@ private:
 <a href="#abt_md-fcheckkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FCheckKey.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Acr key as written in the doc|
-|abt_md.FCheckKey.gitfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Source markdown file|
-|abt_md.FCheckKey.lineno|u32|[Val](/txt/exe/amc/reftype.md#val)||Line number (1-based)|
-|abt_md.FCheckKey.found|bool|[Val](/txt/exe/amc/reftype.md#val)||Set when acr returned the record|
+|abt_md.FCheckKey.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Acr key as written in the doc|
+|abt_md.FCheckKey.gitfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Source markdown file|
+|abt_md.FCheckKey.lineno|u32|[Val](/txt/exe/amc/reftype/Val.md)||Line number (1-based)|
+|abt_md.FCheckKey.found|bool|[Val](/txt/exe/amc/reftype/Val.md)||Set when acr returned the record|
 
 #### Struct FCheckKey
 <a href="#struct-fcheckkey"></a>
@@ -221,10 +224,10 @@ private:
 <a href="#abt_md-fcheckreq-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FCheckReq.id|u32|[Val](/txt/exe/amc/reftype.md#val)||Checkreq id (pkey)|
-|abt_md.FCheckReq.gitfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Source markdown file|
-|abt_md.FCheckReq.lineno|u32|[Val](/txt/exe/amc/reftype.md#val)||Line number (1-based)|
-|abt_md.FCheckReq.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Command line to validate|
+|abt_md.FCheckReq.id|u32|[Val](/txt/exe/amc/reftype/Val.md)||Checkreq id (pkey)|
+|abt_md.FCheckReq.gitfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Source markdown file|
+|abt_md.FCheckReq.lineno|u32|[Val](/txt/exe/amc/reftype/Val.md)||Line number (1-based)|
+|abt_md.FCheckReq.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Command line to validate|
 
 #### Struct FCheckReq
 <a href="#struct-fcheckreq"></a>
@@ -300,10 +303,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FCtype.base|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|abt_md.FCtype.c_ssimfile|[abt_md.FSsimfile](/txt/gen/abt_md/abt_md.md#abt_md-fssimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt_md.FCtype.c_field|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt_md.FCtype.p_ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|abt_md.FCtype.c_field_arg|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|abt_md.FCtype.c_ssimfile|[abt_md.FSsimfile](/txt/gen/abt_md/abt_md.md#abt_md-fssimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt_md.FCtype.c_field|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt_md.FCtype.p_ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|abt_md.FCtype.c_field_arg|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -357,11 +360,11 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FMdsection.base|[dev.Mdsection](/txt/ssimdb/dev/mdsection.md)|[Base](/txt/ssimdb/dev/mdsection.md)|||
-|abt_md.FMdsection.step|[abt_md.FFileSection](/txt/gen/abt_md/abt_md.md#abt_md-ffilesection)|[Hook](/txt/exe/amc/reftype.md#hook)|||
-|abt_md.FMdsection.regx_match|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|||
-|abt_md.FMdsection.regx_path|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|||
-|abt_md.FMdsection.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FMdsection.zd_file_section|[abt_md.FFileSection](/txt/gen/abt_md/abt_md.md#abt_md-ffilesection)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|abt_md.FMdsection.step|[abt_md.FFileSection](/txt/gen/abt_md/abt_md.md#abt_md-ffilesection)|[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|abt_md.FMdsection.regx_match|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|||
+|abt_md.FMdsection.regx_path|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|||
+|abt_md.FMdsection.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FMdsection.zd_file_section|[abt_md.FFileSection](/txt/gen/abt_md/abt_md.md#abt_md-ffilesection)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FMdsection
 <a href="#struct-fmdsection"></a>
@@ -394,61 +397,63 @@ struct FMdsection { // abt_md.FMdsection
 <a href="#abt_md-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FDb._db|[abt_md.FDb](/txt/gen/abt_md/abt_md.md#abt_md-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|abt_md.FDb.cmdline|[command.abt_md](/txt/protocol/command/README.md#command-abt_md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FDb.readmefile|[abt_md.FReadmefile](/txt/gen/abt_md/abt_md.md#abt_md-freadmefile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_readmefile|[abt_md.FReadmefile](/txt/gen/abt_md/abt_md.md#abt_md-freadmefile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.mdsection|[abt_md.FMdsection](/txt/gen/abt_md/abt_md.md#abt_md-fmdsection)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|abt_md.FDb.file_section|[abt_md.FFileSection](/txt/gen/abt_md/abt_md.md#abt_md-ffilesection)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.bh_file_section|[abt_md.FFileSection](/txt/gen/abt_md/abt_md.md#abt_md-ffilesection)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|abt_md.FDb.c_readmefile|[abt_md.FReadmefile](/txt/gen/abt_md/abt_md.md#abt_md-freadmefile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt_md.FDb.ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FDb.ssimfile|[abt_md.FSsimfile](/txt/gen/abt_md/abt_md.md#abt_md-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_ssimfile|[abt_md.FSsimfile](/txt/gen/abt_md/abt_md.md#abt_md-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.field|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_field|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.targsrc|[abt_md.FTargsrc](/txt/gen/abt_md/abt_md.md#abt_md-ftargsrc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.substr|[abt_md.FSubstr](/txt/gen/abt_md/abt_md.md#abt_md-fsubstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.human_text|[abt_md.FHumanText](/txt/gen/abt_md/abt_md.md#abt_md-fhumantext)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|abt_md.FDb.ind_human_text|[abt_md.FHumanText](/txt/gen/abt_md/abt_md.md#abt_md-fhumantext)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.scriptfile|[abt_md.FScriptfile](/txt/gen/abt_md/abt_md.md#abt_md-fscriptfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_scriptfile|[abt_md.FScriptfile](/txt/gen/abt_md/abt_md.md#abt_md-fscriptfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.nstype|[abt_md.FNstype](/txt/gen/abt_md/abt_md.md#abt_md-fnstype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_nstype|[abt_md.FNstype](/txt/gen/abt_md/abt_md.md#abt_md-fnstype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.comptest|[abt_md.FComptest](/txt/gen/abt_md/abt_md.md#abt_md-fcomptest)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.anchor|[abt_md.FAnchor](/txt/gen/abt_md/abt_md.md#abt_md-fanchor)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_anchor|[abt_md.FAnchor](/txt/gen/abt_md/abt_md.md#abt_md-fanchor)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.link|[abt_md.FLink](/txt/gen/abt_md/abt_md.md#abt_md-flink)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.reftype|[abt_md.FReftype](/txt/gen/abt_md/abt_md.md#abt_md-freftype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.tclass|[abt_md.FTclass](/txt/gen/abt_md/abt_md.md#abt_md-ftclass)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_tclass|[abt_md.FTclass](/txt/gen/abt_md/abt_md.md#abt_md-ftclass)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.fconst|[abt_md.FFconst](/txt/gen/abt_md/abt_md.md#abt_md-ffconst)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.gconst|[abt_md.FGconst](/txt/gen/abt_md/abt_md.md#abt_md-fgconst)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.readmesort|[abt_md.FReadmesort](/txt/gen/abt_md/abt_md.md#abt_md-freadmesort)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_readmesort|[abt_md.FReadmesort](/txt/gen/abt_md/abt_md.md#abt_md-freadmesort)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.gstatic|[abt_md.FGstatic](/txt/gen/abt_md/abt_md.md#abt_md-fgstatic)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_gstatic|[abt_md.FGstatic](/txt/gen/abt_md/abt_md.md#abt_md-fgstatic)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.target|[abt_md.FTarget](/txt/gen/abt_md/abt_md.md#abt_md-ftarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.targdep|[abt_md.FTargdep](/txt/gen/abt_md/abt_md.md#abt_md-ftargdep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_target|[abt_md.FTarget](/txt/gen/abt_md/abt_md.md#abt_md-ftarget)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.finput|[abt_md.FFinput](/txt/gen/abt_md/abt_md.md#abt_md-ffinput)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.zd_scanns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|abt_md.FDb.dispatch|[abt_md.FDispatch](/txt/gen/abt_md/abt_md.md#abt_md-fdispatch)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_dispatch|[abt_md.FDispatch](/txt/gen/abt_md/abt_md.md#abt_md-fdispatch)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.dispatch_msg|[abt_md.FDispatchMsg](/txt/gen/abt_md/abt_md.md#abt_md-fdispatchmsg)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.help_loaded|bool|[Val](/txt/exe/amc/reftype.md#val)||true once LoadHelpStrings has scanned cpp/gen/command_gen.cpp|
-|abt_md.FDb.next_checkid|u32|[Val](/txt/exe/amc/reftype.md#val)||Next checkreq id|
-|abt_md.FDb.ind_checkreq|[abt_md.FCheckReq](/txt/gen/abt_md/abt_md.md#abt_md-fcheckreq)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.checkreq|[abt_md.FCheckReq](/txt/gen/abt_md/abt_md.md#abt_md-fcheckreq)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.n_writefail|i32|[Val](/txt/exe/amc/reftype.md#val)|0|readme writes that failed; folded into exit_code at end of Main|
-|abt_md.FDb.badlevel|[abt_md.FBadlevel](/txt/gen/abt_md/abt_md.md#abt_md-fbadlevel)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|abt_md.FDb.ind_badlevel|[abt_md.FBadlevel](/txt/gen/abt_md/abt_md.md#abt_md-fbadlevel)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt_md.FDb.checkkey|[abt_md.FCheckKey](/txt/gen/abt_md/abt_md.md#abt_md-fcheckkey)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt_md.FDb.ind_checkkey|[abt_md.FCheckKey](/txt/gen/abt_md/abt_md.md#abt_md-fcheckkey)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|abt_md.FDb._db|[abt_md.FDb](/txt/gen/abt_md/abt_md.md#abt_md-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|abt_md.FDb.cmdline|[command.abt_md](/txt/protocol/command/README.md#command-abt_md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FDb.readmefile|[abt_md.FReadmefile](/txt/gen/abt_md/abt_md.md#abt_md-freadmefile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_readmefile|[abt_md.FReadmefile](/txt/gen/abt_md/abt_md.md#abt_md-freadmefile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.mdsection|[abt_md.FMdsection](/txt/gen/abt_md/abt_md.md#abt_md-fmdsection)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|abt_md.FDb.file_section|[abt_md.FFileSection](/txt/gen/abt_md/abt_md.md#abt_md-ffilesection)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.bh_file_section|[abt_md.FFileSection](/txt/gen/abt_md/abt_md.md#abt_md-ffilesection)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|abt_md.FDb.c_readmefile|[abt_md.FReadmefile](/txt/gen/abt_md/abt_md.md#abt_md-freadmefile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt_md.FDb.ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FDb.ssimfile|[abt_md.FSsimfile](/txt/gen/abt_md/abt_md.md#abt_md-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_ssimfile|[abt_md.FSsimfile](/txt/gen/abt_md/abt_md.md#abt_md-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.field|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_field|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.targsrc|[abt_md.FTargsrc](/txt/gen/abt_md/abt_md.md#abt_md-ftargsrc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.substr|[abt_md.FSubstr](/txt/gen/abt_md/abt_md.md#abt_md-fsubstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.human_text|[abt_md.FHumanText](/txt/gen/abt_md/abt_md.md#abt_md-fhumantext)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|abt_md.FDb.ind_human_text|[abt_md.FHumanText](/txt/gen/abt_md/abt_md.md#abt_md-fhumantext)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.scriptfile|[abt_md.FScriptfile](/txt/gen/abt_md/abt_md.md#abt_md-fscriptfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_scriptfile|[abt_md.FScriptfile](/txt/gen/abt_md/abt_md.md#abt_md-fscriptfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.nstype|[abt_md.FNstype](/txt/gen/abt_md/abt_md.md#abt_md-fnstype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_nstype|[abt_md.FNstype](/txt/gen/abt_md/abt_md.md#abt_md-fnstype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.comptest|[abt_md.FComptest](/txt/gen/abt_md/abt_md.md#abt_md-fcomptest)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.anchor|[abt_md.FAnchor](/txt/gen/abt_md/abt_md.md#abt_md-fanchor)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_anchor|[abt_md.FAnchor](/txt/gen/abt_md/abt_md.md#abt_md-fanchor)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.link|[abt_md.FLink](/txt/gen/abt_md/abt_md.md#abt_md-flink)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.reftype|[abt_md.FReftype](/txt/gen/abt_md/abt_md.md#abt_md-freftype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.tclass|[abt_md.FTclass](/txt/gen/abt_md/abt_md.md#abt_md-ftclass)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_tclass|[abt_md.FTclass](/txt/gen/abt_md/abt_md.md#abt_md-ftclass)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.fconst|[abt_md.FFconst](/txt/gen/abt_md/abt_md.md#abt_md-ffconst)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.gconst|[abt_md.FGconst](/txt/gen/abt_md/abt_md.md#abt_md-fgconst)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.readmesort|[abt_md.FReadmesort](/txt/gen/abt_md/abt_md.md#abt_md-freadmesort)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_readmesort|[abt_md.FReadmesort](/txt/gen/abt_md/abt_md.md#abt_md-freadmesort)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.gstatic|[abt_md.FGstatic](/txt/gen/abt_md/abt_md.md#abt_md-fgstatic)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_gstatic|[abt_md.FGstatic](/txt/gen/abt_md/abt_md.md#abt_md-fgstatic)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.target|[abt_md.FTarget](/txt/gen/abt_md/abt_md.md#abt_md-ftarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.targdep|[abt_md.FTargdep](/txt/gen/abt_md/abt_md.md#abt_md-ftargdep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_target|[abt_md.FTarget](/txt/gen/abt_md/abt_md.md#abt_md-ftarget)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.finput|[abt_md.FFinput](/txt/gen/abt_md/abt_md.md#abt_md-ffinput)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.zd_scanns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|abt_md.FDb.dispatch|[abt_md.FDispatch](/txt/gen/abt_md/abt_md.md#abt_md-fdispatch)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_dispatch|[abt_md.FDispatch](/txt/gen/abt_md/abt_md.md#abt_md-fdispatch)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.dispatch_msg|[abt_md.FDispatchMsg](/txt/gen/abt_md/abt_md.md#abt_md-fdispatchmsg)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.help_loaded|bool|[Val](/txt/exe/amc/reftype/Val.md)||true once LoadHelpStrings has scanned cpp/gen/command_gen.cpp|
+|abt_md.FDb.next_checkid|u32|[Val](/txt/exe/amc/reftype/Val.md)||Next checkreq id|
+|abt_md.FDb.ind_checkreq|[abt_md.FCheckReq](/txt/gen/abt_md/abt_md.md#abt_md-fcheckreq)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.checkreq|[abt_md.FCheckReq](/txt/gen/abt_md/abt_md.md#abt_md-fcheckreq)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.n_writefail|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|readme writes that failed; folded into exit_code at end of Main|
+|abt_md.FDb.badlevel|[abt_md.FBadlevel](/txt/gen/abt_md/abt_md.md#abt_md-fbadlevel)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|abt_md.FDb.ind_badlevel|[abt_md.FBadlevel](/txt/gen/abt_md/abt_md.md#abt_md-fbadlevel)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.checkkey|[abt_md.FCheckKey](/txt/gen/abt_md/abt_md.md#abt_md-fcheckkey)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_checkkey|[abt_md.FCheckKey](/txt/gen/abt_md/abt_md.md#abt_md-fcheckkey)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt_md.FDb.gitfile|[abt_md.FGitfile](/txt/gen/abt_md/abt_md.md#abt_md-fgitfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt_md.FDb.ind_gitfile|[abt_md.FGitfile](/txt/gen/abt_md/abt_md.md#abt_md-fgitfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -577,6 +582,11 @@ struct FDb { // abt_md.FDb: In-memory database for abt_md
     abt_md::FCheckKey**              ind_checkkey_buckets_elems;                        // pointer to bucket array
     i32                              ind_checkkey_buckets_n;                            // number of elements in bucket array
     i32                              ind_checkkey_n;                                    // number of elements in the hash table
+    abt_md::FGitfile*                gitfile_lary[36];                                  // level array
+    i64                              gitfile_n;                                         // number of elements in array
+    abt_md::FGitfile**               ind_gitfile_buckets_elems;                         // pointer to bucket array
+    i32                              ind_gitfile_buckets_n;                             // number of elements in bucket array
+    i32                              ind_gitfile_n;                                     // number of elements in the hash table
     abt_md::trace                    trace;                                             //
 };
 ```
@@ -588,25 +598,25 @@ struct FDb { // abt_md.FDb: In-memory database for abt_md
 <a href="#abt_md-fdirent-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FDirent.is_dir|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FDirent.p_dirscan|[abt_md.FDirscan](/txt/gen/abt_md/abt_md.md#abt_md-fdirscan)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|abt_md.FDirent.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FDirent.sortfld|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FDirent.pathname|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FDirent.sorted|bool|[Val](/txt/exe/amc/reftype.md#val)|false|a readmesort row names this entry|
+|abt_md.FDirent.is_dir|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FDirent.p_dirscan|[abt_md.FDirscan](/txt/gen/abt_md/abt_md.md#abt_md-fdirscan)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|abt_md.FDirent.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FDirent.sortfld|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FDirent.pathname|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FDirent.sorted|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|a readmesort row names this entry|
 
 #### Struct FDirent
 <a href="#struct-fdirent"></a>
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/abt_md_gen.h](/include/gen/abt_md_gen.h)
 ```
 struct FDirent { // abt_md.FDirent
-    bool                is_dir;                 //   false
-    abt_md::FDirscan*   p_dirscan;              // reference to parent row
-    algo::cstring       filename;               //
-    algo::cstring       sortfld;                //
-    algo::cstring       pathname;               //
-    bool                sorted;                 //   false  a readmesort row names this entry
-    i32                 parent_bh_dirent_idx;   // index in heap; -1 means not-in-heap
+    bool                is_dir;                  //   false
+    abt_md::FDirscan*   p_dirscan;               // reference to parent row
+    algo::cstring       filename;                //
+    algo::cstring       sortfld;                 //
+    algo::cstring       pathname;                //
+    bool                sorted;                  //   false  a readmesort row names this entry
+    i32                 dirscan_bh_dirent_idx;   // index in heap; -1 means not-in-heap
     // func:abt_md.FDirent..AssignOp
     inline abt_md::FDirent& operator =(const abt_md::FDirent &rhs) = delete;
     // func:abt_md.FDirent..CopyCtor
@@ -630,8 +640,8 @@ private:
 <a href="#abt_md-fdirscan-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FDirscan.bh_dirent|[abt_md.FDirent](/txt/gen/abt_md/abt_md.md#abt_md-fdirent)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|abt_md.FDirscan.dirent|[abt_md.FDirent](/txt/gen/abt_md/abt_md.md#abt_md-fdirent)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|abt_md.FDirscan.bh_dirent|[abt_md.FDirent](/txt/gen/abt_md/abt_md.md#abt_md-fdirent)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|abt_md.FDirscan.dirent|[abt_md.FDirent](/txt/gen/abt_md/abt_md.md#abt_md-fdirent)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FDirscan
 <a href="#struct-fdirscan"></a>
@@ -658,7 +668,7 @@ struct FDirscan { // abt_md.FDirscan
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FDispatch.base|[dmmeta.Dispatch](/txt/ssimdb/dmmeta/dispatch.md)|[Base](/txt/ssimdb/dmmeta/dispatch.md)|||
-|abt_md.FDispatch.c_dispatch_msg|[abt_md.FDispatchMsg](/txt/gen/abt_md/abt_md.md#abt_md-fdispatchmsg)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|abt_md.FDispatch.c_dispatch_msg|[abt_md.FDispatchMsg](/txt/gen/abt_md/abt_md.md#abt_md-fdispatchmsg)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FDispatch
 <a href="#struct-fdispatch"></a>
@@ -707,7 +717,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FDispatchMsg.base|[dmmeta.DispatchMsg](/txt/ssimdb/dmmeta/dispatch_msg.md)|[Base](/txt/ssimdb/dmmeta/dispatch_msg.md)|||
-|abt_md.FDispatchMsg.p_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt_md.FDispatchMsg.p_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FDispatchMsg
 <a href="#struct-fdispatchmsg"></a>
@@ -782,13 +792,13 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FField.base|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|abt_md.FField.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FField.c_substr|[abt_md.FSubstr](/txt/gen/abt_md/abt_md.md#abt_md-fsubstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt_md.FField.p_arg|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|abt_md.FField.p_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|abt_md.FField.ispkey|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FField.c_fconst|[abt_md.FFconst](/txt/gen/abt_md/abt_md.md#abt_md-ffconst)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt_md.FField.c_gconst|[abt_md.FGconst](/txt/gen/abt_md/abt_md.md#abt_md-fgconst)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|abt_md.FField.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FField.c_substr|[abt_md.FSubstr](/txt/gen/abt_md/abt_md.md#abt_md-fsubstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt_md.FField.p_arg|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|abt_md.FField.p_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|abt_md.FField.ispkey|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FField.c_fconst|[abt_md.FFconst](/txt/gen/abt_md/abt_md.md#abt_md-ffconst)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt_md.FField.c_gconst|[abt_md.FGconst](/txt/gen/abt_md/abt_md.md#abt_md-fgconst)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -848,12 +858,12 @@ private:
 <a href="#abt_md-ffilesection-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FFileSection.title|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||First line|
-|abt_md.FFileSection.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Remaining lines|
-|abt_md.FFileSection.sortkey|i32|[Val](/txt/exe/amc/reftype.md#val)||Sort key|
-|abt_md.FFileSection.select|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Selected for processing|
-|abt_md.FFileSection.firstline|i32|[Val](/txt/exe/amc/reftype.md#val)||Line in file where section starts|
-|abt_md.FFileSection.p_mdsection|[abt_md.FMdsection](/txt/gen/abt_md/abt_md.md#abt_md-fmdsection)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt_md.FFileSection.title|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||First line|
+|abt_md.FFileSection.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Remaining lines|
+|abt_md.FFileSection.sortkey|i32|[Val](/txt/exe/amc/reftype/Val.md)||Sort key|
+|abt_md.FFileSection.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Selected for processing|
+|abt_md.FFileSection.firstline|i32|[Val](/txt/exe/amc/reftype/Val.md)||Line in file where section starts|
+|abt_md.FFileSection.p_mdsection|[abt_md.FMdsection](/txt/gen/abt_md/abt_md.md#abt_md-fmdsection)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFileSection
 <a href="#struct-ffilesection"></a>
@@ -893,7 +903,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FFinput.base|[dmmeta.Finput](/txt/ssimdb/dmmeta/finput.md)|[Base](/txt/ssimdb/dmmeta/finput.md)|||
-|abt_md.FFinput.p_field|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt_md.FFinput.p_field|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFinput
 <a href="#struct-ffinput"></a>
@@ -963,6 +973,41 @@ private:
 };
 ```
 
+#### abt_md.FGitfile - File managed by git
+<a href="#abt_md-fgitfile"></a>
+
+#### abt_md.FGitfile Fields
+<a href="#abt_md-fgitfile-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|abt_md.FGitfile.base|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Base](/txt/ssimdb/dev/gitfile.md)|||
+
+#### Struct FGitfile
+<a href="#struct-fgitfile"></a>
+*Note:* field ``abt_md.FGitfile.base`` has reftype ``base`` so the fields of [dev.Gitfile](/txt/ssimdb/dev/gitfile.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/abt_md_gen.h](/include/gen/abt_md_gen.h)
+```
+struct FGitfile { // abt_md.FGitfile
+    abt_md::FGitfile*   ind_gitfile_next;      // hash next
+    u32                 ind_gitfile_hashval;   // hash value
+    algo::Smallstr200   gitfile;               //
+    // func:abt_md.FGitfile..AssignOp
+    inline abt_md::FGitfile& operator =(const abt_md::FGitfile &rhs) = delete;
+    // func:abt_md.FGitfile..CopyCtor
+    inline               FGitfile(const abt_md::FGitfile &rhs) = delete;
+private:
+    // func:abt_md.FGitfile..Ctor
+    inline               FGitfile() __attribute__((nothrow));
+    // func:abt_md.FGitfile..Dtor
+    inline               ~FGitfile() __attribute__((nothrow));
+    friend abt_md::FGitfile&    gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend abt_md::FGitfile*    gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 gitfile_RemoveAll() __attribute__((nothrow));
+    friend void                 gitfile_RemoveLast() __attribute__((nothrow));
+};
+```
+
 #### abt_md.FGstatic - Load entries for this table at startup time
 <a href="#abt_md-fgstatic"></a>
 
@@ -1006,9 +1051,9 @@ private:
 <a href="#abt_md-fhumantext-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FHumanText.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FHumanText.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt_md.FHumanText.used|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt_md.FHumanText.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FHumanText.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt_md.FHumanText.used|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FHumanText
 <a href="#struct-fhumantext"></a>
@@ -1043,9 +1088,9 @@ private:
 <a href="#abt_md-flink-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt_md.FLink.location|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||txt/exe/acr.md:31|
-|abt_md.FLink.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||txt/exe/acr.md:31|
-|abt_md.FLink.target|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||URL|
+|abt_md.FLink.location|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||txt/exe/acr.md:31|
+|abt_md.FLink.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||txt/exe/acr.md:31|
+|abt_md.FLink.target|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||URL|
 
 #### Struct FLink
 <a href="#struct-flink"></a>
@@ -1073,14 +1118,14 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FNs.base|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Base](/txt/ssimdb/dmmeta/ns.md)|||
-|abt_md.FNs.c_readmefile|[abt_md.FReadmefile](/txt/gen/abt_md/abt_md.md#abt_md-freadmefile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt_md.FNs.c_targsrc|[abt_md.FTargsrc](/txt/gen/abt_md/abt_md.md#abt_md-ftargsrc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt_md.FNs.c_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt_md.FNs.c_comptest|[abt_md.FComptest](/txt/gen/abt_md/abt_md.md#abt_md-fcomptest)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt_md.FNs.c_target|[abt_md.FTarget](/txt/gen/abt_md/abt_md.md#abt_md-ftarget)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt_md.FNs.zd_finput|[abt_md.FFinput](/txt/gen/abt_md/abt_md.md#abt_md-ffinput)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|abt_md.FNs.c_dispatch|[abt_md.FDispatch](/txt/gen/abt_md/abt_md.md#abt_md-fdispatch)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt_md.FNs.help|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||help text extracted from cpp/gen/command_gen.cpp by LoadHelpStrings|
+|abt_md.FNs.c_readmefile|[abt_md.FReadmefile](/txt/gen/abt_md/abt_md.md#abt_md-freadmefile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt_md.FNs.c_targsrc|[abt_md.FTargsrc](/txt/gen/abt_md/abt_md.md#abt_md-ftargsrc)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt_md.FNs.c_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt_md.FNs.c_comptest|[abt_md.FComptest](/txt/gen/abt_md/abt_md.md#abt_md-fcomptest)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt_md.FNs.c_target|[abt_md.FTarget](/txt/gen/abt_md/abt_md.md#abt_md-ftarget)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt_md.FNs.zd_finput|[abt_md.FFinput](/txt/gen/abt_md/abt_md.md#abt_md-ffinput)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|abt_md.FNs.c_dispatch|[abt_md.FDispatch](/txt/gen/abt_md/abt_md.md#abt_md-fdispatch)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt_md.FNs.help|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||help text extracted from cpp/gen/command_gen.cpp by LoadHelpStrings|
 
 #### Struct FNs
 <a href="#struct-fns"></a>
@@ -1187,11 +1232,11 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FReadmefile.base|[dev.Readmefile](/txt/ssimdb/dev/readmefile.md)|[Base](/txt/ssimdb/dev/readmefile.md)|||
-|abt_md.FReadmefile.p_ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Optional Associated namespace|
-|abt_md.FReadmefile.p_ssimfile|[abt_md.FSsimfile](/txt/gen/abt_md/abt_md.md#abt_md-fssimfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Optional Associated ssimfile|
-|abt_md.FReadmefile.p_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Optional Associated ctype|
-|abt_md.FReadmefile.p_scriptfile|[abt_md.FScriptfile](/txt/gen/abt_md/abt_md.md#abt_md-fscriptfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Optional Associated scriptfile|
-|abt_md.FReadmefile.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt_md.FReadmefile.p_ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Optional Associated namespace|
+|abt_md.FReadmefile.p_ssimfile|[abt_md.FSsimfile](/txt/gen/abt_md/abt_md.md#abt_md-fssimfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Optional Associated ssimfile|
+|abt_md.FReadmefile.p_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Optional Associated ctype|
+|abt_md.FReadmefile.p_scriptfile|[abt_md.FScriptfile](/txt/gen/abt_md/abt_md.md#abt_md-fscriptfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Optional Associated scriptfile|
+|abt_md.FReadmefile.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FReadmefile
 <a href="#struct-freadmefile"></a>
@@ -1236,7 +1281,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FReadmesort.base|[dev.Readmesort](/txt/ssimdb/dev/readmesort.md)|[Base](/txt/ssimdb/dev/readmesort.md)|||
-|abt_md.FReadmesort.sortfld|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt_md.FReadmesort.sortfld|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FReadmesort
 <a href="#struct-freadmesort"></a>
@@ -1274,7 +1319,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FReftype.base|[dmmeta.Reftype](/txt/ssimdb/dmmeta/reftype.md)|[Base](/txt/ssimdb/dmmeta/reftype.md)|||
-|abt_md.FReftype.p_tclass|[abt_md.FTclass](/txt/gen/abt_md/abt_md.md#abt_md-ftclass)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt_md.FReftype.p_tclass|[abt_md.FTclass](/txt/gen/abt_md/abt_md.md#abt_md-ftclass)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FReftype
 <a href="#struct-freftype"></a>
@@ -1351,7 +1396,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FSsimfile.base|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
-|abt_md.FSsimfile.p_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt_md.FSsimfile.p_ctype|[abt_md.FCtype](/txt/gen/abt_md/abt_md.md#abt_md-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSsimfile
 <a href="#struct-fssimfile"></a>
@@ -1391,7 +1436,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FSubstr.base|[dmmeta.Substr](/txt/ssimdb/dmmeta/substr.md)|[Base](/txt/ssimdb/dmmeta/substr.md)|||
-|abt_md.FSubstr.p_srcfield|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt_md.FSubstr.p_srcfield|[abt_md.FField](/txt/gen/abt_md/abt_md.md#abt_md-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSubstr
 <a href="#struct-fsubstr"></a>
@@ -1430,7 +1475,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FTargdep.base|[dev.Targdep](/txt/ssimdb/dev/targdep.md)|[Base](/txt/ssimdb/dev/targdep.md)|||
-|abt_md.FTargdep.p_parent|[abt_md.FTarget](/txt/gen/abt_md/abt_md.md#abt_md-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt_md.FTargdep.p_parent|[abt_md.FTarget](/txt/gen/abt_md/abt_md.md#abt_md-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTargdep
 <a href="#struct-ftargdep"></a>
@@ -1469,8 +1514,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt_md.FTarget.base|[dev.Target](/txt/ssimdb/dev/target.md)|[Base](/txt/ssimdb/dev/target.md)|||
-|abt_md.FTarget.c_targdep|[abt_md.FTargdep](/txt/gen/abt_md/abt_md.md#abt_md-ftargdep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt_md.FTarget.p_ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt_md.FTarget.c_targdep|[abt_md.FTargdep](/txt/gen/abt_md/abt_md.md#abt_md-ftargdep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt_md.FTarget.p_ns|[abt_md.FNs](/txt/gen/abt_md/abt_md.md#abt_md-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTarget
 <a href="#struct-ftarget"></a>

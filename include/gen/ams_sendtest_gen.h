@@ -86,36 +86,36 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 // func:ams_sendtest.FChild.child.Start
-int                  child_Start(ams_sendtest::FChild& child) __attribute__((nothrow));
+int                  child_Start(ams_sendtest::FChild& parent) __attribute__((nothrow));
 // Kill subprocess and wait
 // func:ams_sendtest.FChild.child.Kill
-void                 child_Kill(ams_sendtest::FChild& child);
+void                 child_Kill(ams_sendtest::FChild& parent);
 // Wait for subprocess to return
 // func:ams_sendtest.FChild.child.Wait
-void                 child_Wait(ams_sendtest::FChild& child) __attribute__((nothrow));
+void                 child_Wait(ams_sendtest::FChild& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
 // func:ams_sendtest.FChild.child.Exec
-int                  child_Exec(ams_sendtest::FChild& child) __attribute__((nothrow));
+int                  child_Exec(ams_sendtest::FChild& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
 // func:ams_sendtest.FChild.child.ExecX
-void                 child_ExecX(ams_sendtest::FChild& child);
+void                 child_ExecX(ams_sendtest::FChild& parent);
 // Call execv()
 // Call execv with specified parameters
 // func:ams_sendtest.FChild.child.Execv
-int                  child_Execv(ams_sendtest::FChild& child) __attribute__((nothrow));
+int                  child_Execv(ams_sendtest::FChild& parent) __attribute__((nothrow));
 // func:ams_sendtest.FChild.child.ToCmdline
-algo::tempstr        child_ToCmdline(ams_sendtest::FChild& child) __attribute__((nothrow));
+algo::tempstr        child_ToCmdline(ams_sendtest::FChild& parent) __attribute__((nothrow));
 // Form array from the command line
 // func:ams_sendtest.FChild.child.ToArgv
-void                 child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& args) __attribute__((nothrow));
+void                 child_ToArgv(ams_sendtest::FChild& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:ams_sendtest.FChild..Init
-void                 FChild_Init(ams_sendtest::FChild& child);
+void                 FChild_Init(ams_sendtest::FChild& parent);
 // func:ams_sendtest.FChild..Uninit
-void                 FChild_Uninit(ams_sendtest::FChild& child) __attribute__((nothrow));
+void                 FChild_Uninit(ams_sendtest::FChild& parent) __attribute__((nothrow));
 
 // --- ams_sendtest.FTest
 struct FTest { // ams_sendtest.FTest

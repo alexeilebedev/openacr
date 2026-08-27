@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -128,11 +130,11 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FBuilddir.base|[dev.Builddir](/txt/ssimdb/dev/builddir.md)|[Base](/txt/ssimdb/dev/builddir.md)|||
-|abt.FBuilddir.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FBuilddir.path|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Path for this builddir|
-|abt.FBuilddir.lockfile|[algo_lib.FLockfile](/txt/gen/algo_lib/algo_lib.md#algo_lib-flockfile)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FBuilddir.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FBuilddir.p_compiler|[abt.FCompiler](/txt/gen/abt/abt.md#abt-fcompiler)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt.FBuilddir.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FBuilddir.path|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Path for this builddir|
+|abt.FBuilddir.lockfile|[algo_lib.FLockfile](/txt/gen/algo_lib/algo_lib.md#algo_lib-flockfile)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FBuilddir.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FBuilddir.p_compiler|[abt.FCompiler](/txt/gen/abt/abt.md#abt-fcompiler)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FBuilddir
 <a href="#struct-fbuilddir"></a>
@@ -256,51 +258,51 @@ private:
 <a href="#abt-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype.md#lpool)||private memory pool|
-|abt.FDb.cmdline|[command.abt](/txt/protocol/command/README.md#command-abt)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FDb.srcfile|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.targdep|[abt.FTargdep](/txt/gen/abt/abt.md#abt-ftargdep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.tool_opt|[abt.FToolOpt](/txt/gen/abt/abt.md#abt-ftoolopt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_targsrc|[abt.FTargsrc](/txt/gen/abt/abt.md#abt-ftargsrc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.targsrc|[abt.FTargsrc](/txt/gen/abt/abt.md#abt-ftargsrc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.syscmddep|[abt.FSyscmddep](/txt/gen/abt/abt.md#abt-fsyscmddep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.syscmd|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb._db|[abt.FDb](/txt/gen/abt/abt.md#abt-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|abt.FDb.ind_syscmd|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.ind_running|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.ind_srcfile|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.cfg|[abt.FCfg](/txt/gen/abt/abt.md#abt-fcfg)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_cfg|[abt.FCfg](/txt/gen/abt/abt.md#abt-fcfg)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.uname|[abt.FUname](/txt/gen/abt/abt.md#abt-funame)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_uname|[abt.FUname](/txt/gen/abt/abt.md#abt-funame)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.compiler|[abt.FCompiler](/txt/gen/abt/abt.md#abt-fcompiler)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_compiler|[abt.FCompiler](/txt/gen/abt/abt.md#abt-fcompiler)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.arch|[abt.FArch](/txt/gen/abt/abt.md#abt-farch)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_arch|[abt.FArch](/txt/gen/abt/abt.md#abt-farch)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.bh_syscmd|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|abt.FDb.zs_srcfile_read|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Llist](/txt/exe/amc/reftype.md#llist)||List of source files remaining to be read.|
-|abt.FDb.zs_sel_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|abt.FDb.report|[report.abt](/txt/protocol/report/README.md#report-abt)|[Val](/txt/exe/amc/reftype.md#val)||Final report|
-|abt.FDb.targsyslib|[abt.FTargsyslib](/txt/gen/abt/abt.md#abt-ftargsyslib)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.syslib|[abt.FSyslib](/txt/gen/abt/abt.md#abt-fsyslib)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_syslib|[abt.FSyslib](/txt/gen/abt/abt.md#abt-fsyslib)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.include|[abt.FInclude](/txt/gen/abt/abt.md#abt-finclude)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_include|[abt.FInclude](/txt/gen/abt/abt.md#abt-finclude)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.sysincl|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)||Array of system include dirs to try|
-|abt.FDb.zs_origsel_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|abt.FDb.ns|[abt.FNs](/txt/gen/abt/abt.md#abt-fns)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_ns|[abt.FNs](/txt/gen/abt/abt.md#abt-fns)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.ccache|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FDb.gcache|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FDb.filestat|[abt.FFilestat](/txt/gen/abt/abt.md#abt-ffilestat)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_filestat|[abt.FFilestat](/txt/gen/abt/abt.md#abt-ffilestat)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.builddir|[abt.FBuilddir](/txt/gen/abt/abt.md#abt-fbuilddir)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|abt.FDb.ind_builddir|[abt.FBuilddir](/txt/gen/abt/abt.md#abt-fbuilddir)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|abt.FDb.c_builddir|[abt.FBuilddir](/txt/gen/abt/abt.md#abt-fbuilddir)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt.FDb.zd_inclstack|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|abt.FDb.tty|bool|[Val](/txt/exe/amc/reftype.md#val)||Output|
+|abt.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype/Lpool.md)||private memory pool|
+|abt.FDb.cmdline|[command.abt](/txt/protocol/command/README.md#command-abt)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FDb.srcfile|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.targdep|[abt.FTargdep](/txt/gen/abt/abt.md#abt-ftargdep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.tool_opt|[abt.FToolOpt](/txt/gen/abt/abt.md#abt-ftoolopt)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_targsrc|[abt.FTargsrc](/txt/gen/abt/abt.md#abt-ftargsrc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.targsrc|[abt.FTargsrc](/txt/gen/abt/abt.md#abt-ftargsrc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.syscmddep|[abt.FSyscmddep](/txt/gen/abt/abt.md#abt-fsyscmddep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.syscmd|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb._db|[abt.FDb](/txt/gen/abt/abt.md#abt-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|abt.FDb.ind_syscmd|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.ind_running|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.ind_srcfile|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.cfg|[abt.FCfg](/txt/gen/abt/abt.md#abt-fcfg)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_cfg|[abt.FCfg](/txt/gen/abt/abt.md#abt-fcfg)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.uname|[abt.FUname](/txt/gen/abt/abt.md#abt-funame)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_uname|[abt.FUname](/txt/gen/abt/abt.md#abt-funame)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.compiler|[abt.FCompiler](/txt/gen/abt/abt.md#abt-fcompiler)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_compiler|[abt.FCompiler](/txt/gen/abt/abt.md#abt-fcompiler)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.arch|[abt.FArch](/txt/gen/abt/abt.md#abt-farch)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_arch|[abt.FArch](/txt/gen/abt/abt.md#abt-farch)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.bh_syscmd|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|abt.FDb.zs_srcfile_read|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of source files remaining to be read.|
+|abt.FDb.zs_sel_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|abt.FDb.report|[report.abt](/txt/protocol/report/README.md#report-abt)|[Val](/txt/exe/amc/reftype/Val.md)||Final report|
+|abt.FDb.targsyslib|[abt.FTargsyslib](/txt/gen/abt/abt.md#abt-ftargsyslib)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.syslib|[abt.FSyslib](/txt/gen/abt/abt.md#abt-fsyslib)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_syslib|[abt.FSyslib](/txt/gen/abt/abt.md#abt-fsyslib)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.include|[abt.FInclude](/txt/gen/abt/abt.md#abt-finclude)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_include|[abt.FInclude](/txt/gen/abt/abt.md#abt-finclude)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.sysincl|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)||Array of system include dirs to try|
+|abt.FDb.zs_origsel_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|abt.FDb.ns|[abt.FNs](/txt/gen/abt/abt.md#abt-fns)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_ns|[abt.FNs](/txt/gen/abt/abt.md#abt-fns)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.ccache|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FDb.gcache|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FDb.filestat|[abt.FFilestat](/txt/gen/abt/abt.md#abt-ffilestat)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_filestat|[abt.FFilestat](/txt/gen/abt/abt.md#abt-ffilestat)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.builddir|[abt.FBuilddir](/txt/gen/abt/abt.md#abt-fbuilddir)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|abt.FDb.ind_builddir|[abt.FBuilddir](/txt/gen/abt/abt.md#abt-fbuilddir)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|abt.FDb.c_builddir|[abt.FBuilddir](/txt/gen/abt/abt.md#abt-fbuilddir)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt.FDb.zd_inclstack|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|abt.FDb.tty|bool|[Val](/txt/exe/amc/reftype/Val.md)||Output|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -418,11 +420,11 @@ struct FDb { // abt.FDb: In-memory database for abt
 <a href="#abt-ffilestat-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt.FFilestat.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FFilestat.modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FFilestat.size|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FFilestat.isdir|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FFilestat.exists|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt.FFilestat.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FFilestat.modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FFilestat.size|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FFilestat.isdir|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FFilestat.exists|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FFilestat
 <a href="#struct-ffilestat"></a>
@@ -460,8 +462,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FInclude.msghdr|[dev.Include](/txt/ssimdb/dev/include.md)|[Base](/txt/ssimdb/dev/include.md)|||
-|abt.FInclude.p_header|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|abt.FInclude.wantprint|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt.FInclude.p_header|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|abt.FInclude.wantprint|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FInclude
 <a href="#struct-finclude"></a>
@@ -541,16 +543,16 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FSrcfile.msghdr|[dev.Srcfile](/txt/ssimdb/dev/srcfile.md)|[Base](/txt/ssimdb/dev/srcfile.md)|||
-|abt.FSrcfile.mod_time|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)||File's modification time|
-|abt.FSrcfile.p_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Optional parent target (NULL for common headers)|
-|abt.FSrcfile.objkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Path to file, / replaced with .|
-|abt.FSrcfile.cum_modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Cumulative modtime of src and all headers|
-|abt.FSrcfile.ood|bool|[Val](/txt/exe/amc/reftype.md#val)||Out-of-date flag|
-|abt.FSrcfile.cum_mod_visited|bool|[Val](/txt/exe/amc/reftype.md#val)||Lockout for topo sort|
-|abt.FSrcfile.line_n|u64|[Val](/txt/exe/amc/reftype.md#val)||Number of lines attributed to this file|
-|abt.FSrcfile.srcfile_visited|bool|[Val](/txt/exe/amc/reftype.md#val)||Lockout for srcfiles collection|
-|abt.FSrcfile.zd_include|[abt.FInclude](/txt/gen/abt/abt.md#abt-finclude)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|abt.FSrcfile.printed|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt.FSrcfile.mod_time|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||File's modification time|
+|abt.FSrcfile.p_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Optional parent target (NULL for common headers)|
+|abt.FSrcfile.objkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Path to file, / replaced with .|
+|abt.FSrcfile.cum_modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Cumulative modtime of src and all headers|
+|abt.FSrcfile.ood|bool|[Val](/txt/exe/amc/reftype/Val.md)||Out-of-date flag|
+|abt.FSrcfile.cum_mod_visited|bool|[Val](/txt/exe/amc/reftype/Val.md)||Lockout for topo sort|
+|abt.FSrcfile.line_n|u64|[Val](/txt/exe/amc/reftype/Val.md)||Number of lines attributed to this file|
+|abt.FSrcfile.srcfile_visited|bool|[Val](/txt/exe/amc/reftype/Val.md)||Lockout for srcfiles collection|
+|abt.FSrcfile.zd_include|[abt.FInclude](/txt/gen/abt/abt.md#abt-finclude)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|abt.FSrcfile.printed|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FSrcfile
 <a href="#struct-fsrcfile"></a>
@@ -603,16 +605,16 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FSyscmd.msghdr|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|[Base](/txt/ssimdb/dev/syscmd.md)|||
-|abt.FSyscmd.fstdout|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||filename for stdout output|
-|abt.FSyscmd.fstderr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||filename for stderr output|
-|abt.FSyscmd.c_prior|[abt.FSyscmddep](/txt/gen/abt/abt.md#abt-fsyscmddep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt.FSyscmd.c_next|[abt.FSyscmddep](/txt/gen/abt/abt.md#abt-fsyscmddep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt.FSyscmd.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FSyscmd.fd_stdout|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)||fd for stdout|
-|abt.FSyscmd.fd_stderr|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)||fd for stderr|
-|abt.FSyscmd.line_n|u64|[Val](/txt/exe/amc/reftype.md#val)||Number of lines attributed to this command|
-|abt.FSyscmd.outfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FSyscmd.redirect|bool|[Val](/txt/exe/amc/reftype.md#val)|true||
+|abt.FSyscmd.fstdout|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||filename for stdout output|
+|abt.FSyscmd.fstderr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||filename for stderr output|
+|abt.FSyscmd.c_prior|[abt.FSyscmddep](/txt/gen/abt/abt.md#abt-fsyscmddep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt.FSyscmd.c_next|[abt.FSyscmddep](/txt/gen/abt/abt.md#abt-fsyscmddep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt.FSyscmd.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FSyscmd.fd_stdout|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)||fd for stdout|
+|abt.FSyscmd.fd_stderr|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)||fd for stderr|
+|abt.FSyscmd.line_n|u64|[Val](/txt/exe/amc/reftype/Val.md)||Number of lines attributed to this command|
+|abt.FSyscmd.outfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FSyscmd.redirect|bool|[Val](/txt/exe/amc/reftype/Val.md)|true||
 
 #### Struct FSyscmd
 <a href="#struct-fsyscmd"></a>
@@ -675,8 +677,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FSyscmddep.msghdr|[dev.Syscmddep](/txt/ssimdb/dev/syscmddep.md)|[Base](/txt/ssimdb/dev/syscmddep.md)|||
-|abt.FSyscmddep.p_child|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|abt.FSyscmddep.p_parent|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt.FSyscmddep.p_child|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|abt.FSyscmddep.p_parent|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSyscmddep
 <a href="#struct-fsyscmddep"></a>
@@ -753,7 +755,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FTargdep.msghdr|[dev.Targdep](/txt/ssimdb/dev/targdep.md)|[Base](/txt/ssimdb/dev/targdep.md)|||
-|abt.FTargdep.p_parent|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt.FTargdep.p_parent|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTargdep
 <a href="#struct-ftargdep"></a>
@@ -791,22 +793,22 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FTarget.msghdr|[dev.Target](/txt/ssimdb/dev/target.md)|[Base](/txt/ssimdb/dev/target.md)|||
-|abt.FTarget.cum_modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Cumulative modtime of all source files in this target|
-|abt.FTarget.ood|bool|[Val](/txt/exe/amc/reftype.md#val)|false|File is out of date|
-|abt.FTarget.syscmd_start|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt.FTarget.syscmd_compile|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt.FTarget.syscmd_link|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt.FTarget.syscmd_end|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|abt.FTarget.c_targsrc|[abt.FTargsrc](/txt/gen/abt/abt.md#abt-ftargsrc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt.FTarget.c_srcfile|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt.FTarget.c_targdep|[abt.FTargdep](/txt/gen/abt/abt.md#abt-ftargdep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt.FTarget.ood_visited|bool|[Val](/txt/exe/amc/reftype.md#val)||Lockout for topo sort|
-|abt.FTarget.c_targsyslib|[abt.FTargsyslib](/txt/gen/abt/abt.md#abt-ftargsyslib)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|abt.FTarget.c_alldep|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Transitive closure of all dependencies for this target|
-|abt.FTarget.p_ns|[abt.FNs](/txt/gen/abt/abt.md#abt-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|abt.FTarget.libdep_visited|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FTarget.out_modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.FTarget.origsel|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt.FTarget.cum_modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Cumulative modtime of all source files in this target|
+|abt.FTarget.ood|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|File is out of date|
+|abt.FTarget.syscmd_start|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt.FTarget.syscmd_compile|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt.FTarget.syscmd_link|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt.FTarget.syscmd_end|[abt.FSyscmd](/txt/gen/abt/abt.md#abt-fsyscmd)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|abt.FTarget.c_targsrc|[abt.FTargsrc](/txt/gen/abt/abt.md#abt-ftargsrc)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt.FTarget.c_srcfile|[abt.FSrcfile](/txt/gen/abt/abt.md#abt-fsrcfile)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt.FTarget.c_targdep|[abt.FTargdep](/txt/gen/abt/abt.md#abt-ftargdep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt.FTarget.ood_visited|bool|[Val](/txt/exe/amc/reftype/Val.md)||Lockout for topo sort|
+|abt.FTarget.c_targsyslib|[abt.FTargsyslib](/txt/gen/abt/abt.md#abt-ftargsyslib)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|abt.FTarget.c_alldep|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Transitive closure of all dependencies for this target|
+|abt.FTarget.p_ns|[abt.FNs](/txt/gen/abt/abt.md#abt-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|abt.FTarget.libdep_visited|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FTarget.out_modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.FTarget.origsel|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTarget
 <a href="#struct-ftarget"></a>
@@ -881,7 +883,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FTargsrc.msghdr|[dev.Targsrc](/txt/ssimdb/dev/targsrc.md)|[Base](/txt/ssimdb/dev/targsrc.md)|||
-|abt.FTargsrc.p_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt.FTargsrc.p_target|[abt.FTarget](/txt/gen/abt/abt.md#abt-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTargsrc
 <a href="#struct-ftargsrc"></a>
@@ -921,7 +923,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FTargsyslib.msghdr|[dev.Targsyslib](/txt/ssimdb/dev/targsyslib.md)|[Base](/txt/ssimdb/dev/targsyslib.md)|||
-|abt.FTargsyslib.p_syslib|[abt.FSyslib](/txt/gen/abt/abt.md#abt-fsyslib)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|abt.FTargsyslib.p_syslib|[abt.FSyslib](/txt/gen/abt/abt.md#abt-fsyslib)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTargsyslib
 <a href="#struct-ftargsyslib"></a>
@@ -959,8 +961,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |abt.FToolOpt.msghdr|[dev.ToolOpt](/txt/ssimdb/dev/tool_opt.md)|[Base](/txt/ssimdb/dev/tool_opt.md)|||
-|abt.FToolOpt.regx_opt|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|||
-|abt.FToolOpt.regx_target|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|||
+|abt.FToolOpt.regx_opt|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|||
+|abt.FToolOpt.regx_target|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|||
 
 #### Struct FToolOpt
 <a href="#struct-ftoolopt"></a>
@@ -1024,10 +1026,10 @@ private:
 <a href="#abt-config-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|abt.config.builddir|[dev.Builddir](/txt/ssimdb/dev/builddir.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|abt.config.ood_src|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.config.ood_target|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|abt.config.cache|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype.md#val)|||
+|abt.config.builddir|[dev.Builddir](/txt/ssimdb/dev/builddir.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|abt.config.ood_src|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.config.ood_target|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|abt.config.cache|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct config
 <a href="#struct-config"></a>

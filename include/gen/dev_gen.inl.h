@@ -328,6 +328,7 @@ inline  dev::Package::Package(const algo::strptr& in_package, const algo::strptr
 // Set all fields to initial values.
 inline void dev::Pkgdep_Init(dev::Pkgdep& parent) {
     parent.soft = bool(false);
+    parent.pkgdeptype = algo::strptr("require");
 }
 
 // --- dev.Pkgdep..Ctor
@@ -336,11 +337,16 @@ inline  dev::Pkgdep::Pkgdep() {
 }
 
 // --- dev.Pkgdep..FieldwiseCtor
-inline  dev::Pkgdep::Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::Comment& in_comment)
+inline  dev::Pkgdep::Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::strptr& in_pkgdeptype, const algo::Comment& in_comment)
     : pkgdep(in_pkgdep)
     , soft(in_soft)
+    , pkgdeptype(in_pkgdeptype)
     , comment(in_comment)
  {
+}
+
+// --- dev.Pkgdeptype..Ctor
+inline  dev::Pkgdeptype::Pkgdeptype() {
 }
 
 // --- dev.Pkggen..Ctor
@@ -674,6 +680,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Package &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgdep &row) {// cfmt:dev.Pkgdep.String
     dev::Pkgdep_Print(const_cast<dev::Pkgdep&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgdeptype &row) {// cfmt:dev.Pkgdeptype.String
+    dev::Pkgdeptype_Print(const_cast<dev::Pkgdeptype&>(row), str);
     return str;
 }
 

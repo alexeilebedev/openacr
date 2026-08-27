@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -49,15 +51,15 @@ All allocations are done through global `ssim2csv::_db` [ssim2csv.FDb](#ssim2csv
 <a href="#ssim2csv-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssim2csv.FDb._db|[ssim2csv.FDb](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|ssim2csv.FDb.cmdline|[command.ssim2csv](/txt/protocol/command/README.md#command-ssim2csv)|[Val](/txt/exe/amc/reftype.md#val)|||
-|ssim2csv.FDb.expand|[ssim2csv.FExpand](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-fexpand)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2csv.FDb.ind_expand|[ssim2csv.FExpand](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-fexpand)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|ssim2csv.FDb.outfile|[ssim2csv.FOutfile](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-foutfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2csv.FDb.ind_outfile|[ssim2csv.FOutfile](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-foutfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|ssim2csv.FDb.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|ssim2csv.FDb.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|ssim2csv.FDb.flatten|[ssim2csv.FFlatten](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-fflatten)|[Tary](/txt/exe/amc/reftype.md#tary)|||
+|ssim2csv.FDb._db|[ssim2csv.FDb](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|ssim2csv.FDb.cmdline|[command.ssim2csv](/txt/protocol/command/README.md#command-ssim2csv)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ssim2csv.FDb.expand|[ssim2csv.FExpand](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-fexpand)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2csv.FDb.ind_expand|[ssim2csv.FExpand](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-fexpand)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|ssim2csv.FDb.outfile|[ssim2csv.FOutfile](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-foutfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2csv.FDb.ind_outfile|[ssim2csv.FOutfile](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-foutfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|ssim2csv.FDb.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|ssim2csv.FDb.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|ssim2csv.FDb.flatten|[ssim2csv.FFlatten](/txt/gen/ssim2csv/ssim2csv.md#ssim2csv-fflatten)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -95,7 +97,7 @@ struct FDb { // ssim2csv.FDb: In-memory database for ssim2csv
 <a href="#ssim2csv-fexpand-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssim2csv.FExpand.expand|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|ssim2csv.FExpand.expand|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FExpand
 <a href="#struct-fexpand"></a>
@@ -128,8 +130,8 @@ private:
 <a href="#ssim2csv-fflatten-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssim2csv.FFlatten.in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|ssim2csv.FFlatten.prefix|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|ssim2csv.FFlatten.in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ssim2csv.FFlatten.prefix|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FFlatten
 <a href="#struct-fflatten"></a>
@@ -150,9 +152,9 @@ struct FFlatten { // ssim2csv.FFlatten
 <a href="#ssim2csv-foutfile-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssim2csv.FOutfile.fildes|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)|||
-|ssim2csv.FOutfile.header|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|ssim2csv.FOutfile.outfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|ssim2csv.FOutfile.fildes|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ssim2csv.FOutfile.header|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ssim2csv.FOutfile.outfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FOutfile
 <a href="#struct-foutfile"></a>

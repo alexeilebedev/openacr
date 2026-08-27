@@ -9,8 +9,8 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|dispsig|[dmmeta.Dispsig](/txt/ssimdb/dmmeta/dispsig.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|signature|[algo.Sha1sig](/txt/protocol/algo/Sha1sig.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|dispsig|[dmmeta.Dispsig](/txt/ssimdb/dmmeta/dispsig.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|signature|[algo.Signature](/txt/protocol/algo/Signature.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

@@ -183,40 +183,40 @@ inline  lib_curl::FResponse::~FResponse() {
 
 // --- lib_curl.FCall.done.Call
 // Invoke function by pointer
-inline void lib_curl::done_Call(lib_curl::FCall& call, lib_curl::FCall& arg) {
-    if (call.done) {
-        call.done((void*)call.done_ctx, arg);
+inline void lib_curl::done_Call(lib_curl::FCall& parent, lib_curl::FCall& arg) {
+    if (parent.done) {
+        parent.done((void*)parent.done_ctx, arg);
     }
 }
 
 // --- lib_curl.FCall.done.Set0
 // Assign 0-argument hook with no context pointer
-inline void lib_curl::done_Set0(lib_curl::FCall& call, void (*fcn)() ) {
-    call.done_ctx = 0;
-    call.done = (lib_curl::call_done_hook)fcn;
+inline void lib_curl::done_Set0(lib_curl::FCall& parent, void (*fcn)() ) {
+    parent.done_ctx = 0;
+    parent.done = (lib_curl::call_done_hook)fcn;
 }
 
 // --- lib_curl.FCall.done.Set1
 // Assign 1-argument hook with context pointer
-template<class T> inline void lib_curl::done_Set1(lib_curl::FCall& call, T& ctx, void (*fcn)(T&) ) {
-    call.done_ctx = (u64)&ctx;
-    call.done = (lib_curl::call_done_hook)fcn;
+template<class T> inline void lib_curl::done_Set1(lib_curl::FCall& parent, T& ctx, void (*fcn)(T&) ) {
+    parent.done_ctx = (u64)&ctx;
+    parent.done = (lib_curl::call_done_hook)fcn;
 }
 
 // --- lib_curl.FCall.done.Set2
 // Assign 2-argument hook with context pointer
-template<class T> inline void lib_curl::done_Set2(lib_curl::FCall& call, T& ctx, void (*fcn)(T&, lib_curl::FCall& arg) ) {
-    call.done_ctx = (u64)&ctx;
-    call.done = (lib_curl::call_done_hook)fcn;
+template<class T> inline void lib_curl::done_Set2(lib_curl::FCall& parent, T& ctx, void (*fcn)(T&, lib_curl::FCall& arg) ) {
+    parent.done_ctx = (u64)&ctx;
+    parent.done = (lib_curl::call_done_hook)fcn;
 }
 
 // --- lib_curl.FCall..Init
 // Set all fields to initial values.
-inline void lib_curl::FCall_Init(lib_curl::FCall& call) {
-    call.hdrs = u64(0);
-    call.done = NULL;
-    call.done_ctx = 0;
-    call.call_next = (lib_curl::FCall*)-1; // (lib_curl.FDb.call) not-in-tpool's freelist
+inline void lib_curl::FCall_Init(lib_curl::FCall& parent) {
+    parent.hdrs = u64(0);
+    parent.done = NULL;
+    parent.done_ctx = 0;
+    parent.call_next = (lib_curl::FCall*)-1; // (lib_curl.FDb.call) not-in-tpool's freelist
 }
 
 // --- lib_curl.FCall..Ctor
@@ -311,15 +311,14 @@ inline lib_curl::FSock& lib_curl::_db_zd_sock_free_curs_Access(_db_zd_sock_free_
 
 // --- lib_curl.FDb..Uninit
 inline void lib_curl::FDb_Uninit() {
-    lib_curl::FDb &row = _db; (void)row;
 }
 
 // --- lib_curl.FSock..Init
 // Set all fields to initial values.
-inline void lib_curl::FSock_Init(lib_curl::FSock& sock) {
-    sock.sock_next = (lib_curl::FSock*)-1; // (lib_curl.FDb.sock) not-in-tpool's freelist
-    sock.zd_sock_free_next = (lib_curl::FSock*)-1; // (lib_curl.FDb.zd_sock_free) not-in-list
-    sock.zd_sock_free_prev = NULL; // (lib_curl.FDb.zd_sock_free)
+inline void lib_curl::FSock_Init(lib_curl::FSock& parent) {
+    parent.sock_next = (lib_curl::FSock*)-1; // (lib_curl.FDb.sock) not-in-tpool's freelist
+    parent.zd_sock_free_next = (lib_curl::FSock*)-1; // (lib_curl.FDb.zd_sock_free) not-in-list
+    parent.zd_sock_free_prev = NULL; // (lib_curl.FDb.zd_sock_free)
 }
 
 // --- lib_curl.FSock..Ctor

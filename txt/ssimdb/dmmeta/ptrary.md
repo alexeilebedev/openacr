@@ -21,46 +21,46 @@ The following functions are generated:
 inline-command: amc -report:N -proto atf_amc.FCascdel.c_child_ptrary.%
 // Delete all elements pointed to by the index.
 // func:atf_amc.FCascdel.c_child_ptrary.Cascdel
-void                 c_child_ptrary_Cascdel(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+void                 c_child_ptrary_Cascdel(atf_amc::FCascdel& parent) __attribute__((nothrow));
 // Return true if index is empty
 // func:atf_amc.FCascdel.c_child_ptrary.EmptyQ
-inline bool          c_child_ptrary_EmptyQ(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+inline bool          c_child_ptrary_EmptyQ(atf_amc::FCascdel& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_amc.FCascdel.c_child_ptrary.Find
-inline atf_amc::FCascdel* c_child_ptrary_Find(atf_amc::FCascdel& cascdel, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FCascdel* c_child_ptrary_Find(atf_amc::FCascdel& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_amc.FCascdel.c_child_ptrary.Getary
-inline algo::aryptr<atf_amc::FCascdel*> c_child_ptrary_Getary(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+inline algo::aryptr<atf_amc::FCascdel*> c_child_ptrary_Getary(atf_amc::FCascdel& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_amc.FCascdel.c_child_ptrary.Insert
-void                 c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
+void                 c_child_ptrary_Insert(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:atf_amc.FCascdel.c_child_ptrary.InsertMaybe
-bool                 c_child_ptrary_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
+bool                 c_child_ptrary_InsertMaybe(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_amc.FCascdel.c_child_ptrary.N
-inline i64           c_child_ptrary_N(const atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_child_ptrary_N(const atf_amc::FCascdel& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_amc.FCascdel.c_child_ptrary.Remove
-void                 c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
+void                 c_child_ptrary_Remove(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:atf_amc.FCascdel.c_child_ptrary.RemoveAll
-inline void          c_child_ptrary_RemoveAll(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+inline void          c_child_ptrary_RemoveAll(atf_amc::FCascdel& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_amc.FCascdel.c_child_ptrary.Reserve
-void                 c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u64 n) __attribute__((nothrow));
+void                 c_child_ptrary_Reserve(atf_amc::FCascdel& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_amc.FCascdel.c_child_ptrary.qFind
-inline atf_amc::FCascdel& c_child_ptrary_qFind(atf_amc::FCascdel& cascdel, u64 idx) __attribute__((nothrow));
+inline atf_amc::FCascdel& c_child_ptrary_qFind(atf_amc::FCascdel& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_amc.FCascdel.c_child_ptrary.InAryQ
 inline bool          cascdel_c_child_ptrary_InAryQ(atf_amc::FCascdel& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:atf_amc.FCascdel.c_child_ptrary.qLast
-inline atf_amc::FCascdel& c_child_ptrary_qLast(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+inline atf_amc::FCascdel& c_child_ptrary_qLast(atf_amc::FCascdel& parent) __attribute__((nothrow));
 
 ```
 
@@ -72,9 +72,9 @@ inline atf_amc::FCascdel& c_child_ptrary_qLast(atf_amc::FCascdel& cascdel) __att
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|unique|bool|[Val](/txt/exe/amc/reftype.md#val)||Search for and ignore duplicates|
-|heaplike|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|unique|bool|[Val](/txt/exe/amc/reftype/Val.md)||Search for and ignore duplicates|
+|heaplike|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

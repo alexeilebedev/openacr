@@ -116,6 +116,37 @@ export interface SeqTypeJson {
     value: bigint;
 }
 
+export class Signature {
+    signature: Uint8Array;
+    static size() : number {
+        return 20;
+    }
+    constructor(signature?: Uint8Array) {
+        this.signature = signature !== undefined ? signature : new Uint8Array;
+    }
+}
+
+export function Signature_Encode(view: DataView, offset: number, parent: Signature) {
+    let length = 20;
+    let _a_signature = new Uint8Array(view.buffer,view.byteOffset+offset+0,20);
+    _a_signature.fill(0);
+    _a_signature.set(parent.signature);
+    return length;
+}
+
+export function Signature_Decode(view: DataView, offset: number): Signature {
+    let parent = new Signature;
+    parent.signature = new Uint8Array(view.buffer,view.byteOffset+offset+0,20);
+    return parent;
+}
+
+export function Signature_Print(parent: Signature): string {
+    return `${parent.signature.length}b`;
+}
+
+export interface SignatureJson {
+}
+
 export class UnDiff {
     value: bigint;
     static size() : number {

@@ -67,10 +67,11 @@ enum atfdb_FieldIdEnum {    // atfdb.FieldId.value
     ,atfdb_FieldId_unittest
     ,atfdb_FieldId_ns
     ,atfdb_FieldId_unstableattr
+    ,atfdb_FieldId_unstableline
     ,atfdb_FieldId_var
 };
 
-enum { atfdb_FieldIdEnum_N = 38 };
+enum { atfdb_FieldIdEnum_N = 39 };
 
 extern const char *  atfdb_Msgdir_msgdir_exp;   // exp    fconst:atfdb.Msgdir.msgdir/exp
 extern const char *  atfdb_Msgdir_msgdir_in;    // in     fconst:atfdb.Msgdir.msgdir/in
@@ -88,6 +89,7 @@ namespace atfdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 TestenvPkey;
     typedef algo::Smallstr50 UnittestPkey;
     typedef algo::Smallstr100 UnstableattrPkey;
+    typedef algo::Smallstr50 UnstablelinePkey;
     typedef algo::Smallstr50 VarPkey;
 } // gen:ns_pkeytypedef
 namespace atfdb { // gen:ns_tclass_field
@@ -110,6 +112,7 @@ namespace atfdb { struct Tfilt; }
 namespace atfdb { struct Tifilt; }
 namespace atfdb { struct Unittest; }
 namespace atfdb { struct Unstableattr; }
+namespace atfdb { struct Unstableline; }
 namespace atfdb { struct Var; }
 namespace atfdb { // gen:ns_print_struct
 
@@ -518,6 +521,24 @@ bool                 Unstableattr_ReadStrptrMaybe(atfdb::Unstableattr &parent, a
 // func:atfdb.Unstableattr..Print
 void                 Unstableattr_Print(atfdb::Unstableattr& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- atfdb.Unstableline
+struct Unstableline { // atfdb.Unstableline: Tuple head of a line the comptest capture drops, presence being host-dependent
+    algo::Smallstr50   unstableline;   //
+    algo::Comment      comment;        //
+    // func:atfdb.Unstableline..Ctor
+    inline               Unstableline() __attribute__((nothrow));
+};
+// func:atfdb.Unstableline..ReadFieldMaybe
+bool                 Unstableline_ReadFieldMaybe(atfdb::Unstableline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Unstableline from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atfdb.Unstableline..ReadStrptrMaybe
+bool                 Unstableline_ReadStrptrMaybe(atfdb::Unstableline &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atfdb.Unstableline.String  printfmt:Tuple
+// func:atfdb.Unstableline..Print
+void                 Unstableline_Print(atfdb::Unstableline& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- atfdb.Var
 struct Var { // atfdb.Var
     algo::Smallstr50    var;       //
@@ -556,5 +577,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Testenv &row)
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tfilt &row);// cfmt:atfdb.Tfilt.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tifilt &row);// cfmt:atfdb.Tifilt.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Unstableattr &row);// cfmt:atfdb.Unstableattr.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Unstableline &row);// cfmt:atfdb.Unstableline.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Var &row);// cfmt:atfdb.Var.String
 }

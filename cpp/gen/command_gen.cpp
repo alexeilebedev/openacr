@@ -3074,7 +3074,6 @@ void command::abt_md_proc_Init(command::abt_md_proc& parent) {
 
 // --- command.abt_md_proc..Uninit
 void command::abt_md_proc_Uninit(command::abt_md_proc& parent) {
-    command::abt_md_proc &row = parent; (void)row;
 
     // command.abt_md_proc.abt_md.Uninit (Exec)  //
     abt_md_Kill(parent); // kill child, ensure forward progress
@@ -3429,7 +3428,6 @@ void command::abt_proc_Init(command::abt_proc& parent) {
 
 // --- command.abt_proc..Uninit
 void command::abt_proc_Uninit(command::abt_proc& parent) {
-    command::abt_proc &row = parent; (void)row;
 
     // command.abt_proc.abt.Uninit (Exec)  //
     abt_Kill(parent); // kill child, ensure forward progress
@@ -4102,7 +4100,6 @@ void command::acr_Init(command::acr& parent) {
 
 // --- command.acr..Uninit
 void command::acr_Uninit(command::acr& parent) {
-    command::acr &row = parent; (void)row;
 
     // command.acr.field.Uninit (Tary)  //Fields to select
     // remove all elements from command.acr.field
@@ -5582,7 +5579,6 @@ void command::acr_compl_proc_Init(command::acr_compl_proc& parent) {
 
 // --- command.acr_compl_proc..Uninit
 void command::acr_compl_proc_Uninit(command::acr_compl_proc& parent) {
-    command::acr_compl_proc &row = parent; (void)row;
 
     // command.acr_compl_proc.acr_compl.Uninit (Exec)  //
     acr_compl_Kill(parent); // kill child, ensure forward progress
@@ -5857,7 +5853,6 @@ bool command::acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field,
 
 // --- command.acr_dm..Uninit
 void command::acr_dm_Uninit(command::acr_dm& parent) {
-    command::acr_dm &row = parent; (void)row;
 
     // command.acr_dm.arg.Uninit (Tary)  //Files to merge: older ours theirs...
     // remove all elements from command.acr_dm.arg
@@ -6364,7 +6359,6 @@ void command::acr_dm_proc_Init(command::acr_dm_proc& parent) {
 
 // --- command.acr_dm_proc..Uninit
 void command::acr_dm_proc_Uninit(command::acr_dm_proc& parent) {
-    command::acr_dm_proc &row = parent; (void)row;
 
     // command.acr_dm_proc.acr_dm.Uninit (Exec)  //
     acr_dm_Kill(parent); // kill child, ensure forward progress
@@ -7932,7 +7926,6 @@ void command::acr_ed_proc_Init(command::acr_ed_proc& parent) {
 
 // --- command.acr_ed_proc..Uninit
 void command::acr_ed_proc_Uninit(command::acr_ed_proc& parent) {
-    command::acr_ed_proc &row = parent; (void)row;
 
     // command.acr_ed_proc.acr_ed.Uninit (Exec)  //
     acr_ed_Kill(parent); // kill child, ensure forward progress
@@ -8643,7 +8636,6 @@ void command::acr_in_proc_Init(command::acr_in_proc& parent) {
 
 // --- command.acr_in_proc..Uninit
 void command::acr_in_proc_Uninit(command::acr_in_proc& parent) {
-    command::acr_in_proc &row = parent; (void)row;
 
     // command.acr_in_proc.acr_in.Uninit (Exec)  //
     acr_in_Kill(parent); // kill child, ensure forward progress
@@ -9330,7 +9322,6 @@ void command::acr_my_proc_Init(command::acr_my_proc& parent) {
 
 // --- command.acr_my_proc..Uninit
 void command::acr_my_proc_Uninit(command::acr_my_proc& parent) {
-    command::acr_my_proc &row = parent; (void)row;
 
     // command.acr_my_proc.acr_my.Uninit (Exec)  //
     acr_my_Kill(parent); // kill child, ensure forward progress
@@ -9761,7 +9752,6 @@ void command::acr_proc_Init(command::acr_proc& parent) {
 
 // --- command.acr_proc..Uninit
 void command::acr_proc_Uninit(command::acr_proc& parent) {
-    command::acr_proc &row = parent; (void)row;
 
     // command.acr_proc.acr.Uninit (Exec)  //
     acr_Kill(parent); // kill child, ensure forward progress
@@ -10632,7 +10622,6 @@ void command::amc_gc_proc_Init(command::amc_gc_proc& parent) {
 
 // --- command.amc_gc_proc..Uninit
 void command::amc_gc_proc_Uninit(command::amc_gc_proc& parent) {
-    command::amc_gc_proc &row = parent; (void)row;
 
     // command.amc_gc_proc.amc_gc.Uninit (Exec)  //
     amc_gc_Kill(parent); // kill child, ensure forward progress
@@ -10885,7 +10874,6 @@ void command::amc_proc_Init(command::amc_proc& parent) {
 
 // --- command.amc_proc..Uninit
 void command::amc_proc_Uninit(command::amc_proc& parent) {
-    command::amc_proc &row = parent; (void)row;
 
     // command.amc_proc.amc.Uninit (Exec)  //
     amc_Kill(parent); // kill child, ensure forward progress
@@ -11491,7 +11479,6 @@ void command::amc_vis_proc_Init(command::amc_vis_proc& parent) {
 
 // --- command.amc_vis_proc..Uninit
 void command::amc_vis_proc_Uninit(command::amc_vis_proc& parent) {
-    command::amc_vis_proc &row = parent; (void)row;
 
     // command.amc_vis_proc.amc_vis.Uninit (Exec)  //
     amc_vis_Kill(parent); // kill child, ensure forward progress
@@ -12325,7 +12312,6 @@ void command::ams_sendtest_proc_Init(command::ams_sendtest_proc& parent) {
 
 // --- command.ams_sendtest_proc..Uninit
 void command::ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent) {
-    command::ams_sendtest_proc &row = parent; (void)row;
 
     // command.ams_sendtest_proc.ams_sendtest.Uninit (Exec)  //
     ams_sendtest_Kill(parent); // kill child, ensure forward progress
@@ -13006,7 +12992,6 @@ void command::amsspy_proc_Init(command::amsspy_proc& parent) {
 
 // --- command.amsspy_proc..Uninit
 void command::amsspy_proc_Uninit(command::amsspy_proc& parent) {
-    command::amsspy_proc &row = parent; (void)row;
 
     // command.amsspy_proc.amsspy.Uninit (Exec)  //
     amsspy_Kill(parent); // kill child, ensure forward progress
@@ -14128,7 +14113,6 @@ void command::apm_proc_Init(command::apm_proc& parent) {
 
 // --- command.apm_proc..Uninit
 void command::apm_proc_Uninit(command::apm_proc& parent) {
-    command::apm_proc &row = parent; (void)row;
 
     // command.apm_proc.apm.Uninit (Exec)  //
     apm_Kill(parent); // kill child, ensure forward progress
@@ -14631,7 +14615,6 @@ void command::aqlite_proc_Init(command::aqlite_proc& parent) {
 
 // --- command.aqlite_proc..Uninit
 void command::aqlite_proc_Uninit(command::aqlite_proc& parent) {
-    command::aqlite_proc &row = parent; (void)row;
 
     // command.aqlite_proc.aqlite.Uninit (Exec)  //
     aqlite_Kill(parent); // kill child, ensure forward progress
@@ -15131,7 +15114,6 @@ void command::atf_amc_proc_Init(command::atf_amc_proc& parent) {
 
 // --- command.atf_amc_proc..Uninit
 void command::atf_amc_proc_Uninit(command::atf_amc_proc& parent) {
-    command::atf_amc_proc &row = parent; (void)row;
 
     // command.atf_amc_proc.atf_amc.Uninit (Exec)  //
     atf_amc_Kill(parent); // kill child, ensure forward progress
@@ -15696,7 +15678,6 @@ void command::atf_ci_proc_Init(command::atf_ci_proc& parent) {
 
 // --- command.atf_ci_proc..Uninit
 void command::atf_ci_proc_Uninit(command::atf_ci_proc& parent) {
-    command::atf_ci_proc &row = parent; (void)row;
 
     // command.atf_ci_proc.atf_ci.Uninit (Exec)  //
     atf_ci_Kill(parent); // kill child, ensure forward progress
@@ -16751,7 +16732,6 @@ void command::atf_cmdline_Init(command::atf_cmdline& parent) {
 
 // --- command.atf_cmdline..Uninit
 void command::atf_cmdline_Uninit(command::atf_cmdline& parent) {
-    command::atf_cmdline &row = parent; (void)row;
 
     // command.atf_cmdline.amnum.Uninit (Tary)  //Anon number array
     // remove all elements from command.atf_cmdline.amnum
@@ -17628,7 +17608,6 @@ void command::atf_cmdline_proc_Init(command::atf_cmdline_proc& parent) {
 
 // --- command.atf_cmdline_proc..Uninit
 void command::atf_cmdline_proc_Uninit(command::atf_cmdline_proc& parent) {
-    command::atf_cmdline_proc &row = parent; (void)row;
 
     // command.atf_cmdline_proc.atf_cmdline.Uninit (Exec)  //
     atf_cmdline_Kill(parent); // kill child, ensure forward progress
@@ -18357,7 +18336,6 @@ void command::atf_comp_proc_Init(command::atf_comp_proc& parent) {
 
 // --- command.atf_comp_proc..Uninit
 void command::atf_comp_proc_Uninit(command::atf_comp_proc& parent) {
-    command::atf_comp_proc &row = parent; (void)row;
 
     // command.atf_comp_proc.atf_comp.Uninit (Exec)  //
     atf_comp_Kill(parent); // kill child, ensure forward progress
@@ -19099,7 +19077,6 @@ void command::atf_cov_proc_Init(command::atf_cov_proc& parent) {
 
 // --- command.atf_cov_proc..Uninit
 void command::atf_cov_proc_Uninit(command::atf_cov_proc& parent) {
-    command::atf_cov_proc &row = parent; (void)row;
 
     // command.atf_cov_proc.atf_cov.Uninit (Exec)  //
     atf_cov_Kill(parent); // kill child, ensure forward progress
@@ -19693,7 +19670,6 @@ void command::atf_fuzz_proc_Init(command::atf_fuzz_proc& parent) {
 
 // --- command.atf_fuzz_proc..Uninit
 void command::atf_fuzz_proc_Uninit(command::atf_fuzz_proc& parent) {
-    command::atf_fuzz_proc &row = parent; (void)row;
 
     // command.atf_fuzz_proc.atf_fuzz.Uninit (Exec)  //
     atf_fuzz_Kill(parent); // kill child, ensure forward progress
@@ -20142,7 +20118,6 @@ void command::atf_nrun_proc_Init(command::atf_nrun_proc& parent) {
 
 // --- command.atf_nrun_proc..Uninit
 void command::atf_nrun_proc_Uninit(command::atf_nrun_proc& parent) {
-    command::atf_nrun_proc &row = parent; (void)row;
 
     // command.atf_nrun_proc.atf_nrun.Uninit (Exec)  //
     atf_nrun_Kill(parent); // kill child, ensure forward progress
@@ -20798,7 +20773,6 @@ void command::atf_unit_proc_Init(command::atf_unit_proc& parent) {
 
 // --- command.atf_unit_proc..Uninit
 void command::atf_unit_proc_Uninit(command::atf_unit_proc& parent) {
-    command::atf_unit_proc &row = parent; (void)row;
 
     // command.atf_unit_proc.atf_unit.Uninit (Exec)  //
     atf_unit_Kill(parent); // kill child, ensure forward progress
@@ -21235,7 +21209,6 @@ void command::bash2html_proc_Init(command::bash2html_proc& parent) {
 
 // --- command.bash2html_proc..Uninit
 void command::bash2html_proc_Uninit(command::bash2html_proc& parent) {
-    command::bash2html_proc &row = parent; (void)row;
 
     // command.bash2html_proc.bash2html.Uninit (Exec)  //
     bash2html_Kill(parent); // kill child, ensure forward progress
@@ -21434,7 +21407,6 @@ void command::bash_proc_Init(command::bash_proc& parent) {
 
 // --- command.bash_proc..Uninit
 void command::bash_proc_Uninit(command::bash_proc& parent) {
-    command::bash_proc &row = parent; (void)row;
 
     // command.bash_proc.bash.Uninit (Exec)  //Must be bash to support $'' for string quoting
     bash_Kill(parent); // kill child, ensure forward progress
@@ -21761,7 +21733,6 @@ void command::gcache_Init(command::gcache& parent) {
 
 // --- command.gcache..Uninit
 void command::gcache_Uninit(command::gcache& parent) {
-    command::gcache &row = parent; (void)row;
 
     // command.gcache.cmd.Uninit (Tary)  //Command to execute
     // remove all elements from command.gcache.cmd
@@ -22511,7 +22482,6 @@ void command::gcache_proc_Init(command::gcache_proc& parent) {
 
 // --- command.gcache_proc..Uninit
 void command::gcache_proc_Uninit(command::gcache_proc& parent) {
-    command::gcache_proc &row = parent; (void)row;
 
     // command.gcache_proc.gcache.Uninit (Exec)  //
     gcache_Kill(parent); // kill child, ensure forward progress
@@ -22725,7 +22695,6 @@ void command::generic_proc_Init(command::generic_proc& parent) {
 
 // --- command.generic_proc..Uninit
 void command::generic_proc_Uninit(command::generic_proc& parent) {
-    command::generic_proc &row = parent; (void)row;
 
     // command.generic_proc.name.Uninit (Exec)  //
     name_Kill(parent); // kill child, ensure forward progress
@@ -23077,7 +23046,6 @@ bool command::jkv_ReadFieldMaybe(command::jkv& parent, algo::strptr field, algo:
 
 // --- command.jkv..Uninit
 void command::jkv_Uninit(command::jkv& parent) {
-    command::jkv &row = parent; (void)row;
 
     // command.jkv.kv.Uninit (Tary)  //JSON Keyvals
     // remove all elements from command.jkv.kv
@@ -23608,7 +23576,6 @@ void command::jkv_proc_Init(command::jkv_proc& parent) {
 
 // --- command.jkv_proc..Uninit
 void command::jkv_proc_Uninit(command::jkv_proc& parent) {
-    command::jkv_proc &row = parent; (void)row;
 
     // command.jkv_proc.jkv.Uninit (Exec)  //
     jkv_Kill(parent); // kill child, ensure forward progress
@@ -24170,7 +24137,6 @@ void command::mdbg_Init(command::mdbg& parent) {
 
 // --- command.mdbg..Uninit
 void command::mdbg_Uninit(command::mdbg& parent) {
-    command::mdbg &row = parent; (void)row;
 
     // command.mdbg.b.Uninit (Tary)  //Set breakpoint, e.g. 'a.cpp:123 if cond1', 'func#3'
     // remove all elements from command.mdbg.b
@@ -24945,7 +24911,6 @@ void command::mdbg_proc_Init(command::mdbg_proc& parent) {
 
 // --- command.mdbg_proc..Uninit
 void command::mdbg_proc_Uninit(command::mdbg_proc& parent) {
-    command::mdbg_proc &row = parent; (void)row;
 
     // command.mdbg_proc.mdbg.Uninit (Exec)  //
     mdbg_Kill(parent); // kill child, ensure forward progress
@@ -25527,7 +25492,6 @@ void command::mysql2ssim_proc_Init(command::mysql2ssim_proc& parent) {
 
 // --- command.mysql2ssim_proc..Uninit
 void command::mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) {
-    command::mysql2ssim_proc &row = parent; (void)row;
 
     // command.mysql2ssim_proc.mysql2ssim.Uninit (Exec)  //
     mysql2ssim_Kill(parent); // kill child, ensure forward progress
@@ -26057,7 +26021,6 @@ void command::orgfile_proc_Init(command::orgfile_proc& parent) {
 
 // --- command.orgfile_proc..Uninit
 void command::orgfile_proc_Uninit(command::orgfile_proc& parent) {
-    command::orgfile_proc &row = parent; (void)row;
 
     // command.orgfile_proc.orgfile.Uninit (Exec)  //
     orgfile_Kill(parent); // kill child, ensure forward progress
@@ -26562,7 +26525,6 @@ void command::samp_make_proc_Init(command::samp_make_proc& parent) {
 
 // --- command.samp_make_proc..Uninit
 void command::samp_make_proc_Uninit(command::samp_make_proc& parent) {
-    command::samp_make_proc &row = parent; (void)row;
 
     // command.samp_make_proc.samp_make.Uninit (Exec)  //
     samp_make_Kill(parent); // kill child, ensure forward progress
@@ -26943,7 +26905,6 @@ void command::samp_meng_proc_Init(command::samp_meng_proc& parent) {
 
 // --- command.samp_meng_proc..Uninit
 void command::samp_meng_proc_Uninit(command::samp_meng_proc& parent) {
-    command::samp_meng_proc &row = parent; (void)row;
 
     // command.samp_meng_proc.samp_meng.Uninit (Exec)  //
     samp_meng_Kill(parent); // kill child, ensure forward progress
@@ -27549,7 +27510,6 @@ void command::samp_regx_proc_Init(command::samp_regx_proc& parent) {
 
 // --- command.samp_regx_proc..Uninit
 void command::samp_regx_proc_Uninit(command::samp_regx_proc& parent) {
-    command::samp_regx_proc &row = parent; (void)row;
 
     // command.samp_regx_proc.samp_regx.Uninit (Exec)  //
     samp_regx_Kill(parent); // kill child, ensure forward progress
@@ -28696,7 +28656,6 @@ void command::src_func_proc_Init(command::src_func_proc& parent) {
 
 // --- command.src_func_proc..Uninit
 void command::src_func_proc_Uninit(command::src_func_proc& parent) {
-    command::src_func_proc &row = parent; (void)row;
 
     // command.src_func_proc.src_func.Uninit (Exec)  //
     src_func_Kill(parent); // kill child, ensure forward progress
@@ -29243,7 +29202,6 @@ void command::src_hdr_proc_Init(command::src_hdr_proc& parent) {
 
 // --- command.src_hdr_proc..Uninit
 void command::src_hdr_proc_Uninit(command::src_hdr_proc& parent) {
-    command::src_hdr_proc &row = parent; (void)row;
 
     // command.src_hdr_proc.src_hdr.Uninit (Exec)  //
     src_hdr_Kill(parent); // kill child, ensure forward progress
@@ -29857,7 +29815,6 @@ void command::src_lim_proc_Init(command::src_lim_proc& parent) {
 
 // --- command.src_lim_proc..Uninit
 void command::src_lim_proc_Uninit(command::src_lim_proc& parent) {
-    command::src_lim_proc &row = parent; (void)row;
 
     // command.src_lim_proc.src_lim.Uninit (Exec)  //
     src_lim_Kill(parent); // kill child, ensure forward progress
@@ -30263,7 +30220,6 @@ void command::ssim2csv_proc_Init(command::ssim2csv_proc& parent) {
 
 // --- command.ssim2csv_proc..Uninit
 void command::ssim2csv_proc_Uninit(command::ssim2csv_proc& parent) {
-    command::ssim2csv_proc &row = parent; (void)row;
 
     // command.ssim2csv_proc.ssim2csv.Uninit (Exec)  //
     ssim2csv_Kill(parent); // kill child, ensure forward progress
@@ -30911,7 +30867,6 @@ void command::ssim2mysql_proc_Init(command::ssim2mysql_proc& parent) {
 
 // --- command.ssim2mysql_proc..Uninit
 void command::ssim2mysql_proc_Uninit(command::ssim2mysql_proc& parent) {
-    command::ssim2mysql_proc &row = parent; (void)row;
 
     // command.ssim2mysql_proc.ssim2mysql.Uninit (Exec)  //
     ssim2mysql_Kill(parent); // kill child, ensure forward progress
@@ -31553,7 +31508,6 @@ void command::ssimfilt_Init(command::ssimfilt& parent) {
 
 // --- command.ssimfilt..Uninit
 void command::ssimfilt_Uninit(command::ssimfilt& parent) {
-    command::ssimfilt &row = parent; (void)row;
 
     // command.ssimfilt.field.Uninit (Tary)  //(project) Select fields for output (regx)
     // remove all elements from command.ssimfilt.field
@@ -32105,7 +32059,6 @@ void command::ssimfilt_proc_Init(command::ssimfilt_proc& parent) {
 
 // --- command.ssimfilt_proc..Uninit
 void command::ssimfilt_proc_Uninit(command::ssimfilt_proc& parent) {
-    command::ssimfilt_proc &row = parent; (void)row;
 
     // command.ssimfilt_proc.ssimfilt.Uninit (Exec)  //
     ssimfilt_Kill(parent); // kill child, ensure forward progress
@@ -32612,7 +32565,6 @@ void command::strconv_proc_Init(command::strconv_proc& parent) {
 
 // --- command.strconv_proc..Uninit
 void command::strconv_proc_Uninit(command::strconv_proc& parent) {
-    command::strconv_proc &row = parent; (void)row;
 
     // command.strconv_proc.strconv.Uninit (Exec)  //
     strconv_Kill(parent); // kill child, ensure forward progress
@@ -33324,7 +33276,6 @@ void command::sv2ssim_proc_Init(command::sv2ssim_proc& parent) {
 
 // --- command.sv2ssim_proc..Uninit
 void command::sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) {
-    command::sv2ssim_proc &row = parent; (void)row;
 
     // command.sv2ssim_proc.sv2ssim.Uninit (Exec)  //
     sv2ssim_Kill(parent); // kill child, ensure forward progress
@@ -33901,7 +33852,6 @@ void command::wt_Init(command::wt& parent) {
 
 // --- command.wt..Uninit
 void command::wt_Uninit(command::wt& parent) {
-    command::wt &row = parent; (void)row;
 
     // command.wt.files.Uninit (Tary)  //Shell regx to diff
     // remove all elements from command.wt.files
@@ -34680,7 +34630,6 @@ void command::wt_proc_Init(command::wt_proc& parent) {
 
 // --- command.wt_proc..Uninit
 void command::wt_proc_Uninit(command::wt_proc& parent) {
-    command::wt_proc &row = parent; (void)row;
 
     // command.wt_proc.wt.Uninit (Exec)  //
     wt_Kill(parent); // kill child, ensure forward progress

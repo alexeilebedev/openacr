@@ -28,10 +28,10 @@
 
 // --- lib_sql.FAttr..Init
 // Set all fields to initial values.
-inline void lib_sql::FAttr_Init(lib_sql::FAttr& attr) {
-    attr.isbool = bool(false);
-    attr.ind_attr_next = (lib_sql::FAttr*)-1; // (lib_sql.FDb.ind_attr) not-in-hash
-    attr.ind_attr_hashval = 0; // stored hash value
+inline void lib_sql::FAttr_Init(lib_sql::FAttr& parent) {
+    parent.isbool = bool(false);
+    parent.ind_attr_next = (lib_sql::FAttr*)-1; // (lib_sql.FDb.ind_attr) not-in-hash
+    parent.ind_attr_hashval = 0; // stored hash value
 }
 
 // --- lib_sql.FAttr..Ctor

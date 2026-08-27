@@ -1,6 +1,19 @@
 ## lib_mysql - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_mysql - Mysql adaptor](/txt/lib/lib_mysql/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -65,9 +78,9 @@ All allocations are done through global `lib_mysql::_db` [lib_mysql.FDb](#lib_my
 <a href="#lib_mysql-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_mysql.FDb.res|[lib_mysql.Res](/txt/gen/lib_mysql/lib_mysql.md#lib_mysql-res)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|lib_mysql.FDb._db|[lib_mysql.FDb](/txt/gen/lib_mysql/lib_mysql.md#lib_mysql-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_mysql.FDb.mysql|MYSQL|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|lib_mysql.FDb.res|[lib_mysql.Res](/txt/gen/lib_mysql/lib_mysql.md#lib_mysql-res)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|lib_mysql.FDb._db|[lib_mysql.FDb](/txt/gen/lib_mysql/lib_mysql.md#lib_mysql-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_mysql.FDb.mysql|MYSQL|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -86,7 +99,7 @@ struct FDb { // lib_mysql.FDb: In-memory database for lib_mysql
 <a href="#lib_mysql-res-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_mysql.Res.res|MYSQL_RES|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|lib_mysql.Res.res|MYSQL_RES|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct Res
 <a href="#struct-res"></a>

@@ -61,11 +61,11 @@ italicised fields: *field, name* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc)
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|fconst|[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LL of fconst*|
-|value|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*name*|*[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>/LR of fconst*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|fconst|[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LL of fconst*|
+|value|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*name*|*[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>/LR of fconst*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

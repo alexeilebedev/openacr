@@ -91,6 +91,18 @@ acr_ed -create -ctype ams.MyMsg -subset ams.MsgHeader -write
 # Markdown source files
 acr_ed -create -srcfile txt/.../xyz.md -write
 acr_ed -del    -srcfile txt/.../xyz.md -write
+
+# Rename
+acr_ed -ctype    <ns>.Old      -rename <ns>.New      -write
+acr_ed -field    <ns>.Ct.old   -rename <ns>.Ct.new   -write
+acr_ed -ssimfile <ns>.old      -rename <ns>.new      -write
+acr_ed -target   <old>         -rename <new>         -write
+
+# Delete
+acr_ed -del -field    <ns>.FCtype.<name> -write
+acr_ed -del -ctype    <ns>.FName         -write
+acr_ed -del -ssimfile <ns>.<name>        -write
+acr_ed -del -target   <target>           -write
 ```
 
 Notes:
@@ -122,6 +134,26 @@ acr fprefix                      # field-name prefix → reftype mapping
 
 The `-del` option can be used with `-ctype`, `-field`, `-srcfile`, `-ssimfile`, `-target`.
 
+Deleting a field removes the values as well as the schema row.  `acr` ignores a
+data attribute that names no field of the current ctype, so the values would
+otherwise sit in the ssimfile with nothing to object to them, and `acr_ed`
+follows the delete with a rewrite of every ssimfile whose rows carried them:
+
+    $ acr_ed -del -field dmmeta.Ns.license
+    set -e
+    bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+    EOF
+
+    bin/acr  -query:field:dmmeta.Ns.license -del:Y -write:Y
+    bin/acr  -query:dmmeta.ns:% -write:Y -print:N
+    bin/amc
+
+A field on an in-memory ctype has no ssimfile behind it, so the script for one
+of those carries the delete alone.
+
+Deleting a ctype that has an ssimfile is redirected to the ssimfile delete,
+which removes the ctype, its fields and the data file together.
+
 #### -rename -- Rename to something else
 <a href="#-rename"></a>
 
@@ -129,6 +161,17 @@ The `-rename` option can be used with `-ctype`, `-field`, `-srcfile`, `-ssimfile
 When renaming a ssimfile, the corresponding ctype is also renamed to the CamelCase version of
 the ssimfile name. In addition, in all programs that use the ssimfile as an finput,
 the corresponding in-memory type and its pool are renamed.
+
+Renaming a **field** takes either a bare new name or the full pkey, and the two
+are the same edit: `acr_ed -field <ns>.<Ct>.old -rename new` and
+`acr_ed -field <ns>.<Ct>.old -rename <ns>.<Ct>.new` both rename within the ctype,
+because a rename does not move a field between ctypes.  `acr` renames the column
+in the ssimfile at the same time, so no further step is needed on the data.  Two
+spellings are refused rather than guessed at.  A `:` in the new name is the query
+form (`-rename field:<ns>.<Ct>.new`), which `acr` would read as naming the ctype
+`field:<ns>.<Ct>`.  And a new name carrying a different ctype is refused when
+either ctype has an ssimfile, since the old table's rows would keep a column no
+field claims; move a field between ssim-backed tables with a delete and a create.
 
 When renaming a target, all of its source files are moved to the new location `cpp/<target>/`.
 All component tests are renamed, along with the readme. `acr_ed` uses `sed` speculatively

@@ -9,8 +9,8 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|child|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|parent|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|child|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|parent|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

@@ -31,8 +31,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/ams_gen.h"
 #include "include/gen/ams_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -45,7 +43,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ams::FDb     lib_ams::_db;      // dependency found via dev.targdep
 lib_netio::FDb   lib_netio::_db;    // dependency found via dev.targdep
@@ -69,13 +66,13 @@ namespace samp_meng { // gen:ns_print_proto
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:samp_meng.FOrdq.bh_order.Downheap
-    static int           bh_order_Downheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row, int idx) __attribute__((nothrow));
+    static int           bh_order_Downheap(samp_meng::FOrdq& parent, samp_meng::FOrder& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
     // func:samp_meng.FOrdq.bh_order.Upheap
-    static int           bh_order_Upheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row, int idx) __attribute__((nothrow));
+    static int           bh_order_Upheap(samp_meng::FOrdq& parent, samp_meng::FOrder& row, int idx) __attribute__((nothrow));
     // func:samp_meng.FOrdq.bh_order.ElemLt
-    inline static bool   bh_order_ElemLt(samp_meng::FOrdq& ordq, samp_meng::FOrder &a, samp_meng::FOrder &b) __attribute__((nothrow));
+    inline static bool   bh_order_ElemLt(samp_meng::FOrdq& parent, samp_meng::FOrder &a, samp_meng::FOrder &b) __attribute__((nothrow));
     // func:samp_meng.FOrdq.bh_order_curs.Add
     static void          ordq_bh_order_curs_Add(ordq_bh_order_curs &curs, samp_meng::FOrder& row);
     // func:samp_meng...SizeCheck
@@ -528,6 +525,7 @@ void* samp_meng::order_AllocMem() {
     if (row) {
         _db.order_free = row->order_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(samp_meng::FOrder));
     return row;
 }
 
@@ -537,6 +535,7 @@ void samp_meng::order_FreeMem(samp_meng::FOrder &row) {
     if (UNLIKELY(row.order_next != (samp_meng::FOrder*)-1)) {
         FatalErrorExit("samp_meng.tpool_double_delete  pool:samp_meng.FDb.order  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(samp_meng::FOrder)); // before the free list threads through the element
     row.order_next = _db.order_free; // insert into free list
     _db.order_free  = &row;
 }
@@ -773,6 +772,7 @@ void* samp_meng::ordq_AllocMem() {
     if (row) {
         _db.ordq_free = row->ordq_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(samp_meng::FOrdq));
     return row;
 }
 
@@ -782,6 +782,7 @@ void samp_meng::ordq_FreeMem(samp_meng::FOrdq &row) {
     if (UNLIKELY(row.ordq_next != (samp_meng::FOrdq*)-1)) {
         FatalErrorExit("samp_meng.tpool_double_delete  pool:samp_meng.FDb.ordq  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(samp_meng::FOrdq)); // before the free list threads through the element
     row.ordq_next = _db.ordq_free; // insert into free list
     _db.ordq_free  = &row;
 }
@@ -1116,13 +1117,13 @@ void samp_meng::FDb_Init() {
     memset(_db.ind_user_buckets_elems, 0, sizeof(samp_meng::FUser*)*_db.ind_user_buckets_n); // (samp_meng.FDb.ind_user)
     _db.next_order_id = u64(1);
     _db.n_in = u64(0);
+    _db.n_trade = u64(0);
 
     samp_meng::InitReflection();
 }
 
 // --- samp_meng.FDb..Uninit
 void samp_meng::FDb_Uninit() {
-    samp_meng::FDb &row = _db; (void)row;
 
     // samp_meng.FDb.ind_user.Uninit (Thash)  //
     // skip destruction of ind_user in global scope
@@ -1141,60 +1142,59 @@ void samp_meng::FDb_Uninit() {
 }
 
 // --- samp_meng.FOrder..Uninit
-void samp_meng::FOrder_Uninit(samp_meng::FOrder& order) {
-    samp_meng::FOrder &row = order; (void)row;
-    ind_order_Remove(row); // remove order from index ind_order
-    samp_meng::FOrdq* p_p_ordq = row.p_ordq;
+void samp_meng::FOrder_Uninit(samp_meng::FOrder& parent) {
+    ind_order_Remove(parent); // remove order from index ind_order
+    samp_meng::FOrdq* p_p_ordq = parent.p_ordq;
     if (p_p_ordq)  {
-        bh_order_Remove(*p_p_ordq, row);// remove order from index bh_order
+        bh_order_Remove(*p_p_ordq, parent);// remove order from index bh_order
     }
-    samp_meng::FUser* p_p_user = row.p_user;
+    samp_meng::FUser* p_p_user = parent.p_user;
     if (p_p_user)  {
-        zd_order_Remove(*p_p_user, row);// remove order from index zd_order
+        zd_order_Remove(*p_p_user, parent);// remove order from index zd_order
     }
 }
 
 // --- samp_meng.FOrdq.bh_order.Cascdel
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
-void samp_meng::bh_order_Cascdel(samp_meng::FOrdq& ordq) {
-    i32 n = ordq.bh_order_n;
+void samp_meng::bh_order_Cascdel(samp_meng::FOrdq& parent) {
+    i32 n = parent.bh_order_n;
     while (n > 0) {
         n--;
-        samp_meng::FOrder &elem = *ordq.bh_order_elems[n]; // pick cheapest element to remove
+        samp_meng::FOrder &elem = *parent.bh_order_elems[n]; // pick cheapest element to remove
         elem.ordq_bh_order_idx = -1; // mark not-in-heap
-        ordq.bh_order_n = n;
+        parent.bh_order_n = n;
         order_Delete(elem);
     }
 }
 
 // --- samp_meng.FOrdq.bh_order.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void samp_meng::bh_order_Dealloc(samp_meng::FOrdq& ordq) {
-    bh_order_RemoveAll(ordq);
-    algo_lib::malloc_FreeMem(ordq.bh_order_elems, sizeof(samp_meng::FOrder*)*ordq.bh_order_max);
-    ordq.bh_order_max   = 0;
-    ordq.bh_order_elems = NULL;
+void samp_meng::bh_order_Dealloc(samp_meng::FOrdq& parent) {
+    bh_order_RemoveAll(parent);
+    algo_lib::malloc_FreeMem(parent.bh_order_elems, sizeof(samp_meng::FOrder*)*parent.bh_order_max);
+    parent.bh_order_max   = 0;
+    parent.bh_order_elems = NULL;
 }
 
 // --- samp_meng.FOrdq.bh_order.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int samp_meng::bh_order_Downheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row, int idx) {
-    samp_meng::FOrder* *elems = ordq.bh_order_elems;
-    int n = ordq.bh_order_n;
+static int samp_meng::bh_order_Downheap(samp_meng::FOrdq& parent, samp_meng::FOrder& row, int idx) {
+    samp_meng::FOrder* *elems = parent.bh_order_elems;
+    int n = parent.bh_order_n;
     int child = idx*2+1;
     while (child < n) {
         samp_meng::FOrder* p = elems[child]; // left child
         int rchild = child+1;
         if (rchild < n) {
             samp_meng::FOrder* q = elems[rchild]; // right child
-            if (bh_order_ElemLt(ordq, *q,*p)) {
+            if (bh_order_ElemLt(parent, *q,*p)) {
                 child = rchild;
                 p     = q;
             }
         }
-        if (!bh_order_ElemLt(ordq, *p,row)) {
+        if (!bh_order_ElemLt(parent, *p,row)) {
             break;
         }
         p->ordq_bh_order_idx   = idx;
@@ -1207,33 +1207,33 @@ static int samp_meng::bh_order_Downheap(samp_meng::FOrdq& ordq, samp_meng::FOrde
 
 // --- samp_meng.FOrdq.bh_order.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void samp_meng::bh_order_Insert(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
+void samp_meng::bh_order_Insert(samp_meng::FOrdq& parent, samp_meng::FOrder& row) {
     if (LIKELY(row.ordq_bh_order_idx == -1)) {
-        bh_order_Reserve(ordq, 1);
-        int n = ordq.bh_order_n;
-        ordq.bh_order_n = n + 1;
-        int new_idx = bh_order_Upheap(ordq, row, n);
+        bh_order_Reserve(parent, 1);
+        int n = parent.bh_order_n;
+        parent.bh_order_n = n + 1;
+        int new_idx = bh_order_Upheap(parent, row, n);
         row.ordq_bh_order_idx = new_idx;
-        ordq.bh_order_elems[new_idx] = &row;
+        parent.bh_order_elems[new_idx] = &row;
     }
 }
 
 // --- samp_meng.FOrdq.bh_order.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 samp_meng::bh_order_Reheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
+i32 samp_meng::bh_order_Reheap(samp_meng::FOrdq& parent, samp_meng::FOrder& row) {
     int old_idx = row.ordq_bh_order_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
-        bh_order_Reserve(ordq, 1);
-        old_idx = ordq.bh_order_n++;
+        bh_order_Reserve(parent, 1);
+        old_idx = parent.bh_order_n++;
     }
-    int new_idx = bh_order_Upheap(ordq, row, old_idx);
+    int new_idx = bh_order_Upheap(parent, row, old_idx);
     if (!isnew && new_idx == old_idx) {
-        new_idx = bh_order_Downheap(ordq, row, old_idx);
+        new_idx = bh_order_Downheap(parent, row, old_idx);
     }
     row.ordq_bh_order_idx = new_idx;
-    ordq.bh_order_elems[new_idx] = &row;
+    parent.bh_order_elems[new_idx] = &row;
     return new_idx;
 }
 
@@ -1242,31 +1242,31 @@ i32 samp_meng::bh_order_Reheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 samp_meng::bh_order_ReheapFirst(samp_meng::FOrdq& ordq) {
-    samp_meng::FOrder &row = *ordq.bh_order_elems[0];
-    i32 new_idx = bh_order_Downheap(ordq, row, 0);
+i32 samp_meng::bh_order_ReheapFirst(samp_meng::FOrdq& parent) {
+    samp_meng::FOrder &row = *parent.bh_order_elems[0];
+    i32 new_idx = bh_order_Downheap(parent, row, 0);
     row.ordq_bh_order_idx = new_idx;
-    ordq.bh_order_elems[new_idx] = &row;
+    parent.bh_order_elems[new_idx] = &row;
     return new_idx;
 }
 
 // --- samp_meng.FOrdq.bh_order.Remove
 // Remove element from index. If element is not in index, do nothing.
-void samp_meng::bh_order_Remove(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
+void samp_meng::bh_order_Remove(samp_meng::FOrdq& parent, samp_meng::FOrder& row) {
     if (bh_order_InBheapQ(row)) {
         int old_idx = row.ordq_bh_order_idx;
-        if (ordq.bh_order_elems[old_idx] == &row) { // sanity check: heap points back to row
+        if (parent.bh_order_elems[old_idx] == &row) { // sanity check: heap points back to row
             row.ordq_bh_order_idx = -1;           // mark not in heap
-            i32 n = ordq.bh_order_n - 1; // index of last element in heap
-            ordq.bh_order_n = n;         // decrease count
+            i32 n = parent.bh_order_n - 1; // index of last element in heap
+            parent.bh_order_n = n;         // decrease count
             if (old_idx != n) {
-                samp_meng::FOrder *elem = ordq.bh_order_elems[n];
-                int new_idx = bh_order_Upheap(ordq, *elem, old_idx);
+                samp_meng::FOrder *elem = parent.bh_order_elems[n];
+                int new_idx = bh_order_Upheap(parent, *elem, old_idx);
                 if (new_idx == old_idx) {
-                    new_idx = bh_order_Downheap(ordq, *elem, old_idx);
+                    new_idx = bh_order_Downheap(parent, *elem, old_idx);
                 }
                 elem->ordq_bh_order_idx = new_idx;
-                ordq.bh_order_elems[new_idx] = elem;
+                parent.bh_order_elems[new_idx] = elem;
             }
         }
     }
@@ -1274,29 +1274,29 @@ void samp_meng::bh_order_Remove(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) 
 
 // --- samp_meng.FOrdq.bh_order.RemoveAll
 // Remove all elements from binary heap
-void samp_meng::bh_order_RemoveAll(samp_meng::FOrdq& ordq) {
-    int n = ordq.bh_order_n;
+void samp_meng::bh_order_RemoveAll(samp_meng::FOrdq& parent) {
+    int n = parent.bh_order_n;
     for (int i = n - 1; i>=0; i--) {
-        ordq.bh_order_elems[i]->ordq_bh_order_idx = -1; // mark not-in-heap
+        parent.bh_order_elems[i]->ordq_bh_order_idx = -1; // mark not-in-heap
     }
-    ordq.bh_order_n = 0;
+    parent.bh_order_n = 0;
 }
 
 // --- samp_meng.FOrdq.bh_order.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-samp_meng::FOrder* samp_meng::bh_order_RemoveFirst(samp_meng::FOrdq& ordq) {
+samp_meng::FOrder* samp_meng::bh_order_RemoveFirst(samp_meng::FOrdq& parent) {
     samp_meng::FOrder *row = NULL;
-    if (ordq.bh_order_n > 0) {
-        row = ordq.bh_order_elems[0];
+    if (parent.bh_order_n > 0) {
+        row = parent.bh_order_elems[0];
         row->ordq_bh_order_idx = -1;           // mark not in heap
-        i32 n = ordq.bh_order_n - 1; // index of last element in heap
-        ordq.bh_order_n = n;         // decrease count
+        i32 n = parent.bh_order_n - 1; // index of last element in heap
+        parent.bh_order_n = n;         // decrease count
         if (n) {
-            samp_meng::FOrder &elem = *ordq.bh_order_elems[n];
-            int new_idx = bh_order_Downheap(ordq, elem, 0);
+            samp_meng::FOrder &elem = *parent.bh_order_elems[n];
+            int new_idx = bh_order_Downheap(parent, elem, 0);
             elem.ordq_bh_order_idx = new_idx;
-            ordq.bh_order_elems[new_idx] = &elem;
+            parent.bh_order_elems[new_idx] = &elem;
         }
     }
     return row;
@@ -1304,30 +1304,30 @@ samp_meng::FOrder* samp_meng::bh_order_RemoveFirst(samp_meng::FOrdq& ordq) {
 
 // --- samp_meng.FOrdq.bh_order.Reserve
 // Reserve space in index for N more elements
-void samp_meng::bh_order_Reserve(samp_meng::FOrdq& ordq, int n) {
-    i32 old_max = ordq.bh_order_max;
-    if (UNLIKELY(ordq.bh_order_n + n > old_max)) {
+void samp_meng::bh_order_Reserve(samp_meng::FOrdq& parent, int n) {
+    i32 old_max = parent.bh_order_max;
+    if (UNLIKELY(parent.bh_order_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
         u32 old_size = old_max * sizeof(samp_meng::FOrder*);
         u32 new_size = new_max * sizeof(samp_meng::FOrder*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ordq.bh_order_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.bh_order_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("samp_meng.out_of_memory  field:samp_meng.FOrdq.bh_order");
         }
-        ordq.bh_order_elems = (samp_meng::FOrder**)new_mem;
-        ordq.bh_order_max = new_max;
+        parent.bh_order_elems = (samp_meng::FOrder**)new_mem;
+        parent.bh_order_max = new_max;
     }
 }
 
 // --- samp_meng.FOrdq.bh_order.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int samp_meng::bh_order_Upheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row, int idx) {
-    samp_meng::FOrder* *elems = ordq.bh_order_elems;
+static int samp_meng::bh_order_Upheap(samp_meng::FOrdq& parent, samp_meng::FOrder& row, int idx) {
+    samp_meng::FOrder* *elems = parent.bh_order_elems;
     while (idx>0) {
         int j = (idx-1)/2;
         samp_meng::FOrder* p = elems[j];
-        if (!bh_order_ElemLt(ordq, row, *p)) {
+        if (!bh_order_ElemLt(parent, row, *p)) {
             break;
         }
         p->ordq_bh_order_idx = idx;
@@ -1338,8 +1338,8 @@ static int samp_meng::bh_order_Upheap(samp_meng::FOrdq& ordq, samp_meng::FOrder&
 }
 
 // --- samp_meng.FOrdq.bh_order.ElemLt
-inline static bool samp_meng::bh_order_ElemLt(samp_meng::FOrdq& ordq, samp_meng::FOrder &a, samp_meng::FOrder &b) {
-    (void)ordq;
+inline static bool samp_meng::bh_order_ElemLt(samp_meng::FOrdq& parent, samp_meng::FOrder &a, samp_meng::FOrder &b) {
+    (void)parent;
     return ordkey_Lt(a, b);
 }
 
@@ -1432,26 +1432,25 @@ void samp_meng::ordq_bh_order_curs_Next(ordq_bh_order_curs &curs) {
 }
 
 // --- samp_meng.FOrdq..Uninit
-void samp_meng::FOrdq_Uninit(samp_meng::FOrdq& ordq) {
-    samp_meng::FOrdq &row = ordq; (void)row;
-    bh_order_Cascdel(ordq); // dmmeta.cascdel:samp_meng.FOrdq.bh_order
-    samp_meng::FSymbol* p_p_symbol = row.p_symbol;
+void samp_meng::FOrdq_Uninit(samp_meng::FOrdq& parent) {
+    bh_order_Cascdel(parent); // dmmeta.cascdel:samp_meng.FOrdq.bh_order
+    samp_meng::FSymbol* p_p_symbol = parent.p_symbol;
     if (p_p_symbol)  {
-        c_ordq_Remove(*p_p_symbol, row);// remove ordq from index c_ordq
+        c_ordq_Remove(*p_p_symbol, parent);// remove ordq from index c_ordq
     }
 
     // samp_meng.FOrdq.bh_order.Uninit (Bheap)  //
-    algo_lib::malloc_FreeMem((u8*)ordq.bh_order_elems, sizeof(samp_meng::FOrder*)*ordq.bh_order_max); // (samp_meng.FOrdq.bh_order)
+    algo_lib::malloc_FreeMem((u8*)parent.bh_order_elems, sizeof(samp_meng::FOrder*)*parent.bh_order_max); // (samp_meng.FOrdq.bh_order)
 }
 
 // --- samp_meng.FSymbol.c_ordq.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void samp_meng::c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
+void samp_meng::c_ordq_Insert(samp_meng::FSymbol& parent, samp_meng::FOrdq& row) {
     if (!row.symbol_c_ordq_in_ary) {
-        c_ordq_Reserve(symbol, 1);
-        u64 n  = symbol.c_ordq_n++;
-        symbol.c_ordq_elems[n] = &row;
+        c_ordq_Reserve(parent, 1);
+        u64 n  = parent.c_ordq_n++;
+        parent.c_ordq_elems[n] = &row;
         row.symbol_c_ordq_in_ary = true;
     }
 }
@@ -1460,18 +1459,18 @@ void samp_meng::c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row)
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool samp_meng::c_ordq_InsertMaybe(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
+bool samp_meng::c_ordq_InsertMaybe(samp_meng::FSymbol& parent, samp_meng::FOrdq& row) {
     bool retval = !symbol_c_ordq_InAryQ(row);
-    c_ordq_Insert(symbol,row); // check is performed in _Insert again
+    c_ordq_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- samp_meng.FSymbol.c_ordq.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void samp_meng::c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
-    i64 n = symbol.c_ordq_n;
+void samp_meng::c_ordq_Remove(samp_meng::FSymbol& parent, samp_meng::FOrdq& row) {
+    i64 n = parent.c_ordq_n;
     if (bool_Update(row.symbol_c_ordq_in_ary,false)) {
-        samp_meng::FOrdq* *elems = symbol.c_ordq_elems;
+        samp_meng::FOrdq* *elems = parent.c_ordq_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -1480,7 +1479,7 @@ void samp_meng::c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row)
                 i64 j = i + 1;
                 size_t nbytes = sizeof(samp_meng::FOrdq*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                symbol.c_ordq_n = n - 1;
+                parent.c_ordq_n = n - 1;
                 break;
             }
         }
@@ -1489,76 +1488,75 @@ void samp_meng::c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row)
 
 // --- samp_meng.FSymbol.c_ordq.Reserve
 // Reserve space in index for N more elements;
-void samp_meng::c_ordq_Reserve(samp_meng::FSymbol& symbol, u64 n) {
-    u64 old_max = symbol.c_ordq_max;
-    if (UNLIKELY(symbol.c_ordq_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, symbol.c_ordq_n + n), 4);
+void samp_meng::c_ordq_Reserve(samp_meng::FSymbol& parent, u64 n) {
+    u64 old_max = parent.c_ordq_max;
+    if (UNLIKELY(parent.c_ordq_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_ordq_n + n), 4);
         u64 old_size = old_max * sizeof(samp_meng::FOrdq*);
         u64 new_size = new_max * sizeof(samp_meng::FOrdq*);
-        void *new_mem = algo_lib::malloc_ReallocMem(symbol.c_ordq_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_ordq_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("samp_meng.out_of_memory  field:samp_meng.FSymbol.c_ordq");
         }
-        symbol.c_ordq_elems = (samp_meng::FOrdq**)new_mem;
-        symbol.c_ordq_max = new_max;
+        parent.c_ordq_elems = (samp_meng::FOrdq**)new_mem;
+        parent.c_ordq_max = new_max;
     }
 }
 
 // --- samp_meng.FSymbol..Uninit
-void samp_meng::FSymbol_Uninit(samp_meng::FSymbol& symbol) {
-    samp_meng::FSymbol &row = symbol; (void)row;
-    ind_symbol_Remove(row); // remove symbol from index ind_symbol
+void samp_meng::FSymbol_Uninit(samp_meng::FSymbol& parent) {
+    ind_symbol_Remove(parent); // remove symbol from index ind_symbol
 
     // samp_meng.FSymbol.c_ordq.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(symbol.c_ordq_elems, sizeof(samp_meng::FOrdq*)*symbol.c_ordq_max); // (samp_meng.FSymbol.c_ordq)
+    algo_lib::malloc_FreeMem(parent.c_ordq_elems, sizeof(samp_meng::FOrdq*)*parent.c_ordq_max); // (samp_meng.FSymbol.c_ordq)
 }
 
 // --- samp_meng.FUser.zd_order.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void samp_meng::zd_order_Insert(samp_meng::FUser& user, samp_meng::FOrder& row) {
+void samp_meng::zd_order_Insert(samp_meng::FUser& parent, samp_meng::FOrder& row) {
     if (!user_zd_order_InLlistQ(row)) {
-        samp_meng::FOrder* old_tail = user.zd_order_tail;
+        samp_meng::FOrder* old_tail = parent.zd_order_tail;
         row.user_zd_order_next = NULL;
         row.user_zd_order_prev = old_tail;
-        user.zd_order_tail = &row;
+        parent.zd_order_tail = &row;
         samp_meng::FOrder **new_row_a = &old_tail->user_zd_order_next;
-        samp_meng::FOrder **new_row_b = &user.zd_order_head;
+        samp_meng::FOrder **new_row_b = &parent.zd_order_head;
         samp_meng::FOrder **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        user.zd_order_n++;
+        parent.zd_order_n++;
     }
 }
 
 // --- samp_meng.FUser.zd_order.Remove
 // Remove element from index. If element is not in index, do nothing.
-void samp_meng::zd_order_Remove(samp_meng::FUser& user, samp_meng::FOrder& row) {
+void samp_meng::zd_order_Remove(samp_meng::FUser& parent, samp_meng::FOrder& row) {
     if (user_zd_order_InLlistQ(row)) {
-        samp_meng::FOrder* old_head       = user.zd_order_head;
+        samp_meng::FOrder* old_head       = parent.zd_order_head;
         (void)old_head; // in case it's not used
         samp_meng::FOrder* prev = row.user_zd_order_prev;
         samp_meng::FOrder* next = row.user_zd_order_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         samp_meng::FOrder **new_next_a = &prev->user_zd_order_next;
-        samp_meng::FOrder **new_next_b = &user.zd_order_head;
+        samp_meng::FOrder **new_next_b = &parent.zd_order_head;
         samp_meng::FOrder **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         samp_meng::FOrder **new_prev_a = &next->user_zd_order_prev;
-        samp_meng::FOrder **new_prev_b = &user.zd_order_tail;
+        samp_meng::FOrder **new_prev_b = &parent.zd_order_tail;
         samp_meng::FOrder **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        user.zd_order_n--;
+        parent.zd_order_n--;
         row.user_zd_order_next=(samp_meng::FOrder*)-1; // not-in-list
     }
 }
 
 // --- samp_meng.FUser.zd_order.RemoveAll
 // Empty the index. (The rows are not deleted)
-void samp_meng::zd_order_RemoveAll(samp_meng::FUser& user) {
-    samp_meng::FOrder* row = user.zd_order_head;
-    user.zd_order_head = NULL;
-    user.zd_order_tail = NULL;
-    user.zd_order_n = 0;
+void samp_meng::zd_order_RemoveAll(samp_meng::FUser& parent) {
+    samp_meng::FOrder* row = parent.zd_order_head;
+    parent.zd_order_head = NULL;
+    parent.zd_order_tail = NULL;
+    parent.zd_order_n = 0;
     while (row) {
         samp_meng::FOrder* row_next = row->user_zd_order_next;
         row->user_zd_order_next  = (samp_meng::FOrder*)-1;
@@ -1569,17 +1567,17 @@ void samp_meng::zd_order_RemoveAll(samp_meng::FUser& user) {
 
 // --- samp_meng.FUser.zd_order.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-samp_meng::FOrder* samp_meng::zd_order_RemoveFirst(samp_meng::FUser& user) {
+samp_meng::FOrder* samp_meng::zd_order_RemoveFirst(samp_meng::FUser& parent) {
     samp_meng::FOrder *row = NULL;
-    row = user.zd_order_head;
+    row = parent.zd_order_head;
     if (row) {
         samp_meng::FOrder *next = row->user_zd_order_next;
-        user.zd_order_head = next;
+        parent.zd_order_head = next;
         samp_meng::FOrder **new_end_a = &next->user_zd_order_prev;
-        samp_meng::FOrder **new_end_b = &user.zd_order_tail;
+        samp_meng::FOrder **new_end_b = &parent.zd_order_tail;
         samp_meng::FOrder **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        user.zd_order_n--;
+        parent.zd_order_n--;
         row->user_zd_order_next = (samp_meng::FOrder*)-1; // mark as not-in-list
     }
     return row;
@@ -1587,26 +1585,25 @@ samp_meng::FOrder* samp_meng::zd_order_RemoveFirst(samp_meng::FUser& user) {
 
 // --- samp_meng.FUser.zd_order.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void samp_meng::zd_order_InsertBefore(samp_meng::FUser& user, samp_meng::FOrder& row, samp_meng::FOrder* before) {
+void samp_meng::zd_order_InsertBefore(samp_meng::FUser& parent, samp_meng::FOrder& row, samp_meng::FOrder* before) {
     if (!user_zd_order_InLlistQ(row) && &row != before) {
         samp_meng::FOrder* next = before;
-        samp_meng::FOrder* prev = next ? next->user_zd_order_prev : user.zd_order_tail;
+        samp_meng::FOrder* prev = next ? next->user_zd_order_prev : parent.zd_order_tail;
         row.user_zd_order_next = next;
         row.user_zd_order_prev = prev;
         samp_meng::FOrder **prev_link_a = &prev->user_zd_order_next;
-        samp_meng::FOrder **prev_link_b = &user.zd_order_head;
+        samp_meng::FOrder **prev_link_b = &parent.zd_order_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         samp_meng::FOrder **next_link_a = &next->user_zd_order_prev;
-        samp_meng::FOrder **next_link_b = &user.zd_order_tail;
+        samp_meng::FOrder **next_link_b = &parent.zd_order_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        user.zd_order_n++;
+        parent.zd_order_n++;
     }
 }
 
 // --- samp_meng.FUser..Uninit
-void samp_meng::FUser_Uninit(samp_meng::FUser& user) {
-    samp_meng::FUser &row = user; (void)row;
-    ind_user_Remove(row); // remove user from index ind_user
+void samp_meng::FUser_Uninit(samp_meng::FUser& parent) {
+    ind_user_Remove(parent); // remove user from index ind_user
 }
 
 // --- samp_meng.FieldId.value.ToCstr
@@ -1970,7 +1967,6 @@ bool samp_meng::In_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
 // --- samp_meng...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ams::FDb_Init();
         lib_netio::FDb_Init();
@@ -1993,7 +1989,6 @@ int main(int argc, char **argv) {
         lib_netio::FDb_Uninit();
         lib_ams::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

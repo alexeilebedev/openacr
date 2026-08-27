@@ -13,11 +13,11 @@ italicised fields: *ssimns, ns, name* are [**fldfunc**](/txt/openacr/ssim.md#fld
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssimfile|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*ssimns*|*[dmmeta.Nsdb](/txt/ssimdb/dmmeta/nsdb.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.LL of ssimfile*|
-|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.LL of ssimfile*|
-|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>.RR of ssimfile*|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|ssimfile|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*ssimns*|*[dmmeta.Nsdb](/txt/ssimdb/dmmeta/nsdb.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.LL of ssimfile*|
+|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.LL of ssimfile*|
+|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>.RR of ssimfile*|
+|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
 
 ### Subsets
 <a href="#subsets"></a>

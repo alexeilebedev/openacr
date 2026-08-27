@@ -9,9 +9,9 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|target|[dev.Target](/txt/ssimdb/dev/target.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Target|
-|cov_min|[algo.U32Dec2](/txt/protocol/algo/README.md#algo-u32dec2)|[Val](/txt/exe/amc/reftype.md#val)||Minimal coverage limit|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|target|[dev.Target](/txt/ssimdb/dev/target.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Target|
+|cov_min|[algo.U32Dec2](/txt/protocol/algo/README.md#algo-u32dec2)|[Val](/txt/exe/amc/reftype/Val.md)||Minimal coverage limit|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

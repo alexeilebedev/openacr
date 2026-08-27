@@ -24,11 +24,11 @@ italicised fields: *ctype* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) field
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.RL of field*|
-|autoscan|bool|[Val](/txt/exe/amc/reftype.md#val)|true|acr_compl scans this location for completion candidates|
-|optional|bool|[Val](/txt/exe/amc/reftype.md#val)|false|a layer beyond the primary source: absent means skip, not fail|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.RL of field*|
+|autoscan|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|acr_compl scans this location for completion candidates|
+|optional|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|a layer beyond the primary source: absent means skip, not fail|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

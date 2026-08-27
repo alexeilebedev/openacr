@@ -11,11 +11,11 @@ italicised fields: *target, src, ext* are [**fldfunc**](/txt/openacr/ssim.md#fld
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|targsrc|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*target*|*[dev.Target](/txt/ssimdb/dev/target.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LL of targsrc*|
-|*src*|*[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LR of targsrc*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*ext*|*[algo.Smallstr10](/txt/protocol/algo/README.md#algo-smallstr10)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>.RR of targsrc*|
+|targsrc|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*target*|*[dev.Target](/txt/ssimdb/dev/target.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LL of targsrc*|
+|*src*|*[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LR of targsrc*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*ext*|*[algo.Smallstr10](/txt/protocol/algo/README.md#algo-smallstr10)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>.RR of targsrc*|
 
 ### Used In Commands
 <a href="#used-in-commands"></a>

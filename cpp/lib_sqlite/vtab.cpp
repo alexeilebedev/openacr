@@ -158,6 +158,7 @@ static int xConnect(sqlite3 *db, void *, int argc, const char *const*argv, sqlit
     ctx->p_ctype = ctype;
     char * schema = sqlite3_mprintf("%s", algo::Zeroterm(CreateCtypeTable(*ctype)));
     rc = sqlite3_declare_vtab(db, schema);
+    sqlite3_free(schema); // sqlite keeps its own copy of the declaration
     if (rc == SQLITE_OK) {
         rc = sqlite3_vtab_config(db, SQLITE_VTAB_DIRECTONLY);
     }

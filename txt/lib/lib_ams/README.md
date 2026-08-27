@@ -26,12 +26,12 @@ Process types are registered in table `amsdb.proctype`. The standard types are:
 
 ```
 inline-command: acr proctype | ssimfilt ^ -t
-PROCTYPE      ID  NS            OVERHEADMB  HUGEMB  PATHBYTE  USERBYTE  OPENBYTE  CONNBYTE  COMMENT                             HBTIMEOUT
-              0                 0           0       0         0         0         0         No process                          30
-ams_sendtest  5   ams_sendtest  0           4295    0         0         0         0         Ams testing                         30
-ext           22                0           4295    0         0         0         0         External client connection          30
-samp_meng     23  samp_meng     0           4295    0         0         0         0         Matching engine                     30
-user          21                0           4295    0         0         0         0         User process launched via userproc  30
+PROCTYPE      ID  NS            OVERHEADMB  HUGEMB  HBTIMEOUT  COMMENT
+              0                 0           0       30         No process
+ams_sendtest  5   ams_sendtest  0           4295    30         Ams testing
+ext           22                0           4295    30         External client connection
+samp_meng     23  samp_meng     0           4295    30         Matching engine
+user          21                0           4295    30         User process launched via userproc
 
 ```
 

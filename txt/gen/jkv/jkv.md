@@ -1,6 +1,20 @@
 ## jkv - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [jkv - JSON <-> key-value mapping tool](/txt/exe/jkv/README.md)
+
 ### Sources
 <a href="#sources"></a>
 The source code license is GPL
@@ -38,9 +52,9 @@ All allocations are done through global `jkv::_db` [jkv.FDb](#jkv-fdb) structure
 <a href="#jkv-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|jkv.FDb._db|[jkv.FDb](/txt/gen/jkv/jkv.md#jkv-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|jkv.FDb.cmdline|[command.jkv](/txt/protocol/command/README.md#command-jkv)|[Val](/txt/exe/amc/reftype.md#val)|||
-|jkv.FDb.last_kv|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|jkv.FDb._db|[jkv.FDb](/txt/gen/jkv/jkv.md#jkv-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|jkv.FDb.cmdline|[command.jkv](/txt/protocol/command/README.md#command-jkv)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|jkv.FDb.last_kv|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

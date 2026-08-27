@@ -1,6 +1,19 @@
 ## lib_iconv - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_iconv - Iconv wrapper](/txt/lib/lib_iconv/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -52,8 +65,8 @@ All allocations are done through global `lib_iconv::_db` [lib_iconv.FDb](#lib_ic
 <a href="#lib_iconv-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_iconv.FDb._db|[lib_iconv.FDb](/txt/gen/lib_iconv/lib_iconv.md#lib_iconv-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_iconv.FDb.icd|[lib_iconv.Icd](/txt/gen/lib_iconv/lib_iconv.md#lib_iconv-icd)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
+|lib_iconv.FDb._db|[lib_iconv.FDb](/txt/gen/lib_iconv/lib_iconv.md#lib_iconv-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_iconv.FDb.icd|[lib_iconv.Icd](/txt/gen/lib_iconv/lib_iconv.md#lib_iconv-icd)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -71,7 +84,7 @@ struct FDb { // lib_iconv.FDb: In-memory database for lib_iconv
 <a href="#lib_iconv-icd-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_iconv.Icd.icd|iconv_t|[Val](/txt/exe/amc/reftype.md#val)|((iconv_t)-1)|iconv descriptor|
+|lib_iconv.Icd.icd|iconv_t|[Val](/txt/exe/amc/reftype/Val.md)|((iconv_t)-1)|iconv descriptor|
 
 #### Struct Icd
 <a href="#struct-icd"></a>

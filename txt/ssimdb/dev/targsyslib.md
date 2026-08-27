@@ -11,12 +11,12 @@ italicised fields: *target, syslib, uname, prefix* are [**fldfunc**](/txt/openac
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|targsyslib|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*target*|*[dev.Target](/txt/ssimdb/dev/target.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LR.LL of targsyslib*|
-|*syslib*|*[dev.Syslib](/txt/ssimdb/dev/syslib.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LR.LR of targsyslib*|
-|*uname*|*[dev.Uname](/txt/ssimdb/dev/uname.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LL of targsyslib*|
-|*prefix*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>.RL of targsyslib*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|targsyslib|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*target*|*[dev.Target](/txt/ssimdb/dev/target.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LR.LL of targsyslib*|
+|*syslib*|*[dev.Syslib](/txt/ssimdb/dev/syslib.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LR.LR of targsyslib*|
+|*uname*|*[dev.Uname](/txt/ssimdb/dev/uname.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LL of targsyslib*|
+|*prefix*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>.RL of targsyslib*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

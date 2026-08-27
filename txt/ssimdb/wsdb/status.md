@@ -9,7 +9,7 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|code|u32|[Val](/txt/exe/amc/reftype.md#val)||Status code|
-|reason|[algo.Smallstr32](/txt/protocol/algo/README.md#algo-smallstr32)|[Val](/txt/exe/amc/reftype.md#val)||Status reason|
-|local_only|bool|[Val](/txt/exe/amc/reftype.md#val)||Never sent on close frame, use locally|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|code|u32|[Val](/txt/exe/amc/reftype/Val.md)||Status code|
+|reason|[algo.Smallstr32](/txt/protocol/algo/README.md#algo-smallstr32)|[Val](/txt/exe/amc/reftype/Val.md)||Status reason|
+|local_only|bool|[Val](/txt/exe/amc/reftype/Val.md)||Never sent on close frame, use locally|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||

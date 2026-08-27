@@ -1,6 +1,21 @@
 ## lib_http - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_http - Library for HTTP support](/txt/lib/lib_http/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -118,8 +133,8 @@ struct FStatus { // lib_http.FStatus
 <a href="#lib_http-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_http.FDb._db|[lib_http.FDb](/txt/gen/lib_http/lib_http.md#lib_http-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_http.FDb.status|[lib_http.FStatus](/txt/gen/lib_http/lib_http.md#lib_http-fstatus)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
+|lib_http.FDb._db|[lib_http.FDb](/txt/gen/lib_http/lib_http.md#lib_http-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_http.FDb.status|[lib_http.FStatus](/txt/gen/lib_http/lib_http.md#lib_http-fstatus)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

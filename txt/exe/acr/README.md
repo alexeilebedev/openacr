@@ -280,8 +280,14 @@ acr % -del -write                   # wipe the entire dataset
 ```
 
 When deleting a record acr also deletes all records that refer to it
-(cascade delete).  When deleting a `dmmeta.field` row, acr rewrites
-the ssimfile to drop the column.
+(cascade delete).
+
+Deleting a `dmmeta.field` row removes the field from the schema and leaves its
+values in the ssimfile, because `acr` ignores a data attribute that names no
+field of the current ctype.  Drop them with a rewrite through the new schema —
+`acr '<ssimfile>:%' -write -print:N` — or delete the field through
+`acr_ed -del -field <field> -write`, which emits that rewrite itself.  See
+[/txt/rule/acr.md](/txt/rule/acr.md).
 
 #### Rename
 <a href="#rename"></a>
@@ -302,6 +308,12 @@ renames are issued to git:
 ```bash
 acr ns:old_ns -rename:new_ns -g -write
 ```
+
+Renaming an **ssimfile** is more than renaming its record: the data rows keep
+the old attribute name and the file keeps its old path unless `-g -x` is given,
+and the like-named key field and the ctype have to follow in order.
+`acr_ed -ssimfile <old> -rename <new> -write` performs the whole sequence.  See
+[/txt/rule/acr.md](/txt/rule/acr.md).
 
 #### Editor workflow (-e)
 <a href="#editor-workflow-e-"></a>
@@ -477,7 +489,7 @@ simpler.
 * [ssim2mysql](/txt/exe/ssim2mysql/README.md) — convert ssimfiles to MySQL
 * [amc](/txt/exe/amc/README.md) — code generator driven by the ssim schema
 * [Ssim Fundamentals](/txt/openacr/ssim.md) — ssim tuple format, fldfunc, cross-references
-* [Schema Design and Pitfalls](/txt/openacr/schema.md)
+* [OpenACR: the rules](/txt/rule/openacr.md)
 
 ### Options
 <a href="#options"></a>

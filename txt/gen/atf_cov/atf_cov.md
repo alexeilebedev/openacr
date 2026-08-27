@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -105,7 +107,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_cov.FCovline.base|[dev.Covline](/txt/ssimdb/dev/covline.md)|[Base](/txt/ssimdb/dev/covline.md)|||
-|atf_cov.FCovline.p_gitfile|[atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|atf_cov.FCovline.p_gitfile|[atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCovline
 <a href="#struct-fcovline"></a>
@@ -186,25 +188,25 @@ private:
 <a href="#atf_cov-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_cov.FDb._db|[atf_cov.FDb](/txt/gen/atf_cov/atf_cov.md#atf_cov-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|atf_cov.FDb.cmdline|[command.atf_cov](/txt/protocol/command/README.md#command-atf_cov)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_cov.FDb.bash|[command.bash_proc](/txt/protocol/command/README.md#command-bash_proc)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_cov.FDb.logfd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_cov.FDb.total|[dev.Covtarget](/txt/ssimdb/dev/covtarget.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_cov.FDb.covline|[atf_cov.FCovline](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovline)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_cov.FDb.ind_covline|[atf_cov.FCovline](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovline)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_cov.FDb.target|[atf_cov.FTarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_cov.FDb.ind_target|[atf_cov.FTarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftarget)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_cov.FDb.targsrc|[atf_cov.FTargsrc](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftargsrc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_cov.FDb.ind_targsrc|[atf_cov.FTargsrc](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftargsrc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_cov.FDb.gitfile|[atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_cov.FDb.ind_gitfile|[atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_cov.FDb.covtarget|[atf_cov.FCovtarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovtarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_cov.FDb.covfile|[atf_cov.FCovfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_cov.FDb.tgtcov|[atf_cov.FTgtcov](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftgtcov)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_cov.FDb.ind_tgtcov|[atf_cov.FTgtcov](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftgtcov)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_cov.FDb.uncovfunc|[atf_cov.FUncovfunc](/txt/gen/atf_cov/atf_cov.md#atf_cov-funcovfunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_cov.FDb.report|[report.atf_cov](/txt/protocol/report/README.md#report-atf_cov)|[Val](/txt/exe/amc/reftype.md#val)||Extent of this run's measurement|
+|atf_cov.FDb._db|[atf_cov.FDb](/txt/gen/atf_cov/atf_cov.md#atf_cov-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|atf_cov.FDb.cmdline|[command.atf_cov](/txt/protocol/command/README.md#command-atf_cov)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_cov.FDb.bash|[command.bash_proc](/txt/protocol/command/README.md#command-bash_proc)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_cov.FDb.logfd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_cov.FDb.total|[dev.Covtarget](/txt/ssimdb/dev/covtarget.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_cov.FDb.covline|[atf_cov.FCovline](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovline)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_cov.FDb.ind_covline|[atf_cov.FCovline](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovline)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_cov.FDb.target|[atf_cov.FTarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_cov.FDb.ind_target|[atf_cov.FTarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftarget)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_cov.FDb.targsrc|[atf_cov.FTargsrc](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftargsrc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_cov.FDb.ind_targsrc|[atf_cov.FTargsrc](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftargsrc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_cov.FDb.gitfile|[atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_cov.FDb.ind_gitfile|[atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_cov.FDb.covtarget|[atf_cov.FCovtarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovtarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_cov.FDb.covfile|[atf_cov.FCovfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_cov.FDb.tgtcov|[atf_cov.FTgtcov](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftgtcov)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_cov.FDb.ind_tgtcov|[atf_cov.FTgtcov](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftgtcov)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_cov.FDb.uncovfunc|[atf_cov.FUncovfunc](/txt/gen/atf_cov/atf_cov.md#atf_cov-funcovfunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_cov.FDb.report|[report.atf_cov](/txt/protocol/report/README.md#report-atf_cov)|[Val](/txt/exe/amc/reftype/Val.md)||Extent of this run's measurement|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -259,9 +261,9 @@ struct FDb { // atf_cov.FDb: In-memory database for atf_cov
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_cov.FGitfile.base|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Base](/txt/ssimdb/dev/gitfile.md)|||
-|atf_cov.FGitfile.c_targsrc|[atf_cov.FTargsrc](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftargsrc)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|atf_cov.FGitfile.c_covline|[atf_cov.FCovline](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovline)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|atf_cov.FGitfile.c_covfile|[atf_cov.FCovfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|atf_cov.FGitfile.c_targsrc|[atf_cov.FTargsrc](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftargsrc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|atf_cov.FGitfile.c_covline|[atf_cov.FCovline](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovline)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|atf_cov.FGitfile.c_covfile|[atf_cov.FCovfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FGitfile
 <a href="#struct-fgitfile"></a>
@@ -308,9 +310,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_cov.FTarget.base|[dev.Target](/txt/ssimdb/dev/target.md)|[Base](/txt/ssimdb/dev/target.md)|||
-|atf_cov.FTarget.c_targsrc|[atf_cov.FTargsrc](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftargsrc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|atf_cov.FTarget.c_covtarget|[atf_cov.FCovtarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovtarget)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|atf_cov.FTarget.c_tgtcov|[atf_cov.FTgtcov](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftgtcov)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|atf_cov.FTarget.c_targsrc|[atf_cov.FTargsrc](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftargsrc)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|atf_cov.FTarget.c_covtarget|[atf_cov.FCovtarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-fcovtarget)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|atf_cov.FTarget.c_tgtcov|[atf_cov.FTgtcov](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftgtcov)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FTarget
 <a href="#struct-ftarget"></a>
@@ -357,8 +359,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_cov.FTargsrc.base|[dev.Targsrc](/txt/ssimdb/dev/targsrc.md)|[Base](/txt/ssimdb/dev/targsrc.md)|||
-|atf_cov.FTargsrc.p_gitfile|[atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|atf_cov.FTargsrc.p_target|[atf_cov.FTarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|atf_cov.FTargsrc.p_gitfile|[atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|atf_cov.FTargsrc.p_target|[atf_cov.FTarget](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTargsrc
 <a href="#struct-ftargsrc"></a>
@@ -465,7 +467,7 @@ private:
 <a href="#atf_cov-phase-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_cov.Phase.value|u8|[Val](/txt/exe/amc/reftype.md#val)|0||
+|atf_cov.Phase.value|u8|[Val](/txt/exe/amc/reftype/Val.md)|0||
 
 #### Struct Phase
 <a href="#struct-phase"></a>

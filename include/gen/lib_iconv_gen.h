@@ -174,13 +174,13 @@ struct Icd { // lib_iconv.Icd
 // User-defined cleanup function invoked for field icd of lib_iconv::Icd
 // func:lib_iconv.Icd.icd.Cleanup
 // this function is 'extrn' and implemented by user
-void                 icd_Cleanup(lib_iconv::Icd& icd) __attribute__((nothrow));
+void                 icd_Cleanup(lib_iconv::Icd& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:lib_iconv.Icd..Init
-inline void          Icd_Init(lib_iconv::Icd& icd);
+inline void          Icd_Init(lib_iconv::Icd& parent);
 // func:lib_iconv.Icd..Uninit
-inline void          Icd_Uninit(lib_iconv::Icd& icd) __attribute__((nothrow));
+inline void          Icd_Uninit(lib_iconv::Icd& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:lib_iconv.Icd.String  printfmt:Raw
 // func:lib_iconv.Icd..Print

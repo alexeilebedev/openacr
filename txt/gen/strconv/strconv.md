@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -47,8 +49,8 @@ All allocations are done through global `strconv::_db` [strconv.FDb](#strconv-fd
 <a href="#strconv-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|strconv.FDb._db|[strconv.FDb](/txt/gen/strconv/strconv.md#strconv-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|strconv.FDb.cmdline|[command.strconv](/txt/protocol/command/README.md#command-strconv)|[Val](/txt/exe/amc/reftype.md#val)|||
+|strconv.FDb._db|[strconv.FDb](/txt/gen/strconv/strconv.md#strconv-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|strconv.FDb.cmdline|[command.strconv](/txt/protocol/command/README.md#command-strconv)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

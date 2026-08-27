@@ -27,6 +27,8 @@
 #include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 namespace lib_json { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
@@ -62,6 +64,7 @@ void lib_json::trace_Print(lib_json::trace row, algo::cstring& str) {
 void lib_json::lpool_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
@@ -176,6 +179,7 @@ void* lib_json::lpool_AllocMem(u64 size) {
             blk->next = NULL;
         }
     }
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -267,11 +271,17 @@ static void lib_json::InitReflection() {
     t_trace.comment.value   = "";
     t_trace.c_RowidFind     = trace_RowidFind;
     t_trace.NItems          = trace_N;
-    t_trace.Print           = (algo::ImrowPrintFcn)lib_json::trace_Print;
+    t_trace.Print           = lib_json::trace_PrintImrow;
     algo_lib::imtable_InsertMaybe(t_trace);
 
 
     // -- load signatures of existing dispatches --
+}
+
+// --- lib_json.FDb._db.trace_PrintImrow
+// Print the row DATA points at to STR, as reflection calls a printer.
+void lib_json::trace_PrintImrow(algo::ImrowPtr data, algo::cstring& str) {
+    lib_json::trace_Print(*(lib_json::trace*)data.value, str);
 }
 
 // --- lib_json.FDb._db.InsertStrptrMaybe
@@ -292,6 +302,7 @@ bool lib_json::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = lib_json::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
+        retval = retval && lib_json::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
         algo_lib::AppendErrtext("comment", "Wrong working directory?");
@@ -324,6 +335,7 @@ bool lib_json::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
         }
         if (!retval) {
             algo_lib::_db.errtext << eol
@@ -349,6 +361,7 @@ bool lib_json::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // --- lib_json.FDb._db.Steps
 // Calls Step function of dependencies
 void lib_json::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- lib_json.FDb._db.RemoveStrptrMaybe
@@ -410,6 +423,7 @@ void* lib_json::node_AllocMem() {
     if (row) {
         _db.node_free = row->node_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(lib_json::FNode));
     return row;
 }
 
@@ -419,6 +433,7 @@ void lib_json::node_FreeMem(lib_json::FNode &row) {
     if (UNLIKELY(row.node_next != (lib_json::FNode*)-1)) {
         FatalErrorExit("lib_json.tpool_double_delete  pool:lib_json.FDb.node  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(lib_json::FNode)); // before the free list threads through the element
     row.node_next = _db.node_free; // insert into free list
     _db.node_free  = &row;
 }
@@ -446,6 +461,7 @@ u64 lib_json::node_ReserveMem(u64 size) {
     u64 ret = 0;
     if (size >= sizeof(lib_json::FNode)) {
         lib_json::FNode *mem = (lib_json::FNode*)lib_json::lpool_AllocMem(size);
+        algo_lib::MemcheckFree(mem, size); // the elements broken out below are what the checker accounts for
         ret = mem ? size / sizeof(lib_json::FNode) : 0;
         // add newly allocated elements to the free list;
         for (u64 i=0; i < ret; i++) {
@@ -616,7 +632,6 @@ void lib_json::FDb_Init() {
 
 // --- lib_json.FDb..Uninit
 void lib_json::FDb_Uninit() {
-    lib_json::FDb &row = _db; (void)row;
 
     // lib_json.FDb.ind_objfld.Uninit (Thash)  //
     // skip destruction of ind_objfld in global scope
@@ -635,24 +650,24 @@ void lib_json::FldKey_Print(lib_json::FldKey& row, algo::cstring& str) {
 
 // --- lib_json.FNode.c_child.Cascdel
 // Delete all elements pointed to by the index.
-void lib_json::c_child_Cascdel(lib_json::FNode& node) {
+void lib_json::c_child_Cascdel(lib_json::FNode& parent) {
     // Each row's delete removes it from this array (heaplike: O(1) swap;
     // unique: the backward scan finds the last element first), and a cascade
     // that deletes other members keeps the array consistent, so re-reading
     // c_child_n each iteration visits every remaining row exactly once.
-    while (node.c_child_n > 0) {
-        node_Delete(*node.c_child_elems[node.c_child_n - 1]);
+    while (parent.c_child_n > 0) {
+        node_Delete(*parent.c_child_elems[parent.c_child_n - 1]);
     }
 }
 
 // --- lib_json.FNode.c_child.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void lib_json::c_child_Insert(lib_json::FNode& node, lib_json::FNode& row) {
+void lib_json::c_child_Insert(lib_json::FNode& parent, lib_json::FNode& row) {
     if (!row.node_c_child_in_ary) {
-        c_child_Reserve(node, 1);
-        u64 n  = node.c_child_n++;
-        node.c_child_elems[n] = &row;
+        c_child_Reserve(parent, 1);
+        u64 n  = parent.c_child_n++;
+        parent.c_child_elems[n] = &row;
         row.node_c_child_in_ary = true;
     }
 }
@@ -661,18 +676,18 @@ void lib_json::c_child_Insert(lib_json::FNode& node, lib_json::FNode& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_json::c_child_InsertMaybe(lib_json::FNode& node, lib_json::FNode& row) {
+bool lib_json::c_child_InsertMaybe(lib_json::FNode& parent, lib_json::FNode& row) {
     bool retval = !node_c_child_InAryQ(row);
-    c_child_Insert(node,row); // check is performed in _Insert again
+    c_child_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- lib_json.FNode.c_child.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_json::c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) {
-    i64 n = node.c_child_n;
+void lib_json::c_child_Remove(lib_json::FNode& parent, lib_json::FNode& row) {
+    i64 n = parent.c_child_n;
     if (bool_Update(row.node_c_child_in_ary,false)) {
-        lib_json::FNode* *elems = node.c_child_elems;
+        lib_json::FNode* *elems = parent.c_child_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -681,7 +696,7 @@ void lib_json::c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(lib_json::FNode*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                node.c_child_n = n - 1;
+                parent.c_child_n = n - 1;
                 break;
             }
         }
@@ -690,27 +705,27 @@ void lib_json::c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) {
 
 // --- lib_json.FNode.c_child.Reserve
 // Reserve space in index for N more elements;
-void lib_json::c_child_Reserve(lib_json::FNode& node, u64 n) {
-    u64 old_max = node.c_child_max;
-    if (UNLIKELY(node.c_child_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, node.c_child_n + n), 4);
+void lib_json::c_child_Reserve(lib_json::FNode& parent, u64 n) {
+    u64 old_max = parent.c_child_max;
+    if (UNLIKELY(parent.c_child_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_child_n + n), 4);
         u64 old_size = old_max * sizeof(lib_json::FNode*);
         u64 new_size = new_max * sizeof(lib_json::FNode*);
-        void *new_mem = lib_json::lpool_ReallocMem(node.c_child_elems, old_size, new_size);
+        void *new_mem = lib_json::lpool_ReallocMem(parent.c_child_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_json.out_of_memory  field:lib_json.FNode.c_child");
         }
-        node.c_child_elems = (lib_json::FNode**)new_mem;
-        node.c_child_max = new_max;
+        parent.c_child_elems = (lib_json::FNode**)new_mem;
+        parent.c_child_max = new_max;
     }
 }
 
 // --- lib_json.FNode.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_json::type_ToCstr(const lib_json::FNode& node) {
+const char* lib_json::type_ToCstr(const lib_json::FNode& parent) {
     const char *ret = NULL;
-    switch(type_GetEnum(node)) {
+    switch(type_GetEnum(parent)) {
         case lib_json_FNode_type_null      : ret = "null";  break;
         case lib_json_FNode_type_false     : ret = "false";  break;
         case lib_json_FNode_type_true      : ret = "true";  break;
@@ -726,12 +741,12 @@ const char* lib_json::type_ToCstr(const lib_json::FNode& node) {
 // --- lib_json.FNode.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void lib_json::type_Print(const lib_json::FNode& node, algo::cstring &lhs) {
-    const char *strval = type_ToCstr(node);
+void lib_json::type_Print(const lib_json::FNode& parent, algo::cstring &lhs) {
+    const char *strval = type_ToCstr(parent);
     if (strval) {
         lhs << strval;
     } else {
-        lhs << node.type;
+        lhs << parent.type;
     }
 }
 
@@ -739,16 +754,16 @@ void lib_json::type_Print(const lib_json::FNode& node, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) {
+bool lib_json::type_SetStrptrMaybe(lib_json::FNode& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('n','u','l','l'): {
-                    type_SetEnum(node,lib_json_FNode_type_null); ret = true; break;
+                    type_SetEnum(parent,lib_json_FNode_type_null); ret = true; break;
                 }
                 case LE_STR4('t','r','u','e'): {
-                    type_SetEnum(node,lib_json_FNode_type_true); ret = true; break;
+                    type_SetEnum(parent,lib_json_FNode_type_true); ret = true; break;
                 }
             }
             break;
@@ -756,13 +771,13 @@ bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) {
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('a','r','r','a','y'): {
-                    type_SetEnum(node,lib_json_FNode_type_array); ret = true; break;
+                    type_SetEnum(parent,lib_json_FNode_type_array); ret = true; break;
                 }
                 case LE_STR5('f','a','l','s','e'): {
-                    type_SetEnum(node,lib_json_FNode_type_false); ret = true; break;
+                    type_SetEnum(parent,lib_json_FNode_type_false); ret = true; break;
                 }
                 case LE_STR5('f','i','e','l','d'): {
-                    type_SetEnum(node,lib_json_FNode_type_field); ret = true; break;
+                    type_SetEnum(parent,lib_json_FNode_type_field); ret = true; break;
                 }
             }
             break;
@@ -770,13 +785,13 @@ bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) {
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('n','u','m','b','e','r'): {
-                    type_SetEnum(node,lib_json_FNode_type_number); ret = true; break;
+                    type_SetEnum(parent,lib_json_FNode_type_number); ret = true; break;
                 }
                 case LE_STR6('o','b','j','e','c','t'): {
-                    type_SetEnum(node,lib_json_FNode_type_object); ret = true; break;
+                    type_SetEnum(parent,lib_json_FNode_type_object); ret = true; break;
                 }
                 case LE_STR6('s','t','r','i','n','g'): {
-                    type_SetEnum(node,lib_json_FNode_type_string); ret = true; break;
+                    type_SetEnum(parent,lib_json_FNode_type_string); ret = true; break;
                 }
             }
             break;
@@ -788,22 +803,21 @@ bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) {
 // --- lib_json.FNode.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_json::type_SetStrptr(lib_json::FNode& node, algo::strptr rhs, lib_json_FNode_type_Enum dflt) {
-    if (!type_SetStrptrMaybe(node,rhs)) type_SetEnum(node,dflt);
+void lib_json::type_SetStrptr(lib_json::FNode& parent, algo::strptr rhs, lib_json_FNode_type_Enum dflt) {
+    if (!type_SetStrptrMaybe(parent,rhs)) type_SetEnum(parent,dflt);
 }
 
 // --- lib_json.FNode..Uninit
-void lib_json::FNode_Uninit(lib_json::FNode& node) {
-    lib_json::FNode &row = node; (void)row;
-    c_child_Cascdel(node); // dmmeta.cascdel:lib_json.FNode.c_child
-    ind_objfld_Remove(row); // remove node from index ind_objfld
-    lib_json::FNode* p_p_parent = row.p_parent;
+void lib_json::FNode_Uninit(lib_json::FNode& parent) {
+    c_child_Cascdel(parent); // dmmeta.cascdel:lib_json.FNode.c_child
+    ind_objfld_Remove(parent); // remove node from index ind_objfld
+    lib_json::FNode* p_p_parent = parent.p_parent;
     if (p_p_parent)  {
-        c_child_Remove(*p_p_parent, row);// remove node from index c_child
+        c_child_Remove(*p_p_parent, parent);// remove node from index c_child
     }
 
     // lib_json.FNode.c_child.Uninit (Ptrary)  //Child node(s)
-    lib_json::lpool_FreeMem(node.c_child_elems, sizeof(lib_json::FNode*)*node.c_child_max); // (lib_json.FNode.c_child)
+    lib_json::lpool_FreeMem(parent.c_child_elems, sizeof(lib_json::FNode*)*parent.c_child_max); // (lib_json.FNode.c_child)
 }
 
 // --- lib_json.FNode..Print
@@ -959,7 +973,6 @@ void lib_json::FParser_Init(lib_json::FParser& parent) {
 
 // --- lib_json.FParser..Uninit
 void lib_json::FParser_Uninit(lib_json::FParser& parent) {
-    lib_json::FParser &row = parent; (void)row;
     root_node_Cleanup(parent); // dmmeta.ffunc:lib_json.FParser.root_node/Cleanup
 }
 

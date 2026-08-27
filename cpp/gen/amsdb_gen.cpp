@@ -50,10 +50,6 @@ const char* amsdb::value_ToCstr(const amsdb::FieldId& parent) {
         case amsdb_FieldId_ns              : ret = "ns";  break;
         case amsdb_FieldId_overheadmb      : ret = "overheadmb";  break;
         case amsdb_FieldId_hugemb          : ret = "hugemb";  break;
-        case amsdb_FieldId_pathbyte        : ret = "pathbyte";  break;
-        case amsdb_FieldId_userbyte        : ret = "userbyte";  break;
-        case amsdb_FieldId_openbyte        : ret = "openbyte";  break;
-        case amsdb_FieldId_connbyte        : ret = "connbyte";  break;
         case amsdb_FieldId_hbtimeout       : ret = "hbtimeout";  break;
         case amsdb_FieldId_value           : ret = "value";  break;
     }
@@ -122,20 +118,8 @@ bool amsdb::value_SetStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) {
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('c','o','n','n','b','y','t','e'): {
-                    value_SetEnum(parent,amsdb_FieldId_connbyte); ret = true; break;
-                }
-                case LE_STR8('o','p','e','n','b','y','t','e'): {
-                    value_SetEnum(parent,amsdb_FieldId_openbyte); ret = true; break;
-                }
-                case LE_STR8('p','a','t','h','b','y','t','e'): {
-                    value_SetEnum(parent,amsdb_FieldId_pathbyte); ret = true; break;
-                }
                 case LE_STR8('p','r','o','c','t','y','p','e'): {
                     value_SetEnum(parent,amsdb_FieldId_proctype); ret = true; break;
-                }
-                case LE_STR8('u','s','e','r','b','y','t','e'): {
-                    value_SetEnum(parent,amsdb_FieldId_userbyte); ret = true; break;
                 }
             }
             break;
@@ -343,23 +327,11 @@ bool amsdb::Proctype_ReadFieldMaybe(amsdb::Proctype& parent, algo::strptr field,
         case amsdb_FieldId_hugemb: {
             retval = u32_ReadStrptrMaybe(parent.hugemb, strval);
         } break;
-        case amsdb_FieldId_pathbyte: {
-            retval = u32_ReadStrptrMaybe(parent.pathbyte, strval);
-        } break;
-        case amsdb_FieldId_userbyte: {
-            retval = u32_ReadStrptrMaybe(parent.userbyte, strval);
-        } break;
-        case amsdb_FieldId_openbyte: {
-            retval = u32_ReadStrptrMaybe(parent.openbyte, strval);
-        } break;
-        case amsdb_FieldId_connbyte: {
-            retval = u32_ReadStrptrMaybe(parent.connbyte, strval);
+        case amsdb_FieldId_hbtimeout: {
+            retval = i32_ReadStrptrMaybe(parent.hbtimeout, strval);
         } break;
         case amsdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-        } break;
-        case amsdb_FieldId_hbtimeout: {
-            retval = i32_ReadStrptrMaybe(parent.hbtimeout, strval);
         } break;
         default: {
             retval = false;
@@ -384,19 +356,6 @@ bool amsdb::Proctype_ReadStrptrMaybe(amsdb::Proctype &parent, algo::strptr in_st
     return retval;
 }
 
-// --- amsdb.Proctype..Init
-// Set all fields to initial values.
-void amsdb::Proctype_Init(amsdb::Proctype& parent) {
-    parent.id = u32(0);
-    parent.overheadmb = u32(0);
-    parent.hugemb = u32(0);
-    parent.pathbyte = u32(0);
-    parent.userbyte = u32(0);
-    parent.openbyte = u32(0);
-    parent.connbyte = u32(0);
-    parent.hbtimeout = i32(30);
-}
-
 // --- amsdb.Proctype..Print
 // print string representation of ROW to string STR
 // cfmt:amsdb.Proctype.String  printfmt:Tuple
@@ -419,23 +378,11 @@ void amsdb::Proctype_Print(amsdb::Proctype& row, algo::cstring& str) {
     u32_Print(row.hugemb, temp);
     PrintAttrSpaceReset(str,"hugemb", temp);
 
-    u32_Print(row.pathbyte, temp);
-    PrintAttrSpaceReset(str,"pathbyte", temp);
-
-    u32_Print(row.userbyte, temp);
-    PrintAttrSpaceReset(str,"userbyte", temp);
-
-    u32_Print(row.openbyte, temp);
-    PrintAttrSpaceReset(str,"openbyte", temp);
-
-    u32_Print(row.connbyte, temp);
-    PrintAttrSpaceReset(str,"connbyte", temp);
+    i32_Print(row.hbtimeout, temp);
+    PrintAttrSpaceReset(str,"hbtimeout", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
-
-    i32_Print(row.hbtimeout, temp);
-    PrintAttrSpaceReset(str,"hbtimeout", temp);
 }
 
 // --- amsdb.Trafficclass..ReadFieldMaybe

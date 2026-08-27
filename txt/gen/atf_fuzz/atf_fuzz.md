@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -50,12 +52,12 @@ All allocations are done through global `atf_fuzz::_db` [atf_fuzz.FDb](#atf_fuzz
 <a href="#atf_fuzz-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_fuzz.FDb._db|[atf_fuzz.FDb](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|atf_fuzz.FDb.cmdline|[command.atf_fuzz](/txt/protocol/command/README.md#command-atf_fuzz)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_fuzz.FDb.fuzzstrat|[atf_fuzz.FFuzzstrat](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-ffuzzstrat)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_fuzz.FDb.target|[atf_fuzz.FTarget](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-ftarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_fuzz.FDb.ind_target|[atf_fuzz.FTarget](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-ftarget)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_fuzz.FDb.c_target|[atf_fuzz.FTarget](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-ftarget)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|atf_fuzz.FDb._db|[atf_fuzz.FDb](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|atf_fuzz.FDb.cmdline|[command.atf_fuzz](/txt/protocol/command/README.md#command-atf_fuzz)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_fuzz.FDb.fuzzstrat|[atf_fuzz.FFuzzstrat](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-ffuzzstrat)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_fuzz.FDb.target|[atf_fuzz.FTarget](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-ftarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_fuzz.FDb.ind_target|[atf_fuzz.FTarget](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-ftarget)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_fuzz.FDb.c_target|[atf_fuzz.FTarget](/txt/gen/atf_fuzz/atf_fuzz.md#atf_fuzz-ftarget)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -83,7 +85,7 @@ struct FDb { // atf_fuzz.FDb: In-memory database for atf_fuzz
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_fuzz.FFuzzstrat.base|[atfdb.Fuzzstrat](/txt/ssimdb/atfdb/fuzzstrat.md)|[Base](/txt/ssimdb/atfdb/fuzzstrat.md)|||
-|atf_fuzz.FFuzzstrat.step||[Hook](/txt/exe/amc/reftype.md#hook)|||
+|atf_fuzz.FFuzzstrat.step||[Hook](/txt/exe/amc/reftype/Hook.md)|||
 
 #### Struct FFuzzstrat
 <a href="#struct-ffuzzstrat"></a>

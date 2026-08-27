@@ -9,11 +9,11 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|listtype|[algo.Smallstr5](/txt/protocol/algo/README.md#algo-smallstr5)|[Val](/txt/exe/amc/reftype.md#val)||Field-name prefix naming this list shape|
-|circular|bool|[Val](/txt/exe/amc/reftype.md#val)||Circular list|
-|haveprev|bool|[Val](/txt/exe/amc/reftype.md#val)||Previous link|
-|instail|bool|[Val](/txt/exe/amc/reftype.md#val)||Queue|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|listtype|[algo.Smallstr5](/txt/protocol/algo/README.md#algo-smallstr5)|[Val](/txt/exe/amc/reftype/Val.md)||Field-name prefix naming this list shape|
+|circular|bool|[Val](/txt/exe/amc/reftype/Val.md)||Circular list|
+|haveprev|bool|[Val](/txt/exe/amc/reftype/Val.md)||Previous link|
+|instail|bool|[Val](/txt/exe/amc/reftype/Val.md)||Queue|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Related
 <a href="#related"></a>

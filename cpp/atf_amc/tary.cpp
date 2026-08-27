@@ -169,11 +169,20 @@ void atf_amc::amctest_TaryInsary() {
 // child lets the parent confirm the child exited with the FatalErrorExit
 // status (1) rather than crashing (signal) or returning normally (status 0).
 void atf_amc::amctest_TaryInsaryBadIndex() {
+    tempstr path;
+    path << "temp/atf_amc_insary.fatal";
+    DeleteFile(path);
     int pid = fork();
     if (pid == 0) {
         algo_lib::DieWithParent();
         FILE *devnull = freopen("/dev/null", "w", stderr);// suppress the expected fatal-error banner
         (void)devnull;
+        // The banner goes out on the stderr just discarded, so name a record
+        // file as well: it is the only account of how far the fatal path ran,
+        // and on a system where that path dies it is the only way to say which
+        // part of it did.
+        algo_lib::_db.fatalerr_file << path;
+        algo::Zeroterm(algo_lib::_db.fatalerr_file);
         algo::StringAry ary;
         const char *abc[] = {"a", "b", "c", 0};
         const char *one[] = {"x", 0};
@@ -183,7 +192,26 @@ void atf_amc::amctest_TaryInsaryBadIndex() {
     } else {
         int status = 0;
         waitpid(pid, &status, 0);
-        vrfy_(WIFEXITED(status) && WEXITSTATUS(status) == 1);
+        // Say what the child did, not merely that it was wrong: a fatal exit,
+        // a crash inside the report the fatal path composes, and a bounds check
+        // that never fired all fail this one assertion, and they call for three
+        // different repairs.
+        tempstr outcome;
+        if (WIFEXITED(status)) {
+            outcome << "exit:" << WEXITSTATUS(status);
+        } else if (WIFSIGNALED(status)) {
+            outcome << "signal:" << WTERMSIG(status);
+        } else {
+            outcome << "status:" << status;
+        }
+        tempstr record;
+        if (FileQ(path)) {
+            record = FileToString(path);
+        }
+        if (outcome != "exit:1") {
+            prlog("atf_amc.insary_fatal"<<Keyval("outcome",outcome)<<Keyval("record",record));
+        }
+        vrfyeq_(outcome, tempstr("exit:1"));
     }
 }
 

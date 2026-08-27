@@ -3,14 +3,16 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
-for usage, see [samp_meng -](/txt/exe/samp_meng/README.md)
+for usage, see [samp_meng - Sample matching engine](/txt/exe/samp_meng/README.md)
 
 ### Sources
 <a href="#sources"></a>
@@ -61,18 +63,19 @@ All allocations are done through global `samp_meng::_db` [samp_meng.FDb](#samp_m
 <a href="#samp_meng-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|samp_meng.FDb._db|[samp_meng.FDb](/txt/gen/samp_meng/samp_meng.md#samp_meng-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|samp_meng.FDb.cmdline|[command.samp_meng](/txt/protocol/command/README.md#command-samp_meng)|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FDb.symbol|[samp_meng.FSymbol](/txt/gen/samp_meng/samp_meng.md#samp_meng-fsymbol)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|samp_meng.FDb.ind_symbol|[samp_meng.FSymbol](/txt/gen/samp_meng/samp_meng.md#samp_meng-fsymbol)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|samp_meng.FDb.order|[samp_meng.FOrder](/txt/gen/samp_meng/samp_meng.md#samp_meng-forder)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|samp_meng.FDb.ind_order|[samp_meng.FOrder](/txt/gen/samp_meng/samp_meng.md#samp_meng-forder)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|samp_meng.FDb.ordq|[samp_meng.FOrdq](/txt/gen/samp_meng/samp_meng.md#samp_meng-fordq)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|samp_meng.FDb.user|[samp_meng.FUser](/txt/gen/samp_meng/samp_meng.md#samp_meng-fuser)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|samp_meng.FDb.ind_user|[samp_meng.FUser](/txt/gen/samp_meng/samp_meng.md#samp_meng-fuser)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|samp_meng.FDb.next_order_id|u64|[Val](/txt/exe/amc/reftype.md#val)|1||
-|samp_meng.FDb.now|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Clock this matcher stamps orders with: the input record's sequencing time|
-|samp_meng.FDb.n_in|u64|[Val](/txt/exe/amc/reftype.md#val)||Input records folded by this incarnation|
+|samp_meng.FDb._db|[samp_meng.FDb](/txt/gen/samp_meng/samp_meng.md#samp_meng-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|samp_meng.FDb.cmdline|[command.samp_meng](/txt/protocol/command/README.md#command-samp_meng)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FDb.symbol|[samp_meng.FSymbol](/txt/gen/samp_meng/samp_meng.md#samp_meng-fsymbol)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|samp_meng.FDb.ind_symbol|[samp_meng.FSymbol](/txt/gen/samp_meng/samp_meng.md#samp_meng-fsymbol)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|samp_meng.FDb.order|[samp_meng.FOrder](/txt/gen/samp_meng/samp_meng.md#samp_meng-forder)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|samp_meng.FDb.ind_order|[samp_meng.FOrder](/txt/gen/samp_meng/samp_meng.md#samp_meng-forder)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|samp_meng.FDb.ordq|[samp_meng.FOrdq](/txt/gen/samp_meng/samp_meng.md#samp_meng-fordq)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|samp_meng.FDb.user|[samp_meng.FUser](/txt/gen/samp_meng/samp_meng.md#samp_meng-fuser)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|samp_meng.FDb.ind_user|[samp_meng.FUser](/txt/gen/samp_meng/samp_meng.md#samp_meng-fuser)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|samp_meng.FDb.next_order_id|u64|[Val](/txt/exe/amc/reftype/Val.md)|1||
+|samp_meng.FDb.now|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Clock this matcher stamps orders with: the input record's sequencing time|
+|samp_meng.FDb.n_in|u64|[Val](/txt/exe/amc/reftype/Val.md)||Input records folded by this incarnation|
+|samp_meng.FDb.n_trade|u64|[Val](/txt/exe/amc/reftype/Val.md)||Trades this incarnation emitted|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -100,6 +103,7 @@ struct FDb { // samp_meng.FDb: In-memory database
     u64                    next_order_id;              //   1
     algo::UnTime           now;                        // Clock this matcher stamps orders with: the input record's sequencing time
     u64                    n_in;                       //   0  Input records folded by this incarnation
+    u64                    n_trade;                    //   0  Trades this incarnation emitted
     samp_meng::trace       trace;                      //
 };
 ```
@@ -111,8 +115,8 @@ struct FDb { // samp_meng.FDb: In-memory database
 <a href="#samp_meng-ordkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|samp_meng.Ordkey.price|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.Ordkey.time|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|samp_meng.Ordkey.price|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.Ordkey.time|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Ordkey
 <a href="#struct-ordkey"></a>
@@ -145,13 +149,13 @@ struct Ordkey { // samp_meng.Ordkey: Order key
 <a href="#samp_meng-forder-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|samp_meng.FOrder.order|i64|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FOrder.p_ordq|[samp_meng.FOrdq](/txt/gen/samp_meng/samp_meng.md#samp_meng-fordq)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|samp_meng.FOrder.price|[ams.I64Price8](/txt/protocol/ams/README.md#ams-i64price8)|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FOrder.time|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FOrder.qty|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FOrder.ordkey|[samp_meng.Ordkey](/txt/gen/samp_meng/samp_meng.md#samp_meng-ordkey)|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FOrder.p_user|[samp_meng.FUser](/txt/gen/samp_meng/samp_meng.md#samp_meng-fuser)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|samp_meng.FOrder.order|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FOrder.p_ordq|[samp_meng.FOrdq](/txt/gen/samp_meng/samp_meng.md#samp_meng-fordq)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|samp_meng.FOrder.price|[ams.I64Price8](/txt/protocol/ams/README.md#ams-i64price8)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FOrder.time|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FOrder.qty|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FOrder.ordkey|[samp_meng.Ordkey](/txt/gen/samp_meng/samp_meng.md#samp_meng-ordkey)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FOrder.p_user|[samp_meng.FUser](/txt/gen/samp_meng/samp_meng.md#samp_meng-fuser)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FOrder
 <a href="#struct-forder"></a>
@@ -193,9 +197,9 @@ private:
 <a href="#samp_meng-fordq-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|samp_meng.FOrdq.side|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FOrdq.p_symbol|[samp_meng.FSymbol](/txt/gen/samp_meng/samp_meng.md#samp_meng-fsymbol)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|samp_meng.FOrdq.bh_order|[samp_meng.FOrder](/txt/gen/samp_meng/samp_meng.md#samp_meng-forder)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
+|samp_meng.FOrdq.side|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FOrdq.p_symbol|[samp_meng.FSymbol](/txt/gen/samp_meng/samp_meng.md#samp_meng-fsymbol)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|samp_meng.FOrdq.bh_order|[samp_meng.FOrder](/txt/gen/samp_meng/samp_meng.md#samp_meng-forder)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
 
 #### Struct FOrdq
 <a href="#struct-fordq"></a>
@@ -233,9 +237,9 @@ private:
 <a href="#samp_meng-fsymbol-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|samp_meng.FSymbol.symbol|[ams.SampMengSymbol](/txt/protocol/ams/README.md#ams-sampmengsymbol)|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FSymbol.id|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FSymbol.c_ordq|[samp_meng.FOrdq](/txt/gen/samp_meng/samp_meng.md#samp_meng-fordq)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|samp_meng.FSymbol.symbol|[ams.SampMengSymbol](/txt/protocol/ams/README.md#ams-sampmengsymbol)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FSymbol.id|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FSymbol.c_ordq|[samp_meng.FOrdq](/txt/gen/samp_meng/samp_meng.md#samp_meng-fordq)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FSymbol
 <a href="#struct-fsymbol"></a>
@@ -274,8 +278,8 @@ private:
 <a href="#samp_meng-fuser-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|samp_meng.FUser.user|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|samp_meng.FUser.zd_order|[samp_meng.FOrder](/txt/gen/samp_meng/samp_meng.md#samp_meng-forder)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|samp_meng.FUser.user|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|samp_meng.FUser.zd_order|[samp_meng.FOrder](/txt/gen/samp_meng/samp_meng.md#samp_meng-forder)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FUser
 <a href="#struct-fuser"></a>

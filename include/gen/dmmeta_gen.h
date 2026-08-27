@@ -95,9 +95,10 @@ enum { dmmeta_FastopCaseEnum_N = 7 };
 
 extern const char *  dmmeta_Fbufdir_fbufdir_in;    // in     fconst:dmmeta.Fbufdir.fbufdir/in
 extern const char *  dmmeta_Fbufdir_fbufdir_out;   // out    fconst:dmmeta.Fbufdir.fbufdir/out
-extern const char *  dmmeta_Fbuftype_fbuftype_Bytebuf;   // Bytebuf    fconst:dmmeta.Fbuftype.fbuftype/Bytebuf
-extern const char *  dmmeta_Fbuftype_fbuftype_Linebuf;   // Linebuf    fconst:dmmeta.Fbuftype.fbuftype/Linebuf
-extern const char *  dmmeta_Fbuftype_fbuftype_Msgbuf;    // Msgbuf     fconst:dmmeta.Fbuftype.fbuftype/Msgbuf
+extern const char *  dmmeta_Fbuftype_fbuftype_Bytebuf;    // Bytebuf     fconst:dmmeta.Fbuftype.fbuftype/Bytebuf
+extern const char *  dmmeta_Fbuftype_fbuftype_Dgrambuf;   // Dgrambuf    fconst:dmmeta.Fbuftype.fbuftype/Dgrambuf
+extern const char *  dmmeta_Fbuftype_fbuftype_Linebuf;    // Linebuf     fconst:dmmeta.Fbuftype.fbuftype/Linebuf
+extern const char *  dmmeta_Fbuftype_fbuftype_Msgbuf;     // Msgbuf      fconst:dmmeta.Fbuftype.fbuftype/Msgbuf
 
 // --- dmmeta_FieldIdEnum
 
@@ -262,6 +263,8 @@ enum dmmeta_FieldIdEnum {    // dmmeta.FieldId.value
     ,dmmeta_FieldId_msg
     ,dmmeta_FieldId_bigend
     ,dmmeta_FieldId_varlen
+    ,dmmeta_FieldId_strtype
+    ,dmmeta_FieldId_pad
     ,dmmeta_FieldId_xref
     ,dmmeta_FieldId_nstype
     ,dmmeta_FieldId_license
@@ -305,8 +308,6 @@ enum dmmeta_FieldIdEnum {    // dmmeta.FieldId.value
     ,dmmeta_FieldId_hasalloc
     ,dmmeta_FieldId_inst
     ,dmmeta_FieldId_length
-    ,dmmeta_FieldId_strtype
-    ,dmmeta_FieldId_pad
     ,dmmeta_FieldId_ssimns
     ,dmmeta_FieldId_ssimreq
     ,dmmeta_FieldId_parent
@@ -538,6 +539,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tfilt;                 // at
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tifilt;                // atfdb.tifilt                 fconst:dmmeta.Ssimfile.ssimfile/atfdb.tifilt
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_unittest;              // atfdb.unittest               fconst:dmmeta.Ssimfile.ssimfile/atfdb.unittest
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_unstableattr;          // atfdb.unstableattr           fconst:dmmeta.Ssimfile.ssimfile/atfdb.unstableattr
+extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_unstableline;          // atfdb.unstableline           fconst:dmmeta.Ssimfile.ssimfile/atfdb.unstableline
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_var;                   // atfdb.var                    fconst:dmmeta.Ssimfile.ssimfile/atfdb.var
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_arch;                    // dev.arch                     fconst:dmmeta.Ssimfile.ssimfile/dev.arch
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_badline;                 // dev.badline                  fconst:dmmeta.Ssimfile.ssimfile/dev.badline
@@ -565,6 +567,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_noindent;                // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_opt_type;                // dev.opt_type                 fconst:dmmeta.Ssimfile.ssimfile/dev.opt_type
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_package;                 // dev.package                  fconst:dmmeta.Ssimfile.ssimfile/dev.package
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgdep;                  // dev.pkgdep                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkgdep
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgdeptype;              // dev.pkgdeptype               fconst:dmmeta.Ssimfile.ssimfile/dev.pkgdeptype
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkggen;                  // dev.pkggen                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkggen
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgkey;                  // dev.pkgkey                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkgkey
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_prototransport;          // dev.prototransport           fconst:dmmeta.Ssimfile.ssimfile/dev.prototransport
@@ -1734,7 +1737,7 @@ void                 Dispfilter_Print(dmmeta::Dispfilter& row, algo::cstring& st
 // --- dmmeta.Dispsig
 struct Dispsig { // dmmeta.Dispsig: Cryptographic signature of all dispatches
     algo::Smallstr50   dispsig;     //
-    algo::Sha1sig      signature;   //
+    algo::Signature    signature;   //
     // func:dmmeta.Dispsig..Ctor
     inline               Dispsig() __attribute__((nothrow));
 };
@@ -1764,11 +1767,11 @@ void                 Dispsig_Print(dmmeta::Dispsig& row, algo::cstring& str) __a
 // --- dmmeta.Dispsigcheck
 struct Dispsigcheck { // dmmeta.Dispsigcheck: Check signature of input data against executable's version
     algo::Smallstr50   dispsig;     //
-    algo::Sha1sig      signature;   //
+    algo::Signature    signature;   //
     // func:dmmeta.Dispsigcheck..Ctor
     inline               Dispsigcheck() __attribute__((nothrow));
     // func:dmmeta.Dispsigcheck..FieldwiseCtor
-    explicit inline               Dispsigcheck(const algo::strptr& in_dispsig, const algo::Sha1sig& in_signature) __attribute__((nothrow));
+    explicit inline               Dispsigcheck(const algo::strptr& in_dispsig, const algo::Signature& in_signature) __attribute__((nothrow));
 };
 // func:dmmeta.Dispsigcheck..ReadFieldMaybe
 bool                 Dispsigcheck_ReadFieldMaybe(dmmeta::Dispsigcheck& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -3428,6 +3431,8 @@ struct Msgfield { // dmmeta.Msgfield: Resolved leaf field layout of a message ct
     i32                 width;      //   0  Byte width; for a char array the array length
     bool                bigend;     //   false  Field is big-endian
     bool                varlen;     //   false  Varlen tail: extends to the end of the message
+    algo::Smallstr50    strtype;    // Inline-string format (dmmeta.strtype): rpascal, leftpad, rightpad; empty when the field is not an inline string
+    algo::Smallstr10    pad;        // Padding character of a padded inline string, as a byte value; empty when it has none
     algo::Comment       comment;    //
     // func:dmmeta.Msgfield..Ctor
     inline               Msgfield() __attribute__((nothrow));
@@ -3452,7 +3457,7 @@ bool                 Msgfield_ReadFieldMaybe(dmmeta::Msgfield& parent, algo::str
 bool                 Msgfield_ReadStrptrMaybe(dmmeta::Msgfield &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Msgfield..Init
-inline void          Msgfield_Init(dmmeta::Msgfield& parent);
+void                 Msgfield_Init(dmmeta::Msgfield& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Msgfield.String  printfmt:Tuple
 // func:dmmeta.Msgfield..Print

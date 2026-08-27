@@ -9,12 +9,12 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Target ctype|
-|extrn|bool|[Val](/txt/exe/amc/reftype.md#val)||Whether implementation is external|
-|genop|bool|[Val](/txt/exe/amc/reftype.md#val)||Generate C++ comparison operators (<,>, etc)|
-|order|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|minmax|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Target ctype|
+|extrn|bool|[Val](/txt/exe/amc/reftype/Val.md)||Whether implementation is external|
+|genop|bool|[Val](/txt/exe/amc/reftype/Val.md)||Generate C++ comparison operators (<,>, etc)|
+|order|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|minmax|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

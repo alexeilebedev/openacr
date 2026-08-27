@@ -1,3 +1,4 @@
 dmmeta.fbuftype  fbuftype:Bytebuf  skipbytes:Y  comment:"Byte buffer"
+dmmeta.fbuftype  fbuftype:Dgrambuf  skipbytes:N  comment:"Datagram message buffering: one read per datagram, nothing carried across"
 dmmeta.fbuftype  fbuftype:Linebuf  skipbytes:Y  comment:"Line buffering"
 dmmeta.fbuftype  fbuftype:Msgbuf  skipbytes:N  comment:"Message buffering"

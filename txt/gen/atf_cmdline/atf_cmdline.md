@@ -3,11 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
-* [Tests](#tests)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -48,8 +50,8 @@ All allocations are done through global `atf_cmdline::_db` [atf_cmdline.FDb](#at
 <a href="#atf_cmdline-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_cmdline.FDb._db|[atf_cmdline.FDb](/txt/gen/atf_cmdline/atf_cmdline.md#atf_cmdline-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|atf_cmdline.FDb.cmdline|[command.atf_cmdline](/txt/protocol/command/README.md#command-atf_cmdline)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_cmdline.FDb._db|[atf_cmdline.FDb](/txt/gen/atf_cmdline/atf_cmdline.md#atf_cmdline-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|atf_cmdline.FDb.cmdline|[command.atf_cmdline](/txt/protocol/command/README.md#command-atf_cmdline)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

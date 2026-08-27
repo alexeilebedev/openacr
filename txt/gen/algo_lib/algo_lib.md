@@ -1,6 +1,20 @@
 ## algo_lib - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [algo_lib - Support library for all executables](/txt/lib/algo_lib/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -251,6 +265,25 @@ void CloseHandleSafe(HANDLE &handle)
 ```
 
 ```c++
+// Close every descriptor above stderr, leaving an exec'd program its three
+// standard streams and nothing else.  Call this in the child, after the fork
+// and before the exec.
+//
+// A command that inherits a descriptor holds what the descriptor holds for as
+// long as it runs, without knowing it: a listening socket keeps its port
+// bound, an unlinked file keeps its blocks, a lock keeps its holder alive.  A
+// gateway's port outliving the gateway and reappearing as "address already in
+// use" under an unrelated process name is this leak read from the far end.
+// The child inherits whatever the parent had open, so the close belongs in one
+// place rather than at each parent that happens to hold something.
+//
+// close_range does it in one syscall and skips no descriptor; walking the
+// table one close at a time stops at the first hole unless it is bounded by
+// the limit instead, which is what a kernel without the syscall gets.
+void algo_lib::CloseInheritedFd()
+```
+
+```c++
 // Interpret redirect string, return resulting fd
 // If no redirect applies, return -1
 // If a valid fd is returned, it is unique and may be closd with close()
@@ -329,11 +362,16 @@ algo_lib::FTxtcell *algo_lib::FindCell(algo_lib::FTxttbl &txttbl, int row, int c
 ```
 
 ```c++
-// Signature of dispatch DISPSIG as this binary was compiled with, empty when the
-// binary carries no such dispatch.  Every executable loads its own namespace's
-// rows into this table at startup, so the answer is a fact about the running
-// program and not about any data it has read.
-tempstr algo_lib::GetDispsig(algo::strptr dispsig)
+// Signature of dispatch DISPSIG as this binary was compiled with -- the digest
+// itself, zero when the binary carries no such dispatch.  Every executable loads
+// its own namespace's rows into this table at startup, so the answer is a fact
+// about the running program and not about any data it has read.
+//
+// The digest is what a comparison wants and what a binary protocol carries, so
+// it is what this returns; the 40-character hex form is a rendering of it, which
+// `tempstr() << GetDispsig(...)` produces where a reader or a text field needs
+// one.
+algo::Signature algo_lib::GetDispsig(algo::strptr dispsig)
 ```
 
 ```c++
@@ -434,6 +472,43 @@ inline bool algo_lib::LogcatOnQ(algo_lib::FLogcat &logcat)
 ```
 
 ```c++
+// Tell the memory checker that a pool has just handed the program the SIZE bytes
+// at MEM, so that the checker accounts for that block from here on and reports it
+// if the program drops its last pointer to it.  MEM is the address the pool
+// returned and SIZE the size the caller asked for; a failed allocation passes
+// NULL, which the checker ignores.  In a build without the annotations the call
+// is nothing at all, so an allocator carries no trace of it.
+//
+// A pool takes one big block from its base pool and carves its records out of it,
+// so a checker that knows only about the big block sees a single live allocation
+// no matter which record leaked.  Marking each record moves the accounting to the
+// granularity the program allocates at, and the stack the checker then reports is
+// the one that asked for the record.
+//
+// The block is marked defined rather than undefined, which is the state pool
+// memory has anyway: a fresh block from the base pool is zeroed, and a recycled
+// record still holds whatever was last written into it.  Marking it undefined
+// would report a field read before anything wrote it, which is a real defect and
+// a different one from a leak, so it belongs to a change that goes looking for it.
+inline void algo_lib::MemcheckAlloc(void *mem, u64 size)
+```
+
+```c++
+// Tell the memory checker that the block at MEM, SIZE bytes long, is no longer one
+// the program holds -- either the pool has taken it back, or the pool is about to
+// carve it into records of its own and will mark those instead.  MEM is the
+// address a matching MemcheckAlloc marked, SIZE the size it marked; NULL is
+// ignored.  Nothing at all in a build without the annotations.
+//
+// The block stays readable and writable afterwards, and that is what lets the pool
+// go on using it.  A pool threads its free list through the memory it is not
+// lending out, so a freed record holds the pointer to the next free one; a checker
+// told to treat the block as unmapped would report the pool's own bookkeeping as
+// an invalid write, once per free.
+inline void algo_lib::MemcheckFree(void *mem, u64 size)
+```
+
+```c++
 // Attach mmapfile MMAPFILE to FNAME
 // Return success code.
 bool algo_lib::MmapFile_Load(MmapFile &mmapfile, strptr fname)
@@ -442,6 +517,13 @@ bool algo_lib::MmapFile_Load(MmapFile &mmapfile, strptr fname)
 ```c++
 // Attach mmapfile MMAPFILE to FD.
 // Return success code.
+//
+// The mapping is MAP_SHARED, so it tracks the file and a write another handle
+// makes shows through it.  MAP_PRIVATE would leave that unsaid: the standard
+// does not decide whether a later write to the file reaches a private mapping,
+// Linux lets it through and Darwin does not, so the same call would answer two
+// different things.  Nothing is written through the mapping -- it is PROT_READ
+// -- so sharing costs nothing and the behavior is the same everywhere.
 bool algo_lib::MmapFile_LoadFd(MmapFile &mmapfile, algo::Fildes fd)
 ```
 
@@ -1092,6 +1174,25 @@ int pipe(int fd[2])
 ```
 
 ```c++
+// Create a pipe whose two ends already carry FLAGS, the way Linux's pipe2 does.
+//
+// A caller that wants O_CLOEXEC on a pipe has to get it before the next fork,
+// and `pipe` followed by `fcntl` leaves a window in between: a thread that forks
+// there hands the child a copy of the write end, and the child then holds the
+// reader open after the writer is gone, so a read that should have seen eof
+// blocks forever.  Darwin has no atomic form of the call, so the window cannot
+// be closed here -- what it can do is stop being the caller's problem, and shrink
+// to the two fcntl calls below.
+//
+// FD receives the two descriptors on success, read end first.  FLAGS takes
+// O_CLOEXEC and O_NONBLOCK, each applied to both ends; any other bit is refused
+// with EINVAL, since silently dropping a flag the caller asked for is how the
+// window above reopens.  Returns 0, or -1 with errno set and no descriptor left
+// open.
+int pipe2(int fd[2], int flags)
+```
+
+```c++
 int pthread_create(pthread_t *thread, pthread_attr_t *attr, ThreadFunc func, void *arg)
 ```
 
@@ -1234,6 +1335,7 @@ The following source files are part of this tool:
 |[cpp/lib/algo/lib.cpp](/cpp/lib/algo/lib.cpp)|Main file|
 |[cpp/lib/algo/line.cpp](/cpp/lib/algo/line.cpp)|Line processing|
 |[cpp/lib/algo/lockfile.cpp](/cpp/lib/algo/lockfile.cpp)|Lock file|
+|[cpp/lib/algo/macos.cpp](/cpp/lib/algo/macos.cpp)|macOS adaptation layer|
 |[cpp/lib/algo/mmap.cpp](/cpp/lib/algo/mmap.cpp)|Mmap wrapper|
 |[cpp/lib/algo/prlog.cpp](/cpp/lib/algo/prlog.cpp)|prlog macro|
 |[cpp/lib/algo/proc.cpp](/cpp/lib/algo/proc.cpp)||
@@ -1269,13 +1371,6 @@ The following source files are part of this tool:
 |[include/typedef.h](/include/typedef.h)|Typedefs|
 |[include/u128.h](/include/u128.h)||
 |[include/win32.h](/include/win32.h)||
-
-### Dependencies
-<a href="#dependencies"></a>
-The build target depends on the following libraries
-|Target|Comment|
-|---|---|
-|[lib_json](/txt/lib/lib_json/README.md)|Full json support library|
 
 ### In Memory DB
 <a href="#in-memory-db"></a>
@@ -1337,7 +1432,7 @@ All allocations are done through global `algo_lib::_db` [algo_lib.FDb](#algo_lib
 <a href="#algo_lib-bitset-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.Bitset.ary|u64|[Tary](/txt/exe/amc/reftype.md#tary)|||
+|algo_lib.Bitset.ary|u64|[Tary](/txt/exe/amc/reftype/Tary.md)|||
 
 #### Struct Bitset
 <a href="#struct-bitset"></a>
@@ -1370,15 +1465,15 @@ struct Bitset { // algo_lib.Bitset
 <a href="#algo_lib-cmdline-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.Cmdline.verbose|u8|[Val](/txt/exe/amc/reftype.md#val)||Verbosity level (0..255)|
-|algo_lib.Cmdline.debug|u8|[Val](/txt/exe/amc/reftype.md#val)||Debug level (0..255)|
-|algo_lib.Cmdline.help|bool|[Val](/txt/exe/amc/reftype.md#val)||Print help and exit|
-|algo_lib.Cmdline.version|bool|[Val](/txt/exe/amc/reftype.md#val)||Print version and exit|
-|algo_lib.Cmdline.signature|bool|[Val](/txt/exe/amc/reftype.md#val)||Show signatures and exit|
-|algo_lib.Cmdline.v|u8|[Alias](/txt/exe/amc/reftype.md#alias)||Alias for verbose|
-|algo_lib.Cmdline.d|u8|[Alias](/txt/exe/amc/reftype.md#alias)||Alias for debug|
-|algo_lib.Cmdline.sig|bool|[Alias](/txt/exe/amc/reftype.md#alias)||Alias for signature|
-|algo_lib.Cmdline.h|bool|[Alias](/txt/exe/amc/reftype.md#alias)||Alias for help|
+|algo_lib.Cmdline.verbose|u8|[Val](/txt/exe/amc/reftype/Val.md)||Verbosity level (0..255)|
+|algo_lib.Cmdline.debug|u8|[Val](/txt/exe/amc/reftype/Val.md)||Debug level (0..255)|
+|algo_lib.Cmdline.help|bool|[Val](/txt/exe/amc/reftype/Val.md)||Print help and exit|
+|algo_lib.Cmdline.version|bool|[Val](/txt/exe/amc/reftype/Val.md)||Print version and exit|
+|algo_lib.Cmdline.signature|bool|[Val](/txt/exe/amc/reftype/Val.md)||Show signatures and exit|
+|algo_lib.Cmdline.v|u8|[Alias](/txt/exe/amc/reftype/Alias.md)||Alias for verbose|
+|algo_lib.Cmdline.d|u8|[Alias](/txt/exe/amc/reftype/Alias.md)||Alias for debug|
+|algo_lib.Cmdline.sig|bool|[Alias](/txt/exe/amc/reftype/Alias.md)||Alias for signature|
+|algo_lib.Cmdline.h|bool|[Alias](/txt/exe/amc/reftype/Alias.md)||Alias for help|
 
 #### Struct Cmdline
 <a href="#struct-cmdline"></a>
@@ -1402,12 +1497,12 @@ struct Cmdline { // algo_lib.Cmdline: *can't move this to command namespace beca
 <a href="#algo_lib-csvparse-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.CsvParse.input|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)||Input string|
-|algo_lib.CsvParse.sep|char|[Val](/txt/exe/amc/reftype.md#val)|','|Input: separator|
-|algo_lib.CsvParse.quotechar1|char|[Val](/txt/exe/amc/reftype.md#val)|'\"'|Allow this quote|
-|algo_lib.CsvParse.quotechar2|char|[Val](/txt/exe/amc/reftype.md#val)|'\''|Allow this quote as well|
-|algo_lib.CsvParse.ary_tok|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)||Output: array of tokens|
-|algo_lib.CsvParse.openquote|bool|[Val](/txt/exe/amc/reftype.md#val)|true|On output: set if unbalanced quote found|
+|algo_lib.CsvParse.input|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)||Input string|
+|algo_lib.CsvParse.sep|char|[Val](/txt/exe/amc/reftype/Val.md)|','|Input: separator|
+|algo_lib.CsvParse.quotechar1|char|[Val](/txt/exe/amc/reftype/Val.md)|'\"'|Allow this quote|
+|algo_lib.CsvParse.quotechar2|char|[Val](/txt/exe/amc/reftype/Val.md)|'\''|Allow this quote as well|
+|algo_lib.CsvParse.ary_tok|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)||Output: array of tokens|
+|algo_lib.CsvParse.openquote|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|On output: set if unbalanced quote found|
 
 #### Struct CsvParse
 <a href="#struct-csvparse"></a>
@@ -1442,7 +1537,7 @@ struct CsvParse { // algo_lib.CsvParse
 <a href="#algo_lib-errorx-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.ErrorX.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|algo_lib.ErrorX.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct ErrorX
 <a href="#struct-errorx"></a>
@@ -1464,11 +1559,11 @@ struct ErrorX { // algo_lib.ErrorX
 <a href="#algo_lib-regxm-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.RegxM.front|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype.md#val)||Temporary front (for matching)|
-|algo_lib.RegxM.this_char|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype.md#val)||States to test on this char|
-|algo_lib.RegxM.next_char|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype.md#val)||States to test on next char|
-|algo_lib.RegxM.matchrange|[algo.I32RangeAry](/txt/protocol/algo/README.md#algo-i32rangeary)|[Val](/txt/exe/amc/reftype.md#val)||List of match char ranges|
-|algo_lib.RegxM.visited|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype.md#val)||States already closed for this char|
+|algo_lib.RegxM.front|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype/Val.md)||Temporary front (for matching)|
+|algo_lib.RegxM.this_char|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype/Val.md)||States to test on this char|
+|algo_lib.RegxM.next_char|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype/Val.md)||States to test on next char|
+|algo_lib.RegxM.matchrange|[algo.I32RangeAry](/txt/protocol/algo/README.md#algo-i32rangeary)|[Val](/txt/exe/amc/reftype/Val.md)||List of match char ranges|
+|algo_lib.RegxM.visited|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype/Val.md)||States already closed for this char|
 
 #### Struct RegxM
 <a href="#struct-regxm"></a>
@@ -1492,7 +1587,7 @@ struct RegxM { // algo_lib.RegxM: Matching context for regex
 <a href="#algo_lib-ffildes-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FFildes.fd|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|algo_lib.FFildes.fd|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FFildes
 <a href="#struct-ffildes"></a>
@@ -1514,9 +1609,9 @@ struct FFildes { // algo_lib.FFildes: Wrapper for unix file descritor, call clos
 <a href="#algo_lib-flockfile-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FLockfile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FLockfile.fildes|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FLockfile.keep|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Leave the file on cleanup: its content is a durable record beyond the lock|
+|algo_lib.FLockfile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FLockfile.fildes|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FLockfile.keep|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Leave the file on cleanup: its content is a durable record beyond the lock|
 
 #### Struct FLockfile
 <a href="#struct-flockfile"></a>
@@ -1540,10 +1635,10 @@ struct FLockfile { // algo_lib.FLockfile
 <a href="#algo_lib-ftimehook-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FTimehook.time|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Time the hook is scheduled to expire|
-|algo_lib.FTimehook.delay|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Minimum delay between iterations|
-|algo_lib.FTimehook.hook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Hook](/txt/exe/amc/reftype.md#hook)||Function to call|
-|algo_lib.FTimehook.recurrent|bool|[Val](/txt/exe/amc/reftype.md#val)||If true, automatically reschedule|
+|algo_lib.FTimehook.time|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Time the hook is scheduled to expire|
+|algo_lib.FTimehook.delay|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Minimum delay between iterations|
+|algo_lib.FTimehook.hook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Hook](/txt/exe/amc/reftype/Hook.md)||Function to call|
+|algo_lib.FTimehook.recurrent|bool|[Val](/txt/exe/amc/reftype/Val.md)||If true, automatically reschedule|
 
 #### Struct FTimehook
 <a href="#struct-ftimehook"></a>
@@ -1581,13 +1676,13 @@ struct FTimehook { // algo_lib.FTimehook
 <a href="#algo-imdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo.Imdb.imdb|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)||Database name|
-|algo.Imdb.InsertStrptrMaybe|[algo.ImdbInsertStrptrMaybeFcn](/txt/protocol/algo/README.md#algo-imdbinsertstrptrmaybefcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Insert new element given a string|
-|algo.Imdb.RemoveStrptrMaybe|[algo.ImdbRemoveStrptrMaybeFcn](/txt/protocol/algo/README.md#algo-imdbremovestrptrmaybefcn)|[Val](/txt/exe/amc/reftype.md#val)||Remove element by primary key parsed from string (NULL if unsupported)|
-|algo.Imdb.Step|[algo.ImdbStepFcn](/txt/protocol/algo/README.md#algo-imdbstepfcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Perform one step (may be NULL)|
-|algo.Imdb.MainLoop|[algo.ImdbMainLoopFcn](/txt/protocol/algo/README.md#algo-imdbmainloopfcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Main Loop|
-|algo.Imdb.GetTrace|[algo.ImdbGetTraceFcn](/txt/protocol/algo/README.md#algo-imdbgettracefcn)|[Val](/txt/exe/amc/reftype.md#val)|0||
-|algo.Imdb.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|algo.Imdb.imdb|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)||Database name|
+|algo.Imdb.InsertStrptrMaybe|[algo.ImdbInsertStrptrMaybeFcn](/txt/protocol/algo/README.md#algo-imdbinsertstrptrmaybefcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Insert new element given a string|
+|algo.Imdb.RemoveStrptrMaybe|[algo.ImdbRemoveStrptrMaybeFcn](/txt/protocol/algo/README.md#algo-imdbremovestrptrmaybefcn)|[Val](/txt/exe/amc/reftype/Val.md)||Remove element by primary key parsed from string (NULL if unsupported)|
+|algo.Imdb.Step|[algo.ImdbStepFcn](/txt/protocol/algo/README.md#algo-imdbstepfcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Perform one step (may be NULL)|
+|algo.Imdb.MainLoop|[algo.ImdbMainLoopFcn](/txt/protocol/algo/README.md#algo-imdbmainloopfcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Main Loop|
+|algo.Imdb.GetTrace|[algo.ImdbGetTraceFcn](/txt/protocol/algo/README.md#algo-imdbgettracefcn)|[Val](/txt/exe/amc/reftype/Val.md)|0||
+|algo.Imdb.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FImdb
 <a href="#struct-fimdb"></a>
@@ -1621,13 +1716,13 @@ struct FImdb { // algo_lib.FImdb
 <a href="#algo_lib-regxflags-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.RegxFlags.value|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.RegxFlags.trace|bool|[Bitfld](/txt/exe/amc/reftype.md#bitfld)||Enable tracing|
-|algo_lib.RegxFlags.capture|bool|[Bitfld](/txt/exe/amc/reftype.md#bitfld)||Enable capture groups|
-|algo_lib.RegxFlags.valid|bool|[Bitfld](/txt/exe/amc/reftype.md#bitfld)||The regx parsed successfully|
-|algo_lib.RegxFlags.literal|bool|[Bitfld](/txt/exe/amc/reftype.md#bitfld)||The regx expression is a literal string|
-|algo_lib.RegxFlags.accepts_all|bool|[Bitfld](/txt/exe/amc/reftype.md#bitfld)||Compiled regx accepts all intputs|
-|algo_lib.RegxFlags.fullmatch|bool|[Bitfld](/txt/exe/amc/reftype.md#bitfld)||Regx expression is a substring|
+|algo_lib.RegxFlags.value|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.RegxFlags.trace|bool|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)||Enable tracing|
+|algo_lib.RegxFlags.capture|bool|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)||Enable capture groups|
+|algo_lib.RegxFlags.valid|bool|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)||The regx parsed successfully|
+|algo_lib.RegxFlags.literal|bool|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)||The regx expression is a literal string|
+|algo_lib.RegxFlags.accepts_all|bool|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)||Compiled regx accepts all intputs|
+|algo_lib.RegxFlags.fullmatch|bool|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)||Regx expression is a substring|
 
 #### Struct RegxFlags
 <a href="#struct-regxflags"></a>
@@ -1652,7 +1747,7 @@ struct RegxFlags { // algo_lib.RegxFlags
 <a href="#algo_lib-regxstyle-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.RegxStyle.value|u8|[Val](/txt/exe/amc/reftype.md#val)|||
+|algo_lib.RegxStyle.value|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct RegxStyle
 <a href="#struct-regxstyle"></a>
@@ -1678,10 +1773,10 @@ struct RegxStyle { // algo_lib.RegxStyle: Regex encoding style (Acr, Sql, Classi
 <a href="#algo_lib-regx-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.Regx.expr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Original string expression|
-|algo_lib.Regx.state|[algo_lib.RegxState](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxstate)|[Tary](/txt/exe/amc/reftype.md#tary)||Array of states|
-|algo_lib.Regx.flags|[algo_lib.RegxFlags](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxflags)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.Regx.style|[algo_lib.RegxStyle](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxstyle)|[Val](/txt/exe/amc/reftype.md#val)||Regx style according to which EXPR was parsed|
+|algo_lib.Regx.expr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Original string expression|
+|algo_lib.Regx.state|[algo_lib.RegxState](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxstate)|[Tary](/txt/exe/amc/reftype/Tary.md)||Array of states|
+|algo_lib.Regx.flags|[algo_lib.RegxFlags](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxflags)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.Regx.style|[algo_lib.RegxStyle](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxstyle)|[Val](/txt/exe/amc/reftype/Val.md)||Regx style according to which EXPR was parsed|
 
 #### Struct Regx
 <a href="#struct-regx"></a>
@@ -1713,12 +1808,12 @@ struct Regx { // algo_lib.Regx: Parsed regular expression
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |algo_lib.FLogcat.base|[dmmeta.Logcat](/txt/ssimdb/dmmeta/logcat.md)|[Base](/txt/ssimdb/dmmeta/logcat.md)|||
-|algo_lib.FLogcat.filter|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype.md#val)||Output filter|
-|algo_lib.FLogcat.negfilter|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype.md#val)||Negative output filter|
-|algo_lib.FLogcat.nmsg|i64|[Val](/txt/exe/amc/reftype.md#val)||Number of messages printed inside current window|
-|algo_lib.FLogcat.th_throttle|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FLogcat.changed|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FLogcat.totmsg|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|algo_lib.FLogcat.filter|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype/Val.md)||Output filter|
+|algo_lib.FLogcat.negfilter|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype/Val.md)||Negative output filter|
+|algo_lib.FLogcat.nmsg|i64|[Val](/txt/exe/amc/reftype/Val.md)||Number of messages printed inside current window|
+|algo_lib.FLogcat.th_throttle|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FLogcat.changed|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FLogcat.totmsg|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FLogcat
 <a href="#struct-flogcat"></a>
@@ -1763,9 +1858,9 @@ struct FLogcat { // algo_lib.FLogcat
 <a href="#algo_lib-ferrns-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FErrns.errns|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FErrns.decode|i32|[Hook](/txt/exe/amc/reftype.md#hook)|||
-|algo_lib.FErrns.outstr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Output of decode operation|
+|algo_lib.FErrns.errns|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FErrns.decode|i32|[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|algo_lib.FErrns.outstr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Output of decode operation|
 
 #### Struct FErrns
 <a href="#struct-ferrns"></a>
@@ -1788,100 +1883,100 @@ struct FErrns { // algo_lib.FErrns
 <a href="#algo_lib-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FDb.cstring|[algo.cstring](/txt/protocol/algo/cstring.md)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)|||
-|algo_lib.FDb.sbrk|u8|[Sbrk](/txt/exe/amc/reftype.md#sbrk)||Base allocator for everything|
-|algo_lib.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype.md#lpool)||private memory pool|
-|algo_lib.FDb.next_loop|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.limit|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)|0x7fffffffffffffff|Main loop clock limit|
-|algo_lib.FDb.clocks_to_ms|double|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.n_iohook|u32|[Val](/txt/exe/amc/reftype.md#val)|0|Number of iohooks in epoll|
-|algo_lib.FDb.clock|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Most recent cpu clock value|
-|algo_lib.FDb.step_limit|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Execution limit for current step|
-|algo_lib.FDb.start_clock|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)||cpu clock value at startup|
-|algo_lib.FDb.hz|double|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.t_last_signal|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Time last async signal was processed|
-|algo_lib.FDb.exit_code|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Unix exit code from main program. 0 = success|
-|algo_lib.FDb.clocks_to_ns|double|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.n_temp|u32|[Val](/txt/exe/amc/reftype.md#val)|0||
-|algo_lib.FDb.last_signal|u32|[Val](/txt/exe/amc/reftype.md#val)||Value of last signal (used by SetupExitSignals)|
-|algo_lib.FDb.cpu_hz|u64|[Val](/txt/exe/amc/reftype.md#val)||Cpu HZ, determined at startup|
-|algo_lib.FDb.fildes|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|algo_lib.FDb.temp_strings|[algo.cstring](/txt/protocol/algo/cstring.md)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|algo_lib.FDb.ArgvIdent|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.BashQuotesafe|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.RegxSqlSpecial|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.SsimBreakName|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.SsimBreakValue|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.SsimQuotesafe|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb._db|[algo_lib.FDb](/txt/gen/algo_lib/algo_lib.md#algo_lib-fdb)|[Global](/txt/exe/amc/reftype.md#global)||* initialization order is important *|
-|algo_lib.FDb.imtable|[algo_lib.FImtable](/txt/gen/algo_lib/algo_lib.md#algo_lib-fimtable)|[Lary](/txt/exe/amc/reftype.md#lary)||Array of all in-memory tables linked into this process|
-|algo_lib.FDb.ind_imtable|[algo_lib.FImtable](/txt/gen/algo_lib/algo_lib.md#algo_lib-fimtable)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|algo_lib.FDb.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|algo_lib.FDb.timehook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|algo_lib.FDb.replscope|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|algo_lib.FDb.error|[algo_lib.ErrorX](/txt/gen/algo_lib/algo_lib.md#algo_lib-errorx)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)|||
-|algo_lib.FDb.csvparse|[algo_lib.CsvParse](/txt/gen/algo_lib/algo_lib.md#algo_lib-csvparse)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|algo_lib.FDb.regxparse|[algo_lib.RegxParse](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxparse)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|algo_lib.FDb.regx|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|algo_lib.FDb.regxm|[algo_lib.RegxM](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxm)|[Val](/txt/exe/amc/reftype.md#val)||Context for Regx matching|
-|algo_lib.FDb.tabulate|[algo_lib.Tabulate](/txt/gen/algo_lib/algo_lib.md#algo_lib-tabulate)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|algo_lib.FDb.log_str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.bh_timehook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Bheap](/txt/exe/amc/reftype.md#bheap)||Binary heap of time-based callbacks|
-|algo_lib.FDb.epoll_fd|i32|[Val](/txt/exe/amc/reftype.md#val)|-1||
-|algo_lib.FDb.lock_core|[algo_lib.FLockfile](/txt/gen/algo_lib/algo_lib.md#algo_lib-flockfile)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.c_timehook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Ptr](/txt/exe/amc/reftype.md#ptr)||TEMP: here only for dependency reasons|
-|algo_lib.FDb._timehook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftype.md#val)||Keep me here i'm special|
-|algo_lib.FDb.dispsigcheck|[algo_lib.FDispsigcheck](/txt/gen/algo_lib/algo_lib.md#algo_lib-fdispsigcheck)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|algo_lib.FDb.ind_dispsigcheck|[algo_lib.FDispsigcheck](/txt/gen/algo_lib/algo_lib.md#algo_lib-fdispsigcheck)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|algo_lib.FDb.imdb|[algo_lib.FImdb](/txt/gen/algo_lib/algo_lib.md#algo_lib-fimdb)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|algo_lib.FDb.ind_imdb|[algo_lib.FImdb](/txt/gen/algo_lib/algo_lib.md#algo_lib-fimdb)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|algo_lib.FDb.malloc|u8|[Malloc](/txt/exe/amc/reftype.md#malloc)||Pool for everything else|
-|algo_lib.FDb.txtcell|[algo_lib.FTxtcell](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtcell)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|algo_lib.FDb.txtrow|[algo_lib.FTxtrow](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtrow)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|algo_lib.FDb.txttbl|[algo_lib.FTxttbl](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxttbl)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|algo_lib.FDb.argc|i32|[Val](/txt/exe/amc/reftype.md#val)||Argc from main|
-|algo_lib.FDb.argv|char*|[Ptr](/txt/exe/amc/reftype.md#ptr)||Argv from main|
-|algo_lib.FDb.xref_error|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.errtext|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.varlenbuf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|algo_lib.FDb.replvar|[algo_lib.FReplvar](/txt/gen/algo_lib/algo_lib.md#algo_lib-freplvar)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|algo_lib.FDb.cmdline|[algo_lib.Cmdline](/txt/gen/algo_lib/algo_lib.md#algo_lib-cmdline)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.h_fatalerror||[Hook](/txt/exe/amc/reftype.md#hook)|||
-|algo_lib.FDb.giveup_count|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.fatalerr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.stringtofile_nwrite|u32|[Val](/txt/exe/amc/reftype.md#val)||Global counter of # of files written|
-|algo_lib.FDb.last_sleep_clocks|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.msgtemp|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.DigitChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.NewLineChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.WhiteChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.DirSep|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.IdentChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.IdentStart|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.AlphaChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.HexChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.UpperChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.CmdLineNameBreak|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.CmdLineValueBreak|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.WordSeparator|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.LowerChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.Urlsafe|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|algo_lib.FDb.winjob|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.Prlog|[algo.PrlogFcn](/txt/protocol/algo/PrlogFcn.md)|[Val](/txt/exe/amc/reftype.md#val)|algo::Prlog||
-|algo_lib.FDb.logcat|[algo_lib.FLogcat](/txt/gen/algo_lib/algo_lib.md#algo_lib-flogcat)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|algo_lib.FDb.ind_logcat|[algo_lib.FLogcat](/txt/gen/algo_lib/algo_lib.md#algo_lib-flogcat)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|algo_lib.FDb.tstamp_fmt|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|"%Y/%m/%dT%H:%M:%S.%.6X "||
-|algo_lib.FDb.exec_args|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|algo_lib.FDb.dirstack|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)||Directory stack for PushDir/PopDir|
-|algo_lib.FDb.errns|[algo_lib.FErrns](/txt/gen/algo_lib/algo_lib.md#algo_lib-ferrns)|[Inlary](/txt/exe/amc/reftype.md#inlary)||Fixed table of errns decoders|
-|algo_lib.FDb.tempdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.use_epoll_pwait2|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Use epoll_pwait2 system call|
-|algo_lib.FDb.pending_eol|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.giveup_time|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Trigger for giveup_time loop|
-|algo_lib.FDb.show_tstamp|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FDb.exit_signal|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Signal that terminated the last exported child; 0 when it exited|
-|algo_lib.FDb.fatalerr_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Path a fail-stop writes its report to; empty = stderr only|
-|algo_lib.FDb.in_fatalerr|bool|[Val](/txt/exe/amc/reftype.md#val)||A fail-stop is already reporting; a second one only states its cause|
+|algo_lib.FDb.cstring|[algo.cstring](/txt/protocol/algo/cstring.md)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)|||
+|algo_lib.FDb.sbrk|u8|[Sbrk](/txt/exe/amc/reftype/Sbrk.md)||Base allocator for everything|
+|algo_lib.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype/Lpool.md)||private memory pool|
+|algo_lib.FDb.next_loop|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.limit|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|0x7fffffffffffffff|Main loop clock limit|
+|algo_lib.FDb.clocks_to_ms|double|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.n_iohook|u32|[Val](/txt/exe/amc/reftype/Val.md)|0|Number of iohooks in epoll|
+|algo_lib.FDb.clock|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Most recent cpu clock value|
+|algo_lib.FDb.step_limit|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Execution limit for current step|
+|algo_lib.FDb.start_clock|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||cpu clock value at startup|
+|algo_lib.FDb.hz|double|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.t_last_signal|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Time last async signal was processed|
+|algo_lib.FDb.exit_code|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Unix exit code from main program. 0 = success|
+|algo_lib.FDb.clocks_to_ns|double|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.n_temp|u32|[Val](/txt/exe/amc/reftype/Val.md)|0||
+|algo_lib.FDb.last_signal|u32|[Val](/txt/exe/amc/reftype/Val.md)||Value of last signal (used by SetupExitSignals)|
+|algo_lib.FDb.cpu_hz|u64|[Val](/txt/exe/amc/reftype/Val.md)||Cpu HZ, determined at startup|
+|algo_lib.FDb.fildes|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|algo_lib.FDb.temp_strings|[algo.cstring](/txt/protocol/algo/cstring.md)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|algo_lib.FDb.ArgvIdent|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.BashQuotesafe|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.RegxSqlSpecial|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.SsimBreakName|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.SsimBreakValue|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.SsimQuotesafe|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.bh_timehook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Bheap](/txt/exe/amc/reftype/Bheap.md)||Binary heap of time-based callbacks|
+|algo_lib.FDb._db|[algo_lib.FDb](/txt/gen/algo_lib/algo_lib.md#algo_lib-fdb)|[Global](/txt/exe/amc/reftype/Global.md)||* initialization order is important *|
+|algo_lib.FDb.imtable|[algo_lib.FImtable](/txt/gen/algo_lib/algo_lib.md#algo_lib-fimtable)|[Lary](/txt/exe/amc/reftype/Lary.md)||Array of all in-memory tables linked into this process|
+|algo_lib.FDb.ind_imtable|[algo_lib.FImtable](/txt/gen/algo_lib/algo_lib.md#algo_lib-fimtable)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|algo_lib.FDb.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|algo_lib.FDb.timehook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|algo_lib.FDb.replscope|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|algo_lib.FDb.error|[algo_lib.ErrorX](/txt/gen/algo_lib/algo_lib.md#algo_lib-errorx)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)|||
+|algo_lib.FDb.csvparse|[algo_lib.CsvParse](/txt/gen/algo_lib/algo_lib.md#algo_lib-csvparse)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|algo_lib.FDb.regxparse|[algo_lib.RegxParse](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxparse)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|algo_lib.FDb.regx|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|algo_lib.FDb.regxm|[algo_lib.RegxM](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxm)|[Val](/txt/exe/amc/reftype/Val.md)||Context for Regx matching|
+|algo_lib.FDb.tabulate|[algo_lib.Tabulate](/txt/gen/algo_lib/algo_lib.md#algo_lib-tabulate)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|algo_lib.FDb.log_str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.epoll_fd|i32|[Val](/txt/exe/amc/reftype/Val.md)|-1||
+|algo_lib.FDb.lock_core|[algo_lib.FLockfile](/txt/gen/algo_lib/algo_lib.md#algo_lib-flockfile)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.c_timehook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||TEMP: here only for dependency reasons|
+|algo_lib.FDb._timehook|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftype/Val.md)||Keep me here i'm special|
+|algo_lib.FDb.dispsigcheck|[algo_lib.FDispsigcheck](/txt/gen/algo_lib/algo_lib.md#algo_lib-fdispsigcheck)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|algo_lib.FDb.ind_dispsigcheck|[algo_lib.FDispsigcheck](/txt/gen/algo_lib/algo_lib.md#algo_lib-fdispsigcheck)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|algo_lib.FDb.imdb|[algo_lib.FImdb](/txt/gen/algo_lib/algo_lib.md#algo_lib-fimdb)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|algo_lib.FDb.ind_imdb|[algo_lib.FImdb](/txt/gen/algo_lib/algo_lib.md#algo_lib-fimdb)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|algo_lib.FDb.malloc|u8|[Malloc](/txt/exe/amc/reftype/Malloc.md)||Pool for everything else|
+|algo_lib.FDb.txtcell|[algo_lib.FTxtcell](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtcell)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|algo_lib.FDb.txtrow|[algo_lib.FTxtrow](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtrow)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|algo_lib.FDb.txttbl|[algo_lib.FTxttbl](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxttbl)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|algo_lib.FDb.argc|i32|[Val](/txt/exe/amc/reftype/Val.md)||Argc from main|
+|algo_lib.FDb.argv|char*|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Argv from main|
+|algo_lib.FDb.xref_error|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.errtext|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.varlenbuf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|algo_lib.FDb.replvar|[algo_lib.FReplvar](/txt/gen/algo_lib/algo_lib.md#algo_lib-freplvar)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|algo_lib.FDb.cmdline|[algo_lib.Cmdline](/txt/gen/algo_lib/algo_lib.md#algo_lib-cmdline)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.h_fatalerror||[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|algo_lib.FDb.giveup_count|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.fatalerr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.stringtofile_nwrite|u32|[Val](/txt/exe/amc/reftype/Val.md)||Global counter of # of files written|
+|algo_lib.FDb.last_sleep_clocks|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.msgtemp|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.DigitChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.NewLineChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.WhiteChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.DirSep|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.IdentChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.IdentStart|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.AlphaChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.HexChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.UpperChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.CmdLineNameBreak|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.CmdLineValueBreak|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.WordSeparator|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.LowerChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.Urlsafe|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|algo_lib.FDb.winjob|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.Prlog|[algo.PrlogFcn](/txt/protocol/algo/PrlogFcn.md)|[Val](/txt/exe/amc/reftype/Val.md)|algo::Prlog||
+|algo_lib.FDb.logcat|[algo_lib.FLogcat](/txt/gen/algo_lib/algo_lib.md#algo_lib-flogcat)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|algo_lib.FDb.ind_logcat|[algo_lib.FLogcat](/txt/gen/algo_lib/algo_lib.md#algo_lib-flogcat)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|algo_lib.FDb.tstamp_fmt|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|"%Y/%m/%dT%H:%M:%S.%.6X "||
+|algo_lib.FDb.exec_args|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|algo_lib.FDb.dirstack|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)||Directory stack for PushDir/PopDir|
+|algo_lib.FDb.errns|[algo_lib.FErrns](/txt/gen/algo_lib/algo_lib.md#algo_lib-ferrns)|[Inlary](/txt/exe/amc/reftype/Inlary.md)||Fixed table of errns decoders|
+|algo_lib.FDb.tempdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.use_epoll_pwait2|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Use epoll_pwait2 system call|
+|algo_lib.FDb.pending_eol|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.giveup_time|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Trigger for giveup_time loop|
+|algo_lib.FDb.show_tstamp|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FDb.exit_signal|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Signal that terminated the last exported child; 0 when it exited|
+|algo_lib.FDb.fatalerr_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Path a fail-stop writes its report to; empty = stderr only|
+|algo_lib.FDb.in_fatalerr|bool|[Val](/txt/exe/amc/reftype/Val.md)||A fail-stop is already reporting; a second one only states its cause|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -1914,6 +2009,9 @@ struct FDb { // algo_lib.FDb: In-memory database for algo_lib
     algo::Charset                     SsimBreakName;                                 //
     algo::Charset                     SsimBreakValue;                                //
     algo::Charset                     SsimQuotesafe;                                 //
+    algo_lib::FTimehook**             bh_timehook_elems;                             // binary heap by time
+    i32                               bh_timehook_n;                                 // number of elements in the heap
+    i32                               bh_timehook_max;                               // max elements in bh_timehook_elems
     algo_lib::FImtable*               imtable_lary[36];                              // level array
     i64                               imtable_n;                                     // number of elements in array
     algo_lib::FImtable**              ind_imtable_buckets_elems;                     // pointer to bucket array
@@ -1921,9 +2019,6 @@ struct FDb { // algo_lib.FDb: In-memory database for algo_lib
     i32                               ind_imtable_n;                                 // number of elements in the hash table
     algo_lib::RegxM                   regxm;                                         // Context for Regx matching
     algo::cstring                     log_str;                                       //
-    algo_lib::FTimehook**             bh_timehook_elems;                             // binary heap by time
-    i32                               bh_timehook_n;                                 // number of elements in the heap
-    i32                               bh_timehook_max;                               // max elements in bh_timehook_elems
     i32                               epoll_fd;                                      //   -1
     algo_lib::FLockfile               lock_core;                                     //
     algo_lib::FTimehook*              c_timehook;                                    // TEMP: here only for dependency reasons. optional pointer
@@ -2006,7 +2101,7 @@ struct FDispsigcheck { // algo_lib.FDispsigcheck
     algo_lib::FDispsigcheck*   ind_dispsigcheck_next;      // hash next
     u32                        ind_dispsigcheck_hashval;   // hash value
     algo::Smallstr50           dispsig;                    //
-    algo::Sha1sig              signature;                  //
+    algo::Signature            signature;                  //
     // func:algo_lib.FDispsigcheck..AssignOp
     inline algo_lib::FDispsigcheck& operator =(const algo_lib::FDispsigcheck &rhs) = delete;
     // func:algo_lib.FDispsigcheck..CopyCtor
@@ -2034,15 +2129,15 @@ private:
 <a href="#algo-imtable-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo.Imtable.imtable|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)||Table name|
-|algo.Imtable.elem_type|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Element type name|
-|algo.Imtable.c_RowidFind|[algo.ImrowRowidFindFcn](/txt/protocol/algo/README.md#algo-imrowrowidfindfcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Function to find element by rowid (may be NULL)|
-|algo.Imtable.XrefX|[algo.ImrowXrefXFcn](/txt/protocol/algo/README.md#algo-imrowxrefxfcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Function to x-reference an element (may be NULL)|
-|algo.Imtable.NItems|[algo.ImrowNItemsFcn](/txt/protocol/algo/README.md#algo-imrownitemsfcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Return number of elements in the table|
-|algo.Imtable.Print|[algo.ImrowPrintFcn](/txt/protocol/algo/README.md#algo-imrowprintfcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Convert specified element to string (may be NULL)|
-|algo.Imtable.size|i32|[Val](/txt/exe/amc/reftype.md#val)||Size of one element (for fixed-width elements only)|
-|algo.Imtable.ssimfile|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Ssimfile name (if associated)|
-|algo.Imtable.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|algo.Imtable.imtable|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)||Table name|
+|algo.Imtable.elem_type|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Element type name|
+|algo.Imtable.c_RowidFind|[algo.ImrowRowidFindFcn](/txt/protocol/algo/README.md#algo-imrowrowidfindfcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Function to find element by rowid (may be NULL)|
+|algo.Imtable.XrefX|[algo.ImrowXrefXFcn](/txt/protocol/algo/README.md#algo-imrowxrefxfcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Function to x-reference an element (may be NULL)|
+|algo.Imtable.NItems|[algo.ImrowNItemsFcn](/txt/protocol/algo/README.md#algo-imrownitemsfcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Return number of elements in the table|
+|algo.Imtable.Print|[algo.ImrowPrintFcn](/txt/protocol/algo/README.md#algo-imrowprintfcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Convert specified element to string (may be NULL)|
+|algo.Imtable.size|i32|[Val](/txt/exe/amc/reftype/Val.md)||Size of one element (for fixed-width elements only)|
+|algo.Imtable.ssimfile|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Ssimfile name (if associated)|
+|algo.Imtable.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FImtable
 <a href="#struct-fimtable"></a>
@@ -2083,12 +2178,12 @@ private:
 <a href="#algo_lib-fiohook-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FIohook.callback|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Hook](/txt/exe/amc/reftype.md#hook)|||
-|algo_lib.FIohook.fildes|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype.md#val)||File descriptor, possibly in epoll|
-|algo_lib.FIohook.evt_flags|[algo.IOEvtFlags](/txt/protocol/algo/IOEvtFlags.md)|[Val](/txt/exe/amc/reftype.md#val)||Flags subscribed to|
-|algo_lib.FIohook.flags|[algo.IOEvtFlags](/txt/protocol/algo/IOEvtFlags.md)|[Val](/txt/exe/amc/reftype.md#val)||Flags during callback|
-|algo_lib.FIohook.in_epoll|bool|[Val](/txt/exe/amc/reftype.md#val)||Registered in epoll?|
-|algo_lib.FIohook.nodelete|bool|[Val](/txt/exe/amc/reftype.md#val)|false|File descriptor is shared -- do not close()|
+|algo_lib.FIohook.callback|[algo_lib.FIohook](/txt/lib/algo_lib/FIohook.md)|[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|algo_lib.FIohook.fildes|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype/Val.md)||File descriptor, possibly in epoll|
+|algo_lib.FIohook.evt_flags|[algo.IOEvtFlags](/txt/protocol/algo/IOEvtFlags.md)|[Val](/txt/exe/amc/reftype/Val.md)||Flags subscribed to|
+|algo_lib.FIohook.flags|[algo.IOEvtFlags](/txt/protocol/algo/IOEvtFlags.md)|[Val](/txt/exe/amc/reftype/Val.md)||Flags during callback|
+|algo_lib.FIohook.in_epoll|bool|[Val](/txt/exe/amc/reftype/Val.md)||Registered in epoll?|
+|algo_lib.FIohook.nodelete|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|File descriptor is shared -- do not close()|
 
 #### Struct FIohook
 <a href="#struct-fiohook"></a>
@@ -2116,18 +2211,18 @@ struct FIohook { // algo_lib.FIohook
 <a href="#algo_lib-fproc-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FProc.args|[algo.StringAry](/txt/protocol/algo/README.md#algo-stringary)|[Val](/txt/exe/amc/reftype.md#val)||argv; args[0] is the executable path|
-|algo_lib.FProc.fstdin|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||stdin redirect (<file, <&fd, |)|
-|algo_lib.FProc.fstdout|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||stdout redirect (>file, >>file, >&fd, |)|
-|algo_lib.FProc.fstderr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||stderr redirect (>file, >&fd, |; >&1 merges into stdout)|
-|algo_lib.FProc.to_stdin|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype.md#val)||write end of stdin pipe when fstdin==|; closed by ProcWait|
-|algo_lib.FProc.from_stdout|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype.md#val)||read end of stdout pipe when fstdout==|; closed by ProcWait|
-|algo_lib.FProc.from_stderr|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype.md#val)||read end of stderr pipe when fstderr==|; closed by ProcWait|
-|algo_lib.FProc.pid|pid_t|[Val](/txt/exe/amc/reftype.md#val)||pid of running child; 0 when not running|
-|algo_lib.FProc.timeout|i32|[Val](/txt/exe/amc/reftype.md#val)||alarm seconds before SIGALRM; 0 = none|
-|algo_lib.FProc.status|i32|[Val](/txt/exe/amc/reftype.md#val)||last wait() status|
-|algo_lib.FProc.cloexec|bool|[Val](/txt/exe/amc/reftype.md#val)|true|set O_CLOEXEC on the pipe ends so they don't leak into later-spawned children|
-|algo_lib.FProc.pgroup|bool|[Val](/txt/exe/amc/reftype.md#val)||run the child in its own process group; kills then target the whole group|
+|algo_lib.FProc.args|[algo.StringAry](/txt/protocol/algo/README.md#algo-stringary)|[Val](/txt/exe/amc/reftype/Val.md)||argv; args[0] is the executable path|
+|algo_lib.FProc.fstdin|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||stdin redirect (<file, <&fd, |)|
+|algo_lib.FProc.fstdout|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||stdout redirect (>file, >>file, >&fd, |)|
+|algo_lib.FProc.fstderr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||stderr redirect (>file, >&fd, |; >&1 merges into stdout)|
+|algo_lib.FProc.to_stdin|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype/Val.md)||write end of stdin pipe when fstdin==|; closed by ProcWait|
+|algo_lib.FProc.from_stdout|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype/Val.md)||read end of stdout pipe when fstdout==|; closed by ProcWait|
+|algo_lib.FProc.from_stderr|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype/Val.md)||read end of stderr pipe when fstderr==|; closed by ProcWait|
+|algo_lib.FProc.pid|pid_t|[Val](/txt/exe/amc/reftype/Val.md)||pid of running child; 0 when not running|
+|algo_lib.FProc.timeout|i32|[Val](/txt/exe/amc/reftype/Val.md)||alarm seconds before SIGALRM; 0 = none|
+|algo_lib.FProc.status|i32|[Val](/txt/exe/amc/reftype/Val.md)||last wait() status|
+|algo_lib.FProc.cloexec|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|set O_CLOEXEC on the pipe ends so they don't leak into later-spawned children|
+|algo_lib.FProc.pgroup|bool|[Val](/txt/exe/amc/reftype/Val.md)||run the child in its own process group; kills then target the whole group|
 
 #### Struct FProc
 <a href="#struct-fproc"></a>
@@ -2160,11 +2255,11 @@ struct FProc { // algo_lib.FProc
 <a href="#algo_lib-freplvar-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FReplvar.p_replscope|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Parent|
-|algo_lib.FReplvar.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Key|
-|algo_lib.FReplvar.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Value|
-|algo_lib.FReplvar.nsubst|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of times variable accessed|
-|algo_lib.FReplvar.partial|bool|[Val](/txt/exe/amc/reftype.md#val)||This is a partial match on another variable|
+|algo_lib.FReplvar.p_replscope|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Parent|
+|algo_lib.FReplvar.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Key|
+|algo_lib.FReplvar.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Value|
+|algo_lib.FReplvar.nsubst|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of times variable accessed|
+|algo_lib.FReplvar.partial|bool|[Val](/txt/exe/amc/reftype/Val.md)||This is a partial match on another variable|
 
 #### Struct FReplvar
 <a href="#struct-freplvar"></a>
@@ -2201,8 +2296,8 @@ private:
 <a href="#algo_lib-ftempfile-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FTempfile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.FTempfile.fildes|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)|||
+|algo_lib.FTempfile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.FTempfile.fildes|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTempfile
 <a href="#struct-ftempfile"></a>
@@ -2225,13 +2320,13 @@ struct FTempfile { // algo_lib.FTempfile
 <a href="#algo_lib-ftxtcell-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FTxtcell.p_txtrow|[algo_lib.FTxtrow](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtrow)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|algo_lib.FTxtcell.justify|[algo.TextJust](/txt/protocol/algo/TextJust.md)|[Val](/txt/exe/amc/reftype.md#val)|algo_TextJust_j_left|Justification of text within cell|
-|algo_lib.FTxtcell.style|[algo.TermStyle](/txt/protocol/algo/TermStyle.md)|[Val](/txt/exe/amc/reftype.md#val)||Text style|
-|algo_lib.FTxtcell.span|i32|[Val](/txt/exe/amc/reftype.md#val)|1|Column span of this cell|
-|algo_lib.FTxtcell.width|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Width in chars|
-|algo_lib.FTxtcell.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Cell contents|
-|algo_lib.FTxtcell.rsep|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Right separator|
+|algo_lib.FTxtcell.p_txtrow|[algo_lib.FTxtrow](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtrow)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|algo_lib.FTxtcell.justify|[algo.TextJust](/txt/protocol/algo/TextJust.md)|[Val](/txt/exe/amc/reftype/Val.md)|algo_TextJust_j_left|Justification of text within cell|
+|algo_lib.FTxtcell.style|[algo.TermStyle](/txt/protocol/algo/TermStyle.md)|[Val](/txt/exe/amc/reftype/Val.md)||Text style|
+|algo_lib.FTxtcell.span|i32|[Val](/txt/exe/amc/reftype/Val.md)|1|Column span of this cell|
+|algo_lib.FTxtcell.width|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Width in chars|
+|algo_lib.FTxtcell.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Cell contents|
+|algo_lib.FTxtcell.rsep|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Right separator|
 
 #### Struct FTxtcell
 <a href="#struct-ftxtcell"></a>
@@ -2271,11 +2366,11 @@ private:
 <a href="#algo_lib-ftxtrow-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FTxtrow.p_txttbl|[algo_lib.FTxttbl](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxttbl)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|algo_lib.FTxtrow.select|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Select for processing|
-|algo_lib.FTxtrow.ishdr|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Is header row|
-|algo_lib.FTxtrow.sortkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Sort key|
-|algo_lib.FTxtrow.c_txtcell|[algo_lib.FTxtcell](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtcell)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|algo_lib.FTxtrow.p_txttbl|[algo_lib.FTxttbl](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxttbl)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|algo_lib.FTxtrow.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Select for processing|
+|algo_lib.FTxtrow.ishdr|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Is header row|
+|algo_lib.FTxtrow.sortkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Sort key|
+|algo_lib.FTxtrow.c_txtcell|[algo_lib.FTxtcell](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtcell)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FTxtrow
 <a href="#struct-ftxtrow"></a>
@@ -2315,10 +2410,10 @@ private:
 <a href="#algo_lib-ftxttbl-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.FTxttbl.c_txtrow|[algo_lib.FTxtrow](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtrow)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Array of rows|
-|algo_lib.FTxttbl.col_space|i32|[Val](/txt/exe/amc/reftype.md#val)|2|Default extra space between columns|
-|algo_lib.FTxttbl.normalized|bool|[Val](/txt/exe/amc/reftype.md#val)||Cell widths computed|
-|algo_lib.FTxttbl.style|bool|[Val](/txt/exe/amc/reftype.md#val)||Emit cell color styles even when stdout is not a terminal (e.g. output relayed to a remote terminal)|
+|algo_lib.FTxttbl.c_txtrow|[algo_lib.FTxtrow](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftxtrow)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Array of rows|
+|algo_lib.FTxttbl.col_space|i32|[Val](/txt/exe/amc/reftype/Val.md)|2|Default extra space between columns|
+|algo_lib.FTxttbl.normalized|bool|[Val](/txt/exe/amc/reftype/Val.md)||Cell widths computed|
+|algo_lib.FTxttbl.style|bool|[Val](/txt/exe/amc/reftype/Val.md)||Emit cell color styles even when stdout is not a terminal (e.g. output relayed to a remote terminal)|
 
 #### Struct FTxttbl
 <a href="#struct-ftxttbl"></a>
@@ -2345,10 +2440,10 @@ struct FTxttbl { // algo_lib.FTxttbl: Table row. Todo: absolute index for cells?
 <a href="#algo_lib-intextfile-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.InTextFile.file|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.InTextFile.own_fd|bool|[Val](/txt/exe/amc/reftype.md#val)|true||
-|algo_lib.InTextFile.line_buf|[algo.LineBuf](/txt/protocol/algo/LineBuf.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.InTextFile.temp_buf|u8|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
+|algo_lib.InTextFile.file|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.InTextFile.own_fd|bool|[Val](/txt/exe/amc/reftype/Val.md)|true||
+|algo_lib.InTextFile.line_buf|[algo.LineBuf](/txt/protocol/algo/LineBuf.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.InTextFile.temp_buf|u8|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
 
 #### Struct InTextFile
 <a href="#struct-intextfile"></a>
@@ -2379,7 +2474,7 @@ struct InTextFile { // algo_lib.InTextFile
 <a href="#algo_lib-mmap-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.Mmap.mem|[algo.memptr](/txt/protocol/algo/memptr.md)|[Val](/txt/exe/amc/reftype.md#val)||Memory that has been mmap()ed|
+|algo_lib.Mmap.mem|[algo.memptr](/txt/protocol/algo/memptr.md)|[Val](/txt/exe/amc/reftype/Val.md)||Memory that has been mmap()ed|
 
 #### Struct Mmap
 <a href="#struct-mmap"></a>
@@ -2401,9 +2496,9 @@ struct Mmap { // algo_lib.Mmap
 <a href="#algo_lib-mmapfile-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.MmapFile.map|[algo_lib.Mmap](/txt/gen/algo_lib/algo_lib.md#algo_lib-mmap)|[Val](/txt/exe/amc/reftype.md#val)||Pointer to shared memory|
-|algo_lib.MmapFile.fd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)||Associated file descriptor|
-|algo_lib.MmapFile.text|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)||Alias to map.mem, accessible as text|
+|algo_lib.MmapFile.map|[algo_lib.Mmap](/txt/gen/algo_lib/algo_lib.md#algo_lib-mmap)|[Val](/txt/exe/amc/reftype/Val.md)||Pointer to shared memory|
+|algo_lib.MmapFile.fd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)||Associated file descriptor|
+|algo_lib.MmapFile.text|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)||Alias to map.mem, accessible as text|
 
 #### Struct MmapFile
 <a href="#struct-mmapfile"></a>
@@ -2425,10 +2520,10 @@ struct MmapFile { // algo_lib.MmapFile
 <a href="#algo_lib-recsortkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.RecSortkey.ctype|[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)|[Val](/txt/exe/amc/reftype.md#val)||Type name|
-|algo_lib.RecSortkey.num|double|[Val](/txt/exe/amc/reftype.md#val)||Numeric key (if present)|
-|algo_lib.RecSortkey.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||String key (sort key)|
-|algo_lib.RecSortkey.rowid|float|[Val](/txt/exe/amc/reftype.md#val)||row id|
+|algo_lib.RecSortkey.ctype|[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)|[Val](/txt/exe/amc/reftype/Val.md)||Type name|
+|algo_lib.RecSortkey.num|double|[Val](/txt/exe/amc/reftype/Val.md)||Numeric key (if present)|
+|algo_lib.RecSortkey.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||String key (sort key)|
+|algo_lib.RecSortkey.rowid|float|[Val](/txt/exe/amc/reftype/Val.md)||row id|
 
 #### Struct RecSortkey
 <a href="#struct-recsortkey"></a>
@@ -2463,7 +2558,7 @@ struct RecSortkey { // algo_lib.RecSortkey: One record
 <a href="#algo_lib-regxtoken-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.RegxToken.type|i32|[Val](/txt/exe/amc/reftype.md#val)||State|
+|algo_lib.RegxToken.type|i32|[Val](/txt/exe/amc/reftype/Val.md)||State|
 
 #### Struct RegxToken
 <a href="#struct-regxtoken"></a>
@@ -2489,9 +2584,9 @@ struct RegxToken { // algo_lib.RegxToken: Used when parsing
 <a href="#algo_lib-regxexpr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.RegxExpr.type|[algo_lib.RegxToken](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxtoken)|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.RegxExpr.first|i32|[Val](/txt/exe/amc/reftype.md#val)||First character|
-|algo_lib.RegxExpr.last|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype.md#val)||Last character(s)|
+|algo_lib.RegxExpr.type|[algo_lib.RegxToken](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxtoken)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.RegxExpr.first|i32|[Val](/txt/exe/amc/reftype/Val.md)||First character|
+|algo_lib.RegxExpr.last|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype/Val.md)||Last character(s)|
 
 #### Struct RegxExpr
 <a href="#struct-regxexpr"></a>
@@ -2513,9 +2608,9 @@ struct RegxExpr { // algo_lib.RegxExpr: Expression during parsing
 <a href="#algo_lib-regxop-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.RegxOp.op|u8|[Val](/txt/exe/amc/reftype.md#val)|0|What test to perform|
-|algo_lib.RegxOp.consume|u8|[Val](/txt/exe/amc/reftype.md#val)|1|Number of characters to consume|
-|algo_lib.RegxOp.imm|u16|[Val](/txt/exe/amc/reftype.md#val)|0|immediate value|
+|algo_lib.RegxOp.op|u8|[Val](/txt/exe/amc/reftype/Val.md)|0|What test to perform|
+|algo_lib.RegxOp.consume|u8|[Val](/txt/exe/amc/reftype/Val.md)|1|Number of characters to consume|
+|algo_lib.RegxOp.imm|u16|[Val](/txt/exe/amc/reftype/Val.md)|0|immediate value|
 
 #### Struct RegxOp
 <a href="#struct-regxop"></a>
@@ -2539,10 +2634,10 @@ struct RegxOp { // algo_lib.RegxOp: A single instruction for Regex NFA
 <a href="#algo_lib-regxparse-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.RegxParse.input|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)||Input string|
-|algo_lib.RegxParse.nextgroup|i32|[Val](/txt/exe/amc/reftype.md#val)||Next capture group #|
-|algo_lib.RegxParse.p_regx|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Regx being compiled|
-|algo_lib.RegxParse.ary_expr|[algo_lib.RegxExpr](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxexpr)|[Tary](/txt/exe/amc/reftype.md#tary)||Expression stack|
+|algo_lib.RegxParse.input|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)||Input string|
+|algo_lib.RegxParse.nextgroup|i32|[Val](/txt/exe/amc/reftype/Val.md)||Next capture group #|
+|algo_lib.RegxParse.p_regx|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Regx being compiled|
+|algo_lib.RegxParse.ary_expr|[algo_lib.RegxExpr](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxexpr)|[Tary](/txt/exe/amc/reftype/Tary.md)||Expression stack|
 
 #### Struct RegxParse
 <a href="#struct-regxparse"></a>
@@ -2573,10 +2668,10 @@ struct RegxParse { // algo_lib.RegxParse: Function to parse regx
 <a href="#algo_lib-regxstate-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.RegxState.ch_class|[algo.U16Ary](/txt/protocol/algo/README.md#algo-u16ary)|[Val](/txt/exe/amc/reftype.md#val)||What to match|
-|algo_lib.RegxState.op|[algo_lib.RegxOp](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxop)|[Val](/txt/exe/amc/reftype.md#val)||Operation to perform|
-|algo_lib.RegxState.lparen|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.RegxState.next|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype.md#val)||Where to go on a match|
+|algo_lib.RegxState.ch_class|[algo.U16Ary](/txt/protocol/algo/README.md#algo-u16ary)|[Val](/txt/exe/amc/reftype/Val.md)||What to match|
+|algo_lib.RegxState.op|[algo_lib.RegxOp](/txt/gen/algo_lib/algo_lib.md#algo_lib-regxop)|[Val](/txt/exe/amc/reftype/Val.md)||Operation to perform|
+|algo_lib.RegxState.lparen|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.RegxState.next|[algo_lib.Bitset](/txt/gen/algo_lib/algo_lib.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftype/Val.md)||Where to go on a match|
 
 #### Struct RegxState
 <a href="#struct-regxstate"></a>
@@ -2599,9 +2694,9 @@ struct RegxState { // algo_lib.RegxState: Instruction + jumps
 <a href="#algo_lib-replscope-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.Replscope.eatcomma|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Delete comma+space after substitution|
-|algo_lib.Replscope.strict|u8|[Val](/txt/exe/amc/reftype.md#val)||1=warnings; 2=throw exception on error|
-|algo_lib.Replscope.ind_replvar|[algo_lib.FReplvar](/txt/gen/algo_lib/algo_lib.md#algo_lib-freplvar)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|algo_lib.Replscope.eatcomma|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Delete comma+space after substitution|
+|algo_lib.Replscope.strict|u8|[Val](/txt/exe/amc/reftype/Val.md)||1=warnings; 2=throw exception on error|
+|algo_lib.Replscope.ind_replvar|[algo_lib.FReplvar](/txt/gen/algo_lib/algo_lib.md#algo_lib-freplvar)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct Replscope
 <a href="#struct-replscope"></a>
@@ -2627,13 +2722,13 @@ struct Replscope { // algo_lib.Replscope
 <a href="#algo_lib-shhdr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.ShHdr.magic|u32|[Val](/txt/exe/amc/reftype.md#val)|0x09202017|Signature|
-|algo_lib.ShHdr.name|[algo.RspaceStr32](/txt/protocol/algo/README.md#algo-rspacestr32)|[Val](/txt/exe/amc/reftype.md#val)||User defined name|
-|algo_lib.ShHdr.dataoffset|u64|[Val](/txt/exe/amc/reftype.md#val)|4096|Offset to beginning of data|
-|algo_lib.ShHdr.eof|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.ShHdr.sof|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.ShHdr.bufsize|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|algo_lib.ShHdr.pad|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|algo_lib.ShHdr.magic|u32|[Val](/txt/exe/amc/reftype/Val.md)|0x09202017|Signature|
+|algo_lib.ShHdr.name|[algo.RspaceStr32](/txt/protocol/algo/README.md#algo-rspacestr32)|[Val](/txt/exe/amc/reftype/Val.md)||User defined name|
+|algo_lib.ShHdr.dataoffset|u64|[Val](/txt/exe/amc/reftype/Val.md)|4096|Offset to beginning of data|
+|algo_lib.ShHdr.eof|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.ShHdr.sof|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.ShHdr.bufsize|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|algo_lib.ShHdr.pad|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct ShHdr
 <a href="#struct-shhdr"></a>
@@ -2659,8 +2754,8 @@ struct ShHdr { // algo_lib.ShHdr
 <a href="#algo_lib-srng-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.Srng.z|u32|[Val](/txt/exe/amc/reftype.md#val)|123||
-|algo_lib.Srng.w|u32|[Val](/txt/exe/amc/reftype.md#val)|456||
+|algo_lib.Srng.z|u32|[Val](/txt/exe/amc/reftype/Val.md)|123||
+|algo_lib.Srng.w|u32|[Val](/txt/exe/amc/reftype/Val.md)|456||
 
 #### Struct Srng
 <a href="#struct-srng"></a>
@@ -2681,8 +2776,8 @@ struct Srng { // algo_lib.Srng: Command function, a single word
 <a href="#algo_lib-tabulate-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|algo_lib.Tabulate.width|i32|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|algo_lib.Tabulate.temp|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|algo_lib.Tabulate.width|i32|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|algo_lib.Tabulate.temp|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Tabulate
 <a href="#struct-tabulate"></a>

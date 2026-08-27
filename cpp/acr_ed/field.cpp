@@ -209,27 +209,102 @@ static void PrintNewField(dmmeta::Field &field) {
     }
 }
 
+// Do the rows of SSIMFILE carry values for the fields of CTYPE?
+// An ssimfile's rows carry the fields of the ssimfile's own ctype, plus those
+// of every ctype that one inherits from through a Base field.
+static bool StoresCtypeQ(acr_ed::FSsimfile &ssimfile, acr_ed::FCtype &ctype) {
+    bool ret = false;
+    acr_ed::FCtype *cur = ssimfile.p_ctype;
+    while (cur && !ret) {
+        acr_ed::FCtype *base = acr_ed::Basetype(*cur);
+        ret = cur == &ctype;
+        cur = base != cur ? base : NULL;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Delete a field from the schema, and rewrite every ssimfile whose rows carry
+// its values so that the values go with it.
+//
+// Dropping the schema row alone is not enough.  acr parses a data row against
+// the current ctype and ignores an attribute it does not recognize, which is
+// what lets a tuple survive a schema that has moved on; the same tolerance
+// leaves the deleted field's values sitting in the ssimfile, invisible to
+// acr -check, to amc, and to a query of the row itself.
+//
+// Reading a row through the new schema and writing it back is what drops the
+// attribute, so each ssimfile holding rows of the edited ctype is rewritten
+// once the schema row is gone.
 void acr_ed::edaction_Delete_Field() {
     command::acr acr;
     acr.query << "field:"<<acr_ed::_db.cmdline.field;
     acr.del=true;
     acr.write=true;
     acr_ed::_db.script << acr_ToCmdline(acr) << eol;
+
+    acr_ed::FCtype *ctype = acr_ed::ind_ctype_Find(dmmeta::Field_ctype_Get(acr_ed::_db.cmdline.field));
+    if (ctype) {
+        ind_beg(acr_ed::_db_ssimfile_curs, ssimfile, acr_ed::_db) {
+            if (StoresCtypeQ(ssimfile, *ctype)) {
+                command::acr acr_rewrite;
+                acr_rewrite.query << ssimfile.ssimfile << ":%";
+                acr_rewrite.write = true;
+                acr_rewrite.print = false;
+                acr_ed::_db.script << acr_ToCmdline(acr_rewrite) << eol;
+            }
+        }ind_end;
+    }
 }
 
 // -----------------------------------------------------------------------------
 
+// Rename a field within its ctype, refusing the spellings of -rename that
+// cannot mean what they look like.
+//
+// A bare new name is the ordinary form: `acr_ed -field a.B.c -rename d` renames
+// the field to a.B.d.  A rename does not move a field between ctypes, so the
+// ctype is already known, and the full pkey a.B.d means the same thing.
+//
+// `-rename field:a.B.d` is the spelling a query uses, and it is not one here.
+// `acr` reads `field:a.B` as the ctype and writes a record whose pkey no query
+// finds, so the prefix is refused rather than stripped -- -rename takes a field
+// name and nothing else.
+//
+// A new name carrying a different ctype moves the field to another table.  `acr`
+// renames the column of the ctype named in the *new* pkey, so where the old
+// ctype has an ssimfile its rows keep an attribute no field claims -- invisible
+// to `acr -check`, to `amc` and to a query of the row, which is the state a
+// field delete was taught to avoid.  The move is refused whenever either side is
+// ssim-backed, and it is a delete and a create rather than a rename.  Between
+// two in-memory ctypes there is no column to strand, so it goes through.
 void acr_ed::edaction_Rename_Field() {
     command::acr acr;
-    // if called as
-    // acr_ed -field a.B.c -rename d,
-    // rewrite as
-    // acr_ed -field a.B.c -rename a.B.d
-    vrfy(ind_field_Find(_db.cmdline.field), "no such field");
+    acr_ed::FField *field = acr_ed::ind_field_Find(_db.cmdline.field);
+    vrfy(field && field->p_ctype
+         , tempstr()<<"acr_ed.no_field"
+         <<Keyval("field",_db.cmdline.field)
+         <<Keyval("comment","no such field, or its ctype is missing"));
+    vrfy(Pathcomp(_db.cmdline.rename,":LL") == _db.cmdline.rename
+         , tempstr()<<"acr_ed.rename_prefix"
+         <<Keyval("rename",_db.cmdline.rename)
+         <<Keyval("comment","a field name has no ':' in it; -rename takes a name, not a query"));
     if (dmmeta::Field_ctype_Get(_db.cmdline.rename) == "") {
-        _db.cmdline.rename = tempstr() << dmmeta::Field_ctype_Get(_db.cmdline.field)
-                                       << "." << _db.cmdline.rename;
+        _db.cmdline.rename = tempstr()<<field->p_ctype->ctype<<"."<<_db.cmdline.rename;
     }
+    acr_ed::FCtype *newctype = acr_ed::ind_ctype_Find(dmmeta::Field_ctype_Get(_db.cmdline.rename));
+    vrfy(newctype
+         , tempstr()<<"acr_ed.no_ctype"
+         <<Keyval("ctype",dmmeta::Field_ctype_Get(_db.cmdline.rename))
+         <<Keyval("rename",_db.cmdline.rename)
+         <<Keyval("comment","-rename takes a bare name, or a full <ns>.<Ctype>.<name>"));
+    vrfy(newctype == field->p_ctype
+         || (!field->p_ctype->c_ssimfile && !newctype->c_ssimfile)
+         , tempstr()<<"acr_ed.rename_ctype"
+         <<Keyval("field",_db.cmdline.field)
+         <<Keyval("rename",_db.cmdline.rename)
+         <<Keyval("comment","a rename cannot move a field to another ssim-backed ctype; delete and create instead"));
     acr.query << "field:"<<acr_ed::_db.cmdline.field;
     acr.rename=_db.cmdline.rename;
     acr.write=true;

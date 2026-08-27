@@ -3,10 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -64,7 +67,7 @@ All allocations are done through global `src_hdr::_db` [src_hdr.FDb](#src_hdr-fd
 <a href="#src_hdr-fcopyline-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|src_hdr.FCopyline.fcopyline|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|src_hdr.FCopyline.fcopyline|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FCopyline
 <a href="#struct-fcopyline"></a>
@@ -98,8 +101,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_hdr.FCopyright.base|[dev.Copyright](/txt/ssimdb/dev/copyright.md)|[Base](/txt/ssimdb/dev/copyright.md)|||
-|src_hdr.FCopyright.years|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_hdr.FCopyright.sortkey|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|src_hdr.FCopyright.years|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_hdr.FCopyright.sortkey|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FCopyright
 <a href="#struct-fcopyright"></a>
@@ -139,23 +142,23 @@ private:
 <a href="#src_hdr-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|src_hdr.FDb._db|[src_hdr.FDb](/txt/gen/src_hdr/src_hdr.md#src_hdr-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|src_hdr.FDb.cmdline|[command.src_hdr](/txt/protocol/command/README.md#command-src_hdr)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_hdr.FDb.targsrc|[src_hdr.FTargsrc](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftargsrc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_hdr.FDb.ns|[src_hdr.FNs](/txt/gen/src_hdr/src_hdr.md#src_hdr-fns)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_hdr.FDb.ind_ns|[src_hdr.FNs](/txt/gen/src_hdr/src_hdr.md#src_hdr-fns)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_hdr.FDb.nsx|[src_hdr.FNsx](/txt/gen/src_hdr/src_hdr.md#src_hdr-fnsx)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_hdr.FDb.license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_hdr.FDb.ind_license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_hdr.FDb.target|[src_hdr.FTarget](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_hdr.FDb.ind_target|[src_hdr.FTarget](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftarget)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_hdr.FDb.scriptfile|[src_hdr.FScriptfile](/txt/gen/src_hdr/src_hdr.md#src_hdr-fscriptfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_hdr.FDb.fcopyline|[src_hdr.FCopyline](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyline)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|src_hdr.FDb.ind_fcopyline|[src_hdr.FCopyline](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyline)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_hdr.FDb.copyright|[src_hdr.FCopyright](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyright)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_hdr.FDb.c_dflt_copyright|[src_hdr.FCopyright](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyright)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|src_hdr.FDb.ind_copyright|[src_hdr.FCopyright](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyright)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_hdr.FDb.bh_copyright|[src_hdr.FCopyright](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyright)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
+|src_hdr.FDb._db|[src_hdr.FDb](/txt/gen/src_hdr/src_hdr.md#src_hdr-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|src_hdr.FDb.cmdline|[command.src_hdr](/txt/protocol/command/README.md#command-src_hdr)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_hdr.FDb.targsrc|[src_hdr.FTargsrc](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftargsrc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_hdr.FDb.ns|[src_hdr.FNs](/txt/gen/src_hdr/src_hdr.md#src_hdr-fns)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_hdr.FDb.ind_ns|[src_hdr.FNs](/txt/gen/src_hdr/src_hdr.md#src_hdr-fns)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_hdr.FDb.nsx|[src_hdr.FNsx](/txt/gen/src_hdr/src_hdr.md#src_hdr-fnsx)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_hdr.FDb.license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_hdr.FDb.ind_license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_hdr.FDb.target|[src_hdr.FTarget](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_hdr.FDb.ind_target|[src_hdr.FTarget](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftarget)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_hdr.FDb.scriptfile|[src_hdr.FScriptfile](/txt/gen/src_hdr/src_hdr.md#src_hdr-fscriptfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_hdr.FDb.fcopyline|[src_hdr.FCopyline](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyline)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|src_hdr.FDb.ind_fcopyline|[src_hdr.FCopyline](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyline)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_hdr.FDb.copyright|[src_hdr.FCopyright](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyright)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_hdr.FDb.c_dflt_copyright|[src_hdr.FCopyright](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyright)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|src_hdr.FDb.ind_copyright|[src_hdr.FCopyright](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyright)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_hdr.FDb.bh_copyright|[src_hdr.FCopyright](/txt/gen/src_hdr/src_hdr.md#src_hdr-fcopyright)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -210,7 +213,7 @@ struct FDb { // src_hdr.FDb: In-memory database for src_hdr
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_hdr.FLicense.base|[dev.License](/txt/ssimdb/dev/license.md)|[Base](/txt/ssimdb/dev/license.md)|||
-|src_hdr.FLicense.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|src_hdr.FLicense.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FLicense
 <a href="#struct-flicense"></a>
@@ -248,8 +251,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_hdr.FNs.base|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Base](/txt/ssimdb/dmmeta/ns.md)|||
-|src_hdr.FNs.c_nsx|[src_hdr.FNsx](/txt/gen/src_hdr/src_hdr.md#src_hdr-fnsx)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|src_hdr.FNs.p_license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|src_hdr.FNs.c_nsx|[src_hdr.FNsx](/txt/gen/src_hdr/src_hdr.md#src_hdr-fnsx)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|src_hdr.FNs.p_license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FNs
 <a href="#struct-fns"></a>
@@ -331,7 +334,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_hdr.FScriptfile.base|[dev.Scriptfile](/txt/ssimdb/dev/scriptfile.md)|[Base](/txt/ssimdb/dev/scriptfile.md)|||
-|src_hdr.FScriptfile.p_license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|src_hdr.FScriptfile.p_license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FScriptfile
 <a href="#struct-fscriptfile"></a>
@@ -361,17 +364,17 @@ private:
 <a href="#src_hdr-fsrc-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|src_hdr.FSrc.src|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Filename|
-|src_hdr.FSrc.comment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_hdr.FSrc.cmtstring|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Comment string|
-|src_hdr.FSrc.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_hdr.FSrc.p_license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|src_hdr.FSrc.p_targsrc|[src_hdr.FTargsrc](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftargsrc)|[Upptr](/txt/exe/amc/reftype.md#upptr)||May be NULL|
-|src_hdr.FSrc.text|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_hdr.FSrc.copyright|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_hdr.FSrc.saw_target|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_hdr.FSrc.shebang|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_hdr.FSrc.contact_ice|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Contact information|
+|src_hdr.FSrc.src|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Filename|
+|src_hdr.FSrc.comment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_hdr.FSrc.cmtstring|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Comment string|
+|src_hdr.FSrc.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_hdr.FSrc.p_license|[src_hdr.FLicense](/txt/gen/src_hdr/src_hdr.md#src_hdr-flicense)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|src_hdr.FSrc.p_targsrc|[src_hdr.FTargsrc](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftargsrc)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||May be NULL|
+|src_hdr.FSrc.text|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_hdr.FSrc.copyright|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_hdr.FSrc.saw_target|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_hdr.FSrc.shebang|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_hdr.FSrc.contact_ice|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Contact information|
 
 #### Struct FSrc
 <a href="#struct-fsrc"></a>
@@ -402,8 +405,8 @@ struct FSrc { // src_hdr.FSrc
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_hdr.FTarget.base|[dev.Target](/txt/ssimdb/dev/target.md)|[Base](/txt/ssimdb/dev/target.md)|||
-|src_hdr.FTarget.c_targsrc|[src_hdr.FTargsrc](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftargsrc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|src_hdr.FTarget.p_ns|[src_hdr.FNs](/txt/gen/src_hdr/src_hdr.md#src_hdr-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|src_hdr.FTarget.c_targsrc|[src_hdr.FTargsrc](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftargsrc)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|src_hdr.FTarget.p_ns|[src_hdr.FNs](/txt/gen/src_hdr/src_hdr.md#src_hdr-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTarget
 <a href="#struct-ftarget"></a>
@@ -447,8 +450,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_hdr.FTargsrc.base|[dev.Targsrc](/txt/ssimdb/dev/targsrc.md)|[Base](/txt/ssimdb/dev/targsrc.md)|||
-|src_hdr.FTargsrc.select|bool|[Val](/txt/exe/amc/reftype.md#val)||Temporary flag|
-|src_hdr.FTargsrc.p_target|[src_hdr.FTarget](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|src_hdr.FTargsrc.select|bool|[Val](/txt/exe/amc/reftype/Val.md)||Temporary flag|
+|src_hdr.FTargsrc.p_target|[src_hdr.FTarget](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTargsrc
 <a href="#struct-ftargsrc"></a>

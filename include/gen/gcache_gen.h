@@ -87,16 +87,16 @@ private:
 };
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:gcache.FCachefile.mtime.Lt
-inline bool          mtime_Lt(gcache::FCachefile& cachefile, gcache::FCachefile &rhs) __attribute__((nothrow));
+inline bool          mtime_Lt(gcache::FCachefile& parent, gcache::FCachefile &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:gcache.FCachefile.mtime.Cmp
-inline i32           mtime_Cmp(gcache::FCachefile& cachefile, gcache::FCachefile &rhs) __attribute__((nothrow));
+inline i32           mtime_Cmp(gcache::FCachefile& parent, gcache::FCachefile &rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcache.FCachefile..Init
-inline void          FCachefile_Init(gcache::FCachefile& cachefile);
+inline void          FCachefile_Init(gcache::FCachefile& parent);
 // func:gcache.FCachefile..Uninit
-void                 FCachefile_Uninit(gcache::FCachefile& cachefile) __attribute__((nothrow));
+void                 FCachefile_Uninit(gcache::FCachefile& parent) __attribute__((nothrow));
 
 // --- gcache.cleanreport
 struct cleanreport { // gcache.cleanreport
@@ -389,7 +389,7 @@ private:
 };
 // Set all fields to initial values.
 // func:gcache.FHeader..Init
-inline void          FHeader_Init(gcache::FHeader& header);
+inline void          FHeader_Init(gcache::FHeader& parent);
 // print string representation of ROW to string STR
 // cfmt:gcache.FHeader.String  printfmt:Tuple
 // func:gcache.FHeader..Print

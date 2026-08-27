@@ -20,10 +20,10 @@ italicised fields: *pmaskfld, field* are [**fldfunc**](/txt/openacr/ssim.md#fldf
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|pmaskfld_member|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*pmaskfld*|*[dmmeta.Pmaskfld](/txt/ssimdb/dmmeta/pmaskfld.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RL of pmaskfld_member*|
-|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RR of pmaskfld_member*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|pmaskfld_member|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*pmaskfld*|*[dmmeta.Pmaskfld](/txt/ssimdb/dmmeta/pmaskfld.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/RL of pmaskfld_member*|
+|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/RR of pmaskfld_member*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

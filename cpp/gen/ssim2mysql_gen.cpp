@@ -31,8 +31,6 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_mysql_gen.h"
@@ -41,7 +39,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb     lib_json::_db;      // dependency found via dev.targdep
 algo_lib::FDb     algo_lib::_db;      // dependency found via dev.targdep
 lib_mysql::FDb    lib_mysql::_db;     // dependency found via dev.targdep
 ssim2mysql::FDb   ssim2mysql::_db;    // dependency found via dev.targdep
@@ -89,19 +86,18 @@ namespace ssim2mysql { // gen:ns_print_proto
     // Internal function to scan for a message
     //
     // func:ssim2mysql.FInput.in_buf.ScanMsg
-    static void          in_buf_ScanMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
+    static void          in_buf_ScanMsg(ssim2mysql::FInput& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:ssim2mysql.FInput.in_buf.Shift
-    static void          in_buf_Shift(ssim2mysql::FInput& input) __attribute__((nothrow));
+    static void          in_buf_Shift(ssim2mysql::FInput& parent) __attribute__((nothrow));
     // func:ssim2mysql...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- ssim2mysql.FCmd..Uninit
-void ssim2mysql::FCmd_Uninit(ssim2mysql::FCmd& cmd) {
-    ssim2mysql::FCmd &row = cmd; (void)row;
-    zs_cmd_Remove(row); // remove cmd from index zs_cmd
+void ssim2mysql::FCmd_Uninit(ssim2mysql::FCmd& parent) {
+    zs_cmd_Remove(parent); // remove cmd from index zs_cmd
 }
 
 // --- ssim2mysql.FCmd..Print
@@ -112,13 +108,13 @@ void ssim2mysql::FCmd_Print(ssim2mysql::FCmd& row, algo::cstring& str) {
 }
 
 // --- ssim2mysql.FColumn.name.Get
-algo::strptr ssim2mysql::name_Get(ssim2mysql::FColumn& column) {
-    return algo::Pathcomp(column.column, ".RR");
+algo::strptr ssim2mysql::name_Get(ssim2mysql::FColumn& parent) {
+    return algo::Pathcomp(parent.column, ".RR");
 }
 
 // --- ssim2mysql.FColumn.ssimfile.Get
-algo::strptr ssim2mysql::ssimfile_Get(ssim2mysql::FColumn& column) {
-    return algo::Pathcomp(column.column, ".RL");
+algo::strptr ssim2mysql::ssimfile_Get(ssim2mysql::FColumn& parent) {
+    return algo::Pathcomp(parent.column, ".RL");
 }
 
 // --- ssim2mysql.FColumn..Concat_ssimfile_name
@@ -127,12 +123,11 @@ tempstr ssim2mysql::FColumn_Concat_ssimfile_name( const algo::strptr& ssimfile ,
 }
 
 // --- ssim2mysql.FColumn..Uninit
-void ssim2mysql::FColumn_Uninit(ssim2mysql::FColumn& column) {
-    ssim2mysql::FColumn &row = column; (void)row;
-    ind_column_Remove(row); // remove column from index ind_column
-    ssim2mysql::FSsimfile* p_ssimfile = ssim2mysql::ind_ssimfile_Find(ssimfile_Get(row));
+void ssim2mysql::FColumn_Uninit(ssim2mysql::FColumn& parent) {
+    ind_column_Remove(parent); // remove column from index ind_column
+    ssim2mysql::FSsimfile* p_ssimfile = ssim2mysql::ind_ssimfile_Find(ssimfile_Get(parent));
     if (p_ssimfile)  {
-        c_column_Remove(*p_ssimfile, row);// remove column from index c_column
+        c_column_Remove(*p_ssimfile, parent);// remove column from index c_column
     }
 }
 
@@ -178,11 +173,10 @@ void ssim2mysql::cppfunc_CopyIn(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &in) 
 }
 
 // --- ssim2mysql.FCppfunc..Uninit
-void ssim2mysql::FCppfunc_Uninit(ssim2mysql::FCppfunc& cppfunc) {
-    ssim2mysql::FCppfunc &row = cppfunc; (void)row;
-    ssim2mysql::FField* p_field = ssim2mysql::ind_field_Find(row.field);
+void ssim2mysql::FCppfunc_Uninit(ssim2mysql::FCppfunc& parent) {
+    ssim2mysql::FField* p_field = ssim2mysql::ind_field_Find(parent.field);
     if (p_field)  {
-        c_cppfunc_Remove(*p_field, row);// remove cppfunc from index c_cppfunc
+        c_cppfunc_Remove(*p_field, parent);// remove cppfunc from index c_cppfunc
     }
 }
 
@@ -221,23 +215,23 @@ void ssim2mysql::ctype_CopyIn(ssim2mysql::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- ssim2mysql.FCtype.ns.Get
-algo::strptr ssim2mysql::ns_Get(ssim2mysql::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RL");
+algo::strptr ssim2mysql::ns_Get(ssim2mysql::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RL");
 }
 
 // --- ssim2mysql.FCtype.name.Get
-algo::strptr ssim2mysql::name_Get(ssim2mysql::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RR");
+algo::strptr ssim2mysql::name_Get(ssim2mysql::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RR");
 }
 
 // --- ssim2mysql.FCtype.c_field.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void ssim2mysql::c_field_Insert(ssim2mysql::FCtype& ctype, ssim2mysql::FField& row) {
+void ssim2mysql::c_field_Insert(ssim2mysql::FCtype& parent, ssim2mysql::FField& row) {
     if (!row.ctype_c_field_in_ary) {
-        c_field_Reserve(ctype, 1);
-        u64 n  = ctype.c_field_n++;
-        ctype.c_field_elems[n] = &row;
+        c_field_Reserve(parent, 1);
+        u64 n  = parent.c_field_n++;
+        parent.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
 }
@@ -246,18 +240,18 @@ void ssim2mysql::c_field_Insert(ssim2mysql::FCtype& ctype, ssim2mysql::FField& r
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool ssim2mysql::c_field_InsertMaybe(ssim2mysql::FCtype& ctype, ssim2mysql::FField& row) {
+bool ssim2mysql::c_field_InsertMaybe(ssim2mysql::FCtype& parent, ssim2mysql::FField& row) {
     bool retval = !ctype_c_field_InAryQ(row);
-    c_field_Insert(ctype,row); // check is performed in _Insert again
+    c_field_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- ssim2mysql.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void ssim2mysql::c_field_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FField& row) {
-    i64 n = ctype.c_field_n;
+void ssim2mysql::c_field_Remove(ssim2mysql::FCtype& parent, ssim2mysql::FField& row) {
+    i64 n = parent.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
-        ssim2mysql::FField* *elems = ctype.c_field_elems;
+        ssim2mysql::FField* *elems = parent.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -266,7 +260,7 @@ void ssim2mysql::c_field_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FField& r
                 i64 j = i + 1;
                 size_t nbytes = sizeof(ssim2mysql::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_field_n = n - 1;
+                parent.c_field_n = n - 1;
                 break;
             }
         }
@@ -275,28 +269,27 @@ void ssim2mysql::c_field_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FField& r
 
 // --- ssim2mysql.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void ssim2mysql::c_field_Reserve(ssim2mysql::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_field_max;
-    if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+void ssim2mysql::c_field_Reserve(ssim2mysql::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_field_max;
+    if (UNLIKELY(parent.c_field_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_field_n + n), 4);
         u64 old_size = old_max * sizeof(ssim2mysql::FField*);
         u64 new_size = new_max * sizeof(ssim2mysql::FField*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("ssim2mysql.out_of_memory  field:ssim2mysql.FCtype.c_field");
         }
-        ctype.c_field_elems = (ssim2mysql::FField**)new_mem;
-        ctype.c_field_max = new_max;
+        parent.c_field_elems = (ssim2mysql::FField**)new_mem;
+        parent.c_field_max = new_max;
     }
 }
 
 // --- ssim2mysql.FCtype..Uninit
-void ssim2mysql::FCtype_Uninit(ssim2mysql::FCtype& ctype) {
-    ssim2mysql::FCtype &row = ctype; (void)row;
-    ind_ctype_Remove(row); // remove ctype from index ind_ctype
+void ssim2mysql::FCtype_Uninit(ssim2mysql::FCtype& parent) {
+    ind_ctype_Remove(parent); // remove ctype from index ind_ctype
 
     // ssim2mysql.FCtype.c_field.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(ctype.c_field_elems, sizeof(ssim2mysql::FField*)*ctype.c_field_max); // (ssim2mysql.FCtype.c_field)
+    algo_lib::malloc_FreeMem(parent.c_field_elems, sizeof(ssim2mysql::FField*)*parent.c_field_max); // (ssim2mysql.FCtype.c_field)
 }
 
 // --- ssim2mysql.FCtype..Print
@@ -927,6 +920,7 @@ void* ssim2mysql::cmd_AllocMem() {
     if (row) {
         _db.cmd_free = row->cmd_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(ssim2mysql::FCmd));
     return row;
 }
 
@@ -936,6 +930,7 @@ void ssim2mysql::cmd_FreeMem(ssim2mysql::FCmd &row) {
     if (UNLIKELY(row.cmd_next != (ssim2mysql::FCmd*)-1)) {
         FatalErrorExit("ssim2mysql.tpool_double_delete  pool:ssim2mysql.FDb.cmd  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(ssim2mysql::FCmd)); // before the free list threads through the element
     row.cmd_next = _db.cmd_free; // insert into free list
     _db.cmd_free  = &row;
 }
@@ -2366,6 +2361,7 @@ void* ssim2mysql::input_AllocMem() {
     if (row) {
         _db.input_free = row->input_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(ssim2mysql::FInput));
     return row;
 }
 
@@ -2375,6 +2371,7 @@ void ssim2mysql::input_FreeMem(ssim2mysql::FInput &row) {
     if (UNLIKELY(row.input_next != (ssim2mysql::FInput*)-1)) {
         FatalErrorExit("ssim2mysql.tpool_double_delete  pool:ssim2mysql.FDb.input  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(ssim2mysql::FInput)); // before the free list threads through the element
     row.input_next = _db.input_free; // insert into free list
     _db.input_free  = &row;
 }
@@ -2782,7 +2779,6 @@ void ssim2mysql::FDb_Init() {
 
 // --- ssim2mysql.FDb..Uninit
 void ssim2mysql::FDb_Uninit() {
-    ssim2mysql::FDb &row = _db; (void)row;
 
     // ssim2mysql.FDb.ind_ssimfile.Uninit (Thash)  //
     // skip destruction of ind_ssimfile in global scope
@@ -2845,43 +2841,42 @@ void ssim2mysql::field_CopyIn(ssim2mysql::FField &row, dmmeta::Field &in) {
 }
 
 // --- ssim2mysql.FField.ctype.Get
-algo::strptr ssim2mysql::ctype_Get(ssim2mysql::FField& field) {
-    return algo::Pathcomp(field.field, ".RL");
+algo::strptr ssim2mysql::ctype_Get(ssim2mysql::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- ssim2mysql.FField.ns.Get
-algo::strptr ssim2mysql::ns_Get(ssim2mysql::FField& field) {
-    return algo::Pathcomp(field.field, ".RL.RL");
+algo::strptr ssim2mysql::ns_Get(ssim2mysql::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL.RL");
 }
 
 // --- ssim2mysql.FField.name.Get
-algo::strptr ssim2mysql::name_Get(ssim2mysql::FField& field) {
-    return algo::Pathcomp(field.field, ".RR");
+algo::strptr ssim2mysql::name_Get(ssim2mysql::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RR");
 }
 
 // --- ssim2mysql.FField..Init
 // Set all fields to initial values.
-void ssim2mysql::FField_Init(ssim2mysql::FField& field) {
-    field.reftype = algo::strptr("Val");
-    field.p_ctype = NULL;
-    field.p_arg = NULL;
-    field.c_cppfunc = NULL;
-    field.c_substr = NULL;
-    field.select = bool(false);
-    field.is_pkeyref = bool(false);
-    field.ctype_c_field_in_ary = bool(false);
-    field.ind_field_next = (ssim2mysql::FField*)-1; // (ssim2mysql.FDb.ind_field) not-in-hash
-    field.ind_field_hashval = 0; // stored hash value
+void ssim2mysql::FField_Init(ssim2mysql::FField& parent) {
+    parent.reftype = algo::strptr("Val");
+    parent.p_ctype = NULL;
+    parent.p_arg = NULL;
+    parent.c_cppfunc = NULL;
+    parent.c_substr = NULL;
+    parent.select = bool(false);
+    parent.is_pkeyref = bool(false);
+    parent.ctype_c_field_in_ary = bool(false);
+    parent.ind_field_next = (ssim2mysql::FField*)-1; // (ssim2mysql.FDb.ind_field) not-in-hash
+    parent.ind_field_hashval = 0; // stored hash value
 }
 
 // --- ssim2mysql.FField..Uninit
-void ssim2mysql::FField_Uninit(ssim2mysql::FField& field) {
-    ssim2mysql::FField &row = field; (void)row;
-    ssim2mysql::FCtype* p_ctype = ssim2mysql::ind_ctype_Find(ctype_Get(row));
+void ssim2mysql::FField_Uninit(ssim2mysql::FField& parent) {
+    ssim2mysql::FCtype* p_ctype = ssim2mysql::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_field_Remove(*p_ctype, row);// remove field from index c_field
+        c_field_Remove(*p_ctype, parent);// remove field from index c_field
     }
-    ind_field_Remove(row); // remove field from index ind_field
+    ind_field_Remove(parent); // remove field from index ind_field
 }
 
 // --- ssim2mysql.FField..Print
@@ -2926,25 +2921,25 @@ void ssim2mysql::FField_Print(ssim2mysql::FField& row, algo::cstring& str) {
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by ssim2mysql::FInput.in_buf via FIohook field.
-// Whenever the file descriptor becomes readable, insert input into cd_input_line.
-void ssim2mysql::in_buf_BeginRead(ssim2mysql::FInput& input, algo::Fildes fd) {
-    input.in_buf_iohook.fildes = fd;
-    callback_Set1(input.in_buf_iohook, input, ssim2mysql::cd_input_line_Insert);
+// Whenever the file descriptor becomes readable, insert parent into cd_input_line.
+void ssim2mysql::in_buf_BeginRead(ssim2mysql::FInput& parent, algo::Fildes fd) {
+    parent.in_buf_iohook.fildes = fd;
+    callback_Set1(parent.in_buf_iohook, parent, ssim2mysql::cd_input_line_Insert);
     IOEvtFlags flags;
     read_Set(flags, true);
-    if (input.in_buf_epoll_enable) {
-        algo_lib::IohookAdd(input.in_buf_iohook, flags);
+    if (parent.in_buf_epoll_enable) {
+        algo_lib::IohookAdd(parent.in_buf_iohook, flags);
     } else {
-        ssim2mysql::cd_input_line_Insert(input);
+        ssim2mysql::cd_input_line_Insert(parent);
     }
 }
 
 // --- ssim2mysql.FInput.in_buf.EndRead
 // Set EOF flag
-void ssim2mysql::in_buf_EndRead(ssim2mysql::FInput& input) {
-    if (ValidQ(input.in_buf_iohook.fildes)) {
-        input.in_buf_eof = true;
-        ssim2mysql::cd_input_line_Insert(input);
+void ssim2mysql::in_buf_EndRead(ssim2mysql::FInput& parent) {
+    if (ValidQ(parent.in_buf_iohook.fildes)) {
+        parent.in_buf_eof = true;
+        ssim2mysql::cd_input_line_Insert(parent);
     }
 }
 
@@ -2960,21 +2955,21 @@ void ssim2mysql::in_buf_EndRead(ssim2mysql::FInput& input) {
 // SkipMsg will skip both the line and the delimiter.
 // A partial line at the end of input is NOT returned.
 // 
-algo::aryptr<char> ssim2mysql::in_buf_GetMsg(ssim2mysql::FInput& input) {
+algo::aryptr<char> ssim2mysql::in_buf_GetMsg(ssim2mysql::FInput& parent) {
     algo::aryptr<char> ret;
-    if (!input.in_buf_msgvalid) {
-        in_buf_ScanMsg(input);
-        if (!input.in_buf_msgvalid) {
-            bool readable = in_buf_Refill(input);
+    if (!parent.in_buf_msgvalid) {
+        in_buf_ScanMsg(parent);
+        if (!parent.in_buf_msgvalid) {
+            bool readable = in_buf_Refill(parent);
             if (readable) {
-                in_buf_ScanMsg(input);
+                in_buf_ScanMsg(parent);
             }
         }
     }
-    char *hdr = (char*)(input.in_buf_elems + input.in_buf_start);
-    if (input.in_buf_msgvalid) {
+    char *hdr = (char*)(parent.in_buf_elems + parent.in_buf_start);
+    if (parent.in_buf_msgvalid) {
         ret.elems = hdr;
-        ret.n_elems = input.in_buf_msglen;
+        ret.n_elems = parent.in_buf_msglen;
     }
     return ret;
 }
@@ -2984,45 +2979,56 @@ algo::aryptr<char> ssim2mysql::in_buf_GetMsg(ssim2mysql::FInput& input) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void ssim2mysql::in_buf_Realloc(ssim2mysql::FInput& input, int new_max) {
-    new_max = i32_Max(new_max, input.in_buf_end);
-    u8 *new_mem = input.in_buf_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(input.in_buf_elems, input.in_buf_max, new_max)
+void ssim2mysql::in_buf_Realloc(ssim2mysql::FInput& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_buf_end);
+    u8 *new_mem = parent.in_buf_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_buf_elems, parent.in_buf_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("ssim2mysql.fbuf_nomem  field:ssim2mysql.FInput.in_buf  comment:'out of memory'");
     }
-    input.in_buf_elems = new_mem;
-    input.in_buf_max = new_max;
+    parent.in_buf_elems = new_mem;
+    parent.in_buf_max = new_max;
 }
 
 // --- ssim2mysql.FInput.in_buf.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool ssim2mysql::in_buf_Refill(ssim2mysql::FInput& input) {
-    bool readable = ValidQ(input.in_buf_iohook.fildes);
+bool ssim2mysql::in_buf_Refill(ssim2mysql::FInput& parent) {
+    bool readable = ValidQ(parent.in_buf_iohook.fildes);
     if (readable) {
-        int fd     = input.in_buf_iohook.fildes.value;
-        i32 max    = in_buf_Max(input);
-        i32 end    = input.in_buf_end;
-        i32 nbytes = end - input.in_buf_start; // # bytes currently in buffer
+        int fd     = parent.in_buf_iohook.fildes.value;
+        i32 max    = in_buf_Max(parent);
+        i32 end    = parent.in_buf_end;
+        i32 nbytes = end - parent.in_buf_start; // # bytes currently in buffer
         i32 nfree  = max - end; // bytes available at the end of buffer
         if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
-            in_buf_Shift(input);
-            end = input.in_buf_end;
+            in_buf_Shift(parent);
+            end = parent.in_buf_end;
             nfree = max - end;
         }
-        ssize_t ret         = read(fd, input.in_buf_elems + end, nfree);
-        readable            = !(ret < 0 && errno == EAGAIN);
-        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
-        bool eof            = error || (ret == 0 && nfree > 0);
-        input.in_buf_end += i32_Max(ret,0); // new end of bytes
-        if (error) {
-            input.in_buf_err = algo::FromErrno(errno); // fetch errno
+        if (nfree == 0) {
+            // The buffer is full and holds no complete message, so the framing
+            // asked for one larger than the buffer can ever hold and the connection
+            // cannot make progress.  A read into zero room returns zero without eof,
+            // which would pin the connection on the read list and spin the loop, so
+            // it is retired here instead.
+            parent.in_buf_eof = true;
+            parent.in_buf_err = algo::FromErrno(E2BIG);
+            readable = false;
+        } else {
+            ssize_t ret         = read(fd, parent.in_buf_elems + end, nfree);
+            readable            = !(ret < 0 && errno == EAGAIN);
+            bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
+            bool eof            = error || ret == 0;
+            parent.in_buf_end += i32_Max(ret,0); // new end of bytes
+            if (error) {
+                parent.in_buf_err = algo::FromErrno(errno); // fetch errno
+            }
+            parent.in_buf_eof |= eof;
         }
-        input.in_buf_eof |= eof;
     }
-    if (!readable && input.in_buf_epoll_enable) {
-        ssim2mysql::cd_input_line_Remove(input);
+    if (!readable && parent.in_buf_epoll_enable) {
+        ssim2mysql::cd_input_line_Remove(parent);
     }
     return readable;
 }
@@ -3030,74 +3036,74 @@ bool ssim2mysql::in_buf_Refill(ssim2mysql::FInput& input) {
 // --- ssim2mysql.FInput.in_buf.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void ssim2mysql::in_buf_RemoveAll(ssim2mysql::FInput& input) {
-    input.in_buf_start    = 0;
-    input.in_buf_end      = 0;
-    input.in_buf_msgvalid = false;
+void ssim2mysql::in_buf_RemoveAll(ssim2mysql::FInput& parent) {
+    parent.in_buf_start    = 0;
+    parent.in_buf_end      = 0;
+    parent.in_buf_msgvalid = false;
 }
 
 // --- ssim2mysql.FInput.in_buf.ScanMsg
 // Internal function to scan for a message
 // 
-static void ssim2mysql::in_buf_ScanMsg(ssim2mysql::FInput& input) {
-    char *hdr = (char*)(input.in_buf_elems + input.in_buf_start);
-    i32 avail = in_buf_N(input);
+static void ssim2mysql::in_buf_ScanMsg(ssim2mysql::FInput& parent) {
+    char *hdr = (char*)(parent.in_buf_elems + parent.in_buf_start);
+    i32 avail = in_buf_N(parent);
     i32 msglen;
     bool found = false;
     // scan for delimiter starting from the previous place where we left off.
-    // at the end, save offset back to input so we don't have to re-scan.
+    // at the end, save offset back to parent so we don't have to re-scan.
     // returned message length **does not include delimiter**.
     // a line that exceeds buffer length is not returned.
-    for (msglen = input.in_buf_msglen; msglen < avail; msglen += sizeof(char)) {
+    for (msglen = parent.in_buf_msglen; msglen < avail; msglen += sizeof(char)) {
         if (hdr[msglen] == '\n') { // delimiter?
             found = true;
             break;
         }
     }
-    if (!found && msglen >= in_buf_Max(input)) {
-        input.in_buf_eof = true; // cause user to detect eof
-        input.in_buf_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    if (!found && msglen >= in_buf_Max(parent)) {
+        parent.in_buf_eof = true; // cause user to detect eof
+        parent.in_buf_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
     }
-    input.in_buf_msglen = msglen;
-    input.in_buf_msgvalid = found;
+    parent.in_buf_msglen = msglen;
+    parent.in_buf_msgvalid = found;
 }
 
 // --- ssim2mysql.FInput.in_buf.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void ssim2mysql::in_buf_Shift(ssim2mysql::FInput& input) {
-    i32 start = input.in_buf_start;
-    i32 bytes_n = input.in_buf_end - start;
+static void ssim2mysql::in_buf_Shift(ssim2mysql::FInput& parent) {
+    i32 start = parent.in_buf_start;
+    i32 bytes_n = parent.in_buf_end - start;
     if (bytes_n > 0) {
-        memmove(input.in_buf_elems, input.in_buf_elems + start, bytes_n);
+        memmove(parent.in_buf_elems, parent.in_buf_elems + start, bytes_n);
     }
-    input.in_buf_end = bytes_n;
-    input.in_buf_start = 0;
+    parent.in_buf_end = bytes_n;
+    parent.in_buf_start = 0;
 }
 
 // --- ssim2mysql.FInput.in_buf.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void ssim2mysql::in_buf_SkipBytes(ssim2mysql::FInput& input, int n) {
-    int avail = input.in_buf_end - input.in_buf_start;
+void ssim2mysql::in_buf_SkipBytes(ssim2mysql::FInput& parent, int n) {
+    int avail = parent.in_buf_end - parent.in_buf_start;
     n = i32_Min(n,avail);
-    input.in_buf_start += n;
-    input.in_buf_msgvalid = false;
+    parent.in_buf_start += n;
+    parent.in_buf_msgvalid = false;
 }
 
 // --- ssim2mysql.FInput.in_buf.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void ssim2mysql::in_buf_SkipMsg(ssim2mysql::FInput& input) {
-    if (input.in_buf_msgvalid) {
-        int skip = input.in_buf_msglen;
+void ssim2mysql::in_buf_SkipMsg(ssim2mysql::FInput& parent) {
+    if (parent.in_buf_msgvalid) {
+        int skip = parent.in_buf_msglen;
         skip += ssizeof(char); // delimiter
-        i32 start = input.in_buf_start;
+        i32 start = parent.in_buf_start;
         start += skip;
-        input.in_buf_start = start;
-        input.in_buf_msgvalid = false;
-        input.in_buf_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_buf_start = start;
+        parent.in_buf_msgvalid = false;
+        parent.in_buf_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -3107,19 +3113,19 @@ void ssim2mysql::in_buf_SkipMsg(ssim2mysql::FInput& input) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool ssim2mysql::in_buf_WriteAll(ssim2mysql::FInput& input, u8 *in, i32 in_n) {
-    int max = in_buf_Max(input);
+bool ssim2mysql::in_buf_WriteAll(ssim2mysql::FInput& parent, u8 *in, i32 in_n) {
+    int max = in_buf_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (input.in_buf_end + in_n > max) {
-        in_buf_Shift(input);
+    if (parent.in_buf_end + in_n > max) {
+        in_buf_Shift(parent);
     }
     // now try to write the message.
-    i32 end = input.in_buf_end;
+    i32 end = parent.in_buf_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(input.in_buf_elems + end, in, in_n);
-            input.in_buf_end = end + in_n;
+            memcpy(parent.in_buf_elems + end, in, in_n);
+            parent.in_buf_end = end + in_n;
         }
     }
     return fits;
@@ -3128,43 +3134,42 @@ bool ssim2mysql::in_buf_WriteAll(ssim2mysql::FInput& input, u8 *in, i32 in_n) {
 // --- ssim2mysql.FInput.in_buf.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void ssim2mysql::in_buf_WriteReserve(ssim2mysql::FInput& input, u8 *in, i32 in_n) {
-    if (input.in_buf_end - input.in_buf_start + in_n > in_buf_Max(input)) {
-        in_buf_Realloc(input, input.in_buf_max + i32_Max(input.in_buf_max, in_n));
+void ssim2mysql::in_buf_WriteReserve(ssim2mysql::FInput& parent, u8 *in, i32 in_n) {
+    if (parent.in_buf_end - parent.in_buf_start + in_n > in_buf_Max(parent)) {
+        in_buf_Realloc(parent, parent.in_buf_max + i32_Max(parent.in_buf_max, in_n));
     }
-    if (!in_buf_WriteAll(input, in, in_n)) {
+    if (!in_buf_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in_buf: out of memory");
     }
 }
 
 // --- ssim2mysql.FInput..Init
 // Set all fields to initial values.
-void ssim2mysql::FInput_Init(ssim2mysql::FInput& input) {
-    input.in_buf_elems = NULL; // in_buf: initialize
-    input.in_buf_max = 0; // in_buf: initialize
-    input.in_buf_end = 0; // in_buf: initialize
-    input.in_buf_start = 0; // in_buf: initialize
-    input.in_buf_eof = false; // in_buf: initialize
-    input.in_buf_msgvalid = false; // in_buf: initialize
-    input.in_buf_msglen = 0; // in_buf: initialize
-    input.in_buf_epoll_enable = true; // in_buf: initialize
-    in_buf_Realloc(input, 65536);
-    input.input_next = (ssim2mysql::FInput*)-1; // (ssim2mysql.FDb.input) not-in-tpool's freelist
-    input.cd_input_line_next = (ssim2mysql::FInput*)-1; // (ssim2mysql.FDb.cd_input_line) not-in-list
-    input.cd_input_line_prev = NULL; // (ssim2mysql.FDb.cd_input_line)
+void ssim2mysql::FInput_Init(ssim2mysql::FInput& parent) {
+    parent.in_buf_elems = NULL; // in_buf: initialize
+    parent.in_buf_max = 0; // in_buf: initialize
+    parent.in_buf_end = 0; // in_buf: initialize
+    parent.in_buf_start = 0; // in_buf: initialize
+    parent.in_buf_eof = false; // in_buf: initialize
+    parent.in_buf_msgvalid = false; // in_buf: initialize
+    parent.in_buf_msglen = 0; // in_buf: initialize
+    parent.in_buf_epoll_enable = true; // in_buf: initialize
+    in_buf_Realloc(parent, 65536);
+    parent.input_next = (ssim2mysql::FInput*)-1; // (ssim2mysql.FDb.input) not-in-tpool's freelist
+    parent.cd_input_line_next = (ssim2mysql::FInput*)-1; // (ssim2mysql.FDb.cd_input_line) not-in-list
+    parent.cd_input_line_prev = NULL; // (ssim2mysql.FDb.cd_input_line)
 }
 
 // --- ssim2mysql.FInput..Uninit
-void ssim2mysql::FInput_Uninit(ssim2mysql::FInput& input) {
-    ssim2mysql::FInput &row = input; (void)row;
-    cd_input_line_Remove(row); // remove input from index cd_input_line
+void ssim2mysql::FInput_Uninit(ssim2mysql::FInput& parent) {
+    cd_input_line_Remove(parent); // remove input from index cd_input_line
 
     // ssim2mysql.FInput.in_buf.Uninit (Fbuf)  //Socket data comes here
-    if (input.in_buf_elems) {
-        algo_lib::malloc_FreeMem(input.in_buf_elems, input.in_buf_max); // (ssim2mysql.FInput.in_buf) in_buf_max is the byte size Realloc allocated
+    if (parent.in_buf_elems) {
+        algo_lib::malloc_FreeMem(parent.in_buf_elems, parent.in_buf_max); // (ssim2mysql.FInput.in_buf) in_buf_max is the byte size Realloc allocated
     }
-    input.in_buf_elems = NULL;
-    input.in_buf_max = 0;
+    parent.in_buf_elems = NULL;
+    parent.in_buf_max = 0;
 }
 
 // --- ssim2mysql.FInput..Print
@@ -3202,11 +3207,11 @@ void ssim2mysql::ns_CopyIn(ssim2mysql::FNs &row, dmmeta::Ns &in) {
 // --- ssim2mysql.FNs.c_ssimfile.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void ssim2mysql::c_ssimfile_Insert(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& row) {
+void ssim2mysql::c_ssimfile_Insert(ssim2mysql::FNs& parent, ssim2mysql::FSsimfile& row) {
     if (!row.ns_c_ssimfile_in_ary) {
-        c_ssimfile_Reserve(ns, 1);
-        u64 n  = ns.c_ssimfile_n++;
-        ns.c_ssimfile_elems[n] = &row;
+        c_ssimfile_Reserve(parent, 1);
+        u64 n  = parent.c_ssimfile_n++;
+        parent.c_ssimfile_elems[n] = &row;
         row.ns_c_ssimfile_in_ary = true;
     }
 }
@@ -3215,18 +3220,18 @@ void ssim2mysql::c_ssimfile_Insert(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& r
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool ssim2mysql::c_ssimfile_InsertMaybe(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& row) {
+bool ssim2mysql::c_ssimfile_InsertMaybe(ssim2mysql::FNs& parent, ssim2mysql::FSsimfile& row) {
     bool retval = !ns_c_ssimfile_InAryQ(row);
-    c_ssimfile_Insert(ns,row); // check is performed in _Insert again
+    c_ssimfile_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- ssim2mysql.FNs.c_ssimfile.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void ssim2mysql::c_ssimfile_Remove(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& row) {
-    i64 n = ns.c_ssimfile_n;
+void ssim2mysql::c_ssimfile_Remove(ssim2mysql::FNs& parent, ssim2mysql::FSsimfile& row) {
+    i64 n = parent.c_ssimfile_n;
     if (bool_Update(row.ns_c_ssimfile_in_ary,false)) {
-        ssim2mysql::FSsimfile* *elems = ns.c_ssimfile_elems;
+        ssim2mysql::FSsimfile* *elems = parent.c_ssimfile_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -3235,7 +3240,7 @@ void ssim2mysql::c_ssimfile_Remove(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& r
                 i64 j = i + 1;
                 size_t nbytes = sizeof(ssim2mysql::FSsimfile*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_ssimfile_n = n - 1;
+                parent.c_ssimfile_n = n - 1;
                 break;
             }
         }
@@ -3244,28 +3249,27 @@ void ssim2mysql::c_ssimfile_Remove(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& r
 
 // --- ssim2mysql.FNs.c_ssimfile.Reserve
 // Reserve space in index for N more elements;
-void ssim2mysql::c_ssimfile_Reserve(ssim2mysql::FNs& ns, u64 n) {
-    u64 old_max = ns.c_ssimfile_max;
-    if (UNLIKELY(ns.c_ssimfile_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_ssimfile_n + n), 4);
+void ssim2mysql::c_ssimfile_Reserve(ssim2mysql::FNs& parent, u64 n) {
+    u64 old_max = parent.c_ssimfile_max;
+    if (UNLIKELY(parent.c_ssimfile_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_ssimfile_n + n), 4);
         u64 old_size = old_max * sizeof(ssim2mysql::FSsimfile*);
         u64 new_size = new_max * sizeof(ssim2mysql::FSsimfile*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ns.c_ssimfile_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_ssimfile_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("ssim2mysql.out_of_memory  field:ssim2mysql.FNs.c_ssimfile");
         }
-        ns.c_ssimfile_elems = (ssim2mysql::FSsimfile**)new_mem;
-        ns.c_ssimfile_max = new_max;
+        parent.c_ssimfile_elems = (ssim2mysql::FSsimfile**)new_mem;
+        parent.c_ssimfile_max = new_max;
     }
 }
 
 // --- ssim2mysql.FNs..Uninit
-void ssim2mysql::FNs_Uninit(ssim2mysql::FNs& ns) {
-    ssim2mysql::FNs &row = ns; (void)row;
-    ind_ns_Remove(row); // remove ns from index ind_ns
+void ssim2mysql::FNs_Uninit(ssim2mysql::FNs& parent) {
+    ind_ns_Remove(parent); // remove ns from index ind_ns
 
     // ssim2mysql.FNs.c_ssimfile.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(ns.c_ssimfile_elems, sizeof(ssim2mysql::FSsimfile*)*ns.c_ssimfile_max); // (ssim2mysql.FNs.c_ssimfile)
+    algo_lib::malloc_FreeMem(parent.c_ssimfile_elems, sizeof(ssim2mysql::FSsimfile*)*parent.c_ssimfile_max); // (ssim2mysql.FNs.c_ssimfile)
 }
 
 // --- ssim2mysql.FNs..Print
@@ -3305,11 +3309,10 @@ void ssim2mysql::sqltype_CopyIn(ssim2mysql::FSqltype &row, dmmeta::Sqltype &in) 
 }
 
 // --- ssim2mysql.FSqltype..Uninit
-void ssim2mysql::FSqltype_Uninit(ssim2mysql::FSqltype& sqltype) {
-    ssim2mysql::FSqltype &row = sqltype; (void)row;
-    ssim2mysql::FCtype* p_ctype = ssim2mysql::ind_ctype_Find(row.ctype);
+void ssim2mysql::FSqltype_Uninit(ssim2mysql::FSqltype& parent) {
+    ssim2mysql::FCtype* p_ctype = ssim2mysql::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_sqltype_Remove(*p_ctype, row);// remove sqltype from index c_sqltype
+        c_sqltype_Remove(*p_ctype, parent);// remove sqltype from index c_sqltype
     }
 }
 
@@ -3345,28 +3348,28 @@ void ssim2mysql::ssimfile_CopyIn(ssim2mysql::FSsimfile &row, dmmeta::Ssimfile &i
 }
 
 // --- ssim2mysql.FSsimfile.ssimns.Get
-algo::strptr ssim2mysql::ssimns_Get(ssim2mysql::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr ssim2mysql::ssimns_Get(ssim2mysql::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- ssim2mysql.FSsimfile.ns.Get
-algo::strptr ssim2mysql::ns_Get(ssim2mysql::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr ssim2mysql::ns_Get(ssim2mysql::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- ssim2mysql.FSsimfile.name.Get
-algo::strptr ssim2mysql::name_Get(ssim2mysql::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
+algo::strptr ssim2mysql::name_Get(ssim2mysql::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".RR");
 }
 
 // --- ssim2mysql.FSsimfile.c_column.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void ssim2mysql::c_column_Insert(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FColumn& row) {
+void ssim2mysql::c_column_Insert(ssim2mysql::FSsimfile& parent, ssim2mysql::FColumn& row) {
     if (!row.ssimfile_c_column_in_ary) {
-        c_column_Reserve(ssimfile, 1);
-        u64 n  = ssimfile.c_column_n++;
-        ssimfile.c_column_elems[n] = &row;
+        c_column_Reserve(parent, 1);
+        u64 n  = parent.c_column_n++;
+        parent.c_column_elems[n] = &row;
         row.ssimfile_c_column_in_ary = true;
     }
 }
@@ -3375,18 +3378,18 @@ void ssim2mysql::c_column_Insert(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FC
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool ssim2mysql::c_column_InsertMaybe(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FColumn& row) {
+bool ssim2mysql::c_column_InsertMaybe(ssim2mysql::FSsimfile& parent, ssim2mysql::FColumn& row) {
     bool retval = !ssimfile_c_column_InAryQ(row);
-    c_column_Insert(ssimfile,row); // check is performed in _Insert again
+    c_column_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- ssim2mysql.FSsimfile.c_column.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void ssim2mysql::c_column_Remove(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FColumn& row) {
-    i64 n = ssimfile.c_column_n;
+void ssim2mysql::c_column_Remove(ssim2mysql::FSsimfile& parent, ssim2mysql::FColumn& row) {
+    i64 n = parent.c_column_n;
     if (bool_Update(row.ssimfile_c_column_in_ary,false)) {
-        ssim2mysql::FColumn* *elems = ssimfile.c_column_elems;
+        ssim2mysql::FColumn* *elems = parent.c_column_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -3395,7 +3398,7 @@ void ssim2mysql::c_column_Remove(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FC
                 i64 j = i + 1;
                 size_t nbytes = sizeof(ssim2mysql::FColumn*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ssimfile.c_column_n = n - 1;
+                parent.c_column_n = n - 1;
                 break;
             }
         }
@@ -3404,53 +3407,52 @@ void ssim2mysql::c_column_Remove(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FC
 
 // --- ssim2mysql.FSsimfile.c_column.Reserve
 // Reserve space in index for N more elements;
-void ssim2mysql::c_column_Reserve(ssim2mysql::FSsimfile& ssimfile, u64 n) {
-    u64 old_max = ssimfile.c_column_max;
-    if (UNLIKELY(ssimfile.c_column_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ssimfile.c_column_n + n), 4);
+void ssim2mysql::c_column_Reserve(ssim2mysql::FSsimfile& parent, u64 n) {
+    u64 old_max = parent.c_column_max;
+    if (UNLIKELY(parent.c_column_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_column_n + n), 4);
         u64 old_size = old_max * sizeof(ssim2mysql::FColumn*);
         u64 new_size = new_max * sizeof(ssim2mysql::FColumn*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ssimfile.c_column_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_column_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("ssim2mysql.out_of_memory  field:ssim2mysql.FSsimfile.c_column");
         }
-        ssimfile.c_column_elems = (ssim2mysql::FColumn**)new_mem;
-        ssimfile.c_column_max = new_max;
+        parent.c_column_elems = (ssim2mysql::FColumn**)new_mem;
+        parent.c_column_max = new_max;
     }
 }
 
 // --- ssim2mysql.FSsimfile..Init
 // Set all fields to initial values.
-void ssim2mysql::FSsimfile_Init(ssim2mysql::FSsimfile& ssimfile) {
-    ssimfile.select = bool(false);
-    ssimfile.p_ctype = NULL;
-    ssimfile.truncated = bool(false);
-    ssimfile.c_column_elems = NULL; // (ssim2mysql.FSsimfile.c_column)
-    ssimfile.c_column_n = 0; // (ssim2mysql.FSsimfile.c_column)
-    ssimfile.c_column_max = 0; // (ssim2mysql.FSsimfile.c_column)
-    ssimfile.ns_c_ssimfile_in_ary = bool(false);
-    ssimfile.ind_ssimfile_next = (ssim2mysql::FSsimfile*)-1; // (ssim2mysql.FDb.ind_ssimfile) not-in-hash
-    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
-    ssimfile.zd_ssimfile_next = (ssim2mysql::FSsimfile*)-1; // (ssim2mysql.FDb.zd_ssimfile) not-in-list
-    ssimfile.zd_ssimfile_prev = NULL; // (ssim2mysql.FDb.zd_ssimfile)
+void ssim2mysql::FSsimfile_Init(ssim2mysql::FSsimfile& parent) {
+    parent.select = bool(false);
+    parent.p_ctype = NULL;
+    parent.truncated = bool(false);
+    parent.c_column_elems = NULL; // (ssim2mysql.FSsimfile.c_column)
+    parent.c_column_n = 0; // (ssim2mysql.FSsimfile.c_column)
+    parent.c_column_max = 0; // (ssim2mysql.FSsimfile.c_column)
+    parent.ns_c_ssimfile_in_ary = bool(false);
+    parent.ind_ssimfile_next = (ssim2mysql::FSsimfile*)-1; // (ssim2mysql.FDb.ind_ssimfile) not-in-hash
+    parent.ind_ssimfile_hashval = 0; // stored hash value
+    parent.zd_ssimfile_next = (ssim2mysql::FSsimfile*)-1; // (ssim2mysql.FDb.zd_ssimfile) not-in-list
+    parent.zd_ssimfile_prev = NULL; // (ssim2mysql.FDb.zd_ssimfile)
 }
 
 // --- ssim2mysql.FSsimfile..Uninit
-void ssim2mysql::FSsimfile_Uninit(ssim2mysql::FSsimfile& ssimfile) {
-    ssim2mysql::FSsimfile &row = ssimfile; (void)row;
-    ssim2mysql::FCtype* p_ctype = ssim2mysql::ind_ctype_Find(row.ctype);
+void ssim2mysql::FSsimfile_Uninit(ssim2mysql::FSsimfile& parent) {
+    ssim2mysql::FCtype* p_ctype = ssim2mysql::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_ssimfile_Remove(*p_ctype, row);// remove ssimfile from index c_ssimfile
+        c_ssimfile_Remove(*p_ctype, parent);// remove ssimfile from index c_ssimfile
     }
-    ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
-    zd_ssimfile_Remove(row); // remove ssimfile from index zd_ssimfile
-    ssim2mysql::FNs* p_ns = ssim2mysql::ind_ns_Find(ns_Get(row));
+    ind_ssimfile_Remove(parent); // remove ssimfile from index ind_ssimfile
+    zd_ssimfile_Remove(parent); // remove ssimfile from index zd_ssimfile
+    ssim2mysql::FNs* p_ns = ssim2mysql::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_ssimfile_Remove(*p_ns, row);// remove ssimfile from index c_ssimfile
+        c_ssimfile_Remove(*p_ns, parent);// remove ssimfile from index c_ssimfile
     }
 
     // ssim2mysql.FSsimfile.c_column.Uninit (Ptrary)  //List of columns
-    algo_lib::malloc_FreeMem(ssimfile.c_column_elems, sizeof(ssim2mysql::FColumn*)*ssimfile.c_column_max); // (ssim2mysql.FSsimfile.c_column)
+    algo_lib::malloc_FreeMem(parent.c_column_elems, sizeof(ssim2mysql::FColumn*)*parent.c_column_max); // (ssim2mysql.FSsimfile.c_column)
 }
 
 // --- ssim2mysql.FSsimfile..Print
@@ -3493,11 +3495,10 @@ void ssim2mysql::substr_CopyIn(ssim2mysql::FSubstr &row, dmmeta::Substr &in) {
 }
 
 // --- ssim2mysql.FSubstr..Uninit
-void ssim2mysql::FSubstr_Uninit(ssim2mysql::FSubstr& substr) {
-    ssim2mysql::FSubstr &row = substr; (void)row;
-    ssim2mysql::FField* p_field = ssim2mysql::ind_field_Find(row.field);
+void ssim2mysql::FSubstr_Uninit(ssim2mysql::FSubstr& parent) {
+    ssim2mysql::FField* p_field = ssim2mysql::ind_field_Find(parent.field);
     if (p_field)  {
-        c_substr_Remove(*p_field, row);// remove substr from index c_substr
+        c_substr_Remove(*p_field, parent);// remove substr from index c_substr
     }
 }
 
@@ -3762,7 +3763,6 @@ void ssim2mysql::StaticCheck() {
 // --- ssim2mysql...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_mysql::FDb_Init();
         ssim2mysql::FDb_Init();
@@ -3783,7 +3783,6 @@ int main(int argc, char **argv) {
         ssim2mysql::FDb_Uninit();
         lib_mysql::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

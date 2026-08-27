@@ -261,8 +261,8 @@ inline acr_my::FSsimfile& acr_my::_db_ssimfile_curs_Access(_db_ssimfile_curs &cu
 
 // --- acr_my.FNsdb..Init
 // Set all fields to initial values.
-inline void acr_my::FNsdb_Init(acr_my::FNsdb& nsdb) {
-    nsdb.select = bool(false);
+inline void acr_my::FNsdb_Init(acr_my::FNsdb& parent) {
+    parent.select = bool(false);
 }
 
 // --- acr_my.FNsdb..Ctor

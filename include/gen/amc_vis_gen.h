@@ -163,50 +163,50 @@ void                 ctype_CopyOut(amc_vis::FCtype &row, dmmeta::Ctype &out) __a
 void                 ctype_CopyIn(amc_vis::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:amc_vis.FCtype.ns.Get
-algo::strptr         ns_Get(amc_vis::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc_vis::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc_vis.FCtype.name.Get
-algo::strptr         name_Get(amc_vis::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc_vis::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:amc_vis.FCtype.c_field.EmptyQ
-inline bool          c_field_EmptyQ(amc_vis::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_field_EmptyQ(amc_vis::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc_vis.FCtype.c_field.Find
-inline amc_vis::FField* c_field_Find(amc_vis::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc_vis::FField* c_field_Find(amc_vis::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc_vis.FCtype.c_field.Getary
-inline algo::aryptr<amc_vis::FField*> c_field_Getary(amc_vis::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc_vis::FField*> c_field_Getary(amc_vis::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc_vis.FCtype.c_field.Insert
-void                 c_field_Insert(amc_vis::FCtype& ctype, amc_vis::FField& row) __attribute__((nothrow));
+void                 c_field_Insert(amc_vis::FCtype& parent, amc_vis::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc_vis.FCtype.c_field.InsertMaybe
-bool                 c_field_InsertMaybe(amc_vis::FCtype& ctype, amc_vis::FField& row) __attribute__((nothrow));
+bool                 c_field_InsertMaybe(amc_vis::FCtype& parent, amc_vis::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc_vis.FCtype.c_field.N
-inline i64           c_field_N(const amc_vis::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_N(const amc_vis::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc_vis.FCtype.c_field.Remove
-void                 c_field_Remove(amc_vis::FCtype& ctype, amc_vis::FField& row) __attribute__((nothrow));
+void                 c_field_Remove(amc_vis::FCtype& parent, amc_vis::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc_vis.FCtype.c_field.RemoveAll
-inline void          c_field_RemoveAll(amc_vis::FCtype& ctype) __attribute__((nothrow));
+inline void          c_field_RemoveAll(amc_vis::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc_vis.FCtype.c_field.Reserve
-void                 c_field_Reserve(amc_vis::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_field_Reserve(amc_vis::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc_vis.FCtype.c_field.qFind
-inline amc_vis::FField& c_field_qFind(amc_vis::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc_vis::FField& c_field_qFind(amc_vis::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc_vis.FCtype.c_field.InAryQ
 inline bool          ctype_c_field_InAryQ(amc_vis::FField& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc_vis.FCtype.c_field.qLast
-inline amc_vis::FField& c_field_qLast(amc_vis::FCtype& ctype) __attribute__((nothrow));
+inline amc_vis::FField& c_field_qLast(amc_vis::FCtype& parent) __attribute__((nothrow));
 
 // func:amc_vis.FCtype.c_field_curs.Reset
 inline void          ctype_c_field_curs_Reset(ctype_c_field_curs &curs, amc_vis::FCtype &parent) __attribute__((nothrow));
@@ -221,9 +221,9 @@ inline void          ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribu
 inline amc_vis::FField& ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc_vis.FCtype..Init
-void                 FCtype_Init(amc_vis::FCtype& ctype);
+void                 FCtype_Init(amc_vis::FCtype& parent);
 // func:amc_vis.FCtype..Uninit
-void                 FCtype_Uninit(amc_vis::FCtype& ctype) __attribute__((nothrow));
+void                 FCtype_Uninit(amc_vis::FCtype& parent) __attribute__((nothrow));
 
 // --- amc_vis.trace
 #pragma pack(push,1)
@@ -1217,26 +1217,26 @@ void                 field_CopyOut(amc_vis::FField &row, dmmeta::Field &out) __a
 void                 field_CopyIn(amc_vis::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:amc_vis.FField.ctype.Get
-algo::strptr         ctype_Get(amc_vis::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc_vis::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc_vis.FField.ns.Get
-algo::strptr         ns_Get(amc_vis::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc_vis::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc_vis.FField.name.Get
-algo::strptr         name_Get(amc_vis::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc_vis::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc_vis.FField.c_finput.InsertMaybe
-inline bool          c_finput_InsertMaybe(amc_vis::FField& field, amc_vis::FFinput& row) __attribute__((nothrow));
+inline bool          c_finput_InsertMaybe(amc_vis::FField& parent, amc_vis::FFinput& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc_vis.FField.c_finput.Remove
-inline void          c_finput_Remove(amc_vis::FField& field, amc_vis::FFinput& row) __attribute__((nothrow));
+inline void          c_finput_Remove(amc_vis::FField& parent, amc_vis::FFinput& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc_vis.FField..Init
-void                 FField_Init(amc_vis::FField& field);
+void                 FField_Init(amc_vis::FField& parent);
 // func:amc_vis.FField..Uninit
-void                 FField_Uninit(amc_vis::FField& field) __attribute__((nothrow));
+void                 FField_Uninit(amc_vis::FField& parent) __attribute__((nothrow));
 
 // --- amc_vis.FFinput
 // create: amc_vis.FDb.finput (Lary)
@@ -1268,13 +1268,13 @@ void                 finput_CopyOut(amc_vis::FFinput &row, dmmeta::Finput &out) 
 void                 finput_CopyIn(amc_vis::FFinput &row, dmmeta::Finput &in) __attribute__((nothrow));
 
 // func:amc_vis.FFinput.ns.Get
-algo::strptr         ns_Get(amc_vis::FFinput& finput) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc_vis::FFinput& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc_vis.FFinput..Init
-inline void          FFinput_Init(amc_vis::FFinput& finput);
+inline void          FFinput_Init(amc_vis::FFinput& parent);
 // func:amc_vis.FFinput..Uninit
-void                 FFinput_Uninit(amc_vis::FFinput& finput) __attribute__((nothrow));
+void                 FFinput_Uninit(amc_vis::FFinput& parent) __attribute__((nothrow));
 
 // --- amc_vis.Linkkey
 struct Linkkey { // amc_vis.Linkkey: Heap key for selecting next link to render - fields quantify selection criteria
@@ -1370,26 +1370,26 @@ private:
 };
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:amc_vis.FLink.linkkey.Lt
-inline bool          linkkey_Lt(amc_vis::FLink& link, amc_vis::FLink &rhs) __attribute__((nothrow));
+inline bool          linkkey_Lt(amc_vis::FLink& parent, amc_vis::FLink &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:amc_vis.FLink.linkkey.Cmp
-inline i32           linkkey_Cmp(amc_vis::FLink& link, amc_vis::FLink &rhs) __attribute__((nothrow));
+inline i32           linkkey_Cmp(amc_vis::FLink& parent, amc_vis::FLink &rhs) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc_vis.FLink.zd_linkdep_out.EmptyQ
-inline bool          zd_linkdep_out_EmptyQ(amc_vis::FLink& link) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_linkdep_out_EmptyQ(amc_vis::FLink& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc_vis.FLink.zd_linkdep_out.First
-inline amc_vis::FLinkdep* zd_linkdep_out_First(amc_vis::FLink& link) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FLinkdep* zd_linkdep_out_First(amc_vis::FLink& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc_vis.FLink.zd_linkdep_out.InLlistQ
 inline bool          link_zd_linkdep_out_InLlistQ(amc_vis::FLinkdep& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc_vis.FLink.zd_linkdep_out.Insert
-void                 zd_linkdep_out_Insert(amc_vis::FLink& link, amc_vis::FLinkdep& row) __attribute__((nothrow));
+void                 zd_linkdep_out_Insert(amc_vis::FLink& parent, amc_vis::FLinkdep& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc_vis.FLink.zd_linkdep_out.Last
-inline amc_vis::FLinkdep* zd_linkdep_out_Last(amc_vis::FLink& link) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FLinkdep* zd_linkdep_out_Last(amc_vis::FLink& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc_vis.FLink.zd_linkdep_out.Next
 inline amc_vis::FLinkdep* link_zd_linkdep_out_Next(amc_vis::FLinkdep &row) __attribute__((__warn_unused_result__, nothrow));
@@ -1398,35 +1398,35 @@ inline amc_vis::FLinkdep* link_zd_linkdep_out_Next(amc_vis::FLinkdep &row) __att
 inline amc_vis::FLinkdep* link_zd_linkdep_out_Prev(amc_vis::FLinkdep &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc_vis.FLink.zd_linkdep_out.Remove
-void                 zd_linkdep_out_Remove(amc_vis::FLink& link, amc_vis::FLinkdep& row) __attribute__((nothrow));
+void                 zd_linkdep_out_Remove(amc_vis::FLink& parent, amc_vis::FLinkdep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc_vis.FLink.zd_linkdep_out.RemoveAll
-void                 zd_linkdep_out_RemoveAll(amc_vis::FLink& link) __attribute__((nothrow));
+void                 zd_linkdep_out_RemoveAll(amc_vis::FLink& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc_vis.FLink.zd_linkdep_out.RemoveFirst
-amc_vis::FLinkdep*   zd_linkdep_out_RemoveFirst(amc_vis::FLink& link) __attribute__((nothrow));
+amc_vis::FLinkdep*   zd_linkdep_out_RemoveFirst(amc_vis::FLink& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc_vis.FLink.zd_linkdep_out.qLast
-inline amc_vis::FLinkdep& zd_linkdep_out_qLast(amc_vis::FLink& link) __attribute__((__warn_unused_result__, nothrow));
+inline amc_vis::FLinkdep& zd_linkdep_out_qLast(amc_vis::FLink& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc_vis.FLink.zd_linkdep_out.InsertBefore
-void                 zd_linkdep_out_InsertBefore(amc_vis::FLink& link, amc_vis::FLinkdep& row, amc_vis::FLinkdep* before) __attribute__((nothrow));
+void                 zd_linkdep_out_InsertBefore(amc_vis::FLink& parent, amc_vis::FLinkdep& row, amc_vis::FLinkdep* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc_vis.FLink.zd_linkdep_in.EmptyQ
-inline bool          zd_linkdep_in_EmptyQ(amc_vis::FLink& link) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_linkdep_in_EmptyQ(amc_vis::FLink& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc_vis.FLink.zd_linkdep_in.First
-inline amc_vis::FLinkdep* zd_linkdep_in_First(amc_vis::FLink& link) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FLinkdep* zd_linkdep_in_First(amc_vis::FLink& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc_vis.FLink.zd_linkdep_in.InLlistQ
 inline bool          link_zd_linkdep_in_InLlistQ(amc_vis::FLinkdep& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc_vis.FLink.zd_linkdep_in.Insert
-void                 zd_linkdep_in_Insert(amc_vis::FLink& link, amc_vis::FLinkdep& row) __attribute__((nothrow));
+void                 zd_linkdep_in_Insert(amc_vis::FLink& parent, amc_vis::FLinkdep& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc_vis.FLink.zd_linkdep_in.Last
-inline amc_vis::FLinkdep* zd_linkdep_in_Last(amc_vis::FLink& link) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FLinkdep* zd_linkdep_in_Last(amc_vis::FLink& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc_vis.FLink.zd_linkdep_in.Next
 inline amc_vis::FLinkdep* link_zd_linkdep_in_Next(amc_vis::FLinkdep &row) __attribute__((__warn_unused_result__, nothrow));
@@ -1435,23 +1435,23 @@ inline amc_vis::FLinkdep* link_zd_linkdep_in_Next(amc_vis::FLinkdep &row) __attr
 inline amc_vis::FLinkdep* link_zd_linkdep_in_Prev(amc_vis::FLinkdep &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc_vis.FLink.zd_linkdep_in.Remove
-void                 zd_linkdep_in_Remove(amc_vis::FLink& link, amc_vis::FLinkdep& row) __attribute__((nothrow));
+void                 zd_linkdep_in_Remove(amc_vis::FLink& parent, amc_vis::FLinkdep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc_vis.FLink.zd_linkdep_in.RemoveAll
-void                 zd_linkdep_in_RemoveAll(amc_vis::FLink& link) __attribute__((nothrow));
+void                 zd_linkdep_in_RemoveAll(amc_vis::FLink& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc_vis.FLink.zd_linkdep_in.RemoveFirst
-amc_vis::FLinkdep*   zd_linkdep_in_RemoveFirst(amc_vis::FLink& link) __attribute__((nothrow));
+amc_vis::FLinkdep*   zd_linkdep_in_RemoveFirst(amc_vis::FLink& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc_vis.FLink.zd_linkdep_in.qLast
-inline amc_vis::FLinkdep& zd_linkdep_in_qLast(amc_vis::FLink& link) __attribute__((__warn_unused_result__, nothrow));
+inline amc_vis::FLinkdep& zd_linkdep_in_qLast(amc_vis::FLink& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc_vis.FLink.zd_linkdep_in.InsertBefore
-void                 zd_linkdep_in_InsertBefore(amc_vis::FLink& link, amc_vis::FLinkdep& row, amc_vis::FLinkdep* before) __attribute__((nothrow));
+void                 zd_linkdep_in_InsertBefore(amc_vis::FLink& parent, amc_vis::FLinkdep& row, amc_vis::FLinkdep* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc_vis.FLink..Init
-void                 FLink_Init(amc_vis::FLink& link);
+void                 FLink_Init(amc_vis::FLink& parent);
 // cursor points to valid item
 // func:amc_vis.FLink.zd_linkdep_out_curs.Reset
 inline void          link_zd_linkdep_out_curs_Reset(link_zd_linkdep_out_curs &curs, amc_vis::FLink &parent) __attribute__((nothrow));
@@ -1477,7 +1477,7 @@ inline void          link_zd_linkdep_in_curs_Next(link_zd_linkdep_in_curs &curs)
 // func:amc_vis.FLink.zd_linkdep_in_curs.Access
 inline amc_vis::FLinkdep& link_zd_linkdep_in_curs_Access(link_zd_linkdep_in_curs &curs) __attribute__((nothrow));
 // func:amc_vis.FLink..Uninit
-void                 FLink_Uninit(amc_vis::FLink& link) __attribute__((nothrow));
+void                 FLink_Uninit(amc_vis::FLink& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:amc_vis.FLink.String  printfmt:Tuple
 // func:amc_vis.FLink..Print
@@ -1517,9 +1517,9 @@ private:
 };
 // Set all fields to initial values.
 // func:amc_vis.FLinkdep..Init
-inline void          FLinkdep_Init(amc_vis::FLinkdep& linkdep);
+inline void          FLinkdep_Init(amc_vis::FLinkdep& parent);
 // func:amc_vis.FLinkdep..Uninit
-void                 FLinkdep_Uninit(amc_vis::FLinkdep& linkdep) __attribute__((nothrow));
+void                 FLinkdep_Uninit(amc_vis::FLinkdep& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:amc_vis.FLinkdep.String  printfmt:Tuple
 // func:amc_vis.FLinkdep..Print
@@ -1622,26 +1622,26 @@ private:
 };
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:amc_vis.FNode.nodekey.Lt
-inline bool          nodekey_Lt(amc_vis::FNode& node, amc_vis::FNode &rhs) __attribute__((nothrow));
+inline bool          nodekey_Lt(amc_vis::FNode& parent, amc_vis::FNode &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:amc_vis.FNode.nodekey.Cmp
-inline i32           nodekey_Cmp(amc_vis::FNode& node, amc_vis::FNode &rhs) __attribute__((nothrow));
+inline i32           nodekey_Cmp(amc_vis::FNode& parent, amc_vis::FNode &rhs) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc_vis.FNode.zd_nodedep_out.EmptyQ
-inline bool          zd_nodedep_out_EmptyQ(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_nodedep_out_EmptyQ(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc_vis.FNode.zd_nodedep_out.First
-inline amc_vis::FNodedep* zd_nodedep_out_First(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FNodedep* zd_nodedep_out_First(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc_vis.FNode.zd_nodedep_out.InLlistQ
 inline bool          node_zd_nodedep_out_InLlistQ(amc_vis::FNodedep& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc_vis.FNode.zd_nodedep_out.Insert
-void                 zd_nodedep_out_Insert(amc_vis::FNode& node, amc_vis::FNodedep& row) __attribute__((nothrow));
+void                 zd_nodedep_out_Insert(amc_vis::FNode& parent, amc_vis::FNodedep& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc_vis.FNode.zd_nodedep_out.Last
-inline amc_vis::FNodedep* zd_nodedep_out_Last(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FNodedep* zd_nodedep_out_Last(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc_vis.FNode.zd_nodedep_out.Next
 inline amc_vis::FNodedep* node_zd_nodedep_out_Next(amc_vis::FNodedep &row) __attribute__((__warn_unused_result__, nothrow));
@@ -1650,38 +1650,38 @@ inline amc_vis::FNodedep* node_zd_nodedep_out_Next(amc_vis::FNodedep &row) __att
 inline amc_vis::FNodedep* node_zd_nodedep_out_Prev(amc_vis::FNodedep &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc_vis.FNode.zd_nodedep_out.Remove
-void                 zd_nodedep_out_Remove(amc_vis::FNode& node, amc_vis::FNodedep& row) __attribute__((nothrow));
+void                 zd_nodedep_out_Remove(amc_vis::FNode& parent, amc_vis::FNodedep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc_vis.FNode.zd_nodedep_out.RemoveAll
-void                 zd_nodedep_out_RemoveAll(amc_vis::FNode& node) __attribute__((nothrow));
+void                 zd_nodedep_out_RemoveAll(amc_vis::FNode& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc_vis.FNode.zd_nodedep_out.RemoveFirst
-amc_vis::FNodedep*   zd_nodedep_out_RemoveFirst(amc_vis::FNode& node) __attribute__((nothrow));
+amc_vis::FNodedep*   zd_nodedep_out_RemoveFirst(amc_vis::FNode& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc_vis.FNode.zd_nodedep_out.qLast
-inline amc_vis::FNodedep& zd_nodedep_out_qLast(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow));
+inline amc_vis::FNodedep& zd_nodedep_out_qLast(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc_vis.FNode.zd_nodedep_out.InsertBefore
-void                 zd_nodedep_out_InsertBefore(amc_vis::FNode& node, amc_vis::FNodedep& row, amc_vis::FNodedep* before) __attribute__((nothrow));
+void                 zd_nodedep_out_InsertBefore(amc_vis::FNode& parent, amc_vis::FNodedep& row, amc_vis::FNodedep* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc_vis.FNode.zd_nodedep_in.EmptyQ
-inline bool          zd_nodedep_in_EmptyQ(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_nodedep_in_EmptyQ(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc_vis.FNode.zd_nodedep_in.First
-inline amc_vis::FNodedep* zd_nodedep_in_First(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FNodedep* zd_nodedep_in_First(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc_vis.FNode.zd_nodedep_in.InLlistQ
 inline bool          node_zd_nodedep_in_InLlistQ(amc_vis::FNodedep& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc_vis.FNode.zd_nodedep_in.Insert
-void                 zd_nodedep_in_Insert(amc_vis::FNode& node, amc_vis::FNodedep& row) __attribute__((nothrow));
+void                 zd_nodedep_in_Insert(amc_vis::FNode& parent, amc_vis::FNodedep& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc_vis.FNode.zd_nodedep_in.Last
-inline amc_vis::FNodedep* zd_nodedep_in_Last(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FNodedep* zd_nodedep_in_Last(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:amc_vis.FNode.zd_nodedep_in.N
-inline i32           zd_nodedep_in_N(const amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_nodedep_in_N(const amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc_vis.FNode.zd_nodedep_in.Next
 inline amc_vis::FNodedep* node_zd_nodedep_in_Next(amc_vis::FNodedep &row) __attribute__((__warn_unused_result__, nothrow));
@@ -1690,38 +1690,38 @@ inline amc_vis::FNodedep* node_zd_nodedep_in_Next(amc_vis::FNodedep &row) __attr
 inline amc_vis::FNodedep* node_zd_nodedep_in_Prev(amc_vis::FNodedep &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc_vis.FNode.zd_nodedep_in.Remove
-void                 zd_nodedep_in_Remove(amc_vis::FNode& node, amc_vis::FNodedep& row) __attribute__((nothrow));
+void                 zd_nodedep_in_Remove(amc_vis::FNode& parent, amc_vis::FNodedep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc_vis.FNode.zd_nodedep_in.RemoveAll
-void                 zd_nodedep_in_RemoveAll(amc_vis::FNode& node) __attribute__((nothrow));
+void                 zd_nodedep_in_RemoveAll(amc_vis::FNode& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc_vis.FNode.zd_nodedep_in.RemoveFirst
-amc_vis::FNodedep*   zd_nodedep_in_RemoveFirst(amc_vis::FNode& node) __attribute__((nothrow));
+amc_vis::FNodedep*   zd_nodedep_in_RemoveFirst(amc_vis::FNode& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc_vis.FNode.zd_nodedep_in.qLast
-inline amc_vis::FNodedep& zd_nodedep_in_qLast(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow));
+inline amc_vis::FNodedep& zd_nodedep_in_qLast(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc_vis.FNode.zd_nodedep_in.InsertBefore
-void                 zd_nodedep_in_InsertBefore(amc_vis::FNode& node, amc_vis::FNodedep& row, amc_vis::FNodedep* before) __attribute__((nothrow));
+void                 zd_nodedep_in_InsertBefore(amc_vis::FNode& parent, amc_vis::FNodedep& row, amc_vis::FNodedep* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc_vis.FNode.zd_link_out.EmptyQ
-inline bool          zd_link_out_EmptyQ(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_link_out_EmptyQ(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc_vis.FNode.zd_link_out.First
-inline amc_vis::FLink* zd_link_out_First(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FLink* zd_link_out_First(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc_vis.FNode.zd_link_out.InLlistQ
 inline bool          node_zd_link_out_InLlistQ(amc_vis::FLink& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc_vis.FNode.zd_link_out.Insert
-void                 zd_link_out_Insert(amc_vis::FNode& node, amc_vis::FLink& row) __attribute__((nothrow));
+void                 zd_link_out_Insert(amc_vis::FNode& parent, amc_vis::FLink& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc_vis.FNode.zd_link_out.Last
-inline amc_vis::FLink* zd_link_out_Last(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FLink* zd_link_out_Last(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:amc_vis.FNode.zd_link_out.N
-inline i32           zd_link_out_N(const amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_link_out_N(const amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc_vis.FNode.zd_link_out.Next
 inline amc_vis::FLink* node_zd_link_out_Next(amc_vis::FLink &row) __attribute__((__warn_unused_result__, nothrow));
@@ -1730,38 +1730,38 @@ inline amc_vis::FLink* node_zd_link_out_Next(amc_vis::FLink &row) __attribute__(
 inline amc_vis::FLink* node_zd_link_out_Prev(amc_vis::FLink &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc_vis.FNode.zd_link_out.Remove
-void                 zd_link_out_Remove(amc_vis::FNode& node, amc_vis::FLink& row) __attribute__((nothrow));
+void                 zd_link_out_Remove(amc_vis::FNode& parent, amc_vis::FLink& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc_vis.FNode.zd_link_out.RemoveAll
-void                 zd_link_out_RemoveAll(amc_vis::FNode& node) __attribute__((nothrow));
+void                 zd_link_out_RemoveAll(amc_vis::FNode& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc_vis.FNode.zd_link_out.RemoveFirst
-amc_vis::FLink*      zd_link_out_RemoveFirst(amc_vis::FNode& node) __attribute__((nothrow));
+amc_vis::FLink*      zd_link_out_RemoveFirst(amc_vis::FNode& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc_vis.FNode.zd_link_out.qLast
-inline amc_vis::FLink& zd_link_out_qLast(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow));
+inline amc_vis::FLink& zd_link_out_qLast(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc_vis.FNode.zd_link_out.InsertBefore
-void                 zd_link_out_InsertBefore(amc_vis::FNode& node, amc_vis::FLink& row, amc_vis::FLink* before) __attribute__((nothrow));
+void                 zd_link_out_InsertBefore(amc_vis::FNode& parent, amc_vis::FLink& row, amc_vis::FLink* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc_vis.FNode.zd_link_in.EmptyQ
-inline bool          zd_link_in_EmptyQ(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_link_in_EmptyQ(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc_vis.FNode.zd_link_in.First
-inline amc_vis::FLink* zd_link_in_First(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FLink* zd_link_in_First(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc_vis.FNode.zd_link_in.InLlistQ
 inline bool          node_zd_link_in_InLlistQ(amc_vis::FLink& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc_vis.FNode.zd_link_in.Insert
-void                 zd_link_in_Insert(amc_vis::FNode& node, amc_vis::FLink& row) __attribute__((nothrow));
+void                 zd_link_in_Insert(amc_vis::FNode& parent, amc_vis::FLink& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc_vis.FNode.zd_link_in.Last
-inline amc_vis::FLink* zd_link_in_Last(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc_vis::FLink* zd_link_in_Last(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:amc_vis.FNode.zd_link_in.N
-inline i32           zd_link_in_N(const amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_link_in_N(const amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc_vis.FNode.zd_link_in.Next
 inline amc_vis::FLink* node_zd_link_in_Next(amc_vis::FLink &row) __attribute__((__warn_unused_result__, nothrow));
@@ -1770,23 +1770,23 @@ inline amc_vis::FLink* node_zd_link_in_Next(amc_vis::FLink &row) __attribute__((
 inline amc_vis::FLink* node_zd_link_in_Prev(amc_vis::FLink &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc_vis.FNode.zd_link_in.Remove
-void                 zd_link_in_Remove(amc_vis::FNode& node, amc_vis::FLink& row) __attribute__((nothrow));
+void                 zd_link_in_Remove(amc_vis::FNode& parent, amc_vis::FLink& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc_vis.FNode.zd_link_in.RemoveAll
-void                 zd_link_in_RemoveAll(amc_vis::FNode& node) __attribute__((nothrow));
+void                 zd_link_in_RemoveAll(amc_vis::FNode& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc_vis.FNode.zd_link_in.RemoveFirst
-amc_vis::FLink*      zd_link_in_RemoveFirst(amc_vis::FNode& node) __attribute__((nothrow));
+amc_vis::FLink*      zd_link_in_RemoveFirst(amc_vis::FNode& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc_vis.FNode.zd_link_in.qLast
-inline amc_vis::FLink& zd_link_in_qLast(amc_vis::FNode& node) __attribute__((__warn_unused_result__, nothrow));
+inline amc_vis::FLink& zd_link_in_qLast(amc_vis::FNode& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc_vis.FNode.zd_link_in.InsertBefore
-void                 zd_link_in_InsertBefore(amc_vis::FNode& node, amc_vis::FLink& row, amc_vis::FLink* before) __attribute__((nothrow));
+void                 zd_link_in_InsertBefore(amc_vis::FNode& parent, amc_vis::FLink& row, amc_vis::FLink* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc_vis.FNode..Init
-void                 FNode_Init(amc_vis::FNode& node);
+void                 FNode_Init(amc_vis::FNode& parent);
 // cursor points to valid item
 // func:amc_vis.FNode.zd_nodedep_out_curs.Reset
 inline void          node_zd_nodedep_out_curs_Reset(node_zd_nodedep_out_curs &curs, amc_vis::FNode &parent) __attribute__((nothrow));
@@ -1836,7 +1836,7 @@ inline void          node_zd_link_in_curs_Next(node_zd_link_in_curs &curs) __att
 // func:amc_vis.FNode.zd_link_in_curs.Access
 inline amc_vis::FLink& node_zd_link_in_curs_Access(node_zd_link_in_curs &curs) __attribute__((nothrow));
 // func:amc_vis.FNode..Uninit
-void                 FNode_Uninit(amc_vis::FNode& node) __attribute__((nothrow));
+void                 FNode_Uninit(amc_vis::FNode& parent) __attribute__((nothrow));
 
 // --- amc_vis.FNodedep
 // create: amc_vis.FDb.nodedep (Lary)
@@ -1874,9 +1874,9 @@ private:
 };
 // Set all fields to initial values.
 // func:amc_vis.FNodedep..Init
-inline void          FNodedep_Init(amc_vis::FNodedep& nodedep);
+inline void          FNodedep_Init(amc_vis::FNodedep& parent);
 // func:amc_vis.FNodedep..Uninit
-void                 FNodedep_Uninit(amc_vis::FNodedep& nodedep) __attribute__((nothrow));
+void                 FNodedep_Uninit(amc_vis::FNodedep& parent) __attribute__((nothrow));
 
 // --- amc_vis.FOutrow
 // create: amc_vis.FDb.outrow (Lary)
@@ -1904,89 +1904,89 @@ private:
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:amc_vis.FOutrow.text.Addary
-algo::aryptr<u16>    text_Addary(amc_vis::FOutrow& outrow, algo::aryptr<u16> rhs) __attribute__((nothrow));
+algo::aryptr<u16>    text_Addary(amc_vis::FOutrow& parent, algo::aryptr<u16> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:amc_vis.FOutrow.text.Alloc
-u16&                 text_Alloc(amc_vis::FOutrow& outrow) __attribute__((__warn_unused_result__, nothrow));
+u16&                 text_Alloc(amc_vis::FOutrow& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:amc_vis.FOutrow.text.AllocAt
-u16&                 text_AllocAt(amc_vis::FOutrow& outrow, i64 at) __attribute__((__warn_unused_result__, nothrow));
+u16&                 text_AllocAt(amc_vis::FOutrow& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc_vis.FOutrow.text.AllocN
-algo::aryptr<u16>    text_AllocN(amc_vis::FOutrow& outrow, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u16>    text_AllocN(amc_vis::FOutrow& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:amc_vis.FOutrow.text.AllocNAt
-algo::aryptr<u16>    text_AllocNAt(amc_vis::FOutrow& outrow, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u16>    text_AllocNAt(amc_vis::FOutrow& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:amc_vis.FOutrow.text.EmptyQ
-inline bool          text_EmptyQ(amc_vis::FOutrow& outrow) __attribute__((nothrow));
+inline bool          text_EmptyQ(amc_vis::FOutrow& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc_vis.FOutrow.text.Find
-inline u16*          text_Find(amc_vis::FOutrow& outrow, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline u16*          text_Find(amc_vis::FOutrow& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:amc_vis.FOutrow.text.Getary
-inline algo::aryptr<u16> text_Getary(const amc_vis::FOutrow& outrow) __attribute__((nothrow));
+inline algo::aryptr<u16> text_Getary(const amc_vis::FOutrow& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:amc_vis.FOutrow.text.Last
-inline u16*          text_Last(amc_vis::FOutrow& outrow) __attribute__((nothrow, pure));
+inline u16*          text_Last(amc_vis::FOutrow& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:amc_vis.FOutrow.text.Max
-inline i64           text_Max(amc_vis::FOutrow& outrow) __attribute__((nothrow));
+inline i64           text_Max(amc_vis::FOutrow& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:amc_vis.FOutrow.text.N
-inline i64           text_N(const amc_vis::FOutrow& outrow) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           text_N(const amc_vis::FOutrow& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:amc_vis.FOutrow.text.Remove
-void                 text_Remove(amc_vis::FOutrow& outrow, u64 i) __attribute__((nothrow));
+void                 text_Remove(amc_vis::FOutrow& parent, u64 i) __attribute__((nothrow));
 // func:amc_vis.FOutrow.text.RemoveAll
-inline void          text_RemoveAll(amc_vis::FOutrow& outrow) __attribute__((nothrow));
+inline void          text_RemoveAll(amc_vis::FOutrow& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:amc_vis.FOutrow.text.RemoveLast
-void                 text_RemoveLast(amc_vis::FOutrow& outrow) __attribute__((nothrow));
+void                 text_RemoveLast(amc_vis::FOutrow& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:amc_vis.FOutrow.text.Reserve
-inline void          text_Reserve(amc_vis::FOutrow& outrow, i64 n) __attribute__((nothrow));
+inline void          text_Reserve(amc_vis::FOutrow& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:amc_vis.FOutrow.text.AbsReserve
-void                 text_AbsReserve(amc_vis::FOutrow& outrow, i64 n) __attribute__((nothrow));
+void                 text_AbsReserve(amc_vis::FOutrow& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:amc_vis.FOutrow.text.Setary
-void                 text_Setary(amc_vis::FOutrow& outrow, amc_vis::FOutrow &rhs) __attribute__((nothrow));
+void                 text_Setary(amc_vis::FOutrow& parent, amc_vis::FOutrow &rhs) __attribute__((nothrow));
 // Copy specified array into text, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
 // func:amc_vis.FOutrow.text.Setary2
-void                 text_Setary(amc_vis::FOutrow& outrow, const algo::aryptr<u16> &rhs) __attribute__((nothrow));
+void                 text_Setary(amc_vis::FOutrow& parent, const algo::aryptr<u16> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:amc_vis.FOutrow.text.qFind
-inline u16&          text_qFind(amc_vis::FOutrow& outrow, u64 t) __attribute__((nothrow));
+inline u16&          text_qFind(amc_vis::FOutrow& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:amc_vis.FOutrow.text.qLast
-inline u16&          text_qLast(amc_vis::FOutrow& outrow) __attribute__((nothrow));
+inline u16&          text_qLast(amc_vis::FOutrow& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:amc_vis.FOutrow.text.rowid_Get
-inline u64           text_rowid_Get(amc_vis::FOutrow& outrow, u16 &elem) __attribute__((nothrow));
+inline u64           text_rowid_Get(amc_vis::FOutrow& parent, u16 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc_vis.FOutrow.text.AllocNVal
-algo::aryptr<u16>    text_AllocNVal(amc_vis::FOutrow& outrow, i64 n_elems, const u16& val) __attribute__((nothrow));
+algo::aryptr<u16>    text_AllocNVal(amc_vis::FOutrow& parent, i64 n_elems, const u16& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
 // func:amc_vis.FOutrow.text.ReadStrptrMaybe
-bool                 text_ReadStrptrMaybe(amc_vis::FOutrow& outrow, algo::strptr in_str) __attribute__((nothrow));
+bool                 text_ReadStrptrMaybe(amc_vis::FOutrow& parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:amc_vis.FOutrow.text.Insary
-void                 text_Insary(amc_vis::FOutrow& outrow, algo::aryptr<u16> rhs, i64 at) __attribute__((nothrow));
+void                 text_Insary(amc_vis::FOutrow& parent, algo::aryptr<u16> rhs, i64 at) __attribute__((nothrow));
 // Delete a range of elements
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
 // func:amc_vis.FOutrow.text.RemRegion
-void                 text_RemRegion(amc_vis::FOutrow& outrow, i64 beg, i64 n) __attribute__((nothrow));
+void                 text_RemRegion(amc_vis::FOutrow& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:amc_vis.FOutrow.text_curs.Next
@@ -2001,9 +2001,9 @@ inline bool          outrow_text_curs_ValidQ(outrow_text_curs &curs) __attribute
 inline u16&          outrow_text_curs_Access(outrow_text_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc_vis.FOutrow..Init
-inline void          FOutrow_Init(amc_vis::FOutrow& outrow);
+inline void          FOutrow_Init(amc_vis::FOutrow& parent);
 // func:amc_vis.FOutrow..Uninit
-void                 FOutrow_Uninit(amc_vis::FOutrow& outrow) __attribute__((nothrow));
+void                 FOutrow_Uninit(amc_vis::FOutrow& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:amc_vis.FOutrow.String  printfmt:Tuple
 // func:amc_vis.FOutrow..Print
@@ -2051,9 +2051,9 @@ void                 reftype_CopyIn(amc_vis::FReftype &row, dmmeta::Reftype &in)
 
 // Set all fields to initial values.
 // func:amc_vis.FReftype..Init
-void                 FReftype_Init(amc_vis::FReftype& reftype);
+void                 FReftype_Init(amc_vis::FReftype& parent);
 // func:amc_vis.FReftype..Uninit
-void                 FReftype_Uninit(amc_vis::FReftype& reftype) __attribute__((nothrow));
+void                 FReftype_Uninit(amc_vis::FReftype& parent) __attribute__((nothrow));
 
 // --- amc_vis.FieldId
 #pragma pack(push,1)

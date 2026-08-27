@@ -1,6 +1,21 @@
 ## lib_json - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_json - Full json support library](/txt/lib/lib_json/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -176,13 +191,14 @@ lib_json::FldKey lib_json::fldkey_Get(lib_json::FNode &node)
 ```
 
 ```c++
-// Get node value as u32
+// Get node value as i32
 // If the path is not found, or the value is malformatted, DFLT is returned.
 // true/false is converted to 0/1
+// A string node holding digits reads as the number it spells.
 //
 // PARENT    node to start from
 // PATH      dot-separated list of field keys
-u32 lib_json::i32_Get(lib_json::FNode* parent, strptr path, int dflt = 0)
+i32 lib_json::i32_Get(lib_json::FNode* parent, strptr path, int dflt = 0)
 ```
 
 ```c++
@@ -221,11 +237,19 @@ strptr lib_json::strptr_Get(lib_json::FNode* parent, strptr path)
 // Get node value as u32
 // If the path is not found, or the value is malformatted, DFLT is returned.
 // true/false is converted to 0/1
+// A string node holding digits reads as the number it spells.
 //
 // PARENT    node to start from
 // PATH      dot-separated list of field keys
 u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path, int dflt = 0)
 ```
+
+### Inputs
+<a href="#inputs"></a>
+`lib_json` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 
 ### Sources
 <a href="#sources"></a>
@@ -240,6 +264,13 @@ The following source files are part of this tool:
 |[include/gen/lib_json_gen.inl.h](/include/gen/lib_json_gen.inl.h)||
 |[include/lib_json.h](/include/lib_json.h)||
 |[include/lib_json.inl.h](/include/lib_json.inl.h)||
+
+### Dependencies
+<a href="#dependencies"></a>
+The build target depends on the following libraries
+|Target|Comment|
+|---|---|
+|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
 
 ### In Memory DB
 <a href="#in-memory-db"></a>
@@ -264,12 +295,12 @@ All allocations are done through global `lib_json::_db` [lib_json.FDb](#lib_json
 <a href="#lib_json-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_json.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype.md#lpool)||private memory pool|
-|lib_json.FDb._db|[lib_json.FDb](/txt/gen/lib_json/lib_json.md#lib_json-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_json.FDb.node|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|lib_json.FDb.ind_objfld|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|lib_json.FDb.JsonNumChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|lib_json.FDb.JsonFirstNumChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
+|lib_json.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype/Lpool.md)||private memory pool|
+|lib_json.FDb._db|[lib_json.FDb](/txt/gen/lib_json/lib_json.md#lib_json-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_json.FDb.node|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|lib_json.FDb.ind_objfld|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|lib_json.FDb.JsonNumChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|lib_json.FDb.JsonFirstNumChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -294,8 +325,8 @@ struct FDb { // lib_json.FDb: In-memory database for lib_json
 <a href="#lib_json-fldkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_json.FldKey.p_object|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|lib_json.FldKey.field|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_json.FldKey.p_object|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|lib_json.FldKey.field|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FldKey
 <a href="#struct-fldkey"></a>
@@ -330,11 +361,11 @@ struct FldKey { // lib_json.FldKey
 <a href="#lib_json-fnode-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_json.FNode.p_parent|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Parent node, may be NULL|
-|lib_json.FNode.c_child|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Child node(s)|
-|lib_json.FNode.type|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FNode.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FNode.fldkey|[lib_json.FldKey](/txt/gen/lib_json/lib_json.md#lib_json-fldkey)|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_json.FNode.p_parent|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Parent node, may be NULL|
+|lib_json.FNode.c_child|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Child node(s)|
+|lib_json.FNode.type|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FNode.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FNode.fldkey|[lib_json.FldKey](/txt/gen/lib_json/lib_json.md#lib_json-fldkey)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FNode
 <a href="#struct-fnode"></a>
@@ -375,20 +406,20 @@ private:
 <a href="#lib_json-fparser-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_json.FParser.buf|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.ind|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.node|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_json.FParser.root_node|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_json.FParser.state|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.need_comma|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.have_comma|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.need_colon|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.err_info|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.err_offset|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.offset|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.uesc_value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.uesc_need|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_json.FParser.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_json.FParser.buf|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.ind|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.node|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_json.FParser.root_node|[lib_json.FNode](/txt/gen/lib_json/lib_json.md#lib_json-fnode)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_json.FParser.state|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.need_comma|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.have_comma|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.need_colon|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.err_info|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.err_offset|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.offset|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.uesc_value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.uesc_need|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_json.FParser.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FParser
 <a href="#struct-fparser"></a>

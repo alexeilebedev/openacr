@@ -3,11 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
-* [Tests](#tests)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -137,8 +139,8 @@ All allocations are done through global `acr::_db` [acr.FDb](#acr-fdb) structure
 <a href="#acr-attrregx-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.AttrRegx.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Regx](/txt/exe/amc/reftype.md#regx)|||
-|acr.AttrRegx.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Regx](/txt/exe/amc/reftype.md#regx)|||
+|acr.AttrRegx.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Regx](/txt/exe/amc/reftype/Regx.md)|||
+|acr.AttrRegx.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Regx](/txt/exe/amc/reftype/Regx.md)|||
 
 #### Struct AttrRegx
 <a href="#struct-attrregx"></a>
@@ -159,8 +161,8 @@ struct AttrRegx { // acr.AttrRegx: Filters that must match input key/value pairs
 <a href="#acr-ctypetopokey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.CtypeTopoKey.alldep|i32|[Val](/txt/exe/amc/reftype.md#val)||# Unresolved references|
-|acr.CtypeTopoKey.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)||Rowid of original record|
+|acr.CtypeTopoKey.alldep|i32|[Val](/txt/exe/amc/reftype/Val.md)||# Unresolved references|
+|acr.CtypeTopoKey.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)||Rowid of original record|
 
 #### Struct CtypeTopoKey
 <a href="#struct-ctypetopokey"></a>
@@ -193,11 +195,11 @@ struct CtypeTopoKey { // acr.CtypeTopoKey: Key for sorting print-line records
 <a href="#acr-err-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.Err.ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Parent ctype|
-|acr.Err.id|u32|[Val](/txt/exe/amc/reftype.md#val)|0|ID|
-|acr.Err.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Error text|
-|acr.Err.rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Parent record|
-|acr.Err.fld|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Parent field|
+|acr.Err.ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Parent ctype|
+|acr.Err.id|u32|[Val](/txt/exe/amc/reftype/Val.md)|0|ID|
+|acr.Err.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Error text|
+|acr.Err.rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Parent record|
+|acr.Err.fld|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Parent field|
 
 #### Struct Err
 <a href="#struct-err"></a>
@@ -320,10 +322,10 @@ private:
 <a href="#acr-fcheck-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FCheck.c_bad_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|acr.FCheck.n_record|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FCheck.n_err|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FCheck.ary_name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
+|acr.FCheck.c_bad_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr.FCheck.n_record|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FCheck.n_err|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FCheck.ary_name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
 
 #### Struct FCheck
 <a href="#struct-fcheck"></a>
@@ -389,25 +391,26 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr.FCtype.base|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|acr.FCtype.c_field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|acr.FCtype.c_cdflt|[acr.FCdflt](/txt/gen/acr/acr.md#acr-fcdflt)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr.FCtype.c_ssimfile|[acr.FSsimfile](/txt/gen/acr/acr.md#acr-fssimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr.FCtype.zd_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Llist](/txt/exe/amc/reftype.md#llist)||List of all records with this ctype|
-|acr.FCtype.ind_ctype_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Thash](/txt/exe/amc/reftype.md#thash)||Index of records by primary key|
-|acr.FCtype.zd_selrec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Llist](/txt/exe/amc/reftype.md#llist)||List of selected records|
-|acr.FCtype.n_insert|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Number of tuples inserted|
-|acr.FCtype.rank|i32|[Val](/txt/exe/amc/reftype.md#val)|false|Topological sort rank|
-|acr.FCtype.c_child|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||all tables that reference this table|
-|acr.FCtype.show_rowid|bool|[Val](/txt/exe/amc/reftype.md#val)||True if records of this type require printing rowid (not fully ordered)|
-|acr.FCtype.next_rowid|u64|[Val](/txt/exe/amc/reftype.md#val)|0|Rowid of next created record for this type|
-|acr.FCtype.numeric|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FCtype.c_bltin|[acr.FBltin](/txt/gen/acr/acr.md#acr-fbltin)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr.FCtype.zd_arg|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|acr.FCtype.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)||Row id of ctype from its original ctype.ssim table|
-|acr.FCtype.topokey|[acr.CtypeTopoKey](/txt/gen/acr/acr.md#acr-ctypetopokey)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FCtype.cmt_printed|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FCtype.mark_sel|bool|[Val](/txt/exe/amc/reftype.md#val)||Ctype tree scheduled to be selected (with -meta)|
-|acr.FCtype.c_ssimreq|[acr.FSsimreq](/txt/gen/acr/acr.md#acr-fssimreq)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|acr.FCtype.c_field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr.FCtype.c_cdflt|[acr.FCdflt](/txt/gen/acr/acr.md#acr-fcdflt)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr.FCtype.c_ssimfile|[acr.FSsimfile](/txt/gen/acr/acr.md#acr-fssimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr.FCtype.zd_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of all records with this ctype|
+|acr.FCtype.ind_ctype_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Thash](/txt/exe/amc/reftype/Thash.md)||Index of records by primary key|
+|acr.FCtype.zd_selrec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of selected records|
+|acr.FCtype.n_insert|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Number of tuples inserted|
+|acr.FCtype.rank|i32|[Val](/txt/exe/amc/reftype/Val.md)|false|Topological sort rank|
+|acr.FCtype.c_child|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||all tables that reference this table|
+|acr.FCtype.show_rowid|bool|[Val](/txt/exe/amc/reftype/Val.md)||True if records of this type require printing rowid (not fully ordered)|
+|acr.FCtype.next_rowid|u64|[Val](/txt/exe/amc/reftype/Val.md)|0|Rowid of next created record for this type|
+|acr.FCtype.numeric|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FCtype.c_bltin|[acr.FBltin](/txt/gen/acr/acr.md#acr-fbltin)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr.FCtype.zd_arg|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|acr.FCtype.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)||Row id of ctype from its original ctype.ssim table|
+|acr.FCtype.topokey|[acr.CtypeTopoKey](/txt/gen/acr/acr.md#acr-ctypetopokey)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FCtype.cmt_printed|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FCtype.mark_sel|bool|[Val](/txt/exe/amc/reftype/Val.md)||Ctype tree scheduled to be selected (with -meta)|
+|acr.FCtype.c_ssimreq|[acr.FSsimreq](/txt/gen/acr/acr.md#acr-fssimreq)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr.FCtype.max_attr_len|u32|[Val](/txt/exe/amc/reftype/Val.md)||Widest attribute value this type can hold, in chars|
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -449,6 +452,7 @@ struct FCtype { // acr.FCtype
     acr::FSsimreq**     c_ssimreq_elems;               // array of pointers
     u64                 c_ssimreq_n;                   // current size
     u64                 c_ssimreq_max;                 // capacity of allocated array
+    u32                 max_attr_len;                  //   0  Widest attribute value this type can hold, in chars
     bool                c_ctype_front_in_ary;          //   false  membership flag
     acr::FCtype*        ind_ctype_next;                // hash next
     u32                 ind_ctype_hashval;             // hash value
@@ -497,60 +501,60 @@ private:
 <a href="#acr-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FDb.pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|acr.FDb.pdep|[acr.FPdep](/txt/gen/acr/acr.md#acr-fpdep)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|acr.FDb.zd_pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|acr.FDb.zd_pdep|[acr.FPdep](/txt/gen/acr/acr.md#acr-fpdep)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|acr.FDb.cmdline|[command.acr](/txt/protocol/command/README.md#command-acr)|[Val](/txt/exe/amc/reftype.md#val)||command line|
-|acr.FDb.ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.err|[acr.FErr](/txt/gen/acr/acr.md#acr-ferr)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|acr.FDb.anonfld|[acr.FAnonfld](/txt/gen/acr/acr.md#acr-fanonfld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.cdflt|[acr.FCdflt](/txt/gen/acr/acr.md#acr-fcdflt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|acr.FDb.uniqueattr|[acr.FUniqueattr](/txt/gen/acr/acr.md#acr-funiqueattr)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|acr.FDb.query|[acr.FQuery](/txt/gen/acr/acr.md#acr-fquery)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|acr.FDb.field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.file|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Lary](/txt/exe/amc/reftype.md#lary)||List of all loaded files|
-|acr.FDb._db|[acr.FDb](/txt/gen/acr/acr.md#acr-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|acr.FDb.err_seq|u32|[Val](/txt/exe/amc/reftype.md#val)|0||
-|acr.FDb.check_failed|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FDb.load_failed|bool|[Val](/txt/exe/amc/reftype.md#val)||an -in input could not be loaded|
-|acr.FDb.ind_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr.FDb.ind_field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr.FDb.ind_file|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Thash](/txt/exe/amc/reftype.md#thash)||Index of files by primary key|
-|acr.FDb.zd_all_selrec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Llist](/txt/exe/amc/reftype.md#llist)||List of selected records|
-|acr.FDb.zd_all_err|[acr.FErr](/txt/gen/acr/acr.md#acr-ferr)|[Llist](/txt/exe/amc/reftype.md#llist)||List of errors|
-|acr.FDb.zd_sel_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Llist](/txt/exe/amc/reftype.md#llist)||List of selected ctypess|
-|acr.FDb.bh_pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Bheap](/txt/exe/amc/reftype.md#bheap)||List of records to print|
-|acr.FDb.substr|[acr.FSubstr](/txt/gen/acr/acr.md#acr-fsubstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.ssimfile|[acr.FSsimfile](/txt/gen/acr/acr.md#acr-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.tempkey|[acr.FTempkey](/txt/gen/acr/acr.md#acr-ftempkey)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.ind_tempkey|[acr.FTempkey](/txt/gen/acr/acr.md#acr-ftempkey)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr.FDb.ind_ssimfile|[acr.FSsimfile](/txt/gen/acr/acr.md#acr-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr.FDb.print|[acr.FPrint](/txt/gen/acr/acr.md#acr-fprint)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|acr.FDb.printattr|[acr.FPrintAttr](/txt/gen/acr/acr.md#acr-fprintattr)|[Malloc](/txt/exe/amc/reftype.md#malloc)||Allocate via malloc|
-|acr.FDb.zs_query|[acr.FQuery](/txt/gen/acr/acr.md#acr-fquery)|[Llist](/txt/exe/amc/reftype.md#llist)||List of queries remaining to be performed|
-|acr.FDb.check|[acr.FCheck](/txt/gen/acr/acr.md#acr-fcheck)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|acr.FDb.ssimsort|[acr.FSsimsort](/txt/gen/acr/acr.md#acr-fssimsort)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.ind_ssimsort|[acr.FSsimsort](/txt/gen/acr/acr.md#acr-fssimsort)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr.FDb.write|[acr.FWrite](/txt/gen/acr/acr.md#acr-fwrite)|[Cppstack](/txt/exe/amc/reftype.md#cppstack)||Provides default name for variables of this type|
-|acr.FDb.n_file_written|u32|[Val](/txt/exe/amc/reftype.md#val)|0|Number of files written|
-|acr.FDb.report|[report.acr](/txt/protocol/report/README.md#report-acr)|[Val](/txt/exe/amc/reftype.md#val)||Final report|
-|acr.FDb.smallstr|[acr.FSmallstr](/txt/gen/acr/acr.md#acr-fsmallstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.funique|[acr.FFunique](/txt/gen/acr/acr.md#acr-ffunique)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.ind_uniqueattr|[acr.FUniqueattr](/txt/gen/acr/acr.md#acr-funiqueattr)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr.FDb.bltin|[acr.FBltin](/txt/gen/acr/acr.md#acr-fbltin)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.ctype_rank_computed|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FDb.file_input|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FDb.bh_ctype_topo|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|acr.FDb.cppfunc|[acr.FCppfunc](/txt/gen/acr/acr.md#acr-fcppfunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.ssimreq|[acr.FSsimreq](/txt/gen/acr/acr.md#acr-fssimreq)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.c_ssimreq_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|acr.FDb.c_field_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptr](/txt/exe/amc/reftype.md#ptr)||ctype describing dmmeta.Field|
-|acr.FDb.c_ssimfile_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptr](/txt/exe/amc/reftype.md#ptr)||ctype describing dmmeta.Ssimfile|
-|acr.FDb.c_ctype_front|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Down front (for -ndown)|
-|acr.FDb.sortkey|[acr.FSortkey](/txt/gen/acr/acr.md#acr-fsortkey)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr.FDb.ind_sortkey|[acr.FSortkey](/txt/gen/acr/acr.md#acr-fsortkey)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|acr.FDb.pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|acr.FDb.pdep|[acr.FPdep](/txt/gen/acr/acr.md#acr-fpdep)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|acr.FDb.zd_pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|acr.FDb.zd_pdep|[acr.FPdep](/txt/gen/acr/acr.md#acr-fpdep)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|acr.FDb.cmdline|[command.acr](/txt/protocol/command/README.md#command-acr)|[Val](/txt/exe/amc/reftype/Val.md)||command line|
+|acr.FDb.ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.err|[acr.FErr](/txt/gen/acr/acr.md#acr-ferr)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|acr.FDb.anonfld|[acr.FAnonfld](/txt/gen/acr/acr.md#acr-fanonfld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.cdflt|[acr.FCdflt](/txt/gen/acr/acr.md#acr-fcdflt)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|acr.FDb.uniqueattr|[acr.FUniqueattr](/txt/gen/acr/acr.md#acr-funiqueattr)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|acr.FDb.query|[acr.FQuery](/txt/gen/acr/acr.md#acr-fquery)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|acr.FDb.field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.file|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Lary](/txt/exe/amc/reftype/Lary.md)||List of all loaded files|
+|acr.FDb._db|[acr.FDb](/txt/gen/acr/acr.md#acr-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|acr.FDb.err_seq|u32|[Val](/txt/exe/amc/reftype/Val.md)|0||
+|acr.FDb.check_failed|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FDb.load_failed|bool|[Val](/txt/exe/amc/reftype/Val.md)||an -in input could not be loaded|
+|acr.FDb.ind_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr.FDb.ind_field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr.FDb.ind_file|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Thash](/txt/exe/amc/reftype/Thash.md)||Index of files by primary key|
+|acr.FDb.zd_all_selrec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of selected records|
+|acr.FDb.zd_all_err|[acr.FErr](/txt/gen/acr/acr.md#acr-ferr)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of errors|
+|acr.FDb.zd_sel_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of selected ctypess|
+|acr.FDb.bh_pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Bheap](/txt/exe/amc/reftype/Bheap.md)||List of records to print|
+|acr.FDb.substr|[acr.FSubstr](/txt/gen/acr/acr.md#acr-fsubstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.ssimfile|[acr.FSsimfile](/txt/gen/acr/acr.md#acr-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.tempkey|[acr.FTempkey](/txt/gen/acr/acr.md#acr-ftempkey)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.ind_tempkey|[acr.FTempkey](/txt/gen/acr/acr.md#acr-ftempkey)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr.FDb.ind_ssimfile|[acr.FSsimfile](/txt/gen/acr/acr.md#acr-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr.FDb.print|[acr.FPrint](/txt/gen/acr/acr.md#acr-fprint)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|acr.FDb.printattr|[acr.FPrintAttr](/txt/gen/acr/acr.md#acr-fprintattr)|[Malloc](/txt/exe/amc/reftype/Malloc.md)||Allocate via malloc|
+|acr.FDb.zs_query|[acr.FQuery](/txt/gen/acr/acr.md#acr-fquery)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of queries remaining to be performed|
+|acr.FDb.check|[acr.FCheck](/txt/gen/acr/acr.md#acr-fcheck)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|acr.FDb.ssimsort|[acr.FSsimsort](/txt/gen/acr/acr.md#acr-fssimsort)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.ind_ssimsort|[acr.FSsimsort](/txt/gen/acr/acr.md#acr-fssimsort)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr.FDb.write|[acr.FWrite](/txt/gen/acr/acr.md#acr-fwrite)|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)||Provides default name for variables of this type|
+|acr.FDb.n_file_written|u32|[Val](/txt/exe/amc/reftype/Val.md)|0|Number of files written|
+|acr.FDb.report|[report.acr](/txt/protocol/report/README.md#report-acr)|[Val](/txt/exe/amc/reftype/Val.md)||Final report|
+|acr.FDb.smallstr|[acr.FSmallstr](/txt/gen/acr/acr.md#acr-fsmallstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.funique|[acr.FFunique](/txt/gen/acr/acr.md#acr-ffunique)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.ind_uniqueattr|[acr.FUniqueattr](/txt/gen/acr/acr.md#acr-funiqueattr)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr.FDb.bltin|[acr.FBltin](/txt/gen/acr/acr.md#acr-fbltin)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.ctype_rank_computed|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FDb.file_input|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FDb.bh_ctype_topo|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|acr.FDb.cppfunc|[acr.FCppfunc](/txt/gen/acr/acr.md#acr-fcppfunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.ssimreq|[acr.FSsimreq](/txt/gen/acr/acr.md#acr-fssimreq)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.c_ssimreq_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr.FDb.c_field_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||ctype describing dmmeta.Field|
+|acr.FDb.c_ssimfile_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||ctype describing dmmeta.Ssimfile|
+|acr.FDb.c_ctype_front|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Down front (for -ndown)|
+|acr.FDb.sortkey|[acr.FSortkey](/txt/gen/acr/acr.md#acr-fsortkey)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr.FDb.ind_sortkey|[acr.FSortkey](/txt/gen/acr/acr.md#acr-fsortkey)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -675,11 +679,11 @@ struct FDb { // acr.FDb: In-memory database for acr
 <a href="#acr-err-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.Err.ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Parent ctype|
-|acr.Err.id|u32|[Val](/txt/exe/amc/reftype.md#val)|0|ID|
-|acr.Err.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Error text|
-|acr.Err.rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Parent record|
-|acr.Err.fld|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Parent field|
+|acr.Err.ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Parent ctype|
+|acr.Err.id|u32|[Val](/txt/exe/amc/reftype/Val.md)|0|ID|
+|acr.Err.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Error text|
+|acr.Err.rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Parent record|
+|acr.Err.fld|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Parent field|
 
 #### Struct FErr
 <a href="#struct-ferr"></a>
@@ -716,12 +720,12 @@ private:
 <a href="#acr-fevalattr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FEvalattr.pick_dflt|bool|[Val](/txt/exe/amc/reftype.md#val)||(in) If attr not found, choose default?|
-|acr.FEvalattr.normalize|bool|[Val](/txt/exe/amc/reftype.md#val)||(in) Normalize input value if possible|
-|acr.FEvalattr.field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptr](/txt/exe/amc/reftype.md#ptr)||(in) field|
-|acr.FEvalattr.attr|[algo.Attr](/txt/protocol/algo/Attr.md)|[Ptr](/txt/exe/amc/reftype.md#ptr)||(out) Tuple attribute|
-|acr.FEvalattr.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||(out) Resulting value|
-|acr.FEvalattr.val_range|[algo.i32_Range](/txt/protocol/algo/README.md#algo-i32_range)|[Val](/txt/exe/amc/reftype.md#val)||(out) Range in attribute corresponding to value|
+|acr.FEvalattr.pick_dflt|bool|[Val](/txt/exe/amc/reftype/Val.md)||(in) If attr not found, choose default?|
+|acr.FEvalattr.normalize|bool|[Val](/txt/exe/amc/reftype/Val.md)||(in) Normalize input value if possible|
+|acr.FEvalattr.field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||(in) field|
+|acr.FEvalattr.attr|[algo.Attr](/txt/protocol/algo/Attr.md)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||(out) Tuple attribute|
+|acr.FEvalattr.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||(out) Resulting value|
+|acr.FEvalattr.val_range|[algo.i32_Range](/txt/protocol/algo/README.md#algo-i32_range)|[Val](/txt/exe/amc/reftype/Val.md)||(out) Range in attribute corresponding to value|
 
 #### Struct FEvalattr
 <a href="#struct-fevalattr"></a>
@@ -749,15 +753,15 @@ struct FEvalattr { // acr.FEvalattr
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr.FField.base|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|acr.FField.p_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FField.p_arg|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FField.c_substr|[acr.FSubstr](/txt/gen/acr/acr.md#acr-fsubstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr.FField.max_attr_len|u32|[Val](/txt/exe/amc/reftype.md#val)||Column width in chars|
-|acr.FField.col_width|u32|[Val](/txt/exe/amc/reftype.md#val)||Column width in chars|
-|acr.FField.isfldfunc|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FField.iscppfunc|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FField.anon|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FField.unique|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr.FField.p_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FField.p_arg|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FField.c_substr|[acr.FSubstr](/txt/gen/acr/acr.md#acr-fsubstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr.FField.max_attr_len|u32|[Val](/txt/exe/amc/reftype/Val.md)||Column width in chars|
+|acr.FField.col_width|u32|[Val](/txt/exe/amc/reftype/Val.md)||Column width in chars|
+|acr.FField.isfldfunc|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FField.iscppfunc|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FField.anon|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FField.unique|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -813,15 +817,15 @@ private:
 <a href="#acr-ffile-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FFile.file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Primary key|
-|acr.FFile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Non-empty if it's a real file|
-|acr.FFile.ephemeral|bool|[Val](/txt/exe/amc/reftype.md#val)||Do not save back|
-|acr.FFile.sticky|bool|[Val](/txt/exe/amc/reftype.md#val)||Records loaded from file are written back to file|
-|acr.FFile.lineno|u32|[Val](/txt/exe/amc/reftype.md#val)|1|Current line number|
-|acr.FFile.zd_frec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Llist](/txt/exe/amc/reftype.md#llist)||List of records in file order|
-|acr.FFile.modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)||File modification time at time of loading|
-|acr.FFile.autoloaded|bool|[Val](/txt/exe/amc/reftype.md#val)||File was pulled in implicitly: loaded records are not 'inserted'|
-|acr.FFile.stdin|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Input is a pipe: its lines are never rewritten, so an unknown ctype stays an ignore|
+|acr.FFile.file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Primary key|
+|acr.FFile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Non-empty if it's a real file|
+|acr.FFile.ephemeral|bool|[Val](/txt/exe/amc/reftype/Val.md)||Do not save back|
+|acr.FFile.sticky|bool|[Val](/txt/exe/amc/reftype/Val.md)||Records loaded from file are written back to file|
+|acr.FFile.lineno|u32|[Val](/txt/exe/amc/reftype/Val.md)|1|Current line number|
+|acr.FFile.zd_frec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of records in file order|
+|acr.FFile.modtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||File modification time at time of loading|
+|acr.FFile.autoloaded|bool|[Val](/txt/exe/amc/reftype/Val.md)||File was pulled in implicitly: loaded records are not 'inserted'|
+|acr.FFile.stdin|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Input is a pipe: its lines are never rewritten, so an unknown ctype stays an ignore|
 
 #### Struct FFile
 <a href="#struct-ffile"></a>
@@ -892,10 +896,10 @@ private:
 <a href="#acr-fpdep-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FPdep.p_parent|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FPdep.p_child|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FPdep.weight|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FPdep.lindex|i32|[Val](/txt/exe/amc/reftype.md#val)||Index of child referencing attr|
+|acr.FPdep.p_parent|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FPdep.p_child|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FPdep.weight|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FPdep.lindex|i32|[Val](/txt/exe/amc/reftype/Val.md)||Index of child referencing attr|
 
 #### Struct FPdep
 <a href="#struct-fpdep"></a>
@@ -933,10 +937,10 @@ private:
 <a href="#acr-recsortkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.RecSortkey.ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Type prefix|
-|acr.RecSortkey.num|double|[Val](/txt/exe/amc/reftype.md#val)||Numeric key (if present)|
-|acr.RecSortkey.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||String key (sort key)|
-|acr.RecSortkey.rowid|float|[Val](/txt/exe/amc/reftype.md#val)||row id|
+|acr.RecSortkey.ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Type prefix|
+|acr.RecSortkey.num|double|[Val](/txt/exe/amc/reftype/Val.md)||Numeric key (if present)|
+|acr.RecSortkey.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||String key (sort key)|
+|acr.RecSortkey.rowid|float|[Val](/txt/exe/amc/reftype/Val.md)||row id|
 
 #### Struct RecSortkey
 <a href="#struct-recsortkey"></a>
@@ -971,10 +975,10 @@ struct RecSortkey { // acr.RecSortkey: One record
 <a href="#acr-plinekey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.PlineKey.alldep|i32|[Val](/txt/exe/amc/reftype.md#val)||# Unresolved references|
-|acr.PlineKey.negdepth|i32|[Val](/txt/exe/amc/reftype.md#val)||Minus tree depth for depth-first print|
-|acr.PlineKey.ctype_rank|i32|[Val](/txt/exe/amc/reftype.md#val)||Topological key for ctype|
-|acr.PlineKey.sortkey|[acr.RecSortkey](/txt/gen/acr/acr.md#acr-recsortkey)|[Val](/txt/exe/amc/reftype.md#val)||Sort key of original record|
+|acr.PlineKey.alldep|i32|[Val](/txt/exe/amc/reftype/Val.md)||# Unresolved references|
+|acr.PlineKey.negdepth|i32|[Val](/txt/exe/amc/reftype/Val.md)||Minus tree depth for depth-first print|
+|acr.PlineKey.ctype_rank|i32|[Val](/txt/exe/amc/reftype/Val.md)||Topological key for ctype|
+|acr.PlineKey.sortkey|[acr.RecSortkey](/txt/gen/acr/acr.md#acr-recsortkey)|[Val](/txt/exe/amc/reftype/Val.md)||Sort key of original record|
 
 #### Struct PlineKey
 <a href="#struct-plinekey"></a>
@@ -1009,9 +1013,9 @@ struct PlineKey { // acr.PlineKey: Key for sorting print-line records
 <a href="#acr-fpline-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FPline.key|[acr.PlineKey](/txt/gen/acr/acr.md#acr-plinekey)|[Val](/txt/exe/amc/reftype.md#val)||Sort key|
-|acr.FPline.p_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Underlying record|
-|acr.FPline.zd_child|[acr.FPdep](/txt/gen/acr/acr.md#acr-fpdep)|[Llist](/txt/exe/amc/reftype.md#llist)||List of child records|
+|acr.FPline.key|[acr.PlineKey](/txt/gen/acr/acr.md#acr-plinekey)|[Val](/txt/exe/amc/reftype/Val.md)||Sort key|
+|acr.FPline.p_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Underlying record|
+|acr.FPline.zd_child|[acr.FPdep](/txt/gen/acr/acr.md#acr-fpdep)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of child records|
 
 #### Struct FPline
 <a href="#struct-fpline"></a>
@@ -1050,21 +1054,21 @@ private:
 <a href="#acr-fprint-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FPrint.ind_printattr|[acr.FPrintAttr](/txt/gen/acr/acr.md#acr-fprintattr)|[Thash](/txt/exe/amc/reftype.md#thash)||Index of printed attributes (to get width)|
-|acr.FPrint.c_pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Current print group|
-|acr.FPrint.pretty|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Block alignment|
-|acr.FPrint.tree|bool|[Val](/txt/exe/amc/reftype.md#val)|false||
-|acr.FPrint.fldfunc|bool|[Val](/txt/exe/amc/reftype.md#val)|false||
-|acr.FPrint.maxgroup|i32|[Val](/txt/exe/amc/reftype.md#val)|25||
-|acr.FPrint.cmt|bool|[Val](/txt/exe/amc/reftype.md#val)|false||
-|acr.FPrint.rowid|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Show row ids of records when printing|
-|acr.FPrint.out|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Output|
-|acr.FPrint.fstdout|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Dump to stdout?|
-|acr.FPrint.loose|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Loose referential integrity|
-|acr.FPrint.showstatus|bool|[Val](/txt/exe/amc/reftype.md#val)|false|show record status (acr.insert etc)|
-|acr.FPrint.skip_line|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FPrint.this_depth|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr.FPrint.prev_depth|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr.FPrint.ind_printattr|[acr.FPrintAttr](/txt/gen/acr/acr.md#acr-fprintattr)|[Thash](/txt/exe/amc/reftype/Thash.md)||Index of printed attributes (to get width)|
+|acr.FPrint.c_pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Current print group|
+|acr.FPrint.pretty|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Block alignment|
+|acr.FPrint.tree|bool|[Val](/txt/exe/amc/reftype/Val.md)|false||
+|acr.FPrint.fldfunc|bool|[Val](/txt/exe/amc/reftype/Val.md)|false||
+|acr.FPrint.maxgroup|i32|[Val](/txt/exe/amc/reftype/Val.md)|25||
+|acr.FPrint.cmt|bool|[Val](/txt/exe/amc/reftype/Val.md)|false||
+|acr.FPrint.rowid|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Show row ids of records when printing|
+|acr.FPrint.out|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Output|
+|acr.FPrint.fstdout|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Dump to stdout?|
+|acr.FPrint.loose|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Loose referential integrity|
+|acr.FPrint.showstatus|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|show record status (acr.insert etc)|
+|acr.FPrint.skip_line|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FPrint.this_depth|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr.FPrint.prev_depth|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FPrint
 <a href="#struct-fprint"></a>
@@ -1104,9 +1108,9 @@ struct FPrint { // acr.FPrint: Print function
 <a href="#acr-fprintattr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FPrintAttr.p_print|[acr.FPrint](/txt/gen/acr/acr.md#acr-fprint)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FPrintAttr.field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|0||
-|acr.FPrintAttr.width|u32|[Val](/txt/exe/amc/reftype.md#val)|0|Name width|
+|acr.FPrintAttr.p_print|[acr.FPrint](/txt/gen/acr/acr.md#acr-fprint)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FPrintAttr.field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|0||
+|acr.FPrintAttr.width|u32|[Val](/txt/exe/amc/reftype/Val.md)|0|Name width|
 
 #### Struct FPrintAttr
 <a href="#struct-fprintattr"></a>
@@ -1140,7 +1144,7 @@ private:
 <a href="#acr-queryop-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.Queryop.value|u8|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr.Queryop.value|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Queryop
 <a href="#struct-queryop"></a>
@@ -1166,19 +1170,19 @@ struct Queryop { // acr.Queryop: Operation to perform
 <a href="#acr-fquery-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FQuery.queryop|[acr.Queryop](/txt/gen/acr/acr.md#acr-queryop)|[Val](/txt/exe/amc/reftype.md#val)||Type of operation to perform|
-|acr.FQuery.query|[acr.AttrRegx](/txt/gen/acr/acr.md#acr-attrregx)|[Val](/txt/exe/amc/reftype.md#val)||Field name (SQL regex as string)|
-|acr.FQuery.where|[acr.AttrRegx](/txt/gen/acr/acr.md#acr-attrregx)|[Tary](/txt/exe/amc/reftype.md#tary)||Additional key/value args|
-|acr.FQuery.new_val|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|New value, used with rename|
-|acr.FQuery.ssimfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Regx](/txt/exe/amc/reftype.md#regx)|""|Full ssimfile name (SQL regex as string)|
-|acr.FQuery.comment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Debug info|
-|acr.FQuery.c_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Array of ctypes to check|
-|acr.FQuery.c_field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|acr.FQuery.c_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|acr.FQuery.n_regx_match|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of regex matches executed|
-|acr.FQuery.n_visit_field|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of fields visited|
-|acr.FQuery.n_visit_ctype|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of ctypes visited|
-|acr.FQuery.n_mod_rec|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of records modified|
+|acr.FQuery.queryop|[acr.Queryop](/txt/gen/acr/acr.md#acr-queryop)|[Val](/txt/exe/amc/reftype/Val.md)||Type of operation to perform|
+|acr.FQuery.query|[acr.AttrRegx](/txt/gen/acr/acr.md#acr-attrregx)|[Val](/txt/exe/amc/reftype/Val.md)||Field name (SQL regex as string)|
+|acr.FQuery.where|[acr.AttrRegx](/txt/gen/acr/acr.md#acr-attrregx)|[Tary](/txt/exe/amc/reftype/Tary.md)||Additional key/value args|
+|acr.FQuery.new_val|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|New value, used with rename|
+|acr.FQuery.ssimfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Regx](/txt/exe/amc/reftype/Regx.md)|""|Full ssimfile name (SQL regex as string)|
+|acr.FQuery.comment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Debug info|
+|acr.FQuery.c_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Array of ctypes to check|
+|acr.FQuery.c_field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr.FQuery.c_rec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr.FQuery.n_regx_match|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of regex matches executed|
+|acr.FQuery.n_visit_field|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of fields visited|
+|acr.FQuery.n_visit_ctype|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of ctypes visited|
+|acr.FQuery.n_mod_rec|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of records modified|
 
 #### Struct FQuery
 <a href="#struct-fquery"></a>
@@ -1236,21 +1240,21 @@ private:
 <a href="#acr-frec-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FRec.pkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Record key (arbitrary string)|
-|acr.FRec.oldpkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Delptr](/txt/exe/amc/reftype.md#delptr)||Old pkey (if renamed)|
-|acr.FRec.oldhead|[algo.cstring](/txt/protocol/algo/cstring.md)|[Delptr](/txt/exe/amc/reftype.md#delptr)||Old tuple head (if renamed)|
-|acr.FRec.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype.md#val)||Data item|
-|acr.FRec.del|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Delete?|
-|acr.FRec.mod|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Record was modified?|
-|acr.FRec.metasel|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Select for meta-data|
-|acr.FRec.isnew|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Inserted newly|
-|acr.FRec.seldist|i32|[Val](/txt/exe/amc/reftype.md#val)||Distance to selection. >0 is up, <0 is down|
-|acr.FRec.sortkey|[acr.RecSortkey](/txt/gen/acr/acr.md#acr-recsortkey)|[Val](/txt/exe/amc/reftype.md#val)||Output sort key|
-|acr.FRec.c_pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Optional pline|
-|acr.FRec.p_outfile|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Record's OUTPUT file (may differ from input)|
-|acr.FRec.p_infile|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Upptr](/txt/exe/amc/reftype.md#upptr)||File from which record was loaded|
-|acr.FRec.p_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FRec.lineno|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr.FRec.pkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Record key (arbitrary string)|
+|acr.FRec.oldpkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Delptr](/txt/exe/amc/reftype/Delptr.md)||Old pkey (if renamed)|
+|acr.FRec.oldhead|[algo.cstring](/txt/protocol/algo/cstring.md)|[Delptr](/txt/exe/amc/reftype/Delptr.md)||Old tuple head (if renamed)|
+|acr.FRec.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype/Val.md)||Data item|
+|acr.FRec.del|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Delete?|
+|acr.FRec.mod|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Record was modified?|
+|acr.FRec.metasel|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Select for meta-data|
+|acr.FRec.isnew|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Inserted newly|
+|acr.FRec.seldist|i32|[Val](/txt/exe/amc/reftype/Val.md)||Distance to selection. >0 is up, <0 is down|
+|acr.FRec.sortkey|[acr.RecSortkey](/txt/gen/acr/acr.md#acr-recsortkey)|[Val](/txt/exe/amc/reftype/Val.md)||Output sort key|
+|acr.FRec.c_pline|[acr.FPline](/txt/gen/acr/acr.md#acr-fpline)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Optional pline|
+|acr.FRec.p_outfile|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Record's OUTPUT file (may differ from input)|
+|acr.FRec.p_infile|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||File from which record was loaded|
+|acr.FRec.p_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FRec.lineno|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FRec
 <a href="#struct-frec"></a>
@@ -1342,8 +1346,8 @@ private:
 <a href="#acr-fsortkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FSortkey.sortkey|[acr.RecSortkey](/txt/gen/acr/acr.md#acr-recsortkey)|[Val](/txt/exe/amc/reftype.md#val)||Sort key|
-|acr.FSortkey.next_rowid|double|[Val](/txt/exe/amc/reftype.md#val)|0||
+|acr.FSortkey.sortkey|[acr.RecSortkey](/txt/gen/acr/acr.md#acr-recsortkey)|[Val](/txt/exe/amc/reftype/Val.md)||Sort key|
+|acr.FSortkey.next_rowid|double|[Val](/txt/exe/amc/reftype/Val.md)|0||
 
 #### Struct FSortkey
 <a href="#struct-fsortkey"></a>
@@ -1378,9 +1382,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr.FSsimfile.base|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
-|acr.FSsimfile.c_file|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Ptr](/txt/exe/amc/reftype.md#ptr)||optional!|
-|acr.FSsimfile.p_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FSsimfile.c_ssimsort|[acr.FSsimsort](/txt/gen/acr/acr.md#acr-fssimsort)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Optional sort order|
+|acr.FSsimfile.c_file|[acr.FFile](/txt/gen/acr/acr.md#acr-ffile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||optional!|
+|acr.FSsimfile.p_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FSsimfile.c_ssimsort|[acr.FSsimsort](/txt/gen/acr/acr.md#acr-fssimsort)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Optional sort order|
 
 #### Struct FSsimfile
 <a href="#struct-fssimfile"></a>
@@ -1423,10 +1427,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr.FSsimreq.base|[dmmeta.Ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|[Base](/txt/ssimdb/dmmeta/ssimreq.md)|||
-|acr.FSsimreq.p_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FSsimreq.p_child_ssimfile|[acr.FSsimfile](/txt/gen/acr/acr.md#acr-fssimfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FSsimreq.p_parent_field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr.FSsimreq.regx_value|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|||
+|acr.FSsimreq.p_ctype|[acr.FCtype](/txt/gen/acr/acr.md#acr-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FSsimreq.p_child_ssimfile|[acr.FSsimfile](/txt/gen/acr/acr.md#acr-fssimfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FSsimreq.p_parent_field|[acr.FField](/txt/gen/acr/acr.md#acr-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr.FSsimreq.regx_value|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|||
 
 #### Struct FSsimreq
 <a href="#struct-fssimreq"></a>
@@ -1544,7 +1548,7 @@ private:
 <a href="#acr-ftempkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FTempkey.tempkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr.FTempkey.tempkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTempkey
 <a href="#struct-ftempkey"></a>
@@ -1577,7 +1581,7 @@ private:
 <a href="#acr-funiqueattr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FUniqueattr.uniqueattr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Data|
+|acr.FUniqueattr.uniqueattr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Data|
 
 #### Struct FUniqueattr
 <a href="#struct-funiqueattr"></a>
@@ -1610,7 +1614,7 @@ private:
 <a href="#acr-fwrite-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.FWrite.c_cmtrec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Temporary array for write|
+|acr.FWrite.c_cmtrec|[acr.FRec](/txt/gen/acr/acr.md#acr-frec)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Temporary array for write|
 
 #### Struct FWrite
 <a href="#struct-fwrite"></a>
@@ -1634,7 +1638,7 @@ struct FWrite { // acr.FWrite: Print function
 <a href="#acr-readmode-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr.ReadMode.read_mode|u8|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr.ReadMode.read_mode|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct ReadMode
 <a href="#struct-readmode"></a>
@@ -1689,7 +1693,7 @@ These can be executed with `atf_comp <comptest> -v`
 |[acr.Meta1](/test/atf_comp/acr.Meta1)|Select meta-information|
 |[acr.Meta2](/test/atf_comp/acr.Meta2)|Select meta-information|
 |[acr.Meta3](/test/atf_comp/acr.Meta3)|Select meta-information|
-|[acr.NullTrunc](/test/atf_comp/acr.NullTrunc)|Trunc with reinsertion has no effect|
+|[acr.NullTrunc](/test/atf_comp/acr.NullTrunc)|Trunc with reinsertion has no effect; a pool over real malloc aliases its first element with the chunk, so the annotation is wrong, not the test|
 |[acr.QueryCtype](/test/atf_comp/acr.QueryCtype)|Select one record|
 |[acr.RenameCollision](/test/atf_comp/acr.RenameCollision)|Rename with collision|
 |[acr.RenameField](/test/atf_comp/acr.RenameField)|-rename -field renames affected attributes in dataset|

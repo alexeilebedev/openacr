@@ -1158,7 +1158,7 @@ struct OffsetCommitKey { // kafka.OffsetCommitKey
 };
 // Copy fields out of row
 // func:kafka.OffsetCommitKey.base.CopyOut
-void                 parent_CopyOut(kafka::OffsetCommitKey &row, kafka::GroupRecordKeyHeader &out) __attribute__((nothrow));
+void                 offset_commit_key_CopyOut(kafka::OffsetCommitKey &row, kafka::GroupRecordKeyHeader &out) __attribute__((nothrow));
 // Check if kafka::GroupRecordKeyHeader is an instance of OffsetCommitKey by checking the type field
 // If it is, return the pointer of target type.
 // If not successful, quietly return NULL.
@@ -1195,7 +1195,7 @@ struct OffsetCommitValue { // kafka.OffsetCommitValue
 };
 // Copy fields out of row
 // func:kafka.OffsetCommitValue.base.CopyOut
-void                 parent_CopyOut(kafka::OffsetCommitValue &row, kafka::GroupRecordValueHeader &out) __attribute__((nothrow));
+void                 offset_commit_value_CopyOut(kafka::OffsetCommitValue &row, kafka::GroupRecordValueHeader &out) __attribute__((nothrow));
 // Check if kafka::GroupRecordValueHeader is an instance of OffsetCommitValue by checking the type field
 // If it is, return the pointer of target type.
 // If not successful, quietly return NULL.

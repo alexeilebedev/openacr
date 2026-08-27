@@ -30,8 +30,8 @@
 
 // --- mdbg.FBuilddir..Init
 // Set all fields to initial values.
-inline void mdbg::FBuilddir_Init(mdbg::FBuilddir& builddir) {
-    builddir.cfg_c_builddir_in_ary = bool(false);
+inline void mdbg::FBuilddir_Init(mdbg::FBuilddir& parent) {
+    parent.cfg_c_builddir_in_ary = bool(false);
 }
 
 // --- mdbg.FBuilddir..Ctor
@@ -46,48 +46,48 @@ inline  mdbg::FBuilddir::~FBuilddir() {
 
 // --- mdbg.FCfg.c_builddir.EmptyQ
 // Return true if index is empty
-inline bool mdbg::c_builddir_EmptyQ(mdbg::FCfg& cfg) {
-    return cfg.c_builddir_n == 0;
+inline bool mdbg::c_builddir_EmptyQ(mdbg::FCfg& parent) {
+    return parent.c_builddir_n == 0;
 }
 
 // --- mdbg.FCfg.c_builddir.Find
 // Look up row by row id. Return NULL if out of range
-inline mdbg::FBuilddir* mdbg::c_builddir_Find(mdbg::FCfg& cfg, u64 t) {
+inline mdbg::FBuilddir* mdbg::c_builddir_Find(mdbg::FCfg& parent, u64 t) {
     mdbg::FBuilddir *retval = NULL;
     u64 idx = t;
-    u64 lim = cfg.c_builddir_n;
+    u64 lim = parent.c_builddir_n;
     if (idx < lim) {
-        retval = cfg.c_builddir_elems[idx];
+        retval = parent.c_builddir_elems[idx];
     }
     return retval;
 }
 
 // --- mdbg.FCfg.c_builddir.Getary
 // Return array of pointers
-inline algo::aryptr<mdbg::FBuilddir*> mdbg::c_builddir_Getary(mdbg::FCfg& cfg) {
-    return algo::aryptr<mdbg::FBuilddir*>(cfg.c_builddir_elems, cfg.c_builddir_n);
+inline algo::aryptr<mdbg::FBuilddir*> mdbg::c_builddir_Getary(mdbg::FCfg& parent) {
+    return algo::aryptr<mdbg::FBuilddir*>(parent.c_builddir_elems, parent.c_builddir_n);
 }
 
 // --- mdbg.FCfg.c_builddir.N
 // Return number of items in the pointer array
-inline i64 mdbg::c_builddir_N(const mdbg::FCfg& cfg) {
-    return cfg.c_builddir_n;
+inline i64 mdbg::c_builddir_N(const mdbg::FCfg& parent) {
+    return parent.c_builddir_n;
 }
 
 // --- mdbg.FCfg.c_builddir.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void mdbg::c_builddir_RemoveAll(mdbg::FCfg& cfg) {
-    for (u64 i = 0; i < cfg.c_builddir_n; i++) {
+inline void mdbg::c_builddir_RemoveAll(mdbg::FCfg& parent) {
+    for (u64 i = 0; i < parent.c_builddir_n; i++) {
         // mark all elements as not-in-array
-        cfg.c_builddir_elems[i]->cfg_c_builddir_in_ary = false;
+        parent.c_builddir_elems[i]->cfg_c_builddir_in_ary = false;
     }
-    cfg.c_builddir_n = 0;
+    parent.c_builddir_n = 0;
 }
 
 // --- mdbg.FCfg.c_builddir.qFind
 // Return reference without bounds checking
-inline mdbg::FBuilddir& mdbg::c_builddir_qFind(mdbg::FCfg& cfg, u64 idx) {
-    return *cfg.c_builddir_elems[idx];
+inline mdbg::FBuilddir& mdbg::c_builddir_qFind(mdbg::FCfg& parent, u64 idx) {
+    return *parent.c_builddir_elems[idx];
 }
 
 // --- mdbg.FCfg.c_builddir.InAryQ
@@ -98,8 +98,8 @@ inline bool mdbg::cfg_c_builddir_InAryQ(mdbg::FBuilddir& row) {
 
 // --- mdbg.FCfg.c_builddir.qLast
 // Reference to last element without bounds checking
-inline mdbg::FBuilddir& mdbg::c_builddir_qLast(mdbg::FCfg& cfg) {
-    return *cfg.c_builddir_elems[cfg.c_builddir_n-1];
+inline mdbg::FBuilddir& mdbg::c_builddir_qLast(mdbg::FCfg& parent) {
+    return *parent.c_builddir_elems[parent.c_builddir_n-1];
 }
 
 // --- mdbg.FCfg.c_builddir_curs.Reset
@@ -129,12 +129,12 @@ inline mdbg::FBuilddir& mdbg::cfg_c_builddir_curs_Access(cfg_c_builddir_curs &cu
 
 // --- mdbg.FCfg..Init
 // Set all fields to initial values.
-inline void mdbg::FCfg_Init(mdbg::FCfg& cfg) {
-    cfg.c_builddir_elems = NULL; // (mdbg.FCfg.c_builddir)
-    cfg.c_builddir_n = 0; // (mdbg.FCfg.c_builddir)
-    cfg.c_builddir_max = 0; // (mdbg.FCfg.c_builddir)
-    cfg.ind_cfg_next = (mdbg::FCfg*)-1; // (mdbg.FDb.ind_cfg) not-in-hash
-    cfg.ind_cfg_hashval = 0; // stored hash value
+inline void mdbg::FCfg_Init(mdbg::FCfg& parent) {
+    parent.c_builddir_elems = NULL; // (mdbg.FCfg.c_builddir)
+    parent.c_builddir_n = 0; // (mdbg.FCfg.c_builddir)
+    parent.c_builddir_max = 0; // (mdbg.FCfg.c_builddir)
+    parent.ind_cfg_next = (mdbg::FCfg*)-1; // (mdbg.FDb.ind_cfg) not-in-hash
+    parent.ind_cfg_hashval = 0; // stored hash value
 }
 
 // --- mdbg.FCfg..Ctor

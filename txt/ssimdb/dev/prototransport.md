@@ -11,7 +11,7 @@ italicised fields: *netproto, transport* are [**fldfunc**](/txt/openacr/ssim.md#
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|prototransport|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*netproto*|*[dev.Netproto](/txt/ssimdb/dev/netproto.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RL of prototransport*|
-|*transport*|*[dev.Transport](/txt/ssimdb/dev/transport.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RR of prototransport*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|prototransport|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*netproto*|*[dev.Netproto](/txt/ssimdb/dev/netproto.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/RL of prototransport*|
+|*transport*|*[dev.Transport](/txt/ssimdb/dev/transport.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/RR of prototransport*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||

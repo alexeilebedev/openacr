@@ -42,16 +42,20 @@ const char *dev_Builddir_builddir_Darwin_clangPP_coverage_arm64    = "Darwin-cla
 const char *dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64   = "Darwin-clang++.coverage-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_debug_arm64       = "Darwin-clang++.debug-arm64";
 const char *dev_Builddir_builddir_Darwin_clangPP_debug_x86_64      = "Darwin-clang++.debug-x86_64";
+const char *dev_Builddir_builddir_Darwin_clangPP_memcheck_x86_64   = "Darwin-clang++.memcheck-x86_64";
+
 const char *dev_Builddir_builddir_Darwin_clangPP_profile_arm64     = "Darwin-clang++.profile-arm64";
 const char *dev_Builddir_builddir_Darwin_clangPP_profile_x86_64    = "Darwin-clang++.profile-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_release_arm64     = "Darwin-clang++.release-arm64";
 const char *dev_Builddir_builddir_Darwin_clangPP_release_x86_64    = "Darwin-clang++.release-x86_64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64   = "FreeBSD-clang++.coverage-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64      = "FreeBSD-clang++.debug-amd64";
+const char *dev_Builddir_builddir_FreeBSD_clangPP_memcheck_amd64   = "FreeBSD-clang++.memcheck-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64    = "FreeBSD-clang++.profile-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_release_amd64    = "FreeBSD-clang++.release-amd64";
 const char *dev_Builddir_builddir_Linux_gPP_coverage_x86_64        = "Linux-g++.coverage-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_debug_x86_64           = "Linux-g++.debug-x86_64";
+const char *dev_Builddir_builddir_Linux_gPP_memcheck_x86_64        = "Linux-g++.memcheck-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_profile_x86_64         = "Linux-g++.profile-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_release_x86_64         = "Linux-g++.release-x86_64";
 
@@ -61,8 +65,9 @@ const char *dev_Cfg_cfg_   = "";
 const char *dev_Cfg_cfg_coverage   = "coverage";
 const char *dev_Cfg_cfg_debug      = "debug";
 
-const char *dev_Cfg_cfg_profile   = "profile";
-const char *dev_Cfg_cfg_release   = "release";
+const char *dev_Cfg_cfg_memcheck   = "memcheck";
+const char *dev_Cfg_cfg_profile    = "profile";
+const char *dev_Cfg_cfg_release    = "release";
 
 // compile-time string constants for dev.Compiler.compiler
 const char *dev_Compiler_compiler_          = "";
@@ -1133,6 +1138,7 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_pkgdep            : ret = "pkgdep";  break;
         case dev_FieldId_parent            : ret = "parent";  break;
         case dev_FieldId_soft              : ret = "soft";  break;
+        case dev_FieldId_pkgdeptype        : ret = "pkgdeptype";  break;
         case dev_FieldId_pkgkey            : ret = "pkgkey";  break;
         case dev_FieldId_key               : ret = "key";  break;
         case dev_FieldId_up                : ret = "up";  break;
@@ -1579,6 +1585,10 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('h','t','m','l','e','n','t','i'): {
                     if (memcmp(rhs.elems+8,"ty",2)==0) { value_SetEnum(parent,dev_FieldId_htmlentity); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('p','k','g','d','e','p','t','y'): {
+                    if (memcmp(rhs.elems+8,"pe",2)==0) { value_SetEnum(parent,dev_FieldId_pkgdeptype); ret = true; break; }
                     break;
                 }
                 case LE_STR8('r','e','a','d','m','e','s','o'): {
@@ -2519,6 +2529,9 @@ bool dev::Pkgdep_ReadFieldMaybe(dev::Pkgdep& parent, algo::strptr field, algo::s
         case dev_FieldId_soft: {
             retval = bool_ReadStrptrMaybe(parent.soft, strval);
         } break;
+        case dev_FieldId_pkgdeptype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.pkgdeptype, strval);
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -2557,6 +2570,58 @@ void dev::Pkgdep_Print(dev::Pkgdep& row, algo::cstring& str) {
 
     bool_Print(row.soft, temp);
     PrintAttrSpaceReset(str,"soft", temp);
+
+    algo::Smallstr50_Print(row.pkgdeptype, temp);
+    PrintAttrSpaceReset(str,"pkgdeptype", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dev.Pkgdeptype..ReadFieldMaybe
+bool dev::Pkgdeptype_ReadFieldMaybe(dev::Pkgdeptype& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dev_FieldId_pkgdeptype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.pkgdeptype, strval);
+        } break;
+        case dev_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Pkgdeptype..ReadStrptrMaybe
+// Read fields of dev::Pkgdeptype from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Pkgdeptype_ReadStrptrMaybe(dev::Pkgdeptype &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.pkgdeptype") || algo::StripTypeTag(in_str, "dev.Pkgdeptype");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Pkgdeptype_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Pkgdeptype..Print
+// print string representation of ROW to string STR
+// cfmt:dev.Pkgdeptype.String  printfmt:Tuple
+void dev::Pkgdeptype_Print(dev::Pkgdeptype& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dev.pkgdeptype";
+
+    algo::Smallstr50_Print(row.pkgdeptype, temp);
+    PrintAttrSpaceReset(str,"pkgdeptype", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

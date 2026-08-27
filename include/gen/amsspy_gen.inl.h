@@ -276,48 +276,48 @@ inline amsspy::FShm& amsspy::_db_cd_shm_poll_curs_Access(_db_cd_shm_poll_curs &c
 
 // --- amsspy.FSession.c_shm.EmptyQ
 // Return true if index is empty
-inline bool amsspy::c_shm_EmptyQ(amsspy::FSession& session) {
-    return session.c_shm_n == 0;
+inline bool amsspy::c_shm_EmptyQ(amsspy::FSession& parent) {
+    return parent.c_shm_n == 0;
 }
 
 // --- amsspy.FSession.c_shm.Find
 // Look up row by row id. Return NULL if out of range
-inline amsspy::FShm* amsspy::c_shm_Find(amsspy::FSession& session, u64 t) {
+inline amsspy::FShm* amsspy::c_shm_Find(amsspy::FSession& parent, u64 t) {
     amsspy::FShm *retval = NULL;
     u64 idx = t;
-    u64 lim = session.c_shm_n;
+    u64 lim = parent.c_shm_n;
     if (idx < lim) {
-        retval = session.c_shm_elems[idx];
+        retval = parent.c_shm_elems[idx];
     }
     return retval;
 }
 
 // --- amsspy.FSession.c_shm.Getary
 // Return array of pointers
-inline algo::aryptr<amsspy::FShm*> amsspy::c_shm_Getary(amsspy::FSession& session) {
-    return algo::aryptr<amsspy::FShm*>(session.c_shm_elems, session.c_shm_n);
+inline algo::aryptr<amsspy::FShm*> amsspy::c_shm_Getary(amsspy::FSession& parent) {
+    return algo::aryptr<amsspy::FShm*>(parent.c_shm_elems, parent.c_shm_n);
 }
 
 // --- amsspy.FSession.c_shm.N
 // Return number of items in the pointer array
-inline i64 amsspy::c_shm_N(const amsspy::FSession& session) {
-    return session.c_shm_n;
+inline i64 amsspy::c_shm_N(const amsspy::FSession& parent) {
+    return parent.c_shm_n;
 }
 
 // --- amsspy.FSession.c_shm.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amsspy::c_shm_RemoveAll(amsspy::FSession& session) {
-    for (u64 i = 0; i < session.c_shm_n; i++) {
+inline void amsspy::c_shm_RemoveAll(amsspy::FSession& parent) {
+    for (u64 i = 0; i < parent.c_shm_n; i++) {
         // mark all elements as not-in-array
-        session.c_shm_elems[i]->session_c_shm_in_ary = false;
+        parent.c_shm_elems[i]->session_c_shm_in_ary = false;
     }
-    session.c_shm_n = 0;
+    parent.c_shm_n = 0;
 }
 
 // --- amsspy.FSession.c_shm.qFind
 // Return reference without bounds checking
-inline amsspy::FShm& amsspy::c_shm_qFind(amsspy::FSession& session, u64 idx) {
-    return *session.c_shm_elems[idx];
+inline amsspy::FShm& amsspy::c_shm_qFind(amsspy::FSession& parent, u64 idx) {
+    return *parent.c_shm_elems[idx];
 }
 
 // --- amsspy.FSession.c_shm.InAryQ
@@ -328,18 +328,18 @@ inline bool amsspy::session_c_shm_InAryQ(amsspy::FShm& row) {
 
 // --- amsspy.FSession.c_shm.qLast
 // Reference to last element without bounds checking
-inline amsspy::FShm& amsspy::c_shm_qLast(amsspy::FSession& session) {
-    return *session.c_shm_elems[session.c_shm_n-1];
+inline amsspy::FShm& amsspy::c_shm_qLast(amsspy::FSession& parent) {
+    return *parent.c_shm_elems[parent.c_shm_n-1];
 }
 
 // --- amsspy.FSession..Init
 // Set all fields to initial values.
-inline void amsspy::FSession_Init(amsspy::FSession& session) {
-    session.c_shm_elems = NULL; // (amsspy.FSession.c_shm)
-    session.c_shm_n = 0; // (amsspy.FSession.c_shm)
-    session.c_shm_max = 0; // (amsspy.FSession.c_shm)
-    session.ind_session_next = (amsspy::FSession*)-1; // (amsspy.FDb.ind_session) not-in-hash
-    session.ind_session_hashval = 0; // stored hash value
+inline void amsspy::FSession_Init(amsspy::FSession& parent) {
+    parent.c_shm_elems = NULL; // (amsspy.FSession.c_shm)
+    parent.c_shm_n = 0; // (amsspy.FSession.c_shm)
+    parent.c_shm_max = 0; // (amsspy.FSession.c_shm)
+    parent.ind_session_next = (amsspy::FSession*)-1; // (amsspy.FDb.ind_session) not-in-hash
+    parent.ind_session_hashval = 0; // stored hash value
 }
 
 // --- amsspy.FSession.c_shm_curs.Reset
@@ -379,18 +379,18 @@ inline  amsspy::FSession::~FSession() {
 
 // --- amsspy.FShm..Init
 // Set all fields to initial values.
-inline void amsspy::FShm_Init(amsspy::FShm& shm) {
-    shm.p_session = NULL;
-    shm.hdr = u64(0);
-    shm.mem_size = u64(0);
-    shm.roff = u64(0);
-    shm.mask = u32(0);
-    shm.maxlen = u32(0);
-    shm.session_c_shm_in_ary = bool(false);
-    shm.ind_shm_next = (amsspy::FShm*)-1; // (amsspy.FDb.ind_shm) not-in-hash
-    shm.ind_shm_hashval = 0; // stored hash value
-    shm.cd_shm_poll_next = (amsspy::FShm*)-1; // (amsspy.FDb.cd_shm_poll) not-in-list
-    shm.cd_shm_poll_prev = NULL; // (amsspy.FDb.cd_shm_poll)
+inline void amsspy::FShm_Init(amsspy::FShm& parent) {
+    parent.p_session = NULL;
+    parent.hdr = u64(0);
+    parent.mem_size = u64(0);
+    parent.roff = u64(0);
+    parent.mask = u32(0);
+    parent.maxlen = u32(0);
+    parent.session_c_shm_in_ary = bool(false);
+    parent.ind_shm_next = (amsspy::FShm*)-1; // (amsspy.FDb.ind_shm) not-in-hash
+    parent.ind_shm_hashval = 0; // stored hash value
+    parent.cd_shm_poll_next = (amsspy::FShm*)-1; // (amsspy.FDb.cd_shm_poll) not-in-list
+    parent.cd_shm_poll_prev = NULL; // (amsspy.FDb.cd_shm_poll)
 }
 
 // --- amsspy.FShm..Ctor

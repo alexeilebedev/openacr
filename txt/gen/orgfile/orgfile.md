@@ -3,10 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -54,13 +57,13 @@ All allocations are done through global `orgfile::_db` [orgfile.FDb](#orgfile-fd
 <a href="#orgfile-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|orgfile.FDb._db|[orgfile.FDb](/txt/gen/orgfile/orgfile.md#orgfile-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|orgfile.FDb.cmdline|[command.orgfile](/txt/protocol/command/README.md#command-orgfile)|[Val](/txt/exe/amc/reftype.md#val)|||
-|orgfile.FDb.filename|[orgfile.FFilename](/txt/gen/orgfile/orgfile.md#orgfile-ffilename)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|orgfile.FDb.ind_filename|[orgfile.FFilename](/txt/gen/orgfile/orgfile.md#orgfile-ffilename)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|orgfile.FDb.filehash|[orgfile.FFilehash](/txt/gen/orgfile/orgfile.md#orgfile-ffilehash)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|orgfile.FDb.ind_filehash|[orgfile.FFilehash](/txt/gen/orgfile/orgfile.md#orgfile-ffilehash)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|orgfile.FDb.timefmt|[orgfile.FTimefmt](/txt/gen/orgfile/orgfile.md#orgfile-ftimefmt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|orgfile.FDb._db|[orgfile.FDb](/txt/gen/orgfile/orgfile.md#orgfile-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|orgfile.FDb.cmdline|[command.orgfile](/txt/protocol/command/README.md#command-orgfile)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|orgfile.FDb.filename|[orgfile.FFilename](/txt/gen/orgfile/orgfile.md#orgfile-ffilename)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|orgfile.FDb.ind_filename|[orgfile.FFilename](/txt/gen/orgfile/orgfile.md#orgfile-ffilename)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|orgfile.FDb.filehash|[orgfile.FFilehash](/txt/gen/orgfile/orgfile.md#orgfile-ffilehash)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|orgfile.FDb.ind_filehash|[orgfile.FFilehash](/txt/gen/orgfile/orgfile.md#orgfile-ffilehash)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|orgfile.FDb.timefmt|[orgfile.FTimefmt](/txt/gen/orgfile/orgfile.md#orgfile-ftimefmt)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -91,8 +94,8 @@ struct FDb { // orgfile.FDb: In-memory database for orgfile
 <a href="#orgfile-ffilehash-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|orgfile.FFilehash.filehash|[algo.Smallstr40](/txt/protocol/algo/README.md#algo-smallstr40)|[Val](/txt/exe/amc/reftype.md#val)|||
-|orgfile.FFilehash.c_filename|[orgfile.FFilename](/txt/gen/orgfile/orgfile.md#orgfile-ffilename)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|orgfile.FFilehash.filehash|[algo.Smallstr40](/txt/protocol/algo/README.md#algo-smallstr40)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|orgfile.FFilehash.c_filename|[orgfile.FFilename](/txt/gen/orgfile/orgfile.md#orgfile-ffilename)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FFilehash
 <a href="#struct-ffilehash"></a>
@@ -130,9 +133,9 @@ private:
 <a href="#orgfile-ffilename-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|orgfile.FFilename.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|orgfile.FFilename.filehash|[orgfile.FFilehash](/txt/gen/orgfile/orgfile.md#orgfile-ffilehash)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|orgfile.FFilename.p_filehash|[orgfile.FFilehash](/txt/gen/orgfile/orgfile.md#orgfile-ffilehash)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|orgfile.FFilename.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|orgfile.FFilename.filehash|[orgfile.FFilehash](/txt/gen/orgfile/orgfile.md#orgfile-ffilehash)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|orgfile.FFilename.p_filehash|[orgfile.FFilehash](/txt/gen/orgfile/orgfile.md#orgfile-ffilehash)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFilename
 <a href="#struct-ffilename"></a>
@@ -199,9 +202,9 @@ private:
 <a href="#orgfile-dedup-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|orgfile.dedup.original|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|orgfile.dedup.duplicate|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|orgfile.dedup.comment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|orgfile.dedup.original|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|orgfile.dedup.duplicate|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|orgfile.dedup.comment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct dedup
 <a href="#struct-dedup"></a>
@@ -223,9 +226,9 @@ struct dedup { // orgfile.dedup
 <a href="#orgfile-move-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|orgfile.move.pathname|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|orgfile.move.tgtfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|orgfile.move.comment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|orgfile.move.pathname|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|orgfile.move.tgtfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|orgfile.move.comment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct move
 <a href="#struct-move"></a>

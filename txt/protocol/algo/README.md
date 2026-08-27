@@ -29,7 +29,7 @@
 &#128196; [algo.PrlogFcn - Function for text output](/txt/protocol/algo/PrlogFcn.md)<br/>
 &#128196; [algo.SchedTime - CPU scheduler time (TSC value)](/txt/protocol/algo/SchedTime.md)<br/>
 &#128196; [algo.SeqType - 64-bit sequence type](/txt/protocol/algo/SeqType.md)<br/>
-&#128196; [algo.Sha1sig - SHA1 signature](/txt/protocol/algo/Sha1sig.md)<br/>
+&#128196; [algo.Signature - SHA1 signature](/txt/protocol/algo/Signature.md)<br/>
 &#128196; [algo.TFNNtTestAlert -](/txt/protocol/algo/TFNNtTestAlert.md)<br/>
 &#128196; [algo.TermStyle - terminal style](/txt/protocol/algo/TermStyle.md)<br/>
 &#128196; [algo.TextJust - terminal justification](/txt/protocol/algo/TextJust.md)<br/>
@@ -57,169 +57,169 @@ Other ctypes in this namespace which don't have own readme files
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ary|u8|[Tary](/txt/exe/amc/reftype.md#tary)|||
+|ary|u8|[Tary](/txt/exe/amc/reftype/Tary.md)|||
 
 #### algo.DayRange - Range of days
 <a href="#algo-dayrange"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|start|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|end|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|start|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|end|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.DryrunQ - Symbolic bool
 <a href="#algo-dryrunq"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.EchoQ - Symbolic bool
 <a href="#algo-echoq"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.FailokQ - Symbolic bool
 <a href="#algo-failokq"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I32Dec1 - signed i32, scale 1e1
 <a href="#algo-i32dec1"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I32Dec2 - signed i32, scale 1e2
 <a href="#algo-i32dec2"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I32Dec3 - signed i32, scale 1e3
 <a href="#algo-i32dec3"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I32Dec4 - signed i32, scale 1e4
 <a href="#algo-i32dec4"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I32Dec5 - signed i32, scale 1e5
 <a href="#algo-i32dec5"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I32RangeAry - Byte array
 <a href="#algo-i32rangeary"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ary|[algo.i32_Range](/txt/protocol/algo/README.md#algo-i32_range)|[Tary](/txt/exe/amc/reftype.md#tary)|||
+|ary|[algo.i32_Range](/txt/protocol/algo/README.md#algo-i32_range)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
 
 #### algo.I64Dec1 - signed i64, scale 1e1
 <a href="#algo-i64dec1"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Dec10 - signed i64, scale 1e10
 <a href="#algo-i64dec10"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Dec2 - signed i64, scale 1e2
 <a href="#algo-i64dec2"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Dec3 - signed i64, scale 1e3
 <a href="#algo-i64dec3"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Dec4 - signed i64, scale 1e4
 <a href="#algo-i64dec4"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Dec5 - signed i64, scale 1e5
 <a href="#algo-i64dec5"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Dec6 - signed i64, scale 1e6
 <a href="#algo-i64dec6"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Dec7 - signed i64, scale 1e7
 <a href="#algo-i64dec7"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Dec8 - signed i64, scale 1e8
 <a href="#algo-i64dec8"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Dec9 - signed i64, scale 1e9
 <a href="#algo-i64dec9"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.I64Rate
 <a href="#algo-i64rate"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|last|i64|[Val](/txt/exe/amc/reftype.md#val)||Last value|
-|delta|i64|[Val](/txt/exe/amc/reftype.md#val)||Delta of last value|
+|last|i64|[Val](/txt/exe/amc/reftype/Val.md)||Last value|
+|delta|i64|[Val](/txt/exe/amc/reftype/Val.md)||Delta of last value|
 
 #### algo.Imdb - In-memory database descriptor (reflection)
 <a href="#algo-imdb"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|imdb|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)||Database name|
-|InsertStrptrMaybe|[algo.ImdbInsertStrptrMaybeFcn](/txt/protocol/algo/README.md#algo-imdbinsertstrptrmaybefcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Insert new element given a string|
-|RemoveStrptrMaybe|[algo.ImdbRemoveStrptrMaybeFcn](/txt/protocol/algo/README.md#algo-imdbremovestrptrmaybefcn)|[Val](/txt/exe/amc/reftype.md#val)||Remove element by primary key parsed from string (NULL if unsupported)|
-|Step|[algo.ImdbStepFcn](/txt/protocol/algo/README.md#algo-imdbstepfcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Perform one step (may be NULL)|
-|MainLoop|[algo.ImdbMainLoopFcn](/txt/protocol/algo/README.md#algo-imdbmainloopfcn)|[Val](/txt/exe/amc/reftype.md#val)|0|Main Loop|
-|GetTrace|[algo.ImdbGetTraceFcn](/txt/protocol/algo/README.md#algo-imdbgettracefcn)|[Val](/txt/exe/amc/reftype.md#val)|0||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|imdb|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)||Database name|
+|InsertStrptrMaybe|[algo.ImdbInsertStrptrMaybeFcn](/txt/protocol/algo/README.md#algo-imdbinsertstrptrmaybefcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Insert new element given a string|
+|RemoveStrptrMaybe|[algo.ImdbRemoveStrptrMaybeFcn](/txt/protocol/algo/README.md#algo-imdbremovestrptrmaybefcn)|[Val](/txt/exe/amc/reftype/Val.md)||Remove element by primary key parsed from string (NULL if unsupported)|
+|Step|[algo.ImdbStepFcn](/txt/protocol/algo/README.md#algo-imdbstepfcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Perform one step (may be NULL)|
+|MainLoop|[algo.ImdbMainLoopFcn](/txt/protocol/algo/README.md#algo-imdbmainloopfcn)|[Val](/txt/exe/amc/reftype/Val.md)|0|Main Loop|
+|GetTrace|[algo.ImdbGetTraceFcn](/txt/protocol/algo/README.md#algo-imdbgettracefcn)|[Val](/txt/exe/amc/reftype/Val.md)|0||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.ImdbGetTraceFcn - Function for retrieving address of trace record
 <a href="#algo-imdbgettracefcn"></a>
@@ -247,7 +247,7 @@ Other ctypes in this namespace which don't have own readme files
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.ImrowRowidFindFcn - Function to find rowid of a row given its address
 <a href="#algo-imrowrowidfindfcn"></a>
@@ -260,1086 +260,1086 @@ Other ctypes in this namespace which don't have own readme files
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr11_U64 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr11_u64"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr12_U64 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr12_u64"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr13_U64_Base36 - number stored as ascii digits, left pad with '0', base 36
 <a href="#algo-lnumstr13_u64_base36"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr16_U64_Base16 - number stored as ascii digits, padded with 0s, base 16
 <a href="#algo-lnumstr16_u64_base16"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr1_U32 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr1_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr20_U64 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr20_u64"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr22_U64 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr22_u64"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr2_U32 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr2_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr3_U32 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr3_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr4_U32 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr4_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr5_U32 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr5_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr5_U32_Base36 - number stored as ascii digits, left pad with '0', base 36
 <a href="#algo-lnumstr5_u32_base36"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr6_U32 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr6_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr7_U32 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr7_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr7_U32_Base36 - number stored as ascii digits, left pad with '0', base 36
 <a href="#algo-lnumstr7_u32_base36"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr8_U32 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr8_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr8_U32_Base16 - number stored as ascii digits, padded with 0s, base 16
 <a href="#algo-lnumstr8_u32_base16"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr8_U64 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr8_u64"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr9_U32 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr9_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LnumStr9_U64 - number stored as ascii digits, left pad with '0'
 <a href="#algo-lnumstr9_u64"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr10 - string padded on the left with spaces
 <a href="#algo-lspacestr10"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr12 - string padded on the left with spaces
 <a href="#algo-lspacestr12"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr14 - string padded on the left with spaces
 <a href="#algo-lspacestr14"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr15 - string padded on the left with spaces
 <a href="#algo-lspacestr15"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr20_I64 - number stored as ascii digits, left pad with ' '
 <a href="#algo-lspacestr20_i64"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr20_U64 - number stored as ascii digits, left pad with ' '
 <a href="#algo-lspacestr20_u64"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr3 - string padded on the left with spaces
 <a href="#algo-lspacestr3"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr3_I16 - number stored as ascii digits, left pad with ' '
 <a href="#algo-lspacestr3_i16"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr4 - string padded on the left with spaces
 <a href="#algo-lspacestr4"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr5 - string padded on the left with spaces
 <a href="#algo-lspacestr5"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr5_U16 - number stored as ascii digits, left pad with ' '
 <a href="#algo-lspacestr5_u16"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr6 - string padded on the left with spaces
 <a href="#algo-lspacestr6"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr6_U32 - number stored as ascii digits, left pad with ' '
 <a href="#algo-lspacestr6_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr7_I32_Base36 - number stored as ascii digits, left pad with ' ', base 36
 <a href="#algo-lspacestr7_i32_base36"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr8 - string padded on the left with spaces
 <a href="#algo-lspacestr8"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.LspaceStr9 - string padded on the left with spaces
 <a href="#algo-lspacestr9"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr1 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr1"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr10 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr10"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr100 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr100"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr1000 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr1000"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr11 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr11"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr12 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr12"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr129 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr129"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr13 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr13"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr14 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr14"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr15 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr15"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr151 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr151"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr16 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr16"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr17 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr17"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr18 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr18"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr19 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr19"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr2 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr2"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr20 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr20"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr21 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr21"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr24 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr24"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr25 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr25"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr28 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr28"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr3 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr3"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr30 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr30"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr32 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr33 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr33"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr35 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr35"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr36 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr36"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr4 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr4"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr40 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr40"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr41 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr41"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr43 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr43"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr44 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr44"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr48 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr48"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr5 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr5"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr50 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr50"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr54 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr54"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr55 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr55"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr6 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr6"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr60 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr60"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr62 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr62"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr66 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr66"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr6_U32 - number stored as ascii digits, right pad with null
 <a href="#algo-rnullstr6_u32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr7 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr7"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr8 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr8"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr80 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr80"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RnullStr9 - fixed-length string padded on the right with NUL characters
 <a href="#algo-rnullstr9"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr10 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr10"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr100 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr100"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr11 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr11"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr12 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr12"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr128 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr128"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr14 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr14"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr15 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr15"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr16 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr16"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr18 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr18"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr2 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr2"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr20 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr20"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr200 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr200"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr21 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr21"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr24 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr24"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr240 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr240"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr25 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr25"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr26 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr26"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr3 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr3"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr31 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr31"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr32 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr4 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr4"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr40 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr40"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr5 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr5"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr50 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr50"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr6 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr6"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr64 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr64"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr7 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr7"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr75 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr75"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr8 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr8"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.RspaceStr9 - fixed-length string padded on the right with spaces
 <a href="#algo-rspacestr9"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr1 - inline string with length field
 <a href="#algo-smallstr1"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr10 - inline string with length field
 <a href="#algo-smallstr10"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr100 - inline string with length field
 <a href="#algo-smallstr100"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr150 - inline string with length field
 <a href="#algo-smallstr150"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr16 - inline string with length field
 <a href="#algo-smallstr16"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr2 - inline string with length field
 <a href="#algo-smallstr2"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr20 - inline string with length field
 <a href="#algo-smallstr20"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr200 - inline string with length field
 <a href="#algo-smallstr200"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr249 - inline string with length field
 <a href="#algo-smallstr249"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr25 - inline string with length field
 <a href="#algo-smallstr25"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr250 - inline string with length field
 <a href="#algo-smallstr250"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr255 - inline string with length field
 <a href="#algo-smallstr255"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr3 - inline string with length field
 <a href="#algo-smallstr3"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr30 - inline string with length field
 <a href="#algo-smallstr30"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr32 - inline string with length field
 <a href="#algo-smallstr32"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr4 - inline string with length field
 <a href="#algo-smallstr4"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr40 - inline string with length field
 <a href="#algo-smallstr40"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr5 - inline string with length field
 <a href="#algo-smallstr5"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.Smallstr50 - inline string with length field
 <a href="#algo-smallstr50"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ch|char|[Smallstr](/txt/exe/amc/reftype.md#smallstr)|||
+|ch|char|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|||
 
 #### algo.StringAry - array of strings
 <a href="#algo-stringary"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ary|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
+|ary|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
 
 #### algo.U16Ary - Array of u16
 <a href="#algo-u16ary"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ary|u16|[Tary](/txt/exe/amc/reftype.md#tary)||Array of u16 values|
+|ary|u16|[Tary](/txt/exe/amc/reftype/Tary.md)||Array of u16 values|
 
 #### algo.U16Dec2 - u16, scale 1e2
 <a href="#algo-u16dec2"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u16|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u16|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U32Ary - Array of u16
 <a href="#algo-u32ary"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ary|u32|[Tary](/txt/exe/amc/reftype.md#tary)||Array of u16 values|
+|ary|u32|[Tary](/txt/exe/amc/reftype/Tary.md)||Array of u16 values|
 
 #### algo.U32Dec1 - u32, scale 1e1
 <a href="#algo-u32dec1"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U32Dec2 - u32, scale 1e2
 <a href="#algo-u32dec2"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U32Dec3 - u32, scale 1e3
 <a href="#algo-u32dec3"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U32Dec4 - u32, scale 1e4
 <a href="#algo-u32dec4"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U32Dec5 - u32, scale 1e5
 <a href="#algo-u32dec5"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U32LinearKey
 <a href="#algo-u32linearkey"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U64Ary - Array of u64
 <a href="#algo-u64ary"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ary|u64|[Tary](/txt/exe/amc/reftype.md#tary)||Array of u64 values|
+|ary|u64|[Tary](/txt/exe/amc/reftype/Tary.md)||Array of u64 values|
 
 #### algo.U64Dec10 - unsigned u64, scale 1e10
 <a href="#algo-u64dec10"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U64Dec2 - u64, scale 1e2
 <a href="#algo-u64dec2"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U64Dec4 - u64, scale 1e4
 <a href="#algo-u64dec4"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U64Dec5 - u64, scale 1e5
 <a href="#algo-u64dec5"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U64Dec6 - u64, scale 1e6
 <a href="#algo-u64dec6"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U64Dec7 - u64, scale 1e7
 <a href="#algo-u64dec7"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U64Dec8 - u64, scale 1e8
 <a href="#algo-u64dec8"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.U64Dec9 - u64, scale 1e9
 <a href="#algo-u64dec9"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.Uuid
 <a href="#algo-uuid"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|u8|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
+|value|u8|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
 
 #### algo.WDiff - Difference between two WinTimes
 <a href="#algo-wdiff"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.WTime - Units: 100nsec; Number of units since Jan 1, 1600
 <a href="#algo-wtime"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|value|i64|[Val](/txt/exe/amc/reftype.md#val)|||
+|value|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### algo.i32_Range - i32: beg,end
 <a href="#algo-i32_range"></a>
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|beg|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|end|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|beg|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|end|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Functions
 <a href="#functions"></a>
@@ -1607,7 +1607,17 @@ bool algo::DayRange_curs_ValidQ(algo::DayRange_curs &curs)
 ```
 
 ```c++
-// Convert Decimal to double
+// Convert Decimal to double.  PARENT is printed and the text parsed back, so the
+// answer is whatever this tree's own parser makes of that decimal.
+//
+// The obvious form, mantissa times pow(10, exponent), is a second and
+// disagreeing definition of what a decimal means.  No power of ten above 10^22
+// is representable in a double, so pow answers with whatever accuracy its libm
+// has for a large integral exponent, while the parser builds its scale by
+// repeated multiplication -- two roundings that need not land on the same
+// double.  On 10^-63 the two are 2.7e-16 apart under glibc and further apart
+// under Apple's libm, which is a difference in the platform rather than in the
+// number.  Printing and parsing leaves one definition, and it is the parser's.
 double algo::Decimal_GetDouble(algo::Decimal parent)
 ```
 
@@ -2096,6 +2106,26 @@ const tempstr algo::GetDomainname()
 ```
 
 ```c++
+// Return the path of the binary this process is running, symlinks resolved.
+// The answer is empty only where the kernel refuses to say.
+//
+// A tool that re-executes itself, or that looks for a sibling beside itself,
+// needs the file it is really running rather than the word it was started with.
+// The two differ in every ordinary invocation: `atf_unit` found on PATH gives an
+// argv[0] of "atf_unit", a name with no directory in it that exec cannot resolve
+// on its own, and `bin/atf_unit` gives a path to a symlink into a build tree
+// rather than to the binary the link points at.  A process that re-executes
+// argv[0] therefore fails outright in the first case, and a process that looks
+// beside argv[0] searches the wrong directory in the second.
+//
+// Linux answers through /proc/self/exe, which is a link the kernel resolves for
+// the caller.  Darwin has no /proc and answers through _NSGetExecutablePath,
+// which returns the path as given, so that one is resolved here.  argv[0]
+// remains the last resort, and it is the answer on a system with neither.
+tempstr algo::GetExePath()
+```
+
+```c++
 // Return extension of pathname A, including the dot.
 // GetFileExt("abcd/e.txt") -> ".txt"
 // GetFileExt("abcd/e.txt/f") -> ""
@@ -2178,6 +2208,21 @@ const strptr algo::GetMonthNameZeroBasedShort(int index)
 
 ```c++
 int algo::GetMonthZeroBased(strptr month)
+```
+
+```c++
+// Cores this process may actually run on, which is not always what the machine
+// has.
+//
+// A container, a cpuset or a taskset narrows the set a process is allowed to use,
+// and a decision about whether the work fits the hardware has to be made against
+// what the process may use rather than against what lscpu reports -- a caller that
+// read the machine's total would size itself for eight cores while pinned to two.
+// So the affinity mask is the reading, and the machine's online count is the
+// fallback for a kernel that refuses it.  The mask is a Linux facility, and
+// `cpu_set_t` exists nowhere else, so on every other system the online count is
+// the whole answer.
+i32 algo::GetNcore()
 ```
 
 ```c++
@@ -2453,6 +2498,15 @@ void algo::NextSep(algo::strptr &str, char sep, algo::strptr &left)
 
 ```c++
 tempstr algo::NsecToStr(u64 val, bool numeric = false)
+```
+
+```c++
+// TRUE when SIGNATURE is the zero digest, which is what an absent signature
+// reads as: a message whose sender filled none in, or a binary carrying no such
+// dispatch.  Absence and disagreement are different answers -- a party that
+// states no signature is making no claim -- so every comparison that may face an
+// unstated one asks this first.
+bool algo::NullSignatureQ(const algo::Signature &signature)
 ```
 
 ```c++
@@ -2898,16 +2952,24 @@ void algo::SetupFatalSignals()
 ```
 
 ```c++
-// print binary octet string as hex
-void algo::Sha1sig_Print(algo::Sha1sig &sha1sig, algo::cstring &out)
-```
-
-```c++
-bool algo::Sha1sig_ReadStrptrMaybe(algo::Sha1sig &sha1sig, algo::strptr str)
+// Install HANDLER for SIGTERM, SIGINT and SIGHUP, with all three masked while it
+// runs so a repeat signal cannot re-enter it.  Use it where the process must
+// release children or shared memory before exiting, rather than die on the
+// default disposition with nothing unwound.
+void algo::SetupTeardownSignal(void (*handler)(int))
 ```
 
 ```c++
 void algo::ShowStackTrace(uintptr_t start_ip, cstring &out)
+```
+
+```c++
+// print binary octet string as hex
+void algo::Signature_Print(algo::Signature &signature, algo::cstring &out)
+```
+
+```c++
+bool algo::Signature_ReadStrptrMaybe(algo::Signature &signature, algo::strptr str)
 ```
 
 ```c++

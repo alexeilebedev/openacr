@@ -33,8 +33,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -43,7 +41,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_ed::FDb     acr_ed::_db;      // dependency found via dev.targdep
 
@@ -133,21 +130,20 @@ void acr_ed::cfmt_CopyIn(acr_ed::FCfmt &row, dmmeta::Cfmt &in) {
 }
 
 // --- acr_ed.FCfmt.ctype.Get
-algo::strptr acr_ed::ctype_Get(acr_ed::FCfmt& cfmt) {
-    return algo::Pathcomp(cfmt.cfmt, ".RL");
+algo::strptr acr_ed::ctype_Get(acr_ed::FCfmt& parent) {
+    return algo::Pathcomp(parent.cfmt, ".RL");
 }
 
 // --- acr_ed.FCfmt.strfmt.Get
-algo::strptr acr_ed::strfmt_Get(acr_ed::FCfmt& cfmt) {
-    return algo::Pathcomp(cfmt.cfmt, ".RR");
+algo::strptr acr_ed::strfmt_Get(acr_ed::FCfmt& parent) {
+    return algo::Pathcomp(parent.cfmt, ".RR");
 }
 
 // --- acr_ed.FCfmt..Uninit
-void acr_ed::FCfmt_Uninit(acr_ed::FCfmt& cfmt) {
-    acr_ed::FCfmt &row = cfmt; (void)row;
-    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(ctype_Get(row));
+void acr_ed::FCfmt_Uninit(acr_ed::FCfmt& parent) {
+    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_cfmt_Remove(*p_ctype, row);// remove cfmt from index c_cfmt
+        c_cfmt_Remove(*p_ctype, parent);// remove cfmt from index c_cfmt
     }
 }
 
@@ -166,11 +162,10 @@ void acr_ed::cpptype_CopyIn(acr_ed::FCpptype &row, dmmeta::Cpptype &in) {
 }
 
 // --- acr_ed.FCpptype..Uninit
-void acr_ed::FCpptype_Uninit(acr_ed::FCpptype& cpptype) {
-    acr_ed::FCpptype &row = cpptype; (void)row;
-    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(row.ctype);
+void acr_ed::FCpptype_Uninit(acr_ed::FCpptype& parent) {
+    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cpptype_Remove(*p_ctype, row);// remove cpptype from index c_cpptype
+        c_cpptype_Remove(*p_ctype, parent);// remove cpptype from index c_cpptype
     }
 }
 
@@ -191,11 +186,10 @@ void acr_ed::cstr_CopyIn(acr_ed::FCstr &row, dmmeta::Cstr &in) {
 }
 
 // --- acr_ed.FCstr..Uninit
-void acr_ed::FCstr_Uninit(acr_ed::FCstr& cstr) {
-    acr_ed::FCstr &row = cstr; (void)row;
-    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(row.ctype);
+void acr_ed::FCstr_Uninit(acr_ed::FCstr& parent) {
+    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cstr_Remove(*p_ctype, row);// remove cstr from index c_cstr
+        c_cstr_Remove(*p_ctype, parent);// remove cstr from index c_cstr
     }
 }
 
@@ -214,23 +208,23 @@ void acr_ed::ctype_CopyIn(acr_ed::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- acr_ed.FCtype.ns.Get
-algo::strptr acr_ed::ns_Get(acr_ed::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RL");
+algo::strptr acr_ed::ns_Get(acr_ed::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RL");
 }
 
 // --- acr_ed.FCtype.name.Get
-algo::strptr acr_ed::name_Get(acr_ed::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RR");
+algo::strptr acr_ed::name_Get(acr_ed::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RR");
 }
 
 // --- acr_ed.FCtype.c_field.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void acr_ed::c_field_Insert(acr_ed::FCtype& ctype, acr_ed::FField& row) {
+void acr_ed::c_field_Insert(acr_ed::FCtype& parent, acr_ed::FField& row) {
     if (!row.ctype_c_field_in_ary) {
-        c_field_Reserve(ctype, 1);
-        u64 n  = ctype.c_field_n++;
-        ctype.c_field_elems[n] = &row;
+        c_field_Reserve(parent, 1);
+        u64 n  = parent.c_field_n++;
+        parent.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
 }
@@ -239,18 +233,18 @@ void acr_ed::c_field_Insert(acr_ed::FCtype& ctype, acr_ed::FField& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool acr_ed::c_field_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FField& row) {
+bool acr_ed::c_field_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FField& row) {
     bool retval = !ctype_c_field_InAryQ(row);
-    c_field_Insert(ctype,row); // check is performed in _Insert again
+    c_field_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- acr_ed.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void acr_ed::c_field_Remove(acr_ed::FCtype& ctype, acr_ed::FField& row) {
-    i64 n = ctype.c_field_n;
+void acr_ed::c_field_Remove(acr_ed::FCtype& parent, acr_ed::FField& row) {
+    i64 n = parent.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
-        acr_ed::FField* *elems = ctype.c_field_elems;
+        acr_ed::FField* *elems = parent.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -259,7 +253,7 @@ void acr_ed::c_field_Remove(acr_ed::FCtype& ctype, acr_ed::FField& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(acr_ed::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_field_n = n - 1;
+                parent.c_field_n = n - 1;
                 break;
             }
         }
@@ -268,28 +262,28 @@ void acr_ed::c_field_Remove(acr_ed::FCtype& ctype, acr_ed::FField& row) {
 
 // --- acr_ed.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void acr_ed::c_field_Reserve(acr_ed::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_field_max;
-    if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+void acr_ed::c_field_Reserve(acr_ed::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_field_max;
+    if (UNLIKELY(parent.c_field_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_field_n + n), 4);
         u64 old_size = old_max * sizeof(acr_ed::FField*);
         u64 new_size = new_max * sizeof(acr_ed::FField*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr_ed.out_of_memory  field:acr_ed.FCtype.c_field");
         }
-        ctype.c_field_elems = (acr_ed::FField**)new_mem;
-        ctype.c_field_max = new_max;
+        parent.c_field_elems = (acr_ed::FField**)new_mem;
+        parent.c_field_max = new_max;
     }
 }
 
 // --- acr_ed.FCtype.c_cfmt.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void acr_ed::c_cfmt_Insert(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) {
-    c_cfmt_Reserve(ctype, 1);
-    u64 n  = ctype.c_cfmt_n++;
-    ctype.c_cfmt_elems[n] = &row;
+void acr_ed::c_cfmt_Insert(acr_ed::FCtype& parent, acr_ed::FCfmt& row) {
+    c_cfmt_Reserve(parent, 1);
+    u64 n  = parent.c_cfmt_n++;
+    parent.c_cfmt_elems[n] = &row;
 }
 
 // --- acr_ed.FCtype.c_cfmt.ScanInsertMaybe
@@ -297,84 +291,83 @@ void acr_ed::c_cfmt_Insert(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool acr_ed::c_cfmt_ScanInsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) {
+bool acr_ed::c_cfmt_ScanInsertMaybe(acr_ed::FCtype& parent, acr_ed::FCfmt& row) {
     bool retval = true;
-    u64 n  = ctype.c_cfmt_n;
+    u64 n  = parent.c_cfmt_n;
     for (u64 i = 0; i < n; i++) {
-        if (ctype.c_cfmt_elems[i] == &row) {
+        if (parent.c_cfmt_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_cfmt_Insert(ctype,row); // row known absent; the append is Insert's
+        c_cfmt_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- acr_ed.FCtype.c_cfmt.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void acr_ed::c_cfmt_Remove(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) {
-    i64 n = ctype.c_cfmt_n;
+void acr_ed::c_cfmt_Remove(acr_ed::FCtype& parent, acr_ed::FCfmt& row) {
+    i64 n = parent.c_cfmt_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (ctype.c_cfmt_elems[i] == &row) {
+        if (parent.c_cfmt_elems[i] == &row) {
         } else {
             if (j != i) {
-                ctype.c_cfmt_elems[j] = ctype.c_cfmt_elems[i];
+                parent.c_cfmt_elems[j] = parent.c_cfmt_elems[i];
             }
             j++;
         }
     }
-    ctype.c_cfmt_n = j;
+    parent.c_cfmt_n = j;
 }
 
 // --- acr_ed.FCtype.c_cfmt.Reserve
 // Reserve space in index for N more elements;
-void acr_ed::c_cfmt_Reserve(acr_ed::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_cfmt_max;
-    if (UNLIKELY(ctype.c_cfmt_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_cfmt_n + n), 4);
+void acr_ed::c_cfmt_Reserve(acr_ed::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_cfmt_max;
+    if (UNLIKELY(parent.c_cfmt_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_cfmt_n + n), 4);
         u64 old_size = old_max * sizeof(acr_ed::FCfmt*);
         u64 new_size = new_max * sizeof(acr_ed::FCfmt*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_cfmt_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_cfmt_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr_ed.out_of_memory  field:acr_ed.FCtype.c_cfmt");
         }
-        ctype.c_cfmt_elems = (acr_ed::FCfmt**)new_mem;
-        ctype.c_cfmt_max = new_max;
+        parent.c_cfmt_elems = (acr_ed::FCfmt**)new_mem;
+        parent.c_cfmt_max = new_max;
     }
 }
 
 // --- acr_ed.FCtype..Init
 // Set all fields to initial values.
-void acr_ed::FCtype_Init(acr_ed::FCtype& ctype) {
-    ctype.c_field_elems = NULL; // (acr_ed.FCtype.c_field)
-    ctype.c_field_n = 0; // (acr_ed.FCtype.c_field)
-    ctype.c_field_max = 0; // (acr_ed.FCtype.c_field)
-    ctype.c_cstr = NULL;
-    ctype.p_ns = NULL;
-    ctype.c_ssimfile = NULL;
-    ctype.c_pack = NULL;
-    ctype.c_typefld = NULL;
-    ctype.c_cpptype = NULL;
-    ctype.c_cfmt_elems = NULL; // (acr_ed.FCtype.c_cfmt)
-    ctype.c_cfmt_n = 0; // (acr_ed.FCtype.c_cfmt)
-    ctype.c_cfmt_max = 0; // (acr_ed.FCtype.c_cfmt)
-    ctype.ind_ctype_next = (acr_ed::FCtype*)-1; // (acr_ed.FDb.ind_ctype) not-in-hash
-    ctype.ind_ctype_hashval = 0; // stored hash value
+void acr_ed::FCtype_Init(acr_ed::FCtype& parent) {
+    parent.c_field_elems = NULL; // (acr_ed.FCtype.c_field)
+    parent.c_field_n = 0; // (acr_ed.FCtype.c_field)
+    parent.c_field_max = 0; // (acr_ed.FCtype.c_field)
+    parent.c_cstr = NULL;
+    parent.p_ns = NULL;
+    parent.c_ssimfile = NULL;
+    parent.c_pack = NULL;
+    parent.c_typefld = NULL;
+    parent.c_cpptype = NULL;
+    parent.c_cfmt_elems = NULL; // (acr_ed.FCtype.c_cfmt)
+    parent.c_cfmt_n = 0; // (acr_ed.FCtype.c_cfmt)
+    parent.c_cfmt_max = 0; // (acr_ed.FCtype.c_cfmt)
+    parent.ind_ctype_next = (acr_ed::FCtype*)-1; // (acr_ed.FDb.ind_ctype) not-in-hash
+    parent.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FCtype..Uninit
-void acr_ed::FCtype_Uninit(acr_ed::FCtype& ctype) {
-    acr_ed::FCtype &row = ctype; (void)row;
-    ind_ctype_Remove(row); // remove ctype from index ind_ctype
+void acr_ed::FCtype_Uninit(acr_ed::FCtype& parent) {
+    ind_ctype_Remove(parent); // remove ctype from index ind_ctype
 
     // acr_ed.FCtype.c_cfmt.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(ctype.c_cfmt_elems, sizeof(acr_ed::FCfmt*)*ctype.c_cfmt_max); // (acr_ed.FCtype.c_cfmt)
+    algo_lib::malloc_FreeMem(parent.c_cfmt_elems, sizeof(acr_ed::FCfmt*)*parent.c_cfmt_max); // (acr_ed.FCtype.c_cfmt)
 
     // acr_ed.FCtype.c_field.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(ctype.c_field_elems, sizeof(acr_ed::FField*)*ctype.c_field_max); // (acr_ed.FCtype.c_field)
+    algo_lib::malloc_FreeMem(parent.c_field_elems, sizeof(acr_ed::FField*)*parent.c_field_max); // (acr_ed.FCtype.c_field)
 }
 
 // --- acr_ed.FEdaction.base.CopyOut
@@ -394,19 +387,18 @@ void acr_ed::edaction_CopyIn(acr_ed::FEdaction &row, dev::Edaction &in) {
 }
 
 // --- acr_ed.FEdaction.edacttype.Get
-algo::strptr acr_ed::edacttype_Get(acr_ed::FEdaction& edaction) {
-    return algo::Pathcomp(edaction.edaction, "_LL");
+algo::strptr acr_ed::edacttype_Get(acr_ed::FEdaction& parent) {
+    return algo::Pathcomp(parent.edaction, "_LL");
 }
 
 // --- acr_ed.FEdaction.name.Get
-algo::strptr acr_ed::name_Get(acr_ed::FEdaction& edaction) {
-    return algo::Pathcomp(edaction.edaction, "_LR");
+algo::strptr acr_ed::name_Get(acr_ed::FEdaction& parent) {
+    return algo::Pathcomp(parent.edaction, "_LR");
 }
 
 // --- acr_ed.FEdaction..Uninit
-void acr_ed::FEdaction_Uninit(acr_ed::FEdaction& edaction) {
-    acr_ed::FEdaction &row = edaction; (void)row;
-    ind_edaction_Remove(row); // remove edaction from index ind_edaction
+void acr_ed::FEdaction_Uninit(acr_ed::FEdaction& parent) {
+    ind_edaction_Remove(parent); // remove edaction from index ind_edaction
 }
 
 // --- acr_ed.trace..Print
@@ -4825,7 +4817,6 @@ void acr_ed::FDb_Init() {
 
 // --- acr_ed.FDb..Uninit
 void acr_ed::FDb_Uninit() {
-    acr_ed::FDb &row = _db; (void)row;
 
     // acr_ed.FDb.ind_reftype.Uninit (Thash)  //
     // skip destruction of ind_reftype in global scope
@@ -4942,39 +4933,38 @@ void acr_ed::field_CopyIn(acr_ed::FField &row, dmmeta::Field &in) {
 }
 
 // --- acr_ed.FField.ctype.Get
-algo::strptr acr_ed::ctype_Get(acr_ed::FField& field) {
-    return algo::Pathcomp(field.field, ".RL");
+algo::strptr acr_ed::ctype_Get(acr_ed::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- acr_ed.FField.ns.Get
-algo::strptr acr_ed::ns_Get(acr_ed::FField& field) {
-    return algo::Pathcomp(field.field, ".RL.RL");
+algo::strptr acr_ed::ns_Get(acr_ed::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL.RL");
 }
 
 // --- acr_ed.FField.name.Get
-algo::strptr acr_ed::name_Get(acr_ed::FField& field) {
-    return algo::Pathcomp(field.field, ".RR");
+algo::strptr acr_ed::name_Get(acr_ed::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RR");
 }
 
 // --- acr_ed.FField..Init
 // Set all fields to initial values.
-void acr_ed::FField_Init(acr_ed::FField& field) {
-    field.reftype = algo::strptr("Val");
-    field.p_ctype = NULL;
-    field.p_arg = NULL;
-    field.p_ns = NULL;
-    field.ctype_c_field_in_ary = bool(false);
-    field.ind_field_next = (acr_ed::FField*)-1; // (acr_ed.FDb.ind_field) not-in-hash
-    field.ind_field_hashval = 0; // stored hash value
+void acr_ed::FField_Init(acr_ed::FField& parent) {
+    parent.reftype = algo::strptr("Val");
+    parent.p_ctype = NULL;
+    parent.p_arg = NULL;
+    parent.p_ns = NULL;
+    parent.ctype_c_field_in_ary = bool(false);
+    parent.ind_field_next = (acr_ed::FField*)-1; // (acr_ed.FDb.ind_field) not-in-hash
+    parent.ind_field_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FField..Uninit
-void acr_ed::FField_Uninit(acr_ed::FField& field) {
-    acr_ed::FField &row = field; (void)row;
-    ind_field_Remove(row); // remove field from index ind_field
-    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(ctype_Get(row));
+void acr_ed::FField_Uninit(acr_ed::FField& parent) {
+    ind_field_Remove(parent); // remove field from index ind_field
+    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_field_Remove(*p_ctype, row);// remove field from index c_field
+        c_field_Remove(*p_ctype, parent);// remove field from index c_field
     }
 }
 
@@ -4997,13 +4987,13 @@ void acr_ed::fprefix_CopyIn(acr_ed::FFprefix &row, dmmeta::Fprefix &in) {
 }
 
 // --- acr_ed.FFprefix.prefix.Get
-algo::strptr acr_ed::prefix_Get(acr_ed::FFprefix& fprefix) {
-    return algo::Pathcomp(fprefix.fprefix, ".LL");
+algo::strptr acr_ed::prefix_Get(acr_ed::FFprefix& parent) {
+    return algo::Pathcomp(parent.fprefix, ".LL");
 }
 
 // --- acr_ed.FFprefix.reftype.Get
-algo::strptr acr_ed::reftype_Get(acr_ed::FFprefix& fprefix) {
-    return algo::Pathcomp(fprefix.fprefix, ".LR");
+algo::strptr acr_ed::reftype_Get(acr_ed::FFprefix& parent) {
+    return algo::Pathcomp(parent.fprefix, ".LR");
 }
 
 // --- acr_ed.FGitfile.base.CopyOut
@@ -5019,8 +5009,8 @@ void acr_ed::gitfile_CopyIn(acr_ed::FGitfile &row, dev::Gitfile &in) {
 }
 
 // --- acr_ed.FGitfile.ext.Get
-algo::strptr acr_ed::ext_Get(acr_ed::FGitfile& gitfile) {
-    return algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR");
+algo::strptr acr_ed::ext_Get(acr_ed::FGitfile& parent) {
+    return algo::Pathcomp(parent.gitfile, "/RR.LR.RR");
 }
 
 // --- acr_ed.FListtype.msghdr.CopyOut
@@ -5044,9 +5034,8 @@ void acr_ed::listtype_CopyIn(acr_ed::FListtype &row, dmmeta::Listtype &in) {
 }
 
 // --- acr_ed.FListtype..Uninit
-void acr_ed::FListtype_Uninit(acr_ed::FListtype& listtype) {
-    acr_ed::FListtype &row = listtype; (void)row;
-    ind_listtype_Remove(row); // remove listtype from index ind_listtype
+void acr_ed::FListtype_Uninit(acr_ed::FListtype& parent) {
+    ind_listtype_Remove(parent); // remove listtype from index ind_listtype
 }
 
 // --- acr_ed.FMsgtype.base.CopyOut
@@ -5082,9 +5071,8 @@ void acr_ed::ns_CopyIn(acr_ed::FNs &row, dmmeta::Ns &in) {
 }
 
 // --- acr_ed.FNs..Uninit
-void acr_ed::FNs_Uninit(acr_ed::FNs& ns) {
-    acr_ed::FNs &row = ns; (void)row;
-    ind_ns_Remove(row); // remove ns from index ind_ns
+void acr_ed::FNs_Uninit(acr_ed::FNs& parent) {
+    ind_ns_Remove(parent); // remove ns from index ind_ns
 }
 
 // --- acr_ed.FNsdb.base.CopyOut
@@ -5102,9 +5090,8 @@ void acr_ed::nsdb_CopyIn(acr_ed::FNsdb &row, dmmeta::Nsdb &in) {
 }
 
 // --- acr_ed.FNsdb..Uninit
-void acr_ed::FNsdb_Uninit(acr_ed::FNsdb& nsdb) {
-    acr_ed::FNsdb &row = nsdb; (void)row;
-    ind_nsdb_Remove(row); // remove nsdb from index ind_nsdb
+void acr_ed::FNsdb_Uninit(acr_ed::FNsdb& parent) {
+    ind_nsdb_Remove(parent); // remove nsdb from index ind_nsdb
 }
 
 // --- acr_ed.FPack.base.CopyOut
@@ -5122,11 +5109,10 @@ void acr_ed::pack_CopyIn(acr_ed::FPack &row, dmmeta::Pack &in) {
 }
 
 // --- acr_ed.FPack..Uninit
-void acr_ed::FPack_Uninit(acr_ed::FPack& pack) {
-    acr_ed::FPack &row = pack; (void)row;
-    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(row.ctype);
+void acr_ed::FPack_Uninit(acr_ed::FPack& parent) {
+    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_pack_Remove(*p_ctype, row);// remove pack from index c_pack
+        c_pack_Remove(*p_ctype, parent);// remove pack from index c_pack
     }
 }
 
@@ -5166,27 +5152,26 @@ void acr_ed::reftype_CopyIn(acr_ed::FReftype &row, dmmeta::Reftype &in) {
 
 // --- acr_ed.FReftype..Init
 // Set all fields to initial values.
-void acr_ed::FReftype_Init(acr_ed::FReftype& reftype) {
-    reftype.reftype = algo::strptr("Val");
-    reftype.isval = bool(false);
-    reftype.cascins = bool(false);
-    reftype.usebasepool = bool(false);
-    reftype.cancopy = bool(false);
-    reftype.needxref = bool(false);
-    reftype.del = bool(false);
-    reftype.up = bool(false);
-    reftype.isnew = bool(false);
-    reftype.hasalloc = bool(false);
-    reftype.inst = bool(false);
-    reftype.varlen = bool(false);
-    reftype.ind_reftype_next = (acr_ed::FReftype*)-1; // (acr_ed.FDb.ind_reftype) not-in-hash
-    reftype.ind_reftype_hashval = 0; // stored hash value
+void acr_ed::FReftype_Init(acr_ed::FReftype& parent) {
+    parent.reftype = algo::strptr("Val");
+    parent.isval = bool(false);
+    parent.cascins = bool(false);
+    parent.usebasepool = bool(false);
+    parent.cancopy = bool(false);
+    parent.needxref = bool(false);
+    parent.del = bool(false);
+    parent.up = bool(false);
+    parent.isnew = bool(false);
+    parent.hasalloc = bool(false);
+    parent.inst = bool(false);
+    parent.varlen = bool(false);
+    parent.ind_reftype_next = (acr_ed::FReftype*)-1; // (acr_ed.FDb.ind_reftype) not-in-hash
+    parent.ind_reftype_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FReftype..Uninit
-void acr_ed::FReftype_Uninit(acr_ed::FReftype& reftype) {
-    acr_ed::FReftype &row = reftype; (void)row;
-    ind_reftype_Remove(row); // remove reftype from index ind_reftype
+void acr_ed::FReftype_Uninit(acr_ed::FReftype& parent) {
+    ind_reftype_Remove(parent); // remove reftype from index ind_reftype
 }
 
 // --- acr_ed.FSbpath.base.CopyOut
@@ -5218,27 +5203,26 @@ void acr_ed::ssimfile_CopyIn(acr_ed::FSsimfile &row, dmmeta::Ssimfile &in) {
 }
 
 // --- acr_ed.FSsimfile.ssimns.Get
-algo::strptr acr_ed::ssimns_Get(acr_ed::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr acr_ed::ssimns_Get(acr_ed::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- acr_ed.FSsimfile.ns.Get
-algo::strptr acr_ed::ns_Get(acr_ed::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr acr_ed::ns_Get(acr_ed::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- acr_ed.FSsimfile.name.Get
-algo::strptr acr_ed::name_Get(acr_ed::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
+algo::strptr acr_ed::name_Get(acr_ed::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".RR");
 }
 
 // --- acr_ed.FSsimfile..Uninit
-void acr_ed::FSsimfile_Uninit(acr_ed::FSsimfile& ssimfile) {
-    acr_ed::FSsimfile &row = ssimfile; (void)row;
-    ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
-    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(row.ctype);
+void acr_ed::FSsimfile_Uninit(acr_ed::FSsimfile& parent) {
+    ind_ssimfile_Remove(parent); // remove ssimfile from index ind_ssimfile
+    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_ssimfile_Remove(*p_ctype, row);// remove ssimfile from index c_ssimfile
+        c_ssimfile_Remove(*p_ctype, parent);// remove ssimfile from index c_ssimfile
     }
 }
 
@@ -5256,50 +5240,50 @@ void acr_ed::target_CopyIn(acr_ed::FTarget &row, dev::Target &in) {
 
 // --- acr_ed.FTarget.zd_targsrc.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void acr_ed::zd_targsrc_Insert(acr_ed::FTarget& target, acr_ed::FTargsrc& row) {
+void acr_ed::zd_targsrc_Insert(acr_ed::FTarget& parent, acr_ed::FTargsrc& row) {
     if (!target_zd_targsrc_InLlistQ(row)) {
-        acr_ed::FTargsrc* old_tail = target.zd_targsrc_tail;
+        acr_ed::FTargsrc* old_tail = parent.zd_targsrc_tail;
         row.target_zd_targsrc_next = NULL;
         row.target_zd_targsrc_prev = old_tail;
-        target.zd_targsrc_tail = &row;
+        parent.zd_targsrc_tail = &row;
         acr_ed::FTargsrc **new_row_a = &old_tail->target_zd_targsrc_next;
-        acr_ed::FTargsrc **new_row_b = &target.zd_targsrc_head;
+        acr_ed::FTargsrc **new_row_b = &parent.zd_targsrc_head;
         acr_ed::FTargsrc **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        target.zd_targsrc_n++;
+        parent.zd_targsrc_n++;
     }
 }
 
 // --- acr_ed.FTarget.zd_targsrc.Remove
 // Remove element from index. If element is not in index, do nothing.
-void acr_ed::zd_targsrc_Remove(acr_ed::FTarget& target, acr_ed::FTargsrc& row) {
+void acr_ed::zd_targsrc_Remove(acr_ed::FTarget& parent, acr_ed::FTargsrc& row) {
     if (target_zd_targsrc_InLlistQ(row)) {
-        acr_ed::FTargsrc* old_head       = target.zd_targsrc_head;
+        acr_ed::FTargsrc* old_head       = parent.zd_targsrc_head;
         (void)old_head; // in case it's not used
         acr_ed::FTargsrc* prev = row.target_zd_targsrc_prev;
         acr_ed::FTargsrc* next = row.target_zd_targsrc_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         acr_ed::FTargsrc **new_next_a = &prev->target_zd_targsrc_next;
-        acr_ed::FTargsrc **new_next_b = &target.zd_targsrc_head;
+        acr_ed::FTargsrc **new_next_b = &parent.zd_targsrc_head;
         acr_ed::FTargsrc **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         acr_ed::FTargsrc **new_prev_a = &next->target_zd_targsrc_prev;
-        acr_ed::FTargsrc **new_prev_b = &target.zd_targsrc_tail;
+        acr_ed::FTargsrc **new_prev_b = &parent.zd_targsrc_tail;
         acr_ed::FTargsrc **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        target.zd_targsrc_n--;
+        parent.zd_targsrc_n--;
         row.target_zd_targsrc_next=(acr_ed::FTargsrc*)-1; // not-in-list
     }
 }
 
 // --- acr_ed.FTarget.zd_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
-void acr_ed::zd_targsrc_RemoveAll(acr_ed::FTarget& target) {
-    acr_ed::FTargsrc* row = target.zd_targsrc_head;
-    target.zd_targsrc_head = NULL;
-    target.zd_targsrc_tail = NULL;
-    target.zd_targsrc_n = 0;
+void acr_ed::zd_targsrc_RemoveAll(acr_ed::FTarget& parent) {
+    acr_ed::FTargsrc* row = parent.zd_targsrc_head;
+    parent.zd_targsrc_head = NULL;
+    parent.zd_targsrc_tail = NULL;
+    parent.zd_targsrc_n = 0;
     while (row) {
         acr_ed::FTargsrc* row_next = row->target_zd_targsrc_next;
         row->target_zd_targsrc_next  = (acr_ed::FTargsrc*)-1;
@@ -5310,17 +5294,17 @@ void acr_ed::zd_targsrc_RemoveAll(acr_ed::FTarget& target) {
 
 // --- acr_ed.FTarget.zd_targsrc.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-acr_ed::FTargsrc* acr_ed::zd_targsrc_RemoveFirst(acr_ed::FTarget& target) {
+acr_ed::FTargsrc* acr_ed::zd_targsrc_RemoveFirst(acr_ed::FTarget& parent) {
     acr_ed::FTargsrc *row = NULL;
-    row = target.zd_targsrc_head;
+    row = parent.zd_targsrc_head;
     if (row) {
         acr_ed::FTargsrc *next = row->target_zd_targsrc_next;
-        target.zd_targsrc_head = next;
+        parent.zd_targsrc_head = next;
         acr_ed::FTargsrc **new_end_a = &next->target_zd_targsrc_prev;
-        acr_ed::FTargsrc **new_end_b = &target.zd_targsrc_tail;
+        acr_ed::FTargsrc **new_end_b = &parent.zd_targsrc_tail;
         acr_ed::FTargsrc **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        target.zd_targsrc_n--;
+        parent.zd_targsrc_n--;
         row->target_zd_targsrc_next = (acr_ed::FTargsrc*)-1; // mark as not-in-list
     }
     return row;
@@ -5328,26 +5312,25 @@ acr_ed::FTargsrc* acr_ed::zd_targsrc_RemoveFirst(acr_ed::FTarget& target) {
 
 // --- acr_ed.FTarget.zd_targsrc.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void acr_ed::zd_targsrc_InsertBefore(acr_ed::FTarget& target, acr_ed::FTargsrc& row, acr_ed::FTargsrc* before) {
+void acr_ed::zd_targsrc_InsertBefore(acr_ed::FTarget& parent, acr_ed::FTargsrc& row, acr_ed::FTargsrc* before) {
     if (!target_zd_targsrc_InLlistQ(row) && &row != before) {
         acr_ed::FTargsrc* next = before;
-        acr_ed::FTargsrc* prev = next ? next->target_zd_targsrc_prev : target.zd_targsrc_tail;
+        acr_ed::FTargsrc* prev = next ? next->target_zd_targsrc_prev : parent.zd_targsrc_tail;
         row.target_zd_targsrc_next = next;
         row.target_zd_targsrc_prev = prev;
         acr_ed::FTargsrc **prev_link_a = &prev->target_zd_targsrc_next;
-        acr_ed::FTargsrc **prev_link_b = &target.zd_targsrc_head;
+        acr_ed::FTargsrc **prev_link_b = &parent.zd_targsrc_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         acr_ed::FTargsrc **next_link_a = &next->target_zd_targsrc_prev;
-        acr_ed::FTargsrc **next_link_b = &target.zd_targsrc_tail;
+        acr_ed::FTargsrc **next_link_b = &parent.zd_targsrc_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        target.zd_targsrc_n++;
+        parent.zd_targsrc_n++;
     }
 }
 
 // --- acr_ed.FTarget..Uninit
-void acr_ed::FTarget_Uninit(acr_ed::FTarget& target) {
-    acr_ed::FTarget &row = target; (void)row;
-    ind_target_Remove(row); // remove target from index ind_target
+void acr_ed::FTarget_Uninit(acr_ed::FTarget& parent) {
+    ind_target_Remove(parent); // remove target from index ind_target
 }
 
 // --- acr_ed.FTargsrc.base.CopyOut
@@ -5365,26 +5348,25 @@ void acr_ed::targsrc_CopyIn(acr_ed::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- acr_ed.FTargsrc.target.Get
-algo::strptr acr_ed::target_Get(acr_ed::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LL");
+algo::strptr acr_ed::target_Get(acr_ed::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LL");
 }
 
 // --- acr_ed.FTargsrc.src.Get
-algo::strptr acr_ed::src_Get(acr_ed::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LR");
+algo::strptr acr_ed::src_Get(acr_ed::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LR");
 }
 
 // --- acr_ed.FTargsrc.ext.Get
-algo::strptr acr_ed::ext_Get(acr_ed::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, ".RR");
+algo::strptr acr_ed::ext_Get(acr_ed::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, ".RR");
 }
 
 // --- acr_ed.FTargsrc..Uninit
-void acr_ed::FTargsrc_Uninit(acr_ed::FTargsrc& targsrc) {
-    acr_ed::FTargsrc &row = targsrc; (void)row;
-    acr_ed::FTarget* p_target = acr_ed::ind_target_Find(target_Get(row));
+void acr_ed::FTargsrc_Uninit(acr_ed::FTargsrc& parent) {
+    acr_ed::FTarget* p_target = acr_ed::ind_target_Find(target_Get(parent));
     if (p_target)  {
-        zd_targsrc_Remove(*p_target, row);// remove targsrc from index zd_targsrc
+        zd_targsrc_Remove(*p_target, parent);// remove targsrc from index zd_targsrc
     }
 }
 
@@ -5403,16 +5385,15 @@ void acr_ed::typefld_CopyIn(acr_ed::FTypefld &row, dmmeta::Typefld &in) {
 }
 
 // --- acr_ed.FTypefld.ctype.Get
-algo::strptr acr_ed::ctype_Get(acr_ed::FTypefld& typefld) {
-    return algo::Pathcomp(typefld.field, ".RL");
+algo::strptr acr_ed::ctype_Get(acr_ed::FTypefld& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- acr_ed.FTypefld..Uninit
-void acr_ed::FTypefld_Uninit(acr_ed::FTypefld& typefld) {
-    acr_ed::FTypefld &row = typefld; (void)row;
-    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(ctype_Get(row));
+void acr_ed::FTypefld_Uninit(acr_ed::FTypefld& parent) {
+    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_typefld_Remove(*p_ctype, row);// remove typefld from index c_typefld
+        c_typefld_Remove(*p_ctype, parent);// remove typefld from index c_typefld
     }
 }
 
@@ -5758,7 +5739,6 @@ void acr_ed::StaticCheck() {
 // --- acr_ed...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_ed::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -5777,7 +5757,6 @@ int main(int argc, char **argv) {
     try {
         acr_ed::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

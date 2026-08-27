@@ -9,10 +9,10 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ns|[algo.Smallstr16](/txt/protocol/algo/README.md#algo-smallstr16)|[Val](/txt/exe/amc/reftype.md#val)||Namespace name (primary key)|
-|nstype|[dmmeta.Nstype](/txt/ssimdb/dmmeta/nstype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Namespace type|
-|license|[dev.License](/txt/ssimdb/dev/license.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Associated license|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|ns|[algo.Smallstr16](/txt/protocol/algo/README.md#algo-smallstr16)|[Val](/txt/exe/amc/reftype/Val.md)||Namespace name (primary key)|
+|nstype|[dmmeta.Nstype](/txt/ssimdb/dmmeta/nstype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Namespace type|
+|license|[dev.License](/txt/ssimdb/dev/license.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Associated license|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Subsets
 <a href="#subsets"></a>

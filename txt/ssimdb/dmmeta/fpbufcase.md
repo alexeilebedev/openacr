@@ -11,11 +11,11 @@ italicised fields: *fpbuf, oneof, ctype* are [**fldfunc**](/txt/openacr/ssim.md#
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|fpbufcase|[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*fpbuf*|*[dmmeta.Fpbuf](/txt/ssimdb/dmmeta/fpbuf.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LL of fpbufcase*|
-|*oneof*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>/LR of fpbufcase*|
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LL.RL of fpbufcase*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|fpbufcase|[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*fpbuf*|*[dmmeta.Fpbuf](/txt/ssimdb/dmmeta/fpbuf.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LL of fpbufcase*|
+|*oneof*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>/LR of fpbufcase*|
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LL.RL of fpbufcase*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

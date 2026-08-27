@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -50,9 +52,9 @@ All allocations are done through global `ams_sendtest::_db` [ams_sendtest.FDb](#
 <a href="#ams_sendtest-fchild-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ams_sendtest.FChild.child|[command.ams_sendtest](/txt/protocol/command/README.md#command-ams_sendtest)|[Exec](/txt/exe/amc/reftype.md#exec)|||
-|ams_sendtest.FChild.proc_id|[ams.ProcId](/txt/protocol/ams/ProcId.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|ams_sendtest.FChild.p_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype.md#ptr)||This child's own lane, in unicast mode|
+|ams_sendtest.FChild.child|[command.ams_sendtest](/txt/protocol/command/README.md#command-ams_sendtest)|[Exec](/txt/exe/amc/reftype/Exec.md)|||
+|ams_sendtest.FChild.proc_id|[ams.ProcId](/txt/protocol/ams/ProcId.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ams_sendtest.FChild.p_shm|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||This child's own lane, in unicast mode|
 
 #### Struct FChild
 <a href="#struct-fchild"></a>
@@ -93,14 +95,14 @@ private:
 <a href="#ams_sendtest-ftest-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ams_sendtest.FTest.n_msg_send|u64|[Val](/txt/exe/amc/reftype.md#val)||Number of messages sent|
-|ams_sendtest.FTest.off_send|u64|[Val](/txt/exe/amc/reftype.md#val)||Offset sent|
-|ams_sendtest.FTest.off_recv|u64|[Val](/txt/exe/amc/reftype.md#val)||Offset received|
-|ams_sendtest.FTest.n_msg_recv|u64|[Val](/txt/exe/amc/reftype.md#val)||Number of messages received|
-|ams_sendtest.FTest.n_write_wait|u64|[Val](/txt/exe/amc/reftype.md#val)||Number of waits by parent|
-|ams_sendtest.FTest.n_msg_limit|u64|[Val](/txt/exe/amc/reftype.md#val)|1000000|Limit of messages to send|
-|ams_sendtest.FTest.h_write|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftype.md#val)|||
-|ams_sendtest.FTest.sum_recv_latency|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|ams_sendtest.FTest.n_msg_send|u64|[Val](/txt/exe/amc/reftype/Val.md)||Number of messages sent|
+|ams_sendtest.FTest.off_send|u64|[Val](/txt/exe/amc/reftype/Val.md)||Offset sent|
+|ams_sendtest.FTest.off_recv|u64|[Val](/txt/exe/amc/reftype/Val.md)||Offset received|
+|ams_sendtest.FTest.n_msg_recv|u64|[Val](/txt/exe/amc/reftype/Val.md)||Number of messages received|
+|ams_sendtest.FTest.n_write_wait|u64|[Val](/txt/exe/amc/reftype/Val.md)||Number of waits by parent|
+|ams_sendtest.FTest.n_msg_limit|u64|[Val](/txt/exe/amc/reftype/Val.md)|1000000|Limit of messages to send|
+|ams_sendtest.FTest.h_write|[algo_lib.FTimehook](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ams_sendtest.FTest.sum_recv_latency|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTest
 <a href="#struct-ftest"></a>
@@ -127,14 +129,14 @@ struct FTest { // ams_sendtest.FTest
 <a href="#ams_sendtest-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ams_sendtest.FDb.c_out|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Output goes here|
-|ams_sendtest.FDb._db|[ams_sendtest.FDb](/txt/gen/ams_sendtest/ams_sendtest.md#ams_sendtest-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|ams_sendtest.FDb.cmdline|[command.ams_sendtest](/txt/protocol/command/README.md#command-ams_sendtest)|[Val](/txt/exe/amc/reftype.md#val)|||
-|ams_sendtest.FDb.test|[ams_sendtest.FTest](/txt/gen/ams_sendtest/ams_sendtest.md#ams_sendtest-ftest)|[Val](/txt/exe/amc/reftype.md#val)||Context for the test|
-|ams_sendtest.FDb.child|[ams_sendtest.FChild](/txt/gen/ams_sendtest/ams_sendtest.md#ams_sendtest-fchild)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ams_sendtest.FDb.nsync|u64|[Val](/txt/exe/amc/reftype.md#val)||Number of child processes synchronized (parent)|
-|ams_sendtest.FDb.msgbuf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype.md#val)||Scratch buffer a board-bound message is formatted into|
-|ams_sendtest.FDb.report|[report.ams_sendtest](/txt/protocol/report/README.md#report-ams_sendtest)|[Val](/txt/exe/amc/reftype.md#val)||This run's verdict, printed once at exit|
+|ams_sendtest.FDb.c_out|[lib_ams.FShm](/txt/gen/lib_ams/lib_ams.md#lib_ams-fshm)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Output goes here|
+|ams_sendtest.FDb._db|[ams_sendtest.FDb](/txt/gen/ams_sendtest/ams_sendtest.md#ams_sendtest-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|ams_sendtest.FDb.cmdline|[command.ams_sendtest](/txt/protocol/command/README.md#command-ams_sendtest)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ams_sendtest.FDb.test|[ams_sendtest.FTest](/txt/gen/ams_sendtest/ams_sendtest.md#ams_sendtest-ftest)|[Val](/txt/exe/amc/reftype/Val.md)||Context for the test|
+|ams_sendtest.FDb.child|[ams_sendtest.FChild](/txt/gen/ams_sendtest/ams_sendtest.md#ams_sendtest-fchild)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ams_sendtest.FDb.nsync|u64|[Val](/txt/exe/amc/reftype/Val.md)||Number of child processes synchronized (parent)|
+|ams_sendtest.FDb.msgbuf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftype/Val.md)||Scratch buffer a board-bound message is formatted into|
+|ams_sendtest.FDb.report|[report.ams_sendtest](/txt/protocol/report/README.md#report-ams_sendtest)|[Val](/txt/exe/amc/reftype/Val.md)||This run's verdict, printed once at exit|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

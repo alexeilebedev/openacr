@@ -3,10 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -51,9 +54,9 @@ All allocations are done through global `gcache::_db` [gcache.FDb](#gcache-fdb) 
 <a href="#gcache-fcachefile-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcache.FCachefile.pathname|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Full path of the cache file|
-|gcache.FCachefile.mtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Last use (hits refresh mtime via the access log)|
-|gcache.FCachefile.size|i64|[Val](/txt/exe/amc/reftype.md#val)||File size in bytes|
+|gcache.FCachefile.pathname|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Full path of the cache file|
+|gcache.FCachefile.mtime|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Last use (hits refresh mtime via the access log)|
+|gcache.FCachefile.size|i64|[Val](/txt/exe/amc/reftype/Val.md)||File size in bytes|
 
 #### Struct FCachefile
 <a href="#struct-fcachefile"></a>
@@ -87,13 +90,13 @@ private:
 <a href="#gcache-cleanreport-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcache.cleanreport.n_cachefile|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of files in a cache|
-|gcache.cleanreport.n_cachefile_del|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of files deleted|
-|gcache.cleanreport.n_cachefile_recent|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of files recently accessed|
-|gcache.cleanreport.n_cachefile_evict|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of files evicted to fit the size budget|
-|gcache.cleanreport.n_logline|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of log lines|
-|gcache.cleanreport.n_logline_del|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of log lines deleted|
-|gcache.cleanreport.new_cachesize_mb|i64|[Val](/txt/exe/amc/reftype.md#val)||New cache size in MB|
+|gcache.cleanreport.n_cachefile|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of files in a cache|
+|gcache.cleanreport.n_cachefile_del|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of files deleted|
+|gcache.cleanreport.n_cachefile_recent|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of files recently accessed|
+|gcache.cleanreport.n_cachefile_evict|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of files evicted to fit the size budget|
+|gcache.cleanreport.n_logline|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of log lines|
+|gcache.cleanreport.n_logline_del|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of log lines deleted|
+|gcache.cleanreport.new_cachesize_mb|i64|[Val](/txt/exe/amc/reftype/Val.md)||New cache size in MB|
 
 #### Struct cleanreport
 <a href="#struct-cleanreport"></a>
@@ -121,23 +124,23 @@ struct cleanreport { // gcache.cleanreport
 <a href="#gcache-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcache.FDb.report|[report.gcache](/txt/protocol/report/README.md#report-gcache)|[Val](/txt/exe/amc/reftype.md#val)||Final report|
-|gcache.FDb.cleanreport|[gcache.cleanreport](/txt/gen/gcache/gcache.md#gcache-cleanreport)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb._db|[gcache.FDb](/txt/gen/gcache/gcache.md#gcache-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|gcache.FDb.cmdline|[command.gcache](/txt/protocol/command/README.md#command-gcache)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.dir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.do_not_compile|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.do_not_link|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.do_not_assemble|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.target|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.cached|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.logfname|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.preproc_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.header|[gcache.FHeader](/txt/gen/gcache/gcache.md#gcache-fheader)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|gcache.FDb.preproc_text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.lockfd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FDb.cachefile|[gcache.FCachefile](/txt/gen/gcache/gcache.md#gcache-fcachefile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|gcache.FDb.bh_cachefile|[gcache.FCachefile](/txt/gen/gcache/gcache.md#gcache-fcachefile)|[Bheap](/txt/exe/amc/reftype.md#bheap)||Cache files ordered by last use, for size-budget eviction|
+|gcache.FDb.report|[report.gcache](/txt/protocol/report/README.md#report-gcache)|[Val](/txt/exe/amc/reftype/Val.md)||Final report|
+|gcache.FDb.cleanreport|[gcache.cleanreport](/txt/gen/gcache/gcache.md#gcache-cleanreport)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb._db|[gcache.FDb](/txt/gen/gcache/gcache.md#gcache-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|gcache.FDb.cmdline|[command.gcache](/txt/protocol/command/README.md#command-gcache)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.dir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.do_not_compile|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.do_not_link|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.do_not_assemble|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.target|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.cached|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.logfname|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.preproc_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.header|[gcache.FHeader](/txt/gen/gcache/gcache.md#gcache-fheader)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|gcache.FDb.preproc_text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.lockfd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FDb.cachefile|[gcache.FCachefile](/txt/gen/gcache/gcache.md#gcache-fcachefile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|gcache.FDb.bh_cachefile|[gcache.FCachefile](/txt/gen/gcache/gcache.md#gcache-fcachefile)|[Bheap](/txt/exe/amc/reftype/Bheap.md)||Cache files ordered by last use, for size-budget eviction|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -175,12 +178,12 @@ struct FDb { // gcache.FDb: In-memory database for gcache
 <a href="#gcache-fheader-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcache.FHeader.parent|[gcache.FHeader](/txt/gen/gcache/gcache.md#gcache-fheader)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|gcache.FHeader.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FHeader.begin|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FHeader.inner_end|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FHeader.outer_end|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|gcache.FHeader.mlines_before|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcache.FHeader.parent|[gcache.FHeader](/txt/gen/gcache/gcache.md#gcache-fheader)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|gcache.FHeader.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FHeader.begin|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FHeader.inner_end|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FHeader.outer_end|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|gcache.FHeader.mlines_before|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FHeader
 <a href="#struct-fheader"></a>

@@ -222,7 +222,7 @@ tempstr lib_ws::ComputeSecWebSocketAccept(strptr sec_websocket_key) {
     Update(sha1,algo::strptr_ToMemptr(sec_websocket_key));
     Update(sha1,algo::strptr_ToMemptr("258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
     Finish(sha1);
-    algo::Sha1sig sig = GetDigest(sha1);
-    strptr_PrintBase64(algo::memptr_ToStrptr(sha1sig_Getary(sig)),out);
+    algo::Signature sig = GetDigest(sha1);
+    strptr_PrintBase64(algo::memptr_ToStrptr(signature_Getary(sig)),out);
     return out;
 }

@@ -667,9 +667,9 @@ void                 gitfile_CopyIn(samp_make::FGitfile &row, sampdb::Gitfile &i
 
 // Set all fields to initial values.
 // func:samp_make.FGitfile..Init
-inline void          FGitfile_Init(samp_make::FGitfile& gitfile);
+inline void          FGitfile_Init(samp_make::FGitfile& parent);
 // func:samp_make.FGitfile..Uninit
-void                 FGitfile_Uninit(samp_make::FGitfile& gitfile) __attribute__((nothrow));
+void                 FGitfile_Uninit(samp_make::FGitfile& parent) __attribute__((nothrow));
 
 // --- samp_make.FTargdep
 // create: samp_make.FDb.targdep (Lary)
@@ -712,16 +712,16 @@ void                 targdep_CopyOut(samp_make::FTargdep &row, sampdb::Targdep &
 void                 targdep_CopyIn(samp_make::FTargdep &row, sampdb::Targdep &in) __attribute__((nothrow));
 
 // func:samp_make.FTargdep.target.Get
-algo::strptr         target_Get(samp_make::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(samp_make::FTargdep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:samp_make.FTargdep.parent.Get
-algo::strptr         parent_Get(samp_make::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_Get(samp_make::FTargdep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:samp_make.FTargdep..Init
-inline void          FTargdep_Init(samp_make::FTargdep& targdep);
+inline void          FTargdep_Init(samp_make::FTargdep& parent);
 // func:samp_make.FTargdep..Uninit
-void                 FTargdep_Uninit(samp_make::FTargdep& targdep) __attribute__((nothrow));
+void                 FTargdep_Uninit(samp_make::FTargdep& parent) __attribute__((nothrow));
 
 // --- samp_make.FTarget
 // create: samp_make.FDb.target (Lary)
@@ -776,94 +776,94 @@ void                 target_CopyIn(samp_make::FTarget &row, sampdb::Target &in) 
 
 // Return true if index is empty
 // func:samp_make.FTarget.c_targsrc.EmptyQ
-inline bool          c_targsrc_EmptyQ(samp_make::FTarget& target) __attribute__((nothrow));
+inline bool          c_targsrc_EmptyQ(samp_make::FTarget& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:samp_make.FTarget.c_targsrc.Find
-inline samp_make::FTargsrc* c_targsrc_Find(samp_make::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline samp_make::FTargsrc* c_targsrc_Find(samp_make::FTarget& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:samp_make.FTarget.c_targsrc.Getary
-inline algo::aryptr<samp_make::FTargsrc*> c_targsrc_Getary(samp_make::FTarget& target) __attribute__((nothrow));
+inline algo::aryptr<samp_make::FTargsrc*> c_targsrc_Getary(samp_make::FTarget& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:samp_make.FTarget.c_targsrc.Insert
-void                 c_targsrc_Insert(samp_make::FTarget& target, samp_make::FTargsrc& row) __attribute__((nothrow));
+void                 c_targsrc_Insert(samp_make::FTarget& parent, samp_make::FTargsrc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:samp_make.FTarget.c_targsrc.InsertMaybe
-bool                 c_targsrc_InsertMaybe(samp_make::FTarget& target, samp_make::FTargsrc& row) __attribute__((nothrow));
+bool                 c_targsrc_InsertMaybe(samp_make::FTarget& parent, samp_make::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:samp_make.FTarget.c_targsrc.N
-inline i64           c_targsrc_N(const samp_make::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targsrc_N(const samp_make::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:samp_make.FTarget.c_targsrc.Remove
-void                 c_targsrc_Remove(samp_make::FTarget& target, samp_make::FTargsrc& row) __attribute__((nothrow));
+void                 c_targsrc_Remove(samp_make::FTarget& parent, samp_make::FTargsrc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:samp_make.FTarget.c_targsrc.RemoveAll
-inline void          c_targsrc_RemoveAll(samp_make::FTarget& target) __attribute__((nothrow));
+inline void          c_targsrc_RemoveAll(samp_make::FTarget& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:samp_make.FTarget.c_targsrc.Reserve
-void                 c_targsrc_Reserve(samp_make::FTarget& target, u64 n) __attribute__((nothrow));
+void                 c_targsrc_Reserve(samp_make::FTarget& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:samp_make.FTarget.c_targsrc.qFind
-inline samp_make::FTargsrc& c_targsrc_qFind(samp_make::FTarget& target, u64 idx) __attribute__((nothrow));
+inline samp_make::FTargsrc& c_targsrc_qFind(samp_make::FTarget& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:samp_make.FTarget.c_targsrc.InAryQ
 inline bool          target_c_targsrc_InAryQ(samp_make::FTargsrc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:samp_make.FTarget.c_targsrc.qLast
-inline samp_make::FTargsrc& c_targsrc_qLast(samp_make::FTarget& target) __attribute__((nothrow));
+inline samp_make::FTargsrc& c_targsrc_qLast(samp_make::FTarget& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:samp_make.FTarget.c_targdep.EmptyQ
-inline bool          c_targdep_EmptyQ(samp_make::FTarget& target) __attribute__((nothrow));
+inline bool          c_targdep_EmptyQ(samp_make::FTarget& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:samp_make.FTarget.c_targdep.Find
-inline samp_make::FTargdep* c_targdep_Find(samp_make::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline samp_make::FTargdep* c_targdep_Find(samp_make::FTarget& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:samp_make.FTarget.c_targdep.Getary
-inline algo::aryptr<samp_make::FTargdep*> c_targdep_Getary(samp_make::FTarget& target) __attribute__((nothrow));
+inline algo::aryptr<samp_make::FTargdep*> c_targdep_Getary(samp_make::FTarget& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:samp_make.FTarget.c_targdep.Insert
-void                 c_targdep_Insert(samp_make::FTarget& target, samp_make::FTargdep& row) __attribute__((nothrow));
+void                 c_targdep_Insert(samp_make::FTarget& parent, samp_make::FTargdep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:samp_make.FTarget.c_targdep.InsertMaybe
-bool                 c_targdep_InsertMaybe(samp_make::FTarget& target, samp_make::FTargdep& row) __attribute__((nothrow));
+bool                 c_targdep_InsertMaybe(samp_make::FTarget& parent, samp_make::FTargdep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:samp_make.FTarget.c_targdep.N
-inline i64           c_targdep_N(const samp_make::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targdep_N(const samp_make::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:samp_make.FTarget.c_targdep.Remove
-void                 c_targdep_Remove(samp_make::FTarget& target, samp_make::FTargdep& row) __attribute__((nothrow));
+void                 c_targdep_Remove(samp_make::FTarget& parent, samp_make::FTargdep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:samp_make.FTarget.c_targdep.RemoveAll
-inline void          c_targdep_RemoveAll(samp_make::FTarget& target) __attribute__((nothrow));
+inline void          c_targdep_RemoveAll(samp_make::FTarget& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:samp_make.FTarget.c_targdep.Reserve
-void                 c_targdep_Reserve(samp_make::FTarget& target, u64 n) __attribute__((nothrow));
+void                 c_targdep_Reserve(samp_make::FTarget& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:samp_make.FTarget.c_targdep.qFind
-inline samp_make::FTargdep& c_targdep_qFind(samp_make::FTarget& target, u64 idx) __attribute__((nothrow));
+inline samp_make::FTargdep& c_targdep_qFind(samp_make::FTarget& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:samp_make.FTarget.c_targdep.InAryQ
 inline bool          target_c_targdep_InAryQ(samp_make::FTargdep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:samp_make.FTarget.c_targdep.qLast
-inline samp_make::FTargdep& c_targdep_qLast(samp_make::FTarget& target) __attribute__((nothrow));
+inline samp_make::FTargdep& c_targdep_qLast(samp_make::FTarget& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:samp_make.FTarget.c_targrec.InsertMaybe
-inline bool          c_targrec_InsertMaybe(samp_make::FTarget& target, samp_make::FTargrec& row) __attribute__((nothrow));
+inline bool          c_targrec_InsertMaybe(samp_make::FTarget& parent, samp_make::FTargrec& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:samp_make.FTarget.c_targrec.Remove
-inline void          c_targrec_Remove(samp_make::FTarget& target, samp_make::FTargrec& row) __attribute__((nothrow));
+inline void          c_targrec_Remove(samp_make::FTarget& parent, samp_make::FTargrec& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:samp_make.FTarget..Init
-void                 FTarget_Init(samp_make::FTarget& target);
+void                 FTarget_Init(samp_make::FTarget& parent);
 // func:samp_make.FTarget.c_targsrc_curs.Reset
 inline void          target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, samp_make::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -887,7 +887,7 @@ inline void          target_c_targdep_curs_Next(target_c_targdep_curs &curs) __a
 // func:samp_make.FTarget.c_targdep_curs.Access
 inline samp_make::FTargdep& target_c_targdep_curs_Access(target_c_targdep_curs &curs) __attribute__((nothrow));
 // func:samp_make.FTarget..Uninit
-void                 FTarget_Uninit(samp_make::FTarget& target) __attribute__((nothrow));
+void                 FTarget_Uninit(samp_make::FTarget& parent) __attribute__((nothrow));
 
 // --- samp_make.FTargrec
 // create: samp_make.FDb.targrec (Lary)
@@ -923,9 +923,9 @@ void                 targrec_CopyIn(samp_make::FTargrec &row, sampdb::Targrec &i
 
 // Set all fields to initial values.
 // func:samp_make.FTargrec..Init
-inline void          FTargrec_Init(samp_make::FTargrec& targrec);
+inline void          FTargrec_Init(samp_make::FTargrec& parent);
 // func:samp_make.FTargrec..Uninit
-void                 FTargrec_Uninit(samp_make::FTargrec& targrec) __attribute__((nothrow));
+void                 FTargrec_Uninit(samp_make::FTargrec& parent) __attribute__((nothrow));
 
 // --- samp_make.FTargsrc
 // create: samp_make.FDb.targsrc (Lary)
@@ -962,16 +962,16 @@ void                 targsrc_CopyOut(samp_make::FTargsrc &row, sampdb::Targsrc &
 void                 targsrc_CopyIn(samp_make::FTargsrc &row, sampdb::Targsrc &in) __attribute__((nothrow));
 
 // func:samp_make.FTargsrc.target.Get
-algo::strptr         target_Get(samp_make::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(samp_make::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:samp_make.FTargsrc.src.Get
-algo::strptr         src_Get(samp_make::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(samp_make::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:samp_make.FTargsrc..Init
-inline void          FTargsrc_Init(samp_make::FTargsrc& targsrc);
+inline void          FTargsrc_Init(samp_make::FTargsrc& parent);
 // func:samp_make.FTargsrc..Uninit
-void                 FTargsrc_Uninit(samp_make::FTargsrc& targsrc) __attribute__((nothrow));
+void                 FTargsrc_Uninit(samp_make::FTargsrc& parent) __attribute__((nothrow));
 
 // --- samp_make.FieldId
 #pragma pack(push,1)

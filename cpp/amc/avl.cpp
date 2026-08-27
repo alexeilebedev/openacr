@@ -18,7 +18,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/avl.cpp -- AVL tree
 //
 
@@ -200,7 +200,7 @@ void amc::tfunc_Atree_TallerChild(){
     Ins(&R, func.body, "return $name_Balance(node) < 0 ? node.$Right : node.$Left;");
 }
 
-//Disconnect the node from its parent.
+//Disconnect the node from its up.
 void amc::tfunc_Atree_Disconnect(){
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
@@ -208,10 +208,10 @@ void amc::tfunc_Atree_Disconnect(){
     func.priv = true;
     Ins(&R, func.ret,   "void", false);
     Ins(&R, func.proto, "$name_Disconnect($Cpptype& node)", false);
-    Ins(&R, func.body,  "$Cpptype* parent = node.$Up;");
-    Ins(&R, func.body,  "if(parent != NULL){");
-    Ins(&R, func.body,  "    bool left = parent->$Left == &node;");
-    Ins(&R, func.body,  "    (left ? parent->$Left : parent->$Right) = NULL;");
+    Ins(&R, func.body,  "$Cpptype* up = node.$Up;");
+    Ins(&R, func.body,  "if(up != NULL){");
+    Ins(&R, func.body,  "    bool left = up->$Left == &node;");
+    Ins(&R, func.body,  "    (left ? up->$Left : up->$Right) = NULL;");
     Ins(&R, func.body,  "}");
     Ins(&R, func.body,  "node.$Up = NULL;");
 }
@@ -294,7 +294,7 @@ void amc::tfunc_Atree_Propagate(){
 
 
 
-//Iterate down the tree starting from the parent and place
+//Iterate down the tree starting from the up and place
 //the element in the appropriate leaf.
 //Note that balance might be broken after this operation.
 void amc::tfunc_Atree_InsertImpl(){
@@ -302,17 +302,17 @@ void amc::tfunc_Atree_InsertImpl(){
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.ret,   "void", false);
-    Ins(&R, func.proto, "$name_InsertImpl($Parent, $Cpptype* parent, $Cpptype& row)" , false);
+    Ins(&R, func.proto, "$name_InsertImpl($Parent, $Cpptype* up, $Cpptype& row)" , false);
     Ins(&R, func.body,  "bool left = false;");
-    Ins(&R, func.body,  "while(parent != NULL){");
-    Ins(&R, func.body,  "    left = $name_ElemLt($pararg, row, *parent);");
-    Ins(&R, func.body,  "    $Cpptype* side = left ? parent->$Left : parent->$Right;");
+    Ins(&R, func.body,  "while(up != NULL){");
+    Ins(&R, func.body,  "    left = $name_ElemLt($pararg, row, *up);");
+    Ins(&R, func.body,  "    $Cpptype* side = left ? up->$Left : up->$Right;");
     Ins(&R, func.body,  "    if(side == NULL){");
     Ins(&R, func.body,  "        break;");
     Ins(&R, func.body,  "    }");
-    Ins(&R, func.body,  "    parent = side;");
+    Ins(&R, func.body,  "    up = side;");
     Ins(&R, func.body,  "}");
-    Ins(&R, func.body,  "$name_Connect(parent, &row, left);");
+    Ins(&R, func.body,  "$name_Connect(up, &row, left);");
 }
 
 //1.Insert element starting from the root.
@@ -421,19 +421,19 @@ void amc::tfunc_Atree_Connect(){
     func.inl = true;
     func.priv = true;
     Ins(&R, func.ret  , "void", false);
-    Ins(&R, func.proto, "$name_Connect($Cpptype* parent, $Cpptype* child, bool left)", false);
-    Ins(&R, func.body , "if(parent){");
-    Ins(&R, func.body , "    (left ? parent->$Left : parent->$Right) = child;");
+    Ins(&R, func.proto, "$name_Connect($Cpptype* up, $Cpptype* child, bool left)", false);
+    Ins(&R, func.body , "if(up){");
+    Ins(&R, func.body , "    (left ? up->$Left : up->$Right) = child;");
     Ins(&R, func.body , "}");
     Ins(&R, func.body , "if(child){");
-    Ins(&R, func.body , "    child->$Up = parent;");
+    Ins(&R, func.body , "    child->$Up = up;");
     Ins(&R, func.body , "}");
 }
 //1. Find next/prev element in my subtree (opposite of imbalance direction).
 //2. If that element has a child, swap it with the child by turning from child.
 //3. Swap the element to be removed with the next.
 //4. Remove the element.
-//5. Propagate up from the next's parent.
+//5. Propagate up from the next's up.
 void amc::tfunc_Atree_Remove(){
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;

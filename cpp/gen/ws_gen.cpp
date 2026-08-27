@@ -359,7 +359,7 @@ void ws::StatusCode_Print(ws::StatusCode row, algo::cstring& str) {
 
 // --- ws.CloseMsg.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::CloseMsg &row, ams::MsgHeader &out) {
+void ws::close_msg_CopyOut(ws::CloseMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -468,7 +468,7 @@ void ws::CloseMsg_Print(ws::CloseMsg& row, algo::cstring& str) {
 
 // --- ws.ConnectMsg.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::ConnectMsg &row, ams::MsgHeader &out) {
+void ws::connect_msg_CopyOut(ws::ConnectMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -641,7 +641,7 @@ void ws::Opcode_Print(ws::Opcode row, algo::cstring& str) {
 
 // --- ws.DataMsg.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::DataMsg &row, ams::MsgHeader &out) {
+void ws::data_msg_CopyOut(ws::DataMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -943,7 +943,7 @@ void ws::FieldId_Print(ws::FieldId row, algo::cstring& str) {
 
 // --- ws.Frame.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::Frame &row, ws::FrameHeader &out) {
+void ws::frame_CopyOut(ws::Frame &row, ws::FrameHeader &out) {
     out.byte0 = row.byte0;
     // byte1: field value is computed
     // fin: unknown field type (Bitfld), skipped
@@ -1165,7 +1165,7 @@ void ws::Frame_Print(ws::Frame& row, algo::cstring& str) {
 
 // --- ws.Frame16.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::Frame16 &row, ws::FrameHeader &out) {
+void ws::frame16_CopyOut(ws::Frame16 &row, ws::FrameHeader &out) {
     out.byte0 = row.byte0;
     // byte1: field value is computed
     // fin: unknown field type (Bitfld), skipped
@@ -1391,7 +1391,7 @@ void ws::Frame16_Print(ws::Frame16& row, algo::cstring& str) {
 
 // --- ws.Frame64.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::Frame64 &row, ws::FrameHeader &out) {
+void ws::frame64_CopyOut(ws::Frame64 &row, ws::FrameHeader &out) {
     out.byte0 = row.byte0;
     // byte1: field value is computed
     // fin: unknown field type (Bitfld), skipped
@@ -1701,7 +1701,7 @@ bool ws::FrameHeaderMsgsCase_ReadStrptrMaybe(ws::FrameHeaderMsgsCase &parent, al
 
 // --- ws.FrameMasked.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::FrameMasked &row, ws::FrameHeader &out) {
+void ws::frame_masked_CopyOut(ws::FrameMasked &row, ws::FrameHeader &out) {
     out.byte0 = row.byte0;
     // byte1: field value is computed
     // fin: unknown field type (Bitfld), skipped
@@ -1930,7 +1930,7 @@ void ws::FrameMasked_Print(ws::FrameMasked& row, algo::cstring& str) {
 
 // --- ws.FrameMasked16.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::FrameMasked16 &row, ws::FrameHeader &out) {
+void ws::frame_masked16_CopyOut(ws::FrameMasked16 &row, ws::FrameHeader &out) {
     out.byte0 = row.byte0;
     // byte1: field value is computed
     // fin: unknown field type (Bitfld), skipped
@@ -2163,7 +2163,7 @@ void ws::FrameMasked16_Print(ws::FrameMasked16& row, algo::cstring& str) {
 
 // --- ws.FrameMasked64.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::FrameMasked64 &row, ws::FrameHeader &out) {
+void ws::frame_masked64_CopyOut(ws::FrameMasked64 &row, ws::FrameHeader &out) {
     out.byte0 = row.byte0;
     // byte1: field value is computed
     // fin: unknown field type (Bitfld), skipped
@@ -2503,7 +2503,7 @@ void ws::HttpState_Print(ws::HttpState row, algo::cstring& str) {
 
 // --- ws.ServerStartMsg.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::ServerStartMsg &row, ams::MsgHeader &out) {
+void ws::server_start_msg_CopyOut(ws::ServerStartMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2564,7 +2564,7 @@ void ws::ServerStartMsg_Print(ws::ServerStartMsg& row, algo::cstring& str) {
 
 // --- ws.ServerStopMsg.base.CopyOut
 // Copy fields out of row
-void ws::parent_CopyOut(ws::ServerStopMsg &row, ams::MsgHeader &out) {
+void ws::server_stop_msg_CopyOut(ws::ServerStopMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter

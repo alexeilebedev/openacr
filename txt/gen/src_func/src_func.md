@@ -3,10 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -107,29 +110,29 @@ private:
 <a href="#src_func-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|src_func.FDb.report|[report.src_func](/txt/protocol/report/README.md#report-src_func)|[Val](/txt/exe/amc/reftype.md#val)||Final report|
-|src_func.FDb._db|[src_func.FDb](/txt/gen/src_func/src_func.md#src_func-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|src_func.FDb.cmdline|[command.src_func](/txt/protocol/command/README.md#command-src_func)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_func.FDb.targsrc|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_func.FDb.target|[src_func.FTarget](/txt/gen/src_func/src_func.md#src_func-ftarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_func.FDb.ind_target|[src_func.FTarget](/txt/gen/src_func/src_func.md#src_func-ftarget)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_func.FDb.func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_func.FDb.ind_func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_func.FDb.bh_func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|src_func.FDb.c_cur_targsrc|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|src_func.FDb.cur_line|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_func.FDb.ignore_funcstart|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_func.FDb.ctypelen|[src_func.FCtypelen](/txt/gen/src_func/src_func.md#src_func-fctypelen)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_func.FDb.ind_ctypelen|[src_func.FCtypelen](/txt/gen/src_func/src_func.md#src_func-fctypelen)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_func.FDb.printed_user_impl_notice|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_func.FDb.userfunc|[src_func.FUserfunc](/txt/gen/src_func/src_func.md#src_func-fuserfunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_func.FDb.ind_userfunc|[src_func.FUserfunc](/txt/gen/src_func/src_func.md#src_func-fuserfunc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_func.FDb.ind_userfunc_cppname|[src_func.FUserfunc](/txt/gen/src_func/src_func.md#src_func-fuserfunc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_func.FDb.editloc|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||List of locations to edit|
-|src_func.FDb.genaffix|[src_func.FGenaffix](/txt/gen/src_func/src_func.md#src_func-fgenaffix)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_func.FDb.ind_genaffix|[src_func.FGenaffix](/txt/gen/src_func/src_func.md#src_func-fgenaffix)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_func.FDb.gitfile|[src_func.FGitfile](/txt/gen/src_func/src_func.md#src_func-fgitfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_func.FDb.ind_gitfile|[src_func.FGitfile](/txt/gen/src_func/src_func.md#src_func-fgitfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|src_func.FDb.report|[report.src_func](/txt/protocol/report/README.md#report-src_func)|[Val](/txt/exe/amc/reftype/Val.md)||Final report|
+|src_func.FDb._db|[src_func.FDb](/txt/gen/src_func/src_func.md#src_func-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|src_func.FDb.cmdline|[command.src_func](/txt/protocol/command/README.md#command-src_func)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_func.FDb.targsrc|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_func.FDb.target|[src_func.FTarget](/txt/gen/src_func/src_func.md#src_func-ftarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_func.FDb.ind_target|[src_func.FTarget](/txt/gen/src_func/src_func.md#src_func-ftarget)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_func.FDb.func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_func.FDb.ind_func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_func.FDb.bh_func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|src_func.FDb.c_cur_targsrc|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|src_func.FDb.cur_line|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_func.FDb.ignore_funcstart|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_func.FDb.ctypelen|[src_func.FCtypelen](/txt/gen/src_func/src_func.md#src_func-fctypelen)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_func.FDb.ind_ctypelen|[src_func.FCtypelen](/txt/gen/src_func/src_func.md#src_func-fctypelen)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_func.FDb.printed_user_impl_notice|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_func.FDb.userfunc|[src_func.FUserfunc](/txt/gen/src_func/src_func.md#src_func-fuserfunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_func.FDb.ind_userfunc|[src_func.FUserfunc](/txt/gen/src_func/src_func.md#src_func-fuserfunc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_func.FDb.ind_userfunc_cppname|[src_func.FUserfunc](/txt/gen/src_func/src_func.md#src_func-fuserfunc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_func.FDb.editloc|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||List of locations to edit|
+|src_func.FDb.genaffix|[src_func.FGenaffix](/txt/gen/src_func/src_func.md#src_func-fgenaffix)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_func.FDb.ind_genaffix|[src_func.FGenaffix](/txt/gen/src_func/src_func.md#src_func-fgenaffix)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_func.FDb.gitfile|[src_func.FGitfile](/txt/gen/src_func/src_func.md#src_func-fgitfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_func.FDb.ind_gitfile|[src_func.FGitfile](/txt/gen/src_func/src_func.md#src_func-fgitfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -192,22 +195,22 @@ struct FDb { // src_func.FDb: In-memory database for src_func
 <a href="#src_func-ffunc-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|src_func.FFunc.func|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||First line of function -- primary key|
-|src_func.FFunc.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Function name in the form ns.name|
-|src_func.FFunc.args|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Argument list -- everything beyond first open parenthesis|
-|src_func.FFunc.sortkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_func.FFunc.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Function body|
-|src_func.FFunc.p_targsrc|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Pointer to source file|
-|src_func.FFunc.line|i32|[Val](/txt/exe/amc/reftype.md#val)||Line number where function started|
-|src_func.FFunc.precomment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Comments that appeare before function body|
-|src_func.FFunc.isstatic|bool|[Val](/txt/exe/amc/reftype.md#val)||Static?|
-|src_func.FFunc.isinline|bool|[Val](/txt/exe/amc/reftype.md#val)||Inline?|
-|src_func.FFunc.select|bool|[Val](/txt/exe/amc/reftype.md#val)||Select for further processing|
-|src_func.FFunc.iffy|bool|[Val](/txt/exe/amc/reftype.md#val)||Something wrong with the declaration|
-|src_func.FFunc.mystery|bool|[Val](/txt/exe/amc/reftype.md#val)||Non-static and missing a comment|
-|src_func.FFunc.p_written_to|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Upptr](/txt/exe/amc/reftype.md#upptr)||If non-NULL, header where this function is written|
-|src_func.FFunc.p_userfunc|[src_func.FUserfunc](/txt/gen/src_func/src_func.md#src_func-fuserfunc)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|src_func.FFunc.endline|i32|[Val](/txt/exe/amc/reftype.md#val)||Line where function definition ends|
+|src_func.FFunc.func|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||First line of function -- primary key|
+|src_func.FFunc.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Function name in the form ns.name|
+|src_func.FFunc.args|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Argument list -- everything beyond first open parenthesis|
+|src_func.FFunc.sortkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_func.FFunc.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Function body|
+|src_func.FFunc.p_targsrc|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Pointer to source file|
+|src_func.FFunc.line|i32|[Val](/txt/exe/amc/reftype/Val.md)||Line number where function started|
+|src_func.FFunc.precomment|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Comments that appeare before function body|
+|src_func.FFunc.isstatic|bool|[Val](/txt/exe/amc/reftype/Val.md)||Static?|
+|src_func.FFunc.isinline|bool|[Val](/txt/exe/amc/reftype/Val.md)||Inline?|
+|src_func.FFunc.select|bool|[Val](/txt/exe/amc/reftype/Val.md)||Select for further processing|
+|src_func.FFunc.iffy|bool|[Val](/txt/exe/amc/reftype/Val.md)||Something wrong with the declaration|
+|src_func.FFunc.mystery|bool|[Val](/txt/exe/amc/reftype/Val.md)||Non-static and missing a comment|
+|src_func.FFunc.p_written_to|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||If non-NULL, header where this function is written|
+|src_func.FFunc.p_userfunc|[src_func.FUserfunc](/txt/gen/src_func/src_func.md#src_func-fuserfunc)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|src_func.FFunc.endline|i32|[Val](/txt/exe/amc/reftype/Val.md)||Line where function definition ends|
 
 #### Struct FFunc
 <a href="#struct-ffunc"></a>
@@ -260,7 +263,7 @@ private:
 <a href="#src_func-fgenaffix-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|src_func.FGenaffix.genaffix|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|src_func.FGenaffix.genaffix|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FGenaffix
 <a href="#struct-fgenaffix"></a>
@@ -329,7 +332,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_func.FTarget.base|[dev.Target](/txt/ssimdb/dev/target.md)|[Base](/txt/ssimdb/dev/target.md)|||
-|src_func.FTarget.cd_targsrc|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|src_func.FTarget.cd_targsrc|[src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FTarget
 <a href="#struct-ftarget"></a>
@@ -368,10 +371,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_func.FTargsrc.base|[dev.Targsrc](/txt/ssimdb/dev/targsrc.md)|[Base](/txt/ssimdb/dev/targsrc.md)|||
-|src_func.FTargsrc.zd_func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|src_func.FTargsrc.p_target|[src_func.FTarget](/txt/gen/src_func/src_func.md#src_func-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|src_func.FTargsrc.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_func.FTargsrc.counter|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|src_func.FTargsrc.zd_func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|src_func.FTargsrc.p_target|[src_func.FTarget](/txt/gen/src_func/src_func.md#src_func-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|src_func.FTargsrc.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_func.FTargsrc.counter|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTargsrc
 <a href="#struct-ftargsrc"></a>
@@ -417,8 +420,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_func.FUserfunc.base|[dmmeta.Userfunc](/txt/ssimdb/dmmeta/userfunc.md)|[Base](/txt/ssimdb/dmmeta/userfunc.md)|||
-|src_func.FUserfunc.zd_func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|src_func.FUserfunc.proto|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Cached prototype from amc|
+|src_func.FUserfunc.zd_func|[src_func.FFunc](/txt/gen/src_func/src_func.md#src_func-ffunc)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|src_func.FUserfunc.proto|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Cached prototype from amc|
 
 #### Struct FUserfunc
 <a href="#struct-fuserfunc"></a>

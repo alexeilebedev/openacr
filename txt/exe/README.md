@@ -54,7 +54,6 @@
 &#128196; [ams_sendtest - Algo Messaging System test tool](/txt/exe/ams_sendtest/README.md)<br/>
 &#128196; [amsspy - List ams sessions and monitor traffic on host](/txt/exe/amsspy/README.md)<br/>
 &#128196; [apm - Algo Package Manager](/txt/exe/apm/README.md)<br/>
-&#128196; [apm - Internals](/txt/exe/apm/internals.md)<br/>
 &#128196; [aqlite - Runs sqlite queries against ssim files](/txt/exe/aqlite/README.md)<br/>
 &#128196; [atf_amc - Unit tests for amc (see amctest table)](/txt/exe/atf_amc/README.md)<br/>
 &#128196; [atf_ci - Normalization tests (see citest table)](/txt/exe/atf_ci/README.md)<br/>

@@ -20,8 +20,6 @@
 #include "include/gen/httpdb_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -56,16 +54,16 @@ void lib_http::status_CopyIn(lib_http::FStatus &row, httpdb::Status &in) {
 }
 
 // --- lib_http.FStatus.code.Get
-u16 lib_http::code_Get(lib_http::FStatus& status) {
+u16 lib_http::code_Get(lib_http::FStatus& parent) {
     u16 ret;
     ret = 0; // default value
-    (void)u16_ReadStrptrMaybe(ret, algo::Pathcomp(status.status, " LL"));
+    (void)u16_ReadStrptrMaybe(ret, algo::Pathcomp(parent.status, " LL"));
     return ret;
 }
 
 // --- lib_http.FStatus.reason.Get
-algo::strptr lib_http::reason_Get(lib_http::FStatus& status) {
-    return algo::Pathcomp(status.status, " LR");
+algo::strptr lib_http::reason_Get(lib_http::FStatus& parent) {
+    return algo::Pathcomp(parent.status, " LR");
 }
 
 // --- lib_http.trace..Print
@@ -340,7 +338,6 @@ void lib_http::FDb_Init() {
 
 // --- lib_http.FDb..Uninit
 void lib_http::FDb_Uninit() {
-    lib_http::FDb &row = _db; (void)row;
 
     // lib_http.FDb.status.Uninit (Inlary)  //
     // skip destruction in global scope

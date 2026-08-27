@@ -95,6 +95,27 @@ Example: resolve link errors in .md files:
 errlist abt_md -check
 ```
 
+A link leaves the document it is written in, so checking links is checking the
+whole graph at once: the target of a link out of the selection is a file the run
+never read, and the anchor it names is one the run never saw.  `-check` therefore
+reads every readme, and it refuses a selection rather than skipping the part it
+was asked to do:
+
+```
+abt_md.narrow_check  nselect:16  nreadmefile:1284  comment:"-check reads every readme; drop -readmefile and -ns, or use -update to regenerate a selection"
+```
+
+`-update` is a different request and still takes a selection, since regenerating
+one namespace's documents is the ordinary way to use the tool, and a regeneration
+is not a run that was asked to check anything.
+
+A link's target is good when the repo tracks it -- when `dev.gitfile` holds a row
+for it -- rather than when it happens to exist on disk.  The two differ for a
+build artifact, a gitignored path, and anything reached through a symlinked
+directory: all of them resolve in one checkout and none of them is a page the
+generated site can serve.  `spnx` resolves the same way when it builds the site,
+so a link that passes here is one the site can render.
+
 #### -link -- (with -print) Print links
 <a href="#-link"></a>
 
@@ -135,6 +156,7 @@ proof that it has rotted.
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|Describe input table of a program|
 |[dmmeta.gconst](/txt/ssimdb/dmmeta/gconst.md)|Import ssim table columns as fconst for a field|
+|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
 |[dmmeta.gstatic](/txt/ssimdb/dmmeta/gstatic.md)|Load entries for this table at startup time|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[dmmeta.nstype](/txt/ssimdb/dmmeta/nstype.md)|Namespace type|

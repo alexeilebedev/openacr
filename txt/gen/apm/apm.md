@@ -3,10 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -141,10 +144,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |apm.FCtype.base|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|apm.FCtype.c_ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|apm.FCtype.c_field|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|apm.FCtype.c_ssimreq|[apm.FSsimreq](/txt/gen/apm/apm.md#apm-fssimreq)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|apm.FCtype.c_bltin|[apm.FBltin](/txt/gen/apm/apm.md#apm-fbltin)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|apm.FCtype.c_ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|apm.FCtype.c_field|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|apm.FCtype.c_ssimreq|[apm.FSsimreq](/txt/gen/apm/apm.md#apm-fssimreq)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|apm.FCtype.c_bltin|[apm.FBltin](/txt/gen/apm/apm.md#apm-fbltin)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -196,48 +199,48 @@ private:
 <a href="#apm-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|apm.FDb._db|[apm.FDb](/txt/gen/apm/apm.md#apm-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|apm.FDb.cmdline|[command.apm](/txt/protocol/command/README.md#command-apm)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FDb.package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.zd_sel_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|apm.FDb.zd_temp_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|apm.FDb.script|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FDb.scriptfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FDb.ind_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|apm.FDb.pkgkey|[apm.FPkgkey](/txt/gen/apm/apm.md#apm-fpkgkey)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.pkgdep|[apm.FPkgdep](/txt/gen/apm/apm.md#apm-fpkgdep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.mergefile|[apm.FMergefile](/txt/gen/apm/apm.md#apm-fmergefile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.ind_mergefile|[apm.FMergefile](/txt/gen/apm/apm.md#apm-fmergefile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|apm.FDb.ind_pkgkey|[apm.FPkgkey](/txt/gen/apm/apm.md#apm-fpkgkey)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|apm.FDb.base_sandbox|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Sandbox name for 'base' files|
-|apm.FDb.theirs_sandbox|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Sandbox name for 'theirs' files|
-|apm.FDb.ours_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FDb.theirs_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FDb.base_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FDb.ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.ind_ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|apm.FDb.field|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.ind_field|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|apm.FDb.ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.ind_ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|apm.FDb.rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|apm.FDb.ind_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|apm.FDb.c_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Temporary array for sorting|
-|apm.FDb.zd_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|apm.FDb.zd_selrec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|apm.FDb.zd_chooserec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|apm.FDb.substr|[apm.FSubstr](/txt/gen/apm/apm.md#apm-fsubstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.pkgrec|[apm.FPkgrec](/txt/gen/apm/apm.md#apm-fpkgrec)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|apm.FDb.zd_topo_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|apm.FDb.ssimreq|[apm.FSsimreq](/txt/gen/apm/apm.md#apm-fssimreq)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.merged_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FDb.mkdir|[apm.FMkdir](/txt/gen/apm/apm.md#apm-fmkdir)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.ind_mkdir|[apm.FMkdir](/txt/gen/apm/apm.md#apm-fmkdir)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|apm.FDb.ns|[apm.FNs](/txt/gen/apm/apm.md#apm-fns)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.pkgdata_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||File containing new package definitions|
-|apm.FDb.ssimsort|[apm.FSsimsort](/txt/gen/apm/apm.md#apm-fssimsort)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|apm.FDb.ind_ssimsort|[apm.FSsimsort](/txt/gen/apm/apm.md#apm-fssimsort)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|apm.FDb.bltin|[apm.FBltin](/txt/gen/apm/apm.md#apm-fbltin)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|apm.FDb._db|[apm.FDb](/txt/gen/apm/apm.md#apm-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|apm.FDb.cmdline|[command.apm](/txt/protocol/command/README.md#command-apm)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FDb.package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.zd_sel_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|apm.FDb.zd_temp_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|apm.FDb.script|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FDb.scriptfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FDb.ind_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|apm.FDb.pkgkey|[apm.FPkgkey](/txt/gen/apm/apm.md#apm-fpkgkey)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.pkgdep|[apm.FPkgdep](/txt/gen/apm/apm.md#apm-fpkgdep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.mergefile|[apm.FMergefile](/txt/gen/apm/apm.md#apm-fmergefile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.ind_mergefile|[apm.FMergefile](/txt/gen/apm/apm.md#apm-fmergefile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|apm.FDb.ind_pkgkey|[apm.FPkgkey](/txt/gen/apm/apm.md#apm-fpkgkey)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|apm.FDb.base_sandbox|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Sandbox name for 'base' files|
+|apm.FDb.theirs_sandbox|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Sandbox name for 'theirs' files|
+|apm.FDb.ours_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FDb.theirs_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FDb.base_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FDb.ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.ind_ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|apm.FDb.field|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.ind_field|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|apm.FDb.ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.ind_ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|apm.FDb.rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|apm.FDb.ind_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|apm.FDb.c_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Temporary array for sorting|
+|apm.FDb.zd_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|apm.FDb.zd_selrec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|apm.FDb.zd_chooserec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|apm.FDb.substr|[apm.FSubstr](/txt/gen/apm/apm.md#apm-fsubstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.pkgrec|[apm.FPkgrec](/txt/gen/apm/apm.md#apm-fpkgrec)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|apm.FDb.zd_topo_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|apm.FDb.ssimreq|[apm.FSsimreq](/txt/gen/apm/apm.md#apm-fssimreq)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.merged_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FDb.mkdir|[apm.FMkdir](/txt/gen/apm/apm.md#apm-fmkdir)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.ind_mkdir|[apm.FMkdir](/txt/gen/apm/apm.md#apm-fmkdir)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|apm.FDb.ns|[apm.FNs](/txt/gen/apm/apm.md#apm-fns)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.pkgdata_recfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||File containing new package definitions|
+|apm.FDb.ssimsort|[apm.FSsimsort](/txt/gen/apm/apm.md#apm-fssimsort)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|apm.FDb.ind_ssimsort|[apm.FSsimsort](/txt/gen/apm/apm.md#apm-fssimsort)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|apm.FDb.bltin|[apm.FBltin](/txt/gen/apm/apm.md#apm-fbltin)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -344,9 +347,9 @@ struct FDb { // apm.FDb: In-memory database for apm
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |apm.FField.base|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|apm.FField.p_ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|apm.FField.c_substr|[apm.FSubstr](/txt/gen/apm/apm.md#apm-fsubstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|apm.FField.p_arg|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|apm.FField.p_ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|apm.FField.c_substr|[apm.FSubstr](/txt/gen/apm/apm.md#apm-fsubstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|apm.FField.p_arg|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -395,13 +398,13 @@ private:
 <a href="#apm-fmergefile-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|apm.FMergefile.mergefile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FMergefile.base_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FMergefile.base_mode|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FMergefile.ours_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FMergefile.ours_mode|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FMergefile.theirs_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FMergefile.theirs_mode|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|apm.FMergefile.mergefile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FMergefile.base_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FMergefile.base_mode|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FMergefile.ours_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FMergefile.ours_mode|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FMergefile.theirs_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FMergefile.theirs_mode|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FMergefile
 <a href="#struct-fmergefile"></a>
@@ -440,7 +443,7 @@ private:
 <a href="#apm-fmkdir-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|apm.FMkdir.mkdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|apm.FMkdir.mkdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FMkdir
 <a href="#struct-fmkdir"></a>
@@ -504,11 +507,11 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |apm.FPackage.base|[dev.Package](/txt/ssimdb/dev/package.md)|[Base](/txt/ssimdb/dev/package.md)|||
-|apm.FPackage.zd_pkgkey|[apm.FPkgkey](/txt/gen/apm/apm.md#apm-fpkgkey)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|apm.FPackage.c_pkgdep|[apm.FPkgdep](/txt/gen/apm/apm.md#apm-fpkgdep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|apm.FPackage.c_pkgdep_parent|[apm.FPkgdep](/txt/gen/apm/apm.md#apm-fpkgdep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|apm.FPackage.zd_pkgrec|[apm.FPkgrec](/txt/gen/apm/apm.md#apm-fpkgrec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|apm.FPackage.visited|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|apm.FPackage.zd_pkgkey|[apm.FPkgkey](/txt/gen/apm/apm.md#apm-fpkgkey)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|apm.FPackage.c_pkgdep|[apm.FPkgdep](/txt/gen/apm/apm.md#apm-fpkgdep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|apm.FPackage.c_pkgdep_parent|[apm.FPkgdep](/txt/gen/apm/apm.md#apm-fpkgdep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|apm.FPackage.zd_pkgrec|[apm.FPkgrec](/txt/gen/apm/apm.md#apm-fpkgrec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|apm.FPackage.visited|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FPackage
 <a href="#struct-fpackage"></a>
@@ -575,8 +578,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |apm.FPkgdep.base|[dev.Pkgdep](/txt/ssimdb/dev/pkgdep.md)|[Base](/txt/ssimdb/dev/pkgdep.md)|||
-|apm.FPkgdep.p_parent|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|apm.FPkgdep.p_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|apm.FPkgdep.p_parent|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|apm.FPkgdep.p_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FPkgdep
 <a href="#struct-fpkgdep"></a>
@@ -587,6 +590,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/apm_gen.h](/include
 struct FPkgdep { // apm.FPkgdep
     algo::Smallstr100   pkgdep;                           //
     bool                soft;                             //   false  Soft dependency: affects package ordering but not forced update
+    algo::Smallstr50    pkgdeptype;                       //   "require"  How this package stands to its parent
     algo::cstring       comment;                          //
     apm::FPackage*      p_parent;                         // reference to parent row
     apm::FPackage*      p_package;                        // reference to parent row
@@ -620,10 +624,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |apm.FPkgkey.base|[dev.Pkgkey](/txt/ssimdb/dev/pkgkey.md)|[Base](/txt/ssimdb/dev/pkgkey.md)|||
-|apm.FPkgkey.n_explicit|u32|[Val](/txt/exe/amc/reftype.md#val)||# of explicitly matched records|
-|apm.FPkgkey.n_up|u32|[Val](/txt/exe/amc/reftype.md#val)||# of records connected upwards|
-|apm.FPkgkey.n_down|u32|[Val](/txt/exe/amc/reftype.md#val)||# of records connected downwards|
-|apm.FPkgkey.c_pkgrec|[apm.FPkgrec](/txt/gen/apm/apm.md#apm-fpkgrec)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|apm.FPkgkey.n_explicit|u32|[Val](/txt/exe/amc/reftype/Val.md)||# of explicitly matched records|
+|apm.FPkgkey.n_up|u32|[Val](/txt/exe/amc/reftype/Val.md)||# of records connected upwards|
+|apm.FPkgkey.n_down|u32|[Val](/txt/exe/amc/reftype/Val.md)||# of records connected downwards|
+|apm.FPkgkey.c_pkgrec|[apm.FPkgrec](/txt/gen/apm/apm.md#apm-fpkgrec)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FPkgkey
 <a href="#struct-fpkgkey"></a>
@@ -672,9 +676,9 @@ private:
 <a href="#apm-fpkgrec-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|apm.FPkgrec.p_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|apm.FPkgrec.p_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|apm.FPkgrec.p_pkgkey|[apm.FPkgkey](/txt/gen/apm/apm.md#apm-fpkgkey)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|apm.FPkgrec.p_package|[apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|apm.FPkgrec.p_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|apm.FPkgrec.p_pkgkey|[apm.FPkgkey](/txt/gen/apm/apm.md#apm-fpkgkey)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FPkgrec
 <a href="#struct-fpkgrec"></a>
@@ -712,14 +716,14 @@ private:
 <a href="#apm-frec-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|apm.FRec.rec|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Primary key: ssimfile:pkey|
-|apm.FRec.p_ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Pointer to ssimfile|
-|apm.FRec.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype.md#val)||Original record from file|
-|apm.FRec.sortkey|[algo_lib.RecSortkey](/txt/gen/algo_lib/algo_lib.md#algo_lib-recsortkey)|[Val](/txt/exe/amc/reftype.md#val)||Output sort key|
-|apm.FRec.c_parent|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|apm.FRec.c_child|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|apm.FRec.level|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FRec.zd_rec_pkgrec|[apm.FPkgrec](/txt/gen/apm/apm.md#apm-fpkgrec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|apm.FRec.rec|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Primary key: ssimfile:pkey|
+|apm.FRec.p_ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Pointer to ssimfile|
+|apm.FRec.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype/Val.md)||Original record from file|
+|apm.FRec.sortkey|[algo_lib.RecSortkey](/txt/gen/algo_lib/algo_lib.md#algo_lib-recsortkey)|[Val](/txt/exe/amc/reftype/Val.md)||Output sort key|
+|apm.FRec.c_parent|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|apm.FRec.c_child|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|apm.FRec.level|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FRec.zd_rec_pkgrec|[apm.FPkgrec](/txt/gen/apm/apm.md#apm-fpkgrec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FRec
 <a href="#struct-frec"></a>
@@ -780,9 +784,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |apm.FSsimfile.base|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
-|apm.FSsimfile.p_ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|apm.FSsimfile.c_ssimsort|[apm.FSsimsort](/txt/gen/apm/apm.md#apm-fssimsort)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|apm.FSsimfile.zd_ssimfile_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|apm.FSsimfile.p_ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|apm.FSsimfile.c_ssimsort|[apm.FSsimsort](/txt/gen/apm/apm.md#apm-fssimsort)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|apm.FSsimfile.zd_ssimfile_rec|[apm.FRec](/txt/gen/apm/apm.md#apm-frec)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FSsimfile
 <a href="#struct-fssimfile"></a>
@@ -830,11 +834,11 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |apm.FSsimreq.base|[dmmeta.Ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|[Base](/txt/ssimdb/dmmeta/ssimreq.md)|||
-|apm.FSsimreq.p_child_ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|apm.FSsimreq.p_ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|apm.FSsimreq.p_field|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|apm.FSsimreq.regx_value|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype.md#val)|||
-|apm.FSsimreq.exclude|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|apm.FSsimreq.p_child_ssimfile|[apm.FSsimfile](/txt/gen/apm/apm.md#apm-fssimfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|apm.FSsimreq.p_ctype|[apm.FCtype](/txt/gen/apm/apm.md#apm-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|apm.FSsimreq.p_field|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|apm.FSsimreq.regx_value|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|apm.FSsimreq.exclude|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FSsimreq
 <a href="#struct-fssimreq"></a>
@@ -921,7 +925,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |apm.FSubstr.base|[dmmeta.Substr](/txt/ssimdb/dmmeta/substr.md)|[Base](/txt/ssimdb/dmmeta/substr.md)|||
-|apm.FSubstr.p_srcfield|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|apm.FSubstr.p_srcfield|[apm.FField](/txt/gen/apm/apm.md#apm-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSubstr
 <a href="#struct-fsubstr"></a>

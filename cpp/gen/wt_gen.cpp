@@ -31,15 +31,12 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 wt::FDb         wt::_db;          // dependency found via dev.targdep
 
@@ -684,7 +681,6 @@ void wt::FDb_Init() {
 
 // --- wt.FDb..Uninit
 void wt::FDb_Uninit() {
-    wt::FDb &row = _db; (void)row;
 
     // wt.FDb.sbpath.Uninit (Lary)  //
     // skip destruction in global scope
@@ -713,9 +709,8 @@ void wt::sandbox_CopyIn(wt::FSandbox &row, dev::Sandbox &in) {
 }
 
 // --- wt.FSandbox..Uninit
-void wt::FSandbox_Uninit(wt::FSandbox& sandbox) {
-    wt::FSandbox &row = sandbox; (void)row;
-    ind_sandbox_Remove(row); // remove sandbox from index ind_sandbox
+void wt::FSandbox_Uninit(wt::FSandbox& parent) {
+    ind_sandbox_Remove(parent); // remove sandbox from index ind_sandbox
 }
 
 // --- wt.FSbpath.base.CopyOut
@@ -915,7 +910,6 @@ void wt::StaticCheck() {
 // --- wt...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         wt::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -934,7 +928,6 @@ int main(int argc, char **argv) {
     try {
         wt::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

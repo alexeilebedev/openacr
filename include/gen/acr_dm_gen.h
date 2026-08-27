@@ -88,38 +88,38 @@ private:
 };
 // Return true if index is empty
 // func:acr_dm.FAttr.zs_value.EmptyQ
-inline bool          zs_value_EmptyQ(acr_dm::FAttr& attr) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zs_value_EmptyQ(acr_dm::FAttr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr_dm.FAttr.zs_value.First
-inline acr_dm::FValue* zs_value_First(acr_dm::FAttr& attr) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr_dm::FValue* zs_value_First(acr_dm::FAttr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr_dm.FAttr.zs_value.InLlistQ
 inline bool          attr_zs_value_InLlistQ(acr_dm::FValue& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr_dm.FAttr.zs_value.Insert
-void                 zs_value_Insert(acr_dm::FAttr& attr, acr_dm::FValue& row) __attribute__((nothrow));
+void                 zs_value_Insert(acr_dm::FAttr& parent, acr_dm::FValue& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr_dm.FAttr.zs_value.Last
-inline acr_dm::FValue* zs_value_Last(acr_dm::FAttr& attr) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr_dm::FValue* zs_value_Last(acr_dm::FAttr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:acr_dm.FAttr.zs_value.N
-inline i32           zs_value_N(const acr_dm::FAttr& attr) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zs_value_N(const acr_dm::FAttr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr_dm.FAttr.zs_value.Next
 inline acr_dm::FValue* attr_zs_value_Next(acr_dm::FValue &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:acr_dm.FAttr.zs_value.Remove
-void                 zs_value_Remove(acr_dm::FAttr& attr, acr_dm::FValue& row) __attribute__((nothrow));
+void                 zs_value_Remove(acr_dm::FAttr& parent, acr_dm::FValue& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr_dm.FAttr.zs_value.RemoveAll
-void                 zs_value_RemoveAll(acr_dm::FAttr& attr) __attribute__((nothrow));
+void                 zs_value_RemoveAll(acr_dm::FAttr& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:acr_dm.FAttr.zs_value.RemoveFirst
-acr_dm::FValue*      zs_value_RemoveFirst(acr_dm::FAttr& attr) __attribute__((nothrow));
+acr_dm::FValue*      zs_value_RemoveFirst(acr_dm::FAttr& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr_dm.FAttr.zs_value.qLast
-inline acr_dm::FValue& zs_value_qLast(acr_dm::FAttr& attr) __attribute__((__warn_unused_result__, nothrow));
+inline acr_dm::FValue& zs_value_qLast(acr_dm::FAttr& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // cursor points to valid item
 // func:acr_dm.FAttr.zs_value_curs.Reset
@@ -135,9 +135,9 @@ inline void          attr_zs_value_curs_Next(attr_zs_value_curs &curs) __attribu
 inline acr_dm::FValue& attr_zs_value_curs_Access(attr_zs_value_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_dm.FAttr..Init
-inline void          FAttr_Init(acr_dm::FAttr& attr);
+inline void          FAttr_Init(acr_dm::FAttr& parent);
 // func:acr_dm.FAttr..Uninit
-void                 FAttr_Uninit(acr_dm::FAttr& attr) __attribute__((nothrow));
+void                 FAttr_Uninit(acr_dm::FAttr& parent) __attribute__((nothrow));
 
 // --- acr_dm.trace
 #pragma pack(push,1)
@@ -497,6 +497,7 @@ inline bool          Sortkey_Update(acr_dm::Sortkey &lhs, acr_dm::Sortkey& rhs) 
 // access: acr_dm.FAttr.p_tuple (Upptr)
 // access: acr_dm.FTuple.p_anchor (Upptr)
 // access: acr_dm.FTuple.bh_child (Bheap)
+// access: acr_dm.FTuple.p_wanted (Upptr)
 struct FTuple { // acr_dm.FTuple
     acr_dm::FTuple*    ind_tuple_next;       // hash next
     u32                ind_tuple_hashval;    // hash value
@@ -511,14 +512,18 @@ struct FTuple { // acr_dm.FTuple
     i32                bh_child_n;           // number of elements in the heap
     i32                bh_child_max;         // max elements in bh_child_elems
     i32                tuple_bh_child_idx;   // index in heap; -1 means not-in-heap
+    i32                baseseq;              //   -1  Position of this row in the base file; -1 if the base file did not have it
+    acr_dm::Source     moved;                // Files that placed this row after a different row than the base file did
+    bool               moveconflict;         //   false  Two files moved this row, and not to the same place
+    acr_dm::FTuple*    p_wanted;             // reference to parent row
     // reftype Llist of acr_dm.FTuple.zs_attr prohibits copy
     // reftype Bheap of acr_dm.FTuple.bh_child prohibits copy
     // func:acr_dm.FTuple..AssignOp
-    inline acr_dm::FTuple& operator =(const acr_dm::FTuple &rhs) = delete;
+    acr_dm::FTuple&      operator =(const acr_dm::FTuple &rhs) = delete;
     // reftype Llist of acr_dm.FTuple.zs_attr prohibits copy
     // reftype Bheap of acr_dm.FTuple.bh_child prohibits copy
     // func:acr_dm.FTuple..CopyCtor
-    inline               FTuple(const acr_dm::FTuple &rhs) = delete;
+    FTuple(const acr_dm::FTuple &rhs) = delete;
 private:
     // func:acr_dm.FTuple..Ctor
     inline               FTuple() __attribute__((nothrow));
@@ -531,91 +536,91 @@ private:
 };
 // Return true if index is empty
 // func:acr_dm.FTuple.zs_attr.EmptyQ
-inline bool          zs_attr_EmptyQ(acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zs_attr_EmptyQ(acr_dm::FTuple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr_dm.FTuple.zs_attr.First
-inline acr_dm::FAttr* zs_attr_First(acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr_dm::FAttr* zs_attr_First(acr_dm::FTuple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr_dm.FTuple.zs_attr.InLlistQ
 inline bool          tuple_zs_attr_InLlistQ(acr_dm::FAttr& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr_dm.FTuple.zs_attr.Insert
-void                 zs_attr_Insert(acr_dm::FTuple& tuple, acr_dm::FAttr& row) __attribute__((nothrow));
+void                 zs_attr_Insert(acr_dm::FTuple& parent, acr_dm::FAttr& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr_dm.FTuple.zs_attr.Last
-inline acr_dm::FAttr* zs_attr_Last(acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr_dm::FAttr* zs_attr_Last(acr_dm::FTuple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:acr_dm.FTuple.zs_attr.N
-inline i32           zs_attr_N(const acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zs_attr_N(const acr_dm::FTuple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr_dm.FTuple.zs_attr.Next
 inline acr_dm::FAttr* tuple_zs_attr_Next(acr_dm::FAttr &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:acr_dm.FTuple.zs_attr.Remove
-void                 zs_attr_Remove(acr_dm::FTuple& tuple, acr_dm::FAttr& row) __attribute__((nothrow));
+void                 zs_attr_Remove(acr_dm::FTuple& parent, acr_dm::FAttr& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr_dm.FTuple.zs_attr.RemoveAll
-void                 zs_attr_RemoveAll(acr_dm::FTuple& tuple) __attribute__((nothrow));
+void                 zs_attr_RemoveAll(acr_dm::FTuple& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:acr_dm.FTuple.zs_attr.RemoveFirst
-acr_dm::FAttr*       zs_attr_RemoveFirst(acr_dm::FTuple& tuple) __attribute__((nothrow));
+acr_dm::FAttr*       zs_attr_RemoveFirst(acr_dm::FTuple& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr_dm.FTuple.zs_attr.qLast
-inline acr_dm::FAttr& zs_attr_qLast(acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow));
+inline acr_dm::FAttr& zs_attr_qLast(acr_dm::FTuple& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:acr_dm.FTuple.sortkey.Lt
-inline bool          sortkey_Lt(acr_dm::FTuple& tuple, acr_dm::FTuple &rhs) __attribute__((nothrow));
+inline bool          sortkey_Lt(acr_dm::FTuple& parent, acr_dm::FTuple &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:acr_dm.FTuple.sortkey.Cmp
-inline i32           sortkey_Cmp(acr_dm::FTuple& tuple, acr_dm::FTuple &rhs) __attribute__((nothrow));
+inline i32           sortkey_Cmp(acr_dm::FTuple& parent, acr_dm::FTuple &rhs) __attribute__((nothrow));
 
 // Remove all elements from heap and free memory used by the array.
 // func:acr_dm.FTuple.bh_child.Dealloc
-void                 bh_child_Dealloc(acr_dm::FTuple& tuple) __attribute__((nothrow));
+void                 bh_child_Dealloc(acr_dm::FTuple& parent) __attribute__((nothrow));
 // Return true if index is empty
 // func:acr_dm.FTuple.bh_child.EmptyQ
-inline bool          bh_child_EmptyQ(acr_dm::FTuple& tuple) __attribute__((nothrow));
+inline bool          bh_child_EmptyQ(acr_dm::FTuple& parent) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr_dm.FTuple.bh_child.First
-inline acr_dm::FTuple* bh_child_First(acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr_dm::FTuple* bh_child_First(acr_dm::FTuple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
 // func:acr_dm.FTuple.bh_child.InBheapQ
 inline bool          bh_child_InBheapQ(acr_dm::FTuple& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
 // func:acr_dm.FTuple.bh_child.Insert
-void                 bh_child_Insert(acr_dm::FTuple& tuple, acr_dm::FTuple& row) __attribute__((nothrow));
+void                 bh_child_Insert(acr_dm::FTuple& parent, acr_dm::FTuple& row) __attribute__((nothrow));
 // Return number of items in the heap
 // func:acr_dm.FTuple.bh_child.N
-inline i32           bh_child_N(const acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           bh_child_N(const acr_dm::FTuple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
 // func:acr_dm.FTuple.bh_child.Reheap
-i32                  bh_child_Reheap(acr_dm::FTuple& tuple, acr_dm::FTuple& row) __attribute__((nothrow));
+i32                  bh_child_Reheap(acr_dm::FTuple& parent, acr_dm::FTuple& row) __attribute__((nothrow));
 // Key of first element in the heap changed. Move it.
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
 // func:acr_dm.FTuple.bh_child.ReheapFirst
-i32                  bh_child_ReheapFirst(acr_dm::FTuple& tuple) __attribute__((nothrow));
+i32                  bh_child_ReheapFirst(acr_dm::FTuple& parent) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_dm.FTuple.bh_child.Remove
-void                 bh_child_Remove(acr_dm::FTuple& tuple, acr_dm::FTuple& row) __attribute__((nothrow));
+void                 bh_child_Remove(acr_dm::FTuple& parent, acr_dm::FTuple& row) __attribute__((nothrow));
 // Remove all elements from binary heap
 // func:acr_dm.FTuple.bh_child.RemoveAll
-void                 bh_child_RemoveAll(acr_dm::FTuple& tuple) __attribute__((nothrow));
+void                 bh_child_RemoveAll(acr_dm::FTuple& parent) __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
 // func:acr_dm.FTuple.bh_child.RemoveFirst
-acr_dm::FTuple*      bh_child_RemoveFirst(acr_dm::FTuple& tuple) __attribute__((nothrow));
+acr_dm::FTuple*      bh_child_RemoveFirst(acr_dm::FTuple& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements
 // func:acr_dm.FTuple.bh_child.Reserve
-void                 bh_child_Reserve(acr_dm::FTuple& tuple, int n) __attribute__((nothrow));
+void                 bh_child_Reserve(acr_dm::FTuple& parent, int n) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr_dm.FTuple..Init
-inline void          FTuple_Init(acr_dm::FTuple& tuple);
+void                 FTuple_Init(acr_dm::FTuple& parent);
 // cursor points to valid item
 // func:acr_dm.FTuple.zs_attr_curs.Reset
 inline void          tuple_zs_attr_curs_Reset(tuple_zs_attr_curs &curs, acr_dm::FTuple &parent) __attribute__((nothrow));
@@ -643,7 +648,7 @@ inline acr_dm::FTuple& tuple_bh_child_curs_Access(tuple_bh_child_curs &curs) __a
 // func:acr_dm.FTuple.bh_child_curs.ValidQ
 inline bool          tuple_bh_child_curs_ValidQ(tuple_bh_child_curs &curs) __attribute__((nothrow));
 // func:acr_dm.FTuple..Uninit
-void                 FTuple_Uninit(acr_dm::FTuple& tuple) __attribute__((nothrow));
+void                 FTuple_Uninit(acr_dm::FTuple& parent) __attribute__((nothrow));
 
 // --- acr_dm.FValue
 // create: acr_dm.FDb.value (Lary)
@@ -670,9 +675,9 @@ private:
 };
 // Set all fields to initial values.
 // func:acr_dm.FValue..Init
-inline void          FValue_Init(acr_dm::FValue& value);
+inline void          FValue_Init(acr_dm::FValue& parent);
 // func:acr_dm.FValue..Uninit
-void                 FValue_Uninit(acr_dm::FValue& value) __attribute__((nothrow));
+void                 FValue_Uninit(acr_dm::FValue& parent) __attribute__((nothrow));
 
 // --- acr_dm.FieldId
 #pragma pack(push,1)

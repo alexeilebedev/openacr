@@ -130,7 +130,18 @@ static tempstr ComptestFuncname(strptr comptest_name) {
     return funcname;
 }
 
+// Kill the process groups this run created, then exit, so an interrupted run
+// leaves nothing behind it.  A terminal signals its foreground group alone, so
+// those groups are reachable only from here, and a tool the shell forked has no
+// PR_SET_PDEATHSIG of its own to fall back on.
+static void ProcTeardownSignal(int sig) {
+    atf_comp::ProcSignalAll(SIGKILL);
+    _exit(128 + sig);
+}
+
+// Run every selected comptest and report how many passed.
 void atf_comp::Main() {
+    algo::SetupTeardownSignal(ProcTeardownSignal);
     algo::CreateDirRecurse("temp");
     if (_db.cmdline.capture) {
         _db.cmdline.mode = command_atf_comp_mode_capture;
@@ -240,6 +251,17 @@ void atf_comp::Main() {
         // derive bindir from cfg
         tempstr bindir;
         bindir << "build/" << _db.cmdline.cfg;
+        // Say so when a memcheck run drives a build that carries no pool
+        // annotations.  Those live in the memcheck cfg alone, so a run against
+        // any other configuration still reports invalid reads and writes and
+        // reports no leak inside an amc pool -- and a leak report that names
+        // nothing reads exactly like a run that found nothing.  The memcheck
+        // cijob passes -cfg:memcheck; a hand-run has to ask for it.
+        if (mode == command_atf_comp_mode_memcheck && _db.cmdline.cfg != dev_Cfg_cfg_memcheck) {
+            prlog("atf_comp.memcheck_cfg"
+                  <<Keyval("cfg",_db.cmdline.cfg)
+                  <<Keyval("comment","pool annotations live in cfg:memcheck; pass -cfg:memcheck to see leaks inside a pool"));
+        }
         // scale timeouts for slow modes
         double timeout_scale = 1;
         if (mode == command_atf_comp_mode_memcheck) {
@@ -266,6 +288,15 @@ void atf_comp::Main() {
             SetVar("comptest", comptest.comptest);
             comptest.timeout = comptest.timeout * timeout_scale;
             SetVar("timeout", tempstr() << comptest.timeout);
+            // A test script that speaks a protocol by hand bounds its client with
+            // `timeout`, so a gateway that never answers costs a couple of seconds
+            // rather than the comptest's whole budget.  Two seconds is generous for a
+            // local round trip against a release build, and short of what a
+            // gcov-instrumented gateway on slow metal needs: the client is killed
+            // before the answer arrives, and the run reports a wrong answer rather
+            // than a slow one.  So the bound scales with the configuration, exactly as
+            // the comptest budget above it does.
+            SetVar("replytimeout", tempstr() << i32(2 * timeout_scale));
             Set(_db.R, "$$", "$", false);
             _db.t0 = algo::CurrSchedTime();
             algo::SchedTime t0 = _db.t0;

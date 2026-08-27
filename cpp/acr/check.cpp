@@ -32,9 +32,6 @@ static void CheckArgs_Rec(acr::FRec &rec, acr::FCtype &ctype, acr::FCheck &check
     ind_beg(acr::ctype_c_field_curs,  field, ctype){
         if (Attr *attr = attr_Find(rec.tuple,name_Get(field), 0)) {
             int maxlen = field.max_attr_len;
-            if (!maxlen && c_field_N(*field.p_arg)==1) {
-                maxlen = c_field_Find(*field.p_arg,0)->max_attr_len;
-            }
             int attrlen = 0;
             if (maxlen) {
                 attrlen = ch_N(EvalAttr(rec.tuple, field));

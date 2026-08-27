@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -46,14 +48,14 @@ All allocations are done through global `amc_gc::_db` [amc_gc.FDb](#amc_gc-fdb) 
 <a href="#amc_gc-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc_gc.FDb._db|[amc_gc.FDb](/txt/gen/amc_gc/amc_gc.md#amc_gc-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|amc_gc.FDb.cmdline|[command.amc_gc](/txt/protocol/command/README.md#command-amc_gc)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc_gc.FDb.n_cur|u32|[Val](/txt/exe/amc/reftype.md#val)|1||
-|amc_gc.FDb.n_del|u32|[Val](/txt/exe/amc/reftype.md#val)|0||
-|amc_gc.FDb.n_cppline|u32|[Val](/txt/exe/amc/reftype.md#val)|0||
-|amc_gc.FDb.n_newcppline|u32|[Val](/txt/exe/amc/reftype.md#val)|0||
-|amc_gc.FDb.buildlog|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|"temp/amc_gc.build"||
-|amc_gc.FDb.n_total|u32|[Val](/txt/exe/amc/reftype.md#val)|0||
+|amc_gc.FDb._db|[amc_gc.FDb](/txt/gen/amc_gc/amc_gc.md#amc_gc-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|amc_gc.FDb.cmdline|[command.amc_gc](/txt/protocol/command/README.md#command-amc_gc)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc_gc.FDb.n_cur|u32|[Val](/txt/exe/amc/reftype/Val.md)|1||
+|amc_gc.FDb.n_del|u32|[Val](/txt/exe/amc/reftype/Val.md)|0||
+|amc_gc.FDb.n_cppline|u32|[Val](/txt/exe/amc/reftype/Val.md)|0||
+|amc_gc.FDb.n_newcppline|u32|[Val](/txt/exe/amc/reftype/Val.md)|0||
+|amc_gc.FDb.buildlog|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|"temp/amc_gc.build"||
+|amc_gc.FDb.n_total|u32|[Val](/txt/exe/amc/reftype/Val.md)|0||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

@@ -45,3 +45,23 @@ void atf_comp::comptest_acr_ed_CreateSsimfileBadNs() {
 void atf_comp::comptest_acr_ed_CreateTarget() {
     atf_comp::ProcStart("$bindir/acr_ed -create -target xyz");
 }
+
+// A field delete drops the schema row and then rewrites the ssimfile that held
+// the field's values.  A field on an in-memory ctype has no such file, so the
+// second invocation emits the delete alone.
+void atf_comp::comptest_acr_ed_DelField() {
+    atf_comp::ProcStart("bash -c '$bindir/acr_ed -del -field dmmeta.Ns.license"
+                        " && $bindir/acr_ed -del -field amc.FNs.p_license'");
+}
+
+// A field rename resolves a bare new name against the field's own ctype, and
+// refuses the two spellings that cannot mean what they look like: a query
+// prefix, and a new ctype whose old rows would keep a column no field claims.
+// Between two in-memory ctypes there is no such column, so the move goes
+// through.
+void atf_comp::comptest_acr_ed_RenameField() {
+    atf_comp::ProcStart("bash -c '$bindir/acr_ed -field dmmeta.Ns.license -rename licence"
+                        " ; $bindir/acr_ed -field dmmeta.Ns.license -rename field:dmmeta.Ns.licence"
+                        " ; $bindir/acr_ed -field dmmeta.Ns.license -rename dmmeta.Ctype.license"
+                        " ; $bindir/acr_ed -field amc.FNs.p_license -rename amc.FCtype.p_license'");
+}

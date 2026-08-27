@@ -19,7 +19,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/inlary.cpp -- Inline array
 //
 
@@ -413,7 +413,7 @@ void amc::tfunc_Inlary_RemoveAll() {
 
     if (!fixed && !field.c_fnoremove) {
         amc::FFunc& removeall = amc::CreateCurFunc();
-        Set(R, "$partrace", Refname(*field.p_ctype));
+        Set(R, "$partrace", Varname(*field.p_ctype));
         Ins(&R, removeall.ret  , "void", false);
         Ins(&R, removeall.proto, "$name_RemoveAll($Parent)", false);
         if (field.do_trace) {
@@ -442,7 +442,7 @@ void amc::tfunc_Inlary_RemoveLast() {
 
     if (!fixed) {
         amc::FFunc& remlast = amc::CreateCurFunc();
-        Set(R, "$partrace", Refname(*field.p_ctype));
+        Set(R, "$partrace", Varname(*field.p_ctype));
         Ins(&R, remlast.ret     , "void", false);
         Ins(&R, remlast.proto   , "$name_RemoveLast($Parent)", false);
         Ins(&R, remlast.body    , "u64 n = $parname.$name_n;");

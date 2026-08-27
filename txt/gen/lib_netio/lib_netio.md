@@ -1,6 +1,21 @@
 ## lib_netio - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_netio - Network I/O library](/txt/lib/lib_netio/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -222,9 +237,9 @@ All allocations are done through global `lib_netio::_db` [lib_netio.FDb](#lib_ne
 <a href="#lib_netio-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_netio.FDb._db|[lib_netio.FDb](/txt/gen/lib_netio/lib_netio.md#lib_netio-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_netio.FDb.var|[lib_netio.FVar](/txt/gen/lib_netio/lib_netio.md#lib_netio-fvar)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_netio.FDb.ind_var|[lib_netio.FVar](/txt/gen/lib_netio/lib_netio.md#lib_netio-fvar)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|lib_netio.FDb._db|[lib_netio.FDb](/txt/gen/lib_netio/lib_netio.md#lib_netio-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_netio.FDb.var|[lib_netio.FVar](/txt/gen/lib_netio/lib_netio.md#lib_netio-fvar)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_netio.FDb.ind_var|[lib_netio.FVar](/txt/gen/lib_netio/lib_netio.md#lib_netio-fvar)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -247,8 +262,8 @@ struct FDb { // lib_netio.FDb
 <a href="#lib_netio-fvar-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_netio.FVar.var|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_netio.FVar.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_netio.FVar.var|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_netio.FVar.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FVar
 <a href="#struct-fvar"></a>

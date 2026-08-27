@@ -375,47 +375,47 @@ private:
 };
 // Return true if index is empty
 // func:amsspy.FSession.c_shm.EmptyQ
-inline bool          c_shm_EmptyQ(amsspy::FSession& session) __attribute__((nothrow));
+inline bool          c_shm_EmptyQ(amsspy::FSession& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amsspy.FSession.c_shm.Find
-inline amsspy::FShm* c_shm_Find(amsspy::FSession& session, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amsspy::FShm* c_shm_Find(amsspy::FSession& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amsspy.FSession.c_shm.Getary
-inline algo::aryptr<amsspy::FShm*> c_shm_Getary(amsspy::FSession& session) __attribute__((nothrow));
+inline algo::aryptr<amsspy::FShm*> c_shm_Getary(amsspy::FSession& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amsspy.FSession.c_shm.Insert
-void                 c_shm_Insert(amsspy::FSession& session, amsspy::FShm& row) __attribute__((nothrow));
+void                 c_shm_Insert(amsspy::FSession& parent, amsspy::FShm& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amsspy.FSession.c_shm.InsertMaybe
-bool                 c_shm_InsertMaybe(amsspy::FSession& session, amsspy::FShm& row) __attribute__((nothrow));
+bool                 c_shm_InsertMaybe(amsspy::FSession& parent, amsspy::FShm& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amsspy.FSession.c_shm.N
-inline i64           c_shm_N(const amsspy::FSession& session) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_shm_N(const amsspy::FSession& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amsspy.FSession.c_shm.Remove
-void                 c_shm_Remove(amsspy::FSession& session, amsspy::FShm& row) __attribute__((nothrow));
+void                 c_shm_Remove(amsspy::FSession& parent, amsspy::FShm& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amsspy.FSession.c_shm.RemoveAll
-inline void          c_shm_RemoveAll(amsspy::FSession& session) __attribute__((nothrow));
+inline void          c_shm_RemoveAll(amsspy::FSession& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amsspy.FSession.c_shm.Reserve
-void                 c_shm_Reserve(amsspy::FSession& session, u64 n) __attribute__((nothrow));
+void                 c_shm_Reserve(amsspy::FSession& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amsspy.FSession.c_shm.qFind
-inline amsspy::FShm& c_shm_qFind(amsspy::FSession& session, u64 idx) __attribute__((nothrow));
+inline amsspy::FShm& c_shm_qFind(amsspy::FSession& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amsspy.FSession.c_shm.InAryQ
 inline bool          session_c_shm_InAryQ(amsspy::FShm& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amsspy.FSession.c_shm.qLast
-inline amsspy::FShm& c_shm_qLast(amsspy::FSession& session) __attribute__((nothrow));
+inline amsspy::FShm& c_shm_qLast(amsspy::FSession& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amsspy.FSession..Init
-inline void          FSession_Init(amsspy::FSession& session);
+inline void          FSession_Init(amsspy::FSession& parent);
 // func:amsspy.FSession.c_shm_curs.Reset
 inline void          session_c_shm_curs_Reset(session_c_shm_curs &curs, amsspy::FSession &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -428,7 +428,7 @@ inline void          session_c_shm_curs_Next(session_c_shm_curs &curs) __attribu
 // func:amsspy.FSession.c_shm_curs.Access
 inline amsspy::FShm& session_c_shm_curs_Access(session_c_shm_curs &curs) __attribute__((nothrow));
 // func:amsspy.FSession..Uninit
-void                 FSession_Uninit(amsspy::FSession& session) __attribute__((nothrow));
+void                 FSession_Uninit(amsspy::FSession& parent) __attribute__((nothrow));
 
 // --- amsspy.FShm
 // create: amsspy.FDb.shm (Lary)
@@ -466,9 +466,9 @@ private:
 };
 // Set all fields to initial values.
 // func:amsspy.FShm..Init
-inline void          FShm_Init(amsspy::FShm& shm);
+inline void          FShm_Init(amsspy::FShm& parent);
 // func:amsspy.FShm..Uninit
-void                 FShm_Uninit(amsspy::FShm& shm) __attribute__((nothrow));
+void                 FShm_Uninit(amsspy::FShm& parent) __attribute__((nothrow));
 
 // --- amsspy.FieldId
 #pragma pack(push,1)

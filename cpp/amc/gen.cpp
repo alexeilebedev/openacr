@@ -19,7 +19,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/gen.cpp -- AMC Generators (amcdb.gen)
 //
 // All the functions starting with gen_
@@ -1307,7 +1307,7 @@ void amc::gen_newfield_ptrary() {
             dmmeta::Field newfield;
             tempstr xf;
             if (!GlobalQ(*ptrary.p_field->p_ctype)) {
-                xf << amc::Refname(*ptrary.p_field->p_ctype) << "_";
+                xf << amc::Instname(*ptrary.p_field->p_ctype) << "_";
             }
             if (ptrary.heaplike) {
                 newfield.field         = tempstr()<<ptrary.p_field->arg<<"."<<xf<<name_Get(*ptrary.p_field)<<"_idx";

@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -48,11 +50,11 @@ All allocations are done through global `mysql2ssim::_db` [mysql2ssim.FDb](#mysq
 <a href="#mysql2ssim-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|mysql2ssim.FDb._db|[mysql2ssim.FDb](/txt/gen/mysql2ssim/mysql2ssim.md#mysql2ssim-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|mysql2ssim.FDb.table_names|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)||List of all tables obtained from mysql|
-|mysql2ssim.FDb.in_tables|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|mysql2ssim.FDb.cmdline|[command.mysql2ssim](/txt/protocol/command/README.md#command-mysql2ssim)|[Val](/txt/exe/amc/reftype.md#val)|||
-|mysql2ssim.FDb.tempfile|[algo_lib.FTempfile](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftempfile)|[Val](/txt/exe/amc/reftype.md#val)||Temp file where downloaded mysql goes before being handed to acr|
+|mysql2ssim.FDb._db|[mysql2ssim.FDb](/txt/gen/mysql2ssim/mysql2ssim.md#mysql2ssim-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|mysql2ssim.FDb.table_names|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)||List of all tables obtained from mysql|
+|mysql2ssim.FDb.in_tables|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|mysql2ssim.FDb.cmdline|[command.mysql2ssim](/txt/protocol/command/README.md#command-mysql2ssim)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|mysql2ssim.FDb.tempfile|[algo_lib.FTempfile](/txt/gen/algo_lib/algo_lib.md#algo_lib-ftempfile)|[Val](/txt/exe/amc/reftype/Val.md)||Temp file where downloaded mysql goes before being handed to acr|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -78,9 +80,9 @@ struct FDb { // mysql2ssim.FDb: In-memory database for mysql2ssim
 <a href="#mysql2ssim-ftobltin-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|mysql2ssim.FTobltin.warn|bool|[Val](/txt/exe/amc/reftype.md#val)||Conversion warning|
-|mysql2ssim.FTobltin.err|bool|[Val](/txt/exe/amc/reftype.md#val)||Conversion error|
-|mysql2ssim.FTobltin.vals|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)||Used during schema extraction|
+|mysql2ssim.FTobltin.warn|bool|[Val](/txt/exe/amc/reftype/Val.md)||Conversion warning|
+|mysql2ssim.FTobltin.err|bool|[Val](/txt/exe/amc/reftype/Val.md)||Conversion error|
+|mysql2ssim.FTobltin.vals|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)||Used during schema extraction|
 
 #### Struct FTobltin
 <a href="#struct-ftobltin"></a>

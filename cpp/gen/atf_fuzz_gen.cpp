@@ -33,8 +33,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -43,7 +41,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_fuzz::FDb   atf_fuzz::_db;    // dependency found via dev.targdep
 
@@ -691,7 +688,6 @@ void atf_fuzz::FDb_Init() {
 
 // --- atf_fuzz.FDb..Uninit
 void atf_fuzz::FDb_Uninit() {
-    atf_fuzz::FDb &row = _db; (void)row;
 
     // atf_fuzz.FDb.ind_target.Uninit (Thash)  //
     // skip destruction of ind_target in global scope
@@ -730,9 +726,8 @@ void atf_fuzz::target_CopyIn(atf_fuzz::FTarget &row, dev::Target &in) {
 }
 
 // --- atf_fuzz.FTarget..Uninit
-void atf_fuzz::FTarget_Uninit(atf_fuzz::FTarget& target) {
-    atf_fuzz::FTarget &row = target; (void)row;
-    ind_target_Remove(row); // remove target from index ind_target
+void atf_fuzz::FTarget_Uninit(atf_fuzz::FTarget& parent) {
+    ind_target_Remove(parent); // remove target from index ind_target
 }
 
 // --- atf_fuzz.FieldId.value.ToCstr
@@ -905,7 +900,6 @@ void atf_fuzz::StaticCheck() {
 // --- atf_fuzz...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         atf_fuzz::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -924,7 +918,6 @@ int main(int argc, char **argv) {
     try {
         atf_fuzz::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

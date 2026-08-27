@@ -92,6 +92,9 @@ const char* report::value_ToCstr(const report::FieldId& parent) {
         case report_FieldId_cache_write    : ret = "cache_write";  break;
         case report_FieldId_usd            : ret = "usd";  break;
         case report_FieldId_priced         : ret = "priced";  break;
+        case report_FieldId_n_page         : ret = "n_page";  break;
+        case report_FieldId_n_orphan       : ret = "n_orphan";  break;
+        case report_FieldId_n_badfence     : ret = "n_badfence";  break;
         case report_FieldId_n_line         : ret = "n_line";  break;
         case report_FieldId_n_static       : ret = "n_static";  break;
         case report_FieldId_n_inline       : ret = "n_inline";  break;
@@ -181,6 +184,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('n','_','l','i','n','e'): {
                     value_SetEnum(parent,report_FieldId_n_line); ret = true; break;
                 }
+                case LE_STR6('n','_','p','a','g','e'): {
+                    value_SetEnum(parent,report_FieldId_n_page); ret = true; break;
+                }
                 case LE_STR6('n','_','w','a','r','n'): {
                     value_SetEnum(parent,report_FieldId_n_warn); ret = true; break;
                 }
@@ -235,6 +241,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('n','_','i','n','s','e','r','t'): {
                     value_SetEnum(parent,report_FieldId_n_insert); ret = true; break;
+                }
+                case LE_STR8('n','_','o','r','p','h','a','n'): {
+                    value_SetEnum(parent,report_FieldId_n_orphan); ret = true; break;
                 }
                 case LE_STR8('n','_','s','e','l','e','c','t'): {
                     value_SetEnum(parent,report_FieldId_n_select); ret = true; break;
@@ -302,6 +311,10 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('l','a','t','e','n','c','y','_'): {
                     if (memcmp(rhs.elems+8,"ns",2)==0) { value_SetEnum(parent,report_FieldId_latency_ns); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','_','b','a','d','f','e','n'): {
+                    if (memcmp(rhs.elems+8,"ce",2)==0) { value_SetEnum(parent,report_FieldId_n_badfence); ret = true; break; }
                     break;
                 }
                 case LE_STR8('n','_','f','i','l','e','_','m'): {
@@ -1157,6 +1170,61 @@ void report::llmtool_model_Print(report::llmtool_model& row, algo::cstring& str)
 
     bool_Print(row.priced, temp);
     PrintAttrSpaceReset(str,"priced", temp);
+}
+
+// --- report.spnx_check..ReadFieldMaybe
+bool report::spnx_check_ReadFieldMaybe(report::spnx_check& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    report::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case report_FieldId_n_page: {
+            retval = u32_ReadStrptrMaybe(parent.n_page, strval);
+        } break;
+        case report_FieldId_n_orphan: {
+            retval = u32_ReadStrptrMaybe(parent.n_orphan, strval);
+        } break;
+        case report_FieldId_n_badfence: {
+            retval = u32_ReadStrptrMaybe(parent.n_badfence, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- report.spnx_check..ReadStrptrMaybe
+// Read fields of report::spnx_check from an ascii string.
+// The format of the string is an ssim Tuple
+bool report::spnx_check_ReadStrptrMaybe(report::spnx_check &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "report.spnx_check");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && spnx_check_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- report.spnx_check..Print
+// print string representation of ROW to string STR
+// cfmt:report.spnx_check.String  printfmt:Tuple
+void report::spnx_check_Print(report::spnx_check row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "report.spnx_check";
+
+    u32_Print(row.n_page, temp);
+    PrintAttrSpaceReset(str,"n_page", temp);
+
+    u32_Print(row.n_orphan, temp);
+    PrintAttrSpaceReset(str,"n_orphan", temp);
+
+    u32_Print(row.n_badfence, temp);
+    PrintAttrSpaceReset(str,"n_badfence", temp);
 }
 
 // --- report.src_func..ReadFieldMaybe

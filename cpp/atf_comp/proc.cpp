@@ -104,13 +104,38 @@ static tempstr StabilizeLine(strptr line) {
     return tempstr(line);
 }
 
+// Whether LINE is one the atfdb.unstableline table names, so the capture leaves
+// it out.
+//
+// The problem, by example.  A process reports a core-shortage alarm when the
+// box it starts on has fewer cores than its node's processes want.  A comptest
+// that brings up an eight-process node therefore prints eight of those lines on
+// an eight-core host and none at all on a thirty-two-core one, and the numbers
+// on the line -- the core count itself -- belong to the host rather than to the
+// test.  A golden recorded on either machine fails on the other.
+//
+// Masking the values, which is what atfdb.unstableattr does, cannot reach this:
+// the line is either there or it is not.  So a row names the tuple head of such
+// a line and the capture drops it whole, which is the same judgement the gcov
+// noise above gets, expressed as data rather than as a literal.
+static bool UnstableLineQ(strptr line) {
+    bool ret = false;
+    algo::Tuple tuple;
+    if (Tuple_ReadStrptrMaybe(tuple, line)) {
+        ret = atf_comp::ind_unstableline_Find(tuple.head.value) != NULL;
+    }
+    return ret;
+}
+
 // Emit output lines to log as "proc -> line"
-// Skip gcov profiling noise from coverage-built binaries.
+// Skip gcov profiling noise from coverage-built binaries, and every line the
+// atfdb.unstableline table names.
 static void LogOutput(atf_comp::FProc &proc, strptr text) {
     ind_beg(algo::Line_curs, line, text) {
         if (ch_N(line) > 0
             && !StartsWithQ(line, "profiling:")
-            && algo::FindStr(line, ".gcda:") == -1) {
+            && algo::FindStr(line, ".gcda:") == -1
+            && !UnstableLineQ(line)) {
             Log(tempstr() << proc.proc << " -> " << StabilizeLine(line));
         }
     }ind_end;
@@ -137,6 +162,22 @@ static tempstr DeriveProcName(strptr cmd) {
 // such as kafka-console-consumer.sh, which is an ordinary program.
 static bool ShellQ(strptr name) {
     return name == "sh" || name == "bash" || name == "dash" || name == "ksh" || name == "zsh";
+}
+
+// Multiplier on a comptest's wall-clock budget for the build under test.
+//
+// A comptest that starts a cluster and drives a client through it takes tens of
+// seconds on the release build, and atfdb.comptest.timeout is the budget that
+// work is given.  gcov instrumentation and valgrind each run the same work
+// several times slower, so on those builds the budget expires while the test is
+// still doing what it was asked to do, and the run is reported as a timeout of
+// whichever process the harness happened to be reading.  The number states the
+// time the test needs, so the harness scales it by what this build costs rather
+// than every comptest carrying a figure tuned for the slowest one.
+static double TimeoutScale() {
+    bool instrumented = atf_comp::_db.cmdline.cfg == dev_Cfg_cfg_coverage
+        || atf_comp::_db.cmdline.mode == command_atf_comp_mode_memcheck;
+    return instrumented ? 4.0 : 1.0;
 }
 
 // Spawn subprocess with $-substitution, return reference.
@@ -210,7 +251,25 @@ atf_comp::FProc &atf_comp::ProcStart(strptr cmd) {
         // The patterns are bash-quoted: '*' is a glob character, and the
         // whole valgrind wrap is spliced into a command bash parses.
         strptr trace_child = shell_cmd ? " --trace-children=yes --trace-children-skip='*/cc,*/c++,*/cc1,*/cc1plus,*/gcc,*/gcc-*,*/g++,*/g++-*,*/clang,*/clang++,*/as,*/ld,*/collect2'" : "";
-        cmd_eff = tempstr() << "valgrind --tool=memcheck" << trace_child << " --log-file=" << algo::strptr_ToBash(logfile) << ".%p.log " << cmd_eff;
+        // Ask for the leak search, which is the whole reason the pools mark what
+        // they hand out: without it the run reports invalid reads and writes and
+        // says nothing about a record allocated and never deleted.
+        //
+        // Only a definite loss is an error.  A block still reachable from a
+        // global at exit is not a leak but a table a module holds until it
+        // stops, and a possible loss is a block reached by an interior pointer,
+        // which is what a pool's own free list looks like from outside.  Counting
+        // either would report every module in the tree as leaking and leave the
+        // one real finding indistinguishable from the noise.
+        //
+        // The suppression path is absolute for the same reason the log path is:
+        // valgrind is started from whichever directory the step runs in, and a
+        // compound command has usually cd'd into the tempdir by then.
+        tempstr suppfile = algo::DirFileJoin(algo::GetCurDir(), "conf/memcheck.supp");
+        cmd_eff = tempstr() << "valgrind --tool=memcheck" << trace_child
+                            << " --leak-check=full --errors-for-leak-kinds=definite"
+                            << " --suppressions=" << algo::strptr_ToBash(suppfile)
+                            << " --log-file=" << algo::strptr_ToBash(logfile) << ".%p.log " << cmd_eff;
     } else if (mode == command_atf_comp_mode_valgrind && proc_N() == 1) {
         cmd_eff = tempstr() << "valgrind " << cmd_eff;
     }
@@ -226,6 +285,29 @@ atf_comp::FProc &atf_comp::ProcStart(strptr cmd) {
     proc.subproc.fstdout = "|"; // read end exposed as from_stdout
     proc.subproc.fstderr = ">&1"; // fold stderr into the stdout pipe
     proc.subproc.pgroup = true;
+    // Bound the child by the comptest's own budget, so nothing a test spawns can
+    // outlive the test.  Teardown kills the run's processes, which is enough while
+    // teardown gets to run; it does not run when the harness is killed outright,
+    // and it has nothing to kill when a test starts a server and never asks for it
+    // to stop.  glserver is the standing case of the second: it answers until it is
+    // killed, so a run that does not kill it leaves it holding a localhost port and
+    // its fixture in memory for as long as the machine stays up.
+    //
+    // A comptest's budget is the right bound because a process the test spawned has
+    // no business outliving the test, and the figure here is the one the run is
+    // already judged against.  It carries the same TimeoutScale the harness applies
+    // to its own deadline, because the two have to expire together: gcov and
+    // valgrind run the work several times slower, so a child held to the release
+    // budget would be shot while the test it belongs to still had time to spend.
+    //
+    // The alarm is set in the child between fork and exec, so it needs nothing of
+    // the parent and survives into whatever the command execs.  What it does not
+    // reach is a grandchild: bash replaces itself with a simple command, so the
+    // bound lands on the program itself, but a pipeline or a chain leaves bash as
+    // the process holding the alarm and its children unbounded.
+    if (atf_comp::_db.c_cur_comptest) {
+        proc.subproc.timeout = i32(atf_comp::_db.c_cur_comptest->timeout * TimeoutScale());
+    }
     algo_lib::ProcStart(proc.subproc);
     // take ownership of the parent-side pipe ends; the harness (and the fbuf
     // reader) close them, so detach from subproc to avoid a double close.
@@ -262,13 +344,33 @@ void atf_comp::ProcWrite(atf_comp::FProc &proc, strptr msg) {
     errno_vrfy_(nwrite == (ssize_t)line.ch_n || (nwrite == -1 && err == EPIPE));
 }
 
-// Send SIGNAL to the process group PROC leads, which holds the shell the
-// command runs under together with any tool that shell forked.
-void atf_comp::ProcKill(atf_comp::FProc &proc, int signal) {
-    Log(tempstr() << "# kill " << proc.proc << " signal:" << signal);
-    if (proc.subproc.pid > 0) {
+// Send SIGNAL to the process group PROC leads, and report whether a live process
+// received it.  The one place that decides which pid a comptest's processes are
+// reached by, and usable from a signal handler because kill is its only call.
+bool atf_comp::ProcSignal(atf_comp::FProc &proc, int signal) {
+    // a reaped proc holds pid 0, and kill(0) signals the caller's own group
+    bool sent = proc.subproc.pid > 0;
+    if (sent) {
         int target = proc.subproc.pgroup ? -proc.subproc.pid : proc.subproc.pid;
         kill(target, signal);
+    }
+    return sent;
+}
+
+// Send SIGNAL to every process group this run created.
+void atf_comp::ProcSignalAll(int signal) {
+    ind_beg(atf_comp::_db_proc_curs, proc, atf_comp::_db) {
+        atf_comp::ProcSignal(proc, signal);
+    }ind_end;
+}
+
+// Send SIGNAL to the process group PROC leads, which holds the shell the
+// command runs under together with any tool that shell forked.  Records the kill
+// so ProcWait reports the status as -1 rather than an exit code.
+void atf_comp::ProcKill(atf_comp::FProc &proc, int signal) {
+    Log(tempstr() << "# kill " << proc.proc << " signal:" << signal);
+    bool sent = atf_comp::ProcSignal(proc, signal);
+    if (sent) {
         proc.killed = true;
     }
 }
@@ -280,22 +382,6 @@ void atf_comp::ProcWriteEof(atf_comp::FProc &proc) {
         close(proc.stdin_fd.value);
         proc.stdin_fd = algo::Fildes();
     }
-}
-
-// Multiplier on a comptest's wall-clock budget for the build under test.
-//
-// A comptest that starts a cluster and drives a client through it takes tens of
-// seconds on the release build, and atfdb.comptest.timeout is the budget that
-// work is given.  gcov instrumentation and valgrind each run the same work
-// several times slower, so on those builds the budget expires while the test is
-// still doing what it was asked to do, and the run is reported as a timeout of
-// whichever process the harness happened to be reading.  The number states the
-// time the test needs, so the harness scales it by what this build costs rather
-// than every comptest carrying a figure tuned for the slowest one.
-static double TimeoutScale() {
-    bool instrumented = atf_comp::_db.cmdline.cfg == dev_Cfg_cfg_coverage
-        || atf_comp::_db.cmdline.mode == command_atf_comp_mode_memcheck;
-    return instrumented ? 4.0 : 1.0;
 }
 
 // Check if test timeout has been exceeded

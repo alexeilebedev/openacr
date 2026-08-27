@@ -9,6 +9,7 @@ dmmeta.gsymbol  gsymbol:amc/dmmeta.fbufiotype  inc:%  symboltype:char*  comment:
 dmmeta.gsymbol  gsymbol:amc/dmmeta.jsbltin  inc:%  symboltype:algo.strptr  comment:""
 dmmeta.gsymbol  gsymbol:amc/dmmeta.kafka_type_kind  inc:%  symboltype:""  comment:""
 dmmeta.gsymbol  gsymbol:apm/dev.package  inc:openacr  symboltype:algo.strptr  comment:""
+dmmeta.gsymbol  gsymbol:apm/dev.pkgdeptype  inc:%  symboltype:algo.strptr  comment:""
 dmmeta.gsymbol  gsymbol:atf_amc/atfdb.test_gsymbol_char  inc:%  symboltype:char*  comment:""
 dmmeta.gsymbol  gsymbol:atf_amc/atfdb.test_gsymbol_pkey  inc:%  symboltype:""  comment:""
 dmmeta.gsymbol  gsymbol:atf_amc/atfdb.test_gsymbol_strptr  inc:%  symboltype:algo.strptr  comment:""

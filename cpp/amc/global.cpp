@@ -19,7 +19,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/global.cpp -- Global (FDb)
 //
 
@@ -371,9 +371,33 @@ void amc::tfunc_Global_InitReflection() {
         amc::FTfunc *f_find  = amc::ind_tfunc_Find(amcdb::Tfunc_Concat_tclass_name(globfield.reftype,"RowidFind"));
         amc::FTfunc *f_n     = amc::ind_tfunc_Find(amcdb::Tfunc_Concat_tclass_name(globfield.reftype,"N"));
         bool has_print      = HasStringPrintQ(*globfield.p_arg);
+        // A cheap-copy ctype's Print takes its row by value, and reflection calls
+        // one through algo::ImrowPrintFcn, which takes an ImrowPtr.  Those cannot
+        // be the same function: by value the row occupies as many argument slots
+        // as it has eightbytes, so the cstring the callee reads arrives from the
+        // wrong register and the process dies reporting whatever brought it here.
+        // Where the row is passed by reference the two do agree, a reference being
+        // a pointer on every target, so only the by-value case needs a function of
+        // its own -- and it gets one rather than a cast.
+        bool byval_print = has_print && globfield.p_arg->cheap_copy;
+        if (byval_print) {
+            amc::FFunc &printimrow = amc::CreateCurFunc(false,Subst(R,"$globname_PrintImrow"));
+            Ins(&R, printimrow.proto, "$globname_PrintImrow()", false);
+            AddRetval(printimrow, "void", "", "");
+            AddProtoArg(printimrow, "algo::ImrowPtr", "data");
+            AddProtoArg(printimrow, "algo::cstring&", "str");
+            // CreateCurFunc seeds the comment from the tfunc, which is InitReflection here.
+            ch_RemoveAll(printimrow.comment);
+            Ins(&R, printimrow.comment, "Print the row DATA points at to STR, as reflection calls a printer.");
+            Ins(&R, printimrow.body, "$Ctype_Print(*($Ctype*)data.value, str);");
+            printimrow.priv = false;
+            printimrow.inl = false;
+        }
         Set(R, "$RowidFind", (f_find ? "$globname_RowidFind" : "NULL"));
         Set(R, "$NItems", (f_n ? "$globname_N" : "NULL"));
-        Set(R, "$Print", (has_print ? "$Ctype_Print" : "NULL"));// there may be a specific function that prints JUST this field!
+        // there may be a specific function that prints JUST this field!
+        Set(R, "$Print", byval_print ? "$ns::$globname_PrintImrow"
+            : (has_print ? "(algo::ImrowPrintFcn)$Ctype_Print" : "NULL"));
         // register with algo_lib database
         ch_RemoveAll(text);
         Ins(&R, text,"algo::Imtable t_$globname;");
@@ -383,7 +407,7 @@ void amc::tfunc_Global_InitReflection() {
         Ins(&R, text,"t_$globname.comment.value \t= $comtstr;");
         Ins(&R, text,"t_$globname.c_RowidFind   \t= $RowidFind;");
         Ins(&R, text,"t_$globname.NItems        \t= $NItems;");
-        Ins(&R, text,"t_$globname.Print         \t= (algo::ImrowPrintFcn)$Print;");
+        Ins(&R, text,"t_$globname.Print         \t= $Print;");
         Ins(&R, text,"algo_lib::imtable_InsertMaybe(t_$globname);");
         Ins(&R, text,"");
         initrefl.body << Tabulated(text, "\t", "ll", 2) << eol;

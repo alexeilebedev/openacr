@@ -76,6 +76,7 @@ dmmeta.xref  field:abt_md.FDispatchMsg.p_ctype  inscond:true  via:abt_md.FDb.ind
 dmmeta.xref  field:abt_md.FDb.ind_checkreq  inscond:true  via:""
 dmmeta.xref  field:abt_md.FDb.ind_badlevel  inscond:true  via:""
 dmmeta.xref  field:abt_md.FDb.ind_checkkey  inscond:true  via:""
+dmmeta.xref  field:abt_md.FDb.ind_gitfile  inscond:true  via:""
 dmmeta.xref  field:acr.FDb.zd_pline  inscond:true  via:""
 dmmeta.xref  field:acr.FDb.zd_pdep  inscond:true  via:""
 dmmeta.xref  field:acr.FPline.zd_child  inscond:true  via:acr.FPdep.p_parent
@@ -598,6 +599,7 @@ dmmeta.xref  field:atf_comp.FDb.ind_proc  inscond:true  via:""
 dmmeta.xref  field:atf_comp.FComptest.c_tfilt  inscond:true  via:atf_comp.FDb.ind_comptest/atfdb.Tfilt.comptest
 dmmeta.xref  field:atf_comp.FDb.ind_unstableattr  inscond:true  via:""
 dmmeta.xref  field:atf_comp.FDb.zd_select  inscond:false  via:""
+dmmeta.xref  field:atf_comp.FDb.ind_unstableline  inscond:true  via:""
 dmmeta.xref  field:atf_cov.FDb.ind_covline  inscond:true  via:""
 dmmeta.xref  field:atf_cov.FDb.ind_target  inscond:true  via:""
 dmmeta.xref  field:atf_cov.FDb.ind_targsrc  inscond:true  via:""

@@ -3,11 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
-* [Tests](#tests)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -52,15 +54,15 @@ All allocations are done through global `ssimfilt::_db` [ssimfilt.FDb](#ssimfilt
 <a href="#ssimfilt-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssimfilt.FDb._db|[ssimfilt.FDb](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|ssimfilt.FDb.cmdline|[command.ssimfilt](/txt/protocol/command/README.md#command-ssimfilt)|[Val](/txt/exe/amc/reftype.md#val)|||
-|ssimfilt.FDb.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Lary](/txt/exe/amc/reftype.md#lary)||Accumulated tuples|
-|ssimfilt.FDb.matchfield|[ssimfilt.KVRegx](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-kvregx)|[Lary](/txt/exe/amc/reftype.md#lary)||Input tuple filter. Comes from cmdline.match array|
-|ssimfilt.FDb.selfield|[ssimfilt.KVRegx](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-kvregx)|[Lary](/txt/exe/amc/reftype.md#lary)||Select fields for output|
-|ssimfilt.FDb.csv_locked|bool|[Val](/txt/exe/amc/reftype.md#val)||CSV header locked|
-|ssimfilt.FDb.markdown|bool|[Val](/txt/exe/amc/reftype.md#val)||Use Markdown output|
-|ssimfilt.FDb.unstablefld|[ssimfilt.FUnstablefld](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-funstablefld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssimfilt.FDb.ind_unstablefld|[ssimfilt.FUnstablefld](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-funstablefld)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|ssimfilt.FDb._db|[ssimfilt.FDb](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|ssimfilt.FDb.cmdline|[command.ssimfilt](/txt/protocol/command/README.md#command-ssimfilt)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ssimfilt.FDb.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Lary](/txt/exe/amc/reftype/Lary.md)||Accumulated tuples|
+|ssimfilt.FDb.matchfield|[ssimfilt.KVRegx](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-kvregx)|[Lary](/txt/exe/amc/reftype/Lary.md)||Input tuple filter. Comes from cmdline.match array|
+|ssimfilt.FDb.selfield|[ssimfilt.KVRegx](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-kvregx)|[Lary](/txt/exe/amc/reftype/Lary.md)||Select fields for output|
+|ssimfilt.FDb.csv_locked|bool|[Val](/txt/exe/amc/reftype/Val.md)||CSV header locked|
+|ssimfilt.FDb.markdown|bool|[Val](/txt/exe/amc/reftype/Val.md)||Use Markdown output|
+|ssimfilt.FDb.unstablefld|[ssimfilt.FUnstablefld](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-funstablefld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssimfilt.FDb.ind_unstablefld|[ssimfilt.FUnstablefld](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-funstablefld)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -128,8 +130,8 @@ private:
 <a href="#ssimfilt-kvregx-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssimfilt.KVRegx.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|||
-|ssimfilt.KVRegx.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|||
+|ssimfilt.KVRegx.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|||
+|ssimfilt.KVRegx.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|||
 
 #### Struct KVRegx
 <a href="#struct-kvregx"></a>

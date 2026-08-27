@@ -19,7 +19,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/main.cpp -- Main driver
 //
 // Algo Model Compiler (AMC)
@@ -92,7 +92,7 @@ tempstr amc::DeleteExpr(amc::FField &field, strptr parentref, strptr childref) {
     tempstr ret;
     if (inst) {
         bool global = GlobalQ(*inst->p_ctype);
-        ret << Refname(*field.p_arg) << "_Delete()";
+        ret << name_Get(*inst) << "_Delete()";
         if (!global) {
             AddArg(ret, parentref);
         }
@@ -616,22 +616,80 @@ bool amc::GlobalQ(amc::FCtype &ctype) {
 
 // -----------------------------------------------------------------------------
 
-// Pick a name with which to refer to a record of type CTYPE
-tempstr amc::Refname(amc::FCtype &ctype, algo::strptr dflt DFLTVAL("parent")) {
+// Append to OUT the instname of a ctype named NAME (the name with no namespace):
+// the lower_under form of that name, with a leading F dropped.
+// The F marks a ctype that lives in a pool and is not part of the name, so
+// FTarget gives target.  A word boundary is a capital that follows a lowercase
+// letter or a digit, which makes AbcDef into abc_def and H2Stream into
+// h2_stream, while a run of capitals carries no boundary and ABCDef stays
+// abcdef.
+void amc::strptr_PrintInstname(algo::strptr name, algo::cstring &out) {
+    bool poolmark = elems_N(name) > 1 && name.elems[0] == 'F' && algo_lib::UpperCharQ(name.elems[1]);
+    algo::strptr_PrintLowerUnder(poolmark ? ch_RestFrom(name,1) : name, out);
+}
+
+// -----------------------------------------------------------------------------
+
+// The name CTYPE contributes to a generated identifier -- a trace counter, a
+// static hook function, a hook ctype, a ptrary membership field.
+// Derived from the ctype's own name, so it does not depend on which fields
+// happen to instantiate the ctype, or on the order those fields are declared in.
+// Stored on the ctype: the derivation runs once per ctype and every later reader
+// gets the field.  It runs on first read rather than in a generation pass
+// because the two constraints on such a pass cannot both be met -- gen_trace
+// composes an identifier from an instname and runs sixth, while gen_proc,
+// gen_msgcurs and gen_clonefconst create ctypes of their own much later, and
+// ResetVars asks for the instname of every one of them.
+strptr amc::Instname(amc::FCtype &ctype) {
+    if (!ch_N(ctype.instname)) {
+        amc::strptr_PrintInstname(name_Get(ctype), ctype.instname);
+    }
+    return ctype.instname;
+}
+
+// -----------------------------------------------------------------------------
+
+// The name of the variable that holds a record of CTYPE.
+// A global ctype is held by the namespace global, whose name is the instname
+// behind an underscore: _db.  Every other record is held by whatever field
+// instantiates it, and that field is named after the ctype, so the instname
+// names it.
+// Identifiers that read as a path to a value are built from this rather than
+// from the instname alone, because the underscore is part of the global's name:
+// a trace counter over the malloc pool is _db.trace.alloc__db_malloc, and the
+// metric layer recovers the pool's name by stripping the three leading
+// components that spelling gives it.
+tempstr amc::Varname(amc::FCtype &ctype) {
+    tempstr ret;
+    if (GlobalQ(ctype)) {
+        ret << "_";
+    }
+    ret << Instname(ctype);
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// The name a generated function body uses to refer to a record of CTYPE.
+// A global ctype has exactly one record and the body names it directly, as the
+// namespace global: the instname behind an underscore, which is _db.
+// Every other record arrives as the function's first argument, and that
+// argument is named parent in every generated function without exception.
+// One fixed word is what makes the name safe, and a name derived from the ctype
+// is not.  Consider lib_sqlite.FRow, whose body opens by aliasing its argument
+// to row -- the name every generated body uses for the record it is about.  A
+// parameter also called row would shadow that alias, so the schema names the
+// parameter trow instead, and 33 ctypes in the tree would collide the same way
+// if the parameter took the ctype's name.  A single reserved word cannot
+// collide, and it also removes the need for two generators to agree: the Atree
+// child Init and the ctype's own Init write the same parameter by construction
+// rather than by both deriving the same string.
+tempstr amc::Refname(amc::FCtype &ctype) {
     tempstr refname;
-    ind_beg(amc::ctype_zd_inst_curs,inst,ctype) {// has global instance? use it
-        if (inst.reftype == dmmeta_Reftype_reftype_Global) {
-            refname << name_Get(inst);
-            break;
-        }
-    }ind_end;
-    if (!ch_N(refname)) {
-        amc::FField *pool=FirstInst(ctype);
-        if (pool) {// pick first usable instance
-            refname << name_Get(*pool);
-        } else {
-            refname << dflt;
-        }
+    if (GlobalQ(ctype)) {
+        refname << Varname(ctype);
+    } else {
+        refname << "parent";
     }
     return refname;
 }

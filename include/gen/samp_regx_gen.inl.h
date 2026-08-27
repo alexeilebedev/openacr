@@ -32,7 +32,6 @@ inline  samp_regx::trace::trace() {
 
 // --- samp_regx.FDb..Uninit
 inline void samp_regx::FDb_Uninit() {
-    samp_regx::FDb &row = _db; (void)row;
 }
 
 // --- samp_regx.FieldId.value.GetEnum

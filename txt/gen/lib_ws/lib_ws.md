@@ -1,6 +1,21 @@
 ## lib_ws - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_ws - WebSocket library](/txt/lib/lib_ws/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -119,7 +134,7 @@ All allocations are done through global `lib_ws::_db` [lib_ws.FDb](#lib_ws-fdb) 
 <a href="#lib_ws-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ws.FDb._db|[lib_ws.FDb](/txt/gen/lib_ws/lib_ws.md#lib_ws-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
+|lib_ws.FDb._db|[lib_ws.FDb](/txt/gen/lib_ws/lib_ws.md#lib_ws-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -137,8 +152,8 @@ struct FDb { // lib_ws.FDb: In-memory database for lib_ws
 <a href="#lib_ws-frameidx-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_ws.FrameIdx.masking_key|u32|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|lib_ws.FrameIdx.payload|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|lib_ws.FrameIdx.masking_key|u32|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|lib_ws.FrameIdx.payload|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FrameIdx
 <a href="#struct-frameidx"></a>

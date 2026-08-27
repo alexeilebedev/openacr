@@ -58,12 +58,12 @@ italicised fields: *prefix, reftype* are [**fldfunc**](/txt/openacr/ssim.md#fldf
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|fprefix|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)||prefix.reftype pairing|
-|*prefix*|*[algo.Smallstr5](/txt/protocol/algo/README.md#algo-smallstr5)*|*[Val](/txt/exe/amc/reftype.md#val)*||*Field-name prefix<br>.LL of fprefix*|
-|*reftype*|*[dmmeta.Reftype](/txt/ssimdb/dmmeta/reftype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.LR of fprefix*|
-|require|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Reftype must use one of its registered prefixes|
-|dflt|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Reftype acr_ed infers for this prefix; at most one per prefix|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|fprefix|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)||prefix.reftype pairing|
+|*prefix*|*[algo.Smallstr5](/txt/protocol/algo/README.md#algo-smallstr5)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*Field-name prefix<br>.LL of fprefix*|
+|*reftype*|*[dmmeta.Reftype](/txt/ssimdb/dmmeta/reftype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.LR of fprefix*|
+|require|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Reftype must use one of its registered prefixes|
+|dflt|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Reftype acr_ed infers for this prefix; at most one per prefix|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

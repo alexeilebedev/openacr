@@ -124,7 +124,7 @@ dmmeta.ccmp  ctype:algo.RspaceStr8  extrn:N  genop:N  order:Y  minmax:N  comment
 dmmeta.ccmp  ctype:algo.RspaceStr9  extrn:N  genop:Y  order:N  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.SchedTime  extrn:N  genop:N  order:Y  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.SeqType  extrn:N  genop:N  order:Y  minmax:N  comment:""
-dmmeta.ccmp  ctype:algo.Sha1sig  extrn:N  genop:Y  order:Y  minmax:N  comment:""
+dmmeta.ccmp  ctype:algo.Signature  extrn:N  genop:Y  order:Y  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.Smallstr1  extrn:N  genop:Y  order:N  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.Smallstr10  extrn:N  genop:Y  order:N  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.Smallstr100  extrn:N  genop:Y  order:Y  minmax:N  comment:""

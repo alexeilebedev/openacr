@@ -3,14 +3,17 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
-for usage, see [wt - Worktree manager](/txt/exe/wt/README.md)
+for usage, see [wt - Worktree manager - reset, run, diff, delete](/txt/exe/wt/README.md)
 
 ### Sources
 <a href="#sources"></a>
@@ -49,11 +52,11 @@ All allocations are done through global `wt::_db` [wt.FDb](#wt-fdb) structure
 <a href="#wt-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|wt.FDb._db|[wt.FDb](/txt/gen/wt/wt.md#wt-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|wt.FDb.cmdline|[command.wt](/txt/protocol/command/README.md#command-wt)|[Val](/txt/exe/amc/reftype.md#val)|||
-|wt.FDb.sandbox|[wt.FSandbox](/txt/gen/wt/wt.md#wt-fsandbox)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|wt.FDb.ind_sandbox|[wt.FSandbox](/txt/gen/wt/wt.md#wt-fsandbox)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|wt.FDb.sbpath|[wt.FSbpath](/txt/gen/wt/wt.md#wt-fsbpath)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|wt.FDb._db|[wt.FDb](/txt/gen/wt/wt.md#wt-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|wt.FDb.cmdline|[command.wt](/txt/protocol/command/README.md#command-wt)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|wt.FDb.sandbox|[wt.FSandbox](/txt/gen/wt/wt.md#wt-fsandbox)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|wt.FDb.ind_sandbox|[wt.FSandbox](/txt/gen/wt/wt.md#wt-fsandbox)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|wt.FDb.sbpath|[wt.FSbpath](/txt/gen/wt/wt.md#wt-fsbpath)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -80,8 +83,8 @@ struct FDb { // wt.FDb: In-memory database for sandbox
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |wt.FSandbox.base|[dev.Sandbox](/txt/ssimdb/dev/sandbox.md)|[Base](/txt/ssimdb/dev/sandbox.md)|||
-|wt.FSandbox.dir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|wt.FSandbox.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|wt.FSandbox.dir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|wt.FSandbox.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FSandbox
 <a href="#struct-fsandbox"></a>

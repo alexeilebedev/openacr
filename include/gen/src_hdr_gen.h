@@ -113,9 +113,9 @@ private:
 };
 // Set all fields to initial values.
 // func:src_hdr.FCopyline..Init
-inline void          FCopyline_Init(src_hdr::FCopyline& fcopyline);
+inline void          FCopyline_Init(src_hdr::FCopyline& parent);
 // func:src_hdr.FCopyline..Uninit
-void                 FCopyline_Uninit(src_hdr::FCopyline& fcopyline) __attribute__((nothrow));
+void                 FCopyline_Uninit(src_hdr::FCopyline& parent) __attribute__((nothrow));
 
 // --- src_hdr.FCopyright
 // create: src_hdr.FDb.copyright (Lary)
@@ -155,9 +155,9 @@ void                 copyright_CopyIn(src_hdr::FCopyright &row, dev::Copyright &
 
 // Set all fields to initial values.
 // func:src_hdr.FCopyright..Init
-inline void          FCopyright_Init(src_hdr::FCopyright& copyright);
+inline void          FCopyright_Init(src_hdr::FCopyright& parent);
 // func:src_hdr.FCopyright..Uninit
-void                 FCopyright_Uninit(src_hdr::FCopyright& copyright) __attribute__((nothrow));
+void                 FCopyright_Uninit(src_hdr::FCopyright& parent) __attribute__((nothrow));
 
 // --- src_hdr.trace
 #pragma pack(push,1)
@@ -889,9 +889,9 @@ void                 license_CopyIn(src_hdr::FLicense &row, dev::License &in) __
 
 // Set all fields to initial values.
 // func:src_hdr.FLicense..Init
-inline void          FLicense_Init(src_hdr::FLicense& license);
+inline void          FLicense_Init(src_hdr::FLicense& parent);
 // func:src_hdr.FLicense..Uninit
-void                 FLicense_Uninit(src_hdr::FLicense& license) __attribute__((nothrow));
+void                 FLicense_Uninit(src_hdr::FLicense& parent) __attribute__((nothrow));
 
 // --- src_hdr.FNs
 // create: src_hdr.FDb.ns (Lary)
@@ -933,16 +933,16 @@ void                 ns_CopyIn(src_hdr::FNs &row, dmmeta::Ns &in) __attribute__(
 
 // Insert row into pointer index. Return final membership status.
 // func:src_hdr.FNs.c_nsx.InsertMaybe
-inline bool          c_nsx_InsertMaybe(src_hdr::FNs& ns, src_hdr::FNsx& row) __attribute__((nothrow));
+inline bool          c_nsx_InsertMaybe(src_hdr::FNs& parent, src_hdr::FNsx& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_hdr.FNs.c_nsx.Remove
-inline void          c_nsx_Remove(src_hdr::FNs& ns, src_hdr::FNsx& row) __attribute__((nothrow));
+inline void          c_nsx_Remove(src_hdr::FNs& parent, src_hdr::FNsx& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:src_hdr.FNs..Init
-inline void          FNs_Init(src_hdr::FNs& ns);
+inline void          FNs_Init(src_hdr::FNs& parent);
 // func:src_hdr.FNs..Uninit
-void                 FNs_Uninit(src_hdr::FNs& ns) __attribute__((nothrow));
+void                 FNs_Uninit(src_hdr::FNs& parent) __attribute__((nothrow));
 
 // --- src_hdr.FNsx
 // create: src_hdr.FDb.nsx (Lary)
@@ -978,9 +978,9 @@ void                 nsx_CopyIn(src_hdr::FNsx &row, dmmeta::Nsx &in) __attribute
 
 // Set all fields to initial values.
 // func:src_hdr.FNsx..Init
-inline void          FNsx_Init(src_hdr::FNsx& nsx);
+inline void          FNsx_Init(src_hdr::FNsx& parent);
 // func:src_hdr.FNsx..Uninit
-void                 FNsx_Uninit(src_hdr::FNsx& nsx) __attribute__((nothrow));
+void                 FNsx_Uninit(src_hdr::FNsx& parent) __attribute__((nothrow));
 
 // --- src_hdr.FScriptfile
 // create: src_hdr.FDb.scriptfile (Lary)
@@ -1006,11 +1006,11 @@ void                 scriptfile_CopyOut(src_hdr::FScriptfile &row, dev::Scriptfi
 void                 scriptfile_CopyIn(src_hdr::FScriptfile &row, dev::Scriptfile &in) __attribute__((nothrow));
 
 // func:src_hdr.FScriptfile.name.Get
-algo::strptr         name_Get(src_hdr::FScriptfile& scriptfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(src_hdr::FScriptfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_hdr.FScriptfile..Init
-inline void          FScriptfile_Init(src_hdr::FScriptfile& scriptfile);
+inline void          FScriptfile_Init(src_hdr::FScriptfile& parent);
 
 // --- src_hdr.FSrc
 struct FSrc { // src_hdr.FSrc
@@ -1072,47 +1072,47 @@ void                 target_CopyIn(src_hdr::FTarget &row, dev::Target &in) __att
 
 // Return true if index is empty
 // func:src_hdr.FTarget.c_targsrc.EmptyQ
-inline bool          c_targsrc_EmptyQ(src_hdr::FTarget& target) __attribute__((nothrow));
+inline bool          c_targsrc_EmptyQ(src_hdr::FTarget& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:src_hdr.FTarget.c_targsrc.Find
-inline src_hdr::FTargsrc* c_targsrc_Find(src_hdr::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline src_hdr::FTargsrc* c_targsrc_Find(src_hdr::FTarget& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:src_hdr.FTarget.c_targsrc.Getary
-inline algo::aryptr<src_hdr::FTargsrc*> c_targsrc_Getary(src_hdr::FTarget& target) __attribute__((nothrow));
+inline algo::aryptr<src_hdr::FTargsrc*> c_targsrc_Getary(src_hdr::FTarget& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:src_hdr.FTarget.c_targsrc.Insert
-void                 c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
+void                 c_targsrc_Insert(src_hdr::FTarget& parent, src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:src_hdr.FTarget.c_targsrc.InsertMaybe
-bool                 c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
+bool                 c_targsrc_InsertMaybe(src_hdr::FTarget& parent, src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:src_hdr.FTarget.c_targsrc.N
-inline i64           c_targsrc_N(const src_hdr::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targsrc_N(const src_hdr::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:src_hdr.FTarget.c_targsrc.Remove
-void                 c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
+void                 c_targsrc_Remove(src_hdr::FTarget& parent, src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:src_hdr.FTarget.c_targsrc.RemoveAll
-inline void          c_targsrc_RemoveAll(src_hdr::FTarget& target) __attribute__((nothrow));
+inline void          c_targsrc_RemoveAll(src_hdr::FTarget& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:src_hdr.FTarget.c_targsrc.Reserve
-void                 c_targsrc_Reserve(src_hdr::FTarget& target, u64 n) __attribute__((nothrow));
+void                 c_targsrc_Reserve(src_hdr::FTarget& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:src_hdr.FTarget.c_targsrc.qFind
-inline src_hdr::FTargsrc& c_targsrc_qFind(src_hdr::FTarget& target, u64 idx) __attribute__((nothrow));
+inline src_hdr::FTargsrc& c_targsrc_qFind(src_hdr::FTarget& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:src_hdr.FTarget.c_targsrc.InAryQ
 inline bool          target_c_targsrc_InAryQ(src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:src_hdr.FTarget.c_targsrc.qLast
-inline src_hdr::FTargsrc& c_targsrc_qLast(src_hdr::FTarget& target) __attribute__((nothrow));
+inline src_hdr::FTargsrc& c_targsrc_qLast(src_hdr::FTarget& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:src_hdr.FTarget..Init
-inline void          FTarget_Init(src_hdr::FTarget& target);
+inline void          FTarget_Init(src_hdr::FTarget& parent);
 // func:src_hdr.FTarget.c_targsrc_curs.Reset
 inline void          target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, src_hdr::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -1125,7 +1125,7 @@ inline void          target_c_targsrc_curs_Next(target_c_targsrc_curs &curs) __a
 // func:src_hdr.FTarget.c_targsrc_curs.Access
 inline src_hdr::FTargsrc& target_c_targsrc_curs_Access(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // func:src_hdr.FTarget..Uninit
-void                 FTarget_Uninit(src_hdr::FTarget& target) __attribute__((nothrow));
+void                 FTarget_Uninit(src_hdr::FTarget& parent) __attribute__((nothrow));
 
 // --- src_hdr.FTargsrc
 // create: src_hdr.FDb.targsrc (Lary)
@@ -1161,19 +1161,19 @@ void                 targsrc_CopyOut(src_hdr::FTargsrc &row, dev::Targsrc &out) 
 void                 targsrc_CopyIn(src_hdr::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:src_hdr.FTargsrc.target.Get
-algo::strptr         target_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(src_hdr::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_hdr.FTargsrc.src.Get
-algo::strptr         src_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(src_hdr::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_hdr.FTargsrc.ext.Get
-algo::strptr         ext_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(src_hdr::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_hdr.FTargsrc..Init
-inline void          FTargsrc_Init(src_hdr::FTargsrc& targsrc);
+inline void          FTargsrc_Init(src_hdr::FTargsrc& parent);
 // func:src_hdr.FTargsrc..Uninit
-void                 FTargsrc_Uninit(src_hdr::FTargsrc& targsrc) __attribute__((nothrow));
+void                 FTargsrc_Uninit(src_hdr::FTargsrc& parent) __attribute__((nothrow));
 
 // --- src_hdr.FieldId
 #pragma pack(push,1)

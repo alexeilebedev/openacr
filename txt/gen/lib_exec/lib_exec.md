@@ -1,6 +1,21 @@
 ## lib_exec - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_exec - Build and run a dag of subprocesses with N parallel jobs](/txt/lib/lib_exec/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -91,11 +106,11 @@ All allocations are done through global `lib_exec::_db` [lib_exec.FDb](#lib_exec
 <a href="#lib_exec-cmdline-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_exec.Cmdline.dry_run|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_exec.Cmdline.q|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Do not print node name|
-|lib_exec.Cmdline.maxjobs|i32|[Val](/txt/exe/amc/reftype.md#val)|8|Maximum number of parallel jobs|
-|lib_exec.Cmdline.complooo|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Allow jobs to complete out-of-order|
-|lib_exec.Cmdline.merge_output|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Merge stderr and stdout from child processes|
+|lib_exec.Cmdline.dry_run|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_exec.Cmdline.q|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Do not print node name|
+|lib_exec.Cmdline.maxjobs|i32|[Val](/txt/exe/amc/reftype/Val.md)|8|Maximum number of parallel jobs|
+|lib_exec.Cmdline.complooo|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Allow jobs to complete out-of-order|
+|lib_exec.Cmdline.merge_output|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Merge stderr and stdout from child processes|
 
 #### Struct Cmdline
 <a href="#struct-cmdline"></a>
@@ -119,14 +134,14 @@ struct Cmdline { // lib_exec.Cmdline
 <a href="#lib_exec-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_exec.FDb._db|[lib_exec.FDb](/txt/gen/lib_exec/lib_exec.md#lib_exec-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|lib_exec.FDb.cmdline|[lib_exec.Cmdline](/txt/gen/lib_exec/lib_exec.md#lib_exec-cmdline)|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_exec.FDb.syscmddep|[lib_exec.FSyscmddep](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmddep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_exec.FDb.next_syscmd|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_exec.FDb.syscmd|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|lib_exec.FDb.ind_running|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Thash](/txt/exe/amc/reftype.md#thash)||Running subprocesses, hashed by pid|
-|lib_exec.FDb.bh_syscmd|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Bheap](/txt/exe/amc/reftype.md#bheap)||Heap of all commands in dependency order|
-|lib_exec.FDb.zd_started|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|lib_exec.FDb._db|[lib_exec.FDb](/txt/gen/lib_exec/lib_exec.md#lib_exec-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|lib_exec.FDb.cmdline|[lib_exec.Cmdline](/txt/gen/lib_exec/lib_exec.md#lib_exec-cmdline)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_exec.FDb.syscmddep|[lib_exec.FSyscmddep](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmddep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_exec.FDb.next_syscmd|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_exec.FDb.syscmd|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|lib_exec.FDb.ind_running|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Thash](/txt/exe/amc/reftype/Thash.md)||Running subprocesses, hashed by pid|
+|lib_exec.FDb.bh_syscmd|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Bheap](/txt/exe/amc/reftype/Bheap.md)||Heap of all commands in dependency order|
+|lib_exec.FDb.zd_started|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -160,18 +175,18 @@ struct FDb { // lib_exec.FDb
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_exec.FSyscmd.msghdr|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|[Base](/txt/ssimdb/dev/syscmd.md)|||
-|lib_exec.FSyscmd.c_prior|[lib_exec.FSyscmddep](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmddep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Set of dependencies where this command is the 'after'|
-|lib_exec.FSyscmd.c_next|[lib_exec.FSyscmddep](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmddep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Set of dependencies where this command is the 'before'|
-|lib_exec.FSyscmd.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|lib_exec.FSyscmd.message|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Message to print when command finishes|
-|lib_exec.FSyscmd.redir_out|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Redirect stdout/stderr to temp file|
-|lib_exec.FSyscmd.show_out|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Print stdout/stderr|
-|lib_exec.FSyscmd.stdout_fd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)||Temporary file containing stdout of subprocess|
-|lib_exec.FSyscmd.stderr_fd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)||Temporary file containing stderr of subprocess|
-|lib_exec.FSyscmd.pty_in|bool|[Val](/txt/exe/amc/reftype.md#val)||Give the child a pty slave as stdin (for tools that require a tty)|
-|lib_exec.FSyscmd.pty_fd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype.md#val)||Pty master held open while the child runs (never read or written)|
-|lib_exec.FSyscmd.signal|i32|[Val](/txt/exe/amc/reftype.md#val)||Signal received by process (if any)|
-|lib_exec.FSyscmd.args|[algo.StringAry](/txt/protocol/algo/README.md#algo-stringary)|[Val](/txt/exe/amc/reftype.md#val)||Overrides 'command'|
+|lib_exec.FSyscmd.c_prior|[lib_exec.FSyscmddep](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmddep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Set of dependencies where this command is the 'after'|
+|lib_exec.FSyscmd.c_next|[lib_exec.FSyscmddep](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmddep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Set of dependencies where this command is the 'before'|
+|lib_exec.FSyscmd.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|lib_exec.FSyscmd.message|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Message to print when command finishes|
+|lib_exec.FSyscmd.redir_out|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Redirect stdout/stderr to temp file|
+|lib_exec.FSyscmd.show_out|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Print stdout/stderr|
+|lib_exec.FSyscmd.stdout_fd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)||Temporary file containing stdout of subprocess|
+|lib_exec.FSyscmd.stderr_fd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)||Temporary file containing stderr of subprocess|
+|lib_exec.FSyscmd.pty_in|bool|[Val](/txt/exe/amc/reftype/Val.md)||Give the child a pty slave as stdin (for tools that require a tty)|
+|lib_exec.FSyscmd.pty_fd|[algo_lib.FFildes](/txt/gen/algo_lib/algo_lib.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftype/Val.md)||Pty master held open while the child runs (never read or written)|
+|lib_exec.FSyscmd.signal|i32|[Val](/txt/exe/amc/reftype/Val.md)||Signal received by process (if any)|
+|lib_exec.FSyscmd.args|[algo.StringAry](/txt/protocol/algo/README.md#algo-stringary)|[Val](/txt/exe/amc/reftype/Val.md)||Overrides 'command'|
 
 #### Struct FSyscmd
 <a href="#struct-fsyscmd"></a>
@@ -237,8 +252,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |lib_exec.FSyscmddep.msghdr|[dev.Syscmddep](/txt/ssimdb/dev/syscmddep.md)|[Base](/txt/ssimdb/dev/syscmddep.md)|||
-|lib_exec.FSyscmddep.p_child|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Command to execute after|
-|lib_exec.FSyscmddep.p_parent|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Command to execute before (p = parent, prior, prerequisite..)|
+|lib_exec.FSyscmddep.p_child|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Command to execute after|
+|lib_exec.FSyscmddep.p_parent|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Command to execute before (p = parent, prior, prerequisite..)|
 
 #### Struct FSyscmddep
 <a href="#struct-fsyscmddep"></a>

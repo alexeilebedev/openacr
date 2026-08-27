@@ -1,6 +1,19 @@
 ## atf_comp - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [atf_comp - Component test runner: spawn processes and diff the log against a reference](/txt/exe/atf_comp/README.md)
+
 ### Sources
 <a href="#sources"></a>
 The source code license is GPL
@@ -55,6 +68,7 @@ All allocations are done through global `atf_comp::_db` [atf_comp.FDb](#atf_comp
 ||||FComptest.c_tfilt (Ptr)|
 |[atf_comp.FUnstableattr](#atf_comp-funstableattr)|[atfdb.unstableattr](/txt/ssimdb/atfdb/unstableattr.md)|FDb.unstableattr (Lary)|unstableattr (Lary, by rowid)|ind_unstableattr (Thash, hash field unstableattr)|
 |[atf_comp.FUnstablefld](#atf_comp-funstablefld)|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|
+|[atf_comp.FUnstableline](#atf_comp-funstableline)|[atfdb.unstableline](/txt/ssimdb/atfdb/unstableline.md)|FDb.unstableline (Lary)|unstableline (Lary, by rowid)|ind_unstableline (Thash, hash field unstableline)|
 
 #### atf_comp.FComptest - A component test
 <a href="#atf_comp-fcomptest"></a>
@@ -64,8 +78,8 @@ All allocations are done through global `atf_comp::_db` [atf_comp.FDb](#atf_comp
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_comp.FComptest.base|[atfdb.Comptest](/txt/ssimdb/atfdb/comptest.md)|[Base](/txt/ssimdb/atfdb/comptest.md)|||
-|atf_comp.FComptest.step||[Hook](/txt/exe/amc/reftype.md#hook)||Test function|
-|atf_comp.FComptest.c_tfilt|[atf_comp.FTfilt](/txt/gen/atf_comp/atf_comp.md#atf_comp-ftfilt)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Optional output filter|
+|atf_comp.FComptest.step||[Hook](/txt/exe/amc/reftype/Hook.md)||Test function|
+|atf_comp.FComptest.c_tfilt|[atf_comp.FTfilt](/txt/gen/atf_comp/atf_comp.md#atf_comp-ftfilt)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Optional output filter|
 
 #### Struct FComptest
 <a href="#struct-fcomptest"></a>
@@ -113,23 +127,25 @@ private:
 <a href="#atf_comp-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_comp.FDb._db|[atf_comp.FDb](/txt/gen/atf_comp/atf_comp.md#atf_comp-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|atf_comp.FDb.cmdline|[command.atf_comp](/txt/protocol/command/README.md#command-atf_comp)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_comp.FDb.comptest|[atf_comp.FComptest](/txt/gen/atf_comp/atf_comp.md#atf_comp-fcomptest)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_comp.FDb.ind_comptest|[atf_comp.FComptest](/txt/gen/atf_comp/atf_comp.md#atf_comp-fcomptest)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_comp.FDb.ind_proc|[atf_comp.FProc](/txt/gen/atf_comp/atf_comp.md#atf_comp-fproc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_comp.FDb.tfilt|[atf_comp.FTfilt](/txt/gen/atf_comp/atf_comp.md#atf_comp-ftfilt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_comp.FDb.proc|[atf_comp.FProc](/txt/gen/atf_comp/atf_comp.md#atf_comp-fproc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_comp.FDb.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype.md#val)||Variable substitution scope|
-|atf_comp.FDb.log|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Formatted test log for reference comparison|
-|atf_comp.FDb.c_cur_comptest|[atf_comp.FComptest](/txt/gen/atf_comp/atf_comp.md#atf_comp-fcomptest)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Currently running comptest|
-|atf_comp.FDb.t0|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype.md#val)||Test start time|
-|atf_comp.FDb.fail_summary|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Summary of failed tests|
-|atf_comp.FDb.unstableattr|[atf_comp.FUnstableattr](/txt/gen/atf_comp/atf_comp.md#atf_comp-funstableattr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_comp.FDb.ind_unstableattr|[atf_comp.FUnstableattr](/txt/gen/atf_comp/atf_comp.md#atf_comp-funstableattr)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_comp.FDb.zd_select|[atf_comp.FComptest](/txt/gen/atf_comp/atf_comp.md#atf_comp-fcomptest)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|atf_comp.FDb.n_capture|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of files captured|
-|atf_comp.FDb.testenv|[atf_comp.FTestenv](/txt/gen/atf_comp/atf_comp.md#atf_comp-ftestenv)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|atf_comp.FDb._db|[atf_comp.FDb](/txt/gen/atf_comp/atf_comp.md#atf_comp-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|atf_comp.FDb.cmdline|[command.atf_comp](/txt/protocol/command/README.md#command-atf_comp)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_comp.FDb.comptest|[atf_comp.FComptest](/txt/gen/atf_comp/atf_comp.md#atf_comp-fcomptest)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_comp.FDb.ind_comptest|[atf_comp.FComptest](/txt/gen/atf_comp/atf_comp.md#atf_comp-fcomptest)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_comp.FDb.ind_proc|[atf_comp.FProc](/txt/gen/atf_comp/atf_comp.md#atf_comp-fproc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_comp.FDb.tfilt|[atf_comp.FTfilt](/txt/gen/atf_comp/atf_comp.md#atf_comp-ftfilt)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_comp.FDb.proc|[atf_comp.FProc](/txt/gen/atf_comp/atf_comp.md#atf_comp-fproc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_comp.FDb.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype/Val.md)||Variable substitution scope|
+|atf_comp.FDb.log|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Formatted test log for reference comparison|
+|atf_comp.FDb.c_cur_comptest|[atf_comp.FComptest](/txt/gen/atf_comp/atf_comp.md#atf_comp-fcomptest)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Currently running comptest|
+|atf_comp.FDb.t0|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftype/Val.md)||Test start time|
+|atf_comp.FDb.fail_summary|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Summary of failed tests|
+|atf_comp.FDb.unstableattr|[atf_comp.FUnstableattr](/txt/gen/atf_comp/atf_comp.md#atf_comp-funstableattr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_comp.FDb.ind_unstableattr|[atf_comp.FUnstableattr](/txt/gen/atf_comp/atf_comp.md#atf_comp-funstableattr)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_comp.FDb.zd_select|[atf_comp.FComptest](/txt/gen/atf_comp/atf_comp.md#atf_comp-fcomptest)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|atf_comp.FDb.n_capture|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of files captured|
+|atf_comp.FDb.testenv|[atf_comp.FTestenv](/txt/gen/atf_comp/atf_comp.md#atf_comp-ftestenv)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_comp.FDb.unstableline|[atf_comp.FUnstableline](/txt/gen/atf_comp/atf_comp.md#atf_comp-funstableline)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_comp.FDb.ind_unstableline|[atf_comp.FUnstableline](/txt/gen/atf_comp/atf_comp.md#atf_comp-funstableline)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -165,6 +181,11 @@ struct FDb { // atf_comp.FDb
     i32                         n_capture;                        //   0  Number of files captured
     atf_comp::FTestenv*         testenv_lary[36];                 // level array
     i64                         testenv_n;                        // number of elements in array
+    atf_comp::FUnstableline*    unstableline_lary[36];            // level array
+    i64                         unstableline_n;                   // number of elements in array
+    atf_comp::FUnstableline**   ind_unstableline_buckets_elems;   // pointer to bucket array
+    i32                         ind_unstableline_buckets_n;       // number of elements in bucket array
+    i32                         ind_unstableline_n;               // number of elements in the hash table
     atf_comp::trace             trace;                            //
 };
 ```
@@ -176,13 +197,13 @@ struct FDb { // atf_comp.FDb
 <a href="#atf_comp-fproc-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_comp.FProc.proc|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_comp.FProc.status|i32|[Val](/txt/exe/amc/reftype.md#val)|-1|Exit status (-1=running)|
-|atf_comp.FProc.memcheck_log|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Valgrind memcheck log path prefix; one <prefix>.<pid>.log per traced process|
-|atf_comp.FProc.stdin_fd|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype.md#val)||Stdin pipe write end|
-|atf_comp.FProc.in|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)|'\n'|Line-buffered subprocess stdout|
-|atf_comp.FProc.killed|bool|[Val](/txt/exe/amc/reftype.md#val)|false|ProcKill was called|
-|atf_comp.FProc.subproc|[algo_lib.FProc](/txt/gen/algo_lib/algo_lib.md#algo_lib-fproc)|[Val](/txt/exe/amc/reftype.md#val)||subprocess spawner|
+|atf_comp.FProc.proc|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_comp.FProc.status|i32|[Val](/txt/exe/amc/reftype/Val.md)|-1|Exit status (-1=running)|
+|atf_comp.FProc.memcheck_log|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Valgrind memcheck log path prefix; one <prefix>.<pid>.log per traced process|
+|atf_comp.FProc.stdin_fd|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftype/Val.md)||Stdin pipe write end|
+|atf_comp.FProc.in|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)|'\n'|Line-buffered subprocess stdout|
+|atf_comp.FProc.killed|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|ProcKill was called|
+|atf_comp.FProc.subproc|[algo_lib.FProc](/txt/gen/algo_lib/algo_lib.md#algo_lib-fproc)|[Val](/txt/exe/amc/reftype/Val.md)||subprocess spawner|
 
 #### Struct FProc
 <a href="#struct-fproc"></a>
@@ -347,5 +368,41 @@ struct FUnstablefld { // atf_comp.FUnstablefld
     algo::cstring       comment;   //
     // func:atf_comp.FUnstablefld..Ctor
     inline               FUnstablefld() __attribute__((nothrow));
+};
+```
+
+#### atf_comp.FUnstableline - Tuple head of a line the comptest capture drops, presence being host-dependent
+<a href="#atf_comp-funstableline"></a>
+
+#### atf_comp.FUnstableline Fields
+<a href="#atf_comp-funstableline-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|atf_comp.FUnstableline.base|[atfdb.Unstableline](/txt/ssimdb/atfdb/unstableline.md)|[Base](/txt/ssimdb/atfdb/unstableline.md)|||
+
+#### Struct FUnstableline
+<a href="#struct-funstableline"></a>
+*Note:* field ``atf_comp.FUnstableline.base`` has reftype ``base`` so the fields of [atfdb.Unstableline](/txt/ssimdb/atfdb/unstableline.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_comp_gen.h](/include/gen/atf_comp_gen.h)
+```
+struct FUnstableline { // atf_comp.FUnstableline
+    atf_comp::FUnstableline*   ind_unstableline_next;      // hash next
+    u32                        ind_unstableline_hashval;   // hash value
+    algo::Smallstr50           unstableline;               //
+    algo::cstring              comment;                    //
+    // func:atf_comp.FUnstableline..AssignOp
+    inline atf_comp::FUnstableline& operator =(const atf_comp::FUnstableline &rhs) = delete;
+    // func:atf_comp.FUnstableline..CopyCtor
+    inline               FUnstableline(const atf_comp::FUnstableline &rhs) = delete;
+private:
+    // func:atf_comp.FUnstableline..Ctor
+    inline               FUnstableline() __attribute__((nothrow));
+    // func:atf_comp.FUnstableline..Dtor
+    inline               ~FUnstableline() __attribute__((nothrow));
+    friend atf_comp::FUnstableline& unstableline_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_comp::FUnstableline* unstableline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 unstableline_RemoveAll() __attribute__((nothrow));
+    friend void                 unstableline_RemoveLast() __attribute__((nothrow));
 };
 ```

@@ -172,7 +172,26 @@ namespace atf_ci { // update-hdr
     // -------------------------------------------------------------------
     // cpp/atf_ci/memcheck.cpp
     //
+
+    // First memcheck citest: build every target with the memcheck cfg, which is the
+    // configuration the memcheck run drives.
+    //
+    // That cfg is release with valgrind's client requests compiled in and nothing
+    // else changed.  The requests are what let a checker account for the records
+    // inside an amc pool, and they are not free when nothing is watching -- a dozen
+    // instructions on every allocation and every free -- so the configuration that
+    // ships does not carry them.  Keeping the optimization identical to release is
+    // the point of a separate cfg rather than reusing debug: the binary a checker
+    // examines is generated the way the shipped one is, so what it finds is what the
+    // shipped code would do.
+    //
+    // No -install, so bin/ keeps pointing at the release build; the run reaches the
+    // annotated binaries through atf_comp's -cfg:memcheck instead.
     //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_mem_prep(); // gstatic/atfdb.citest:mem_prep
+
+    // Run every comptest under valgrind memcheck against the annotated build that
+    // mem_prep produced.
     // void citest_atf_comp_mem(); // gstatic/atfdb.citest:atf_comp_mem
 
     // -------------------------------------------------------------------

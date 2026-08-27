@@ -394,7 +394,7 @@ void atf_ci::citest_lineendings() {
     cstring files(SysEval("git ls-files",FailokQ(true),1024*1024*100));
     ind_beg(Line_curs,fname,files) {
         if (Regx_Match(regx,fname) && FileQ(fname)) {
-            SysCmd(tempstr() << "sed -i 's/\\r$//;s/\\r/\\n/g' "<<fname);
+            SysCmd(tempstr() << "perl -pi -e 's/\\r$//;s/\\r/\\n/g' "<<algo::strptr_ToBash(fname),FailokQ(false));
         }
     }ind_end;
 }
@@ -454,7 +454,7 @@ void atf_ci::citest_indent_script() {
                 SysCmd(tempstr()<<"bin/cpp-indent "<<gitfile->gitfile
                        <<" >> temp/atf_ci_indent.log 2>&1",FailokQ(false));
                 // eliminate windows line endings from script files
-                SysCmd(tempstr()<<"sed -i 's/\\r$//' "<<gitfile->gitfile);
+                SysCmd(tempstr()<<"perl -pi -e 's/\\r$//' "<<algo::strptr_ToBash(gitfile->gitfile),FailokQ(false));
             }
         }
     }ind_end;
@@ -662,9 +662,10 @@ void atf_ci::citest_apm_check() {
 //
 // The test is per word rather than per line because the words that must not
 // appear are prefixes -- a namespace, a tool -- and a substring search on a
-// prefix answers yes to any word that merely contains it: `fix2` and the hex
-// `0x28` both hold "x2" without being it.  A word here is what a name is made
-// of, letters, digits and underscore, and every other character ends one.
+// prefix answers yes to any word that merely contains it: a forbidden prefix of
+// two characters is held by any identifier and by half the hex constants in the
+// tree without being that prefix.  A word here is what a name is made of,
+// letters, digits and underscore, and every other character ends one.
 static bool MentionQ(algo_lib::Regx &regx, strptr line) {
     bool ret = false;
     int beg = 0;

@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -82,7 +84,7 @@ All allocations are done through global `atf_unit::_db` [atf_unit.FDb](#atf_unit
 <a href="#atf_unit-cstr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.Cstr.val|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_unit.Cstr.val|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Cstr
 <a href="#struct-cstr"></a>
@@ -106,7 +108,7 @@ struct Cstr { // atf_unit.Cstr
 <a href="#atf_unit-dbl-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.Dbl.val|double|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_unit.Dbl.val|double|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Dbl
 <a href="#struct-dbl"></a>
@@ -142,20 +144,20 @@ struct Dbl { // atf_unit.Dbl
 <a href="#atf_unit-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.FDb.acr_ed|[command.acr_ed](/txt/protocol/command/README.md#command-acr_ed)|[Exec](/txt/exe/amc/reftype.md#exec)|||
-|atf_unit.FDb.number|[atf_unit.FNumber](/txt/gen/atf_unit/atf_unit.md#atf_unit-fnumber)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|atf_unit.FDb.tr_number|[atf_unit.FNumber](/txt/gen/atf_unit/atf_unit.md#atf_unit-fnumber)|[Atree](/txt/exe/amc/reftype.md#atree)|||
-|atf_unit.FDb.unittest|[atf_unit.FUnittest](/txt/gen/atf_unit/atf_unit.md#atf_unit-funittest)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_unit.FDb._db|[atf_unit.FDb](/txt/gen/atf_unit/atf_unit.md#atf_unit-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|atf_unit.FDb.ind_unittest|[atf_unit.FUnittest](/txt/gen/atf_unit/atf_unit.md#atf_unit-funittest)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_unit.FDb.cmdline|[command.atf_unit](/txt/protocol/command/README.md#command-atf_unit)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.FDb.curdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.FDb.c_curtest|[atf_unit.FUnittest](/txt/gen/atf_unit/atf_unit.md#atf_unit-funittest)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Currently running test|
-|atf_unit.FDb.cur_teststep|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.FDb.report|[report.atf_unit](/txt/protocol/report/README.md#report-atf_unit)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.FDb.perf_cycle_budget|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.FDb.tempdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.FDb.msg|[atf_unit.FMsg](/txt/gen/atf_unit/atf_unit.md#atf_unit-fmsg)|[Blkpool](/txt/exe/amc/reftype.md#blkpool)|||
+|atf_unit.FDb.acr_ed|[command.acr_ed](/txt/protocol/command/README.md#command-acr_ed)|[Exec](/txt/exe/amc/reftype/Exec.md)|||
+|atf_unit.FDb.number|[atf_unit.FNumber](/txt/gen/atf_unit/atf_unit.md#atf_unit-fnumber)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|atf_unit.FDb.tr_number|[atf_unit.FNumber](/txt/gen/atf_unit/atf_unit.md#atf_unit-fnumber)|[Atree](/txt/exe/amc/reftype/Atree.md)|||
+|atf_unit.FDb.unittest|[atf_unit.FUnittest](/txt/gen/atf_unit/atf_unit.md#atf_unit-funittest)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_unit.FDb._db|[atf_unit.FDb](/txt/gen/atf_unit/atf_unit.md#atf_unit-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|atf_unit.FDb.ind_unittest|[atf_unit.FUnittest](/txt/gen/atf_unit/atf_unit.md#atf_unit-funittest)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_unit.FDb.cmdline|[command.atf_unit](/txt/protocol/command/README.md#command-atf_unit)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.FDb.curdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.FDb.c_curtest|[atf_unit.FUnittest](/txt/gen/atf_unit/atf_unit.md#atf_unit-funittest)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Currently running test|
+|atf_unit.FDb.cur_teststep|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.FDb.report|[report.atf_unit](/txt/protocol/report/README.md#report-atf_unit)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.FDb.perf_cycle_budget|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.FDb.tempdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.FDb.msg|[atf_unit.FMsg](/txt/gen/atf_unit/atf_unit.md#atf_unit-fmsg)|[Blkpool](/txt/exe/amc/reftype/Blkpool.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -209,8 +211,8 @@ struct FDb { // atf_unit.FDb: In-memory database for atf_unit
 <a href="#atf_unit-fmsg-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.FMsg.len|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.FMsg.msg|u8|[Varlen](/txt/exe/amc/reftype.md#varlen)|||
+|atf_unit.FMsg.len|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.FMsg.msg|u8|[Varlen](/txt/exe/amc/reftype/Varlen.md)|||
 
 #### Struct FMsg
 <a href="#struct-fmsg"></a>
@@ -240,7 +242,7 @@ private:
 <a href="#atf_unit-fnumber-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.FNumber.num|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_unit.FNumber.num|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FNumber
 <a href="#struct-fnumber"></a>
@@ -275,9 +277,9 @@ private:
 <a href="#atf_unit-fperfsort-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.FPerfSort.orig|[atf_unit.Dbl](/txt/gen/atf_unit/atf_unit.md#atf_unit-dbl)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|atf_unit.FPerfSort.sorted|[atf_unit.Dbl](/txt/gen/atf_unit/atf_unit.md#atf_unit-dbl)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|atf_unit.FPerfSort.index|i32|[Tary](/txt/exe/amc/reftype.md#tary)|||
+|atf_unit.FPerfSort.orig|[atf_unit.Dbl](/txt/gen/atf_unit/atf_unit.md#atf_unit-dbl)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|atf_unit.FPerfSort.sorted|[atf_unit.Dbl](/txt/gen/atf_unit/atf_unit.md#atf_unit-dbl)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|atf_unit.FPerfSort.index|i32|[Tary](/txt/exe/amc/reftype/Tary.md)|||
 
 #### Struct FPerfSort
 <a href="#struct-fperfsort"></a>
@@ -312,11 +314,11 @@ struct FPerfSort { // atf_unit.FPerfSort: Function to test double sorting
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_unit.FUnittest.base|[atfdb.Unittest](/txt/ssimdb/atfdb/unittest.md)|[Base](/txt/ssimdb/atfdb/unittest.md)|||
-|atf_unit.FUnittest.select|bool|[Val](/txt/exe/amc/reftype.md#val)||Select test for running?|
-|atf_unit.FUnittest.step||[Hook](/txt/exe/amc/reftype.md#hook)|||
-|atf_unit.FUnittest.success|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.FUnittest.error|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.FUnittest.c_syscmd|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|atf_unit.FUnittest.select|bool|[Val](/txt/exe/amc/reftype/Val.md)||Select test for running?|
+|atf_unit.FUnittest.step||[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|atf_unit.FUnittest.success|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.FUnittest.error|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.FUnittest.c_syscmd|[lib_exec.FSyscmd](/txt/gen/lib_exec/lib_exec.md#lib_exec-fsyscmd)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FUnittest
 <a href="#struct-funittest"></a>
@@ -359,7 +361,7 @@ private:
 <a href="#atf_unit-jsonary-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.JsonAry.name|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Inlary](/txt/exe/amc/reftype.md#inlary)||elements print as strings: Smallstr20 has no Json cfmt|
+|atf_unit.JsonAry.name|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Inlary](/txt/exe/amc/reftype/Inlary.md)||elements print as strings: Smallstr20 has no Json cfmt|
 
 #### Struct JsonAry
 <a href="#struct-jsonary"></a>
@@ -387,7 +389,7 @@ struct JsonAry { // atf_unit.JsonAry: single-field record whose JSON node is its
 <a href="#atf_unit-typea-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.TypeA.typea|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_unit.TypeA.typea|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeA
 <a href="#struct-typea"></a>
@@ -419,8 +421,8 @@ struct TypeA { // atf_unit.TypeA
 <a href="#atf_unit-typeb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.TypeB.typea|[atf_unit.TypeA](/txt/gen/atf_unit/atf_unit.md#atf_unit-typea)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|atf_unit.TypeB.j|i32|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_unit.TypeB.typea|[atf_unit.TypeA](/txt/gen/atf_unit/atf_unit.md#atf_unit-typea)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|atf_unit.TypeB.j|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct TypeB
 <a href="#struct-typeb"></a>
@@ -453,26 +455,26 @@ struct TypeB { // atf_unit.TypeB
 <a href="#atf_unit-testjson-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_unit.TestJson.fld_bool|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_u8|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_i8|i8|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_u16|u16|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_i16|i16|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_u32|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_i32|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_u64|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_i64|i64|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_float|float|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_double|double|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_char|char|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_strptr|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_cstring|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_unit.TestJson.fld_atftypea|[atf_unit.TypeA](/txt/gen/atf_unit/atf_unit.md#atf_unit-typea)|[Val](/txt/exe/amc/reftype.md#val)||wrapped integer|
-|atf_unit.TestJson.fld_atfcstr|[atf_unit.Cstr](/txt/gen/atf_unit/atf_unit.md#atf_unit-cstr)|[Val](/txt/exe/amc/reftype.md#val)||wrapped cstring|
-|atf_unit.TestJson.fld_atfdbl|[atf_unit.Dbl](/txt/gen/atf_unit/atf_unit.md#atf_unit-dbl)|[Val](/txt/exe/amc/reftype.md#val)||wrapped double|
-|atf_unit.TestJson.fld_atftypeb|[atf_unit.TypeB](/txt/gen/atf_unit/atf_unit.md#atf_unit-typeb)|[Val](/txt/exe/amc/reftype.md#val)||wrapped complex type|
-|atf_unit.TestJson.fld_ary_u32|u32|[Inlary](/txt/exe/amc/reftype.md#inlary)||array of a type with a Json cfmt: elements are numbers|
-|atf_unit.TestJson.fld_ary_name|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Inlary](/txt/exe/amc/reftype.md#inlary)||array of a type with no Json cfmt: elements are strings|
+|atf_unit.TestJson.fld_bool|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_u8|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_i8|i8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_u16|u16|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_i16|i16|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_u32|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_i32|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_u64|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_i64|i64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_float|float|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_double|double|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_char|char|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_strptr|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_cstring|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_unit.TestJson.fld_atftypea|[atf_unit.TypeA](/txt/gen/atf_unit/atf_unit.md#atf_unit-typea)|[Val](/txt/exe/amc/reftype/Val.md)||wrapped integer|
+|atf_unit.TestJson.fld_atfcstr|[atf_unit.Cstr](/txt/gen/atf_unit/atf_unit.md#atf_unit-cstr)|[Val](/txt/exe/amc/reftype/Val.md)||wrapped cstring|
+|atf_unit.TestJson.fld_atfdbl|[atf_unit.Dbl](/txt/gen/atf_unit/atf_unit.md#atf_unit-dbl)|[Val](/txt/exe/amc/reftype/Val.md)||wrapped double|
+|atf_unit.TestJson.fld_atftypeb|[atf_unit.TypeB](/txt/gen/atf_unit/atf_unit.md#atf_unit-typeb)|[Val](/txt/exe/amc/reftype/Val.md)||wrapped complex type|
+|atf_unit.TestJson.fld_ary_u32|u32|[Inlary](/txt/exe/amc/reftype/Inlary.md)||array of a type with a Json cfmt: elements are numbers|
+|atf_unit.TestJson.fld_ary_name|[algo.Smallstr20](/txt/protocol/algo/README.md#algo-smallstr20)|[Inlary](/txt/exe/amc/reftype/Inlary.md)||array of a type with no Json cfmt: elements are strings|
 
 #### Struct TestJson
 <a href="#struct-testjson"></a>

@@ -471,11 +471,27 @@ void gcache::ProcessCommandLine() {
 
 //------------------------------------------------------------------------------
 
-// When precompiling replace, c by c-header, c++ by c++-header
-static tempstr ConvertLang(strptr from, bool precomp) {
+// Name the language the compiler is to read this input as.  FROM is the language
+// the original command line asked for, PRECOMP says the compile produces a
+// precompiled header, and CPPOUT says the input has already been through the
+// preprocessor.
+//
+// Saying that last one through -x is what lets a driver other than gcc
+// understand it.  The alternative spelling is -fpreprocessed, which is gcc's own
+// and which clang refuses outright, while both read c++-cpp-output.  It has to
+// be the -x that is already on the command line, put there by dev.tool_opt,
+// because -x applies to the inputs that follow it and one appended after the
+// source would apply to nothing at all.
+static tempstr ConvertLang(strptr from, bool precomp, bool cppout) {
     tempstr to(from);
-    if (precomp && (from == "c" || from == "c++")) {
-        to << "-header";
+    if (from == "c" || from == "c++") {
+        if (precomp) {
+            to << "-header";
+        } else if (cppout) {
+            // gcc spells the preprocessed form of c as cpp-output, with no c- in
+            // front of it, and the preprocessed form of c++ as c++-cpp-output
+            to = from == "c" ? "cpp-output" : "c++-cpp-output";
+        }
     }
     return to;
 }
@@ -494,12 +510,15 @@ tempstr gcache::MakeCmd(strptr source DFLTVAL(""), strptr target DFLTVAL(""), st
     bool is_lang(false);
     bool preproc = EndsWithQ(target,".ii");
     bool precomp = EndsWithQ(target,".gch");
+    // The phase is read off the suffixes, and a .ii handed in as the source says
+    // the preprocessor has already run over it.
+    bool cppout = EndsWithQ(source,".ii");
     ind_beg(command::gcache_cmd_curs,arg,_db.cmdline) {
         tempstr new_arg;
         if (bool_Update(is_target,false)) {
             new_arg << (ch_N(target) ? target : arg);
         } else if (bool_Update(is_lang,false)) {
-            new_arg << ConvertLang(arg,precomp);
+            new_arg << ConvertLang(arg,precomp,cppout);
         } else if (arg == "-c" && preproc) {
             new_arg << "-E";
         } else if (SourceQ(arg)) {
@@ -752,7 +771,13 @@ bool gcache::Pch() {
         strptr  text   = ch_GetRegion(_db.preproc_text,pch->begin,pch->inner_end-pch->begin);
         cstring sha1   = Sha1(MakeCmd(pch->name,tempstr()<<pch->name<<".gch"),text);
         cstring base   = CachedFile(sha1);
-        cstring h      = tempstr() << base << ".h";
+        // .hpp rather than .h, because a driver reads the language off the
+        // suffix and .h is a C header to both of them.  g++ takes it as a C++
+        // one anyway and says nothing; clang++ obeys the suffix and warns on
+        // every compile that it is treating a C header as C++.  The rest of
+        // gcache already writes C++ -- the preprocessed file it makes is a .ii
+        // -- so naming this one for the same language is what it meant to say.
+        cstring h      = tempstr() << base << ".hpp";
         cstring gch    = tempstr() << base << ".gch";
         cstring tmp    = tempstr() << base << ".tmp.gch";
         cstring lock   = tempstr() << base << ".lock";
@@ -762,10 +787,19 @@ bool gcache::Pch() {
         if (build) {
             StringToFile(text,h);
             int rc = RunCmd(MakeCmd(h,tmp,"-fpreprocessed"));
-            algo_lib::_db.exit_code += rc;
             DeleteFile(h);
             if (rc) {
-                ret = false;
+                // A precompiled header is an optimization, so failing to build
+                // one leaves the compile to proceed without it rather than
+                // failing with it.  A cache that turns a working compile into a
+                // broken one is worse than no cache: the driver need only be one
+                // that does not read gcc's own pch_preprocess pragma -- clang is
+                // such a driver -- and every build through gcache stops.
+                // Deleting the gch is what makes the fallback happen, since the
+                // rewrite below runs only where one exists.
+                prerr("gcache.warning"
+                      <<Keyval("gch",gch)
+                      <<Keyval("comment","precompiled header did not build; compiling without it"));
                 DeleteFile(tmp);
                 DeleteFile(gch);
             } else if (rename(Zeroterm(tmp),Zeroterm(gch))!=0){
@@ -865,7 +899,7 @@ void gcache::Main() {
             } else {
                 int compile_rc = 1;// a precompiled header that failed to build fails the compile
                 if (Pch()) { // rewrites _db.preproc_file
-                    compile_rc = RunCmd(MakeCmd(_db.preproc_file,"","-fpreprocessed"));
+                    compile_rc = RunCmd(MakeCmd(_db.preproc_file));
                     algo_lib::_db.exit_code += compile_rc;
                 }
                 if (!compile_rc && coverage) {

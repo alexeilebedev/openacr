@@ -91,11 +91,11 @@ italicised fields: *listtype* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fi
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Index in question|
-|havetail|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Generate 'tail' field|
-|havecount|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Generate count of elements|
-|*listtype*|*[dmmeta.Listtype](/txt/ssimdb/dmmeta/listtype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.RR_LL of field*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Index in question|
+|havetail|bool|[Val](/txt/exe/amc/reftype/Val.md)|true|Generate 'tail' field|
+|havecount|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Generate count of elements|
+|*listtype*|*[dmmeta.Listtype](/txt/ssimdb/dmmeta/listtype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.RR_LL of field*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

@@ -38,7 +38,13 @@ void apm::Main_Diff() {
         cstring baseref(_db.cmdline.ref == "" ? algo::strptr(package.baseref) : algo::strptr(_db.cmdline.ref));
         // check out the package into sandbox directory.
         // evaluate symbolic value of baseref into actual git commit
-        baseref=FetchPackageOrigin(origin,baseref);
+        // An origin that cannot be reached resolves to nothing, and nothing is
+        // what the sandbox reads as "the current directory": the base would then
+        // be a copy of the very tree being diffed, and apm would print an empty
+        // diff and exit zero over a fetch that never happened.  A base that is
+        // not the published version is not a base at all, so the run stops here.
+        baseref=FetchPackageOrigin(package.package,origin,baseref);
+        vrfy(baseref!="", tempstr()<<"failed to resolve the base version of package "<<package.package<<" in "<<origin);
         vrfy(CreatePackageSandbox(_db.base_sandbox,baseref)==0,
              tempstr()<<"failed to check out package "<<package.package<<" at "<<baseref);
     }ind_end;

@@ -90,6 +90,103 @@ The `Maybe` suffix is the naming rule for the whole family, and it is what
 named `Alloc` exits the process when memory runs out, and `AllocMaybe`
 returns NULL.
 
+### Leak checking
+<a href="#leak-checking"></a>
+
+Take a process that allocates a row from `lib_x2.FDb.lpool`, drops the last
+pointer to it, and exits.  Run it under `valgrind --leak-check=full` and the
+report says nothing at all.  The row is still there, unreachable and never
+freed, and the checker has no complaint to make about it.
+
+The reason is that the checker only knows about the blocks it saw handed out.
+It watches `malloc` and `mmap`, and what it saw was one 2MB mapping the lpool
+took from `algo_lib.FDb.sbrk` early in the run.  The lpool then cut that
+mapping into rows on its own, and the cuts are ordinary pointer arithmetic that
+no checker can distinguish from any other.  A pool is a second allocator
+layered on the first, so the checker's picture stops at the mapping: it stays
+live from the moment it was mapped until the process ends, whether every row
+inside it is in use or none is.
+
+So the pools say what they hand out.  `Lpool` marks each block it returns from
+`AllocMem` and unmarks it in `FreeMem`; `Tpool` marks each element it hands out
+and unmarks it as the element comes back.  The mark is
+`algo_lib::MemcheckAlloc`, and a leak report then names the row that leaked and
+the stack that allocated it.
+
+Each block is marked by exactly one pool.  A tpool reserves a block from its
+base pool and breaks it into elements, so the reservation is unmarked at the
+moment it arrives and the elements are what the checker accounts for after
+that.  This matters beyond tidiness: memcheck refuses to hold two blocks that
+overlap, and it aborts the run when its leak search finds such a pair.
+`amc::MemcheckedPoolQ` is where a pool asks whether its base pool marks, and
+the generated `ReserveMem` carries the unmark only when the answer is yes.
+
+Two reftypes mark nothing, for opposite reasons.  A `Malloc` pool needs no mark
+of its own, since every block it returns came from `malloc` and the checker
+already knows it.  `Sbrk` hands out mappings, which are not blocks the checker
+accounts for in the first place, and it is the one pool whose whole job is to
+be the layer underneath.  A `Blkpool` buffer also stays the unit the checker
+holds, because a blkpool returns memory a buffer at a time and not an element
+at a time: an element that leaks pins its buffer, and the buffer is what the
+report names.
+
+### The annotations live in the memcheck configuration
+<a href="#the-annotations-live-in-the-memcheck-configuration"></a>
+
+A valgrind client request is not free when nothing is watching.  It writes six
+words to the stack and executes the magic instruction sequence either way, about
+a dozen instructions on every allocation and every free, which on an
+allocation-heavy run costs a few percent: `amc` regenerating the tree takes
+0.95-0.99s built as release and 1.01s built with the requests compiled in.
+Release is what runs in production, so it does not carry them.
+
+They live in `cfg:memcheck` instead, which is release with the client requests
+added and nothing else changed -- same `-O3`, plus `-g` so a report can name a
+line.  Keeping the optimization identical is the point of a separate
+configuration rather than reusing `cfg:debug`: the binary a checker examines is
+generated the way the shipped one is, so what the checker finds is what the
+shipped code would do.  It is also the difference between a check that costs 20%
+and one that costs 190% -- the 46 `acr` comptests take 65s under valgrind built
+as release, 78s built as memcheck, and 189s built as debug, because debug is
+unoptimized.
+
+`include/sysincl.h` admits valgrind's headers under `ALGO_MEMCHECK`, which
+`dev.tool_opt` defines for that configuration alone; a memcheck build on a
+machine with no valgrind headers is refused rather than quietly built without
+annotations.
+
+To run the checks, build the configuration and drive the comptests against it,
+which is what the `memcheck` cijob does:
+
+```bash
+atf_ci -cijob:memcheck        # mem_prep builds -cfg:memcheck, then atf_comp_mem runs
+atf_comp -mode:memcheck -cfg:memcheck <comptest regx>    # one test, by hand
+```
+
+The wrap asks for `--leak-check=full --errors-for-leak-kinds=definite`, so a
+leaked record fails the comptest that leaked it.  Only a definite loss counts.
+A block still reachable from a global at exit is a table a module holds until it
+stops, and a possible loss is a block reached by an interior pointer, which is
+what a pool's free list looks like from outside; counting either would report
+every module in the tree as leaking.
+
+Leaving `-cfg:memcheck` off is the one mistake worth knowing about, because its
+symptom is silence: the run still reports invalid reads and writes, and it
+reports no leak inside any pool.  `atf_comp` prints `atf_comp.memcheck_cfg` when
+it notices.
+
+`atf_comp` writes one log per traced process under
+`temp/atf_comp/<comptest>/<proc>.memcheck.<pid>.log`, and a leak is reported
+there with the stack that allocated it.
+
+Valgrind traces children, so a comptest whose steps run through `bash`, `sed` or
+`cp` would report those programs' own leaks as its own -- bash releases neither
+its command table nor its variable hash before exiting.  `conf/memcheck.supp`
+drops them, on the same reasoning that stops the wrap tracing the C++ toolchain:
+a leak in a program this repo does not build is not a finding about this repo.
+The suppression is scoped to leaks, so an invalid read or write inside one of
+those programs is still reported -- that one may well be ours.
+
 ### Running Out Of Memory
 <a href="#running-out-of-memory"></a>
 

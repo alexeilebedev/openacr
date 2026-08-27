@@ -3,11 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
-* [Tests](#tests)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -49,6 +51,7 @@ All allocations are done through global `acr_dm::_db` [acr_dm.FDb](#acr_dm-fdb) 
 ||||FAttr.p_tuple (Upptr)|
 ||||FTuple.p_anchor (Upptr)|
 ||||FTuple.bh_child (Bheap)|
+||||FTuple.p_wanted (Upptr)|
 |[acr_dm.FValue](#acr_dm-fvalue)||FDb.value (Lary)|value (Lary, by rowid)|
 ||||FAttr.zs_value (Llist)|
 
@@ -59,9 +62,9 @@ All allocations are done through global `acr_dm::_db` [acr_dm.FDb](#acr_dm-fdb) 
 <a href="#acr_dm-fattr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_dm.FAttr.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_dm.FAttr.p_tuple|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_dm.FAttr.zs_value|[acr_dm.FValue](/txt/gen/acr_dm/acr_dm.md#acr_dm-fvalue)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|acr_dm.FAttr.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_dm.FAttr.p_tuple|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_dm.FAttr.zs_value|[acr_dm.FValue](/txt/gen/acr_dm/acr_dm.md#acr_dm-fvalue)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FAttr
 <a href="#struct-fattr"></a>
@@ -99,13 +102,13 @@ private:
 <a href="#acr_dm-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_dm.FDb._db|[acr_dm.FDb](/txt/gen/acr_dm/acr_dm.md#acr_dm-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|acr_dm.FDb.cmdline|[command.acr_dm](/txt/protocol/command/README.md#command-acr_dm)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_dm.FDb.tuple|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_dm.FDb.ind_tuple|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_dm.FDb.attr|[acr_dm.FAttr](/txt/gen/acr_dm/acr_dm.md#acr_dm-fattr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_dm.FDb.value|[acr_dm.FValue](/txt/gen/acr_dm/acr_dm.md#acr_dm-fvalue)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_dm.FDb.p_root|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Virtual row every file's first run hangs off; never printed|
+|acr_dm.FDb._db|[acr_dm.FDb](/txt/gen/acr_dm/acr_dm.md#acr_dm-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|acr_dm.FDb.cmdline|[command.acr_dm](/txt/protocol/command/README.md#command-acr_dm)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_dm.FDb.tuple|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_dm.FDb.ind_tuple|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_dm.FDb.attr|[acr_dm.FAttr](/txt/gen/acr_dm/acr_dm.md#acr_dm-fattr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_dm.FDb.value|[acr_dm.FValue](/txt/gen/acr_dm/acr_dm.md#acr_dm-fvalue)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_dm.FDb.p_root|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Virtual row every file's first run hangs off; never printed|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -134,7 +137,7 @@ struct FDb { // acr_dm.FDb: In-memory database for acr_dm
 <a href="#acr_dm-source-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_dm.Source.source|u8|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr_dm.Source.source|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Source
 <a href="#struct-source"></a>
@@ -154,9 +157,9 @@ struct Source { // acr_dm.Source
 <a href="#acr_dm-sortkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_dm.Sortkey.base|i32|[Val](/txt/exe/amc/reftype.md#val)||1 for a row of the base file, 0 for a branch insertion|
-|acr_dm.Sortkey.runkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Key of the first row of the run this row belongs to|
-|acr_dm.Sortkey.seq|i32|[Val](/txt/exe/amc/reftype.md#val)||Position of this row within its run|
+|acr_dm.Sortkey.base|i32|[Val](/txt/exe/amc/reftype/Val.md)||1 for a row of the base file, 0 for a branch insertion|
+|acr_dm.Sortkey.runkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Key of the first row of the run this row belongs to|
+|acr_dm.Sortkey.seq|i32|[Val](/txt/exe/amc/reftype/Val.md)||Position of this row within its run|
 
 #### Struct Sortkey
 <a href="#struct-sortkey"></a>
@@ -190,12 +193,16 @@ struct Sortkey { // acr_dm.Sortkey: Orders rows under one anchor: insertions by 
 <a href="#acr_dm-ftuple-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_dm.FTuple.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_dm.FTuple.zs_attr|[acr_dm.FAttr](/txt/gen/acr_dm/acr_dm.md#acr_dm-fattr)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|acr_dm.FTuple.source|[acr_dm.Source](/txt/gen/acr_dm/acr_dm.md#acr_dm-source)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_dm.FTuple.p_anchor|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Row this row followed in the file that first showed it; NULL at start of file|
-|acr_dm.FTuple.sortkey|[acr_dm.Sortkey](/txt/gen/acr_dm/acr_dm.md#acr_dm-sortkey)|[Val](/txt/exe/amc/reftype.md#val)||Position of this row among the rows sharing its anchor|
-|acr_dm.FTuple.bh_child|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Bheap](/txt/exe/amc/reftype.md#bheap)||Rows anchored on this one, in output order|
+|acr_dm.FTuple.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_dm.FTuple.zs_attr|[acr_dm.FAttr](/txt/gen/acr_dm/acr_dm.md#acr_dm-fattr)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|acr_dm.FTuple.source|[acr_dm.Source](/txt/gen/acr_dm/acr_dm.md#acr_dm-source)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_dm.FTuple.p_anchor|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Row this row followed in the file that first showed it; NULL at start of file|
+|acr_dm.FTuple.sortkey|[acr_dm.Sortkey](/txt/gen/acr_dm/acr_dm.md#acr_dm-sortkey)|[Val](/txt/exe/amc/reftype/Val.md)||Position of this row among the rows sharing its anchor|
+|acr_dm.FTuple.bh_child|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Bheap](/txt/exe/amc/reftype/Bheap.md)||Rows anchored on this one, in output order|
+|acr_dm.FTuple.baseseq|i32|[Val](/txt/exe/amc/reftype/Val.md)|-1|Position of this row in the base file; -1 if the base file did not have it|
+|acr_dm.FTuple.moved|[acr_dm.Source](/txt/gen/acr_dm/acr_dm.md#acr_dm-source)|[Val](/txt/exe/amc/reftype/Val.md)||Files that placed this row after a different row than the base file did|
+|acr_dm.FTuple.moveconflict|bool|[Val](/txt/exe/amc/reftype/Val.md)||Two files moved this row, and not to the same place|
+|acr_dm.FTuple.p_wanted|[acr_dm.FTuple](/txt/gen/acr_dm/acr_dm.md#acr_dm-ftuple)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Row another file wanted this row to follow, when that was not where it already goes|
 
 #### Struct FTuple
 <a href="#struct-ftuple"></a>
@@ -215,14 +222,18 @@ struct FTuple { // acr_dm.FTuple
     i32                bh_child_n;           // number of elements in the heap
     i32                bh_child_max;         // max elements in bh_child_elems
     i32                tuple_bh_child_idx;   // index in heap; -1 means not-in-heap
+    i32                baseseq;              //   -1  Position of this row in the base file; -1 if the base file did not have it
+    acr_dm::Source     moved;                // Files that placed this row after a different row than the base file did
+    bool               moveconflict;         //   false  Two files moved this row, and not to the same place
+    acr_dm::FTuple*    p_wanted;             // reference to parent row
     // reftype Llist of acr_dm.FTuple.zs_attr prohibits copy
     // reftype Bheap of acr_dm.FTuple.bh_child prohibits copy
     // func:acr_dm.FTuple..AssignOp
-    inline acr_dm::FTuple& operator =(const acr_dm::FTuple &rhs) = delete;
+    acr_dm::FTuple&      operator =(const acr_dm::FTuple &rhs) = delete;
     // reftype Llist of acr_dm.FTuple.zs_attr prohibits copy
     // reftype Bheap of acr_dm.FTuple.bh_child prohibits copy
     // func:acr_dm.FTuple..CopyCtor
-    inline               FTuple(const acr_dm::FTuple &rhs) = delete;
+    FTuple(const acr_dm::FTuple &rhs) = delete;
 private:
     // func:acr_dm.FTuple..Ctor
     inline               FTuple() __attribute__((nothrow));
@@ -242,9 +253,9 @@ private:
 <a href="#acr_dm-fvalue-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_dm.FValue.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_dm.FValue.p_attr|[acr_dm.FAttr](/txt/gen/acr_dm/acr_dm.md#acr_dm-fattr)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_dm.FValue.source|[acr_dm.Source](/txt/gen/acr_dm/acr_dm.md#acr_dm-source)|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr_dm.FValue.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_dm.FValue.p_attr|[acr_dm.FAttr](/txt/gen/acr_dm/acr_dm.md#acr_dm-fattr)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_dm.FValue.source|[acr_dm.Source](/txt/gen/acr_dm/acr_dm.md#acr_dm-source)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FValue
 <a href="#struct-fvalue"></a>
@@ -277,9 +288,13 @@ The following component tests are defined for `acr_dm`.
 These can be executed with `atf_comp <comptest> -v`
 |Comptest|Comment|
 |---|---|
+|[acr_dm.Comment](/test/atf_comp/acr_dm.Comment)||
 |[acr_dm.Conflict](/test/atf_comp/acr_dm.Conflict)||
 |[acr_dm.DeepRun](/test/atf_comp/acr_dm.DeepRun)||
 |[acr_dm.FieldOrder](/test/atf_comp/acr_dm.FieldOrder)||
 |[acr_dm.Merge](/test/atf_comp/acr_dm.Merge)||
+|[acr_dm.MergeFail](/test/atf_comp/acr_dm.MergeFail)||
+|[acr_dm.MoveConflict](/test/atf_comp/acr_dm.MoveConflict)||
 |[acr_dm.RenameTuple](/test/atf_comp/acr_dm.RenameTuple)||
+|[acr_dm.Reorder](/test/atf_comp/acr_dm.Reorder)||
 |[acr_dm.Symmetry](/test/atf_comp/acr_dm.Symmetry)||

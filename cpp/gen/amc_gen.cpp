@@ -39,16 +39,16 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
 #include "include/gen/lib_amcdb_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 amc::FDb        amc::_db;         // dependency found via dev.targdep
 
 amc::_db_bh_enumstr_len_curs::~_db_bh_enumstr_len_curs() {
@@ -450,25 +450,25 @@ namespace amc { // gen:ns_print_proto
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:amc.FEnumstrLen.bh_enumstr.Downheap
-    static int           bh_enumstr_Downheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) __attribute__((nothrow));
+    static int           bh_enumstr_Downheap(amc::FEnumstrLen& parent, amc::FEnumstr& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
     // func:amc.FEnumstrLen.bh_enumstr.Upheap
-    static int           bh_enumstr_Upheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) __attribute__((nothrow));
+    static int           bh_enumstr_Upheap(amc::FEnumstrLen& parent, amc::FEnumstr& row, int idx) __attribute__((nothrow));
     // func:amc.FEnumstrLen.bh_enumstr.ElemLt
-    inline static bool   bh_enumstr_ElemLt(amc::FEnumstrLen& enumstr_len, amc::FEnumstr &a, amc::FEnumstr &b) __attribute__((nothrow));
+    inline static bool   bh_enumstr_ElemLt(amc::FEnumstrLen& parent, amc::FEnumstr &a, amc::FEnumstr &b) __attribute__((nothrow));
     // func:amc.FEnumstrLen.bh_enumstr_curs.Add
     static void          enumstr_len_bh_enumstr_curs_Add(enumstr_len_bh_enumstr_curs &curs, amc::FEnumstr& row);
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:amc.FField.bh_bitfld.Downheap
-    static int           bh_bitfld_Downheap(amc::FField& field, amc::FBitfld& row, int idx) __attribute__((nothrow));
+    static int           bh_bitfld_Downheap(amc::FField& parent, amc::FBitfld& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
     // func:amc.FField.bh_bitfld.Upheap
-    static int           bh_bitfld_Upheap(amc::FField& field, amc::FBitfld& row, int idx) __attribute__((nothrow));
+    static int           bh_bitfld_Upheap(amc::FField& parent, amc::FBitfld& row, int idx) __attribute__((nothrow));
     // func:amc.FField.bh_bitfld.ElemLt
-    inline static bool   bh_bitfld_ElemLt(amc::FField& field, amc::FBitfld &a, amc::FBitfld &b) __attribute__((nothrow));
+    inline static bool   bh_bitfld_ElemLt(amc::FField& parent, amc::FBitfld &a, amc::FBitfld &b) __attribute__((nothrow));
     // func:amc.FField.bh_bitfld_curs.Add
     static void          field_bh_bitfld_curs_Add(field_bh_bitfld_curs &curs, amc::FBitfld& row);
     // func:amc...SizeCheck
@@ -1153,11 +1153,10 @@ void amc::anonfld_CopyIn(amc::FAnonfld &row, dmmeta::Anonfld &in) {
 }
 
 // --- amc.FAnonfld..Uninit
-void amc::FAnonfld_Uninit(amc::FAnonfld& anonfld) {
-    amc::FAnonfld &row = anonfld; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FAnonfld_Uninit(amc::FAnonfld& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_anonfld_Remove(*p_field, row);// remove anonfld from index c_anonfld
+        c_anonfld_Remove(*p_field, parent);// remove anonfld from index c_anonfld
     }
 }
 
@@ -1178,11 +1177,10 @@ void amc::argvtype_CopyIn(amc::FArgvtype &row, dmmeta::Argvtype &in) {
 }
 
 // --- amc.FArgvtype..Uninit
-void amc::FArgvtype_Uninit(amc::FArgvtype& argvtype) {
-    amc::FArgvtype &row = argvtype; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FArgvtype_Uninit(amc::FArgvtype& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_argvtype_Remove(*p_ctype, row);// remove argvtype from index c_argvtype
+        c_argvtype_Remove(*p_ctype, parent);// remove argvtype from index c_argvtype
     }
 }
 
@@ -1201,11 +1199,10 @@ void amc::basepool_CopyIn(amc::FBasepool &row, dmmeta::Basepool &in) {
 }
 
 // --- amc.FBasepool..Uninit
-void amc::FBasepool_Uninit(amc::FBasepool& basepool) {
-    amc::FBasepool &row = basepool; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FBasepool_Uninit(amc::FBasepool& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_basepool_Remove(*p_field, row);// remove basepool from index c_basepool
+        c_basepool_Remove(*p_field, parent);// remove basepool from index c_basepool
     }
 }
 
@@ -1230,20 +1227,19 @@ void amc::bitfld_CopyIn(amc::FBitfld &row, dmmeta::Bitfld &in) {
 }
 
 // --- amc.FBitfld.name.Get
-algo::strptr amc::name_Get(amc::FBitfld& bitfld) {
-    return algo::Pathcomp(bitfld.field, ".RR");
+algo::strptr amc::name_Get(amc::FBitfld& parent) {
+    return algo::Pathcomp(parent.field, ".RR");
 }
 
 // --- amc.FBitfld..Uninit
-void amc::FBitfld_Uninit(amc::FBitfld& bitfld) {
-    amc::FBitfld &row = bitfld; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FBitfld_Uninit(amc::FBitfld& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_bitfld_Remove(*p_field, row);// remove bitfld from index c_bitfld
+        c_bitfld_Remove(*p_field, parent);// remove bitfld from index c_bitfld
     }
-    amc::FField* p_srcfield = amc::ind_field_Find(row.srcfield);
+    amc::FField* p_srcfield = amc::ind_field_Find(parent.srcfield);
     if (p_srcfield)  {
-        bh_bitfld_Remove(*p_srcfield, row);// remove bitfld from index bh_bitfld
+        bh_bitfld_Remove(*p_srcfield, parent);// remove bitfld from index bh_bitfld
     }
 }
 
@@ -1268,11 +1264,10 @@ void amc::blkhash_CopyIn(amc::FBlkhash &row, dmmeta::Blkhash &in) {
 }
 
 // --- amc.FBlkhash..Uninit
-void amc::FBlkhash_Uninit(amc::FBlkhash& blkhash) {
-    amc::FBlkhash &row = blkhash; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FBlkhash_Uninit(amc::FBlkhash& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_blkhash_Remove(*p_field, row);// remove blkhash from index c_blkhash
+        c_blkhash_Remove(*p_field, parent);// remove blkhash from index c_blkhash
     }
 }
 
@@ -1297,12 +1292,11 @@ void amc::bltin_CopyIn(amc::FBltin &row, amcdb::Bltin &in) {
 }
 
 // --- amc.FBltin..Uninit
-void amc::FBltin_Uninit(amc::FBltin& bltin) {
-    amc::FBltin &row = bltin; (void)row;
-    ind_bltin_Remove(row); // remove bltin from index ind_bltin
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FBltin_Uninit(amc::FBltin& parent) {
+    ind_bltin_Remove(parent); // remove bltin from index ind_bltin
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_bltin_Remove(*p_ctype, row);// remove bltin from index c_bltin
+        c_bltin_Remove(*p_ctype, parent);// remove bltin from index c_bltin
     }
 }
 
@@ -1321,21 +1315,20 @@ void amc::cafter_CopyIn(amc::FCafter &row, dmmeta::Cafter &in) {
 }
 
 // --- amc.FCafter.ctype.Get
-algo::strptr amc::ctype_Get(amc::FCafter& cafter) {
-    return algo::Pathcomp(cafter.cafter, "/RL");
+algo::strptr amc::ctype_Get(amc::FCafter& parent) {
+    return algo::Pathcomp(parent.cafter, "/RL");
 }
 
 // --- amc.FCafter.after.Get
-algo::strptr amc::after_Get(amc::FCafter& cafter) {
-    return algo::Pathcomp(cafter.cafter, "/RR");
+algo::strptr amc::after_Get(amc::FCafter& parent) {
+    return algo::Pathcomp(parent.cafter, "/RR");
 }
 
 // --- amc.FCafter..Uninit
-void amc::FCafter_Uninit(amc::FCafter& cafter) {
-    amc::FCafter &row = cafter; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+void amc::FCafter_Uninit(amc::FCafter& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        zd_cafter_Remove(*p_ctype, row);// remove cafter from index zd_cafter
+        zd_cafter_Remove(*p_ctype, parent);// remove cafter from index zd_cafter
     }
 }
 
@@ -1354,11 +1347,10 @@ void amc::cascdel_CopyIn(amc::FCascdel &row, dmmeta::Cascdel &in) {
 }
 
 // --- amc.FCascdel..Uninit
-void amc::FCascdel_Uninit(amc::FCascdel& cascdel) {
-    amc::FCascdel &row = cascdel; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FCascdel_Uninit(amc::FCascdel& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_cascdel_Remove(*p_field, row);// remove cascdel from index c_cascdel
+        c_cascdel_Remove(*p_field, parent);// remove cascdel from index c_cascdel
     }
 }
 
@@ -1381,11 +1373,10 @@ void amc::ccmdline_CopyIn(amc::FCcmdline &row, dmmeta::Ccmdline &in) {
 }
 
 // --- amc.FCcmdline..Uninit
-void amc::FCcmdline_Uninit(amc::FCcmdline& ccmdline) {
-    amc::FCcmdline &row = ccmdline; (void)row;
-    amc::FCtype* p_p_ctype = row.p_ctype;
+void amc::FCcmdline_Uninit(amc::FCcmdline& parent) {
+    amc::FCtype* p_p_ctype = parent.p_ctype;
     if (p_p_ctype)  {
-        c_ccmdline_Remove(*p_p_ctype, row);// remove ccmdline from index c_ccmdline
+        c_ccmdline_Remove(*p_p_ctype, parent);// remove ccmdline from index c_ccmdline
     }
 }
 
@@ -1412,13 +1403,12 @@ void amc::ccmp_CopyIn(amc::FCcmp &row, dmmeta::Ccmp &in) {
 }
 
 // --- amc.FCcmp..Uninit
-void amc::FCcmp_Uninit(amc::FCcmp& ccmp) {
-    amc::FCcmp &row = ccmp; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCcmp_Uninit(amc::FCcmp& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_ccmp_Remove(*p_ctype, row);// remove ccmp from index c_ccmp
+        c_ccmp_Remove(*p_ctype, parent);// remove ccmp from index c_ccmp
     }
-    ind_ccmp_Remove(row); // remove ccmp from index ind_ccmp
+    ind_ccmp_Remove(parent); // remove ccmp from index ind_ccmp
 }
 
 // --- amc.FCdflt.base.CopyOut
@@ -1442,11 +1432,10 @@ void amc::cdflt_CopyIn(amc::FCdflt &row, dmmeta::Cdflt &in) {
 }
 
 // --- amc.FCdflt..Uninit
-void amc::FCdflt_Uninit(amc::FCdflt& cdflt) {
-    amc::FCdflt &row = cdflt; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCdflt_Uninit(amc::FCdflt& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cdflt_Remove(*p_ctype, row);// remove cdflt from index c_cdflt
+        c_cdflt_Remove(*p_ctype, parent);// remove cdflt from index c_cdflt
     }
 }
 
@@ -1469,11 +1458,10 @@ void amc::cextern_CopyIn(amc::FCextern &row, dmmeta::Cextern &in) {
 }
 
 // --- amc.FCextern..Uninit
-void amc::FCextern_Uninit(amc::FCextern& cextern) {
-    amc::FCextern &row = cextern; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCextern_Uninit(amc::FCextern& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cextern_Remove(*p_ctype, row);// remove cextern from index c_cextern
+        c_cextern_Remove(*p_ctype, parent);// remove cextern from index c_cextern
     }
 }
 
@@ -1498,11 +1486,10 @@ void amc::cfast_CopyIn(amc::FCfast &row, dmmeta::Cfast &in) {
 }
 
 // --- amc.FCfast..Uninit
-void amc::FCfast_Uninit(amc::FCfast& cfast) {
-    amc::FCfast &row = cfast; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCfast_Uninit(amc::FCfast& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cfast_Remove(*p_ctype, row);// remove cfast from index c_cfast
+        c_cfast_Remove(*p_ctype, parent);// remove cfast from index c_cfast
     }
 }
 
@@ -1531,34 +1518,33 @@ void amc::cfmt_CopyIn(amc::FCfmt &row, dmmeta::Cfmt &in) {
 }
 
 // --- amc.FCfmt.ctype.Get
-algo::strptr amc::ctype_Get(amc::FCfmt& cfmt) {
-    return algo::Pathcomp(cfmt.cfmt, ".RL");
+algo::strptr amc::ctype_Get(amc::FCfmt& parent) {
+    return algo::Pathcomp(parent.cfmt, ".RL");
 }
 
 // --- amc.FCfmt.strfmt.Get
-algo::strptr amc::strfmt_Get(amc::FCfmt& cfmt) {
-    return algo::Pathcomp(cfmt.cfmt, ".RR");
+algo::strptr amc::strfmt_Get(amc::FCfmt& parent) {
+    return algo::Pathcomp(parent.cfmt, ".RR");
 }
 
 // --- amc.FCfmt..Init
 // Set all fields to initial values.
-void amc::FCfmt_Init(amc::FCfmt& cfmt) {
-    cfmt.read = bool(false);
-    cfmt.print = bool(false);
-    cfmt.genop = bool(false);
-    cfmt.p_ctype = NULL;
-    cfmt.ctype_zs_cfmt_next = (amc::FCfmt*)-1; // (amc.FCtype.zs_cfmt) not-in-list
-    cfmt.ind_cfmt_next = (amc::FCfmt*)-1; // (amc.FDb.ind_cfmt) not-in-hash
-    cfmt.ind_cfmt_hashval = 0; // stored hash value
+void amc::FCfmt_Init(amc::FCfmt& parent) {
+    parent.read = bool(false);
+    parent.print = bool(false);
+    parent.genop = bool(false);
+    parent.p_ctype = NULL;
+    parent.ctype_zs_cfmt_next = (amc::FCfmt*)-1; // (amc.FCtype.zs_cfmt) not-in-list
+    parent.ind_cfmt_next = (amc::FCfmt*)-1; // (amc.FDb.ind_cfmt) not-in-hash
+    parent.ind_cfmt_hashval = 0; // stored hash value
 }
 
 // --- amc.FCfmt..Uninit
-void amc::FCfmt_Uninit(amc::FCfmt& cfmt) {
-    amc::FCfmt &row = cfmt; (void)row;
-    ind_cfmt_Remove(row); // remove cfmt from index ind_cfmt
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+void amc::FCfmt_Uninit(amc::FCfmt& parent) {
+    ind_cfmt_Remove(parent); // remove cfmt from index ind_cfmt
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        zs_cfmt_Remove(*p_ctype, row);// remove cfmt from index zs_cfmt
+        zs_cfmt_Remove(*p_ctype, parent);// remove cfmt from index zs_cfmt
     }
 }
 
@@ -1597,11 +1583,10 @@ void amc::charset_CopyIn(amc::FCharset &row, dmmeta::Charset &in) {
 }
 
 // --- amc.FCharset..Uninit
-void amc::FCharset_Uninit(amc::FCharset& charset) {
-    amc::FCharset &row = charset; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FCharset_Uninit(amc::FCharset& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_charset_Remove(*p_field, row);// remove charset from index c_charset
+        c_charset_Remove(*p_field, parent);// remove charset from index c_charset
     }
 }
 
@@ -1622,13 +1607,12 @@ void amc::chash_CopyIn(amc::FChash &row, dmmeta::Chash &in) {
 }
 
 // --- amc.FChash..Uninit
-void amc::FChash_Uninit(amc::FChash& chash) {
-    amc::FChash &row = chash; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FChash_Uninit(amc::FChash& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_chash_Remove(*p_ctype, row);// remove chash from index c_chash
+        c_chash_Remove(*p_ctype, parent);// remove chash from index c_chash
     }
-    ind_chash_Remove(row); // remove chash from index ind_chash
+    ind_chash_Remove(parent); // remove chash from index ind_chash
 }
 
 // --- amc.FCjsbltin.base.CopyOut
@@ -1648,11 +1632,10 @@ void amc::cjsbltin_CopyIn(amc::FCjsbltin &row, dmmeta::Cjsbltin &in) {
 }
 
 // --- amc.FCjsbltin..Uninit
-void amc::FCjsbltin_Uninit(amc::FCjsbltin& cjsbltin) {
-    amc::FCjsbltin &row = cjsbltin; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCjsbltin_Uninit(amc::FCjsbltin& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cjsbltin_Remove(*p_ctype, row);// remove cjsbltin from index c_cjsbltin
+        c_cjsbltin_Remove(*p_ctype, parent);// remove cjsbltin from index c_cjsbltin
     }
 }
 
@@ -1673,11 +1656,10 @@ void amc::cjson_CopyIn(amc::FCjson &row, dmmeta::Cjson &in) {
 }
 
 // --- amc.FCjson..Uninit
-void amc::FCjson_Uninit(amc::FCjson& cjson) {
-    amc::FCjson &row = cjson; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCjson_Uninit(amc::FCjson& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cjson_Remove(*p_ctype, row);// remove cjson from index c_cjson
+        c_cjson_Remove(*p_ctype, parent);// remove cjson from index c_cjson
     }
 }
 
@@ -1704,11 +1686,10 @@ void amc::ckafka_CopyIn(amc::FCkafka &row, dmmeta::Ckafka &in) {
 }
 
 // --- amc.FCkafka..Uninit
-void amc::FCkafka_Uninit(amc::FCkafka& ckafka) {
-    amc::FCkafka &row = ckafka; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCkafka_Uninit(amc::FCkafka& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_ckafka_Remove(*p_ctype, row);// remove ckafka from index c_ckafka
+        c_ckafka_Remove(*p_ctype, parent);// remove ckafka from index c_ckafka
     }
 }
 
@@ -1729,11 +1710,10 @@ void amc::cpbuf_CopyIn(amc::FCpbuf &row, dmmeta::Cpbuf &in) {
 }
 
 // --- amc.FCpbuf..Uninit
-void amc::FCpbuf_Uninit(amc::FCpbuf& cpbuf) {
-    amc::FCpbuf &row = cpbuf; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCpbuf_Uninit(amc::FCpbuf& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cpbuf_Remove(*p_ctype, row);// remove cpbuf from index c_cpbuf
+        c_cpbuf_Remove(*p_ctype, parent);// remove cpbuf from index c_cpbuf
     }
 }
 
@@ -1756,11 +1736,10 @@ void amc::cppfunc_CopyIn(amc::FCppfunc &row, dmmeta::Cppfunc &in) {
 }
 
 // --- amc.FCppfunc..Uninit
-void amc::FCppfunc_Uninit(amc::FCppfunc& cppfunc) {
-    amc::FCppfunc &row = cppfunc; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FCppfunc_Uninit(amc::FCppfunc& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_cppfunc_Remove(*p_field, row);// remove cppfunc from index c_cppfunc
+        c_cppfunc_Remove(*p_field, parent);// remove cppfunc from index c_cppfunc
     }
 }
 
@@ -1779,12 +1758,11 @@ void amc::cpptype_CopyIn(amc::FCpptype &row, dmmeta::Cpptype &in) {
 }
 
 // --- amc.FCpptype..Uninit
-void amc::FCpptype_Uninit(amc::FCpptype& cpptype) {
-    amc::FCpptype &row = cpptype; (void)row;
-    ind_cpptype_Remove(row); // remove cpptype from index ind_cpptype
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCpptype_Uninit(amc::FCpptype& parent) {
+    ind_cpptype_Remove(parent); // remove cpptype from index ind_cpptype
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cpptype_Remove(*p_ctype, row);// remove cpptype from index c_cpptype
+        c_cpptype_Remove(*p_ctype, parent);// remove cpptype from index c_cpptype
     }
 }
 
@@ -1807,11 +1785,10 @@ void amc::csize_CopyIn(amc::FCsize &row, dmmeta::Csize &in) {
 }
 
 // --- amc.FCsize..Uninit
-void amc::FCsize_Uninit(amc::FCsize& csize) {
-    amc::FCsize &row = csize; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCsize_Uninit(amc::FCsize& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_csize_Remove(*p_ctype, row);// remove csize from index c_csize
+        c_csize_Remove(*p_ctype, parent);// remove csize from index c_csize
     }
 }
 
@@ -1832,11 +1809,10 @@ void amc::cstr_CopyIn(amc::FCstr &row, dmmeta::Cstr &in) {
 }
 
 // --- amc.FCstr..Uninit
-void amc::FCstr_Uninit(amc::FCstr& cstr) {
-    amc::FCstr &row = cstr; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCstr_Uninit(amc::FCstr& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cstr_Remove(*p_ctype, row);// remove cstr from index c_cstr
+        c_cstr_Remove(*p_ctype, parent);// remove cstr from index c_cstr
     }
 }
 
@@ -1855,24 +1831,24 @@ void amc::ctype_CopyIn(amc::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- amc.FCtype.ns.Get
-algo::strptr amc::ns_Get(amc::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RL");
+algo::strptr amc::ns_Get(amc::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RL");
 }
 
 // --- amc.FCtype.name.Get
-algo::strptr amc::name_Get(amc::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RR");
+algo::strptr amc::name_Get(amc::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RR");
 }
 
 // --- amc.FCtype.zs_cfmt.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zs_cfmt_Insert(amc::FCtype& ctype, amc::FCfmt& row) {
+void amc::zs_cfmt_Insert(amc::FCtype& parent, amc::FCfmt& row) {
     if (!ctype_zs_cfmt_InLlistQ(row)) {
-        amc::FCfmt* old_tail       = ctype.zs_cfmt_tail;
+        amc::FCfmt* old_tail       = parent.zs_cfmt_tail;
         row.ctype_zs_cfmt_next  = NULL;
-        ctype.zs_cfmt_tail = &row;
+        parent.zs_cfmt_tail = &row;
         amc::FCfmt **new_row_a = &old_tail->ctype_zs_cfmt_next;
-        amc::FCfmt **new_row_b = &ctype.zs_cfmt_head;
+        amc::FCfmt **new_row_b = &parent.zs_cfmt_head;
         amc::FCfmt **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
     }
@@ -1881,24 +1857,24 @@ void amc::zs_cfmt_Insert(amc::FCtype& ctype, amc::FCfmt& row) {
 // --- amc.FCtype.zs_cfmt.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void amc::zs_cfmt_Remove(amc::FCtype& ctype, amc::FCfmt& row) {
+void amc::zs_cfmt_Remove(amc::FCtype& parent, amc::FCfmt& row) {
     if (ctype_zs_cfmt_InLlistQ(row)) {
-        amc::FCfmt* old_head       = ctype.zs_cfmt_head;
+        amc::FCfmt* old_head       = parent.zs_cfmt_head;
         (void)old_head; // in case it's not used
         amc::FCfmt* prev=NULL;
-        amc::FCfmt* cur     = ctype.zs_cfmt_head;
+        amc::FCfmt* cur     = parent.zs_cfmt_head;
         while (cur) {  // search for element by pointer
             amc::FCfmt* next = cur->ctype_zs_cfmt_next;
             if (cur == &row) {
 
                 if (!next) {
-                    ctype.zs_cfmt_tail = prev;  // adjust tail pointer
+                    parent.zs_cfmt_tail = prev;  // adjust tail pointer
                 }
                 // disconnect element from linked list
                 if (prev) {
                     prev->ctype_zs_cfmt_next = next;
                 } else {
-                    ctype.zs_cfmt_head = next;
+                    parent.zs_cfmt_head = next;
                 }
                 row.ctype_zs_cfmt_next = (amc::FCfmt*)-1; // not-in-list
                 break;
@@ -1911,10 +1887,10 @@ void amc::zs_cfmt_Remove(amc::FCtype& ctype, amc::FCfmt& row) {
 
 // --- amc.FCtype.zs_cfmt.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zs_cfmt_RemoveAll(amc::FCtype& ctype) {
-    amc::FCfmt* row = ctype.zs_cfmt_head;
-    ctype.zs_cfmt_head = NULL;
-    ctype.zs_cfmt_tail = NULL;
+void amc::zs_cfmt_RemoveAll(amc::FCtype& parent) {
+    amc::FCfmt* row = parent.zs_cfmt_head;
+    parent.zs_cfmt_head = NULL;
+    parent.zs_cfmt_tail = NULL;
     while (row) {
         amc::FCfmt* row_next = row->ctype_zs_cfmt_next;
         row->ctype_zs_cfmt_next  = (amc::FCfmt*)-1;
@@ -1924,15 +1900,15 @@ void amc::zs_cfmt_RemoveAll(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zs_cfmt.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FCfmt* amc::zs_cfmt_RemoveFirst(amc::FCtype& ctype) {
+amc::FCfmt* amc::zs_cfmt_RemoveFirst(amc::FCtype& parent) {
     amc::FCfmt *row = NULL;
-    row = ctype.zs_cfmt_head;
+    row = parent.zs_cfmt_head;
     if (row) {
         amc::FCfmt *next = row->ctype_zs_cfmt_next;
-        ctype.zs_cfmt_head = next;
+        parent.zs_cfmt_head = next;
         // clear list's tail pointer if list is empty.
         if (!next) {
-            ctype.zs_cfmt_tail = NULL;
+            parent.zs_cfmt_tail = NULL;
         }
         row->ctype_zs_cfmt_next = (amc::FCfmt*)-1; // mark as not-in-list
     }
@@ -1942,10 +1918,10 @@ amc::FCfmt* amc::zs_cfmt_RemoveFirst(amc::FCtype& ctype) {
 // --- amc.FCtype.c_field.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_field_Insert(amc::FCtype& ctype, amc::FField& row) {
-    c_field_Reserve(ctype, 1);
-    u64 n  = ctype.c_field_n++;
-    ctype.c_field_elems[n] = &row;
+void amc::c_field_Insert(amc::FCtype& parent, amc::FField& row) {
+    c_field_Reserve(parent, 1);
+    u64 n  = parent.c_field_n++;
+    parent.c_field_elems[n] = &row;
 }
 
 // --- amc.FCtype.c_field.ScanInsertMaybe
@@ -1953,52 +1929,52 @@ void amc::c_field_Insert(amc::FCtype& ctype, amc::FField& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool amc::c_field_ScanInsertMaybe(amc::FCtype& ctype, amc::FField& row) {
+bool amc::c_field_ScanInsertMaybe(amc::FCtype& parent, amc::FField& row) {
     bool retval = true;
-    u64 n  = ctype.c_field_n;
+    u64 n  = parent.c_field_n;
     for (u64 i = 0; i < n; i++) {
-        if (ctype.c_field_elems[i] == &row) {
+        if (parent.c_field_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_field_Insert(ctype,row); // row known absent; the append is Insert's
+        c_field_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- amc.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_field_Remove(amc::FCtype& ctype, amc::FField& row) {
-    i64 n = ctype.c_field_n;
+void amc::c_field_Remove(amc::FCtype& parent, amc::FField& row) {
+    i64 n = parent.c_field_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (ctype.c_field_elems[i] == &row) {
+        if (parent.c_field_elems[i] == &row) {
         } else {
             if (j != i) {
-                ctype.c_field_elems[j] = ctype.c_field_elems[i];
+                parent.c_field_elems[j] = parent.c_field_elems[i];
             }
             j++;
         }
     }
-    ctype.c_field_n = j;
+    parent.c_field_n = j;
 }
 
 // --- amc.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void amc::c_field_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_field_max;
-    if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+void amc::c_field_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_field_max;
+    if (UNLIKELY(parent.c_field_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_field_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FField*);
         u64 new_size = new_max * sizeof(amc::FField*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_field_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_field");
         }
-        ctype.c_field_elems = (amc::FField**)new_mem;
-        ctype.c_field_max = new_max;
+        parent.c_field_elems = (amc::FField**)new_mem;
+        parent.c_field_max = new_max;
     }
 }
 
@@ -2031,9 +2007,9 @@ static bool amc::c_field_Lt(amc::FField &elem_a, amc::FField &elem_b) {
 
 // --- amc.FCtype.c_field.SortedQ
 // Verify whether array is sorted
-bool amc::c_field_SortedQ(amc::FCtype& ctype) {
-    amc::FField* *elems = c_field_Getary(ctype).elems;
-    int n = c_field_N(ctype);
+bool amc::c_field_SortedQ(amc::FCtype& parent) {
+    amc::FField* *elems = c_field_Getary(parent).elems;
+    int n = c_field_N(parent);
     for (int i = 1; i < n; i++) {
         if (c_field_Lt(*elems[i], *elems[i-1])) {
             return false;
@@ -2144,38 +2120,38 @@ static void amc::c_field_IntQuickSort(amc::FField* *elems, int n, int depth) {
 
 // --- amc.FCtype.c_field.InsertionSort
 // Insertion sort
-void amc::c_field_InsertionSort(amc::FCtype& ctype) {
-    amc::FField* *elems = c_field_Getary(ctype).elems;
-    int n = c_field_N(ctype);
+void amc::c_field_InsertionSort(amc::FCtype& parent) {
+    amc::FField* *elems = c_field_Getary(parent).elems;
+    int n = c_field_N(parent);
     c_field_IntInsertionSort(elems, n);
 }
 
 // --- amc.FCtype.c_field.HeapSort
 // Heap sort
-void amc::c_field_HeapSort(amc::FCtype& ctype) {
-    amc::FField* *elems = c_field_Getary(ctype).elems;
-    int n = c_field_N(ctype);
+void amc::c_field_HeapSort(amc::FCtype& parent) {
+    amc::FField* *elems = c_field_Getary(parent).elems;
+    int n = c_field_N(parent);
     c_field_IntHeapSort(elems, n);
 }
 
 // --- amc.FCtype.c_field.QuickSort
 // Quick sort
-void amc::c_field_QuickSort(amc::FCtype& ctype) {
+void amc::c_field_QuickSort(amc::FCtype& parent) {
     // compute max recursion depth based on number of elements in the array
-    int max_depth = algo::CeilingLog2(u32(c_field_N(ctype) + 1)) + 3;
-    amc::FField* *elems = c_field_Getary(ctype).elems;
-    int n = c_field_N(ctype);
+    int max_depth = algo::CeilingLog2(u32(c_field_N(parent) + 1)) + 3;
+    amc::FField* *elems = c_field_Getary(parent).elems;
+    int n = c_field_N(parent);
     c_field_IntQuickSort(elems, n, max_depth);
 }
 
 // --- amc.FCtype.c_static.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_static_Insert(amc::FCtype& ctype, amc::FStatictuple& row) {
+void amc::c_static_Insert(amc::FCtype& parent, amc::FStatictuple& row) {
     if (!row.ctype_c_static_in_ary) {
-        c_static_Reserve(ctype, 1);
-        u64 n  = ctype.c_static_n++;
-        ctype.c_static_elems[n] = &row;
+        c_static_Reserve(parent, 1);
+        u64 n  = parent.c_static_n++;
+        parent.c_static_elems[n] = &row;
         row.ctype_c_static_in_ary = true;
     }
 }
@@ -2184,18 +2160,18 @@ void amc::c_static_Insert(amc::FCtype& ctype, amc::FStatictuple& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_static_InsertMaybe(amc::FCtype& ctype, amc::FStatictuple& row) {
+bool amc::c_static_InsertMaybe(amc::FCtype& parent, amc::FStatictuple& row) {
     bool retval = !ctype_c_static_InAryQ(row);
-    c_static_Insert(ctype,row); // check is performed in _Insert again
+    c_static_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FCtype.c_static.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_static_Remove(amc::FCtype& ctype, amc::FStatictuple& row) {
-    i64 n = ctype.c_static_n;
+void amc::c_static_Remove(amc::FCtype& parent, amc::FStatictuple& row) {
+    i64 n = parent.c_static_n;
     if (bool_Update(row.ctype_c_static_in_ary,false)) {
-        amc::FStatictuple* *elems = ctype.c_static_elems;
+        amc::FStatictuple* *elems = parent.c_static_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2204,7 +2180,7 @@ void amc::c_static_Remove(amc::FCtype& ctype, amc::FStatictuple& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FStatictuple*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_static_n = n - 1;
+                parent.c_static_n = n - 1;
                 break;
             }
         }
@@ -2213,28 +2189,28 @@ void amc::c_static_Remove(amc::FCtype& ctype, amc::FStatictuple& row) {
 
 // --- amc.FCtype.c_static.Reserve
 // Reserve space in index for N more elements;
-void amc::c_static_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_static_max;
-    if (UNLIKELY(ctype.c_static_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_static_n + n), 4);
+void amc::c_static_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_static_max;
+    if (UNLIKELY(parent.c_static_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_static_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FStatictuple*);
         u64 new_size = new_max * sizeof(amc::FStatictuple*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_static_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_static_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_static");
         }
-        ctype.c_static_elems = (amc::FStatictuple**)new_mem;
-        ctype.c_static_max = new_max;
+        parent.c_static_elems = (amc::FStatictuple**)new_mem;
+        parent.c_static_max = new_max;
     }
 }
 
 // --- amc.FCtype.c_parent.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_parent_Insert(amc::FCtype& ctype, amc::FCtype& row) {
-    c_parent_Reserve(ctype, 1);
-    u64 n  = ctype.c_parent_n++;
-    ctype.c_parent_elems[n] = &row;
+void amc::c_parent_Insert(amc::FCtype& parent, amc::FCtype& row) {
+    c_parent_Reserve(parent, 1);
+    u64 n  = parent.c_parent_n++;
+    parent.c_parent_elems[n] = &row;
 }
 
 // --- amc.FCtype.c_parent.ScanInsertMaybe
@@ -2242,63 +2218,63 @@ void amc::c_parent_Insert(amc::FCtype& ctype, amc::FCtype& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool amc::c_parent_ScanInsertMaybe(amc::FCtype& ctype, amc::FCtype& row) {
+bool amc::c_parent_ScanInsertMaybe(amc::FCtype& parent, amc::FCtype& row) {
     bool retval = true;
-    u64 n  = ctype.c_parent_n;
+    u64 n  = parent.c_parent_n;
     for (u64 i = 0; i < n; i++) {
-        if (ctype.c_parent_elems[i] == &row) {
+        if (parent.c_parent_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_parent_Insert(ctype,row); // row known absent; the append is Insert's
+        c_parent_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- amc.FCtype.c_parent.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_parent_Remove(amc::FCtype& ctype, amc::FCtype& row) {
-    i64 n = ctype.c_parent_n;
+void amc::c_parent_Remove(amc::FCtype& parent, amc::FCtype& row) {
+    i64 n = parent.c_parent_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (ctype.c_parent_elems[i] == &row) {
+        if (parent.c_parent_elems[i] == &row) {
         } else {
             if (j != i) {
-                ctype.c_parent_elems[j] = ctype.c_parent_elems[i];
+                parent.c_parent_elems[j] = parent.c_parent_elems[i];
             }
             j++;
         }
     }
-    ctype.c_parent_n = j;
+    parent.c_parent_n = j;
 }
 
 // --- amc.FCtype.c_parent.Reserve
 // Reserve space in index for N more elements;
-void amc::c_parent_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_parent_max;
-    if (UNLIKELY(ctype.c_parent_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_parent_n + n), 4);
+void amc::c_parent_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_parent_max;
+    if (UNLIKELY(parent.c_parent_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_parent_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FCtype*);
         u64 new_size = new_max * sizeof(amc::FCtype*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_parent_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_parent_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_parent");
         }
-        ctype.c_parent_elems = (amc::FCtype**)new_mem;
-        ctype.c_parent_max = new_max;
+        parent.c_parent_elems = (amc::FCtype**)new_mem;
+        parent.c_parent_max = new_max;
     }
 }
 
 // --- amc.FCtype.c_pmaskfld.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_pmaskfld_Insert(amc::FCtype& ctype, amc::FPmaskfld& row) {
+void amc::c_pmaskfld_Insert(amc::FCtype& parent, amc::FPmaskfld& row) {
     if (!row.ctype_c_pmaskfld_in_ary) {
-        c_pmaskfld_Reserve(ctype, 1);
-        u64 n  = ctype.c_pmaskfld_n++;
-        ctype.c_pmaskfld_elems[n] = &row;
+        c_pmaskfld_Reserve(parent, 1);
+        u64 n  = parent.c_pmaskfld_n++;
+        parent.c_pmaskfld_elems[n] = &row;
         row.ctype_c_pmaskfld_in_ary = true;
     }
 }
@@ -2307,18 +2283,18 @@ void amc::c_pmaskfld_Insert(amc::FCtype& ctype, amc::FPmaskfld& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_pmaskfld_InsertMaybe(amc::FCtype& ctype, amc::FPmaskfld& row) {
+bool amc::c_pmaskfld_InsertMaybe(amc::FCtype& parent, amc::FPmaskfld& row) {
     bool retval = !ctype_c_pmaskfld_InAryQ(row);
-    c_pmaskfld_Insert(ctype,row); // check is performed in _Insert again
+    c_pmaskfld_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FCtype.c_pmaskfld.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_pmaskfld_Remove(amc::FCtype& ctype, amc::FPmaskfld& row) {
-    i64 n = ctype.c_pmaskfld_n;
+void amc::c_pmaskfld_Remove(amc::FCtype& parent, amc::FPmaskfld& row) {
+    i64 n = parent.c_pmaskfld_n;
     if (bool_Update(row.ctype_c_pmaskfld_in_ary,false)) {
-        amc::FPmaskfld* *elems = ctype.c_pmaskfld_elems;
+        amc::FPmaskfld* *elems = parent.c_pmaskfld_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2327,7 +2303,7 @@ void amc::c_pmaskfld_Remove(amc::FCtype& ctype, amc::FPmaskfld& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FPmaskfld*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_pmaskfld_n = n - 1;
+                parent.c_pmaskfld_n = n - 1;
                 break;
             }
         }
@@ -2336,29 +2312,29 @@ void amc::c_pmaskfld_Remove(amc::FCtype& ctype, amc::FPmaskfld& row) {
 
 // --- amc.FCtype.c_pmaskfld.Reserve
 // Reserve space in index for N more elements;
-void amc::c_pmaskfld_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_pmaskfld_max;
-    if (UNLIKELY(ctype.c_pmaskfld_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_pmaskfld_n + n), 4);
+void amc::c_pmaskfld_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_pmaskfld_max;
+    if (UNLIKELY(parent.c_pmaskfld_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_pmaskfld_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FPmaskfld*);
         u64 new_size = new_max * sizeof(amc::FPmaskfld*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_pmaskfld_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_pmaskfld_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_pmaskfld");
         }
-        ctype.c_pmaskfld_elems = (amc::FPmaskfld**)new_mem;
-        ctype.c_pmaskfld_max = new_max;
+        parent.c_pmaskfld_elems = (amc::FPmaskfld**)new_mem;
+        parent.c_pmaskfld_max = new_max;
     }
 }
 
 // --- amc.FCtype.c_datafld.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_datafld_Insert(amc::FCtype& ctype, amc::FField& row) {
+void amc::c_datafld_Insert(amc::FCtype& parent, amc::FField& row) {
     if (!row.ctype_c_datafld_in_ary) {
-        c_datafld_Reserve(ctype, 1);
-        u64 n  = ctype.c_datafld_n++;
-        ctype.c_datafld_elems[n] = &row;
+        c_datafld_Reserve(parent, 1);
+        u64 n  = parent.c_datafld_n++;
+        parent.c_datafld_elems[n] = &row;
         row.ctype_c_datafld_in_ary = true;
     }
 }
@@ -2367,18 +2343,18 @@ void amc::c_datafld_Insert(amc::FCtype& ctype, amc::FField& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_datafld_InsertMaybe(amc::FCtype& ctype, amc::FField& row) {
+bool amc::c_datafld_InsertMaybe(amc::FCtype& parent, amc::FField& row) {
     bool retval = !ctype_c_datafld_InAryQ(row);
-    c_datafld_Insert(ctype,row); // check is performed in _Insert again
+    c_datafld_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FCtype.c_datafld.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_datafld_Remove(amc::FCtype& ctype, amc::FField& row) {
-    i64 n = ctype.c_datafld_n;
+void amc::c_datafld_Remove(amc::FCtype& parent, amc::FField& row) {
+    i64 n = parent.c_datafld_n;
     if (bool_Update(row.ctype_c_datafld_in_ary,false)) {
-        amc::FField* *elems = ctype.c_datafld_elems;
+        amc::FField* *elems = parent.c_datafld_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2387,7 +2363,7 @@ void amc::c_datafld_Remove(amc::FCtype& ctype, amc::FField& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_datafld_n = n - 1;
+                parent.c_datafld_n = n - 1;
                 break;
             }
         }
@@ -2396,67 +2372,67 @@ void amc::c_datafld_Remove(amc::FCtype& ctype, amc::FField& row) {
 
 // --- amc.FCtype.c_datafld.Reserve
 // Reserve space in index for N more elements;
-void amc::c_datafld_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_datafld_max;
-    if (UNLIKELY(ctype.c_datafld_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_datafld_n + n), 4);
+void amc::c_datafld_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_datafld_max;
+    if (UNLIKELY(parent.c_datafld_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_datafld_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FField*);
         u64 new_size = new_max * sizeof(amc::FField*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_datafld_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_datafld_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_datafld");
         }
-        ctype.c_datafld_elems = (amc::FField**)new_mem;
-        ctype.c_datafld_max = new_max;
+        parent.c_datafld_elems = (amc::FField**)new_mem;
+        parent.c_datafld_max = new_max;
     }
 }
 
 // --- amc.FCtype.zd_inst.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zd_inst_Insert(amc::FCtype& ctype, amc::FField& row) {
+void amc::zd_inst_Insert(amc::FCtype& parent, amc::FField& row) {
     if (!ctype_zd_inst_InLlistQ(row)) {
-        amc::FField* old_tail = ctype.zd_inst_tail;
+        amc::FField* old_tail = parent.zd_inst_tail;
         row.ctype_zd_inst_next = NULL;
         row.ctype_zd_inst_prev = old_tail;
-        ctype.zd_inst_tail = &row;
+        parent.zd_inst_tail = &row;
         amc::FField **new_row_a = &old_tail->ctype_zd_inst_next;
-        amc::FField **new_row_b = &ctype.zd_inst_head;
+        amc::FField **new_row_b = &parent.zd_inst_head;
         amc::FField **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        ctype.zd_inst_n++;
+        parent.zd_inst_n++;
     }
 }
 
 // --- amc.FCtype.zd_inst.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc::zd_inst_Remove(amc::FCtype& ctype, amc::FField& row) {
+void amc::zd_inst_Remove(amc::FCtype& parent, amc::FField& row) {
     if (ctype_zd_inst_InLlistQ(row)) {
-        amc::FField* old_head       = ctype.zd_inst_head;
+        amc::FField* old_head       = parent.zd_inst_head;
         (void)old_head; // in case it's not used
         amc::FField* prev = row.ctype_zd_inst_prev;
         amc::FField* next = row.ctype_zd_inst_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         amc::FField **new_next_a = &prev->ctype_zd_inst_next;
-        amc::FField **new_next_b = &ctype.zd_inst_head;
+        amc::FField **new_next_b = &parent.zd_inst_head;
         amc::FField **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         amc::FField **new_prev_a = &next->ctype_zd_inst_prev;
-        amc::FField **new_prev_b = &ctype.zd_inst_tail;
+        amc::FField **new_prev_b = &parent.zd_inst_tail;
         amc::FField **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        ctype.zd_inst_n--;
+        parent.zd_inst_n--;
         row.ctype_zd_inst_next=(amc::FField*)-1; // not-in-list
     }
 }
 
 // --- amc.FCtype.zd_inst.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zd_inst_RemoveAll(amc::FCtype& ctype) {
-    amc::FField* row = ctype.zd_inst_head;
-    ctype.zd_inst_head = NULL;
-    ctype.zd_inst_tail = NULL;
-    ctype.zd_inst_n = 0;
+void amc::zd_inst_RemoveAll(amc::FCtype& parent) {
+    amc::FField* row = parent.zd_inst_head;
+    parent.zd_inst_head = NULL;
+    parent.zd_inst_tail = NULL;
+    parent.zd_inst_n = 0;
     while (row) {
         amc::FField* row_next = row->ctype_zd_inst_next;
         row->ctype_zd_inst_next  = (amc::FField*)-1;
@@ -2467,17 +2443,17 @@ void amc::zd_inst_RemoveAll(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zd_inst.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FField* amc::zd_inst_RemoveFirst(amc::FCtype& ctype) {
+amc::FField* amc::zd_inst_RemoveFirst(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_inst_head;
+    row = parent.zd_inst_head;
     if (row) {
         amc::FField *next = row->ctype_zd_inst_next;
-        ctype.zd_inst_head = next;
+        parent.zd_inst_head = next;
         amc::FField **new_end_a = &next->ctype_zd_inst_prev;
-        amc::FField **new_end_b = &ctype.zd_inst_tail;
+        amc::FField **new_end_b = &parent.zd_inst_tail;
         amc::FField **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        ctype.zd_inst_n--;
+        parent.zd_inst_n--;
         row->ctype_zd_inst_next = (amc::FField*)-1; // mark as not-in-list
     }
     return row;
@@ -2485,59 +2461,59 @@ amc::FField* amc::zd_inst_RemoveFirst(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zd_inst.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void amc::zd_inst_InsertBefore(amc::FCtype& ctype, amc::FField& row, amc::FField* before) {
+void amc::zd_inst_InsertBefore(amc::FCtype& parent, amc::FField& row, amc::FField* before) {
     if (!ctype_zd_inst_InLlistQ(row) && &row != before) {
         amc::FField* next = before;
-        amc::FField* prev = next ? next->ctype_zd_inst_prev : ctype.zd_inst_tail;
+        amc::FField* prev = next ? next->ctype_zd_inst_prev : parent.zd_inst_tail;
         row.ctype_zd_inst_next = next;
         row.ctype_zd_inst_prev = prev;
         amc::FField **prev_link_a = &prev->ctype_zd_inst_next;
-        amc::FField **prev_link_b = &ctype.zd_inst_head;
+        amc::FField **prev_link_b = &parent.zd_inst_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         amc::FField **next_link_a = &next->ctype_zd_inst_prev;
-        amc::FField **next_link_b = &ctype.zd_inst_tail;
+        amc::FField **next_link_b = &parent.zd_inst_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        ctype.zd_inst_n++;
+        parent.zd_inst_n++;
     }
 }
 
 // --- amc.FCtype.zs_xref.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zs_xref_Insert(amc::FCtype& ctype, amc::FXref& row) {
+void amc::zs_xref_Insert(amc::FCtype& parent, amc::FXref& row) {
     if (!ctype_zs_xref_InLlistQ(row)) {
-        amc::FXref* old_tail       = ctype.zs_xref_tail;
+        amc::FXref* old_tail       = parent.zs_xref_tail;
         row.ctype_zs_xref_next  = NULL;
-        ctype.zs_xref_tail = &row;
+        parent.zs_xref_tail = &row;
         amc::FXref **new_row_a = &old_tail->ctype_zs_xref_next;
-        amc::FXref **new_row_b = &ctype.zs_xref_head;
+        amc::FXref **new_row_b = &parent.zs_xref_head;
         amc::FXref **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        ctype.zs_xref_n++;
+        parent.zs_xref_n++;
     }
 }
 
 // --- amc.FCtype.zs_xref.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void amc::zs_xref_Remove(amc::FCtype& ctype, amc::FXref& row) {
+void amc::zs_xref_Remove(amc::FCtype& parent, amc::FXref& row) {
     if (ctype_zs_xref_InLlistQ(row)) {
-        amc::FXref* old_head       = ctype.zs_xref_head;
+        amc::FXref* old_head       = parent.zs_xref_head;
         (void)old_head; // in case it's not used
         amc::FXref* prev=NULL;
-        amc::FXref* cur     = ctype.zs_xref_head;
+        amc::FXref* cur     = parent.zs_xref_head;
         while (cur) {  // search for element by pointer
             amc::FXref* next = cur->ctype_zs_xref_next;
             if (cur == &row) {
-                ctype.zs_xref_n--;  // adjust count
+                parent.zs_xref_n--;  // adjust count
 
                 if (!next) {
-                    ctype.zs_xref_tail = prev;  // adjust tail pointer
+                    parent.zs_xref_tail = prev;  // adjust tail pointer
                 }
                 // disconnect element from linked list
                 if (prev) {
                     prev->ctype_zs_xref_next = next;
                 } else {
-                    ctype.zs_xref_head = next;
+                    parent.zs_xref_head = next;
                 }
                 row.ctype_zs_xref_next = (amc::FXref*)-1; // not-in-list
                 break;
@@ -2550,11 +2526,11 @@ void amc::zs_xref_Remove(amc::FCtype& ctype, amc::FXref& row) {
 
 // --- amc.FCtype.zs_xref.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zs_xref_RemoveAll(amc::FCtype& ctype) {
-    amc::FXref* row = ctype.zs_xref_head;
-    ctype.zs_xref_head = NULL;
-    ctype.zs_xref_tail = NULL;
-    ctype.zs_xref_n = 0;
+void amc::zs_xref_RemoveAll(amc::FCtype& parent) {
+    amc::FXref* row = parent.zs_xref_head;
+    parent.zs_xref_head = NULL;
+    parent.zs_xref_tail = NULL;
+    parent.zs_xref_n = 0;
     while (row) {
         amc::FXref* row_next = row->ctype_zs_xref_next;
         row->ctype_zs_xref_next  = (amc::FXref*)-1;
@@ -2564,17 +2540,17 @@ void amc::zs_xref_RemoveAll(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zs_xref.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FXref* amc::zs_xref_RemoveFirst(amc::FCtype& ctype) {
+amc::FXref* amc::zs_xref_RemoveFirst(amc::FCtype& parent) {
     amc::FXref *row = NULL;
-    row = ctype.zs_xref_head;
+    row = parent.zs_xref_head;
     if (row) {
         amc::FXref *next = row->ctype_zs_xref_next;
-        ctype.zs_xref_head = next;
+        parent.zs_xref_head = next;
         // clear list's tail pointer if list is empty.
         if (!next) {
-            ctype.zs_xref_tail = NULL;
+            parent.zs_xref_tail = NULL;
         }
-        ctype.zs_xref_n--;
+        parent.zs_xref_n--;
         row->ctype_zs_xref_next = (amc::FXref*)-1; // mark as not-in-list
     }
     return row;
@@ -2583,10 +2559,10 @@ amc::FXref* amc::zs_xref_RemoveFirst(amc::FCtype& ctype) {
 // --- amc.FCtype.c_ffunc.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_ffunc_Insert(amc::FCtype& ctype, amc::FFunc& row) {
-    c_ffunc_Reserve(ctype, 1);
-    u64 n  = ctype.c_ffunc_n++;
-    ctype.c_ffunc_elems[n] = &row;
+void amc::c_ffunc_Insert(amc::FCtype& parent, amc::FFunc& row) {
+    c_ffunc_Reserve(parent, 1);
+    u64 n  = parent.c_ffunc_n++;
+    parent.c_ffunc_elems[n] = &row;
 }
 
 // --- amc.FCtype.c_ffunc.ScanInsertMaybe
@@ -2594,101 +2570,101 @@ void amc::c_ffunc_Insert(amc::FCtype& ctype, amc::FFunc& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool amc::c_ffunc_ScanInsertMaybe(amc::FCtype& ctype, amc::FFunc& row) {
+bool amc::c_ffunc_ScanInsertMaybe(amc::FCtype& parent, amc::FFunc& row) {
     bool retval = true;
-    u64 n  = ctype.c_ffunc_n;
+    u64 n  = parent.c_ffunc_n;
     for (u64 i = 0; i < n; i++) {
-        if (ctype.c_ffunc_elems[i] == &row) {
+        if (parent.c_ffunc_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_ffunc_Insert(ctype,row); // row known absent; the append is Insert's
+        c_ffunc_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- amc.FCtype.c_ffunc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_ffunc_Remove(amc::FCtype& ctype, amc::FFunc& row) {
-    i64 n = ctype.c_ffunc_n;
+void amc::c_ffunc_Remove(amc::FCtype& parent, amc::FFunc& row) {
+    i64 n = parent.c_ffunc_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (ctype.c_ffunc_elems[i] == &row) {
+        if (parent.c_ffunc_elems[i] == &row) {
         } else {
             if (j != i) {
-                ctype.c_ffunc_elems[j] = ctype.c_ffunc_elems[i];
+                parent.c_ffunc_elems[j] = parent.c_ffunc_elems[i];
             }
             j++;
         }
     }
-    ctype.c_ffunc_n = j;
+    parent.c_ffunc_n = j;
 }
 
 // --- amc.FCtype.c_ffunc.Reserve
 // Reserve space in index for N more elements;
-void amc::c_ffunc_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_ffunc_max;
-    if (UNLIKELY(ctype.c_ffunc_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_ffunc_n + n), 4);
+void amc::c_ffunc_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_ffunc_max;
+    if (UNLIKELY(parent.c_ffunc_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_ffunc_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFunc*);
         u64 new_size = new_max * sizeof(amc::FFunc*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_ffunc_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_ffunc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_ffunc");
         }
-        ctype.c_ffunc_elems = (amc::FFunc**)new_mem;
-        ctype.c_ffunc_max = new_max;
+        parent.c_ffunc_elems = (amc::FFunc**)new_mem;
+        parent.c_ffunc_max = new_max;
     }
 }
 
 // --- amc.FCtype.zd_cafter.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zd_cafter_Insert(amc::FCtype& ctype, amc::FCafter& row) {
+void amc::zd_cafter_Insert(amc::FCtype& parent, amc::FCafter& row) {
     if (!ctype_zd_cafter_InLlistQ(row)) {
-        amc::FCafter* old_tail = ctype.zd_cafter_tail;
+        amc::FCafter* old_tail = parent.zd_cafter_tail;
         row.ctype_zd_cafter_next = NULL;
         row.ctype_zd_cafter_prev = old_tail;
-        ctype.zd_cafter_tail = &row;
+        parent.zd_cafter_tail = &row;
         amc::FCafter **new_row_a = &old_tail->ctype_zd_cafter_next;
-        amc::FCafter **new_row_b = &ctype.zd_cafter_head;
+        amc::FCafter **new_row_b = &parent.zd_cafter_head;
         amc::FCafter **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        ctype.zd_cafter_n++;
+        parent.zd_cafter_n++;
     }
 }
 
 // --- amc.FCtype.zd_cafter.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc::zd_cafter_Remove(amc::FCtype& ctype, amc::FCafter& row) {
+void amc::zd_cafter_Remove(amc::FCtype& parent, amc::FCafter& row) {
     if (ctype_zd_cafter_InLlistQ(row)) {
-        amc::FCafter* old_head       = ctype.zd_cafter_head;
+        amc::FCafter* old_head       = parent.zd_cafter_head;
         (void)old_head; // in case it's not used
         amc::FCafter* prev = row.ctype_zd_cafter_prev;
         amc::FCafter* next = row.ctype_zd_cafter_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         amc::FCafter **new_next_a = &prev->ctype_zd_cafter_next;
-        amc::FCafter **new_next_b = &ctype.zd_cafter_head;
+        amc::FCafter **new_next_b = &parent.zd_cafter_head;
         amc::FCafter **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         amc::FCafter **new_prev_a = &next->ctype_zd_cafter_prev;
-        amc::FCafter **new_prev_b = &ctype.zd_cafter_tail;
+        amc::FCafter **new_prev_b = &parent.zd_cafter_tail;
         amc::FCafter **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        ctype.zd_cafter_n--;
+        parent.zd_cafter_n--;
         row.ctype_zd_cafter_next=(amc::FCafter*)-1; // not-in-list
     }
 }
 
 // --- amc.FCtype.zd_cafter.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zd_cafter_RemoveAll(amc::FCtype& ctype) {
-    amc::FCafter* row = ctype.zd_cafter_head;
-    ctype.zd_cafter_head = NULL;
-    ctype.zd_cafter_tail = NULL;
-    ctype.zd_cafter_n = 0;
+void amc::zd_cafter_RemoveAll(amc::FCtype& parent) {
+    amc::FCafter* row = parent.zd_cafter_head;
+    parent.zd_cafter_head = NULL;
+    parent.zd_cafter_tail = NULL;
+    parent.zd_cafter_n = 0;
     while (row) {
         amc::FCafter* row_next = row->ctype_zd_cafter_next;
         row->ctype_zd_cafter_next  = (amc::FCafter*)-1;
@@ -2699,17 +2675,17 @@ void amc::zd_cafter_RemoveAll(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zd_cafter.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FCafter* amc::zd_cafter_RemoveFirst(amc::FCtype& ctype) {
+amc::FCafter* amc::zd_cafter_RemoveFirst(amc::FCtype& parent) {
     amc::FCafter *row = NULL;
-    row = ctype.zd_cafter_head;
+    row = parent.zd_cafter_head;
     if (row) {
         amc::FCafter *next = row->ctype_zd_cafter_next;
-        ctype.zd_cafter_head = next;
+        parent.zd_cafter_head = next;
         amc::FCafter **new_end_a = &next->ctype_zd_cafter_prev;
-        amc::FCafter **new_end_b = &ctype.zd_cafter_tail;
+        amc::FCafter **new_end_b = &parent.zd_cafter_tail;
         amc::FCafter **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        ctype.zd_cafter_n--;
+        parent.zd_cafter_n--;
         row->ctype_zd_cafter_next = (amc::FCafter*)-1; // mark as not-in-list
     }
     return row;
@@ -2717,68 +2693,68 @@ amc::FCafter* amc::zd_cafter_RemoveFirst(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zd_cafter.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void amc::zd_cafter_InsertBefore(amc::FCtype& ctype, amc::FCafter& row, amc::FCafter* before) {
+void amc::zd_cafter_InsertBefore(amc::FCtype& parent, amc::FCafter& row, amc::FCafter* before) {
     if (!ctype_zd_cafter_InLlistQ(row) && &row != before) {
         amc::FCafter* next = before;
-        amc::FCafter* prev = next ? next->ctype_zd_cafter_prev : ctype.zd_cafter_tail;
+        amc::FCafter* prev = next ? next->ctype_zd_cafter_prev : parent.zd_cafter_tail;
         row.ctype_zd_cafter_next = next;
         row.ctype_zd_cafter_prev = prev;
         amc::FCafter **prev_link_a = &prev->ctype_zd_cafter_next;
-        amc::FCafter **prev_link_b = &ctype.zd_cafter_head;
+        amc::FCafter **prev_link_b = &parent.zd_cafter_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         amc::FCafter **next_link_a = &next->ctype_zd_cafter_prev;
-        amc::FCafter **next_link_b = &ctype.zd_cafter_tail;
+        amc::FCafter **next_link_b = &parent.zd_cafter_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        ctype.zd_cafter_n++;
+        parent.zd_cafter_n++;
     }
 }
 
 // --- amc.FCtype.zd_access.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zd_access_Insert(amc::FCtype& ctype, amc::FField& row) {
+void amc::zd_access_Insert(amc::FCtype& parent, amc::FField& row) {
     if (!ctype_zd_access_InLlistQ(row)) {
-        amc::FField* old_tail = ctype.zd_access_tail;
+        amc::FField* old_tail = parent.zd_access_tail;
         row.ctype_zd_access_next = NULL;
         row.ctype_zd_access_prev = old_tail;
-        ctype.zd_access_tail = &row;
+        parent.zd_access_tail = &row;
         amc::FField **new_row_a = &old_tail->ctype_zd_access_next;
-        amc::FField **new_row_b = &ctype.zd_access_head;
+        amc::FField **new_row_b = &parent.zd_access_head;
         amc::FField **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        ctype.zd_access_n++;
+        parent.zd_access_n++;
     }
 }
 
 // --- amc.FCtype.zd_access.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc::zd_access_Remove(amc::FCtype& ctype, amc::FField& row) {
+void amc::zd_access_Remove(amc::FCtype& parent, amc::FField& row) {
     if (ctype_zd_access_InLlistQ(row)) {
-        amc::FField* old_head       = ctype.zd_access_head;
+        amc::FField* old_head       = parent.zd_access_head;
         (void)old_head; // in case it's not used
         amc::FField* prev = row.ctype_zd_access_prev;
         amc::FField* next = row.ctype_zd_access_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         amc::FField **new_next_a = &prev->ctype_zd_access_next;
-        amc::FField **new_next_b = &ctype.zd_access_head;
+        amc::FField **new_next_b = &parent.zd_access_head;
         amc::FField **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         amc::FField **new_prev_a = &next->ctype_zd_access_prev;
-        amc::FField **new_prev_b = &ctype.zd_access_tail;
+        amc::FField **new_prev_b = &parent.zd_access_tail;
         amc::FField **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        ctype.zd_access_n--;
+        parent.zd_access_n--;
         row.ctype_zd_access_next=(amc::FField*)-1; // not-in-list
     }
 }
 
 // --- amc.FCtype.zd_access.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zd_access_RemoveAll(amc::FCtype& ctype) {
-    amc::FField* row = ctype.zd_access_head;
-    ctype.zd_access_head = NULL;
-    ctype.zd_access_tail = NULL;
-    ctype.zd_access_n = 0;
+void amc::zd_access_RemoveAll(amc::FCtype& parent) {
+    amc::FField* row = parent.zd_access_head;
+    parent.zd_access_head = NULL;
+    parent.zd_access_tail = NULL;
+    parent.zd_access_n = 0;
     while (row) {
         amc::FField* row_next = row->ctype_zd_access_next;
         row->ctype_zd_access_next  = (amc::FField*)-1;
@@ -2789,17 +2765,17 @@ void amc::zd_access_RemoveAll(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zd_access.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FField* amc::zd_access_RemoveFirst(amc::FCtype& ctype) {
+amc::FField* amc::zd_access_RemoveFirst(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_access_head;
+    row = parent.zd_access_head;
     if (row) {
         amc::FField *next = row->ctype_zd_access_next;
-        ctype.zd_access_head = next;
+        parent.zd_access_head = next;
         amc::FField **new_end_a = &next->ctype_zd_access_prev;
-        amc::FField **new_end_b = &ctype.zd_access_tail;
+        amc::FField **new_end_b = &parent.zd_access_tail;
         amc::FField **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        ctype.zd_access_n--;
+        parent.zd_access_n--;
         row->ctype_zd_access_next = (amc::FField*)-1; // mark as not-in-list
     }
     return row;
@@ -2807,30 +2783,30 @@ amc::FField* amc::zd_access_RemoveFirst(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zd_access.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void amc::zd_access_InsertBefore(amc::FCtype& ctype, amc::FField& row, amc::FField* before) {
+void amc::zd_access_InsertBefore(amc::FCtype& parent, amc::FField& row, amc::FField* before) {
     if (!ctype_zd_access_InLlistQ(row) && &row != before) {
         amc::FField* next = before;
-        amc::FField* prev = next ? next->ctype_zd_access_prev : ctype.zd_access_tail;
+        amc::FField* prev = next ? next->ctype_zd_access_prev : parent.zd_access_tail;
         row.ctype_zd_access_next = next;
         row.ctype_zd_access_prev = prev;
         amc::FField **prev_link_a = &prev->ctype_zd_access_next;
-        amc::FField **prev_link_b = &ctype.zd_access_head;
+        amc::FField **prev_link_b = &parent.zd_access_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         amc::FField **next_link_a = &next->ctype_zd_access_prev;
-        amc::FField **next_link_b = &ctype.zd_access_tail;
+        amc::FField **next_link_b = &parent.zd_access_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        ctype.zd_access_n++;
+        parent.zd_access_n++;
     }
 }
 
 // --- amc.FCtype.c_floadtuples.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_floadtuples_Insert(amc::FCtype& ctype, amc::FFloadtuples& row) {
+void amc::c_floadtuples_Insert(amc::FCtype& parent, amc::FFloadtuples& row) {
     if (!row.ctype_c_floadtuples_in_ary) {
-        c_floadtuples_Reserve(ctype, 1);
-        u64 n  = ctype.c_floadtuples_n++;
-        ctype.c_floadtuples_elems[n] = &row;
+        c_floadtuples_Reserve(parent, 1);
+        u64 n  = parent.c_floadtuples_n++;
+        parent.c_floadtuples_elems[n] = &row;
         row.ctype_c_floadtuples_in_ary = true;
     }
 }
@@ -2839,18 +2815,18 @@ void amc::c_floadtuples_Insert(amc::FCtype& ctype, amc::FFloadtuples& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_floadtuples_InsertMaybe(amc::FCtype& ctype, amc::FFloadtuples& row) {
+bool amc::c_floadtuples_InsertMaybe(amc::FCtype& parent, amc::FFloadtuples& row) {
     bool retval = !ctype_c_floadtuples_InAryQ(row);
-    c_floadtuples_Insert(ctype,row); // check is performed in _Insert again
+    c_floadtuples_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FCtype.c_floadtuples.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_floadtuples_Remove(amc::FCtype& ctype, amc::FFloadtuples& row) {
-    i64 n = ctype.c_floadtuples_n;
+void amc::c_floadtuples_Remove(amc::FCtype& parent, amc::FFloadtuples& row) {
+    i64 n = parent.c_floadtuples_n;
     if (bool_Update(row.ctype_c_floadtuples_in_ary,false)) {
-        amc::FFloadtuples* *elems = ctype.c_floadtuples_elems;
+        amc::FFloadtuples* *elems = parent.c_floadtuples_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2859,7 +2835,7 @@ void amc::c_floadtuples_Remove(amc::FCtype& ctype, amc::FFloadtuples& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFloadtuples*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_floadtuples_n = n - 1;
+                parent.c_floadtuples_n = n - 1;
                 break;
             }
         }
@@ -2868,29 +2844,29 @@ void amc::c_floadtuples_Remove(amc::FCtype& ctype, amc::FFloadtuples& row) {
 
 // --- amc.FCtype.c_floadtuples.Reserve
 // Reserve space in index for N more elements;
-void amc::c_floadtuples_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_floadtuples_max;
-    if (UNLIKELY(ctype.c_floadtuples_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_floadtuples_n + n), 4);
+void amc::c_floadtuples_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_floadtuples_max;
+    if (UNLIKELY(parent.c_floadtuples_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_floadtuples_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFloadtuples*);
         u64 new_size = new_max * sizeof(amc::FFloadtuples*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_floadtuples_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_floadtuples_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_floadtuples");
         }
-        ctype.c_floadtuples_elems = (amc::FFloadtuples**)new_mem;
-        ctype.c_floadtuples_max = new_max;
+        parent.c_floadtuples_elems = (amc::FFloadtuples**)new_mem;
+        parent.c_floadtuples_max = new_max;
     }
 }
 
 // --- amc.FCtype.c_fcurs.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_fcurs_Insert(amc::FCtype& ctype, amc::FFcurs& row) {
+void amc::c_fcurs_Insert(amc::FCtype& parent, amc::FFcurs& row) {
     if (!row.ctype_c_fcurs_in_ary) {
-        c_fcurs_Reserve(ctype, 1);
-        u64 n  = ctype.c_fcurs_n++;
-        ctype.c_fcurs_elems[n] = &row;
+        c_fcurs_Reserve(parent, 1);
+        u64 n  = parent.c_fcurs_n++;
+        parent.c_fcurs_elems[n] = &row;
         row.ctype_c_fcurs_in_ary = true;
     }
 }
@@ -2899,18 +2875,18 @@ void amc::c_fcurs_Insert(amc::FCtype& ctype, amc::FFcurs& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_fcurs_InsertMaybe(amc::FCtype& ctype, amc::FFcurs& row) {
+bool amc::c_fcurs_InsertMaybe(amc::FCtype& parent, amc::FFcurs& row) {
     bool retval = !ctype_c_fcurs_InAryQ(row);
-    c_fcurs_Insert(ctype,row); // check is performed in _Insert again
+    c_fcurs_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FCtype.c_fcurs.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_fcurs_Remove(amc::FCtype& ctype, amc::FFcurs& row) {
-    i64 n = ctype.c_fcurs_n;
+void amc::c_fcurs_Remove(amc::FCtype& parent, amc::FFcurs& row) {
+    i64 n = parent.c_fcurs_n;
     if (bool_Update(row.ctype_c_fcurs_in_ary,false)) {
-        amc::FFcurs* *elems = ctype.c_fcurs_elems;
+        amc::FFcurs* *elems = parent.c_fcurs_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2919,7 +2895,7 @@ void amc::c_fcurs_Remove(amc::FCtype& ctype, amc::FFcurs& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFcurs*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_fcurs_n = n - 1;
+                parent.c_fcurs_n = n - 1;
                 break;
             }
         }
@@ -2928,29 +2904,29 @@ void amc::c_fcurs_Remove(amc::FCtype& ctype, amc::FFcurs& row) {
 
 // --- amc.FCtype.c_fcurs.Reserve
 // Reserve space in index for N more elements;
-void amc::c_fcurs_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_fcurs_max;
-    if (UNLIKELY(ctype.c_fcurs_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_fcurs_n + n), 4);
+void amc::c_fcurs_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_fcurs_max;
+    if (UNLIKELY(parent.c_fcurs_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_fcurs_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFcurs*);
         u64 new_size = new_max * sizeof(amc::FFcurs*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_fcurs_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_fcurs_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_fcurs");
         }
-        ctype.c_fcurs_elems = (amc::FFcurs**)new_mem;
-        ctype.c_fcurs_max = new_max;
+        parent.c_fcurs_elems = (amc::FFcurs**)new_mem;
+        parent.c_fcurs_max = new_max;
     }
 }
 
 // --- amc.FCtype.c_ffast.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_ffast_Insert(amc::FCtype& ctype, amc::FFfast& row) {
+void amc::c_ffast_Insert(amc::FCtype& parent, amc::FFfast& row) {
     if (!row.ctype_c_ffast_in_ary) {
-        c_ffast_Reserve(ctype, 1);
-        u64 n  = ctype.c_ffast_n++;
-        ctype.c_ffast_elems[n] = &row;
+        c_ffast_Reserve(parent, 1);
+        u64 n  = parent.c_ffast_n++;
+        parent.c_ffast_elems[n] = &row;
         row.ctype_c_ffast_in_ary = true;
     }
 }
@@ -2959,18 +2935,18 @@ void amc::c_ffast_Insert(amc::FCtype& ctype, amc::FFfast& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_ffast_InsertMaybe(amc::FCtype& ctype, amc::FFfast& row) {
+bool amc::c_ffast_InsertMaybe(amc::FCtype& parent, amc::FFfast& row) {
     bool retval = !ctype_c_ffast_InAryQ(row);
-    c_ffast_Insert(ctype,row); // check is performed in _Insert again
+    c_ffast_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FCtype.c_ffast.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_ffast_Remove(amc::FCtype& ctype, amc::FFfast& row) {
-    i64 n = ctype.c_ffast_n;
+void amc::c_ffast_Remove(amc::FCtype& parent, amc::FFfast& row) {
+    i64 n = parent.c_ffast_n;
     if (bool_Update(row.ctype_c_ffast_in_ary,false)) {
-        amc::FFfast* *elems = ctype.c_ffast_elems;
+        amc::FFfast* *elems = parent.c_ffast_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2979,7 +2955,7 @@ void amc::c_ffast_Remove(amc::FCtype& ctype, amc::FFfast& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFfast*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_ffast_n = n - 1;
+                parent.c_ffast_n = n - 1;
                 break;
             }
         }
@@ -2988,18 +2964,18 @@ void amc::c_ffast_Remove(amc::FCtype& ctype, amc::FFfast& row) {
 
 // --- amc.FCtype.c_ffast.Reserve
 // Reserve space in index for N more elements;
-void amc::c_ffast_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_ffast_max;
-    if (UNLIKELY(ctype.c_ffast_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_ffast_n + n), 4);
+void amc::c_ffast_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_ffast_max;
+    if (UNLIKELY(parent.c_ffast_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_ffast_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFfast*);
         u64 new_size = new_max * sizeof(amc::FFfast*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_ffast_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_ffast_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_ffast");
         }
-        ctype.c_ffast_elems = (amc::FFfast**)new_mem;
-        ctype.c_ffast_max = new_max;
+        parent.c_ffast_elems = (amc::FFfast**)new_mem;
+        parent.c_ffast_max = new_max;
     }
 }
 
@@ -3032,9 +3008,9 @@ static bool amc::c_ffast_Lt(amc::FFfast &elem_a, amc::FFfast &elem_b) {
 
 // --- amc.FCtype.c_ffast.SortedQ
 // Verify whether array is sorted
-bool amc::c_ffast_SortedQ(amc::FCtype& ctype) {
-    amc::FFfast* *elems = c_ffast_Getary(ctype).elems;
-    int n = c_ffast_N(ctype);
+bool amc::c_ffast_SortedQ(amc::FCtype& parent) {
+    amc::FFfast* *elems = c_ffast_Getary(parent).elems;
+    int n = c_ffast_N(parent);
     for (int i = 1; i < n; i++) {
         if (c_ffast_Lt(*elems[i], *elems[i-1])) {
             return false;
@@ -3145,76 +3121,76 @@ static void amc::c_ffast_IntQuickSort(amc::FFfast* *elems, int n, int depth) {
 
 // --- amc.FCtype.c_ffast.InsertionSort
 // Insertion sort
-void amc::c_ffast_InsertionSort(amc::FCtype& ctype) {
-    amc::FFfast* *elems = c_ffast_Getary(ctype).elems;
-    int n = c_ffast_N(ctype);
+void amc::c_ffast_InsertionSort(amc::FCtype& parent) {
+    amc::FFfast* *elems = c_ffast_Getary(parent).elems;
+    int n = c_ffast_N(parent);
     c_ffast_IntInsertionSort(elems, n);
 }
 
 // --- amc.FCtype.c_ffast.HeapSort
 // Heap sort
-void amc::c_ffast_HeapSort(amc::FCtype& ctype) {
-    amc::FFfast* *elems = c_ffast_Getary(ctype).elems;
-    int n = c_ffast_N(ctype);
+void amc::c_ffast_HeapSort(amc::FCtype& parent) {
+    amc::FFfast* *elems = c_ffast_Getary(parent).elems;
+    int n = c_ffast_N(parent);
     c_ffast_IntHeapSort(elems, n);
 }
 
 // --- amc.FCtype.c_ffast.QuickSort
 // Quick sort
-void amc::c_ffast_QuickSort(amc::FCtype& ctype) {
+void amc::c_ffast_QuickSort(amc::FCtype& parent) {
     // compute max recursion depth based on number of elements in the array
-    int max_depth = algo::CeilingLog2(u32(c_ffast_N(ctype) + 1)) + 3;
-    amc::FFfast* *elems = c_ffast_Getary(ctype).elems;
-    int n = c_ffast_N(ctype);
+    int max_depth = algo::CeilingLog2(u32(c_ffast_N(parent) + 1)) + 3;
+    amc::FFfast* *elems = c_ffast_Getary(parent).elems;
+    int n = c_ffast_N(parent);
     c_ffast_IntQuickSort(elems, n, max_depth);
 }
 
 // --- amc.FCtype.zd_varlenfld.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zd_varlenfld_Insert(amc::FCtype& ctype, amc::FField& row) {
+void amc::zd_varlenfld_Insert(amc::FCtype& parent, amc::FField& row) {
     if (!ctype_zd_varlenfld_InLlistQ(row)) {
-        amc::FField* old_tail = ctype.zd_varlenfld_tail;
+        amc::FField* old_tail = parent.zd_varlenfld_tail;
         row.ctype_zd_varlenfld_next = NULL;
         row.ctype_zd_varlenfld_prev = old_tail;
-        ctype.zd_varlenfld_tail = &row;
+        parent.zd_varlenfld_tail = &row;
         amc::FField **new_row_a = &old_tail->ctype_zd_varlenfld_next;
-        amc::FField **new_row_b = &ctype.zd_varlenfld_head;
+        amc::FField **new_row_b = &parent.zd_varlenfld_head;
         amc::FField **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        ctype.zd_varlenfld_n++;
+        parent.zd_varlenfld_n++;
     }
 }
 
 // --- amc.FCtype.zd_varlenfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc::zd_varlenfld_Remove(amc::FCtype& ctype, amc::FField& row) {
+void amc::zd_varlenfld_Remove(amc::FCtype& parent, amc::FField& row) {
     if (ctype_zd_varlenfld_InLlistQ(row)) {
-        amc::FField* old_head       = ctype.zd_varlenfld_head;
+        amc::FField* old_head       = parent.zd_varlenfld_head;
         (void)old_head; // in case it's not used
         amc::FField* prev = row.ctype_zd_varlenfld_prev;
         amc::FField* next = row.ctype_zd_varlenfld_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         amc::FField **new_next_a = &prev->ctype_zd_varlenfld_next;
-        amc::FField **new_next_b = &ctype.zd_varlenfld_head;
+        amc::FField **new_next_b = &parent.zd_varlenfld_head;
         amc::FField **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         amc::FField **new_prev_a = &next->ctype_zd_varlenfld_prev;
-        amc::FField **new_prev_b = &ctype.zd_varlenfld_tail;
+        amc::FField **new_prev_b = &parent.zd_varlenfld_tail;
         amc::FField **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        ctype.zd_varlenfld_n--;
+        parent.zd_varlenfld_n--;
         row.ctype_zd_varlenfld_next=(amc::FField*)-1; // not-in-list
     }
 }
 
 // --- amc.FCtype.zd_varlenfld.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zd_varlenfld_RemoveAll(amc::FCtype& ctype) {
-    amc::FField* row = ctype.zd_varlenfld_head;
-    ctype.zd_varlenfld_head = NULL;
-    ctype.zd_varlenfld_tail = NULL;
-    ctype.zd_varlenfld_n = 0;
+void amc::zd_varlenfld_RemoveAll(amc::FCtype& parent) {
+    amc::FField* row = parent.zd_varlenfld_head;
+    parent.zd_varlenfld_head = NULL;
+    parent.zd_varlenfld_tail = NULL;
+    parent.zd_varlenfld_n = 0;
     while (row) {
         amc::FField* row_next = row->ctype_zd_varlenfld_next;
         row->ctype_zd_varlenfld_next  = (amc::FField*)-1;
@@ -3225,17 +3201,17 @@ void amc::zd_varlenfld_RemoveAll(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zd_varlenfld.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FField* amc::zd_varlenfld_RemoveFirst(amc::FCtype& ctype) {
+amc::FField* amc::zd_varlenfld_RemoveFirst(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_varlenfld_head;
+    row = parent.zd_varlenfld_head;
     if (row) {
         amc::FField *next = row->ctype_zd_varlenfld_next;
-        ctype.zd_varlenfld_head = next;
+        parent.zd_varlenfld_head = next;
         amc::FField **new_end_a = &next->ctype_zd_varlenfld_prev;
-        amc::FField **new_end_b = &ctype.zd_varlenfld_tail;
+        amc::FField **new_end_b = &parent.zd_varlenfld_tail;
         amc::FField **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        ctype.zd_varlenfld_n--;
+        parent.zd_varlenfld_n--;
         row->ctype_zd_varlenfld_next = (amc::FField*)-1; // mark as not-in-list
     }
     return row;
@@ -3243,30 +3219,30 @@ amc::FField* amc::zd_varlenfld_RemoveFirst(amc::FCtype& ctype) {
 
 // --- amc.FCtype.zd_varlenfld.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void amc::zd_varlenfld_InsertBefore(amc::FCtype& ctype, amc::FField& row, amc::FField* before) {
+void amc::zd_varlenfld_InsertBefore(amc::FCtype& parent, amc::FField& row, amc::FField* before) {
     if (!ctype_zd_varlenfld_InLlistQ(row) && &row != before) {
         amc::FField* next = before;
-        amc::FField* prev = next ? next->ctype_zd_varlenfld_prev : ctype.zd_varlenfld_tail;
+        amc::FField* prev = next ? next->ctype_zd_varlenfld_prev : parent.zd_varlenfld_tail;
         row.ctype_zd_varlenfld_next = next;
         row.ctype_zd_varlenfld_prev = prev;
         amc::FField **prev_link_a = &prev->ctype_zd_varlenfld_next;
-        amc::FField **prev_link_b = &ctype.zd_varlenfld_head;
+        amc::FField **prev_link_b = &parent.zd_varlenfld_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         amc::FField **next_link_a = &next->ctype_zd_varlenfld_prev;
-        amc::FField **next_link_b = &ctype.zd_varlenfld_tail;
+        amc::FField **next_link_b = &parent.zd_varlenfld_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        ctype.zd_varlenfld_n++;
+        parent.zd_varlenfld_n++;
     }
 }
 
 // --- amc.FCtype.c_fpbufcase.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_fpbufcase_Insert(amc::FCtype& ctype, amc::FFpbufcase& row) {
+void amc::c_fpbufcase_Insert(amc::FCtype& parent, amc::FFpbufcase& row) {
     if (!row.ctype_c_fpbufcase_in_ary) {
-        c_fpbufcase_Reserve(ctype, 1);
-        u64 n  = ctype.c_fpbufcase_n++;
-        ctype.c_fpbufcase_elems[n] = &row;
+        c_fpbufcase_Reserve(parent, 1);
+        u64 n  = parent.c_fpbufcase_n++;
+        parent.c_fpbufcase_elems[n] = &row;
         row.ctype_c_fpbufcase_in_ary = true;
     }
 }
@@ -3275,18 +3251,18 @@ void amc::c_fpbufcase_Insert(amc::FCtype& ctype, amc::FFpbufcase& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_fpbufcase_InsertMaybe(amc::FCtype& ctype, amc::FFpbufcase& row) {
+bool amc::c_fpbufcase_InsertMaybe(amc::FCtype& parent, amc::FFpbufcase& row) {
     bool retval = !ctype_c_fpbufcase_InAryQ(row);
-    c_fpbufcase_Insert(ctype,row); // check is performed in _Insert again
+    c_fpbufcase_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FCtype.c_fpbufcase.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_fpbufcase_Remove(amc::FCtype& ctype, amc::FFpbufcase& row) {
-    i64 n = ctype.c_fpbufcase_n;
+void amc::c_fpbufcase_Remove(amc::FCtype& parent, amc::FFpbufcase& row) {
+    i64 n = parent.c_fpbufcase_n;
     if (bool_Update(row.ctype_c_fpbufcase_in_ary,false)) {
-        amc::FFpbufcase* *elems = ctype.c_fpbufcase_elems;
+        amc::FFpbufcase* *elems = parent.c_fpbufcase_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -3295,7 +3271,7 @@ void amc::c_fpbufcase_Remove(amc::FCtype& ctype, amc::FFpbufcase& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFpbufcase*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_fpbufcase_n = n - 1;
+                parent.c_fpbufcase_n = n - 1;
                 break;
             }
         }
@@ -3304,29 +3280,29 @@ void amc::c_fpbufcase_Remove(amc::FCtype& ctype, amc::FFpbufcase& row) {
 
 // --- amc.FCtype.c_fpbufcase.Reserve
 // Reserve space in index for N more elements;
-void amc::c_fpbufcase_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_fpbufcase_max;
-    if (UNLIKELY(ctype.c_fpbufcase_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_fpbufcase_n + n), 4);
+void amc::c_fpbufcase_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_fpbufcase_max;
+    if (UNLIKELY(parent.c_fpbufcase_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_fpbufcase_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFpbufcase*);
         u64 new_size = new_max * sizeof(amc::FFpbufcase*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_fpbufcase_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_fpbufcase_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_fpbufcase");
         }
-        ctype.c_fpbufcase_elems = (amc::FFpbufcase**)new_mem;
-        ctype.c_fpbufcase_max = new_max;
+        parent.c_fpbufcase_elems = (amc::FFpbufcase**)new_mem;
+        parent.c_fpbufcase_max = new_max;
     }
 }
 
 // --- amc.FCtype.c_pnew.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_pnew_Insert(amc::FCtype& ctype, amc::FPnew& row) {
+void amc::c_pnew_Insert(amc::FCtype& parent, amc::FPnew& row) {
     if (!row.ctype_c_pnew_in_ary) {
-        c_pnew_Reserve(ctype, 1);
-        u64 n  = ctype.c_pnew_n++;
-        ctype.c_pnew_elems[n] = &row;
+        c_pnew_Reserve(parent, 1);
+        u64 n  = parent.c_pnew_n++;
+        parent.c_pnew_elems[n] = &row;
         row.ctype_c_pnew_in_ary = true;
     }
 }
@@ -3335,18 +3311,18 @@ void amc::c_pnew_Insert(amc::FCtype& ctype, amc::FPnew& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_pnew_InsertMaybe(amc::FCtype& ctype, amc::FPnew& row) {
+bool amc::c_pnew_InsertMaybe(amc::FCtype& parent, amc::FPnew& row) {
     bool retval = !ctype_c_pnew_InAryQ(row);
-    c_pnew_Insert(ctype,row); // check is performed in _Insert again
+    c_pnew_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FCtype.c_pnew.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_pnew_Remove(amc::FCtype& ctype, amc::FPnew& row) {
-    i64 n = ctype.c_pnew_n;
+void amc::c_pnew_Remove(amc::FCtype& parent, amc::FPnew& row) {
+    i64 n = parent.c_pnew_n;
     if (bool_Update(row.ctype_c_pnew_in_ary,false)) {
-        amc::FPnew* *elems = ctype.c_pnew_elems;
+        amc::FPnew* *elems = parent.c_pnew_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -3355,7 +3331,7 @@ void amc::c_pnew_Remove(amc::FCtype& ctype, amc::FPnew& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FPnew*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_pnew_n = n - 1;
+                parent.c_pnew_n = n - 1;
                 break;
             }
         }
@@ -3364,172 +3340,171 @@ void amc::c_pnew_Remove(amc::FCtype& ctype, amc::FPnew& row) {
 
 // --- amc.FCtype.c_pnew.Reserve
 // Reserve space in index for N more elements;
-void amc::c_pnew_Reserve(amc::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_pnew_max;
-    if (UNLIKELY(ctype.c_pnew_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_pnew_n + n), 4);
+void amc::c_pnew_Reserve(amc::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_pnew_max;
+    if (UNLIKELY(parent.c_pnew_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_pnew_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FPnew*);
         u64 new_size = new_max * sizeof(amc::FPnew*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_pnew_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_pnew_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_pnew");
         }
-        ctype.c_pnew_elems = (amc::FPnew**)new_mem;
-        ctype.c_pnew_max = new_max;
+        parent.c_pnew_elems = (amc::FPnew**)new_mem;
+        parent.c_pnew_max = new_max;
     }
 }
 
 // --- amc.FCtype..Init
 // Set all fields to initial values.
-void amc::FCtype_Init(amc::FCtype& ctype) {
-    ctype.zs_cfmt_head = NULL; // (amc.FCtype.zs_cfmt)
-    ctype.zs_cfmt_tail = NULL; // (amc.FCtype.zs_cfmt)
-    ctype.c_init = NULL;
-    ctype.p_ns = NULL;
-    ctype.c_bltin = NULL;
-    ctype.c_field_elems = NULL; // (amc.FCtype.c_field)
-    ctype.c_field_n = 0; // (amc.FCtype.c_field)
-    ctype.c_field_max = 0; // (amc.FCtype.c_field)
-    ctype.c_msgtype = NULL;
-    ctype.c_optfld = NULL;
-    ctype.c_static_elems = NULL; // (amc.FCtype.c_static)
-    ctype.c_static_n = 0; // (amc.FCtype.c_static)
-    ctype.c_static_max = 0; // (amc.FCtype.c_static)
-    ctype.c_cpptype = NULL;
-    ctype.c_parent_elems = NULL; // (amc.FCtype.c_parent)
-    ctype.c_parent_n = 0; // (amc.FCtype.c_parent)
-    ctype.c_parent_max = 0; // (amc.FCtype.c_parent)
-    ctype.c_ssimfile = NULL;
-    ctype.c_pack = NULL;
-    ctype.c_lenfld = NULL;
-    ctype.c_pmaskfld_elems = NULL; // (amc.FCtype.c_pmaskfld)
-    ctype.c_pmaskfld_n = 0; // (amc.FCtype.c_pmaskfld)
-    ctype.c_pmaskfld_max = 0; // (amc.FCtype.c_pmaskfld)
-    ctype.c_typefld = NULL;
-    ctype.c_datafld_elems = NULL; // (amc.FCtype.c_datafld)
-    ctype.c_datafld_n = 0; // (amc.FCtype.c_datafld)
-    ctype.c_datafld_max = 0; // (amc.FCtype.c_datafld)
-    ctype.zd_inst_head = NULL; // (amc.FCtype.zd_inst)
-    ctype.zd_inst_n = 0; // (amc.FCtype.zd_inst)
-    ctype.zd_inst_tail = NULL; // (amc.FCtype.zd_inst)
-    ctype.zs_xref_head = NULL; // (amc.FCtype.zs_xref)
-    ctype.zs_xref_n = 0; // (amc.FCtype.zs_xref)
-    ctype.zs_xref_tail = NULL; // (amc.FCtype.zs_xref)
-    ctype.c_chash = NULL;
-    ctype.c_ccmp = NULL;
-    ctype.c_cstr = NULL;
-    ctype.c_cextern = NULL;
-    ctype.c_ffunc_elems = NULL; // (amc.FCtype.c_ffunc)
-    ctype.c_ffunc_n = 0; // (amc.FCtype.c_ffunc)
-    ctype.c_ffunc_max = 0; // (amc.FCtype.c_ffunc)
-    ctype.zd_cafter_head = NULL; // (amc.FCtype.zd_cafter)
-    ctype.zd_cafter_n = 0; // (amc.FCtype.zd_cafter)
-    ctype.zd_cafter_tail = NULL; // (amc.FCtype.zd_cafter)
-    ctype.c_csize = NULL;
-    ctype.zd_access_head = NULL; // (amc.FCtype.zd_access)
-    ctype.zd_access_n = 0; // (amc.FCtype.zd_access)
-    ctype.zd_access_tail = NULL; // (amc.FCtype.zd_access)
-    ctype.c_cdflt = NULL;
-    ctype.c_argvtype = NULL;
-    ctype.c_floadtuples_elems = NULL; // (amc.FCtype.c_floadtuples)
-    ctype.c_floadtuples_n = 0; // (amc.FCtype.c_floadtuples)
-    ctype.c_floadtuples_max = 0; // (amc.FCtype.c_floadtuples)
-    ctype.c_pkeyfield = NULL;
-    ctype.c_fcurs_elems = NULL; // (amc.FCtype.c_fcurs)
-    ctype.c_fcurs_n = 0; // (amc.FCtype.c_fcurs)
-    ctype.c_fcurs_max = 0; // (amc.FCtype.c_fcurs)
-    ctype.c_ctypelen = NULL;
-    ctype.size_unknown = bool(false);
-    ctype.size_locked = bool(false);
-    ctype.topo_visited = bool(false);
-    ctype.enum_visited = bool(false);
-    ctype.fields_cloned = bool(false);
-    ctype.original = bool(false);
-    ctype.plaindata = bool(false);
-    ctype.has_dtor = bool(false);
-    ctype.cheap_copy = bool(false);
-    ctype.declared_size = i32(0);
-    ctype.declared_alignment = i32(1);
-    ctype.alignment = u32(1);
-    ctype.n_padbytes = i32(0);
-    ctype.totsize_byte = u32(0);
-    ctype.n_xref = i32(0);
-    ctype.next_anon_idx = i32(0);
-    ctype.c_nossimfile = NULL;
-    ctype.topo_idx = i32(0);
-    ctype.c_cfast = NULL;
-    ctype.c_ffast_elems = NULL; // (amc.FCtype.c_ffast)
-    ctype.c_ffast_n = 0; // (amc.FCtype.c_ffast)
-    ctype.c_ffast_max = 0; // (amc.FCtype.c_ffast)
-    ctype.in_copy_priv = bool(false);
-    ctype.zd_varlenfld_head = NULL; // (amc.FCtype.zd_varlenfld)
-    ctype.zd_varlenfld_n = 0; // (amc.FCtype.zd_varlenfld)
-    ctype.zd_varlenfld_tail = NULL; // (amc.FCtype.zd_varlenfld)
-    ctype.c_jstype = NULL;
-    ctype.c_ckafka = NULL;
-    ctype.c_cjsbltin = NULL;
-    ctype.c_cjson = NULL;
-    ctype.c_ccmdline = NULL;
-    ctype.c_cpbuf = NULL;
-    ctype.c_fpbufcase_elems = NULL; // (amc.FCtype.c_fpbufcase)
-    ctype.c_fpbufcase_n = 0; // (amc.FCtype.c_fpbufcase)
-    ctype.c_fpbufcase_max = 0; // (amc.FCtype.c_fpbufcase)
-    ctype.in_compute_size = bool(false);
-    ctype.c_payloadhdr = NULL;
-    ctype.c_msg = NULL;
-    ctype.c_pnew_elems = NULL; // (amc.FCtype.c_pnew)
-    ctype.c_pnew_n = 0; // (amc.FCtype.c_pnew)
-    ctype.c_pnew_max = 0; // (amc.FCtype.c_pnew)
-    ctype.ns_c_ctype_in_ary = bool(false);
-    ctype.ind_ctype_next = (amc::FCtype*)-1; // (amc.FDb.ind_ctype) not-in-hash
-    ctype.ind_ctype_hashval = 0; // stored hash value
-    ctype.zsl_ctype_pack_tran_next = (amc::FCtype*)-1; // (amc.FDb.zsl_ctype_pack_tran) not-in-list
-    ctype.zs_sig_visit_next = (amc::FCtype*)-1; // (amc.FDb.zs_sig_visit) not-in-list
+void amc::FCtype_Init(amc::FCtype& parent) {
+    parent.zs_cfmt_head = NULL; // (amc.FCtype.zs_cfmt)
+    parent.zs_cfmt_tail = NULL; // (amc.FCtype.zs_cfmt)
+    parent.c_init = NULL;
+    parent.p_ns = NULL;
+    parent.c_bltin = NULL;
+    parent.c_field_elems = NULL; // (amc.FCtype.c_field)
+    parent.c_field_n = 0; // (amc.FCtype.c_field)
+    parent.c_field_max = 0; // (amc.FCtype.c_field)
+    parent.c_msgtype = NULL;
+    parent.c_optfld = NULL;
+    parent.c_static_elems = NULL; // (amc.FCtype.c_static)
+    parent.c_static_n = 0; // (amc.FCtype.c_static)
+    parent.c_static_max = 0; // (amc.FCtype.c_static)
+    parent.c_cpptype = NULL;
+    parent.c_parent_elems = NULL; // (amc.FCtype.c_parent)
+    parent.c_parent_n = 0; // (amc.FCtype.c_parent)
+    parent.c_parent_max = 0; // (amc.FCtype.c_parent)
+    parent.c_ssimfile = NULL;
+    parent.c_pack = NULL;
+    parent.c_lenfld = NULL;
+    parent.c_pmaskfld_elems = NULL; // (amc.FCtype.c_pmaskfld)
+    parent.c_pmaskfld_n = 0; // (amc.FCtype.c_pmaskfld)
+    parent.c_pmaskfld_max = 0; // (amc.FCtype.c_pmaskfld)
+    parent.c_typefld = NULL;
+    parent.c_datafld_elems = NULL; // (amc.FCtype.c_datafld)
+    parent.c_datafld_n = 0; // (amc.FCtype.c_datafld)
+    parent.c_datafld_max = 0; // (amc.FCtype.c_datafld)
+    parent.zd_inst_head = NULL; // (amc.FCtype.zd_inst)
+    parent.zd_inst_n = 0; // (amc.FCtype.zd_inst)
+    parent.zd_inst_tail = NULL; // (amc.FCtype.zd_inst)
+    parent.zs_xref_head = NULL; // (amc.FCtype.zs_xref)
+    parent.zs_xref_n = 0; // (amc.FCtype.zs_xref)
+    parent.zs_xref_tail = NULL; // (amc.FCtype.zs_xref)
+    parent.c_chash = NULL;
+    parent.c_ccmp = NULL;
+    parent.c_cstr = NULL;
+    parent.c_cextern = NULL;
+    parent.c_ffunc_elems = NULL; // (amc.FCtype.c_ffunc)
+    parent.c_ffunc_n = 0; // (amc.FCtype.c_ffunc)
+    parent.c_ffunc_max = 0; // (amc.FCtype.c_ffunc)
+    parent.zd_cafter_head = NULL; // (amc.FCtype.zd_cafter)
+    parent.zd_cafter_n = 0; // (amc.FCtype.zd_cafter)
+    parent.zd_cafter_tail = NULL; // (amc.FCtype.zd_cafter)
+    parent.c_csize = NULL;
+    parent.zd_access_head = NULL; // (amc.FCtype.zd_access)
+    parent.zd_access_n = 0; // (amc.FCtype.zd_access)
+    parent.zd_access_tail = NULL; // (amc.FCtype.zd_access)
+    parent.c_cdflt = NULL;
+    parent.c_argvtype = NULL;
+    parent.c_floadtuples_elems = NULL; // (amc.FCtype.c_floadtuples)
+    parent.c_floadtuples_n = 0; // (amc.FCtype.c_floadtuples)
+    parent.c_floadtuples_max = 0; // (amc.FCtype.c_floadtuples)
+    parent.c_pkeyfield = NULL;
+    parent.c_fcurs_elems = NULL; // (amc.FCtype.c_fcurs)
+    parent.c_fcurs_n = 0; // (amc.FCtype.c_fcurs)
+    parent.c_fcurs_max = 0; // (amc.FCtype.c_fcurs)
+    parent.c_ctypelen = NULL;
+    parent.size_unknown = bool(false);
+    parent.size_locked = bool(false);
+    parent.topo_visited = bool(false);
+    parent.enum_visited = bool(false);
+    parent.fields_cloned = bool(false);
+    parent.original = bool(false);
+    parent.plaindata = bool(false);
+    parent.has_dtor = bool(false);
+    parent.cheap_copy = bool(false);
+    parent.declared_size = i32(0);
+    parent.declared_alignment = i32(1);
+    parent.alignment = u32(1);
+    parent.n_padbytes = i32(0);
+    parent.totsize_byte = u32(0);
+    parent.n_xref = i32(0);
+    parent.next_anon_idx = i32(0);
+    parent.c_nossimfile = NULL;
+    parent.topo_idx = i32(0);
+    parent.c_cfast = NULL;
+    parent.c_ffast_elems = NULL; // (amc.FCtype.c_ffast)
+    parent.c_ffast_n = 0; // (amc.FCtype.c_ffast)
+    parent.c_ffast_max = 0; // (amc.FCtype.c_ffast)
+    parent.in_copy_priv = bool(false);
+    parent.zd_varlenfld_head = NULL; // (amc.FCtype.zd_varlenfld)
+    parent.zd_varlenfld_n = 0; // (amc.FCtype.zd_varlenfld)
+    parent.zd_varlenfld_tail = NULL; // (amc.FCtype.zd_varlenfld)
+    parent.c_jstype = NULL;
+    parent.c_ckafka = NULL;
+    parent.c_cjsbltin = NULL;
+    parent.c_cjson = NULL;
+    parent.c_ccmdline = NULL;
+    parent.c_cpbuf = NULL;
+    parent.c_fpbufcase_elems = NULL; // (amc.FCtype.c_fpbufcase)
+    parent.c_fpbufcase_n = 0; // (amc.FCtype.c_fpbufcase)
+    parent.c_fpbufcase_max = 0; // (amc.FCtype.c_fpbufcase)
+    parent.in_compute_size = bool(false);
+    parent.c_payloadhdr = NULL;
+    parent.c_msg = NULL;
+    parent.c_pnew_elems = NULL; // (amc.FCtype.c_pnew)
+    parent.c_pnew_n = 0; // (amc.FCtype.c_pnew)
+    parent.c_pnew_max = 0; // (amc.FCtype.c_pnew)
+    parent.ns_c_ctype_in_ary = bool(false);
+    parent.ind_ctype_next = (amc::FCtype*)-1; // (amc.FDb.ind_ctype) not-in-hash
+    parent.ind_ctype_hashval = 0; // stored hash value
+    parent.zsl_ctype_pack_tran_next = (amc::FCtype*)-1; // (amc.FDb.zsl_ctype_pack_tran) not-in-list
+    parent.zs_sig_visit_next = (amc::FCtype*)-1; // (amc.FDb.zs_sig_visit) not-in-list
 }
 
 // --- amc.FCtype..Uninit
-void amc::FCtype_Uninit(amc::FCtype& ctype) {
-    amc::FCtype &row = ctype; (void)row;
-    ind_ctype_Remove(row); // remove ctype from index ind_ctype
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+void amc::FCtype_Uninit(amc::FCtype& parent) {
+    ind_ctype_Remove(parent); // remove ctype from index ind_ctype
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_ctype_Remove(*p_ns, row);// remove ctype from index c_ctype
+        c_ctype_Remove(*p_ns, parent);// remove ctype from index c_ctype
     }
-    zsl_ctype_pack_tran_Remove(row); // remove ctype from index zsl_ctype_pack_tran
-    zs_sig_visit_Remove(row); // remove ctype from index zs_sig_visit
+    zsl_ctype_pack_tran_Remove(parent); // remove ctype from index zsl_ctype_pack_tran
+    zs_sig_visit_Remove(parent); // remove ctype from index zs_sig_visit
 
     // amc.FCtype.c_pnew.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ctype.c_pnew_elems, sizeof(amc::FPnew*)*ctype.c_pnew_max); // (amc.FCtype.c_pnew)
+    amc::lpool_FreeMem(parent.c_pnew_elems, sizeof(amc::FPnew*)*parent.c_pnew_max); // (amc.FCtype.c_pnew)
 
     // amc.FCtype.c_fpbufcase.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ctype.c_fpbufcase_elems, sizeof(amc::FFpbufcase*)*ctype.c_fpbufcase_max); // (amc.FCtype.c_fpbufcase)
+    amc::lpool_FreeMem(parent.c_fpbufcase_elems, sizeof(amc::FFpbufcase*)*parent.c_fpbufcase_max); // (amc.FCtype.c_fpbufcase)
 
     // amc.FCtype.c_ffast.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ctype.c_ffast_elems, sizeof(amc::FFfast*)*ctype.c_ffast_max); // (amc.FCtype.c_ffast)
+    amc::lpool_FreeMem(parent.c_ffast_elems, sizeof(amc::FFfast*)*parent.c_ffast_max); // (amc.FCtype.c_ffast)
 
     // amc.FCtype.c_fcurs.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ctype.c_fcurs_elems, sizeof(amc::FFcurs*)*ctype.c_fcurs_max); // (amc.FCtype.c_fcurs)
+    amc::lpool_FreeMem(parent.c_fcurs_elems, sizeof(amc::FFcurs*)*parent.c_fcurs_max); // (amc.FCtype.c_fcurs)
 
     // amc.FCtype.c_floadtuples.Uninit (Ptrary)  //tuple sources this command loads at startup
-    amc::lpool_FreeMem(ctype.c_floadtuples_elems, sizeof(amc::FFloadtuples*)*ctype.c_floadtuples_max); // (amc.FCtype.c_floadtuples)
+    amc::lpool_FreeMem(parent.c_floadtuples_elems, sizeof(amc::FFloadtuples*)*parent.c_floadtuples_max); // (amc.FCtype.c_floadtuples)
 
     // amc.FCtype.c_ffunc.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ctype.c_ffunc_elems, sizeof(amc::FFunc*)*ctype.c_ffunc_max); // (amc.FCtype.c_ffunc)
+    amc::lpool_FreeMem(parent.c_ffunc_elems, sizeof(amc::FFunc*)*parent.c_ffunc_max); // (amc.FCtype.c_ffunc)
 
     // amc.FCtype.c_datafld.Uninit (Ptrary)  //Physical fields (non-fldfunc)
-    amc::lpool_FreeMem(ctype.c_datafld_elems, sizeof(amc::FField*)*ctype.c_datafld_max); // (amc.FCtype.c_datafld)
+    amc::lpool_FreeMem(parent.c_datafld_elems, sizeof(amc::FField*)*parent.c_datafld_max); // (amc.FCtype.c_datafld)
 
     // amc.FCtype.c_pmaskfld.Uninit (Ptrary)  //List of pmask fields in this ctype
-    amc::lpool_FreeMem(ctype.c_pmaskfld_elems, sizeof(amc::FPmaskfld*)*ctype.c_pmaskfld_max); // (amc.FCtype.c_pmaskfld)
+    amc::lpool_FreeMem(parent.c_pmaskfld_elems, sizeof(amc::FPmaskfld*)*parent.c_pmaskfld_max); // (amc.FCtype.c_pmaskfld)
 
     // amc.FCtype.c_parent.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ctype.c_parent_elems, sizeof(amc::FCtype*)*ctype.c_parent_max); // (amc.FCtype.c_parent)
+    amc::lpool_FreeMem(parent.c_parent_elems, sizeof(amc::FCtype*)*parent.c_parent_max); // (amc.FCtype.c_parent)
 
     // amc.FCtype.c_static.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ctype.c_static_elems, sizeof(amc::FStatictuple*)*ctype.c_static_max); // (amc.FCtype.c_static)
+    amc::lpool_FreeMem(parent.c_static_elems, sizeof(amc::FStatictuple*)*parent.c_static_max); // (amc.FCtype.c_static)
 
     // amc.FCtype.c_field.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ctype.c_field_elems, sizeof(amc::FField*)*ctype.c_field_max); // (amc.FCtype.c_field)
+    amc::lpool_FreeMem(parent.c_field_elems, sizeof(amc::FField*)*parent.c_field_max); // (amc.FCtype.c_field)
 }
 
 // --- amc.FCtypelen.base.CopyOut
@@ -3553,11 +3528,10 @@ void amc::ctypelen_CopyIn(amc::FCtypelen &row, dmmeta::Ctypelen &in) {
 }
 
 // --- amc.FCtypelen..Uninit
-void amc::FCtypelen_Uninit(amc::FCtypelen& ctypelen) {
-    amc::FCtypelen &row = ctypelen; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FCtypelen_Uninit(amc::FCtypelen& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_ctypelen_Remove(*p_ctype, row);// remove ctypelen from index c_ctypelen
+        c_ctypelen_Remove(*p_ctype, parent);// remove ctypelen from index c_ctypelen
     }
 }
 
@@ -3580,9 +3554,8 @@ void amc::jsbltin_CopyIn(amc::FJsbltin &row, dmmeta::Jsbltin &in) {
 }
 
 // --- amc.FJsbltin..Uninit
-void amc::FJsbltin_Uninit(amc::FJsbltin& jsbltin) {
-    amc::FJsbltin &row = jsbltin; (void)row;
-    ind_jsbltin_Remove(row); // remove jsbltin from index ind_jsbltin
+void amc::FJsbltin_Uninit(amc::FJsbltin& parent) {
+    ind_jsbltin_Remove(parent); // remove jsbltin from index ind_jsbltin
 }
 
 // --- amc.FTclass.msghdr.CopyOut
@@ -3602,11 +3575,11 @@ void amc::tclass_CopyIn(amc::FTclass &row, amcdb::Tclass &in) {
 // --- amc.FTclass.c_tfunc.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_tfunc_Insert(amc::FTclass& tclass, amc::FTfunc& row) {
+void amc::c_tfunc_Insert(amc::FTclass& parent, amc::FTfunc& row) {
     if (!row.tclass_c_tfunc_in_ary) {
-        c_tfunc_Reserve(tclass, 1);
-        u64 n  = tclass.c_tfunc_n++;
-        tclass.c_tfunc_elems[n] = &row;
+        c_tfunc_Reserve(parent, 1);
+        u64 n  = parent.c_tfunc_n++;
+        parent.c_tfunc_elems[n] = &row;
         row.tclass_c_tfunc_in_ary = true;
     }
 }
@@ -3615,18 +3588,18 @@ void amc::c_tfunc_Insert(amc::FTclass& tclass, amc::FTfunc& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_tfunc_InsertMaybe(amc::FTclass& tclass, amc::FTfunc& row) {
+bool amc::c_tfunc_InsertMaybe(amc::FTclass& parent, amc::FTfunc& row) {
     bool retval = !tclass_c_tfunc_InAryQ(row);
-    c_tfunc_Insert(tclass,row); // check is performed in _Insert again
+    c_tfunc_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FTclass.c_tfunc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_tfunc_Remove(amc::FTclass& tclass, amc::FTfunc& row) {
-    i64 n = tclass.c_tfunc_n;
+void amc::c_tfunc_Remove(amc::FTclass& parent, amc::FTfunc& row) {
+    i64 n = parent.c_tfunc_n;
     if (bool_Update(row.tclass_c_tfunc_in_ary,false)) {
-        amc::FTfunc* *elems = tclass.c_tfunc_elems;
+        amc::FTfunc* *elems = parent.c_tfunc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -3635,7 +3608,7 @@ void amc::c_tfunc_Remove(amc::FTclass& tclass, amc::FTfunc& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FTfunc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                tclass.c_tfunc_n = n - 1;
+                parent.c_tfunc_n = n - 1;
                 break;
             }
         }
@@ -3644,29 +3617,29 @@ void amc::c_tfunc_Remove(amc::FTclass& tclass, amc::FTfunc& row) {
 
 // --- amc.FTclass.c_tfunc.Reserve
 // Reserve space in index for N more elements;
-void amc::c_tfunc_Reserve(amc::FTclass& tclass, u64 n) {
-    u64 old_max = tclass.c_tfunc_max;
-    if (UNLIKELY(tclass.c_tfunc_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, tclass.c_tfunc_n + n), 4);
+void amc::c_tfunc_Reserve(amc::FTclass& parent, u64 n) {
+    u64 old_max = parent.c_tfunc_max;
+    if (UNLIKELY(parent.c_tfunc_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_tfunc_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FTfunc*);
         u64 new_size = new_max * sizeof(amc::FTfunc*);
-        void *new_mem = amc::lpool_ReallocMem(tclass.c_tfunc_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_tfunc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FTclass.c_tfunc");
         }
-        tclass.c_tfunc_elems = (amc::FTfunc**)new_mem;
-        tclass.c_tfunc_max = new_max;
+        parent.c_tfunc_elems = (amc::FTfunc**)new_mem;
+        parent.c_tfunc_max = new_max;
     }
 }
 
 // --- amc.FTclass.c_tcond.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_tcond_Insert(amc::FTclass& tclass, amc::FTcond& row) {
+void amc::c_tcond_Insert(amc::FTclass& parent, amc::FTcond& row) {
     if (!row.tclass_c_tcond_in_ary) {
-        c_tcond_Reserve(tclass, 1);
-        u64 n  = tclass.c_tcond_n++;
-        tclass.c_tcond_elems[n] = &row;
+        c_tcond_Reserve(parent, 1);
+        u64 n  = parent.c_tcond_n++;
+        parent.c_tcond_elems[n] = &row;
         row.tclass_c_tcond_in_ary = true;
     }
 }
@@ -3675,18 +3648,18 @@ void amc::c_tcond_Insert(amc::FTclass& tclass, amc::FTcond& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_tcond_InsertMaybe(amc::FTclass& tclass, amc::FTcond& row) {
+bool amc::c_tcond_InsertMaybe(amc::FTclass& parent, amc::FTcond& row) {
     bool retval = !tclass_c_tcond_InAryQ(row);
-    c_tcond_Insert(tclass,row); // check is performed in _Insert again
+    c_tcond_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FTclass.c_tcond.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_tcond_Remove(amc::FTclass& tclass, amc::FTcond& row) {
-    i64 n = tclass.c_tcond_n;
+void amc::c_tcond_Remove(amc::FTclass& parent, amc::FTcond& row) {
+    i64 n = parent.c_tcond_n;
     if (bool_Update(row.tclass_c_tcond_in_ary,false)) {
-        amc::FTcond* *elems = tclass.c_tcond_elems;
+        amc::FTcond* *elems = parent.c_tcond_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -3695,7 +3668,7 @@ void amc::c_tcond_Remove(amc::FTclass& tclass, amc::FTcond& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FTcond*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                tclass.c_tcond_n = n - 1;
+                parent.c_tcond_n = n - 1;
                 break;
             }
         }
@@ -3704,31 +3677,30 @@ void amc::c_tcond_Remove(amc::FTclass& tclass, amc::FTcond& row) {
 
 // --- amc.FTclass.c_tcond.Reserve
 // Reserve space in index for N more elements;
-void amc::c_tcond_Reserve(amc::FTclass& tclass, u64 n) {
-    u64 old_max = tclass.c_tcond_max;
-    if (UNLIKELY(tclass.c_tcond_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, tclass.c_tcond_n + n), 4);
+void amc::c_tcond_Reserve(amc::FTclass& parent, u64 n) {
+    u64 old_max = parent.c_tcond_max;
+    if (UNLIKELY(parent.c_tcond_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_tcond_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FTcond*);
         u64 new_size = new_max * sizeof(amc::FTcond*);
-        void *new_mem = amc::lpool_ReallocMem(tclass.c_tcond_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_tcond_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FTclass.c_tcond");
         }
-        tclass.c_tcond_elems = (amc::FTcond**)new_mem;
-        tclass.c_tcond_max = new_max;
+        parent.c_tcond_elems = (amc::FTcond**)new_mem;
+        parent.c_tcond_max = new_max;
     }
 }
 
 // --- amc.FTclass..Uninit
-void amc::FTclass_Uninit(amc::FTclass& tclass) {
-    amc::FTclass &row = tclass; (void)row;
-    ind_tclass_Remove(row); // remove tclass from index ind_tclass
+void amc::FTclass_Uninit(amc::FTclass& parent) {
+    ind_tclass_Remove(parent); // remove tclass from index ind_tclass
 
     // amc.FTclass.c_tcond.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(tclass.c_tcond_elems, sizeof(amc::FTcond*)*tclass.c_tcond_max); // (amc.FTclass.c_tcond)
+    amc::lpool_FreeMem(parent.c_tcond_elems, sizeof(amc::FTcond*)*parent.c_tcond_max); // (amc.FTclass.c_tcond)
 
     // amc.FTclass.c_tfunc.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(tclass.c_tfunc_elems, sizeof(amc::FTfunc*)*tclass.c_tfunc_max); // (amc.FTclass.c_tfunc)
+    amc::lpool_FreeMem(parent.c_tfunc_elems, sizeof(amc::FTfunc*)*parent.c_tfunc_max); // (amc.FTclass.c_tfunc)
 }
 
 // --- amc.trace..Print
@@ -3746,6 +3718,7 @@ void amc::trace_Print(amc::trace& row, algo::cstring& str) {
 void amc::lpool_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
@@ -3860,6 +3833,7 @@ void* amc::lpool_AllocMem(u64 size) {
             blk->next = NULL;
         }
     }
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -4134,7 +4108,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'d2aac32d30656f02bc428ab77d5cbde243bef2e6'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'7d20912a531fdae05562b949440b78d25595f0ca'");
 }
 
 // --- amc.FDb._db.InsertStrptrMaybe
@@ -5665,6 +5639,14 @@ amc::FCfmt* amc::ind_cfmt_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_cfmt.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FCfmt& amc::ind_cfmt_FindX(const algo::strptr& key) {
+    amc::FCfmt* ret = ind_cfmt_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_cfmt  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_cfmt.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FCfmt& amc::ind_cfmt_GetOrCreate(const algo::strptr& key) {
@@ -6207,7 +6189,7 @@ amc::FDispatchmsg* amc::dispatch_msg_AllocMaybe() {
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 amc::FDispatchmsg* amc::dispatch_msg_InsertMaybe(const dmmeta::DispatchMsg &value) {
     amc::FDispatchmsg *row = &dispatch_msg_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    dispatch_msg_CopyIn(*row,const_cast<dmmeta::DispatchMsg&>(value));
+    dispatchmsg_CopyIn(*row,const_cast<dmmeta::DispatchMsg&>(value));
     bool ok = dispatch_msg_XrefMaybe(*row); // this may return false
     if (!ok) {
         dispatch_msg_RemoveLast(); // delete offending row, any existing xrefs are cleared
@@ -8368,6 +8350,7 @@ void* amc::outfile_AllocMem() {
     if (row) {
         _db.outfile_free = row->outfile_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(amc::FOutfile));
     return row;
 }
 
@@ -8377,6 +8360,7 @@ void amc::outfile_FreeMem(amc::FOutfile &row) {
     if (UNLIKELY(row.outfile_next != (amc::FOutfile*)-1)) {
         FatalErrorExit("amc.tpool_double_delete  pool:amc.FDb.outfile  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(amc::FOutfile)); // before the free list threads through the element
     row.outfile_next = _db.outfile_free; // insert into free list
     _db.outfile_free  = &row;
 }
@@ -8404,6 +8388,7 @@ u64 amc::outfile_ReserveMem(u64 size) {
     u64 ret = 0;
     if (size >= sizeof(amc::FOutfile)) {
         amc::FOutfile *mem = (amc::FOutfile*)amc::lpool_AllocMem(size);
+        algo_lib::MemcheckFree(mem, size); // the elements broken out below are what the checker accounts for
         ret = mem ? size / sizeof(amc::FOutfile) : 0;
         // add newly allocated elements to the free list;
         for (u64 i=0; i < ret; i++) {
@@ -9060,6 +9045,14 @@ amc::FBltin* amc::ind_bltin_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_bltin.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FBltin& amc::ind_bltin_FindX(const algo::strptr& key) {
+    amc::FBltin* ret = ind_bltin_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_bltin  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_bltin.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FBltin& amc::ind_bltin_GetOrCreate(const algo::strptr& key) {
@@ -9174,6 +9167,14 @@ amc::FCtype* amc::ind_ctype_Find(const algo::strptr& key) {
     for (; ret && !((*ret).ctype == key); ret = ret->ind_ctype_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_ctype.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FCtype& amc::ind_ctype_FindX(const algo::strptr& key) {
+    amc::FCtype* ret = ind_ctype_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_ctype  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_ctype.GetOrCreate
@@ -9292,6 +9293,14 @@ amc::FDispatch* amc::ind_dispatch_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_dispatch.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FDispatch& amc::ind_dispatch_FindX(const algo::strptr& key) {
+    amc::FDispatch* ret = ind_dispatch_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_dispatch  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_dispatch.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FDispatch& amc::ind_dispatch_GetOrCreate(const algo::strptr& key) {
@@ -9406,6 +9415,14 @@ amc::FFunc* amc::ind_func_Find(const algo::strptr& key) {
     for (; ret && !((*ret).func == key); ret = ret->ind_func_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_func.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFunc& amc::ind_func_FindX(const algo::strptr& key) {
+    amc::FFunc* ret = ind_func_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_func  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_func.GetOrCreate
@@ -9524,6 +9541,14 @@ amc::FField* amc::ind_field_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_field.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FField& amc::ind_field_FindX(const algo::strptr& key) {
+    amc::FField* ret = ind_field_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_field  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_field.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FField* amc::ind_field_GetOrCreate(const algo::strptr& key) {
@@ -9637,6 +9662,14 @@ amc::FNs* amc::ind_ns_Find(const algo::strptr& key) {
     for (; ret && !((*ret).ns == key); ret = ret->ind_ns_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_ns.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FNs& amc::ind_ns_FindX(const algo::strptr& key) {
+    amc::FNs* ret = ind_ns_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_ns  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_ns.GetOrCreate
@@ -9755,6 +9788,14 @@ amc::FPnew* amc::ind_pnew_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_pnew.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FPnew& amc::ind_pnew_FindX(const algo::strptr& key) {
+    amc::FPnew* ret = ind_pnew_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_pnew  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_pnew.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FPnew& amc::ind_pnew_GetOrCreate(const algo::strptr& key) {
@@ -9869,6 +9910,14 @@ amc::FXref* amc::ind_xref_Find(const algo::strptr& key) {
     for (; ret && !((*ret).field == key); ret = ret->ind_xref_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_xref.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FXref& amc::ind_xref_FindX(const algo::strptr& key) {
+    amc::FXref* ret = ind_xref_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_xref  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_xref.GetOrCreate
@@ -10102,6 +10151,14 @@ amc::FCpptype* amc::ind_cpptype_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_cpptype.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FCpptype& amc::ind_cpptype_FindX(const algo::strptr& key) {
+    amc::FCpptype* ret = ind_cpptype_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_cpptype  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_cpptype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FCpptype& amc::ind_cpptype_GetOrCreate(const algo::strptr& key) {
@@ -10327,6 +10384,14 @@ amc::FInlary* amc::ind_inlary_Find(const algo::strptr& key) {
     for (; ret && !((*ret).field == key); ret = ret->ind_inlary_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_inlary.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FInlary& amc::ind_inlary_FindX(const algo::strptr& key) {
+    amc::FInlary* ret = ind_inlary_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_inlary  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_inlary.GetOrCreate
@@ -10558,6 +10623,14 @@ amc::FTary* amc::ind_tary_Find(const algo::strptr& key) {
     for (; ret && !((*ret).field == key); ret = ret->ind_tary_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_tary.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FTary& amc::ind_tary_FindX(const algo::strptr& key) {
+    amc::FTary* ret = ind_tary_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_tary  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_tary.GetOrCreate
@@ -10887,6 +10960,14 @@ amc::FRowid* amc::ind_rowid_Find(const algo::strptr& key) {
     for (; ret && !((*ret).field == key); ret = ret->ind_rowid_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_rowid.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FRowid& amc::ind_rowid_FindX(const algo::strptr& key) {
+    amc::FRowid* ret = ind_rowid_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_rowid  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_rowid.GetOrCreate
@@ -11460,6 +11541,14 @@ amc::FSsimfile* amc::ind_ssimfile_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_ssimfile.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FSsimfile& amc::ind_ssimfile_FindX(const algo::strptr& key) {
+    amc::FSsimfile* ret = ind_ssimfile_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_ssimfile  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_ssimfile.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FSsimfile& amc::ind_ssimfile_GetOrCreate(const algo::strptr& key) {
@@ -11691,6 +11780,14 @@ amc::FPack* amc::ind_pack_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_pack.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FPack& amc::ind_pack_FindX(const algo::strptr& key) {
+    amc::FPack* ret = ind_pack_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_pack  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_pack.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FPack& amc::ind_pack_GetOrCreate(const algo::strptr& key) {
@@ -11805,6 +11902,14 @@ amc::FSmallstr* amc::ind_smallstr_Find(const algo::strptr& key) {
     for (; ret && !((*ret).field == key); ret = ret->ind_smallstr_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_smallstr.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FSmallstr& amc::ind_smallstr_FindX(const algo::strptr& key) {
+    amc::FSmallstr* ret = ind_smallstr_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_smallstr  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_smallstr.GetOrCreate
@@ -12618,6 +12723,14 @@ amc::FEnumstrLen* amc::ind_enumstr_len_Find(i32 key) {
     return ret;
 }
 
+// --- amc.FDb.ind_enumstr_len.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FEnumstrLen& amc::ind_enumstr_len_FindX(i32 key) {
+    amc::FEnumstrLen* ret = ind_enumstr_len_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_enumstr_len  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_enumstr_len.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FEnumstrLen& amc::ind_enumstr_len_GetOrCreate(i32 key) {
@@ -12732,6 +12845,14 @@ amc::FEnumstr* amc::ind_enumstr_Find(const amc::Enumstr& key) {
     for (; ret && !((*ret).enumstr == key); ret = ret->ind_enumstr_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_enumstr.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FEnumstr& amc::ind_enumstr_FindX(const amc::Enumstr& key) {
+    amc::FEnumstr* ret = ind_enumstr_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_enumstr  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_enumstr.GetOrCreate
@@ -12965,6 +13086,14 @@ amc::FFbitset* amc::ind_fbitset_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_fbitset.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFbitset& amc::ind_fbitset_FindX(const algo::strptr& key) {
+    amc::FFbitset* ret = ind_fbitset_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fbitset  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_fbitset.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FFbitset& amc::ind_fbitset_GetOrCreate(const algo::strptr& key) {
@@ -13196,6 +13325,14 @@ amc::FFdec* amc::ind_fdec_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_fdec.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFdec& amc::ind_fdec_FindX(const algo::strptr& key) {
+    amc::FFdec* ret = ind_fdec_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fdec  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_fdec.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FFdec& amc::ind_fdec_GetOrCreate(const algo::strptr& key) {
@@ -13310,6 +13447,14 @@ amc::FReftype* amc::ind_reftype_Find(const algo::strptr& key) {
     for (; ret && !((*ret).reftype == key); ret = ret->ind_reftype_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_reftype.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FReftype& amc::ind_reftype_FindX(const algo::strptr& key) {
+    amc::FReftype* ret = ind_reftype_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_reftype  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_reftype.GetOrCreate
@@ -13536,6 +13681,14 @@ amc::FFconst* amc::ind_fconst_Find(const algo::strptr& key) {
     for (; ret && !((*ret).fconst == key); ret = ret->ind_fconst_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_fconst.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFconst& amc::ind_fconst_FindX(const algo::strptr& key) {
+    amc::FFconst* ret = ind_fconst_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fconst  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_fconst.GetOrCreate
@@ -14063,6 +14216,14 @@ amc::FFbuf* amc::ind_fbuf_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_fbuf.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFbuf& amc::ind_fbuf_FindX(const algo::strptr& key) {
+    amc::FFbuf* ret = ind_fbuf_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fbuf  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_fbuf.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FFbuf& amc::ind_fbuf_GetOrCreate(const algo::strptr& key) {
@@ -14290,6 +14451,14 @@ amc::FChash* amc::ind_chash_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_chash.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FChash& amc::ind_chash_FindX(const algo::strptr& key) {
+    amc::FChash* ret = ind_chash_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_chash  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_chash.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FChash& amc::ind_chash_GetOrCreate(const algo::strptr& key) {
@@ -14515,6 +14684,14 @@ amc::FCcmp* amc::ind_ccmp_Find(const algo::strptr& key) {
     for (; ret && !((*ret).ctype == key); ret = ret->ind_ccmp_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_ccmp.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FCcmp& amc::ind_ccmp_FindX(const algo::strptr& key) {
+    amc::FCcmp* ret = ind_ccmp_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_ccmp  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_ccmp.GetOrCreate
@@ -14998,6 +15175,14 @@ amc::FListtype* amc::ind_listtype_Find(const algo::strptr& key) {
     for (; ret && !((*ret).listtype == key); ret = ret->ind_listtype_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_listtype.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FListtype& amc::ind_listtype_FindX(const algo::strptr& key) {
+    amc::FListtype* ret = ind_listtype_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_listtype  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_listtype.GetOrCreate
@@ -15557,6 +15742,14 @@ amc::FFstep* amc::ind_fstep_Find(const algo::strptr& key) {
     for (; ret && !((*ret).fstep == key); ret = ret->ind_fstep_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_fstep.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFstep& amc::ind_fstep_FindX(const algo::strptr& key) {
+    amc::FFstep* ret = ind_fstep_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fstep  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_fstep.GetOrCreate
@@ -16147,6 +16340,14 @@ amc::FTarget* amc::ind_target_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_target.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FTarget& amc::ind_target_FindX(const algo::strptr& key) {
+    amc::FTarget* ret = ind_target_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_target  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_target.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FTarget& amc::ind_target_GetOrCreate(const algo::strptr& key) {
@@ -16714,6 +16915,14 @@ amc::FFwddecl* amc::ind_fwddecl_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_fwddecl.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFwddecl& amc::ind_fwddecl_FindX(const algo::strptr& key) {
+    amc::FFwddecl* ret = ind_fwddecl_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fwddecl  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_fwddecl.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FFwddecl& amc::ind_fwddecl_GetOrCreate(const algo::strptr& key) {
@@ -17156,7 +17365,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Inlary.RowidFind  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"find row by row id\"", amc::tfunc_Inlary_RowidFind }
         ,{ "amcdb.tfunc  tfunc:Inlary.Setary  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Set contents of fixed array to RHS; Input length is trimmed as necessary\"", amc::tfunc_Inlary_Setary }
         ,{ "amcdb.tfunc  tfunc:Inlary.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Inlary_Uninit }
-        ,{ "amcdb.tfunc  tfunc:Inlary.qFind  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"'quick' Access row by row id. No bounds checking in release.\"", amc::tfunc_Inlary_qFind }
+        ,{ "amcdb.tfunc  tfunc:Inlary.qFind  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"'quick' Access row by row id. No bounds checking.\"", amc::tfunc_Inlary_qFind }
         ,{ "amcdb.tfunc  tfunc:Inlary.rowid_Get  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Compute row id of element given element's address\"", amc::tfunc_Inlary_rowid_Get }
         ,{ "amcdb.tfunc  tfunc:Inlary.Eq  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:Y  ismacro:N  comment:\"\"", amc::tfunc_Inlary_Eq }
         ,{ "amcdb.tfunc  tfunc:Inlary.Cmp  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Inlary_Cmp }
@@ -17418,6 +17627,14 @@ amc::FTfunc* amc::ind_tfunc_Find(const algo::strptr& key) {
     for (; ret && !((*ret).tfunc == key); ret = ret->ind_tfunc_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_tfunc.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FTfunc& amc::ind_tfunc_FindX(const algo::strptr& key) {
+    amc::FTfunc* ret = ind_tfunc_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_tfunc  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_tfunc.GetOrCreate
@@ -17997,6 +18214,14 @@ amc::FTclass* amc::ind_tclass_Find(const algo::strptr& key) {
     for (; ret && !((*ret).tclass == key); ret = ret->ind_tclass_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_tclass.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FTclass& amc::ind_tclass_FindX(const algo::strptr& key) {
+    amc::FTclass* ret = ind_tclass_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_tclass  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_tclass.GetOrCreate
@@ -19161,6 +19386,14 @@ amc::FMain* amc::ind_main_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_main.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FMain& amc::ind_main_FindX(const algo::strptr& key) {
+    amc::FMain* ret = ind_main_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_main  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_main.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FMain& amc::ind_main_GetOrCreate(const algo::strptr& key) {
@@ -19874,6 +20107,14 @@ amc::FFconst* amc::ind_fconst_int_Find(const algo::strptr& key) {
     for (; ret && !((*ret).cpp_value == key); ret = ret->ind_fconst_int_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_fconst_int.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFconst& amc::ind_fconst_int_FindX(const algo::strptr& key) {
+    amc::FFconst* ret = ind_fconst_int_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fconst_int  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_fconst_int.InsertMaybe
@@ -20605,6 +20846,14 @@ amc::FFcmap* amc::ind_fcmap_Find(const algo::strptr& key) {
     for (; ret && !((*ret).fcmap == key); ret = ret->ind_fcmap_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_fcmap.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFcmap& amc::ind_fcmap_FindX(const algo::strptr& key) {
+    amc::FFcmap* ret = ind_fcmap_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fcmap  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_fcmap.GetOrCreate
@@ -21883,6 +22132,14 @@ amc::FFcurs* amc::ind_fcurs_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_fcurs.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFcurs& amc::ind_fcurs_FindX(const algo::strptr& key) {
+    amc::FFcurs* ret = ind_fcurs_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fcurs  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_fcurs.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FFcurs& amc::ind_fcurs_GetOrCreate(const algo::strptr& key) {
@@ -22344,6 +22601,14 @@ amc::FFflag* amc::ind_fflag_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_fflag.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFflag& amc::ind_fflag_FindX(const algo::strptr& key) {
+    amc::FFflag* ret = ind_fflag_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fflag  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_fflag.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FFflag& amc::ind_fflag_GetOrCreate(const algo::strptr& key) {
@@ -22686,6 +22951,14 @@ amc::FLicense* amc::ind_license_Find(const algo::strptr& key) {
     for (; ret && !((*ret).license == key); ret = ret->ind_license_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_license.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FLicense& amc::ind_license_FindX(const algo::strptr& key) {
+    amc::FLicense* ret = ind_license_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_license  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_license.GetOrCreate
@@ -23337,6 +23610,14 @@ amc::FPmaskfld* amc::ind_pmaskfld_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_pmaskfld.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FPmaskfld& amc::ind_pmaskfld_FindX(const algo::strptr& key) {
+    amc::FPmaskfld* ret = ind_pmaskfld_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_pmaskfld  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_pmaskfld.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FPmaskfld& amc::ind_pmaskfld_GetOrCreate(const algo::strptr& key) {
@@ -23674,6 +23955,14 @@ amc::FFbuftype* amc::ind_fbuftype_Find(const algo::strptr& key) {
     for (; ret && !((*ret).fbuftype == key); ret = ret->ind_fbuftype_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_fbuftype.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFbuftype& amc::ind_fbuftype_FindX(const algo::strptr& key) {
+    amc::FFbuftype* ret = ind_fbuftype_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_fbuftype  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_fbuftype.GetOrCreate
@@ -24438,6 +24727,14 @@ amc::FSteptype* amc::ind_steptype_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_steptype.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FSteptype& amc::ind_steptype_FindX(const algo::strptr& key) {
+    amc::FSteptype* ret = ind_steptype_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_steptype  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_steptype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FSteptype& amc::ind_steptype_GetOrCreate(const algo::strptr& key) {
@@ -24794,6 +25091,14 @@ amc::FJsbltin* amc::ind_jsbltin_Find(const algo::strptr& key) {
     for (; ret && !((*ret).jsbltin == key); ret = ret->ind_jsbltin_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_jsbltin.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FJsbltin& amc::ind_jsbltin_FindX(const algo::strptr& key) {
+    amc::FJsbltin* ret = ind_jsbltin_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_jsbltin  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_jsbltin.GetOrCreate
@@ -25507,6 +25812,14 @@ amc::FFfunc* amc::ind_ffunc_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_ffunc.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FFfunc& amc::ind_ffunc_FindX(const algo::strptr& key) {
+    amc::FFfunc* ret = ind_ffunc_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_ffunc  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_ffunc.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FFfunc& amc::ind_ffunc_GetOrCreate(const algo::strptr& key) {
@@ -26001,6 +26314,14 @@ amc::FTcond* amc::ind_tcond_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_tcond.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FTcond& amc::ind_tcond_FindX(const algo::strptr& key) {
+    amc::FTcond* ret = ind_tcond_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_tcond  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_tcond.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FTcond& amc::ind_tcond_GetOrCreate(const algo::strptr& key) {
@@ -26427,6 +26748,14 @@ amc::FMsg* amc::ind_msg_typekey_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_msg_typekey.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FMsg& amc::ind_msg_typekey_FindX(const algo::strptr& key) {
+    amc::FMsg* ret = ind_msg_typekey_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_msg_typekey  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_msg_typekey.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FMsg& amc::ind_msg_typekey_GetOrCreate(const algo::strptr& key) {
@@ -26676,6 +27005,14 @@ amc::FPbtype* amc::ind_pbtype_Find(const algo::strptr& key) {
     return ret;
 }
 
+// --- amc.FDb.ind_pbtype.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FPbtype& amc::ind_pbtype_FindX(const algo::strptr& key) {
+    amc::FPbtype* ret = ind_pbtype_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_pbtype  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
 // --- amc.FDb.ind_pbtype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
 amc::FPbtype& amc::ind_pbtype_GetOrCreate(const algo::strptr& key) {
@@ -26908,6 +27245,14 @@ amc::FPbsyntax* amc::ind_pbsyntax_Find(const algo::strptr& key) {
     for (; ret && !((*ret).pbsyntax == key); ret = ret->ind_pbsyntax_next) {
     }
     return ret;
+}
+
+// --- amc.FDb.ind_pbsyntax.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FPbsyntax& amc::ind_pbsyntax_FindX(const algo::strptr& key) {
+    amc::FPbsyntax* ret = ind_pbsyntax_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_pbsyntax  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FDb.ind_pbsyntax.GetOrCreate
@@ -28923,7 +29268,6 @@ void amc::FDb_Init() {
 
 // --- amc.FDb..Uninit
 void amc::FDb_Uninit() {
-    amc::FDb &row = _db; (void)row;
 
     // amc.FDb.ind_pbsyntax.Uninit (Thash)  //
     // skip destruction of ind_pbsyntax in global scope
@@ -29487,23 +29831,23 @@ void amc::dispatch_CopyIn(amc::FDispatch &row, dmmeta::Dispatch &in) {
 }
 
 // --- amc.FDispatch.ns.Get
-algo::strptr amc::ns_Get(amc::FDispatch& dispatch) {
-    return algo::Pathcomp(dispatch.dispatch, ".RL");
+algo::strptr amc::ns_Get(amc::FDispatch& parent) {
+    return algo::Pathcomp(parent.dispatch, ".RL");
 }
 
 // --- amc.FDispatch.name.Get
-algo::strptr amc::name_Get(amc::FDispatch& dispatch) {
-    return algo::Pathcomp(dispatch.dispatch, ".RR");
+algo::strptr amc::name_Get(amc::FDispatch& parent) {
+    return algo::Pathcomp(parent.dispatch, ".RR");
 }
 
 // --- amc.FDispatch.c_dispatch_msg.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_dispatch_msg_Insert(amc::FDispatch& dispatch, amc::FDispatchmsg& row) {
+void amc::c_dispatch_msg_Insert(amc::FDispatch& parent, amc::FDispatchmsg& row) {
     if (!row.dispatch_c_dispatch_msg_in_ary) {
-        c_dispatch_msg_Reserve(dispatch, 1);
-        u64 n  = dispatch.c_dispatch_msg_n++;
-        dispatch.c_dispatch_msg_elems[n] = &row;
+        c_dispatch_msg_Reserve(parent, 1);
+        u64 n  = parent.c_dispatch_msg_n++;
+        parent.c_dispatch_msg_elems[n] = &row;
         row.dispatch_c_dispatch_msg_in_ary = true;
     }
 }
@@ -29512,18 +29856,18 @@ void amc::c_dispatch_msg_Insert(amc::FDispatch& dispatch, amc::FDispatchmsg& row
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_dispatch_msg_InsertMaybe(amc::FDispatch& dispatch, amc::FDispatchmsg& row) {
+bool amc::c_dispatch_msg_InsertMaybe(amc::FDispatch& parent, amc::FDispatchmsg& row) {
     bool retval = !dispatch_c_dispatch_msg_InAryQ(row);
-    c_dispatch_msg_Insert(dispatch,row); // check is performed in _Insert again
+    c_dispatch_msg_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FDispatch.c_dispatch_msg.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_dispatch_msg_Remove(amc::FDispatch& dispatch, amc::FDispatchmsg& row) {
-    i64 n = dispatch.c_dispatch_msg_n;
+void amc::c_dispatch_msg_Remove(amc::FDispatch& parent, amc::FDispatchmsg& row) {
+    i64 n = parent.c_dispatch_msg_n;
     if (bool_Update(row.dispatch_c_dispatch_msg_in_ary,false)) {
-        amc::FDispatchmsg* *elems = dispatch.c_dispatch_msg_elems;
+        amc::FDispatchmsg* *elems = parent.c_dispatch_msg_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -29532,7 +29876,7 @@ void amc::c_dispatch_msg_Remove(amc::FDispatch& dispatch, amc::FDispatchmsg& row
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FDispatchmsg*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                dispatch.c_dispatch_msg_n = n - 1;
+                parent.c_dispatch_msg_n = n - 1;
                 break;
             }
         }
@@ -29541,89 +29885,87 @@ void amc::c_dispatch_msg_Remove(amc::FDispatch& dispatch, amc::FDispatchmsg& row
 
 // --- amc.FDispatch.c_dispatch_msg.Reserve
 // Reserve space in index for N more elements;
-void amc::c_dispatch_msg_Reserve(amc::FDispatch& dispatch, u64 n) {
-    u64 old_max = dispatch.c_dispatch_msg_max;
-    if (UNLIKELY(dispatch.c_dispatch_msg_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, dispatch.c_dispatch_msg_n + n), 4);
+void amc::c_dispatch_msg_Reserve(amc::FDispatch& parent, u64 n) {
+    u64 old_max = parent.c_dispatch_msg_max;
+    if (UNLIKELY(parent.c_dispatch_msg_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_dispatch_msg_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FDispatchmsg*);
         u64 new_size = new_max * sizeof(amc::FDispatchmsg*);
-        void *new_mem = amc::lpool_ReallocMem(dispatch.c_dispatch_msg_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_dispatch_msg_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FDispatch.c_dispatch_msg");
         }
-        dispatch.c_dispatch_msg_elems = (amc::FDispatchmsg**)new_mem;
-        dispatch.c_dispatch_msg_max = new_max;
+        parent.c_dispatch_msg_elems = (amc::FDispatchmsg**)new_mem;
+        parent.c_dispatch_msg_max = new_max;
     }
 }
 
 // --- amc.FDispatch..Init
 // Set all fields to initial values.
-void amc::FDispatch_Init(amc::FDispatch& dispatch) {
-    dispatch.unk = bool(false);
-    dispatch.read = bool(false);
-    dispatch.print = bool(false);
-    dispatch.haslen = bool(false);
-    dispatch.call = bool(false);
-    dispatch.strict = bool(false);
-    dispatch.dyn = bool(false);
-    dispatch.kafka = bool(false);
-    dispatch.p_ctype_hdr = NULL;
-    dispatch.p_casetype = NULL;
-    dispatch.c_dispfilter = NULL;
-    dispatch.p_ns = NULL;
-    dispatch.c_dispatch_msg_elems = NULL; // (amc.FDispatch.c_dispatch_msg)
-    dispatch.c_dispatch_msg_n = 0; // (amc.FDispatch.c_dispatch_msg)
-    dispatch.c_dispatch_msg_max = 0; // (amc.FDispatch.c_dispatch_msg)
-    dispatch.c_disptrace = NULL;
-    dispatch.c_dispctx = NULL;
-    dispatch.ns_c_dispatch_in_ary = bool(false);
-    dispatch.ind_dispatch_next = (amc::FDispatch*)-1; // (amc.FDb.ind_dispatch) not-in-hash
-    dispatch.ind_dispatch_hashval = 0; // stored hash value
+void amc::FDispatch_Init(amc::FDispatch& parent) {
+    parent.unk = bool(false);
+    parent.read = bool(false);
+    parent.print = bool(false);
+    parent.haslen = bool(false);
+    parent.call = bool(false);
+    parent.strict = bool(false);
+    parent.dyn = bool(false);
+    parent.kafka = bool(false);
+    parent.p_ctype_hdr = NULL;
+    parent.p_casetype = NULL;
+    parent.c_dispfilter = NULL;
+    parent.p_ns = NULL;
+    parent.c_dispatch_msg_elems = NULL; // (amc.FDispatch.c_dispatch_msg)
+    parent.c_dispatch_msg_n = 0; // (amc.FDispatch.c_dispatch_msg)
+    parent.c_dispatch_msg_max = 0; // (amc.FDispatch.c_dispatch_msg)
+    parent.c_disptrace = NULL;
+    parent.c_dispctx = NULL;
+    parent.ns_c_dispatch_in_ary = bool(false);
+    parent.ind_dispatch_next = (amc::FDispatch*)-1; // (amc.FDb.ind_dispatch) not-in-hash
+    parent.ind_dispatch_hashval = 0; // stored hash value
 }
 
 // --- amc.FDispatch..Uninit
-void amc::FDispatch_Uninit(amc::FDispatch& dispatch) {
-    amc::FDispatch &row = dispatch; (void)row;
-    ind_dispatch_Remove(row); // remove dispatch from index ind_dispatch
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+void amc::FDispatch_Uninit(amc::FDispatch& parent) {
+    ind_dispatch_Remove(parent); // remove dispatch from index ind_dispatch
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_dispatch_Remove(*p_ns, row);// remove dispatch from index c_dispatch
+        c_dispatch_Remove(*p_ns, parent);// remove dispatch from index c_dispatch
     }
 
     // amc.FDispatch.c_dispatch_msg.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(dispatch.c_dispatch_msg_elems, sizeof(amc::FDispatchmsg*)*dispatch.c_dispatch_msg_max); // (amc.FDispatch.c_dispatch_msg)
+    amc::lpool_FreeMem(parent.c_dispatch_msg_elems, sizeof(amc::FDispatchmsg*)*parent.c_dispatch_msg_max); // (amc.FDispatch.c_dispatch_msg)
 }
 
 // --- amc.FDispatchmsg.msghdr.CopyOut
 // Copy fields out of row
-void amc::dispatch_msg_CopyOut(amc::FDispatchmsg &row, dmmeta::DispatchMsg &out) {
+void amc::dispatchmsg_CopyOut(amc::FDispatchmsg &row, dmmeta::DispatchMsg &out) {
     out.dispatch_msg = row.dispatch_msg;
     out.comment = algo::Comment(row.comment);
 }
 
 // --- amc.FDispatchmsg.msghdr.CopyIn
 // Copy fields in to row
-void amc::dispatch_msg_CopyIn(amc::FDispatchmsg &row, dmmeta::DispatchMsg &in) {
+void amc::dispatchmsg_CopyIn(amc::FDispatchmsg &row, dmmeta::DispatchMsg &in) {
     row.dispatch_msg = in.dispatch_msg;
     row.comment = in.comment;
 }
 
 // --- amc.FDispatchmsg.dispatch.Get
-algo::strptr amc::dispatch_Get(amc::FDispatchmsg& dispatch_msg) {
-    return algo::Pathcomp(dispatch_msg.dispatch_msg, "/RL");
+algo::strptr amc::dispatch_Get(amc::FDispatchmsg& parent) {
+    return algo::Pathcomp(parent.dispatch_msg, "/RL");
 }
 
 // --- amc.FDispatchmsg.ctype.Get
-algo::strptr amc::ctype_Get(amc::FDispatchmsg& dispatch_msg) {
-    return algo::Pathcomp(dispatch_msg.dispatch_msg, "/RR");
+algo::strptr amc::ctype_Get(amc::FDispatchmsg& parent) {
+    return algo::Pathcomp(parent.dispatch_msg, "/RR");
 }
 
 // --- amc.FDispatchmsg..Uninit
-void amc::FDispatchmsg_Uninit(amc::FDispatchmsg& dispatch_msg) {
-    amc::FDispatchmsg &row = dispatch_msg; (void)row;
-    amc::FDispatch* p_dispatch = amc::ind_dispatch_Find(dispatch_Get(row));
+void amc::FDispatchmsg_Uninit(amc::FDispatchmsg& parent) {
+    amc::FDispatch* p_dispatch = amc::ind_dispatch_Find(dispatch_Get(parent));
     if (p_dispatch)  {
-        c_dispatch_msg_Remove(*p_dispatch, row);// remove dispatch_msg from index c_dispatch_msg
+        c_dispatch_msg_Remove(*p_dispatch, parent);// remove dispatch_msg from index c_dispatch_msg
     }
 }
 
@@ -29644,11 +29986,10 @@ void amc::dispctx_CopyIn(amc::FDispctx &row, dmmeta::Dispctx &in) {
 }
 
 // --- amc.FDispctx..Uninit
-void amc::FDispctx_Uninit(amc::FDispctx& dispctx) {
-    amc::FDispctx &row = dispctx; (void)row;
-    amc::FDispatch* p_dispatch = amc::ind_dispatch_Find(row.dispatch);
+void amc::FDispctx_Uninit(amc::FDispctx& parent) {
+    amc::FDispatch* p_dispatch = amc::ind_dispatch_Find(parent.dispatch);
     if (p_dispatch)  {
-        c_dispctx_Remove(*p_dispatch, row);// remove dispctx from index c_dispctx
+        c_dispctx_Remove(*p_dispatch, parent);// remove dispctx from index c_dispctx
     }
 }
 
@@ -29669,11 +30010,10 @@ void amc::dispfilter_CopyIn(amc::FDispfilter &row, dmmeta::Dispfilter &in) {
 }
 
 // --- amc.FDispfilter..Uninit
-void amc::FDispfilter_Uninit(amc::FDispfilter& dispfilter) {
-    amc::FDispfilter &row = dispfilter; (void)row;
-    amc::FDispatch* p_dispatch = amc::ind_dispatch_Find(row.dispatch);
+void amc::FDispfilter_Uninit(amc::FDispfilter& parent) {
+    amc::FDispatch* p_dispatch = amc::ind_dispatch_Find(parent.dispatch);
     if (p_dispatch)  {
-        c_dispfilter_Remove(*p_dispatch, row);// remove dispfilter from index c_dispfilter
+        c_dispfilter_Remove(*p_dispatch, parent);// remove dispfilter from index c_dispfilter
     }
 }
 
@@ -29692,21 +30032,20 @@ void amc::dispsig_CopyIn(amc::FDispsig &row, dmmeta::Dispsig &in) {
 }
 
 // --- amc.FDispsig.ns.Get
-algo::strptr amc::ns_Get(amc::FDispsig& dispsig) {
-    return algo::Pathcomp(dispsig.dispsig, ".RL");
+algo::strptr amc::ns_Get(amc::FDispsig& parent) {
+    return algo::Pathcomp(parent.dispsig, ".RL");
 }
 
 // --- amc.FDispsig.name.Get
-algo::strptr amc::name_Get(amc::FDispsig& dispsig) {
-    return algo::Pathcomp(dispsig.dispsig, ".RR");
+algo::strptr amc::name_Get(amc::FDispsig& parent) {
+    return algo::Pathcomp(parent.dispsig, ".RR");
 }
 
 // --- amc.FDispsig..Uninit
-void amc::FDispsig_Uninit(amc::FDispsig& dispsig) {
-    amc::FDispsig &row = dispsig; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+void amc::FDispsig_Uninit(amc::FDispsig& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_dispsig_Remove(*p_ns, row);// remove dispsig from index c_dispsig
+        c_dispsig_Remove(*p_ns, parent);// remove dispsig from index c_dispsig
     }
 }
 
@@ -29727,21 +30066,20 @@ void amc::disptrace_CopyIn(amc::FDisptrace &row, dmmeta::Disptrace &in) {
 }
 
 // --- amc.FDisptrace..Uninit
-void amc::FDisptrace_Uninit(amc::FDisptrace& disptrace) {
-    amc::FDisptrace &row = disptrace; (void)row;
-    amc::FDispatch* p_dispatch = amc::ind_dispatch_Find(row.dispatch);
+void amc::FDisptrace_Uninit(amc::FDisptrace& parent) {
+    amc::FDispatch* p_dispatch = amc::ind_dispatch_Find(parent.dispatch);
     if (p_dispatch)  {
-        c_disptrace_Remove(*p_dispatch, row);// remove disptrace from index c_disptrace
+        c_disptrace_Remove(*p_dispatch, parent);// remove disptrace from index c_disptrace
     }
 }
 
 // --- amc.FEnumstr.c_fconst.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_fconst_Insert(amc::FEnumstr& enumstr, amc::FFconst& row) {
-    c_fconst_Reserve(enumstr, 1);
-    u64 n  = enumstr.c_fconst_n++;
-    enumstr.c_fconst_elems[n] = &row;
+void amc::c_fconst_Insert(amc::FEnumstr& parent, amc::FFconst& row) {
+    c_fconst_Reserve(parent, 1);
+    u64 n  = parent.c_fconst_n++;
+    parent.c_fconst_elems[n] = &row;
 }
 
 // --- amc.FEnumstr.c_fconst.ScanInsertMaybe
@@ -29749,95 +30087,94 @@ void amc::c_fconst_Insert(amc::FEnumstr& enumstr, amc::FFconst& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool amc::c_fconst_ScanInsertMaybe(amc::FEnumstr& enumstr, amc::FFconst& row) {
+bool amc::c_fconst_ScanInsertMaybe(amc::FEnumstr& parent, amc::FFconst& row) {
     bool retval = true;
-    u64 n  = enumstr.c_fconst_n;
+    u64 n  = parent.c_fconst_n;
     for (u64 i = 0; i < n; i++) {
-        if (enumstr.c_fconst_elems[i] == &row) {
+        if (parent.c_fconst_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_fconst_Insert(enumstr,row); // row known absent; the append is Insert's
+        c_fconst_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- amc.FEnumstr.c_fconst.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_fconst_Remove(amc::FEnumstr& enumstr, amc::FFconst& row) {
-    i64 n = enumstr.c_fconst_n;
+void amc::c_fconst_Remove(amc::FEnumstr& parent, amc::FFconst& row) {
+    i64 n = parent.c_fconst_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (enumstr.c_fconst_elems[i] == &row) {
+        if (parent.c_fconst_elems[i] == &row) {
         } else {
             if (j != i) {
-                enumstr.c_fconst_elems[j] = enumstr.c_fconst_elems[i];
+                parent.c_fconst_elems[j] = parent.c_fconst_elems[i];
             }
             j++;
         }
     }
-    enumstr.c_fconst_n = j;
+    parent.c_fconst_n = j;
 }
 
 // --- amc.FEnumstr.c_fconst.Reserve
 // Reserve space in index for N more elements;
-void amc::c_fconst_Reserve(amc::FEnumstr& enumstr, u64 n) {
-    u64 old_max = enumstr.c_fconst_max;
-    if (UNLIKELY(enumstr.c_fconst_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, enumstr.c_fconst_n + n), 4);
+void amc::c_fconst_Reserve(amc::FEnumstr& parent, u64 n) {
+    u64 old_max = parent.c_fconst_max;
+    if (UNLIKELY(parent.c_fconst_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_fconst_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFconst*);
         u64 new_size = new_max * sizeof(amc::FFconst*);
-        void *new_mem = amc::lpool_ReallocMem(enumstr.c_fconst_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_fconst_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FEnumstr.c_fconst");
         }
-        enumstr.c_fconst_elems = (amc::FFconst**)new_mem;
-        enumstr.c_fconst_max = new_max;
+        parent.c_fconst_elems = (amc::FFconst**)new_mem;
+        parent.c_fconst_max = new_max;
     }
 }
 
 // --- amc.FEnumstr..Uninit
-void amc::FEnumstr_Uninit(amc::FEnumstr& enumstr) {
-    amc::FEnumstr &row = enumstr; (void)row;
-    amc::FEnumstrLen* p_len = amc::ind_enumstr_len_Find(row.enumstr.len);
+void amc::FEnumstr_Uninit(amc::FEnumstr& parent) {
+    amc::FEnumstrLen* p_len = amc::ind_enumstr_len_Find(parent.enumstr.len);
     if (p_len)  {
-        bh_enumstr_Remove(*p_len, row);// remove enumstr from index bh_enumstr
+        bh_enumstr_Remove(*p_len, parent);// remove enumstr from index bh_enumstr
     }
-    ind_enumstr_Remove(row); // remove enumstr from index ind_enumstr
+    ind_enumstr_Remove(parent); // remove enumstr from index ind_enumstr
 
     // amc.FEnumstr.c_fconst.Uninit (Ptrary)  //for fconst use
-    amc::lpool_FreeMem(enumstr.c_fconst_elems, sizeof(amc::FFconst*)*enumstr.c_fconst_max); // (amc.FEnumstr.c_fconst)
+    amc::lpool_FreeMem(parent.c_fconst_elems, sizeof(amc::FFconst*)*parent.c_fconst_max); // (amc.FEnumstr.c_fconst)
 }
 
 // --- amc.FEnumstrLen.bh_enumstr.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void amc::bh_enumstr_Dealloc(amc::FEnumstrLen& enumstr_len) {
-    bh_enumstr_RemoveAll(enumstr_len);
-    amc::lpool_FreeMem(enumstr_len.bh_enumstr_elems, sizeof(amc::FEnumstr*)*enumstr_len.bh_enumstr_max);
-    enumstr_len.bh_enumstr_max   = 0;
-    enumstr_len.bh_enumstr_elems = NULL;
+void amc::bh_enumstr_Dealloc(amc::FEnumstrLen& parent) {
+    bh_enumstr_RemoveAll(parent);
+    amc::lpool_FreeMem(parent.bh_enumstr_elems, sizeof(amc::FEnumstr*)*parent.bh_enumstr_max);
+    parent.bh_enumstr_max   = 0;
+    parent.bh_enumstr_elems = NULL;
 }
 
 // --- amc.FEnumstrLen.bh_enumstr.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int amc::bh_enumstr_Downheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) {
-    amc::FEnumstr* *elems = enumstr_len.bh_enumstr_elems;
-    int n = enumstr_len.bh_enumstr_n;
+static int amc::bh_enumstr_Downheap(amc::FEnumstrLen& parent, amc::FEnumstr& row, int idx) {
+    amc::FEnumstr* *elems = parent.bh_enumstr_elems;
+    int n = parent.bh_enumstr_n;
     int child = idx*2+1;
     while (child < n) {
         amc::FEnumstr* p = elems[child]; // left child
         int rchild = child+1;
         if (rchild < n) {
             amc::FEnumstr* q = elems[rchild]; // right child
-            if (bh_enumstr_ElemLt(enumstr_len, *q,*p)) {
+            if (bh_enumstr_ElemLt(parent, *q,*p)) {
                 child = rchild;
                 p     = q;
             }
         }
-        if (!bh_enumstr_ElemLt(enumstr_len, *p,row)) {
+        if (!bh_enumstr_ElemLt(parent, *p,row)) {
             break;
         }
         p->enumstr_len_bh_enumstr_idx   = idx;
@@ -29850,33 +30187,33 @@ static int amc::bh_enumstr_Downheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr
 
 // --- amc.FEnumstrLen.bh_enumstr.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void amc::bh_enumstr_Insert(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row) {
+void amc::bh_enumstr_Insert(amc::FEnumstrLen& parent, amc::FEnumstr& row) {
     if (LIKELY(row.enumstr_len_bh_enumstr_idx == -1)) {
-        bh_enumstr_Reserve(enumstr_len, 1);
-        int n = enumstr_len.bh_enumstr_n;
-        enumstr_len.bh_enumstr_n = n + 1;
-        int new_idx = bh_enumstr_Upheap(enumstr_len, row, n);
+        bh_enumstr_Reserve(parent, 1);
+        int n = parent.bh_enumstr_n;
+        parent.bh_enumstr_n = n + 1;
+        int new_idx = bh_enumstr_Upheap(parent, row, n);
         row.enumstr_len_bh_enumstr_idx = new_idx;
-        enumstr_len.bh_enumstr_elems[new_idx] = &row;
+        parent.bh_enumstr_elems[new_idx] = &row;
     }
 }
 
 // --- amc.FEnumstrLen.bh_enumstr.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 amc::bh_enumstr_Reheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row) {
+i32 amc::bh_enumstr_Reheap(amc::FEnumstrLen& parent, amc::FEnumstr& row) {
     int old_idx = row.enumstr_len_bh_enumstr_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
-        bh_enumstr_Reserve(enumstr_len, 1);
-        old_idx = enumstr_len.bh_enumstr_n++;
+        bh_enumstr_Reserve(parent, 1);
+        old_idx = parent.bh_enumstr_n++;
     }
-    int new_idx = bh_enumstr_Upheap(enumstr_len, row, old_idx);
+    int new_idx = bh_enumstr_Upheap(parent, row, old_idx);
     if (!isnew && new_idx == old_idx) {
-        new_idx = bh_enumstr_Downheap(enumstr_len, row, old_idx);
+        new_idx = bh_enumstr_Downheap(parent, row, old_idx);
     }
     row.enumstr_len_bh_enumstr_idx = new_idx;
-    enumstr_len.bh_enumstr_elems[new_idx] = &row;
+    parent.bh_enumstr_elems[new_idx] = &row;
     return new_idx;
 }
 
@@ -29885,31 +30222,31 @@ i32 amc::bh_enumstr_Reheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 amc::bh_enumstr_ReheapFirst(amc::FEnumstrLen& enumstr_len) {
-    amc::FEnumstr &row = *enumstr_len.bh_enumstr_elems[0];
-    i32 new_idx = bh_enumstr_Downheap(enumstr_len, row, 0);
+i32 amc::bh_enumstr_ReheapFirst(amc::FEnumstrLen& parent) {
+    amc::FEnumstr &row = *parent.bh_enumstr_elems[0];
+    i32 new_idx = bh_enumstr_Downheap(parent, row, 0);
     row.enumstr_len_bh_enumstr_idx = new_idx;
-    enumstr_len.bh_enumstr_elems[new_idx] = &row;
+    parent.bh_enumstr_elems[new_idx] = &row;
     return new_idx;
 }
 
 // --- amc.FEnumstrLen.bh_enumstr.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc::bh_enumstr_Remove(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row) {
+void amc::bh_enumstr_Remove(amc::FEnumstrLen& parent, amc::FEnumstr& row) {
     if (bh_enumstr_InBheapQ(row)) {
         int old_idx = row.enumstr_len_bh_enumstr_idx;
-        if (enumstr_len.bh_enumstr_elems[old_idx] == &row) { // sanity check: heap points back to row
+        if (parent.bh_enumstr_elems[old_idx] == &row) { // sanity check: heap points back to row
             row.enumstr_len_bh_enumstr_idx = -1;           // mark not in heap
-            i32 n = enumstr_len.bh_enumstr_n - 1; // index of last element in heap
-            enumstr_len.bh_enumstr_n = n;         // decrease count
+            i32 n = parent.bh_enumstr_n - 1; // index of last element in heap
+            parent.bh_enumstr_n = n;         // decrease count
             if (old_idx != n) {
-                amc::FEnumstr *elem = enumstr_len.bh_enumstr_elems[n];
-                int new_idx = bh_enumstr_Upheap(enumstr_len, *elem, old_idx);
+                amc::FEnumstr *elem = parent.bh_enumstr_elems[n];
+                int new_idx = bh_enumstr_Upheap(parent, *elem, old_idx);
                 if (new_idx == old_idx) {
-                    new_idx = bh_enumstr_Downheap(enumstr_len, *elem, old_idx);
+                    new_idx = bh_enumstr_Downheap(parent, *elem, old_idx);
                 }
                 elem->enumstr_len_bh_enumstr_idx = new_idx;
-                enumstr_len.bh_enumstr_elems[new_idx] = elem;
+                parent.bh_enumstr_elems[new_idx] = elem;
             }
         }
     }
@@ -29917,29 +30254,29 @@ void amc::bh_enumstr_Remove(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row) {
 
 // --- amc.FEnumstrLen.bh_enumstr.RemoveAll
 // Remove all elements from binary heap
-void amc::bh_enumstr_RemoveAll(amc::FEnumstrLen& enumstr_len) {
-    int n = enumstr_len.bh_enumstr_n;
+void amc::bh_enumstr_RemoveAll(amc::FEnumstrLen& parent) {
+    int n = parent.bh_enumstr_n;
     for (int i = n - 1; i>=0; i--) {
-        enumstr_len.bh_enumstr_elems[i]->enumstr_len_bh_enumstr_idx = -1; // mark not-in-heap
+        parent.bh_enumstr_elems[i]->enumstr_len_bh_enumstr_idx = -1; // mark not-in-heap
     }
-    enumstr_len.bh_enumstr_n = 0;
+    parent.bh_enumstr_n = 0;
 }
 
 // --- amc.FEnumstrLen.bh_enumstr.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-amc::FEnumstr* amc::bh_enumstr_RemoveFirst(amc::FEnumstrLen& enumstr_len) {
+amc::FEnumstr* amc::bh_enumstr_RemoveFirst(amc::FEnumstrLen& parent) {
     amc::FEnumstr *row = NULL;
-    if (enumstr_len.bh_enumstr_n > 0) {
-        row = enumstr_len.bh_enumstr_elems[0];
+    if (parent.bh_enumstr_n > 0) {
+        row = parent.bh_enumstr_elems[0];
         row->enumstr_len_bh_enumstr_idx = -1;           // mark not in heap
-        i32 n = enumstr_len.bh_enumstr_n - 1; // index of last element in heap
-        enumstr_len.bh_enumstr_n = n;         // decrease count
+        i32 n = parent.bh_enumstr_n - 1; // index of last element in heap
+        parent.bh_enumstr_n = n;         // decrease count
         if (n) {
-            amc::FEnumstr &elem = *enumstr_len.bh_enumstr_elems[n];
-            int new_idx = bh_enumstr_Downheap(enumstr_len, elem, 0);
+            amc::FEnumstr &elem = *parent.bh_enumstr_elems[n];
+            int new_idx = bh_enumstr_Downheap(parent, elem, 0);
             elem.enumstr_len_bh_enumstr_idx = new_idx;
-            enumstr_len.bh_enumstr_elems[new_idx] = &elem;
+            parent.bh_enumstr_elems[new_idx] = &elem;
         }
     }
     return row;
@@ -29947,30 +30284,30 @@ amc::FEnumstr* amc::bh_enumstr_RemoveFirst(amc::FEnumstrLen& enumstr_len) {
 
 // --- amc.FEnumstrLen.bh_enumstr.Reserve
 // Reserve space in index for N more elements
-void amc::bh_enumstr_Reserve(amc::FEnumstrLen& enumstr_len, int n) {
-    i32 old_max = enumstr_len.bh_enumstr_max;
-    if (UNLIKELY(enumstr_len.bh_enumstr_n + n > old_max)) {
+void amc::bh_enumstr_Reserve(amc::FEnumstrLen& parent, int n) {
+    i32 old_max = parent.bh_enumstr_max;
+    if (UNLIKELY(parent.bh_enumstr_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
         u32 old_size = old_max * sizeof(amc::FEnumstr*);
         u32 new_size = new_max * sizeof(amc::FEnumstr*);
-        void *new_mem = amc::lpool_ReallocMem(enumstr_len.bh_enumstr_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.bh_enumstr_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FEnumstrLen.bh_enumstr");
         }
-        enumstr_len.bh_enumstr_elems = (amc::FEnumstr**)new_mem;
-        enumstr_len.bh_enumstr_max = new_max;
+        parent.bh_enumstr_elems = (amc::FEnumstr**)new_mem;
+        parent.bh_enumstr_max = new_max;
     }
 }
 
 // --- amc.FEnumstrLen.bh_enumstr.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int amc::bh_enumstr_Upheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) {
-    amc::FEnumstr* *elems = enumstr_len.bh_enumstr_elems;
+static int amc::bh_enumstr_Upheap(amc::FEnumstrLen& parent, amc::FEnumstr& row, int idx) {
+    amc::FEnumstr* *elems = parent.bh_enumstr_elems;
     while (idx>0) {
         int j = (idx-1)/2;
         amc::FEnumstr* p = elems[j];
-        if (!bh_enumstr_ElemLt(enumstr_len, row, *p)) {
+        if (!bh_enumstr_ElemLt(parent, row, *p)) {
             break;
         }
         p->enumstr_len_bh_enumstr_idx = idx;
@@ -29981,8 +30318,8 @@ static int amc::bh_enumstr_Upheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& 
 }
 
 // --- amc.FEnumstrLen.bh_enumstr.ElemLt
-inline static bool amc::bh_enumstr_ElemLt(amc::FEnumstrLen& enumstr_len, amc::FEnumstr &a, amc::FEnumstr &b) {
-    (void)enumstr_len;
+inline static bool amc::bh_enumstr_ElemLt(amc::FEnumstrLen& parent, amc::FEnumstr &a, amc::FEnumstr &b) {
+    (void)parent;
     return a.enumstr.str < b.enumstr.str;
 }
 
@@ -30075,13 +30412,12 @@ void amc::enumstr_len_bh_enumstr_curs_Next(enumstr_len_bh_enumstr_curs &curs) {
 }
 
 // --- amc.FEnumstrLen..Uninit
-void amc::FEnumstrLen_Uninit(amc::FEnumstrLen& enumstr_len) {
-    amc::FEnumstrLen &row = enumstr_len; (void)row;
-    bh_enumstr_len_Remove(row); // remove enumstr_len from index bh_enumstr_len
-    ind_enumstr_len_Remove(row); // remove enumstr_len from index ind_enumstr_len
+void amc::FEnumstrLen_Uninit(amc::FEnumstrLen& parent) {
+    bh_enumstr_len_Remove(parent); // remove enumstr_len from index bh_enumstr_len
+    ind_enumstr_len_Remove(parent); // remove enumstr_len from index ind_enumstr_len
 
     // amc.FEnumstrLen.bh_enumstr.Uninit (Bheap)  //List of FEnumstr by string value
-    amc::lpool_FreeMem((u8*)enumstr_len.bh_enumstr_elems, sizeof(amc::FEnumstr*)*enumstr_len.bh_enumstr_max); // (amc.FEnumstrLen.bh_enumstr)
+    amc::lpool_FreeMem((u8*)parent.bh_enumstr_elems, sizeof(amc::FEnumstr*)*parent.bh_enumstr_max); // (amc.FEnumstrLen.bh_enumstr)
 }
 
 // --- amc.FFalias.base.CopyOut
@@ -30101,11 +30437,10 @@ void amc::falias_CopyIn(amc::FFalias &row, dmmeta::Falias &in) {
 }
 
 // --- amc.FFalias..Uninit
-void amc::FFalias_Uninit(amc::FFalias& falias) {
-    amc::FFalias &row = falias; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFalias_Uninit(amc::FFalias& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_falias_Remove(*p_field, row);// remove falias from index c_falias
+        c_falias_Remove(*p_field, parent);// remove falias from index c_falias
     }
 }
 
@@ -30124,11 +30459,10 @@ void amc::fbigend_CopyIn(amc::FFbigend &row, dmmeta::Fbigend &in) {
 }
 
 // --- amc.FFbigend..Uninit
-void amc::FFbigend_Uninit(amc::FFbigend& fbigend) {
-    amc::FFbigend &row = fbigend; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFbigend_Uninit(amc::FFbigend& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fbigend_Remove(*p_field, row);// remove fbigend from index c_fbigend
+        c_fbigend_Remove(*p_field, parent);// remove fbigend from index c_fbigend
     }
 }
 
@@ -30147,13 +30481,12 @@ void amc::fbitset_CopyIn(amc::FFbitset &row, dmmeta::Fbitset &in) {
 }
 
 // --- amc.FFbitset..Uninit
-void amc::FFbitset_Uninit(amc::FFbitset& fbitset) {
-    amc::FFbitset &row = fbitset; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFbitset_Uninit(amc::FFbitset& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fbitset_Remove(*p_field, row);// remove fbitset from index c_fbitset
+        c_fbitset_Remove(*p_field, parent);// remove fbitset from index c_fbitset
     }
-    ind_fbitset_Remove(row); // remove fbitset from index ind_fbitset
+    ind_fbitset_Remove(parent); // remove fbitset from index ind_fbitset
 }
 
 // --- amc.FFbuf.msghdr.CopyOut
@@ -30179,18 +30512,17 @@ void amc::fbuf_CopyIn(amc::FFbuf &row, dmmeta::Fbuf &in) {
 }
 
 // --- amc.FFbuf.fbufdir.Get
-algo::strptr amc::fbufdir_Get(amc::FFbuf& fbuf) {
-    return algo::Pathcomp(fbuf.field, ".RR_LL");
+algo::strptr amc::fbufdir_Get(amc::FFbuf& parent) {
+    return algo::Pathcomp(parent.field, ".RR_LL");
 }
 
 // --- amc.FFbuf..Uninit
-void amc::FFbuf_Uninit(amc::FFbuf& fbuf) {
-    amc::FFbuf &row = fbuf; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFbuf_Uninit(amc::FFbuf& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fbuf_Remove(*p_field, row);// remove fbuf from index c_fbuf
+        c_fbuf_Remove(*p_field, parent);// remove fbuf from index c_fbuf
     }
-    ind_fbuf_Remove(row); // remove fbuf from index ind_fbuf
+    ind_fbuf_Remove(parent); // remove fbuf from index ind_fbuf
 }
 
 // --- amc.FFbuftype.base.CopyOut
@@ -30210,9 +30542,8 @@ void amc::fbuftype_CopyIn(amc::FFbuftype &row, dmmeta::Fbuftype &in) {
 }
 
 // --- amc.FFbuftype..Uninit
-void amc::FFbuftype_Uninit(amc::FFbuftype& fbuftype) {
-    amc::FFbuftype &row = fbuftype; (void)row;
-    ind_fbuftype_Remove(row); // remove fbuftype from index ind_fbuftype
+void amc::FFbuftype_Uninit(amc::FFbuftype& parent) {
+    ind_fbuftype_Remove(parent); // remove fbuftype from index ind_fbuftype
 }
 
 // --- amc.FFcast.msghdr.CopyOut
@@ -30232,11 +30563,10 @@ void amc::fcast_CopyIn(amc::FFcast &row, dmmeta::Fcast &in) {
 }
 
 // --- amc.FFcast..Uninit
-void amc::FFcast_Uninit(amc::FFcast& fcast) {
-    amc::FFcast &row = fcast; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFcast_Uninit(amc::FFcast& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fcast_Remove(*p_field, row);// remove fcast from index c_fcast
+        c_fcast_Remove(*p_field, parent);// remove fcast from index c_fcast
     }
 }
 
@@ -30257,45 +30587,44 @@ void amc::fcmap_CopyIn(amc::FFcmap &row, dmmeta::Fcmap &in) {
 }
 
 // --- amc.FFcmap.leftField.Get
-algo::strptr amc::leftField_Get(amc::FFcmap& fcmap) {
-    return algo::Pathcomp(fcmap.fcmap, "=LL/LL");
+algo::strptr amc::leftField_Get(amc::FFcmap& parent) {
+    return algo::Pathcomp(parent.fcmap, "=LL/LL");
 }
 
 // --- amc.FFcmap.leftVal.Get
-algo::strptr amc::leftVal_Get(amc::FFcmap& fcmap) {
-    return algo::Pathcomp(fcmap.fcmap, "=LL/LR");
+algo::strptr amc::leftVal_Get(amc::FFcmap& parent) {
+    return algo::Pathcomp(parent.fcmap, "=LL/LR");
 }
 
 // --- amc.FFcmap.rightVal.Get
-algo::strptr amc::rightVal_Get(amc::FFcmap& fcmap) {
-    return algo::Pathcomp(fcmap.fcmap, "=LR/LR");
+algo::strptr amc::rightVal_Get(amc::FFcmap& parent) {
+    return algo::Pathcomp(parent.fcmap, "=LR/LR");
 }
 
 // --- amc.FFcmap.rightField.Get
-algo::strptr amc::rightField_Get(amc::FFcmap& fcmap) {
-    return algo::Pathcomp(fcmap.fcmap, "=LR/LL");
+algo::strptr amc::rightField_Get(amc::FFcmap& parent) {
+    return algo::Pathcomp(parent.fcmap, "=LR/LL");
 }
 
 // --- amc.FFcmap..Init
 // Set all fields to initial values.
-void amc::FFcmap_Init(amc::FFcmap& fcmap) {
-    fcmap.bidir = bool(true);
-    fcmap.p_leftField = NULL;
-    fcmap.p_rightField = NULL;
-    fcmap.c_convfunc = NULL;
-    fcmap.ind_fcmap_next = (amc::FFcmap*)-1; // (amc.FDb.ind_fcmap) not-in-hash
-    fcmap.ind_fcmap_hashval = 0; // stored hash value
-    fcmap.field_zs_fcmap_next = (amc::FFcmap*)-1; // (amc.FField.zs_fcmap) not-in-list
+void amc::FFcmap_Init(amc::FFcmap& parent) {
+    parent.bidir = bool(true);
+    parent.p_leftField = NULL;
+    parent.p_rightField = NULL;
+    parent.c_convfunc = NULL;
+    parent.ind_fcmap_next = (amc::FFcmap*)-1; // (amc.FDb.ind_fcmap) not-in-hash
+    parent.ind_fcmap_hashval = 0; // stored hash value
+    parent.field_zs_fcmap_next = (amc::FFcmap*)-1; // (amc.FField.zs_fcmap) not-in-list
 }
 
 // --- amc.FFcmap..Uninit
-void amc::FFcmap_Uninit(amc::FFcmap& fcmap) {
-    amc::FFcmap &row = fcmap; (void)row;
-    amc::FField* p_p_leftField = row.p_leftField;
+void amc::FFcmap_Uninit(amc::FFcmap& parent) {
+    amc::FField* p_p_leftField = parent.p_leftField;
     if (p_p_leftField)  {
-        zs_fcmap_Remove(*p_p_leftField, row);// remove fcmap from index zs_fcmap
+        zs_fcmap_Remove(*p_p_leftField, parent);// remove fcmap from index zs_fcmap
     }
-    ind_fcmap_Remove(row); // remove fcmap from index ind_fcmap
+    ind_fcmap_Remove(parent); // remove fcmap from index ind_fcmap
 }
 
 // --- amc.FFcmp.msghdr.CopyOut
@@ -30319,11 +30648,10 @@ void amc::fcmp_CopyIn(amc::FFcmp &row, dmmeta::Fcmp &in) {
 }
 
 // --- amc.FFcmp..Uninit
-void amc::FFcmp_Uninit(amc::FFcmp& fcmp) {
-    amc::FFcmp &row = fcmp; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFcmp_Uninit(amc::FFcmp& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fcmp_Remove(*p_field, row);// remove fcmp from index c_fcmp
+        c_fcmp_Remove(*p_field, parent);// remove fcmp from index c_fcmp
     }
 }
 
@@ -30342,11 +30670,10 @@ void amc::fcompact_CopyIn(amc::FFcompact &row, dmmeta::Fcompact &in) {
 }
 
 // --- amc.FFcompact..Uninit
-void amc::FFcompact_Uninit(amc::FFcompact& fcompact) {
-    amc::FFcompact &row = fcompact; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFcompact_Uninit(amc::FFcompact& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fcompact_Remove(*p_field, row);// remove fcompact from index c_fcompact
+        c_fcompact_Remove(*p_field, parent);// remove fcompact from index c_fcompact
     }
 }
 
@@ -30371,21 +30698,20 @@ void amc::fcond_CopyIn(amc::FFcond &row, dmmeta::Fcond &in) {
 }
 
 // --- amc.FFcond.field.Get
-algo::strptr amc::field_Get(amc::FFcond& fcond) {
-    return algo::Pathcomp(fcond.fcond, "/LL");
+algo::strptr amc::field_Get(amc::FFcond& parent) {
+    return algo::Pathcomp(parent.fcond, "/LL");
 }
 
 // --- amc.FFcond.value.Get
-algo::strptr amc::value_Get(amc::FFcond& fcond) {
-    return algo::Pathcomp(fcond.fcond, "/LR");
+algo::strptr amc::value_Get(amc::FFcond& parent) {
+    return algo::Pathcomp(parent.fcond, "/LR");
 }
 
 // --- amc.FFcond..Uninit
-void amc::FFcond_Uninit(amc::FFcond& fcond) {
-    amc::FFcond &row = fcond; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+void amc::FFcond_Uninit(amc::FFcond& parent) {
+    amc::FField* p_field = amc::ind_field_Find(field_Get(parent));
     if (p_field)  {
-        c_fcond_Remove(*p_field, row);// remove fcond from index c_fcond
+        c_fcond_Remove(*p_field, parent);// remove fcond from index c_fcond
     }
 }
 
@@ -30406,34 +30732,33 @@ void amc::fconst_CopyIn(amc::FFconst &row, dmmeta::Fconst &in) {
 }
 
 // --- amc.FFconst.field.Get
-algo::strptr amc::field_Get(amc::FFconst& fconst) {
-    return algo::Pathcomp(fconst.fconst, "/LL");
+algo::strptr amc::field_Get(amc::FFconst& parent) {
+    return algo::Pathcomp(parent.fconst, "/LL");
 }
 
 // --- amc.FFconst.name.Get
-algo::strptr amc::name_Get(amc::FFconst& fconst) {
-    return algo::Pathcomp(fconst.fconst, "/LR");
+algo::strptr amc::name_Get(amc::FFconst& parent) {
+    return algo::Pathcomp(parent.fconst, "/LR");
 }
 
 // --- amc.FFconst..Init
 // Set all fields to initial values.
-void amc::FFconst_Init(amc::FFconst& fconst) {
-    fconst.p_field = NULL;
-    fconst.int_val = i64(0);
-    fconst.field_c_fconst_in_ary = bool(false);
-    fconst.ind_fconst_next = (amc::FFconst*)-1; // (amc.FDb.ind_fconst) not-in-hash
-    fconst.ind_fconst_hashval = 0; // stored hash value
-    fconst.ind_fconst_int_next = (amc::FFconst*)-1; // (amc.FDb.ind_fconst_int) not-in-hash
-    fconst.ind_fconst_int_hashval = 0; // stored hash value
+void amc::FFconst_Init(amc::FFconst& parent) {
+    parent.p_field = NULL;
+    parent.int_val = i64(0);
+    parent.field_c_fconst_in_ary = bool(false);
+    parent.ind_fconst_next = (amc::FFconst*)-1; // (amc.FDb.ind_fconst) not-in-hash
+    parent.ind_fconst_hashval = 0; // stored hash value
+    parent.ind_fconst_int_next = (amc::FFconst*)-1; // (amc.FDb.ind_fconst_int) not-in-hash
+    parent.ind_fconst_int_hashval = 0; // stored hash value
 }
 
 // --- amc.FFconst..Uninit
-void amc::FFconst_Uninit(amc::FFconst& fconst) {
-    amc::FFconst &row = fconst; (void)row;
-    ind_fconst_Remove(row); // remove fconst from index ind_fconst
-    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+void amc::FFconst_Uninit(amc::FFconst& parent) {
+    ind_fconst_Remove(parent); // remove fconst from index ind_fconst
+    amc::FField* p_field = amc::ind_field_Find(field_Get(parent));
     if (p_field)  {
-        c_fconst_Remove(*p_field, row);// remove fconst from index c_fconst
+        c_fconst_Remove(*p_field, parent);// remove fconst from index c_fconst
     }
 }
 
@@ -30452,28 +30777,27 @@ void amc::fcurs_CopyIn(amc::FFcurs &row, dmmeta::Fcurs &in) {
 }
 
 // --- amc.FFcurs.field.Get
-algo::strptr amc::field_Get(amc::FFcurs& fcurs) {
-    return algo::Pathcomp(fcurs.fcurs, "/RL");
+algo::strptr amc::field_Get(amc::FFcurs& parent) {
+    return algo::Pathcomp(parent.fcurs, "/RL");
 }
 
 // --- amc.FFcurs.ctype.Get
-algo::strptr amc::ctype_Get(amc::FFcurs& fcurs) {
-    return algo::Pathcomp(fcurs.fcurs, "/RL.RL");
+algo::strptr amc::ctype_Get(amc::FFcurs& parent) {
+    return algo::Pathcomp(parent.fcurs, "/RL.RL");
 }
 
 // --- amc.FFcurs.curstype.Get
-algo::strptr amc::curstype_Get(amc::FFcurs& fcurs) {
-    return algo::Pathcomp(fcurs.fcurs, "/RR");
+algo::strptr amc::curstype_Get(amc::FFcurs& parent) {
+    return algo::Pathcomp(parent.fcurs, "/RR");
 }
 
 // --- amc.FFcurs..Uninit
-void amc::FFcurs_Uninit(amc::FFcurs& fcurs) {
-    amc::FFcurs &row = fcurs; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+void amc::FFcurs_Uninit(amc::FFcurs& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_fcurs_Remove(*p_ctype, row);// remove fcurs from index c_fcurs
+        c_fcurs_Remove(*p_ctype, parent);// remove fcurs from index c_fcurs
     }
-    ind_fcurs_Remove(row); // remove fcurs from index ind_fcurs
+    ind_fcurs_Remove(parent); // remove fcurs from index ind_fcurs
 }
 
 // --- amc.FFdec.msghdr.CopyOut
@@ -30495,12 +30819,11 @@ void amc::fdec_CopyIn(amc::FFdec &row, dmmeta::Fdec &in) {
 }
 
 // --- amc.FFdec..Uninit
-void amc::FFdec_Uninit(amc::FFdec& fdec) {
-    amc::FFdec &row = fdec; (void)row;
-    ind_fdec_Remove(row); // remove fdec from index ind_fdec
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFdec_Uninit(amc::FFdec& parent) {
+    ind_fdec_Remove(parent); // remove fdec from index ind_fdec
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fdec_Remove(*p_field, row);// remove fdec from index c_fdec
+        c_fdec_Remove(*p_field, parent);// remove fdec from index c_fdec
     }
 }
 
@@ -30523,11 +30846,10 @@ void amc::fdelay_CopyIn(amc::FFdelay &row, dmmeta::Fdelay &in) {
 }
 
 // --- amc.FFdelay..Uninit
-void amc::FFdelay_Uninit(amc::FFdelay& fdelay) {
-    amc::FFdelay &row = fdelay; (void)row;
-    amc::FFstep* p_fstep = amc::ind_fstep_Find(row.fstep);
+void amc::FFdelay_Uninit(amc::FFdelay& parent) {
+    amc::FFstep* p_fstep = amc::ind_fstep_Find(parent.fstep);
     if (p_fstep)  {
-        c_fdelay_Remove(*p_fstep, row);// remove fdelay from index c_fdelay
+        c_fdelay_Remove(*p_fstep, parent);// remove fdelay from index c_fdelay
     }
 }
 
@@ -30560,50 +30882,49 @@ void amc::ffast_CopyIn(amc::FFfast &row, dmmeta::Ffast &in) {
 }
 
 // --- amc.FFfast.field.Get
-algo::strptr amc::field_Get(amc::FFfast& ffast) {
-    return algo::Pathcomp(ffast.ffast, ".RL");
+algo::strptr amc::field_Get(amc::FFfast& parent) {
+    return algo::Pathcomp(parent.ffast, ".RL");
 }
 
 // --- amc.FFfast.ctype.Get
-algo::strptr amc::ctype_Get(amc::FFfast& ffast) {
-    return algo::Pathcomp(ffast.ffast, ".RL.RL");
+algo::strptr amc::ctype_Get(amc::FFfast& parent) {
+    return algo::Pathcomp(parent.ffast, ".RL.RL");
 }
 
 // --- amc.FFfast.fastinstr.Get
-algo::strptr amc::fastinstr_Get(amc::FFfast& ffast) {
-    return algo::Pathcomp(ffast.ffast, ".RR");
+algo::strptr amc::fastinstr_Get(amc::FFfast& parent) {
+    return algo::Pathcomp(parent.ffast, ".RR");
 }
 
 // --- amc.FFfast..Init
 // Set all fields to initial values.
-void amc::FFfast_Init(amc::FFfast& ffast) {
-    ffast.id = u32(0);
-    ffast.pos = u32(0);
-    ffast.optional = bool(false);
-    ffast.p_field = NULL;
-    ffast.ctype_c_ffast_in_ary = bool(false);
-    ffast.field_c_ffast_in_ary = bool(false);
+void amc::FFfast_Init(amc::FFfast& parent) {
+    parent.id = u32(0);
+    parent.pos = u32(0);
+    parent.optional = bool(false);
+    parent.p_field = NULL;
+    parent.ctype_c_ffast_in_ary = bool(false);
+    parent.field_c_ffast_in_ary = bool(false);
 }
 
 // --- amc.FFfast..Uninit
-void amc::FFfast_Uninit(amc::FFfast& ffast) {
-    amc::FFfast &row = ffast; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+void amc::FFfast_Uninit(amc::FFfast& parent) {
+    amc::FField* p_field = amc::ind_field_Find(field_Get(parent));
     if (p_field)  {
-        c_ffast_field_Remove(*p_field, row);// remove ffast from index c_ffast_field
+        c_ffast_field_Remove(*p_field, parent);// remove ffast from index c_ffast_field
     }
     if (p_field)  {
-        c_ffast_length_Remove(*p_field, row);// remove ffast from index c_ffast_length
+        c_ffast_length_Remove(*p_field, parent);// remove ffast from index c_ffast_length
     }
     if (p_field)  {
-        c_ffast_mantissa_Remove(*p_field, row);// remove ffast from index c_ffast_mantissa
+        c_ffast_mantissa_Remove(*p_field, parent);// remove ffast from index c_ffast_mantissa
     }
     if (p_field)  {
-        c_ffast_Remove(*p_field, row);// remove ffast from index c_ffast
+        c_ffast_Remove(*p_field, parent);// remove ffast from index c_ffast
     }
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_ffast_Remove(*p_ctype, row);// remove ffast from index c_ffast
+        c_ffast_Remove(*p_ctype, parent);// remove ffast from index c_ffast
     }
 }
 
@@ -30626,12 +30947,11 @@ void amc::fflag_CopyIn(amc::FFflag &row, dmmeta::Fflag &in) {
 }
 
 // --- amc.FFflag..Uninit
-void amc::FFflag_Uninit(amc::FFflag& fflag) {
-    amc::FFflag &row = fflag; (void)row;
-    ind_fflag_Remove(row); // remove fflag from index ind_fflag
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFflag_Uninit(amc::FFflag& parent) {
+    ind_fflag_Remove(parent); // remove fflag from index ind_fflag
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fflag_Remove(*p_field, row);// remove fflag from index c_fflag
+        c_fflag_Remove(*p_field, parent);// remove fflag from index c_fflag
     }
 }
 
@@ -30652,22 +30972,21 @@ void amc::ffunc_CopyIn(amc::FFfunc &row, dmmeta::Ffunc &in) {
 }
 
 // --- amc.FFfunc.field.Get
-algo::strptr amc::field_Get(amc::FFfunc& ffunc) {
-    return algo::Pathcomp(ffunc.ffunc, ".RL");
+algo::strptr amc::field_Get(amc::FFfunc& parent) {
+    return algo::Pathcomp(parent.ffunc, ".RL");
 }
 
 // --- amc.FFfunc.name.Get
-algo::strptr amc::name_Get(amc::FFfunc& ffunc) {
-    return algo::Pathcomp(ffunc.ffunc, ".RR");
+algo::strptr amc::name_Get(amc::FFfunc& parent) {
+    return algo::Pathcomp(parent.ffunc, ".RR");
 }
 
 // --- amc.FFfunc..Uninit
-void amc::FFfunc_Uninit(amc::FFfunc& ffunc) {
-    amc::FFfunc &row = ffunc; (void)row;
-    ind_ffunc_Remove(row); // remove ffunc from index ind_ffunc
-    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+void amc::FFfunc_Uninit(amc::FFfunc& parent) {
+    ind_ffunc_Remove(parent); // remove ffunc from index ind_ffunc
+    amc::FField* p_field = amc::ind_field_Find(field_Get(parent));
     if (p_field)  {
-        zs_ffunc_Remove(*p_field, row);// remove ffunc from index zs_ffunc
+        zs_ffunc_Remove(*p_field, parent);// remove ffunc from index zs_ffunc
     }
 }
 
@@ -30692,27 +31011,27 @@ void amc::field_CopyIn(amc::FField &row, dmmeta::Field &in) {
 }
 
 // --- amc.FField.ctype.Get
-algo::strptr amc::ctype_Get(amc::FField& field) {
-    return algo::Pathcomp(field.field, ".RL");
+algo::strptr amc::ctype_Get(amc::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- amc.FField.ns.Get
-algo::strptr amc::ns_Get(amc::FField& field) {
-    return algo::Pathcomp(field.field, ".RL.RL");
+algo::strptr amc::ns_Get(amc::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL.RL");
 }
 
 // --- amc.FField.name.Get
-algo::strptr amc::name_Get(amc::FField& field) {
-    return algo::Pathcomp(field.field, ".RR");
+algo::strptr amc::name_Get(amc::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RR");
 }
 
 // --- amc.FField.c_ffunc.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_ffunc_Insert(amc::FField& field, amc::FFunc& row) {
-    c_ffunc_Reserve(field, 1);
-    u64 n  = field.c_ffunc_n++;
-    field.c_ffunc_elems[n] = &row;
+void amc::c_ffunc_Insert(amc::FField& parent, amc::FFunc& row) {
+    c_ffunc_Reserve(parent, 1);
+    u64 n  = parent.c_ffunc_n++;
+    parent.c_ffunc_elems[n] = &row;
 }
 
 // --- amc.FField.c_ffunc.ScanInsertMaybe
@@ -30720,63 +31039,63 @@ void amc::c_ffunc_Insert(amc::FField& field, amc::FFunc& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool amc::c_ffunc_ScanInsertMaybe(amc::FField& field, amc::FFunc& row) {
+bool amc::c_ffunc_ScanInsertMaybe(amc::FField& parent, amc::FFunc& row) {
     bool retval = true;
-    u64 n  = field.c_ffunc_n;
+    u64 n  = parent.c_ffunc_n;
     for (u64 i = 0; i < n; i++) {
-        if (field.c_ffunc_elems[i] == &row) {
+        if (parent.c_ffunc_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_ffunc_Insert(field,row); // row known absent; the append is Insert's
+        c_ffunc_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- amc.FField.c_ffunc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_ffunc_Remove(amc::FField& field, amc::FFunc& row) {
-    i64 n = field.c_ffunc_n;
+void amc::c_ffunc_Remove(amc::FField& parent, amc::FFunc& row) {
+    i64 n = parent.c_ffunc_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (field.c_ffunc_elems[i] == &row) {
+        if (parent.c_ffunc_elems[i] == &row) {
         } else {
             if (j != i) {
-                field.c_ffunc_elems[j] = field.c_ffunc_elems[i];
+                parent.c_ffunc_elems[j] = parent.c_ffunc_elems[i];
             }
             j++;
         }
     }
-    field.c_ffunc_n = j;
+    parent.c_ffunc_n = j;
 }
 
 // --- amc.FField.c_ffunc.Reserve
 // Reserve space in index for N more elements;
-void amc::c_ffunc_Reserve(amc::FField& field, u64 n) {
-    u64 old_max = field.c_ffunc_max;
-    if (UNLIKELY(field.c_ffunc_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, field.c_ffunc_n + n), 4);
+void amc::c_ffunc_Reserve(amc::FField& parent, u64 n) {
+    u64 old_max = parent.c_ffunc_max;
+    if (UNLIKELY(parent.c_ffunc_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_ffunc_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFunc*);
         u64 new_size = new_max * sizeof(amc::FFunc*);
-        void *new_mem = amc::lpool_ReallocMem(field.c_ffunc_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_ffunc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FField.c_ffunc");
         }
-        field.c_ffunc_elems = (amc::FFunc**)new_mem;
-        field.c_ffunc_max = new_max;
+        parent.c_ffunc_elems = (amc::FFunc**)new_mem;
+        parent.c_ffunc_max = new_max;
     }
 }
 
 // --- amc.FField.c_fconst.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_fconst_Insert(amc::FField& field, amc::FFconst& row) {
+void amc::c_fconst_Insert(amc::FField& parent, amc::FFconst& row) {
     if (!row.field_c_fconst_in_ary) {
-        c_fconst_Reserve(field, 1);
-        u64 n  = field.c_fconst_n++;
-        field.c_fconst_elems[n] = &row;
+        c_fconst_Reserve(parent, 1);
+        u64 n  = parent.c_fconst_n++;
+        parent.c_fconst_elems[n] = &row;
         row.field_c_fconst_in_ary = true;
     }
 }
@@ -30785,18 +31104,18 @@ void amc::c_fconst_Insert(amc::FField& field, amc::FFconst& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_fconst_InsertMaybe(amc::FField& field, amc::FFconst& row) {
+bool amc::c_fconst_InsertMaybe(amc::FField& parent, amc::FFconst& row) {
     bool retval = !field_c_fconst_InAryQ(row);
-    c_fconst_Insert(field,row); // check is performed in _Insert again
+    c_fconst_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FField.c_fconst.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_fconst_Remove(amc::FField& field, amc::FFconst& row) {
-    i64 n = field.c_fconst_n;
+void amc::c_fconst_Remove(amc::FField& parent, amc::FFconst& row) {
+    i64 n = parent.c_fconst_n;
     if (bool_Update(row.field_c_fconst_in_ary,false)) {
-        amc::FFconst* *elems = field.c_fconst_elems;
+        amc::FFconst* *elems = parent.c_fconst_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -30805,7 +31124,7 @@ void amc::c_fconst_Remove(amc::FField& field, amc::FFconst& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFconst*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                field.c_fconst_n = n - 1;
+                parent.c_fconst_n = n - 1;
                 break;
             }
         }
@@ -30814,67 +31133,67 @@ void amc::c_fconst_Remove(amc::FField& field, amc::FFconst& row) {
 
 // --- amc.FField.c_fconst.Reserve
 // Reserve space in index for N more elements;
-void amc::c_fconst_Reserve(amc::FField& field, u64 n) {
-    u64 old_max = field.c_fconst_max;
-    if (UNLIKELY(field.c_fconst_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, field.c_fconst_n + n), 4);
+void amc::c_fconst_Reserve(amc::FField& parent, u64 n) {
+    u64 old_max = parent.c_fconst_max;
+    if (UNLIKELY(parent.c_fconst_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_fconst_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFconst*);
         u64 new_size = new_max * sizeof(amc::FFconst*);
-        void *new_mem = amc::lpool_ReallocMem(field.c_fconst_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_fconst_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FField.c_fconst");
         }
-        field.c_fconst_elems = (amc::FFconst**)new_mem;
-        field.c_fconst_max = new_max;
+        parent.c_fconst_elems = (amc::FFconst**)new_mem;
+        parent.c_fconst_max = new_max;
     }
 }
 
 // --- amc.FField.zd_xref_keyfld.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zd_xref_keyfld_Insert(amc::FField& field, amc::FXref& row) {
+void amc::zd_xref_keyfld_Insert(amc::FField& parent, amc::FXref& row) {
     if (!field_zd_xref_keyfld_InLlistQ(row)) {
-        amc::FXref* old_tail = field.zd_xref_keyfld_tail;
+        amc::FXref* old_tail = parent.zd_xref_keyfld_tail;
         row.field_zd_xref_keyfld_next = NULL;
         row.field_zd_xref_keyfld_prev = old_tail;
-        field.zd_xref_keyfld_tail = &row;
+        parent.zd_xref_keyfld_tail = &row;
         amc::FXref **new_row_a = &old_tail->field_zd_xref_keyfld_next;
-        amc::FXref **new_row_b = &field.zd_xref_keyfld_head;
+        amc::FXref **new_row_b = &parent.zd_xref_keyfld_head;
         amc::FXref **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        field.zd_xref_keyfld_n++;
+        parent.zd_xref_keyfld_n++;
     }
 }
 
 // --- amc.FField.zd_xref_keyfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc::zd_xref_keyfld_Remove(amc::FField& field, amc::FXref& row) {
+void amc::zd_xref_keyfld_Remove(amc::FField& parent, amc::FXref& row) {
     if (field_zd_xref_keyfld_InLlistQ(row)) {
-        amc::FXref* old_head       = field.zd_xref_keyfld_head;
+        amc::FXref* old_head       = parent.zd_xref_keyfld_head;
         (void)old_head; // in case it's not used
         amc::FXref* prev = row.field_zd_xref_keyfld_prev;
         amc::FXref* next = row.field_zd_xref_keyfld_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         amc::FXref **new_next_a = &prev->field_zd_xref_keyfld_next;
-        amc::FXref **new_next_b = &field.zd_xref_keyfld_head;
+        amc::FXref **new_next_b = &parent.zd_xref_keyfld_head;
         amc::FXref **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         amc::FXref **new_prev_a = &next->field_zd_xref_keyfld_prev;
-        amc::FXref **new_prev_b = &field.zd_xref_keyfld_tail;
+        amc::FXref **new_prev_b = &parent.zd_xref_keyfld_tail;
         amc::FXref **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        field.zd_xref_keyfld_n--;
+        parent.zd_xref_keyfld_n--;
         row.field_zd_xref_keyfld_next=(amc::FXref*)-1; // not-in-list
     }
 }
 
 // --- amc.FField.zd_xref_keyfld.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zd_xref_keyfld_RemoveAll(amc::FField& field) {
-    amc::FXref* row = field.zd_xref_keyfld_head;
-    field.zd_xref_keyfld_head = NULL;
-    field.zd_xref_keyfld_tail = NULL;
-    field.zd_xref_keyfld_n = 0;
+void amc::zd_xref_keyfld_RemoveAll(amc::FField& parent) {
+    amc::FXref* row = parent.zd_xref_keyfld_head;
+    parent.zd_xref_keyfld_head = NULL;
+    parent.zd_xref_keyfld_tail = NULL;
+    parent.zd_xref_keyfld_n = 0;
     while (row) {
         amc::FXref* row_next = row->field_zd_xref_keyfld_next;
         row->field_zd_xref_keyfld_next  = (amc::FXref*)-1;
@@ -30885,17 +31204,17 @@ void amc::zd_xref_keyfld_RemoveAll(amc::FField& field) {
 
 // --- amc.FField.zd_xref_keyfld.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FXref* amc::zd_xref_keyfld_RemoveFirst(amc::FField& field) {
+amc::FXref* amc::zd_xref_keyfld_RemoveFirst(amc::FField& parent) {
     amc::FXref *row = NULL;
-    row = field.zd_xref_keyfld_head;
+    row = parent.zd_xref_keyfld_head;
     if (row) {
         amc::FXref *next = row->field_zd_xref_keyfld_next;
-        field.zd_xref_keyfld_head = next;
+        parent.zd_xref_keyfld_head = next;
         amc::FXref **new_end_a = &next->field_zd_xref_keyfld_prev;
-        amc::FXref **new_end_b = &field.zd_xref_keyfld_tail;
+        amc::FXref **new_end_b = &parent.zd_xref_keyfld_tail;
         amc::FXref **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        field.zd_xref_keyfld_n--;
+        parent.zd_xref_keyfld_n--;
         row->field_zd_xref_keyfld_next = (amc::FXref*)-1; // mark as not-in-list
     }
     return row;
@@ -30903,31 +31222,31 @@ amc::FXref* amc::zd_xref_keyfld_RemoveFirst(amc::FField& field) {
 
 // --- amc.FField.zd_xref_keyfld.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void amc::zd_xref_keyfld_InsertBefore(amc::FField& field, amc::FXref& row, amc::FXref* before) {
+void amc::zd_xref_keyfld_InsertBefore(amc::FField& parent, amc::FXref& row, amc::FXref* before) {
     if (!field_zd_xref_keyfld_InLlistQ(row) && &row != before) {
         amc::FXref* next = before;
-        amc::FXref* prev = next ? next->field_zd_xref_keyfld_prev : field.zd_xref_keyfld_tail;
+        amc::FXref* prev = next ? next->field_zd_xref_keyfld_prev : parent.zd_xref_keyfld_tail;
         row.field_zd_xref_keyfld_next = next;
         row.field_zd_xref_keyfld_prev = prev;
         amc::FXref **prev_link_a = &prev->field_zd_xref_keyfld_next;
-        amc::FXref **prev_link_b = &field.zd_xref_keyfld_head;
+        amc::FXref **prev_link_b = &parent.zd_xref_keyfld_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         amc::FXref **next_link_a = &next->field_zd_xref_keyfld_prev;
-        amc::FXref **next_link_b = &field.zd_xref_keyfld_tail;
+        amc::FXref **next_link_b = &parent.zd_xref_keyfld_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        field.zd_xref_keyfld_n++;
+        parent.zd_xref_keyfld_n++;
     }
 }
 
 // --- amc.FField.zs_fcmap.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zs_fcmap_Insert(amc::FField& field, amc::FFcmap& row) {
+void amc::zs_fcmap_Insert(amc::FField& parent, amc::FFcmap& row) {
     if (!field_zs_fcmap_InLlistQ(row)) {
-        amc::FFcmap* old_tail       = field.zs_fcmap_tail;
+        amc::FFcmap* old_tail       = parent.zs_fcmap_tail;
         row.field_zs_fcmap_next  = NULL;
-        field.zs_fcmap_tail = &row;
+        parent.zs_fcmap_tail = &row;
         amc::FFcmap **new_row_a = &old_tail->field_zs_fcmap_next;
-        amc::FFcmap **new_row_b = &field.zs_fcmap_head;
+        amc::FFcmap **new_row_b = &parent.zs_fcmap_head;
         amc::FFcmap **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
     }
@@ -30936,24 +31255,24 @@ void amc::zs_fcmap_Insert(amc::FField& field, amc::FFcmap& row) {
 // --- amc.FField.zs_fcmap.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void amc::zs_fcmap_Remove(amc::FField& field, amc::FFcmap& row) {
+void amc::zs_fcmap_Remove(amc::FField& parent, amc::FFcmap& row) {
     if (field_zs_fcmap_InLlistQ(row)) {
-        amc::FFcmap* old_head       = field.zs_fcmap_head;
+        amc::FFcmap* old_head       = parent.zs_fcmap_head;
         (void)old_head; // in case it's not used
         amc::FFcmap* prev=NULL;
-        amc::FFcmap* cur     = field.zs_fcmap_head;
+        amc::FFcmap* cur     = parent.zs_fcmap_head;
         while (cur) {  // search for element by pointer
             amc::FFcmap* next = cur->field_zs_fcmap_next;
             if (cur == &row) {
 
                 if (!next) {
-                    field.zs_fcmap_tail = prev;  // adjust tail pointer
+                    parent.zs_fcmap_tail = prev;  // adjust tail pointer
                 }
                 // disconnect element from linked list
                 if (prev) {
                     prev->field_zs_fcmap_next = next;
                 } else {
-                    field.zs_fcmap_head = next;
+                    parent.zs_fcmap_head = next;
                 }
                 row.field_zs_fcmap_next = (amc::FFcmap*)-1; // not-in-list
                 break;
@@ -30966,10 +31285,10 @@ void amc::zs_fcmap_Remove(amc::FField& field, amc::FFcmap& row) {
 
 // --- amc.FField.zs_fcmap.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zs_fcmap_RemoveAll(amc::FField& field) {
-    amc::FFcmap* row = field.zs_fcmap_head;
-    field.zs_fcmap_head = NULL;
-    field.zs_fcmap_tail = NULL;
+void amc::zs_fcmap_RemoveAll(amc::FField& parent) {
+    amc::FFcmap* row = parent.zs_fcmap_head;
+    parent.zs_fcmap_head = NULL;
+    parent.zs_fcmap_tail = NULL;
     while (row) {
         amc::FFcmap* row_next = row->field_zs_fcmap_next;
         row->field_zs_fcmap_next  = (amc::FFcmap*)-1;
@@ -30979,15 +31298,15 @@ void amc::zs_fcmap_RemoveAll(amc::FField& field) {
 
 // --- amc.FField.zs_fcmap.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FFcmap* amc::zs_fcmap_RemoveFirst(amc::FField& field) {
+amc::FFcmap* amc::zs_fcmap_RemoveFirst(amc::FField& parent) {
     amc::FFcmap *row = NULL;
-    row = field.zs_fcmap_head;
+    row = parent.zs_fcmap_head;
     if (row) {
         amc::FFcmap *next = row->field_zs_fcmap_next;
-        field.zs_fcmap_head = next;
+        parent.zs_fcmap_head = next;
         // clear list's tail pointer if list is empty.
         if (!next) {
-            field.zs_fcmap_tail = NULL;
+            parent.zs_fcmap_tail = NULL;
         }
         row->field_zs_fcmap_next = (amc::FFcmap*)-1; // mark as not-in-list
     }
@@ -30996,31 +31315,31 @@ amc::FFcmap* amc::zs_fcmap_RemoveFirst(amc::FField& field) {
 
 // --- amc.FField.bh_bitfld.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void amc::bh_bitfld_Dealloc(amc::FField& field) {
-    bh_bitfld_RemoveAll(field);
-    amc::lpool_FreeMem(field.bh_bitfld_elems, sizeof(amc::FBitfld*)*field.bh_bitfld_max);
-    field.bh_bitfld_max   = 0;
-    field.bh_bitfld_elems = NULL;
+void amc::bh_bitfld_Dealloc(amc::FField& parent) {
+    bh_bitfld_RemoveAll(parent);
+    amc::lpool_FreeMem(parent.bh_bitfld_elems, sizeof(amc::FBitfld*)*parent.bh_bitfld_max);
+    parent.bh_bitfld_max   = 0;
+    parent.bh_bitfld_elems = NULL;
 }
 
 // --- amc.FField.bh_bitfld.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int amc::bh_bitfld_Downheap(amc::FField& field, amc::FBitfld& row, int idx) {
-    amc::FBitfld* *elems = field.bh_bitfld_elems;
-    int n = field.bh_bitfld_n;
+static int amc::bh_bitfld_Downheap(amc::FField& parent, amc::FBitfld& row, int idx) {
+    amc::FBitfld* *elems = parent.bh_bitfld_elems;
+    int n = parent.bh_bitfld_n;
     int child = idx*2+1;
     while (child < n) {
         amc::FBitfld* p = elems[child]; // left child
         int rchild = child+1;
         if (rchild < n) {
             amc::FBitfld* q = elems[rchild]; // right child
-            if (bh_bitfld_ElemLt(field, *q,*p)) {
+            if (bh_bitfld_ElemLt(parent, *q,*p)) {
                 child = rchild;
                 p     = q;
             }
         }
-        if (!bh_bitfld_ElemLt(field, *p,row)) {
+        if (!bh_bitfld_ElemLt(parent, *p,row)) {
             break;
         }
         p->field_bh_bitfld_idx   = idx;
@@ -31033,33 +31352,33 @@ static int amc::bh_bitfld_Downheap(amc::FField& field, amc::FBitfld& row, int id
 
 // --- amc.FField.bh_bitfld.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void amc::bh_bitfld_Insert(amc::FField& field, amc::FBitfld& row) {
+void amc::bh_bitfld_Insert(amc::FField& parent, amc::FBitfld& row) {
     if (LIKELY(row.field_bh_bitfld_idx == -1)) {
-        bh_bitfld_Reserve(field, 1);
-        int n = field.bh_bitfld_n;
-        field.bh_bitfld_n = n + 1;
-        int new_idx = bh_bitfld_Upheap(field, row, n);
+        bh_bitfld_Reserve(parent, 1);
+        int n = parent.bh_bitfld_n;
+        parent.bh_bitfld_n = n + 1;
+        int new_idx = bh_bitfld_Upheap(parent, row, n);
         row.field_bh_bitfld_idx = new_idx;
-        field.bh_bitfld_elems[new_idx] = &row;
+        parent.bh_bitfld_elems[new_idx] = &row;
     }
 }
 
 // --- amc.FField.bh_bitfld.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 amc::bh_bitfld_Reheap(amc::FField& field, amc::FBitfld& row) {
+i32 amc::bh_bitfld_Reheap(amc::FField& parent, amc::FBitfld& row) {
     int old_idx = row.field_bh_bitfld_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
-        bh_bitfld_Reserve(field, 1);
-        old_idx = field.bh_bitfld_n++;
+        bh_bitfld_Reserve(parent, 1);
+        old_idx = parent.bh_bitfld_n++;
     }
-    int new_idx = bh_bitfld_Upheap(field, row, old_idx);
+    int new_idx = bh_bitfld_Upheap(parent, row, old_idx);
     if (!isnew && new_idx == old_idx) {
-        new_idx = bh_bitfld_Downheap(field, row, old_idx);
+        new_idx = bh_bitfld_Downheap(parent, row, old_idx);
     }
     row.field_bh_bitfld_idx = new_idx;
-    field.bh_bitfld_elems[new_idx] = &row;
+    parent.bh_bitfld_elems[new_idx] = &row;
     return new_idx;
 }
 
@@ -31068,31 +31387,31 @@ i32 amc::bh_bitfld_Reheap(amc::FField& field, amc::FBitfld& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 amc::bh_bitfld_ReheapFirst(amc::FField& field) {
-    amc::FBitfld &row = *field.bh_bitfld_elems[0];
-    i32 new_idx = bh_bitfld_Downheap(field, row, 0);
+i32 amc::bh_bitfld_ReheapFirst(amc::FField& parent) {
+    amc::FBitfld &row = *parent.bh_bitfld_elems[0];
+    i32 new_idx = bh_bitfld_Downheap(parent, row, 0);
     row.field_bh_bitfld_idx = new_idx;
-    field.bh_bitfld_elems[new_idx] = &row;
+    parent.bh_bitfld_elems[new_idx] = &row;
     return new_idx;
 }
 
 // --- amc.FField.bh_bitfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc::bh_bitfld_Remove(amc::FField& field, amc::FBitfld& row) {
+void amc::bh_bitfld_Remove(amc::FField& parent, amc::FBitfld& row) {
     if (bh_bitfld_InBheapQ(row)) {
         int old_idx = row.field_bh_bitfld_idx;
-        if (field.bh_bitfld_elems[old_idx] == &row) { // sanity check: heap points back to row
+        if (parent.bh_bitfld_elems[old_idx] == &row) { // sanity check: heap points back to row
             row.field_bh_bitfld_idx = -1;           // mark not in heap
-            i32 n = field.bh_bitfld_n - 1; // index of last element in heap
-            field.bh_bitfld_n = n;         // decrease count
+            i32 n = parent.bh_bitfld_n - 1; // index of last element in heap
+            parent.bh_bitfld_n = n;         // decrease count
             if (old_idx != n) {
-                amc::FBitfld *elem = field.bh_bitfld_elems[n];
-                int new_idx = bh_bitfld_Upheap(field, *elem, old_idx);
+                amc::FBitfld *elem = parent.bh_bitfld_elems[n];
+                int new_idx = bh_bitfld_Upheap(parent, *elem, old_idx);
                 if (new_idx == old_idx) {
-                    new_idx = bh_bitfld_Downheap(field, *elem, old_idx);
+                    new_idx = bh_bitfld_Downheap(parent, *elem, old_idx);
                 }
                 elem->field_bh_bitfld_idx = new_idx;
-                field.bh_bitfld_elems[new_idx] = elem;
+                parent.bh_bitfld_elems[new_idx] = elem;
             }
         }
     }
@@ -31100,29 +31419,29 @@ void amc::bh_bitfld_Remove(amc::FField& field, amc::FBitfld& row) {
 
 // --- amc.FField.bh_bitfld.RemoveAll
 // Remove all elements from binary heap
-void amc::bh_bitfld_RemoveAll(amc::FField& field) {
-    int n = field.bh_bitfld_n;
+void amc::bh_bitfld_RemoveAll(amc::FField& parent) {
+    int n = parent.bh_bitfld_n;
     for (int i = n - 1; i>=0; i--) {
-        field.bh_bitfld_elems[i]->field_bh_bitfld_idx = -1; // mark not-in-heap
+        parent.bh_bitfld_elems[i]->field_bh_bitfld_idx = -1; // mark not-in-heap
     }
-    field.bh_bitfld_n = 0;
+    parent.bh_bitfld_n = 0;
 }
 
 // --- amc.FField.bh_bitfld.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-amc::FBitfld* amc::bh_bitfld_RemoveFirst(amc::FField& field) {
+amc::FBitfld* amc::bh_bitfld_RemoveFirst(amc::FField& parent) {
     amc::FBitfld *row = NULL;
-    if (field.bh_bitfld_n > 0) {
-        row = field.bh_bitfld_elems[0];
+    if (parent.bh_bitfld_n > 0) {
+        row = parent.bh_bitfld_elems[0];
         row->field_bh_bitfld_idx = -1;           // mark not in heap
-        i32 n = field.bh_bitfld_n - 1; // index of last element in heap
-        field.bh_bitfld_n = n;         // decrease count
+        i32 n = parent.bh_bitfld_n - 1; // index of last element in heap
+        parent.bh_bitfld_n = n;         // decrease count
         if (n) {
-            amc::FBitfld &elem = *field.bh_bitfld_elems[n];
-            int new_idx = bh_bitfld_Downheap(field, elem, 0);
+            amc::FBitfld &elem = *parent.bh_bitfld_elems[n];
+            int new_idx = bh_bitfld_Downheap(parent, elem, 0);
             elem.field_bh_bitfld_idx = new_idx;
-            field.bh_bitfld_elems[new_idx] = &elem;
+            parent.bh_bitfld_elems[new_idx] = &elem;
         }
     }
     return row;
@@ -31130,30 +31449,30 @@ amc::FBitfld* amc::bh_bitfld_RemoveFirst(amc::FField& field) {
 
 // --- amc.FField.bh_bitfld.Reserve
 // Reserve space in index for N more elements
-void amc::bh_bitfld_Reserve(amc::FField& field, int n) {
-    i32 old_max = field.bh_bitfld_max;
-    if (UNLIKELY(field.bh_bitfld_n + n > old_max)) {
+void amc::bh_bitfld_Reserve(amc::FField& parent, int n) {
+    i32 old_max = parent.bh_bitfld_max;
+    if (UNLIKELY(parent.bh_bitfld_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
         u32 old_size = old_max * sizeof(amc::FBitfld*);
         u32 new_size = new_max * sizeof(amc::FBitfld*);
-        void *new_mem = amc::lpool_ReallocMem(field.bh_bitfld_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.bh_bitfld_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FField.bh_bitfld");
         }
-        field.bh_bitfld_elems = (amc::FBitfld**)new_mem;
-        field.bh_bitfld_max = new_max;
+        parent.bh_bitfld_elems = (amc::FBitfld**)new_mem;
+        parent.bh_bitfld_max = new_max;
     }
 }
 
 // --- amc.FField.bh_bitfld.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int amc::bh_bitfld_Upheap(amc::FField& field, amc::FBitfld& row, int idx) {
-    amc::FBitfld* *elems = field.bh_bitfld_elems;
+static int amc::bh_bitfld_Upheap(amc::FField& parent, amc::FBitfld& row, int idx) {
+    amc::FBitfld* *elems = parent.bh_bitfld_elems;
     while (idx>0) {
         int j = (idx-1)/2;
         amc::FBitfld* p = elems[j];
-        if (!bh_bitfld_ElemLt(field, row, *p)) {
+        if (!bh_bitfld_ElemLt(parent, row, *p)) {
             break;
         }
         p->field_bh_bitfld_idx = idx;
@@ -31164,19 +31483,19 @@ static int amc::bh_bitfld_Upheap(amc::FField& field, amc::FBitfld& row, int idx)
 }
 
 // --- amc.FField.bh_bitfld.ElemLt
-inline static bool amc::bh_bitfld_ElemLt(amc::FField& field, amc::FBitfld &a, amc::FBitfld &b) {
-    (void)field;
+inline static bool amc::bh_bitfld_ElemLt(amc::FField& parent, amc::FBitfld &a, amc::FBitfld &b) {
+    (void)parent;
     return a.offset < b.offset;
 }
 
 // --- amc.FField.c_ffast.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_ffast_Insert(amc::FField& field, amc::FFfast& row) {
+void amc::c_ffast_Insert(amc::FField& parent, amc::FFfast& row) {
     if (!row.field_c_ffast_in_ary) {
-        c_ffast_Reserve(field, 1);
-        u64 n  = field.c_ffast_n++;
-        field.c_ffast_elems[n] = &row;
+        c_ffast_Reserve(parent, 1);
+        u64 n  = parent.c_ffast_n++;
+        parent.c_ffast_elems[n] = &row;
         row.field_c_ffast_in_ary = true;
     }
 }
@@ -31185,18 +31504,18 @@ void amc::c_ffast_Insert(amc::FField& field, amc::FFfast& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_ffast_InsertMaybe(amc::FField& field, amc::FFfast& row) {
+bool amc::c_ffast_InsertMaybe(amc::FField& parent, amc::FFfast& row) {
     bool retval = !field_c_ffast_InAryQ(row);
-    c_ffast_Insert(field,row); // check is performed in _Insert again
+    c_ffast_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FField.c_ffast.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_ffast_Remove(amc::FField& field, amc::FFfast& row) {
-    i64 n = field.c_ffast_n;
+void amc::c_ffast_Remove(amc::FField& parent, amc::FFfast& row) {
+    i64 n = parent.c_ffast_n;
     if (bool_Update(row.field_c_ffast_in_ary,false)) {
-        amc::FFfast* *elems = field.c_ffast_elems;
+        amc::FFfast* *elems = parent.c_ffast_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -31205,7 +31524,7 @@ void amc::c_ffast_Remove(amc::FField& field, amc::FFfast& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFfast*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                field.c_ffast_n = n - 1;
+                parent.c_ffast_n = n - 1;
                 break;
             }
         }
@@ -31214,29 +31533,29 @@ void amc::c_ffast_Remove(amc::FField& field, amc::FFfast& row) {
 
 // --- amc.FField.c_ffast.Reserve
 // Reserve space in index for N more elements;
-void amc::c_ffast_Reserve(amc::FField& field, u64 n) {
-    u64 old_max = field.c_ffast_max;
-    if (UNLIKELY(field.c_ffast_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, field.c_ffast_n + n), 4);
+void amc::c_ffast_Reserve(amc::FField& parent, u64 n) {
+    u64 old_max = parent.c_ffast_max;
+    if (UNLIKELY(parent.c_ffast_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_ffast_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFfast*);
         u64 new_size = new_max * sizeof(amc::FFfast*);
-        void *new_mem = amc::lpool_ReallocMem(field.c_ffast_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_ffast_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FField.c_ffast");
         }
-        field.c_ffast_elems = (amc::FFfast**)new_mem;
-        field.c_ffast_max = new_max;
+        parent.c_ffast_elems = (amc::FFfast**)new_mem;
+        parent.c_ffast_max = new_max;
     }
 }
 
 // --- amc.FField.c_pmaskfld_member.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_pmaskfld_member_Insert(amc::FField& field, amc::FPmaskfldMember& row) {
+void amc::c_pmaskfld_member_Insert(amc::FField& parent, amc::FPmaskfldMember& row) {
     if (!row.field_c_pmaskfld_member_in_ary) {
-        c_pmaskfld_member_Reserve(field, 1);
-        u64 n  = field.c_pmaskfld_member_n++;
-        field.c_pmaskfld_member_elems[n] = &row;
+        c_pmaskfld_member_Reserve(parent, 1);
+        u64 n  = parent.c_pmaskfld_member_n++;
+        parent.c_pmaskfld_member_elems[n] = &row;
         row.field_c_pmaskfld_member_in_ary = true;
     }
 }
@@ -31245,18 +31564,18 @@ void amc::c_pmaskfld_member_Insert(amc::FField& field, amc::FPmaskfldMember& row
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_pmaskfld_member_InsertMaybe(amc::FField& field, amc::FPmaskfldMember& row) {
+bool amc::c_pmaskfld_member_InsertMaybe(amc::FField& parent, amc::FPmaskfldMember& row) {
     bool retval = !field_c_pmaskfld_member_InAryQ(row);
-    c_pmaskfld_member_Insert(field,row); // check is performed in _Insert again
+    c_pmaskfld_member_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FField.c_pmaskfld_member.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_pmaskfld_member_Remove(amc::FField& field, amc::FPmaskfldMember& row) {
-    i64 n = field.c_pmaskfld_member_n;
+void amc::c_pmaskfld_member_Remove(amc::FField& parent, amc::FPmaskfldMember& row) {
+    i64 n = parent.c_pmaskfld_member_n;
     if (bool_Update(row.field_c_pmaskfld_member_in_ary,false)) {
-        amc::FPmaskfldMember* *elems = field.c_pmaskfld_member_elems;
+        amc::FPmaskfldMember* *elems = parent.c_pmaskfld_member_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -31265,7 +31584,7 @@ void amc::c_pmaskfld_member_Remove(amc::FField& field, amc::FPmaskfldMember& row
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FPmaskfldMember*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                field.c_pmaskfld_member_n = n - 1;
+                parent.c_pmaskfld_member_n = n - 1;
                 break;
             }
         }
@@ -31274,30 +31593,30 @@ void amc::c_pmaskfld_member_Remove(amc::FField& field, amc::FPmaskfldMember& row
 
 // --- amc.FField.c_pmaskfld_member.Reserve
 // Reserve space in index for N more elements;
-void amc::c_pmaskfld_member_Reserve(amc::FField& field, u64 n) {
-    u64 old_max = field.c_pmaskfld_member_max;
-    if (UNLIKELY(field.c_pmaskfld_member_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, field.c_pmaskfld_member_n + n), 4);
+void amc::c_pmaskfld_member_Reserve(amc::FField& parent, u64 n) {
+    u64 old_max = parent.c_pmaskfld_member_max;
+    if (UNLIKELY(parent.c_pmaskfld_member_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_pmaskfld_member_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FPmaskfldMember*);
         u64 new_size = new_max * sizeof(amc::FPmaskfldMember*);
-        void *new_mem = amc::lpool_ReallocMem(field.c_pmaskfld_member_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_pmaskfld_member_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FField.c_pmaskfld_member");
         }
-        field.c_pmaskfld_member_elems = (amc::FPmaskfldMember**)new_mem;
-        field.c_pmaskfld_member_max = new_max;
+        parent.c_pmaskfld_member_elems = (amc::FPmaskfldMember**)new_mem;
+        parent.c_pmaskfld_member_max = new_max;
     }
 }
 
 // --- amc.FField.zs_ffunc.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zs_ffunc_Insert(amc::FField& field, amc::FFfunc& row) {
+void amc::zs_ffunc_Insert(amc::FField& parent, amc::FFfunc& row) {
     if (!field_zs_ffunc_InLlistQ(row)) {
-        amc::FFfunc* old_tail       = field.zs_ffunc_tail;
+        amc::FFfunc* old_tail       = parent.zs_ffunc_tail;
         row.field_zs_ffunc_next  = NULL;
-        field.zs_ffunc_tail = &row;
+        parent.zs_ffunc_tail = &row;
         amc::FFfunc **new_row_a = &old_tail->field_zs_ffunc_next;
-        amc::FFfunc **new_row_b = &field.zs_ffunc_head;
+        amc::FFfunc **new_row_b = &parent.zs_ffunc_head;
         amc::FFfunc **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
     }
@@ -31306,24 +31625,24 @@ void amc::zs_ffunc_Insert(amc::FField& field, amc::FFfunc& row) {
 // --- amc.FField.zs_ffunc.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void amc::zs_ffunc_Remove(amc::FField& field, amc::FFfunc& row) {
+void amc::zs_ffunc_Remove(amc::FField& parent, amc::FFfunc& row) {
     if (field_zs_ffunc_InLlistQ(row)) {
-        amc::FFfunc* old_head       = field.zs_ffunc_head;
+        amc::FFfunc* old_head       = parent.zs_ffunc_head;
         (void)old_head; // in case it's not used
         amc::FFfunc* prev=NULL;
-        amc::FFfunc* cur     = field.zs_ffunc_head;
+        amc::FFfunc* cur     = parent.zs_ffunc_head;
         while (cur) {  // search for element by pointer
             amc::FFfunc* next = cur->field_zs_ffunc_next;
             if (cur == &row) {
 
                 if (!next) {
-                    field.zs_ffunc_tail = prev;  // adjust tail pointer
+                    parent.zs_ffunc_tail = prev;  // adjust tail pointer
                 }
                 // disconnect element from linked list
                 if (prev) {
                     prev->field_zs_ffunc_next = next;
                 } else {
-                    field.zs_ffunc_head = next;
+                    parent.zs_ffunc_head = next;
                 }
                 row.field_zs_ffunc_next = (amc::FFfunc*)-1; // not-in-list
                 break;
@@ -31336,10 +31655,10 @@ void amc::zs_ffunc_Remove(amc::FField& field, amc::FFfunc& row) {
 
 // --- amc.FField.zs_ffunc.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zs_ffunc_RemoveAll(amc::FField& field) {
-    amc::FFfunc* row = field.zs_ffunc_head;
-    field.zs_ffunc_head = NULL;
-    field.zs_ffunc_tail = NULL;
+void amc::zs_ffunc_RemoveAll(amc::FField& parent) {
+    amc::FFfunc* row = parent.zs_ffunc_head;
+    parent.zs_ffunc_head = NULL;
+    parent.zs_ffunc_tail = NULL;
     while (row) {
         amc::FFfunc* row_next = row->field_zs_ffunc_next;
         row->field_zs_ffunc_next  = (amc::FFfunc*)-1;
@@ -31349,15 +31668,15 @@ void amc::zs_ffunc_RemoveAll(amc::FField& field) {
 
 // --- amc.FField.zs_ffunc.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FFfunc* amc::zs_ffunc_RemoveFirst(amc::FField& field) {
+amc::FFfunc* amc::zs_ffunc_RemoveFirst(amc::FField& parent) {
     amc::FFfunc *row = NULL;
-    row = field.zs_ffunc_head;
+    row = parent.zs_ffunc_head;
     if (row) {
         amc::FFfunc *next = row->field_zs_ffunc_next;
-        field.zs_ffunc_head = next;
+        parent.zs_ffunc_head = next;
         // clear list's tail pointer if list is empty.
         if (!next) {
-            field.zs_ffunc_tail = NULL;
+            parent.zs_ffunc_tail = NULL;
         }
         row->field_zs_ffunc_next = (amc::FFfunc*)-1; // mark as not-in-list
     }
@@ -31367,11 +31686,11 @@ amc::FFfunc* amc::zs_ffunc_RemoveFirst(amc::FField& field) {
 // --- amc.FField.c_fcond.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_fcond_Insert(amc::FField& field, amc::FFcond& row) {
+void amc::c_fcond_Insert(amc::FField& parent, amc::FFcond& row) {
     if (!row.field_c_fcond_in_ary) {
-        c_fcond_Reserve(field, 1);
-        u64 n  = field.c_fcond_n++;
-        field.c_fcond_elems[n] = &row;
+        c_fcond_Reserve(parent, 1);
+        u64 n  = parent.c_fcond_n++;
+        parent.c_fcond_elems[n] = &row;
         row.field_c_fcond_in_ary = true;
     }
 }
@@ -31380,18 +31699,18 @@ void amc::c_fcond_Insert(amc::FField& field, amc::FFcond& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_fcond_InsertMaybe(amc::FField& field, amc::FFcond& row) {
+bool amc::c_fcond_InsertMaybe(amc::FField& parent, amc::FFcond& row) {
     bool retval = !field_c_fcond_InAryQ(row);
-    c_fcond_Insert(field,row); // check is performed in _Insert again
+    c_fcond_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FField.c_fcond.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_fcond_Remove(amc::FField& field, amc::FFcond& row) {
-    i64 n = field.c_fcond_n;
+void amc::c_fcond_Remove(amc::FField& parent, amc::FFcond& row) {
+    i64 n = parent.c_fcond_n;
     if (bool_Update(row.field_c_fcond_in_ary,false)) {
-        amc::FFcond* *elems = field.c_fcond_elems;
+        amc::FFcond* *elems = parent.c_fcond_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -31400,7 +31719,7 @@ void amc::c_fcond_Remove(amc::FField& field, amc::FFcond& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFcond*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                field.c_fcond_n = n - 1;
+                parent.c_fcond_n = n - 1;
                 break;
             }
         }
@@ -31409,121 +31728,121 @@ void amc::c_fcond_Remove(amc::FField& field, amc::FFcond& row) {
 
 // --- amc.FField.c_fcond.Reserve
 // Reserve space in index for N more elements;
-void amc::c_fcond_Reserve(amc::FField& field, u64 n) {
-    u64 old_max = field.c_fcond_max;
-    if (UNLIKELY(field.c_fcond_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, field.c_fcond_n + n), 4);
+void amc::c_fcond_Reserve(amc::FField& parent, u64 n) {
+    u64 old_max = parent.c_fcond_max;
+    if (UNLIKELY(parent.c_fcond_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_fcond_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFcond*);
         u64 new_size = new_max * sizeof(amc::FFcond*);
-        void *new_mem = amc::lpool_ReallocMem(field.c_fcond_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_fcond_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FField.c_fcond");
         }
-        field.c_fcond_elems = (amc::FFcond**)new_mem;
-        field.c_fcond_max = new_max;
+        parent.c_fcond_elems = (amc::FFcond**)new_mem;
+        parent.c_fcond_max = new_max;
     }
 }
 
 // --- amc.FField..Init
 // Set all fields to initial values.
-void amc::FField_Init(amc::FField& field) {
-    field.reftype = algo::strptr("Val");
-    field.c_fsort = NULL;
-    field.c_fbitset = NULL;
-    field.c_smallstr = NULL;
-    field.c_ffunc_elems = NULL; // (amc.FField.c_ffunc)
-    field.c_ffunc_n = 0; // (amc.FField.c_ffunc)
-    field.c_ffunc_max = 0; // (amc.FField.c_ffunc)
-    field.p_ctype = NULL;
-    field.p_arg = NULL;
-    field.c_xref = NULL;
-    field.c_anonfld = NULL;
-    field.c_fldoffset = NULL;
-    field.c_basepool = NULL;
-    field.c_llist = NULL;
-    field.c_thash = NULL;
-    field.c_inlary = NULL;
-    field.c_tary = NULL;
-    field.c_rowid = NULL;
-    field.c_cascdel = NULL;
-    field.rowid = double(0.0);
-    field.child_rowid = double(0.0);
-    field.c_gstatic = NULL;
-    field.c_ptrary = NULL;
-    field.c_pmaskfld = NULL;
-    field.c_typefld = NULL;
-    field.c_fdec = NULL;
-    field.p_reftype = NULL;
-    field.c_fconst_elems = NULL; // (amc.FField.c_fconst)
-    field.c_fconst_n = 0; // (amc.FField.c_fconst)
-    field.c_fconst_max = 0; // (amc.FField.c_fconst)
-    field.c_finput = NULL;
-    field.c_foutput = NULL;
-    field.c_fbuf = NULL;
-    field.c_fbigend = NULL;
-    field.c_fstep = NULL;
-    field.c_fregx = NULL;
-    field.c_fcmp = NULL;
-    field.c_fcast = NULL;
-    field.c_gconst = NULL;
-    field.c_bitfld = NULL;
-    field.c_cppfunc = NULL;
-    field.c_substr = NULL;
-    field.c_fcompact = NULL;
-    field.zd_xref_keyfld_head = NULL; // (amc.FField.zd_xref_keyfld)
-    field.zd_xref_keyfld_n = 0; // (amc.FField.zd_xref_keyfld)
-    field.zd_xref_keyfld_tail = NULL; // (amc.FField.zd_xref_keyfld)
-    field.zs_fcmap_head = NULL; // (amc.FField.zs_fcmap)
-    field.zs_fcmap_tail = NULL; // (amc.FField.zs_fcmap)
-    field.c_inkey_fconst = NULL;
-    field.c_fnoremove = NULL;
-    field.c_sortfld = NULL;
-    field.c_ftrace = NULL;
-    field.reflect = bool(false);
-    field.ctype_read = bool(false);
-    field.has_substr = bool(false);
-    field.need_firstchanged = bool(false);
-    field.do_trace = bool(false);
-    field.processed = bool(false);
-    field.synthetic = bool(false);
-    field.visit = bool(false);
-    field.c_hook = NULL;
-    field.c_charset = NULL;
-    field.bh_bitfld_max   	= 0; // (amc.FField.bh_bitfld)
-    field.bh_bitfld_n     	= 0; // (amc.FField.bh_bitfld)
-    field.bh_bitfld_elems 	= NULL; // (amc.FField.bh_bitfld)
-    field.c_funique = NULL;
-    field.c_fflag = NULL;
-    field.c_falias = NULL;
-    field.c_ffast_field = NULL;
-    field.c_ffast_length = NULL;
-    field.c_ffast_mantissa = NULL;
-    field.c_ffast_elems = NULL; // (amc.FField.c_ffast)
-    field.c_ffast_n = 0; // (amc.FField.c_ffast)
-    field.c_ffast_max = 0; // (amc.FField.c_ffast)
-    field.c_pmaskfld_member_elems = NULL; // (amc.FField.c_pmaskfld_member)
-    field.c_pmaskfld_member_n = 0; // (amc.FField.c_pmaskfld_member)
-    field.c_pmaskfld_member_max = 0; // (amc.FField.c_pmaskfld_member)
-    field.c_lenfld = NULL;
-    field.c_fkafka = NULL;
-    field.c_fpbuf = NULL;
-    field.c_fpbufcase = NULL;
-    field.zs_ffunc_head = NULL; // (amc.FField.zs_ffunc)
-    field.zs_ffunc_tail = NULL; // (amc.FField.zs_ffunc)
-    field.c_blkhash = NULL;
-    field.c_fcond_elems = NULL; // (amc.FField.c_fcond)
-    field.c_fcond_n = 0; // (amc.FField.c_fcond)
-    field.c_fcond_max = 0; // (amc.FField.c_fcond)
-    field.ctype_c_datafld_in_ary = bool(false);
-    field.ctype_zd_inst_next = (amc::FField*)-1; // (amc.FCtype.zd_inst) not-in-list
-    field.ctype_zd_inst_prev = NULL; // (amc.FCtype.zd_inst)
-    field.ctype_zd_access_next = (amc::FField*)-1; // (amc.FCtype.zd_access) not-in-list
-    field.ctype_zd_access_prev = NULL; // (amc.FCtype.zd_access)
-    field.ctype_zd_varlenfld_next = (amc::FField*)-1; // (amc.FCtype.zd_varlenfld) not-in-list
-    field.ctype_zd_varlenfld_prev = NULL; // (amc.FCtype.zd_varlenfld)
-    field.ind_field_next = (amc::FField*)-1; // (amc.FDb.ind_field) not-in-hash
-    field.ind_field_hashval = 0; // stored hash value
-    field.zs_ordkeyfield_next = (amc::FField*)-1; // (amc.FDb.zs_ordkeyfield) not-in-list
+void amc::FField_Init(amc::FField& parent) {
+    parent.reftype = algo::strptr("Val");
+    parent.c_fsort = NULL;
+    parent.c_fbitset = NULL;
+    parent.c_smallstr = NULL;
+    parent.c_ffunc_elems = NULL; // (amc.FField.c_ffunc)
+    parent.c_ffunc_n = 0; // (amc.FField.c_ffunc)
+    parent.c_ffunc_max = 0; // (amc.FField.c_ffunc)
+    parent.p_ctype = NULL;
+    parent.p_arg = NULL;
+    parent.c_xref = NULL;
+    parent.c_anonfld = NULL;
+    parent.c_fldoffset = NULL;
+    parent.c_basepool = NULL;
+    parent.c_llist = NULL;
+    parent.c_thash = NULL;
+    parent.c_inlary = NULL;
+    parent.c_tary = NULL;
+    parent.c_rowid = NULL;
+    parent.c_cascdel = NULL;
+    parent.rowid = double(0.0);
+    parent.child_rowid = double(0.0);
+    parent.c_gstatic = NULL;
+    parent.c_ptrary = NULL;
+    parent.c_pmaskfld = NULL;
+    parent.c_typefld = NULL;
+    parent.c_fdec = NULL;
+    parent.p_reftype = NULL;
+    parent.c_fconst_elems = NULL; // (amc.FField.c_fconst)
+    parent.c_fconst_n = 0; // (amc.FField.c_fconst)
+    parent.c_fconst_max = 0; // (amc.FField.c_fconst)
+    parent.c_finput = NULL;
+    parent.c_foutput = NULL;
+    parent.c_fbuf = NULL;
+    parent.c_fbigend = NULL;
+    parent.c_fstep = NULL;
+    parent.c_fregx = NULL;
+    parent.c_fcmp = NULL;
+    parent.c_fcast = NULL;
+    parent.c_gconst = NULL;
+    parent.c_bitfld = NULL;
+    parent.c_cppfunc = NULL;
+    parent.c_substr = NULL;
+    parent.c_fcompact = NULL;
+    parent.zd_xref_keyfld_head = NULL; // (amc.FField.zd_xref_keyfld)
+    parent.zd_xref_keyfld_n = 0; // (amc.FField.zd_xref_keyfld)
+    parent.zd_xref_keyfld_tail = NULL; // (amc.FField.zd_xref_keyfld)
+    parent.zs_fcmap_head = NULL; // (amc.FField.zs_fcmap)
+    parent.zs_fcmap_tail = NULL; // (amc.FField.zs_fcmap)
+    parent.c_inkey_fconst = NULL;
+    parent.c_fnoremove = NULL;
+    parent.c_sortfld = NULL;
+    parent.c_ftrace = NULL;
+    parent.reflect = bool(false);
+    parent.ctype_read = bool(false);
+    parent.has_substr = bool(false);
+    parent.need_firstchanged = bool(false);
+    parent.do_trace = bool(false);
+    parent.processed = bool(false);
+    parent.synthetic = bool(false);
+    parent.visit = bool(false);
+    parent.c_hook = NULL;
+    parent.c_charset = NULL;
+    parent.bh_bitfld_max   	= 0; // (amc.FField.bh_bitfld)
+    parent.bh_bitfld_n     	= 0; // (amc.FField.bh_bitfld)
+    parent.bh_bitfld_elems 	= NULL; // (amc.FField.bh_bitfld)
+    parent.c_funique = NULL;
+    parent.c_fflag = NULL;
+    parent.c_falias = NULL;
+    parent.c_ffast_field = NULL;
+    parent.c_ffast_length = NULL;
+    parent.c_ffast_mantissa = NULL;
+    parent.c_ffast_elems = NULL; // (amc.FField.c_ffast)
+    parent.c_ffast_n = 0; // (amc.FField.c_ffast)
+    parent.c_ffast_max = 0; // (amc.FField.c_ffast)
+    parent.c_pmaskfld_member_elems = NULL; // (amc.FField.c_pmaskfld_member)
+    parent.c_pmaskfld_member_n = 0; // (amc.FField.c_pmaskfld_member)
+    parent.c_pmaskfld_member_max = 0; // (amc.FField.c_pmaskfld_member)
+    parent.c_lenfld = NULL;
+    parent.c_fkafka = NULL;
+    parent.c_fpbuf = NULL;
+    parent.c_fpbufcase = NULL;
+    parent.zs_ffunc_head = NULL; // (amc.FField.zs_ffunc)
+    parent.zs_ffunc_tail = NULL; // (amc.FField.zs_ffunc)
+    parent.c_blkhash = NULL;
+    parent.c_fcond_elems = NULL; // (amc.FField.c_fcond)
+    parent.c_fcond_n = 0; // (amc.FField.c_fcond)
+    parent.c_fcond_max = 0; // (amc.FField.c_fcond)
+    parent.ctype_c_datafld_in_ary = bool(false);
+    parent.ctype_zd_inst_next = (amc::FField*)-1; // (amc.FCtype.zd_inst) not-in-list
+    parent.ctype_zd_inst_prev = NULL; // (amc.FCtype.zd_inst)
+    parent.ctype_zd_access_next = (amc::FField*)-1; // (amc.FCtype.zd_access) not-in-list
+    parent.ctype_zd_access_prev = NULL; // (amc.FCtype.zd_access)
+    parent.ctype_zd_varlenfld_next = (amc::FField*)-1; // (amc.FCtype.zd_varlenfld) not-in-list
+    parent.ctype_zd_varlenfld_prev = NULL; // (amc.FCtype.zd_varlenfld)
+    parent.ind_field_next = (amc::FField*)-1; // (amc.FDb.ind_field) not-in-hash
+    parent.ind_field_hashval = 0; // stored hash value
+    parent.zs_ordkeyfield_next = (amc::FField*)-1; // (amc.FDb.zs_ordkeyfield) not-in-list
 }
 
 // --- amc.FField.bh_bitfld_curs.Add
@@ -31615,52 +31934,51 @@ void amc::field_bh_bitfld_curs_Next(field_bh_bitfld_curs &curs) {
 }
 
 // --- amc.FField..Uninit
-void amc::FField_Uninit(amc::FField& field) {
-    amc::FField &row = field; (void)row;
-    ind_field_Remove(row); // remove field from index ind_field
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+void amc::FField_Uninit(amc::FField& parent) {
+    ind_field_Remove(parent); // remove field from index ind_field
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_field_Remove(*p_ctype, row);// remove field from index c_field
+        c_field_Remove(*p_ctype, parent);// remove field from index c_field
     }
     if (p_ctype)  {
-        c_optfld_Remove(*p_ctype, row);// remove field from index c_optfld
+        c_optfld_Remove(*p_ctype, parent);// remove field from index c_optfld
     }
     if (p_ctype)  {
-        c_datafld_Remove(*p_ctype, row);// remove field from index c_datafld
+        c_datafld_Remove(*p_ctype, parent);// remove field from index c_datafld
     }
-    amc::FCtype* p_arg = amc::ind_ctype_Find(row.arg);
+    amc::FCtype* p_arg = amc::ind_ctype_Find(parent.arg);
     if (p_arg)  {
-        zd_inst_Remove(*p_arg, row);// remove field from index zd_inst
+        zd_inst_Remove(*p_arg, parent);// remove field from index zd_inst
     }
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_globfld_Remove(*p_ns, row);// remove field from index c_globfld
+        c_globfld_Remove(*p_ns, parent);// remove field from index c_globfld
     }
     if (p_arg)  {
-        zd_access_Remove(*p_arg, row);// remove field from index zd_access
+        zd_access_Remove(*p_arg, parent);// remove field from index zd_access
     }
-    zs_ordkeyfield_Remove(row); // remove field from index zs_ordkeyfield
+    zs_ordkeyfield_Remove(parent); // remove field from index zs_ordkeyfield
     if (p_ctype)  {
-        zd_varlenfld_Remove(*p_ctype, row);// remove field from index zd_varlenfld
+        zd_varlenfld_Remove(*p_ctype, parent);// remove field from index zd_varlenfld
     }
 
     // amc.FField.c_fcond.Uninit (Ptrary)  //fcond rows watching this field
-    amc::lpool_FreeMem(field.c_fcond_elems, sizeof(amc::FFcond*)*field.c_fcond_max); // (amc.FField.c_fcond)
+    amc::lpool_FreeMem(parent.c_fcond_elems, sizeof(amc::FFcond*)*parent.c_fcond_max); // (amc.FField.c_fcond)
 
     // amc.FField.c_pmaskfld_member.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(field.c_pmaskfld_member_elems, sizeof(amc::FPmaskfldMember*)*field.c_pmaskfld_member_max); // (amc.FField.c_pmaskfld_member)
+    amc::lpool_FreeMem(parent.c_pmaskfld_member_elems, sizeof(amc::FPmaskfldMember*)*parent.c_pmaskfld_member_max); // (amc.FField.c_pmaskfld_member)
 
     // amc.FField.c_ffast.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(field.c_ffast_elems, sizeof(amc::FFfast*)*field.c_ffast_max); // (amc.FField.c_ffast)
+    amc::lpool_FreeMem(parent.c_ffast_elems, sizeof(amc::FFfast*)*parent.c_ffast_max); // (amc.FField.c_ffast)
 
     // amc.FField.bh_bitfld.Uninit (Bheap)  //
-    amc::lpool_FreeMem((u8*)field.bh_bitfld_elems, sizeof(amc::FBitfld*)*field.bh_bitfld_max); // (amc.FField.bh_bitfld)
+    amc::lpool_FreeMem((u8*)parent.bh_bitfld_elems, sizeof(amc::FBitfld*)*parent.bh_bitfld_max); // (amc.FField.bh_bitfld)
 
     // amc.FField.c_fconst.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(field.c_fconst_elems, sizeof(amc::FFconst*)*field.c_fconst_max); // (amc.FField.c_fconst)
+    amc::lpool_FreeMem(parent.c_fconst_elems, sizeof(amc::FFconst*)*parent.c_fconst_max); // (amc.FField.c_fconst)
 
     // amc.FField.c_ffunc.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(field.c_ffunc_elems, sizeof(amc::FFunc*)*field.c_ffunc_max); // (amc.FField.c_ffunc)
+    amc::lpool_FreeMem(parent.c_ffunc_elems, sizeof(amc::FFunc*)*parent.c_ffunc_max); // (amc.FField.c_ffunc)
 }
 
 // --- amc.FFinput.msghdr.CopyOut
@@ -31682,16 +32000,15 @@ void amc::finput_CopyIn(amc::FFinput &row, dmmeta::Finput &in) {
 }
 
 // --- amc.FFinput.ns.Get
-algo::strptr amc::ns_Get(amc::FFinput& finput) {
-    return algo::Pathcomp(finput.field, ".LL");
+algo::strptr amc::ns_Get(amc::FFinput& parent) {
+    return algo::Pathcomp(parent.field, ".LL");
 }
 
 // --- amc.FFinput..Uninit
-void amc::FFinput_Uninit(amc::FFinput& finput) {
-    amc::FFinput &row = finput; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFinput_Uninit(amc::FFinput& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_finput_Remove(*p_field, row);// remove finput from index c_finput
+        c_finput_Remove(*p_field, parent);// remove finput from index c_finput
     }
 }
 
@@ -31718,11 +32035,10 @@ void amc::fkafka_CopyIn(amc::FFkafka &row, dmmeta::Fkafka &in) {
 }
 
 // --- amc.FFkafka..Uninit
-void amc::FFkafka_Uninit(amc::FFkafka& fkafka) {
-    amc::FFkafka &row = fkafka; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFkafka_Uninit(amc::FFkafka& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fkafka_Remove(*p_field, row);// remove fkafka from index c_fkafka
+        c_fkafka_Remove(*p_field, parent);// remove fkafka from index c_fkafka
     }
 }
 
@@ -31741,11 +32057,10 @@ void amc::fldoffset_CopyIn(amc::FFldoffset &row, dmmeta::Fldoffset &in) {
 }
 
 // --- amc.FFldoffset..Uninit
-void amc::FFldoffset_Uninit(amc::FFldoffset& fldoffset) {
-    amc::FFldoffset &row = fldoffset; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFldoffset_Uninit(amc::FFldoffset& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fldoffset_Remove(*p_field, row);// remove fldoffset from index c_fldoffset
+        c_fldoffset_Remove(*p_field, parent);// remove fldoffset from index c_fldoffset
     }
 }
 
@@ -31768,16 +32083,15 @@ void amc::floadtuples_CopyIn(amc::FFloadtuples &row, dmmeta::Floadtuples &in) {
 }
 
 // --- amc.FFloadtuples.ctype.Get
-algo::strptr amc::ctype_Get(amc::FFloadtuples& floadtuples) {
-    return algo::Pathcomp(floadtuples.field, ".RL");
+algo::strptr amc::ctype_Get(amc::FFloadtuples& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- amc.FFloadtuples..Uninit
-void amc::FFloadtuples_Uninit(amc::FFloadtuples& floadtuples) {
-    amc::FFloadtuples &row = floadtuples; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+void amc::FFloadtuples_Uninit(amc::FFloadtuples& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_floadtuples_Remove(*p_ctype, row);// remove floadtuples from index c_floadtuples
+        c_floadtuples_Remove(*p_ctype, parent);// remove floadtuples from index c_floadtuples
     }
 }
 
@@ -31796,11 +32110,10 @@ void amc::fnoremove_CopyIn(amc::FFnoremove &row, dmmeta::Fnoremove &in) {
 }
 
 // --- amc.FFnoremove..Uninit
-void amc::FFnoremove_Uninit(amc::FFnoremove& fnoremove) {
-    amc::FFnoremove &row = fnoremove; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFnoremove_Uninit(amc::FFnoremove& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fnoremove_Remove(*p_field, row);// remove fnoremove from index c_fnoremove
+        c_fnoremove_Remove(*p_field, parent);// remove fnoremove from index c_fnoremove
     }
 }
 
@@ -31819,20 +32132,19 @@ void amc::foutput_CopyIn(amc::FFoutput &row, dmmeta::Foutput &in) {
 }
 
 // --- amc.FFoutput.ns.Get
-algo::strptr amc::ns_Get(amc::FFoutput& foutput) {
-    return algo::Pathcomp(foutput.field, ".LL");
+algo::strptr amc::ns_Get(amc::FFoutput& parent) {
+    return algo::Pathcomp(parent.field, ".LL");
 }
 
 // --- amc.FFoutput..Uninit
-void amc::FFoutput_Uninit(amc::FFoutput& foutput) {
-    amc::FFoutput &row = foutput; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFoutput_Uninit(amc::FFoutput& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_foutput_Remove(*p_field, row);// remove foutput from index c_foutput
+        c_foutput_Remove(*p_field, parent);// remove foutput from index c_foutput
     }
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_foutput_Remove(*p_ns, row);// remove foutput from index c_foutput
+        c_foutput_Remove(*p_ns, parent);// remove foutput from index c_foutput
     }
 }
 
@@ -31857,11 +32169,10 @@ void amc::fpbuf_CopyIn(amc::FFpbuf &row, dmmeta::Fpbuf &in) {
 }
 
 // --- amc.FFpbuf..Uninit
-void amc::FFpbuf_Uninit(amc::FFpbuf& fpbuf) {
-    amc::FFpbuf &row = fpbuf; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFpbuf_Uninit(amc::FFpbuf& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fpbuf_Remove(*p_field, row);// remove fpbuf from index c_fpbuf
+        c_fpbuf_Remove(*p_field, parent);// remove fpbuf from index c_fpbuf
     }
 }
 
@@ -31880,30 +32191,29 @@ void amc::fpbufcase_CopyIn(amc::FFpbufcase &row, dmmeta::Fpbufcase &in) {
 }
 
 // --- amc.FFpbufcase.fpbuf.Get
-algo::strptr amc::fpbuf_Get(amc::FFpbufcase& fpbufcase) {
-    return algo::Pathcomp(fpbufcase.fpbufcase, "/LL");
+algo::strptr amc::fpbuf_Get(amc::FFpbufcase& parent) {
+    return algo::Pathcomp(parent.fpbufcase, "/LL");
 }
 
 // --- amc.FFpbufcase.oneof.Get
-algo::strptr amc::oneof_Get(amc::FFpbufcase& fpbufcase) {
-    return algo::Pathcomp(fpbufcase.fpbufcase, "/LR");
+algo::strptr amc::oneof_Get(amc::FFpbufcase& parent) {
+    return algo::Pathcomp(parent.fpbufcase, "/LR");
 }
 
 // --- amc.FFpbufcase.ctype.Get
-algo::strptr amc::ctype_Get(amc::FFpbufcase& fpbufcase) {
-    return algo::Pathcomp(fpbufcase.fpbufcase, "/LL.RL");
+algo::strptr amc::ctype_Get(amc::FFpbufcase& parent) {
+    return algo::Pathcomp(parent.fpbufcase, "/LL.RL");
 }
 
 // --- amc.FFpbufcase..Uninit
-void amc::FFpbufcase_Uninit(amc::FFpbufcase& fpbufcase) {
-    amc::FFpbufcase &row = fpbufcase; (void)row;
-    amc::FField* p_fpbuf = amc::ind_field_Find(fpbuf_Get(row));
+void amc::FFpbufcase_Uninit(amc::FFpbufcase& parent) {
+    amc::FField* p_fpbuf = amc::ind_field_Find(fpbuf_Get(parent));
     if (p_fpbuf)  {
-        c_fpbufcase_Remove(*p_fpbuf, row);// remove fpbufcase from index c_fpbufcase
+        c_fpbufcase_Remove(*p_fpbuf, parent);// remove fpbufcase from index c_fpbufcase
     }
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_fpbufcase_Remove(*p_ctype, row);// remove fpbufcase from index c_fpbufcase
+        c_fpbufcase_Remove(*p_ctype, parent);// remove fpbufcase from index c_fpbufcase
     }
 }
 
@@ -31926,21 +32236,20 @@ void amc::fprefix_CopyIn(amc::FFprefix &row, dmmeta::Fprefix &in) {
 }
 
 // --- amc.FFprefix.prefix.Get
-algo::strptr amc::prefix_Get(amc::FFprefix& fprefix) {
-    return algo::Pathcomp(fprefix.fprefix, ".LL");
+algo::strptr amc::prefix_Get(amc::FFprefix& parent) {
+    return algo::Pathcomp(parent.fprefix, ".LL");
 }
 
 // --- amc.FFprefix.reftype.Get
-algo::strptr amc::reftype_Get(amc::FFprefix& fprefix) {
-    return algo::Pathcomp(fprefix.fprefix, ".LR");
+algo::strptr amc::reftype_Get(amc::FFprefix& parent) {
+    return algo::Pathcomp(parent.fprefix, ".LR");
 }
 
 // --- amc.FFprefix..Uninit
-void amc::FFprefix_Uninit(amc::FFprefix& fprefix) {
-    amc::FFprefix &row = fprefix; (void)row;
-    amc::FReftype* p_reftype = amc::ind_reftype_Find(reftype_Get(row));
+void amc::FFprefix_Uninit(amc::FFprefix& parent) {
+    amc::FReftype* p_reftype = amc::ind_reftype_Find(reftype_Get(parent));
     if (p_reftype)  {
-        zs_fprefix_Remove(*p_reftype, row);// remove fprefix from index zs_fprefix
+        zs_fprefix_Remove(*p_reftype, parent);// remove fprefix from index zs_fprefix
     }
 }
 
@@ -31963,11 +32272,10 @@ void amc::fregx_CopyIn(amc::FFregx &row, dmmeta::Fregx &in) {
 }
 
 // --- amc.FFregx..Uninit
-void amc::FFregx_Uninit(amc::FFregx& fregx) {
-    amc::FFregx &row = fregx; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFregx_Uninit(amc::FFregx& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fregx_Remove(*p_field, row);// remove fregx from index c_fregx
+        c_fregx_Remove(*p_field, parent);// remove fregx from index c_fregx
     }
 }
 
@@ -31990,11 +32298,10 @@ void amc::fsort_CopyIn(amc::FFsort &row, dmmeta::Fsort &in) {
 }
 
 // --- amc.FFsort..Uninit
-void amc::FFsort_Uninit(amc::FFsort& fsort) {
-    amc::FFsort &row = fsort; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFsort_Uninit(amc::FFsort& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_fsort_Remove(*p_field, row);// remove fsort from index c_fsort
+        c_fsort_Remove(*p_field, parent);// remove fsort from index c_fsort
     }
 }
 
@@ -32015,43 +32322,42 @@ void amc::fstep_CopyIn(amc::FFstep &row, dmmeta::Fstep &in) {
 }
 
 // --- amc.FFstep.field.Get
-algo::strptr amc::field_Get(amc::FFstep& fstep) {
-    return algo::Pathcomp(fstep.fstep, "");
+algo::strptr amc::field_Get(amc::FFstep& parent) {
+    return algo::Pathcomp(parent.fstep, "");
 }
 
 // --- amc.FFstep.ns.Get
-algo::strptr amc::ns_Get(amc::FFstep& fstep) {
-    return algo::Pathcomp(fstep.fstep, ".LL");
+algo::strptr amc::ns_Get(amc::FFstep& parent) {
+    return algo::Pathcomp(parent.fstep, ".LL");
 }
 
 // --- amc.FFstep.name.Get
-algo::strptr amc::name_Get(amc::FFstep& fstep) {
-    return algo::Pathcomp(fstep.fstep, ".RR");
+algo::strptr amc::name_Get(amc::FFstep& parent) {
+    return algo::Pathcomp(parent.fstep, ".RR");
 }
 
 // --- amc.FFstep..Init
 // Set all fields to initial values.
-void amc::FFstep_Init(amc::FFstep& fstep) {
-    fstep.c_fdelay = NULL;
-    fstep.p_field = NULL;
-    fstep.p_steptype = NULL;
-    fstep.ns_c_fstep_in_ary = bool(false);
-    fstep.ind_fstep_next = (amc::FFstep*)-1; // (amc.FDb.ind_fstep) not-in-hash
-    fstep.ind_fstep_hashval = 0; // stored hash value
+void amc::FFstep_Init(amc::FFstep& parent) {
+    parent.c_fdelay = NULL;
+    parent.p_field = NULL;
+    parent.p_steptype = NULL;
+    parent.ns_c_fstep_in_ary = bool(false);
+    parent.ind_fstep_next = (amc::FFstep*)-1; // (amc.FDb.ind_fstep) not-in-hash
+    parent.ind_fstep_hashval = 0; // stored hash value
 }
 
 // --- amc.FFstep..Uninit
-void amc::FFstep_Uninit(amc::FFstep& fstep) {
-    amc::FFstep &row = fstep; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+void amc::FFstep_Uninit(amc::FFstep& parent) {
+    amc::FField* p_field = amc::ind_field_Find(field_Get(parent));
     if (p_field)  {
-        c_fstep_Remove(*p_field, row);// remove fstep from index c_fstep
+        c_fstep_Remove(*p_field, parent);// remove fstep from index c_fstep
     }
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_fstep_Remove(*p_ns, row);// remove fstep from index c_fstep
+        c_fstep_Remove(*p_ns, parent);// remove fstep from index c_fstep
     }
-    ind_fstep_Remove(row); // remove fstep from index ind_fstep
+    ind_fstep_Remove(parent); // remove fstep from index ind_fstep
 }
 
 // --- amc.FFtrace.base.CopyOut
@@ -32069,11 +32375,10 @@ void amc::ftrace_CopyIn(amc::FFtrace &row, dmmeta::Ftrace &in) {
 }
 
 // --- amc.FFtrace..Uninit
-void amc::FFtrace_Uninit(amc::FFtrace& ftrace) {
-    amc::FFtrace &row = ftrace; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFtrace_Uninit(amc::FFtrace& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_ftrace_Remove(*p_field, row);// remove ftrace from index c_ftrace
+        c_ftrace_Remove(*p_field, parent);// remove ftrace from index c_ftrace
     }
 }
 
@@ -32094,84 +32399,84 @@ void amc::func_CopyIn(amc::FFunc &row, dmmeta::Func &in) {
 }
 
 // --- amc.FFunc.field.Get
-algo::strptr amc::field_Get(amc::FFunc& func) {
-    return algo::Pathcomp(func.func, ".RL");
+algo::strptr amc::field_Get(amc::FFunc& parent) {
+    return algo::Pathcomp(parent.func, ".RL");
 }
 
 // --- amc.FFunc.name.Get
-algo::strptr amc::name_Get(amc::FFunc& func) {
-    return algo::Pathcomp(func.func, ".RR");
+algo::strptr amc::name_Get(amc::FFunc& parent) {
+    return algo::Pathcomp(parent.func, ".RR");
 }
 
 // --- amc.FFunc.ctype.Get
-algo::strptr amc::ctype_Get(amc::FFunc& func) {
-    return algo::Pathcomp(func.func, ".RL.RL");
+algo::strptr amc::ctype_Get(amc::FFunc& parent) {
+    return algo::Pathcomp(parent.func, ".RL.RL");
 }
 
 // --- amc.FFunc.ns.Get
-algo::strptr amc::ns_Get(amc::FFunc& func) {
-    return algo::Pathcomp(func.func, ".RL.RL.RL");
+algo::strptr amc::ns_Get(amc::FFunc& parent) {
+    return algo::Pathcomp(parent.func, ".RL.RL.RL");
 }
 
 // --- amc.FFunc.funcarg.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<amc::Funcarg> amc::funcarg_Addary(amc::FFunc& func, algo::aryptr<amc::Funcarg> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= func.funcarg_elems && rhs.elems < func.funcarg_elems + func.funcarg_max;
+algo::aryptr<amc::Funcarg> amc::funcarg_Addary(amc::FFunc& parent, algo::aryptr<amc::Funcarg> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.funcarg_elems && rhs.elems < parent.funcarg_elems + parent.funcarg_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("amc.tary_alias  field:amc.FFunc.funcarg  comment:'alias error: sub-array is being appended to the whole'");
     }
     i64 nnew = rhs.n_elems;
-    funcarg_Reserve(func, nnew); // reserve space
-    i64 at = func.funcarg_n;
+    funcarg_Reserve(parent, nnew); // reserve space
+    i64 at = parent.funcarg_n;
     for (i64 i = 0; i < nnew; i++) {
-        new (func.funcarg_elems + at + i) amc::Funcarg(rhs[i]);
-        func.funcarg_n++;
+        new (parent.funcarg_elems + at + i) amc::Funcarg(rhs[i]);
+        parent.funcarg_n++;
     }
-    return algo::aryptr<amc::Funcarg>(func.funcarg_elems + at, nnew);
+    return algo::aryptr<amc::Funcarg>(parent.funcarg_elems + at, nnew);
 }
 
 // --- amc.FFunc.funcarg.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-amc::Funcarg& amc::funcarg_Alloc(amc::FFunc& func) {
-    funcarg_Reserve(func, 1);
-    i64 n  = func.funcarg_n;
+amc::Funcarg& amc::funcarg_Alloc(amc::FFunc& parent) {
+    funcarg_Reserve(parent, 1);
+    i64 n  = parent.funcarg_n;
     i64 at = n;
-    amc::Funcarg *elems = func.funcarg_elems;
+    amc::Funcarg *elems = parent.funcarg_elems;
     new (elems + at) amc::Funcarg(); // construct new element, default initializer
-    func.funcarg_n = n+1;
+    parent.funcarg_n = n+1;
     return elems[at];
 }
 
 // --- amc.FFunc.funcarg.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-amc::Funcarg& amc::funcarg_AllocAt(amc::FFunc& func, i64 at) {
-    funcarg_Reserve(func, 1);
-    i64 n  = func.funcarg_n;
+amc::Funcarg& amc::funcarg_AllocAt(amc::FFunc& parent, i64 at) {
+    funcarg_Reserve(parent, 1);
+    i64 n  = parent.funcarg_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("amc.bad_alloc_at  field:amc.FFunc.funcarg  comment:'index out of range'");
     }
-    amc::Funcarg *elems = func.funcarg_elems;
+    amc::Funcarg *elems = parent.funcarg_elems;
     memmove(elems + at + 1, elems + at, (n - at) * sizeof(amc::Funcarg));
     new (elems + at) amc::Funcarg(); // construct element, default initializer
-    func.funcarg_n = n+1;
+    parent.funcarg_n = n+1;
     return elems[at];
 }
 
 // --- amc.FFunc.funcarg.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<amc::Funcarg> amc::funcarg_AllocN(amc::FFunc& func, i64 n_elems) {
-    funcarg_Reserve(func, n_elems);
-    i64 old_n  = func.funcarg_n;
+algo::aryptr<amc::Funcarg> amc::funcarg_AllocN(amc::FFunc& parent, i64 n_elems) {
+    funcarg_Reserve(parent, n_elems);
+    i64 old_n  = parent.funcarg_n;
     i64 new_n = old_n + n_elems;
-    amc::Funcarg *elems = func.funcarg_elems;
+    amc::Funcarg *elems = parent.funcarg_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) amc::Funcarg(); // construct new element, default initialize
     }
-    func.funcarg_n = new_n;
+    parent.funcarg_n = new_n;
     return algo::aryptr<amc::Funcarg>(elems + old_n, n_elems);
 }
 
@@ -32179,124 +32484,124 @@ algo::aryptr<amc::Funcarg> amc::funcarg_AllocN(amc::FFunc& func, i64 n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<amc::Funcarg> amc::funcarg_AllocNAt(amc::FFunc& func, i64 n_elems, i64 at) {
-    funcarg_Reserve(func, n_elems);
-    i64 n  = func.funcarg_n;
+algo::aryptr<amc::Funcarg> amc::funcarg_AllocNAt(amc::FFunc& parent, i64 n_elems, i64 at) {
+    funcarg_Reserve(parent, n_elems);
+    i64 n  = parent.funcarg_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("amc.bad_alloc_n_at  field:amc.FFunc.funcarg  comment:'index out of range'");
     }
-    amc::Funcarg *elems = func.funcarg_elems;
+    amc::Funcarg *elems = parent.funcarg_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(amc::Funcarg));
     for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) amc::Funcarg(); // construct new element, default initialize
     }
-    func.funcarg_n = n+n_elems;
+    parent.funcarg_n = n+n_elems;
     return algo::aryptr<amc::Funcarg>(elems+at,n_elems);
 }
 
 // --- amc.FFunc.funcarg.Remove
 // Remove item by index. If index outside of range, do nothing.
-void amc::funcarg_Remove(amc::FFunc& func, u64 i) {
-    u64 lim = func.funcarg_n;
-    amc::Funcarg *elems = func.funcarg_elems;
+void amc::funcarg_Remove(amc::FFunc& parent, u64 i) {
+    u64 lim = parent.funcarg_n;
+    amc::Funcarg *elems = parent.funcarg_elems;
     if (i < lim) {
         elems[i].~Funcarg(); // destroy element
         memmove(elems + i, elems + (i + 1), sizeof(amc::Funcarg) * (lim - (i + 1)));
-        func.funcarg_n = lim - 1;
+        parent.funcarg_n = lim - 1;
     }
 }
 
 // --- amc.FFunc.funcarg.RemoveAll
-void amc::funcarg_RemoveAll(amc::FFunc& func) {
-    u64 n = func.funcarg_n;
+void amc::funcarg_RemoveAll(amc::FFunc& parent) {
+    u64 n = parent.funcarg_n;
     for (u64 i=0; i<n; i++) {
-        func.funcarg_elems[i].~Funcarg();
+        parent.funcarg_elems[i].~Funcarg();
     }
-    func.funcarg_n = 0;
+    parent.funcarg_n = 0;
 }
 
 // --- amc.FFunc.funcarg.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc::funcarg_RemoveLast(amc::FFunc& func) {
-    u64 n = func.funcarg_n;
+void amc::funcarg_RemoveLast(amc::FFunc& parent) {
+    u64 n = parent.funcarg_n;
     if (n > 0) {
         n -= 1;
-        funcarg_qFind(func, u64(n)).~Funcarg();
-        func.funcarg_n = n;
+        funcarg_qFind(parent, u64(n)).~Funcarg();
+        parent.funcarg_n = n;
     }
 }
 
 // --- amc.FFunc.funcarg.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void amc::funcarg_AbsReserve(amc::FFunc& func, i64 n) {
-    u64 old_max  = func.funcarg_max;
+void amc::funcarg_AbsReserve(amc::FFunc& parent, i64 n) {
+    u64 old_max  = parent.funcarg_max;
     if (n > i64(old_max)) {
         u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
-        void *new_mem = amc::lpool_ReallocMem(func.funcarg_elems, old_max * sizeof(amc::Funcarg), new_max * sizeof(amc::Funcarg));
+        void *new_mem = amc::lpool_ReallocMem(parent.funcarg_elems, old_max * sizeof(amc::Funcarg), new_max * sizeof(amc::Funcarg));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.tary_nomem  field:amc.FFunc.funcarg  comment:'out of memory'");
         }
-        func.funcarg_elems = (amc::Funcarg*)new_mem;
-        func.funcarg_max = new_max;
+        parent.funcarg_elems = (amc::Funcarg*)new_mem;
+        parent.funcarg_max = new_max;
     }
 }
 
 // --- amc.FFunc.funcarg.Setary
 // Copy contents of RHS to PARENT.
-void amc::funcarg_Setary(amc::FFunc& func, amc::FFunc &rhs) {
-    funcarg_RemoveAll(func);
+void amc::funcarg_Setary(amc::FFunc& parent, amc::FFunc &rhs) {
+    funcarg_RemoveAll(parent);
     i64 nnew = rhs.funcarg_n;
-    funcarg_Reserve(func, nnew); // reserve space
+    funcarg_Reserve(parent, nnew); // reserve space
     for (i64 i = 0; i < nnew; i++) { // copy elements over
-        new (func.funcarg_elems + i) amc::Funcarg(funcarg_qFind(rhs, i));
-        func.funcarg_n = i + 1;
+        new (parent.funcarg_elems + i) amc::Funcarg(funcarg_qFind(rhs, i));
+        parent.funcarg_n = i + 1;
     }
 }
 
 // --- amc.FFunc.funcarg.Setary2
 // Copy specified array into funcarg, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void amc::funcarg_Setary(amc::FFunc& func, const algo::aryptr<amc::Funcarg> &rhs) {
-    funcarg_RemoveAll(func);
-    funcarg_Addary(func, rhs);
+void amc::funcarg_Setary(amc::FFunc& parent, const algo::aryptr<amc::Funcarg> &rhs) {
+    funcarg_RemoveAll(parent);
+    funcarg_Addary(parent, rhs);
 }
 
 // --- amc.FFunc.funcarg.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<amc::Funcarg> amc::funcarg_AllocNVal(amc::FFunc& func, i64 n_elems, const amc::Funcarg& val) {
-    funcarg_Reserve(func, n_elems);
-    i64 old_n  = func.funcarg_n;
+algo::aryptr<amc::Funcarg> amc::funcarg_AllocNVal(amc::FFunc& parent, i64 n_elems, const amc::Funcarg& val) {
+    funcarg_Reserve(parent, n_elems);
+    i64 old_n  = parent.funcarg_n;
     i64 new_n = old_n + n_elems;
-    amc::Funcarg *elems = func.funcarg_elems;
+    amc::Funcarg *elems = parent.funcarg_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) amc::Funcarg(val);
     }
-    func.funcarg_n = new_n;
+    parent.funcarg_n = new_n;
     return algo::aryptr<amc::Funcarg>(elems + old_n, n_elems);
 }
 
 // --- amc.FFunc.funcarg.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void amc::funcarg_Insary(amc::FFunc& func, algo::aryptr<amc::Funcarg> rhs, i64 at) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= func.funcarg_elems && rhs.elems < func.funcarg_elems + func.funcarg_max;
+void amc::funcarg_Insary(amc::FFunc& parent, algo::aryptr<amc::Funcarg> rhs, i64 at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.funcarg_elems && rhs.elems < parent.funcarg_elems + parent.funcarg_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("amc.tary_alias  field:amc.FFunc.funcarg  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(func.funcarg_n+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.funcarg_n+1))) {
         FatalErrorExit("amc.bad_insary  field:amc.FFunc.funcarg  comment:'index out of range'");
     }
     i64 nnew = rhs.n_elems;
-    i64 nmove = func.funcarg_n - at;
-    funcarg_Reserve(func, nnew); // reserve space
+    i64 nmove = parent.funcarg_n - at;
+    funcarg_Reserve(parent, nnew); // reserve space
     for (i64 i = nmove-1; i >=0 ; --i) {
-        new (func.funcarg_elems + at + nnew + i) amc::Funcarg(func.funcarg_elems[at + i]);
-        func.funcarg_elems[at + i].~Funcarg(); // destroy element
+        new (parent.funcarg_elems + at + nnew + i) amc::Funcarg(parent.funcarg_elems[at + i]);
+        parent.funcarg_elems[at + i].~Funcarg(); // destroy element
     }
     for (i64 i = 0; i < nnew; ++i) {
-        new (func.funcarg_elems + at + i) amc::Funcarg(rhs[i]);
+        new (parent.funcarg_elems + at + i) amc::Funcarg(rhs[i]);
     }
-    func.funcarg_n += nnew;
+    parent.funcarg_n += nnew;
 }
 
 // --- amc.FFunc.funcarg.RemRegion
@@ -32304,69 +32609,68 @@ void amc::funcarg_Insary(amc::FFunc& func, algo::aryptr<amc::Funcarg> rhs, i64 a
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
-void amc::funcarg_RemRegion(amc::FFunc& func, i64 beg, i64 n) {
-    i64 end = i64_Min(beg+n, func.funcarg_n);
+void amc::funcarg_RemRegion(amc::FFunc& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.funcarg_n);
     beg = i64_Max(beg,0);
     n = end-beg;
     if (n>0) {
         for (i64 i=beg; i<end; i++) {
-            func.funcarg_elems[i].~Funcarg();
+            parent.funcarg_elems[i].~Funcarg();
         }
-        memmove(func.funcarg_elems+beg, func.funcarg_elems+end, sizeof(amc::Funcarg) * (func.funcarg_n-end));
-        func.funcarg_n -= n;
+        memmove(parent.funcarg_elems+beg, parent.funcarg_elems+end, sizeof(amc::Funcarg) * (parent.funcarg_n-end));
+        parent.funcarg_n -= n;
     }
 }
 
 // --- amc.FFunc..Init
 // Set all fields to initial values.
-void amc::FFunc_Init(amc::FFunc& func) {
-    func.extrn = bool(false);
-    func.p_ns = NULL;
-    func.funcarg_elems 	= 0; // (amc.FFunc.funcarg)
-    func.funcarg_n     	= 0; // (amc.FFunc.funcarg)
-    func.funcarg_max   	= 0; // (amc.FFunc.funcarg)
-    func.printed = bool(false);
-    func.throws = bool(false);
-    func.nothrow = bool(false);
-    func.member = bool(false);
-    func.disable = bool(false);
-    func.deprecate = bool(false);
-    func.globns = bool(false);
-    func.ismacro = bool(false);
-    func.isalloc = bool(false);
-    func.isconst = bool(false);
-    func.glob = bool(false);
-    func.wur = bool(false);
-    func.priv = bool(false);
-    func.pure = bool(false);
-    func.isprivate = bool(false);
-    func.finalized = bool(false);
-    func.isexplicit = bool(false);
-    func.istmpl = bool(false);
-    func.deleted = bool(false);
-    func.inl = bool(false);
-    func.ns_c_func_in_ary = bool(false);
-    func.ind_func_next = (amc::FFunc*)-1; // (amc.FDb.ind_func) not-in-hash
-    func.ind_func_hashval = 0; // stored hash value
-    func.cd_temp_func_next = (amc::FFunc*)-1; // (amc.FDb.cd_temp_func) not-in-list
-    func.cd_temp_func_prev = NULL; // (amc.FDb.cd_temp_func)
+void amc::FFunc_Init(amc::FFunc& parent) {
+    parent.extrn = bool(false);
+    parent.p_ns = NULL;
+    parent.funcarg_elems 	= 0; // (amc.FFunc.funcarg)
+    parent.funcarg_n     	= 0; // (amc.FFunc.funcarg)
+    parent.funcarg_max   	= 0; // (amc.FFunc.funcarg)
+    parent.printed = bool(false);
+    parent.throws = bool(false);
+    parent.nothrow = bool(false);
+    parent.member = bool(false);
+    parent.disable = bool(false);
+    parent.deprecate = bool(false);
+    parent.globns = bool(false);
+    parent.ismacro = bool(false);
+    parent.isalloc = bool(false);
+    parent.isconst = bool(false);
+    parent.glob = bool(false);
+    parent.wur = bool(false);
+    parent.priv = bool(false);
+    parent.pure = bool(false);
+    parent.isprivate = bool(false);
+    parent.finalized = bool(false);
+    parent.isexplicit = bool(false);
+    parent.istmpl = bool(false);
+    parent.deleted = bool(false);
+    parent.inl = bool(false);
+    parent.ns_c_func_in_ary = bool(false);
+    parent.ind_func_next = (amc::FFunc*)-1; // (amc.FDb.ind_func) not-in-hash
+    parent.ind_func_hashval = 0; // stored hash value
+    parent.cd_temp_func_next = (amc::FFunc*)-1; // (amc.FDb.cd_temp_func) not-in-list
+    parent.cd_temp_func_prev = NULL; // (amc.FDb.cd_temp_func)
 }
 
 // --- amc.FFunc..Uninit
-void amc::FFunc_Uninit(amc::FFunc& func) {
-    amc::FFunc &row = func; (void)row;
-    ind_func_Remove(row); // remove func from index ind_func
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+void amc::FFunc_Uninit(amc::FFunc& parent) {
+    ind_func_Remove(parent); // remove func from index ind_func
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_func_Remove(*p_ns, row);// remove func from index c_func
+        c_func_Remove(*p_ns, parent);// remove func from index c_func
     }
-    cd_temp_func_Remove(row); // remove func from index cd_temp_func
+    cd_temp_func_Remove(parent); // remove func from index cd_temp_func
 
     // amc.FFunc.funcarg.Uninit (Tary)  //Array of declared function arguments
     // remove all elements from amc.FFunc.funcarg
-    funcarg_RemoveAll(func);
+    funcarg_RemoveAll(parent);
     // free memory for Tary amc.FFunc.funcarg
-    amc::lpool_FreeMem(func.funcarg_elems, sizeof(amc::Funcarg)*func.funcarg_max); // (amc.FFunc.funcarg)
+    amc::lpool_FreeMem(parent.funcarg_elems, sizeof(amc::Funcarg)*parent.funcarg_max); // (amc.FFunc.funcarg)
 }
 
 // --- amc.FFunique.base.CopyOut
@@ -32384,11 +32688,10 @@ void amc::funique_CopyIn(amc::FFunique &row, dmmeta::Funique &in) {
 }
 
 // --- amc.FFunique..Uninit
-void amc::FFunique_Uninit(amc::FFunique& funique) {
-    amc::FFunique &row = funique; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FFunique_Uninit(amc::FFunique& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_funique_Remove(*p_field, row);// remove funique from index c_funique
+        c_funique_Remove(*p_field, parent);// remove funique from index c_funique
     }
 }
 
@@ -32407,23 +32710,22 @@ void amc::fwddecl_CopyIn(amc::FFwddecl &row, dmmeta::Fwddecl &in) {
 }
 
 // --- amc.FFwddecl.ns.Get
-algo::strptr amc::ns_Get(amc::FFwddecl& fwddecl) {
-    return algo::Pathcomp(fwddecl.fwddecl, ".LL");
+algo::strptr amc::ns_Get(amc::FFwddecl& parent) {
+    return algo::Pathcomp(parent.fwddecl, ".LL");
 }
 
 // --- amc.FFwddecl.ctype.Get
-algo::strptr amc::ctype_Get(amc::FFwddecl& fwddecl) {
-    return algo::Pathcomp(fwddecl.fwddecl, ".LR");
+algo::strptr amc::ctype_Get(amc::FFwddecl& parent) {
+    return algo::Pathcomp(parent.fwddecl, ".LR");
 }
 
 // --- amc.FFwddecl..Uninit
-void amc::FFwddecl_Uninit(amc::FFwddecl& fwddecl) {
-    amc::FFwddecl &row = fwddecl; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+void amc::FFwddecl_Uninit(amc::FFwddecl& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_fwddecl_Remove(*p_ns, row);// remove fwddecl from index c_fwddecl
+        c_fwddecl_Remove(*p_ns, parent);// remove fwddecl from index c_fwddecl
     }
-    ind_fwddecl_Remove(row); // remove fwddecl from index ind_fwddecl
+    ind_fwddecl_Remove(parent); // remove fwddecl from index ind_fwddecl
 }
 
 // --- amc.FGconst.msghdr.CopyOut
@@ -32445,16 +32747,15 @@ void amc::gconst_CopyIn(amc::FGconst &row, dmmeta::Gconst &in) {
 }
 
 // --- amc.FGconst.namefldctyp.Get
-algo::strptr amc::namefldctyp_Get(amc::FGconst& gconst) {
-    return algo::Pathcomp(gconst.namefld, ".RL");
+algo::strptr amc::namefldctyp_Get(amc::FGconst& parent) {
+    return algo::Pathcomp(parent.namefld, ".RL");
 }
 
 // --- amc.FGconst..Uninit
-void amc::FGconst_Uninit(amc::FGconst& gconst) {
-    amc::FGconst &row = gconst; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FGconst_Uninit(amc::FGconst& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_gconst_Remove(*p_field, row);// remove gconst from index c_gconst
+        c_gconst_Remove(*p_field, parent);// remove gconst from index c_gconst
     }
 }
 
@@ -32475,9 +32776,8 @@ void amc::gen_CopyIn(amc::FGen &row, amcdb::Gen &in) {
 }
 
 // --- amc.FGen..Uninit
-void amc::FGen_Uninit(amc::FGen& gen) {
-    amc::FGen &row = gen; (void)row;
-    zs_gen_perns_Remove(row); // remove gen from index zs_gen_perns
+void amc::FGen_Uninit(amc::FGen& parent) {
+    zs_gen_perns_Remove(parent); // remove gen from index zs_gen_perns
 }
 
 // --- amc.FGenXref.ind_seen.Find
@@ -32485,19 +32785,27 @@ void amc::FGen_Uninit(amc::FGen& gen) {
 amc::FGenXrefSeen* amc::ind_seen_Find(amc::FGenXref& parent, const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (parent.ind_seen_buckets_n - 1);
     amc::FGenXrefSeen *ret = parent.ind_seen_buckets_elems[index];
-    for (; ret && !((*ret).value == key); ret = ret->parent_ind_seen_next) {
+    for (; ret && !((*ret).value == key); ret = ret->gen_xref_ind_seen_next) {
     }
     return ret;
+}
+
+// --- amc.FGenXref.ind_seen.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FGenXrefSeen& amc::ind_seen_FindX(amc::FGenXref& parent, const algo::strptr& key) {
+    amc::FGenXrefSeen* ret = ind_seen_Find(parent, key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_seen  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
 }
 
 // --- amc.FGenXref.ind_seen.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool amc::ind_seen_InsertMaybe(amc::FGenXref& parent, amc::FGenXrefSeen& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.parent_ind_seen_next == (amc::FGenXrefSeen*)-1)) {// check if in hash already
-        row.parent_ind_seen_hashval = algo::cstring_Hash(0, row.value);
+    if (LIKELY(row.gen_xref_ind_seen_next == (amc::FGenXrefSeen*)-1)) {// check if in hash already
+        row.gen_xref_ind_seen_hashval = algo::cstring_Hash(0, row.value);
         ind_seen_Reserve(parent, 1);
-        u32 index = row.parent_ind_seen_hashval & (parent.ind_seen_buckets_n - 1);
+        u32 index = row.gen_xref_ind_seen_hashval & (parent.ind_seen_buckets_n - 1);
         amc::FGenXrefSeen* *prev = &parent.ind_seen_buckets_elems[index];
         do {
             amc::FGenXrefSeen* ret = *prev;
@@ -32508,10 +32816,10 @@ bool amc::ind_seen_InsertMaybe(amc::FGenXref& parent, amc::FGenXrefSeen& row) {
                 retval = false;
                 break;
             }
-            prev = &ret->parent_ind_seen_next;
+            prev = &ret->gen_xref_ind_seen_next;
         } while (true);
         if (retval) {
-            row.parent_ind_seen_next = *prev;
+            row.gen_xref_ind_seen_next = *prev;
             parent.ind_seen_n++;
             *prev = &row;
         }
@@ -32522,17 +32830,17 @@ bool amc::ind_seen_InsertMaybe(amc::FGenXref& parent, amc::FGenXrefSeen& row) {
 // --- amc.FGenXref.ind_seen.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc::ind_seen_Remove(amc::FGenXref& parent, amc::FGenXrefSeen& row) {
-    if (LIKELY(row.parent_ind_seen_next != (amc::FGenXrefSeen*)-1)) {// check if in hash already
-        u32 index = row.parent_ind_seen_hashval & (parent.ind_seen_buckets_n - 1);
+    if (LIKELY(row.gen_xref_ind_seen_next != (amc::FGenXrefSeen*)-1)) {// check if in hash already
+        u32 index = row.gen_xref_ind_seen_hashval & (parent.ind_seen_buckets_n - 1);
         amc::FGenXrefSeen* *prev = &parent.ind_seen_buckets_elems[index]; // addr of pointer to current element
         while (amc::FGenXrefSeen *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
-                *prev = next->parent_ind_seen_next; // unlink (singly linked list)
+                *prev = next->gen_xref_ind_seen_next; // unlink (singly linked list)
                 parent.ind_seen_n--;
-                row.parent_ind_seen_next = (amc::FGenXrefSeen*)-1;// not-in-hash
+                row.gen_xref_ind_seen_next = (amc::FGenXrefSeen*)-1;// not-in-hash
                 break;
             }
-            prev = &next->parent_ind_seen_next;
+            prev = &next->gen_xref_ind_seen_next;
         }
     }
 }
@@ -32565,9 +32873,9 @@ void amc::ind_seen_AbsReserve(amc::FGenXref& parent, int n) {
             amc::FGenXrefSeen* elem = parent.ind_seen_buckets_elems[i];
             while (elem) {
                 amc::FGenXrefSeen &row        = *elem;
-                amc::FGenXrefSeen* next       = row.parent_ind_seen_next;
-                u32 index          = row.parent_ind_seen_hashval & (new_nbuckets-1);
-                row.parent_ind_seen_next     = new_buckets[index];
+                amc::FGenXrefSeen* next       = row.gen_xref_ind_seen_next;
+                u32 index          = row.gen_xref_ind_seen_hashval & (new_nbuckets-1);
+                row.gen_xref_ind_seen_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
             }
@@ -32682,7 +32990,6 @@ void amc::FGenXref_Init(amc::FGenXref& parent) {
 
 // --- amc.FGenXref..Uninit
 void amc::FGenXref_Uninit(amc::FGenXref& parent) {
-    amc::FGenXref &row = parent; (void)row;
 
     // amc.FGenXref.seen.Uninit (Lary)  //
     // destroy amc.FGenXref.seen
@@ -32713,20 +33020,19 @@ void amc::gstatic_CopyIn(amc::FGstatic &row, dmmeta::Gstatic &in) {
 }
 
 // --- amc.FGstatic.ns.Get
-algo::strptr amc::ns_Get(amc::FGstatic& gstatic) {
-    return algo::Pathcomp(gstatic.field, ".LL");
+algo::strptr amc::ns_Get(amc::FGstatic& parent) {
+    return algo::Pathcomp(parent.field, ".LL");
 }
 
 // --- amc.FGstatic..Uninit
-void amc::FGstatic_Uninit(amc::FGstatic& gstatic) {
-    amc::FGstatic &row = gstatic; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+void amc::FGstatic_Uninit(amc::FGstatic& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_gstatic_Remove(*p_ns, row);// remove gstatic from index c_gstatic
+        c_gstatic_Remove(*p_ns, parent);// remove gstatic from index c_gstatic
     }
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_gstatic_Remove(*p_field, row);// remove gstatic from index c_gstatic
+        c_gstatic_Remove(*p_field, parent);// remove gstatic from index c_gstatic
     }
 }
 
@@ -32749,21 +33055,20 @@ void amc::gsymbol_CopyIn(amc::FGsymbol &row, dmmeta::Gsymbol &in) {
 }
 
 // --- amc.FGsymbol.ns.Get
-algo::strptr amc::ns_Get(amc::FGsymbol& gsymbol) {
-    return algo::Pathcomp(gsymbol.gsymbol, "/RL");
+algo::strptr amc::ns_Get(amc::FGsymbol& parent) {
+    return algo::Pathcomp(parent.gsymbol, "/RL");
 }
 
 // --- amc.FGsymbol.ssimfile.Get
-algo::strptr amc::ssimfile_Get(amc::FGsymbol& gsymbol) {
-    return algo::Pathcomp(gsymbol.gsymbol, "/RR");
+algo::strptr amc::ssimfile_Get(amc::FGsymbol& parent) {
+    return algo::Pathcomp(parent.gsymbol, "/RR");
 }
 
 // --- amc.FGsymbol..Uninit
-void amc::FGsymbol_Uninit(amc::FGsymbol& gsymbol) {
-    amc::FGsymbol &row = gsymbol; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+void amc::FGsymbol_Uninit(amc::FGsymbol& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_gsymbol_Remove(*p_ns, row);// remove gsymbol from index c_gsymbol
+        c_gsymbol_Remove(*p_ns, parent);// remove gsymbol from index c_gsymbol
     }
 }
 
@@ -32780,11 +33085,10 @@ void amc::hook_CopyIn(amc::FHook &row, dmmeta::Hook &in) {
 }
 
 // --- amc.FHook..Uninit
-void amc::FHook_Uninit(amc::FHook& hook) {
-    amc::FHook &row = hook; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FHook_Uninit(amc::FHook& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_hook_Remove(*p_field, row);// remove hook from index c_hook
+        c_hook_Remove(*p_field, parent);// remove hook from index c_hook
     }
 }
 
@@ -32807,12 +33111,11 @@ void amc::inlary_CopyIn(amc::FInlary &row, dmmeta::Inlary &in) {
 }
 
 // --- amc.FInlary..Uninit
-void amc::FInlary_Uninit(amc::FInlary& inlary) {
-    amc::FInlary &row = inlary; (void)row;
-    ind_inlary_Remove(row); // remove inlary from index ind_inlary
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FInlary_Uninit(amc::FInlary& parent) {
+    ind_inlary_Remove(parent); // remove inlary from index ind_inlary
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_inlary_Remove(*p_field, row);// remove inlary from index c_inlary
+        c_inlary_Remove(*p_field, parent);// remove inlary from index c_inlary
     }
 }
 
@@ -32831,11 +33134,10 @@ void amc::jstype_CopyIn(amc::FJstype &row, dmmeta::Jstype &in) {
 }
 
 // --- amc.FJstype..Uninit
-void amc::FJstype_Uninit(amc::FJstype& jstype) {
-    amc::FJstype &row = jstype; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FJstype_Uninit(amc::FJstype& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_jstype_Remove(*p_ctype, row);// remove jstype from index c_jstype
+        c_jstype_Remove(*p_ctype, parent);// remove jstype from index c_jstype
     }
 }
 
@@ -32856,20 +33158,19 @@ void amc::lenfld_CopyIn(amc::FLenfld &row, dmmeta::Lenfld &in) {
 }
 
 // --- amc.FLenfld.ctype.Get
-algo::strptr amc::ctype_Get(amc::FLenfld& lenfld) {
-    return algo::Pathcomp(lenfld.field, ".RL");
+algo::strptr amc::ctype_Get(amc::FLenfld& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- amc.FLenfld..Uninit
-void amc::FLenfld_Uninit(amc::FLenfld& lenfld) {
-    amc::FLenfld &row = lenfld; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+void amc::FLenfld_Uninit(amc::FLenfld& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_lenfld_Remove(*p_ctype, row);// remove lenfld from index c_lenfld
+        c_lenfld_Remove(*p_ctype, parent);// remove lenfld from index c_lenfld
     }
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_lenfld_Remove(*p_field, row);// remove lenfld from index c_lenfld
+        c_lenfld_Remove(*p_field, parent);// remove lenfld from index c_lenfld
     }
 }
 
@@ -32888,9 +33189,8 @@ void amc::license_CopyIn(amc::FLicense &row, dev::License &in) {
 }
 
 // --- amc.FLicense..Uninit
-void amc::FLicense_Uninit(amc::FLicense& license) {
-    amc::FLicense &row = license; (void)row;
-    ind_license_Remove(row); // remove license from index ind_license
+void amc::FLicense_Uninit(amc::FLicense& parent) {
+    ind_license_Remove(parent); // remove license from index ind_license
 }
 
 // --- amc.FListtype.msghdr.CopyOut
@@ -32914,9 +33214,8 @@ void amc::listtype_CopyIn(amc::FListtype &row, dmmeta::Listtype &in) {
 }
 
 // --- amc.FListtype..Uninit
-void amc::FListtype_Uninit(amc::FListtype& listtype) {
-    amc::FListtype &row = listtype; (void)row;
-    ind_listtype_Remove(row); // remove listtype from index ind_listtype
+void amc::FListtype_Uninit(amc::FListtype& parent) {
+    ind_listtype_Remove(parent); // remove listtype from index ind_listtype
 }
 
 // --- amc.FLlist.msghdr.CopyOut
@@ -32938,16 +33237,15 @@ void amc::llist_CopyIn(amc::FLlist &row, dmmeta::Llist &in) {
 }
 
 // --- amc.FLlist.listtype.Get
-algo::strptr amc::listtype_Get(amc::FLlist& llist) {
-    return algo::Pathcomp(llist.field, ".RR_LL");
+algo::strptr amc::listtype_Get(amc::FLlist& parent) {
+    return algo::Pathcomp(parent.field, ".RR_LL");
 }
 
 // --- amc.FLlist..Uninit
-void amc::FLlist_Uninit(amc::FLlist& llist) {
-    amc::FLlist &row = llist; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FLlist_Uninit(amc::FLlist& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_llist_Remove(*p_field, row);// remove llist from index c_llist
+        c_llist_Remove(*p_field, parent);// remove llist from index c_llist
     }
 }
 
@@ -32966,13 +33264,12 @@ void amc::main_CopyIn(amc::FMain &row, dmmeta::Main &in) {
 }
 
 // --- amc.FMain..Uninit
-void amc::FMain_Uninit(amc::FMain& main) {
-    amc::FMain &row = main; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(row.ns);
+void amc::FMain_Uninit(amc::FMain& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(parent.ns);
     if (p_ns)  {
-        c_main_Remove(*p_ns, row);// remove main from index c_main
+        c_main_Remove(*p_ns, parent);// remove main from index c_main
     }
-    ind_main_Remove(row); // remove main from index ind_main
+    ind_main_Remove(parent); // remove main from index ind_main
 }
 
 // --- amc.FMsg.base.CopyOut
@@ -32996,13 +33293,12 @@ void amc::msg_CopyIn(amc::FMsg &row, dmmeta::Msg &in) {
 }
 
 // --- amc.FMsg..Uninit
-void amc::FMsg_Uninit(amc::FMsg& msg) {
-    amc::FMsg &row = msg; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FMsg_Uninit(amc::FMsg& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_msg_Remove(*p_ctype, row);// remove msg from index c_msg
+        c_msg_Remove(*p_ctype, parent);// remove msg from index c_msg
     }
-    ind_msg_typekey_Remove(row); // remove msg from index ind_msg_typekey
+    ind_msg_typekey_Remove(parent); // remove msg from index ind_msg_typekey
 }
 
 // --- amc.FMsgfield.base.CopyOut
@@ -33014,6 +33310,8 @@ void amc::msgfield_CopyOut(amc::FMsgfield &row, dmmeta::Msgfield &out) {
     out.width = row.width;
     out.bigend = row.bigend;
     out.varlen = row.varlen;
+    out.strtype = row.strtype;
+    out.pad = row.pad;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -33026,17 +33324,28 @@ void amc::msgfield_CopyIn(amc::FMsgfield &row, dmmeta::Msgfield &in) {
     row.width = in.width;
     row.bigend = in.bigend;
     row.varlen = in.varlen;
+    row.strtype = in.strtype;
+    row.pad = in.pad;
     row.comment = in.comment;
 }
 
 // --- amc.FMsgfield.msg.Get
-algo::strptr amc::msg_Get(amc::FMsgfield& msgfield) {
-    return algo::Pathcomp(msgfield.msgfield, "/RL");
+algo::strptr amc::msg_Get(amc::FMsgfield& parent) {
+    return algo::Pathcomp(parent.msgfield, "/RL");
 }
 
 // --- amc.FMsgfield.name.Get
-algo::strptr amc::name_Get(amc::FMsgfield& msgfield) {
-    return algo::Pathcomp(msgfield.msgfield, "/RR");
+algo::strptr amc::name_Get(amc::FMsgfield& parent) {
+    return algo::Pathcomp(parent.msgfield, "/RR");
+}
+
+// --- amc.FMsgfield..Init
+// Set all fields to initial values.
+void amc::FMsgfield_Init(amc::FMsgfield& parent) {
+    parent.offset = i32(0);
+    parent.width = i32(0);
+    parent.bigend = bool(false);
+    parent.varlen = bool(false);
 }
 
 // --- amc.FMsgtype.msghdr.CopyOut
@@ -33054,11 +33363,10 @@ void amc::msgtype_CopyIn(amc::FMsgtype &row, dmmeta::Msgtype &in) {
 }
 
 // --- amc.FMsgtype..Uninit
-void amc::FMsgtype_Uninit(amc::FMsgtype& msgtype) {
-    amc::FMsgtype &row = msgtype; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FMsgtype_Uninit(amc::FMsgtype& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_msgtype_Remove(*p_ctype, row);// remove msgtype from index c_msgtype
+        c_msgtype_Remove(*p_ctype, parent);// remove msgtype from index c_msgtype
     }
 }
 
@@ -33077,11 +33385,10 @@ void amc::nocascdel_CopyIn(amc::FNocascdel &row, dmmeta::Nocascdel &in) {
 }
 
 // --- amc.FNocascdel..Uninit
-void amc::FNocascdel_Uninit(amc::FNocascdel& nocascdel) {
-    amc::FNocascdel &row = nocascdel; (void)row;
-    amc::FXref* p_xref = amc::ind_xref_Find(row.xref);
+void amc::FNocascdel_Uninit(amc::FNocascdel& parent) {
+    amc::FXref* p_xref = amc::ind_xref_Find(parent.xref);
     if (p_xref)  {
-        c_nocascdel_Remove(*p_xref, row);// remove nocascdel from index c_nocascdel
+        c_nocascdel_Remove(*p_xref, parent);// remove nocascdel from index c_nocascdel
     }
 }
 
@@ -33100,11 +33407,10 @@ void amc::nossimfile_CopyIn(amc::FNossimfile &row, dmmeta::Nossimfile &in) {
 }
 
 // --- amc.FNossimfile..Uninit
-void amc::FNossimfile_Uninit(amc::FNossimfile& nossimfile) {
-    amc::FNossimfile &row = nossimfile; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FNossimfile_Uninit(amc::FNossimfile& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_nossimfile_Remove(*p_ctype, row);// remove nossimfile from index c_nossimfile
+        c_nossimfile_Remove(*p_ctype, parent);// remove nossimfile from index c_nossimfile
     }
 }
 
@@ -33129,11 +33435,11 @@ void amc::ns_CopyIn(amc::FNs &row, dmmeta::Ns &in) {
 // --- amc.FNs.c_ctype.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_ctype_Insert(amc::FNs& ns, amc::FCtype& row) {
+void amc::c_ctype_Insert(amc::FNs& parent, amc::FCtype& row) {
     if (!row.ns_c_ctype_in_ary) {
-        c_ctype_Reserve(ns, 1);
-        u64 n  = ns.c_ctype_n++;
-        ns.c_ctype_elems[n] = &row;
+        c_ctype_Reserve(parent, 1);
+        u64 n  = parent.c_ctype_n++;
+        parent.c_ctype_elems[n] = &row;
         row.ns_c_ctype_in_ary = true;
     }
 }
@@ -33142,18 +33448,18 @@ void amc::c_ctype_Insert(amc::FNs& ns, amc::FCtype& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_ctype_InsertMaybe(amc::FNs& ns, amc::FCtype& row) {
+bool amc::c_ctype_InsertMaybe(amc::FNs& parent, amc::FCtype& row) {
     bool retval = !ns_c_ctype_InAryQ(row);
-    c_ctype_Insert(ns,row); // check is performed in _Insert again
+    c_ctype_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_ctype.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_ctype_Remove(amc::FNs& ns, amc::FCtype& row) {
-    i64 n = ns.c_ctype_n;
+void amc::c_ctype_Remove(amc::FNs& parent, amc::FCtype& row) {
+    i64 n = parent.c_ctype_n;
     if (bool_Update(row.ns_c_ctype_in_ary,false)) {
-        amc::FCtype* *elems = ns.c_ctype_elems;
+        amc::FCtype* *elems = parent.c_ctype_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -33162,7 +33468,7 @@ void amc::c_ctype_Remove(amc::FNs& ns, amc::FCtype& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FCtype*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_ctype_n = n - 1;
+                parent.c_ctype_n = n - 1;
                 break;
             }
         }
@@ -33171,29 +33477,29 @@ void amc::c_ctype_Remove(amc::FNs& ns, amc::FCtype& row) {
 
 // --- amc.FNs.c_ctype.Reserve
 // Reserve space in index for N more elements;
-void amc::c_ctype_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_ctype_max;
-    if (UNLIKELY(ns.c_ctype_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_ctype_n + n), 4);
+void amc::c_ctype_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_ctype_max;
+    if (UNLIKELY(parent.c_ctype_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_ctype_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FCtype*);
         u64 new_size = new_max * sizeof(amc::FCtype*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_ctype_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_ctype_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_ctype");
         }
-        ns.c_ctype_elems = (amc::FCtype**)new_mem;
-        ns.c_ctype_max = new_max;
+        parent.c_ctype_elems = (amc::FCtype**)new_mem;
+        parent.c_ctype_max = new_max;
     }
 }
 
 // --- amc.FNs.c_func.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_func_Insert(amc::FNs& ns, amc::FFunc& row) {
+void amc::c_func_Insert(amc::FNs& parent, amc::FFunc& row) {
     if (!row.ns_c_func_in_ary) {
-        c_func_Reserve(ns, 1);
-        u64 n  = ns.c_func_n++;
-        ns.c_func_elems[n] = &row;
+        c_func_Reserve(parent, 1);
+        u64 n  = parent.c_func_n++;
+        parent.c_func_elems[n] = &row;
         row.ns_c_func_in_ary = true;
     }
 }
@@ -33202,18 +33508,18 @@ void amc::c_func_Insert(amc::FNs& ns, amc::FFunc& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_func_InsertMaybe(amc::FNs& ns, amc::FFunc& row) {
+bool amc::c_func_InsertMaybe(amc::FNs& parent, amc::FFunc& row) {
     bool retval = !ns_c_func_InAryQ(row);
-    c_func_Insert(ns,row); // check is performed in _Insert again
+    c_func_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_func.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_func_Remove(amc::FNs& ns, amc::FFunc& row) {
-    i64 n = ns.c_func_n;
+void amc::c_func_Remove(amc::FNs& parent, amc::FFunc& row) {
+    i64 n = parent.c_func_n;
     if (bool_Update(row.ns_c_func_in_ary,false)) {
-        amc::FFunc* *elems = ns.c_func_elems;
+        amc::FFunc* *elems = parent.c_func_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -33222,7 +33528,7 @@ void amc::c_func_Remove(amc::FNs& ns, amc::FFunc& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFunc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_func_n = n - 1;
+                parent.c_func_n = n - 1;
                 break;
             }
         }
@@ -33231,29 +33537,29 @@ void amc::c_func_Remove(amc::FNs& ns, amc::FFunc& row) {
 
 // --- amc.FNs.c_func.Reserve
 // Reserve space in index for N more elements;
-void amc::c_func_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_func_max;
-    if (UNLIKELY(ns.c_func_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_func_n + n), 4);
+void amc::c_func_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_func_max;
+    if (UNLIKELY(parent.c_func_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_func_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFunc*);
         u64 new_size = new_max * sizeof(amc::FFunc*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_func_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_func_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_func");
         }
-        ns.c_func_elems = (amc::FFunc**)new_mem;
-        ns.c_func_max = new_max;
+        parent.c_func_elems = (amc::FFunc**)new_mem;
+        parent.c_func_max = new_max;
     }
 }
 
 // --- amc.FNs.c_dispatch.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_dispatch_Insert(amc::FNs& ns, amc::FDispatch& row) {
+void amc::c_dispatch_Insert(amc::FNs& parent, amc::FDispatch& row) {
     if (!row.ns_c_dispatch_in_ary) {
-        c_dispatch_Reserve(ns, 1);
-        u64 n  = ns.c_dispatch_n++;
-        ns.c_dispatch_elems[n] = &row;
+        c_dispatch_Reserve(parent, 1);
+        u64 n  = parent.c_dispatch_n++;
+        parent.c_dispatch_elems[n] = &row;
         row.ns_c_dispatch_in_ary = true;
     }
 }
@@ -33262,18 +33568,18 @@ void amc::c_dispatch_Insert(amc::FNs& ns, amc::FDispatch& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_dispatch_InsertMaybe(amc::FNs& ns, amc::FDispatch& row) {
+bool amc::c_dispatch_InsertMaybe(amc::FNs& parent, amc::FDispatch& row) {
     bool retval = !ns_c_dispatch_InAryQ(row);
-    c_dispatch_Insert(ns,row); // check is performed in _Insert again
+    c_dispatch_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_dispatch.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_dispatch_Remove(amc::FNs& ns, amc::FDispatch& row) {
-    i64 n = ns.c_dispatch_n;
+void amc::c_dispatch_Remove(amc::FNs& parent, amc::FDispatch& row) {
+    i64 n = parent.c_dispatch_n;
     if (bool_Update(row.ns_c_dispatch_in_ary,false)) {
-        amc::FDispatch* *elems = ns.c_dispatch_elems;
+        amc::FDispatch* *elems = parent.c_dispatch_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -33282,7 +33588,7 @@ void amc::c_dispatch_Remove(amc::FNs& ns, amc::FDispatch& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FDispatch*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_dispatch_n = n - 1;
+                parent.c_dispatch_n = n - 1;
                 break;
             }
         }
@@ -33291,29 +33597,29 @@ void amc::c_dispatch_Remove(amc::FNs& ns, amc::FDispatch& row) {
 
 // --- amc.FNs.c_dispatch.Reserve
 // Reserve space in index for N more elements;
-void amc::c_dispatch_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_dispatch_max;
-    if (UNLIKELY(ns.c_dispatch_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_dispatch_n + n), 4);
+void amc::c_dispatch_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_dispatch_max;
+    if (UNLIKELY(parent.c_dispatch_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_dispatch_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FDispatch*);
         u64 new_size = new_max * sizeof(amc::FDispatch*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_dispatch_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_dispatch_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_dispatch");
         }
-        ns.c_dispatch_elems = (amc::FDispatch**)new_mem;
-        ns.c_dispatch_max = new_max;
+        parent.c_dispatch_elems = (amc::FDispatch**)new_mem;
+        parent.c_dispatch_max = new_max;
     }
 }
 
 // --- amc.FNs.c_gstatic.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_gstatic_Insert(amc::FNs& ns, amc::FGstatic& row) {
+void amc::c_gstatic_Insert(amc::FNs& parent, amc::FGstatic& row) {
     if (!row.ns_c_gstatic_in_ary) {
-        c_gstatic_Reserve(ns, 1);
-        u64 n  = ns.c_gstatic_n++;
-        ns.c_gstatic_elems[n] = &row;
+        c_gstatic_Reserve(parent, 1);
+        u64 n  = parent.c_gstatic_n++;
+        parent.c_gstatic_elems[n] = &row;
         row.ns_c_gstatic_in_ary = true;
     }
 }
@@ -33322,18 +33628,18 @@ void amc::c_gstatic_Insert(amc::FNs& ns, amc::FGstatic& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_gstatic_InsertMaybe(amc::FNs& ns, amc::FGstatic& row) {
+bool amc::c_gstatic_InsertMaybe(amc::FNs& parent, amc::FGstatic& row) {
     bool retval = !ns_c_gstatic_InAryQ(row);
-    c_gstatic_Insert(ns,row); // check is performed in _Insert again
+    c_gstatic_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_gstatic.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_gstatic_Remove(amc::FNs& ns, amc::FGstatic& row) {
-    i64 n = ns.c_gstatic_n;
+void amc::c_gstatic_Remove(amc::FNs& parent, amc::FGstatic& row) {
+    i64 n = parent.c_gstatic_n;
     if (bool_Update(row.ns_c_gstatic_in_ary,false)) {
-        amc::FGstatic* *elems = ns.c_gstatic_elems;
+        amc::FGstatic* *elems = parent.c_gstatic_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -33342,7 +33648,7 @@ void amc::c_gstatic_Remove(amc::FNs& ns, amc::FGstatic& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FGstatic*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_gstatic_n = n - 1;
+                parent.c_gstatic_n = n - 1;
                 break;
             }
         }
@@ -33351,18 +33657,18 @@ void amc::c_gstatic_Remove(amc::FNs& ns, amc::FGstatic& row) {
 
 // --- amc.FNs.c_gstatic.Reserve
 // Reserve space in index for N more elements;
-void amc::c_gstatic_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_gstatic_max;
-    if (UNLIKELY(ns.c_gstatic_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_gstatic_n + n), 4);
+void amc::c_gstatic_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_gstatic_max;
+    if (UNLIKELY(parent.c_gstatic_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_gstatic_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FGstatic*);
         u64 new_size = new_max * sizeof(amc::FGstatic*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_gstatic_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_gstatic_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_gstatic");
         }
-        ns.c_gstatic_elems = (amc::FGstatic**)new_mem;
-        ns.c_gstatic_max = new_max;
+        parent.c_gstatic_elems = (amc::FGstatic**)new_mem;
+        parent.c_gstatic_max = new_max;
     }
 }
 
@@ -33370,61 +33676,61 @@ void amc::c_gstatic_Reserve(amc::FNs& ns, u64 n) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> amc::include_Addary(amc::FNs& ns, algo::aryptr<algo::cstring> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= ns.include_elems && rhs.elems < ns.include_elems + ns.include_max;
+algo::aryptr<algo::cstring> amc::include_Addary(amc::FNs& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.include_elems && rhs.elems < parent.include_elems + parent.include_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("amc.tary_alias  field:amc.FNs.include  comment:'alias error: sub-array is being appended to the whole'");
     }
     i64 nnew = rhs.n_elems;
-    include_Reserve(ns, nnew); // reserve space
-    i64 at = ns.include_n;
+    include_Reserve(parent, nnew); // reserve space
+    i64 at = parent.include_n;
     for (i64 i = 0; i < nnew; i++) {
-        new (ns.include_elems + at + i) algo::cstring(rhs[i]);
-        ns.include_n++;
+        new (parent.include_elems + at + i) algo::cstring(rhs[i]);
+        parent.include_n++;
     }
-    return algo::aryptr<algo::cstring>(ns.include_elems + at, nnew);
+    return algo::aryptr<algo::cstring>(parent.include_elems + at, nnew);
 }
 
 // --- amc.FNs.include.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& amc::include_Alloc(amc::FNs& ns) {
-    include_Reserve(ns, 1);
-    i64 n  = ns.include_n;
+algo::cstring& amc::include_Alloc(amc::FNs& parent) {
+    include_Reserve(parent, 1);
+    i64 n  = parent.include_n;
     i64 at = n;
-    algo::cstring *elems = ns.include_elems;
+    algo::cstring *elems = parent.include_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
-    ns.include_n = n+1;
+    parent.include_n = n+1;
     return elems[at];
 }
 
 // --- amc.FNs.include.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& amc::include_AllocAt(amc::FNs& ns, i64 at) {
-    include_Reserve(ns, 1);
-    i64 n  = ns.include_n;
+algo::cstring& amc::include_AllocAt(amc::FNs& parent, i64 at) {
+    include_Reserve(parent, 1);
+    i64 n  = parent.include_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("amc.bad_alloc_at  field:amc.FNs.include  comment:'index out of range'");
     }
-    algo::cstring *elems = ns.include_elems;
+    algo::cstring *elems = parent.include_elems;
     memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
     new (elems + at) algo::cstring(); // construct element, default initializer
-    ns.include_n = n+1;
+    parent.include_n = n+1;
     return elems[at];
 }
 
 // --- amc.FNs.include.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> amc::include_AllocN(amc::FNs& ns, i64 n_elems) {
-    include_Reserve(ns, n_elems);
-    i64 old_n  = ns.include_n;
+algo::aryptr<algo::cstring> amc::include_AllocN(amc::FNs& parent, i64 n_elems) {
+    include_Reserve(parent, n_elems);
+    i64 old_n  = parent.include_n;
     i64 new_n = old_n + n_elems;
-    algo::cstring *elems = ns.include_elems;
+    algo::cstring *elems = parent.include_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
-    ns.include_n = new_n;
+    parent.include_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
@@ -33432,99 +33738,99 @@ algo::aryptr<algo::cstring> amc::include_AllocN(amc::FNs& ns, i64 n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> amc::include_AllocNAt(amc::FNs& ns, i64 n_elems, i64 at) {
-    include_Reserve(ns, n_elems);
-    i64 n  = ns.include_n;
+algo::aryptr<algo::cstring> amc::include_AllocNAt(amc::FNs& parent, i64 n_elems, i64 at) {
+    include_Reserve(parent, n_elems);
+    i64 n  = parent.include_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("amc.bad_alloc_n_at  field:amc.FNs.include  comment:'index out of range'");
     }
-    algo::cstring *elems = ns.include_elems;
+    algo::cstring *elems = parent.include_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
     for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
-    ns.include_n = n+n_elems;
+    parent.include_n = n+n_elems;
     return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- amc.FNs.include.Remove
 // Remove item by index. If index outside of range, do nothing.
-void amc::include_Remove(amc::FNs& ns, u64 i) {
-    u64 lim = ns.include_n;
-    algo::cstring *elems = ns.include_elems;
+void amc::include_Remove(amc::FNs& parent, u64 i) {
+    u64 lim = parent.include_n;
+    algo::cstring *elems = parent.include_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
         memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
-        ns.include_n = lim - 1;
+        parent.include_n = lim - 1;
     }
 }
 
 // --- amc.FNs.include.RemoveAll
-void amc::include_RemoveAll(amc::FNs& ns) {
-    u64 n = ns.include_n;
+void amc::include_RemoveAll(amc::FNs& parent) {
+    u64 n = parent.include_n;
     for (u64 i=0; i<n; i++) {
-        ns.include_elems[i].~cstring();
+        parent.include_elems[i].~cstring();
     }
-    ns.include_n = 0;
+    parent.include_n = 0;
 }
 
 // --- amc.FNs.include.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc::include_RemoveLast(amc::FNs& ns) {
-    u64 n = ns.include_n;
+void amc::include_RemoveLast(amc::FNs& parent) {
+    u64 n = parent.include_n;
     if (n > 0) {
         n -= 1;
-        include_qFind(ns, u64(n)).~cstring();
-        ns.include_n = n;
+        include_qFind(parent, u64(n)).~cstring();
+        parent.include_n = n;
     }
 }
 
 // --- amc.FNs.include.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void amc::include_AbsReserve(amc::FNs& ns, i64 n) {
-    u64 old_max  = ns.include_max;
+void amc::include_AbsReserve(amc::FNs& parent, i64 n) {
+    u64 old_max  = parent.include_max;
     if (n > i64(old_max)) {
         u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
-        void *new_mem = amc::lpool_ReallocMem(ns.include_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        void *new_mem = amc::lpool_ReallocMem(parent.include_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.tary_nomem  field:amc.FNs.include  comment:'out of memory'");
         }
-        ns.include_elems = (algo::cstring*)new_mem;
-        ns.include_max = new_max;
+        parent.include_elems = (algo::cstring*)new_mem;
+        parent.include_max = new_max;
     }
 }
 
 // --- amc.FNs.include.Setary
 // Copy contents of RHS to PARENT.
-void amc::include_Setary(amc::FNs& ns, amc::FNs &rhs) {
-    include_RemoveAll(ns);
+void amc::include_Setary(amc::FNs& parent, amc::FNs &rhs) {
+    include_RemoveAll(parent);
     i64 nnew = rhs.include_n;
-    include_Reserve(ns, nnew); // reserve space
+    include_Reserve(parent, nnew); // reserve space
     for (i64 i = 0; i < nnew; i++) { // copy elements over
-        new (ns.include_elems + i) algo::cstring(include_qFind(rhs, i));
-        ns.include_n = i + 1;
+        new (parent.include_elems + i) algo::cstring(include_qFind(rhs, i));
+        parent.include_n = i + 1;
     }
 }
 
 // --- amc.FNs.include.Setary2
 // Copy specified array into include, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void amc::include_Setary(amc::FNs& ns, const algo::aryptr<algo::cstring> &rhs) {
-    include_RemoveAll(ns);
-    include_Addary(ns, rhs);
+void amc::include_Setary(amc::FNs& parent, const algo::aryptr<algo::cstring> &rhs) {
+    include_RemoveAll(parent);
+    include_Addary(parent, rhs);
 }
 
 // --- amc.FNs.include.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> amc::include_AllocNVal(amc::FNs& ns, i64 n_elems, const algo::cstring& val) {
-    include_Reserve(ns, n_elems);
-    i64 old_n  = ns.include_n;
+algo::aryptr<algo::cstring> amc::include_AllocNVal(amc::FNs& parent, i64 n_elems, const algo::cstring& val) {
+    include_Reserve(parent, n_elems);
+    i64 old_n  = parent.include_n;
     i64 new_n = old_n + n_elems;
-    algo::cstring *elems = ns.include_elems;
+    algo::cstring *elems = parent.include_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
-    ns.include_n = new_n;
+    parent.include_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
@@ -33532,12 +33838,12 @@ algo::aryptr<algo::cstring> amc::include_AllocNVal(amc::FNs& ns, i64 n_elems, co
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool amc::include_ReadStrptrMaybe(amc::FNs& ns, algo::strptr in_str) {
+bool amc::include_ReadStrptrMaybe(amc::FNs& parent, algo::strptr in_str) {
     bool retval = true;
-    algo::cstring &elem = include_Alloc(ns);
+    algo::cstring &elem = include_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
     if (!retval) {
-        include_RemoveLast(ns);
+        include_RemoveLast(parent);
     }
     return retval;
 }
@@ -33545,25 +33851,25 @@ bool amc::include_ReadStrptrMaybe(amc::FNs& ns, algo::strptr in_str) {
 // --- amc.FNs.include.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void amc::include_Insary(amc::FNs& ns, algo::aryptr<algo::cstring> rhs, i64 at) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= ns.include_elems && rhs.elems < ns.include_elems + ns.include_max;
+void amc::include_Insary(amc::FNs& parent, algo::aryptr<algo::cstring> rhs, i64 at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.include_elems && rhs.elems < parent.include_elems + parent.include_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("amc.tary_alias  field:amc.FNs.include  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(ns.include_n+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.include_n+1))) {
         FatalErrorExit("amc.bad_insary  field:amc.FNs.include  comment:'index out of range'");
     }
     i64 nnew = rhs.n_elems;
-    i64 nmove = ns.include_n - at;
-    include_Reserve(ns, nnew); // reserve space
+    i64 nmove = parent.include_n - at;
+    include_Reserve(parent, nnew); // reserve space
     for (i64 i = nmove-1; i >=0 ; --i) {
-        new (ns.include_elems + at + nnew + i) algo::cstring(ns.include_elems[at + i]);
-        ns.include_elems[at + i].~cstring(); // destroy element
+        new (parent.include_elems + at + nnew + i) algo::cstring(parent.include_elems[at + i]);
+        parent.include_elems[at + i].~cstring(); // destroy element
     }
     for (i64 i = 0; i < nnew; ++i) {
-        new (ns.include_elems + at + i) algo::cstring(rhs[i]);
+        new (parent.include_elems + at + i) algo::cstring(rhs[i]);
     }
-    ns.include_n += nnew;
+    parent.include_n += nnew;
 }
 
 // --- amc.FNs.include.RemRegion
@@ -33571,27 +33877,27 @@ void amc::include_Insary(amc::FNs& ns, algo::aryptr<algo::cstring> rhs, i64 at) 
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
-void amc::include_RemRegion(amc::FNs& ns, i64 beg, i64 n) {
-    i64 end = i64_Min(beg+n, ns.include_n);
+void amc::include_RemRegion(amc::FNs& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.include_n);
     beg = i64_Max(beg,0);
     n = end-beg;
     if (n>0) {
         for (i64 i=beg; i<end; i++) {
-            ns.include_elems[i].~cstring();
+            parent.include_elems[i].~cstring();
         }
-        memmove(ns.include_elems+beg, ns.include_elems+end, sizeof(algo::cstring) * (ns.include_n-end));
-        ns.include_n -= n;
+        memmove(parent.include_elems+beg, parent.include_elems+end, sizeof(algo::cstring) * (parent.include_n-end));
+        parent.include_n -= n;
     }
 }
 
 // --- amc.FNs.c_dispsig.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_dispsig_Insert(amc::FNs& ns, amc::FDispsig& row) {
+void amc::c_dispsig_Insert(amc::FNs& parent, amc::FDispsig& row) {
     if (!row.ns_c_dispsig_in_ary) {
-        c_dispsig_Reserve(ns, 1);
-        u64 n  = ns.c_dispsig_n++;
-        ns.c_dispsig_elems[n] = &row;
+        c_dispsig_Reserve(parent, 1);
+        u64 n  = parent.c_dispsig_n++;
+        parent.c_dispsig_elems[n] = &row;
         row.ns_c_dispsig_in_ary = true;
     }
 }
@@ -33600,18 +33906,18 @@ void amc::c_dispsig_Insert(amc::FNs& ns, amc::FDispsig& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_dispsig_InsertMaybe(amc::FNs& ns, amc::FDispsig& row) {
+bool amc::c_dispsig_InsertMaybe(amc::FNs& parent, amc::FDispsig& row) {
     bool retval = !ns_c_dispsig_InAryQ(row);
-    c_dispsig_Insert(ns,row); // check is performed in _Insert again
+    c_dispsig_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_dispsig.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_dispsig_Remove(amc::FNs& ns, amc::FDispsig& row) {
-    i64 n = ns.c_dispsig_n;
+void amc::c_dispsig_Remove(amc::FNs& parent, amc::FDispsig& row) {
+    i64 n = parent.c_dispsig_n;
     if (bool_Update(row.ns_c_dispsig_in_ary,false)) {
-        amc::FDispsig* *elems = ns.c_dispsig_elems;
+        amc::FDispsig* *elems = parent.c_dispsig_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -33620,7 +33926,7 @@ void amc::c_dispsig_Remove(amc::FNs& ns, amc::FDispsig& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FDispsig*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_dispsig_n = n - 1;
+                parent.c_dispsig_n = n - 1;
                 break;
             }
         }
@@ -33629,28 +33935,28 @@ void amc::c_dispsig_Remove(amc::FNs& ns, amc::FDispsig& row) {
 
 // --- amc.FNs.c_dispsig.Reserve
 // Reserve space in index for N more elements;
-void amc::c_dispsig_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_dispsig_max;
-    if (UNLIKELY(ns.c_dispsig_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_dispsig_n + n), 4);
+void amc::c_dispsig_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_dispsig_max;
+    if (UNLIKELY(parent.c_dispsig_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_dispsig_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FDispsig*);
         u64 new_size = new_max * sizeof(amc::FDispsig*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_dispsig_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_dispsig_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_dispsig");
         }
-        ns.c_dispsig_elems = (amc::FDispsig**)new_mem;
-        ns.c_dispsig_max = new_max;
+        parent.c_dispsig_elems = (amc::FDispsig**)new_mem;
+        parent.c_dispsig_max = new_max;
     }
 }
 
 // --- amc.FNs.c_parentns.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_parentns_Insert(amc::FNs& ns, amc::FNs& row) {
-    c_parentns_Reserve(ns, 1);
-    u64 n  = ns.c_parentns_n++;
-    ns.c_parentns_elems[n] = &row;
+void amc::c_parentns_Insert(amc::FNs& parent, amc::FNs& row) {
+    c_parentns_Reserve(parent, 1);
+    u64 n  = parent.c_parentns_n++;
+    parent.c_parentns_elems[n] = &row;
 }
 
 // --- amc.FNs.c_parentns.ScanInsertMaybe
@@ -33658,62 +33964,62 @@ void amc::c_parentns_Insert(amc::FNs& ns, amc::FNs& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool amc::c_parentns_ScanInsertMaybe(amc::FNs& ns, amc::FNs& row) {
+bool amc::c_parentns_ScanInsertMaybe(amc::FNs& parent, amc::FNs& row) {
     bool retval = true;
-    u64 n  = ns.c_parentns_n;
+    u64 n  = parent.c_parentns_n;
     for (u64 i = 0; i < n; i++) {
-        if (ns.c_parentns_elems[i] == &row) {
+        if (parent.c_parentns_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_parentns_Insert(ns,row); // row known absent; the append is Insert's
+        c_parentns_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- amc.FNs.c_parentns.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_parentns_Remove(amc::FNs& ns, amc::FNs& row) {
-    i64 n = ns.c_parentns_n;
+void amc::c_parentns_Remove(amc::FNs& parent, amc::FNs& row) {
+    i64 n = parent.c_parentns_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (ns.c_parentns_elems[i] == &row) {
+        if (parent.c_parentns_elems[i] == &row) {
         } else {
             if (j != i) {
-                ns.c_parentns_elems[j] = ns.c_parentns_elems[i];
+                parent.c_parentns_elems[j] = parent.c_parentns_elems[i];
             }
             j++;
         }
     }
-    ns.c_parentns_n = j;
+    parent.c_parentns_n = j;
 }
 
 // --- amc.FNs.c_parentns.Reserve
 // Reserve space in index for N more elements;
-void amc::c_parentns_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_parentns_max;
-    if (UNLIKELY(ns.c_parentns_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_parentns_n + n), 4);
+void amc::c_parentns_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_parentns_max;
+    if (UNLIKELY(parent.c_parentns_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_parentns_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FNs*);
         u64 new_size = new_max * sizeof(amc::FNs*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_parentns_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_parentns_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_parentns");
         }
-        ns.c_parentns_elems = (amc::FNs**)new_mem;
-        ns.c_parentns_max = new_max;
+        parent.c_parentns_elems = (amc::FNs**)new_mem;
+        parent.c_parentns_max = new_max;
     }
 }
 
 // --- amc.FNs.c_cppincl.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_cppincl_Insert(amc::FNs& ns, amc::FNs& row) {
-    c_cppincl_Reserve(ns, 1);
-    u64 n  = ns.c_cppincl_n++;
-    ns.c_cppincl_elems[n] = &row;
+void amc::c_cppincl_Insert(amc::FNs& parent, amc::FNs& row) {
+    c_cppincl_Reserve(parent, 1);
+    u64 n  = parent.c_cppincl_n++;
+    parent.c_cppincl_elems[n] = &row;
 }
 
 // --- amc.FNs.c_cppincl.ScanInsertMaybe
@@ -33721,62 +34027,62 @@ void amc::c_cppincl_Insert(amc::FNs& ns, amc::FNs& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool amc::c_cppincl_ScanInsertMaybe(amc::FNs& ns, amc::FNs& row) {
+bool amc::c_cppincl_ScanInsertMaybe(amc::FNs& parent, amc::FNs& row) {
     bool retval = true;
-    u64 n  = ns.c_cppincl_n;
+    u64 n  = parent.c_cppincl_n;
     for (u64 i = 0; i < n; i++) {
-        if (ns.c_cppincl_elems[i] == &row) {
+        if (parent.c_cppincl_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_cppincl_Insert(ns,row); // row known absent; the append is Insert's
+        c_cppincl_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- amc.FNs.c_cppincl.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_cppincl_Remove(amc::FNs& ns, amc::FNs& row) {
-    i64 n = ns.c_cppincl_n;
+void amc::c_cppincl_Remove(amc::FNs& parent, amc::FNs& row) {
+    i64 n = parent.c_cppincl_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (ns.c_cppincl_elems[i] == &row) {
+        if (parent.c_cppincl_elems[i] == &row) {
         } else {
             if (j != i) {
-                ns.c_cppincl_elems[j] = ns.c_cppincl_elems[i];
+                parent.c_cppincl_elems[j] = parent.c_cppincl_elems[i];
             }
             j++;
         }
     }
-    ns.c_cppincl_n = j;
+    parent.c_cppincl_n = j;
 }
 
 // --- amc.FNs.c_cppincl.Reserve
 // Reserve space in index for N more elements;
-void amc::c_cppincl_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_cppincl_max;
-    if (UNLIKELY(ns.c_cppincl_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_cppincl_n + n), 4);
+void amc::c_cppincl_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_cppincl_max;
+    if (UNLIKELY(parent.c_cppincl_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_cppincl_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FNs*);
         u64 new_size = new_max * sizeof(amc::FNs*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_cppincl_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_cppincl_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_cppincl");
         }
-        ns.c_cppincl_elems = (amc::FNs**)new_mem;
-        ns.c_cppincl_max = new_max;
+        parent.c_cppincl_elems = (amc::FNs**)new_mem;
+        parent.c_cppincl_max = new_max;
     }
 }
 
 // --- amc.FNs.c_hdrincl.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_hdrincl_Insert(amc::FNs& ns, amc::FNs& row) {
-    c_hdrincl_Reserve(ns, 1);
-    u64 n  = ns.c_hdrincl_n++;
-    ns.c_hdrincl_elems[n] = &row;
+void amc::c_hdrincl_Insert(amc::FNs& parent, amc::FNs& row) {
+    c_hdrincl_Reserve(parent, 1);
+    u64 n  = parent.c_hdrincl_n++;
+    parent.c_hdrincl_elems[n] = &row;
 }
 
 // --- amc.FNs.c_hdrincl.ScanInsertMaybe
@@ -33784,63 +34090,63 @@ void amc::c_hdrincl_Insert(amc::FNs& ns, amc::FNs& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool amc::c_hdrincl_ScanInsertMaybe(amc::FNs& ns, amc::FNs& row) {
+bool amc::c_hdrincl_ScanInsertMaybe(amc::FNs& parent, amc::FNs& row) {
     bool retval = true;
-    u64 n  = ns.c_hdrincl_n;
+    u64 n  = parent.c_hdrincl_n;
     for (u64 i = 0; i < n; i++) {
-        if (ns.c_hdrincl_elems[i] == &row) {
+        if (parent.c_hdrincl_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_hdrincl_Insert(ns,row); // row known absent; the append is Insert's
+        c_hdrincl_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- amc.FNs.c_hdrincl.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_hdrincl_Remove(amc::FNs& ns, amc::FNs& row) {
-    i64 n = ns.c_hdrincl_n;
+void amc::c_hdrincl_Remove(amc::FNs& parent, amc::FNs& row) {
+    i64 n = parent.c_hdrincl_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (ns.c_hdrincl_elems[i] == &row) {
+        if (parent.c_hdrincl_elems[i] == &row) {
         } else {
             if (j != i) {
-                ns.c_hdrincl_elems[j] = ns.c_hdrincl_elems[i];
+                parent.c_hdrincl_elems[j] = parent.c_hdrincl_elems[i];
             }
             j++;
         }
     }
-    ns.c_hdrincl_n = j;
+    parent.c_hdrincl_n = j;
 }
 
 // --- amc.FNs.c_hdrincl.Reserve
 // Reserve space in index for N more elements;
-void amc::c_hdrincl_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_hdrincl_max;
-    if (UNLIKELY(ns.c_hdrincl_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_hdrincl_n + n), 4);
+void amc::c_hdrincl_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_hdrincl_max;
+    if (UNLIKELY(parent.c_hdrincl_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_hdrincl_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FNs*);
         u64 new_size = new_max * sizeof(amc::FNs*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_hdrincl_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_hdrincl_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_hdrincl");
         }
-        ns.c_hdrincl_elems = (amc::FNs**)new_mem;
-        ns.c_hdrincl_max = new_max;
+        parent.c_hdrincl_elems = (amc::FNs**)new_mem;
+        parent.c_hdrincl_max = new_max;
     }
 }
 
 // --- amc.FNs.c_fwddecl.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_fwddecl_Insert(amc::FNs& ns, amc::FFwddecl& row) {
+void amc::c_fwddecl_Insert(amc::FNs& parent, amc::FFwddecl& row) {
     if (!row.ns_c_fwddecl_in_ary) {
-        c_fwddecl_Reserve(ns, 1);
-        u64 n  = ns.c_fwddecl_n++;
-        ns.c_fwddecl_elems[n] = &row;
+        c_fwddecl_Reserve(parent, 1);
+        u64 n  = parent.c_fwddecl_n++;
+        parent.c_fwddecl_elems[n] = &row;
         row.ns_c_fwddecl_in_ary = true;
     }
 }
@@ -33849,18 +34155,18 @@ void amc::c_fwddecl_Insert(amc::FNs& ns, amc::FFwddecl& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_fwddecl_InsertMaybe(amc::FNs& ns, amc::FFwddecl& row) {
+bool amc::c_fwddecl_InsertMaybe(amc::FNs& parent, amc::FFwddecl& row) {
     bool retval = !ns_c_fwddecl_InAryQ(row);
-    c_fwddecl_Insert(ns,row); // check is performed in _Insert again
+    c_fwddecl_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_fwddecl.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_fwddecl_Remove(amc::FNs& ns, amc::FFwddecl& row) {
-    i64 n = ns.c_fwddecl_n;
+void amc::c_fwddecl_Remove(amc::FNs& parent, amc::FFwddecl& row) {
+    i64 n = parent.c_fwddecl_n;
     if (bool_Update(row.ns_c_fwddecl_in_ary,false)) {
-        amc::FFwddecl* *elems = ns.c_fwddecl_elems;
+        amc::FFwddecl* *elems = parent.c_fwddecl_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -33869,7 +34175,7 @@ void amc::c_fwddecl_Remove(amc::FNs& ns, amc::FFwddecl& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFwddecl*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_fwddecl_n = n - 1;
+                parent.c_fwddecl_n = n - 1;
                 break;
             }
         }
@@ -33878,29 +34184,29 @@ void amc::c_fwddecl_Remove(amc::FNs& ns, amc::FFwddecl& row) {
 
 // --- amc.FNs.c_fwddecl.Reserve
 // Reserve space in index for N more elements;
-void amc::c_fwddecl_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_fwddecl_max;
-    if (UNLIKELY(ns.c_fwddecl_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_fwddecl_n + n), 4);
+void amc::c_fwddecl_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_fwddecl_max;
+    if (UNLIKELY(parent.c_fwddecl_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_fwddecl_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFwddecl*);
         u64 new_size = new_max * sizeof(amc::FFwddecl*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_fwddecl_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_fwddecl_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_fwddecl");
         }
-        ns.c_fwddecl_elems = (amc::FFwddecl**)new_mem;
-        ns.c_fwddecl_max = new_max;
+        parent.c_fwddecl_elems = (amc::FFwddecl**)new_mem;
+        parent.c_fwddecl_max = new_max;
     }
 }
 
 // --- amc.FNs.c_pnew.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_pnew_Insert(amc::FNs& ns, amc::FPnew& row) {
+void amc::c_pnew_Insert(amc::FNs& parent, amc::FPnew& row) {
     if (!row.ns_c_pnew_in_ary) {
-        c_pnew_Reserve(ns, 1);
-        u64 n  = ns.c_pnew_n++;
-        ns.c_pnew_elems[n] = &row;
+        c_pnew_Reserve(parent, 1);
+        u64 n  = parent.c_pnew_n++;
+        parent.c_pnew_elems[n] = &row;
         row.ns_c_pnew_in_ary = true;
     }
 }
@@ -33909,18 +34215,18 @@ void amc::c_pnew_Insert(amc::FNs& ns, amc::FPnew& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_pnew_InsertMaybe(amc::FNs& ns, amc::FPnew& row) {
+bool amc::c_pnew_InsertMaybe(amc::FNs& parent, amc::FPnew& row) {
     bool retval = !ns_c_pnew_InAryQ(row);
-    c_pnew_Insert(ns,row); // check is performed in _Insert again
+    c_pnew_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_pnew.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_pnew_Remove(amc::FNs& ns, amc::FPnew& row) {
-    i64 n = ns.c_pnew_n;
+void amc::c_pnew_Remove(amc::FNs& parent, amc::FPnew& row) {
+    i64 n = parent.c_pnew_n;
     if (bool_Update(row.ns_c_pnew_in_ary,false)) {
-        amc::FPnew* *elems = ns.c_pnew_elems;
+        amc::FPnew* *elems = parent.c_pnew_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -33929,7 +34235,7 @@ void amc::c_pnew_Remove(amc::FNs& ns, amc::FPnew& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FPnew*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_pnew_n = n - 1;
+                parent.c_pnew_n = n - 1;
                 break;
             }
         }
@@ -33938,41 +34244,41 @@ void amc::c_pnew_Remove(amc::FNs& ns, amc::FPnew& row) {
 
 // --- amc.FNs.c_pnew.Reserve
 // Reserve space in index for N more elements;
-void amc::c_pnew_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_pnew_max;
-    if (UNLIKELY(ns.c_pnew_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_pnew_n + n), 4);
+void amc::c_pnew_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_pnew_max;
+    if (UNLIKELY(parent.c_pnew_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_pnew_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FPnew*);
         u64 new_size = new_max * sizeof(amc::FPnew*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_pnew_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_pnew_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_pnew");
         }
-        ns.c_pnew_elems = (amc::FPnew**)new_mem;
-        ns.c_pnew_max = new_max;
+        parent.c_pnew_elems = (amc::FPnew**)new_mem;
+        parent.c_pnew_max = new_max;
     }
 }
 
 // --- amc.FNs.c_outfile.Cascdel
 // Delete all elements pointed to by the index.
-void amc::c_outfile_Cascdel(amc::FNs& ns) {
+void amc::c_outfile_Cascdel(amc::FNs& parent) {
     // Each row's delete removes it from this array (heaplike: O(1) swap;
     // unique: the backward scan finds the last element first), and a cascade
     // that deletes other members keeps the array consistent, so re-reading
     // c_outfile_n each iteration visits every remaining row exactly once.
-    while (ns.c_outfile_n > 0) {
-        outfile_Delete(*ns.c_outfile_elems[ns.c_outfile_n - 1]);
+    while (parent.c_outfile_n > 0) {
+        outfile_Delete(*parent.c_outfile_elems[parent.c_outfile_n - 1]);
     }
 }
 
 // --- amc.FNs.c_outfile.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_outfile_Insert(amc::FNs& ns, amc::FOutfile& row) {
+void amc::c_outfile_Insert(amc::FNs& parent, amc::FOutfile& row) {
     if (!row.ns_c_outfile_in_ary) {
-        c_outfile_Reserve(ns, 1);
-        u64 n  = ns.c_outfile_n++;
-        ns.c_outfile_elems[n] = &row;
+        c_outfile_Reserve(parent, 1);
+        u64 n  = parent.c_outfile_n++;
+        parent.c_outfile_elems[n] = &row;
         row.ns_c_outfile_in_ary = true;
     }
 }
@@ -33981,18 +34287,18 @@ void amc::c_outfile_Insert(amc::FNs& ns, amc::FOutfile& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_outfile_InsertMaybe(amc::FNs& ns, amc::FOutfile& row) {
+bool amc::c_outfile_InsertMaybe(amc::FNs& parent, amc::FOutfile& row) {
     bool retval = !ns_c_outfile_InAryQ(row);
-    c_outfile_Insert(ns,row); // check is performed in _Insert again
+    c_outfile_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_outfile.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_outfile_Remove(amc::FNs& ns, amc::FOutfile& row) {
-    i64 n = ns.c_outfile_n;
+void amc::c_outfile_Remove(amc::FNs& parent, amc::FOutfile& row) {
+    i64 n = parent.c_outfile_n;
     if (bool_Update(row.ns_c_outfile_in_ary,false)) {
-        amc::FOutfile* *elems = ns.c_outfile_elems;
+        amc::FOutfile* *elems = parent.c_outfile_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -34001,7 +34307,7 @@ void amc::c_outfile_Remove(amc::FNs& ns, amc::FOutfile& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FOutfile*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_outfile_n = n - 1;
+                parent.c_outfile_n = n - 1;
                 break;
             }
         }
@@ -34010,29 +34316,29 @@ void amc::c_outfile_Remove(amc::FNs& ns, amc::FOutfile& row) {
 
 // --- amc.FNs.c_outfile.Reserve
 // Reserve space in index for N more elements;
-void amc::c_outfile_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_outfile_max;
-    if (UNLIKELY(ns.c_outfile_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_outfile_n + n), 4);
+void amc::c_outfile_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_outfile_max;
+    if (UNLIKELY(parent.c_outfile_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_outfile_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FOutfile*);
         u64 new_size = new_max * sizeof(amc::FOutfile*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_outfile_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_outfile_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_outfile");
         }
-        ns.c_outfile_elems = (amc::FOutfile**)new_mem;
-        ns.c_outfile_max = new_max;
+        parent.c_outfile_elems = (amc::FOutfile**)new_mem;
+        parent.c_outfile_max = new_max;
     }
 }
 
 // --- amc.FNs.c_foutput.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_foutput_Insert(amc::FNs& ns, amc::FFoutput& row) {
+void amc::c_foutput_Insert(amc::FNs& parent, amc::FFoutput& row) {
     if (!row.ns_c_foutput_in_ary) {
-        c_foutput_Reserve(ns, 1);
-        u64 n  = ns.c_foutput_n++;
-        ns.c_foutput_elems[n] = &row;
+        c_foutput_Reserve(parent, 1);
+        u64 n  = parent.c_foutput_n++;
+        parent.c_foutput_elems[n] = &row;
         row.ns_c_foutput_in_ary = true;
     }
 }
@@ -34041,18 +34347,18 @@ void amc::c_foutput_Insert(amc::FNs& ns, amc::FFoutput& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_foutput_InsertMaybe(amc::FNs& ns, amc::FFoutput& row) {
+bool amc::c_foutput_InsertMaybe(amc::FNs& parent, amc::FFoutput& row) {
     bool retval = !ns_c_foutput_InAryQ(row);
-    c_foutput_Insert(ns,row); // check is performed in _Insert again
+    c_foutput_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_foutput.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_foutput_Remove(amc::FNs& ns, amc::FFoutput& row) {
-    i64 n = ns.c_foutput_n;
+void amc::c_foutput_Remove(amc::FNs& parent, amc::FFoutput& row) {
+    i64 n = parent.c_foutput_n;
     if (bool_Update(row.ns_c_foutput_in_ary,false)) {
-        amc::FFoutput* *elems = ns.c_foutput_elems;
+        amc::FFoutput* *elems = parent.c_foutput_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -34061,7 +34367,7 @@ void amc::c_foutput_Remove(amc::FNs& ns, amc::FFoutput& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFoutput*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_foutput_n = n - 1;
+                parent.c_foutput_n = n - 1;
                 break;
             }
         }
@@ -34070,29 +34376,29 @@ void amc::c_foutput_Remove(amc::FNs& ns, amc::FFoutput& row) {
 
 // --- amc.FNs.c_foutput.Reserve
 // Reserve space in index for N more elements;
-void amc::c_foutput_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_foutput_max;
-    if (UNLIKELY(ns.c_foutput_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_foutput_n + n), 4);
+void amc::c_foutput_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_foutput_max;
+    if (UNLIKELY(parent.c_foutput_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_foutput_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFoutput*);
         u64 new_size = new_max * sizeof(amc::FFoutput*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_foutput_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_foutput_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_foutput");
         }
-        ns.c_foutput_elems = (amc::FFoutput**)new_mem;
-        ns.c_foutput_max = new_max;
+        parent.c_foutput_elems = (amc::FFoutput**)new_mem;
+        parent.c_foutput_max = new_max;
     }
 }
 
 // --- amc.FNs.c_fstep.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_fstep_Insert(amc::FNs& ns, amc::FFstep& row) {
+void amc::c_fstep_Insert(amc::FNs& parent, amc::FFstep& row) {
     if (!row.ns_c_fstep_in_ary) {
-        c_fstep_Reserve(ns, 1);
-        u64 n  = ns.c_fstep_n++;
-        ns.c_fstep_elems[n] = &row;
+        c_fstep_Reserve(parent, 1);
+        u64 n  = parent.c_fstep_n++;
+        parent.c_fstep_elems[n] = &row;
         row.ns_c_fstep_in_ary = true;
     }
 }
@@ -34101,18 +34407,18 @@ void amc::c_fstep_Insert(amc::FNs& ns, amc::FFstep& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_fstep_InsertMaybe(amc::FNs& ns, amc::FFstep& row) {
+bool amc::c_fstep_InsertMaybe(amc::FNs& parent, amc::FFstep& row) {
     bool retval = !ns_c_fstep_InAryQ(row);
-    c_fstep_Insert(ns,row); // check is performed in _Insert again
+    c_fstep_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_fstep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_fstep_Remove(amc::FNs& ns, amc::FFstep& row) {
-    i64 n = ns.c_fstep_n;
+void amc::c_fstep_Remove(amc::FNs& parent, amc::FFstep& row) {
+    i64 n = parent.c_fstep_n;
     if (bool_Update(row.ns_c_fstep_in_ary,false)) {
-        amc::FFstep* *elems = ns.c_fstep_elems;
+        amc::FFstep* *elems = parent.c_fstep_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -34121,7 +34427,7 @@ void amc::c_fstep_Remove(amc::FNs& ns, amc::FFstep& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FFstep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_fstep_n = n - 1;
+                parent.c_fstep_n = n - 1;
                 break;
             }
         }
@@ -34130,29 +34436,29 @@ void amc::c_fstep_Remove(amc::FNs& ns, amc::FFstep& row) {
 
 // --- amc.FNs.c_fstep.Reserve
 // Reserve space in index for N more elements;
-void amc::c_fstep_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_fstep_max;
-    if (UNLIKELY(ns.c_fstep_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_fstep_n + n), 4);
+void amc::c_fstep_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_fstep_max;
+    if (UNLIKELY(parent.c_fstep_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_fstep_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FFstep*);
         u64 new_size = new_max * sizeof(amc::FFstep*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_fstep_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_fstep_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_fstep");
         }
-        ns.c_fstep_elems = (amc::FFstep**)new_mem;
-        ns.c_fstep_max = new_max;
+        parent.c_fstep_elems = (amc::FFstep**)new_mem;
+        parent.c_fstep_max = new_max;
     }
 }
 
 // --- amc.FNs.c_gsymbol.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_gsymbol_Insert(amc::FNs& ns, amc::FGsymbol& row) {
+void amc::c_gsymbol_Insert(amc::FNs& parent, amc::FGsymbol& row) {
     if (!row.ns_c_gsymbol_in_ary) {
-        c_gsymbol_Reserve(ns, 1);
-        u64 n  = ns.c_gsymbol_n++;
-        ns.c_gsymbol_elems[n] = &row;
+        c_gsymbol_Reserve(parent, 1);
+        u64 n  = parent.c_gsymbol_n++;
+        parent.c_gsymbol_elems[n] = &row;
         row.ns_c_gsymbol_in_ary = true;
     }
 }
@@ -34161,18 +34467,18 @@ void amc::c_gsymbol_Insert(amc::FNs& ns, amc::FGsymbol& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_gsymbol_InsertMaybe(amc::FNs& ns, amc::FGsymbol& row) {
+bool amc::c_gsymbol_InsertMaybe(amc::FNs& parent, amc::FGsymbol& row) {
     bool retval = !ns_c_gsymbol_InAryQ(row);
-    c_gsymbol_Insert(ns,row); // check is performed in _Insert again
+    c_gsymbol_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_gsymbol.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_gsymbol_Remove(amc::FNs& ns, amc::FGsymbol& row) {
-    i64 n = ns.c_gsymbol_n;
+void amc::c_gsymbol_Remove(amc::FNs& parent, amc::FGsymbol& row) {
+    i64 n = parent.c_gsymbol_n;
     if (bool_Update(row.ns_c_gsymbol_in_ary,false)) {
-        amc::FGsymbol* *elems = ns.c_gsymbol_elems;
+        amc::FGsymbol* *elems = parent.c_gsymbol_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -34181,7 +34487,7 @@ void amc::c_gsymbol_Remove(amc::FNs& ns, amc::FGsymbol& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FGsymbol*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_gsymbol_n = n - 1;
+                parent.c_gsymbol_n = n - 1;
                 break;
             }
         }
@@ -34190,29 +34496,29 @@ void amc::c_gsymbol_Remove(amc::FNs& ns, amc::FGsymbol& row) {
 
 // --- amc.FNs.c_gsymbol.Reserve
 // Reserve space in index for N more elements;
-void amc::c_gsymbol_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_gsymbol_max;
-    if (UNLIKELY(ns.c_gsymbol_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_gsymbol_n + n), 4);
+void amc::c_gsymbol_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_gsymbol_max;
+    if (UNLIKELY(parent.c_gsymbol_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_gsymbol_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FGsymbol*);
         u64 new_size = new_max * sizeof(amc::FGsymbol*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_gsymbol_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_gsymbol_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_gsymbol");
         }
-        ns.c_gsymbol_elems = (amc::FGsymbol**)new_mem;
-        ns.c_gsymbol_max = new_max;
+        parent.c_gsymbol_elems = (amc::FGsymbol**)new_mem;
+        parent.c_gsymbol_max = new_max;
     }
 }
 
 // --- amc.FNs.c_nsinclude.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_nsinclude_Insert(amc::FNs& ns, amc::FNsinclude& row) {
+void amc::c_nsinclude_Insert(amc::FNs& parent, amc::FNsinclude& row) {
     if (!row.ns_c_nsinclude_in_ary) {
-        c_nsinclude_Reserve(ns, 1);
-        u64 n  = ns.c_nsinclude_n++;
-        ns.c_nsinclude_elems[n] = &row;
+        c_nsinclude_Reserve(parent, 1);
+        u64 n  = parent.c_nsinclude_n++;
+        parent.c_nsinclude_elems[n] = &row;
         row.ns_c_nsinclude_in_ary = true;
     }
 }
@@ -34221,18 +34527,18 @@ void amc::c_nsinclude_Insert(amc::FNs& ns, amc::FNsinclude& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_nsinclude_InsertMaybe(amc::FNs& ns, amc::FNsinclude& row) {
+bool amc::c_nsinclude_InsertMaybe(amc::FNs& parent, amc::FNsinclude& row) {
     bool retval = !ns_c_nsinclude_InAryQ(row);
-    c_nsinclude_Insert(ns,row); // check is performed in _Insert again
+    c_nsinclude_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FNs.c_nsinclude.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_nsinclude_Remove(amc::FNs& ns, amc::FNsinclude& row) {
-    i64 n = ns.c_nsinclude_n;
+void amc::c_nsinclude_Remove(amc::FNs& parent, amc::FNsinclude& row) {
+    i64 n = parent.c_nsinclude_n;
     if (bool_Update(row.ns_c_nsinclude_in_ary,false)) {
-        amc::FNsinclude* *elems = ns.c_nsinclude_elems;
+        amc::FNsinclude* *elems = parent.c_nsinclude_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -34241,7 +34547,7 @@ void amc::c_nsinclude_Remove(amc::FNs& ns, amc::FNsinclude& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FNsinclude*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_nsinclude_n = n - 1;
+                parent.c_nsinclude_n = n - 1;
                 break;
             }
         }
@@ -34250,146 +34556,145 @@ void amc::c_nsinclude_Remove(amc::FNs& ns, amc::FNsinclude& row) {
 
 // --- amc.FNs.c_nsinclude.Reserve
 // Reserve space in index for N more elements;
-void amc::c_nsinclude_Reserve(amc::FNs& ns, u64 n) {
-    u64 old_max = ns.c_nsinclude_max;
-    if (UNLIKELY(ns.c_nsinclude_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_nsinclude_n + n), 4);
+void amc::c_nsinclude_Reserve(amc::FNs& parent, u64 n) {
+    u64 old_max = parent.c_nsinclude_max;
+    if (UNLIKELY(parent.c_nsinclude_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_nsinclude_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FNsinclude*);
         u64 new_size = new_max * sizeof(amc::FNsinclude*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_nsinclude_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_nsinclude_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_nsinclude");
         }
-        ns.c_nsinclude_elems = (amc::FNsinclude**)new_mem;
-        ns.c_nsinclude_max = new_max;
+        parent.c_nsinclude_elems = (amc::FNsinclude**)new_mem;
+        parent.c_nsinclude_max = new_max;
     }
 }
 
 // --- amc.FNs..Init
 // Set all fields to initial values.
-void amc::FNs_Init(amc::FNs& ns) {
-    ns.nhash = i32(0);
-    ns.c_ctype_elems = NULL; // (amc.FNs.c_ctype)
-    ns.c_ctype_n = 0; // (amc.FNs.c_ctype)
-    ns.c_ctype_max = 0; // (amc.FNs.c_ctype)
-    ns.c_func_elems = NULL; // (amc.FNs.c_func)
-    ns.c_func_n = 0; // (amc.FNs.c_func)
-    ns.c_func_max = 0; // (amc.FNs.c_func)
-    ns.c_dispatch_elems = NULL; // (amc.FNs.c_dispatch)
-    ns.c_dispatch_n = 0; // (amc.FNs.c_dispatch)
-    ns.c_dispatch_max = 0; // (amc.FNs.c_dispatch)
-    ns.c_globfld = NULL;
-    ns.c_gstatic_elems = NULL; // (amc.FNs.c_gstatic)
-    ns.c_gstatic_n = 0; // (amc.FNs.c_gstatic)
-    ns.c_gstatic_max = 0; // (amc.FNs.c_gstatic)
-    ns.c_main = NULL;
-    ns.hdr = NULL;
-    ns.inl = NULL;
-    ns.cpp = NULL;
-    ns.include_elems 	= 0; // (amc.FNs.include)
-    ns.include_n     	= 0; // (amc.FNs.include)
-    ns.include_max   	= 0; // (amc.FNs.include)
-    ns.c_dispsig_elems = NULL; // (amc.FNs.c_dispsig)
-    ns.c_dispsig_n = 0; // (amc.FNs.c_dispsig)
-    ns.c_dispsig_max = 0; // (amc.FNs.c_dispsig)
-    ns.c_parentns_elems = NULL; // (amc.FNs.c_parentns)
-    ns.c_parentns_n = 0; // (amc.FNs.c_parentns)
-    ns.c_parentns_max = 0; // (amc.FNs.c_parentns)
-    ns.c_cppincl_elems = NULL; // (amc.FNs.c_cppincl)
-    ns.c_cppincl_n = 0; // (amc.FNs.c_cppincl)
-    ns.c_cppincl_max = 0; // (amc.FNs.c_cppincl)
-    ns.c_hdrincl_elems = NULL; // (amc.FNs.c_hdrincl)
-    ns.c_hdrincl_n = 0; // (amc.FNs.c_hdrincl)
-    ns.c_hdrincl_max = 0; // (amc.FNs.c_hdrincl)
-    ns.c_fwddecl_elems = NULL; // (amc.FNs.c_fwddecl)
-    ns.c_fwddecl_n = 0; // (amc.FNs.c_fwddecl)
-    ns.c_fwddecl_max = 0; // (amc.FNs.c_fwddecl)
-    ns.select = bool(false);
-    ns.c_nsx = NULL;
-    ns.c_target = NULL;
-    ns.c_pnew_elems = NULL; // (amc.FNs.c_pnew)
-    ns.c_pnew_n = 0; // (amc.FNs.c_pnew)
-    ns.c_pnew_max = 0; // (amc.FNs.c_pnew)
-    ns.c_nsproto = NULL;
-    ns.c_nsdb = NULL;
-    ns.c_outfile_elems = NULL; // (amc.FNs.c_outfile)
-    ns.c_outfile_n = 0; // (amc.FNs.c_outfile)
-    ns.c_outfile_max = 0; // (amc.FNs.c_outfile)
-    ns.c_foutput_elems = NULL; // (amc.FNs.c_foutput)
-    ns.c_foutput_n = 0; // (amc.FNs.c_foutput)
-    ns.c_foutput_max = 0; // (amc.FNs.c_foutput)
-    ns.c_fstep_elems = NULL; // (amc.FNs.c_fstep)
-    ns.c_fstep_n = 0; // (amc.FNs.c_fstep)
-    ns.c_fstep_max = 0; // (amc.FNs.c_fstep)
-    ns.c_gsymbol_elems = NULL; // (amc.FNs.c_gsymbol)
-    ns.c_gsymbol_n = 0; // (amc.FNs.c_gsymbol)
-    ns.c_gsymbol_max = 0; // (amc.FNs.c_gsymbol)
-    ns.c_nsinclude_elems = NULL; // (amc.FNs.c_nsinclude)
-    ns.c_nsinclude_n = 0; // (amc.FNs.c_nsinclude)
-    ns.c_nsinclude_max = 0; // (amc.FNs.c_nsinclude)
-    ns.c_nscpp = NULL;
-    ns.p_license = NULL;
-    ns.c_nsjs = NULL;
-    ns.ind_ns_next = (amc::FNs*)-1; // (amc.FDb.ind_ns) not-in-hash
-    ns.ind_ns_hashval = 0; // stored hash value
+void amc::FNs_Init(amc::FNs& parent) {
+    parent.nhash = i32(0);
+    parent.c_ctype_elems = NULL; // (amc.FNs.c_ctype)
+    parent.c_ctype_n = 0; // (amc.FNs.c_ctype)
+    parent.c_ctype_max = 0; // (amc.FNs.c_ctype)
+    parent.c_func_elems = NULL; // (amc.FNs.c_func)
+    parent.c_func_n = 0; // (amc.FNs.c_func)
+    parent.c_func_max = 0; // (amc.FNs.c_func)
+    parent.c_dispatch_elems = NULL; // (amc.FNs.c_dispatch)
+    parent.c_dispatch_n = 0; // (amc.FNs.c_dispatch)
+    parent.c_dispatch_max = 0; // (amc.FNs.c_dispatch)
+    parent.c_globfld = NULL;
+    parent.c_gstatic_elems = NULL; // (amc.FNs.c_gstatic)
+    parent.c_gstatic_n = 0; // (amc.FNs.c_gstatic)
+    parent.c_gstatic_max = 0; // (amc.FNs.c_gstatic)
+    parent.c_main = NULL;
+    parent.hdr = NULL;
+    parent.inl = NULL;
+    parent.cpp = NULL;
+    parent.include_elems 	= 0; // (amc.FNs.include)
+    parent.include_n     	= 0; // (amc.FNs.include)
+    parent.include_max   	= 0; // (amc.FNs.include)
+    parent.c_dispsig_elems = NULL; // (amc.FNs.c_dispsig)
+    parent.c_dispsig_n = 0; // (amc.FNs.c_dispsig)
+    parent.c_dispsig_max = 0; // (amc.FNs.c_dispsig)
+    parent.c_parentns_elems = NULL; // (amc.FNs.c_parentns)
+    parent.c_parentns_n = 0; // (amc.FNs.c_parentns)
+    parent.c_parentns_max = 0; // (amc.FNs.c_parentns)
+    parent.c_cppincl_elems = NULL; // (amc.FNs.c_cppincl)
+    parent.c_cppincl_n = 0; // (amc.FNs.c_cppincl)
+    parent.c_cppincl_max = 0; // (amc.FNs.c_cppincl)
+    parent.c_hdrincl_elems = NULL; // (amc.FNs.c_hdrincl)
+    parent.c_hdrincl_n = 0; // (amc.FNs.c_hdrincl)
+    parent.c_hdrincl_max = 0; // (amc.FNs.c_hdrincl)
+    parent.c_fwddecl_elems = NULL; // (amc.FNs.c_fwddecl)
+    parent.c_fwddecl_n = 0; // (amc.FNs.c_fwddecl)
+    parent.c_fwddecl_max = 0; // (amc.FNs.c_fwddecl)
+    parent.select = bool(false);
+    parent.c_nsx = NULL;
+    parent.c_target = NULL;
+    parent.c_pnew_elems = NULL; // (amc.FNs.c_pnew)
+    parent.c_pnew_n = 0; // (amc.FNs.c_pnew)
+    parent.c_pnew_max = 0; // (amc.FNs.c_pnew)
+    parent.c_nsproto = NULL;
+    parent.c_nsdb = NULL;
+    parent.c_outfile_elems = NULL; // (amc.FNs.c_outfile)
+    parent.c_outfile_n = 0; // (amc.FNs.c_outfile)
+    parent.c_outfile_max = 0; // (amc.FNs.c_outfile)
+    parent.c_foutput_elems = NULL; // (amc.FNs.c_foutput)
+    parent.c_foutput_n = 0; // (amc.FNs.c_foutput)
+    parent.c_foutput_max = 0; // (amc.FNs.c_foutput)
+    parent.c_fstep_elems = NULL; // (amc.FNs.c_fstep)
+    parent.c_fstep_n = 0; // (amc.FNs.c_fstep)
+    parent.c_fstep_max = 0; // (amc.FNs.c_fstep)
+    parent.c_gsymbol_elems = NULL; // (amc.FNs.c_gsymbol)
+    parent.c_gsymbol_n = 0; // (amc.FNs.c_gsymbol)
+    parent.c_gsymbol_max = 0; // (amc.FNs.c_gsymbol)
+    parent.c_nsinclude_elems = NULL; // (amc.FNs.c_nsinclude)
+    parent.c_nsinclude_n = 0; // (amc.FNs.c_nsinclude)
+    parent.c_nsinclude_max = 0; // (amc.FNs.c_nsinclude)
+    parent.c_nscpp = NULL;
+    parent.p_license = NULL;
+    parent.c_nsjs = NULL;
+    parent.ind_ns_next = (amc::FNs*)-1; // (amc.FDb.ind_ns) not-in-hash
+    parent.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- amc.FNs..Uninit
-void amc::FNs_Uninit(amc::FNs& ns) {
-    amc::FNs &row = ns; (void)row;
-    c_outfile_Cascdel(ns); // dmmeta.cascdel:amc.FNs.c_outfile
-    ind_ns_Remove(row); // remove ns from index ind_ns
+void amc::FNs_Uninit(amc::FNs& parent) {
+    c_outfile_Cascdel(parent); // dmmeta.cascdel:amc.FNs.c_outfile
+    ind_ns_Remove(parent); // remove ns from index ind_ns
 
     // amc.FNs.c_nsinclude.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_nsinclude_elems, sizeof(amc::FNsinclude*)*ns.c_nsinclude_max); // (amc.FNs.c_nsinclude)
+    amc::lpool_FreeMem(parent.c_nsinclude_elems, sizeof(amc::FNsinclude*)*parent.c_nsinclude_max); // (amc.FNs.c_nsinclude)
 
     // amc.FNs.c_gsymbol.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_gsymbol_elems, sizeof(amc::FGsymbol*)*ns.c_gsymbol_max); // (amc.FNs.c_gsymbol)
+    amc::lpool_FreeMem(parent.c_gsymbol_elems, sizeof(amc::FGsymbol*)*parent.c_gsymbol_max); // (amc.FNs.c_gsymbol)
 
     // amc.FNs.c_fstep.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_fstep_elems, sizeof(amc::FFstep*)*ns.c_fstep_max); // (amc.FNs.c_fstep)
+    amc::lpool_FreeMem(parent.c_fstep_elems, sizeof(amc::FFstep*)*parent.c_fstep_max); // (amc.FNs.c_fstep)
 
     // amc.FNs.c_foutput.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_foutput_elems, sizeof(amc::FFoutput*)*ns.c_foutput_max); // (amc.FNs.c_foutput)
+    amc::lpool_FreeMem(parent.c_foutput_elems, sizeof(amc::FFoutput*)*parent.c_foutput_max); // (amc.FNs.c_foutput)
 
     // amc.FNs.c_outfile.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_outfile_elems, sizeof(amc::FOutfile*)*ns.c_outfile_max); // (amc.FNs.c_outfile)
+    amc::lpool_FreeMem(parent.c_outfile_elems, sizeof(amc::FOutfile*)*parent.c_outfile_max); // (amc.FNs.c_outfile)
 
     // amc.FNs.c_pnew.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_pnew_elems, sizeof(amc::FPnew*)*ns.c_pnew_max); // (amc.FNs.c_pnew)
+    amc::lpool_FreeMem(parent.c_pnew_elems, sizeof(amc::FPnew*)*parent.c_pnew_max); // (amc.FNs.c_pnew)
 
     // amc.FNs.c_fwddecl.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_fwddecl_elems, sizeof(amc::FFwddecl*)*ns.c_fwddecl_max); // (amc.FNs.c_fwddecl)
+    amc::lpool_FreeMem(parent.c_fwddecl_elems, sizeof(amc::FFwddecl*)*parent.c_fwddecl_max); // (amc.FNs.c_fwddecl)
 
     // amc.FNs.c_hdrincl.Uninit (Ptrary)  //List of .h includes
-    amc::lpool_FreeMem(ns.c_hdrincl_elems, sizeof(amc::FNs*)*ns.c_hdrincl_max); // (amc.FNs.c_hdrincl)
+    amc::lpool_FreeMem(parent.c_hdrincl_elems, sizeof(amc::FNs*)*parent.c_hdrincl_max); // (amc.FNs.c_hdrincl)
 
     // amc.FNs.c_cppincl.Uninit (Ptrary)  //List of .cpp includes
-    amc::lpool_FreeMem(ns.c_cppincl_elems, sizeof(amc::FNs*)*ns.c_cppincl_max); // (amc.FNs.c_cppincl)
+    amc::lpool_FreeMem(parent.c_cppincl_elems, sizeof(amc::FNs*)*parent.c_cppincl_max); // (amc.FNs.c_cppincl)
 
     // amc.FNs.c_parentns.Uninit (Ptrary)  //Namespaces implied by targdep
-    amc::lpool_FreeMem(ns.c_parentns_elems, sizeof(amc::FNs*)*ns.c_parentns_max); // (amc.FNs.c_parentns)
+    amc::lpool_FreeMem(parent.c_parentns_elems, sizeof(amc::FNs*)*parent.c_parentns_max); // (amc.FNs.c_parentns)
 
     // amc.FNs.c_dispsig.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_dispsig_elems, sizeof(amc::FDispsig*)*ns.c_dispsig_max); // (amc.FNs.c_dispsig)
+    amc::lpool_FreeMem(parent.c_dispsig_elems, sizeof(amc::FDispsig*)*parent.c_dispsig_max); // (amc.FNs.c_dispsig)
 
     // amc.FNs.include.Uninit (Tary)  //
     // remove all elements from amc.FNs.include
-    include_RemoveAll(ns);
+    include_RemoveAll(parent);
     // free memory for Tary amc.FNs.include
-    amc::lpool_FreeMem(ns.include_elems, sizeof(algo::cstring)*ns.include_max); // (amc.FNs.include)
+    amc::lpool_FreeMem(parent.include_elems, sizeof(algo::cstring)*parent.include_max); // (amc.FNs.include)
 
     // amc.FNs.c_gstatic.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_gstatic_elems, sizeof(amc::FGstatic*)*ns.c_gstatic_max); // (amc.FNs.c_gstatic)
+    amc::lpool_FreeMem(parent.c_gstatic_elems, sizeof(amc::FGstatic*)*parent.c_gstatic_max); // (amc.FNs.c_gstatic)
 
     // amc.FNs.c_dispatch.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_dispatch_elems, sizeof(amc::FDispatch*)*ns.c_dispatch_max); // (amc.FNs.c_dispatch)
+    amc::lpool_FreeMem(parent.c_dispatch_elems, sizeof(amc::FDispatch*)*parent.c_dispatch_max); // (amc.FNs.c_dispatch)
 
     // amc.FNs.c_func.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_func_elems, sizeof(amc::FFunc*)*ns.c_func_max); // (amc.FNs.c_func)
+    amc::lpool_FreeMem(parent.c_func_elems, sizeof(amc::FFunc*)*parent.c_func_max); // (amc.FNs.c_func)
 
     // amc.FNs.c_ctype.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_ctype_elems, sizeof(amc::FCtype*)*ns.c_ctype_max); // (amc.FNs.c_ctype)
+    amc::lpool_FreeMem(parent.c_ctype_elems, sizeof(amc::FCtype*)*parent.c_ctype_max); // (amc.FNs.c_ctype)
 }
 
 // --- amc.FNscpp.base.CopyOut
@@ -34407,11 +34712,10 @@ void amc::nscpp_CopyIn(amc::FNscpp &row, dmmeta::Nscpp &in) {
 }
 
 // --- amc.FNscpp..Uninit
-void amc::FNscpp_Uninit(amc::FNscpp& nscpp) {
-    amc::FNscpp &row = nscpp; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(row.ns);
+void amc::FNscpp_Uninit(amc::FNscpp& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(parent.ns);
     if (p_ns)  {
-        c_nscpp_Remove(*p_ns, row);// remove nscpp from index c_nscpp
+        c_nscpp_Remove(*p_ns, parent);// remove nscpp from index c_nscpp
     }
 }
 
@@ -34430,11 +34734,10 @@ void amc::nsdb_CopyIn(amc::FNsdb &row, dmmeta::Nsdb &in) {
 }
 
 // --- amc.FNsdb..Uninit
-void amc::FNsdb_Uninit(amc::FNsdb& nsdb) {
-    amc::FNsdb &row = nsdb; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(row.ns);
+void amc::FNsdb_Uninit(amc::FNsdb& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(parent.ns);
     if (p_ns)  {
-        c_nsdb_Remove(*p_ns, row);// remove nsdb from index c_nsdb
+        c_nsdb_Remove(*p_ns, parent);// remove nsdb from index c_nsdb
     }
 }
 
@@ -34455,21 +34758,20 @@ void amc::nsinclude_CopyIn(amc::FNsinclude &row, dmmeta::Nsinclude &in) {
 }
 
 // --- amc.FNsinclude.ns.Get
-algo::strptr amc::ns_Get(amc::FNsinclude& nsinclude) {
-    return algo::Pathcomp(nsinclude.nsinclude, "/LL");
+algo::strptr amc::ns_Get(amc::FNsinclude& parent) {
+    return algo::Pathcomp(parent.nsinclude, "/LL");
 }
 
 // --- amc.FNsinclude.name.Get
-algo::strptr amc::name_Get(amc::FNsinclude& nsinclude) {
-    return algo::Pathcomp(nsinclude.nsinclude, "/LR");
+algo::strptr amc::name_Get(amc::FNsinclude& parent) {
+    return algo::Pathcomp(parent.nsinclude, "/LR");
 }
 
 // --- amc.FNsinclude..Uninit
-void amc::FNsinclude_Uninit(amc::FNsinclude& nsinclude) {
-    amc::FNsinclude &row = nsinclude; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+void amc::FNsinclude_Uninit(amc::FNsinclude& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_nsinclude_Remove(*p_ns, row);// remove nsinclude from index c_nsinclude
+        c_nsinclude_Remove(*p_ns, parent);// remove nsinclude from index c_nsinclude
     }
 }
 
@@ -34492,11 +34794,10 @@ void amc::nsjs_CopyIn(amc::FNsjs &row, dmmeta::Nsjs &in) {
 }
 
 // --- amc.FNsjs..Uninit
-void amc::FNsjs_Uninit(amc::FNsjs& nsjs) {
-    amc::FNsjs &row = nsjs; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(row.ns);
+void amc::FNsjs_Uninit(amc::FNsjs& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(parent.ns);
     if (p_ns)  {
-        c_nsjs_Remove(*p_ns, row);// remove nsjs from index c_nsjs
+        c_nsjs_Remove(*p_ns, parent);// remove nsjs from index c_nsjs
     }
 }
 
@@ -34515,11 +34816,10 @@ void amc::nsproto_CopyIn(amc::FNsproto &row, dmmeta::Nsproto &in) {
 }
 
 // --- amc.FNsproto..Uninit
-void amc::FNsproto_Uninit(amc::FNsproto& nsproto) {
-    amc::FNsproto &row = nsproto; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(row.ns);
+void amc::FNsproto_Uninit(amc::FNsproto& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(parent.ns);
     if (p_ns)  {
-        c_nsproto_Remove(*p_ns, row);// remove nsproto from index c_nsproto
+        c_nsproto_Remove(*p_ns, parent);// remove nsproto from index c_nsproto
     }
 }
 
@@ -34548,11 +34848,10 @@ void amc::nsx_CopyIn(amc::FNsx &row, dmmeta::Nsx &in) {
 }
 
 // --- amc.FNsx..Uninit
-void amc::FNsx_Uninit(amc::FNsx& nsx) {
-    amc::FNsx &row = nsx; (void)row;
-    amc::FNs* p_ns = amc::ind_ns_Find(row.ns);
+void amc::FNsx_Uninit(amc::FNsx& parent) {
+    amc::FNs* p_ns = amc::ind_ns_Find(parent.ns);
     if (p_ns)  {
-        c_nsx_Remove(*p_ns, row);// remove nsx from index c_nsx
+        c_nsx_Remove(*p_ns, parent);// remove nsx from index c_nsx
     }
 }
 
@@ -34575,25 +34874,23 @@ void amc::numstr_CopyIn(amc::FNumstr &row, dmmeta::Numstr &in) {
 }
 
 // --- amc.FNumstr..Uninit
-void amc::FNumstr_Uninit(amc::FNumstr& numstr) {
-    amc::FNumstr &row = numstr; (void)row;
-    amc::FSmallstr* p_field = amc::ind_smallstr_Find(row.field);
+void amc::FNumstr_Uninit(amc::FNumstr& parent) {
+    amc::FSmallstr* p_field = amc::ind_smallstr_Find(parent.field);
     if (p_field)  {
-        c_numstr_Remove(*p_field, row);// remove numstr from index c_numstr
+        c_numstr_Remove(*p_field, parent);// remove numstr from index c_numstr
     }
 }
 
 // --- amc.FOutfile.ns.Get
-algo::strptr amc::ns_Get(amc::FOutfile& outfile) {
-    return algo::Pathcomp(outfile.outfile, "/RR_RL");
+algo::strptr amc::ns_Get(amc::FOutfile& parent) {
+    return algo::Pathcomp(parent.outfile, "/RR_RL");
 }
 
 // --- amc.FOutfile..Uninit
-void amc::FOutfile_Uninit(amc::FOutfile& outfile) {
-    amc::FOutfile &row = outfile; (void)row;
-    amc::FNs* p_p_ns = row.p_ns;
+void amc::FOutfile_Uninit(amc::FOutfile& parent) {
+    amc::FNs* p_p_ns = parent.p_ns;
     if (p_p_ns)  {
-        c_outfile_Remove(*p_p_ns, row);// remove outfile from index c_outfile
+        c_outfile_Remove(*p_p_ns, parent);// remove outfile from index c_outfile
     }
 }
 
@@ -34612,13 +34909,12 @@ void amc::pack_CopyIn(amc::FPack &row, dmmeta::Pack &in) {
 }
 
 // --- amc.FPack..Uninit
-void amc::FPack_Uninit(amc::FPack& pack) {
-    amc::FPack &row = pack; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FPack_Uninit(amc::FPack& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_pack_Remove(*p_ctype, row);// remove pack from index c_pack
+        c_pack_Remove(*p_ctype, parent);// remove pack from index c_pack
     }
-    ind_pack_Remove(row); // remove pack from index ind_pack
+    ind_pack_Remove(parent); // remove pack from index ind_pack
 }
 
 // --- amc.FPayloadhdr.base.CopyOut
@@ -34655,24 +34951,23 @@ void amc::payloadhdr_CopyIn(amc::FPayloadhdr &row, dmmeta::Payloadhdr &in) {
 
 // --- amc.FPayloadhdr..Init
 // Set all fields to initial values.
-void amc::FPayloadhdr_Init(amc::FPayloadhdr& payloadhdr) {
-    payloadhdr.typeoffset = i32(0);
-    payloadhdr.typewidth = i32(0);
-    payloadhdr.typebig = bool(false);
-    payloadhdr.lenoffset = i32(0);
-    payloadhdr.lenwidth = i32(0);
-    payloadhdr.lenbig = bool(false);
-    payloadhdr.lenscale = i32(1);
-    payloadhdr.lenextra = i32(0);
-    payloadhdr.len = i32(0);
+void amc::FPayloadhdr_Init(amc::FPayloadhdr& parent) {
+    parent.typeoffset = i32(0);
+    parent.typewidth = i32(0);
+    parent.typebig = bool(false);
+    parent.lenoffset = i32(0);
+    parent.lenwidth = i32(0);
+    parent.lenbig = bool(false);
+    parent.lenscale = i32(1);
+    parent.lenextra = i32(0);
+    parent.len = i32(0);
 }
 
 // --- amc.FPayloadhdr..Uninit
-void amc::FPayloadhdr_Uninit(amc::FPayloadhdr& payloadhdr) {
-    amc::FPayloadhdr &row = payloadhdr; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FPayloadhdr_Uninit(amc::FPayloadhdr& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_payloadhdr_Remove(*p_ctype, row);// remove payloadhdr from index c_payloadhdr
+        c_payloadhdr_Remove(*p_ctype, parent);// remove payloadhdr from index c_payloadhdr
     }
 }
 
@@ -34693,9 +34988,8 @@ void amc::pbsyntax_CopyIn(amc::FPbsyntax &row, dmmeta::Pbsyntax &in) {
 }
 
 // --- amc.FPbsyntax..Uninit
-void amc::FPbsyntax_Uninit(amc::FPbsyntax& pbsyntax) {
-    amc::FPbsyntax &row = pbsyntax; (void)row;
-    ind_pbsyntax_Remove(row); // remove pbsyntax from index ind_pbsyntax
+void amc::FPbsyntax_Uninit(amc::FPbsyntax& parent) {
+    ind_pbsyntax_Remove(parent); // remove pbsyntax from index ind_pbsyntax
 }
 
 // --- amc.FPbtype.base.CopyOut
@@ -34725,9 +35019,8 @@ void amc::pbtype_CopyIn(amc::FPbtype &row, amcdb::Pbtype &in) {
 }
 
 // --- amc.FPbtype..Uninit
-void amc::FPbtype_Uninit(amc::FPbtype& pbtype) {
-    amc::FPbtype &row = pbtype; (void)row;
-    ind_pbtype_Remove(row); // remove pbtype from index ind_pbtype
+void amc::FPbtype_Uninit(amc::FPbtype& parent) {
+    ind_pbtype_Remove(parent); // remove pbtype from index ind_pbtype
 }
 
 // --- amc.FPmaskfld.msghdr.CopyOut
@@ -34747,18 +35040,18 @@ void amc::pmaskfld_CopyIn(amc::FPmaskfld &row, dmmeta::Pmaskfld &in) {
 }
 
 // --- amc.FPmaskfld.ctype.Get
-algo::strptr amc::ctype_Get(amc::FPmaskfld& pmaskfld) {
-    return algo::Pathcomp(pmaskfld.field, ".RL");
+algo::strptr amc::ctype_Get(amc::FPmaskfld& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- amc.FPmaskfld.c_pmaskfld_member.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_pmaskfld_member_Insert(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMember& row) {
+void amc::c_pmaskfld_member_Insert(amc::FPmaskfld& parent, amc::FPmaskfldMember& row) {
     if (!row.pmaskfld_c_pmaskfld_member_in_ary) {
-        c_pmaskfld_member_Reserve(pmaskfld, 1);
-        u64 n  = pmaskfld.c_pmaskfld_member_n++;
-        pmaskfld.c_pmaskfld_member_elems[n] = &row;
+        c_pmaskfld_member_Reserve(parent, 1);
+        u64 n  = parent.c_pmaskfld_member_n++;
+        parent.c_pmaskfld_member_elems[n] = &row;
         row.pmaskfld_c_pmaskfld_member_in_ary = true;
     }
 }
@@ -34767,18 +35060,18 @@ void amc::c_pmaskfld_member_Insert(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMembe
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_pmaskfld_member_InsertMaybe(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMember& row) {
+bool amc::c_pmaskfld_member_InsertMaybe(amc::FPmaskfld& parent, amc::FPmaskfldMember& row) {
     bool retval = !pmaskfld_c_pmaskfld_member_InAryQ(row);
-    c_pmaskfld_member_Insert(pmaskfld,row); // check is performed in _Insert again
+    c_pmaskfld_member_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FPmaskfld.c_pmaskfld_member.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_pmaskfld_member_Remove(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMember& row) {
-    i64 n = pmaskfld.c_pmaskfld_member_n;
+void amc::c_pmaskfld_member_Remove(amc::FPmaskfld& parent, amc::FPmaskfldMember& row) {
+    i64 n = parent.c_pmaskfld_member_n;
     if (bool_Update(row.pmaskfld_c_pmaskfld_member_in_ary,false)) {
-        amc::FPmaskfldMember* *elems = pmaskfld.c_pmaskfld_member_elems;
+        amc::FPmaskfldMember* *elems = parent.c_pmaskfld_member_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -34787,7 +35080,7 @@ void amc::c_pmaskfld_member_Remove(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMembe
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FPmaskfldMember*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                pmaskfld.c_pmaskfld_member_n = n - 1;
+                parent.c_pmaskfld_member_n = n - 1;
                 break;
             }
         }
@@ -34796,36 +35089,35 @@ void amc::c_pmaskfld_member_Remove(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMembe
 
 // --- amc.FPmaskfld.c_pmaskfld_member.Reserve
 // Reserve space in index for N more elements;
-void amc::c_pmaskfld_member_Reserve(amc::FPmaskfld& pmaskfld, u64 n) {
-    u64 old_max = pmaskfld.c_pmaskfld_member_max;
-    if (UNLIKELY(pmaskfld.c_pmaskfld_member_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, pmaskfld.c_pmaskfld_member_n + n), 4);
+void amc::c_pmaskfld_member_Reserve(amc::FPmaskfld& parent, u64 n) {
+    u64 old_max = parent.c_pmaskfld_member_max;
+    if (UNLIKELY(parent.c_pmaskfld_member_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_pmaskfld_member_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FPmaskfldMember*);
         u64 new_size = new_max * sizeof(amc::FPmaskfldMember*);
-        void *new_mem = amc::lpool_ReallocMem(pmaskfld.c_pmaskfld_member_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_pmaskfld_member_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FPmaskfld.c_pmaskfld_member");
         }
-        pmaskfld.c_pmaskfld_member_elems = (amc::FPmaskfldMember**)new_mem;
-        pmaskfld.c_pmaskfld_member_max = new_max;
+        parent.c_pmaskfld_member_elems = (amc::FPmaskfldMember**)new_mem;
+        parent.c_pmaskfld_member_max = new_max;
     }
 }
 
 // --- amc.FPmaskfld..Uninit
-void amc::FPmaskfld_Uninit(amc::FPmaskfld& pmaskfld) {
-    amc::FPmaskfld &row = pmaskfld; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+void amc::FPmaskfld_Uninit(amc::FPmaskfld& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_pmaskfld_Remove(*p_ctype, row);// remove pmaskfld from index c_pmaskfld
+        c_pmaskfld_Remove(*p_ctype, parent);// remove pmaskfld from index c_pmaskfld
     }
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_pmaskfld_Remove(*p_field, row);// remove pmaskfld from index c_pmaskfld
+        c_pmaskfld_Remove(*p_field, parent);// remove pmaskfld from index c_pmaskfld
     }
-    ind_pmaskfld_Remove(row); // remove pmaskfld from index ind_pmaskfld
+    ind_pmaskfld_Remove(parent); // remove pmaskfld from index ind_pmaskfld
 
     // amc.FPmaskfld.c_pmaskfld_member.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(pmaskfld.c_pmaskfld_member_elems, sizeof(amc::FPmaskfldMember*)*pmaskfld.c_pmaskfld_member_max); // (amc.FPmaskfld.c_pmaskfld_member)
+    amc::lpool_FreeMem(parent.c_pmaskfld_member_elems, sizeof(amc::FPmaskfldMember*)*parent.c_pmaskfld_member_max); // (amc.FPmaskfld.c_pmaskfld_member)
 }
 
 // --- amc.FPmaskfldMember.base.CopyOut
@@ -34843,25 +35135,24 @@ void amc::pmaskfld_member_CopyIn(amc::FPmaskfldMember &row, dmmeta::PmaskfldMemb
 }
 
 // --- amc.FPmaskfldMember.pmaskfld.Get
-algo::strptr amc::pmaskfld_Get(amc::FPmaskfldMember& pmaskfld_member) {
-    return algo::Pathcomp(pmaskfld_member.pmaskfld_member, "/RL");
+algo::strptr amc::pmaskfld_Get(amc::FPmaskfldMember& parent) {
+    return algo::Pathcomp(parent.pmaskfld_member, "/RL");
 }
 
 // --- amc.FPmaskfldMember.field.Get
-algo::strptr amc::field_Get(amc::FPmaskfldMember& pmaskfld_member) {
-    return algo::Pathcomp(pmaskfld_member.pmaskfld_member, "/RR");
+algo::strptr amc::field_Get(amc::FPmaskfldMember& parent) {
+    return algo::Pathcomp(parent.pmaskfld_member, "/RR");
 }
 
 // --- amc.FPmaskfldMember..Uninit
-void amc::FPmaskfldMember_Uninit(amc::FPmaskfldMember& pmaskfld_member) {
-    amc::FPmaskfldMember &row = pmaskfld_member; (void)row;
-    amc::FPmaskfld* p_pmaskfld = amc::ind_pmaskfld_Find(pmaskfld_Get(row));
+void amc::FPmaskfldMember_Uninit(amc::FPmaskfldMember& parent) {
+    amc::FPmaskfld* p_pmaskfld = amc::ind_pmaskfld_Find(pmaskfld_Get(parent));
     if (p_pmaskfld)  {
-        c_pmaskfld_member_Remove(*p_pmaskfld, row);// remove pmaskfld_member from index c_pmaskfld_member
+        c_pmaskfld_member_Remove(*p_pmaskfld, parent);// remove pmaskfld_member from index c_pmaskfld_member
     }
-    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+    amc::FField* p_field = amc::ind_field_Find(field_Get(parent));
     if (p_field)  {
-        c_pmaskfld_member_Remove(*p_field, row);// remove pmaskfld_member from index c_pmaskfld_member
+        c_pmaskfld_member_Remove(*p_field, parent);// remove pmaskfld_member from index c_pmaskfld_member
     }
 }
 
@@ -34880,31 +35171,30 @@ void amc::pnew_CopyIn(amc::FPnew &row, dmmeta::Pnew &in) {
 }
 
 // --- amc.FPnew.ns.Get
-algo::strptr amc::ns_Get(amc::FPnew& pnew) {
-    return algo::Pathcomp(pnew.pnew, "/LL");
+algo::strptr amc::ns_Get(amc::FPnew& parent) {
+    return algo::Pathcomp(parent.pnew, "/LL");
 }
 
 // --- amc.FPnew.ctype.Get
-algo::strptr amc::ctype_Get(amc::FPnew& pnew) {
-    return algo::Pathcomp(pnew.pnew, "/LR.RL");
+algo::strptr amc::ctype_Get(amc::FPnew& parent) {
+    return algo::Pathcomp(parent.pnew, "/LR.RL");
 }
 
 // --- amc.FPnew.buftype.Get
-algo::strptr amc::buftype_Get(amc::FPnew& pnew) {
-    return algo::Pathcomp(pnew.pnew, "/LR.RR");
+algo::strptr amc::buftype_Get(amc::FPnew& parent) {
+    return algo::Pathcomp(parent.pnew, "/LR.RR");
 }
 
 // --- amc.FPnew..Uninit
-void amc::FPnew_Uninit(amc::FPnew& pnew) {
-    amc::FPnew &row = pnew; (void)row;
-    ind_pnew_Remove(row); // remove pnew from index ind_pnew
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+void amc::FPnew_Uninit(amc::FPnew& parent) {
+    ind_pnew_Remove(parent); // remove pnew from index ind_pnew
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(parent));
     if (p_ns)  {
-        c_pnew_Remove(*p_ns, row);// remove pnew from index c_pnew
+        c_pnew_Remove(*p_ns, parent);// remove pnew from index c_pnew
     }
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_pnew_Remove(*p_ctype, row);// remove pnew from index c_pnew
+        c_pnew_Remove(*p_ctype, parent);// remove pnew from index c_pnew
     }
 }
 
@@ -34925,11 +35215,10 @@ void amc::ptrary_CopyIn(amc::FPtrary &row, dmmeta::Ptrary &in) {
 }
 
 // --- amc.FPtrary..Uninit
-void amc::FPtrary_Uninit(amc::FPtrary& ptrary) {
-    amc::FPtrary &row = ptrary; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FPtrary_Uninit(amc::FPtrary& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_ptrary_Remove(*p_field, row);// remove ptrary from index c_ptrary
+        c_ptrary_Remove(*p_field, parent);// remove ptrary from index c_ptrary
     }
 }
 
@@ -34969,13 +35258,13 @@ void amc::reftype_CopyIn(amc::FReftype &row, dmmeta::Reftype &in) {
 
 // --- amc.FReftype.zs_fprefix.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc::zs_fprefix_Insert(amc::FReftype& reftype, amc::FFprefix& row) {
+void amc::zs_fprefix_Insert(amc::FReftype& parent, amc::FFprefix& row) {
     if (!reftype_zs_fprefix_InLlistQ(row)) {
-        amc::FFprefix* old_tail       = reftype.zs_fprefix_tail;
+        amc::FFprefix* old_tail       = parent.zs_fprefix_tail;
         row.reftype_zs_fprefix_next  = NULL;
-        reftype.zs_fprefix_tail = &row;
+        parent.zs_fprefix_tail = &row;
         amc::FFprefix **new_row_a = &old_tail->reftype_zs_fprefix_next;
-        amc::FFprefix **new_row_b = &reftype.zs_fprefix_head;
+        amc::FFprefix **new_row_b = &parent.zs_fprefix_head;
         amc::FFprefix **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
     }
@@ -34984,24 +35273,24 @@ void amc::zs_fprefix_Insert(amc::FReftype& reftype, amc::FFprefix& row) {
 // --- amc.FReftype.zs_fprefix.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void amc::zs_fprefix_Remove(amc::FReftype& reftype, amc::FFprefix& row) {
+void amc::zs_fprefix_Remove(amc::FReftype& parent, amc::FFprefix& row) {
     if (reftype_zs_fprefix_InLlistQ(row)) {
-        amc::FFprefix* old_head       = reftype.zs_fprefix_head;
+        amc::FFprefix* old_head       = parent.zs_fprefix_head;
         (void)old_head; // in case it's not used
         amc::FFprefix* prev=NULL;
-        amc::FFprefix* cur     = reftype.zs_fprefix_head;
+        amc::FFprefix* cur     = parent.zs_fprefix_head;
         while (cur) {  // search for element by pointer
             amc::FFprefix* next = cur->reftype_zs_fprefix_next;
             if (cur == &row) {
 
                 if (!next) {
-                    reftype.zs_fprefix_tail = prev;  // adjust tail pointer
+                    parent.zs_fprefix_tail = prev;  // adjust tail pointer
                 }
                 // disconnect element from linked list
                 if (prev) {
                     prev->reftype_zs_fprefix_next = next;
                 } else {
-                    reftype.zs_fprefix_head = next;
+                    parent.zs_fprefix_head = next;
                 }
                 row.reftype_zs_fprefix_next = (amc::FFprefix*)-1; // not-in-list
                 break;
@@ -35014,10 +35303,10 @@ void amc::zs_fprefix_Remove(amc::FReftype& reftype, amc::FFprefix& row) {
 
 // --- amc.FReftype.zs_fprefix.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc::zs_fprefix_RemoveAll(amc::FReftype& reftype) {
-    amc::FFprefix* row = reftype.zs_fprefix_head;
-    reftype.zs_fprefix_head = NULL;
-    reftype.zs_fprefix_tail = NULL;
+void amc::zs_fprefix_RemoveAll(amc::FReftype& parent) {
+    amc::FFprefix* row = parent.zs_fprefix_head;
+    parent.zs_fprefix_head = NULL;
+    parent.zs_fprefix_tail = NULL;
     while (row) {
         amc::FFprefix* row_next = row->reftype_zs_fprefix_next;
         row->reftype_zs_fprefix_next  = (amc::FFprefix*)-1;
@@ -35027,15 +35316,15 @@ void amc::zs_fprefix_RemoveAll(amc::FReftype& reftype) {
 
 // --- amc.FReftype.zs_fprefix.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc::FFprefix* amc::zs_fprefix_RemoveFirst(amc::FReftype& reftype) {
+amc::FFprefix* amc::zs_fprefix_RemoveFirst(amc::FReftype& parent) {
     amc::FFprefix *row = NULL;
-    row = reftype.zs_fprefix_head;
+    row = parent.zs_fprefix_head;
     if (row) {
         amc::FFprefix *next = row->reftype_zs_fprefix_next;
-        reftype.zs_fprefix_head = next;
+        parent.zs_fprefix_head = next;
         // clear list's tail pointer if list is empty.
         if (!next) {
-            reftype.zs_fprefix_tail = NULL;
+            parent.zs_fprefix_tail = NULL;
         }
         row->reftype_zs_fprefix_next = (amc::FFprefix*)-1; // mark as not-in-list
     }
@@ -35044,31 +35333,30 @@ amc::FFprefix* amc::zs_fprefix_RemoveFirst(amc::FReftype& reftype) {
 
 // --- amc.FReftype..Init
 // Set all fields to initial values.
-void amc::FReftype_Init(amc::FReftype& reftype) {
-    reftype.reftype = algo::strptr("Val");
-    reftype.isval = bool(false);
-    reftype.cascins = bool(false);
-    reftype.usebasepool = bool(false);
-    reftype.cancopy = bool(false);
-    reftype.needxref = bool(false);
-    reftype.del = bool(false);
-    reftype.up = bool(false);
-    reftype.isnew = bool(false);
-    reftype.hasalloc = bool(false);
-    reftype.inst = bool(false);
-    reftype.varlen = bool(false);
-    reftype.rowid = i32(0);
-    reftype.p_tclass = NULL;
-    reftype.zs_fprefix_head = NULL; // (amc.FReftype.zs_fprefix)
-    reftype.zs_fprefix_tail = NULL; // (amc.FReftype.zs_fprefix)
-    reftype.ind_reftype_next = (amc::FReftype*)-1; // (amc.FDb.ind_reftype) not-in-hash
-    reftype.ind_reftype_hashval = 0; // stored hash value
+void amc::FReftype_Init(amc::FReftype& parent) {
+    parent.reftype = algo::strptr("Val");
+    parent.isval = bool(false);
+    parent.cascins = bool(false);
+    parent.usebasepool = bool(false);
+    parent.cancopy = bool(false);
+    parent.needxref = bool(false);
+    parent.del = bool(false);
+    parent.up = bool(false);
+    parent.isnew = bool(false);
+    parent.hasalloc = bool(false);
+    parent.inst = bool(false);
+    parent.varlen = bool(false);
+    parent.rowid = i32(0);
+    parent.p_tclass = NULL;
+    parent.zs_fprefix_head = NULL; // (amc.FReftype.zs_fprefix)
+    parent.zs_fprefix_tail = NULL; // (amc.FReftype.zs_fprefix)
+    parent.ind_reftype_next = (amc::FReftype*)-1; // (amc.FDb.ind_reftype) not-in-hash
+    parent.ind_reftype_hashval = 0; // stored hash value
 }
 
 // --- amc.FReftype..Uninit
-void amc::FReftype_Uninit(amc::FReftype& reftype) {
-    amc::FReftype &row = reftype; (void)row;
-    ind_reftype_Remove(row); // remove reftype from index ind_reftype
+void amc::FReftype_Uninit(amc::FReftype& parent) {
+    ind_reftype_Remove(parent); // remove reftype from index ind_reftype
 }
 
 // --- amc.FRowid.msghdr.CopyOut
@@ -35086,12 +35374,11 @@ void amc::rowid_CopyIn(amc::FRowid &row, dmmeta::Rowid &in) {
 }
 
 // --- amc.FRowid..Uninit
-void amc::FRowid_Uninit(amc::FRowid& rowid) {
-    amc::FRowid &row = rowid; (void)row;
-    ind_rowid_Remove(row); // remove rowid from index ind_rowid
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FRowid_Uninit(amc::FRowid& parent) {
+    ind_rowid_Remove(parent); // remove rowid from index ind_rowid
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_rowid_Remove(*p_field, row);// remove rowid from index c_rowid
+        c_rowid_Remove(*p_field, parent);// remove rowid from index c_rowid
     }
 }
 
@@ -35116,18 +35403,17 @@ void amc::smallstr_CopyIn(amc::FSmallstr &row, dmmeta::Smallstr &in) {
 }
 
 // --- amc.FSmallstr.ctype.Get
-algo::strptr amc::ctype_Get(amc::FSmallstr& smallstr) {
-    return algo::Pathcomp(smallstr.field, ".RL");
+algo::strptr amc::ctype_Get(amc::FSmallstr& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- amc.FSmallstr..Uninit
-void amc::FSmallstr_Uninit(amc::FSmallstr& smallstr) {
-    amc::FSmallstr &row = smallstr; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FSmallstr_Uninit(amc::FSmallstr& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_smallstr_Remove(*p_field, row);// remove smallstr from index c_smallstr
+        c_smallstr_Remove(*p_field, parent);// remove smallstr from index c_smallstr
     }
-    ind_smallstr_Remove(row); // remove smallstr from index ind_smallstr
+    ind_smallstr_Remove(parent); // remove smallstr from index ind_smallstr
 }
 
 // --- amc.FSortfld.msghdr.CopyOut
@@ -35145,11 +35431,10 @@ void amc::sortfld_CopyIn(amc::FSortfld &row, dmmeta::Sortfld &in) {
 }
 
 // --- amc.FSortfld..Uninit
-void amc::FSortfld_Uninit(amc::FSortfld& sortfld) {
-    amc::FSortfld &row = sortfld; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FSortfld_Uninit(amc::FSortfld& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_sortfld_Remove(*p_field, row);// remove sortfld from index c_sortfld
+        c_sortfld_Remove(*p_field, parent);// remove sortfld from index c_sortfld
     }
 }
 
@@ -35168,45 +35453,44 @@ void amc::ssimfile_CopyIn(amc::FSsimfile &row, dmmeta::Ssimfile &in) {
 }
 
 // --- amc.FSsimfile.ssimns.Get
-algo::strptr amc::ssimns_Get(amc::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr amc::ssimns_Get(amc::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- amc.FSsimfile.ns.Get
-algo::strptr amc::ns_Get(amc::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr amc::ns_Get(amc::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- amc.FSsimfile.name.Get
-algo::strptr amc::name_Get(amc::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
+algo::strptr amc::name_Get(amc::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".RR");
 }
 
 // --- amc.FSsimfile..Init
 // Set all fields to initial values.
-void amc::FSsimfile_Init(amc::FSsimfile& ssimfile) {
-    ssimfile.p_ctype = NULL;
-    ssimfile.c_ssimvolatile = NULL;
-    ssimfile.topovisit = bool(false);
-    ssimfile.topoindex = i32(0);
-    ssimfile.input_select = bool(false);
-    ssimfile.c_ssimfile_sorted_in_ary = bool(false);
-    ssimfile.ind_ssimfile_next = (amc::FSsimfile*)-1; // (amc.FDb.ind_ssimfile) not-in-hash
-    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
-    ssimfile.zd_ssimfile_todo_next = (amc::FSsimfile*)-1; // (amc.FDb.zd_ssimfile_todo) not-in-list
-    ssimfile.zd_ssimfile_todo_prev = NULL; // (amc.FDb.zd_ssimfile_todo)
+void amc::FSsimfile_Init(amc::FSsimfile& parent) {
+    parent.p_ctype = NULL;
+    parent.c_ssimvolatile = NULL;
+    parent.topovisit = bool(false);
+    parent.topoindex = i32(0);
+    parent.input_select = bool(false);
+    parent.c_ssimfile_sorted_in_ary = bool(false);
+    parent.ind_ssimfile_next = (amc::FSsimfile*)-1; // (amc.FDb.ind_ssimfile) not-in-hash
+    parent.ind_ssimfile_hashval = 0; // stored hash value
+    parent.zd_ssimfile_todo_next = (amc::FSsimfile*)-1; // (amc.FDb.zd_ssimfile_todo) not-in-list
+    parent.zd_ssimfile_todo_prev = NULL; // (amc.FDb.zd_ssimfile_todo)
 }
 
 // --- amc.FSsimfile..Uninit
-void amc::FSsimfile_Uninit(amc::FSsimfile& ssimfile) {
-    amc::FSsimfile &row = ssimfile; (void)row;
-    ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FSsimfile_Uninit(amc::FSsimfile& parent) {
+    ind_ssimfile_Remove(parent); // remove ssimfile from index ind_ssimfile
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_ssimfile_Remove(*p_ctype, row);// remove ssimfile from index c_ssimfile
+        c_ssimfile_Remove(*p_ctype, parent);// remove ssimfile from index c_ssimfile
     }
-    c_ssimfile_sorted_Remove(row); // remove ssimfile from index c_ssimfile_sorted
-    zd_ssimfile_todo_Remove(row); // remove ssimfile from index zd_ssimfile_todo
+    c_ssimfile_sorted_Remove(parent); // remove ssimfile from index c_ssimfile_sorted
+    zd_ssimfile_todo_Remove(parent); // remove ssimfile from index zd_ssimfile_todo
 }
 
 // --- amc.FSsimsort.base.CopyOut
@@ -35240,20 +35524,18 @@ void amc::ssimvolatile_CopyIn(amc::FSsimvolatile &row, dmmeta::Ssimvolatile &in)
 }
 
 // --- amc.FSsimvolatile..Uninit
-void amc::FSsimvolatile_Uninit(amc::FSsimvolatile& ssimvolatile) {
-    amc::FSsimvolatile &row = ssimvolatile; (void)row;
-    amc::FSsimfile* p_ssimfile = amc::ind_ssimfile_Find(row.ssimfile);
+void amc::FSsimvolatile_Uninit(amc::FSsimvolatile& parent) {
+    amc::FSsimfile* p_ssimfile = amc::ind_ssimfile_Find(parent.ssimfile);
     if (p_ssimfile)  {
-        c_ssimvolatile_Remove(*p_ssimfile, row);// remove ssimvolatile from index c_ssimvolatile
+        c_ssimvolatile_Remove(*p_ssimfile, parent);// remove ssimvolatile from index c_ssimvolatile
     }
 }
 
 // --- amc.FStatictuple..Uninit
-void amc::FStatictuple_Uninit(amc::FStatictuple& static_tuple) {
-    amc::FStatictuple &row = static_tuple; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+void amc::FStatictuple_Uninit(amc::FStatictuple& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_static_Remove(*p_ctype, row);// remove static_tuple from index c_static
+        c_static_Remove(*p_ctype, parent);// remove static_tuple from index c_static
     }
 }
 
@@ -35272,9 +35554,8 @@ void amc::steptype_CopyIn(amc::FSteptype &row, dmmeta::Steptype &in) {
 }
 
 // --- amc.FSteptype..Uninit
-void amc::FSteptype_Uninit(amc::FSteptype& steptype) {
-    amc::FSteptype &row = steptype; (void)row;
-    ind_steptype_Remove(row); // remove steptype from index ind_steptype
+void amc::FSteptype_Uninit(amc::FSteptype& parent) {
+    ind_steptype_Remove(parent); // remove steptype from index ind_steptype
 }
 
 // --- amc.FSubstr.msghdr.CopyOut
@@ -35294,13 +35575,12 @@ void amc::substr_CopyIn(amc::FSubstr &row, dmmeta::Substr &in) {
 }
 
 // --- amc.FSubstr..Uninit
-void amc::FSubstr_Uninit(amc::FSubstr& substr) {
-    amc::FSubstr &row = substr; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FSubstr_Uninit(amc::FSubstr& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_substr_Remove(*p_field, row);// remove substr from index c_substr
+        c_substr_Remove(*p_field, parent);// remove substr from index c_substr
     }
-    zd_substr_params_Remove(row); // remove substr from index zd_substr_params
+    zd_substr_params_Remove(parent); // remove substr from index zd_substr_params
 }
 
 // --- amc.FTargdep.msghdr.CopyOut
@@ -35318,21 +35598,20 @@ void amc::targdep_CopyIn(amc::FTargdep &row, dev::Targdep &in) {
 }
 
 // --- amc.FTargdep.target.Get
-algo::strptr amc::target_Get(amc::FTargdep& targdep) {
-    return algo::Pathcomp(targdep.targdep, ".RL");
+algo::strptr amc::target_Get(amc::FTargdep& parent) {
+    return algo::Pathcomp(parent.targdep, ".RL");
 }
 
 // --- amc.FTargdep.parent.Get
-algo::strptr amc::parent_Get(amc::FTargdep& targdep) {
-    return algo::Pathcomp(targdep.targdep, ".RR");
+algo::strptr amc::parent_Get(amc::FTargdep& parent) {
+    return algo::Pathcomp(parent.targdep, ".RR");
 }
 
 // --- amc.FTargdep..Uninit
-void amc::FTargdep_Uninit(amc::FTargdep& targdep) {
-    amc::FTargdep &row = targdep; (void)row;
-    amc::FTarget* p_target = amc::ind_target_Find(target_Get(row));
+void amc::FTargdep_Uninit(amc::FTargdep& parent) {
+    amc::FTarget* p_target = amc::ind_target_Find(target_Get(parent));
     if (p_target)  {
-        c_targdep_Remove(*p_target, row);// remove targdep from index c_targdep
+        c_targdep_Remove(*p_target, parent);// remove targdep from index c_targdep
     }
 }
 
@@ -35351,11 +35630,11 @@ void amc::target_CopyIn(amc::FTarget &row, dev::Target &in) {
 // --- amc.FTarget.c_targdep.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amc::c_targdep_Insert(amc::FTarget& target, amc::FTargdep& row) {
+void amc::c_targdep_Insert(amc::FTarget& parent, amc::FTargdep& row) {
     if (!row.target_c_targdep_in_ary) {
-        c_targdep_Reserve(target, 1);
-        u64 n  = target.c_targdep_n++;
-        target.c_targdep_elems[n] = &row;
+        c_targdep_Reserve(parent, 1);
+        u64 n  = parent.c_targdep_n++;
+        parent.c_targdep_elems[n] = &row;
         row.target_c_targdep_in_ary = true;
     }
 }
@@ -35364,18 +35643,18 @@ void amc::c_targdep_Insert(amc::FTarget& target, amc::FTargdep& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc::c_targdep_InsertMaybe(amc::FTarget& target, amc::FTargdep& row) {
+bool amc::c_targdep_InsertMaybe(amc::FTarget& parent, amc::FTargdep& row) {
     bool retval = !target_c_targdep_InAryQ(row);
-    c_targdep_Insert(target,row); // check is performed in _Insert again
+    c_targdep_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amc.FTarget.c_targdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_targdep_Remove(amc::FTarget& target, amc::FTargdep& row) {
-    i64 n = target.c_targdep_n;
+void amc::c_targdep_Remove(amc::FTarget& parent, amc::FTargdep& row) {
+    i64 n = parent.c_targdep_n;
     if (bool_Update(row.target_c_targdep_in_ary,false)) {
-        amc::FTargdep* *elems = target.c_targdep_elems;
+        amc::FTargdep* *elems = parent.c_targdep_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -35384,7 +35663,7 @@ void amc::c_targdep_Remove(amc::FTarget& target, amc::FTargdep& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amc::FTargdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targdep_n = n - 1;
+                parent.c_targdep_n = n - 1;
                 break;
             }
         }
@@ -35393,32 +35672,31 @@ void amc::c_targdep_Remove(amc::FTarget& target, amc::FTargdep& row) {
 
 // --- amc.FTarget.c_targdep.Reserve
 // Reserve space in index for N more elements;
-void amc::c_targdep_Reserve(amc::FTarget& target, u64 n) {
-    u64 old_max = target.c_targdep_max;
-    if (UNLIKELY(target.c_targdep_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targdep_n + n), 4);
+void amc::c_targdep_Reserve(amc::FTarget& parent, u64 n) {
+    u64 old_max = parent.c_targdep_max;
+    if (UNLIKELY(parent.c_targdep_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_targdep_n + n), 4);
         u64 old_size = old_max * sizeof(amc::FTargdep*);
         u64 new_size = new_max * sizeof(amc::FTargdep*);
-        void *new_mem = amc::lpool_ReallocMem(target.c_targdep_elems, old_size, new_size);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_targdep_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amc.out_of_memory  field:amc.FTarget.c_targdep");
         }
-        target.c_targdep_elems = (amc::FTargdep**)new_mem;
-        target.c_targdep_max = new_max;
+        parent.c_targdep_elems = (amc::FTargdep**)new_mem;
+        parent.c_targdep_max = new_max;
     }
 }
 
 // --- amc.FTarget..Uninit
-void amc::FTarget_Uninit(amc::FTarget& target) {
-    amc::FTarget &row = target; (void)row;
-    ind_target_Remove(row); // remove target from index ind_target
-    amc::FNs* p_target = amc::ind_ns_Find(row.target);
+void amc::FTarget_Uninit(amc::FTarget& parent) {
+    ind_target_Remove(parent); // remove target from index ind_target
+    amc::FNs* p_target = amc::ind_ns_Find(parent.target);
     if (p_target)  {
-        c_target_Remove(*p_target, row);// remove target from index c_target
+        c_target_Remove(*p_target, parent);// remove target from index c_target
     }
 
     // amc.FTarget.c_targdep.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(target.c_targdep_elems, sizeof(amc::FTargdep*)*target.c_targdep_max); // (amc.FTarget.c_targdep)
+    amc::lpool_FreeMem(parent.c_targdep_elems, sizeof(amc::FTargdep*)*parent.c_targdep_max); // (amc.FTarget.c_targdep)
 }
 
 // --- amc.FTary.msghdr.CopyOut
@@ -35438,12 +35716,11 @@ void amc::tary_CopyIn(amc::FTary &row, dmmeta::Tary &in) {
 }
 
 // --- amc.FTary..Uninit
-void amc::FTary_Uninit(amc::FTary& tary) {
-    amc::FTary &row = tary; (void)row;
-    ind_tary_Remove(row); // remove tary from index ind_tary
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FTary_Uninit(amc::FTary& parent) {
+    ind_tary_Remove(parent); // remove tary from index ind_tary
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_tary_Remove(*p_field, row);// remove tary from index c_tary
+        c_tary_Remove(*p_field, parent);// remove tary from index c_tary
     }
 }
 
@@ -35462,22 +35739,21 @@ void amc::tcond_CopyIn(amc::FTcond &row, amcdb::Tcond &in) {
 }
 
 // --- amc.FTcond.tclass.Get
-algo::strptr amc::tclass_Get(amc::FTcond& tcond) {
-    return algo::Pathcomp(tcond.tcond, ".RL");
+algo::strptr amc::tclass_Get(amc::FTcond& parent) {
+    return algo::Pathcomp(parent.tcond, ".RL");
 }
 
 // --- amc.FTcond.name.Get
-algo::strptr amc::name_Get(amc::FTcond& tcond) {
-    return algo::Pathcomp(tcond.tcond, ".RR");
+algo::strptr amc::name_Get(amc::FTcond& parent) {
+    return algo::Pathcomp(parent.tcond, ".RR");
 }
 
 // --- amc.FTcond..Uninit
-void amc::FTcond_Uninit(amc::FTcond& tcond) {
-    amc::FTcond &row = tcond; (void)row;
-    ind_tcond_Remove(row); // remove tcond from index ind_tcond
-    amc::FTclass* p_tclass = amc::ind_tclass_Find(tclass_Get(row));
+void amc::FTcond_Uninit(amc::FTcond& parent) {
+    ind_tcond_Remove(parent); // remove tcond from index ind_tcond
+    amc::FTclass* p_tclass = amc::ind_tclass_Find(tclass_Get(parent));
     if (p_tclass)  {
-        c_tcond_Remove(*p_tclass, row);// remove tcond from index c_tcond
+        c_tcond_Remove(*p_tclass, parent);// remove tcond from index c_tcond
     }
 }
 
@@ -35498,16 +35774,15 @@ void amc::tcurs_CopyIn(amc::FTcurs &row, amcdb::Tcurs &in) {
 }
 
 // --- amc.FTcurs.curstype.Get
-algo::strptr amc::curstype_Get(amc::FTcurs& tcurs) {
-    return algo::Pathcomp(tcurs.tfunc, ".RR");
+algo::strptr amc::curstype_Get(amc::FTcurs& parent) {
+    return algo::Pathcomp(parent.tfunc, ".RR");
 }
 
 // --- amc.FTcurs..Uninit
-void amc::FTcurs_Uninit(amc::FTcurs& tcurs) {
-    amc::FTcurs &row = tcurs; (void)row;
-    amc::FTfunc* p_tfunc = amc::ind_tfunc_Find(row.tfunc);
+void amc::FTcurs_Uninit(amc::FTcurs& parent) {
+    amc::FTfunc* p_tfunc = amc::ind_tfunc_Find(parent.tfunc);
     if (p_tfunc)  {
-        c_tcurs_Remove(*p_tfunc, row);// remove tcurs from index c_tcurs
+        c_tcurs_Remove(*p_tfunc, parent);// remove tcurs from index c_tcurs
     }
 }
 
@@ -35540,39 +35815,38 @@ void amc::tfunc_CopyIn(amc::FTfunc &row, amcdb::Tfunc &in) {
 }
 
 // --- amc.FTfunc.tclass.Get
-algo::strptr amc::tclass_Get(amc::FTfunc& tfunc) {
-    return algo::Pathcomp(tfunc.tfunc, ".RL");
+algo::strptr amc::tclass_Get(amc::FTfunc& parent) {
+    return algo::Pathcomp(parent.tfunc, ".RL");
 }
 
 // --- amc.FTfunc.name.Get
-algo::strptr amc::name_Get(amc::FTfunc& tfunc) {
-    return algo::Pathcomp(tfunc.tfunc, ".RR");
+algo::strptr amc::name_Get(amc::FTfunc& parent) {
+    return algo::Pathcomp(parent.tfunc, ".RR");
 }
 
 // --- amc.FTfunc..Init
 // Set all fields to initial values.
-void amc::FTfunc_Init(amc::FTfunc& tfunc) {
-    tfunc.hasthrow = bool(false);
-    tfunc.leaf = bool(true);
-    tfunc.poolfunc = bool(false);
-    tfunc.inl = bool(false);
-    tfunc.wur = bool(false);
-    tfunc.pure = bool(false);
-    tfunc.ismacro = bool(false);
-    tfunc.c_tcurs = NULL;
-    tfunc.tclass_c_tfunc_in_ary = bool(false);
-    tfunc.ind_tfunc_next = (amc::FTfunc*)-1; // (amc.FDb.ind_tfunc) not-in-hash
-    tfunc.ind_tfunc_hashval = 0; // stored hash value
-    tfunc.step = NULL;
+void amc::FTfunc_Init(amc::FTfunc& parent) {
+    parent.hasthrow = bool(false);
+    parent.leaf = bool(true);
+    parent.poolfunc = bool(false);
+    parent.inl = bool(false);
+    parent.wur = bool(false);
+    parent.pure = bool(false);
+    parent.ismacro = bool(false);
+    parent.c_tcurs = NULL;
+    parent.tclass_c_tfunc_in_ary = bool(false);
+    parent.ind_tfunc_next = (amc::FTfunc*)-1; // (amc.FDb.ind_tfunc) not-in-hash
+    parent.ind_tfunc_hashval = 0; // stored hash value
+    parent.step = NULL;
 }
 
 // --- amc.FTfunc..Uninit
-void amc::FTfunc_Uninit(amc::FTfunc& tfunc) {
-    amc::FTfunc &row = tfunc; (void)row;
-    ind_tfunc_Remove(row); // remove tfunc from index ind_tfunc
-    amc::FTclass* p_tclass = amc::ind_tclass_Find(tclass_Get(row));
+void amc::FTfunc_Uninit(amc::FTfunc& parent) {
+    ind_tfunc_Remove(parent); // remove tfunc from index ind_tfunc
+    amc::FTclass* p_tclass = amc::ind_tclass_Find(tclass_Get(parent));
     if (p_tclass)  {
-        c_tfunc_Remove(*p_tclass, row);// remove tfunc from index c_tfunc
+        c_tfunc_Remove(*p_tclass, parent);// remove tfunc from index c_tfunc
     }
 }
 
@@ -35595,11 +35869,10 @@ void amc::thash_CopyIn(amc::FThash &row, dmmeta::Thash &in) {
 }
 
 // --- amc.FThash..Uninit
-void amc::FThash_Uninit(amc::FThash& thash) {
-    amc::FThash &row = thash; (void)row;
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FThash_Uninit(amc::FThash& parent) {
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_thash_Remove(*p_field, row);// remove thash from index c_thash
+        c_thash_Remove(*p_field, parent);// remove thash from index c_thash
     }
 }
 
@@ -35618,13 +35891,13 @@ void amc::tracefld_CopyIn(amc::FTracefld &row, dmmeta::Tracefld &in) {
 }
 
 // --- amc.FTracefld.tracerec.Get
-algo::strptr amc::tracerec_Get(amc::FTracefld& tracefld) {
-    return algo::Pathcomp(tracefld.tracefld, ".RL");
+algo::strptr amc::tracerec_Get(amc::FTracefld& parent) {
+    return algo::Pathcomp(parent.tracefld, ".RL");
 }
 
 // --- amc.FTracefld.name.Get
-algo::strptr amc::name_Get(amc::FTracefld& tracefld) {
-    return algo::Pathcomp(tracefld.tracefld, ".RR");
+algo::strptr amc::name_Get(amc::FTracefld& parent) {
+    return algo::Pathcomp(parent.tracefld, ".RR");
 }
 
 // --- amc.FTracerec.msghdr.CopyOut
@@ -35642,13 +35915,13 @@ void amc::tracerec_CopyIn(amc::FTracerec &row, dmmeta::Tracerec &in) {
 }
 
 // --- amc.FTracerec.name.Get
-algo::strptr amc::name_Get(amc::FTracerec& tracerec) {
-    return algo::Pathcomp(tracerec.tracerec, ".LR");
+algo::strptr amc::name_Get(amc::FTracerec& parent) {
+    return algo::Pathcomp(parent.tracerec, ".LR");
 }
 
 // --- amc.FTracerec.ns.Get
-algo::strptr amc::ns_Get(amc::FTracerec& tracerec) {
-    return algo::Pathcomp(tracerec.tracerec, ".LL");
+algo::strptr amc::ns_Get(amc::FTracerec& parent) {
+    return algo::Pathcomp(parent.tracerec, ".LL");
 }
 
 // --- amc.FTypefld.msghdr.CopyOut
@@ -35666,20 +35939,19 @@ void amc::typefld_CopyIn(amc::FTypefld &row, dmmeta::Typefld &in) {
 }
 
 // --- amc.FTypefld.ctype.Get
-algo::strptr amc::ctype_Get(amc::FTypefld& typefld) {
-    return algo::Pathcomp(typefld.field, ".RL");
+algo::strptr amc::ctype_Get(amc::FTypefld& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- amc.FTypefld..Uninit
-void amc::FTypefld_Uninit(amc::FTypefld& typefld) {
-    amc::FTypefld &row = typefld; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+void amc::FTypefld_Uninit(amc::FTypefld& parent) {
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_typefld_Remove(*p_ctype, row);// remove typefld from index c_typefld
+        c_typefld_Remove(*p_ctype, parent);// remove typefld from index c_typefld
     }
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_typefld_Remove(*p_field, row);// remove typefld from index c_typefld
+        c_typefld_Remove(*p_field, parent);// remove typefld from index c_typefld
     }
 }
 
@@ -35732,52 +36004,51 @@ void amc::xref_CopyIn(amc::FXref &row, dmmeta::Xref &in) {
 }
 
 // --- amc.FXref.name.Get
-algo::strptr amc::name_Get(amc::FXref& xref) {
-    return algo::Pathcomp(xref.field, ".RR");
+algo::strptr amc::name_Get(amc::FXref& parent) {
+    return algo::Pathcomp(parent.field, ".RR");
 }
 
 // --- amc.FXref.ns.Get
-algo::strptr amc::ns_Get(amc::FXref& xref) {
-    return algo::Pathcomp(xref.field, ".LL");
+algo::strptr amc::ns_Get(amc::FXref& parent) {
+    return algo::Pathcomp(parent.field, ".LL");
 }
 
 // --- amc.FXref.viafld.Get
-algo::strptr amc::viafld_Get(amc::FXref& xref) {
-    return algo::Pathcomp(xref.via, "/LL");
+algo::strptr amc::viafld_Get(amc::FXref& parent) {
+    return algo::Pathcomp(parent.via, "/LL");
 }
 
 // --- amc.FXref.keyfld.Get
-algo::strptr amc::keyfld_Get(amc::FXref& xref) {
-    return algo::Pathcomp(xref.via, "/RR");
+algo::strptr amc::keyfld_Get(amc::FXref& parent) {
+    return algo::Pathcomp(parent.via, "/RR");
 }
 
 // --- amc.FXref..Init
 // Set all fields to initial values.
-void amc::FXref_Init(amc::FXref& xref) {
-    xref.inscond = algo::CppExpr("true");
-    xref.p_field = NULL;
-    xref.p_ctype = NULL;
-    xref.c_nocascdel = NULL;
-    xref.p_viafld = NULL;
-    xref.p_keyfld = NULL;
-    xref.ctype_zs_xref_next = (amc::FXref*)-1; // (amc.FCtype.zs_xref) not-in-list
-    xref.ind_xref_next = (amc::FXref*)-1; // (amc.FDb.ind_xref) not-in-hash
-    xref.ind_xref_hashval = 0; // stored hash value
-    xref.field_zd_xref_keyfld_next = (amc::FXref*)-1; // (amc.FField.zd_xref_keyfld) not-in-list
-    xref.field_zd_xref_keyfld_prev = NULL; // (amc.FField.zd_xref_keyfld)
+void amc::FXref_Init(amc::FXref& parent) {
+    parent.inscond = algo::CppExpr("true");
+    parent.p_field = NULL;
+    parent.p_ctype = NULL;
+    parent.c_nocascdel = NULL;
+    parent.p_viafld = NULL;
+    parent.p_keyfld = NULL;
+    parent.ctype_zs_xref_next = (amc::FXref*)-1; // (amc.FCtype.zs_xref) not-in-list
+    parent.ind_xref_next = (amc::FXref*)-1; // (amc.FDb.ind_xref) not-in-hash
+    parent.ind_xref_hashval = 0; // stored hash value
+    parent.field_zd_xref_keyfld_next = (amc::FXref*)-1; // (amc.FField.zd_xref_keyfld) not-in-list
+    parent.field_zd_xref_keyfld_prev = NULL; // (amc.FField.zd_xref_keyfld)
 }
 
 // --- amc.FXref..Uninit
-void amc::FXref_Uninit(amc::FXref& xref) {
-    amc::FXref &row = xref; (void)row;
-    ind_xref_Remove(row); // remove xref from index ind_xref
-    amc::FField* p_field = amc::ind_field_Find(row.field);
+void amc::FXref_Uninit(amc::FXref& parent) {
+    ind_xref_Remove(parent); // remove xref from index ind_xref
+    amc::FField* p_field = amc::ind_field_Find(parent.field);
     if (p_field)  {
-        c_xref_Remove(*p_field, row);// remove xref from index c_xref
+        c_xref_Remove(*p_field, parent);// remove xref from index c_xref
     }
-    amc::FField* p_keyfld = amc::ind_field_Find(keyfld_Get(row));
+    amc::FField* p_keyfld = amc::ind_field_Find(keyfld_Get(parent));
     if (p_keyfld)  {
-        zd_xref_keyfld_Remove(*p_keyfld, row);// remove xref from index zd_xref_keyfld
+        zd_xref_keyfld_Remove(*p_keyfld, parent);// remove xref from index zd_xref_keyfld
     }
 }
 
@@ -36814,8 +37085,8 @@ void amc::StaticCheck() {
 // --- amc...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
+        lib_json::FDb_Init();
         amc::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -36832,8 +37103,8 @@ int main(int argc, char **argv) {
     }
     try {
         amc::FDb_Uninit();
-        algo_lib::FDb_Uninit();
         lib_json::FDb_Uninit();
+        algo_lib::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

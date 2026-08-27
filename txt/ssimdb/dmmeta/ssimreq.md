@@ -11,16 +11,16 @@ italicised fields: *parent_field, parent_ctype, value, child_ssimfile, child_key
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssimreq|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
-|parent|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*parent_field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>:LL of parent*|
-|*parent_ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>:LL.RL of parent*|
-|*value*|*[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>:LR of parent*|
-|*child_ssimfile*|*[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>:LL of ssimreq*|
-|*child_key*|*[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>:RR of ssimreq*|
-|reqchild|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|bidir|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|ssimreq|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|parent|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*parent_field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>:LL of parent*|
+|*parent_ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>:LL.RL of parent*|
+|*value*|*[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>:LR of parent*|
+|*child_ssimfile*|*[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>:LL of ssimreq*|
+|*child_key*|*[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>:RR of ssimreq*|
+|reqchild|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|bidir|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

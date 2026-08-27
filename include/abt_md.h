@@ -171,6 +171,15 @@ namespace abt_md { // update-hdr
     // Optional anchor is ANCHOR
     // For executables and libraries, a separate gen file is used
     tempstr LinkToGen(algo::strptr name, abt_md::FNs &ns, algo::strptr anchor = "");
+
+    // Link to the page documenting REFTYPE.
+    //
+    // Every reftype has a page of its own under txt/exe/amc/reftype, and the link
+    // goes straight to it.  The index beside them, txt/exe/amc/reftype.md, groups the
+    // reftypes so a reader who does not yet know which one they want can find it --
+    // but a reader who arrives from a field's reftype column already knows, and
+    // landing them on an index entry that says "see the page" costs them a click for
+    // nothing.
     tempstr LinkToReftype(algo::strptr reftype);
     tempstr LinkToCtype(abt_md::FCtype &ctype);
     tempstr TypeComment(abt_md::FCtype &ctype);
@@ -337,6 +346,19 @@ namespace abt_md { // update-hdr
     // void mdsection_Internals(abt_md::FFileSection &section); // gstatic/dev.mdsection:Internals
     // void mdsection_Sources(abt_md::FFileSection &section); // gstatic/dev.mdsection:Sources
     // void mdsection_Dependencies(abt_md::FFileSection &section); // gstatic/dev.mdsection:Dependencies
+
+    // Point an internals document at the usage document for the same namespace.
+    //
+    // Land on txt/gen/acr/acr.md and what you get is acr's structs, its access
+    // paths and its build inputs, which is rarely what a reader arrived for; the
+    // usage README next door is.  So the internals document opens with one line
+    // naming it, titled the way mdsection_Title titles that file, and a reader who
+    // wanted the other document is one link away rather than back at a search.
+    //
+    // Under txt/gen the line is derived, so it is rewritten on every pass and a
+    // namespace whose nstype has no README gets an empty section rather than a link
+    // to a file that is not there.  Everywhere else -- every README.md in the tree
+    // -- the section is prose somebody wrote, and this leaves it alone.
     // void mdsection_Description(abt_md::FFileSection &section); // gstatic/dev.mdsection:Description
     // void mdsection_Content(abt_md::FFileSection &); // gstatic/dev.mdsection:Content
     // void mdsection_Limitations(abt_md::FFileSection &); // gstatic/dev.mdsection:Limitations

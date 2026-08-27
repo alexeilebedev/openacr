@@ -31,15 +31,12 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 orgfile::FDb    orgfile::_db;     // dependency found via dev.targdep
 
@@ -329,6 +326,7 @@ void* orgfile::filename_AllocMem() {
     if (row) {
         _db.filename_free = row->filename_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(orgfile::FFilename));
     return row;
 }
 
@@ -338,6 +336,7 @@ void orgfile::filename_FreeMem(orgfile::FFilename &row) {
     if (UNLIKELY(row.filename_next != (orgfile::FFilename*)-1)) {
         FatalErrorExit("orgfile.tpool_double_delete  pool:orgfile.FDb.filename  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(orgfile::FFilename)); // before the free list threads through the element
     row.filename_next = _db.filename_free; // insert into free list
     _db.filename_free  = &row;
 }
@@ -899,7 +898,6 @@ void orgfile::FDb_Init() {
 
 // --- orgfile.FDb..Uninit
 void orgfile::FDb_Uninit() {
-    orgfile::FDb &row = _db; (void)row;
 
     // orgfile.FDb.timefmt.Uninit (Lary)  //
     // skip destruction in global scope
@@ -917,11 +915,11 @@ void orgfile::FDb_Uninit() {
 // --- orgfile.FFilehash.c_filename.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void orgfile::c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
+void orgfile::c_filename_Insert(orgfile::FFilehash& parent, orgfile::FFilename& row) {
     if (!row.filehash_c_filename_in_ary) {
-        c_filename_Reserve(filehash, 1);
-        u64 n  = filehash.c_filename_n++;
-        filehash.c_filename_elems[n] = &row;
+        c_filename_Reserve(parent, 1);
+        u64 n  = parent.c_filename_n++;
+        parent.c_filename_elems[n] = &row;
         row.filehash_c_filename_in_ary = true;
     }
 }
@@ -930,18 +928,18 @@ void orgfile::c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool orgfile::c_filename_InsertMaybe(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
+bool orgfile::c_filename_InsertMaybe(orgfile::FFilehash& parent, orgfile::FFilename& row) {
     bool retval = !filehash_c_filename_InAryQ(row);
-    c_filename_Insert(filehash,row); // check is performed in _Insert again
+    c_filename_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- orgfile.FFilehash.c_filename.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void orgfile::c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
-    i64 n = filehash.c_filename_n;
+void orgfile::c_filename_Remove(orgfile::FFilehash& parent, orgfile::FFilename& row) {
+    i64 n = parent.c_filename_n;
     if (bool_Update(row.filehash_c_filename_in_ary,false)) {
-        orgfile::FFilename* *elems = filehash.c_filename_elems;
+        orgfile::FFilename* *elems = parent.c_filename_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -950,7 +948,7 @@ void orgfile::c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename
                 i64 j = i + 1;
                 size_t nbytes = sizeof(orgfile::FFilename*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                filehash.c_filename_n = n - 1;
+                parent.c_filename_n = n - 1;
                 break;
             }
         }
@@ -959,37 +957,35 @@ void orgfile::c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename
 
 // --- orgfile.FFilehash.c_filename.Reserve
 // Reserve space in index for N more elements;
-void orgfile::c_filename_Reserve(orgfile::FFilehash& filehash, u64 n) {
-    u64 old_max = filehash.c_filename_max;
-    if (UNLIKELY(filehash.c_filename_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, filehash.c_filename_n + n), 4);
+void orgfile::c_filename_Reserve(orgfile::FFilehash& parent, u64 n) {
+    u64 old_max = parent.c_filename_max;
+    if (UNLIKELY(parent.c_filename_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_filename_n + n), 4);
         u64 old_size = old_max * sizeof(orgfile::FFilename*);
         u64 new_size = new_max * sizeof(orgfile::FFilename*);
-        void *new_mem = algo_lib::malloc_ReallocMem(filehash.c_filename_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_filename_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("orgfile.out_of_memory  field:orgfile.FFilehash.c_filename");
         }
-        filehash.c_filename_elems = (orgfile::FFilename**)new_mem;
-        filehash.c_filename_max = new_max;
+        parent.c_filename_elems = (orgfile::FFilename**)new_mem;
+        parent.c_filename_max = new_max;
     }
 }
 
 // --- orgfile.FFilehash..Uninit
-void orgfile::FFilehash_Uninit(orgfile::FFilehash& filehash) {
-    orgfile::FFilehash &row = filehash; (void)row;
-    ind_filehash_Remove(row); // remove filehash from index ind_filehash
+void orgfile::FFilehash_Uninit(orgfile::FFilehash& parent) {
+    ind_filehash_Remove(parent); // remove filehash from index ind_filehash
 
     // orgfile.FFilehash.c_filename.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(filehash.c_filename_elems, sizeof(orgfile::FFilename*)*filehash.c_filename_max); // (orgfile.FFilehash.c_filename)
+    algo_lib::malloc_FreeMem(parent.c_filename_elems, sizeof(orgfile::FFilename*)*parent.c_filename_max); // (orgfile.FFilehash.c_filename)
 }
 
 // --- orgfile.FFilename..Uninit
-void orgfile::FFilename_Uninit(orgfile::FFilename& filename) {
-    orgfile::FFilename &row = filename; (void)row;
-    ind_filename_Remove(row); // remove filename from index ind_filename
-    orgfile::FFilehash* p_filehash = orgfile::ind_filehash_Find(row.filehash);
+void orgfile::FFilename_Uninit(orgfile::FFilename& parent) {
+    ind_filename_Remove(parent); // remove filename from index ind_filename
+    orgfile::FFilehash* p_filehash = orgfile::ind_filehash_Find(parent.filehash);
     if (p_filehash)  {
-        c_filename_Remove(*p_filehash, row);// remove filename from index c_filename
+        c_filename_Remove(*p_filehash, parent);// remove filename from index c_filename
     }
 }
 
@@ -1324,7 +1320,6 @@ void orgfile::StaticCheck() {
 // --- orgfile...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         orgfile::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1343,7 +1338,6 @@ int main(int argc, char **argv) {
     try {
         orgfile::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -163,48 +163,48 @@ inline  lib_json::FldKey::FldKey(lib_json::FNode* in_p_object, algo::strptr in_f
 
 // --- lib_json.FNode.c_child.EmptyQ
 // Return true if index is empty
-inline bool lib_json::c_child_EmptyQ(lib_json::FNode& node) {
-    return node.c_child_n == 0;
+inline bool lib_json::c_child_EmptyQ(lib_json::FNode& parent) {
+    return parent.c_child_n == 0;
 }
 
 // --- lib_json.FNode.c_child.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_json::FNode* lib_json::c_child_Find(lib_json::FNode& node, u64 t) {
+inline lib_json::FNode* lib_json::c_child_Find(lib_json::FNode& parent, u64 t) {
     lib_json::FNode *retval = NULL;
     u64 idx = t;
-    u64 lim = node.c_child_n;
+    u64 lim = parent.c_child_n;
     if (idx < lim) {
-        retval = node.c_child_elems[idx];
+        retval = parent.c_child_elems[idx];
     }
     return retval;
 }
 
 // --- lib_json.FNode.c_child.Getary
 // Return array of pointers
-inline algo::aryptr<lib_json::FNode*> lib_json::c_child_Getary(lib_json::FNode& node) {
-    return algo::aryptr<lib_json::FNode*>(node.c_child_elems, node.c_child_n);
+inline algo::aryptr<lib_json::FNode*> lib_json::c_child_Getary(lib_json::FNode& parent) {
+    return algo::aryptr<lib_json::FNode*>(parent.c_child_elems, parent.c_child_n);
 }
 
 // --- lib_json.FNode.c_child.N
 // Return number of items in the pointer array
-inline i64 lib_json::c_child_N(const lib_json::FNode& node) {
-    return node.c_child_n;
+inline i64 lib_json::c_child_N(const lib_json::FNode& parent) {
+    return parent.c_child_n;
 }
 
 // --- lib_json.FNode.c_child.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void lib_json::c_child_RemoveAll(lib_json::FNode& node) {
-    for (u64 i = 0; i < node.c_child_n; i++) {
+inline void lib_json::c_child_RemoveAll(lib_json::FNode& parent) {
+    for (u64 i = 0; i < parent.c_child_n; i++) {
         // mark all elements as not-in-array
-        node.c_child_elems[i]->node_c_child_in_ary = false;
+        parent.c_child_elems[i]->node_c_child_in_ary = false;
     }
-    node.c_child_n = 0;
+    parent.c_child_n = 0;
 }
 
 // --- lib_json.FNode.c_child.qFind
 // Return reference without bounds checking
-inline lib_json::FNode& lib_json::c_child_qFind(lib_json::FNode& node, u64 idx) {
-    return *node.c_child_elems[idx];
+inline lib_json::FNode& lib_json::c_child_qFind(lib_json::FNode& parent, u64 idx) {
+    return *parent.c_child_elems[idx];
 }
 
 // --- lib_json.FNode.c_child.InAryQ
@@ -215,34 +215,34 @@ inline bool lib_json::node_c_child_InAryQ(lib_json::FNode& row) {
 
 // --- lib_json.FNode.c_child.qLast
 // Reference to last element without bounds checking
-inline lib_json::FNode& lib_json::c_child_qLast(lib_json::FNode& node) {
-    return *node.c_child_elems[node.c_child_n-1];
+inline lib_json::FNode& lib_json::c_child_qLast(lib_json::FNode& parent) {
+    return *parent.c_child_elems[parent.c_child_n-1];
 }
 
 // --- lib_json.FNode.type.GetEnum
 // Get value of field as enum type
-inline lib_json_FNode_type_Enum lib_json::type_GetEnum(const lib_json::FNode& node) {
-    return lib_json_FNode_type_Enum(node.type);
+inline lib_json_FNode_type_Enum lib_json::type_GetEnum(const lib_json::FNode& parent) {
+    return lib_json_FNode_type_Enum(parent.type);
 }
 
 // --- lib_json.FNode.type.SetEnum
 // Set value of field from enum type.
-inline void lib_json::type_SetEnum(lib_json::FNode& node, lib_json_FNode_type_Enum rhs) {
-    node.type = u32(rhs);
+inline void lib_json::type_SetEnum(lib_json::FNode& parent, lib_json_FNode_type_Enum rhs) {
+    parent.type = u32(rhs);
 }
 
 // --- lib_json.FNode..Init
 // Set all fields to initial values.
-inline void lib_json::FNode_Init(lib_json::FNode& node) {
-    node.p_parent = NULL;
-    node.c_child_elems = NULL; // (lib_json.FNode.c_child)
-    node.c_child_n = 0; // (lib_json.FNode.c_child)
-    node.c_child_max = 0; // (lib_json.FNode.c_child)
-    node.type = u32(0);
-    node.node_c_child_in_ary = bool(false);
-    node.node_next = (lib_json::FNode*)-1; // (lib_json.FDb.node) not-in-tpool's freelist
-    node.ind_objfld_next = (lib_json::FNode*)-1; // (lib_json.FDb.ind_objfld) not-in-hash
-    node.ind_objfld_hashval = 0; // stored hash value
+inline void lib_json::FNode_Init(lib_json::FNode& parent) {
+    parent.p_parent = NULL;
+    parent.c_child_elems = NULL; // (lib_json.FNode.c_child)
+    parent.c_child_n = 0; // (lib_json.FNode.c_child)
+    parent.c_child_max = 0; // (lib_json.FNode.c_child)
+    parent.type = u32(0);
+    parent.node_c_child_in_ary = bool(false);
+    parent.node_next = (lib_json::FNode*)-1; // (lib_json.FDb.node) not-in-tpool's freelist
+    parent.ind_objfld_next = (lib_json::FNode*)-1; // (lib_json.FDb.ind_objfld) not-in-hash
+    parent.ind_objfld_hashval = 0; // stored hash value
 }
 
 // --- lib_json.FNode.c_child_curs.Reset

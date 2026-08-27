@@ -36,7 +36,8 @@
 // indistinguishable from a process that allocated nothing.  The field's own
 // documentation promises otherwise: every mapping, huge or not.
 //
-// The huge-page budget starts at zero and only the X2 runtime raises it, so this
+// The huge-page budget starts at zero and only a runtime that wants huge pages
+// raises it, so this
 // process never had huge pages to lose; zeroing it here states that the ordinary
 // path is the one under test and keeps the test independent of the machine it
 // runs on.  It is not restored: the allocator itself zeroes the budget for good
@@ -79,14 +80,20 @@ void atf_amc::amctest_SbrkMmapTrace() {
     vrfy_(!mapped || algo_lib::_db.trace.n_mmap == nmmap + 1);
     algo_lib::sbrk_FreeMem(mem, size);
     // A request no mapping can serve is not a mapping, and must not count as
-    // one.  The size has to exceed the address space rather than merely exhaust
+    // one.  The reading it must leave alone is whatever the served request
+    // above counted, which is one mapping where a big block is mapped and none
+    // where it comes from the aligned allocator -- so the count is taken rather
+    // than assumed, and the assertion keeps its force on either kind of system.
+    //
+    // The size has to exceed the address space rather than merely exhaust
     // memory: a mapping is requested with the flag that faults every page in up
     // front, so a size the kernel is willing to map would be populated before it
     // failed, and a test that asks for one waits for terabytes of page faults
     // instead of failing.
+    u64 nmmap_served = algo_lib::_db.trace.n_mmap;
     void *unservable = algo_lib::sbrk_AllocMem(1ULL << 60);
     vrfy_(unservable == NULL);
-    vrfy_(algo_lib::_db.trace.n_mmap == nmmap + 1);
+    vrfyeq_(algo_lib::_db.trace.n_mmap, nmmap_served);
 }
 
 // A block too big to fit under the huge-page ceiling leaves the ceiling in place.

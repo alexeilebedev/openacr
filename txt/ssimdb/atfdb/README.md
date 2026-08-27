@@ -20,5 +20,6 @@
 &#128196; [atfdb.tifilt - Input filter for component test](/txt/ssimdb/atfdb/tifilt.md)<br/>
 &#128196; [atfdb.unittest -](/txt/ssimdb/atfdb/unittest.md)<br/>
 &#128196; [atfdb.unstableattr -](/txt/ssimdb/atfdb/unstableattr.md)<br/>
+&#128196; [atfdb.unstableline - Tuple head of a line the comptest capture drops, presence being host-dependent](/txt/ssimdb/atfdb/unstableline.md)<br/>
 &#128196; [atfdb.var -](/txt/ssimdb/atfdb/var.md)<br/>
 <!-- abt_md.toc_end -->

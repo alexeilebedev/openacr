@@ -11,14 +11,14 @@ italicised fields: *target, testname* are [**fldfunc**](/txt/openacr/ssim.md#fld
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|comptest|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*target*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.LL of comptest*|
-|*testname*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>.LR of comptest*|
-|timeout|i32|[Val](/txt/exe/amc/reftype.md#val)|10||
-|memcheck|bool|[Val](/txt/exe/amc/reftype.md#val)|true||
-|coverage|bool|[Val](/txt/exe/amc/reftype.md#val)|true||
-|stablefld|bool|[Val](/txt/exe/amc/reftype.md#val)||Replace unstable fields with ***|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|comptest|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*target*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.LL of comptest*|
+|*testname*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>.LR of comptest*|
+|timeout|i32|[Val](/txt/exe/amc/reftype/Val.md)|10||
+|memcheck|bool|[Val](/txt/exe/amc/reftype/Val.md)|true||
+|coverage|bool|[Val](/txt/exe/amc/reftype/Val.md)|true||
+|stablefld|bool|[Val](/txt/exe/amc/reftype/Val.md)||Replace unstable fields with ***|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Subsets
 <a href="#subsets"></a>

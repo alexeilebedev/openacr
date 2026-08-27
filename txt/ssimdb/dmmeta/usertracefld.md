@@ -9,8 +9,8 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|tracefld|[dmmeta.Tracefld](/txt/ssimdb/dmmeta/tracefld.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|tracefld|[dmmeta.Tracefld](/txt/ssimdb/dmmeta/tracefld.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

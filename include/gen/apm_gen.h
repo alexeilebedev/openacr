@@ -140,6 +140,11 @@ namespace apm { extern struct apm::FDb _db; }
 namespace apm { // gen:ns_gsymbol
     extern const algo::strptr dev_package_openacr; // "openacr"
 } // gen:ns_gsymbol
+namespace apm { // gen:ns_gsymbol
+    extern const algo::strptr dev_pkgdeptype_contain; // "contain"
+    extern const algo::strptr dev_pkgdeptype_extend; // "extend"
+    extern const algo::strptr dev_pkgdeptype_require; // "require"
+} // gen:ns_gsymbol
 namespace apm { // gen:ns_print_struct
 
 // --- apm.FBltin
@@ -175,9 +180,9 @@ void                 bltin_CopyIn(apm::FBltin &row, amcdb::Bltin &in) __attribut
 
 // Set all fields to initial values.
 // func:apm.FBltin..Init
-inline void          FBltin_Init(apm::FBltin& bltin);
+inline void          FBltin_Init(apm::FBltin& parent);
 // func:apm.FBltin..Uninit
-void                 FBltin_Uninit(apm::FBltin& bltin) __attribute__((nothrow));
+void                 FBltin_Uninit(apm::FBltin& parent) __attribute__((nothrow));
 
 // --- apm.FCtype
 // create: apm.FDb.ctype (Lary)
@@ -230,104 +235,104 @@ void                 ctype_CopyOut(apm::FCtype &row, dmmeta::Ctype &out) __attri
 void                 ctype_CopyIn(apm::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:apm.FCtype.ns.Get
-algo::strptr         ns_Get(apm::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(apm::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FCtype.name.Get
-algo::strptr         name_Get(apm::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(apm::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:apm.FCtype.c_ssimfile.InsertMaybe
-inline bool          c_ssimfile_InsertMaybe(apm::FCtype& ctype, apm::FSsimfile& row) __attribute__((nothrow));
+inline bool          c_ssimfile_InsertMaybe(apm::FCtype& parent, apm::FSsimfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FCtype.c_ssimfile.Remove
-inline void          c_ssimfile_Remove(apm::FCtype& ctype, apm::FSsimfile& row) __attribute__((nothrow));
+inline void          c_ssimfile_Remove(apm::FCtype& parent, apm::FSsimfile& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:apm.FCtype.c_field.EmptyQ
-inline bool          c_field_EmptyQ(apm::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_field_EmptyQ(apm::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:apm.FCtype.c_field.Find
-inline apm::FField*  c_field_Find(apm::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FField*  c_field_Find(apm::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:apm.FCtype.c_field.Getary
-inline algo::aryptr<apm::FField*> c_field_Getary(apm::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<apm::FField*> c_field_Getary(apm::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:apm.FCtype.c_field.Insert
-void                 c_field_Insert(apm::FCtype& ctype, apm::FField& row) __attribute__((nothrow));
+void                 c_field_Insert(apm::FCtype& parent, apm::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:apm.FCtype.c_field.InsertMaybe
-bool                 c_field_InsertMaybe(apm::FCtype& ctype, apm::FField& row) __attribute__((nothrow));
+bool                 c_field_InsertMaybe(apm::FCtype& parent, apm::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:apm.FCtype.c_field.N
-inline i64           c_field_N(const apm::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_N(const apm::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:apm.FCtype.c_field.Remove
-void                 c_field_Remove(apm::FCtype& ctype, apm::FField& row) __attribute__((nothrow));
+void                 c_field_Remove(apm::FCtype& parent, apm::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FCtype.c_field.RemoveAll
-inline void          c_field_RemoveAll(apm::FCtype& ctype) __attribute__((nothrow));
+inline void          c_field_RemoveAll(apm::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:apm.FCtype.c_field.Reserve
-void                 c_field_Reserve(apm::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_field_Reserve(apm::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:apm.FCtype.c_field.qFind
-inline apm::FField&  c_field_qFind(apm::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline apm::FField&  c_field_qFind(apm::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:apm.FCtype.c_field.InAryQ
 inline bool          ctype_c_field_InAryQ(apm::FField& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:apm.FCtype.c_field.qLast
-inline apm::FField&  c_field_qLast(apm::FCtype& ctype) __attribute__((nothrow));
+inline apm::FField&  c_field_qLast(apm::FCtype& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:apm.FCtype.c_ssimreq.EmptyQ
-inline bool          c_ssimreq_EmptyQ(apm::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_ssimreq_EmptyQ(apm::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:apm.FCtype.c_ssimreq.Find
-inline apm::FSsimreq* c_ssimreq_Find(apm::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FSsimreq* c_ssimreq_Find(apm::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:apm.FCtype.c_ssimreq.Getary
-inline algo::aryptr<apm::FSsimreq*> c_ssimreq_Getary(apm::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<apm::FSsimreq*> c_ssimreq_Getary(apm::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:apm.FCtype.c_ssimreq.Insert
-void                 c_ssimreq_Insert(apm::FCtype& ctype, apm::FSsimreq& row) __attribute__((nothrow));
+void                 c_ssimreq_Insert(apm::FCtype& parent, apm::FSsimreq& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:apm.FCtype.c_ssimreq.InsertMaybe
-bool                 c_ssimreq_InsertMaybe(apm::FCtype& ctype, apm::FSsimreq& row) __attribute__((nothrow));
+bool                 c_ssimreq_InsertMaybe(apm::FCtype& parent, apm::FSsimreq& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:apm.FCtype.c_ssimreq.N
-inline i64           c_ssimreq_N(const apm::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ssimreq_N(const apm::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:apm.FCtype.c_ssimreq.Remove
-void                 c_ssimreq_Remove(apm::FCtype& ctype, apm::FSsimreq& row) __attribute__((nothrow));
+void                 c_ssimreq_Remove(apm::FCtype& parent, apm::FSsimreq& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FCtype.c_ssimreq.RemoveAll
-inline void          c_ssimreq_RemoveAll(apm::FCtype& ctype) __attribute__((nothrow));
+inline void          c_ssimreq_RemoveAll(apm::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:apm.FCtype.c_ssimreq.Reserve
-void                 c_ssimreq_Reserve(apm::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_ssimreq_Reserve(apm::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:apm.FCtype.c_ssimreq.qFind
-inline apm::FSsimreq& c_ssimreq_qFind(apm::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline apm::FSsimreq& c_ssimreq_qFind(apm::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:apm.FCtype.c_ssimreq.InAryQ
 inline bool          ctype_c_ssimreq_InAryQ(apm::FSsimreq& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:apm.FCtype.c_ssimreq.qLast
-inline apm::FSsimreq& c_ssimreq_qLast(apm::FCtype& ctype) __attribute__((nothrow));
+inline apm::FSsimreq& c_ssimreq_qLast(apm::FCtype& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:apm.FCtype.c_bltin.InsertMaybe
-inline bool          c_bltin_InsertMaybe(apm::FCtype& ctype, apm::FBltin& row) __attribute__((nothrow));
+inline bool          c_bltin_InsertMaybe(apm::FCtype& parent, apm::FBltin& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FCtype.c_bltin.Remove
-inline void          c_bltin_Remove(apm::FCtype& ctype, apm::FBltin& row) __attribute__((nothrow));
+inline void          c_bltin_Remove(apm::FCtype& parent, apm::FBltin& row) __attribute__((nothrow));
 
 // func:apm.FCtype.c_field_curs.Reset
 inline void          ctype_c_field_curs_Reset(ctype_c_field_curs &curs, apm::FCtype &parent) __attribute__((nothrow));
@@ -353,9 +358,9 @@ inline void          ctype_c_ssimreq_curs_Next(ctype_c_ssimreq_curs &curs) __att
 inline apm::FSsimreq& ctype_c_ssimreq_curs_Access(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:apm.FCtype..Init
-inline void          FCtype_Init(apm::FCtype& ctype);
+inline void          FCtype_Init(apm::FCtype& parent);
 // func:apm.FCtype..Uninit
-void                 FCtype_Uninit(apm::FCtype& ctype) __attribute__((nothrow));
+void                 FCtype_Uninit(apm::FCtype& parent) __attribute__((nothrow));
 
 // --- apm.trace
 #pragma pack(push,1)
@@ -1927,26 +1932,26 @@ void                 field_CopyOut(apm::FField &row, dmmeta::Field &out) __attri
 void                 field_CopyIn(apm::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:apm.FField.ctype.Get
-algo::strptr         ctype_Get(apm::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(apm::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FField.ns.Get
-algo::strptr         ns_Get(apm::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(apm::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FField.name.Get
-algo::strptr         name_Get(apm::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(apm::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:apm.FField.c_substr.InsertMaybe
-inline bool          c_substr_InsertMaybe(apm::FField& field, apm::FSubstr& row) __attribute__((nothrow));
+inline bool          c_substr_InsertMaybe(apm::FField& parent, apm::FSubstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FField.c_substr.Remove
-inline void          c_substr_Remove(apm::FField& field, apm::FSubstr& row) __attribute__((nothrow));
+inline void          c_substr_Remove(apm::FField& parent, apm::FSubstr& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:apm.FField..Init
-void                 FField_Init(apm::FField& field);
+void                 FField_Init(apm::FField& parent);
 // func:apm.FField..Uninit
-void                 FField_Uninit(apm::FField& field) __attribute__((nothrow));
+void                 FField_Uninit(apm::FField& parent) __attribute__((nothrow));
 
 // --- apm.FMergefile
 // create: apm.FDb.mergefile (Lary)
@@ -1978,9 +1983,9 @@ private:
 };
 // Set all fields to initial values.
 // func:apm.FMergefile..Init
-inline void          FMergefile_Init(apm::FMergefile& mergefile);
+inline void          FMergefile_Init(apm::FMergefile& parent);
 // func:apm.FMergefile..Uninit
-void                 FMergefile_Uninit(apm::FMergefile& mergefile) __attribute__((nothrow));
+void                 FMergefile_Uninit(apm::FMergefile& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:apm.FMergefile.String  printfmt:Tuple
 // func:apm.FMergefile..Print
@@ -2010,9 +2015,9 @@ private:
 };
 // Set all fields to initial values.
 // func:apm.FMkdir..Init
-inline void          FMkdir_Init(apm::FMkdir& mkdir);
+inline void          FMkdir_Init(apm::FMkdir& parent);
 // func:apm.FMkdir..Uninit
-void                 FMkdir_Uninit(apm::FMkdir& mkdir) __attribute__((nothrow));
+void                 FMkdir_Uninit(apm::FMkdir& parent) __attribute__((nothrow));
 
 // --- apm.FNs
 // create: apm.FDb.ns (Lary)
@@ -2106,22 +2111,22 @@ void                 package_CopyIn(apm::FPackage &row, dev::Package &in) __attr
 
 // Return true if index is empty
 // func:apm.FPackage.zd_pkgkey.EmptyQ
-inline bool          zd_pkgkey_EmptyQ(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_pkgkey_EmptyQ(apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:apm.FPackage.zd_pkgkey.First
-inline apm::FPkgkey* zd_pkgkey_First(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline apm::FPkgkey* zd_pkgkey_First(apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:apm.FPackage.zd_pkgkey.InLlistQ
 inline bool          package_zd_pkgkey_InLlistQ(apm::FPkgkey& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:apm.FPackage.zd_pkgkey.Insert
-void                 zd_pkgkey_Insert(apm::FPackage& package, apm::FPkgkey& row) __attribute__((nothrow));
+void                 zd_pkgkey_Insert(apm::FPackage& parent, apm::FPkgkey& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:apm.FPackage.zd_pkgkey.Last
-inline apm::FPkgkey* zd_pkgkey_Last(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline apm::FPkgkey* zd_pkgkey_Last(apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:apm.FPackage.zd_pkgkey.N
-inline i32           zd_pkgkey_N(const apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_pkgkey_N(const apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:apm.FPackage.zd_pkgkey.Next
 inline apm::FPkgkey* package_zd_pkgkey_Next(apm::FPkgkey &row) __attribute__((__warn_unused_result__, nothrow));
@@ -2130,118 +2135,118 @@ inline apm::FPkgkey* package_zd_pkgkey_Next(apm::FPkgkey &row) __attribute__((__
 inline apm::FPkgkey* package_zd_pkgkey_Prev(apm::FPkgkey &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FPackage.zd_pkgkey.Remove
-void                 zd_pkgkey_Remove(apm::FPackage& package, apm::FPkgkey& row) __attribute__((nothrow));
+void                 zd_pkgkey_Remove(apm::FPackage& parent, apm::FPkgkey& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FPackage.zd_pkgkey.RemoveAll
-void                 zd_pkgkey_RemoveAll(apm::FPackage& package) __attribute__((nothrow));
+void                 zd_pkgkey_RemoveAll(apm::FPackage& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:apm.FPackage.zd_pkgkey.RemoveFirst
-apm::FPkgkey*        zd_pkgkey_RemoveFirst(apm::FPackage& package) __attribute__((nothrow));
+apm::FPkgkey*        zd_pkgkey_RemoveFirst(apm::FPackage& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:apm.FPackage.zd_pkgkey.qLast
-inline apm::FPkgkey& zd_pkgkey_qLast(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgkey& zd_pkgkey_qLast(apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:apm.FPackage.zd_pkgkey.InsertBefore
-void                 zd_pkgkey_InsertBefore(apm::FPackage& package, apm::FPkgkey& row, apm::FPkgkey* before) __attribute__((nothrow));
+void                 zd_pkgkey_InsertBefore(apm::FPackage& parent, apm::FPkgkey& row, apm::FPkgkey* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:apm.FPackage.c_pkgdep.EmptyQ
-inline bool          c_pkgdep_EmptyQ(apm::FPackage& package) __attribute__((nothrow));
+inline bool          c_pkgdep_EmptyQ(apm::FPackage& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:apm.FPackage.c_pkgdep.Find
-inline apm::FPkgdep* c_pkgdep_Find(apm::FPackage& package, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgdep* c_pkgdep_Find(apm::FPackage& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:apm.FPackage.c_pkgdep.Getary
-inline algo::aryptr<apm::FPkgdep*> c_pkgdep_Getary(apm::FPackage& package) __attribute__((nothrow));
+inline algo::aryptr<apm::FPkgdep*> c_pkgdep_Getary(apm::FPackage& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:apm.FPackage.c_pkgdep.Insert
-void                 c_pkgdep_Insert(apm::FPackage& package, apm::FPkgdep& row) __attribute__((nothrow));
+void                 c_pkgdep_Insert(apm::FPackage& parent, apm::FPkgdep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:apm.FPackage.c_pkgdep.InsertMaybe
-bool                 c_pkgdep_InsertMaybe(apm::FPackage& package, apm::FPkgdep& row) __attribute__((nothrow));
+bool                 c_pkgdep_InsertMaybe(apm::FPackage& parent, apm::FPkgdep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:apm.FPackage.c_pkgdep.N
-inline i64           c_pkgdep_N(const apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_pkgdep_N(const apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:apm.FPackage.c_pkgdep.Remove
-void                 c_pkgdep_Remove(apm::FPackage& package, apm::FPkgdep& row) __attribute__((nothrow));
+void                 c_pkgdep_Remove(apm::FPackage& parent, apm::FPkgdep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FPackage.c_pkgdep.RemoveAll
-inline void          c_pkgdep_RemoveAll(apm::FPackage& package) __attribute__((nothrow));
+inline void          c_pkgdep_RemoveAll(apm::FPackage& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:apm.FPackage.c_pkgdep.Reserve
-void                 c_pkgdep_Reserve(apm::FPackage& package, u64 n) __attribute__((nothrow));
+void                 c_pkgdep_Reserve(apm::FPackage& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:apm.FPackage.c_pkgdep.qFind
-inline apm::FPkgdep& c_pkgdep_qFind(apm::FPackage& package, u64 idx) __attribute__((nothrow));
+inline apm::FPkgdep& c_pkgdep_qFind(apm::FPackage& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:apm.FPackage.c_pkgdep.InAryQ
 inline bool          package_c_pkgdep_InAryQ(apm::FPkgdep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:apm.FPackage.c_pkgdep.qLast
-inline apm::FPkgdep& c_pkgdep_qLast(apm::FPackage& package) __attribute__((nothrow));
+inline apm::FPkgdep& c_pkgdep_qLast(apm::FPackage& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:apm.FPackage.c_pkgdep_parent.EmptyQ
-inline bool          c_pkgdep_parent_EmptyQ(apm::FPackage& package) __attribute__((nothrow));
+inline bool          c_pkgdep_parent_EmptyQ(apm::FPackage& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:apm.FPackage.c_pkgdep_parent.Find
-inline apm::FPkgdep* c_pkgdep_parent_Find(apm::FPackage& package, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgdep* c_pkgdep_parent_Find(apm::FPackage& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:apm.FPackage.c_pkgdep_parent.Getary
-inline algo::aryptr<apm::FPkgdep*> c_pkgdep_parent_Getary(apm::FPackage& package) __attribute__((nothrow));
+inline algo::aryptr<apm::FPkgdep*> c_pkgdep_parent_Getary(apm::FPackage& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:apm.FPackage.c_pkgdep_parent.Insert
-void                 c_pkgdep_parent_Insert(apm::FPackage& package, apm::FPkgdep& row) __attribute__((nothrow));
+void                 c_pkgdep_parent_Insert(apm::FPackage& parent, apm::FPkgdep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:apm.FPackage.c_pkgdep_parent.InsertMaybe
-bool                 c_pkgdep_parent_InsertMaybe(apm::FPackage& package, apm::FPkgdep& row) __attribute__((nothrow));
+bool                 c_pkgdep_parent_InsertMaybe(apm::FPackage& parent, apm::FPkgdep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:apm.FPackage.c_pkgdep_parent.N
-inline i64           c_pkgdep_parent_N(const apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_pkgdep_parent_N(const apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:apm.FPackage.c_pkgdep_parent.Remove
-void                 c_pkgdep_parent_Remove(apm::FPackage& package, apm::FPkgdep& row) __attribute__((nothrow));
+void                 c_pkgdep_parent_Remove(apm::FPackage& parent, apm::FPkgdep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FPackage.c_pkgdep_parent.RemoveAll
-inline void          c_pkgdep_parent_RemoveAll(apm::FPackage& package) __attribute__((nothrow));
+inline void          c_pkgdep_parent_RemoveAll(apm::FPackage& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:apm.FPackage.c_pkgdep_parent.Reserve
-void                 c_pkgdep_parent_Reserve(apm::FPackage& package, u64 n) __attribute__((nothrow));
+void                 c_pkgdep_parent_Reserve(apm::FPackage& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:apm.FPackage.c_pkgdep_parent.qFind
-inline apm::FPkgdep& c_pkgdep_parent_qFind(apm::FPackage& package, u64 idx) __attribute__((nothrow));
+inline apm::FPkgdep& c_pkgdep_parent_qFind(apm::FPackage& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:apm.FPackage.c_pkgdep_parent.InAryQ
 inline bool          package_c_pkgdep_parent_InAryQ(apm::FPkgdep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:apm.FPackage.c_pkgdep_parent.qLast
-inline apm::FPkgdep& c_pkgdep_parent_qLast(apm::FPackage& package) __attribute__((nothrow));
+inline apm::FPkgdep& c_pkgdep_parent_qLast(apm::FPackage& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:apm.FPackage.zd_pkgrec.EmptyQ
-inline bool          zd_pkgrec_EmptyQ(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_pkgrec_EmptyQ(apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:apm.FPackage.zd_pkgrec.First
-inline apm::FPkgrec* zd_pkgrec_First(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline apm::FPkgrec* zd_pkgrec_First(apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:apm.FPackage.zd_pkgrec.InLlistQ
 inline bool          package_zd_pkgrec_InLlistQ(apm::FPkgrec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:apm.FPackage.zd_pkgrec.Insert
-void                 zd_pkgrec_Insert(apm::FPackage& package, apm::FPkgrec& row) __attribute__((nothrow));
+void                 zd_pkgrec_Insert(apm::FPackage& parent, apm::FPkgrec& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:apm.FPackage.zd_pkgrec.Last
-inline apm::FPkgrec* zd_pkgrec_Last(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline apm::FPkgrec* zd_pkgrec_Last(apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:apm.FPackage.zd_pkgrec.N
-inline i32           zd_pkgrec_N(const apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_pkgrec_N(const apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:apm.FPackage.zd_pkgrec.Next
 inline apm::FPkgrec* package_zd_pkgrec_Next(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
@@ -2250,23 +2255,23 @@ inline apm::FPkgrec* package_zd_pkgrec_Next(apm::FPkgrec &row) __attribute__((__
 inline apm::FPkgrec* package_zd_pkgrec_Prev(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FPackage.zd_pkgrec.Remove
-void                 zd_pkgrec_Remove(apm::FPackage& package, apm::FPkgrec& row) __attribute__((nothrow));
+void                 zd_pkgrec_Remove(apm::FPackage& parent, apm::FPkgrec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FPackage.zd_pkgrec.RemoveAll
-void                 zd_pkgrec_RemoveAll(apm::FPackage& package) __attribute__((nothrow));
+void                 zd_pkgrec_RemoveAll(apm::FPackage& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:apm.FPackage.zd_pkgrec.RemoveFirst
-apm::FPkgrec*        zd_pkgrec_RemoveFirst(apm::FPackage& package) __attribute__((nothrow));
+apm::FPkgrec*        zd_pkgrec_RemoveFirst(apm::FPackage& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:apm.FPackage.zd_pkgrec.qLast
-inline apm::FPkgrec& zd_pkgrec_qLast(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgrec& zd_pkgrec_qLast(apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:apm.FPackage.zd_pkgrec.InsertBefore
-void                 zd_pkgrec_InsertBefore(apm::FPackage& package, apm::FPkgrec& row, apm::FPkgrec* before) __attribute__((nothrow));
+void                 zd_pkgrec_InsertBefore(apm::FPackage& parent, apm::FPkgrec& row, apm::FPkgrec* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:apm.FPackage..Init
-void                 FPackage_Init(apm::FPackage& package);
+void                 FPackage_Init(apm::FPackage& parent);
 // cursor points to valid item
 // func:apm.FPackage.zd_pkgkey_curs.Reset
 inline void          package_zd_pkgkey_curs_Reset(package_zd_pkgkey_curs &curs, apm::FPackage &parent) __attribute__((nothrow));
@@ -2314,7 +2319,7 @@ inline void          package_zd_pkgrec_curs_Next(package_zd_pkgrec_curs &curs) _
 // func:apm.FPackage.zd_pkgrec_curs.Access
 inline apm::FPkgrec& package_zd_pkgrec_curs_Access(package_zd_pkgrec_curs &curs) __attribute__((nothrow));
 // func:apm.FPackage..Uninit
-void                 FPackage_Uninit(apm::FPackage& package) __attribute__((nothrow));
+void                 FPackage_Uninit(apm::FPackage& parent) __attribute__((nothrow));
 
 // --- apm.FPkgdep
 // create: apm.FDb.pkgdep (Lary)
@@ -2324,6 +2329,7 @@ void                 FPackage_Uninit(apm::FPackage& package) __attribute__((noth
 struct FPkgdep { // apm.FPkgdep
     algo::Smallstr100   pkgdep;                           //
     bool                soft;                             //   false  Soft dependency: affects package ordering but not forced update
+    algo::Smallstr50    pkgdeptype;                       //   "require"  How this package stands to its parent
     algo::cstring       comment;                          //
     apm::FPackage*      p_parent;                         // reference to parent row
     apm::FPackage*      p_package;                        // reference to parent row
@@ -2355,16 +2361,16 @@ void                 pkgdep_CopyOut(apm::FPkgdep &row, dev::Pkgdep &out) __attri
 void                 pkgdep_CopyIn(apm::FPkgdep &row, dev::Pkgdep &in) __attribute__((nothrow));
 
 // func:apm.FPkgdep.package.Get
-algo::strptr         package_Get(apm::FPkgdep& pkgdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         package_Get(apm::FPkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FPkgdep.parent.Get
-algo::strptr         parent_Get(apm::FPkgdep& pkgdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_Get(apm::FPkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:apm.FPkgdep..Init
-inline void          FPkgdep_Init(apm::FPkgdep& pkgdep);
+void                 FPkgdep_Init(apm::FPkgdep& parent);
 // func:apm.FPkgdep..Uninit
-void                 FPkgdep_Uninit(apm::FPkgdep& pkgdep) __attribute__((nothrow));
+void                 FPkgdep_Uninit(apm::FPkgdep& parent) __attribute__((nothrow));
 
 // --- apm.FPkgkey
 // create: apm.FDb.pkgkey (Lary)
@@ -2412,54 +2418,54 @@ void                 pkgkey_CopyOut(apm::FPkgkey &row, dev::Pkgkey &out) __attri
 void                 pkgkey_CopyIn(apm::FPkgkey &row, dev::Pkgkey &in) __attribute__((nothrow));
 
 // func:apm.FPkgkey.package.Get
-algo::strptr         package_Get(apm::FPkgkey& pkgkey) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         package_Get(apm::FPkgkey& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FPkgkey.key.Get
-algo::strptr         key_Get(apm::FPkgkey& pkgkey) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         key_Get(apm::FPkgkey& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:apm.FPkgkey.c_pkgrec.EmptyQ
-inline bool          c_pkgrec_EmptyQ(apm::FPkgkey& pkgkey) __attribute__((nothrow));
+inline bool          c_pkgrec_EmptyQ(apm::FPkgkey& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:apm.FPkgkey.c_pkgrec.Find
-inline apm::FPkgrec* c_pkgrec_Find(apm::FPkgkey& pkgkey, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgrec* c_pkgrec_Find(apm::FPkgkey& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:apm.FPkgkey.c_pkgrec.Getary
-inline algo::aryptr<apm::FPkgrec*> c_pkgrec_Getary(apm::FPkgkey& pkgkey) __attribute__((nothrow));
+inline algo::aryptr<apm::FPkgrec*> c_pkgrec_Getary(apm::FPkgkey& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:apm.FPkgkey.c_pkgrec.Insert
-void                 c_pkgrec_Insert(apm::FPkgkey& pkgkey, apm::FPkgrec& row) __attribute__((nothrow));
+void                 c_pkgrec_Insert(apm::FPkgkey& parent, apm::FPkgrec& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:apm.FPkgkey.c_pkgrec.InsertMaybe
-bool                 c_pkgrec_InsertMaybe(apm::FPkgkey& pkgkey, apm::FPkgrec& row) __attribute__((nothrow));
+bool                 c_pkgrec_InsertMaybe(apm::FPkgkey& parent, apm::FPkgrec& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:apm.FPkgkey.c_pkgrec.N
-inline i64           c_pkgrec_N(const apm::FPkgkey& pkgkey) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_pkgrec_N(const apm::FPkgkey& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:apm.FPkgkey.c_pkgrec.Remove
-void                 c_pkgrec_Remove(apm::FPkgkey& pkgkey, apm::FPkgrec& row) __attribute__((nothrow));
+void                 c_pkgrec_Remove(apm::FPkgkey& parent, apm::FPkgrec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FPkgkey.c_pkgrec.RemoveAll
-inline void          c_pkgrec_RemoveAll(apm::FPkgkey& pkgkey) __attribute__((nothrow));
+inline void          c_pkgrec_RemoveAll(apm::FPkgkey& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:apm.FPkgkey.c_pkgrec.Reserve
-void                 c_pkgrec_Reserve(apm::FPkgkey& pkgkey, u64 n) __attribute__((nothrow));
+void                 c_pkgrec_Reserve(apm::FPkgkey& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:apm.FPkgkey.c_pkgrec.qFind
-inline apm::FPkgrec& c_pkgrec_qFind(apm::FPkgkey& pkgkey, u64 idx) __attribute__((nothrow));
+inline apm::FPkgrec& c_pkgrec_qFind(apm::FPkgkey& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:apm.FPkgkey.c_pkgrec.InAryQ
 inline bool          pkgkey_c_pkgrec_InAryQ(apm::FPkgrec& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:apm.FPkgkey.c_pkgrec.qLast
-inline apm::FPkgrec& c_pkgrec_qLast(apm::FPkgkey& pkgkey) __attribute__((nothrow));
+inline apm::FPkgrec& c_pkgrec_qLast(apm::FPkgkey& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:apm.FPkgkey..Init
-void                 FPkgkey_Init(apm::FPkgkey& pkgkey);
+void                 FPkgkey_Init(apm::FPkgkey& parent);
 // func:apm.FPkgkey.c_pkgrec_curs.Reset
 inline void          pkgkey_c_pkgrec_curs_Reset(pkgkey_c_pkgrec_curs &curs, apm::FPkgkey &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -2472,7 +2478,7 @@ inline void          pkgkey_c_pkgrec_curs_Next(pkgkey_c_pkgrec_curs &curs) __att
 // func:apm.FPkgkey.c_pkgrec_curs.Access
 inline apm::FPkgrec& pkgkey_c_pkgrec_curs_Access(pkgkey_c_pkgrec_curs &curs) __attribute__((nothrow));
 // func:apm.FPkgkey..Uninit
-void                 FPkgkey_Uninit(apm::FPkgkey& pkgkey) __attribute__((nothrow));
+void                 FPkgkey_Uninit(apm::FPkgkey& parent) __attribute__((nothrow));
 
 // --- apm.FPkgrec
 // create: apm.FDb.pkgrec (Tpool)
@@ -2504,9 +2510,9 @@ private:
 };
 // Set all fields to initial values.
 // func:apm.FPkgrec..Init
-inline void          FPkgrec_Init(apm::FPkgrec& pkgrec);
+inline void          FPkgrec_Init(apm::FPkgrec& parent);
 // func:apm.FPkgrec..Uninit
-void                 FPkgrec_Uninit(apm::FPkgrec& pkgrec) __attribute__((nothrow));
+void                 FPkgrec_Uninit(apm::FPkgrec& parent) __attribute__((nothrow));
 
 // --- apm.FRec
 // create: apm.FDb.rec (Tpool)
@@ -2566,101 +2572,101 @@ private:
 };
 // Return true if index is empty
 // func:apm.FRec.c_parent.EmptyQ
-inline bool          c_parent_EmptyQ(apm::FRec& rec) __attribute__((nothrow));
+inline bool          c_parent_EmptyQ(apm::FRec& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:apm.FRec.c_parent.Find
-inline apm::FRec*    c_parent_Find(apm::FRec& rec, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FRec*    c_parent_Find(apm::FRec& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:apm.FRec.c_parent.Getary
-inline algo::aryptr<apm::FRec*> c_parent_Getary(apm::FRec& rec) __attribute__((nothrow));
+inline algo::aryptr<apm::FRec*> c_parent_Getary(apm::FRec& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:apm.FRec.c_parent.Insert
-void                 c_parent_Insert(apm::FRec& rec, apm::FRec& row) __attribute__((nothrow));
+void                 c_parent_Insert(apm::FRec& parent, apm::FRec& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:apm.FRec.c_parent.ScanInsertMaybe
-bool                 c_parent_ScanInsertMaybe(apm::FRec& rec, apm::FRec& row) __attribute__((nothrow));
+bool                 c_parent_ScanInsertMaybe(apm::FRec& parent, apm::FRec& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:apm.FRec.c_parent.N
-inline i64           c_parent_N(const apm::FRec& rec) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_parent_N(const apm::FRec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:apm.FRec.c_parent.Remove
-void                 c_parent_Remove(apm::FRec& rec, apm::FRec& row) __attribute__((nothrow));
+void                 c_parent_Remove(apm::FRec& parent, apm::FRec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FRec.c_parent.RemoveAll
-inline void          c_parent_RemoveAll(apm::FRec& rec) __attribute__((nothrow));
+inline void          c_parent_RemoveAll(apm::FRec& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:apm.FRec.c_parent.Reserve
-void                 c_parent_Reserve(apm::FRec& rec, u64 n) __attribute__((nothrow));
+void                 c_parent_Reserve(apm::FRec& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:apm.FRec.c_parent.qFind
-inline apm::FRec&    c_parent_qFind(apm::FRec& rec, u64 idx) __attribute__((nothrow));
+inline apm::FRec&    c_parent_qFind(apm::FRec& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:apm.FRec.c_parent.qLast
-inline apm::FRec&    c_parent_qLast(apm::FRec& rec) __attribute__((nothrow));
+inline apm::FRec&    c_parent_qLast(apm::FRec& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:apm.FRec.c_child.EmptyQ
-inline bool          c_child_EmptyQ(apm::FRec& rec) __attribute__((nothrow));
+inline bool          c_child_EmptyQ(apm::FRec& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:apm.FRec.c_child.Find
-inline apm::FRec*    c_child_Find(apm::FRec& rec, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FRec*    c_child_Find(apm::FRec& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:apm.FRec.c_child.Getary
-inline algo::aryptr<apm::FRec*> c_child_Getary(apm::FRec& rec) __attribute__((nothrow));
+inline algo::aryptr<apm::FRec*> c_child_Getary(apm::FRec& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:apm.FRec.c_child.Insert
-void                 c_child_Insert(apm::FRec& rec, apm::FRec& row) __attribute__((nothrow));
+void                 c_child_Insert(apm::FRec& parent, apm::FRec& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:apm.FRec.c_child.ScanInsertMaybe
-bool                 c_child_ScanInsertMaybe(apm::FRec& rec, apm::FRec& row) __attribute__((nothrow));
+bool                 c_child_ScanInsertMaybe(apm::FRec& parent, apm::FRec& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:apm.FRec.c_child.N
-inline i64           c_child_N(const apm::FRec& rec) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_child_N(const apm::FRec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:apm.FRec.c_child.Remove
-void                 c_child_Remove(apm::FRec& rec, apm::FRec& row) __attribute__((nothrow));
+void                 c_child_Remove(apm::FRec& parent, apm::FRec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FRec.c_child.RemoveAll
-inline void          c_child_RemoveAll(apm::FRec& rec) __attribute__((nothrow));
+inline void          c_child_RemoveAll(apm::FRec& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:apm.FRec.c_child.Reserve
-void                 c_child_Reserve(apm::FRec& rec, u64 n) __attribute__((nothrow));
+void                 c_child_Reserve(apm::FRec& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:apm.FRec.c_child.qFind
-inline apm::FRec&    c_child_qFind(apm::FRec& rec, u64 idx) __attribute__((nothrow));
+inline apm::FRec&    c_child_qFind(apm::FRec& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:apm.FRec.c_child.qLast
-inline apm::FRec&    c_child_qLast(apm::FRec& rec) __attribute__((nothrow));
+inline apm::FRec&    c_child_qLast(apm::FRec& parent) __attribute__((nothrow));
 
 // Delete all elements in the linked list.
 // func:apm.FRec.zd_rec_pkgrec.Cascdel
-void                 zd_rec_pkgrec_Cascdel(apm::FRec& rec) __attribute__((nothrow));
+void                 zd_rec_pkgrec_Cascdel(apm::FRec& parent) __attribute__((nothrow));
 // Return true if index is empty
 // func:apm.FRec.zd_rec_pkgrec.EmptyQ
-inline bool          zd_rec_pkgrec_EmptyQ(apm::FRec& rec) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_rec_pkgrec_EmptyQ(apm::FRec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:apm.FRec.zd_rec_pkgrec.First
-inline apm::FPkgrec* zd_rec_pkgrec_First(apm::FRec& rec) __attribute__((__warn_unused_result__, nothrow, pure));
+inline apm::FPkgrec* zd_rec_pkgrec_First(apm::FRec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:apm.FRec.zd_rec_pkgrec.InLlistQ
 inline bool          rec_zd_rec_pkgrec_InLlistQ(apm::FPkgrec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:apm.FRec.zd_rec_pkgrec.Insert
-void                 zd_rec_pkgrec_Insert(apm::FRec& rec, apm::FPkgrec& row) __attribute__((nothrow));
+void                 zd_rec_pkgrec_Insert(apm::FRec& parent, apm::FPkgrec& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:apm.FRec.zd_rec_pkgrec.Last
-inline apm::FPkgrec* zd_rec_pkgrec_Last(apm::FRec& rec) __attribute__((__warn_unused_result__, nothrow, pure));
+inline apm::FPkgrec* zd_rec_pkgrec_Last(apm::FRec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:apm.FRec.zd_rec_pkgrec.N
-inline i32           zd_rec_pkgrec_N(const apm::FRec& rec) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_rec_pkgrec_N(const apm::FRec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:apm.FRec.zd_rec_pkgrec.Next
 inline apm::FPkgrec* rec_zd_rec_pkgrec_Next(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
@@ -2669,23 +2675,23 @@ inline apm::FPkgrec* rec_zd_rec_pkgrec_Next(apm::FPkgrec &row) __attribute__((__
 inline apm::FPkgrec* rec_zd_rec_pkgrec_Prev(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FRec.zd_rec_pkgrec.Remove
-void                 zd_rec_pkgrec_Remove(apm::FRec& rec, apm::FPkgrec& row) __attribute__((nothrow));
+void                 zd_rec_pkgrec_Remove(apm::FRec& parent, apm::FPkgrec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FRec.zd_rec_pkgrec.RemoveAll
-void                 zd_rec_pkgrec_RemoveAll(apm::FRec& rec) __attribute__((nothrow));
+void                 zd_rec_pkgrec_RemoveAll(apm::FRec& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:apm.FRec.zd_rec_pkgrec.RemoveFirst
-apm::FPkgrec*        zd_rec_pkgrec_RemoveFirst(apm::FRec& rec) __attribute__((nothrow));
+apm::FPkgrec*        zd_rec_pkgrec_RemoveFirst(apm::FRec& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:apm.FRec.zd_rec_pkgrec.qLast
-inline apm::FPkgrec& zd_rec_pkgrec_qLast(apm::FRec& rec) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgrec& zd_rec_pkgrec_qLast(apm::FRec& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:apm.FRec.zd_rec_pkgrec.InsertBefore
-void                 zd_rec_pkgrec_InsertBefore(apm::FRec& rec, apm::FPkgrec& row, apm::FPkgrec* before) __attribute__((nothrow));
+void                 zd_rec_pkgrec_InsertBefore(apm::FRec& parent, apm::FPkgrec& row, apm::FPkgrec* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:apm.FRec..Init
-inline void          FRec_Init(apm::FRec& rec);
+inline void          FRec_Init(apm::FRec& parent);
 // func:apm.FRec.c_parent_curs.Reset
 inline void          rec_c_parent_curs_Reset(rec_c_parent_curs &curs, apm::FRec &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -2721,7 +2727,7 @@ inline void          rec_zd_rec_pkgrec_curs_Next(rec_zd_rec_pkgrec_curs &curs) _
 // func:apm.FRec.zd_rec_pkgrec_curs.Access
 inline apm::FPkgrec& rec_zd_rec_pkgrec_curs_Access(rec_zd_rec_pkgrec_curs &curs) __attribute__((nothrow));
 // func:apm.FRec..Uninit
-void                 FRec_Uninit(apm::FRec& rec) __attribute__((nothrow));
+void                 FRec_Uninit(apm::FRec& parent) __attribute__((nothrow));
 
 // --- apm.FSsimfile
 // create: apm.FDb.ssimfile (Lary)
@@ -2768,39 +2774,39 @@ void                 ssimfile_CopyOut(apm::FSsimfile &row, dmmeta::Ssimfile &out
 void                 ssimfile_CopyIn(apm::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:apm.FSsimfile.ssimns.Get
-algo::strptr         ssimns_Get(apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(apm::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FSsimfile.ns.Get
-algo::strptr         ns_Get(apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(apm::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FSsimfile.name.Get
-algo::strptr         name_Get(apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(apm::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:apm.FSsimfile.c_ssimsort.InsertMaybe
-inline bool          c_ssimsort_InsertMaybe(apm::FSsimfile& ssimfile, apm::FSsimsort& row) __attribute__((nothrow));
+inline bool          c_ssimsort_InsertMaybe(apm::FSsimfile& parent, apm::FSsimsort& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FSsimfile.c_ssimsort.Remove
-inline void          c_ssimsort_Remove(apm::FSsimfile& ssimfile, apm::FSsimsort& row) __attribute__((nothrow));
+inline void          c_ssimsort_Remove(apm::FSsimfile& parent, apm::FSsimsort& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:apm.FSsimfile.zd_ssimfile_rec.EmptyQ
-inline bool          zd_ssimfile_rec_EmptyQ(apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_ssimfile_rec_EmptyQ(apm::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:apm.FSsimfile.zd_ssimfile_rec.First
-inline apm::FRec*    zd_ssimfile_rec_First(apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline apm::FRec*    zd_ssimfile_rec_First(apm::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:apm.FSsimfile.zd_ssimfile_rec.InLlistQ
 inline bool          ssimfile_zd_ssimfile_rec_InLlistQ(apm::FRec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:apm.FSsimfile.zd_ssimfile_rec.Insert
-void                 zd_ssimfile_rec_Insert(apm::FSsimfile& ssimfile, apm::FRec& row) __attribute__((nothrow));
+void                 zd_ssimfile_rec_Insert(apm::FSsimfile& parent, apm::FRec& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:apm.FSsimfile.zd_ssimfile_rec.Last
-inline apm::FRec*    zd_ssimfile_rec_Last(apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline apm::FRec*    zd_ssimfile_rec_Last(apm::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:apm.FSsimfile.zd_ssimfile_rec.N
-inline i32           zd_ssimfile_rec_N(const apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_ssimfile_rec_N(const apm::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:apm.FSsimfile.zd_ssimfile_rec.Next
 inline apm::FRec*    ssimfile_zd_ssimfile_rec_Next(apm::FRec &row) __attribute__((__warn_unused_result__, nothrow));
@@ -2809,23 +2815,23 @@ inline apm::FRec*    ssimfile_zd_ssimfile_rec_Next(apm::FRec &row) __attribute__
 inline apm::FRec*    ssimfile_zd_ssimfile_rec_Prev(apm::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FSsimfile.zd_ssimfile_rec.Remove
-void                 zd_ssimfile_rec_Remove(apm::FSsimfile& ssimfile, apm::FRec& row) __attribute__((nothrow));
+void                 zd_ssimfile_rec_Remove(apm::FSsimfile& parent, apm::FRec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:apm.FSsimfile.zd_ssimfile_rec.RemoveAll
-void                 zd_ssimfile_rec_RemoveAll(apm::FSsimfile& ssimfile) __attribute__((nothrow));
+void                 zd_ssimfile_rec_RemoveAll(apm::FSsimfile& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:apm.FSsimfile.zd_ssimfile_rec.RemoveFirst
-apm::FRec*           zd_ssimfile_rec_RemoveFirst(apm::FSsimfile& ssimfile) __attribute__((nothrow));
+apm::FRec*           zd_ssimfile_rec_RemoveFirst(apm::FSsimfile& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:apm.FSsimfile.zd_ssimfile_rec.qLast
-inline apm::FRec&    zd_ssimfile_rec_qLast(apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FRec&    zd_ssimfile_rec_qLast(apm::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:apm.FSsimfile.zd_ssimfile_rec.InsertBefore
-void                 zd_ssimfile_rec_InsertBefore(apm::FSsimfile& ssimfile, apm::FRec& row, apm::FRec* before) __attribute__((nothrow));
+void                 zd_ssimfile_rec_InsertBefore(apm::FSsimfile& parent, apm::FRec& row, apm::FRec* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:apm.FSsimfile..Init
-inline void          FSsimfile_Init(apm::FSsimfile& ssimfile);
+inline void          FSsimfile_Init(apm::FSsimfile& parent);
 // cursor points to valid item
 // func:apm.FSsimfile.zd_ssimfile_rec_curs.Reset
 inline void          ssimfile_zd_ssimfile_rec_curs_Reset(ssimfile_zd_ssimfile_rec_curs &curs, apm::FSsimfile &parent) __attribute__((nothrow));
@@ -2839,7 +2845,7 @@ inline void          ssimfile_zd_ssimfile_rec_curs_Next(ssimfile_zd_ssimfile_rec
 // func:apm.FSsimfile.zd_ssimfile_rec_curs.Access
 inline apm::FRec&    ssimfile_zd_ssimfile_rec_curs_Access(ssimfile_zd_ssimfile_rec_curs &curs) __attribute__((nothrow));
 // func:apm.FSsimfile..Uninit
-void                 FSsimfile_Uninit(apm::FSsimfile& ssimfile) __attribute__((nothrow));
+void                 FSsimfile_Uninit(apm::FSsimfile& parent) __attribute__((nothrow));
 
 // --- apm.FSsimreq
 // create: apm.FDb.ssimreq (Lary)
@@ -2885,25 +2891,25 @@ void                 ssimreq_CopyOut(apm::FSsimreq &row, dmmeta::Ssimreq &out) _
 void                 ssimreq_CopyIn(apm::FSsimreq &row, dmmeta::Ssimreq &in) __attribute__((nothrow));
 
 // func:apm.FSsimreq.parent_field.Get
-algo::strptr         parent_field_Get(apm::FSsimreq& ssimreq) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_field_Get(apm::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FSsimreq.parent_ctype.Get
-algo::strptr         parent_ctype_Get(apm::FSsimreq& ssimreq) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_ctype_Get(apm::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FSsimreq.value.Get
-algo::strptr         value_Get(apm::FSsimreq& ssimreq) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         value_Get(apm::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FSsimreq.child_ssimfile.Get
-algo::strptr         child_ssimfile_Get(apm::FSsimreq& ssimreq) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         child_ssimfile_Get(apm::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:apm.FSsimreq.child_key.Get
-algo::strptr         child_key_Get(apm::FSsimreq& ssimreq) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         child_key_Get(apm::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:apm.FSsimreq..Init
-void                 FSsimreq_Init(apm::FSsimreq& ssimreq);
+void                 FSsimreq_Init(apm::FSsimreq& parent);
 // func:apm.FSsimreq..Uninit
-void                 FSsimreq_Uninit(apm::FSsimreq& ssimreq) __attribute__((nothrow));
+void                 FSsimreq_Uninit(apm::FSsimreq& parent) __attribute__((nothrow));
 
 // --- apm.FSsimsort
 // create: apm.FDb.ssimsort (Lary)
@@ -2939,9 +2945,9 @@ void                 ssimsort_CopyIn(apm::FSsimsort &row, dmmeta::Ssimsort &in) 
 
 // Set all fields to initial values.
 // func:apm.FSsimsort..Init
-inline void          FSsimsort_Init(apm::FSsimsort& ssimsort);
+inline void          FSsimsort_Init(apm::FSsimsort& parent);
 // func:apm.FSsimsort..Uninit
-void                 FSsimsort_Uninit(apm::FSsimsort& ssimsort) __attribute__((nothrow));
+void                 FSsimsort_Uninit(apm::FSsimsort& parent) __attribute__((nothrow));
 
 // --- apm.FSubstr
 // create: apm.FDb.substr (Lary)
@@ -2977,9 +2983,9 @@ void                 substr_CopyIn(apm::FSubstr &row, dmmeta::Substr &in) __attr
 
 // Set all fields to initial values.
 // func:apm.FSubstr..Init
-inline void          FSubstr_Init(apm::FSubstr& substr);
+inline void          FSubstr_Init(apm::FSubstr& parent);
 // func:apm.FSubstr..Uninit
-void                 FSubstr_Uninit(apm::FSubstr& substr) __attribute__((nothrow));
+void                 FSubstr_Uninit(apm::FSubstr& parent) __attribute__((nothrow));
 
 // --- apm.FieldId
 #pragma pack(push,1)

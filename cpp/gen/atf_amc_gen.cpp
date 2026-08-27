@@ -45,9 +45,9 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_exec::FDb   lib_exec::_db;    // dependency found via dev.targdep
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 atf_amc::FDb    atf_amc::_db;     // dependency found via dev.targdep
 
 atf_amc::cascdel_bh_child_bheap_curs::~cascdel_bh_child_bheap_curs() {
@@ -89,22 +89,30 @@ namespace atf_amc { // gen:ns_print_proto
     // Internal function to scan for a message
     //
     // func:atf_amc.Bytebuf.in.ScanMsg
-    static void          in_ScanMsg(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
+    static void          in_ScanMsg(atf_amc::Bytebuf& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Bytebuf.in.Shift
-    static void          in_Shift(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
+    static void          in_Shift(atf_amc::Bytebuf& parent) __attribute__((nothrow));
     // Internal function to scan for a message
     //
     // func:atf_amc.BytebufDyn.in.ScanMsg
-    static void          in_ScanMsg(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
+    static void          in_ScanMsg(atf_amc::BytebufDyn& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.BytebufDyn.in.Shift
-    static void          in_Shift(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
+    static void          in_Shift(atf_amc::BytebufDyn& parent) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
     // func:atf_amc.Cstr.val.Nextchar
     inline static int    val_Nextchar(const atf_amc::Cstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    // Internal function to scan for a message
+    //
+    // func:atf_amc.Dgrambuf.in.ScanMsg
+    static void          in_ScanMsg(atf_amc::Dgrambuf& parent) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Dgrambuf.in.Shift
+    static void          in_Shift(atf_amc::Dgrambuf& parent) __attribute__((nothrow));
     // func:atf_amc.Disp2Filter.strval.ReadStrptrMaybe
     inline static bool   strval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.Disp2Filter.strval_regx.ReadStrptrMaybe
@@ -148,15 +156,15 @@ namespace atf_amc { // gen:ns_print_proto
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:atf_amc.FCascdel.bh_child_bheap.Downheap
-    static int           bh_child_bheap_Downheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
+    static int           bh_child_bheap_Downheap(atf_amc::FCascdel& parent, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
     // func:atf_amc.FCascdel.bh_child_bheap.Upheap
-    static int           bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
+    static int           bh_child_bheap_Upheap(atf_amc::FCascdel& parent, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
     // func:atf_amc.FCascdel.bh_child_bheap.ElemLt
-    inline static bool   bh_child_bheap_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
+    inline static bool   bh_child_bheap_ElemLt(atf_amc::FCascdel& parent, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
     // func:atf_amc.FCascdel.bh_child_bheap.ElemLtval
-    inline static bool   bh_child_bheap_ElemLtval(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, const u32 &b) __attribute__((nothrow));
+    inline static bool   bh_child_bheap_ElemLtval(atf_amc::FCascdel& parent, atf_amc::FCascdel &a, const u32 &b) __attribute__((nothrow));
     // func:atf_amc.FCascdel.bh_child_bheap_curs.Add
     static void          cascdel_bh_child_bheap_curs_Add(cascdel_bh_child_bheap_curs &curs, atf_amc::FCascdel& row);
     // Returns the child that has greater height.
@@ -166,20 +174,20 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FCascdel.tr_child_atree.Disconnect
     static void          tr_child_atree_Disconnect(atf_amc::FCascdel& node) __attribute__((nothrow));
     // func:atf_amc.FCascdel.tr_child_atree.ElemLt
-    inline static bool   tr_child_atree_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
+    inline static bool   tr_child_atree_ElemLt(atf_amc::FCascdel& parent, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
     // func:atf_amc.FCascdel.tr_child_atree.UpdateDepth
     static void          cascdel_tr_child_atree_updateDepth(atf_amc::FCascdel& node) __attribute__((nothrow));
     // rotates the tree in from->to direction
     // func:atf_amc.FCascdel.tr_child_atree.Turn
     static void          tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCascdel& to) __attribute__((nothrow));
     // func:atf_amc.FCascdel.tr_child_atree.Connect
-    inline static void   tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) __attribute__((nothrow));
+    inline static void   tr_child_atree_Connect(atf_amc::FCascdel* up, atf_amc::FCascdel* child, bool left) __attribute__((nothrow));
     // func:atf_amc.FCondtest.ready.ReadStrptrMaybe
-    inline static bool   ready_ReadStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   ready_ReadStrptrMaybe(atf_amc::FCondtest& parent, algo::strptr in_str) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.FCondtest.out_buf.Shift
-    static void          out_buf_Shift(atf_amc::FCondtest& condtest) __attribute__((nothrow));
+    static void          out_buf_Shift(atf_amc::FCondtest& parent) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:atf_amc.FDb.bh_typec.Downheap
@@ -223,7 +231,7 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FDb.tr_avl.Turn
     static void          tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) __attribute__((nothrow));
     // func:atf_amc.FDb.tr_avl.Connect
-    inline static void   tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) __attribute__((nothrow));
+    inline static void   tr_avl_Connect(atf_amc::FAvl* up, atf_amc::FAvl* child, bool left) __attribute__((nothrow));
     // func:atf_amc.FDb.listtype.LoadStatic
     static void          listtype_LoadStatic() __attribute__((nothrow));
     // Find new location for ROW starting at IDX
@@ -291,13 +299,13 @@ namespace atf_amc { // gen:ns_print_proto
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:atf_amc.FTypeA.bh_typeb.Downheap
-    static int           bh_typeb_Downheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
+    static int           bh_typeb_Downheap(atf_amc::FTypeA& parent, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
     // func:atf_amc.FTypeA.bh_typeb.Upheap
-    static int           bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
+    static int           bh_typeb_Upheap(atf_amc::FTypeA& parent, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
     // func:atf_amc.FTypeA.bh_typeb.ElemLt
-    inline static bool   bh_typeb_ElemLt(atf_amc::FTypeA& typea, atf_amc::FTypeB &a, atf_amc::FTypeB &b) __attribute__((nothrow));
+    inline static bool   bh_typeb_ElemLt(atf_amc::FTypeA& parent, atf_amc::FTypeB &a, atf_amc::FTypeB &b) __attribute__((nothrow));
     // func:atf_amc.FTypeA.bh_typeb_curs.Add
     static void          typea_bh_typeb_curs_Add(typea_bh_typeb_curs &curs, atf_amc::FTypeB& row);
     // Swap values elem_a and elem_b
@@ -363,47 +371,47 @@ namespace atf_amc { // gen:ns_print_proto
     // Internal function to scan for a message
     //
     // func:atf_amc.Linebuf.in.ScanMsg
-    static void          in_ScanMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+    static void          in_ScanMsg(atf_amc::Linebuf& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Linebuf.in.Shift
-    static void          in_Shift(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+    static void          in_Shift(atf_amc::Linebuf& parent) __attribute__((nothrow));
     // Internal function to scan for a message
     //
     // func:atf_amc.Lpoolbuf.in.ScanMsg
-    static void          in_ScanMsg(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((nothrow));
+    static void          in_ScanMsg(atf_amc::Lpoolbuf& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Lpoolbuf.in.Shift
-    static void          in_Shift(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((nothrow));
+    static void          in_Shift(atf_amc::Lpoolbuf& parent) __attribute__((nothrow));
     // Internal function to scan for a message
     //
     // func:atf_amc.Msgbuf.in_buf.ScanMsg
-    static void          in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    static void          in_buf_ScanMsg(atf_amc::Msgbuf& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Msgbuf.in_buf.Shift
-    static void          in_buf_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    static void          in_buf_Shift(atf_amc::Msgbuf& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Msgbuf.in_custom.Shift
-    static void          in_custom_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    static void          in_custom_Shift(atf_amc::Msgbuf& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Msgbuf.out_extra.Shift
-    static void          out_extra_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    static void          out_extra_Shift(atf_amc::Msgbuf& parent) __attribute__((nothrow));
     // Internal function to scan for a message
     //
     // func:atf_amc.Msgbuf.in_extra.ScanMsg
-    static void          in_extra_ScanMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    static void          in_extra_ScanMsg(atf_amc::Msgbuf& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Msgbuf.in_extra.Shift
-    static void          in_extra_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    static void          in_extra_Shift(atf_amc::Msgbuf& parent) __attribute__((nothrow));
     // func:atf_amc.NetEntry.id.ReadStrptrMaybe
-    inline static bool   id_ReadStrptrMaybe(atf_amc::NetEntry& entry, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   id_ReadStrptrMaybe(atf_amc::NetEntry& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.NetEntry.val.ReadStrptrMaybe
-    inline static bool   val_ReadStrptrMaybe(atf_amc::NetEntry& entry, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   val_ReadStrptrMaybe(atf_amc::NetEntry& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.NetFrame.word.ReadStrptrMaybe
     inline static bool   word_ReadStrptrMaybe(atf_amc::NetFrame& parent, algo::strptr in_str) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
@@ -587,7 +595,7 @@ namespace atf_amc { // gen:ns_print_proto
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Sslbuf.out.Shift
-    static void          out_Shift(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
+    static void          out_Shift(atf_amc::Sslbuf& parent) __attribute__((nothrow));
     // func:atf_amc.TypeBE64.value.ReadStrptrMaybe
     inline static bool   value_ReadStrptrMaybe(atf_amc::TypeBE64& parent, algo::strptr in_str) __attribute__((nothrow));
     // Swap values elem_a and elem_b
@@ -1001,15 +1009,15 @@ void atf_amc::BlkKey_Print(atf_amc::BlkKey row, algo::cstring& str) {
 // --- atf_amc.Bytebuf.in.BeginAlloc
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // No reallocation is performed. If not possible, return NULL.
-void* atf_amc::in_BeginAlloc(atf_amc::Bytebuf &bytebuf, i32 in_n) {
+void* atf_amc::in_BeginAlloc(atf_amc::Bytebuf &parent, i32 in_n) {
     void *ret = NULL;
-    int max = in_Max(bytebuf);
-    if (bytebuf.in_end + in_n > max) {
-        in_Shift(bytebuf);
+    int max = in_Max(parent);
+    if (parent.in_end + in_n > max) {
+        in_Shift(parent);
     }
-    if (bytebuf.in_end + in_n <= max) {
-        ret = (u8*)bytebuf.in_elems + bytebuf.in_end;
-        bytebuf.in_end += in_n;
+    if (parent.in_end + in_n <= max) {
+        ret = (u8*)parent.in_elems + parent.in_end;
+        parent.in_end += in_n;
     }
     return ret;
 }
@@ -1017,11 +1025,11 @@ void* atf_amc::in_BeginAlloc(atf_amc::Bytebuf &bytebuf, i32 in_n) {
 // --- atf_amc.Bytebuf.in.BeginAllocReserve
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // Buffer is reallocated as necessary; function always succeeds.
-void* atf_amc::in_BeginAllocReserve(atf_amc::Bytebuf &bytebuf, i32 in_n) {
-    if (bytebuf.in_end - bytebuf.in_start + in_n > in_Max(bytebuf)) {
-        in_Realloc(bytebuf, bytebuf.in_max + i32_Max(bytebuf.in_max, in_n));
+void* atf_amc::in_BeginAllocReserve(atf_amc::Bytebuf &parent, i32 in_n) {
+    if (parent.in_end - parent.in_start + in_n > in_Max(parent)) {
+        in_Realloc(parent, parent.in_max + i32_Max(parent.in_max, in_n));
     }
-    return in_BeginAlloc(bytebuf, in_n);
+    return in_BeginAlloc(parent, in_n);
 }
 
 // --- atf_amc.Bytebuf.in.GetMsg
@@ -1031,15 +1039,15 @@ void* atf_amc::in_BeginAllocReserve(atf_amc::Bytebuf &bytebuf, i32 in_n) {
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is any number of bytes > 0
 // 
-algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) {
+algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& parent) {
     algo::aryptr<char> ret;
-    if (!bytebuf.in_msgvalid) {
-        in_ScanMsg(bytebuf);
+    if (!parent.in_msgvalid) {
+        in_ScanMsg(parent);
     }
-    char *hdr = (char*)(bytebuf.in_elems + bytebuf.in_start);
-    if (bytebuf.in_msgvalid) {
+    char *hdr = (char*)(parent.in_elems + parent.in_start);
+    if (parent.in_msgvalid) {
         ret.elems = hdr;
-        ret.n_elems = bytebuf.in_msglen;
+        ret.n_elems = parent.in_msglen;
     }
     return ret;
 }
@@ -1049,75 +1057,75 @@ algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::in_Realloc(atf_amc::Bytebuf& bytebuf, int new_max) {
-    new_max = i32_Max(new_max, bytebuf.in_end);
-    u8 *new_mem = bytebuf.in_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(bytebuf.in_elems, bytebuf.in_max, new_max)
+void atf_amc::in_Realloc(atf_amc::Bytebuf& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_end);
+    u8 *new_mem = parent.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_elems, parent.in_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Bytebuf.in  comment:'out of memory'");
     }
-    bytebuf.in_elems = new_mem;
-    bytebuf.in_max = new_max;
+    parent.in_elems = new_mem;
+    parent.in_max = new_max;
 }
 
 // --- atf_amc.Bytebuf.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_RemoveAll(atf_amc::Bytebuf& bytebuf) {
-    bytebuf.in_start    = 0;
-    bytebuf.in_end      = 0;
-    bytebuf.in_msgvalid = false;
+void atf_amc::in_RemoveAll(atf_amc::Bytebuf& parent) {
+    parent.in_start    = 0;
+    parent.in_end      = 0;
+    parent.in_msgvalid = false;
 }
 
 // --- atf_amc.Bytebuf.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_ScanMsg(atf_amc::Bytebuf& bytebuf) {
-    i32 avail = in_N(bytebuf);
+static void atf_amc::in_ScanMsg(atf_amc::Bytebuf& parent) {
+    i32 avail = in_N(parent);
     i32 msglen;
     bool found = false;
     found = avail>0;
     msglen = avail;
-    bytebuf.in_msglen = msglen;
-    bytebuf.in_msgvalid = found;
+    parent.in_msglen = msglen;
+    parent.in_msgvalid = found;
 }
 
 // --- atf_amc.Bytebuf.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_Shift(atf_amc::Bytebuf& bytebuf) {
-    i32 start = bytebuf.in_start;
-    i32 bytes_n = bytebuf.in_end - start;
+static void atf_amc::in_Shift(atf_amc::Bytebuf& parent) {
+    i32 start = parent.in_start;
+    i32 bytes_n = parent.in_end - start;
     if (bytes_n > 0) {
-        memmove(bytebuf.in_elems, bytebuf.in_elems + start, bytes_n);
+        memmove(parent.in_elems, parent.in_elems + start, bytes_n);
     }
-    bytebuf.in_end = bytes_n;
-    bytebuf.in_start = 0;
+    parent.in_end = bytes_n;
+    parent.in_start = 0;
 }
 
 // --- atf_amc.Bytebuf.in.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) {
-    int avail = bytebuf.in_end - bytebuf.in_start;
+void atf_amc::in_SkipBytes(atf_amc::Bytebuf& parent, int n) {
+    int avail = parent.in_end - parent.in_start;
     n = i32_Min(n,avail);
-    bytebuf.in_start += n;
-    bytebuf.in_msgvalid = false;
+    parent.in_start += n;
+    parent.in_msgvalid = false;
 }
 
 // --- atf_amc.Bytebuf.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_SkipMsg(atf_amc::Bytebuf& bytebuf) {
-    if (bytebuf.in_msgvalid) {
-        int skip = bytebuf.in_msglen;
-        i32 start = bytebuf.in_start;
+void atf_amc::in_SkipMsg(atf_amc::Bytebuf& parent) {
+    if (parent.in_msgvalid) {
+        int skip = parent.in_msglen;
+        i32 start = parent.in_start;
         start += skip;
-        bytebuf.in_start = start;
-        bytebuf.in_msgvalid = false;
-        bytebuf.in_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_start = start;
+        parent.in_msgvalid = false;
+        parent.in_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -1127,19 +1135,19 @@ void atf_amc::in_SkipMsg(atf_amc::Bytebuf& bytebuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_WriteAll(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) {
-    int max = in_Max(bytebuf);
+bool atf_amc::in_WriteAll(atf_amc::Bytebuf& parent, u8 *in, i32 in_n) {
+    int max = in_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (bytebuf.in_end + in_n > max) {
-        in_Shift(bytebuf);
+    if (parent.in_end + in_n > max) {
+        in_Shift(parent);
     }
     // now try to write the message.
-    i32 end = bytebuf.in_end;
+    i32 end = parent.in_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(bytebuf.in_elems + end, in, in_n);
-            bytebuf.in_end = end + in_n;
+            memcpy(parent.in_elems + end, in, in_n);
+            parent.in_end = end + in_n;
         }
     }
     return fits;
@@ -1148,39 +1156,38 @@ bool atf_amc::in_WriteAll(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) {
 // --- atf_amc.Bytebuf.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::in_WriteReserve(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) {
-    if (bytebuf.in_end - bytebuf.in_start + in_n > in_Max(bytebuf)) {
-        in_Realloc(bytebuf, bytebuf.in_max + i32_Max(bytebuf.in_max, in_n));
+void atf_amc::in_WriteReserve(atf_amc::Bytebuf& parent, u8 *in, i32 in_n) {
+    if (parent.in_end - parent.in_start + in_n > in_Max(parent)) {
+        in_Realloc(parent, parent.in_max + i32_Max(parent.in_max, in_n));
     }
-    if (!in_WriteAll(bytebuf, in, in_n)) {
+    if (!in_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in: out of memory");
     }
 }
 
 // --- atf_amc.Bytebuf..Init
 // Set all fields to initial values.
-void atf_amc::Bytebuf_Init(atf_amc::Bytebuf& bytebuf) {
-    bytebuf.in_elems = NULL; // in: initialize
-    bytebuf.in_max = 0; // in: initialize
-    bytebuf.in_end = 0; // in: initialize
-    bytebuf.in_start = 0; // in: initialize
-    bytebuf.in_eof = false; // in: initialize
-    bytebuf.in_msgvalid = false; // in: initialize
-    bytebuf.in_msglen = 0; // in: initialize
-    bytebuf.in_epoll_enable = true; // in: initialize
-    in_Realloc(bytebuf, 64);
+void atf_amc::Bytebuf_Init(atf_amc::Bytebuf& parent) {
+    parent.in_elems = NULL; // in: initialize
+    parent.in_max = 0; // in: initialize
+    parent.in_end = 0; // in: initialize
+    parent.in_start = 0; // in: initialize
+    parent.in_eof = false; // in: initialize
+    parent.in_msgvalid = false; // in: initialize
+    parent.in_msglen = 0; // in: initialize
+    parent.in_epoll_enable = true; // in: initialize
+    in_Realloc(parent, 64);
 }
 
 // --- atf_amc.Bytebuf..Uninit
-void atf_amc::Bytebuf_Uninit(atf_amc::Bytebuf& bytebuf) {
-    atf_amc::Bytebuf &row = bytebuf; (void)row;
+void atf_amc::Bytebuf_Uninit(atf_amc::Bytebuf& parent) {
 
     // atf_amc.Bytebuf.in.Uninit (Fbuf)  //Streaming buffer
-    if (bytebuf.in_elems) {
-        algo_lib::malloc_FreeMem(bytebuf.in_elems, bytebuf.in_max); // (atf_amc.Bytebuf.in) in_max is the byte size Realloc allocated
+    if (parent.in_elems) {
+        algo_lib::malloc_FreeMem(parent.in_elems, parent.in_max); // (atf_amc.Bytebuf.in) in_max is the byte size Realloc allocated
     }
-    bytebuf.in_elems = NULL;
-    bytebuf.in_max = 0;
+    parent.in_elems = NULL;
+    parent.in_max = 0;
 }
 
 // --- atf_amc.Bytebuf..Print
@@ -1194,15 +1201,15 @@ void atf_amc::Bytebuf_Print(atf_amc::Bytebuf& row, algo::cstring& str) {
 // --- atf_amc.BytebufDyn.in.BeginAlloc
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // No reallocation is performed. If not possible, return NULL.
-void* atf_amc::in_BeginAlloc(atf_amc::BytebufDyn &bytebuf_dyn, i32 in_n) {
+void* atf_amc::in_BeginAlloc(atf_amc::BytebufDyn &parent, i32 in_n) {
     void *ret = NULL;
-    int max = in_Max(bytebuf_dyn);
-    if (bytebuf_dyn.in_end + in_n > max) {
-        in_Shift(bytebuf_dyn);
+    int max = in_Max(parent);
+    if (parent.in_end + in_n > max) {
+        in_Shift(parent);
     }
-    if (bytebuf_dyn.in_end + in_n <= max) {
-        ret = (u8*)bytebuf_dyn.in_elems + bytebuf_dyn.in_end;
-        bytebuf_dyn.in_end += in_n;
+    if (parent.in_end + in_n <= max) {
+        ret = (u8*)parent.in_elems + parent.in_end;
+        parent.in_end += in_n;
     }
     return ret;
 }
@@ -1210,11 +1217,11 @@ void* atf_amc::in_BeginAlloc(atf_amc::BytebufDyn &bytebuf_dyn, i32 in_n) {
 // --- atf_amc.BytebufDyn.in.BeginAllocReserve
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // Buffer is reallocated as necessary; function always succeeds.
-void* atf_amc::in_BeginAllocReserve(atf_amc::BytebufDyn &bytebuf_dyn, i32 in_n) {
-    if (bytebuf_dyn.in_end - bytebuf_dyn.in_start + in_n > in_Max(bytebuf_dyn)) {
-        in_Realloc(bytebuf_dyn, bytebuf_dyn.in_max + i32_Max(bytebuf_dyn.in_max, in_n));
+void* atf_amc::in_BeginAllocReserve(atf_amc::BytebufDyn &parent, i32 in_n) {
+    if (parent.in_end - parent.in_start + in_n > in_Max(parent)) {
+        in_Realloc(parent, parent.in_max + i32_Max(parent.in_max, in_n));
     }
-    return in_BeginAlloc(bytebuf_dyn, in_n);
+    return in_BeginAlloc(parent, in_n);
 }
 
 // --- atf_amc.BytebufDyn.in.GetMsg
@@ -1224,15 +1231,15 @@ void* atf_amc::in_BeginAllocReserve(atf_amc::BytebufDyn &bytebuf_dyn, i32 in_n) 
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is any number of bytes > 0
 // 
-algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
+algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::BytebufDyn& parent) {
     algo::aryptr<char> ret;
-    if (!bytebuf_dyn.in_msgvalid) {
-        in_ScanMsg(bytebuf_dyn);
+    if (!parent.in_msgvalid) {
+        in_ScanMsg(parent);
     }
-    char *hdr = (char*)(bytebuf_dyn.in_elems + bytebuf_dyn.in_start);
-    if (bytebuf_dyn.in_msgvalid) {
+    char *hdr = (char*)(parent.in_elems + parent.in_start);
+    if (parent.in_msgvalid) {
         ret.elems = hdr;
-        ret.n_elems = bytebuf_dyn.in_msglen;
+        ret.n_elems = parent.in_msglen;
     }
     return ret;
 }
@@ -1242,75 +1249,75 @@ algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::in_Realloc(atf_amc::BytebufDyn& bytebuf_dyn, int new_max) {
-    new_max = i32_Max(new_max, bytebuf_dyn.in_end);
-    u8 *new_mem = bytebuf_dyn.in_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(bytebuf_dyn.in_elems, bytebuf_dyn.in_max, new_max)
+void atf_amc::in_Realloc(atf_amc::BytebufDyn& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_end);
+    u8 *new_mem = parent.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_elems, parent.in_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.BytebufDyn.in  comment:'out of memory'");
     }
-    bytebuf_dyn.in_elems = new_mem;
-    bytebuf_dyn.in_max = new_max;
+    parent.in_elems = new_mem;
+    parent.in_max = new_max;
 }
 
 // --- atf_amc.BytebufDyn.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_RemoveAll(atf_amc::BytebufDyn& bytebuf_dyn) {
-    bytebuf_dyn.in_start    = 0;
-    bytebuf_dyn.in_end      = 0;
-    bytebuf_dyn.in_msgvalid = false;
+void atf_amc::in_RemoveAll(atf_amc::BytebufDyn& parent) {
+    parent.in_start    = 0;
+    parent.in_end      = 0;
+    parent.in_msgvalid = false;
 }
 
 // --- atf_amc.BytebufDyn.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_ScanMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
-    i32 avail = in_N(bytebuf_dyn);
+static void atf_amc::in_ScanMsg(atf_amc::BytebufDyn& parent) {
+    i32 avail = in_N(parent);
     i32 msglen;
     bool found = false;
     found = avail>0;
     msglen = avail;
-    bytebuf_dyn.in_msglen = msglen;
-    bytebuf_dyn.in_msgvalid = found;
+    parent.in_msglen = msglen;
+    parent.in_msgvalid = found;
 }
 
 // --- atf_amc.BytebufDyn.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_Shift(atf_amc::BytebufDyn& bytebuf_dyn) {
-    i32 start = bytebuf_dyn.in_start;
-    i32 bytes_n = bytebuf_dyn.in_end - start;
+static void atf_amc::in_Shift(atf_amc::BytebufDyn& parent) {
+    i32 start = parent.in_start;
+    i32 bytes_n = parent.in_end - start;
     if (bytes_n > 0) {
-        memmove(bytebuf_dyn.in_elems, bytebuf_dyn.in_elems + start, bytes_n);
+        memmove(parent.in_elems, parent.in_elems + start, bytes_n);
     }
-    bytebuf_dyn.in_end = bytes_n;
-    bytebuf_dyn.in_start = 0;
+    parent.in_end = bytes_n;
+    parent.in_start = 0;
 }
 
 // --- atf_amc.BytebufDyn.in.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::in_SkipBytes(atf_amc::BytebufDyn& bytebuf_dyn, int n) {
-    int avail = bytebuf_dyn.in_end - bytebuf_dyn.in_start;
+void atf_amc::in_SkipBytes(atf_amc::BytebufDyn& parent, int n) {
+    int avail = parent.in_end - parent.in_start;
     n = i32_Min(n,avail);
-    bytebuf_dyn.in_start += n;
-    bytebuf_dyn.in_msgvalid = false;
+    parent.in_start += n;
+    parent.in_msgvalid = false;
 }
 
 // --- atf_amc.BytebufDyn.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_SkipMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
-    if (bytebuf_dyn.in_msgvalid) {
-        int skip = bytebuf_dyn.in_msglen;
-        i32 start = bytebuf_dyn.in_start;
+void atf_amc::in_SkipMsg(atf_amc::BytebufDyn& parent) {
+    if (parent.in_msgvalid) {
+        int skip = parent.in_msglen;
+        i32 start = parent.in_start;
         start += skip;
-        bytebuf_dyn.in_start = start;
-        bytebuf_dyn.in_msgvalid = false;
-        bytebuf_dyn.in_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_start = start;
+        parent.in_msgvalid = false;
+        parent.in_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -1320,19 +1327,19 @@ void atf_amc::in_SkipMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_WriteAll(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) {
-    int max = in_Max(bytebuf_dyn);
+bool atf_amc::in_WriteAll(atf_amc::BytebufDyn& parent, u8 *in, i32 in_n) {
+    int max = in_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (bytebuf_dyn.in_end + in_n > max) {
-        in_Shift(bytebuf_dyn);
+    if (parent.in_end + in_n > max) {
+        in_Shift(parent);
     }
     // now try to write the message.
-    i32 end = bytebuf_dyn.in_end;
+    i32 end = parent.in_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(bytebuf_dyn.in_elems + end, in, in_n);
-            bytebuf_dyn.in_end = end + in_n;
+            memcpy(parent.in_elems + end, in, in_n);
+            parent.in_end = end + in_n;
         }
     }
     return fits;
@@ -1341,39 +1348,38 @@ bool atf_amc::in_WriteAll(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) {
 // --- atf_amc.BytebufDyn.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::in_WriteReserve(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) {
-    if (bytebuf_dyn.in_end - bytebuf_dyn.in_start + in_n > in_Max(bytebuf_dyn)) {
-        in_Realloc(bytebuf_dyn, bytebuf_dyn.in_max + i32_Max(bytebuf_dyn.in_max, in_n));
+void atf_amc::in_WriteReserve(atf_amc::BytebufDyn& parent, u8 *in, i32 in_n) {
+    if (parent.in_end - parent.in_start + in_n > in_Max(parent)) {
+        in_Realloc(parent, parent.in_max + i32_Max(parent.in_max, in_n));
     }
-    if (!in_WriteAll(bytebuf_dyn, in, in_n)) {
+    if (!in_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in: out of memory");
     }
 }
 
 // --- atf_amc.BytebufDyn..Init
 // Set all fields to initial values.
-void atf_amc::BytebufDyn_Init(atf_amc::BytebufDyn& bytebuf_dyn) {
-    bytebuf_dyn.in_elems = NULL; // in: initialize
-    bytebuf_dyn.in_max = 0; // in: initialize
-    bytebuf_dyn.in_end = 0; // in: initialize
-    bytebuf_dyn.in_start = 0; // in: initialize
-    bytebuf_dyn.in_eof = false; // in: initialize
-    bytebuf_dyn.in_msgvalid = false; // in: initialize
-    bytebuf_dyn.in_msglen = 0; // in: initialize
-    bytebuf_dyn.in_epoll_enable = true; // in: initialize
-    in_Realloc(bytebuf_dyn, 0);
+void atf_amc::BytebufDyn_Init(atf_amc::BytebufDyn& parent) {
+    parent.in_elems = NULL; // in: initialize
+    parent.in_max = 0; // in: initialize
+    parent.in_end = 0; // in: initialize
+    parent.in_start = 0; // in: initialize
+    parent.in_eof = false; // in: initialize
+    parent.in_msgvalid = false; // in: initialize
+    parent.in_msglen = 0; // in: initialize
+    parent.in_epoll_enable = true; // in: initialize
+    in_Realloc(parent, 0);
 }
 
 // --- atf_amc.BytebufDyn..Uninit
-void atf_amc::BytebufDyn_Uninit(atf_amc::BytebufDyn& bytebuf_dyn) {
-    atf_amc::BytebufDyn &row = bytebuf_dyn; (void)row;
+void atf_amc::BytebufDyn_Uninit(atf_amc::BytebufDyn& parent) {
 
     // atf_amc.BytebufDyn.in.Uninit (Fbuf)  //Streaming buffer
-    if (bytebuf_dyn.in_elems) {
-        algo_lib::malloc_FreeMem(bytebuf_dyn.in_elems, bytebuf_dyn.in_max); // (atf_amc.BytebufDyn.in) in_max is the byte size Realloc allocated
+    if (parent.in_elems) {
+        algo_lib::malloc_FreeMem(parent.in_elems, parent.in_max); // (atf_amc.BytebufDyn.in) in_max is the byte size Realloc allocated
     }
-    bytebuf_dyn.in_elems = NULL;
-    bytebuf_dyn.in_max = 0;
+    parent.in_elems = NULL;
+    parent.in_max = 0;
 }
 
 // --- atf_amc.BytebufDyn..Print
@@ -1602,10 +1608,377 @@ void atf_amc::u32val_Delete(atf_amc::DelType1& parent) {
 
 // --- atf_amc.DelType1..Uninit
 void atf_amc::DelType1_Uninit(atf_amc::DelType1& parent) {
-    atf_amc::DelType1 &row = parent; (void)row;
 
     // atf_amc.DelType1.u32val.Uninit (Delptr)  //
     u32val_Delete(parent);
+}
+
+// --- atf_amc.MsgType.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::value_ToCstr(const atf_amc::MsgType& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case atf_amc_MsgType_atf_amc_OptBMsg: ret = "atf_amc.OptBMsg";  break;
+        case atf_amc_MsgType_atf_amc_Seqmsg: ret = "atf_amc.Seqmsg";  break;
+        case atf_amc_MsgType_atf_amc_Text  : ret = "atf_amc.Text";  break;
+        case atf_amc_MsgType_atf_amc_Varlen2Msg: ret = "atf_amc.Varlen2Msg";  break;
+        case atf_amc_MsgType_atf_amc_Varlen2aMsg: ret = "atf_amc.Varlen2aMsg";  break;
+        case atf_amc_MsgType_atf_amc_Varlen2mMsg: ret = "atf_amc.Varlen2mMsg";  break;
+        case atf_amc_MsgType_atf_amc_Varlen2vMsg: ret = "atf_amc.Varlen2vMsg";  break;
+        case atf_amc_MsgType_atf_amc_VarlenBMsg: ret = "atf_amc.VarlenBMsg";  break;
+        case atf_amc_MsgType_atf_amc_VarlenMsg: ret = "atf_amc.VarlenMsg";  break;
+        case atf_amc_MsgType_atf_amc_VarlenVMsg: ret = "atf_amc.VarlenVMsg";  break;
+        case atf_amc_MsgType_atf_amc_VarlenWMsg: ret = "atf_amc.VarlenWMsg";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgType.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void atf_amc::value_Print(const atf_amc::MsgType& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- atf_amc.MsgType.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 12: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"Text",4)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Text); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"Seqmsg",6)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Seqmsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 15: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"OptBMsg",7)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_OptBMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 17: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"VarlenMsg",9)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 18: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"Varlen2Msg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Varlen2Msg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VarlenBMsg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenBMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VarlenVMsg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenVMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VarlenWMsg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenWMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 19: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"Varlen2aMsg",11)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Varlen2aMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"Varlen2mMsg",11)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Varlen2mMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"Varlen2vMsg",11)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Varlen2vMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgType.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::value_SetStrptr(atf_amc::MsgType& parent, algo::strptr rhs, atf_amc_MsgTypeEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- atf_amc.MsgType.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u16_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgType..ReadStrptrMaybe
+// Read fields of atf_amc::MsgType from an ascii string.
+// The format of the string is the format of the atf_amc::MsgType's only field
+bool atf_amc::MsgType_ReadStrptrMaybe(atf_amc::MsgType &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- atf_amc.MsgType..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgType.String  printfmt:Raw
+void atf_amc::MsgType_Print(atf_amc::MsgType row, algo::cstring& str) {
+    atf_amc::value_Print(row, str);
+}
+
+// --- atf_amc.MsgLength..ReadStrptrMaybe
+// Read fields of atf_amc::MsgLength from an ascii string.
+// The format of the string is the format of the atf_amc::MsgLength's only field
+bool atf_amc::MsgLength_ReadStrptrMaybe(atf_amc::MsgLength &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && u16_ReadStrptrMaybe(parent.value, in_str);
+    return retval;
+}
+
+// --- atf_amc.MsgLength..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLength.String  printfmt:Raw
+void atf_amc::MsgLength_Print(atf_amc::MsgLength row, algo::cstring& str) {
+    u16_Print(row.value, str);
+}
+
+// --- atf_amc.MsgHeader..ReadFieldMaybe
+bool atf_amc::MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_type: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_length: {
+            retval = false;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    (void)strval;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.MsgHeader..ReadStrptrMaybe
+// Read fields of atf_amc::MsgHeader from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::MsgHeader_ReadStrptrMaybe(atf_amc::MsgHeader &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.MsgHeader");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && MsgHeader_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.MsgHeader..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHeader.String  printfmt:Tuple
+void atf_amc::MsgHeader_Print(atf_amc::MsgHeader row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.MsgHeader";
+    (void)row;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.Dgrambuf.in.GetMsg
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// One refill is one datagram: messages already in the buffer are returned
+// one at a time, and only an exhausted buffer reads the next datagram.
+// Bytes the datagram could not frame are dropped with it, never carried.
+// The message is length-delimited based on field length field
+// 
+atf_amc::MsgHeader* atf_amc::in_GetMsg(atf_amc::Dgrambuf& parent) {
+    atf_amc::MsgHeader* ret;
+    if (!parent.in_msgvalid) {
+        in_ScanMsg(parent);
+    }
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(parent.in_elems + parent.in_start);
+    ret = parent.in_msgvalid ? hdr : NULL;
+    return ret;
+}
+
+// --- atf_amc.Dgrambuf.in.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void atf_amc::in_Realloc(atf_amc::Dgrambuf& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_end);
+    u8 *new_mem = parent.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_elems, parent.in_max, new_max)
+    : (u8*)algo_lib::malloc_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Dgrambuf.in  comment:'out of memory'");
+    }
+    parent.in_elems = new_mem;
+    parent.in_max = new_max;
+}
+
+// --- atf_amc.Dgrambuf.in.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::in_RemoveAll(atf_amc::Dgrambuf& parent) {
+    parent.in_start    = 0;
+    parent.in_end      = 0;
+    parent.in_msgvalid = false;
+}
+
+// --- atf_amc.Dgrambuf.in.ScanMsg
+// Internal function to scan for a message
+// 
+static void atf_amc::in_ScanMsg(atf_amc::Dgrambuf& parent) {
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(parent.in_elems + parent.in_start);
+    i32 avail = in_N(parent);
+    i32 msglen;
+    bool found = false;
+    // A datagram carries whole messages and nothing partial, so a length
+    // this datagram cannot satisfy ends the datagram rather than the
+    // buffer.  There is nothing inside a datagram to resynchronize on --
+    // the next message would begin wherever this one claimed to end, and
+    // that place does not exist -- so no eof is raised and the remaining
+    // bytes go when the next refill drops them.
+    msglen = ssizeof(atf_amc::MsgHeader);
+    if (avail >= msglen) {
+        msglen = i32((*hdr).length); // check rest of the message
+    }
+    found = msglen >= ssizeof(atf_amc::MsgHeader) && avail >= msglen;
+    if (!found) {
+        msglen = 0;
+    }
+    parent.in_msglen = msglen;
+    parent.in_msgvalid = found;
+}
+
+// --- atf_amc.Dgrambuf.in.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::in_Shift(atf_amc::Dgrambuf& parent) {
+    i32 start = parent.in_start;
+    i32 bytes_n = parent.in_end - start;
+    if (bytes_n > 0) {
+        memmove(parent.in_elems, parent.in_elems + start, bytes_n);
+    }
+    parent.in_end = bytes_n;
+    parent.in_start = 0;
+}
+
+// --- atf_amc.Dgrambuf.in.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::in_SkipMsg(atf_amc::Dgrambuf& parent) {
+    if (parent.in_msgvalid) {
+        int skip = parent.in_msglen;
+        i32 start = parent.in_start;
+        start += skip;
+        parent.in_start = start;
+        parent.in_msgvalid = false;
+        parent.in_msglen   = 0; // reset message length -- important for delimited streams
+    }
+}
+
+// --- atf_amc.Dgrambuf.in.WriteAll
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::in_WriteAll(atf_amc::Dgrambuf& parent, u8 *in, i32 in_n) {
+    int max = in_Max(parent);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (parent.in_end + in_n > max) {
+        in_Shift(parent);
+    }
+    // now try to write the message.
+    i32 end = parent.in_end;
+    bool fits = end + in_n <= max;
+    if (fits) {
+        if (in_n > 0) {
+            memcpy(parent.in_elems + end, in, in_n);
+            parent.in_end = end + in_n;
+        }
+    }
+    return fits;
+}
+
+// --- atf_amc.Dgrambuf.in.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+void atf_amc::in_WriteReserve(atf_amc::Dgrambuf& parent, u8 *in, i32 in_n) {
+    if (parent.in_end - parent.in_start + in_n > in_Max(parent)) {
+        in_Realloc(parent, parent.in_max + i32_Max(parent.in_max, in_n));
+    }
+    if (!in_WriteAll(parent, in, in_n)) {
+        FatalErrorExit("in: out of memory");
+    }
+}
+
+// --- atf_amc.Dgrambuf.in.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::in_XrefMaybe(atf_amc::MsgHeader &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.Dgrambuf..Init
+// Set all fields to initial values.
+void atf_amc::Dgrambuf_Init(atf_amc::Dgrambuf& parent) {
+    parent.in_elems = NULL; // in: initialize
+    parent.in_max = 0; // in: initialize
+    parent.in_end = 0; // in: initialize
+    parent.in_start = 0; // in: initialize
+    parent.in_eof = false; // in: initialize
+    parent.in_msgvalid = false; // in: initialize
+    parent.in_msglen = 0; // in: initialize
+    parent.in_epoll_enable = true; // in: initialize
+    in_Realloc(parent, 64);
+}
+
+// --- atf_amc.Dgrambuf..Uninit
+void atf_amc::Dgrambuf_Uninit(atf_amc::Dgrambuf& parent) {
+
+    // atf_amc.Dgrambuf.in.Uninit (Fbuf)  //Datagram-based buffer
+    if (parent.in_elems) {
+        algo_lib::malloc_FreeMem(parent.in_elems, parent.in_max); // (atf_amc.Dgrambuf.in) in_max is the byte size Realloc allocated
+    }
+    parent.in_elems = NULL;
+    parent.in_max = 0;
 }
 
 // --- atf_amc.Disp2Case.value.ToCstr
@@ -2568,24 +2941,22 @@ void atf_amc::FAmctest_Print(atf_amc::FAmctest& row, algo::cstring& str) {
 }
 
 // --- atf_amc.FAvl..Uninit
-void atf_amc::FAvl_Uninit(atf_amc::FAvl& avl) {
-    atf_amc::FAvl &row = avl; (void)row;
-    tr_avl_Remove(row); // remove avl from index tr_avl
+void atf_amc::FAvl_Uninit(atf_amc::FAvl& parent) {
+    tr_avl_Remove(parent); // remove avl from index tr_avl
 }
 
 // --- atf_amc.FBlkhashElem..Uninit
-void atf_amc::FBlkhashElem_Uninit(atf_amc::FBlkhashElem& blkhash_elem) {
-    atf_amc::FBlkhashElem &row = blkhash_elem; (void)row;
-    ind_blkhash_elem_Remove(row); // remove blkhash_elem from index ind_blkhash_elem
-    ind_blkhash_elem_thash_Remove(row); // remove blkhash_elem from index ind_blkhash_elem_thash
+void atf_amc::FBlkhashElem_Uninit(atf_amc::FBlkhashElem& parent) {
+    ind_blkhash_elem_Remove(parent); // remove blkhash_elem from index ind_blkhash_elem
+    ind_blkhash_elem_thash_Remove(parent); // remove blkhash_elem from index ind_blkhash_elem_thash
 }
 
 // --- atf_amc.FCascdel.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::type_ToCstr(const atf_amc::FCascdel& cascdel) {
+const char* atf_amc::type_ToCstr(const atf_amc::FCascdel& parent) {
     const char *ret = NULL;
-    switch(type_GetEnum(cascdel)) {
+    switch(type_GetEnum(parent)) {
         case atf_amc_FCascdel_type_none    : ret = "none";  break;
         case atf_amc_FCascdel_type_ptr     : ret = "ptr";  break;
         case atf_amc_FCascdel_type_ptrary  : ret = "ptrary";  break;
@@ -2601,12 +2972,12 @@ const char* atf_amc::type_ToCstr(const atf_amc::FCascdel& cascdel) {
 // --- atf_amc.FCascdel.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void atf_amc::type_Print(const atf_amc::FCascdel& cascdel, algo::cstring &lhs) {
-    const char *strval = type_ToCstr(cascdel);
+void atf_amc::type_Print(const atf_amc::FCascdel& parent, algo::cstring &lhs) {
+    const char *strval = type_ToCstr(parent);
     if (strval) {
         lhs << strval;
     } else {
-        lhs << cascdel.type;
+        lhs << parent.type;
     }
 }
 
@@ -2614,13 +2985,13 @@ void atf_amc::type_Print(const atf_amc::FCascdel& cascdel, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) {
+bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('p','t','r'): {
-                    type_SetEnum(cascdel,atf_amc_FCascdel_type_ptr); ret = true; break;
+                    type_SetEnum(parent,atf_amc_FCascdel_type_ptr); ret = true; break;
                 }
             }
             break;
@@ -2628,10 +2999,10 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('h','e','a','p'): {
-                    type_SetEnum(cascdel,atf_amc_FCascdel_type_heap); ret = true; break;
+                    type_SetEnum(parent,atf_amc_FCascdel_type_heap); ret = true; break;
                 }
                 case LE_STR4('n','o','n','e'): {
-                    type_SetEnum(cascdel,atf_amc_FCascdel_type_none); ret = true; break;
+                    type_SetEnum(parent,atf_amc_FCascdel_type_none); ret = true; break;
                 }
             }
             break;
@@ -2639,13 +3010,13 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('a','t','r','e','e'): {
-                    type_SetEnum(cascdel,atf_amc_FCascdel_type_atree); ret = true; break;
+                    type_SetEnum(parent,atf_amc_FCascdel_type_atree); ret = true; break;
                 }
                 case LE_STR5('b','h','e','a','p'): {
-                    type_SetEnum(cascdel,atf_amc_FCascdel_type_bheap); ret = true; break;
+                    type_SetEnum(parent,atf_amc_FCascdel_type_bheap); ret = true; break;
                 }
                 case LE_STR5('t','h','a','s','h'): {
-                    type_SetEnum(cascdel,atf_amc_FCascdel_type_thash); ret = true; break;
+                    type_SetEnum(parent,atf_amc_FCascdel_type_thash); ret = true; break;
                 }
             }
             break;
@@ -2653,10 +3024,10 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('p','t','r','a','r','y'): {
-                    type_SetEnum(cascdel,atf_amc_FCascdel_type_ptrary); ret = true; break;
+                    type_SetEnum(parent,atf_amc_FCascdel_type_ptrary); ret = true; break;
                 }
                 case LE_STR6('z','d','l','i','s','t'): {
-                    type_SetEnum(cascdel,atf_amc_FCascdel_type_zdlist); ret = true; break;
+                    type_SetEnum(parent,atf_amc_FCascdel_type_zdlist); ret = true; break;
                 }
             }
             break;
@@ -2668,41 +3039,41 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
 // --- atf_amc.FCascdel.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::type_SetStrptr(atf_amc::FCascdel& cascdel, algo::strptr rhs, atf_amc_FCascdel_type_Enum dflt) {
-    if (!type_SetStrptrMaybe(cascdel,rhs)) type_SetEnum(cascdel,dflt);
+void atf_amc::type_SetStrptr(atf_amc::FCascdel& parent, algo::strptr rhs, atf_amc_FCascdel_type_Enum dflt) {
+    if (!type_SetStrptrMaybe(parent,rhs)) type_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.FCascdel.child_ptr.Cascdel
 // Delete referred-to items.
 // Deleted pointed-to item.
-void atf_amc::child_ptr_Cascdel(atf_amc::FCascdel& cascdel) {
-    atf_amc::FCascdel *ptr = cascdel.child_ptr;
+void atf_amc::child_ptr_Cascdel(atf_amc::FCascdel& parent) {
+    atf_amc::FCascdel *ptr = parent.child_ptr;
     if (ptr) {
         cascdel_Delete(*ptr);
-        cascdel.child_ptr = NULL;
+        parent.child_ptr = NULL;
     }
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary.Cascdel
 // Delete all elements pointed to by the index.
-void atf_amc::c_child_ptrary_Cascdel(atf_amc::FCascdel& cascdel) {
+void atf_amc::c_child_ptrary_Cascdel(atf_amc::FCascdel& parent) {
     // Each row's delete removes it from this array (heaplike: O(1) swap;
     // unique: the backward scan finds the last element first), and a cascade
     // that deletes other members keeps the array consistent, so re-reading
     // c_child_ptrary_n each iteration visits every remaining row exactly once.
-    while (cascdel.c_child_ptrary_n > 0) {
-        cascdel_Delete(*cascdel.c_child_ptrary_elems[cascdel.c_child_ptrary_n - 1]);
+    while (parent.c_child_ptrary_n > 0) {
+        cascdel_Delete(*parent.c_child_ptrary_elems[parent.c_child_ptrary_n - 1]);
     }
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void atf_amc::c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::c_child_ptrary_Insert(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     if (!row.cascdel_c_child_ptrary_in_ary) {
-        c_child_ptrary_Reserve(cascdel, 1);
-        u64 n  = cascdel.c_child_ptrary_n++;
-        cascdel.c_child_ptrary_elems[n] = &row;
+        c_child_ptrary_Reserve(parent, 1);
+        u64 n  = parent.c_child_ptrary_n++;
+        parent.c_child_ptrary_elems[n] = &row;
         row.cascdel_c_child_ptrary_in_ary = true;
     }
 }
@@ -2711,18 +3082,18 @@ void atf_amc::c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_amc::c_child_ptrary_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+bool atf_amc::c_child_ptrary_InsertMaybe(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     bool retval = !cascdel_c_child_ptrary_InAryQ(row);
-    c_child_ptrary_Insert(cascdel,row); // check is performed in _Insert again
+    c_child_ptrary_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_amc::c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
-    i64 n = cascdel.c_child_ptrary_n;
+void atf_amc::c_child_ptrary_Remove(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
+    i64 n = parent.c_child_ptrary_n;
     if (bool_Update(row.cascdel_c_child_ptrary_in_ary,false)) {
-        atf_amc::FCascdel* *elems = cascdel.c_child_ptrary_elems;
+        atf_amc::FCascdel* *elems = parent.c_child_ptrary_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2731,7 +3102,7 @@ void atf_amc::c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascde
                 i64 j = i + 1;
                 size_t nbytes = sizeof(atf_amc::FCascdel*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                cascdel.c_child_ptrary_n = n - 1;
+                parent.c_child_ptrary_n = n - 1;
                 break;
             }
         }
@@ -2740,27 +3111,27 @@ void atf_amc::c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 
 // --- atf_amc.FCascdel.c_child_ptrary.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u64 n) {
-    u64 old_max = cascdel.c_child_ptrary_max;
-    if (UNLIKELY(cascdel.c_child_ptrary_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, cascdel.c_child_ptrary_n + n), 4);
+void atf_amc::c_child_ptrary_Reserve(atf_amc::FCascdel& parent, u64 n) {
+    u64 old_max = parent.c_child_ptrary_max;
+    if (UNLIKELY(parent.c_child_ptrary_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_child_ptrary_n + n), 4);
         u64 old_size = old_max * sizeof(atf_amc::FCascdel*);
         u64 new_size = new_max * sizeof(atf_amc::FCascdel*);
-        void *new_mem = algo_lib::malloc_ReallocMem(cascdel.c_child_ptrary_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_child_ptrary_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FCascdel.c_child_ptrary");
         }
-        cascdel.c_child_ptrary_elems = (atf_amc::FCascdel**)new_mem;
-        cascdel.c_child_ptrary_max = new_max;
+        parent.c_child_ptrary_elems = (atf_amc::FCascdel**)new_mem;
+        parent.c_child_ptrary_max = new_max;
     }
 }
 
 // --- atf_amc.FCascdel.ind_child_thash.Cascdel
 // Delete all rows reachable through the hash index
-void atf_amc::ind_child_thash_Cascdel(atf_amc::FCascdel& cascdel) {
-    if (cascdel.ind_child_thash_n) {
-        for (int i = 0; i < cascdel.ind_child_thash_buckets_n; i++) {
-            atf_amc::FCascdel *elem = cascdel.ind_child_thash_buckets_elems[i];
+void atf_amc::ind_child_thash_Cascdel(atf_amc::FCascdel& parent) {
+    if (parent.ind_child_thash_n) {
+        for (int i = 0; i < parent.ind_child_thash_buckets_n; i++) {
+            atf_amc::FCascdel *elem = parent.ind_child_thash_buckets_elems[i];
             while (elem) {
                 atf_amc::FCascdel *next = elem->cascdel_ind_child_thash_next;
                 cascdel_Delete(*elem);
@@ -2772,9 +3143,9 @@ void atf_amc::ind_child_thash_Cascdel(atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.ind_child_thash.Find
 // Find row by key. Return NULL if not found.
-atf_amc::FCascdel* atf_amc::ind_child_thash_Find(atf_amc::FCascdel& cascdel, u32 key) {
-    u32 index = ::u32_Hash(0, key) & (cascdel.ind_child_thash_buckets_n - 1);
-    atf_amc::FCascdel *ret = cascdel.ind_child_thash_buckets_elems[index];
+atf_amc::FCascdel* atf_amc::ind_child_thash_Find(atf_amc::FCascdel& parent, u32 key) {
+    u32 index = ::u32_Hash(0, key) & (parent.ind_child_thash_buckets_n - 1);
+    atf_amc::FCascdel *ret = parent.ind_child_thash_buckets_elems[index];
     for (; ret && !((*ret).key == key); ret = ret->cascdel_ind_child_thash_next) {
     }
     return ret;
@@ -2782,16 +3153,16 @@ atf_amc::FCascdel* atf_amc::ind_child_thash_Find(atf_amc::FCascdel& cascdel, u32
 
 // --- atf_amc.FCascdel.ind_child_thash.FindX
 // Look up row by key and return reference. Throw exception if not found
-atf_amc::FCascdel& atf_amc::ind_child_thash_FindX(atf_amc::FCascdel& cascdel, u32 key) {
-    atf_amc::FCascdel* ret = ind_child_thash_Find(cascdel, key);
+atf_amc::FCascdel& atf_amc::ind_child_thash_FindX(atf_amc::FCascdel& parent, u32 key) {
+    atf_amc::FCascdel* ret = ind_child_thash_Find(parent, key);
     vrfy(ret, tempstr() << "atf_amc.key_error  table:ind_child_thash  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
 }
 
 // --- atf_amc.FCascdel.ind_child_thash.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_amc::FCascdel* atf_amc::ind_child_thash_GetOrCreate(atf_amc::FCascdel& cascdel, u32 key) {
-    atf_amc::FCascdel* ret = ind_child_thash_Find(cascdel, key);
+atf_amc::FCascdel* atf_amc::ind_child_thash_GetOrCreate(atf_amc::FCascdel& parent, u32 key) {
+    atf_amc::FCascdel* ret = ind_child_thash_Find(parent, key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &cascdel_Alloc();
         (*ret).key = key;
@@ -2806,13 +3177,13 @@ atf_amc::FCascdel* atf_amc::ind_child_thash_GetOrCreate(atf_amc::FCascdel& cascd
 
 // --- atf_amc.FCascdel.ind_child_thash.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_amc::ind_child_thash_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+bool atf_amc::ind_child_thash_InsertMaybe(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.cascdel_ind_child_thash_next == (atf_amc::FCascdel*)-1)) {// check if in hash already
         row.cascdel_ind_child_thash_hashval = ::u32_Hash(0, row.key);
-        ind_child_thash_Reserve(cascdel, 1);
-        u32 index = row.cascdel_ind_child_thash_hashval & (cascdel.ind_child_thash_buckets_n - 1);
-        atf_amc::FCascdel* *prev = &cascdel.ind_child_thash_buckets_elems[index];
+        ind_child_thash_Reserve(parent, 1);
+        u32 index = row.cascdel_ind_child_thash_hashval & (parent.ind_child_thash_buckets_n - 1);
+        atf_amc::FCascdel* *prev = &parent.ind_child_thash_buckets_elems[index];
         do {
             atf_amc::FCascdel* ret = *prev;
             if (!ret) { // exit condition 1: reached the end of the list
@@ -2826,7 +3197,7 @@ bool atf_amc::ind_child_thash_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::F
         } while (true);
         if (retval) {
             row.cascdel_ind_child_thash_next = *prev;
-            cascdel.ind_child_thash_n++;
+            parent.ind_child_thash_n++;
             *prev = &row;
         }
     }
@@ -2835,14 +3206,14 @@ bool atf_amc::ind_child_thash_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::F
 
 // --- atf_amc.FCascdel.ind_child_thash.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_amc::ind_child_thash_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::ind_child_thash_Remove(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     if (LIKELY(row.cascdel_ind_child_thash_next != (atf_amc::FCascdel*)-1)) {// check if in hash already
-        u32 index = row.cascdel_ind_child_thash_hashval & (cascdel.ind_child_thash_buckets_n - 1);
-        atf_amc::FCascdel* *prev = &cascdel.ind_child_thash_buckets_elems[index]; // addr of pointer to current element
+        u32 index = row.cascdel_ind_child_thash_hashval & (parent.ind_child_thash_buckets_n - 1);
+        atf_amc::FCascdel* *prev = &parent.ind_child_thash_buckets_elems[index]; // addr of pointer to current element
         while (atf_amc::FCascdel *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
                 *prev = next->cascdel_ind_child_thash_next; // unlink (singly linked list)
-                cascdel.ind_child_thash_n--;
+                parent.ind_child_thash_n--;
                 row.cascdel_ind_child_thash_next = (atf_amc::FCascdel*)-1;// not-in-hash
                 break;
             }
@@ -2853,14 +3224,14 @@ void atf_amc::ind_child_thash_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascd
 
 // --- atf_amc.FCascdel.ind_child_thash.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_amc::ind_child_thash_Reserve(atf_amc::FCascdel& cascdel, int n) {
-    ind_child_thash_AbsReserve(cascdel,cascdel.ind_child_thash_n + n);
+void atf_amc::ind_child_thash_Reserve(atf_amc::FCascdel& parent, int n) {
+    ind_child_thash_AbsReserve(parent,parent.ind_child_thash_n + n);
 }
 
 // --- atf_amc.FCascdel.ind_child_thash.AbsReserve
 // Reserve enough room for exacty N elements. Return success code.
-void atf_amc::ind_child_thash_AbsReserve(atf_amc::FCascdel& cascdel, int n) {
-    u32 old_nbuckets = cascdel.ind_child_thash_buckets_n;
+void atf_amc::ind_child_thash_AbsReserve(atf_amc::FCascdel& parent, int n) {
+    u32 old_nbuckets = parent.ind_child_thash_buckets_n;
     u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
@@ -2875,8 +3246,8 @@ void atf_amc::ind_child_thash_AbsReserve(atf_amc::FCascdel& cascdel, int n) {
         }
         memset(new_buckets, 0, new_size); // clear pointers
         // rehash all entries
-        for (int i = 0; i < cascdel.ind_child_thash_buckets_n; i++) {
-            atf_amc::FCascdel* elem = cascdel.ind_child_thash_buckets_elems[i];
+        for (int i = 0; i < parent.ind_child_thash_buckets_n; i++) {
+            atf_amc::FCascdel* elem = parent.ind_child_thash_buckets_elems[i];
             while (elem) {
                 atf_amc::FCascdel &row        = *elem;
                 atf_amc::FCascdel* next       = row.cascdel_ind_child_thash_next;
@@ -2887,53 +3258,53 @@ void atf_amc::ind_child_thash_AbsReserve(atf_amc::FCascdel& cascdel, int n) {
             }
         }
         // free old array
-        algo_lib::malloc_FreeMem(cascdel.ind_child_thash_buckets_elems, old_size);
-        cascdel.ind_child_thash_buckets_elems = new_buckets;
-        cascdel.ind_child_thash_buckets_n = new_nbuckets;
+        algo_lib::malloc_FreeMem(parent.ind_child_thash_buckets_elems, old_size);
+        parent.ind_child_thash_buckets_elems = new_buckets;
+        parent.ind_child_thash_buckets_n = new_nbuckets;
     }
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.Cascdel
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
-void atf_amc::bh_child_bheap_Cascdel(atf_amc::FCascdel& cascdel) {
-    i32 n = cascdel.bh_child_bheap_n;
+void atf_amc::bh_child_bheap_Cascdel(atf_amc::FCascdel& parent) {
+    i32 n = parent.bh_child_bheap_n;
     while (n > 0) {
         n--;
-        atf_amc::FCascdel &elem = *cascdel.bh_child_bheap_elems[n]; // pick cheapest element to remove
+        atf_amc::FCascdel &elem = *parent.bh_child_bheap_elems[n]; // pick cheapest element to remove
         elem.cascdel_bh_child_bheap_idx = -1; // mark not-in-heap
-        cascdel.bh_child_bheap_n = n;
+        parent.bh_child_bheap_n = n;
         cascdel_Delete(elem);
     }
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void atf_amc::bh_child_bheap_Dealloc(atf_amc::FCascdel& cascdel) {
-    bh_child_bheap_RemoveAll(cascdel);
-    algo_lib::malloc_FreeMem(cascdel.bh_child_bheap_elems, sizeof(atf_amc::FCascdel*)*cascdel.bh_child_bheap_max);
-    cascdel.bh_child_bheap_max   = 0;
-    cascdel.bh_child_bheap_elems = NULL;
+void atf_amc::bh_child_bheap_Dealloc(atf_amc::FCascdel& parent) {
+    bh_child_bheap_RemoveAll(parent);
+    algo_lib::malloc_FreeMem(parent.bh_child_bheap_elems, sizeof(atf_amc::FCascdel*)*parent.bh_child_bheap_max);
+    parent.bh_child_bheap_max   = 0;
+    parent.bh_child_bheap_elems = NULL;
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int atf_amc::bh_child_bheap_Downheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) {
-    atf_amc::FCascdel* *elems = cascdel.bh_child_bheap_elems;
-    int n = cascdel.bh_child_bheap_n;
+static int atf_amc::bh_child_bheap_Downheap(atf_amc::FCascdel& parent, atf_amc::FCascdel& row, int idx) {
+    atf_amc::FCascdel* *elems = parent.bh_child_bheap_elems;
+    int n = parent.bh_child_bheap_n;
     int child = idx*2+1;
     while (child < n) {
         atf_amc::FCascdel* p = elems[child]; // left child
         int rchild = child+1;
         if (rchild < n) {
             atf_amc::FCascdel* q = elems[rchild]; // right child
-            if (bh_child_bheap_ElemLt(cascdel, *q,*p)) {
+            if (bh_child_bheap_ElemLt(parent, *q,*p)) {
                 child = rchild;
                 p     = q;
             }
         }
-        if (!bh_child_bheap_ElemLt(cascdel, *p,row)) {
+        if (!bh_child_bheap_ElemLt(parent, *p,row)) {
             break;
         }
         p->cascdel_bh_child_bheap_idx   = idx;
@@ -2946,33 +3317,33 @@ static int atf_amc::bh_child_bheap_Downheap(atf_amc::FCascdel& cascdel, atf_amc:
 
 // --- atf_amc.FCascdel.bh_child_bheap.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void atf_amc::bh_child_bheap_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::bh_child_bheap_Insert(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     if (LIKELY(row.cascdel_bh_child_bheap_idx == -1)) {
-        bh_child_bheap_Reserve(cascdel, 1);
-        int n = cascdel.bh_child_bheap_n;
-        cascdel.bh_child_bheap_n = n + 1;
-        int new_idx = bh_child_bheap_Upheap(cascdel, row, n);
+        bh_child_bheap_Reserve(parent, 1);
+        int n = parent.bh_child_bheap_n;
+        parent.bh_child_bheap_n = n + 1;
+        int new_idx = bh_child_bheap_Upheap(parent, row, n);
         row.cascdel_bh_child_bheap_idx = new_idx;
-        cascdel.bh_child_bheap_elems[new_idx] = &row;
+        parent.bh_child_bheap_elems[new_idx] = &row;
     }
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 atf_amc::bh_child_bheap_Reheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+i32 atf_amc::bh_child_bheap_Reheap(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     int old_idx = row.cascdel_bh_child_bheap_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
-        bh_child_bheap_Reserve(cascdel, 1);
-        old_idx = cascdel.bh_child_bheap_n++;
+        bh_child_bheap_Reserve(parent, 1);
+        old_idx = parent.bh_child_bheap_n++;
     }
-    int new_idx = bh_child_bheap_Upheap(cascdel, row, old_idx);
+    int new_idx = bh_child_bheap_Upheap(parent, row, old_idx);
     if (!isnew && new_idx == old_idx) {
-        new_idx = bh_child_bheap_Downheap(cascdel, row, old_idx);
+        new_idx = bh_child_bheap_Downheap(parent, row, old_idx);
     }
     row.cascdel_bh_child_bheap_idx = new_idx;
-    cascdel.bh_child_bheap_elems[new_idx] = &row;
+    parent.bh_child_bheap_elems[new_idx] = &row;
     return new_idx;
 }
 
@@ -2981,31 +3352,31 @@ i32 atf_amc::bh_child_bheap_Reheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 atf_amc::bh_child_bheap_ReheapFirst(atf_amc::FCascdel& cascdel) {
-    atf_amc::FCascdel &row = *cascdel.bh_child_bheap_elems[0];
-    i32 new_idx = bh_child_bheap_Downheap(cascdel, row, 0);
+i32 atf_amc::bh_child_bheap_ReheapFirst(atf_amc::FCascdel& parent) {
+    atf_amc::FCascdel &row = *parent.bh_child_bheap_elems[0];
+    i32 new_idx = bh_child_bheap_Downheap(parent, row, 0);
     row.cascdel_bh_child_bheap_idx = new_idx;
-    cascdel.bh_child_bheap_elems[new_idx] = &row;
+    parent.bh_child_bheap_elems[new_idx] = &row;
     return new_idx;
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::bh_child_bheap_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::bh_child_bheap_Remove(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     if (bh_child_bheap_InBheapQ(row)) {
         int old_idx = row.cascdel_bh_child_bheap_idx;
-        if (cascdel.bh_child_bheap_elems[old_idx] == &row) { // sanity check: heap points back to row
+        if (parent.bh_child_bheap_elems[old_idx] == &row) { // sanity check: heap points back to row
             row.cascdel_bh_child_bheap_idx = -1;           // mark not in heap
-            i32 n = cascdel.bh_child_bheap_n - 1; // index of last element in heap
-            cascdel.bh_child_bheap_n = n;         // decrease count
+            i32 n = parent.bh_child_bheap_n - 1; // index of last element in heap
+            parent.bh_child_bheap_n = n;         // decrease count
             if (old_idx != n) {
-                atf_amc::FCascdel *elem = cascdel.bh_child_bheap_elems[n];
-                int new_idx = bh_child_bheap_Upheap(cascdel, *elem, old_idx);
+                atf_amc::FCascdel *elem = parent.bh_child_bheap_elems[n];
+                int new_idx = bh_child_bheap_Upheap(parent, *elem, old_idx);
                 if (new_idx == old_idx) {
-                    new_idx = bh_child_bheap_Downheap(cascdel, *elem, old_idx);
+                    new_idx = bh_child_bheap_Downheap(parent, *elem, old_idx);
                 }
                 elem->cascdel_bh_child_bheap_idx = new_idx;
-                cascdel.bh_child_bheap_elems[new_idx] = elem;
+                parent.bh_child_bheap_elems[new_idx] = elem;
             }
         }
     }
@@ -3013,29 +3384,29 @@ void atf_amc::bh_child_bheap_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 
 // --- atf_amc.FCascdel.bh_child_bheap.RemoveAll
 // Remove all elements from binary heap
-void atf_amc::bh_child_bheap_RemoveAll(atf_amc::FCascdel& cascdel) {
-    int n = cascdel.bh_child_bheap_n;
+void atf_amc::bh_child_bheap_RemoveAll(atf_amc::FCascdel& parent) {
+    int n = parent.bh_child_bheap_n;
     for (int i = n - 1; i>=0; i--) {
-        cascdel.bh_child_bheap_elems[i]->cascdel_bh_child_bheap_idx = -1; // mark not-in-heap
+        parent.bh_child_bheap_elems[i]->cascdel_bh_child_bheap_idx = -1; // mark not-in-heap
     }
-    cascdel.bh_child_bheap_n = 0;
+    parent.bh_child_bheap_n = 0;
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-atf_amc::FCascdel* atf_amc::bh_child_bheap_RemoveFirst(atf_amc::FCascdel& cascdel) {
+atf_amc::FCascdel* atf_amc::bh_child_bheap_RemoveFirst(atf_amc::FCascdel& parent) {
     atf_amc::FCascdel *row = NULL;
-    if (cascdel.bh_child_bheap_n > 0) {
-        row = cascdel.bh_child_bheap_elems[0];
+    if (parent.bh_child_bheap_n > 0) {
+        row = parent.bh_child_bheap_elems[0];
         row->cascdel_bh_child_bheap_idx = -1;           // mark not in heap
-        i32 n = cascdel.bh_child_bheap_n - 1; // index of last element in heap
-        cascdel.bh_child_bheap_n = n;         // decrease count
+        i32 n = parent.bh_child_bheap_n - 1; // index of last element in heap
+        parent.bh_child_bheap_n = n;         // decrease count
         if (n) {
-            atf_amc::FCascdel &elem = *cascdel.bh_child_bheap_elems[n];
-            int new_idx = bh_child_bheap_Downheap(cascdel, elem, 0);
+            atf_amc::FCascdel &elem = *parent.bh_child_bheap_elems[n];
+            int new_idx = bh_child_bheap_Downheap(parent, elem, 0);
             elem.cascdel_bh_child_bheap_idx = new_idx;
-            cascdel.bh_child_bheap_elems[new_idx] = &elem;
+            parent.bh_child_bheap_elems[new_idx] = &elem;
         }
     }
     return row;
@@ -3043,31 +3414,31 @@ atf_amc::FCascdel* atf_amc::bh_child_bheap_RemoveFirst(atf_amc::FCascdel& cascde
 
 // --- atf_amc.FCascdel.bh_child_bheap.Reserve
 // Reserve space in index for N more elements
-void atf_amc::bh_child_bheap_Reserve(atf_amc::FCascdel& cascdel, int n) {
-    i32 old_max = cascdel.bh_child_bheap_max;
-    if (UNLIKELY(cascdel.bh_child_bheap_n + n > old_max)) {
+void atf_amc::bh_child_bheap_Reserve(atf_amc::FCascdel& parent, int n) {
+    i32 old_max = parent.bh_child_bheap_max;
+    if (UNLIKELY(parent.bh_child_bheap_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
         u32 old_size = old_max * sizeof(atf_amc::FCascdel*);
         u32 new_size = new_max * sizeof(atf_amc::FCascdel*);
-        void *new_mem = algo_lib::malloc_ReallocMem(cascdel.bh_child_bheap_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.bh_child_bheap_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FCascdel.bh_child_bheap");
         }
-        cascdel.bh_child_bheap_elems = (atf_amc::FCascdel**)new_mem;
-        cascdel.bh_child_bheap_max = new_max;
+        parent.bh_child_bheap_elems = (atf_amc::FCascdel**)new_mem;
+        parent.bh_child_bheap_max = new_max;
     }
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.Set
 // Set row key to new value.
 // Update heap membership based on insert condition [row.p_parent != &row && row.type==atf_amc_FCascdel_type_bheap]
-void atf_amc::key_Set(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 new_key) {
+void atf_amc::key_Set(atf_amc::FCascdel& parent, atf_amc::FCascdel &row, u32 new_key) {
     row.key = new_key;
     bool ins = row.p_parent != &row && row.type==atf_amc_FCascdel_type_bheap; // user-defined insert condition (xref)
     if (ins) {
-        bh_child_bheap_Reheap(cascdel, row);
+        bh_child_bheap_Reheap(parent, row);
     } else {
-        bh_child_bheap_Remove(cascdel, row);
+        bh_child_bheap_Remove(parent, row);
     }
 }
 
@@ -3075,25 +3446,25 @@ void atf_amc::key_Set(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 ne
 // Set row key to new value. If row not in heap, the key is set to new value
 // Otherwise, the key is changed only if the new key is better than the old.
 // Update heap membership based on insert condition [row.p_parent != &row && row.type==atf_amc_FCascdel_type_bheap]
-void atf_amc::key_SetIfBetter(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 new_key) {
+void atf_amc::key_SetIfBetter(atf_amc::FCascdel& parent, atf_amc::FCascdel &row, u32 new_key) {
     bool better = true;
     if (bh_child_bheap_InBheapQ(row)) {
-        better = !bh_child_bheap_ElemLtval(cascdel, row,new_key); // this is really Not Worse, not Better
+        better = !bh_child_bheap_ElemLtval(parent, row,new_key); // this is really Not Worse, not Better
     }
     if (better) {
-        key_Set(cascdel, row, new_key);
+        key_Set(parent, row, new_key);
     }
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int atf_amc::bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) {
-    atf_amc::FCascdel* *elems = cascdel.bh_child_bheap_elems;
+static int atf_amc::bh_child_bheap_Upheap(atf_amc::FCascdel& parent, atf_amc::FCascdel& row, int idx) {
+    atf_amc::FCascdel* *elems = parent.bh_child_bheap_elems;
     while (idx>0) {
         int j = (idx-1)/2;
         atf_amc::FCascdel* p = elems[j];
-        if (!bh_child_bheap_ElemLt(cascdel, row, *p)) {
+        if (!bh_child_bheap_ElemLt(parent, row, *p)) {
             break;
         }
         p->cascdel_bh_child_bheap_idx = idx;
@@ -3104,71 +3475,71 @@ static int atf_amc::bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::F
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.ElemLt
-inline static bool atf_amc::bh_child_bheap_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) {
-    (void)cascdel;
+inline static bool atf_amc::bh_child_bheap_ElemLt(atf_amc::FCascdel& parent, atf_amc::FCascdel &a, atf_amc::FCascdel &b) {
+    (void)parent;
     return a.key < b.key;
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.ElemLtval
-inline static bool atf_amc::bh_child_bheap_ElemLtval(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, const u32 &b) {
-    (void)cascdel;
+inline static bool atf_amc::bh_child_bheap_ElemLtval(atf_amc::FCascdel& parent, atf_amc::FCascdel &a, const u32 &b) {
+    (void)parent;
     return a.key < (u32&)b;
 }
 
 // --- atf_amc.FCascdel.zd_childlist.Cascdel
 // Delete all elements in the linked list.
-void atf_amc::zd_childlist_Cascdel(atf_amc::FCascdel& cascdel) {
-    while (atf_amc::FCascdel *zd_childlist_first = zd_childlist_First(cascdel)) {
+void atf_amc::zd_childlist_Cascdel(atf_amc::FCascdel& parent) {
+    while (atf_amc::FCascdel *zd_childlist_first = zd_childlist_First(parent)) {
         cascdel_Delete(*zd_childlist_first);
     }
 }
 
 // --- atf_amc.FCascdel.zd_childlist.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zd_childlist_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::zd_childlist_Insert(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     if (!cascdel_zd_childlist_InLlistQ(row)) {
-        atf_amc::FCascdel* old_tail = cascdel.zd_childlist_tail;
+        atf_amc::FCascdel* old_tail = parent.zd_childlist_tail;
         row.cascdel_zd_childlist_next = NULL;
         row.cascdel_zd_childlist_prev = old_tail;
-        cascdel.zd_childlist_tail = &row;
+        parent.zd_childlist_tail = &row;
         atf_amc::FCascdel **new_row_a = &old_tail->cascdel_zd_childlist_next;
-        atf_amc::FCascdel **new_row_b = &cascdel.zd_childlist_head;
+        atf_amc::FCascdel **new_row_b = &parent.zd_childlist_head;
         atf_amc::FCascdel **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        cascdel.zd_childlist_n++;
+        parent.zd_childlist_n++;
     }
 }
 
 // --- atf_amc.FCascdel.zd_childlist.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zd_childlist_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::zd_childlist_Remove(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     if (cascdel_zd_childlist_InLlistQ(row)) {
-        atf_amc::FCascdel* old_head       = cascdel.zd_childlist_head;
+        atf_amc::FCascdel* old_head       = parent.zd_childlist_head;
         (void)old_head; // in case it's not used
         atf_amc::FCascdel* prev = row.cascdel_zd_childlist_prev;
         atf_amc::FCascdel* next = row.cascdel_zd_childlist_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         atf_amc::FCascdel **new_next_a = &prev->cascdel_zd_childlist_next;
-        atf_amc::FCascdel **new_next_b = &cascdel.zd_childlist_head;
+        atf_amc::FCascdel **new_next_b = &parent.zd_childlist_head;
         atf_amc::FCascdel **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         atf_amc::FCascdel **new_prev_a = &next->cascdel_zd_childlist_prev;
-        atf_amc::FCascdel **new_prev_b = &cascdel.zd_childlist_tail;
+        atf_amc::FCascdel **new_prev_b = &parent.zd_childlist_tail;
         atf_amc::FCascdel **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        cascdel.zd_childlist_n--;
+        parent.zd_childlist_n--;
         row.cascdel_zd_childlist_next=(atf_amc::FCascdel*)-1; // not-in-list
     }
 }
 
 // --- atf_amc.FCascdel.zd_childlist.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zd_childlist_RemoveAll(atf_amc::FCascdel& cascdel) {
-    atf_amc::FCascdel* row = cascdel.zd_childlist_head;
-    cascdel.zd_childlist_head = NULL;
-    cascdel.zd_childlist_tail = NULL;
-    cascdel.zd_childlist_n = 0;
+void atf_amc::zd_childlist_RemoveAll(atf_amc::FCascdel& parent) {
+    atf_amc::FCascdel* row = parent.zd_childlist_head;
+    parent.zd_childlist_head = NULL;
+    parent.zd_childlist_tail = NULL;
+    parent.zd_childlist_n = 0;
     while (row) {
         atf_amc::FCascdel* row_next = row->cascdel_zd_childlist_next;
         row->cascdel_zd_childlist_next  = (atf_amc::FCascdel*)-1;
@@ -3179,17 +3550,17 @@ void atf_amc::zd_childlist_RemoveAll(atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.zd_childlist.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FCascdel* atf_amc::zd_childlist_RemoveFirst(atf_amc::FCascdel& cascdel) {
+atf_amc::FCascdel* atf_amc::zd_childlist_RemoveFirst(atf_amc::FCascdel& parent) {
     atf_amc::FCascdel *row = NULL;
-    row = cascdel.zd_childlist_head;
+    row = parent.zd_childlist_head;
     if (row) {
         atf_amc::FCascdel *next = row->cascdel_zd_childlist_next;
-        cascdel.zd_childlist_head = next;
+        parent.zd_childlist_head = next;
         atf_amc::FCascdel **new_end_a = &next->cascdel_zd_childlist_prev;
-        atf_amc::FCascdel **new_end_b = &cascdel.zd_childlist_tail;
+        atf_amc::FCascdel **new_end_b = &parent.zd_childlist_tail;
         atf_amc::FCascdel **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        cascdel.zd_childlist_n--;
+        parent.zd_childlist_n--;
         row->cascdel_zd_childlist_next = (atf_amc::FCascdel*)-1; // mark as not-in-list
     }
     return row;
@@ -3197,28 +3568,28 @@ atf_amc::FCascdel* atf_amc::zd_childlist_RemoveFirst(atf_amc::FCascdel& cascdel)
 
 // --- atf_amc.FCascdel.zd_childlist.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void atf_amc::zd_childlist_InsertBefore(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, atf_amc::FCascdel* before) {
+void atf_amc::zd_childlist_InsertBefore(atf_amc::FCascdel& parent, atf_amc::FCascdel& row, atf_amc::FCascdel* before) {
     if (!cascdel_zd_childlist_InLlistQ(row) && &row != before) {
         atf_amc::FCascdel* next = before;
-        atf_amc::FCascdel* prev = next ? next->cascdel_zd_childlist_prev : cascdel.zd_childlist_tail;
+        atf_amc::FCascdel* prev = next ? next->cascdel_zd_childlist_prev : parent.zd_childlist_tail;
         row.cascdel_zd_childlist_next = next;
         row.cascdel_zd_childlist_prev = prev;
         atf_amc::FCascdel **prev_link_a = &prev->cascdel_zd_childlist_next;
-        atf_amc::FCascdel **prev_link_b = &cascdel.zd_childlist_head;
+        atf_amc::FCascdel **prev_link_b = &parent.zd_childlist_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         atf_amc::FCascdel **next_link_a = &next->cascdel_zd_childlist_prev;
-        atf_amc::FCascdel **next_link_b = &cascdel.zd_childlist_tail;
+        atf_amc::FCascdel **next_link_b = &parent.zd_childlist_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        cascdel.zd_childlist_n++;
+        parent.zd_childlist_n++;
     }
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.Cascdel
 // Delete all elements in the tree.
-void atf_amc::tr_child_atree_Cascdel(atf_amc::FCascdel& cascdel) {
-    tr_child_atree_RemoveAllImpl(cascdel, cascdel.tr_child_atree_root, true);
-    cascdel.tr_child_atree_root = NULL;
-    cascdel.tr_child_atree_n = 0;
+void atf_amc::tr_child_atree_Cascdel(atf_amc::FCascdel& parent) {
+    tr_child_atree_RemoveAllImpl(parent, parent.tr_child_atree_root, true);
+    parent.tr_child_atree_root = NULL;
+    parent.tr_child_atree_n = 0;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.FirstImpl
@@ -3232,38 +3603,38 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_FirstImpl(atf_amc::FCascdel* root) {
 
 // --- atf_amc.FCascdel.tr_child_atree.First
 // Return pointer to the first(smallest) element in the tree
-atf_amc::FCascdel* atf_amc::tr_child_atree_First(atf_amc::FCascdel& cascdel) {
-    return tr_child_atree_FirstImpl(cascdel.tr_child_atree_root);
+atf_amc::FCascdel* atf_amc::tr_child_atree_First(atf_amc::FCascdel& parent) {
+    return tr_child_atree_FirstImpl(parent.tr_child_atree_root);
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.InsertImpl
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_amc::tr_child_atree_InsertImpl(atf_amc::FCascdel& cascdel, atf_amc::FCascdel* parent, atf_amc::FCascdel& row) {
+void atf_amc::tr_child_atree_InsertImpl(atf_amc::FCascdel& parent, atf_amc::FCascdel* up, atf_amc::FCascdel& row) {
     bool left = false;
-    while(parent != NULL){
-        left = tr_child_atree_ElemLt(cascdel, row, *parent);
-        atf_amc::FCascdel* side = left ? parent->cascdel_tr_child_atree_left : parent->cascdel_tr_child_atree_right;
+    while(up != NULL){
+        left = tr_child_atree_ElemLt(parent, row, *up);
+        atf_amc::FCascdel* side = left ? up->cascdel_tr_child_atree_left : up->cascdel_tr_child_atree_right;
         if(side == NULL){
             break;
         }
-        parent = side;
+        up = side;
     }
-    tr_child_atree_Connect(parent, &row, left);
+    tr_child_atree_Connect(up, &row, left);
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.Insert
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_amc::tr_child_atree_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::tr_child_atree_Insert(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     if(!tr_child_atree_InTreeQ(row)){
-        cascdel.tr_child_atree_n++;
-        tr_child_atree_InsertImpl(cascdel, cascdel.tr_child_atree_root, row);
-        cascdel.tr_child_atree_root = tr_child_atree_Propagate(row);
+        parent.tr_child_atree_n++;
+        tr_child_atree_InsertImpl(parent, parent.tr_child_atree_root, row);
+        parent.tr_child_atree_root = tr_child_atree_Propagate(row);
     }
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::tr_child_atree_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::tr_child_atree_Remove(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     if(!tr_child_atree_InTreeQ(row)){
         return;
     }
@@ -3285,19 +3656,19 @@ void atf_amc::tr_child_atree_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascde
     }
     bool dir = root && root->cascdel_tr_child_atree_left == &row;
     tr_child_atree_Connect(root, next, dir);
-    cascdel.tr_child_atree_root = prop ? tr_child_atree_Propagate(*prop) : NULL;
+    parent.tr_child_atree_root = prop ? tr_child_atree_Propagate(*prop) : NULL;
     row.cascdel_tr_child_atree_depth = 0;
     row.cascdel_tr_child_atree_left = NULL;
     row.cascdel_tr_child_atree_right = NULL;
     row.cascdel_tr_child_atree_up = (atf_amc::FCascdel*)-1;
-    cascdel.tr_child_atree_n--;
+    parent.tr_child_atree_n--;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.RemoveFirst
 // If the tree is empty, return NULL. Otherwise unlink and return pointer to first element.
-void atf_amc::tr_child_atree_RemoveFirst(atf_amc::FCascdel& cascdel) {
-    if(!tr_child_atree_EmptyQ(cascdel)){
-        tr_child_atree_Remove(cascdel, *tr_child_atree_First(cascdel));
+void atf_amc::tr_child_atree_RemoveFirst(atf_amc::FCascdel& parent) {
+    if(!tr_child_atree_EmptyQ(parent)){
+        tr_child_atree_Remove(parent, *tr_child_atree_First(parent));
     }
 }
 
@@ -3331,10 +3702,10 @@ inline static atf_amc::FCascdel* atf_amc::tr_child_atree_TallerChild(atf_amc::FC
 // --- atf_amc.FCascdel.tr_child_atree.Disconnect
 // Disconnects the subtree(branch) from the parent
 static void atf_amc::tr_child_atree_Disconnect(atf_amc::FCascdel& node) {
-    atf_amc::FCascdel* parent = node.cascdel_tr_child_atree_up;
-    if(parent != NULL){
-        bool left = parent->cascdel_tr_child_atree_left == &node;
-        (left ? parent->cascdel_tr_child_atree_left : parent->cascdel_tr_child_atree_right) = NULL;
+    atf_amc::FCascdel* up = node.cascdel_tr_child_atree_up;
+    if(up != NULL){
+        bool left = up->cascdel_tr_child_atree_left == &node;
+        (left ? up->cascdel_tr_child_atree_left : up->cascdel_tr_child_atree_right) = NULL;
     }
     node.cascdel_tr_child_atree_up = NULL;
 }
@@ -3396,13 +3767,13 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_LastImpl(atf_amc::FCascdel* root) {
 
 // --- atf_amc.FCascdel.tr_child_atree.Last
 // Return pointer to the last(largest) element in tree
-atf_amc::FCascdel* atf_amc::tr_child_atree_Last(atf_amc::FCascdel& cascdel) {
-    return tr_child_atree_LastImpl(cascdel.tr_child_atree_root);
+atf_amc::FCascdel* atf_amc::tr_child_atree_Last(atf_amc::FCascdel& parent) {
+    return tr_child_atree_LastImpl(parent.tr_child_atree_root);
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.ElemLt
-inline static bool atf_amc::tr_child_atree_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) {
-    (void)cascdel;
+inline static bool atf_amc::tr_child_atree_ElemLt(atf_amc::FCascdel& parent, atf_amc::FCascdel &a, atf_amc::FCascdel &b) {
+    (void)parent;
     return a.key < b.key;
 }
 
@@ -3426,21 +3797,21 @@ static void atf_amc::tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCasc
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.Connect
-inline static void atf_amc::tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) {
-    if(parent){
-        (left ? parent->cascdel_tr_child_atree_left : parent->cascdel_tr_child_atree_right) = child;
+inline static void atf_amc::tr_child_atree_Connect(atf_amc::FCascdel* up, atf_amc::FCascdel* child, bool left) {
+    if(up){
+        (left ? up->cascdel_tr_child_atree_left : up->cascdel_tr_child_atree_right) = child;
     }
     if(child){
-        child->cascdel_tr_child_atree_up = parent;
+        child->cascdel_tr_child_atree_up = up;
     }
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.RemoveAllImpl
 // Empty the index. (rows may be deleted if cascdel)
-void atf_amc::tr_child_atree_RemoveAllImpl(atf_amc::FCascdel& cascdel, atf_amc::FCascdel* root, bool del) {
+void atf_amc::tr_child_atree_RemoveAllImpl(atf_amc::FCascdel& parent, atf_amc::FCascdel* root, bool del) {
     if(root != NULL){
-        tr_child_atree_RemoveAllImpl(cascdel, root->cascdel_tr_child_atree_left, del);
-        tr_child_atree_RemoveAllImpl(cascdel, root->cascdel_tr_child_atree_right, del);
+        tr_child_atree_RemoveAllImpl(parent, root->cascdel_tr_child_atree_left, del);
+        tr_child_atree_RemoveAllImpl(parent, root->cascdel_tr_child_atree_right, del);
         tr_child_atree_Disconnect(*root);
         root->cascdel_tr_child_atree_depth = 0;//the pointers are taken care of by Disconnect
         root->cascdel_tr_child_atree_up = (atf_amc::FCascdel*)-1;//the pointers are taken care of by Disconnect
@@ -3452,15 +3823,15 @@ void atf_amc::tr_child_atree_RemoveAllImpl(atf_amc::FCascdel& cascdel, atf_amc::
 
 // --- atf_amc.FCascdel.tr_child_atree.Reinsert
 // Reinsert a row with modified key(Reheap semantics)
-void atf_amc::tr_child_atree_Reinsert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& node) {
-    tr_child_atree_Remove(cascdel, node);
-    tr_child_atree_Insert(cascdel, node);
+void atf_amc::tr_child_atree_Reinsert(atf_amc::FCascdel& parent, atf_amc::FCascdel& node) {
+    tr_child_atree_Remove(parent, node);
+    tr_child_atree_Insert(parent, node);
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.FirstGe
 // Find the first element that is greater or equal to a sortfld value
-atf_amc::FCascdel* atf_amc::tr_child_atree_FirstGe(atf_amc::FCascdel& cascdel, const u32& val) {
-    atf_amc::FCascdel* result = cascdel.tr_child_atree_root;
+atf_amc::FCascdel* atf_amc::tr_child_atree_FirstGe(atf_amc::FCascdel& parent, const u32& val) {
+    atf_amc::FCascdel* result = parent.tr_child_atree_root;
     bool left = false;
     while(result){
         left = !((*result).key < val);
@@ -3478,8 +3849,8 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_FirstGe(atf_amc::FCascdel& cascdel, c
 
 // --- atf_amc.FCascdel.tr_child_atree.LastLt
 // Find the last element that is smaller or equal to a sortfld value
-atf_amc::FCascdel* atf_amc::tr_child_atree_LastLt(atf_amc::FCascdel& cascdel, const u32& val) {
-    atf_amc::FCascdel* result = cascdel.tr_child_atree_root;
+atf_amc::FCascdel* atf_amc::tr_child_atree_LastLt(atf_amc::FCascdel& parent, const u32& val) {
+    atf_amc::FCascdel* result = parent.tr_child_atree_root;
     bool left = false;
     while(result){
         left = val < (*result).key;
@@ -3497,24 +3868,24 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_LastLt(atf_amc::FCascdel& cascdel, co
 
 // --- atf_amc.FCascdel.c_child_heap.Cascdel
 // Delete all elements pointed to by the index.
-void atf_amc::c_child_heap_Cascdel(atf_amc::FCascdel& cascdel) {
+void atf_amc::c_child_heap_Cascdel(atf_amc::FCascdel& parent) {
     // Each row's delete removes it from this array (heaplike: O(1) swap;
     // unique: the backward scan finds the last element first), and a cascade
     // that deletes other members keeps the array consistent, so re-reading
     // c_child_heap_n each iteration visits every remaining row exactly once.
-    while (cascdel.c_child_heap_n > 0) {
-        cascdel_Delete(*cascdel.c_child_heap_elems[cascdel.c_child_heap_n - 1]);
+    while (parent.c_child_heap_n > 0) {
+        cascdel_Delete(*parent.c_child_heap_elems[parent.c_child_heap_n - 1]);
     }
 }
 
 // --- atf_amc.FCascdel.c_child_heap.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void atf_amc::c_child_heap_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::c_child_heap_Insert(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     if (row.cascdel_c_child_heap_idx == -1) {
-        c_child_heap_Reserve(cascdel, 1);
-        u64 n  = cascdel.c_child_heap_n++;
-        cascdel.c_child_heap_elems[n] = &row;
+        c_child_heap_Reserve(parent, 1);
+        u64 n  = parent.c_child_heap_n++;
+        parent.c_child_heap_elems[n] = &row;
         row.cascdel_c_child_heap_idx = n;
     }
 }
@@ -3523,55 +3894,55 @@ void atf_amc::c_child_heap_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel&
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_amc::c_child_heap_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+bool atf_amc::c_child_heap_InsertMaybe(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
     bool retval = !cascdel_c_child_heap_InAryQ(row);
-    c_child_heap_Insert(cascdel,row); // check is performed in _Insert again
+    c_child_heap_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- atf_amc.FCascdel.c_child_heap.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_amc::c_child_heap_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
-    i64 n = cascdel.c_child_heap_n;
+void atf_amc::c_child_heap_Remove(atf_amc::FCascdel& parent, atf_amc::FCascdel& row) {
+    i64 n = parent.c_child_heap_n;
     i64 idx = row.cascdel_c_child_heap_idx;
     if (idx != -1) {
-        atf_amc::FCascdel *last = cascdel.c_child_heap_elems[n-1];
+        atf_amc::FCascdel *last = parent.c_child_heap_elems[n-1];
         last->cascdel_c_child_heap_idx = idx;
-        cascdel.c_child_heap_elems[idx] = last;
+        parent.c_child_heap_elems[idx] = last;
         row.cascdel_c_child_heap_idx = -1;
-        cascdel.c_child_heap_n = n - 1;
+        parent.c_child_heap_n = n - 1;
     }
 }
 
 // --- atf_amc.FCascdel.c_child_heap.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_child_heap_Reserve(atf_amc::FCascdel& cascdel, u64 n) {
-    u64 old_max = cascdel.c_child_heap_max;
-    if (UNLIKELY(cascdel.c_child_heap_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, cascdel.c_child_heap_n + n), 4);
+void atf_amc::c_child_heap_Reserve(atf_amc::FCascdel& parent, u64 n) {
+    u64 old_max = parent.c_child_heap_max;
+    if (UNLIKELY(parent.c_child_heap_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_child_heap_n + n), 4);
         u64 old_size = old_max * sizeof(atf_amc::FCascdel*);
         u64 new_size = new_max * sizeof(atf_amc::FCascdel*);
-        void *new_mem = algo_lib::malloc_ReallocMem(cascdel.c_child_heap_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_child_heap_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FCascdel.c_child_heap");
         }
-        cascdel.c_child_heap_elems = (atf_amc::FCascdel**)new_mem;
-        cascdel.c_child_heap_max = new_max;
+        parent.c_child_heap_elems = (atf_amc::FCascdel**)new_mem;
+        parent.c_child_heap_max = new_max;
     }
 }
 
 // --- atf_amc.FCascdel.c_child_heap.RemoveFirst
 // Heap-like Ptrary: remove first element
 // If index is empty, return NULL. Otherwise remove and return first element in index.
-atf_amc::FCascdel* atf_amc::c_child_heap_RemoveFirst(atf_amc::FCascdel& cascdel) {
+atf_amc::FCascdel* atf_amc::c_child_heap_RemoveFirst(atf_amc::FCascdel& parent) {
     atf_amc::FCascdel *row = NULL;
-    i64 n = cascdel.c_child_heap_n;
+    i64 n = parent.c_child_heap_n;
     if (n > 0) {
-        row = cascdel.c_child_heap_elems[0];
-        cascdel.c_child_heap_elems[n-1]->cascdel_c_child_heap_idx=0;
+        row = parent.c_child_heap_elems[0];
+        parent.c_child_heap_elems[n-1]->cascdel_c_child_heap_idx=0;
         row->cascdel_c_child_heap_idx=-1;
-        cascdel.c_child_heap_elems[0]=cascdel.c_child_heap_elems[n-1];
-        cascdel.c_child_heap_n = n-1;
+        parent.c_child_heap_elems[0]=parent.c_child_heap_elems[n-1];
+        parent.c_child_heap_n = n-1;
     }
     return row;
 }
@@ -3579,58 +3950,58 @@ atf_amc::FCascdel* atf_amc::c_child_heap_RemoveFirst(atf_amc::FCascdel& cascdel)
 // --- atf_amc.FCascdel.c_child_heap.RemoveLast
 // Ptrary: remove last element
 // If index is empty, return NULL. Otherwise remove and return last element in index.
-atf_amc::FCascdel* atf_amc::c_child_heap_RemoveLast(atf_amc::FCascdel& cascdel) {
+atf_amc::FCascdel* atf_amc::c_child_heap_RemoveLast(atf_amc::FCascdel& parent) {
     atf_amc::FCascdel *row = NULL;
-    i64 n = cascdel.c_child_heap_n;
+    i64 n = parent.c_child_heap_n;
     if (n > 0) {
-        row = cascdel.c_child_heap_elems[n-1];
+        row = parent.c_child_heap_elems[n-1];
         row->cascdel_c_child_heap_idx=-1;
-        cascdel.c_child_heap_n = n-1;
+        parent.c_child_heap_n = n-1;
     }
     return row;
 }
 
 // --- atf_amc.FCascdel..Init
 // Set all fields to initial values.
-void atf_amc::FCascdel_Init(atf_amc::FCascdel& cascdel) {
-    cascdel.p_parent = NULL;
-    cascdel.key = u32(0);
-    cascdel.type = u32(0);
-    cascdel.child_ptr = NULL;
-    cascdel.c_child_ptrary_elems = NULL; // (atf_amc.FCascdel.c_child_ptrary)
-    cascdel.c_child_ptrary_n = 0; // (atf_amc.FCascdel.c_child_ptrary)
-    cascdel.c_child_ptrary_max = 0; // (atf_amc.FCascdel.c_child_ptrary)
+void atf_amc::FCascdel_Init(atf_amc::FCascdel& parent) {
+    parent.p_parent = NULL;
+    parent.key = u32(0);
+    parent.type = u32(0);
+    parent.child_ptr = NULL;
+    parent.c_child_ptrary_elems = NULL; // (atf_amc.FCascdel.c_child_ptrary)
+    parent.c_child_ptrary_n = 0; // (atf_amc.FCascdel.c_child_ptrary)
+    parent.c_child_ptrary_max = 0; // (atf_amc.FCascdel.c_child_ptrary)
     // initialize hash table for atf_amc::FCascdel;
-    cascdel.ind_child_thash_n             	= 0; // (atf_amc.FCascdel.ind_child_thash)
-    cascdel.ind_child_thash_buckets_n     	= 4; // (atf_amc.FCascdel.ind_child_thash)
-    cascdel.ind_child_thash_buckets_elems 	= (atf_amc::FCascdel**)algo_lib::malloc_AllocMem(sizeof(atf_amc::FCascdel*)*cascdel.ind_child_thash_buckets_n); // initial buckets (atf_amc.FCascdel.ind_child_thash)
-    if (!cascdel.ind_child_thash_buckets_elems) {
+    parent.ind_child_thash_n             	= 0; // (atf_amc.FCascdel.ind_child_thash)
+    parent.ind_child_thash_buckets_n     	= 4; // (atf_amc.FCascdel.ind_child_thash)
+    parent.ind_child_thash_buckets_elems 	= (atf_amc::FCascdel**)algo_lib::malloc_AllocMem(sizeof(atf_amc::FCascdel*)*parent.ind_child_thash_buckets_n); // initial buckets (atf_amc.FCascdel.ind_child_thash)
+    if (!parent.ind_child_thash_buckets_elems) {
         FatalErrorExit("out of memory"); // (atf_amc.FCascdel.ind_child_thash)
     }
-    memset(cascdel.ind_child_thash_buckets_elems, 0, sizeof(atf_amc::FCascdel*)*cascdel.ind_child_thash_buckets_n); // (atf_amc.FCascdel.ind_child_thash)
-    cascdel.bh_child_bheap_max   	= 0; // (atf_amc.FCascdel.bh_child_bheap)
-    cascdel.bh_child_bheap_n     	= 0; // (atf_amc.FCascdel.bh_child_bheap)
-    cascdel.bh_child_bheap_elems 	= NULL; // (atf_amc.FCascdel.bh_child_bheap)
-    cascdel.zd_childlist_head = NULL; // (atf_amc.FCascdel.zd_childlist)
-    cascdel.zd_childlist_n = 0; // (atf_amc.FCascdel.zd_childlist)
-    cascdel.zd_childlist_tail = NULL; // (atf_amc.FCascdel.zd_childlist)
-    cascdel.tr_child_atree_root = NULL; // (atf_amc.FCascdel.tr_child_atree)
-    cascdel.tr_child_atree_n = 0;
-    cascdel.c_child_heap_elems = NULL; // (atf_amc.FCascdel.c_child_heap)
-    cascdel.c_child_heap_n = 0; // (atf_amc.FCascdel.c_child_heap)
-    cascdel.c_child_heap_max = 0; // (atf_amc.FCascdel.c_child_heap)
-    cascdel.cascdel_c_child_heap_idx = i32(-1);
-    cascdel.cascdel_c_child_ptrary_in_ary = bool(false);
-    cascdel.cascdel_ind_child_thash_next = (atf_amc::FCascdel*)-1; // (atf_amc.FCascdel.ind_child_thash) not-in-hash
-    cascdel.cascdel_ind_child_thash_hashval = 0; // stored hash value
-    cascdel.cascdel_bh_child_bheap_idx = -1; // (atf_amc.FCascdel.bh_child_bheap) not-in-heap
-    cascdel.cascdel_zd_childlist_next = (atf_amc::FCascdel*)-1; // (atf_amc.FCascdel.zd_childlist) not-in-list
-    cascdel.cascdel_zd_childlist_prev = NULL; // (atf_amc.FCascdel.zd_childlist)
-    cascdel.cascdel_tr_child_atree_up = (atf_amc::FCascdel*)-1; // (atf_amc.FCascdel.tr_child_atree) not in tree
-    cascdel.cascdel_tr_child_atree_left = NULL;
-    cascdel.cascdel_tr_child_atree_right = NULL;
-    cascdel.cascdel_tr_child_atree_depth = 0;
-    cascdel.cascdel_next = (atf_amc::FCascdel*)-1; // (atf_amc.FDb.cascdel) not-in-tpool's freelist
+    memset(parent.ind_child_thash_buckets_elems, 0, sizeof(atf_amc::FCascdel*)*parent.ind_child_thash_buckets_n); // (atf_amc.FCascdel.ind_child_thash)
+    parent.bh_child_bheap_max   	= 0; // (atf_amc.FCascdel.bh_child_bheap)
+    parent.bh_child_bheap_n     	= 0; // (atf_amc.FCascdel.bh_child_bheap)
+    parent.bh_child_bheap_elems 	= NULL; // (atf_amc.FCascdel.bh_child_bheap)
+    parent.zd_childlist_head = NULL; // (atf_amc.FCascdel.zd_childlist)
+    parent.zd_childlist_n = 0; // (atf_amc.FCascdel.zd_childlist)
+    parent.zd_childlist_tail = NULL; // (atf_amc.FCascdel.zd_childlist)
+    parent.tr_child_atree_root = NULL; // (atf_amc.FCascdel.tr_child_atree)
+    parent.tr_child_atree_n = 0;
+    parent.c_child_heap_elems = NULL; // (atf_amc.FCascdel.c_child_heap)
+    parent.c_child_heap_n = 0; // (atf_amc.FCascdel.c_child_heap)
+    parent.c_child_heap_max = 0; // (atf_amc.FCascdel.c_child_heap)
+    parent.cascdel_c_child_heap_idx = i32(-1);
+    parent.cascdel_c_child_ptrary_in_ary = bool(false);
+    parent.cascdel_ind_child_thash_next = (atf_amc::FCascdel*)-1; // (atf_amc.FCascdel.ind_child_thash) not-in-hash
+    parent.cascdel_ind_child_thash_hashval = 0; // stored hash value
+    parent.cascdel_bh_child_bheap_idx = -1; // (atf_amc.FCascdel.bh_child_bheap) not-in-heap
+    parent.cascdel_zd_childlist_next = (atf_amc::FCascdel*)-1; // (atf_amc.FCascdel.zd_childlist) not-in-list
+    parent.cascdel_zd_childlist_prev = NULL; // (atf_amc.FCascdel.zd_childlist)
+    parent.cascdel_tr_child_atree_up = (atf_amc::FCascdel*)-1; // (atf_amc.FCascdel.tr_child_atree) not in tree
+    parent.cascdel_tr_child_atree_left = NULL;
+    parent.cascdel_tr_child_atree_right = NULL;
+    parent.cascdel_tr_child_atree_depth = 0;
+    parent.cascdel_next = (atf_amc::FCascdel*)-1; // (atf_amc.FDb.cascdel) not-in-tpool's freelist
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap_curs.Add
@@ -3722,50 +4093,49 @@ void atf_amc::cascdel_bh_child_bheap_curs_Next(cascdel_bh_child_bheap_curs &curs
 }
 
 // --- atf_amc.FCascdel..Uninit
-void atf_amc::FCascdel_Uninit(atf_amc::FCascdel& cascdel) {
-    atf_amc::FCascdel &row = cascdel; (void)row;
-    key_Cleanup(cascdel); // dmmeta.ffunc:atf_amc.FCascdel.key/Cleanup
-    c_child_heap_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.c_child_heap
-    tr_child_atree_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.tr_child_atree
-    zd_childlist_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.zd_childlist
-    bh_child_bheap_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.bh_child_bheap
-    ind_child_thash_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.ind_child_thash
-    c_child_ptrary_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.c_child_ptrary
-    child_ptr_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.child_ptr
-    atf_amc::FCascdel* p_p_parent = row.p_parent;
+void atf_amc::FCascdel_Uninit(atf_amc::FCascdel& parent) {
+    key_Cleanup(parent); // dmmeta.ffunc:atf_amc.FCascdel.key/Cleanup
+    c_child_heap_Cascdel(parent); // dmmeta.cascdel:atf_amc.FCascdel.c_child_heap
+    tr_child_atree_Cascdel(parent); // dmmeta.cascdel:atf_amc.FCascdel.tr_child_atree
+    zd_childlist_Cascdel(parent); // dmmeta.cascdel:atf_amc.FCascdel.zd_childlist
+    bh_child_bheap_Cascdel(parent); // dmmeta.cascdel:atf_amc.FCascdel.bh_child_bheap
+    ind_child_thash_Cascdel(parent); // dmmeta.cascdel:atf_amc.FCascdel.ind_child_thash
+    c_child_ptrary_Cascdel(parent); // dmmeta.cascdel:atf_amc.FCascdel.c_child_ptrary
+    child_ptr_Cascdel(parent); // dmmeta.cascdel:atf_amc.FCascdel.child_ptr
+    atf_amc::FCascdel* p_p_parent = parent.p_parent;
     if (p_p_parent)  {
-        child_ptr_Remove(*p_p_parent, row);// remove cascdel from index child_ptr
+        child_ptr_Remove(*p_p_parent, parent);// remove cascdel from index child_ptr
     }
     if (p_p_parent)  {
-        c_child_ptrary_Remove(*p_p_parent, row);// remove cascdel from index c_child_ptrary
+        c_child_ptrary_Remove(*p_p_parent, parent);// remove cascdel from index c_child_ptrary
     }
     if (p_p_parent)  {
-        ind_child_thash_Remove(*p_p_parent, row);// remove cascdel from index ind_child_thash
+        ind_child_thash_Remove(*p_p_parent, parent);// remove cascdel from index ind_child_thash
     }
     if (p_p_parent)  {
-        bh_child_bheap_Remove(*p_p_parent, row);// remove cascdel from index bh_child_bheap
+        bh_child_bheap_Remove(*p_p_parent, parent);// remove cascdel from index bh_child_bheap
     }
     if (p_p_parent)  {
-        zd_childlist_Remove(*p_p_parent, row);// remove cascdel from index zd_childlist
+        zd_childlist_Remove(*p_p_parent, parent);// remove cascdel from index zd_childlist
     }
     if (p_p_parent)  {
-        tr_child_atree_Remove(*p_p_parent, row);// remove cascdel from index tr_child_atree
+        tr_child_atree_Remove(*p_p_parent, parent);// remove cascdel from index tr_child_atree
     }
     if (p_p_parent)  {
-        c_child_heap_Remove(*p_p_parent, row);// remove cascdel from index c_child_heap
+        c_child_heap_Remove(*p_p_parent, parent);// remove cascdel from index c_child_heap
     }
 
     // atf_amc.FCascdel.c_child_heap.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(cascdel.c_child_heap_elems, sizeof(atf_amc::FCascdel*)*cascdel.c_child_heap_max); // (atf_amc.FCascdel.c_child_heap)
+    algo_lib::malloc_FreeMem(parent.c_child_heap_elems, sizeof(atf_amc::FCascdel*)*parent.c_child_heap_max); // (atf_amc.FCascdel.c_child_heap)
 
     // atf_amc.FCascdel.bh_child_bheap.Uninit (Bheap)  //
-    algo_lib::malloc_FreeMem((u8*)cascdel.bh_child_bheap_elems, sizeof(atf_amc::FCascdel*)*cascdel.bh_child_bheap_max); // (atf_amc.FCascdel.bh_child_bheap)
+    algo_lib::malloc_FreeMem((u8*)parent.bh_child_bheap_elems, sizeof(atf_amc::FCascdel*)*parent.bh_child_bheap_max); // (atf_amc.FCascdel.bh_child_bheap)
 
     // atf_amc.FCascdel.ind_child_thash.Uninit (Thash)  //
-    algo_lib::malloc_FreeMem(cascdel.ind_child_thash_buckets_elems, sizeof(atf_amc::FCascdel*)*cascdel.ind_child_thash_buckets_n); // (atf_amc.FCascdel.ind_child_thash)
+    algo_lib::malloc_FreeMem(parent.ind_child_thash_buckets_elems, sizeof(atf_amc::FCascdel*)*parent.ind_child_thash_buckets_n); // (atf_amc.FCascdel.ind_child_thash)
 
     // atf_amc.FCascdel.c_child_ptrary.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(cascdel.c_child_ptrary_elems, sizeof(atf_amc::FCascdel*)*cascdel.c_child_ptrary_max); // (atf_amc.FCascdel.c_child_ptrary)
+    algo_lib::malloc_FreeMem(parent.c_child_ptrary_elems, sizeof(atf_amc::FCascdel*)*parent.c_child_ptrary_max); // (atf_amc.FCascdel.c_child_ptrary)
 }
 
 // --- atf_amc.FCascdel..Print
@@ -3792,32 +4162,31 @@ void atf_amc::FCascdel_Print(atf_amc::FCascdel& row, algo::cstring& str) {
 }
 
 // --- atf_amc.FCondpar..Uninit
-void atf_amc::FCondpar_Uninit(atf_amc::FCondpar& condpar) {
-    atf_amc::FCondpar &row = condpar; (void)row;
-    zd_condpar_done_Remove(row); // remove condpar from index zd_condpar_done
+void atf_amc::FCondpar_Uninit(atf_amc::FCondpar& parent) {
+    zd_condpar_done_Remove(parent); // remove condpar from index zd_condpar_done
 }
 
 // --- atf_amc.FCondtest.state.Set
-void atf_amc::state_Set(atf_amc::FCondtest& condtest, u32 rhs) {
-    if (!(condtest.state == rhs)) {
-        if (condtest.state == atf_amc_FCondtest_state_done && condtest.p_parent) {
-            atf_amc::zd_condpar_done_Remove(*condtest.p_parent);
+void atf_amc::state_Set(atf_amc::FCondtest& parent, u32 rhs) {
+    if (!(parent.state == rhs)) {
+        if (parent.state == atf_amc_FCondtest_state_done && parent.p_parent) {
+            atf_amc::zd_condpar_done_Remove(*parent.p_parent);
         }
-        if (condtest.state == atf_amc_FCondtest_state_idle) {
-            atf_amc::zd_condtest_idle_Remove(condtest);
+        if (parent.state == atf_amc_FCondtest_state_idle) {
+            atf_amc::zd_condtest_idle_Remove(parent);
         }
-        if (condtest.state == atf_amc_FCondtest_state_run) {
-            atf_amc::zd_condtest_run_Remove(condtest);
+        if (parent.state == atf_amc_FCondtest_state_run) {
+            atf_amc::zd_condtest_run_Remove(parent);
         }
-        condtest.state = rhs;
-        if (rhs == atf_amc_FCondtest_state_done && condtest.p_parent) {
-            atf_amc::zd_condpar_done_Insert(*condtest.p_parent);
+        parent.state = rhs;
+        if (rhs == atf_amc_FCondtest_state_done && parent.p_parent) {
+            atf_amc::zd_condpar_done_Insert(*parent.p_parent);
         }
         if (rhs == atf_amc_FCondtest_state_idle) {
-            atf_amc::zd_condtest_idle_Insert(condtest);
+            atf_amc::zd_condtest_idle_Insert(parent);
         }
         if (rhs == atf_amc_FCondtest_state_run) {
-            atf_amc::zd_condtest_run_Insert(condtest);
+            atf_amc::zd_condtest_run_Insert(parent);
         }
     }
 }
@@ -3825,9 +4194,9 @@ void atf_amc::state_Set(atf_amc::FCondtest& condtest, u32 rhs) {
 // --- atf_amc.FCondtest.state.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::state_ToCstr(const atf_amc::FCondtest& condtest) {
+const char* atf_amc::state_ToCstr(const atf_amc::FCondtest& parent) {
     const char *ret = NULL;
-    switch(state_GetEnum(condtest)) {
+    switch(state_GetEnum(parent)) {
         case atf_amc_FCondtest_state_idle  : ret = "idle";  break;
         case atf_amc_FCondtest_state_run   : ret = "run";  break;
         case atf_amc_FCondtest_state_done  : ret = "done";  break;
@@ -3838,12 +4207,12 @@ const char* atf_amc::state_ToCstr(const atf_amc::FCondtest& condtest) {
 // --- atf_amc.FCondtest.state.Print
 // Convert state to a string. First, attempt conversion to a known string.
 // If no string matches, print state as a numeric value.
-void atf_amc::state_Print(const atf_amc::FCondtest& condtest, algo::cstring &lhs) {
-    const char *strval = state_ToCstr(condtest);
+void atf_amc::state_Print(const atf_amc::FCondtest& parent, algo::cstring &lhs) {
+    const char *strval = state_ToCstr(parent);
     if (strval) {
         lhs << strval;
     } else {
-        lhs << condtest.state;
+        lhs << parent.state;
     }
 }
 
@@ -3851,13 +4220,13 @@ void atf_amc::state_Print(const atf_amc::FCondtest& condtest, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::state_SetStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr rhs) {
+bool atf_amc::state_SetStrptrMaybe(atf_amc::FCondtest& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('r','u','n'): {
-                    state_SetEnum(condtest,atf_amc_FCondtest_state_run); ret = true; break;
+                    state_SetEnum(parent,atf_amc_FCondtest_state_run); ret = true; break;
                 }
             }
             break;
@@ -3865,10 +4234,10 @@ bool atf_amc::state_SetStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr rh
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('d','o','n','e'): {
-                    state_SetEnum(condtest,atf_amc_FCondtest_state_done); ret = true; break;
+                    state_SetEnum(parent,atf_amc_FCondtest_state_done); ret = true; break;
                 }
                 case LE_STR4('i','d','l','e'): {
-                    state_SetEnum(condtest,atf_amc_FCondtest_state_idle); ret = true; break;
+                    state_SetEnum(parent,atf_amc_FCondtest_state_idle); ret = true; break;
                 }
             }
             break;
@@ -3880,42 +4249,42 @@ bool atf_amc::state_SetStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr rh
 // --- atf_amc.FCondtest.state.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::state_SetStrptr(atf_amc::FCondtest& condtest, algo::strptr rhs, atf_amc_FCondtest_state_Enum dflt) {
-    if (!state_SetStrptrMaybe(condtest,rhs)) state_SetEnum(condtest,dflt);
+void atf_amc::state_SetStrptr(atf_amc::FCondtest& parent, algo::strptr rhs, atf_amc_FCondtest_state_Enum dflt) {
+    if (!state_SetStrptrMaybe(parent,rhs)) state_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.FCondtest.state.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::state_ReadStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr rhs) {
+bool atf_amc::state_ReadStrptrMaybe(atf_amc::FCondtest& parent, algo::strptr rhs) {
     bool retval = false;
-    retval = state_SetStrptrMaybe(condtest,rhs); // try symbol conversion
+    retval = state_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
         u32 state_tmp;
         retval = u32_ReadStrptrMaybe(state_tmp, rhs);
         if (retval) {
-            state_Set(condtest, state_tmp);
+            state_Set(parent, state_tmp);
         }
     }
     return retval;
 }
 
 // --- atf_amc.FCondtest.ready.Set
-void atf_amc::ready_Set(atf_amc::FCondtest& condtest, bool rhs) {
-    if (!(condtest.ready == rhs)) {
-        condtest.ready = rhs;
+void atf_amc::ready_Set(atf_amc::FCondtest& parent, bool rhs) {
+    if (!(parent.ready == rhs)) {
+        parent.ready = rhs;
         if (rhs == true) {
-            atf_amc::cd_condtest_ready_Insert(condtest);
+            atf_amc::cd_condtest_ready_Insert(parent);
         }
     }
 }
 
 // --- atf_amc.FCondtest.ready.ReadStrptrMaybe
-inline static bool atf_amc::ready_ReadStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr in_str) {
+inline static bool atf_amc::ready_ReadStrptrMaybe(atf_amc::FCondtest& parent, algo::strptr in_str) {
     bool retval = true;
     bool ready_tmp;
     retval = bool_ReadStrptrMaybe(ready_tmp, in_str);
     if (retval) {
-        ready_Set(condtest, ready_tmp);
+        ready_Set(parent, ready_tmp);
     }
     return retval;
 }
@@ -3923,15 +4292,15 @@ inline static bool atf_amc::ready_ReadStrptrMaybe(atf_amc::FCondtest& condtest, 
 // --- atf_amc.FCondtest.out_buf.BeginAlloc
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // No reallocation is performed. If not possible, return NULL.
-void* atf_amc::out_buf_BeginAlloc(atf_amc::FCondtest &condtest, i32 in_n) {
+void* atf_amc::out_buf_BeginAlloc(atf_amc::FCondtest &parent, i32 in_n) {
     void *ret = NULL;
-    int max = out_buf_Max(condtest);
-    if (condtest.out_buf_end + in_n > max) {
-        out_buf_Shift(condtest);
+    int max = out_buf_Max(parent);
+    if (parent.out_buf_end + in_n > max) {
+        out_buf_Shift(parent);
     }
-    if (condtest.out_buf_end + in_n <= max) {
-        ret = (u8*)condtest.out_buf_elems + condtest.out_buf_end;
-        condtest.out_buf_end += in_n;
+    if (parent.out_buf_end + in_n <= max) {
+        ret = (u8*)parent.out_buf_elems + parent.out_buf_end;
+        parent.out_buf_end += in_n;
     }
     return ret;
 }
@@ -3939,11 +4308,11 @@ void* atf_amc::out_buf_BeginAlloc(atf_amc::FCondtest &condtest, i32 in_n) {
 // --- atf_amc.FCondtest.out_buf.BeginAllocReserve
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // Buffer is reallocated as necessary; function always succeeds.
-void* atf_amc::out_buf_BeginAllocReserve(atf_amc::FCondtest &condtest, i32 in_n) {
-    if (condtest.out_buf_end - condtest.out_buf_start + in_n > out_buf_Max(condtest)) {
-        out_buf_Realloc(condtest, condtest.out_buf_max + i32_Max(condtest.out_buf_max, in_n));
+void* atf_amc::out_buf_BeginAllocReserve(atf_amc::FCondtest &parent, i32 in_n) {
+    if (parent.out_buf_end - parent.out_buf_start + in_n > out_buf_Max(parent)) {
+        out_buf_Realloc(parent, parent.out_buf_max + i32_Max(parent.out_buf_max, in_n));
     }
-    return out_buf_BeginAlloc(condtest, in_n);
+    return out_buf_BeginAlloc(parent, in_n);
 }
 
 // --- atf_amc.FCondtest.out_buf.Realloc
@@ -3951,75 +4320,75 @@ void* atf_amc::out_buf_BeginAllocReserve(atf_amc::FCondtest &condtest, i32 in_n)
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::out_buf_Realloc(atf_amc::FCondtest& condtest, int new_max) {
-    new_max = i32_Max(new_max, condtest.out_buf_end);
-    u8 *new_mem = condtest.out_buf_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(condtest.out_buf_elems, condtest.out_buf_max, new_max)
+void atf_amc::out_buf_Realloc(atf_amc::FCondtest& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.out_buf_end);
+    u8 *new_mem = parent.out_buf_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.out_buf_elems, parent.out_buf_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.FCondtest.out_buf  comment:'out of memory'");
     }
-    condtest.out_buf_elems = new_mem;
-    condtest.out_buf_max = new_max;
+    parent.out_buf_elems = new_mem;
+    parent.out_buf_max = new_max;
 }
 
 // --- atf_amc.FCondtest.out_buf.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::out_buf_RemoveAll(atf_amc::FCondtest& condtest) {
-    condtest.out_buf_start    = 0;
-    condtest.out_buf_end      = 0;
-    condtest.out_buf_msgvalid = false;
+void atf_amc::out_buf_RemoveAll(atf_amc::FCondtest& parent) {
+    parent.out_buf_start    = 0;
+    parent.out_buf_end      = 0;
+    parent.out_buf_msgvalid = false;
     // the buffer is now empty, so a congested producer can proceed
-    if (condtest.out_buf_congested) {
-        condtest.out_buf_congested = false;
-        atf_amc::cd_condtest_space_Insert(condtest);
+    if (parent.out_buf_congested) {
+        parent.out_buf_congested = false;
+        atf_amc::cd_condtest_space_Insert(parent);
     }
 }
 
 // --- atf_amc.FCondtest.out_buf.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::out_buf_Shift(atf_amc::FCondtest& condtest) {
-    i32 start = condtest.out_buf_start;
-    i32 bytes_n = condtest.out_buf_end - start;
+static void atf_amc::out_buf_Shift(atf_amc::FCondtest& parent) {
+    i32 start = parent.out_buf_start;
+    i32 bytes_n = parent.out_buf_end - start;
     if (bytes_n > 0) {
-        memmove(condtest.out_buf_elems, condtest.out_buf_elems + start, bytes_n);
+        memmove(parent.out_buf_elems, parent.out_buf_elems + start, bytes_n);
     }
-    condtest.out_buf_end = bytes_n;
-    condtest.out_buf_start = 0;
+    parent.out_buf_end = bytes_n;
+    parent.out_buf_start = 0;
 }
 
 // --- atf_amc.FCondtest.out_buf.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::out_buf_SkipBytes(atf_amc::FCondtest& condtest, int n) {
-    int avail = condtest.out_buf_end - condtest.out_buf_start;
+void atf_amc::out_buf_SkipBytes(atf_amc::FCondtest& parent, int n) {
+    int avail = parent.out_buf_end - parent.out_buf_start;
     n = i32_Min(n,avail);
-    condtest.out_buf_start += n;
-    condtest.out_buf_msgvalid = false;
+    parent.out_buf_start += n;
+    parent.out_buf_msgvalid = false;
     // A congested buffer drained to the low-water mark can take a full
     // message again, so the producer parked on the space condition is woken
     // exactly once per congestion episode: this is the only place bytes
     // leave an out buffer, so it is the only place the room can appear.
-    if (condtest.out_buf_congested && out_buf_N(condtest) * 4 <= out_buf_Max(condtest)) {
-        condtest.out_buf_congested = false;
-        atf_amc::cd_condtest_space_Insert(condtest);
+    if (parent.out_buf_congested && out_buf_N(parent) * 4 <= out_buf_Max(parent)) {
+        parent.out_buf_congested = false;
+        atf_amc::cd_condtest_space_Insert(parent);
     }
 }
 
 // --- atf_amc.FCondtest.out_buf.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::out_buf_SkipMsg(atf_amc::FCondtest& condtest) {
-    if (condtest.out_buf_msgvalid) {
-        int skip = condtest.out_buf_msglen;
-        i32 start = condtest.out_buf_start;
+void atf_amc::out_buf_SkipMsg(atf_amc::FCondtest& parent) {
+    if (parent.out_buf_msgvalid) {
+        int skip = parent.out_buf_msglen;
+        i32 start = parent.out_buf_start;
         start += skip;
-        condtest.out_buf_start = start;
-        condtest.out_buf_msgvalid = false;
-        condtest.out_buf_msglen   = 0; // reset message length -- important for delimited streams
+        parent.out_buf_start = start;
+        parent.out_buf_msgvalid = false;
+        parent.out_buf_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -4029,19 +4398,19 @@ void atf_amc::out_buf_SkipMsg(atf_amc::FCondtest& condtest) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::out_buf_WriteAll(atf_amc::FCondtest& condtest, u8 *in, i32 in_n) {
-    int max = out_buf_Max(condtest);
+bool atf_amc::out_buf_WriteAll(atf_amc::FCondtest& parent, u8 *in, i32 in_n) {
+    int max = out_buf_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (condtest.out_buf_end + in_n > max) {
-        out_buf_Shift(condtest);
+    if (parent.out_buf_end + in_n > max) {
+        out_buf_Shift(parent);
     }
     // now try to write the message.
-    i32 end = condtest.out_buf_end;
+    i32 end = parent.out_buf_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(condtest.out_buf_elems + end, in, in_n);
-            condtest.out_buf_end = end + in_n;
+            memcpy(parent.out_buf_elems + end, in, in_n);
+            parent.out_buf_end = end + in_n;
         }
     }
     // At the high-water mark the buffer is full enough that a producer must
@@ -4054,11 +4423,11 @@ bool atf_amc::out_buf_WriteAll(atf_amc::FCondtest& condtest, u8 *in, i32 in_n) {
     // producer writing at the drain rate from being woken on every message.
     // A message longer than the whole buffer can never fit, so it does not
     // latch -- that caller must resize (out_buf_WriteReserve).
-    int cong_max = out_buf_Max(condtest);
-    bool cong_hi = cong_max > 0 && out_buf_N(condtest) * 4 >= cong_max * 3;
+    int cong_max = out_buf_Max(parent);
+    bool cong_hi = cong_max > 0 && out_buf_N(parent) * 4 >= cong_max * 3;
     bool cong_refused = !fits && in_n <= cong_max;
     if (cong_hi || cong_refused) {
-        condtest.out_buf_congested = true;
+        parent.out_buf_congested = true;
     }
     return fits;
 }
@@ -4066,39 +4435,39 @@ bool atf_amc::out_buf_WriteAll(atf_amc::FCondtest& condtest, u8 *in, i32 in_n) {
 // --- atf_amc.FCondtest.out_buf.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::out_buf_WriteReserve(atf_amc::FCondtest& condtest, u8 *in, i32 in_n) {
-    if (condtest.out_buf_end - condtest.out_buf_start + in_n > out_buf_Max(condtest)) {
-        out_buf_Realloc(condtest, condtest.out_buf_max + i32_Max(condtest.out_buf_max, in_n));
+void atf_amc::out_buf_WriteReserve(atf_amc::FCondtest& parent, u8 *in, i32 in_n) {
+    if (parent.out_buf_end - parent.out_buf_start + in_n > out_buf_Max(parent)) {
+        out_buf_Realloc(parent, parent.out_buf_max + i32_Max(parent.out_buf_max, in_n));
     }
-    if (!out_buf_WriteAll(condtest, in, in_n)) {
+    if (!out_buf_WriteAll(parent, in, in_n)) {
         FatalErrorExit("out_buf: out of memory");
     }
 }
 
 // --- atf_amc.FCondtest..Init
 // Set all fields to initial values.
-void atf_amc::FCondtest_Init(atf_amc::FCondtest& condtest) {
-    condtest.state = u32(0);
-    condtest.ready = bool(false);
-    condtest.p_parent = NULL;
-    condtest.out_buf_elems = NULL; // out_buf: initialize
-    condtest.out_buf_max = 0; // out_buf: initialize
-    condtest.out_buf_end = 0; // out_buf: initialize
-    condtest.out_buf_start = 0; // out_buf: initialize
-    condtest.out_buf_eof = false; // out_buf: initialize
-    condtest.out_buf_msgvalid = false; // out_buf: initialize
-    condtest.out_buf_msglen = 0; // out_buf: initialize
-    condtest.out_buf_epoll_enable = true; // out_buf: initialize
-    out_buf_Realloc(condtest, 64);
-    condtest.condtest_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.condtest) not-in-tpool's freelist
-    condtest.zd_condtest_run_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.zd_condtest_run) not-in-list
-    condtest.zd_condtest_run_prev = NULL; // (atf_amc.FDb.zd_condtest_run)
-    condtest.zd_condtest_idle_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.zd_condtest_idle) not-in-list
-    condtest.zd_condtest_idle_prev = NULL; // (atf_amc.FDb.zd_condtest_idle)
-    condtest.cd_condtest_ready_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.cd_condtest_ready) not-in-list
-    condtest.cd_condtest_ready_prev = NULL; // (atf_amc.FDb.cd_condtest_ready)
-    condtest.cd_condtest_space_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.cd_condtest_space) not-in-list
-    condtest.cd_condtest_space_prev = NULL; // (atf_amc.FDb.cd_condtest_space)
+void atf_amc::FCondtest_Init(atf_amc::FCondtest& parent) {
+    parent.state = u32(0);
+    parent.ready = bool(false);
+    parent.p_parent = NULL;
+    parent.out_buf_elems = NULL; // out_buf: initialize
+    parent.out_buf_max = 0; // out_buf: initialize
+    parent.out_buf_end = 0; // out_buf: initialize
+    parent.out_buf_start = 0; // out_buf: initialize
+    parent.out_buf_eof = false; // out_buf: initialize
+    parent.out_buf_msgvalid = false; // out_buf: initialize
+    parent.out_buf_msglen = 0; // out_buf: initialize
+    parent.out_buf_epoll_enable = true; // out_buf: initialize
+    out_buf_Realloc(parent, 64);
+    parent.condtest_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.condtest) not-in-tpool's freelist
+    parent.zd_condtest_run_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.zd_condtest_run) not-in-list
+    parent.zd_condtest_run_prev = NULL; // (atf_amc.FDb.zd_condtest_run)
+    parent.zd_condtest_idle_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.zd_condtest_idle) not-in-list
+    parent.zd_condtest_idle_prev = NULL; // (atf_amc.FDb.zd_condtest_idle)
+    parent.cd_condtest_ready_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.cd_condtest_ready) not-in-list
+    parent.cd_condtest_ready_prev = NULL; // (atf_amc.FDb.cd_condtest_ready)
+    parent.cd_condtest_space_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.cd_condtest_space) not-in-list
+    parent.cd_condtest_space_prev = NULL; // (atf_amc.FDb.cd_condtest_space)
 }
 
 // --- atf_amc.FCondtest..ReadFieldMaybe
@@ -4143,19 +4512,18 @@ bool atf_amc::FCondtest_ReadStrptrMaybe(atf_amc::FCondtest &parent, algo::strptr
 }
 
 // --- atf_amc.FCondtest..Uninit
-void atf_amc::FCondtest_Uninit(atf_amc::FCondtest& condtest) {
-    atf_amc::FCondtest &row = condtest; (void)row;
-    zd_condtest_idle_Remove(row); // remove condtest from index zd_condtest_idle
-    zd_condtest_run_Remove(row); // remove condtest from index zd_condtest_run
-    cd_condtest_ready_Remove(row); // remove condtest from index cd_condtest_ready
-    cd_condtest_space_Remove(row); // remove condtest from index cd_condtest_space
+void atf_amc::FCondtest_Uninit(atf_amc::FCondtest& parent) {
+    zd_condtest_idle_Remove(parent); // remove condtest from index zd_condtest_idle
+    zd_condtest_run_Remove(parent); // remove condtest from index zd_condtest_run
+    cd_condtest_ready_Remove(parent); // remove condtest from index cd_condtest_ready
+    cd_condtest_space_Remove(parent); // remove condtest from index cd_condtest_space
 
     // atf_amc.FCondtest.out_buf.Uninit (Fbuf)  //fcond test: out-direction buffer whose drain arms the space condition
-    if (condtest.out_buf_elems) {
-        algo_lib::malloc_FreeMem(condtest.out_buf_elems, condtest.out_buf_max); // (atf_amc.FCondtest.out_buf) out_buf_max is the byte size Realloc allocated
+    if (parent.out_buf_elems) {
+        algo_lib::malloc_FreeMem(parent.out_buf_elems, parent.out_buf_max); // (atf_amc.FCondtest.out_buf) out_buf_max is the byte size Realloc allocated
     }
-    condtest.out_buf_elems = NULL;
-    condtest.out_buf_max = 0;
+    parent.out_buf_elems = NULL;
+    parent.out_buf_max = 0;
 }
 
 // --- atf_amc.FCondtest..Print
@@ -4185,9 +4553,8 @@ void atf_amc::cstring_CopyIn(atf_amc::FCstring &row, atf_amc::Cstring &in) {
 }
 
 // --- atf_amc.FCstring..Uninit
-void atf_amc::FCstring_Uninit(atf_amc::FCstring& cstring) {
-    atf_amc::FCstring &row = cstring; (void)row;
-    ind_cstring_Remove(row); // remove cstring from index ind_cstring
+void atf_amc::FCstring_Uninit(atf_amc::FCstring& parent) {
+    ind_cstring_Remove(parent); // remove cstring from index ind_cstring
 }
 
 // --- atf_amc.FListtype.base.CopyOut
@@ -5676,7 +6043,7 @@ atf_amc::FTypeA* atf_amc::typea_AllocMaybe() {
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_amc::FTypeA* atf_amc::typea_InsertMaybe(const atf_amc::TypeA &value) {
     atf_amc::FTypeA *row = &typea_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    typea_CopyIn(*row,const_cast<atf_amc::TypeA&>(value));
+    type_a_CopyIn(*row,const_cast<atf_amc::TypeA&>(value));
     bool ok = typea_XrefMaybe(*row); // this may return false
     if (!ok) {
         typea_RemoveLast(); // delete offending row, any existing xrefs are cleared
@@ -5776,7 +6143,7 @@ atf_amc::FTypeS* atf_amc::types_AllocMaybe() {
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_amc::FTypeS* atf_amc::types_InsertMaybe(const atf_amc::TypeS &value) {
     atf_amc::FTypeS *row = &types_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    types_CopyIn(*row,const_cast<atf_amc::TypeS&>(value));
+    type_s_CopyIn(*row,const_cast<atf_amc::TypeS&>(value));
     bool ok = types_XrefMaybe(*row); // this may return false
     if (!ok) {
         types_RemoveLast(); // delete offending row, any existing xrefs are cleared
@@ -6386,7 +6753,7 @@ atf_amc::FTypeT* atf_amc::typet_AllocMaybe() {
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_amc::FTypeT* atf_amc::typet_InsertMaybe(const atf_amc::TypeT &value) {
     atf_amc::FTypeT *row = &typet_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    typet_CopyIn(*row,const_cast<atf_amc::TypeT&>(value));
+    type_t_CopyIn(*row,const_cast<atf_amc::TypeT&>(value));
     bool ok = typet_XrefMaybe(*row); // this may return false
     if (!ok) {
         typet_RemoveLast(); // delete offending row, any existing xrefs are cleared
@@ -6857,7 +7224,7 @@ atf_amc::FTypeB* atf_amc::typeb_AllocMaybe() {
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_amc::FTypeB* atf_amc::typeb_InsertMaybe(const atf_amc::TypeB &value) {
     atf_amc::FTypeB *row = &typeb_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    typeb_CopyIn(*row,const_cast<atf_amc::TypeB&>(value));
+    type_b_CopyIn(*row,const_cast<atf_amc::TypeB&>(value));
     bool ok = typeb_XrefMaybe(*row); // this may return false
     if (!ok) {
         typeb_Delete(*row); // delete offending row, any existing xrefs are cleared
@@ -6885,6 +7252,7 @@ void* atf_amc::typeb_AllocMem() {
     if (row) {
         _db.typeb_free = row->typeb_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::FTypeB));
     return row;
 }
 
@@ -6894,6 +7262,7 @@ void atf_amc::typeb_FreeMem(atf_amc::FTypeB &row) {
     if (UNLIKELY(row.typeb_next != (atf_amc::FTypeB*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.typeb  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::FTypeB)); // before the free list threads through the element
     row.typeb_next = _db.typeb_free; // insert into free list
     _db.typeb_free  = &row;
 }
@@ -6988,6 +7357,7 @@ void* atf_amc::pooledbe64_AllocMem() {
     if (row) {
         _db.pooledbe64_free = row->pooledbe64_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::PooledBE64));
     return row;
 }
 
@@ -6997,6 +7367,7 @@ void atf_amc::pooledbe64_FreeMem(atf_amc::PooledBE64 &row) {
     if (UNLIKELY(row.pooledbe64_next != (atf_amc::PooledBE64*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.pooledbe64  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::PooledBE64)); // before the free list threads through the element
     row.pooledbe64_next = _db.pooledbe64_free; // insert into free list
     _db.pooledbe64_free  = &row;
 }
@@ -7049,6 +7420,7 @@ bool atf_amc::pooledbe64_XrefMaybe(atf_amc::PooledBE64 &row) {
 void atf_amc::varlen_extern_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         varlen_extern_Lpblk *blk = (varlen_extern_Lpblk*)((u64)mem & ~(u64)65535);
@@ -7166,6 +7538,7 @@ void* atf_amc::varlen_extern_AllocMem(u64 size) {
         }
     }
     _db.varlen_extern_n += retval != NULL;
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -7635,6 +8008,9 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:bytebuf_dyn_test1  comment:\"Check buffer sizes\"", atf_amc::amctest_bytebuf_dyn_test1 }
         ,{ "atfdb.amctest  amctest:bytebuf_test1  comment:\"Initial state -- no data\"", atf_amc::amctest_bytebuf_test1 }
         ,{ "atfdb.amctest  amctest:bytebuf_test2  comment:\"Write some bytes, read back\"", atf_amc::amctest_bytebuf_test2 }
+        ,{ "atfdb.amctest  amctest:dgrambuf_badlen  comment:\"datagram buffer: an unframeable length ends the datagram, no eof\"", atf_amc::amctest_dgrambuf_badlen }
+        ,{ "atfdb.amctest  amctest:dgrambuf_overrun  comment:\"datagram buffer: a length past the datagram returns nothing, no eof\"", atf_amc::amctest_dgrambuf_overrun }
+        ,{ "atfdb.amctest  amctest:dgrambuf_walk  comment:\"datagram buffer: walk the messages one datagram packed\"", atf_amc::amctest_dgrambuf_walk }
         ,{ "atfdb.amctest  amctest:fbuf_lpool_free  comment:\"Fbuf Uninit returns the buffer to the lpool with the allocated byte size\"", atf_amc::amctest_fbuf_lpool_free }
         ,{ "atfdb.amctest  amctest:fstep_Inline  comment:\"Check step type\"", atf_amc::amctest_fstep_Inline }
         ,{ "atfdb.amctest  amctest:fstep_InlineOnce  comment:\"Check step type\"", atf_amc::amctest_fstep_InlineOnce }
@@ -7726,6 +8102,7 @@ void* atf_amc::cascdel_AllocMem() {
     if (row) {
         _db.cascdel_free = row->cascdel_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::FCascdel));
     return row;
 }
 
@@ -7735,6 +8112,7 @@ void atf_amc::cascdel_FreeMem(atf_amc::FCascdel &row) {
     if (UNLIKELY(row.cascdel_next != (atf_amc::FCascdel*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.cascdel  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::FCascdel)); // before the free list threads through the element
     row.cascdel_next = _db.cascdel_free; // insert into free list
     _db.cascdel_free  = &row;
 }
@@ -7830,6 +8208,7 @@ bool atf_amc::cascdel_XrefMaybe(atf_amc::FCascdel &row) {
 void atf_amc::optalloc_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         optalloc_Lpblk *blk = (optalloc_Lpblk*)((u64)mem & ~(u64)65535);
@@ -7947,6 +8326,7 @@ void* atf_amc::optalloc_AllocMem(u64 size) {
         }
     }
     _db.optalloc_n += retval != NULL;
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -8040,6 +8420,7 @@ bool atf_amc::optalloc_XrefMaybe(atf_amc::OptAlloc &row) {
 void atf_amc::varlenalloc_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         varlenalloc_Lpblk *blk = (varlenalloc_Lpblk*)((u64)mem & ~(u64)65535);
@@ -8157,6 +8538,7 @@ void* atf_amc::varlenalloc_AllocMem(u64 size) {
         }
     }
     _db.varlenalloc_n += retval != NULL;
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -8261,6 +8643,7 @@ bool atf_amc::varlenalloc_XrefMaybe(atf_amc::VarlenAlloc &row) {
 void atf_amc::optg_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         optg_Lpblk *blk = (optg_Lpblk*)((u64)mem & ~(u64)65535);
@@ -8378,6 +8761,7 @@ void* atf_amc::optg_AllocMem(u64 size) {
         }
     }
     _db.optg_n += retval != NULL;
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -8459,7 +8843,7 @@ atf_amc::FOptG* atf_amc::optg_InsertMaybe(const atf_amc::OptG &value) {
         return NULL; // the addon count is not one the allocation accepts
     }
     atf_amc::FOptG *row = &optg_AllocExtra(addon_addr, i32(addon_len));
-    optg_CopyIn(*row,const_cast<atf_amc::OptG&>(value));
+    opt_g_CopyIn(*row,const_cast<atf_amc::OptG&>(value));
     bool ok = optg_XrefMaybe(*row); // this may return false
     if (!ok) {
         optg_Delete(*row); // delete offending row, any existing xrefs are cleared
@@ -8788,17 +9172,17 @@ atf_amc::FAvl* atf_amc::tr_avl_First() {
 
 // --- atf_amc.FDb.tr_avl.InsertImpl
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_amc::tr_avl_InsertImpl(atf_amc::FAvl* parent, atf_amc::FAvl& row) {
+void atf_amc::tr_avl_InsertImpl(atf_amc::FAvl* up, atf_amc::FAvl& row) {
     bool left = false;
-    while(parent != NULL){
-        left = tr_avl_ElemLt(row, *parent);
-        atf_amc::FAvl* side = left ? parent->tr_avl_left : parent->tr_avl_right;
+    while(up != NULL){
+        left = tr_avl_ElemLt(row, *up);
+        atf_amc::FAvl* side = left ? up->tr_avl_left : up->tr_avl_right;
         if(side == NULL){
             break;
         }
-        parent = side;
+        up = side;
     }
-    tr_avl_Connect(parent, &row, left);
+    tr_avl_Connect(up, &row, left);
 }
 
 // --- atf_amc.FDb.tr_avl.Insert
@@ -8881,10 +9265,10 @@ inline static atf_amc::FAvl* atf_amc::tr_avl_TallerChild(atf_amc::FAvl& node) {
 // --- atf_amc.FDb.tr_avl.Disconnect
 // Disconnects the subtree(branch) from the parent
 static void atf_amc::tr_avl_Disconnect(atf_amc::FAvl& node) {
-    atf_amc::FAvl* parent = node.tr_avl_up;
-    if(parent != NULL){
-        bool left = parent->tr_avl_left == &node;
-        (left ? parent->tr_avl_left : parent->tr_avl_right) = NULL;
+    atf_amc::FAvl* up = node.tr_avl_up;
+    if(up != NULL){
+        bool left = up->tr_avl_left == &node;
+        (left ? up->tr_avl_left : up->tr_avl_right) = NULL;
     }
     node.tr_avl_up = NULL;
 }
@@ -8976,12 +9360,12 @@ static void atf_amc::tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) {
 }
 
 // --- atf_amc.FDb.tr_avl.Connect
-inline static void atf_amc::tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) {
-    if(parent){
-        (left ? parent->tr_avl_left : parent->tr_avl_right) = child;
+inline static void atf_amc::tr_avl_Connect(atf_amc::FAvl* up, atf_amc::FAvl* child, bool left) {
+    if(up){
+        (left ? up->tr_avl_left : up->tr_avl_right) = child;
     }
     if(child){
-        child->tr_avl_up = parent;
+        child->tr_avl_up = up;
     }
 }
 
@@ -9161,7 +9545,7 @@ atf_amc::FTypeD* atf_amc::typed_AllocMaybe() {
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_amc::FTypeD* atf_amc::typed_InsertMaybe(const atf_amc::TypeC &value) {
     atf_amc::FTypeD *row = &typed_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    typed_CopyIn(*row,const_cast<atf_amc::TypeC&>(value));
+    type_d_CopyIn(*row,const_cast<atf_amc::TypeC&>(value));
     bool ok = typed_XrefMaybe(*row); // this may return false
     if (!ok) {
         typed_Delete(*row); // delete offending row, any existing xrefs are cleared
@@ -9189,6 +9573,7 @@ void* atf_amc::typed_AllocMem() {
     if (row) {
         _db.typed_free = row->typed_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::FTypeD));
     return row;
 }
 
@@ -9198,6 +9583,7 @@ void atf_amc::typed_FreeMem(atf_amc::FTypeD &row) {
     if (UNLIKELY(row.typed_next != (atf_amc::FTypeD*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.typed  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::FTypeD)); // before the free list threads through the element
     row.typed_next = _db.typed_free; // insert into free list
     _db.typed_free  = &row;
 }
@@ -9534,6 +9920,7 @@ void* atf_amc::hashable_AllocMem() {
     if (row) {
         _db.hashable_free = row->hashable_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::Hashable));
     return row;
 }
 
@@ -9543,6 +9930,7 @@ void atf_amc::hashable_FreeMem(atf_amc::Hashable &row) {
     if (UNLIKELY(row.hashable_next != (atf_amc::Hashable*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.hashable  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::Hashable)); // before the free list threads through the element
     row.hashable_next = _db.hashable_free; // insert into free list
     _db.hashable_free  = &row;
 }
@@ -9762,6 +10150,7 @@ void* atf_amc::time_entry_AllocMem() {
     if (row) {
         _db.time_entry_free = row->time_entry_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::FTimeEntry));
     return row;
 }
 
@@ -9771,6 +10160,7 @@ void atf_amc::time_entry_FreeMem(atf_amc::FTimeEntry &row) {
     if (UNLIKELY(row.time_entry_next != (atf_amc::FTimeEntry*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.time_entry  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::FTimeEntry)); // before the free list threads through the element
     row.time_entry_next = _db.time_entry_free; // insert into free list
     _db.time_entry_free  = &row;
 }
@@ -10218,6 +10608,7 @@ void* atf_amc::hashable_linear_AllocMem() {
     if (row) {
         _db.hashable_linear_free = row->hashable_linear_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::FHashableLinear));
     return row;
 }
 
@@ -10227,6 +10618,7 @@ void atf_amc::hashable_linear_FreeMem(atf_amc::FHashableLinear &row) {
     if (UNLIKELY(row.hashable_linear_next != (atf_amc::FHashableLinear*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.hashable_linear  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::FHashableLinear)); // before the free list threads through the element
     row.hashable_linear_next = _db.hashable_linear_free; // insert into free list
     _db.hashable_linear_free  = &row;
 }
@@ -10322,6 +10714,7 @@ void* atf_amc::strkey_AllocMem() {
     if (row) {
         _db.strkey_free = row->strkey_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::Strkey));
     return row;
 }
 
@@ -10331,6 +10724,7 @@ void atf_amc::strkey_FreeMem(atf_amc::Strkey &row) {
     if (UNLIKELY(row.strkey_next != (atf_amc::Strkey*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.strkey  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::Strkey)); // before the free list threads through the element
     row.strkey_next = _db.strkey_free; // insert into free list
     _db.strkey_free  = &row;
 }
@@ -10550,6 +10944,7 @@ void* atf_amc::blkhash_elem_AllocMem() {
     if (row) {
         _db.blkhash_elem_free = row->blkhash_elem_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::FBlkhashElem));
     return row;
 }
 
@@ -10559,6 +10954,7 @@ void atf_amc::blkhash_elem_FreeMem(atf_amc::FBlkhashElem &row) {
     if (UNLIKELY(row.blkhash_elem_next != (atf_amc::FBlkhashElem*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.blkhash_elem  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::FBlkhashElem)); // before the free list threads through the element
     row.blkhash_elem_next = _db.blkhash_elem_free; // insert into free list
     _db.blkhash_elem_free  = &row;
 }
@@ -10857,6 +11253,7 @@ void atf_amc::ind_blkhash_elem_thash_AbsReserve(int n) {
 void atf_amc::varlenallocscale_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         varlenallocscale_Lpblk *blk = (varlenallocscale_Lpblk*)((u64)mem & ~(u64)65535);
@@ -10974,6 +11371,7 @@ void* atf_amc::varlenallocscale_AllocMem(u64 size) {
         }
     }
     _db.varlenallocscale_n += retval != NULL;
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -11078,6 +11476,7 @@ bool atf_amc::varlenallocscale_XrefMaybe(atf_amc::VarlenAllocScale &row) {
 void atf_amc::msghdrltscale_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         msghdrltscale_Lpblk *blk = (msghdrltscale_Lpblk*)((u64)mem & ~(u64)65535);
@@ -11195,6 +11594,7 @@ void* atf_amc::msghdrltscale_AllocMem(u64 size) {
         }
     }
     _db.msghdrltscale_n += retval != NULL;
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -11744,6 +12144,7 @@ void* atf_amc::condpar_AllocMem() {
     if (row) {
         _db.condpar_free = row->condpar_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::FCondpar));
     return row;
 }
 
@@ -11753,6 +12154,7 @@ void atf_amc::condpar_FreeMem(atf_amc::FCondpar &row) {
     if (UNLIKELY(row.condpar_next != (atf_amc::FCondpar*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.condpar  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::FCondpar)); // before the free list threads through the element
     row.condpar_next = _db.condpar_free; // insert into free list
     _db.condpar_free  = &row;
 }
@@ -11839,6 +12241,7 @@ void* atf_amc::condtest_AllocMem() {
     if (row) {
         _db.condtest_free = row->condtest_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_amc::FCondtest));
     return row;
 }
 
@@ -11848,6 +12251,7 @@ void atf_amc::condtest_FreeMem(atf_amc::FCondtest &row) {
     if (UNLIKELY(row.condtest_next != (atf_amc::FCondtest*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.condtest  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_amc::FCondtest)); // before the free list threads through the element
     row.condtest_next = _db.condtest_free; // insert into free list
     _db.condtest_free  = &row;
 }
@@ -12434,6 +12838,7 @@ atf_amc::Sslbuf* atf_amc::cd_sslbuf_out_RotateFirst() {
 void atf_amc::lpool_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
@@ -12548,6 +12953,7 @@ void* atf_amc::lpool_AllocMem(u64 size) {
             blk->next = NULL;
         }
     }
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -12636,6 +13042,7 @@ bool atf_amc::lpoolbuf_XrefMaybe(atf_amc::Lpoolbuf &row) {
 void atf_amc::optwide_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         optwide_Lpblk *blk = (optwide_Lpblk*)((u64)mem & ~(u64)65535);
@@ -12753,6 +13160,7 @@ void* atf_amc::optwide_AllocMem(u64 size) {
         }
     }
     _db.optwide_n += retval != NULL;
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -12837,7 +13245,7 @@ atf_amc::FOptWide* atf_amc::optwide_InsertMaybe(const atf_amc::OptWide &value) {
         return NULL; // the addon count is not one the allocation accepts
     }
     atf_amc::FOptWide *row = &optwide_AllocExtra(addon_addr, i32(addon_len));
-    optwide_CopyIn(*row,const_cast<atf_amc::OptWide&>(value));
+    opt_wide_CopyIn(*row,const_cast<atf_amc::OptWide&>(value));
     bool ok = optwide_XrefMaybe(*row); // this may return false
     if (!ok) {
         optwide_Delete(*row); // delete offending row, any existing xrefs are cleared
@@ -12868,6 +13276,7 @@ bool atf_amc::optwide_XrefMaybe(atf_amc::FOptWide &row) {
 void atf_amc::optsigned_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         optsigned_Lpblk *blk = (optsigned_Lpblk*)((u64)mem & ~(u64)65535);
@@ -12985,6 +13394,7 @@ void* atf_amc::optsigned_AllocMem(u64 size) {
         }
     }
     _db.optsigned_n += retval != NULL;
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -13069,7 +13479,7 @@ atf_amc::FOptSigned* atf_amc::optsigned_InsertMaybe(const atf_amc::OptSigned &va
         return NULL; // the addon count is not one the allocation accepts
     }
     atf_amc::FOptSigned *row = &optsigned_AllocExtra(addon_addr, i32(addon_len));
-    optsigned_CopyIn(*row,const_cast<atf_amc::OptSigned&>(value));
+    opt_signed_CopyIn(*row,const_cast<atf_amc::OptSigned&>(value));
     bool ok = optsigned_XrefMaybe(*row); // this may return false
     if (!ok) {
         optsigned_Delete(*row); // delete offending row, any existing xrefs are cleared
@@ -13120,7 +13530,7 @@ atf_amc::FTypeU* atf_amc::typeu_AllocMaybe() {
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_amc::FTypeU* atf_amc::typeu_InsertMaybe(const atf_amc::TypeU &value) {
     atf_amc::FTypeU *row = &typeu_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    typeu_CopyIn(*row,const_cast<atf_amc::TypeU&>(value));
+    type_u_CopyIn(*row,const_cast<atf_amc::TypeU&>(value));
     bool ok = typeu_XrefMaybe(*row); // this may return false
     if (!ok) {
         typeu_RemoveLast(); // delete offending row, any existing xrefs are cleared
@@ -14053,7 +14463,6 @@ void atf_amc::FDb_Init() {
 
 // --- atf_amc.FDb..Uninit
 void atf_amc::FDb_Uninit() {
-    atf_amc::FDb &row = _db; (void)row;
 
     // atf_amc.FDb.ind_typeu_v.Uninit (Thash)  //Second index, keyed by the value an update changes
     // skip destruction of ind_typeu_v in global scope
@@ -14149,9 +14558,8 @@ void atf_amc::FDb_Uninit() {
 }
 
 // --- atf_amc.FHashableLinear..Uninit
-void atf_amc::FHashableLinear_Uninit(atf_amc::FHashableLinear& hashable_linear) {
-    atf_amc::FHashableLinear &row = hashable_linear; (void)row;
-    ind_linear_Remove(row); // remove hashable_linear from index ind_linear
+void atf_amc::FHashableLinear_Uninit(atf_amc::FHashableLinear& parent) {
+    ind_linear_Remove(parent); // remove hashable_linear from index ind_linear
 }
 
 // --- atf_amc.TypeG..ReadStrptrMaybe
@@ -14172,7 +14580,7 @@ void atf_amc::TypeG_Print(atf_amc::TypeG row, algo::cstring& str) {
 
 // --- atf_amc.FOptG.optg.CopyOut
 // Copy fields out of row
-void atf_amc::optg_CopyOut(atf_amc::FOptG &row, atf_amc::OptG &out) {
+void atf_amc::opt_g_CopyOut(atf_amc::FOptG &row, atf_amc::OptG &out) {
     // length: field value is computed
     // typeg: unknown field type (Opt), skipped
     (void)row;//only to avoid -Wunused-parameter
@@ -14181,7 +14589,7 @@ void atf_amc::optg_CopyOut(atf_amc::FOptG &row, atf_amc::OptG &out) {
 
 // --- atf_amc.FOptG.optg.CopyIn
 // Copy fields in to row
-void atf_amc::optg_CopyIn(atf_amc::FOptG &row, atf_amc::OptG &in) {
+void atf_amc::opt_g_CopyIn(atf_amc::FOptG &row, atf_amc::OptG &in) {
     // length: field value is computed
     // typeg: unknown field reftype (Opt), skipped
     (void)row;//only to avoid -Wunused-parameter
@@ -14190,14 +14598,14 @@ void atf_amc::optg_CopyIn(atf_amc::FOptG &row, atf_amc::OptG &in) {
 
 // --- atf_amc.FOptG.typeg.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptG& optg) {
-    u8 *end = (u8*)&optg + sizeof(atf_amc::FOptG);
-    return algo::aryptr<u8>(end, i32(optg.length) - ssizeof(atf_amc::FOptG));
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptG& parent) {
+    u8 *end = (u8*)&parent + sizeof(atf_amc::FOptG);
+    return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(atf_amc::FOptG));
 }
 
 // --- atf_amc.FOptSigned.optsigned.CopyOut
 // Copy fields out of row
-void atf_amc::optsigned_CopyOut(atf_amc::FOptSigned &row, atf_amc::OptSigned &out) {
+void atf_amc::opt_signed_CopyOut(atf_amc::FOptSigned &row, atf_amc::OptSigned &out) {
     // length: field value is computed
     // typeg: unknown field type (Opt), skipped
     (void)row;//only to avoid -Wunused-parameter
@@ -14206,7 +14614,7 @@ void atf_amc::optsigned_CopyOut(atf_amc::FOptSigned &row, atf_amc::OptSigned &ou
 
 // --- atf_amc.FOptSigned.optsigned.CopyIn
 // Copy fields in to row
-void atf_amc::optsigned_CopyIn(atf_amc::FOptSigned &row, atf_amc::OptSigned &in) {
+void atf_amc::opt_signed_CopyIn(atf_amc::FOptSigned &row, atf_amc::OptSigned &in) {
     // length: field value is computed
     // typeg: unknown field reftype (Opt), skipped
     (void)row;//only to avoid -Wunused-parameter
@@ -14215,14 +14623,14 @@ void atf_amc::optsigned_CopyIn(atf_amc::FOptSigned &row, atf_amc::OptSigned &in)
 
 // --- atf_amc.FOptSigned.typeg.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptSigned& optsigned) {
-    u8 *end = (u8*)&optsigned + sizeof(atf_amc::FOptSigned);
-    return algo::aryptr<u8>(end, i32(optsigned.length) - ssizeof(atf_amc::FOptSigned));
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptSigned& parent) {
+    u8 *end = (u8*)&parent + sizeof(atf_amc::FOptSigned);
+    return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(atf_amc::FOptSigned));
 }
 
 // --- atf_amc.FOptWide.optwide.CopyOut
 // Copy fields out of row
-void atf_amc::optwide_CopyOut(atf_amc::FOptWide &row, atf_amc::OptWide &out) {
+void atf_amc::opt_wide_CopyOut(atf_amc::FOptWide &row, atf_amc::OptWide &out) {
     // length: field value is computed
     // typeg: unknown field type (Opt), skipped
     (void)row;//only to avoid -Wunused-parameter
@@ -14231,7 +14639,7 @@ void atf_amc::optwide_CopyOut(atf_amc::FOptWide &row, atf_amc::OptWide &out) {
 
 // --- atf_amc.FOptWide.optwide.CopyIn
 // Copy fields in to row
-void atf_amc::optwide_CopyIn(atf_amc::FOptWide &row, atf_amc::OptWide &in) {
+void atf_amc::opt_wide_CopyIn(atf_amc::FOptWide &row, atf_amc::OptWide &in) {
     // length: field value is computed
     // typeg: unknown field reftype (Opt), skipped
     (void)row;//only to avoid -Wunused-parameter
@@ -14240,9 +14648,9 @@ void atf_amc::optwide_CopyIn(atf_amc::FOptWide &row, atf_amc::OptWide &in) {
 
 // --- atf_amc.FOptWide.typeg.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptWide& optwide) {
-    u8 *end = (u8*)&optwide + sizeof(atf_amc::FOptWide);
-    return algo::aryptr<u8>(end, i32(optwide.length * 2 + 8) - ssizeof(atf_amc::FOptWide));
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptWide& parent) {
+    u8 *end = (u8*)&parent + sizeof(atf_amc::FOptWide);
+    return algo::aryptr<u8>(end, i32(parent.length * 2 + 8) - ssizeof(atf_amc::FOptWide));
 }
 
 // --- atf_amc.FPerfSortString.orig.Addary
@@ -14824,7 +15232,6 @@ void atf_amc::sorted1_QuickSort(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString..Uninit
 void atf_amc::FPerfSortString_Uninit(atf_amc::FPerfSortString& parent) {
-    atf_amc::FPerfSortString &row = parent; (void)row;
 
     // atf_amc.FPerfSortString.sorted1.Uninit (Tary)  //
     // remove all elements from atf_amc.FPerfSortString.sorted1
@@ -14859,43 +15266,40 @@ atf_amc::FPerfSortString& atf_amc::FPerfSortString::operator =(const atf_amc::FP
 }
 
 // --- atf_amc.FThashElem..Uninit
-void atf_amc::FThashElem_Uninit(atf_amc::FThashElem& thash_elem) {
-    atf_amc::FThashElem &row = thash_elem; (void)row;
-    ind_thash_elem_Remove(row); // remove thash_elem from index ind_thash_elem
+void atf_amc::FThashElem_Uninit(atf_amc::FThashElem& parent) {
+    ind_thash_elem_Remove(parent); // remove thash_elem from index ind_thash_elem
 }
 
 // --- atf_amc.FTimeEntry..Uninit
-void atf_amc::FTimeEntry_Uninit(atf_amc::FTimeEntry& time_entry) {
-    atf_amc::FTimeEntry &row = time_entry; (void)row;
-    bh_time_entry_Remove(row); // remove time_entry from index bh_time_entry
+void atf_amc::FTimeEntry_Uninit(atf_amc::FTimeEntry& parent) {
+    bh_time_entry_Remove(parent); // remove time_entry from index bh_time_entry
 }
 
 // --- atf_amc.FTypeC.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typec_CopyOut(atf_amc::FTypeC &row, atf_amc::TypeC &out) {
+void atf_amc::type_c_CopyOut(atf_amc::FTypeC &row, atf_amc::TypeC &out) {
     out.typec = row.typec;
 }
 
 // --- atf_amc.FTypeC.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typec_CopyIn(atf_amc::FTypeC &row, atf_amc::TypeC &in) {
+void atf_amc::type_c_CopyIn(atf_amc::FTypeC &row, atf_amc::TypeC &in) {
     row.typec = in.typec;
 }
 
 // --- atf_amc.FTypeC..Uninit
-void atf_amc::FTypeC_Uninit(atf_amc::FTypeC& typec) {
-    atf_amc::FTypeC &row = typec; (void)row;
-    zsl_h_typec_Remove(row); // remove typec from index zsl_h_typec
-    zs_t_typec_Remove(row); // remove typec from index zs_t_typec
-    zs_mt_typec_Remove(row); // remove typec from index zs_mt_typec
-    bh_typec_Remove(row); // remove typec from index bh_typec
-    zdl_h_typec_Remove(row); // remove typec from index zdl_h_typec
-    zd_t_typec_Remove(row); // remove typec from index zd_t_typec
-    zdl_hnt_typec_Remove(row); // remove typec from index zdl_hnt_typec
-    csl_h_typec_Remove(row); // remove typec from index csl_h_typec
-    cs_t_typec_Remove(row); // remove typec from index cs_t_typec
-    cdl_h_typec_Remove(row); // remove typec from index cdl_h_typec
-    cd_t_typec_Remove(row); // remove typec from index cd_t_typec
+void atf_amc::FTypeC_Uninit(atf_amc::FTypeC& parent) {
+    zsl_h_typec_Remove(parent); // remove typec from index zsl_h_typec
+    zs_t_typec_Remove(parent); // remove typec from index zs_t_typec
+    zs_mt_typec_Remove(parent); // remove typec from index zs_mt_typec
+    bh_typec_Remove(parent); // remove typec from index bh_typec
+    zdl_h_typec_Remove(parent); // remove typec from index zdl_h_typec
+    zd_t_typec_Remove(parent); // remove typec from index zd_t_typec
+    zdl_hnt_typec_Remove(parent); // remove typec from index zdl_hnt_typec
+    csl_h_typec_Remove(parent); // remove typec from index csl_h_typec
+    cs_t_typec_Remove(parent); // remove typec from index cs_t_typec
+    cdl_h_typec_Remove(parent); // remove typec from index cdl_h_typec
+    cd_t_typec_Remove(parent); // remove typec from index cd_t_typec
 }
 
 // --- atf_amc.FTypeC..Print
@@ -14907,21 +15311,21 @@ void atf_amc::FTypeC_Print(atf_amc::FTypeC& row, algo::cstring& str) {
 
 // --- atf_amc.FTypeA.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typea_CopyOut(atf_amc::FTypeA &row, atf_amc::TypeA &out) {
+void atf_amc::type_a_CopyOut(atf_amc::FTypeA &row, atf_amc::TypeA &out) {
     out.typea = row.typea;
 }
 
 // --- atf_amc.FTypeA.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typea_CopyIn(atf_amc::FTypeA &row, atf_amc::TypeA &in) {
+void atf_amc::type_a_CopyIn(atf_amc::FTypeA &row, atf_amc::TypeA &in) {
     row.typea = in.typea;
 }
 
 // --- atf_amc.FTypeA.typec.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FTypeC& atf_amc::typec_Alloc(atf_amc::FTypeA& typea) {
-    atf_amc::FTypeC* row = typec_AllocMaybe(typea);
+atf_amc::FTypeC& atf_amc::typec_Alloc(atf_amc::FTypeA& parent) {
+    atf_amc::FTypeC* row = typec_AllocMaybe(parent);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FTypeA.typec  comment:'Alloc failed'");
     }
@@ -14930,8 +15334,8 @@ atf_amc::FTypeC& atf_amc::typec_Alloc(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.typec.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FTypeC* atf_amc::typec_AllocMaybe(atf_amc::FTypeA& typea) {
-    atf_amc::FTypeC *row = (atf_amc::FTypeC*)typec_AllocMem(typea);
+atf_amc::FTypeC* atf_amc::typec_AllocMaybe(atf_amc::FTypeA& parent) {
+    atf_amc::FTypeC *row = (atf_amc::FTypeC*)typec_AllocMem(parent);
     if (row) {
         new (row) atf_amc::FTypeC; // call constructor
     }
@@ -14941,12 +15345,12 @@ atf_amc::FTypeC* atf_amc::typec_AllocMaybe(atf_amc::FTypeA& typea) {
 // --- atf_amc.FTypeA.typec.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FTypeC* atf_amc::typec_InsertMaybe(atf_amc::FTypeA& typea, const atf_amc::TypeC &value) {
-    atf_amc::FTypeC *row = &typec_Alloc(typea); // if out of memory, process dies. if input error, return NULL.
-    typec_CopyIn(*row,const_cast<atf_amc::TypeC&>(value));
+atf_amc::FTypeC* atf_amc::typec_InsertMaybe(atf_amc::FTypeA& parent, const atf_amc::TypeC &value) {
+    atf_amc::FTypeC *row = &typec_Alloc(parent); // if out of memory, process dies. if input error, return NULL.
+    type_c_CopyIn(*row,const_cast<atf_amc::TypeC&>(value));
     bool ok = typec_XrefMaybe(*row); // this may return false
     if (!ok) {
-        typec_RemoveLast(typea); // delete offending row, any existing xrefs are cleared
+        typec_RemoveLast(parent); // delete offending row, any existing xrefs are cleared
         row = NULL; // forget this ever happened
     }
     return row;
@@ -14954,22 +15358,22 @@ atf_amc::FTypeC* atf_amc::typec_InsertMaybe(atf_amc::FTypeA& typea, const atf_am
 
 // --- atf_amc.FTypeA.typec.RemoveAll
 // Destroy all elements of Inlary
-void atf_amc::typec_RemoveAll(atf_amc::FTypeA& typea) {
-    for (u64 n = typea.typec_n; n>0; ) {
+void atf_amc::typec_RemoveAll(atf_amc::FTypeA& parent) {
+    for (u64 n = parent.typec_n; n>0; ) {
         n--;
-        reinterpret_cast<atf_amc::FTypeC*>(typea.typec_data)[n].~FTypeC(); // destroy last element
-        typea.typec_n=n;
+        reinterpret_cast<atf_amc::FTypeC*>(parent.typec_data)[n].~FTypeC(); // destroy last element
+        parent.typec_n=n;
     }
 }
 
 // --- atf_amc.FTypeA.typec.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::typec_RemoveLast(atf_amc::FTypeA& typea) {
-    u64 n = typea.typec_n;
+void atf_amc::typec_RemoveLast(atf_amc::FTypeA& parent) {
+    u64 n = parent.typec_n;
     if (n > 0) {
         n -= 1;
-        reinterpret_cast<atf_amc::FTypeC*>(typea.typec_data)[n].~FTypeC();
-        typea.typec_n = n;
+        reinterpret_cast<atf_amc::FTypeC*>(parent.typec_data)[n].~FTypeC();
+        parent.typec_n = n;
     }
 }
 
@@ -14984,146 +15388,146 @@ bool atf_amc::typec_XrefMaybe(atf_amc::FTypeC &row) {
 
 // --- atf_amc.FTypeA.zdl_typeb.Cascdel
 // Delete all elements in the linked list.
-void atf_amc::zdl_typeb_Cascdel(atf_amc::FTypeA& typea) {
-    while (atf_amc::FTypeB *zdl_typeb_first = zdl_typeb_First(typea)) {
+void atf_amc::zdl_typeb_Cascdel(atf_amc::FTypeA& parent) {
+    while (atf_amc::FTypeB *zdl_typeb_first = zdl_typeb_First(parent)) {
         typeb_Delete(*zdl_typeb_first);
     }
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zdl_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
-    if (!typea_zdl_typeb_InLlistQ(row)) {
-        atf_amc::FTypeB* old_head = typea.zdl_typeb_head;
-        row.typea_zdl_typeb_prev = NULL;
-        row.typea_zdl_typeb_next = old_head;
-        typea.zdl_typeb_head  = &row;
-        atf_amc::FTypeB **new_row_a = &old_head->typea_zdl_typeb_prev;
-        atf_amc::FTypeB **new_row_b = &typea.zdl_typeb_tail;
+void atf_amc::zdl_typeb_Insert(atf_amc::FTypeA& parent, atf_amc::FTypeB& row) {
+    if (!type_a_zdl_typeb_InLlistQ(row)) {
+        atf_amc::FTypeB* old_head = parent.zdl_typeb_head;
+        row.type_a_zdl_typeb_prev = NULL;
+        row.type_a_zdl_typeb_next = old_head;
+        parent.zdl_typeb_head  = &row;
+        atf_amc::FTypeB **new_row_a = &old_head->type_a_zdl_typeb_prev;
+        atf_amc::FTypeB **new_row_b = &parent.zdl_typeb_tail;
         atf_amc::FTypeB **new_row = old_head ? new_row_a : new_row_b;
         *new_row = &row;
-        typea.zdl_typeb_n++;
+        parent.zdl_typeb_n++;
     }
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zdl_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
-    if (typea_zdl_typeb_InLlistQ(row)) {
-        atf_amc::FTypeB* old_head       = typea.zdl_typeb_head;
+void atf_amc::zdl_typeb_Remove(atf_amc::FTypeA& parent, atf_amc::FTypeB& row) {
+    if (type_a_zdl_typeb_InLlistQ(row)) {
+        atf_amc::FTypeB* old_head       = parent.zdl_typeb_head;
         (void)old_head; // in case it's not used
-        atf_amc::FTypeB* prev = row.typea_zdl_typeb_prev;
-        atf_amc::FTypeB* next = row.typea_zdl_typeb_next;
+        atf_amc::FTypeB* prev = row.type_a_zdl_typeb_prev;
+        atf_amc::FTypeB* next = row.type_a_zdl_typeb_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        atf_amc::FTypeB **new_next_a = &prev->typea_zdl_typeb_next;
-        atf_amc::FTypeB **new_next_b = &typea.zdl_typeb_head;
+        atf_amc::FTypeB **new_next_a = &prev->type_a_zdl_typeb_next;
+        atf_amc::FTypeB **new_next_b = &parent.zdl_typeb_head;
         atf_amc::FTypeB **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        atf_amc::FTypeB **new_prev_a = &next->typea_zdl_typeb_prev;
-        atf_amc::FTypeB **new_prev_b = &typea.zdl_typeb_tail;
+        atf_amc::FTypeB **new_prev_a = &next->type_a_zdl_typeb_prev;
+        atf_amc::FTypeB **new_prev_b = &parent.zdl_typeb_tail;
         atf_amc::FTypeB **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        typea.zdl_typeb_n--;
-        row.typea_zdl_typeb_next=(atf_amc::FTypeB*)-1; // not-in-list
+        parent.zdl_typeb_n--;
+        row.type_a_zdl_typeb_next=(atf_amc::FTypeB*)-1; // not-in-list
     }
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zdl_typeb_RemoveAll(atf_amc::FTypeA& typea) {
-    atf_amc::FTypeB* row = typea.zdl_typeb_head;
-    typea.zdl_typeb_head = NULL;
-    typea.zdl_typeb_tail = NULL;
-    typea.zdl_typeb_n = 0;
+void atf_amc::zdl_typeb_RemoveAll(atf_amc::FTypeA& parent) {
+    atf_amc::FTypeB* row = parent.zdl_typeb_head;
+    parent.zdl_typeb_head = NULL;
+    parent.zdl_typeb_tail = NULL;
+    parent.zdl_typeb_n = 0;
     while (row) {
-        atf_amc::FTypeB* row_next = row->typea_zdl_typeb_next;
-        row->typea_zdl_typeb_next  = (atf_amc::FTypeB*)-1;
-        row->typea_zdl_typeb_prev  = NULL;
+        atf_amc::FTypeB* row_next = row->type_a_zdl_typeb_next;
+        row->type_a_zdl_typeb_next  = (atf_amc::FTypeB*)-1;
+        row->type_a_zdl_typeb_prev  = NULL;
         row = row_next;
     }
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeB* atf_amc::zdl_typeb_RemoveFirst(atf_amc::FTypeA& typea) {
+atf_amc::FTypeB* atf_amc::zdl_typeb_RemoveFirst(atf_amc::FTypeA& parent) {
     atf_amc::FTypeB *row = NULL;
-    row = typea.zdl_typeb_head;
+    row = parent.zdl_typeb_head;
     if (row) {
-        atf_amc::FTypeB *next = row->typea_zdl_typeb_next;
-        typea.zdl_typeb_head = next;
-        atf_amc::FTypeB **new_end_a = &next->typea_zdl_typeb_prev;
-        atf_amc::FTypeB **new_end_b = &typea.zdl_typeb_tail;
+        atf_amc::FTypeB *next = row->type_a_zdl_typeb_next;
+        parent.zdl_typeb_head = next;
+        atf_amc::FTypeB **new_end_a = &next->type_a_zdl_typeb_prev;
+        atf_amc::FTypeB **new_end_b = &parent.zdl_typeb_tail;
         atf_amc::FTypeB **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        typea.zdl_typeb_n--;
-        row->typea_zdl_typeb_next = (atf_amc::FTypeB*)-1; // mark as not-in-list
+        parent.zdl_typeb_n--;
+        row->type_a_zdl_typeb_next = (atf_amc::FTypeB*)-1; // mark as not-in-list
     }
     return row;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void atf_amc::zdl_typeb_InsertBefore(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, atf_amc::FTypeB* before) {
-    if (!typea_zdl_typeb_InLlistQ(row) && &row != before) {
+void atf_amc::zdl_typeb_InsertBefore(atf_amc::FTypeA& parent, atf_amc::FTypeB& row, atf_amc::FTypeB* before) {
+    if (!type_a_zdl_typeb_InLlistQ(row) && &row != before) {
         atf_amc::FTypeB* next = before;
-        atf_amc::FTypeB* prev = next ? next->typea_zdl_typeb_prev : typea.zdl_typeb_tail;
-        row.typea_zdl_typeb_next = next;
-        row.typea_zdl_typeb_prev = prev;
-        atf_amc::FTypeB **prev_link_a = &prev->typea_zdl_typeb_next;
-        atf_amc::FTypeB **prev_link_b = &typea.zdl_typeb_head;
+        atf_amc::FTypeB* prev = next ? next->type_a_zdl_typeb_prev : parent.zdl_typeb_tail;
+        row.type_a_zdl_typeb_next = next;
+        row.type_a_zdl_typeb_prev = prev;
+        atf_amc::FTypeB **prev_link_a = &prev->type_a_zdl_typeb_next;
+        atf_amc::FTypeB **prev_link_b = &parent.zdl_typeb_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
-        atf_amc::FTypeB **next_link_a = &next->typea_zdl_typeb_prev;
-        atf_amc::FTypeB **next_link_b = &typea.zdl_typeb_tail;
+        atf_amc::FTypeB **next_link_a = &next->type_a_zdl_typeb_prev;
+        atf_amc::FTypeB **next_link_b = &parent.zdl_typeb_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        typea.zdl_typeb_n++;
+        parent.zdl_typeb_n++;
     }
 }
 
 // --- atf_amc.FTypeA.bh_typeb.Cascdel
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
-void atf_amc::bh_typeb_Cascdel(atf_amc::FTypeA& typea) {
-    i32 n = typea.bh_typeb_n;
+void atf_amc::bh_typeb_Cascdel(atf_amc::FTypeA& parent) {
+    i32 n = parent.bh_typeb_n;
     while (n > 0) {
         n--;
-        atf_amc::FTypeB &elem = *typea.bh_typeb_elems[n]; // pick cheapest element to remove
-        elem.typea_bh_typeb_idx = -1; // mark not-in-heap
-        typea.bh_typeb_n = n;
+        atf_amc::FTypeB &elem = *parent.bh_typeb_elems[n]; // pick cheapest element to remove
+        elem.type_a_bh_typeb_idx = -1; // mark not-in-heap
+        parent.bh_typeb_n = n;
         typeb_Delete(elem);
     }
 }
 
 // --- atf_amc.FTypeA.bh_typeb.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void atf_amc::bh_typeb_Dealloc(atf_amc::FTypeA& typea) {
-    bh_typeb_RemoveAll(typea);
-    algo_lib::malloc_FreeMem(typea.bh_typeb_elems, sizeof(atf_amc::FTypeB*)*typea.bh_typeb_max);
-    typea.bh_typeb_max   = 0;
-    typea.bh_typeb_elems = NULL;
+void atf_amc::bh_typeb_Dealloc(atf_amc::FTypeA& parent) {
+    bh_typeb_RemoveAll(parent);
+    algo_lib::malloc_FreeMem(parent.bh_typeb_elems, sizeof(atf_amc::FTypeB*)*parent.bh_typeb_max);
+    parent.bh_typeb_max   = 0;
+    parent.bh_typeb_elems = NULL;
 }
 
 // --- atf_amc.FTypeA.bh_typeb.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int atf_amc::bh_typeb_Downheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) {
-    atf_amc::FTypeB* *elems = typea.bh_typeb_elems;
-    int n = typea.bh_typeb_n;
+static int atf_amc::bh_typeb_Downheap(atf_amc::FTypeA& parent, atf_amc::FTypeB& row, int idx) {
+    atf_amc::FTypeB* *elems = parent.bh_typeb_elems;
+    int n = parent.bh_typeb_n;
     int child = idx*2+1;
     while (child < n) {
         atf_amc::FTypeB* p = elems[child]; // left child
         int rchild = child+1;
         if (rchild < n) {
             atf_amc::FTypeB* q = elems[rchild]; // right child
-            if (bh_typeb_ElemLt(typea, *q,*p)) {
+            if (bh_typeb_ElemLt(parent, *q,*p)) {
                 child = rchild;
                 p     = q;
             }
         }
-        if (!bh_typeb_ElemLt(typea, *p,row)) {
+        if (!bh_typeb_ElemLt(parent, *p,row)) {
             break;
         }
-        p->typea_bh_typeb_idx   = idx;
+        p->type_a_bh_typeb_idx   = idx;
         elems[idx]     = p;
         idx            = child;
         child          = idx*2+1;
@@ -15133,33 +15537,33 @@ static int atf_amc::bh_typeb_Downheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& r
 
 // --- atf_amc.FTypeA.bh_typeb.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void atf_amc::bh_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
-    if (LIKELY(row.typea_bh_typeb_idx == -1)) {
-        bh_typeb_Reserve(typea, 1);
-        int n = typea.bh_typeb_n;
-        typea.bh_typeb_n = n + 1;
-        int new_idx = bh_typeb_Upheap(typea, row, n);
-        row.typea_bh_typeb_idx = new_idx;
-        typea.bh_typeb_elems[new_idx] = &row;
+void atf_amc::bh_typeb_Insert(atf_amc::FTypeA& parent, atf_amc::FTypeB& row) {
+    if (LIKELY(row.type_a_bh_typeb_idx == -1)) {
+        bh_typeb_Reserve(parent, 1);
+        int n = parent.bh_typeb_n;
+        parent.bh_typeb_n = n + 1;
+        int new_idx = bh_typeb_Upheap(parent, row, n);
+        row.type_a_bh_typeb_idx = new_idx;
+        parent.bh_typeb_elems[new_idx] = &row;
     }
 }
 
 // --- atf_amc.FTypeA.bh_typeb.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 atf_amc::bh_typeb_Reheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
-    int old_idx = row.typea_bh_typeb_idx;
+i32 atf_amc::bh_typeb_Reheap(atf_amc::FTypeA& parent, atf_amc::FTypeB& row) {
+    int old_idx = row.type_a_bh_typeb_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
-        bh_typeb_Reserve(typea, 1);
-        old_idx = typea.bh_typeb_n++;
+        bh_typeb_Reserve(parent, 1);
+        old_idx = parent.bh_typeb_n++;
     }
-    int new_idx = bh_typeb_Upheap(typea, row, old_idx);
+    int new_idx = bh_typeb_Upheap(parent, row, old_idx);
     if (!isnew && new_idx == old_idx) {
-        new_idx = bh_typeb_Downheap(typea, row, old_idx);
+        new_idx = bh_typeb_Downheap(parent, row, old_idx);
     }
-    row.typea_bh_typeb_idx = new_idx;
-    typea.bh_typeb_elems[new_idx] = &row;
+    row.type_a_bh_typeb_idx = new_idx;
+    parent.bh_typeb_elems[new_idx] = &row;
     return new_idx;
 }
 
@@ -15168,31 +15572,31 @@ i32 atf_amc::bh_typeb_Reheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 atf_amc::bh_typeb_ReheapFirst(atf_amc::FTypeA& typea) {
-    atf_amc::FTypeB &row = *typea.bh_typeb_elems[0];
-    i32 new_idx = bh_typeb_Downheap(typea, row, 0);
-    row.typea_bh_typeb_idx = new_idx;
-    typea.bh_typeb_elems[new_idx] = &row;
+i32 atf_amc::bh_typeb_ReheapFirst(atf_amc::FTypeA& parent) {
+    atf_amc::FTypeB &row = *parent.bh_typeb_elems[0];
+    i32 new_idx = bh_typeb_Downheap(parent, row, 0);
+    row.type_a_bh_typeb_idx = new_idx;
+    parent.bh_typeb_elems[new_idx] = &row;
     return new_idx;
 }
 
 // --- atf_amc.FTypeA.bh_typeb.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::bh_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
+void atf_amc::bh_typeb_Remove(atf_amc::FTypeA& parent, atf_amc::FTypeB& row) {
     if (bh_typeb_InBheapQ(row)) {
-        int old_idx = row.typea_bh_typeb_idx;
-        if (typea.bh_typeb_elems[old_idx] == &row) { // sanity check: heap points back to row
-            row.typea_bh_typeb_idx = -1;           // mark not in heap
-            i32 n = typea.bh_typeb_n - 1; // index of last element in heap
-            typea.bh_typeb_n = n;         // decrease count
+        int old_idx = row.type_a_bh_typeb_idx;
+        if (parent.bh_typeb_elems[old_idx] == &row) { // sanity check: heap points back to row
+            row.type_a_bh_typeb_idx = -1;           // mark not in heap
+            i32 n = parent.bh_typeb_n - 1; // index of last element in heap
+            parent.bh_typeb_n = n;         // decrease count
             if (old_idx != n) {
-                atf_amc::FTypeB *elem = typea.bh_typeb_elems[n];
-                int new_idx = bh_typeb_Upheap(typea, *elem, old_idx);
+                atf_amc::FTypeB *elem = parent.bh_typeb_elems[n];
+                int new_idx = bh_typeb_Upheap(parent, *elem, old_idx);
                 if (new_idx == old_idx) {
-                    new_idx = bh_typeb_Downheap(typea, *elem, old_idx);
+                    new_idx = bh_typeb_Downheap(parent, *elem, old_idx);
                 }
-                elem->typea_bh_typeb_idx = new_idx;
-                typea.bh_typeb_elems[new_idx] = elem;
+                elem->type_a_bh_typeb_idx = new_idx;
+                parent.bh_typeb_elems[new_idx] = elem;
             }
         }
     }
@@ -15200,29 +15604,29 @@ void atf_amc::bh_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
 
 // --- atf_amc.FTypeA.bh_typeb.RemoveAll
 // Remove all elements from binary heap
-void atf_amc::bh_typeb_RemoveAll(atf_amc::FTypeA& typea) {
-    int n = typea.bh_typeb_n;
+void atf_amc::bh_typeb_RemoveAll(atf_amc::FTypeA& parent) {
+    int n = parent.bh_typeb_n;
     for (int i = n - 1; i>=0; i--) {
-        typea.bh_typeb_elems[i]->typea_bh_typeb_idx = -1; // mark not-in-heap
+        parent.bh_typeb_elems[i]->type_a_bh_typeb_idx = -1; // mark not-in-heap
     }
-    typea.bh_typeb_n = 0;
+    parent.bh_typeb_n = 0;
 }
 
 // --- atf_amc.FTypeA.bh_typeb.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-atf_amc::FTypeB* atf_amc::bh_typeb_RemoveFirst(atf_amc::FTypeA& typea) {
+atf_amc::FTypeB* atf_amc::bh_typeb_RemoveFirst(atf_amc::FTypeA& parent) {
     atf_amc::FTypeB *row = NULL;
-    if (typea.bh_typeb_n > 0) {
-        row = typea.bh_typeb_elems[0];
-        row->typea_bh_typeb_idx = -1;           // mark not in heap
-        i32 n = typea.bh_typeb_n - 1; // index of last element in heap
-        typea.bh_typeb_n = n;         // decrease count
+    if (parent.bh_typeb_n > 0) {
+        row = parent.bh_typeb_elems[0];
+        row->type_a_bh_typeb_idx = -1;           // mark not in heap
+        i32 n = parent.bh_typeb_n - 1; // index of last element in heap
+        parent.bh_typeb_n = n;         // decrease count
         if (n) {
-            atf_amc::FTypeB &elem = *typea.bh_typeb_elems[n];
-            int new_idx = bh_typeb_Downheap(typea, elem, 0);
-            elem.typea_bh_typeb_idx = new_idx;
-            typea.bh_typeb_elems[new_idx] = &elem;
+            atf_amc::FTypeB &elem = *parent.bh_typeb_elems[n];
+            int new_idx = bh_typeb_Downheap(parent, elem, 0);
+            elem.type_a_bh_typeb_idx = new_idx;
+            parent.bh_typeb_elems[new_idx] = &elem;
         }
     }
     return row;
@@ -15230,33 +15634,33 @@ atf_amc::FTypeB* atf_amc::bh_typeb_RemoveFirst(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.bh_typeb.Reserve
 // Reserve space in index for N more elements
-void atf_amc::bh_typeb_Reserve(atf_amc::FTypeA& typea, int n) {
-    i32 old_max = typea.bh_typeb_max;
-    if (UNLIKELY(typea.bh_typeb_n + n > old_max)) {
+void atf_amc::bh_typeb_Reserve(atf_amc::FTypeA& parent, int n) {
+    i32 old_max = parent.bh_typeb_max;
+    if (UNLIKELY(parent.bh_typeb_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
         u32 old_size = old_max * sizeof(atf_amc::FTypeB*);
         u32 new_size = new_max * sizeof(atf_amc::FTypeB*);
-        void *new_mem = algo_lib::malloc_ReallocMem(typea.bh_typeb_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.bh_typeb_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FTypeA.bh_typeb");
         }
-        typea.bh_typeb_elems = (atf_amc::FTypeB**)new_mem;
-        typea.bh_typeb_max = new_max;
+        parent.bh_typeb_elems = (atf_amc::FTypeB**)new_mem;
+        parent.bh_typeb_max = new_max;
     }
 }
 
 // --- atf_amc.FTypeA.bh_typeb.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int atf_amc::bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) {
-    atf_amc::FTypeB* *elems = typea.bh_typeb_elems;
+static int atf_amc::bh_typeb_Upheap(atf_amc::FTypeA& parent, atf_amc::FTypeB& row, int idx) {
+    atf_amc::FTypeB* *elems = parent.bh_typeb_elems;
     while (idx>0) {
         int j = (idx-1)/2;
         atf_amc::FTypeB* p = elems[j];
-        if (!bh_typeb_ElemLt(typea, row, *p)) {
+        if (!bh_typeb_ElemLt(parent, row, *p)) {
             break;
         }
-        p->typea_bh_typeb_idx = idx;
+        p->type_a_bh_typeb_idx = idx;
         elems[idx] = p;
         idx = j;
     }
@@ -15264,25 +15668,25 @@ static int atf_amc::bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row
 }
 
 // --- atf_amc.FTypeA.bh_typeb.ElemLt
-inline static bool atf_amc::bh_typeb_ElemLt(atf_amc::FTypeA& typea, atf_amc::FTypeB &a, atf_amc::FTypeB &b) {
-    (void)typea;
+inline static bool atf_amc::bh_typeb_ElemLt(atf_amc::FTypeA& parent, atf_amc::FTypeB &a, atf_amc::FTypeB &b) {
+    (void)parent;
     return a.j < b.j;
 }
 
 // --- atf_amc.FTypeA..Init
 // Set all fields to initial values.
-void atf_amc::FTypeA_Init(atf_amc::FTypeA& typea) {
-    typea.typea = i32(0);
-    typea.typec_n = 0; // typec: initialize count
-    typea.zdl_typeb_head = NULL; // (atf_amc.FTypeA.zdl_typeb)
-    typea.zdl_typeb_n = 0; // (atf_amc.FTypeA.zdl_typeb)
-    typea.zdl_typeb_tail = NULL; // (atf_amc.FTypeA.zdl_typeb)
-    typea.rowid = i32(0);
-    typea.bh_typeb_max   	= 0; // (atf_amc.FTypeA.bh_typeb)
-    typea.bh_typeb_n     	= 0; // (atf_amc.FTypeA.bh_typeb)
-    typea.bh_typeb_elems 	= NULL; // (atf_amc.FTypeA.bh_typeb)
-    typea.ind_typea_next = (atf_amc::FTypeA*)-1; // (atf_amc.FDb.ind_typea) not-in-hash
-    typea.ind_typea_hashval = 0; // stored hash value
+void atf_amc::FTypeA_Init(atf_amc::FTypeA& parent) {
+    parent.typea = i32(0);
+    parent.typec_n = 0; // typec: initialize count
+    parent.zdl_typeb_head = NULL; // (atf_amc.FTypeA.zdl_typeb)
+    parent.zdl_typeb_n = 0; // (atf_amc.FTypeA.zdl_typeb)
+    parent.zdl_typeb_tail = NULL; // (atf_amc.FTypeA.zdl_typeb)
+    parent.rowid = i32(0);
+    parent.bh_typeb_max   	= 0; // (atf_amc.FTypeA.bh_typeb)
+    parent.bh_typeb_n     	= 0; // (atf_amc.FTypeA.bh_typeb)
+    parent.bh_typeb_elems 	= NULL; // (atf_amc.FTypeA.bh_typeb)
+    parent.ind_typea_next = (atf_amc::FTypeA*)-1; // (atf_amc.FDb.ind_typea) not-in-hash
+    parent.ind_typea_hashval = 0; // stored hash value
 }
 
 // --- atf_amc.FTypeA.bh_typeb_curs.Add
@@ -15360,7 +15764,7 @@ void atf_amc::typea_bh_typeb_curs_Next(typea_bh_typeb_curs &curs) {
             i = l;
         } while (i < n);
         curs.temp_n = n-1;
-        int index = dead->typea_bh_typeb_idx;
+        int index = dead->type_a_bh_typeb_idx;
         i = (index*2+1);
         if (i < bh_typeb_N((*curs.parent))) {
             atf_amc::FTypeB &elem = *curs.parent->bh_typeb_elems[i];
@@ -15374,17 +15778,16 @@ void atf_amc::typea_bh_typeb_curs_Next(typea_bh_typeb_curs &curs) {
 }
 
 // --- atf_amc.FTypeA..Uninit
-void atf_amc::FTypeA_Uninit(atf_amc::FTypeA& typea) {
-    atf_amc::FTypeA &row = typea; (void)row;
-    bh_typeb_Cascdel(typea); // dmmeta.cascdel:atf_amc.FTypeA.bh_typeb
-    zdl_typeb_Cascdel(typea); // dmmeta.cascdel:atf_amc.FTypeA.zdl_typeb
-    ind_typea_Remove(row); // remove typea from index ind_typea
+void atf_amc::FTypeA_Uninit(atf_amc::FTypeA& parent) {
+    bh_typeb_Cascdel(parent); // dmmeta.cascdel:atf_amc.FTypeA.bh_typeb
+    zdl_typeb_Cascdel(parent); // dmmeta.cascdel:atf_amc.FTypeA.zdl_typeb
+    ind_typea_Remove(parent); // remove typea from index ind_typea
 
     // atf_amc.FTypeA.bh_typeb.Uninit (Bheap)  //
-    algo_lib::malloc_FreeMem((u8*)typea.bh_typeb_elems, sizeof(atf_amc::FTypeB*)*typea.bh_typeb_max); // (atf_amc.FTypeA.bh_typeb)
+    algo_lib::malloc_FreeMem((u8*)parent.bh_typeb_elems, sizeof(atf_amc::FTypeB*)*parent.bh_typeb_max); // (atf_amc.FTypeA.bh_typeb)
 
     // atf_amc.FTypeA.typec.Uninit (Inlary)  //
-    typec_RemoveAll(typea);
+    typec_RemoveAll(parent);
 }
 
 // --- atf_amc.FTypeA..Print
@@ -15411,27 +15814,26 @@ void atf_amc::FTypeA_Print(atf_amc::FTypeA& row, algo::cstring& str) {
 
 // --- atf_amc.FTypeB.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typeb_CopyOut(atf_amc::FTypeB &row, atf_amc::TypeB &out) {
+void atf_amc::type_b_CopyOut(atf_amc::FTypeB &row, atf_amc::TypeB &out) {
     out.typea = row.typea;
     out.j = row.j;
 }
 
 // --- atf_amc.FTypeB.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typeb_CopyIn(atf_amc::FTypeB &row, atf_amc::TypeB &in) {
+void atf_amc::type_b_CopyIn(atf_amc::FTypeB &row, atf_amc::TypeB &in) {
     row.typea = in.typea;
     row.j = in.j;
 }
 
 // --- atf_amc.FTypeB..Uninit
-void atf_amc::FTypeB_Uninit(atf_amc::FTypeB& typeb) {
-    atf_amc::FTypeB &row = typeb; (void)row;
-    atf_amc::FTypeA* p_typea = atf_amc::ind_typea_Find(row.typea);
+void atf_amc::FTypeB_Uninit(atf_amc::FTypeB& parent) {
+    atf_amc::FTypeA* p_typea = atf_amc::ind_typea_Find(parent.typea);
     if (p_typea)  {
-        zdl_typeb_Remove(*p_typea, row);// remove typeb from index zdl_typeb
+        zdl_typeb_Remove(*p_typea, parent);// remove typeb from index zdl_typeb
     }
     if (p_typea)  {
-        bh_typeb_Remove(*p_typea, row);// remove typeb from index bh_typeb
+        bh_typeb_Remove(*p_typea, parent);// remove typeb from index bh_typeb
     }
 }
 
@@ -15451,22 +15853,21 @@ void atf_amc::FTypeB_Print(atf_amc::FTypeB& row, algo::cstring& str) {
 
 // --- atf_amc.FTypeD.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typed_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) {
+void atf_amc::type_d_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) {
     out.typec = row.typec;
 }
 
 // --- atf_amc.FTypeD.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typed_CopyIn(atf_amc::FTypeD &row, atf_amc::TypeC &in) {
+void atf_amc::type_d_CopyIn(atf_amc::FTypeD &row, atf_amc::TypeC &in) {
     row.typec = in.typec;
 }
 
 // --- atf_amc.FTypeD..Uninit
-void atf_amc::FTypeD_Uninit(atf_amc::FTypeD& typed) {
-    atf_amc::FTypeD &row = typed; (void)row;
-    zd_typed_Remove(row); // remove typed from index zd_typed
-    zs_t_typed_Remove(row); // remove typed from index zs_t_typed
-    cd_typed_Remove(row); // remove typed from index cd_typed
+void atf_amc::FTypeD_Uninit(atf_amc::FTypeD& parent) {
+    zd_typed_Remove(parent); // remove typed from index zd_typed
+    zs_t_typed_Remove(parent); // remove typed from index zs_t_typed
+    cd_typed_Remove(parent); // remove typed from index cd_typed
 }
 
 // --- atf_amc.FTypeD..Print
@@ -15478,112 +15879,111 @@ void atf_amc::FTypeD_Print(atf_amc::FTypeD& row, algo::cstring& str) {
 
 // --- atf_amc.FTypeS.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::types_CopyOut(atf_amc::FTypeS &row, atf_amc::TypeS &out) {
+void atf_amc::type_s_CopyOut(atf_amc::FTypeS &row, atf_amc::TypeS &out) {
     out.types = row.types;
     out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_amc.FTypeS.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::types_CopyIn(atf_amc::FTypeS &row, atf_amc::TypeS &in) {
+void atf_amc::type_s_CopyIn(atf_amc::FTypeS &row, atf_amc::TypeS &in) {
     row.types = in.types;
     row.comment = in.comment;
 }
 
 // --- atf_amc.FTypeS.zdl_typet.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zdl_typet_Insert(atf_amc::FTypeS& types, atf_amc::FTypeT& row) {
-    if (!types_zdl_typet_InLlistQ(row)) {
-        atf_amc::FTypeT* old_head = types.zdl_typet_head;
-        row.types_zdl_typet_prev = NULL;
-        row.types_zdl_typet_next = old_head;
-        types.zdl_typet_head  = &row;
-        atf_amc::FTypeT **new_row_a = &old_head->types_zdl_typet_prev;
-        atf_amc::FTypeT **new_row_b = &types.zdl_typet_tail;
+void atf_amc::zdl_typet_Insert(atf_amc::FTypeS& parent, atf_amc::FTypeT& row) {
+    if (!type_s_zdl_typet_InLlistQ(row)) {
+        atf_amc::FTypeT* old_head = parent.zdl_typet_head;
+        row.type_s_zdl_typet_prev = NULL;
+        row.type_s_zdl_typet_next = old_head;
+        parent.zdl_typet_head  = &row;
+        atf_amc::FTypeT **new_row_a = &old_head->type_s_zdl_typet_prev;
+        atf_amc::FTypeT **new_row_b = &parent.zdl_typet_tail;
         atf_amc::FTypeT **new_row = old_head ? new_row_a : new_row_b;
         *new_row = &row;
-        types.zdl_typet_n++;
+        parent.zdl_typet_n++;
     }
 }
 
 // --- atf_amc.FTypeS.zdl_typet.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zdl_typet_Remove(atf_amc::FTypeS& types, atf_amc::FTypeT& row) {
-    if (types_zdl_typet_InLlistQ(row)) {
-        atf_amc::FTypeT* old_head       = types.zdl_typet_head;
+void atf_amc::zdl_typet_Remove(atf_amc::FTypeS& parent, atf_amc::FTypeT& row) {
+    if (type_s_zdl_typet_InLlistQ(row)) {
+        atf_amc::FTypeT* old_head       = parent.zdl_typet_head;
         (void)old_head; // in case it's not used
-        atf_amc::FTypeT* prev = row.types_zdl_typet_prev;
-        atf_amc::FTypeT* next = row.types_zdl_typet_next;
+        atf_amc::FTypeT* prev = row.type_s_zdl_typet_prev;
+        atf_amc::FTypeT* next = row.type_s_zdl_typet_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        atf_amc::FTypeT **new_next_a = &prev->types_zdl_typet_next;
-        atf_amc::FTypeT **new_next_b = &types.zdl_typet_head;
+        atf_amc::FTypeT **new_next_a = &prev->type_s_zdl_typet_next;
+        atf_amc::FTypeT **new_next_b = &parent.zdl_typet_head;
         atf_amc::FTypeT **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        atf_amc::FTypeT **new_prev_a = &next->types_zdl_typet_prev;
-        atf_amc::FTypeT **new_prev_b = &types.zdl_typet_tail;
+        atf_amc::FTypeT **new_prev_a = &next->type_s_zdl_typet_prev;
+        atf_amc::FTypeT **new_prev_b = &parent.zdl_typet_tail;
         atf_amc::FTypeT **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        types.zdl_typet_n--;
-        row.types_zdl_typet_next=(atf_amc::FTypeT*)-1; // not-in-list
+        parent.zdl_typet_n--;
+        row.type_s_zdl_typet_next=(atf_amc::FTypeT*)-1; // not-in-list
     }
 }
 
 // --- atf_amc.FTypeS.zdl_typet.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zdl_typet_RemoveAll(atf_amc::FTypeS& types) {
-    atf_amc::FTypeT* row = types.zdl_typet_head;
-    types.zdl_typet_head = NULL;
-    types.zdl_typet_tail = NULL;
-    types.zdl_typet_n = 0;
+void atf_amc::zdl_typet_RemoveAll(atf_amc::FTypeS& parent) {
+    atf_amc::FTypeT* row = parent.zdl_typet_head;
+    parent.zdl_typet_head = NULL;
+    parent.zdl_typet_tail = NULL;
+    parent.zdl_typet_n = 0;
     while (row) {
-        atf_amc::FTypeT* row_next = row->types_zdl_typet_next;
-        row->types_zdl_typet_next  = (atf_amc::FTypeT*)-1;
-        row->types_zdl_typet_prev  = NULL;
+        atf_amc::FTypeT* row_next = row->type_s_zdl_typet_next;
+        row->type_s_zdl_typet_next  = (atf_amc::FTypeT*)-1;
+        row->type_s_zdl_typet_prev  = NULL;
         row = row_next;
     }
 }
 
 // --- atf_amc.FTypeS.zdl_typet.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeT* atf_amc::zdl_typet_RemoveFirst(atf_amc::FTypeS& types) {
+atf_amc::FTypeT* atf_amc::zdl_typet_RemoveFirst(atf_amc::FTypeS& parent) {
     atf_amc::FTypeT *row = NULL;
-    row = types.zdl_typet_head;
+    row = parent.zdl_typet_head;
     if (row) {
-        atf_amc::FTypeT *next = row->types_zdl_typet_next;
-        types.zdl_typet_head = next;
-        atf_amc::FTypeT **new_end_a = &next->types_zdl_typet_prev;
-        atf_amc::FTypeT **new_end_b = &types.zdl_typet_tail;
+        atf_amc::FTypeT *next = row->type_s_zdl_typet_next;
+        parent.zdl_typet_head = next;
+        atf_amc::FTypeT **new_end_a = &next->type_s_zdl_typet_prev;
+        atf_amc::FTypeT **new_end_b = &parent.zdl_typet_tail;
         atf_amc::FTypeT **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        types.zdl_typet_n--;
-        row->types_zdl_typet_next = (atf_amc::FTypeT*)-1; // mark as not-in-list
+        parent.zdl_typet_n--;
+        row->type_s_zdl_typet_next = (atf_amc::FTypeT*)-1; // mark as not-in-list
     }
     return row;
 }
 
 // --- atf_amc.FTypeS.zdl_typet.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void atf_amc::zdl_typet_InsertBefore(atf_amc::FTypeS& types, atf_amc::FTypeT& row, atf_amc::FTypeT* before) {
-    if (!types_zdl_typet_InLlistQ(row) && &row != before) {
+void atf_amc::zdl_typet_InsertBefore(atf_amc::FTypeS& parent, atf_amc::FTypeT& row, atf_amc::FTypeT* before) {
+    if (!type_s_zdl_typet_InLlistQ(row) && &row != before) {
         atf_amc::FTypeT* next = before;
-        atf_amc::FTypeT* prev = next ? next->types_zdl_typet_prev : types.zdl_typet_tail;
-        row.types_zdl_typet_next = next;
-        row.types_zdl_typet_prev = prev;
-        atf_amc::FTypeT **prev_link_a = &prev->types_zdl_typet_next;
-        atf_amc::FTypeT **prev_link_b = &types.zdl_typet_head;
+        atf_amc::FTypeT* prev = next ? next->type_s_zdl_typet_prev : parent.zdl_typet_tail;
+        row.type_s_zdl_typet_next = next;
+        row.type_s_zdl_typet_prev = prev;
+        atf_amc::FTypeT **prev_link_a = &prev->type_s_zdl_typet_next;
+        atf_amc::FTypeT **prev_link_b = &parent.zdl_typet_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
-        atf_amc::FTypeT **next_link_a = &next->types_zdl_typet_prev;
-        atf_amc::FTypeT **next_link_b = &types.zdl_typet_tail;
+        atf_amc::FTypeT **next_link_a = &next->type_s_zdl_typet_prev;
+        atf_amc::FTypeT **next_link_b = &parent.zdl_typet_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        types.zdl_typet_n++;
+        parent.zdl_typet_n++;
     }
 }
 
 // --- atf_amc.FTypeS..Uninit
-void atf_amc::FTypeS_Uninit(atf_amc::FTypeS& types) {
-    atf_amc::FTypeS &row = types; (void)row;
-    ind_types_Remove(row); // remove types from index ind_types
+void atf_amc::FTypeS_Uninit(atf_amc::FTypeS& parent) {
+    ind_types_Remove(parent); // remove types from index ind_types
 }
 
 // --- atf_amc.FTypeS..Print
@@ -15602,24 +16002,23 @@ void atf_amc::FTypeS_Print(atf_amc::FTypeS& row, algo::cstring& str) {
 
 // --- atf_amc.FTypeT.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typet_CopyOut(atf_amc::FTypeT &row, atf_amc::TypeT &out) {
+void atf_amc::type_t_CopyOut(atf_amc::FTypeT &row, atf_amc::TypeT &out) {
     out.types = row.types;
     out.j = row.j;
 }
 
 // --- atf_amc.FTypeT.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typet_CopyIn(atf_amc::FTypeT &row, atf_amc::TypeT &in) {
+void atf_amc::type_t_CopyIn(atf_amc::FTypeT &row, atf_amc::TypeT &in) {
     row.types = in.types;
     row.j = in.j;
 }
 
 // --- atf_amc.FTypeT..Uninit
-void atf_amc::FTypeT_Uninit(atf_amc::FTypeT& typet) {
-    atf_amc::FTypeT &row = typet; (void)row;
-    atf_amc::FTypeS* p_types = atf_amc::ind_types_Find(row.types);
+void atf_amc::FTypeT_Uninit(atf_amc::FTypeT& parent) {
+    atf_amc::FTypeS* p_types = atf_amc::ind_types_Find(parent.types);
     if (p_types)  {
-        zdl_typet_Remove(*p_types, row);// remove typet from index zdl_typet
+        zdl_typet_Remove(*p_types, parent);// remove typet from index zdl_typet
     }
 }
 
@@ -15639,23 +16038,22 @@ void atf_amc::FTypeT_Print(atf_amc::FTypeT& row, algo::cstring& str) {
 
 // --- atf_amc.FTypeU.base.CopyOut
 // Copy fields out of row
-void atf_amc::typeu_CopyOut(atf_amc::FTypeU &row, atf_amc::TypeU &out) {
+void atf_amc::type_u_CopyOut(atf_amc::FTypeU &row, atf_amc::TypeU &out) {
     out.u = row.u;
     out.v = row.v;
 }
 
 // --- atf_amc.FTypeU.base.CopyIn
 // Copy fields in to row
-void atf_amc::typeu_CopyIn(atf_amc::FTypeU &row, atf_amc::TypeU &in) {
+void atf_amc::type_u_CopyIn(atf_amc::FTypeU &row, atf_amc::TypeU &in) {
     row.u = in.u;
     row.v = in.v;
 }
 
 // --- atf_amc.FTypeU..Uninit
-void atf_amc::FTypeU_Uninit(atf_amc::FTypeU& typeu) {
-    atf_amc::FTypeU &row = typeu; (void)row;
-    ind_typeu_Remove(row); // remove typeu from index ind_typeu
-    ind_typeu_v_Remove(row); // remove typeu from index ind_typeu_v
+void atf_amc::FTypeU_Uninit(atf_amc::FTypeU& parent) {
+    ind_typeu_Remove(parent); // remove typeu from index ind_typeu
+    ind_typeu_v_Remove(parent); // remove typeu from index ind_typeu_v
 }
 
 // --- atf_amc.TypeA..ReadStrptrMaybe
@@ -16467,7 +16865,6 @@ bool atf_amc::fixary_XrefMaybe(atf_amc::TypeA &row) {
 
 // --- atf_amc.FUnitSort..Uninit
 void atf_amc::FUnitSort_Uninit(atf_amc::FUnitSort& parent) {
-    atf_amc::FUnitSort &row = parent; (void)row;
 
     // atf_amc.FUnitSort.c_ptrary.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(parent.c_ptrary_elems, sizeof(atf_amc::TypeA*)*parent.c_ptrary_max); // (atf_amc.FUnitSort.c_ptrary)
@@ -17193,9 +17590,8 @@ void atf_amc::FieldId_Print(atf_amc::FieldId row, algo::cstring& str) {
 }
 
 // --- atf_amc.Hashable..Uninit
-void atf_amc::Hashable_Uninit(atf_amc::Hashable& hashable) {
-    atf_amc::Hashable &row = hashable; (void)row;
-    ind_hashable_Remove(row); // remove hashable from index ind_hashable
+void atf_amc::Hashable_Uninit(atf_amc::Hashable& parent) {
+    ind_hashable_Remove(parent); // remove hashable from index ind_hashable
 }
 
 // --- atf_amc.InlaryMin.ary.Alloc
@@ -17316,7 +17712,6 @@ void atf_amc::InlaryMin_Init(atf_amc::InlaryMin& parent) {
 
 // --- atf_amc.InlaryMin..Uninit
 void atf_amc::InlaryMin_Uninit(atf_amc::InlaryMin& parent) {
-    atf_amc::InlaryMin &row = parent; (void)row;
 
     // atf_amc.InlaryMin.ary.Uninit (Inlary)  //
     ary_RemoveAll(parent);
@@ -17476,7 +17871,6 @@ void atf_amc::InlaryPrint_Init(atf_amc::InlaryPrint& parent) {
 
 // --- atf_amc.InlaryPrint..Uninit
 void atf_amc::InlaryPrint_Uninit(atf_amc::InlaryPrint& parent) {
-    atf_amc::InlaryPrint &row = parent; (void)row;
 
     // atf_amc.InlaryPrint.inlary.Uninit (Inlary)  //
     inlary_RemoveAll(parent);
@@ -17577,7 +17971,6 @@ void atf_amc::Lary32_Init(atf_amc::Lary32& parent) {
 
 // --- atf_amc.Lary32..Uninit
 void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
-    atf_amc::Lary32 &row = parent; (void)row;
 
     // atf_amc.Lary32.lary.Uninit (Lary)  //
     // destroy atf_amc.Lary32.lary
@@ -17602,15 +17995,15 @@ void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
 // SkipMsg will skip both the line and the delimiter.
 // A partial line at the end of input is NOT returned.
 // 
-algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) {
+algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& parent) {
     algo::aryptr<char> ret;
-    if (!linebuf.in_msgvalid) {
-        in_ScanMsg(linebuf);
+    if (!parent.in_msgvalid) {
+        in_ScanMsg(parent);
     }
-    char *hdr = (char*)(linebuf.in_elems + linebuf.in_start);
-    if (linebuf.in_msgvalid) {
+    char *hdr = (char*)(parent.in_elems + parent.in_start);
+    if (parent.in_msgvalid) {
         ret.elems = hdr;
-        ret.n_elems = linebuf.in_msglen;
+        ret.n_elems = parent.in_msglen;
     }
     return ret;
 }
@@ -17620,89 +18013,89 @@ algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::in_Realloc(atf_amc::Linebuf& linebuf, int new_max) {
-    new_max = i32_Max(new_max, linebuf.in_end);
-    u8 *new_mem = linebuf.in_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(linebuf.in_elems, linebuf.in_max, new_max)
+void atf_amc::in_Realloc(atf_amc::Linebuf& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_end);
+    u8 *new_mem = parent.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_elems, parent.in_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Linebuf.in  comment:'out of memory'");
     }
-    linebuf.in_elems = new_mem;
-    linebuf.in_max = new_max;
+    parent.in_elems = new_mem;
+    parent.in_max = new_max;
 }
 
 // --- atf_amc.Linebuf.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_RemoveAll(atf_amc::Linebuf& linebuf) {
-    linebuf.in_start    = 0;
-    linebuf.in_end      = 0;
-    linebuf.in_msgvalid = false;
+void atf_amc::in_RemoveAll(atf_amc::Linebuf& parent) {
+    parent.in_start    = 0;
+    parent.in_end      = 0;
+    parent.in_msgvalid = false;
 }
 
 // --- atf_amc.Linebuf.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_ScanMsg(atf_amc::Linebuf& linebuf) {
-    char *hdr = (char*)(linebuf.in_elems + linebuf.in_start);
-    i32 avail = in_N(linebuf);
+static void atf_amc::in_ScanMsg(atf_amc::Linebuf& parent) {
+    char *hdr = (char*)(parent.in_elems + parent.in_start);
+    i32 avail = in_N(parent);
     i32 msglen;
     bool found = false;
     // scan for delimiter starting from the previous place where we left off.
-    // at the end, save offset back to linebuf so we don't have to re-scan.
+    // at the end, save offset back to parent so we don't have to re-scan.
     // returned message length **does not include delimiter**.
     // a line that exceeds buffer length is not returned.
-    for (msglen = linebuf.in_msglen; msglen < avail; msglen += sizeof(char)) {
+    for (msglen = parent.in_msglen; msglen < avail; msglen += sizeof(char)) {
         if (hdr[msglen] == '\n') { // delimiter?
             found = true;
             break;
         }
     }
-    if (!found && msglen >= in_Max(linebuf)) {
-        linebuf.in_eof = true; // cause user to detect eof
-        linebuf.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    if (!found && msglen >= in_Max(parent)) {
+        parent.in_eof = true; // cause user to detect eof
+        parent.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
     }
-    linebuf.in_msglen = msglen;
-    linebuf.in_msgvalid = found;
+    parent.in_msglen = msglen;
+    parent.in_msgvalid = found;
 }
 
 // --- atf_amc.Linebuf.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_Shift(atf_amc::Linebuf& linebuf) {
-    i32 start = linebuf.in_start;
-    i32 bytes_n = linebuf.in_end - start;
+static void atf_amc::in_Shift(atf_amc::Linebuf& parent) {
+    i32 start = parent.in_start;
+    i32 bytes_n = parent.in_end - start;
     if (bytes_n > 0) {
-        memmove(linebuf.in_elems, linebuf.in_elems + start, bytes_n);
+        memmove(parent.in_elems, parent.in_elems + start, bytes_n);
     }
-    linebuf.in_end = bytes_n;
-    linebuf.in_start = 0;
+    parent.in_end = bytes_n;
+    parent.in_start = 0;
 }
 
 // --- atf_amc.Linebuf.in.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::in_SkipBytes(atf_amc::Linebuf& linebuf, int n) {
-    int avail = linebuf.in_end - linebuf.in_start;
+void atf_amc::in_SkipBytes(atf_amc::Linebuf& parent, int n) {
+    int avail = parent.in_end - parent.in_start;
     n = i32_Min(n,avail);
-    linebuf.in_start += n;
-    linebuf.in_msgvalid = false;
+    parent.in_start += n;
+    parent.in_msgvalid = false;
 }
 
 // --- atf_amc.Linebuf.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_SkipMsg(atf_amc::Linebuf& linebuf) {
-    if (linebuf.in_msgvalid) {
-        int skip = linebuf.in_msglen;
+void atf_amc::in_SkipMsg(atf_amc::Linebuf& parent) {
+    if (parent.in_msgvalid) {
+        int skip = parent.in_msglen;
         skip += ssizeof(char); // delimiter
-        i32 start = linebuf.in_start;
+        i32 start = parent.in_start;
         start += skip;
-        linebuf.in_start = start;
-        linebuf.in_msgvalid = false;
-        linebuf.in_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_start = start;
+        parent.in_msgvalid = false;
+        parent.in_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -17712,19 +18105,19 @@ void atf_amc::in_SkipMsg(atf_amc::Linebuf& linebuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_WriteAll(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) {
-    int max = in_Max(linebuf);
+bool atf_amc::in_WriteAll(atf_amc::Linebuf& parent, u8 *in, i32 in_n) {
+    int max = in_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (linebuf.in_end + in_n > max) {
-        in_Shift(linebuf);
+    if (parent.in_end + in_n > max) {
+        in_Shift(parent);
     }
     // now try to write the message.
-    i32 end = linebuf.in_end;
+    i32 end = parent.in_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(linebuf.in_elems + end, in, in_n);
-            linebuf.in_end = end + in_n;
+            memcpy(parent.in_elems + end, in, in_n);
+            parent.in_end = end + in_n;
         }
     }
     return fits;
@@ -17733,39 +18126,38 @@ bool atf_amc::in_WriteAll(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) {
 // --- atf_amc.Linebuf.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::in_WriteReserve(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) {
-    if (linebuf.in_end - linebuf.in_start + in_n > in_Max(linebuf)) {
-        in_Realloc(linebuf, linebuf.in_max + i32_Max(linebuf.in_max, in_n));
+void atf_amc::in_WriteReserve(atf_amc::Linebuf& parent, u8 *in, i32 in_n) {
+    if (parent.in_end - parent.in_start + in_n > in_Max(parent)) {
+        in_Realloc(parent, parent.in_max + i32_Max(parent.in_max, in_n));
     }
-    if (!in_WriteAll(linebuf, in, in_n)) {
+    if (!in_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in: out of memory");
     }
 }
 
 // --- atf_amc.Linebuf..Init
 // Set all fields to initial values.
-void atf_amc::Linebuf_Init(atf_amc::Linebuf& linebuf) {
-    linebuf.in_elems = NULL; // in: initialize
-    linebuf.in_max = 0; // in: initialize
-    linebuf.in_end = 0; // in: initialize
-    linebuf.in_start = 0; // in: initialize
-    linebuf.in_eof = false; // in: initialize
-    linebuf.in_msgvalid = false; // in: initialize
-    linebuf.in_msglen = 0; // in: initialize
-    linebuf.in_epoll_enable = true; // in: initialize
-    in_Realloc(linebuf, 64);
+void atf_amc::Linebuf_Init(atf_amc::Linebuf& parent) {
+    parent.in_elems = NULL; // in: initialize
+    parent.in_max = 0; // in: initialize
+    parent.in_end = 0; // in: initialize
+    parent.in_start = 0; // in: initialize
+    parent.in_eof = false; // in: initialize
+    parent.in_msgvalid = false; // in: initialize
+    parent.in_msglen = 0; // in: initialize
+    parent.in_epoll_enable = true; // in: initialize
+    in_Realloc(parent, 64);
 }
 
 // --- atf_amc.Linebuf..Uninit
-void atf_amc::Linebuf_Uninit(atf_amc::Linebuf& linebuf) {
-    atf_amc::Linebuf &row = linebuf; (void)row;
+void atf_amc::Linebuf_Uninit(atf_amc::Linebuf& parent) {
 
     // atf_amc.Linebuf.in.Uninit (Fbuf)  //Delimited buffer
-    if (linebuf.in_elems) {
-        algo_lib::malloc_FreeMem(linebuf.in_elems, linebuf.in_max); // (atf_amc.Linebuf.in) in_max is the byte size Realloc allocated
+    if (parent.in_elems) {
+        algo_lib::malloc_FreeMem(parent.in_elems, parent.in_max); // (atf_amc.Linebuf.in) in_max is the byte size Realloc allocated
     }
-    linebuf.in_elems = NULL;
-    linebuf.in_max = 0;
+    parent.in_elems = NULL;
+    parent.in_max = 0;
 }
 
 // --- atf_amc.Linebuf..Print
@@ -17866,205 +18258,6 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::LnullStr4_U32_Base256& parent, i64 rhs) {
     return retval;
 }
 
-// --- atf_amc.MsgType.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::MsgType& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case atf_amc_MsgType_atf_amc_OptBMsg: ret = "atf_amc.OptBMsg";  break;
-        case atf_amc_MsgType_atf_amc_Seqmsg: ret = "atf_amc.Seqmsg";  break;
-        case atf_amc_MsgType_atf_amc_Text  : ret = "atf_amc.Text";  break;
-        case atf_amc_MsgType_atf_amc_Varlen2Msg: ret = "atf_amc.Varlen2Msg";  break;
-        case atf_amc_MsgType_atf_amc_Varlen2aMsg: ret = "atf_amc.Varlen2aMsg";  break;
-        case atf_amc_MsgType_atf_amc_Varlen2mMsg: ret = "atf_amc.Varlen2mMsg";  break;
-        case atf_amc_MsgType_atf_amc_Varlen2vMsg: ret = "atf_amc.Varlen2vMsg";  break;
-        case atf_amc_MsgType_atf_amc_VarlenBMsg: ret = "atf_amc.VarlenBMsg";  break;
-        case atf_amc_MsgType_atf_amc_VarlenMsg: ret = "atf_amc.VarlenMsg";  break;
-        case atf_amc_MsgType_atf_amc_VarlenVMsg: ret = "atf_amc.VarlenVMsg";  break;
-        case atf_amc_MsgType_atf_amc_VarlenWMsg: ret = "atf_amc.VarlenWMsg";  break;
-    }
-    return ret;
-}
-
-// --- atf_amc.MsgType.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::MsgType& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.value;
-    }
-}
-
-// --- atf_amc.MsgType.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 12: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"Text",4)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Text); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 14: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"Seqmsg",6)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Seqmsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 15: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"OptBMsg",7)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_OptBMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 17: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"VarlenMsg",9)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 18: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"Varlen2Msg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Varlen2Msg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"VarlenBMsg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenBMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"VarlenVMsg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenVMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"VarlenWMsg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenWMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 19: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"Varlen2aMsg",11)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Varlen2aMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"Varlen2mMsg",11)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Varlen2mMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"Varlen2vMsg",11)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Varlen2vMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- atf_amc.MsgType.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::MsgType& parent, algo::strptr rhs, atf_amc_MsgTypeEnum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- atf_amc.MsgType.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u16_ReadStrptrMaybe(parent.value,rhs);
-    }
-    return retval;
-}
-
-// --- atf_amc.MsgType..ReadStrptrMaybe
-// Read fields of atf_amc::MsgType from an ascii string.
-// The format of the string is the format of the atf_amc::MsgType's only field
-bool atf_amc::MsgType_ReadStrptrMaybe(atf_amc::MsgType &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && value_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- atf_amc.MsgType..Print
-// print string representation of ROW to string STR
-// cfmt:atf_amc.MsgType.String  printfmt:Raw
-void atf_amc::MsgType_Print(atf_amc::MsgType row, algo::cstring& str) {
-    atf_amc::value_Print(row, str);
-}
-
-// --- atf_amc.MsgLength..ReadStrptrMaybe
-// Read fields of atf_amc::MsgLength from an ascii string.
-// The format of the string is the format of the atf_amc::MsgLength's only field
-bool atf_amc::MsgLength_ReadStrptrMaybe(atf_amc::MsgLength &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && u16_ReadStrptrMaybe(parent.value, in_str);
-    return retval;
-}
-
-// --- atf_amc.MsgLength..Print
-// print string representation of ROW to string STR
-// cfmt:atf_amc.MsgLength.String  printfmt:Raw
-void atf_amc::MsgLength_Print(atf_amc::MsgLength row, algo::cstring& str) {
-    u16_Print(row.value, str);
-}
-
-// --- atf_amc.MsgHeader..ReadFieldMaybe
-bool atf_amc::MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    atf_amc::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case atf_amc_FieldId_type: {
-            retval = false;
-        } break;
-        case atf_amc_FieldId_length: {
-            retval = false;
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    (void)parent;//only to avoid -Wunused-parameter
-    (void)strval;//only to avoid -Wunused-parameter
-    return retval;
-}
-
-// --- atf_amc.MsgHeader..ReadStrptrMaybe
-// Read fields of atf_amc::MsgHeader from an ascii string.
-// The format of the string is an ssim Tuple
-bool atf_amc::MsgHeader_ReadStrptrMaybe(atf_amc::MsgHeader &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "atf_amc.MsgHeader");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && MsgHeader_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- atf_amc.MsgHeader..Print
-// print string representation of ROW to string STR
-// cfmt:atf_amc.MsgHeader.String  printfmt:Tuple
-void atf_amc::MsgHeader_Print(atf_amc::MsgHeader row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "atf_amc.MsgHeader";
-    (void)row;//only to avoid -Wunused-parameter
-}
-
 // --- atf_amc.Lpoolbuf.in.GetMsg
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
@@ -18072,13 +18265,13 @@ void atf_amc::MsgHeader_Print(atf_amc::MsgHeader row, algo::cstring& str) {
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field length field
 // 
-atf_amc::MsgHeader* atf_amc::in_GetMsg(atf_amc::Lpoolbuf& lpoolbuf) {
+atf_amc::MsgHeader* atf_amc::in_GetMsg(atf_amc::Lpoolbuf& parent) {
     atf_amc::MsgHeader* ret;
-    if (!lpoolbuf.in_msgvalid) {
-        in_ScanMsg(lpoolbuf);
+    if (!parent.in_msgvalid) {
+        in_ScanMsg(parent);
     }
-    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(lpoolbuf.in_elems + lpoolbuf.in_start);
-    ret = lpoolbuf.in_msgvalid ? hdr : NULL;
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(parent.in_elems + parent.in_start);
+    ret = parent.in_msgvalid ? hdr : NULL;
     return ret;
 }
 
@@ -18087,33 +18280,33 @@ atf_amc::MsgHeader* atf_amc::in_GetMsg(atf_amc::Lpoolbuf& lpoolbuf) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::in_Realloc(atf_amc::Lpoolbuf& lpoolbuf, int new_max) {
-    new_max = i32_Max(new_max, lpoolbuf.in_end);
-    u8 *new_mem = lpoolbuf.in_elems
-    ? (u8*)atf_amc::lpool_ReallocMem(lpoolbuf.in_elems, lpoolbuf.in_max, new_max)
+void atf_amc::in_Realloc(atf_amc::Lpoolbuf& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_end);
+    u8 *new_mem = parent.in_elems
+    ? (u8*)atf_amc::lpool_ReallocMem(parent.in_elems, parent.in_max, new_max)
     : (u8*)atf_amc::lpool_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Lpoolbuf.in  comment:'out of memory'");
     }
-    lpoolbuf.in_elems = new_mem;
-    lpoolbuf.in_max = new_max;
+    parent.in_elems = new_mem;
+    parent.in_max = new_max;
 }
 
 // --- atf_amc.Lpoolbuf.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_RemoveAll(atf_amc::Lpoolbuf& lpoolbuf) {
-    lpoolbuf.in_start    = 0;
-    lpoolbuf.in_end      = 0;
-    lpoolbuf.in_msgvalid = false;
+void atf_amc::in_RemoveAll(atf_amc::Lpoolbuf& parent) {
+    parent.in_start    = 0;
+    parent.in_end      = 0;
+    parent.in_msgvalid = false;
 }
 
 // --- atf_amc.Lpoolbuf.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_ScanMsg(atf_amc::Lpoolbuf& lpoolbuf) {
-    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(lpoolbuf.in_elems + lpoolbuf.in_start);
-    i32 avail = in_N(lpoolbuf);
+static void atf_amc::in_ScanMsg(atf_amc::Lpoolbuf& parent) {
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(parent.in_elems + parent.in_start);
+    i32 avail = in_N(parent);
     i32 msglen;
     bool found = false;
     msglen = ssizeof(atf_amc::MsgHeader);
@@ -18121,38 +18314,38 @@ static void atf_amc::in_ScanMsg(atf_amc::Lpoolbuf& lpoolbuf) {
         msglen = i32((*hdr).length); // check rest of the message
     }
     found = msglen >= ssizeof(atf_amc::MsgHeader) && avail >= msglen;
-    if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_Max(lpoolbuf)) {
-        lpoolbuf.in_eof = true; // cause user to detect eof
-        lpoolbuf.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_Max(parent)) {
+        parent.in_eof = true; // cause user to detect eof
+        parent.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
     }
-    lpoolbuf.in_msglen = msglen;
-    lpoolbuf.in_msgvalid = found;
+    parent.in_msglen = msglen;
+    parent.in_msgvalid = found;
 }
 
 // --- atf_amc.Lpoolbuf.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_Shift(atf_amc::Lpoolbuf& lpoolbuf) {
-    i32 start = lpoolbuf.in_start;
-    i32 bytes_n = lpoolbuf.in_end - start;
+static void atf_amc::in_Shift(atf_amc::Lpoolbuf& parent) {
+    i32 start = parent.in_start;
+    i32 bytes_n = parent.in_end - start;
     if (bytes_n > 0) {
-        memmove(lpoolbuf.in_elems, lpoolbuf.in_elems + start, bytes_n);
+        memmove(parent.in_elems, parent.in_elems + start, bytes_n);
     }
-    lpoolbuf.in_end = bytes_n;
-    lpoolbuf.in_start = 0;
+    parent.in_end = bytes_n;
+    parent.in_start = 0;
 }
 
 // --- atf_amc.Lpoolbuf.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_SkipMsg(atf_amc::Lpoolbuf& lpoolbuf) {
-    if (lpoolbuf.in_msgvalid) {
-        int skip = lpoolbuf.in_msglen;
-        i32 start = lpoolbuf.in_start;
+void atf_amc::in_SkipMsg(atf_amc::Lpoolbuf& parent) {
+    if (parent.in_msgvalid) {
+        int skip = parent.in_msglen;
+        i32 start = parent.in_start;
         start += skip;
-        lpoolbuf.in_start = start;
-        lpoolbuf.in_msgvalid = false;
-        lpoolbuf.in_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_start = start;
+        parent.in_msgvalid = false;
+        parent.in_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -18162,19 +18355,19 @@ void atf_amc::in_SkipMsg(atf_amc::Lpoolbuf& lpoolbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_WriteAll(atf_amc::Lpoolbuf& lpoolbuf, u8 *in, i32 in_n) {
-    int max = in_Max(lpoolbuf);
+bool atf_amc::in_WriteAll(atf_amc::Lpoolbuf& parent, u8 *in, i32 in_n) {
+    int max = in_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (lpoolbuf.in_end + in_n > max) {
-        in_Shift(lpoolbuf);
+    if (parent.in_end + in_n > max) {
+        in_Shift(parent);
     }
     // now try to write the message.
-    i32 end = lpoolbuf.in_end;
+    i32 end = parent.in_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(lpoolbuf.in_elems + end, in, in_n);
-            lpoolbuf.in_end = end + in_n;
+            memcpy(parent.in_elems + end, in, in_n);
+            parent.in_end = end + in_n;
         }
     }
     return fits;
@@ -18183,48 +18376,38 @@ bool atf_amc::in_WriteAll(atf_amc::Lpoolbuf& lpoolbuf, u8 *in, i32 in_n) {
 // --- atf_amc.Lpoolbuf.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::in_WriteReserve(atf_amc::Lpoolbuf& lpoolbuf, u8 *in, i32 in_n) {
-    if (lpoolbuf.in_end - lpoolbuf.in_start + in_n > in_Max(lpoolbuf)) {
-        in_Realloc(lpoolbuf, lpoolbuf.in_max + i32_Max(lpoolbuf.in_max, in_n));
+void atf_amc::in_WriteReserve(atf_amc::Lpoolbuf& parent, u8 *in, i32 in_n) {
+    if (parent.in_end - parent.in_start + in_n > in_Max(parent)) {
+        in_Realloc(parent, parent.in_max + i32_Max(parent.in_max, in_n));
     }
-    if (!in_WriteAll(lpoolbuf, in, in_n)) {
+    if (!in_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in: out of memory");
     }
 }
 
-// --- atf_amc.Lpoolbuf.in.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool atf_amc::in_XrefMaybe(atf_amc::MsgHeader &row) {
-    bool retval = true;
-    (void)row;
-    return retval;
-}
-
 // --- atf_amc.Lpoolbuf..Init
 // Set all fields to initial values.
-void atf_amc::Lpoolbuf_Init(atf_amc::Lpoolbuf& lpoolbuf) {
-    lpoolbuf.in_elems = NULL; // in: initialize
-    lpoolbuf.in_max = 0; // in: initialize
-    lpoolbuf.in_end = 0; // in: initialize
-    lpoolbuf.in_start = 0; // in: initialize
-    lpoolbuf.in_eof = false; // in: initialize
-    lpoolbuf.in_msgvalid = false; // in: initialize
-    lpoolbuf.in_msglen = 0; // in: initialize
-    lpoolbuf.in_epoll_enable = true; // in: initialize
-    in_Realloc(lpoolbuf, 8192);
+void atf_amc::Lpoolbuf_Init(atf_amc::Lpoolbuf& parent) {
+    parent.in_elems = NULL; // in: initialize
+    parent.in_max = 0; // in: initialize
+    parent.in_end = 0; // in: initialize
+    parent.in_start = 0; // in: initialize
+    parent.in_eof = false; // in: initialize
+    parent.in_msgvalid = false; // in: initialize
+    parent.in_msglen = 0; // in: initialize
+    parent.in_epoll_enable = true; // in: initialize
+    in_Realloc(parent, 8192);
 }
 
 // --- atf_amc.Lpoolbuf..Uninit
-void atf_amc::Lpoolbuf_Uninit(atf_amc::Lpoolbuf& lpoolbuf) {
-    atf_amc::Lpoolbuf &row = lpoolbuf; (void)row;
+void atf_amc::Lpoolbuf_Uninit(atf_amc::Lpoolbuf& parent) {
 
     // atf_amc.Lpoolbuf.in.Uninit (Fbuf)  //Message buffer allocated from the lpool
-    if (lpoolbuf.in_elems) {
-        atf_amc::lpool_FreeMem(lpoolbuf.in_elems, lpoolbuf.in_max); // (atf_amc.Lpoolbuf.in) in_max is the byte size Realloc allocated
+    if (parent.in_elems) {
+        atf_amc::lpool_FreeMem(parent.in_elems, parent.in_max); // (atf_amc.Lpoolbuf.in) in_max is the byte size Realloc allocated
     }
-    lpoolbuf.in_elems = NULL;
-    lpoolbuf.in_max = 0;
+    parent.in_elems = NULL;
+    parent.in_max = 0;
 }
 
 // --- atf_amc.LspaceStr5_U32_Base95.ch.Print
@@ -18416,9 +18599,9 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::LspaceStr7_I32& parent, i64 rhs) {
 // --- atf_amc.MsgHdrLT.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLT& o) {
+const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLT& parent) {
     const char *ret = NULL;
-    switch(type_GetEnum(o)) {
+    switch(type_GetEnum(parent)) {
         case atf_amc_MsgHdrLT_type_atf_amc_MsgLTA: ret = "atf_amc.MsgLTA";  break;
         case atf_amc_MsgHdrLT_type_atf_amc_MsgLTB: ret = "atf_amc.MsgLTB";  break;
         case atf_amc_MsgHdrLT_type_atf_amc_MsgLTO: ret = "atf_amc.MsgLTO";  break;
@@ -18430,12 +18613,12 @@ const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLT& o) {
 // --- atf_amc.MsgHdrLT.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void atf_amc::type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) {
-    const char *strval = type_ToCstr(o);
+void atf_amc::type_Print(const atf_amc::MsgHdrLT& parent, algo::cstring &lhs) {
+    const char *strval = type_ToCstr(parent);
     if (strval) {
         lhs << strval;
     } else {
-        lhs << o.type;
+        lhs << parent.type;
     }
 }
 
@@ -18443,16 +18626,16 @@ void atf_amc::type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
+bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLT& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 14: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"MsgLTA",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTA); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTB",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTB); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTO",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTO); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTV",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTV); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTA",6)==0) { type_SetEnum(parent,atf_amc_MsgHdrLT_type_atf_amc_MsgLTA); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTB",6)==0) { type_SetEnum(parent,atf_amc_MsgHdrLT_type_atf_amc_MsgLTB); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTO",6)==0) { type_SetEnum(parent,atf_amc_MsgHdrLT_type_atf_amc_MsgLTO); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTV",6)==0) { type_SetEnum(parent,atf_amc_MsgHdrLT_type_atf_amc_MsgLTV); ret = true; break; }
                     break;
                 }
             }
@@ -18465,17 +18648,17 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
 // --- atf_amc.MsgHdrLT.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::type_SetStrptr(atf_amc::MsgHdrLT& o, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) {
-    if (!type_SetStrptrMaybe(o,rhs)) type_SetEnum(o,dflt);
+void atf_amc::type_SetStrptr(atf_amc::MsgHdrLT& parent, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) {
+    if (!type_SetStrptrMaybe(parent,rhs)) type_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.MsgHdrLT.type.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
+bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLT& parent, algo::strptr rhs) {
     bool retval = false;
-    retval = type_SetStrptrMaybe(o,rhs); // try symbol conversion
+    retval = type_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
-        retval = char_ReadStrptrMaybe(o.type,rhs);
+        retval = char_ReadStrptrMaybe(parent.type,rhs);
     }
     return retval;
 }
@@ -18603,9 +18786,9 @@ bool atf_amc::MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent
 // --- atf_amc.MsgHdrLTScale.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLTScale& msghdrltscale) {
+const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLTScale& parent) {
     const char *ret = NULL;
-    switch(type_GetEnum(msghdrltscale)) {
+    switch(type_GetEnum(parent)) {
         case atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA: ret = "atf_amc.MsgLTScaleA";  break;
         case atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleV: ret = "atf_amc.MsgLTScaleV";  break;
     }
@@ -18615,12 +18798,12 @@ const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLTScale& msghdrltscale) {
 // --- atf_amc.MsgHdrLTScale.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void atf_amc::type_Print(const atf_amc::MsgHdrLTScale& msghdrltscale, algo::cstring &lhs) {
-    const char *strval = type_ToCstr(msghdrltscale);
+void atf_amc::type_Print(const atf_amc::MsgHdrLTScale& parent, algo::cstring &lhs) {
+    const char *strval = type_ToCstr(parent);
     if (strval) {
         lhs << strval;
     } else {
-        lhs << msghdrltscale.type;
+        lhs << parent.type;
     }
 }
 
@@ -18628,14 +18811,14 @@ void atf_amc::type_Print(const atf_amc::MsgHdrLTScale& msghdrltscale, algo::cstr
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLTScale& msghdrltscale, algo::strptr rhs) {
+bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 19: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"MsgLTScaleA",11)==0) { type_SetEnum(msghdrltscale,atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTScaleV",11)==0) { type_SetEnum(msghdrltscale,atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleV); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTScaleA",11)==0) { type_SetEnum(parent,atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTScaleV",11)==0) { type_SetEnum(parent,atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleV); ret = true; break; }
                     break;
                 }
             }
@@ -18648,17 +18831,17 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLTScale& msghdrltscale, algo::s
 // --- atf_amc.MsgHdrLTScale.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::type_SetStrptr(atf_amc::MsgHdrLTScale& msghdrltscale, algo::strptr rhs, atf_amc_MsgHdrLTScale_type_Enum dflt) {
-    if (!type_SetStrptrMaybe(msghdrltscale,rhs)) type_SetEnum(msghdrltscale,dflt);
+void atf_amc::type_SetStrptr(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs, atf_amc_MsgHdrLTScale_type_Enum dflt) {
+    if (!type_SetStrptrMaybe(parent,rhs)) type_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.MsgHdrLTScale.type.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLTScale& msghdrltscale, algo::strptr rhs) {
+bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) {
     bool retval = false;
-    retval = type_SetStrptrMaybe(msghdrltscale,rhs); // try symbol conversion
+    retval = type_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
-        retval = char_ReadStrptrMaybe(msghdrltscale.type,rhs);
+        retval = char_ReadStrptrMaybe(parent.type,rhs);
     }
     return retval;
 }
@@ -18781,7 +18964,7 @@ bool atf_amc::MsgHdrLTScaleMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCa
 
 // --- atf_amc.MsgLTA.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTA &row, atf_amc::MsgHdrLT &out) {
+void atf_amc::msg_lta_CopyOut(atf_amc::MsgLTA &row, atf_amc::MsgHdrLT &out) {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -18842,7 +19025,7 @@ void atf_amc::MsgLTA_Print(atf_amc::MsgLTA& row, algo::cstring& str) {
 
 // --- atf_amc.MsgLTB.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTB &row, atf_amc::MsgHdrLT &out) {
+void atf_amc::msg_ltb_CopyOut(atf_amc::MsgLTB &row, atf_amc::MsgHdrLT &out) {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -18903,7 +19086,7 @@ void atf_amc::MsgLTB_Print(atf_amc::MsgLTB& row, algo::cstring& str) {
 
 // --- atf_amc.MsgLTO.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTO &row, atf_amc::MsgHdrLT &out) {
+void atf_amc::msg_lto_CopyOut(atf_amc::MsgLTO &row, atf_amc::MsgHdrLT &out) {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -19003,7 +19186,7 @@ void atf_amc::MsgLTO_Print(atf_amc::MsgLTO& row, algo::cstring& str) {
 
 // --- atf_amc.MsgLTScaleA.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTScaleA &row, atf_amc::MsgHdrLTScale &out) {
+void atf_amc::msg_ltscale_a_CopyOut(atf_amc::MsgLTScaleA &row, atf_amc::MsgHdrLTScale &out) {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -19061,7 +19244,7 @@ void atf_amc::MsgLTScaleA_Print(atf_amc::MsgLTScaleA row, algo::cstring& str) {
 
 // --- atf_amc.MsgLTScaleV.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTScaleV &row, atf_amc::MsgHdrLTScale &out) {
+void atf_amc::msg_ltscale_v_CopyOut(atf_amc::MsgLTScaleV &row, atf_amc::MsgHdrLTScale &out) {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -19152,7 +19335,7 @@ void atf_amc::MsgLTScaleV_Print(atf_amc::MsgLTScaleV& row, algo::cstring& str) {
 
 // --- atf_amc.MsgLTV.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTV &row, atf_amc::MsgHdrLT &out) {
+void atf_amc::msg_ltv_CopyOut(atf_amc::MsgLTV &row, atf_amc::MsgHdrLT &out) {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -19245,25 +19428,25 @@ void atf_amc::MsgLTV_Print(atf_amc::MsgLTV& row, algo::cstring& str) {
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by atf_amc::Msgbuf.in_buf via FIohook field.
-// Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
-void atf_amc::in_buf_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
-    msgbuf.in_buf_iohook.fildes = fd;
-    callback_Set1(msgbuf.in_buf_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
+// Whenever the file descriptor becomes readable, insert parent into cd_in_msg.
+void atf_amc::in_buf_BeginRead(atf_amc::Msgbuf& parent, algo::Fildes fd) {
+    parent.in_buf_iohook.fildes = fd;
+    callback_Set1(parent.in_buf_iohook, parent, atf_amc::cd_in_msg_Insert);
     IOEvtFlags flags;
     read_Set(flags, true);
-    if (msgbuf.in_buf_epoll_enable) {
-        algo_lib::IohookAdd(msgbuf.in_buf_iohook, flags);
+    if (parent.in_buf_epoll_enable) {
+        algo_lib::IohookAdd(parent.in_buf_iohook, flags);
     } else {
-        atf_amc::cd_in_msg_Insert(msgbuf);
+        atf_amc::cd_in_msg_Insert(parent);
     }
 }
 
 // --- atf_amc.Msgbuf.in_buf.EndRead
 // Set EOF flag
-void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf) {
-    if (ValidQ(msgbuf.in_buf_iohook.fildes)) {
-        msgbuf.in_buf_eof = true;
-        atf_amc::cd_in_msg_Insert(msgbuf);
+void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& parent) {
+    if (ValidQ(parent.in_buf_iohook.fildes)) {
+        parent.in_buf_eof = true;
+        atf_amc::cd_in_msg_Insert(parent);
     }
 }
 
@@ -19274,19 +19457,19 @@ void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf) {
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field length field
 // 
-atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) {
+atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& parent) {
     atf_amc::MsgHeader* ret;
-    if (!msgbuf.in_buf_msgvalid) {
-        in_buf_ScanMsg(msgbuf);
-        if (!msgbuf.in_buf_msgvalid) {
-            bool readable = in_buf_Refill(msgbuf);
+    if (!parent.in_buf_msgvalid) {
+        in_buf_ScanMsg(parent);
+        if (!parent.in_buf_msgvalid) {
+            bool readable = in_buf_Refill(parent);
             if (readable) {
-                in_buf_ScanMsg(msgbuf);
+                in_buf_ScanMsg(parent);
             }
         }
     }
-    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_buf_elems + msgbuf.in_buf_start);
-    ret = msgbuf.in_buf_msgvalid ? hdr : NULL;
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(parent.in_buf_elems + parent.in_buf_start);
+    ret = parent.in_buf_msgvalid ? hdr : NULL;
     return ret;
 }
 
@@ -19295,45 +19478,56 @@ atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::in_buf_Realloc(atf_amc::Msgbuf& msgbuf, int new_max) {
-    new_max = i32_Max(new_max, msgbuf.in_buf_end);
-    u8 *new_mem = msgbuf.in_buf_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(msgbuf.in_buf_elems, msgbuf.in_buf_max, new_max)
+void atf_amc::in_buf_Realloc(atf_amc::Msgbuf& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_buf_end);
+    u8 *new_mem = parent.in_buf_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_buf_elems, parent.in_buf_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Msgbuf.in_buf  comment:'out of memory'");
     }
-    msgbuf.in_buf_elems = new_mem;
-    msgbuf.in_buf_max = new_max;
+    parent.in_buf_elems = new_mem;
+    parent.in_buf_max = new_max;
 }
 
 // --- atf_amc.Msgbuf.in_buf.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& msgbuf) {
-    bool readable = ValidQ(msgbuf.in_buf_iohook.fildes);
+bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& parent) {
+    bool readable = ValidQ(parent.in_buf_iohook.fildes);
     if (readable) {
-        int fd     = msgbuf.in_buf_iohook.fildes.value;
-        i32 max    = in_buf_Max(msgbuf);
-        i32 end    = msgbuf.in_buf_end;
-        i32 nbytes = end - msgbuf.in_buf_start; // # bytes currently in buffer
+        int fd     = parent.in_buf_iohook.fildes.value;
+        i32 max    = in_buf_Max(parent);
+        i32 end    = parent.in_buf_end;
+        i32 nbytes = end - parent.in_buf_start; // # bytes currently in buffer
         i32 nfree  = max - end; // bytes available at the end of buffer
         if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
-            in_buf_Shift(msgbuf);
-            end = msgbuf.in_buf_end;
+            in_buf_Shift(parent);
+            end = parent.in_buf_end;
             nfree = max - end;
         }
-        ssize_t ret         = read(fd, msgbuf.in_buf_elems + end, nfree);
-        readable            = !(ret < 0 && errno == EAGAIN);
-        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
-        bool eof            = error || (ret == 0 && nfree > 0);
-        msgbuf.in_buf_end += i32_Max(ret,0); // new end of bytes
-        if (error) {
-            msgbuf.in_buf_err = algo::FromErrno(errno); // fetch errno
+        if (nfree == 0) {
+            // The buffer is full and holds no complete message, so the framing
+            // asked for one larger than the buffer can ever hold and the connection
+            // cannot make progress.  A read into zero room returns zero without eof,
+            // which would pin the connection on the read list and spin the loop, so
+            // it is retired here instead.
+            parent.in_buf_eof = true;
+            parent.in_buf_err = algo::FromErrno(E2BIG);
+            readable = false;
+        } else {
+            ssize_t ret         = read(fd, parent.in_buf_elems + end, nfree);
+            readable            = !(ret < 0 && errno == EAGAIN);
+            bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
+            bool eof            = error || ret == 0;
+            parent.in_buf_end += i32_Max(ret,0); // new end of bytes
+            if (error) {
+                parent.in_buf_err = algo::FromErrno(errno); // fetch errno
+            }
+            parent.in_buf_eof |= eof;
         }
-        msgbuf.in_buf_eof |= eof;
     }
-    if (!readable && msgbuf.in_buf_epoll_enable) {
-        atf_amc::cd_in_msg_Remove(msgbuf);
+    if (!readable && parent.in_buf_epoll_enable) {
+        atf_amc::cd_in_msg_Remove(parent);
     }
     return readable;
 }
@@ -19341,18 +19535,18 @@ bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_buf.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_buf_RemoveAll(atf_amc::Msgbuf& msgbuf) {
-    msgbuf.in_buf_start    = 0;
-    msgbuf.in_buf_end      = 0;
-    msgbuf.in_buf_msgvalid = false;
+void atf_amc::in_buf_RemoveAll(atf_amc::Msgbuf& parent) {
+    parent.in_buf_start    = 0;
+    parent.in_buf_end      = 0;
+    parent.in_buf_msgvalid = false;
 }
 
 // --- atf_amc.Msgbuf.in_buf.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) {
-    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_buf_elems + msgbuf.in_buf_start);
-    i32 avail = in_buf_N(msgbuf);
+static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& parent) {
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(parent.in_buf_elems + parent.in_buf_start);
+    i32 avail = in_buf_N(parent);
     i32 msglen;
     bool found = false;
     msglen = ssizeof(atf_amc::MsgHeader);
@@ -19360,38 +19554,38 @@ static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) {
         msglen = i32((*hdr).length); // check rest of the message
     }
     found = msglen >= ssizeof(atf_amc::MsgHeader) && avail >= msglen;
-    if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_buf_Max(msgbuf)) {
-        msgbuf.in_buf_eof = true; // cause user to detect eof
-        msgbuf.in_buf_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_buf_Max(parent)) {
+        parent.in_buf_eof = true; // cause user to detect eof
+        parent.in_buf_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
     }
-    msgbuf.in_buf_msglen = msglen;
-    msgbuf.in_buf_msgvalid = found;
+    parent.in_buf_msglen = msglen;
+    parent.in_buf_msgvalid = found;
 }
 
 // --- atf_amc.Msgbuf.in_buf.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& msgbuf) {
-    i32 start = msgbuf.in_buf_start;
-    i32 bytes_n = msgbuf.in_buf_end - start;
+static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& parent) {
+    i32 start = parent.in_buf_start;
+    i32 bytes_n = parent.in_buf_end - start;
     if (bytes_n > 0) {
-        memmove(msgbuf.in_buf_elems, msgbuf.in_buf_elems + start, bytes_n);
+        memmove(parent.in_buf_elems, parent.in_buf_elems + start, bytes_n);
     }
-    msgbuf.in_buf_end = bytes_n;
-    msgbuf.in_buf_start = 0;
+    parent.in_buf_end = bytes_n;
+    parent.in_buf_start = 0;
 }
 
 // --- atf_amc.Msgbuf.in_buf.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) {
-    if (msgbuf.in_buf_msgvalid) {
-        int skip = msgbuf.in_buf_msglen;
-        i32 start = msgbuf.in_buf_start;
+void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& parent) {
+    if (parent.in_buf_msgvalid) {
+        int skip = parent.in_buf_msglen;
+        i32 start = parent.in_buf_start;
         start += skip;
-        msgbuf.in_buf_start = start;
-        msgbuf.in_buf_msgvalid = false;
-        msgbuf.in_buf_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_buf_start = start;
+        parent.in_buf_msgvalid = false;
+        parent.in_buf_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -19401,19 +19595,19 @@ void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    int max = in_buf_Max(msgbuf);
+bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) {
+    int max = in_buf_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (msgbuf.in_buf_end + in_n > max) {
-        in_buf_Shift(msgbuf);
+    if (parent.in_buf_end + in_n > max) {
+        in_buf_Shift(parent);
     }
     // now try to write the message.
-    i32 end = msgbuf.in_buf_end;
+    i32 end = parent.in_buf_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(msgbuf.in_buf_elems + end, in, in_n);
-            msgbuf.in_buf_end = end + in_n;
+            memcpy(parent.in_buf_elems + end, in, in_n);
+            parent.in_buf_end = end + in_n;
         }
     }
     return fits;
@@ -19422,11 +19616,11 @@ bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 // --- atf_amc.Msgbuf.in_buf.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::in_buf_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    if (msgbuf.in_buf_end - msgbuf.in_buf_start + in_n > in_buf_Max(msgbuf)) {
-        in_buf_Realloc(msgbuf, msgbuf.in_buf_max + i32_Max(msgbuf.in_buf_max, in_n));
+void atf_amc::in_buf_WriteReserve(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) {
+    if (parent.in_buf_end - parent.in_buf_start + in_n > in_buf_Max(parent)) {
+        in_buf_Realloc(parent, parent.in_buf_max + i32_Max(parent.in_buf_max, in_n));
     }
-    if (!in_buf_WriteAll(msgbuf, in, in_n)) {
+    if (!in_buf_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in_buf: out of memory");
     }
 }
@@ -19435,40 +19629,40 @@ void atf_amc::in_buf_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by atf_amc::Msgbuf.in_custom via FIohook field.
-// Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
-void atf_amc::in_custom_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
-    msgbuf.in_custom_iohook.fildes = fd;
-    callback_Set1(msgbuf.in_custom_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
+// Whenever the file descriptor becomes readable, insert parent into cd_in_msg.
+void atf_amc::in_custom_BeginRead(atf_amc::Msgbuf& parent, algo::Fildes fd) {
+    parent.in_custom_iohook.fildes = fd;
+    callback_Set1(parent.in_custom_iohook, parent, atf_amc::cd_in_msg_Insert);
     IOEvtFlags flags;
     read_Set(flags, true);
-    if (msgbuf.in_custom_epoll_enable) {
-        algo_lib::IohookAdd(msgbuf.in_custom_iohook, flags);
+    if (parent.in_custom_epoll_enable) {
+        algo_lib::IohookAdd(parent.in_custom_iohook, flags);
     } else {
-        atf_amc::cd_in_msg_Insert(msgbuf);
+        atf_amc::cd_in_msg_Insert(parent);
     }
 }
 
 // --- atf_amc.Msgbuf.in_custom.EndRead
 // Set EOF flag
-void atf_amc::in_custom_EndRead(atf_amc::Msgbuf& msgbuf) {
-    if (ValidQ(msgbuf.in_custom_iohook.fildes)) {
-        msgbuf.in_custom_eof = true;
-        atf_amc::cd_in_msg_Insert(msgbuf);
+void atf_amc::in_custom_EndRead(atf_amc::Msgbuf& parent) {
+    if (ValidQ(parent.in_custom_iohook.fildes)) {
+        parent.in_custom_eof = true;
+        atf_amc::cd_in_msg_Insert(parent);
     }
 }
 
 // --- atf_amc.Msgbuf.in_custom.BeginAlloc
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // No reallocation is performed. If not possible, return NULL.
-void* atf_amc::in_custom_BeginAlloc(atf_amc::Msgbuf &msgbuf, i32 in_n) {
+void* atf_amc::in_custom_BeginAlloc(atf_amc::Msgbuf &parent, i32 in_n) {
     void *ret = NULL;
-    int max = in_custom_Max(msgbuf);
-    if (msgbuf.in_custom_end + in_n > max) {
-        in_custom_Shift(msgbuf);
+    int max = in_custom_Max(parent);
+    if (parent.in_custom_end + in_n > max) {
+        in_custom_Shift(parent);
     }
-    if (msgbuf.in_custom_end + in_n <= max) {
-        ret = (u8*)msgbuf.in_custom_elems + msgbuf.in_custom_end;
-        msgbuf.in_custom_end += in_n;
+    if (parent.in_custom_end + in_n <= max) {
+        ret = (u8*)parent.in_custom_elems + parent.in_custom_end;
+        parent.in_custom_end += in_n;
     }
     return ret;
 }
@@ -19476,11 +19670,11 @@ void* atf_amc::in_custom_BeginAlloc(atf_amc::Msgbuf &msgbuf, i32 in_n) {
 // --- atf_amc.Msgbuf.in_custom.BeginAllocReserve
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // Buffer is reallocated as necessary; function always succeeds.
-void* atf_amc::in_custom_BeginAllocReserve(atf_amc::Msgbuf &msgbuf, i32 in_n) {
-    if (msgbuf.in_custom_end - msgbuf.in_custom_start + in_n > in_custom_Max(msgbuf)) {
-        in_custom_Realloc(msgbuf, msgbuf.in_custom_max + i32_Max(msgbuf.in_custom_max, in_n));
+void* atf_amc::in_custom_BeginAllocReserve(atf_amc::Msgbuf &parent, i32 in_n) {
+    if (parent.in_custom_end - parent.in_custom_start + in_n > in_custom_Max(parent)) {
+        in_custom_Realloc(parent, parent.in_custom_max + i32_Max(parent.in_custom_max, in_n));
     }
-    return in_custom_BeginAlloc(msgbuf, in_n);
+    return in_custom_BeginAlloc(parent, in_n);
 }
 
 // --- atf_amc.Msgbuf.in_custom.GetMsg
@@ -19490,21 +19684,21 @@ void* atf_amc::in_custom_BeginAllocReserve(atf_amc::Msgbuf &msgbuf, i32 in_n) {
 // If there is no message, read once from underlying file descriptor and try again.
 // The message boundary is determined by a custom ScanMsg function implemented by user
 // 
-algo::aryptr<char> atf_amc::in_custom_GetMsg(atf_amc::Msgbuf& msgbuf) {
+algo::aryptr<char> atf_amc::in_custom_GetMsg(atf_amc::Msgbuf& parent) {
     algo::aryptr<char> ret;
-    if (!msgbuf.in_custom_msgvalid) {
-        in_custom_ScanMsg(msgbuf);
-        if (!msgbuf.in_custom_msgvalid) {
-            bool readable = in_custom_Refill(msgbuf);
+    if (!parent.in_custom_msgvalid) {
+        in_custom_ScanMsg(parent);
+        if (!parent.in_custom_msgvalid) {
+            bool readable = in_custom_Refill(parent);
             if (readable) {
-                in_custom_ScanMsg(msgbuf);
+                in_custom_ScanMsg(parent);
             }
         }
     }
-    char *hdr = (char*)(msgbuf.in_custom_elems + msgbuf.in_custom_start);
-    if (msgbuf.in_custom_msgvalid) {
+    char *hdr = (char*)(parent.in_custom_elems + parent.in_custom_start);
+    if (parent.in_custom_msgvalid) {
         ret.elems = hdr;
-        ret.n_elems = msgbuf.in_custom_msglen;
+        ret.n_elems = parent.in_custom_msglen;
     }
     return ret;
 }
@@ -19514,45 +19708,56 @@ algo::aryptr<char> atf_amc::in_custom_GetMsg(atf_amc::Msgbuf& msgbuf) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::in_custom_Realloc(atf_amc::Msgbuf& msgbuf, int new_max) {
-    new_max = i32_Max(new_max, msgbuf.in_custom_end);
-    u8 *new_mem = msgbuf.in_custom_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(msgbuf.in_custom_elems, msgbuf.in_custom_max, new_max)
+void atf_amc::in_custom_Realloc(atf_amc::Msgbuf& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_custom_end);
+    u8 *new_mem = parent.in_custom_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_custom_elems, parent.in_custom_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Msgbuf.in_custom  comment:'out of memory'");
     }
-    msgbuf.in_custom_elems = new_mem;
-    msgbuf.in_custom_max = new_max;
+    parent.in_custom_elems = new_mem;
+    parent.in_custom_max = new_max;
 }
 
 // --- atf_amc.Msgbuf.in_custom.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool atf_amc::in_custom_Refill(atf_amc::Msgbuf& msgbuf) {
-    bool readable = ValidQ(msgbuf.in_custom_iohook.fildes);
+bool atf_amc::in_custom_Refill(atf_amc::Msgbuf& parent) {
+    bool readable = ValidQ(parent.in_custom_iohook.fildes);
     if (readable) {
-        int fd     = msgbuf.in_custom_iohook.fildes.value;
-        i32 max    = in_custom_Max(msgbuf);
-        i32 end    = msgbuf.in_custom_end;
-        i32 nbytes = end - msgbuf.in_custom_start; // # bytes currently in buffer
+        int fd     = parent.in_custom_iohook.fildes.value;
+        i32 max    = in_custom_Max(parent);
+        i32 end    = parent.in_custom_end;
+        i32 nbytes = end - parent.in_custom_start; // # bytes currently in buffer
         i32 nfree  = max - end; // bytes available at the end of buffer
         if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
-            in_custom_Shift(msgbuf);
-            end = msgbuf.in_custom_end;
+            in_custom_Shift(parent);
+            end = parent.in_custom_end;
             nfree = max - end;
         }
-        ssize_t ret         = read(fd, msgbuf.in_custom_elems + end, nfree);
-        readable            = !(ret < 0 && errno == EAGAIN);
-        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
-        bool eof            = error || (ret == 0 && nfree > 0);
-        msgbuf.in_custom_end += i32_Max(ret,0); // new end of bytes
-        if (error) {
-            msgbuf.in_custom_err = algo::FromErrno(errno); // fetch errno
+        if (nfree == 0) {
+            // The buffer is full and holds no complete message, so the framing
+            // asked for one larger than the buffer can ever hold and the connection
+            // cannot make progress.  A read into zero room returns zero without eof,
+            // which would pin the connection on the read list and spin the loop, so
+            // it is retired here instead.
+            parent.in_custom_eof = true;
+            parent.in_custom_err = algo::FromErrno(E2BIG);
+            readable = false;
+        } else {
+            ssize_t ret         = read(fd, parent.in_custom_elems + end, nfree);
+            readable            = !(ret < 0 && errno == EAGAIN);
+            bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
+            bool eof            = error || ret == 0;
+            parent.in_custom_end += i32_Max(ret,0); // new end of bytes
+            if (error) {
+                parent.in_custom_err = algo::FromErrno(errno); // fetch errno
+            }
+            parent.in_custom_eof |= eof;
         }
-        msgbuf.in_custom_eof |= eof;
     }
-    if (!readable && msgbuf.in_custom_epoll_enable) {
-        atf_amc::cd_in_msg_Remove(msgbuf);
+    if (!readable && parent.in_custom_epoll_enable) {
+        atf_amc::cd_in_msg_Remove(parent);
     }
     return readable;
 }
@@ -19560,47 +19765,47 @@ bool atf_amc::in_custom_Refill(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_custom.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_custom_RemoveAll(atf_amc::Msgbuf& msgbuf) {
-    msgbuf.in_custom_start    = 0;
-    msgbuf.in_custom_end      = 0;
-    msgbuf.in_custom_msgvalid = false;
+void atf_amc::in_custom_RemoveAll(atf_amc::Msgbuf& parent) {
+    parent.in_custom_start    = 0;
+    parent.in_custom_end      = 0;
+    parent.in_custom_msgvalid = false;
 }
 
 // --- atf_amc.Msgbuf.in_custom.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_custom_Shift(atf_amc::Msgbuf& msgbuf) {
-    i32 start = msgbuf.in_custom_start;
-    i32 bytes_n = msgbuf.in_custom_end - start;
+static void atf_amc::in_custom_Shift(atf_amc::Msgbuf& parent) {
+    i32 start = parent.in_custom_start;
+    i32 bytes_n = parent.in_custom_end - start;
     if (bytes_n > 0) {
-        memmove(msgbuf.in_custom_elems, msgbuf.in_custom_elems + start, bytes_n);
+        memmove(parent.in_custom_elems, parent.in_custom_elems + start, bytes_n);
     }
-    msgbuf.in_custom_end = bytes_n;
-    msgbuf.in_custom_start = 0;
+    parent.in_custom_end = bytes_n;
+    parent.in_custom_start = 0;
 }
 
 // --- atf_amc.Msgbuf.in_custom.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::in_custom_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
-    int avail = msgbuf.in_custom_end - msgbuf.in_custom_start;
+void atf_amc::in_custom_SkipBytes(atf_amc::Msgbuf& parent, int n) {
+    int avail = parent.in_custom_end - parent.in_custom_start;
     n = i32_Min(n,avail);
-    msgbuf.in_custom_start += n;
-    msgbuf.in_custom_msgvalid = false;
+    parent.in_custom_start += n;
+    parent.in_custom_msgvalid = false;
 }
 
 // --- atf_amc.Msgbuf.in_custom.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) {
-    if (msgbuf.in_custom_msgvalid) {
-        int skip = msgbuf.in_custom_msglen;
-        i32 start = msgbuf.in_custom_start;
+void atf_amc::in_custom_SkipMsg(atf_amc::Msgbuf& parent) {
+    if (parent.in_custom_msgvalid) {
+        int skip = parent.in_custom_msglen;
+        i32 start = parent.in_custom_start;
         start += skip;
-        msgbuf.in_custom_start = start;
-        msgbuf.in_custom_msgvalid = false;
-        msgbuf.in_custom_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_custom_start = start;
+        parent.in_custom_msgvalid = false;
+        parent.in_custom_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -19610,19 +19815,19 @@ void atf_amc::in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    int max = in_custom_Max(msgbuf);
+bool atf_amc::in_custom_WriteAll(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) {
+    int max = in_custom_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (msgbuf.in_custom_end + in_n > max) {
-        in_custom_Shift(msgbuf);
+    if (parent.in_custom_end + in_n > max) {
+        in_custom_Shift(parent);
     }
     // now try to write the message.
-    i32 end = msgbuf.in_custom_end;
+    i32 end = parent.in_custom_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(msgbuf.in_custom_elems + end, in, in_n);
-            msgbuf.in_custom_end = end + in_n;
+            memcpy(parent.in_custom_elems + end, in, in_n);
+            parent.in_custom_end = end + in_n;
         }
     }
     return fits;
@@ -19631,11 +19836,11 @@ bool atf_amc::in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 // --- atf_amc.Msgbuf.in_custom.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::in_custom_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    if (msgbuf.in_custom_end - msgbuf.in_custom_start + in_n > in_custom_Max(msgbuf)) {
-        in_custom_Realloc(msgbuf, msgbuf.in_custom_max + i32_Max(msgbuf.in_custom_max, in_n));
+void atf_amc::in_custom_WriteReserve(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) {
+    if (parent.in_custom_end - parent.in_custom_start + in_n > in_custom_Max(parent)) {
+        in_custom_Realloc(parent, parent.in_custom_max + i32_Max(parent.in_custom_max, in_n));
     }
-    if (!in_custom_WriteAll(msgbuf, in, in_n)) {
+    if (!in_custom_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in_custom: out of memory");
     }
 }
@@ -19645,62 +19850,62 @@ void atf_amc::in_custom_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) 
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::out_extra_Realloc(atf_amc::Msgbuf& msgbuf, int new_max) {
-    new_max = i32_Max(new_max, msgbuf.out_extra_end);
-    u8 *new_mem = msgbuf.out_extra_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(msgbuf.out_extra_elems, msgbuf.out_extra_max, new_max)
+void atf_amc::out_extra_Realloc(atf_amc::Msgbuf& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.out_extra_end);
+    u8 *new_mem = parent.out_extra_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.out_extra_elems, parent.out_extra_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Msgbuf.out_extra  comment:'out of memory'");
     }
-    msgbuf.out_extra_elems = new_mem;
-    msgbuf.out_extra_max = new_max;
+    parent.out_extra_elems = new_mem;
+    parent.out_extra_max = new_max;
 }
 
 // --- atf_amc.Msgbuf.out_extra.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::out_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
-    msgbuf.out_extra_start    = 0;
-    msgbuf.out_extra_end      = 0;
-    msgbuf.out_extra_msgvalid = false;
+void atf_amc::out_extra_RemoveAll(atf_amc::Msgbuf& parent) {
+    parent.out_extra_start    = 0;
+    parent.out_extra_end      = 0;
+    parent.out_extra_msgvalid = false;
 }
 
 // --- atf_amc.Msgbuf.out_extra.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::out_extra_Shift(atf_amc::Msgbuf& msgbuf) {
-    i32 start = msgbuf.out_extra_start;
-    i32 bytes_n = msgbuf.out_extra_end - start;
+static void atf_amc::out_extra_Shift(atf_amc::Msgbuf& parent) {
+    i32 start = parent.out_extra_start;
+    i32 bytes_n = parent.out_extra_end - start;
     if (bytes_n > 0) {
-        memmove(msgbuf.out_extra_elems, msgbuf.out_extra_elems + start, bytes_n);
+        memmove(parent.out_extra_elems, parent.out_extra_elems + start, bytes_n);
     }
-    msgbuf.out_extra_end = bytes_n;
-    msgbuf.out_extra_start = 0;
+    parent.out_extra_end = bytes_n;
+    parent.out_extra_start = 0;
 }
 
 // --- atf_amc.Msgbuf.out_extra.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::out_extra_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
-    int avail = msgbuf.out_extra_end - msgbuf.out_extra_start;
+void atf_amc::out_extra_SkipBytes(atf_amc::Msgbuf& parent, int n) {
+    int avail = parent.out_extra_end - parent.out_extra_start;
     n = i32_Min(n,avail);
-    msgbuf.out_extra_start += n;
-    msgbuf.out_extra_msgvalid = false;
+    parent.out_extra_start += n;
+    parent.out_extra_msgvalid = false;
 }
 
 // --- atf_amc.Msgbuf.out_extra.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::out_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
-    if (msgbuf.out_extra_msgvalid) {
-        int skip = msgbuf.out_extra_msglen;
-        i32 start = msgbuf.out_extra_start;
+void atf_amc::out_extra_SkipMsg(atf_amc::Msgbuf& parent) {
+    if (parent.out_extra_msgvalid) {
+        int skip = parent.out_extra_msglen;
+        i32 start = parent.out_extra_start;
         start += skip;
-        msgbuf.out_extra_start = start;
-        msgbuf.out_extra_msgvalid = false;
-        msgbuf.out_extra_msglen   = 0; // reset message length -- important for delimited streams
+        parent.out_extra_start = start;
+        parent.out_extra_msgvalid = false;
+        parent.out_extra_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -19710,19 +19915,19 @@ void atf_amc::out_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    int max = out_extra_Max(msgbuf);
+bool atf_amc::out_extra_WriteAll(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) {
+    int max = out_extra_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (msgbuf.out_extra_end + in_n > max) {
-        out_extra_Shift(msgbuf);
+    if (parent.out_extra_end + in_n > max) {
+        out_extra_Shift(parent);
     }
     // now try to write the message.
-    i32 end = msgbuf.out_extra_end;
+    i32 end = parent.out_extra_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(msgbuf.out_extra_elems + end, in, in_n);
-            msgbuf.out_extra_end = end + in_n;
+            memcpy(parent.out_extra_elems + end, in, in_n);
+            parent.out_extra_end = end + in_n;
         }
     }
     return fits;
@@ -19731,19 +19936,19 @@ bool atf_amc::out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 // --- atf_amc.Msgbuf.out_extra.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::out_extra_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    if (msgbuf.out_extra_end - msgbuf.out_extra_start + in_n > out_extra_Max(msgbuf)) {
-        out_extra_Realloc(msgbuf, msgbuf.out_extra_max + i32_Max(msgbuf.out_extra_max, in_n));
+void atf_amc::out_extra_WriteReserve(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) {
+    if (parent.out_extra_end - parent.out_extra_start + in_n > out_extra_Max(parent)) {
+        out_extra_Realloc(parent, parent.out_extra_max + i32_Max(parent.out_extra_max, in_n));
     }
-    if (!out_extra_WriteAll(msgbuf, in, in_n)) {
+    if (!out_extra_WriteAll(parent, in, in_n)) {
         FatalErrorExit("out_extra: out of memory");
     }
 }
 
 // --- atf_amc.Msgbuf.out_extra.WriteMsg
 // Write message to buffer. If the entire message is written, return true, otherwise false.
-bool atf_amc::out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdrLT &msg) {
-    return out_extra_WriteAll(msgbuf, (u8*)&msg, i32(msg.len + 2));
+bool atf_amc::out_extra_WriteMsg(atf_amc::Msgbuf& parent, atf_amc::MsgHdrLT &msg) {
+    return out_extra_WriteAll(parent, (u8*)&msg, i32(msg.len + 2));
 }
 
 // --- atf_amc.Msgbuf.in_extra.GetMsg
@@ -19753,13 +19958,13 @@ bool atf_amc::out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdrLT &msg
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field len field
 // 
-atf_amc::MsgHdrLT* atf_amc::in_extra_GetMsg(atf_amc::Msgbuf& msgbuf) {
+atf_amc::MsgHdrLT* atf_amc::in_extra_GetMsg(atf_amc::Msgbuf& parent) {
     atf_amc::MsgHdrLT* ret;
-    if (!msgbuf.in_extra_msgvalid) {
-        in_extra_ScanMsg(msgbuf);
+    if (!parent.in_extra_msgvalid) {
+        in_extra_ScanMsg(parent);
     }
-    atf_amc::MsgHdrLT *hdr = (atf_amc::MsgHdrLT*)(msgbuf.in_extra_elems + msgbuf.in_extra_start);
-    ret = msgbuf.in_extra_msgvalid ? hdr : NULL;
+    atf_amc::MsgHdrLT *hdr = (atf_amc::MsgHdrLT*)(parent.in_extra_elems + parent.in_extra_start);
+    ret = parent.in_extra_msgvalid ? hdr : NULL;
     return ret;
 }
 
@@ -19768,33 +19973,33 @@ atf_amc::MsgHdrLT* atf_amc::in_extra_GetMsg(atf_amc::Msgbuf& msgbuf) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::in_extra_Realloc(atf_amc::Msgbuf& msgbuf, int new_max) {
-    new_max = i32_Max(new_max, msgbuf.in_extra_end);
-    u8 *new_mem = msgbuf.in_extra_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(msgbuf.in_extra_elems, msgbuf.in_extra_max, new_max)
+void atf_amc::in_extra_Realloc(atf_amc::Msgbuf& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_extra_end);
+    u8 *new_mem = parent.in_extra_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_extra_elems, parent.in_extra_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Msgbuf.in_extra  comment:'out of memory'");
     }
-    msgbuf.in_extra_elems = new_mem;
-    msgbuf.in_extra_max = new_max;
+    parent.in_extra_elems = new_mem;
+    parent.in_extra_max = new_max;
 }
 
 // --- atf_amc.Msgbuf.in_extra.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
-    msgbuf.in_extra_start    = 0;
-    msgbuf.in_extra_end      = 0;
-    msgbuf.in_extra_msgvalid = false;
+void atf_amc::in_extra_RemoveAll(atf_amc::Msgbuf& parent) {
+    parent.in_extra_start    = 0;
+    parent.in_extra_end      = 0;
+    parent.in_extra_msgvalid = false;
 }
 
 // --- atf_amc.Msgbuf.in_extra.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_extra_ScanMsg(atf_amc::Msgbuf& msgbuf) {
-    atf_amc::MsgHdrLT *hdr = (atf_amc::MsgHdrLT*)(msgbuf.in_extra_elems + msgbuf.in_extra_start);
-    i32 avail = in_extra_N(msgbuf);
+static void atf_amc::in_extra_ScanMsg(atf_amc::Msgbuf& parent) {
+    atf_amc::MsgHdrLT *hdr = (atf_amc::MsgHdrLT*)(parent.in_extra_elems + parent.in_extra_start);
+    i32 avail = in_extra_N(parent);
     i32 msglen;
     bool found = false;
     msglen = ssizeof(atf_amc::MsgHdrLT);
@@ -19802,38 +20007,38 @@ static void atf_amc::in_extra_ScanMsg(atf_amc::Msgbuf& msgbuf) {
         msglen = i32((*hdr).len + 2); // check rest of the message
     }
     found = msglen >= ssizeof(atf_amc::MsgHdrLT) && avail >= msglen;
-    if (msglen < ssizeof(atf_amc::MsgHdrLT) || msglen > in_extra_Max(msgbuf)) {
-        msgbuf.in_extra_eof = true; // cause user to detect eof
-        msgbuf.in_extra_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    if (msglen < ssizeof(atf_amc::MsgHdrLT) || msglen > in_extra_Max(parent)) {
+        parent.in_extra_eof = true; // cause user to detect eof
+        parent.in_extra_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
     }
-    msgbuf.in_extra_msglen = msglen;
-    msgbuf.in_extra_msgvalid = found;
+    parent.in_extra_msglen = msglen;
+    parent.in_extra_msgvalid = found;
 }
 
 // --- atf_amc.Msgbuf.in_extra.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_extra_Shift(atf_amc::Msgbuf& msgbuf) {
-    i32 start = msgbuf.in_extra_start;
-    i32 bytes_n = msgbuf.in_extra_end - start;
+static void atf_amc::in_extra_Shift(atf_amc::Msgbuf& parent) {
+    i32 start = parent.in_extra_start;
+    i32 bytes_n = parent.in_extra_end - start;
     if (bytes_n > 0) {
-        memmove(msgbuf.in_extra_elems, msgbuf.in_extra_elems + start, bytes_n);
+        memmove(parent.in_extra_elems, parent.in_extra_elems + start, bytes_n);
     }
-    msgbuf.in_extra_end = bytes_n;
-    msgbuf.in_extra_start = 0;
+    parent.in_extra_end = bytes_n;
+    parent.in_extra_start = 0;
 }
 
 // --- atf_amc.Msgbuf.in_extra.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
-    if (msgbuf.in_extra_msgvalid) {
-        int skip = msgbuf.in_extra_msglen;
-        i32 start = msgbuf.in_extra_start;
+void atf_amc::in_extra_SkipMsg(atf_amc::Msgbuf& parent) {
+    if (parent.in_extra_msgvalid) {
+        int skip = parent.in_extra_msglen;
+        i32 start = parent.in_extra_start;
         start += skip;
-        msgbuf.in_extra_start = start;
-        msgbuf.in_extra_msgvalid = false;
-        msgbuf.in_extra_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_extra_start = start;
+        parent.in_extra_msgvalid = false;
+        parent.in_extra_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -19843,19 +20048,19 @@ void atf_amc::in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    int max = in_extra_Max(msgbuf);
+bool atf_amc::in_extra_WriteAll(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) {
+    int max = in_extra_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (msgbuf.in_extra_end + in_n > max) {
-        in_extra_Shift(msgbuf);
+    if (parent.in_extra_end + in_n > max) {
+        in_extra_Shift(parent);
     }
     // now try to write the message.
-    i32 end = msgbuf.in_extra_end;
+    i32 end = parent.in_extra_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(msgbuf.in_extra_elems + end, in, in_n);
-            msgbuf.in_extra_end = end + in_n;
+            memcpy(parent.in_extra_elems + end, in, in_n);
+            parent.in_extra_end = end + in_n;
         }
     }
     return fits;
@@ -19864,90 +20069,89 @@ bool atf_amc::in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 // --- atf_amc.Msgbuf.in_extra.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::in_extra_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    if (msgbuf.in_extra_end - msgbuf.in_extra_start + in_n > in_extra_Max(msgbuf)) {
-        in_extra_Realloc(msgbuf, msgbuf.in_extra_max + i32_Max(msgbuf.in_extra_max, in_n));
+void atf_amc::in_extra_WriteReserve(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) {
+    if (parent.in_extra_end - parent.in_extra_start + in_n > in_extra_Max(parent)) {
+        in_extra_Realloc(parent, parent.in_extra_max + i32_Max(parent.in_extra_max, in_n));
     }
-    if (!in_extra_WriteAll(msgbuf, in, in_n)) {
+    if (!in_extra_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in_extra: out of memory");
     }
 }
 
 // --- atf_amc.Msgbuf..Init
 // Set all fields to initial values.
-void atf_amc::Msgbuf_Init(atf_amc::Msgbuf& msgbuf) {
-    msgbuf.in_buf_elems = NULL; // in_buf: initialize
-    msgbuf.in_buf_max = 0; // in_buf: initialize
-    msgbuf.in_buf_end = 0; // in_buf: initialize
-    msgbuf.in_buf_start = 0; // in_buf: initialize
-    msgbuf.in_buf_eof = false; // in_buf: initialize
-    msgbuf.in_buf_msgvalid = false; // in_buf: initialize
-    msgbuf.in_buf_msglen = 0; // in_buf: initialize
-    msgbuf.in_buf_epoll_enable = true; // in_buf: initialize
-    in_buf_Realloc(msgbuf, 64);
-    msgbuf.in_custom_elems = NULL; // in_custom: initialize
-    msgbuf.in_custom_max = 0; // in_custom: initialize
-    msgbuf.in_custom_end = 0; // in_custom: initialize
-    msgbuf.in_custom_start = 0; // in_custom: initialize
-    msgbuf.in_custom_eof = false; // in_custom: initialize
-    msgbuf.in_custom_msgvalid = false; // in_custom: initialize
-    msgbuf.in_custom_msglen = 0; // in_custom: initialize
-    msgbuf.in_custom_epoll_enable = true; // in_custom: initialize
-    in_custom_Realloc(msgbuf, 64);
-    msgbuf.out_extra_elems = NULL; // out_extra: initialize
-    msgbuf.out_extra_max = 0; // out_extra: initialize
-    msgbuf.out_extra_end = 0; // out_extra: initialize
-    msgbuf.out_extra_start = 0; // out_extra: initialize
-    msgbuf.out_extra_eof = false; // out_extra: initialize
-    msgbuf.out_extra_msgvalid = false; // out_extra: initialize
-    msgbuf.out_extra_msglen = 0; // out_extra: initialize
-    msgbuf.out_extra_epoll_enable = true; // out_extra: initialize
-    out_extra_Realloc(msgbuf, 64);
-    msgbuf.in_extra_elems = NULL; // in_extra: initialize
-    msgbuf.in_extra_max = 0; // in_extra: initialize
-    msgbuf.in_extra_end = 0; // in_extra: initialize
-    msgbuf.in_extra_start = 0; // in_extra: initialize
-    msgbuf.in_extra_eof = false; // in_extra: initialize
-    msgbuf.in_extra_msgvalid = false; // in_extra: initialize
-    msgbuf.in_extra_msglen = 0; // in_extra: initialize
-    msgbuf.in_extra_epoll_enable = true; // in_extra: initialize
-    in_extra_Realloc(msgbuf, 64);
-    msgbuf.cd_in_msg_next = (atf_amc::Msgbuf*)-1; // (atf_amc.FDb.cd_in_msg) not-in-list
-    msgbuf.cd_in_msg_prev = NULL; // (atf_amc.FDb.cd_in_msg)
+void atf_amc::Msgbuf_Init(atf_amc::Msgbuf& parent) {
+    parent.in_buf_elems = NULL; // in_buf: initialize
+    parent.in_buf_max = 0; // in_buf: initialize
+    parent.in_buf_end = 0; // in_buf: initialize
+    parent.in_buf_start = 0; // in_buf: initialize
+    parent.in_buf_eof = false; // in_buf: initialize
+    parent.in_buf_msgvalid = false; // in_buf: initialize
+    parent.in_buf_msglen = 0; // in_buf: initialize
+    parent.in_buf_epoll_enable = true; // in_buf: initialize
+    in_buf_Realloc(parent, 64);
+    parent.in_custom_elems = NULL; // in_custom: initialize
+    parent.in_custom_max = 0; // in_custom: initialize
+    parent.in_custom_end = 0; // in_custom: initialize
+    parent.in_custom_start = 0; // in_custom: initialize
+    parent.in_custom_eof = false; // in_custom: initialize
+    parent.in_custom_msgvalid = false; // in_custom: initialize
+    parent.in_custom_msglen = 0; // in_custom: initialize
+    parent.in_custom_epoll_enable = true; // in_custom: initialize
+    in_custom_Realloc(parent, 64);
+    parent.out_extra_elems = NULL; // out_extra: initialize
+    parent.out_extra_max = 0; // out_extra: initialize
+    parent.out_extra_end = 0; // out_extra: initialize
+    parent.out_extra_start = 0; // out_extra: initialize
+    parent.out_extra_eof = false; // out_extra: initialize
+    parent.out_extra_msgvalid = false; // out_extra: initialize
+    parent.out_extra_msglen = 0; // out_extra: initialize
+    parent.out_extra_epoll_enable = true; // out_extra: initialize
+    out_extra_Realloc(parent, 64);
+    parent.in_extra_elems = NULL; // in_extra: initialize
+    parent.in_extra_max = 0; // in_extra: initialize
+    parent.in_extra_end = 0; // in_extra: initialize
+    parent.in_extra_start = 0; // in_extra: initialize
+    parent.in_extra_eof = false; // in_extra: initialize
+    parent.in_extra_msgvalid = false; // in_extra: initialize
+    parent.in_extra_msglen = 0; // in_extra: initialize
+    parent.in_extra_epoll_enable = true; // in_extra: initialize
+    in_extra_Realloc(parent, 64);
+    parent.cd_in_msg_next = (atf_amc::Msgbuf*)-1; // (atf_amc.FDb.cd_in_msg) not-in-list
+    parent.cd_in_msg_prev = NULL; // (atf_amc.FDb.cd_in_msg)
 }
 
 // --- atf_amc.Msgbuf..Uninit
-void atf_amc::Msgbuf_Uninit(atf_amc::Msgbuf& msgbuf) {
-    atf_amc::Msgbuf &row = msgbuf; (void)row;
-    cd_in_msg_Remove(row); // remove msgbuf from index cd_in_msg
+void atf_amc::Msgbuf_Uninit(atf_amc::Msgbuf& parent) {
+    cd_in_msg_Remove(parent); // remove msgbuf from index cd_in_msg
 
     // atf_amc.Msgbuf.in_extra.Uninit (Fbuf)  //Message-based buffer
-    if (msgbuf.in_extra_elems) {
-        algo_lib::malloc_FreeMem(msgbuf.in_extra_elems, msgbuf.in_extra_max); // (atf_amc.Msgbuf.in_extra) in_extra_max is the byte size Realloc allocated
+    if (parent.in_extra_elems) {
+        algo_lib::malloc_FreeMem(parent.in_extra_elems, parent.in_extra_max); // (atf_amc.Msgbuf.in_extra) in_extra_max is the byte size Realloc allocated
     }
-    msgbuf.in_extra_elems = NULL;
-    msgbuf.in_extra_max = 0;
+    parent.in_extra_elems = NULL;
+    parent.in_extra_max = 0;
 
     // atf_amc.Msgbuf.out_extra.Uninit (Fbuf)  //Message-based buffer
-    if (msgbuf.out_extra_elems) {
-        algo_lib::malloc_FreeMem(msgbuf.out_extra_elems, msgbuf.out_extra_max); // (atf_amc.Msgbuf.out_extra) out_extra_max is the byte size Realloc allocated
+    if (parent.out_extra_elems) {
+        algo_lib::malloc_FreeMem(parent.out_extra_elems, parent.out_extra_max); // (atf_amc.Msgbuf.out_extra) out_extra_max is the byte size Realloc allocated
     }
-    msgbuf.out_extra_elems = NULL;
-    msgbuf.out_extra_max = 0;
+    parent.out_extra_elems = NULL;
+    parent.out_extra_max = 0;
 
     // atf_amc.Msgbuf.in_custom.Uninit (Fbuf)  //Message-based buffer
-    if (msgbuf.in_custom_elems) {
-        algo_lib::malloc_FreeMem(msgbuf.in_custom_elems, msgbuf.in_custom_max); // (atf_amc.Msgbuf.in_custom) in_custom_max is the byte size Realloc allocated
+    if (parent.in_custom_elems) {
+        algo_lib::malloc_FreeMem(parent.in_custom_elems, parent.in_custom_max); // (atf_amc.Msgbuf.in_custom) in_custom_max is the byte size Realloc allocated
     }
-    msgbuf.in_custom_elems = NULL;
-    msgbuf.in_custom_max = 0;
+    parent.in_custom_elems = NULL;
+    parent.in_custom_max = 0;
 
     // atf_amc.Msgbuf.in_buf.Uninit (Fbuf)  //Message-based buffer
-    if (msgbuf.in_buf_elems) {
-        algo_lib::malloc_FreeMem(msgbuf.in_buf_elems, msgbuf.in_buf_max); // (atf_amc.Msgbuf.in_buf) in_buf_max is the byte size Realloc allocated
+    if (parent.in_buf_elems) {
+        algo_lib::malloc_FreeMem(parent.in_buf_elems, parent.in_buf_max); // (atf_amc.Msgbuf.in_buf) in_buf_max is the byte size Realloc allocated
     }
-    msgbuf.in_buf_elems = NULL;
-    msgbuf.in_buf_max = 0;
+    parent.in_buf_elems = NULL;
+    parent.in_buf_max = 0;
 }
 
 // --- atf_amc.Msgbuf..Print
@@ -20038,23 +20242,23 @@ void atf_amc::NetBitfld1_Print(atf_amc::NetBitfld1 row, algo::cstring& str) {
 }
 
 // --- atf_amc.NetEntry.id.ReadStrptrMaybe
-inline static bool atf_amc::id_ReadStrptrMaybe(atf_amc::NetEntry& entry, algo::strptr in_str) {
+inline static bool atf_amc::id_ReadStrptrMaybe(atf_amc::NetEntry& parent, algo::strptr in_str) {
     bool retval = true;
     u16 id_tmp;
     retval = u16_ReadStrptrMaybe(id_tmp, in_str);
     if (retval) {
-        id_Set(entry, id_tmp);
+        id_Set(parent, id_tmp);
     }
     return retval;
 }
 
 // --- atf_amc.NetEntry.val.ReadStrptrMaybe
-inline static bool atf_amc::val_ReadStrptrMaybe(atf_amc::NetEntry& entry, algo::strptr in_str) {
+inline static bool atf_amc::val_ReadStrptrMaybe(atf_amc::NetEntry& parent, algo::strptr in_str) {
     bool retval = true;
     u32 val_tmp;
     retval = u32_ReadStrptrMaybe(val_tmp, in_str);
     if (retval) {
-        val_Set(entry, val_tmp);
+        val_Set(parent, val_tmp);
     }
     return retval;
 }
@@ -20110,7 +20314,7 @@ void atf_amc::NetEntry_Print(atf_amc::NetEntry row, algo::cstring& str) {
 
 // --- atf_amc.NetFrame.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::NetFrame &row, atf_amc::NetFrameHdr &out) {
+void atf_amc::net_frame_CopyOut(atf_amc::NetFrame &row, atf_amc::NetFrameHdr &out) {
     out.word_be = row.word_be;
     // kind: field value is computed
     // len: field value is computed
@@ -20421,14 +20625,14 @@ void atf_amc::ch_SetStrptr(atf_amc::NovsStr9& parent, const algo::strptr& rhs) {
 
 // --- atf_amc.OptAlloc.typeg.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptAlloc& optalloc) {
-    u8 *end = (u8*)&optalloc + sizeof(atf_amc::OptAlloc);
-    return algo::aryptr<u8>(end, i32(optalloc.length) - ssizeof(atf_amc::OptAlloc));
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptAlloc& parent) {
+    u8 *end = (u8*)&parent + sizeof(atf_amc::OptAlloc);
+    return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(atf_amc::OptAlloc));
 }
 
 // --- atf_amc.OptAlloc.typeg.Print
-void atf_amc::typeg_Print(atf_amc::OptAlloc& optalloc, cstring &out) {
-    if (atf_amc::TypeG *typeg = typeg_Get(optalloc)) {
+void atf_amc::typeg_Print(atf_amc::OptAlloc& parent, cstring &out) {
+    if (atf_amc::TypeG *typeg = typeg_Get(parent)) {
         out << *typeg;
     }
 }
@@ -20503,31 +20707,31 @@ void atf_amc::OptAlloc_Print(atf_amc::OptAlloc& row, algo::cstring& str) {
 
 // --- atf_amc.VarlenB.c.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> atf_amc::c_Getary(atf_amc::VarlenB& b) {
-    return algo::aryptr<char>(c_Addr(b), c_N(b));
+algo::aryptr<char> atf_amc::c_Getary(atf_amc::VarlenB& parent) {
+    return algo::aryptr<char>(c_Addr(parent), c_N(parent));
 }
 
 // --- atf_amc.VarlenB.c.Addr
-char* atf_amc::c_Addr(atf_amc::VarlenB& b) {
-    return (char*)((u8*)&b + sizeof(atf_amc::VarlenB)); // address of varlen portion
+char* atf_amc::c_Addr(atf_amc::VarlenB& parent) {
+    return (char*)((u8*)&parent + sizeof(atf_amc::VarlenB)); // address of varlen portion
 }
 
 // --- atf_amc.VarlenB.c.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::c_ReadStrptrMaybe(atf_amc::VarlenB& b, algo::strptr in_str) {
+bool atf_amc::c_ReadStrptrMaybe(atf_amc::VarlenB& parent, algo::strptr in_str) {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
     }
-    (void)b;//only to avoid -Wunused-parameter
+    (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.VarlenB.c.Print
 // Convert c to a string.
 // Array is printed as a regular string.
-void atf_amc::c_Print(atf_amc::VarlenB& b, algo::cstring &rhs) {
-    rhs << c_Getary(b);
+void atf_amc::c_Print(atf_amc::VarlenB& parent, algo::cstring &rhs) {
+    rhs << c_Getary(parent);
 }
 
 // --- atf_amc.VarlenB..ReadFieldMaybe
@@ -20579,7 +20783,7 @@ void atf_amc::VarlenB_Print(atf_amc::VarlenB& row, algo::cstring& str) {
 
 // --- atf_amc.OptBMsg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::OptBMsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::opt_bmsg_CopyOut(atf_amc::OptBMsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -20686,14 +20890,14 @@ void atf_amc::OptBMsg_Print(atf_amc::OptBMsg& row, algo::cstring& str) {
 
 // --- atf_amc.OptG.typeg.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptG& optg) {
-    u8 *end = (u8*)&optg + sizeof(atf_amc::OptG);
-    return algo::aryptr<u8>(end, i32(optg.length) - ssizeof(atf_amc::OptG));
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptG& parent) {
+    u8 *end = (u8*)&parent + sizeof(atf_amc::OptG);
+    return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(atf_amc::OptG));
 }
 
 // --- atf_amc.OptG.typeg.Print
-void atf_amc::typeg_Print(atf_amc::OptG& optg, cstring &out) {
-    if (atf_amc::TypeG *typeg = typeg_Get(optg)) {
+void atf_amc::typeg_Print(atf_amc::OptG& parent, cstring &out) {
+    if (atf_amc::TypeG *typeg = typeg_Get(parent)) {
         out << *typeg;
     }
 }
@@ -22770,9 +22974,9 @@ bool atf_amc::pmask_ReadStrptrMaybe(atf_amc::PmaskU555& parent, algo::strptr in_
 // --- atf_amc.PooledBE64.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::PooledBE64& pooledbe64) {
+const char* atf_amc::value_ToCstr(const atf_amc::PooledBE64& parent) {
     const char *ret = NULL;
-    switch(value_GetEnum(pooledbe64)) {
+    switch(value_GetEnum(parent)) {
         case atf_amc_PooledBE64_value_A    : ret = "A";  break;
         case atf_amc_PooledBE64_value_B    : ret = "B";  break;
     }
@@ -22782,12 +22986,12 @@ const char* atf_amc::value_ToCstr(const atf_amc::PooledBE64& pooledbe64) {
 // --- atf_amc.PooledBE64.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::PooledBE64& pooledbe64, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(pooledbe64);
+void atf_amc::value_Print(const atf_amc::PooledBE64& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
     } else {
-        lhs << value_Get(pooledbe64);
+        lhs << value_Get(parent);
     }
 }
 
@@ -22795,16 +22999,16 @@ void atf_amc::value_Print(const atf_amc::PooledBE64& pooledbe64, algo::cstring &
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::PooledBE64& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
             switch (u64(rhs[0])) {
                 case 'A': {
-                    value_SetEnum(pooledbe64,atf_amc_PooledBE64_value_A); ret = true; break;
+                    value_SetEnum(parent,atf_amc_PooledBE64_value_A); ret = true; break;
                 }
                 case 'B': {
-                    value_SetEnum(pooledbe64,atf_amc_PooledBE64_value_B); ret = true; break;
+                    value_SetEnum(parent,atf_amc_PooledBE64_value_B); ret = true; break;
                 }
             }
             break;
@@ -22816,20 +23020,20 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr
 // --- atf_amc.PooledBE64.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs, atf_amc_PooledBE64_value_Enum dflt) {
-    if (!value_SetStrptrMaybe(pooledbe64,rhs)) value_SetEnum(pooledbe64,dflt);
+void atf_amc::value_SetStrptr(atf_amc::PooledBE64& parent, algo::strptr rhs, atf_amc_PooledBE64_value_Enum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.PooledBE64.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::PooledBE64& parent, algo::strptr rhs) {
     bool retval = false;
-    retval = value_SetStrptrMaybe(pooledbe64,rhs); // try symbol conversion
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
         u64 value_tmp;
         retval = u64_ReadStrptrMaybe(value_tmp, rhs);
         if (retval) {
-            value_Set(pooledbe64, value_tmp);
+            value_Set(parent, value_tmp);
         }
     }
     return retval;
@@ -23284,7 +23488,7 @@ void atf_amc::Sep1_Print(atf_amc::Sep1 row, algo::cstring& str) {
 
 // --- atf_amc.Seqmsg.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::Seqmsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::seqmsg_CopyOut(atf_amc::Seqmsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -23508,10 +23712,10 @@ bool atf_amc::SsimfilesCase_ReadStrptrMaybe(atf_amc::SsimfilesCase &parent, algo
 
 // --- atf_amc.Sslbuf.out.EndWrite
 // Send zero-byte write
-void atf_amc::out_EndWrite(atf_amc::Sslbuf& sslbuf) {
-    if (ValidQ(sslbuf.out_iohook.fildes)) {
+void atf_amc::out_EndWrite(atf_amc::Sslbuf& parent) {
+    if (ValidQ(parent.out_iohook.fildes)) {
         // zero-byte write for remote side
-        ssize_t rc=write(sslbuf.out_iohook.fildes.value, "", 0);
+        ssize_t rc=write(parent.out_iohook.fildes.value, "", 0);
         (void)rc;
     }
 }
@@ -23519,17 +23723,17 @@ void atf_amc::out_EndWrite(atf_amc::Sslbuf& sslbuf) {
 // --- atf_amc.Sslbuf.out.BeginAlloc
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // No reallocation is performed. If not possible, return NULL.
-void* atf_amc::out_BeginAlloc(atf_amc::Sslbuf &sslbuf, i32 in_n) {
+void* atf_amc::out_BeginAlloc(atf_amc::Sslbuf &parent, i32 in_n) {
     void *ret = NULL;
-    int max = out_Max(sslbuf);
-    if (sslbuf.out_end + in_n > max) {
-        out_Shift(sslbuf);
+    int max = out_Max(parent);
+    if (parent.out_end + in_n > max) {
+        out_Shift(parent);
     }
-    if (sslbuf.out_end + in_n <= max) {
-        ret = (u8*)sslbuf.out_elems + sslbuf.out_end;
-        sslbuf.out_end += in_n;
+    if (parent.out_end + in_n <= max) {
+        ret = (u8*)parent.out_elems + parent.out_end;
+        parent.out_end += in_n;
         // schedule outflow
-        atf_amc::cd_sslbuf_out_Insert(sslbuf);
+        atf_amc::cd_sslbuf_out_Insert(parent);
     }
     return ret;
 }
@@ -23537,29 +23741,29 @@ void* atf_amc::out_BeginAlloc(atf_amc::Sslbuf &sslbuf, i32 in_n) {
 // --- atf_amc.Sslbuf.out.BeginAllocReserve
 // // Return pointer to a block of IN_N contiguous bytes in the buffer.
 // // Buffer is reallocated as necessary; function always succeeds.
-void* atf_amc::out_BeginAllocReserve(atf_amc::Sslbuf &sslbuf, i32 in_n) {
-    if (sslbuf.out_end - sslbuf.out_start + in_n > out_Max(sslbuf)) {
-        out_Realloc(sslbuf, sslbuf.out_max + i32_Max(sslbuf.out_max, in_n));
+void* atf_amc::out_BeginAllocReserve(atf_amc::Sslbuf &parent, i32 in_n) {
+    if (parent.out_end - parent.out_start + in_n > out_Max(parent)) {
+        out_Realloc(parent, parent.out_max + i32_Max(parent.out_max, in_n));
     }
-    return out_BeginAlloc(sslbuf, in_n);
+    return out_BeginAlloc(parent, in_n);
 }
 
 // --- atf_amc.Sslbuf.out.BeginWrite
 // Attach fbuf to Iohook for writing
 // Attach file descriptor and begin outflowing buffer reading using edge-triggered epoll.
-// Whenever buffer is non-empty and fd is writable, insert sslbuf into cd_sslbuf_out.
+// Whenever buffer is non-empty and fd is writable, insert parent into cd_sslbuf_out.
 // User should implement a step function that calls out_Outflow.
-void atf_amc::out_BeginWrite(atf_amc::Sslbuf& sslbuf, algo::Fildes fd, bool nodelete) {
-    callback_Set1(sslbuf.out_iohook, sslbuf, atf_amc::cd_sslbuf_out_Insert);
+void atf_amc::out_BeginWrite(atf_amc::Sslbuf& parent, algo::Fildes fd, bool nodelete) {
+    callback_Set1(parent.out_iohook, parent, atf_amc::cd_sslbuf_out_Insert);
     if (nodelete) {
-        sslbuf.out_epoll_enable    = false; // cannot register fd twice -- disable epoll on shared fd
-        sslbuf.out_iohook.nodelete = true;
+        parent.out_epoll_enable    = false; // cannot register fd twice -- disable epoll on shared fd
+        parent.out_iohook.nodelete = true;
     }
-    sslbuf.out_iohook.fildes    = fd;
+    parent.out_iohook.fildes    = fd;
     IOEvtFlags flags;
     write_Set(flags, true);
-    if (sslbuf.out_epoll_enable) {
-        algo_lib::IohookAdd(sslbuf.out_iohook, flags);
+    if (parent.out_epoll_enable) {
+        algo_lib::IohookAdd(parent.out_iohook, flags);
     }
 }
 
@@ -23568,30 +23772,30 @@ void atf_amc::out_BeginWrite(atf_amc::Sslbuf& sslbuf, algo::Fildes fd, bool node
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::out_Realloc(atf_amc::Sslbuf& sslbuf, int new_max) {
-    new_max = i32_Max(new_max, sslbuf.out_end);
-    u8 *new_mem = sslbuf.out_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(sslbuf.out_elems, sslbuf.out_max, new_max)
+void atf_amc::out_Realloc(atf_amc::Sslbuf& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.out_end);
+    u8 *new_mem = parent.out_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.out_elems, parent.out_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Sslbuf.out  comment:'out of memory'");
     }
-    sslbuf.out_elems = new_mem;
-    sslbuf.out_max = new_max;
+    parent.out_elems = new_mem;
+    parent.out_max = new_max;
 }
 
 // --- atf_amc.Sslbuf.out.Outflow
 // Transfer bytes from buffer to fd using write()
 // Once all bytes are written or when fd buffer is full, buffer is automatically removed from cd_sslbuf_out list.
 // Edge-triggered epoll will re-insert out into cd_sslbuf_out.
-bool atf_amc::out_Outflow(atf_amc::Sslbuf& sslbuf) {
-    int  nwrite   = out_N(sslbuf);
-    int  start    = sslbuf.out_start;
+bool atf_amc::out_Outflow(atf_amc::Sslbuf& parent) {
+    int  nwrite   = out_N(parent);
+    int  start    = parent.out_start;
     int  nwritten;
-    if (sslbuf.out_ssl) {
+    if (parent.out_ssl) {
         if (nwrite > 0) {
-            nwritten = SSL_write(sslbuf.out_ssl, sslbuf.out_elems + start, nwrite);
-            int err = SSL_get_error(sslbuf.out_ssl,nwritten);
+            nwritten = SSL_write(parent.out_ssl, parent.out_elems + start, nwrite);
+            int err = SSL_get_error(parent.out_ssl,nwritten);
             bool fdretry = err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE;
             bool sslretry = fdretry || err == SSL_ERROR_WANT_CONNECT || err == SSL_ERROR_WANT_ACCEPT || err == SSL_ERROR_WANT_X509_LOOKUP;
             bool good = nwritten > 0 || sslretry;
@@ -23599,28 +23803,28 @@ bool atf_amc::out_Outflow(atf_amc::Sslbuf& sslbuf) {
             // (with out_epoll_enable, the exit below then unschedules the buffer; a nodelete writer must handle out_err itself)
             nwritten = good ? i32_Max(nwritten,0) : -1;
             if (!good) {
-                sslbuf.out_err = algo::MakeErrcode(algo_Errns_ssl, err); // save error code
+                parent.out_err = algo::MakeErrcode(algo_Errns_ssl, err); // save error code
             }
         } else {
             nwritten = 0; // nothing to write: SSL_write rejects a zero byte count
         }
     } else {
-        nwritten = nwrite > 0 ? write(sslbuf.out_iohook.fildes.value, sslbuf.out_elems + start, nwrite) : 0;
+        nwritten = nwrite > 0 ? write(parent.out_iohook.fildes.value, parent.out_elems + start, nwrite) : 0;
         bool good     = nwritten >= 0 || errno == EAGAIN;
         if (!good) {
-            sslbuf.out_err = algo::FromErrno(errno); // save error code
+            parent.out_err = algo::FromErrno(errno); // save error code
         }
     }
     if (nwritten > 0) {
-        out_SkipBytes(sslbuf,nwritten); // skip written bytes
+        out_SkipBytes(parent,nwritten); // skip written bytes
     }
-    bool done = out_N(sslbuf)==0;
-    if (sslbuf.out_epoll_enable) {
+    bool done = out_N(parent)==0;
+    if (parent.out_epoll_enable) {
         done |= nwritten<0;
     }
     if (done) {
         // done writing
-        atf_amc::cd_sslbuf_out_Remove(sslbuf);
+        atf_amc::cd_sslbuf_out_Remove(parent);
     }
     return nwritten > 0;
 }
@@ -23628,47 +23832,47 @@ bool atf_amc::out_Outflow(atf_amc::Sslbuf& sslbuf) {
 // --- atf_amc.Sslbuf.out.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::out_RemoveAll(atf_amc::Sslbuf& sslbuf) {
-    sslbuf.out_start    = 0;
-    sslbuf.out_end      = 0;
-    sslbuf.out_msgvalid = false;
+void atf_amc::out_RemoveAll(atf_amc::Sslbuf& parent) {
+    parent.out_start    = 0;
+    parent.out_end      = 0;
+    parent.out_msgvalid = false;
 }
 
 // --- atf_amc.Sslbuf.out.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::out_Shift(atf_amc::Sslbuf& sslbuf) {
-    i32 start = sslbuf.out_start;
-    i32 bytes_n = sslbuf.out_end - start;
+static void atf_amc::out_Shift(atf_amc::Sslbuf& parent) {
+    i32 start = parent.out_start;
+    i32 bytes_n = parent.out_end - start;
     if (bytes_n > 0) {
-        memmove(sslbuf.out_elems, sslbuf.out_elems + start, bytes_n);
+        memmove(parent.out_elems, parent.out_elems + start, bytes_n);
     }
-    sslbuf.out_end = bytes_n;
-    sslbuf.out_start = 0;
+    parent.out_end = bytes_n;
+    parent.out_start = 0;
 }
 
 // --- atf_amc.Sslbuf.out.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::out_SkipBytes(atf_amc::Sslbuf& sslbuf, int n) {
-    int avail = sslbuf.out_end - sslbuf.out_start;
+void atf_amc::out_SkipBytes(atf_amc::Sslbuf& parent, int n) {
+    int avail = parent.out_end - parent.out_start;
     n = i32_Min(n,avail);
-    sslbuf.out_start += n;
-    sslbuf.out_msgvalid = false;
+    parent.out_start += n;
+    parent.out_msgvalid = false;
 }
 
 // --- atf_amc.Sslbuf.out.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::out_SkipMsg(atf_amc::Sslbuf& sslbuf) {
-    if (sslbuf.out_msgvalid) {
-        int skip = sslbuf.out_msglen;
-        i32 start = sslbuf.out_start;
+void atf_amc::out_SkipMsg(atf_amc::Sslbuf& parent) {
+    if (parent.out_msgvalid) {
+        int skip = parent.out_msglen;
+        i32 start = parent.out_start;
         start += skip;
-        sslbuf.out_start = start;
-        sslbuf.out_msgvalid = false;
-        sslbuf.out_msglen   = 0; // reset message length -- important for delimited streams
+        parent.out_start = start;
+        parent.out_msgvalid = false;
+        parent.out_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -23678,29 +23882,29 @@ void atf_amc::out_SkipMsg(atf_amc::Sslbuf& sslbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::out_WriteAll(atf_amc::Sslbuf& sslbuf, u8 *in, i32 in_n) {
-    int max = out_Max(sslbuf);
+bool atf_amc::out_WriteAll(atf_amc::Sslbuf& parent, u8 *in, i32 in_n) {
+    int max = out_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (sslbuf.out_end + in_n > max) {
-        out_Shift(sslbuf);
+    if (parent.out_end + in_n > max) {
+        out_Shift(parent);
     }
     // now try to write the message.
-    i32 end = sslbuf.out_end;
+    i32 end = parent.out_end;
     bool fits = end + in_n <= max;
     if (fits) {
-        if (sslbuf.out_zerocopy && out_N(sslbuf)==0) {// in kernel bypass situations this is faster
-            int rc = sslbuf.out_ssl ? SSL_write(sslbuf.out_ssl, in, in_n)
-            : write(sslbuf.out_iohook.fildes.value, in, in_n);
+        if (parent.out_zerocopy && out_N(parent)==0) {// in kernel bypass situations this is faster
+            int rc = parent.out_ssl ? SSL_write(parent.out_ssl, in, in_n)
+            : write(parent.out_iohook.fildes.value, in, in_n);
             if (rc >= 0) {
                 in += rc;
                 in_n -= rc;
             }
         }
         if (in_n > 0) {
-            memcpy(sslbuf.out_elems + end, in, in_n);
-            sslbuf.out_end = end + in_n;
+            memcpy(parent.out_elems + end, in, in_n);
+            parent.out_end = end + in_n;
             // schedule outflow
-            atf_amc::cd_sslbuf_out_Insert(sslbuf);
+            atf_amc::cd_sslbuf_out_Insert(parent);
         }
     }
     return fits;
@@ -23709,51 +23913,49 @@ bool atf_amc::out_WriteAll(atf_amc::Sslbuf& sslbuf, u8 *in, i32 in_n) {
 // --- atf_amc.Sslbuf.out.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::out_WriteReserve(atf_amc::Sslbuf& sslbuf, u8 *in, i32 in_n) {
-    if (sslbuf.out_end - sslbuf.out_start + in_n > out_Max(sslbuf)) {
-        out_Realloc(sslbuf, sslbuf.out_max + i32_Max(sslbuf.out_max, in_n));
+void atf_amc::out_WriteReserve(atf_amc::Sslbuf& parent, u8 *in, i32 in_n) {
+    if (parent.out_end - parent.out_start + in_n > out_Max(parent)) {
+        out_Realloc(parent, parent.out_max + i32_Max(parent.out_max, in_n));
     }
-    if (!out_WriteAll(sslbuf, in, in_n)) {
+    if (!out_WriteAll(parent, in, in_n)) {
         FatalErrorExit("out: out of memory");
     }
 }
 
 // --- atf_amc.Sslbuf..Init
 // Set all fields to initial values.
-void atf_amc::Sslbuf_Init(atf_amc::Sslbuf& sslbuf) {
-    sslbuf.out_elems = NULL; // out: initialize
-    sslbuf.out_max = 0; // out: initialize
-    sslbuf.out_end = 0; // out: initialize
-    sslbuf.out_start = 0; // out: initialize
-    sslbuf.out_eof = false; // out: initialize
-    sslbuf.out_zerocopy = false; // out: initialize
-    sslbuf.out_n_eagain = 0; // out: initialize
-    sslbuf.out_msgvalid = false; // out: initialize
-    sslbuf.out_msglen = 0; // out: initialize
-    sslbuf.out_epoll_enable = true; // out: initialize
-    sslbuf.out_ssl = NULL; // out: initialize
-    out_Realloc(sslbuf, 64);
-    sslbuf.cd_sslbuf_out_next = (atf_amc::Sslbuf*)-1; // (atf_amc.FDb.cd_sslbuf_out) not-in-list
-    sslbuf.cd_sslbuf_out_prev = NULL; // (atf_amc.FDb.cd_sslbuf_out)
+void atf_amc::Sslbuf_Init(atf_amc::Sslbuf& parent) {
+    parent.out_elems = NULL; // out: initialize
+    parent.out_max = 0; // out: initialize
+    parent.out_end = 0; // out: initialize
+    parent.out_start = 0; // out: initialize
+    parent.out_eof = false; // out: initialize
+    parent.out_zerocopy = false; // out: initialize
+    parent.out_n_eagain = 0; // out: initialize
+    parent.out_msgvalid = false; // out: initialize
+    parent.out_msglen = 0; // out: initialize
+    parent.out_epoll_enable = true; // out: initialize
+    parent.out_ssl = NULL; // out: initialize
+    out_Realloc(parent, 64);
+    parent.cd_sslbuf_out_next = (atf_amc::Sslbuf*)-1; // (atf_amc.FDb.cd_sslbuf_out) not-in-list
+    parent.cd_sslbuf_out_prev = NULL; // (atf_amc.FDb.cd_sslbuf_out)
 }
 
 // --- atf_amc.Sslbuf..Uninit
-void atf_amc::Sslbuf_Uninit(atf_amc::Sslbuf& sslbuf) {
-    atf_amc::Sslbuf &row = sslbuf; (void)row;
-    cd_sslbuf_out_Remove(row); // remove sslbuf from index cd_sslbuf_out
+void atf_amc::Sslbuf_Uninit(atf_amc::Sslbuf& parent) {
+    cd_sslbuf_out_Remove(parent); // remove sslbuf from index cd_sslbuf_out
 
     // atf_amc.Sslbuf.out.Uninit (Fbuf)  //Outbound byte buffer over TLS
-    if (sslbuf.out_elems) {
-        algo_lib::malloc_FreeMem(sslbuf.out_elems, sslbuf.out_max); // (atf_amc.Sslbuf.out) out_max is the byte size Realloc allocated
+    if (parent.out_elems) {
+        algo_lib::malloc_FreeMem(parent.out_elems, parent.out_max); // (atf_amc.Sslbuf.out) out_max is the byte size Realloc allocated
     }
-    sslbuf.out_elems = NULL;
-    sslbuf.out_max = 0;
+    parent.out_elems = NULL;
+    parent.out_max = 0;
 }
 
 // --- atf_amc.Strkey..Uninit
-void atf_amc::Strkey_Uninit(atf_amc::Strkey& strkey) {
-    atf_amc::Strkey &row = strkey; (void)row;
-    ind_strkey_Remove(row); // remove strkey from index ind_strkey
+void atf_amc::Strkey_Uninit(atf_amc::Strkey& parent) {
+    ind_strkey_Remove(parent); // remove strkey from index ind_strkey
 }
 
 // --- atf_amc.TableId.value.ToCstr
@@ -24036,7 +24238,6 @@ void atf_amc::tary_u32_RemRegion(atf_amc::TaryU32& parent, i64 beg, i64 n) {
 
 // --- atf_amc.TaryU32..Uninit
 void atf_amc::TaryU32_Uninit(atf_amc::TaryU32& parent) {
-    atf_amc::TaryU32 &row = parent; (void)row;
 
     // atf_amc.TaryU32.tary_u32.Uninit (Tary)  //
     // remove all elements from atf_amc.TaryU32.tary_u32
@@ -24263,7 +24464,6 @@ void atf_amc::ary_RemRegion(atf_amc::TaryU8& parent, i64 beg, i64 n) {
 
 // --- atf_amc.TaryU8..Uninit
 void atf_amc::TaryU8_Uninit(atf_amc::TaryU8& parent) {
-    atf_amc::TaryU8 &row = parent; (void)row;
 
     // atf_amc.TaryU8.ary.Uninit (Tary)  //
     // remove all elements from atf_amc.TaryU8.ary
@@ -24363,7 +24563,7 @@ void atf_amc::TestType_Print(atf_amc::TestType& row, algo::cstring& str) {
 
 // --- atf_amc.Text.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::Text &row, atf_amc::MsgHeader &out) {
+void atf_amc::text_CopyOut(atf_amc::Text &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -25046,7 +25246,7 @@ void atf_amc::Typefconst_Print(atf_amc::Typefconst row, algo::cstring& str) {
 
 // --- atf_amc.Varlen2Msg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::Varlen2Msg &row, atf_amc::MsgHeader &out) {
+void atf_amc::varlen2_msg_CopyOut(atf_amc::Varlen2Msg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -25210,7 +25410,7 @@ void atf_amc::Varlen2Msg_Print(atf_amc::Varlen2Msg& row, algo::cstring& str) {
 
 // --- atf_amc.Varlen2aMsg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::Varlen2aMsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::varlen2a_msg_CopyOut(atf_amc::Varlen2aMsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -25371,7 +25571,7 @@ void atf_amc::Varlen2aMsg_Print(atf_amc::Varlen2aMsg& row, algo::cstring& str) {
 
 // --- atf_amc.Varlen2mMsg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::Varlen2mMsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::varlen2m_msg_CopyOut(atf_amc::Varlen2mMsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -25535,24 +25735,24 @@ void atf_amc::Varlen2mMsg_Print(atf_amc::Varlen2mMsg& row, algo::cstring& str) {
 
 // --- atf_amc.VarlenK.i.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u32> atf_amc::i_Getary(atf_amc::VarlenK& v1) {
-    return algo::aryptr<u32>(i_Addr(v1), i_N(v1));
+algo::aryptr<u32> atf_amc::i_Getary(atf_amc::VarlenK& parent) {
+    return algo::aryptr<u32>(i_Addr(parent), i_N(parent));
 }
 
 // --- atf_amc.VarlenK.i.Addr
-u32* atf_amc::i_Addr(atf_amc::VarlenK& v1) {
-    return (u32*)((u8*)&v1 + sizeof(atf_amc::VarlenK)); // address of varlen portion
+u32* atf_amc::i_Addr(atf_amc::VarlenK& parent) {
+    return (u32*)((u8*)&parent + sizeof(atf_amc::VarlenK)); // address of varlen portion
 }
 
 // --- atf_amc.VarlenK.i.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenK& v1, algo::strptr in_str) {
+bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenK& parent, algo::strptr in_str) {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         u32 *i_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(u32)).elems) u32;
         retval = u32_ReadStrptrMaybe(*i_tmp, in_str);
     }
-    (void)v1;//only to avoid -Wunused-parameter
+    (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
@@ -25610,7 +25810,7 @@ void atf_amc::VarlenK_Print(atf_amc::VarlenK& row, algo::cstring& str) {
 
 // --- atf_amc.Varlen2vMsg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::Varlen2vMsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::varlen2v_msg_CopyOut(atf_amc::Varlen2vMsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -25800,24 +26000,24 @@ void atf_amc::Varlen2vMsg_Print(atf_amc::Varlen2vMsg& row, algo::cstring& str) {
 
 // --- atf_amc.VarlenAlloc.elem.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<i32> atf_amc::elem_Getary(atf_amc::VarlenAlloc& varlenalloc) {
-    return algo::aryptr<i32>(elem_Addr(varlenalloc), elem_N(varlenalloc));
+algo::aryptr<i32> atf_amc::elem_Getary(atf_amc::VarlenAlloc& parent) {
+    return algo::aryptr<i32>(elem_Addr(parent), elem_N(parent));
 }
 
 // --- atf_amc.VarlenAlloc.elem.Addr
-i32* atf_amc::elem_Addr(atf_amc::VarlenAlloc& varlenalloc) {
-    return (i32*)((u8*)&varlenalloc + sizeof(atf_amc::VarlenAlloc)); // address of varlen portion
+i32* atf_amc::elem_Addr(atf_amc::VarlenAlloc& parent) {
+    return (i32*)((u8*)&parent + sizeof(atf_amc::VarlenAlloc)); // address of varlen portion
 }
 
 // --- atf_amc.VarlenAllocScale.elem.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<i32> atf_amc::elem_Getary(atf_amc::VarlenAllocScale& varlenallocscale) {
-    return algo::aryptr<i32>(elem_Addr(varlenallocscale), elem_N(varlenallocscale));
+algo::aryptr<i32> atf_amc::elem_Getary(atf_amc::VarlenAllocScale& parent) {
+    return algo::aryptr<i32>(elem_Addr(parent), elem_N(parent));
 }
 
 // --- atf_amc.VarlenAllocScale.elem.Addr
-i32* atf_amc::elem_Addr(atf_amc::VarlenAllocScale& varlenallocscale) {
-    return (i32*)((u8*)&varlenallocscale + sizeof(atf_amc::VarlenAllocScale)); // address of varlen portion
+i32* atf_amc::elem_Addr(atf_amc::VarlenAllocScale& parent) {
+    return (i32*)((u8*)&parent + sizeof(atf_amc::VarlenAllocScale)); // address of varlen portion
 }
 
 // --- atf_amc.VarlenAllocU64.a.Getary
@@ -25876,7 +26076,7 @@ void atf_amc::elem_Print(atf_amc::VarlenAllocU8& parent, algo::cstring &rhs) {
 
 // --- atf_amc.VarlenBMsg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::VarlenBMsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::varlen_bmsg_CopyOut(atf_amc::VarlenBMsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -25973,13 +26173,13 @@ void atf_amc::VarlenBMsg_Print(atf_amc::VarlenBMsg& row, algo::cstring& str) {
 
 // --- atf_amc.VarlenExtern.varlen.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u32> atf_amc::varlen_Getary(atf_amc::VarlenExtern& varlen_extern) {
-    return algo::aryptr<u32>(varlen_Addr(varlen_extern), varlen_N(varlen_extern));
+algo::aryptr<u32> atf_amc::varlen_Getary(atf_amc::VarlenExtern& parent) {
+    return algo::aryptr<u32>(varlen_Addr(parent), varlen_N(parent));
 }
 
 // --- atf_amc.VarlenExtern.varlen.Addr
-u32* atf_amc::varlen_Addr(atf_amc::VarlenExtern& varlen_extern) {
-    return (u32*)((u8*)&varlen_extern + sizeof(atf_amc::VarlenExtern)); // address of varlen portion
+u32* atf_amc::varlen_Addr(atf_amc::VarlenExtern& parent) {
+    return (u32*)((u8*)&parent + sizeof(atf_amc::VarlenExtern)); // address of varlen portion
 }
 
 // --- atf_amc.VarlenH.typeh.Getary
@@ -26188,7 +26388,7 @@ void atf_amc::c_Print(atf_amc::VarlenLow& parent, algo::cstring &rhs) {
 
 // --- atf_amc.VarlenMsg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::VarlenMsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::varlen_msg_CopyOut(atf_amc::VarlenMsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -26284,24 +26484,24 @@ void atf_amc::VarlenMsg_Print(atf_amc::VarlenMsg& row, algo::cstring& str) {
 
 // --- atf_amc.VarlenW.i.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u32> atf_amc::i_Getary(atf_amc::VarlenW& w) {
-    return algo::aryptr<u32>(i_Addr(w), i_N(w));
+algo::aryptr<u32> atf_amc::i_Getary(atf_amc::VarlenW& parent) {
+    return algo::aryptr<u32>(i_Addr(parent), i_N(parent));
 }
 
 // --- atf_amc.VarlenW.i.Addr
-u32* atf_amc::i_Addr(atf_amc::VarlenW& w) {
-    return (u32*)((u8*)&w + sizeof(atf_amc::VarlenW)); // address of varlen portion
+u32* atf_amc::i_Addr(atf_amc::VarlenW& parent) {
+    return (u32*)((u8*)&parent + sizeof(atf_amc::VarlenW)); // address of varlen portion
 }
 
 // --- atf_amc.VarlenW.i.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenW& w, algo::strptr in_str) {
+bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenW& parent, algo::strptr in_str) {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         u32 *i_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(u32)).elems) u32;
         retval = u32_ReadStrptrMaybe(*i_tmp, in_str);
     }
-    (void)w;//only to avoid -Wunused-parameter
+    (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
@@ -26359,7 +26559,7 @@ void atf_amc::VarlenW_Print(atf_amc::VarlenW& row, algo::cstring& str) {
 
 // --- atf_amc.VarlenVMsg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::VarlenVMsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::varlen_vmsg_CopyOut(atf_amc::VarlenVMsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -26465,7 +26665,7 @@ void atf_amc::VarlenVMsg_Print(atf_amc::VarlenVMsg& row, algo::cstring& str) {
 
 // --- atf_amc.VarlenWMsg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::VarlenWMsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::varlen_wmsg_CopyOut(atf_amc::VarlenWMsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -26731,8 +26931,8 @@ inline static void atf_amc::SizeCheck() {
 // --- atf_amc...StaticCheck
 void atf_amc::StaticCheck() {
     algo_assert(sizeof(atf_amc::amctest_step_hook) == 8); // csize:atf_amc.amctest_step_hook
+    algo_assert(sizeof(atf_amc::hooktype_callback_hook) == 8); // csize:atf_amc.hooktype_callback_hook
     algo_assert(sizeof(atf_amc::listtype_step_hook) == 8); // csize:atf_amc.listtype_step_hook
-    algo_assert(sizeof(atf_amc::parent_callback_hook) == 8); // csize:atf_amc.parent_callback_hook
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::BitfldType1*)0)->value)*8 >= 15);
     // check that bitfield fits width
@@ -26741,15 +26941,15 @@ void atf_amc::StaticCheck() {
     algo_assert(sizeof(((atf_amc::BitfldU128*)0)->value)*8 >= 128);
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::BitfldU16*)0)->value)*8 >= 12);
+    algo_assert(_offset_of(atf_amc::MsgType, value) + sizeof(((atf_amc::MsgType*)0)->value) == sizeof(atf_amc::MsgType));
+    algo_assert(_offset_of(atf_amc::MsgLength, value) + sizeof(((atf_amc::MsgLength*)0)->value) == sizeof(atf_amc::MsgLength));
+    algo_assert(_offset_of(atf_amc::MsgHeader, length) == 2);
     algo_assert(_offset_of(atf_amc::Disp2Case, value) + sizeof(((atf_amc::Disp2Case*)0)->value) == sizeof(atf_amc::Disp2Case));
     algo_assert(_offset_of(atf_amc::DispCase, value) + sizeof(((atf_amc::DispCase*)0)->value) == sizeof(atf_amc::DispCase));
     algo_assert(_offset_of(atf_amc::trace, _db_out_fb_n_write_msg) + sizeof(((atf_amc::trace*)0)->_db_out_fb_n_write_msg) == sizeof(atf_amc::trace));
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::FDb*)0)->flagbits)*8 >= 4);
     algo_assert(_offset_of(atf_amc::FieldId, value) + sizeof(((atf_amc::FieldId*)0)->value) == sizeof(atf_amc::FieldId));
-    algo_assert(_offset_of(atf_amc::MsgType, value) + sizeof(((atf_amc::MsgType*)0)->value) == sizeof(atf_amc::MsgType));
-    algo_assert(_offset_of(atf_amc::MsgLength, value) + sizeof(((atf_amc::MsgLength*)0)->value) == sizeof(atf_amc::MsgLength));
-    algo_assert(_offset_of(atf_amc::MsgHeader, length) == 2);
     algo_assert(_offset_of(atf_amc::MsgHdrLTMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTMsgsCase));
     algo_assert(_offset_of(atf_amc::MsgHdrLTScaleMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTScaleMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTScaleMsgsCase));
     algo_assert(_offset_of(atf_amc::MsgHdrLTScale_curs, msglen) + sizeof(((atf_amc::MsgHdrLTScale_curs*)0)->msglen) == sizeof(atf_amc::MsgHdrLTScale_curs));
@@ -27706,9 +27906,9 @@ atf_amc::VarlenLow * atf_amc::VarlenLow_FmtByteAry(algo::ByteAry &buf, algo::ary
 // --- atf_amc...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_exec::FDb_Init();
+        lib_json::FDb_Init();
         atf_amc::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -27725,9 +27925,9 @@ int main(int argc, char **argv) {
     }
     try {
         atf_amc::FDb_Uninit();
+        lib_json::FDb_Uninit();
         lib_exec::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

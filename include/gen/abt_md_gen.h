@@ -61,35 +61,37 @@ enum abt_md_TableIdEnum {                        // abt_md.TableId.value
     ,abt_md_TableId_dmmeta_finput         = 6    // dmmeta.finput -> abt_md.FFinput
     ,abt_md_TableId_dmmeta_Gconst         = 7    // dmmeta.Gconst -> abt_md.FGconst
     ,abt_md_TableId_dmmeta_gconst         = 7    // dmmeta.gconst -> abt_md.FGconst
-    ,abt_md_TableId_dmmeta_Gstatic        = 8    // dmmeta.Gstatic -> abt_md.FGstatic
-    ,abt_md_TableId_dmmeta_gstatic        = 8    // dmmeta.gstatic -> abt_md.FGstatic
-    ,abt_md_TableId_dmmeta_Ns             = 9    // dmmeta.Ns -> abt_md.FNs
-    ,abt_md_TableId_dmmeta_ns             = 9    // dmmeta.ns -> abt_md.FNs
-    ,abt_md_TableId_dmmeta_Nstype         = 10   // dmmeta.Nstype -> abt_md.FNstype
-    ,abt_md_TableId_dmmeta_nstype         = 10   // dmmeta.nstype -> abt_md.FNstype
-    ,abt_md_TableId_dev_Readmefile        = 11   // dev.Readmefile -> abt_md.FReadmefile
-    ,abt_md_TableId_dev_readmefile        = 11   // dev.readmefile -> abt_md.FReadmefile
-    ,abt_md_TableId_dev_Readmesort        = 12   // dev.Readmesort -> abt_md.FReadmesort
-    ,abt_md_TableId_dev_readmesort        = 12   // dev.readmesort -> abt_md.FReadmesort
-    ,abt_md_TableId_dmmeta_Reftype        = 13   // dmmeta.Reftype -> abt_md.FReftype
-    ,abt_md_TableId_dmmeta_reftype        = 13   // dmmeta.reftype -> abt_md.FReftype
-    ,abt_md_TableId_dev_Scriptfile        = 14   // dev.Scriptfile -> abt_md.FScriptfile
-    ,abt_md_TableId_dev_scriptfile        = 14   // dev.scriptfile -> abt_md.FScriptfile
-    ,abt_md_TableId_dmmeta_Ssimfile       = 15   // dmmeta.Ssimfile -> abt_md.FSsimfile
-    ,abt_md_TableId_dmmeta_ssimfile       = 15   // dmmeta.ssimfile -> abt_md.FSsimfile
-    ,abt_md_TableId_dmmeta_Substr         = 16   // dmmeta.Substr -> abt_md.FSubstr
-    ,abt_md_TableId_dmmeta_substr         = 16   // dmmeta.substr -> abt_md.FSubstr
-    ,abt_md_TableId_dev_Targdep           = 17   // dev.Targdep -> abt_md.FTargdep
-    ,abt_md_TableId_dev_targdep           = 17   // dev.targdep -> abt_md.FTargdep
-    ,abt_md_TableId_dev_Target            = 18   // dev.Target -> abt_md.FTarget
-    ,abt_md_TableId_dev_target            = 18   // dev.target -> abt_md.FTarget
-    ,abt_md_TableId_dev_Targsrc           = 19   // dev.Targsrc -> abt_md.FTargsrc
-    ,abt_md_TableId_dev_targsrc           = 19   // dev.targsrc -> abt_md.FTargsrc
-    ,abt_md_TableId_amcdb_Tclass          = 20   // amcdb.Tclass -> abt_md.FTclass
-    ,abt_md_TableId_amcdb_tclass          = 20   // amcdb.tclass -> abt_md.FTclass
+    ,abt_md_TableId_dev_Gitfile           = 8    // dev.Gitfile -> abt_md.FGitfile
+    ,abt_md_TableId_dev_gitfile           = 8    // dev.gitfile -> abt_md.FGitfile
+    ,abt_md_TableId_dmmeta_Gstatic        = 9    // dmmeta.Gstatic -> abt_md.FGstatic
+    ,abt_md_TableId_dmmeta_gstatic        = 9    // dmmeta.gstatic -> abt_md.FGstatic
+    ,abt_md_TableId_dmmeta_Ns             = 10   // dmmeta.Ns -> abt_md.FNs
+    ,abt_md_TableId_dmmeta_ns             = 10   // dmmeta.ns -> abt_md.FNs
+    ,abt_md_TableId_dmmeta_Nstype         = 11   // dmmeta.Nstype -> abt_md.FNstype
+    ,abt_md_TableId_dmmeta_nstype         = 11   // dmmeta.nstype -> abt_md.FNstype
+    ,abt_md_TableId_dev_Readmefile        = 12   // dev.Readmefile -> abt_md.FReadmefile
+    ,abt_md_TableId_dev_readmefile        = 12   // dev.readmefile -> abt_md.FReadmefile
+    ,abt_md_TableId_dev_Readmesort        = 13   // dev.Readmesort -> abt_md.FReadmesort
+    ,abt_md_TableId_dev_readmesort        = 13   // dev.readmesort -> abt_md.FReadmesort
+    ,abt_md_TableId_dmmeta_Reftype        = 14   // dmmeta.Reftype -> abt_md.FReftype
+    ,abt_md_TableId_dmmeta_reftype        = 14   // dmmeta.reftype -> abt_md.FReftype
+    ,abt_md_TableId_dev_Scriptfile        = 15   // dev.Scriptfile -> abt_md.FScriptfile
+    ,abt_md_TableId_dev_scriptfile        = 15   // dev.scriptfile -> abt_md.FScriptfile
+    ,abt_md_TableId_dmmeta_Ssimfile       = 16   // dmmeta.Ssimfile -> abt_md.FSsimfile
+    ,abt_md_TableId_dmmeta_ssimfile       = 16   // dmmeta.ssimfile -> abt_md.FSsimfile
+    ,abt_md_TableId_dmmeta_Substr         = 17   // dmmeta.Substr -> abt_md.FSubstr
+    ,abt_md_TableId_dmmeta_substr         = 17   // dmmeta.substr -> abt_md.FSubstr
+    ,abt_md_TableId_dev_Targdep           = 18   // dev.Targdep -> abt_md.FTargdep
+    ,abt_md_TableId_dev_targdep           = 18   // dev.targdep -> abt_md.FTargdep
+    ,abt_md_TableId_dev_Target            = 19   // dev.Target -> abt_md.FTarget
+    ,abt_md_TableId_dev_target            = 19   // dev.target -> abt_md.FTarget
+    ,abt_md_TableId_dev_Targsrc           = 20   // dev.Targsrc -> abt_md.FTargsrc
+    ,abt_md_TableId_dev_targsrc           = 20   // dev.targsrc -> abt_md.FTargsrc
+    ,abt_md_TableId_amcdb_Tclass          = 21   // amcdb.Tclass -> abt_md.FTclass
+    ,abt_md_TableId_amcdb_tclass          = 21   // amcdb.tclass -> abt_md.FTclass
 };
 
-enum { abt_md_TableIdEnum_N = 42 };
+enum { abt_md_TableIdEnum_N = 44 };
 
 namespace abt_md { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -109,6 +111,7 @@ namespace abt_md { struct FMdsection; }
 namespace dmmeta { struct Finput; }
 namespace abt_md { struct FField; }
 namespace dmmeta { struct Gconst; }
+namespace dev { struct Gitfile; }
 namespace dmmeta { struct Gstatic; }
 namespace dev { struct Mdsection; }
 namespace abt_md { struct FFileSection; }
@@ -161,6 +164,7 @@ namespace abt_md { struct _db_dispatch_curs; }
 namespace abt_md { struct _db_dispatch_msg_curs; }
 namespace abt_md { struct _db_checkreq_curs; }
 namespace abt_md { struct _db_checkkey_curs; }
+namespace abt_md { struct _db_gitfile_curs; }
 namespace abt_md { struct FDirscan_bh_dirent_curs; }
 namespace abt_md { struct FDirscan_dirent_curs; }
 namespace abt_md { struct dispatch_c_dispatch_msg_curs; }
@@ -184,6 +188,7 @@ namespace abt_md { struct FDispatchMsg; }
 namespace abt_md { struct FFconst; }
 namespace abt_md { struct FFinput; }
 namespace abt_md { struct FGconst; }
+namespace abt_md { struct FGitfile; }
 namespace abt_md { struct FGstatic; }
 namespace abt_md { struct FHumanText; }
 namespace abt_md { struct FLink; }
@@ -226,9 +231,9 @@ private:
 };
 // Set all fields to initial values.
 // func:abt_md.FAnchor..Init
-inline void          FAnchor_Init(abt_md::FAnchor& anchor);
+inline void          FAnchor_Init(abt_md::FAnchor& parent);
 // func:abt_md.FAnchor..Uninit
-void                 FAnchor_Uninit(abt_md::FAnchor& anchor) __attribute__((nothrow));
+void                 FAnchor_Uninit(abt_md::FAnchor& parent) __attribute__((nothrow));
 
 // --- abt_md.FBadlevel
 // create: abt_md.FDb.badlevel (Tpool)
@@ -253,9 +258,9 @@ private:
 };
 // Set all fields to initial values.
 // func:abt_md.FBadlevel..Init
-inline void          FBadlevel_Init(abt_md::FBadlevel& badlevel);
+inline void          FBadlevel_Init(abt_md::FBadlevel& parent);
 // func:abt_md.FBadlevel..Uninit
-void                 FBadlevel_Uninit(abt_md::FBadlevel& badlevel) __attribute__((nothrow));
+void                 FBadlevel_Uninit(abt_md::FBadlevel& parent) __attribute__((nothrow));
 
 // --- abt_md.FCheckKey
 // create: abt_md.FDb.checkkey (Lary)
@@ -284,9 +289,9 @@ private:
 };
 // Set all fields to initial values.
 // func:abt_md.FCheckKey..Init
-inline void          FCheckKey_Init(abt_md::FCheckKey& checkkey);
+inline void          FCheckKey_Init(abt_md::FCheckKey& parent);
 // func:abt_md.FCheckKey..Uninit
-void                 FCheckKey_Uninit(abt_md::FCheckKey& checkkey) __attribute__((nothrow));
+void                 FCheckKey_Uninit(abt_md::FCheckKey& parent) __attribute__((nothrow));
 
 // --- abt_md.FCheckReq
 // create: abt_md.FDb.checkreq (Lary)
@@ -315,9 +320,9 @@ private:
 };
 // Set all fields to initial values.
 // func:abt_md.FCheckReq..Init
-inline void          FCheckReq_Init(abt_md::FCheckReq& checkreq);
+inline void          FCheckReq_Init(abt_md::FCheckReq& parent);
 // func:abt_md.FCheckReq..Uninit
-void                 FCheckReq_Uninit(abt_md::FCheckReq& checkreq) __attribute__((nothrow));
+void                 FCheckReq_Uninit(abt_md::FCheckReq& parent) __attribute__((nothrow));
 
 // --- abt_md.FComptest
 // create: abt_md.FDb.comptest (Lary)
@@ -353,16 +358,16 @@ void                 comptest_CopyOut(abt_md::FComptest &row, atfdb::Comptest &o
 void                 comptest_CopyIn(abt_md::FComptest &row, atfdb::Comptest &in) __attribute__((nothrow));
 
 // func:abt_md.FComptest.target.Get
-algo::strptr         target_Get(abt_md::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(abt_md::FComptest& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FComptest.testname.Get
-algo::strptr         testname_Get(abt_md::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         testname_Get(abt_md::FComptest& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FComptest..Init
-inline void          FComptest_Init(abt_md::FComptest& comptest);
+inline void          FComptest_Init(abt_md::FComptest& parent);
 // func:abt_md.FComptest..Uninit
-void                 FComptest_Uninit(abt_md::FComptest& comptest) __attribute__((nothrow));
+void                 FComptest_Uninit(abt_md::FComptest& parent) __attribute__((nothrow));
 
 // --- abt_md.FCtype
 // create: abt_md.FDb.ctype (Lary)
@@ -418,97 +423,97 @@ void                 ctype_CopyOut(abt_md::FCtype &row, dmmeta::Ctype &out) __at
 void                 ctype_CopyIn(abt_md::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:abt_md.FCtype.ns.Get
-algo::strptr         ns_Get(abt_md::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(abt_md::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FCtype.name.Get
-algo::strptr         name_Get(abt_md::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(abt_md::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:abt_md.FCtype.c_ssimfile.InsertMaybe
-inline bool          c_ssimfile_InsertMaybe(abt_md::FCtype& ctype, abt_md::FSsimfile& row) __attribute__((nothrow));
+inline bool          c_ssimfile_InsertMaybe(abt_md::FCtype& parent, abt_md::FSsimfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:abt_md.FCtype.c_ssimfile.Remove
-inline void          c_ssimfile_Remove(abt_md::FCtype& ctype, abt_md::FSsimfile& row) __attribute__((nothrow));
+inline void          c_ssimfile_Remove(abt_md::FCtype& parent, abt_md::FSsimfile& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt_md.FCtype.c_field.EmptyQ
-inline bool          c_field_EmptyQ(abt_md::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_field_EmptyQ(abt_md::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt_md.FCtype.c_field.Find
-inline abt_md::FField* c_field_Find(abt_md::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FField* c_field_Find(abt_md::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt_md.FCtype.c_field.Getary
-inline algo::aryptr<abt_md::FField*> c_field_Getary(abt_md::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<abt_md::FField*> c_field_Getary(abt_md::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt_md.FCtype.c_field.Insert
-void                 c_field_Insert(abt_md::FCtype& ctype, abt_md::FField& row) __attribute__((nothrow));
+void                 c_field_Insert(abt_md::FCtype& parent, abt_md::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:abt_md.FCtype.c_field.InsertMaybe
-bool                 c_field_InsertMaybe(abt_md::FCtype& ctype, abt_md::FField& row) __attribute__((nothrow));
+bool                 c_field_InsertMaybe(abt_md::FCtype& parent, abt_md::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt_md.FCtype.c_field.N
-inline i64           c_field_N(const abt_md::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_N(const abt_md::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt_md.FCtype.c_field.Remove
-void                 c_field_Remove(abt_md::FCtype& ctype, abt_md::FField& row) __attribute__((nothrow));
+void                 c_field_Remove(abt_md::FCtype& parent, abt_md::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FCtype.c_field.RemoveAll
-inline void          c_field_RemoveAll(abt_md::FCtype& ctype) __attribute__((nothrow));
+inline void          c_field_RemoveAll(abt_md::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt_md.FCtype.c_field.Reserve
-void                 c_field_Reserve(abt_md::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_field_Reserve(abt_md::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt_md.FCtype.c_field.qFind
-inline abt_md::FField& c_field_qFind(abt_md::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline abt_md::FField& c_field_qFind(abt_md::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt_md.FCtype.c_field.InAryQ
 inline bool          ctype_c_field_InAryQ(abt_md::FField& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt_md.FCtype.c_field.qLast
-inline abt_md::FField& c_field_qLast(abt_md::FCtype& ctype) __attribute__((nothrow));
+inline abt_md::FField& c_field_qLast(abt_md::FCtype& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt_md.FCtype.c_field_arg.EmptyQ
-inline bool          c_field_arg_EmptyQ(abt_md::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_field_arg_EmptyQ(abt_md::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt_md.FCtype.c_field_arg.Find
-inline abt_md::FField* c_field_arg_Find(abt_md::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FField* c_field_arg_Find(abt_md::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt_md.FCtype.c_field_arg.Getary
-inline algo::aryptr<abt_md::FField*> c_field_arg_Getary(abt_md::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<abt_md::FField*> c_field_arg_Getary(abt_md::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt_md.FCtype.c_field_arg.Insert
-void                 c_field_arg_Insert(abt_md::FCtype& ctype, abt_md::FField& row) __attribute__((nothrow));
+void                 c_field_arg_Insert(abt_md::FCtype& parent, abt_md::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:abt_md.FCtype.c_field_arg.InsertMaybe
-bool                 c_field_arg_InsertMaybe(abt_md::FCtype& ctype, abt_md::FField& row) __attribute__((nothrow));
+bool                 c_field_arg_InsertMaybe(abt_md::FCtype& parent, abt_md::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt_md.FCtype.c_field_arg.N
-inline i64           c_field_arg_N(const abt_md::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_arg_N(const abt_md::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt_md.FCtype.c_field_arg.Remove
-void                 c_field_arg_Remove(abt_md::FCtype& ctype, abt_md::FField& row) __attribute__((nothrow));
+void                 c_field_arg_Remove(abt_md::FCtype& parent, abt_md::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FCtype.c_field_arg.RemoveAll
-inline void          c_field_arg_RemoveAll(abt_md::FCtype& ctype) __attribute__((nothrow));
+inline void          c_field_arg_RemoveAll(abt_md::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt_md.FCtype.c_field_arg.Reserve
-void                 c_field_arg_Reserve(abt_md::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_field_arg_Reserve(abt_md::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt_md.FCtype.c_field_arg.qFind
-inline abt_md::FField& c_field_arg_qFind(abt_md::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline abt_md::FField& c_field_arg_qFind(abt_md::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt_md.FCtype.c_field_arg.InAryQ
 inline bool          ctype_c_field_arg_InAryQ(abt_md::FField& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt_md.FCtype.c_field_arg.qLast
-inline abt_md::FField& c_field_arg_qLast(abt_md::FCtype& ctype) __attribute__((nothrow));
+inline abt_md::FField& c_field_arg_qLast(abt_md::FCtype& parent) __attribute__((nothrow));
 
 // func:abt_md.FCtype.c_field_curs.Reset
 inline void          ctype_c_field_curs_Reset(ctype_c_field_curs &curs, abt_md::FCtype &parent) __attribute__((nothrow));
@@ -534,9 +539,9 @@ inline void          ctype_c_field_arg_curs_Next(ctype_c_field_arg_curs &curs) _
 inline abt_md::FField& ctype_c_field_arg_curs_Access(ctype_c_field_arg_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:abt_md.FCtype..Init
-inline void          FCtype_Init(abt_md::FCtype& ctype);
+inline void          FCtype_Init(abt_md::FCtype& parent);
 // func:abt_md.FCtype..Uninit
-void                 FCtype_Uninit(abt_md::FCtype& ctype) __attribute__((nothrow));
+void                 FCtype_Uninit(abt_md::FCtype& parent) __attribute__((nothrow));
 
 // --- abt_md.FMdsection
 // create: abt_md.FDb.mdsection (Inlary)
@@ -566,34 +571,34 @@ void                 mdsection_CopyIn(abt_md::FMdsection &row, dev::Mdsection &i
 
 // Invoke function by pointer
 // func:abt_md.FMdsection.step.Call
-inline void          step_Call(abt_md::FMdsection& mdsection, abt_md::FFileSection& arg) __attribute__((nothrow));
+inline void          step_Call(abt_md::FMdsection& parent, abt_md::FFileSection& arg) __attribute__((nothrow));
 
 // Print back to string
 // func:abt_md.FMdsection.regx_match.Print
-void                 regx_match_Print(abt_md::FMdsection& mdsection, algo::cstring &out) __attribute__((nothrow));
+void                 regx_match_Print(abt_md::FMdsection& parent, algo::cstring &out) __attribute__((nothrow));
 
 // Print back to string
 // func:abt_md.FMdsection.regx_path.Print
-void                 regx_path_Print(abt_md::FMdsection& mdsection, algo::cstring &out) __attribute__((nothrow));
+void                 regx_path_Print(abt_md::FMdsection& parent, algo::cstring &out) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt_md.FMdsection.zd_file_section.EmptyQ
-inline bool          zd_file_section_EmptyQ(abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_file_section_EmptyQ(abt_md::FMdsection& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:abt_md.FMdsection.zd_file_section.First
-inline abt_md::FFileSection* zd_file_section_First(abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow, pure));
+inline abt_md::FFileSection* zd_file_section_First(abt_md::FMdsection& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:abt_md.FMdsection.zd_file_section.InLlistQ
 inline bool          mdsection_zd_file_section_InLlistQ(abt_md::FFileSection& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:abt_md.FMdsection.zd_file_section.Insert
-void                 zd_file_section_Insert(abt_md::FMdsection& mdsection, abt_md::FFileSection& row) __attribute__((nothrow));
+void                 zd_file_section_Insert(abt_md::FMdsection& parent, abt_md::FFileSection& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:abt_md.FMdsection.zd_file_section.Last
-inline abt_md::FFileSection* zd_file_section_Last(abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow, pure));
+inline abt_md::FFileSection* zd_file_section_Last(abt_md::FMdsection& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:abt_md.FMdsection.zd_file_section.N
-inline i32           zd_file_section_N(const abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_file_section_N(const abt_md::FMdsection& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:abt_md.FMdsection.zd_file_section.Next
 inline abt_md::FFileSection* mdsection_zd_file_section_Next(abt_md::FFileSection &row) __attribute__((__warn_unused_result__, nothrow));
@@ -602,23 +607,23 @@ inline abt_md::FFileSection* mdsection_zd_file_section_Next(abt_md::FFileSection
 inline abt_md::FFileSection* mdsection_zd_file_section_Prev(abt_md::FFileSection &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:abt_md.FMdsection.zd_file_section.Remove
-void                 zd_file_section_Remove(abt_md::FMdsection& mdsection, abt_md::FFileSection& row) __attribute__((nothrow));
+void                 zd_file_section_Remove(abt_md::FMdsection& parent, abt_md::FFileSection& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FMdsection.zd_file_section.RemoveAll
-void                 zd_file_section_RemoveAll(abt_md::FMdsection& mdsection) __attribute__((nothrow));
+void                 zd_file_section_RemoveAll(abt_md::FMdsection& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:abt_md.FMdsection.zd_file_section.RemoveFirst
-abt_md::FFileSection* zd_file_section_RemoveFirst(abt_md::FMdsection& mdsection) __attribute__((nothrow));
+abt_md::FFileSection* zd_file_section_RemoveFirst(abt_md::FMdsection& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:abt_md.FMdsection.zd_file_section.qLast
-inline abt_md::FFileSection& zd_file_section_qLast(abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FFileSection& zd_file_section_qLast(abt_md::FMdsection& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:abt_md.FMdsection.zd_file_section.InsertBefore
-void                 zd_file_section_InsertBefore(abt_md::FMdsection& mdsection, abt_md::FFileSection& row, abt_md::FFileSection* before) __attribute__((nothrow));
+void                 zd_file_section_InsertBefore(abt_md::FMdsection& parent, abt_md::FFileSection& row, abt_md::FFileSection* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FMdsection..Init
-void                 FMdsection_Init(abt_md::FMdsection& mdsection);
+void                 FMdsection_Init(abt_md::FMdsection& parent);
 // cursor points to valid item
 // func:abt_md.FMdsection.zd_file_section_curs.Reset
 inline void          mdsection_zd_file_section_curs_Reset(mdsection_zd_file_section_curs &curs, abt_md::FMdsection &parent) __attribute__((nothrow));
@@ -769,6 +774,11 @@ struct FDb { // abt_md.FDb: In-memory database for abt_md
     abt_md::FCheckKey**              ind_checkkey_buckets_elems;                        // pointer to bucket array
     i32                              ind_checkkey_buckets_n;                            // number of elements in bucket array
     i32                              ind_checkkey_n;                                    // number of elements in the hash table
+    abt_md::FGitfile*                gitfile_lary[36];                                  // level array
+    i64                              gitfile_n;                                         // number of elements in array
+    abt_md::FGitfile**               ind_gitfile_buckets_elems;                         // pointer to bucket array
+    i32                              ind_gitfile_buckets_n;                             // number of elements in bucket array
+    i32                              ind_gitfile_n;                                     // number of elements in the hash table
     abt_md::trace                    trace;                                             //
 };
 // Read argc,argv into the fields of abt_md.FDb.cmdline (and any base command line)
@@ -921,7 +931,7 @@ void                 mdsection_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:abt_md.FDb.mdsection.RemoveLast
 void                 mdsection_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:abt_md.FDb.mdsection.qFind
 inline abt_md::FMdsection& mdsection_qFind(i32 t) __attribute__((nothrow));
 // Compute row id of element given element's address
@@ -2505,6 +2515,74 @@ void                 ind_checkkey_Reserve(int n) __attribute__((nothrow));
 // func:abt_md.FDb.ind_checkkey.AbsReserve
 void                 ind_checkkey_AbsReserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:abt_md.FDb.gitfile.Alloc
+abt_md::FGitfile&    gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:abt_md.FDb.gitfile.AllocMaybe
+abt_md::FGitfile*    gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt_md.FDb.gitfile.InsertMaybe
+abt_md::FGitfile*    gitfile_InsertMaybe(const dev::Gitfile &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:abt_md.FDb.gitfile.AllocMem
+void*                gitfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:abt_md.FDb.gitfile.EmptyQ
+inline bool          gitfile_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:abt_md.FDb.gitfile.Find
+inline abt_md::FGitfile* gitfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:abt_md.FDb.gitfile.Last
+inline abt_md::FGitfile* gitfile_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:abt_md.FDb.gitfile.N
+inline i64           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:abt_md.FDb.gitfile.RemoveAll
+void                 gitfile_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:abt_md.FDb.gitfile.RemoveLast
+void                 gitfile_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:abt_md.FDb.gitfile.qFind
+inline abt_md::FGitfile& gitfile_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt_md.FDb.gitfile.XrefMaybe
+bool                 gitfile_XrefMaybe(abt_md::FGitfile &row);
+
+// Return true if hash is empty
+// func:abt_md.FDb.ind_gitfile.EmptyQ
+inline bool          ind_gitfile_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:abt_md.FDb.ind_gitfile.Find
+abt_md::FGitfile*    ind_gitfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:abt_md.FDb.ind_gitfile.FindX
+abt_md::FGitfile&    ind_gitfile_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt_md.FDb.ind_gitfile.GetOrCreate
+abt_md::FGitfile&    ind_gitfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:abt_md.FDb.ind_gitfile.N
+inline i32           ind_gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt_md.FDb.ind_gitfile.InsertMaybe
+bool                 ind_gitfile_InsertMaybe(abt_md::FGitfile& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt_md.FDb.ind_gitfile.Remove
+void                 ind_gitfile_Remove(abt_md::FGitfile& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:abt_md.FDb.ind_gitfile.Reserve
+void                 ind_gitfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt_md.FDb.ind_gitfile.AbsReserve
+void                 ind_gitfile_AbsReserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:abt_md.FDb.readmefile_curs.Reset
 inline void          _db_readmefile_curs_Reset(_db_readmefile_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
@@ -2866,6 +2944,18 @@ inline void          _db_checkkey_curs_Next(_db_checkkey_curs &curs) __attribute
 // item access
 // func:abt_md.FDb.checkkey_curs.Access
 inline abt_md::FCheckKey& _db_checkkey_curs_Access(_db_checkkey_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:abt_md.FDb.gitfile_curs.Reset
+inline void          _db_gitfile_curs_Reset(_db_gitfile_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:abt_md.FDb.gitfile_curs.ValidQ
+inline bool          _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:abt_md.FDb.gitfile_curs.Next
+inline void          _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__((nothrow));
+// item access
+// func:abt_md.FDb.gitfile_curs.Access
+inline abt_md::FGitfile& _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:abt_md.FDb..Init
 void                 FDb_Init();
@@ -2876,13 +2966,13 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // create: abt_md.FDirscan.dirent (Lary)
 // access: abt_md.FDirscan.bh_dirent (Bheap)
 struct FDirent { // abt_md.FDirent
-    bool                is_dir;                 //   false
-    abt_md::FDirscan*   p_dirscan;              // reference to parent row
-    algo::cstring       filename;               //
-    algo::cstring       sortfld;                //
-    algo::cstring       pathname;               //
-    bool                sorted;                 //   false  a readmesort row names this entry
-    i32                 parent_bh_dirent_idx;   // index in heap; -1 means not-in-heap
+    bool                is_dir;                  //   false
+    abt_md::FDirscan*   p_dirscan;               // reference to parent row
+    algo::cstring       filename;                //
+    algo::cstring       sortfld;                 //
+    algo::cstring       pathname;                //
+    bool                sorted;                  //   false  a readmesort row names this entry
+    i32                 dirscan_bh_dirent_idx;   // index in heap; -1 means not-in-heap
     // func:abt_md.FDirent..AssignOp
     inline abt_md::FDirent& operator =(const abt_md::FDirent &rhs) = delete;
     // func:abt_md.FDirent..CopyCtor
@@ -2899,16 +2989,16 @@ private:
 };
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:abt_md.FDirent.sortfld.Lt
-inline bool          sortfld_Lt(abt_md::FDirent& dirent, abt_md::FDirent &rhs) __attribute__((nothrow));
+inline bool          sortfld_Lt(abt_md::FDirent& parent, abt_md::FDirent &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:abt_md.FDirent.sortfld.Cmp
-inline i32           sortfld_Cmp(abt_md::FDirent& dirent, abt_md::FDirent &rhs) __attribute__((nothrow));
+inline i32           sortfld_Cmp(abt_md::FDirent& parent, abt_md::FDirent &rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FDirent..Init
-inline void          FDirent_Init(abt_md::FDirent& dirent);
+inline void          FDirent_Init(abt_md::FDirent& parent);
 // func:abt_md.FDirent..Uninit
-void                 FDirent_Uninit(abt_md::FDirent& dirent) __attribute__((nothrow));
+void                 FDirent_Uninit(abt_md::FDirent& parent) __attribute__((nothrow));
 
 // --- abt_md.FDirscan
 // access: abt_md.FDirent.p_dirscan (Upptr)
@@ -3077,54 +3167,54 @@ void                 dispatch_CopyOut(abt_md::FDispatch &row, dmmeta::Dispatch &
 void                 dispatch_CopyIn(abt_md::FDispatch &row, dmmeta::Dispatch &in) __attribute__((nothrow));
 
 // func:abt_md.FDispatch.ns.Get
-algo::strptr         ns_Get(abt_md::FDispatch& dispatch) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(abt_md::FDispatch& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FDispatch.name.Get
-algo::strptr         name_Get(abt_md::FDispatch& dispatch) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(abt_md::FDispatch& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:abt_md.FDispatch.c_dispatch_msg.EmptyQ
-inline bool          c_dispatch_msg_EmptyQ(abt_md::FDispatch& dispatch) __attribute__((nothrow));
+inline bool          c_dispatch_msg_EmptyQ(abt_md::FDispatch& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt_md.FDispatch.c_dispatch_msg.Find
-inline abt_md::FDispatchMsg* c_dispatch_msg_Find(abt_md::FDispatch& dispatch, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FDispatchMsg* c_dispatch_msg_Find(abt_md::FDispatch& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt_md.FDispatch.c_dispatch_msg.Getary
-inline algo::aryptr<abt_md::FDispatchMsg*> c_dispatch_msg_Getary(abt_md::FDispatch& dispatch) __attribute__((nothrow));
+inline algo::aryptr<abt_md::FDispatchMsg*> c_dispatch_msg_Getary(abt_md::FDispatch& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt_md.FDispatch.c_dispatch_msg.Insert
-void                 c_dispatch_msg_Insert(abt_md::FDispatch& dispatch, abt_md::FDispatchMsg& row) __attribute__((nothrow));
+void                 c_dispatch_msg_Insert(abt_md::FDispatch& parent, abt_md::FDispatchMsg& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:abt_md.FDispatch.c_dispatch_msg.InsertMaybe
-bool                 c_dispatch_msg_InsertMaybe(abt_md::FDispatch& dispatch, abt_md::FDispatchMsg& row) __attribute__((nothrow));
+bool                 c_dispatch_msg_InsertMaybe(abt_md::FDispatch& parent, abt_md::FDispatchMsg& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt_md.FDispatch.c_dispatch_msg.N
-inline i64           c_dispatch_msg_N(const abt_md::FDispatch& dispatch) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_dispatch_msg_N(const abt_md::FDispatch& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt_md.FDispatch.c_dispatch_msg.Remove
-void                 c_dispatch_msg_Remove(abt_md::FDispatch& dispatch, abt_md::FDispatchMsg& row) __attribute__((nothrow));
+void                 c_dispatch_msg_Remove(abt_md::FDispatch& parent, abt_md::FDispatchMsg& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FDispatch.c_dispatch_msg.RemoveAll
-inline void          c_dispatch_msg_RemoveAll(abt_md::FDispatch& dispatch) __attribute__((nothrow));
+inline void          c_dispatch_msg_RemoveAll(abt_md::FDispatch& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt_md.FDispatch.c_dispatch_msg.Reserve
-void                 c_dispatch_msg_Reserve(abt_md::FDispatch& dispatch, u64 n) __attribute__((nothrow));
+void                 c_dispatch_msg_Reserve(abt_md::FDispatch& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt_md.FDispatch.c_dispatch_msg.qFind
-inline abt_md::FDispatchMsg& c_dispatch_msg_qFind(abt_md::FDispatch& dispatch, u64 idx) __attribute__((nothrow));
+inline abt_md::FDispatchMsg& c_dispatch_msg_qFind(abt_md::FDispatch& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt_md.FDispatch.c_dispatch_msg.InAryQ
 inline bool          dispatch_c_dispatch_msg_InAryQ(abt_md::FDispatchMsg& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt_md.FDispatch.c_dispatch_msg.qLast
-inline abt_md::FDispatchMsg& c_dispatch_msg_qLast(abt_md::FDispatch& dispatch) __attribute__((nothrow));
+inline abt_md::FDispatchMsg& c_dispatch_msg_qLast(abt_md::FDispatch& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FDispatch..Init
-void                 FDispatch_Init(abt_md::FDispatch& dispatch);
+void                 FDispatch_Init(abt_md::FDispatch& parent);
 // func:abt_md.FDispatch.c_dispatch_msg_curs.Reset
 inline void          dispatch_c_dispatch_msg_curs_Reset(dispatch_c_dispatch_msg_curs &curs, abt_md::FDispatch &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -3137,7 +3227,7 @@ inline void          dispatch_c_dispatch_msg_curs_Next(dispatch_c_dispatch_msg_c
 // func:abt_md.FDispatch.c_dispatch_msg_curs.Access
 inline abt_md::FDispatchMsg& dispatch_c_dispatch_msg_curs_Access(dispatch_c_dispatch_msg_curs &curs) __attribute__((nothrow));
 // func:abt_md.FDispatch..Uninit
-void                 FDispatch_Uninit(abt_md::FDispatch& dispatch) __attribute__((nothrow));
+void                 FDispatch_Uninit(abt_md::FDispatch& parent) __attribute__((nothrow));
 
 // --- abt_md.FDispatchMsg
 // create: abt_md.FDb.dispatch_msg (Lary)
@@ -3172,16 +3262,16 @@ void                 dispatch_msg_CopyOut(abt_md::FDispatchMsg &row, dmmeta::Dis
 void                 dispatch_msg_CopyIn(abt_md::FDispatchMsg &row, dmmeta::DispatchMsg &in) __attribute__((nothrow));
 
 // func:abt_md.FDispatchMsg.dispatch.Get
-algo::strptr         dispatch_Get(abt_md::FDispatchMsg& dispatch_msg) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         dispatch_Get(abt_md::FDispatchMsg& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FDispatchMsg.ctype.Get
-algo::strptr         ctype_Get(abt_md::FDispatchMsg& dispatch_msg) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(abt_md::FDispatchMsg& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FDispatchMsg..Init
-inline void          FDispatchMsg_Init(abt_md::FDispatchMsg& dispatch_msg);
+inline void          FDispatchMsg_Init(abt_md::FDispatchMsg& parent);
 // func:abt_md.FDispatchMsg..Uninit
-void                 FDispatchMsg_Uninit(abt_md::FDispatchMsg& dispatch_msg) __attribute__((nothrow));
+void                 FDispatchMsg_Uninit(abt_md::FDispatchMsg& parent) __attribute__((nothrow));
 
 // --- abt_md.FFconst
 // create: abt_md.FDb.fconst (Lary)
@@ -3214,16 +3304,16 @@ void                 fconst_CopyOut(abt_md::FFconst &row, dmmeta::Fconst &out) _
 void                 fconst_CopyIn(abt_md::FFconst &row, dmmeta::Fconst &in) __attribute__((nothrow));
 
 // func:abt_md.FFconst.field.Get
-algo::strptr         field_Get(abt_md::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(abt_md::FFconst& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FFconst.name.Get
-algo::strptr         name_Get(abt_md::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(abt_md::FFconst& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FFconst..Init
-inline void          FFconst_Init(abt_md::FFconst& fconst);
+inline void          FFconst_Init(abt_md::FFconst& parent);
 // func:abt_md.FFconst..Uninit
-void                 FFconst_Uninit(abt_md::FFconst& fconst) __attribute__((nothrow));
+void                 FFconst_Uninit(abt_md::FFconst& parent) __attribute__((nothrow));
 
 // --- abt_md.FField
 // create: abt_md.FDb.field (Lary)
@@ -3284,71 +3374,71 @@ void                 field_CopyOut(abt_md::FField &row, dmmeta::Field &out) __at
 void                 field_CopyIn(abt_md::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:abt_md.FField.ctype.Get
-algo::strptr         ctype_Get(abt_md::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(abt_md::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FField.ns.Get
-algo::strptr         ns_Get(abt_md::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(abt_md::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FField.name.Get
-algo::strptr         name_Get(abt_md::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(abt_md::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:abt_md.FField.c_substr.InsertMaybe
-inline bool          c_substr_InsertMaybe(abt_md::FField& field, abt_md::FSubstr& row) __attribute__((nothrow));
+inline bool          c_substr_InsertMaybe(abt_md::FField& parent, abt_md::FSubstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:abt_md.FField.c_substr.Remove
-inline void          c_substr_Remove(abt_md::FField& field, abt_md::FSubstr& row) __attribute__((nothrow));
+inline void          c_substr_Remove(abt_md::FField& parent, abt_md::FSubstr& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt_md.FField.c_fconst.EmptyQ
-inline bool          c_fconst_EmptyQ(abt_md::FField& field) __attribute__((nothrow));
+inline bool          c_fconst_EmptyQ(abt_md::FField& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt_md.FField.c_fconst.Find
-inline abt_md::FFconst* c_fconst_Find(abt_md::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FFconst* c_fconst_Find(abt_md::FField& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt_md.FField.c_fconst.Getary
-inline algo::aryptr<abt_md::FFconst*> c_fconst_Getary(abt_md::FField& field) __attribute__((nothrow));
+inline algo::aryptr<abt_md::FFconst*> c_fconst_Getary(abt_md::FField& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt_md.FField.c_fconst.Insert
-void                 c_fconst_Insert(abt_md::FField& field, abt_md::FFconst& row) __attribute__((nothrow));
+void                 c_fconst_Insert(abt_md::FField& parent, abt_md::FFconst& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:abt_md.FField.c_fconst.InsertMaybe
-bool                 c_fconst_InsertMaybe(abt_md::FField& field, abt_md::FFconst& row) __attribute__((nothrow));
+bool                 c_fconst_InsertMaybe(abt_md::FField& parent, abt_md::FFconst& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt_md.FField.c_fconst.N
-inline i64           c_fconst_N(const abt_md::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fconst_N(const abt_md::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt_md.FField.c_fconst.Remove
-void                 c_fconst_Remove(abt_md::FField& field, abt_md::FFconst& row) __attribute__((nothrow));
+void                 c_fconst_Remove(abt_md::FField& parent, abt_md::FFconst& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FField.c_fconst.RemoveAll
-inline void          c_fconst_RemoveAll(abt_md::FField& field) __attribute__((nothrow));
+inline void          c_fconst_RemoveAll(abt_md::FField& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt_md.FField.c_fconst.Reserve
-void                 c_fconst_Reserve(abt_md::FField& field, u64 n) __attribute__((nothrow));
+void                 c_fconst_Reserve(abt_md::FField& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt_md.FField.c_fconst.qFind
-inline abt_md::FFconst& c_fconst_qFind(abt_md::FField& field, u64 idx) __attribute__((nothrow));
+inline abt_md::FFconst& c_fconst_qFind(abt_md::FField& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt_md.FField.c_fconst.InAryQ
 inline bool          field_c_fconst_InAryQ(abt_md::FFconst& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt_md.FField.c_fconst.qLast
-inline abt_md::FFconst& c_fconst_qLast(abt_md::FField& field) __attribute__((nothrow));
+inline abt_md::FFconst& c_fconst_qLast(abt_md::FField& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:abt_md.FField.c_gconst.InsertMaybe
-inline bool          c_gconst_InsertMaybe(abt_md::FField& field, abt_md::FGconst& row) __attribute__((nothrow));
+inline bool          c_gconst_InsertMaybe(abt_md::FField& parent, abt_md::FGconst& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:abt_md.FField.c_gconst.Remove
-inline void          c_gconst_Remove(abt_md::FField& field, abt_md::FGconst& row) __attribute__((nothrow));
+inline void          c_gconst_Remove(abt_md::FField& parent, abt_md::FGconst& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FField..Init
-void                 FField_Init(abt_md::FField& field);
+void                 FField_Init(abt_md::FField& parent);
 // func:abt_md.FField.c_fconst_curs.Reset
 inline void          field_c_fconst_curs_Reset(field_c_fconst_curs &curs, abt_md::FField &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -3361,7 +3451,7 @@ inline void          field_c_fconst_curs_Next(field_c_fconst_curs &curs) __attri
 // func:abt_md.FField.c_fconst_curs.Access
 inline abt_md::FFconst& field_c_fconst_curs_Access(field_c_fconst_curs &curs) __attribute__((nothrow));
 // func:abt_md.FField..Uninit
-void                 FField_Uninit(abt_md::FField& field) __attribute__((nothrow));
+void                 FField_Uninit(abt_md::FField& parent) __attribute__((nothrow));
 
 // --- abt_md.FFileSection
 // create: abt_md.FDb.file_section (Lary)
@@ -3395,9 +3485,9 @@ private:
 };
 // Set all fields to initial values.
 // func:abt_md.FFileSection..Init
-inline void          FFileSection_Init(abt_md::FFileSection& file_section);
+inline void          FFileSection_Init(abt_md::FFileSection& parent);
 // func:abt_md.FFileSection..Uninit
-void                 FFileSection_Uninit(abt_md::FFileSection& file_section) __attribute__((nothrow));
+void                 FFileSection_Uninit(abt_md::FFileSection& parent) __attribute__((nothrow));
 
 // --- abt_md.FFinput
 // create: abt_md.FDb.finput (Lary)
@@ -3435,13 +3525,13 @@ void                 finput_CopyOut(abt_md::FFinput &row, dmmeta::Finput &out) _
 void                 finput_CopyIn(abt_md::FFinput &row, dmmeta::Finput &in) __attribute__((nothrow));
 
 // func:abt_md.FFinput.ns.Get
-algo::strptr         ns_Get(abt_md::FFinput& finput) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(abt_md::FFinput& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FFinput..Init
-inline void          FFinput_Init(abt_md::FFinput& finput);
+inline void          FFinput_Init(abt_md::FFinput& parent);
 // func:abt_md.FFinput..Uninit
-void                 FFinput_Uninit(abt_md::FFinput& finput) __attribute__((nothrow));
+void                 FFinput_Uninit(abt_md::FFinput& parent) __attribute__((nothrow));
 
 // --- abt_md.FGconst
 // create: abt_md.FDb.gconst (Lary)
@@ -3474,13 +3564,51 @@ void                 gconst_CopyOut(abt_md::FGconst &row, dmmeta::Gconst &out) _
 void                 gconst_CopyIn(abt_md::FGconst &row, dmmeta::Gconst &in) __attribute__((nothrow));
 
 // func:abt_md.FGconst.namefldctyp.Get
-algo::strptr         namefldctyp_Get(abt_md::FGconst& gconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         namefldctyp_Get(abt_md::FGconst& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FGconst..Init
-inline void          FGconst_Init(abt_md::FGconst& gconst);
+inline void          FGconst_Init(abt_md::FGconst& parent);
 // func:abt_md.FGconst..Uninit
-void                 FGconst_Uninit(abt_md::FGconst& gconst) __attribute__((nothrow));
+void                 FGconst_Uninit(abt_md::FGconst& parent) __attribute__((nothrow));
+
+// --- abt_md.FGitfile
+// create: abt_md.FDb.gitfile (Lary)
+// global access: gitfile (Lary, by rowid)
+// global access: ind_gitfile (Thash, hash field gitfile)
+struct FGitfile { // abt_md.FGitfile
+    abt_md::FGitfile*   ind_gitfile_next;      // hash next
+    u32                 ind_gitfile_hashval;   // hash value
+    algo::Smallstr200   gitfile;               //
+    // func:abt_md.FGitfile..AssignOp
+    inline abt_md::FGitfile& operator =(const abt_md::FGitfile &rhs) = delete;
+    // func:abt_md.FGitfile..CopyCtor
+    inline               FGitfile(const abt_md::FGitfile &rhs) = delete;
+private:
+    // func:abt_md.FGitfile..Ctor
+    inline               FGitfile() __attribute__((nothrow));
+    // func:abt_md.FGitfile..Dtor
+    inline               ~FGitfile() __attribute__((nothrow));
+    friend abt_md::FGitfile&    gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend abt_md::FGitfile*    gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 gitfile_RemoveAll() __attribute__((nothrow));
+    friend void                 gitfile_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:abt_md.FGitfile.base.CopyOut
+void                 gitfile_CopyOut(abt_md::FGitfile &row, dev::Gitfile &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:abt_md.FGitfile.base.CopyIn
+void                 gitfile_CopyIn(abt_md::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
+
+// func:abt_md.FGitfile.ext.Get
+algo::strptr         ext_Get(abt_md::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:abt_md.FGitfile..Init
+inline void          FGitfile_Init(abt_md::FGitfile& parent);
+// func:abt_md.FGitfile..Uninit
+void                 FGitfile_Uninit(abt_md::FGitfile& parent) __attribute__((nothrow));
 
 // --- abt_md.FGstatic
 // create: abt_md.FDb.gstatic (Lary)
@@ -3513,13 +3641,13 @@ void                 gstatic_CopyOut(abt_md::FGstatic &row, dmmeta::Gstatic &out
 void                 gstatic_CopyIn(abt_md::FGstatic &row, dmmeta::Gstatic &in) __attribute__((nothrow));
 
 // func:abt_md.FGstatic.ns.Get
-algo::strptr         ns_Get(abt_md::FGstatic& gstatic) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(abt_md::FGstatic& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FGstatic..Init
-inline void          FGstatic_Init(abt_md::FGstatic& gstatic);
+inline void          FGstatic_Init(abt_md::FGstatic& parent);
 // func:abt_md.FGstatic..Uninit
-void                 FGstatic_Uninit(abt_md::FGstatic& gstatic) __attribute__((nothrow));
+void                 FGstatic_Uninit(abt_md::FGstatic& parent) __attribute__((nothrow));
 
 // --- abt_md.FHumanText
 // create: abt_md.FDb.human_text (Tpool)
@@ -3546,9 +3674,9 @@ private:
 };
 // Set all fields to initial values.
 // func:abt_md.FHumanText..Init
-inline void          FHumanText_Init(abt_md::FHumanText& human_text);
+inline void          FHumanText_Init(abt_md::FHumanText& parent);
 // func:abt_md.FHumanText..Uninit
-void                 FHumanText_Uninit(abt_md::FHumanText& human_text) __attribute__((nothrow));
+void                 FHumanText_Uninit(abt_md::FHumanText& parent) __attribute__((nothrow));
 
 // --- abt_md.FLink
 // create: abt_md.FDb.link (Lary)
@@ -3636,149 +3764,149 @@ void                 ns_CopyIn(abt_md::FNs &row, dmmeta::Ns &in) __attribute__((
 
 // Return true if index is empty
 // func:abt_md.FNs.c_targsrc.EmptyQ
-inline bool          c_targsrc_EmptyQ(abt_md::FNs& ns) __attribute__((nothrow));
+inline bool          c_targsrc_EmptyQ(abt_md::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt_md.FNs.c_targsrc.Find
-inline abt_md::FTargsrc* c_targsrc_Find(abt_md::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FTargsrc* c_targsrc_Find(abt_md::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt_md.FNs.c_targsrc.Getary
-inline algo::aryptr<abt_md::FTargsrc*> c_targsrc_Getary(abt_md::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<abt_md::FTargsrc*> c_targsrc_Getary(abt_md::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt_md.FNs.c_targsrc.Insert
-void                 c_targsrc_Insert(abt_md::FNs& ns, abt_md::FTargsrc& row) __attribute__((nothrow));
+void                 c_targsrc_Insert(abt_md::FNs& parent, abt_md::FTargsrc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:abt_md.FNs.c_targsrc.InsertMaybe
-bool                 c_targsrc_InsertMaybe(abt_md::FNs& ns, abt_md::FTargsrc& row) __attribute__((nothrow));
+bool                 c_targsrc_InsertMaybe(abt_md::FNs& parent, abt_md::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt_md.FNs.c_targsrc.N
-inline i64           c_targsrc_N(const abt_md::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targsrc_N(const abt_md::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt_md.FNs.c_targsrc.Remove
-void                 c_targsrc_Remove(abt_md::FNs& ns, abt_md::FTargsrc& row) __attribute__((nothrow));
+void                 c_targsrc_Remove(abt_md::FNs& parent, abt_md::FTargsrc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FNs.c_targsrc.RemoveAll
-inline void          c_targsrc_RemoveAll(abt_md::FNs& ns) __attribute__((nothrow));
+inline void          c_targsrc_RemoveAll(abt_md::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt_md.FNs.c_targsrc.Reserve
-void                 c_targsrc_Reserve(abt_md::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_targsrc_Reserve(abt_md::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt_md.FNs.c_targsrc.qFind
-inline abt_md::FTargsrc& c_targsrc_qFind(abt_md::FNs& ns, u64 idx) __attribute__((nothrow));
+inline abt_md::FTargsrc& c_targsrc_qFind(abt_md::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt_md.FNs.c_targsrc.InAryQ
 inline bool          ns_c_targsrc_InAryQ(abt_md::FTargsrc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt_md.FNs.c_targsrc.qLast
-inline abt_md::FTargsrc& c_targsrc_qLast(abt_md::FNs& ns) __attribute__((nothrow));
+inline abt_md::FTargsrc& c_targsrc_qLast(abt_md::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt_md.FNs.c_ctype.EmptyQ
-inline bool          c_ctype_EmptyQ(abt_md::FNs& ns) __attribute__((nothrow));
+inline bool          c_ctype_EmptyQ(abt_md::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt_md.FNs.c_ctype.Find
-inline abt_md::FCtype* c_ctype_Find(abt_md::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FCtype* c_ctype_Find(abt_md::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt_md.FNs.c_ctype.Getary
-inline algo::aryptr<abt_md::FCtype*> c_ctype_Getary(abt_md::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<abt_md::FCtype*> c_ctype_Getary(abt_md::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt_md.FNs.c_ctype.Insert
-void                 c_ctype_Insert(abt_md::FNs& ns, abt_md::FCtype& row) __attribute__((nothrow));
+void                 c_ctype_Insert(abt_md::FNs& parent, abt_md::FCtype& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:abt_md.FNs.c_ctype.InsertMaybe
-bool                 c_ctype_InsertMaybe(abt_md::FNs& ns, abt_md::FCtype& row) __attribute__((nothrow));
+bool                 c_ctype_InsertMaybe(abt_md::FNs& parent, abt_md::FCtype& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt_md.FNs.c_ctype.N
-inline i64           c_ctype_N(const abt_md::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ctype_N(const abt_md::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt_md.FNs.c_ctype.Remove
-void                 c_ctype_Remove(abt_md::FNs& ns, abt_md::FCtype& row) __attribute__((nothrow));
+void                 c_ctype_Remove(abt_md::FNs& parent, abt_md::FCtype& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FNs.c_ctype.RemoveAll
-inline void          c_ctype_RemoveAll(abt_md::FNs& ns) __attribute__((nothrow));
+inline void          c_ctype_RemoveAll(abt_md::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt_md.FNs.c_ctype.Reserve
-void                 c_ctype_Reserve(abt_md::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_ctype_Reserve(abt_md::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt_md.FNs.c_ctype.qFind
-inline abt_md::FCtype& c_ctype_qFind(abt_md::FNs& ns, u64 idx) __attribute__((nothrow));
+inline abt_md::FCtype& c_ctype_qFind(abt_md::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt_md.FNs.c_ctype.InAryQ
 inline bool          ns_c_ctype_InAryQ(abt_md::FCtype& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt_md.FNs.c_ctype.qLast
-inline abt_md::FCtype& c_ctype_qLast(abt_md::FNs& ns) __attribute__((nothrow));
+inline abt_md::FCtype& c_ctype_qLast(abt_md::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt_md.FNs.c_comptest.EmptyQ
-inline bool          c_comptest_EmptyQ(abt_md::FNs& ns) __attribute__((nothrow));
+inline bool          c_comptest_EmptyQ(abt_md::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt_md.FNs.c_comptest.Find
-inline abt_md::FComptest* c_comptest_Find(abt_md::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FComptest* c_comptest_Find(abt_md::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt_md.FNs.c_comptest.Getary
-inline algo::aryptr<abt_md::FComptest*> c_comptest_Getary(abt_md::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<abt_md::FComptest*> c_comptest_Getary(abt_md::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt_md.FNs.c_comptest.Insert
-void                 c_comptest_Insert(abt_md::FNs& ns, abt_md::FComptest& row) __attribute__((nothrow));
+void                 c_comptest_Insert(abt_md::FNs& parent, abt_md::FComptest& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:abt_md.FNs.c_comptest.InsertMaybe
-bool                 c_comptest_InsertMaybe(abt_md::FNs& ns, abt_md::FComptest& row) __attribute__((nothrow));
+bool                 c_comptest_InsertMaybe(abt_md::FNs& parent, abt_md::FComptest& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt_md.FNs.c_comptest.N
-inline i64           c_comptest_N(const abt_md::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_comptest_N(const abt_md::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt_md.FNs.c_comptest.Remove
-void                 c_comptest_Remove(abt_md::FNs& ns, abt_md::FComptest& row) __attribute__((nothrow));
+void                 c_comptest_Remove(abt_md::FNs& parent, abt_md::FComptest& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FNs.c_comptest.RemoveAll
-inline void          c_comptest_RemoveAll(abt_md::FNs& ns) __attribute__((nothrow));
+inline void          c_comptest_RemoveAll(abt_md::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt_md.FNs.c_comptest.Reserve
-void                 c_comptest_Reserve(abt_md::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_comptest_Reserve(abt_md::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt_md.FNs.c_comptest.qFind
-inline abt_md::FComptest& c_comptest_qFind(abt_md::FNs& ns, u64 idx) __attribute__((nothrow));
+inline abt_md::FComptest& c_comptest_qFind(abt_md::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt_md.FNs.c_comptest.InAryQ
 inline bool          ns_c_comptest_InAryQ(abt_md::FComptest& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt_md.FNs.c_comptest.qLast
-inline abt_md::FComptest& c_comptest_qLast(abt_md::FNs& ns) __attribute__((nothrow));
+inline abt_md::FComptest& c_comptest_qLast(abt_md::FNs& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:abt_md.FNs.c_target.InsertMaybe
-inline bool          c_target_InsertMaybe(abt_md::FNs& ns, abt_md::FTarget& row) __attribute__((nothrow));
+inline bool          c_target_InsertMaybe(abt_md::FNs& parent, abt_md::FTarget& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:abt_md.FNs.c_target.Remove
-inline void          c_target_Remove(abt_md::FNs& ns, abt_md::FTarget& row) __attribute__((nothrow));
+inline void          c_target_Remove(abt_md::FNs& parent, abt_md::FTarget& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt_md.FNs.zd_finput.EmptyQ
-inline bool          zd_finput_EmptyQ(abt_md::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_finput_EmptyQ(abt_md::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:abt_md.FNs.zd_finput.First
-inline abt_md::FFinput* zd_finput_First(abt_md::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline abt_md::FFinput* zd_finput_First(abt_md::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:abt_md.FNs.zd_finput.InLlistQ
 inline bool          ns_zd_finput_InLlistQ(abt_md::FFinput& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:abt_md.FNs.zd_finput.Insert
-void                 zd_finput_Insert(abt_md::FNs& ns, abt_md::FFinput& row) __attribute__((nothrow));
+void                 zd_finput_Insert(abt_md::FNs& parent, abt_md::FFinput& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:abt_md.FNs.zd_finput.Last
-inline abt_md::FFinput* zd_finput_Last(abt_md::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline abt_md::FFinput* zd_finput_Last(abt_md::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:abt_md.FNs.zd_finput.N
-inline i32           zd_finput_N(const abt_md::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_finput_N(const abt_md::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:abt_md.FNs.zd_finput.Next
 inline abt_md::FFinput* ns_zd_finput_Next(abt_md::FFinput &row) __attribute__((__warn_unused_result__, nothrow));
@@ -3787,63 +3915,63 @@ inline abt_md::FFinput* ns_zd_finput_Next(abt_md::FFinput &row) __attribute__((_
 inline abt_md::FFinput* ns_zd_finput_Prev(abt_md::FFinput &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:abt_md.FNs.zd_finput.Remove
-void                 zd_finput_Remove(abt_md::FNs& ns, abt_md::FFinput& row) __attribute__((nothrow));
+void                 zd_finput_Remove(abt_md::FNs& parent, abt_md::FFinput& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FNs.zd_finput.RemoveAll
-void                 zd_finput_RemoveAll(abt_md::FNs& ns) __attribute__((nothrow));
+void                 zd_finput_RemoveAll(abt_md::FNs& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:abt_md.FNs.zd_finput.RemoveFirst
-abt_md::FFinput*     zd_finput_RemoveFirst(abt_md::FNs& ns) __attribute__((nothrow));
+abt_md::FFinput*     zd_finput_RemoveFirst(abt_md::FNs& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:abt_md.FNs.zd_finput.qLast
-inline abt_md::FFinput& zd_finput_qLast(abt_md::FNs& ns) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FFinput& zd_finput_qLast(abt_md::FNs& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:abt_md.FNs.zd_finput.InsertBefore
-void                 zd_finput_InsertBefore(abt_md::FNs& ns, abt_md::FFinput& row, abt_md::FFinput* before) __attribute__((nothrow));
+void                 zd_finput_InsertBefore(abt_md::FNs& parent, abt_md::FFinput& row, abt_md::FFinput* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt_md.FNs.c_dispatch.EmptyQ
-inline bool          c_dispatch_EmptyQ(abt_md::FNs& ns) __attribute__((nothrow));
+inline bool          c_dispatch_EmptyQ(abt_md::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt_md.FNs.c_dispatch.Find
-inline abt_md::FDispatch* c_dispatch_Find(abt_md::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FDispatch* c_dispatch_Find(abt_md::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt_md.FNs.c_dispatch.Getary
-inline algo::aryptr<abt_md::FDispatch*> c_dispatch_Getary(abt_md::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<abt_md::FDispatch*> c_dispatch_Getary(abt_md::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt_md.FNs.c_dispatch.Insert
-void                 c_dispatch_Insert(abt_md::FNs& ns, abt_md::FDispatch& row) __attribute__((nothrow));
+void                 c_dispatch_Insert(abt_md::FNs& parent, abt_md::FDispatch& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:abt_md.FNs.c_dispatch.InsertMaybe
-bool                 c_dispatch_InsertMaybe(abt_md::FNs& ns, abt_md::FDispatch& row) __attribute__((nothrow));
+bool                 c_dispatch_InsertMaybe(abt_md::FNs& parent, abt_md::FDispatch& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt_md.FNs.c_dispatch.N
-inline i64           c_dispatch_N(const abt_md::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_dispatch_N(const abt_md::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt_md.FNs.c_dispatch.Remove
-void                 c_dispatch_Remove(abt_md::FNs& ns, abt_md::FDispatch& row) __attribute__((nothrow));
+void                 c_dispatch_Remove(abt_md::FNs& parent, abt_md::FDispatch& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FNs.c_dispatch.RemoveAll
-inline void          c_dispatch_RemoveAll(abt_md::FNs& ns) __attribute__((nothrow));
+inline void          c_dispatch_RemoveAll(abt_md::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt_md.FNs.c_dispatch.Reserve
-void                 c_dispatch_Reserve(abt_md::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_dispatch_Reserve(abt_md::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt_md.FNs.c_dispatch.qFind
-inline abt_md::FDispatch& c_dispatch_qFind(abt_md::FNs& ns, u64 idx) __attribute__((nothrow));
+inline abt_md::FDispatch& c_dispatch_qFind(abt_md::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt_md.FNs.c_dispatch.InAryQ
 inline bool          ns_c_dispatch_InAryQ(abt_md::FDispatch& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt_md.FNs.c_dispatch.qLast
-inline abt_md::FDispatch& c_dispatch_qLast(abt_md::FNs& ns) __attribute__((nothrow));
+inline abt_md::FDispatch& c_dispatch_qLast(abt_md::FNs& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FNs..Init
-void                 FNs_Init(abt_md::FNs& ns);
+void                 FNs_Init(abt_md::FNs& parent);
 // func:abt_md.FNs.c_targsrc_curs.Reset
 inline void          ns_c_targsrc_curs_Reset(ns_c_targsrc_curs &curs, abt_md::FNs &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -3901,7 +4029,7 @@ inline void          ns_c_dispatch_curs_Next(ns_c_dispatch_curs &curs) __attribu
 // func:abt_md.FNs.c_dispatch_curs.Access
 inline abt_md::FDispatch& ns_c_dispatch_curs_Access(ns_c_dispatch_curs &curs) __attribute__((nothrow));
 // func:abt_md.FNs..Uninit
-void                 FNs_Uninit(abt_md::FNs& ns) __attribute__((nothrow));
+void                 FNs_Uninit(abt_md::FNs& parent) __attribute__((nothrow));
 
 // --- abt_md.FNstype
 // create: abt_md.FDb.nstype (Lary)
@@ -3935,9 +4063,9 @@ void                 nstype_CopyIn(abt_md::FNstype &row, dmmeta::Nstype &in) __a
 
 // Set all fields to initial values.
 // func:abt_md.FNstype..Init
-inline void          FNstype_Init(abt_md::FNstype& nstype);
+inline void          FNstype_Init(abt_md::FNstype& parent);
 // func:abt_md.FNstype..Uninit
-void                 FNstype_Uninit(abt_md::FNstype& nstype) __attribute__((nothrow));
+void                 FNstype_Uninit(abt_md::FNstype& parent) __attribute__((nothrow));
 
 // --- abt_md.FReadmefile
 // create: abt_md.FDb.readmefile (Lary)
@@ -3981,9 +4109,9 @@ void                 readmefile_CopyIn(abt_md::FReadmefile &row, dev::Readmefile
 
 // Set all fields to initial values.
 // func:abt_md.FReadmefile..Init
-void                 FReadmefile_Init(abt_md::FReadmefile& readmefile);
+void                 FReadmefile_Init(abt_md::FReadmefile& parent);
 // func:abt_md.FReadmefile..Uninit
-void                 FReadmefile_Uninit(abt_md::FReadmefile& readmefile) __attribute__((nothrow));
+void                 FReadmefile_Uninit(abt_md::FReadmefile& parent) __attribute__((nothrow));
 
 // --- abt_md.FReadmesort
 // create: abt_md.FDb.readmesort (Lary)
@@ -4018,9 +4146,9 @@ void                 readmesort_CopyIn(abt_md::FReadmesort &row, dev::Readmesort
 
 // Set all fields to initial values.
 // func:abt_md.FReadmesort..Init
-inline void          FReadmesort_Init(abt_md::FReadmesort& readmesort);
+inline void          FReadmesort_Init(abt_md::FReadmesort& parent);
 // func:abt_md.FReadmesort..Uninit
-void                 FReadmesort_Uninit(abt_md::FReadmesort& readmesort) __attribute__((nothrow));
+void                 FReadmesort_Uninit(abt_md::FReadmesort& parent) __attribute__((nothrow));
 
 // --- abt_md.FReftype
 // create: abt_md.FDb.reftype (Lary)
@@ -4056,7 +4184,7 @@ void                 reftype_CopyIn(abt_md::FReftype &row, dmmeta::Reftype &in) 
 
 // Set all fields to initial values.
 // func:abt_md.FReftype..Init
-void                 FReftype_Init(abt_md::FReftype& reftype);
+void                 FReftype_Init(abt_md::FReftype& parent);
 
 // --- abt_md.FScriptfile
 // create: abt_md.FDb.scriptfile (Lary)
@@ -4091,13 +4219,13 @@ void                 scriptfile_CopyOut(abt_md::FScriptfile &row, dev::Scriptfil
 void                 scriptfile_CopyIn(abt_md::FScriptfile &row, dev::Scriptfile &in) __attribute__((nothrow));
 
 // func:abt_md.FScriptfile.name.Get
-algo::strptr         name_Get(abt_md::FScriptfile& scriptfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(abt_md::FScriptfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FScriptfile..Init
-inline void          FScriptfile_Init(abt_md::FScriptfile& scriptfile);
+inline void          FScriptfile_Init(abt_md::FScriptfile& parent);
 // func:abt_md.FScriptfile..Uninit
-void                 FScriptfile_Uninit(abt_md::FScriptfile& scriptfile) __attribute__((nothrow));
+void                 FScriptfile_Uninit(abt_md::FScriptfile& parent) __attribute__((nothrow));
 
 // --- abt_md.FSsimfile
 // create: abt_md.FDb.ssimfile (Lary)
@@ -4135,19 +4263,19 @@ void                 ssimfile_CopyOut(abt_md::FSsimfile &row, dmmeta::Ssimfile &
 void                 ssimfile_CopyIn(abt_md::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:abt_md.FSsimfile.ssimns.Get
-algo::strptr         ssimns_Get(abt_md::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(abt_md::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FSsimfile.ns.Get
-algo::strptr         ns_Get(abt_md::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(abt_md::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FSsimfile.name.Get
-algo::strptr         name_Get(abt_md::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(abt_md::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FSsimfile..Init
-inline void          FSsimfile_Init(abt_md::FSsimfile& ssimfile);
+inline void          FSsimfile_Init(abt_md::FSsimfile& parent);
 // func:abt_md.FSsimfile..Uninit
-void                 FSsimfile_Uninit(abt_md::FSsimfile& ssimfile) __attribute__((nothrow));
+void                 FSsimfile_Uninit(abt_md::FSsimfile& parent) __attribute__((nothrow));
 
 // --- abt_md.FSubstr
 // create: abt_md.FDb.substr (Lary)
@@ -4183,9 +4311,9 @@ void                 substr_CopyIn(abt_md::FSubstr &row, dmmeta::Substr &in) __a
 
 // Set all fields to initial values.
 // func:abt_md.FSubstr..Init
-inline void          FSubstr_Init(abt_md::FSubstr& substr);
+inline void          FSubstr_Init(abt_md::FSubstr& parent);
 // func:abt_md.FSubstr..Uninit
-void                 FSubstr_Uninit(abt_md::FSubstr& substr) __attribute__((nothrow));
+void                 FSubstr_Uninit(abt_md::FSubstr& parent) __attribute__((nothrow));
 
 // --- abt_md.FTargdep
 // create: abt_md.FDb.targdep (Lary)
@@ -4220,16 +4348,16 @@ void                 targdep_CopyOut(abt_md::FTargdep &row, dev::Targdep &out) _
 void                 targdep_CopyIn(abt_md::FTargdep &row, dev::Targdep &in) __attribute__((nothrow));
 
 // func:abt_md.FTargdep.target.Get
-algo::strptr         target_Get(abt_md::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(abt_md::FTargdep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FTargdep.parent.Get
-algo::strptr         parent_Get(abt_md::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_Get(abt_md::FTargdep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FTargdep..Init
-inline void          FTargdep_Init(abt_md::FTargdep& targdep);
+inline void          FTargdep_Init(abt_md::FTargdep& parent);
 // func:abt_md.FTargdep..Uninit
-void                 FTargdep_Uninit(abt_md::FTargdep& targdep) __attribute__((nothrow));
+void                 FTargdep_Uninit(abt_md::FTargdep& parent) __attribute__((nothrow));
 
 // --- abt_md.FTarget
 // create: abt_md.FDb.target (Lary)
@@ -4272,47 +4400,47 @@ void                 target_CopyIn(abt_md::FTarget &row, dev::Target &in) __attr
 
 // Return true if index is empty
 // func:abt_md.FTarget.c_targdep.EmptyQ
-inline bool          c_targdep_EmptyQ(abt_md::FTarget& target) __attribute__((nothrow));
+inline bool          c_targdep_EmptyQ(abt_md::FTarget& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:abt_md.FTarget.c_targdep.Find
-inline abt_md::FTargdep* c_targdep_Find(abt_md::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline abt_md::FTargdep* c_targdep_Find(abt_md::FTarget& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:abt_md.FTarget.c_targdep.Getary
-inline algo::aryptr<abt_md::FTargdep*> c_targdep_Getary(abt_md::FTarget& target) __attribute__((nothrow));
+inline algo::aryptr<abt_md::FTargdep*> c_targdep_Getary(abt_md::FTarget& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:abt_md.FTarget.c_targdep.Insert
-void                 c_targdep_Insert(abt_md::FTarget& target, abt_md::FTargdep& row) __attribute__((nothrow));
+void                 c_targdep_Insert(abt_md::FTarget& parent, abt_md::FTargdep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:abt_md.FTarget.c_targdep.InsertMaybe
-bool                 c_targdep_InsertMaybe(abt_md::FTarget& target, abt_md::FTargdep& row) __attribute__((nothrow));
+bool                 c_targdep_InsertMaybe(abt_md::FTarget& parent, abt_md::FTargdep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:abt_md.FTarget.c_targdep.N
-inline i64           c_targdep_N(const abt_md::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targdep_N(const abt_md::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:abt_md.FTarget.c_targdep.Remove
-void                 c_targdep_Remove(abt_md::FTarget& target, abt_md::FTargdep& row) __attribute__((nothrow));
+void                 c_targdep_Remove(abt_md::FTarget& parent, abt_md::FTargdep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:abt_md.FTarget.c_targdep.RemoveAll
-inline void          c_targdep_RemoveAll(abt_md::FTarget& target) __attribute__((nothrow));
+inline void          c_targdep_RemoveAll(abt_md::FTarget& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:abt_md.FTarget.c_targdep.Reserve
-void                 c_targdep_Reserve(abt_md::FTarget& target, u64 n) __attribute__((nothrow));
+void                 c_targdep_Reserve(abt_md::FTarget& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:abt_md.FTarget.c_targdep.qFind
-inline abt_md::FTargdep& c_targdep_qFind(abt_md::FTarget& target, u64 idx) __attribute__((nothrow));
+inline abt_md::FTargdep& c_targdep_qFind(abt_md::FTarget& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:abt_md.FTarget.c_targdep.InAryQ
 inline bool          target_c_targdep_InAryQ(abt_md::FTargdep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:abt_md.FTarget.c_targdep.qLast
-inline abt_md::FTargdep& c_targdep_qLast(abt_md::FTarget& target) __attribute__((nothrow));
+inline abt_md::FTargdep& c_targdep_qLast(abt_md::FTarget& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FTarget..Init
-inline void          FTarget_Init(abt_md::FTarget& target);
+inline void          FTarget_Init(abt_md::FTarget& parent);
 // func:abt_md.FTarget.c_targdep_curs.Reset
 inline void          target_c_targdep_curs_Reset(target_c_targdep_curs &curs, abt_md::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -4325,7 +4453,7 @@ inline void          target_c_targdep_curs_Next(target_c_targdep_curs &curs) __a
 // func:abt_md.FTarget.c_targdep_curs.Access
 inline abt_md::FTargdep& target_c_targdep_curs_Access(target_c_targdep_curs &curs) __attribute__((nothrow));
 // func:abt_md.FTarget..Uninit
-void                 FTarget_Uninit(abt_md::FTarget& target) __attribute__((nothrow));
+void                 FTarget_Uninit(abt_md::FTarget& parent) __attribute__((nothrow));
 
 // --- abt_md.FTargsrc
 // create: abt_md.FDb.targsrc (Lary)
@@ -4357,19 +4485,19 @@ void                 targsrc_CopyOut(abt_md::FTargsrc &row, dev::Targsrc &out) _
 void                 targsrc_CopyIn(abt_md::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:abt_md.FTargsrc.target.Get
-algo::strptr         target_Get(abt_md::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(abt_md::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FTargsrc.src.Get
-algo::strptr         src_Get(abt_md::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(abt_md::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:abt_md.FTargsrc.ext.Get
-algo::strptr         ext_Get(abt_md::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(abt_md::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:abt_md.FTargsrc..Init
-inline void          FTargsrc_Init(abt_md::FTargsrc& targsrc);
+inline void          FTargsrc_Init(abt_md::FTargsrc& parent);
 // func:abt_md.FTargsrc..Uninit
-void                 FTargsrc_Uninit(abt_md::FTargsrc& targsrc) __attribute__((nothrow));
+void                 FTargsrc_Uninit(abt_md::FTargsrc& parent) __attribute__((nothrow));
 
 // --- abt_md.FTclass
 // create: abt_md.FDb.tclass (Lary)
@@ -4404,9 +4532,9 @@ void                 tclass_CopyIn(abt_md::FTclass &row, amcdb::Tclass &in) __at
 
 // Set all fields to initial values.
 // func:abt_md.FTclass..Init
-inline void          FTclass_Init(abt_md::FTclass& tclass);
+inline void          FTclass_Init(abt_md::FTclass& parent);
 // func:abt_md.FTclass..Uninit
-void                 FTclass_Uninit(abt_md::FTclass& tclass) __attribute__((nothrow));
+void                 FTclass_Uninit(abt_md::FTclass& parent) __attribute__((nothrow));
 
 // --- abt_md.FieldId
 #pragma pack(push,1)
@@ -4784,6 +4912,14 @@ struct _db_checkkey_curs {// cursor
     abt_md::FDb *parent;
     i64 index;
     _db_checkkey_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_gitfile_curs {// cursor
+    typedef abt_md::FGitfile ChildType;
+    abt_md::FDb *parent;
+    i64 index;
+    _db_gitfile_curs(){ parent=NULL; index=0; }
 };
 
 // Non-destructive heap cursor, returns heap elements in sorted order.

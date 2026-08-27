@@ -10,13 +10,20 @@ jobs:
     name: Build & test on ${{ matrix.os }}.
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-22.04]
+        # macos-26 rather than macos-15: the Darwin arm64 build passes
+        # -Wno-cast-function-type-mismatch and -Wno-nontrivial-memcall, which
+        # clang learned in 19 and 20, and under -Werror an older clang rejects
+        # the option itself.  macos-15 defaults to Xcode 16.4, which is clang 17.
+        os: [ubuntu-22.04, macos-26]
+    continue-on-error: ${{ matrix.os == 'macos-26' }}
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
       - uses: actions/checkout@v3
       - name: Setup developers tools
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update && sudo apt-get install -y \
               mariadb-client\
@@ -28,11 +35,54 @@ jobs:
               liblz4-dev \
               cppcheck \
               valgrind
+      - name: Setup developers tools
+        if: runner.os == 'macOS'
+        run: |
+          # mariadb for mysqld_safe, which acr_my starts itself; rsync because
+          # the one Apple ships predates --ignore-missing-args, which wt needs
+          # to copy a modified-file list that can name a deleted path.
+          brew install openssl@3 mariadb-connector-c mariadb readline rsync cppcheck
+          brew --prefix openssl@3 mariadb-connector-c mariadb readline
+          command -v mysqld_safe rsync
       - name: Build and test
         run: |
           export PATH=bin:$PATH
           git config --global user.email root@localhost
           git config --global user.name runner
-          bin/normalize
-          bin/atf_ci -cijob:comp
+          # Downloading a job's log needs admin rights on the repository, so a
+          # red leg tells a contributor only that something failed.  An
+          # annotation needs no rights at all and rides on the check run itself,
+          # so a failure repeats its own tail as one, where anyone reading the
+          # pull request can see which citest died and what it printed.
+          # The log goes outside the tree, since checkclean reads the tree.
+          log="${RUNNER_TEMP:-/tmp}/citest.log"
+          set -o pipefail
+          rc=0
+          { bin/normalize && bin/atf_ci -cijob:comp; } 2>&1 | tee "$log" || rc=$?
+          if [ $rc -ne 0 ]; then
+            # An annotation's message is capped at 4096 characters and is cut
+            # from the end, so the encoded text is trimmed from the front here
+            # -- the last thing the run printed is the part worth keeping.
+            # perl rather than sed: an escape sequence written \x1b is a GNU
+            # extension, and the macOS leg runs the BSD one.
+            annotate() {
+              body=$(perl -pe 's/\e\[[0-9;]*m//g; s/%/%25/g; s/\r//g; s/\n/%0A/g' | tail -c 3800)
+              echo "::error title=$1::$body"
+            }
+            # Two annotations rather than one: a citest that dies thousands of
+            # lines before the end leaves nothing of itself in the tail.  The
+            # first failure is the one that matters, since a cijob stops at it,
+            # so this half is taken from the top and carries the lines above each
+            # hit -- what a test printed sits above the line reporting it.  The
+            # pattern matches how a failure is spelled rather than words like
+            # fatal or assert, which a passing test's own comment can contain.
+            grep -a -B6 -E 'success:N|\.error|\.failed|exception:|errno:|signal:|Segmentation fault' "$log" \
+              | head -n 70 | annotate "${{ matrix.os }}: first lines naming a failure" || true
+            tail -n 40 "$log" | annotate "${{ matrix.os }}: end of the run"
+          fi
+          exit $rc
+      - name: Memory check
+        if: runner.os == 'Linux'
+        run: |
+          export PATH=bin:$PATH
           bin/atf_ci -cijob:memcheck

@@ -113,7 +113,35 @@ int apm::CreatePackageSandbox(algo::strptr sandbox_name, algo::strptr baseref) {
 
 // -----------------------------------------------------------------------------
 
-tempstr apm::FetchPackageOrigin(algo::strptr origin, algo::strptr ref) {
+// Return the commit REV names, or the empty string when it names nothing here.
+// Rev-parse is quiet and verifying, so an unknown name is an empty answer
+// rather than a message on stderr the caller has no use for.
+tempstr apm::RevParseMaybe(algo::strptr rev) {
+    tempstr cmd(tempstr()<<"git rev-parse -q --verify "<<strptr_ToBash(tempstr()<<rev<<"^{commit}"));
+    tempstr out(SysEval(cmd,FailokQ(true),1024));
+    return tempstr(Trimmed(out));
+}
+
+// -----------------------------------------------------------------------------
+
+// Bring PACKAGE's origin into this repo and resolve REF to a commit id there.
+// Return the commit, or the empty string when the origin cannot be reached or
+// REF names nothing in it.
+//
+// A baseref has to survive being written down, so it is a commit id rather than
+// a branch name.  But `git fetch <origin> <commit>` fails: both the local
+// transport and an ordinary server match a refspec by name against the refs the
+// origin advertises, and a commit id is not one of them.  Fetching a stored
+// baseref directly therefore dies with "couldn't find remote ref" on the one
+// value the field is supposed to hold.
+//
+// The origin's heads come across as a set instead, into a ref namespace of this
+// package's own, and REF is resolved locally afterwards.  Any commit an origin
+// branch reaches is then in this repo's object store and rev-parse finds it, so
+// a commit id, a branch name and HEAD all resolve through one path.  The
+// namespace is consulted before the repo, because REF names something in the
+// origin and a local branch of the same spelling is a different commit.
+tempstr apm::FetchPackageOrigin(algo::strptr pkgname, algo::strptr origin, algo::strptr ref) {
     tempstr gitref;
     if (origin == ".") {
         if (ref == "HEAD") {
@@ -122,11 +150,16 @@ tempstr apm::FetchPackageOrigin(algo::strptr origin, algo::strptr ref) {
             gitref=Trimmed(SysEval(tempstr()<<"git rev-parse "<<ref,FailokQ(true),1024));
         }
     } else {
-        int rc=SysCmd(tempstr()<<"git fetch -q "<<origin<<" "<<ref);
+        tempstr refns(tempstr()<<"refs/apm/"<<pkgname);
+        tempstr fetch(tempstr()<<"git fetch -q --prune "<<strptr_ToBash(origin));
+        fetch << " " << strptr_ToBash(tempstr()<<"+refs/heads/*:"<<refns<<"/*");
+        fetch << " " << strptr_ToBash(tempstr()<<"+HEAD:"<<refns<<"/HEAD");
+        int rc=SysCmd(fetch);
         if (rc==0) {
-            // FETCH_HEAD lives in the per-worktree gitdir (.git may be a file),
-            // so resolve it through git instead of reading .git/FETCH_HEAD
-            gitref=Trimmed(SysEval("git rev-parse FETCH_HEAD",FailokQ(true),1024));
+            gitref=RevParseMaybe(tempstr()<<refns<<"/"<<ref);
+            if (gitref=="") {
+                gitref=RevParseMaybe(ref);
+            }
         }
     }
     verblog("apm.fetch_package_origin"

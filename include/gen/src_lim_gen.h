@@ -107,7 +107,7 @@ void                 badline_CopyIn(src_lim::FBadline &row, dev::Badline &in) __
 
 // Set all fields to initial values.
 // func:src_lim.FBadline..Init
-inline void          FBadline_Init(src_lim::FBadline& badline);
+inline void          FBadline_Init(src_lim::FBadline& parent);
 
 // --- src_lim.trace
 #pragma pack(push,1)
@@ -511,26 +511,26 @@ void                 gitfile_CopyOut(src_lim::FGitfile &row, dev::Gitfile &out) 
 void                 gitfile_CopyIn(src_lim::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
 
 // func:src_lim.FGitfile.ext.Get
-algo::strptr         ext_Get(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(src_lim::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:src_lim.FGitfile.zd_include.EmptyQ
-inline bool          zd_include_EmptyQ(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_include_EmptyQ(src_lim::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:src_lim.FGitfile.zd_include.First
-inline src_lim::FInclude* zd_include_First(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_lim::FInclude* zd_include_First(src_lim::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:src_lim.FGitfile.zd_include.InLlistQ
 inline bool          gitfile_zd_include_InLlistQ(src_lim::FInclude& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:src_lim.FGitfile.zd_include.Insert
-void                 zd_include_Insert(src_lim::FGitfile& gitfile, src_lim::FInclude& row) __attribute__((nothrow));
+void                 zd_include_Insert(src_lim::FGitfile& parent, src_lim::FInclude& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:src_lim.FGitfile.zd_include.Last
-inline src_lim::FInclude* zd_include_Last(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_lim::FInclude* zd_include_Last(src_lim::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:src_lim.FGitfile.zd_include.N
-inline i32           zd_include_N(const src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_include_N(const src_lim::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:src_lim.FGitfile.zd_include.Next
 inline src_lim::FInclude* gitfile_zd_include_Next(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
@@ -539,37 +539,37 @@ inline src_lim::FInclude* gitfile_zd_include_Next(src_lim::FInclude &row) __attr
 inline src_lim::FInclude* gitfile_zd_include_Prev(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_lim.FGitfile.zd_include.Remove
-void                 zd_include_Remove(src_lim::FGitfile& gitfile, src_lim::FInclude& row) __attribute__((nothrow));
+void                 zd_include_Remove(src_lim::FGitfile& parent, src_lim::FInclude& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:src_lim.FGitfile.zd_include.RemoveAll
-void                 zd_include_RemoveAll(src_lim::FGitfile& gitfile) __attribute__((nothrow));
+void                 zd_include_RemoveAll(src_lim::FGitfile& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:src_lim.FGitfile.zd_include.RemoveFirst
-src_lim::FInclude*   zd_include_RemoveFirst(src_lim::FGitfile& gitfile) __attribute__((nothrow));
+src_lim::FInclude*   zd_include_RemoveFirst(src_lim::FGitfile& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:src_lim.FGitfile.zd_include.qLast
-inline src_lim::FInclude& zd_include_qLast(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+inline src_lim::FInclude& zd_include_qLast(src_lim::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:src_lim.FGitfile.zd_include.InsertBefore
-void                 zd_include_InsertBefore(src_lim::FGitfile& gitfile, src_lim::FInclude& row, src_lim::FInclude* before) __attribute__((nothrow));
+void                 zd_include_InsertBefore(src_lim::FGitfile& parent, src_lim::FInclude& row, src_lim::FInclude* before) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:src_lim.FGitfile.c_linelim.InsertMaybe
-inline bool          c_linelim_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) __attribute__((nothrow));
+inline bool          c_linelim_InsertMaybe(src_lim::FGitfile& parent, src_lim::FLinelim& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_lim.FGitfile.c_linelim.Remove
-inline void          c_linelim_Remove(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) __attribute__((nothrow));
+inline void          c_linelim_Remove(src_lim::FGitfile& parent, src_lim::FLinelim& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:src_lim.FGitfile.c_targsrc.InsertMaybe
-inline bool          c_targsrc_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) __attribute__((nothrow));
+inline bool          c_targsrc_InsertMaybe(src_lim::FGitfile& parent, src_lim::FTargsrc& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_lim.FGitfile.c_targsrc.Remove
-inline void          c_targsrc_Remove(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) __attribute__((nothrow));
+inline void          c_targsrc_Remove(src_lim::FGitfile& parent, src_lim::FTargsrc& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:src_lim.FGitfile..Init
-inline void          FGitfile_Init(src_lim::FGitfile& gitfile);
+inline void          FGitfile_Init(src_lim::FGitfile& parent);
 // cursor points to valid item
 // func:src_lim.FGitfile.zd_include_curs.Reset
 inline void          gitfile_zd_include_curs_Reset(gitfile_zd_include_curs &curs, src_lim::FGitfile &parent) __attribute__((nothrow));
@@ -583,7 +583,7 @@ inline void          gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs)
 // func:src_lim.FGitfile.zd_include_curs.Access
 inline src_lim::FInclude& gitfile_zd_include_curs_Access(gitfile_zd_include_curs &curs) __attribute__((nothrow));
 // func:src_lim.FGitfile..Uninit
-void                 FGitfile_Uninit(src_lim::FGitfile& gitfile) __attribute__((nothrow));
+void                 FGitfile_Uninit(src_lim::FGitfile& parent) __attribute__((nothrow));
 
 // --- src_lim.FInclude
 // create: src_lim.FDb.include (Lary)
@@ -616,16 +616,16 @@ void                 include_CopyOut(src_lim::FInclude &row, dev::Include &out) 
 void                 include_CopyIn(src_lim::FInclude &row, dev::Include &in) __attribute__((nothrow));
 
 // func:src_lim.FInclude.srcfile.Get
-algo::strptr         srcfile_Get(src_lim::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         srcfile_Get(src_lim::FInclude& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_lim.FInclude.filename.Get
-algo::strptr         filename_Get(src_lim::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         filename_Get(src_lim::FInclude& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_lim.FInclude..Init
-inline void          FInclude_Init(src_lim::FInclude& include);
+inline void          FInclude_Init(src_lim::FInclude& parent);
 // func:src_lim.FInclude..Uninit
-void                 FInclude_Uninit(src_lim::FInclude& include) __attribute__((nothrow));
+void                 FInclude_Uninit(src_lim::FInclude& parent) __attribute__((nothrow));
 
 // --- src_lim.FLinelim
 // create: src_lim.FDb.linelim (Lary)
@@ -663,9 +663,9 @@ void                 linelim_CopyIn(src_lim::FLinelim &row, dev::Linelim &in) __
 
 // Set all fields to initial values.
 // func:src_lim.FLinelim..Init
-inline void          FLinelim_Init(src_lim::FLinelim& linelim);
+inline void          FLinelim_Init(src_lim::FLinelim& parent);
 // func:src_lim.FLinelim..Uninit
-void                 FLinelim_Uninit(src_lim::FLinelim& linelim) __attribute__((nothrow));
+void                 FLinelim_Uninit(src_lim::FLinelim& parent) __attribute__((nothrow));
 
 // --- src_lim.FTargsrc
 // create: src_lim.FDb.targsrc (Lary)
@@ -699,19 +699,19 @@ void                 targsrc_CopyOut(src_lim::FTargsrc &row, dev::Targsrc &out) 
 void                 targsrc_CopyIn(src_lim::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:src_lim.FTargsrc.target.Get
-algo::strptr         target_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(src_lim::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_lim.FTargsrc.src.Get
-algo::strptr         src_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(src_lim::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_lim.FTargsrc.ext.Get
-algo::strptr         ext_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(src_lim::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_lim.FTargsrc..Init
-inline void          FTargsrc_Init(src_lim::FTargsrc& targsrc);
+inline void          FTargsrc_Init(src_lim::FTargsrc& parent);
 // func:src_lim.FTargsrc..Uninit
-void                 FTargsrc_Uninit(src_lim::FTargsrc& targsrc) __attribute__((nothrow));
+void                 FTargsrc_Uninit(src_lim::FTargsrc& parent) __attribute__((nothrow));
 
 // --- src_lim.FieldId
 #pragma pack(push,1)

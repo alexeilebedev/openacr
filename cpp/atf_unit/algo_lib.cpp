@@ -3205,36 +3205,43 @@ static void PumpStdin(command::bash_proc &p, algo::strptr data) {
 // set redirects, and drive the lifecycle with the generic ProcStart/Wait/Exec.
 // This is the path one would use to spawn `ssh` or any other external command.
 #ifndef WIN32
-// Spawn a long-lived proc holding a stdout-pipe read end (with the given cloexec
-// setting), then spawn a second child that lists its own open fds, and report
-// whether the held pipe leaked into that second child.  Matches the pipe's
-// unique "pipe:[inode]" name rather than the fd number, so the lister's own dir
-// fd can't cause a false positive.
+// Spawn a long-lived proc holding a stdout-pipe read end, with the given cloexec
+// setting, and report whether that read end reached a second child spawned
+// afterwards.
+//
+// The second child is asked to read from the fd number by which the parent knows
+// the pipe.  A leaked descriptor is one the child can use, so the child reads the
+// marker the first proc wrote and prints it; a descriptor closed on exec makes
+// the redirect fail and the child prints nothing.  Asking what the child can do
+// tests the consequence rather than the bookkeeping, and it needs no way to
+// enumerate another process's descriptors -- /proc/self/fd is Linux's and macOS
+// has no equivalent that names a pipe.
 static bool PipeFdLeaksQ(bool cloexec) {
     algo_lib::FProc longproc;
-    ary_Alloc(longproc.args) = "sleep";
-    ary_Alloc(longproc.args) = "30";
+    ary_Alloc(longproc.args) = "sh";
+    ary_Alloc(longproc.args) = "-c";
+    ary_Alloc(longproc.args) = "echo LEAKMARK; sleep 30";
     longproc.fstdout = "|";
     longproc.cloexec = cloexec;
+    // The shell outlives its echo, so it is killed as a group: a shell that
+    // forks for the sleep rather than exec'ing into it would otherwise leave the
+    // sleep behind, holding this process's stderr open for another half minute.
+    longproc.pgroup = true;
     algo_lib::ProcStart(longproc);
-    tempstr linkpath;
-    linkpath << "/proc/self/fd/" << longproc.from_stdout.value;
-    char target[64];
-    ssize_t n = readlink(Zeroterm(linkpath), target, sizeof(target)-1);
-    tempstr pipename;
-    if (n > 0) {
-        pipename = algo::strptr(target, (int)n);
-    }
-    algo_lib::FProc lsproc;
-    ary_Alloc(lsproc.args) = "sh";
-    ary_Alloc(lsproc.args) = "-c";
-    ary_Alloc(lsproc.args) = "ls -l /proc/self/fd";
-    lsproc.fstdout = "|";
-    algo_lib::ProcStart(lsproc);
-    algo::tempstr listing = ReadAllFd(lsproc.from_stdout);
-    algo_lib::ProcWait(lsproc);
+    algo_lib::FProc readproc;
+    ary_Alloc(readproc.args) = "sh";
+    ary_Alloc(readproc.args) = "-c";
+    // stderr is redirected before the descriptor is, so a shell refusing the one
+    // that is not there reports it into the void rather than onto the test's own
+    // output.  Redirections apply left to right, and the complaint comes from the
+    // shell rather than from head, so the order is what silences it.
+    ary_Alloc(readproc.args) = tempstr()<<"head -c 8 2>/dev/null <&"<<longproc.from_stdout.value;
+    readproc.fstdout = "|";
+    algo_lib::ProcStart(readproc);
+    algo::tempstr out = ReadAllFd(readproc.from_stdout);
+    algo_lib::ProcWait(readproc);
     algo_lib::ProcKill(longproc);
-    return ch_N(pipename) > 0 && algo::FindStr(listing, pipename) != -1;
+    return algo::FindStr(out, "LEAKMARK") != -1;
 }
 #endif
 
@@ -3393,8 +3400,8 @@ void atf_unit::unittest_algo_lib_ExecPipe() {
 //
 // A host with no export has nothing to compare against, so the check is
 // announced as skipped rather than passing silently.  That host is exactly
-// where an x2 process refuses to start unless the rate is stated, and where
-// the file source /etc/x2.d/tscfreq_khz is exercised -- installing that file
+// where a process that needs the rate refuses to start unless it is stated, and
+// where the file source under /etc is exercised -- installing that file
 // needs root, so it is covered on such a host rather than here.  The second
 // half of the test covers the variable on either kind of host:
 // where the export exists it must be ignored, and where it does not it must be

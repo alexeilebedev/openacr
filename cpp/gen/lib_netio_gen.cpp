@@ -18,8 +18,6 @@
 #include "include/gen/lib_netio_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -418,7 +416,6 @@ void lib_netio::FDb_Init() {
 
 // --- lib_netio.FDb..Uninit
 void lib_netio::FDb_Uninit() {
-    lib_netio::FDb &row = _db; (void)row;
 
     // lib_netio.FDb.ind_var.Uninit (Thash)  //
     // skip destruction of ind_var in global scope
@@ -428,9 +425,8 @@ void lib_netio::FDb_Uninit() {
 }
 
 // --- lib_netio.FVar..Uninit
-void lib_netio::FVar_Uninit(lib_netio::FVar& var) {
-    lib_netio::FVar &row = var; (void)row;
-    ind_var_Remove(row); // remove var from index ind_var
+void lib_netio::FVar_Uninit(lib_netio::FVar& parent) {
+    ind_var_Remove(parent); // remove var from index ind_var
 }
 
 // --- lib_netio.FieldId.value.ToCstr

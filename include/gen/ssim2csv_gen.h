@@ -593,9 +593,9 @@ private:
 };
 // Set all fields to initial values.
 // func:ssim2csv.FExpand..Init
-inline void          FExpand_Init(ssim2csv::FExpand& expand);
+inline void          FExpand_Init(ssim2csv::FExpand& parent);
 // func:ssim2csv.FExpand..Uninit
-void                 FExpand_Uninit(ssim2csv::FExpand& expand) __attribute__((nothrow));
+void                 FExpand_Uninit(ssim2csv::FExpand& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.FExpand.String  printfmt:Raw
 // func:ssim2csv.FExpand..Print
@@ -640,9 +640,9 @@ private:
 };
 // Set all fields to initial values.
 // func:ssim2csv.FOutfile..Init
-inline void          FOutfile_Init(ssim2csv::FOutfile& outfile);
+inline void          FOutfile_Init(ssim2csv::FOutfile& parent);
 // func:ssim2csv.FOutfile..Uninit
-void                 FOutfile_Uninit(ssim2csv::FOutfile& outfile) __attribute__((nothrow));
+void                 FOutfile_Uninit(ssim2csv::FOutfile& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.FOutfile.String  printfmt:Tuple
 // func:ssim2csv.FOutfile..Print

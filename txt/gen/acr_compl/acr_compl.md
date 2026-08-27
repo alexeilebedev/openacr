@@ -3,11 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
-* [Tests](#tests)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -90,8 +92,8 @@ All allocations are done through global `acr_compl::_db` [acr_compl.FDb](#acr_co
 <a href="#acr_compl-badness-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_compl.Badness.badness|u8|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.Badness.strkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr_compl.Badness.badness|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.Badness.strkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Badness
 <a href="#struct-badness"></a>
@@ -128,8 +130,8 @@ struct Badness { // acr_compl.Badness: Trading Session
 <a href="#acr_compl-completion-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_compl.Completion.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.Completion.nospace|bool|[Val](/txt/exe/amc/reftype.md#val)||do not add space after the value|
+|acr_compl.Completion.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.Completion.nospace|bool|[Val](/txt/exe/amc/reftype/Val.md)||do not add space after the value|
 
 #### Struct Completion
 <a href="#struct-completion"></a>
@@ -219,8 +221,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_compl.FCcmdline.base|[dmmeta.Ccmdline](/txt/ssimdb/dmmeta/ccmdline.md)|[Base](/txt/ssimdb/dmmeta/ccmdline.md)|||
-|acr_compl.FCcmdline.p_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_compl.FCcmdline.p_basecmdline|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|acr_compl.FCcmdline.p_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_compl.FCcmdline.p_basecmdline|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCcmdline
 <a href="#struct-fccmdline"></a>
@@ -252,9 +254,9 @@ private:
 <a href="#acr_compl-fcmd-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_compl.FCmd.cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.FCmd.p_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_compl.FCmd.p_basectype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|acr_compl.FCmd.cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.FCmd.p_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_compl.FCmd.p_basectype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCmd
 <a href="#struct-fcmd"></a>
@@ -290,14 +292,14 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_compl.FCompletion.msghdr|[acr_compl.Completion](/txt/gen/acr_compl/acr_compl.md#acr_compl-completion)|[Base](#acr_compl-completion-fields)|||
-|acr_compl.FCompletion.badness|[acr_compl.Badness](/txt/gen/acr_compl/acr_compl.md#acr_compl-badness)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.FCompletion.field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|acr_compl.FCompletion.badness|[acr_compl.Badness](/txt/gen/acr_compl/acr_compl.md#acr_compl-badness)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.FCompletion.field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 #### acr_compl.Completion Fields
 <a href="#acr_compl-completion-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_compl.Completion.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.Completion.nospace|bool|[Val](/txt/exe/amc/reftype.md#val)||do not add space after the value|
+|acr_compl.Completion.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.Completion.nospace|bool|[Val](/txt/exe/amc/reftype/Val.md)||do not add space after the value|
 
 #### Struct FCompletion
 <a href="#struct-fcompletion"></a>
@@ -332,7 +334,7 @@ private:
 <a href="#acr_compl-fcomplsource-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_compl.FComplsource.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr_compl.FComplsource.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FComplsource
 <a href="#struct-fcomplsource"></a>
@@ -358,10 +360,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_compl.FCtype.msghdr|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|acr_compl.FCtype.c_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|acr_compl.FCtype.c_ssimfile|[acr_compl.FSsimfile](/txt/gen/acr_compl/acr_compl.md#acr_compl-fssimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_compl.FCtype.c_argvtype|[acr_compl.FArgvtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fargvtype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_compl.FCtype.c_floadtuples|[acr_compl.FFloadtuples](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffloadtuples)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||tuple sources this command loads at startup|
+|acr_compl.FCtype.c_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr_compl.FCtype.c_ssimfile|[acr_compl.FSsimfile](/txt/gen/acr_compl/acr_compl.md#acr_compl-fssimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_compl.FCtype.c_argvtype|[acr_compl.FArgvtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fargvtype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_compl.FCtype.c_floadtuples|[acr_compl.FFloadtuples](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffloadtuples)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||tuple sources this command loads at startup|
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -412,45 +414,45 @@ private:
 <a href="#acr_compl-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_compl.FDb._db|[acr_compl.FDb](/txt/gen/acr_compl/acr_compl.md#acr_compl-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|acr_compl.FDb.cmdline|[command.acr_compl](/txt/protocol/command/README.md#command-acr_compl)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.FDb.point|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.FDb.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.FDb.word|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|acr_compl.FDb.ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.ind_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_compl.FDb.field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.ind_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_compl.FDb.ssimfile|[acr_compl.FSsimfile](/txt/gen/acr_compl/acr_compl.md#acr_compl-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.ind_ssimfile|[acr_compl.FSsimfile](/txt/gen/acr_compl/acr_compl.md#acr_compl-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_compl.FDb.completion|[acr_compl.FCompletion](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcompletion)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.anonfld|[acr_compl.FAnonfld](/txt/gen/acr_compl/acr_compl.md#acr_compl-fanonfld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.bh_completion|[acr_compl.FCompletion](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcompletion)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|acr_compl.FDb.fconst|[acr_compl.FFconst](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffconst)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.fflag|[acr_compl.FFflag](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffflag)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.zd_cmd_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|acr_compl.FDb.ind_cmd_field_name|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_compl.FDb.name|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)||option name|
-|acr_compl.FDb.value|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype.md#val)||option value|
-|acr_compl.FDb.need_value|bool|[Val](/txt/exe/amc/reftype.md#val)||next word is value|
-|acr_compl.FDb.anon_index|i32|[Val](/txt/exe/amc/reftype.md#val)||current index of anon argument|
-|acr_compl.FDb.exact|bool|[Val](/txt/exe/amc/reftype.md#val)||whether option name is considered as exact|
-|acr_compl.FDb.anon|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.FDb.argvtype|[acr_compl.FArgvtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fargvtype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.falias|[acr_compl.FFalias](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffalias)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.complsource|[acr_compl.FComplsource](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcomplsource)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.is_data_dir|bool|[Val](/txt/exe/amc/reftype.md#val)||Input is a directory of ssimfiles|
-|acr_compl.FDb.parse_error|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Error from command line parsing|
-|acr_compl.FDb.compl_output|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|Collected completion output|
-|acr_compl.FDb.finsertwhen|[acr_compl.FFinsertwhen](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffinsertwhen)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.ind_finsertwhen|[acr_compl.FFinsertwhen](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffinsertwhen)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_compl.FDb.substr|[acr_compl.FSubstr](/txt/gen/acr_compl/acr_compl.md#acr_compl-fsubstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.ccmdline|[acr_compl.FCcmdline](/txt/gen/acr_compl/acr_compl.md#acr_compl-fccmdline)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.cmd|[acr_compl.FCmd](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcmd)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.ind_cmd|[acr_compl.FCmd](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcmd)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_compl.FDb.floadtuples|[acr_compl.FFloadtuples](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffloadtuples)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_compl.FDb.ind_floadtuples|[acr_compl.FFloadtuples](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffloadtuples)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_compl.FDb.p_cmd_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Ptr](/txt/exe/amc/reftype.md#ptr)||cmdline ctype of the command being completed|
+|acr_compl.FDb._db|[acr_compl.FDb](/txt/gen/acr_compl/acr_compl.md#acr_compl-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|acr_compl.FDb.cmdline|[command.acr_compl](/txt/protocol/command/README.md#command-acr_compl)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.FDb.point|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.FDb.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.FDb.word|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|acr_compl.FDb.ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.ind_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_compl.FDb.field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.ind_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_compl.FDb.ssimfile|[acr_compl.FSsimfile](/txt/gen/acr_compl/acr_compl.md#acr_compl-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.ind_ssimfile|[acr_compl.FSsimfile](/txt/gen/acr_compl/acr_compl.md#acr_compl-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_compl.FDb.completion|[acr_compl.FCompletion](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcompletion)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.anonfld|[acr_compl.FAnonfld](/txt/gen/acr_compl/acr_compl.md#acr_compl-fanonfld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.bh_completion|[acr_compl.FCompletion](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcompletion)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|acr_compl.FDb.fconst|[acr_compl.FFconst](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffconst)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.fflag|[acr_compl.FFflag](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffflag)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.zd_cmd_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|acr_compl.FDb.ind_cmd_field_name|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_compl.FDb.name|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)||option name|
+|acr_compl.FDb.value|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftype/Val.md)||option value|
+|acr_compl.FDb.need_value|bool|[Val](/txt/exe/amc/reftype/Val.md)||next word is value|
+|acr_compl.FDb.anon_index|i32|[Val](/txt/exe/amc/reftype/Val.md)||current index of anon argument|
+|acr_compl.FDb.exact|bool|[Val](/txt/exe/amc/reftype/Val.md)||whether option name is considered as exact|
+|acr_compl.FDb.anon|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.FDb.argvtype|[acr_compl.FArgvtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fargvtype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.falias|[acr_compl.FFalias](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffalias)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.complsource|[acr_compl.FComplsource](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcomplsource)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.is_data_dir|bool|[Val](/txt/exe/amc/reftype/Val.md)||Input is a directory of ssimfiles|
+|acr_compl.FDb.parse_error|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Error from command line parsing|
+|acr_compl.FDb.compl_output|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|""|Collected completion output|
+|acr_compl.FDb.finsertwhen|[acr_compl.FFinsertwhen](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffinsertwhen)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.ind_finsertwhen|[acr_compl.FFinsertwhen](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffinsertwhen)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_compl.FDb.substr|[acr_compl.FSubstr](/txt/gen/acr_compl/acr_compl.md#acr_compl-fsubstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.ccmdline|[acr_compl.FCcmdline](/txt/gen/acr_compl/acr_compl.md#acr_compl-fccmdline)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.cmd|[acr_compl.FCmd](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcmd)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.ind_cmd|[acr_compl.FCmd](/txt/gen/acr_compl/acr_compl.md#acr_compl-fcmd)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_compl.FDb.floadtuples|[acr_compl.FFloadtuples](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffloadtuples)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_compl.FDb.ind_floadtuples|[acr_compl.FFloadtuples](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffloadtuples)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_compl.FDb.p_cmd_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||cmdline ctype of the command being completed|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -542,8 +544,8 @@ struct FDb { // acr_compl.FDb: In-memory database for acr_compl
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_compl.FFalias.base|[dmmeta.Falias](/txt/ssimdb/dmmeta/falias.md)|[Base](/txt/ssimdb/dmmeta/falias.md)|||
-|acr_compl.FFalias.p_srcfield|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_compl.FFalias.p_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|acr_compl.FFalias.p_srcfield|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_compl.FFalias.p_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFalias
 <a href="#struct-ffalias"></a>
@@ -657,15 +659,15 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_compl.FField.msghdr|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|acr_compl.FField.p_arg|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_compl.FField.c_anonfld|[acr_compl.FAnonfld](/txt/gen/acr_compl/acr_compl.md#acr_compl-fanonfld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_compl.FField.c_fconst|[acr_compl.FFconst](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffconst)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|acr_compl.FField.seen|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_compl.FField.c_fflag|[acr_compl.FFflag](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffflag)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_compl.FField.p_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_compl.FField.c_falias|[acr_compl.FFalias](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffalias)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_compl.FField.c_falias_srcfield|[acr_compl.FFalias](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffalias)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|acr_compl.FField.typed_value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||value supplied for this option on the line being completed|
+|acr_compl.FField.p_arg|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_compl.FField.c_anonfld|[acr_compl.FAnonfld](/txt/gen/acr_compl/acr_compl.md#acr_compl-fanonfld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_compl.FField.c_fconst|[acr_compl.FFconst](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffconst)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr_compl.FField.seen|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_compl.FField.c_fflag|[acr_compl.FFflag](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffflag)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_compl.FField.p_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_compl.FField.c_falias|[acr_compl.FFalias](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffalias)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_compl.FField.c_falias_srcfield|[acr_compl.FFalias](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffalias)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr_compl.FField.typed_value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||value supplied for this option on the line being completed|
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -773,7 +775,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_compl.FFloadtuples.base|[dmmeta.Floadtuples](/txt/ssimdb/dmmeta/floadtuples.md)|[Base](/txt/ssimdb/dmmeta/floadtuples.md)|||
-|acr_compl.FFloadtuples.p_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)||the cmdline field naming this source|
+|acr_compl.FFloadtuples.p_field|[acr_compl.FField](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||the cmdline field naming this source|
 
 #### Struct FFloadtuples
 <a href="#struct-ffloadtuples"></a>
@@ -816,7 +818,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_compl.FSsimfile.msghdr|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
-|acr_compl.FSsimfile.p_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|acr_compl.FSsimfile.p_ctype|[acr_compl.FCtype](/txt/gen/acr_compl/acr_compl.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSsimfile
 <a href="#struct-fssimfile"></a>
@@ -883,7 +885,7 @@ private:
 <a href="#acr_compl-shellqtype-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_compl.Shellqtype.type|u8|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr_compl.Shellqtype.type|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Shellqtype
 <a href="#struct-shellqtype"></a>
@@ -907,8 +909,8 @@ struct Shellqtype { // acr_compl.Shellqtype
 <a href="#acr_compl-checkerr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_compl.checkerr.id|u32|[Val](/txt/exe/amc/reftype.md#val)||Echoed from checkreq|
-|acr_compl.checkerr.err|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Validation error text|
+|acr_compl.checkerr.id|u32|[Val](/txt/exe/amc/reftype/Val.md)||Echoed from checkreq|
+|acr_compl.checkerr.err|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Validation error text|
 
 #### Struct checkerr
 <a href="#struct-checkerr"></a>
@@ -929,8 +931,8 @@ struct checkerr { // acr_compl.checkerr: Batch check failure
 <a href="#acr_compl-checkreq-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_compl.checkreq.id|u32|[Val](/txt/exe/amc/reftype.md#val)||Echoed in checkerr|
-|acr_compl.checkreq.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Command line to validate|
+|acr_compl.checkreq.id|u32|[Val](/txt/exe/amc/reftype/Val.md)||Echoed in checkerr|
+|acr_compl.checkreq.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Command line to validate|
 
 #### Struct checkreq
 <a href="#struct-checkreq"></a>

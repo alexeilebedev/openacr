@@ -174,8 +174,16 @@ tempstr abt_md::LinkToGen(algo::strptr name, abt_md::FNs &ns, algo::strptr ancho
     return LinkToFileAbs(name, path, anchor);
 }
 
+// Link to the page documenting REFTYPE.
+//
+// Every reftype has a page of its own under txt/exe/amc/reftype, and the link
+// goes straight to it.  The index beside them, txt/exe/amc/reftype.md, groups the
+// reftypes so a reader who does not yet know which one they want can find it --
+// but a reader who arrives from a field's reftype column already knows, and
+// landing them on an index entry that says "see the page" costs them a click for
+// nothing.
 tempstr abt_md::LinkToReftype(algo::strptr reftype) {
-    return LinkToFileAbs(reftype, "txt/exe/amc/reftype.md", MdAnchor(reftype));
+    return LinkToFileAbs(reftype, tempstr() << "txt/exe/amc/reftype/" << reftype << ".md");
 }
 
 tempstr abt_md::LinkToCtype(abt_md::FCtype &ctype) {
@@ -558,12 +566,12 @@ void abt_md::CheckLinks() {
                       <<Keyval("path",path)
                       <<Keyval("comment","target outside repository"));
             } else {
-                if (!FileQ(path)) {
+                if (!ind_gitfile_Find(path)) {
                     good=false;
                     prlog(link.location<<": "
                           <<Keyval("target",link.target)
                           <<Keyval("path",path)
-                          <<Keyval("comment","target file doesn't exist"));
+                          <<Keyval("comment","target is not a file the repo tracks"));
                 }
                 tempstr anchor(Pathcomp(link.target,"#LR"));
                 tempstr fullanchor = tempstr() << path << "#"<<anchor;
@@ -898,6 +906,25 @@ void abt_md::Main() {
         nselect += readmefile.select;
     }ind_end;
 
+    // A link leaves the document it is written in, so checking links is checking the whole
+    // graph at once: the target of a link out of the selection is a file this run never
+    // read, and the anchor it names is one this run never saw.  A narrowed -check can
+    // therefore only skip the link check, and a check that skips the thing it was asked
+    // to look at and then exits zero is worse than no check -- a document whose links do
+    // not resolve reads as verified.  So the narrowed form is refused here, before any
+    // readme is processed, rather than being honoured up to the part that matters.
+    // -update is a different request and keeps working on a selection: regenerating one
+    // namespace's documents is the ordinary way to use this tool, and that run says on its
+    // way past that it checked no links.
+    bool wholetree = nselect == readmefile_N();
+    if (_db.cmdline.check && !wholetree) {
+        prerr("abt_md.narrow_check"
+              <<Keyval("nselect",nselect)
+              <<Keyval("nreadmefile",readmefile_N())
+              <<Keyval("comment","-check reads every readme; drop -readmefile and -ns, or use -update to regenerate a selection"));
+        algo_lib::_db.exit_code++;
+    }
+
     // process selected readmes
     // if none are selected, it is an error, unless the selection
     // was an empty string, in which case just update the top-level readme
@@ -933,11 +960,14 @@ void abt_md::Main() {
         // the mdsection check reads the whole readmefile pool rather than the
         // selection, so it is valid whichever readmes this run asked to process
         Main_CheckMdsection();
-        // can't check links if not all files were loaded
-        if (nselect < readmefile_N()) {
-            verblog("abt_md: disable link checking, not all files being loaded");
-        } else {
+        if (wholetree) {
             CheckLinks();
+        } else {
+            // -check refused a selection above, so what reaches here is a regeneration,
+            // which nobody asked to check anything: acr_ed regenerates one namespace's
+            // documents as a step of creating a target, and a line about links in the
+            // middle of that is noise in the output of a tool doing something else.
+            verblog("abt_md: link checking needs every readme; this run checked none");
         }
     }
     // print anchors out

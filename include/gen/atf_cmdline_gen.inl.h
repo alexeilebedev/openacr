@@ -32,7 +32,6 @@ inline  atf_cmdline::trace::trace() {
 
 // --- atf_cmdline.FDb..Uninit
 inline void atf_cmdline::FDb_Uninit() {
-    atf_cmdline::FDb &row = _db; (void)row;
 }
 
 // --- atf_cmdline.FieldId.value.GetEnum

@@ -104,7 +104,7 @@ enum algo_FieldIdEnum {    // algo.FieldId.value
     ,algo_FieldId_neg
     ,algo_FieldId_overflow
     ,algo_FieldId_hex
-    ,algo_FieldId_sha1sig
+    ,algo_FieldId_signature
     ,algo_FieldId_attrs
     ,algo_FieldId_head
     ,algo_FieldId_protocol
@@ -218,7 +218,7 @@ namespace algo { struct Charset_ch_curs; }
 namespace algo { struct I32RangeAry_ary_curs; }
 namespace algo { struct LineBuf_buf_curs; }
 namespace algo { struct Md5Digest_value_curs; }
-namespace algo { struct Sha1sig_sha1sig_curs; }
+namespace algo { struct Signature_signature_curs; }
 namespace algo { struct StringAry_ary_curs; }
 namespace algo { struct Tuple_attrs_curs; }
 namespace algo { struct U16Ary_ary_curs; }
@@ -392,7 +392,7 @@ namespace algo { struct RspaceStr8; }
 namespace algo { struct RspaceStr9; }
 namespace algo { struct SchedTime; }
 namespace algo { struct SeqType; }
-namespace algo { struct Sha1sig; }
+namespace algo { struct Signature; }
 namespace algo { struct Smallstr1; }
 namespace algo { struct Smallstr10; }
 namespace algo { struct Smallstr16; }
@@ -900,7 +900,7 @@ inline i32           ch_N(const algo::Charset& parent) __attribute__((__warn_unu
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:algo.Charset.ch.Setary
 inline void          ch_Setary(algo::Charset& parent, const algo::aryptr<u64> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:algo.Charset.ch.qFind
 inline u64&          ch_qFind(algo::Charset& parent, u64 t) __attribute__((nothrow));
 // Convert ch to a string.
@@ -1544,6 +1544,7 @@ inline bool          Fildes_Update(algo::Fildes &lhs, algo::Fildes rhs) __attrib
 void                 Fildes_Print(algo::Fildes row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.FileFlags
+#pragma pack(push,1)
 struct FileFlags { // algo.FileFlags: File flags used with file functions
     u32   value;   //   0
     // func:algo.FileFlags.value.Cast
@@ -1555,6 +1556,7 @@ struct FileFlags { // algo.FileFlags: File flags used with file functions
     // func:algo.FileFlags..EnumCtor
     inline               FileFlags(algo_FileFlagsEnum arg) __attribute__((nothrow));
 };
+#pragma pack(pop)
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 4.
 // func:algo.FileFlags.append.Get
@@ -6031,7 +6033,7 @@ inline i32           value_N(const algo::Md5Digest& parent) __attribute__((__war
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:algo.Md5Digest.value.Setary
 inline void          value_Setary(algo::Md5Digest& parent, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:algo.Md5Digest.value.qFind
 inline u8&           value_qFind(algo::Md5Digest& parent, u64 t) __attribute__((nothrow));
 // Convert value to a string.
@@ -11593,91 +11595,93 @@ inline bool          SeqType_Update(algo::SeqType &lhs, algo::SeqType rhs) __att
 // func:algo.SeqType..Print
 void                 SeqType_Print(algo::SeqType row, algo::cstring& str) __attribute__((nothrow));
 
-// --- algo.Sha1sig
-struct Sha1sig { // algo.Sha1sig: SHA1 signature
-    u8   sha1sig_elems[20];   //   0  fixed array
-    // func:algo.Sha1sig..EqOp
-    inline bool          operator ==(const algo::Sha1sig &rhs) const __attribute__((nothrow));
-    // func:algo.Sha1sig..NeOp
-    inline bool          operator !=(const algo::Sha1sig &rhs) const __attribute__((nothrow));
-    // func:algo.Sha1sig..LtOp
-    inline bool          operator <(const algo::Sha1sig &rhs) const __attribute__((nothrow));
-    // func:algo.Sha1sig..GtOp
-    inline bool          operator >(const algo::Sha1sig &rhs) const __attribute__((nothrow));
-    // func:algo.Sha1sig..LeOp
-    inline bool          operator <=(const algo::Sha1sig &rhs) const __attribute__((nothrow));
-    // func:algo.Sha1sig..GeOp
-    inline bool          operator >=(const algo::Sha1sig &rhs) const __attribute__((nothrow));
-    // func:algo.Sha1sig..Ctor
-    inline               Sha1sig() __attribute__((nothrow));
+// --- algo.Signature
+#pragma pack(push,1)
+struct Signature { // algo.Signature: SHA1 signature
+    u8   signature_elems[20];   //   0  fixed array
+    // func:algo.Signature..EqOp
+    inline bool          operator ==(const algo::Signature &rhs) const __attribute__((nothrow));
+    // func:algo.Signature..NeOp
+    inline bool          operator !=(const algo::Signature &rhs) const __attribute__((nothrow));
+    // func:algo.Signature..LtOp
+    inline bool          operator <(const algo::Signature &rhs) const __attribute__((nothrow));
+    // func:algo.Signature..GtOp
+    inline bool          operator >(const algo::Signature &rhs) const __attribute__((nothrow));
+    // func:algo.Signature..LeOp
+    inline bool          operator <=(const algo::Signature &rhs) const __attribute__((nothrow));
+    // func:algo.Signature..GeOp
+    inline bool          operator >=(const algo::Signature &rhs) const __attribute__((nothrow));
+    // func:algo.Signature..Ctor
+    inline               Signature() __attribute__((nothrow));
 };
+#pragma pack(pop)
 // Set all elements of fixed array to value RHS
-// func:algo.Sha1sig.sha1sig.Fill
-inline void          sha1sig_Fill(algo::Sha1sig& parent, const u8 &rhs) __attribute__((nothrow));
+// func:algo.Signature.signature.Fill
+inline void          signature_Fill(algo::Signature& parent, const u8 &rhs) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
-// func:algo.Sha1sig.sha1sig.Find
-inline u8*           sha1sig_Find(algo::Sha1sig& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Access fixed array sha1sig as aryptr.
-// func:algo.Sha1sig.sha1sig.Getary
-inline algo::aryptr<u8> sha1sig_Getary(algo::Sha1sig& parent) __attribute__((nothrow));
+// func:algo.Signature.signature.Find
+inline u8*           signature_Find(algo::Signature& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Access fixed array signature as aryptr.
+// func:algo.Signature.signature.Getary
+inline algo::aryptr<u8> signature_Getary(algo::Signature& parent) __attribute__((nothrow));
 // Return max number of items in the array
-// func:algo.Sha1sig.sha1sig.Max
-inline i32           sha1sig_Max(algo::Sha1sig& parent) __attribute__((nothrow));
+// func:algo.Signature.signature.Max
+inline i32           signature_Max(algo::Signature& parent) __attribute__((nothrow));
 // Return number of items in the array
-// func:algo.Sha1sig.sha1sig.N
-inline i32           sha1sig_N(const algo::Sha1sig& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:algo.Signature.signature.N
+inline i32           signature_N(const algo::Signature& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-// func:algo.Sha1sig.sha1sig.Setary
-inline void          sha1sig_Setary(algo::Sha1sig& parent, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
-// func:algo.Sha1sig.sha1sig.qFind
-inline u8&           sha1sig_qFind(algo::Sha1sig& parent, u64 t) __attribute__((nothrow));
-// func:algo.Sha1sig.sha1sig.Eq
-bool                 sha1sig_Eq(algo::Sha1sig& parent, algo::Sha1sig &rhs) __attribute__((nothrow, pure));
-// func:algo.Sha1sig.sha1sig.Cmp
-int                  sha1sig_Cmp(algo::Sha1sig& parent, algo::Sha1sig &rhs) __attribute__((nothrow));
-// Convert sha1sig to a string.
+// func:algo.Signature.signature.Setary
+inline void          signature_Setary(algo::Signature& parent, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:algo.Signature.signature.qFind
+inline u8&           signature_qFind(algo::Signature& parent, u64 t) __attribute__((nothrow));
+// func:algo.Signature.signature.Eq
+bool                 signature_Eq(algo::Signature& parent, algo::Signature &rhs) __attribute__((nothrow, pure));
+// func:algo.Signature.signature.Cmp
+int                  signature_Cmp(algo::Signature& parent, algo::Signature &rhs) __attribute__((nothrow));
+// Convert signature to a string.
 // Array is printed as a regular string.
-// func:algo.Sha1sig.sha1sig.Print
-void                 sha1sig_Print(algo::Sha1sig& parent, algo::cstring &rhs) __attribute__((nothrow));
+// func:algo.Signature.signature.Print
+void                 signature_Print(algo::Signature& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Read array from string
 // Convert string to field. Return success value
-// func:algo.Sha1sig.sha1sig.ReadStrptrMaybe
-bool                 sha1sig_ReadStrptrMaybe(algo::Sha1sig& parent, algo::strptr in_str) __attribute__((nothrow));
+// func:algo.Signature.signature.ReadStrptrMaybe
+bool                 signature_ReadStrptrMaybe(algo::Signature& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // cursor points to valid item
-// func:algo.Sha1sig.sha1sig_curs.Reset
-inline void          Sha1sig_sha1sig_curs_Reset(Sha1sig_sha1sig_curs &curs, algo::Sha1sig &parent) __attribute__((nothrow));
+// func:algo.Signature.signature_curs.Reset
+inline void          Signature_signature_curs_Reset(Signature_signature_curs &curs, algo::Signature &parent) __attribute__((nothrow));
 // cursor points to valid item
-// func:algo.Sha1sig.sha1sig_curs.ValidQ
-inline bool          Sha1sig_sha1sig_curs_ValidQ(Sha1sig_sha1sig_curs &curs) __attribute__((nothrow));
+// func:algo.Signature.signature_curs.ValidQ
+inline bool          Signature_signature_curs_ValidQ(Signature_signature_curs &curs) __attribute__((nothrow));
 // proceed to next item
-// func:algo.Sha1sig.sha1sig_curs.Next
-inline void          Sha1sig_sha1sig_curs_Next(Sha1sig_sha1sig_curs &curs) __attribute__((nothrow));
+// func:algo.Signature.signature_curs.Next
+inline void          Signature_signature_curs_Next(Signature_signature_curs &curs) __attribute__((nothrow));
 // item access
-// func:algo.Sha1sig.sha1sig_curs.Access
-inline u8&           Sha1sig_sha1sig_curs_Access(Sha1sig_sha1sig_curs &curs) __attribute__((nothrow));
-// Read fields of algo::Sha1sig from an ascii string.
-// func:algo.Sha1sig..ReadStrptrMaybe
+// func:algo.Signature.signature_curs.Access
+inline u8&           Signature_signature_curs_Access(Signature_signature_curs &curs) __attribute__((nothrow));
+// Read fields of algo::Signature from an ascii string.
+// func:algo.Signature..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Sha1sig_ReadStrptrMaybe(algo::Sha1sig &parent, algo::strptr in_str) __attribute__((nothrow));
-// func:algo.Sha1sig..Lt
-inline bool          Sha1sig_Lt(algo::Sha1sig& lhs, algo::Sha1sig& rhs) __attribute__((nothrow));
-// func:algo.Sha1sig..Cmp
-inline i32           Sha1sig_Cmp(algo::Sha1sig& lhs, algo::Sha1sig& rhs) __attribute__((nothrow));
+bool                 Signature_ReadStrptrMaybe(algo::Signature &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:algo.Signature..Lt
+inline bool          Signature_Lt(algo::Signature& lhs, algo::Signature& rhs) __attribute__((nothrow));
+// func:algo.Signature..Cmp
+inline i32           Signature_Cmp(algo::Signature& lhs, algo::Signature& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:algo.Sha1sig..Init
-inline void          Sha1sig_Init(algo::Sha1sig& parent);
-// func:algo.Sha1sig..Eq
-inline bool          Sha1sig_Eq(algo::Sha1sig& lhs, algo::Sha1sig& rhs) __attribute__((nothrow));
+// func:algo.Signature..Init
+inline void          Signature_Init(algo::Signature& parent);
+// func:algo.Signature..Eq
+inline bool          Signature_Eq(algo::Signature& lhs, algo::Signature& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-// func:algo.Sha1sig..Update
-inline bool          Sha1sig_Update(algo::Sha1sig &lhs, algo::Sha1sig& rhs) __attribute__((nothrow));
+// func:algo.Signature..Update
+inline bool          Signature_Update(algo::Signature &lhs, algo::Signature& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
-// cfmt:algo.Sha1sig.String  printfmt:Extern
-// func:algo.Sha1sig..Print
+// cfmt:algo.Signature.String  printfmt:Extern
+// func:algo.Signature..Print
 // this function is 'extrn' and implemented by user
-void                 Sha1sig_Print(algo::Sha1sig& row, algo::cstring& str) __attribute__((nothrow));
+void                 Signature_Print(algo::Signature& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr1
 struct Smallstr1 { // algo.Smallstr1: inline string with length field
@@ -14608,7 +14612,7 @@ inline i32           value_N(const algo::Uuid& parent) __attribute__((__warn_unu
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:algo.Uuid.value.Setary
 inline void          value_Setary(algo::Uuid& parent, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:algo.Uuid.value.qFind
 inline u8&           value_qFind(algo::Uuid& parent, u64 t) __attribute__((nothrow));
 // func:algo.Uuid.value.Eq
@@ -14876,11 +14880,11 @@ struct Md5Digest_value_curs {// cursor
 };
 
 
-struct Sha1sig_sha1sig_curs {// cursor
+struct Signature_signature_curs {// cursor
     typedef u8 ChildType;
     int index;
-    algo::Sha1sig *parent;
-    Sha1sig_sha1sig_curs() { parent=NULL; index=0; }
+    algo::Signature *parent;
+    Signature_signature_curs() { parent=NULL; index=0; }
 };
 
 
@@ -14987,7 +14991,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const algo::Month &row);//
 inline algo::cstring &operator <<(algo::cstring &str, const algo::NumParseFlags &row);// cfmt:algo.NumParseFlags.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::SchedTime &row);// cfmt:algo.SchedTime.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::SeqType &row);// cfmt:algo.SeqType.String
-inline algo::cstring &operator <<(algo::cstring &str, const algo::Sha1sig &row);// cfmt:algo.Sha1sig.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo::Signature &row);// cfmt:algo.Signature.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::StringAry &row);// cfmt:algo.StringAry.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::TermStyle &row);// cfmt:algo.TermStyle.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::TextJust &row);// cfmt:algo.TextJust.String

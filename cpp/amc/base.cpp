@@ -18,7 +18,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/base.cpp -- Base reftype
 //
 
@@ -78,7 +78,7 @@ void amc::tfunc_Base_CopyOut() {
     amc::FField &fldbase = *amc::_db.genctx.p_field;
     amc::FFunc& copyout = amc::CreateCurFunc();
     Ins(&R, copyout.ret  , "void", false);
-    Ins(&R, copyout.proto, "$parname_CopyOut($Partype &row, $Cpptype &out)", false);
+    Ins(&R, copyout.proto, tempstr()<<Instname(*fldbase.p_ctype)<<"_CopyOut($Partype &row, $Cpptype &out)", false);
     ind_beg(amc::ctype_c_field_curs, field, *fldbase.p_arg) {
         Set(R, "$cppname", name_Get(field));
         Set(R, "$reftype", field.reftype);
@@ -119,7 +119,7 @@ void amc::tfunc_Base_CopyIn() {
     if (amc::CanCopyQ(*fldbase.p_ctype) && !zd_inst_EmptyQ(*fldbase.p_ctype)) {
         amc::FFunc& copyin = amc::CreateCurFunc();
         Ins(&R, copyin.ret  , "void", false);
-        Ins(&R, copyin.proto, "$parname_CopyIn($Partype &row, $Cpptype &in)", false);
+        Ins(&R, copyin.proto, tempstr()<<Instname(*fldbase.p_ctype)<<"_CopyIn($Partype &row, $Cpptype &in)", false);
         ind_beg(amc::ctype_c_field_curs, field, *fldbase.p_arg) {
             Set(R, "$reftype", field.reftype);
             Set(R, "$cppname", name_Get(field));

@@ -292,7 +292,7 @@ void                 anonfld_CopyOut(acr_compl::FAnonfld &row, dmmeta::Anonfld &
 void                 anonfld_CopyIn(acr_compl::FAnonfld &row, dmmeta::Anonfld &in) __attribute__((nothrow));
 
 // func:acr_compl.FAnonfld..Uninit
-void                 FAnonfld_Uninit(acr_compl::FAnonfld& anonfld) __attribute__((nothrow));
+void                 FAnonfld_Uninit(acr_compl::FAnonfld& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr_compl.FAnonfld.String  printfmt:Tuple
 // func:acr_compl.FAnonfld..Print
@@ -328,7 +328,7 @@ void                 argvtype_CopyOut(acr_compl::FArgvtype &row, dmmeta::Argvtyp
 void                 argvtype_CopyIn(acr_compl::FArgvtype &row, dmmeta::Argvtype &in) __attribute__((nothrow));
 
 // func:acr_compl.FArgvtype..Uninit
-void                 FArgvtype_Uninit(acr_compl::FArgvtype& argvtype) __attribute__((nothrow));
+void                 FArgvtype_Uninit(acr_compl::FArgvtype& parent) __attribute__((nothrow));
 
 // --- acr_compl.FCcmdline
 // create: acr_compl.FDb.ccmdline (Lary)
@@ -357,7 +357,7 @@ void                 ccmdline_CopyIn(acr_compl::FCcmdline &row, dmmeta::Ccmdline
 
 // Set all fields to initial values.
 // func:acr_compl.FCcmdline..Init
-inline void          FCcmdline_Init(acr_compl::FCcmdline& ccmdline);
+inline void          FCcmdline_Init(acr_compl::FCcmdline& parent);
 
 // --- acr_compl.FCmd
 // create: acr_compl.FDb.cmd (Lary)
@@ -385,9 +385,9 @@ private:
 };
 // Set all fields to initial values.
 // func:acr_compl.FCmd..Init
-inline void          FCmd_Init(acr_compl::FCmd& cmd);
+inline void          FCmd_Init(acr_compl::FCmd& parent);
 // func:acr_compl.FCmd..Uninit
-void                 FCmd_Uninit(acr_compl::FCmd& cmd) __attribute__((nothrow));
+void                 FCmd_Uninit(acr_compl::FCmd& parent) __attribute__((nothrow));
 
 // --- acr_compl.FCompletion
 // create: acr_compl.FDb.completion (Lary)
@@ -422,14 +422,14 @@ void                 completion_CopyIn(acr_compl::FCompletion &row, acr_compl::C
 
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:acr_compl.FCompletion.badness.Lt
-inline bool          badness_Lt(acr_compl::FCompletion& completion, acr_compl::FCompletion &rhs) __attribute__((nothrow));
+inline bool          badness_Lt(acr_compl::FCompletion& parent, acr_compl::FCompletion &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:acr_compl.FCompletion.badness.Cmp
-inline i32           badness_Cmp(acr_compl::FCompletion& completion, acr_compl::FCompletion &rhs) __attribute__((nothrow));
+inline i32           badness_Cmp(acr_compl::FCompletion& parent, acr_compl::FCompletion &rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr_compl.FCompletion..Init
-inline void          FCompletion_Init(acr_compl::FCompletion& completion);
+inline void          FCompletion_Init(acr_compl::FCompletion& parent);
 // func:acr_compl.FCompletion..ReadFieldMaybe
 bool                 FCompletion_ReadFieldMaybe(acr_compl::FCompletion& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of acr_compl::FCompletion from an ascii string.
@@ -437,7 +437,7 @@ bool                 FCompletion_ReadFieldMaybe(acr_compl::FCompletion& parent, 
 // func:acr_compl.FCompletion..ReadStrptrMaybe
 bool                 FCompletion_ReadStrptrMaybe(acr_compl::FCompletion &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:acr_compl.FCompletion..Uninit
-void                 FCompletion_Uninit(acr_compl::FCompletion& completion) __attribute__((nothrow));
+void                 FCompletion_Uninit(acr_compl::FCompletion& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr_compl.FCompletion.String  printfmt:Tuple
 // func:acr_compl.FCompletion..Print
@@ -510,104 +510,104 @@ void                 ctype_CopyOut(acr_compl::FCtype &row, dmmeta::Ctype &out) _
 void                 ctype_CopyIn(acr_compl::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:acr_compl.FCtype.ns.Get
-algo::strptr         ns_Get(acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_compl::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FCtype.name.Get
-algo::strptr         name_Get(acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_compl::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:acr_compl.FCtype.c_field.EmptyQ
-inline bool          c_field_EmptyQ(acr_compl::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_field_EmptyQ(acr_compl::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_compl.FCtype.c_field.Find
-inline acr_compl::FField* c_field_Find(acr_compl::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_compl::FField* c_field_Find(acr_compl::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr_compl.FCtype.c_field.Getary
-inline algo::aryptr<acr_compl::FField*> c_field_Getary(acr_compl::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<acr_compl::FField*> c_field_Getary(acr_compl::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:acr_compl.FCtype.c_field.Insert
-void                 c_field_Insert(acr_compl::FCtype& ctype, acr_compl::FField& row) __attribute__((nothrow));
+void                 c_field_Insert(acr_compl::FCtype& parent, acr_compl::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:acr_compl.FCtype.c_field.InsertMaybe
-bool                 c_field_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FField& row) __attribute__((nothrow));
+bool                 c_field_InsertMaybe(acr_compl::FCtype& parent, acr_compl::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr_compl.FCtype.c_field.N
-inline i64           c_field_N(const acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_N(const acr_compl::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr_compl.FCtype.c_field.Remove
-void                 c_field_Remove(acr_compl::FCtype& ctype, acr_compl::FField& row) __attribute__((nothrow));
+void                 c_field_Remove(acr_compl::FCtype& parent, acr_compl::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr_compl.FCtype.c_field.RemoveAll
-inline void          c_field_RemoveAll(acr_compl::FCtype& ctype) __attribute__((nothrow));
+inline void          c_field_RemoveAll(acr_compl::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr_compl.FCtype.c_field.Reserve
-void                 c_field_Reserve(acr_compl::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_field_Reserve(acr_compl::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr_compl.FCtype.c_field.qFind
-inline acr_compl::FField& c_field_qFind(acr_compl::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline acr_compl::FField& c_field_qFind(acr_compl::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr_compl.FCtype.c_field.InAryQ
 inline bool          ctype_c_field_InAryQ(acr_compl::FField& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr_compl.FCtype.c_field.qLast
-inline acr_compl::FField& c_field_qLast(acr_compl::FCtype& ctype) __attribute__((nothrow));
+inline acr_compl::FField& c_field_qLast(acr_compl::FCtype& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_compl.FCtype.c_ssimfile.InsertMaybe
-inline bool          c_ssimfile_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FSsimfile& row) __attribute__((nothrow));
+inline bool          c_ssimfile_InsertMaybe(acr_compl::FCtype& parent, acr_compl::FSsimfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_compl.FCtype.c_ssimfile.Remove
-inline void          c_ssimfile_Remove(acr_compl::FCtype& ctype, acr_compl::FSsimfile& row) __attribute__((nothrow));
+inline void          c_ssimfile_Remove(acr_compl::FCtype& parent, acr_compl::FSsimfile& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_compl.FCtype.c_argvtype.InsertMaybe
-inline bool          c_argvtype_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FArgvtype& row) __attribute__((nothrow));
+inline bool          c_argvtype_InsertMaybe(acr_compl::FCtype& parent, acr_compl::FArgvtype& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_compl.FCtype.c_argvtype.Remove
-inline void          c_argvtype_Remove(acr_compl::FCtype& ctype, acr_compl::FArgvtype& row) __attribute__((nothrow));
+inline void          c_argvtype_Remove(acr_compl::FCtype& parent, acr_compl::FArgvtype& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr_compl.FCtype.c_floadtuples.EmptyQ
-inline bool          c_floadtuples_EmptyQ(acr_compl::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_floadtuples_EmptyQ(acr_compl::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_compl.FCtype.c_floadtuples.Find
-inline acr_compl::FFloadtuples* c_floadtuples_Find(acr_compl::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_compl::FFloadtuples* c_floadtuples_Find(acr_compl::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr_compl.FCtype.c_floadtuples.Getary
-inline algo::aryptr<acr_compl::FFloadtuples*> c_floadtuples_Getary(acr_compl::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<acr_compl::FFloadtuples*> c_floadtuples_Getary(acr_compl::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:acr_compl.FCtype.c_floadtuples.Insert
-void                 c_floadtuples_Insert(acr_compl::FCtype& ctype, acr_compl::FFloadtuples& row) __attribute__((nothrow));
+void                 c_floadtuples_Insert(acr_compl::FCtype& parent, acr_compl::FFloadtuples& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:acr_compl.FCtype.c_floadtuples.InsertMaybe
-bool                 c_floadtuples_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FFloadtuples& row) __attribute__((nothrow));
+bool                 c_floadtuples_InsertMaybe(acr_compl::FCtype& parent, acr_compl::FFloadtuples& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr_compl.FCtype.c_floadtuples.N
-inline i64           c_floadtuples_N(const acr_compl::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_floadtuples_N(const acr_compl::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr_compl.FCtype.c_floadtuples.Remove
-void                 c_floadtuples_Remove(acr_compl::FCtype& ctype, acr_compl::FFloadtuples& row) __attribute__((nothrow));
+void                 c_floadtuples_Remove(acr_compl::FCtype& parent, acr_compl::FFloadtuples& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr_compl.FCtype.c_floadtuples.RemoveAll
-inline void          c_floadtuples_RemoveAll(acr_compl::FCtype& ctype) __attribute__((nothrow));
+inline void          c_floadtuples_RemoveAll(acr_compl::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr_compl.FCtype.c_floadtuples.Reserve
-void                 c_floadtuples_Reserve(acr_compl::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_floadtuples_Reserve(acr_compl::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr_compl.FCtype.c_floadtuples.qFind
-inline acr_compl::FFloadtuples& c_floadtuples_qFind(acr_compl::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline acr_compl::FFloadtuples& c_floadtuples_qFind(acr_compl::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr_compl.FCtype.c_floadtuples.InAryQ
 inline bool          ctype_c_floadtuples_InAryQ(acr_compl::FFloadtuples& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr_compl.FCtype.c_floadtuples.qLast
-inline acr_compl::FFloadtuples& c_floadtuples_qLast(acr_compl::FCtype& ctype) __attribute__((nothrow));
+inline acr_compl::FFloadtuples& c_floadtuples_qLast(acr_compl::FCtype& parent) __attribute__((nothrow));
 
 // func:acr_compl.FCtype.c_field_curs.Reset
 inline void          ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_compl::FCtype &parent) __attribute__((nothrow));
@@ -633,9 +633,9 @@ inline void          ctype_c_floadtuples_curs_Next(ctype_c_floadtuples_curs &cur
 inline acr_compl::FFloadtuples& ctype_c_floadtuples_curs_Access(ctype_c_floadtuples_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_compl.FCtype..Init
-inline void          FCtype_Init(acr_compl::FCtype& ctype);
+inline void          FCtype_Init(acr_compl::FCtype& parent);
 // func:acr_compl.FCtype..Uninit
-void                 FCtype_Uninit(acr_compl::FCtype& ctype) __attribute__((nothrow));
+void                 FCtype_Uninit(acr_compl::FCtype& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr_compl.FCtype.String  printfmt:Tuple
 // func:acr_compl.FCtype..Print
@@ -1954,9 +1954,9 @@ void                 falias_CopyIn(acr_compl::FFalias &row, dmmeta::Falias &in) 
 
 // Set all fields to initial values.
 // func:acr_compl.FFalias..Init
-inline void          FFalias_Init(acr_compl::FFalias& falias);
+inline void          FFalias_Init(acr_compl::FFalias& parent);
 // func:acr_compl.FFalias..Uninit
-void                 FFalias_Uninit(acr_compl::FFalias& falias) __attribute__((nothrow));
+void                 FFalias_Uninit(acr_compl::FFalias& parent) __attribute__((nothrow));
 
 // --- acr_compl.FFconst
 // create: acr_compl.FDb.fconst (Lary)
@@ -1989,16 +1989,16 @@ void                 fconst_CopyOut(acr_compl::FFconst &row, dmmeta::Fconst &out
 void                 fconst_CopyIn(acr_compl::FFconst &row, dmmeta::Fconst &in) __attribute__((nothrow));
 
 // func:acr_compl.FFconst.field.Get
-algo::strptr         field_Get(acr_compl::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(acr_compl::FFconst& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FFconst.name.Get
-algo::strptr         name_Get(acr_compl::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_compl::FFconst& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_compl.FFconst..Init
-inline void          FFconst_Init(acr_compl::FFconst& fconst);
+inline void          FFconst_Init(acr_compl::FFconst& parent);
 // func:acr_compl.FFconst..Uninit
-void                 FFconst_Uninit(acr_compl::FFconst& fconst) __attribute__((nothrow));
+void                 FFconst_Uninit(acr_compl::FFconst& parent) __attribute__((nothrow));
 
 // --- acr_compl.FFflag
 // create: acr_compl.FDb.fflag (Lary)
@@ -2032,9 +2032,9 @@ void                 fflag_CopyIn(acr_compl::FFflag &row, dmmeta::Fflag &in) __a
 
 // Set all fields to initial values.
 // func:acr_compl.FFflag..Init
-inline void          FFflag_Init(acr_compl::FFflag& fflag);
+inline void          FFflag_Init(acr_compl::FFflag& parent);
 // func:acr_compl.FFflag..Uninit
-void                 FFflag_Uninit(acr_compl::FFflag& fflag) __attribute__((nothrow));
+void                 FFflag_Uninit(acr_compl::FFflag& parent) __attribute__((nothrow));
 
 // --- acr_compl.FField
 // create: acr_compl.FDb.field (Lary)
@@ -2109,116 +2109,116 @@ void                 field_CopyOut(acr_compl::FField &row, dmmeta::Field &out) _
 void                 field_CopyIn(acr_compl::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:acr_compl.FField.ctype.Get
-algo::strptr         ctype_Get(acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(acr_compl::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FField.ns.Get
-algo::strptr         ns_Get(acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_compl::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FField.name.Get
-algo::strptr         name_Get(acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_compl::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_compl.FField.c_anonfld.InsertMaybe
-inline bool          c_anonfld_InsertMaybe(acr_compl::FField& field, acr_compl::FAnonfld& row) __attribute__((nothrow));
+inline bool          c_anonfld_InsertMaybe(acr_compl::FField& parent, acr_compl::FAnonfld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_compl.FField.c_anonfld.Remove
-inline void          c_anonfld_Remove(acr_compl::FField& field, acr_compl::FAnonfld& row) __attribute__((nothrow));
+inline void          c_anonfld_Remove(acr_compl::FField& parent, acr_compl::FAnonfld& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr_compl.FField.c_fconst.EmptyQ
-inline bool          c_fconst_EmptyQ(acr_compl::FField& field) __attribute__((nothrow));
+inline bool          c_fconst_EmptyQ(acr_compl::FField& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_compl.FField.c_fconst.Find
-inline acr_compl::FFconst* c_fconst_Find(acr_compl::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_compl::FFconst* c_fconst_Find(acr_compl::FField& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr_compl.FField.c_fconst.Getary
-inline algo::aryptr<acr_compl::FFconst*> c_fconst_Getary(acr_compl::FField& field) __attribute__((nothrow));
+inline algo::aryptr<acr_compl::FFconst*> c_fconst_Getary(acr_compl::FField& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:acr_compl.FField.c_fconst.Insert
-void                 c_fconst_Insert(acr_compl::FField& field, acr_compl::FFconst& row) __attribute__((nothrow));
+void                 c_fconst_Insert(acr_compl::FField& parent, acr_compl::FFconst& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:acr_compl.FField.c_fconst.InsertMaybe
-bool                 c_fconst_InsertMaybe(acr_compl::FField& field, acr_compl::FFconst& row) __attribute__((nothrow));
+bool                 c_fconst_InsertMaybe(acr_compl::FField& parent, acr_compl::FFconst& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr_compl.FField.c_fconst.N
-inline i64           c_fconst_N(const acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fconst_N(const acr_compl::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr_compl.FField.c_fconst.Remove
-void                 c_fconst_Remove(acr_compl::FField& field, acr_compl::FFconst& row) __attribute__((nothrow));
+void                 c_fconst_Remove(acr_compl::FField& parent, acr_compl::FFconst& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr_compl.FField.c_fconst.RemoveAll
-inline void          c_fconst_RemoveAll(acr_compl::FField& field) __attribute__((nothrow));
+inline void          c_fconst_RemoveAll(acr_compl::FField& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr_compl.FField.c_fconst.Reserve
-void                 c_fconst_Reserve(acr_compl::FField& field, u64 n) __attribute__((nothrow));
+void                 c_fconst_Reserve(acr_compl::FField& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr_compl.FField.c_fconst.qFind
-inline acr_compl::FFconst& c_fconst_qFind(acr_compl::FField& field, u64 idx) __attribute__((nothrow));
+inline acr_compl::FFconst& c_fconst_qFind(acr_compl::FField& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr_compl.FField.c_fconst.InAryQ
 inline bool          field_c_fconst_InAryQ(acr_compl::FFconst& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr_compl.FField.c_fconst.qLast
-inline acr_compl::FFconst& c_fconst_qLast(acr_compl::FField& field) __attribute__((nothrow));
+inline acr_compl::FFconst& c_fconst_qLast(acr_compl::FField& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_compl.FField.c_fflag.InsertMaybe
-inline bool          c_fflag_InsertMaybe(acr_compl::FField& field, acr_compl::FFflag& row) __attribute__((nothrow));
+inline bool          c_fflag_InsertMaybe(acr_compl::FField& parent, acr_compl::FFflag& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_compl.FField.c_fflag.Remove
-inline void          c_fflag_Remove(acr_compl::FField& field, acr_compl::FFflag& row) __attribute__((nothrow));
+inline void          c_fflag_Remove(acr_compl::FField& parent, acr_compl::FFflag& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_compl.FField.c_falias.InsertMaybe
-inline bool          c_falias_InsertMaybe(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
+inline bool          c_falias_InsertMaybe(acr_compl::FField& parent, acr_compl::FFalias& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_compl.FField.c_falias.Remove
-inline void          c_falias_Remove(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
+inline void          c_falias_Remove(acr_compl::FField& parent, acr_compl::FFalias& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr_compl.FField.c_falias_srcfield.EmptyQ
-inline bool          c_falias_srcfield_EmptyQ(acr_compl::FField& field) __attribute__((nothrow));
+inline bool          c_falias_srcfield_EmptyQ(acr_compl::FField& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_compl.FField.c_falias_srcfield.Find
-inline acr_compl::FFalias* c_falias_srcfield_Find(acr_compl::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_compl::FFalias* c_falias_srcfield_Find(acr_compl::FField& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr_compl.FField.c_falias_srcfield.Getary
-inline algo::aryptr<acr_compl::FFalias*> c_falias_srcfield_Getary(acr_compl::FField& field) __attribute__((nothrow));
+inline algo::aryptr<acr_compl::FFalias*> c_falias_srcfield_Getary(acr_compl::FField& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:acr_compl.FField.c_falias_srcfield.Insert
-void                 c_falias_srcfield_Insert(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
+void                 c_falias_srcfield_Insert(acr_compl::FField& parent, acr_compl::FFalias& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:acr_compl.FField.c_falias_srcfield.ScanInsertMaybe
-bool                 c_falias_srcfield_ScanInsertMaybe(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
+bool                 c_falias_srcfield_ScanInsertMaybe(acr_compl::FField& parent, acr_compl::FFalias& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr_compl.FField.c_falias_srcfield.N
-inline i64           c_falias_srcfield_N(const acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_falias_srcfield_N(const acr_compl::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr_compl.FField.c_falias_srcfield.Remove
-void                 c_falias_srcfield_Remove(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
+void                 c_falias_srcfield_Remove(acr_compl::FField& parent, acr_compl::FFalias& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr_compl.FField.c_falias_srcfield.RemoveAll
-inline void          c_falias_srcfield_RemoveAll(acr_compl::FField& field) __attribute__((nothrow));
+inline void          c_falias_srcfield_RemoveAll(acr_compl::FField& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr_compl.FField.c_falias_srcfield.Reserve
-void                 c_falias_srcfield_Reserve(acr_compl::FField& field, u64 n) __attribute__((nothrow));
+void                 c_falias_srcfield_Reserve(acr_compl::FField& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr_compl.FField.c_falias_srcfield.qFind
-inline acr_compl::FFalias& c_falias_srcfield_qFind(acr_compl::FField& field, u64 idx) __attribute__((nothrow));
+inline acr_compl::FFalias& c_falias_srcfield_qFind(acr_compl::FField& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr_compl.FField.c_falias_srcfield.qLast
-inline acr_compl::FFalias& c_falias_srcfield_qLast(acr_compl::FField& field) __attribute__((nothrow));
+inline acr_compl::FFalias& c_falias_srcfield_qLast(acr_compl::FField& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr_compl.FField..Init
-void                 FField_Init(acr_compl::FField& field);
+void                 FField_Init(acr_compl::FField& parent);
 // func:acr_compl.FField.c_fconst_curs.Reset
 inline void          field_c_fconst_curs_Reset(field_c_fconst_curs &curs, acr_compl::FField &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -2242,7 +2242,7 @@ inline void          field_c_falias_srcfield_curs_Next(field_c_falias_srcfield_c
 // func:acr_compl.FField.c_falias_srcfield_curs.Access
 inline acr_compl::FFalias& field_c_falias_srcfield_curs_Access(field_c_falias_srcfield_curs &curs) __attribute__((nothrow));
 // func:acr_compl.FField..Uninit
-void                 FField_Uninit(acr_compl::FField& field) __attribute__((nothrow));
+void                 FField_Uninit(acr_compl::FField& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr_compl.FField.String  printfmt:Tuple
 // func:acr_compl.FField..Print
@@ -2281,9 +2281,9 @@ void                 finsertwhen_CopyIn(acr_compl::FFinsertwhen &row, dmmeta::Fi
 
 // Set all fields to initial values.
 // func:acr_compl.FFinsertwhen..Init
-inline void          FFinsertwhen_Init(acr_compl::FFinsertwhen& finsertwhen);
+inline void          FFinsertwhen_Init(acr_compl::FFinsertwhen& parent);
 // func:acr_compl.FFinsertwhen..Uninit
-void                 FFinsertwhen_Uninit(acr_compl::FFinsertwhen& finsertwhen) __attribute__((nothrow));
+void                 FFinsertwhen_Uninit(acr_compl::FFinsertwhen& parent) __attribute__((nothrow));
 
 // --- acr_compl.FFloadtuples
 // create: acr_compl.FDb.floadtuples (Lary)
@@ -2323,13 +2323,13 @@ void                 floadtuples_CopyOut(acr_compl::FFloadtuples &row, dmmeta::F
 void                 floadtuples_CopyIn(acr_compl::FFloadtuples &row, dmmeta::Floadtuples &in) __attribute__((nothrow));
 
 // func:acr_compl.FFloadtuples.ctype.Get
-algo::strptr         ctype_Get(acr_compl::FFloadtuples& floadtuples) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(acr_compl::FFloadtuples& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_compl.FFloadtuples..Init
-inline void          FFloadtuples_Init(acr_compl::FFloadtuples& floadtuples);
+inline void          FFloadtuples_Init(acr_compl::FFloadtuples& parent);
 // func:acr_compl.FFloadtuples..Uninit
-void                 FFloadtuples_Uninit(acr_compl::FFloadtuples& floadtuples) __attribute__((nothrow));
+void                 FFloadtuples_Uninit(acr_compl::FFloadtuples& parent) __attribute__((nothrow));
 
 // --- acr_compl.FSsimfile
 // create: acr_compl.FDb.ssimfile (Lary)
@@ -2365,19 +2365,19 @@ void                 ssimfile_CopyOut(acr_compl::FSsimfile &row, dmmeta::Ssimfil
 void                 ssimfile_CopyIn(acr_compl::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:acr_compl.FSsimfile.ssimns.Get
-algo::strptr         ssimns_Get(acr_compl::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(acr_compl::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FSsimfile.ns.Get
-algo::strptr         ns_Get(acr_compl::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_compl::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_compl.FSsimfile.name.Get
-algo::strptr         name_Get(acr_compl::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_compl::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_compl.FSsimfile..Init
-inline void          FSsimfile_Init(acr_compl::FSsimfile& ssimfile);
+inline void          FSsimfile_Init(acr_compl::FSsimfile& parent);
 // func:acr_compl.FSsimfile..Uninit
-void                 FSsimfile_Uninit(acr_compl::FSsimfile& ssimfile) __attribute__((nothrow));
+void                 FSsimfile_Uninit(acr_compl::FSsimfile& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr_compl.FSsimfile.String  printfmt:Tuple
 // func:acr_compl.FSsimfile..Print

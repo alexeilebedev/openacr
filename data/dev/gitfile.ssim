@@ -135,6 +135,7 @@ dev.gitfile  gitfile:conf/elisp/markdown-mode.el
 dev.gitfile  gitfile:conf/emacs.el
 dev.gitfile  gitfile:conf/gdb.py
 dev.gitfile  gitfile:conf/license.txt
+dev.gitfile  gitfile:conf/memcheck.supp
 dev.gitfile  gitfile:conf/samp_tut1.txt
 dev.gitfile  gitfile:conf/samp_tut3.txt
 dev.gitfile  gitfile:conf/vim/ftdetect/ssim.vim
@@ -465,6 +466,7 @@ dev.gitfile  gitfile:cpp/lib/algo/iohook.cpp
 dev.gitfile  gitfile:cpp/lib/algo/lib.cpp
 dev.gitfile  gitfile:cpp/lib/algo/line.cpp
 dev.gitfile  gitfile:cpp/lib/algo/lockfile.cpp
+dev.gitfile  gitfile:cpp/lib/algo/macos.cpp
 dev.gitfile  gitfile:cpp/lib/algo/mmap.cpp
 dev.gitfile  gitfile:cpp/lib/algo/prlog.cpp
 dev.gitfile  gitfile:cpp/lib/algo/proc.cpp
@@ -556,6 +558,7 @@ dev.gitfile  gitfile:data/atfdb/tfilt.ssim
 dev.gitfile  gitfile:data/atfdb/tifilt.ssim
 dev.gitfile  gitfile:data/atfdb/unittest.ssim
 dev.gitfile  gitfile:data/atfdb/unstableattr.ssim
+dev.gitfile  gitfile:data/atfdb/unstableline.ssim
 dev.gitfile  gitfile:data/atfdb/var.ssim
 dev.gitfile  gitfile:data/dev/arch.ssim
 dev.gitfile  gitfile:data/dev/badline.ssim
@@ -583,6 +586,7 @@ dev.gitfile  gitfile:data/dev/noindent.ssim
 dev.gitfile  gitfile:data/dev/opt_type.ssim
 dev.gitfile  gitfile:data/dev/package.ssim
 dev.gitfile  gitfile:data/dev/pkgdep.ssim
+dev.gitfile  gitfile:data/dev/pkgdeptype.ssim
 dev.gitfile  gitfile:data/dev/pkggen.ssim
 dev.gitfile  gitfile:data/dev/pkgkey.ssim
 dev.gitfile  gitfile:data/dev/prototransport.ssim
@@ -994,6 +998,7 @@ dev.gitfile  gitfile:test/abt_md/checkfail.ssim
 dev.gitfile  gitfile:test/abt_md/checklinks.ssim
 dev.gitfile  gitfile:test/abt_md/escapelink.ssim
 dev.gitfile  gitfile:test/abt_md/evalfail.ssim
+dev.gitfile  gitfile:test/abt_md/linkgitfile.ssim
 dev.gitfile  gitfile:test/abt_md/readmesort.ssim
 dev.gitfile  gitfile:test/abt_md/readmesort2.ssim
 dev.gitfile  gitfile:test/abt_md/writefail.ssim
@@ -1001,6 +1006,9 @@ dev.gitfile  gitfile:test/acr/writefail/dev
 dev.gitfile  gitfile:test/acr/writefail/dmmeta
 dev.gitfile  gitfile:test/acr_compl.data.ssim
 dev.gitfile  gitfile:test/acr_compl.schema.ssim
+dev.gitfile  gitfile:test/acr_dm/comment1.ssim
+dev.gitfile  gitfile:test/acr_dm/comment2.ssim
+dev.gitfile  gitfile:test/acr_dm/comment3.ssim
 dev.gitfile  gitfile:test/acr_dm/fieldorder1.ssim
 dev.gitfile  gitfile:test/acr_dm/fieldorder2.ssim
 dev.gitfile  gitfile:test/acr_dm/fieldorder3.ssim
@@ -1008,9 +1016,15 @@ dev.gitfile  gitfile:test/acr_dm/file1.ssim
 dev.gitfile  gitfile:test/acr_dm/file2.ssim
 dev.gitfile  gitfile:test/acr_dm/file3.ssim
 dev.gitfile  gitfile:test/acr_dm/file4.ssim
+dev.gitfile  gitfile:test/acr_dm/movecfl1.ssim
+dev.gitfile  gitfile:test/acr_dm/movecfl2.ssim
+dev.gitfile  gitfile:test/acr_dm/movecfl3.ssim
 dev.gitfile  gitfile:test/acr_dm/renametuple1.ssim
 dev.gitfile  gitfile:test/acr_dm/renametuple2.ssim
 dev.gitfile  gitfile:test/acr_dm/renametuple3.ssim
+dev.gitfile  gitfile:test/acr_dm/reorder1.ssim
+dev.gitfile  gitfile:test/acr_dm/reorder2.ssim
+dev.gitfile  gitfile:test/acr_dm/reorder3.ssim
 dev.gitfile  gitfile:test/acr_dm/symmetry1.ssim
 dev.gitfile  gitfile:test/acr_dm/symmetry2.ssim
 dev.gitfile  gitfile:test/acr_dm/symmetry3.ssim
@@ -1361,11 +1375,15 @@ dev.gitfile  gitfile:test/atf_comp/acr_compl.T07
 dev.gitfile  gitfile:test/atf_comp/acr_compl.T08
 dev.gitfile  gitfile:test/atf_comp/acr_compl.T09
 dev.gitfile  gitfile:test/atf_comp/acr_compl.T10
+dev.gitfile  gitfile:test/atf_comp/acr_dm.Comment
 dev.gitfile  gitfile:test/atf_comp/acr_dm.Conflict
 dev.gitfile  gitfile:test/atf_comp/acr_dm.DeepRun
 dev.gitfile  gitfile:test/atf_comp/acr_dm.FieldOrder
 dev.gitfile  gitfile:test/atf_comp/acr_dm.Merge
+dev.gitfile  gitfile:test/atf_comp/acr_dm.MergeFail
+dev.gitfile  gitfile:test/atf_comp/acr_dm.MoveConflict
 dev.gitfile  gitfile:test/atf_comp/acr_dm.RenameTuple
+dev.gitfile  gitfile:test/atf_comp/acr_dm.Reorder
 dev.gitfile  gitfile:test/atf_comp/acr_dm.Symmetry
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateCtype
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateMsg
@@ -1373,6 +1391,8 @@ dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateSrcfileTarget
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateSsimfile
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateSsimfileBadNs
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateTarget
+dev.gitfile  gitfile:test/atf_comp/acr_ed.DelField
+dev.gitfile  gitfile:test/atf_comp/acr_ed.RenameField
 dev.gitfile  gitfile:test/atf_comp/acr_in.Reverse
 dev.gitfile  gitfile:test/atf_comp/acr_in.Simple
 dev.gitfile  gitfile:test/atf_comp/acr_in.Tree
@@ -1737,7 +1757,6 @@ dev.gitfile  gitfile:txt/exe/amc_vis/README.md
 dev.gitfile  gitfile:txt/exe/ams_sendtest/README.md
 dev.gitfile  gitfile:txt/exe/amsspy/README.md
 dev.gitfile  gitfile:txt/exe/apm/README.md
-dev.gitfile  gitfile:txt/exe/apm/internals.md
 dev.gitfile  gitfile:txt/exe/aqlite/README.md
 dev.gitfile  gitfile:txt/exe/atf_amc/README.md
 dev.gitfile  gitfile:txt/exe/atf_ci/README.md
@@ -1849,7 +1868,6 @@ dev.gitfile  gitfile:txt/openacr/build.md
 dev.gitfile  gitfile:txt/openacr/codegen.md
 dev.gitfile  gitfile:txt/openacr/recipes.md
 dev.gitfile  gitfile:txt/openacr/runtime.md
-dev.gitfile  gitfile:txt/openacr/schema.md
 dev.gitfile  gitfile:txt/openacr/setup.md
 dev.gitfile  gitfile:txt/openacr/ssim.md
 dev.gitfile  gitfile:txt/protocol/README.md
@@ -1877,7 +1895,7 @@ dev.gitfile  gitfile:txt/protocol/algo/PrlogFcn.md
 dev.gitfile  gitfile:txt/protocol/algo/README.md
 dev.gitfile  gitfile:txt/protocol/algo/SchedTime.md
 dev.gitfile  gitfile:txt/protocol/algo/SeqType.md
-dev.gitfile  gitfile:txt/protocol/algo/Sha1sig.md
+dev.gitfile  gitfile:txt/protocol/algo/Signature.md
 dev.gitfile  gitfile:txt/protocol/algo/TFNNtTestAlert.md
 dev.gitfile  gitfile:txt/protocol/algo/TermStyle.md
 dev.gitfile  gitfile:txt/protocol/algo/TextJust.md
@@ -1908,6 +1926,11 @@ dev.gitfile  gitfile:txt/protocol/js/README.md
 dev.gitfile  gitfile:txt/protocol/kafka/README.md
 dev.gitfile  gitfile:txt/protocol/report/README.md
 dev.gitfile  gitfile:txt/protocol/ws/README.md
+dev.gitfile  gitfile:txt/rule/acr.md
+dev.gitfile  gitfile:txt/rule/acr_dm.md
+dev.gitfile  gitfile:txt/rule/acr_ed.md
+dev.gitfile  gitfile:txt/rule/amc.md
+dev.gitfile  gitfile:txt/rule/openacr.md
 dev.gitfile  gitfile:txt/script/README.md
 dev.gitfile  gitfile:txt/script/abt_md_filt.md
 dev.gitfile  gitfile:txt/script/ai.md
@@ -2000,6 +2023,7 @@ dev.gitfile  gitfile:txt/ssimdb/atfdb/tfilt.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/tifilt.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/unittest.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/unstableattr.md
+dev.gitfile  gitfile:txt/ssimdb/atfdb/unstableline.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/var.md
 dev.gitfile  gitfile:txt/ssimdb/dev/README.md
 dev.gitfile  gitfile:txt/ssimdb/dev/arch.md
@@ -2028,6 +2052,7 @@ dev.gitfile  gitfile:txt/ssimdb/dev/noindent.md
 dev.gitfile  gitfile:txt/ssimdb/dev/opt_type.md
 dev.gitfile  gitfile:txt/ssimdb/dev/package.md
 dev.gitfile  gitfile:txt/ssimdb/dev/pkgdep.md
+dev.gitfile  gitfile:txt/ssimdb/dev/pkgdeptype.md
 dev.gitfile  gitfile:txt/ssimdb/dev/pkggen.md
 dev.gitfile  gitfile:txt/ssimdb/dev/pkgkey.md
 dev.gitfile  gitfile:txt/ssimdb/dev/prototransport.md

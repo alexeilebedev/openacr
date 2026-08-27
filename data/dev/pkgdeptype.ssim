@@ -1,0 +1,3 @@
+dev.pkgdeptype  pkgdeptype:contain  comment:"The parent distributes this package, so the parent's content covers it"
+dev.pkgdeptype  pkgdeptype:extend  comment:"This package extends the parent, so the parent's content excludes what it captures"
+dev.pkgdeptype  pkgdeptype:require  comment:"This package needs the parent built first, and neither one's content touches the other's"

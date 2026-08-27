@@ -94,6 +94,7 @@
 #ifdef __MACH__
 #include <libkern/OSByteOrder.h>
 #include <mach/mach_time.h>
+#include <mach-o/dyld.h>
 #endif
 
 #if defined(__APPLE__) && defined(__aarch64__)
@@ -133,4 +134,29 @@
 
 #ifdef WIN32
 #include <winnt.h> // temporary, for Interlocked*
+#endif
+
+// Valgrind's client requests, which is how a pool tells the memory checker
+// which blocks it has handed the program (see algo_lib::MemcheckAlloc).
+//
+// Only the memcheck configuration carries them, and ALGO_MEMCHECK is how that
+// configuration says so (dev.tool_opt).  A client request is not free when
+// nothing is watching: it writes six words to the stack and executes the magic
+// instruction sequence either way, about a dozen instructions on every
+// allocation and every free.  The memcheck cfg is release with those requests
+// added and nothing else changed, so the binary a checker examines is generated
+// the way the shipped one is, and no other configuration pays for the checking.
+//
+// A memcheck build with no valgrind headers on the machine is refused rather
+// than quietly built without annotations, because that build's whole purpose is
+// the annotations and a leak report naming nothing reads exactly like a clean
+// run.
+#ifdef ALGO_MEMCHECK
+#if defined(__has_include)
+#if !__has_include(<valgrind/valgrind.h>)
+#error "cfg:memcheck needs valgrind's headers -- install valgrind, or build another cfg"
+#endif
+#endif
+#include <valgrind/valgrind.h>
+#include <valgrind/memcheck.h>
 #endif

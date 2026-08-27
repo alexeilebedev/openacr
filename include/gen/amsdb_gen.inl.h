@@ -81,6 +81,15 @@ inline  amsdb::Mcgrptype::Mcgrptype() {
     amsdb::Mcgrptype_Init(*this);
 }
 
+// --- amsdb.Proctype..Init
+// Set all fields to initial values.
+inline void amsdb::Proctype_Init(amsdb::Proctype& parent) {
+    parent.id = u32(0);
+    parent.overheadmb = u32(0);
+    parent.hugemb = u32(0);
+    parent.hbtimeout = i32(30);
+}
+
 // --- amsdb.Proctype..Ctor
 inline  amsdb::Proctype::Proctype() {
     amsdb::Proctype_Init(*this);

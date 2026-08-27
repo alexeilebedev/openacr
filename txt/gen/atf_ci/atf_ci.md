@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -171,9 +173,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_ci.FCitest.base|[atfdb.Citest](/txt/ssimdb/atfdb/citest.md)|[Base](/txt/ssimdb/atfdb/citest.md)|||
-|atf_ci.FCitest.nerr|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_ci.FCitest.step||[Hook](/txt/exe/amc/reftype.md#hook)|||
-|atf_ci.FCitest.srcfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_ci.FCitest.nerr|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_ci.FCitest.step||[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|atf_ci.FCitest.srcfile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FCitest
 <a href="#struct-fcitest"></a>
@@ -218,34 +220,34 @@ private:
 <a href="#atf_ci-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_ci.FDb._db|[atf_ci.FDb](/txt/gen/atf_ci/atf_ci.md#atf_ci-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|atf_ci.FDb.cmdline|[command.atf_ci](/txt/protocol/command/README.md#command-atf_ci)|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_ci.FDb.citest|[atf_ci.FCitest](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcitest)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.ssimfile|[atf_ci.FSsimfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.ind_ssimfile|[atf_ci.FSsimfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_ci.FDb.c_citest|[atf_ci.FCitest](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcitest)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|atf_ci.FDb.scriptfile|[atf_ci.FScriptfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fscriptfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.ind_scriptfile|[atf_ci.FScriptfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fscriptfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_ci.FDb.ns|[atf_ci.FNs](/txt/gen/atf_ci/atf_ci.md#atf_ci-fns)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.ind_ns|[atf_ci.FNs](/txt/gen/atf_ci/atf_ci.md#atf_ci-fns)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_ci.FDb.readmefile|[atf_ci.FReadmefile](/txt/gen/atf_ci/atf_ci.md#atf_ci-freadmefile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.builddir|[atf_ci.FBuilddir](/txt/gen/atf_ci/atf_ci.md#atf_ci-fbuilddir)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.cfg|[atf_ci.FCfg](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcfg)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.ind_builddir|[atf_ci.FBuilddir](/txt/gen/atf_ci/atf_ci.md#atf_ci-fbuilddir)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_ci.FDb.gitfile|[atf_ci.FGitfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fgitfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.ind_gitfile|[atf_ci.FGitfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fgitfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_ci.FDb.noindent|[atf_ci.FNoindent](/txt/gen/atf_ci/atf_ci.md#atf_ci-fnoindent)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.targsrc|[atf_ci.FTargsrc](/txt/gen/atf_ci/atf_ci.md#atf_ci-ftargsrc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.msgfile|[atf_ci.FMsgfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fmsgfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.ind_citest|[atf_ci.FCitest](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcitest)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_ci.FDb.file|[atf_ci.File](/txt/gen/atf_ci/atf_ci.md#atf_ci-file)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.ind_file|[atf_ci.File](/txt/gen/atf_ci/atf_ci.md#atf_ci-file)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|atf_ci.FDb.sandbox_need_init|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_ci.FDb.cipackage|[atf_ci.FCipackage](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcipackage)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.called_npm_install|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_ci.FDb.modfiles|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||GitModifiedFiles output from end of previous citest|
-|atf_ci.FDb.pkggen|[atf_ci.FPkggen](/txt/gen/atf_ci/atf_ci.md#atf_ci-fpkggen)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|atf_ci.FDb.package|[atf_ci.FPackage](/txt/gen/atf_ci/atf_ci.md#atf_ci-fpackage)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|atf_ci.FDb._db|[atf_ci.FDb](/txt/gen/atf_ci/atf_ci.md#atf_ci-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|atf_ci.FDb.cmdline|[command.atf_ci](/txt/protocol/command/README.md#command-atf_ci)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_ci.FDb.citest|[atf_ci.FCitest](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcitest)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.ssimfile|[atf_ci.FSsimfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.ind_ssimfile|[atf_ci.FSsimfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_ci.FDb.c_citest|[atf_ci.FCitest](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcitest)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|atf_ci.FDb.scriptfile|[atf_ci.FScriptfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fscriptfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.ind_scriptfile|[atf_ci.FScriptfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fscriptfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_ci.FDb.ns|[atf_ci.FNs](/txt/gen/atf_ci/atf_ci.md#atf_ci-fns)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.ind_ns|[atf_ci.FNs](/txt/gen/atf_ci/atf_ci.md#atf_ci-fns)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_ci.FDb.readmefile|[atf_ci.FReadmefile](/txt/gen/atf_ci/atf_ci.md#atf_ci-freadmefile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.builddir|[atf_ci.FBuilddir](/txt/gen/atf_ci/atf_ci.md#atf_ci-fbuilddir)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.cfg|[atf_ci.FCfg](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcfg)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.ind_builddir|[atf_ci.FBuilddir](/txt/gen/atf_ci/atf_ci.md#atf_ci-fbuilddir)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_ci.FDb.gitfile|[atf_ci.FGitfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fgitfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.ind_gitfile|[atf_ci.FGitfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fgitfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_ci.FDb.noindent|[atf_ci.FNoindent](/txt/gen/atf_ci/atf_ci.md#atf_ci-fnoindent)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.targsrc|[atf_ci.FTargsrc](/txt/gen/atf_ci/atf_ci.md#atf_ci-ftargsrc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.msgfile|[atf_ci.FMsgfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fmsgfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.ind_citest|[atf_ci.FCitest](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcitest)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_ci.FDb.file|[atf_ci.File](/txt/gen/atf_ci/atf_ci.md#atf_ci-file)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.ind_file|[atf_ci.File](/txt/gen/atf_ci/atf_ci.md#atf_ci-file)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|atf_ci.FDb.sandbox_need_init|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_ci.FDb.cipackage|[atf_ci.FCipackage](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcipackage)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.called_npm_install|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_ci.FDb.modfiles|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||GitModifiedFiles output from end of previous citest|
+|atf_ci.FDb.pkggen|[atf_ci.FPkggen](/txt/gen/atf_ci/atf_ci.md#atf_ci-fpkggen)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|atf_ci.FDb.package|[atf_ci.FPackage](/txt/gen/atf_ci/atf_ci.md#atf_ci-fpackage)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -338,9 +340,9 @@ struct FExecLimit { // atf_ci.FExecLimit
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |atf_ci.FGitfile.base|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Base](/txt/ssimdb/dev/gitfile.md)|||
-|atf_ci.FGitfile.c_noindent|[atf_ci.FNoindent](/txt/gen/atf_ci/atf_ci.md#atf_ci-fnoindent)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|atf_ci.FGitfile.c_scriptfile|[atf_ci.FScriptfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fscriptfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|atf_ci.FGitfile.c_targsrc|[atf_ci.FTargsrc](/txt/gen/atf_ci/atf_ci.md#atf_ci-ftargsrc)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|atf_ci.FGitfile.c_noindent|[atf_ci.FNoindent](/txt/gen/atf_ci/atf_ci.md#atf_ci-fnoindent)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|atf_ci.FGitfile.c_scriptfile|[atf_ci.FScriptfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fscriptfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|atf_ci.FGitfile.c_targsrc|[atf_ci.FTargsrc](/txt/gen/atf_ci/atf_ci.md#atf_ci-ftargsrc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FGitfile
 <a href="#struct-fgitfile"></a>
@@ -681,9 +683,9 @@ private:
 <a href="#atf_ci-file-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|atf_ci.File.file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Filename|
-|atf_ci.File.file_exists|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|atf_ci.File.record_exists|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|atf_ci.File.file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Filename|
+|atf_ci.File.file_exists|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|atf_ci.File.record_exists|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct File
 <a href="#struct-file"></a>

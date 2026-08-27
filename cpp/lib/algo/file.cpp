@@ -29,6 +29,9 @@
 #ifndef WIN32
 #include <fnmatch.h>
 #include <sys/mman.h>
+#include <sys/resource.h>
+#include <sys/syscall.h>
+#include <sched.h>
 #endif
 
 #ifdef WIN32
@@ -1122,6 +1125,101 @@ tempstr algo::ReadLink(strptr path) {
     int n=readlink(TOCSTR(path),buf,sizeof(buf));
     if (n>0) {
         ret << strptr(buf,n);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Close every descriptor above stderr, leaving an exec'd program its three
+// standard streams and nothing else.  Call this in the child, after the fork
+// and before the exec.
+//
+// A command that inherits a descriptor holds what the descriptor holds for as
+// long as it runs, without knowing it: a listening socket keeps its port
+// bound, an unlinked file keeps its blocks, a lock keeps its holder alive.  A
+// gateway's port outliving the gateway and reappearing as "address already in
+// use" under an unrelated process name is this leak read from the far end.
+// The child inherits whatever the parent had open, so the close belongs in one
+// place rather than at each parent that happens to hold something.
+//
+// close_range does it in one syscall and skips no descriptor; walking the
+// table one close at a time stops at the first hole unless it is bounded by
+// the limit instead, which is what a kernel without the syscall gets.
+void algo_lib::CloseInheritedFd() {
+    int rc = -1;
+#ifdef SYS_close_range
+    rc = int(syscall(SYS_close_range, 3, ~0U, 0));
+#endif
+    if (rc == -1) {
+        struct rlimit rlim;
+        u64 nfd = getrlimit(RLIMIT_NOFILE, &rlim) == 0 ? u64(rlim.rlim_cur) : 1024;
+        for (u64 i = 3; i < nfd && i < 65536; i++) {
+            (void)close(int(i));
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Cores this process may actually run on, which is not always what the machine
+// has.
+//
+// A container, a cpuset or a taskset narrows the set a process is allowed to use,
+// and a decision about whether the work fits the hardware has to be made against
+// what the process may use rather than against what lscpu reports -- a caller that
+// read the machine's total would size itself for eight cores while pinned to two.
+// So the affinity mask is the reading, and the machine's online count is the
+// fallback for a kernel that refuses it.  The mask is a Linux facility, and
+// `cpu_set_t` exists nowhere else, so on every other system the online count is
+// the whole answer.
+i32 algo::GetNcore() {
+    i32 ret = 0;
+#ifdef __linux__
+    cpu_set_t set;
+    CPU_ZERO(&set);
+    if (sched_getaffinity(0, sizeof(set), &set) == 0) {
+        ret = i32(CPU_COUNT(&set));
+    }
+#endif
+    if (ret <= 0) {
+        long online = sysconf(_SC_NPROCESSORS_ONLN);
+        ret = online > 0 ? i32(online) : 1;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the path of the binary this process is running, symlinks resolved.
+// The answer is empty only where the kernel refuses to say.
+//
+// A tool that re-executes itself, or that looks for a sibling beside itself,
+// needs the file it is really running rather than the word it was started with.
+// The two differ in every ordinary invocation: `atf_unit` found on PATH gives an
+// argv[0] of "atf_unit", a name with no directory in it that exec cannot resolve
+// on its own, and `bin/atf_unit` gives a path to a symlink into a build tree
+// rather than to the binary the link points at.  A process that re-executes
+// argv[0] therefore fails outright in the first case, and a process that looks
+// beside argv[0] searches the wrong directory in the second.
+//
+// Linux answers through /proc/self/exe, which is a link the kernel resolves for
+// the caller.  Darwin has no /proc and answers through _NSGetExecutablePath,
+// which returns the path as given, so that one is resolved here.  argv[0]
+// remains the last resort, and it is the answer on a system with neither.
+tempstr algo::GetExePath() {
+    tempstr ret;
+#ifdef __MACH__
+    char buf[4096];
+    u32 size=sizeof(buf);
+    if (_NSGetExecutablePath(buf,&size)==0) {
+        ret=GetFullPath(strptr(buf,strlen(buf)));
+    }
+#else
+    ret=ReadLink("/proc/self/exe");
+#endif
+    if (ch_N(ret)==0 && algo_lib::_db.argv) {
+        ret=algo_lib::_db.argv[0];
     }
     return ret;
 }

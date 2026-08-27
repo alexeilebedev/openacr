@@ -113,22 +113,22 @@ void                 builddir_CopyOut(mdbg::FBuilddir &row, dev::Builddir &out) 
 void                 builddir_CopyIn(mdbg::FBuilddir &row, dev::Builddir &in) __attribute__((nothrow));
 
 // func:mdbg.FBuilddir.uname.Get
-algo::strptr         uname_Get(mdbg::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         uname_Get(mdbg::FBuilddir& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:mdbg.FBuilddir.compiler.Get
-algo::strptr         compiler_Get(mdbg::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         compiler_Get(mdbg::FBuilddir& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:mdbg.FBuilddir.cfg.Get
-algo::strptr         cfg_Get(mdbg::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         cfg_Get(mdbg::FBuilddir& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:mdbg.FBuilddir.arch.Get
-algo::strptr         arch_Get(mdbg::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         arch_Get(mdbg::FBuilddir& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:mdbg.FBuilddir..Init
-inline void          FBuilddir_Init(mdbg::FBuilddir& builddir);
+inline void          FBuilddir_Init(mdbg::FBuilddir& parent);
 // func:mdbg.FBuilddir..Uninit
-void                 FBuilddir_Uninit(mdbg::FBuilddir& builddir) __attribute__((nothrow));
+void                 FBuilddir_Uninit(mdbg::FBuilddir& parent) __attribute__((nothrow));
 
 // --- mdbg.FCfg
 // create: mdbg.FDb.cfg (Lary)
@@ -168,43 +168,43 @@ void                 cfg_CopyIn(mdbg::FCfg &row, dev::Cfg &in) __attribute__((no
 
 // Return true if index is empty
 // func:mdbg.FCfg.c_builddir.EmptyQ
-inline bool          c_builddir_EmptyQ(mdbg::FCfg& cfg) __attribute__((nothrow));
+inline bool          c_builddir_EmptyQ(mdbg::FCfg& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:mdbg.FCfg.c_builddir.Find
-inline mdbg::FBuilddir* c_builddir_Find(mdbg::FCfg& cfg, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline mdbg::FBuilddir* c_builddir_Find(mdbg::FCfg& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:mdbg.FCfg.c_builddir.Getary
-inline algo::aryptr<mdbg::FBuilddir*> c_builddir_Getary(mdbg::FCfg& cfg) __attribute__((nothrow));
+inline algo::aryptr<mdbg::FBuilddir*> c_builddir_Getary(mdbg::FCfg& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:mdbg.FCfg.c_builddir.Insert
-void                 c_builddir_Insert(mdbg::FCfg& cfg, mdbg::FBuilddir& row) __attribute__((nothrow));
+void                 c_builddir_Insert(mdbg::FCfg& parent, mdbg::FBuilddir& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:mdbg.FCfg.c_builddir.InsertMaybe
-bool                 c_builddir_InsertMaybe(mdbg::FCfg& cfg, mdbg::FBuilddir& row) __attribute__((nothrow));
+bool                 c_builddir_InsertMaybe(mdbg::FCfg& parent, mdbg::FBuilddir& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:mdbg.FCfg.c_builddir.N
-inline i64           c_builddir_N(const mdbg::FCfg& cfg) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_builddir_N(const mdbg::FCfg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:mdbg.FCfg.c_builddir.Remove
-void                 c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) __attribute__((nothrow));
+void                 c_builddir_Remove(mdbg::FCfg& parent, mdbg::FBuilddir& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:mdbg.FCfg.c_builddir.RemoveAll
-inline void          c_builddir_RemoveAll(mdbg::FCfg& cfg) __attribute__((nothrow));
+inline void          c_builddir_RemoveAll(mdbg::FCfg& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:mdbg.FCfg.c_builddir.Reserve
-void                 c_builddir_Reserve(mdbg::FCfg& cfg, u64 n) __attribute__((nothrow));
+void                 c_builddir_Reserve(mdbg::FCfg& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:mdbg.FCfg.c_builddir.qFind
-inline mdbg::FBuilddir& c_builddir_qFind(mdbg::FCfg& cfg, u64 idx) __attribute__((nothrow));
+inline mdbg::FBuilddir& c_builddir_qFind(mdbg::FCfg& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:mdbg.FCfg.c_builddir.InAryQ
 inline bool          cfg_c_builddir_InAryQ(mdbg::FBuilddir& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:mdbg.FCfg.c_builddir.qLast
-inline mdbg::FBuilddir& c_builddir_qLast(mdbg::FCfg& cfg) __attribute__((nothrow));
+inline mdbg::FBuilddir& c_builddir_qLast(mdbg::FCfg& parent) __attribute__((nothrow));
 
 // func:mdbg.FCfg.c_builddir_curs.Reset
 inline void          cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCfg &parent) __attribute__((nothrow));
@@ -219,9 +219,9 @@ inline void          cfg_c_builddir_curs_Next(cfg_c_builddir_curs &curs) __attri
 inline mdbg::FBuilddir& cfg_c_builddir_curs_Access(cfg_c_builddir_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mdbg.FCfg..Init
-inline void          FCfg_Init(mdbg::FCfg& cfg);
+inline void          FCfg_Init(mdbg::FCfg& parent);
 // func:mdbg.FCfg..Uninit
-void                 FCfg_Uninit(mdbg::FCfg& cfg) __attribute__((nothrow));
+void                 FCfg_Uninit(mdbg::FCfg& parent) __attribute__((nothrow));
 
 // --- mdbg.trace
 #pragma pack(push,1)

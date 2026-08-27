@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -47,8 +49,8 @@ All allocations are done through global `bash2html::_db` [bash2html.FDb](#bash2h
 <a href="#bash2html-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|bash2html.FDb._db|[bash2html.FDb](/txt/gen/bash2html/bash2html.md#bash2html-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|bash2html.FDb.cmdline|[command.bash2html](/txt/protocol/command/README.md#command-bash2html)|[Val](/txt/exe/amc/reftype.md#val)|||
+|bash2html.FDb._db|[bash2html.FDb](/txt/gen/bash2html/bash2html.md#bash2html-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|bash2html.FDb.cmdline|[command.bash2html](/txt/protocol/command/README.md#command-bash2html)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

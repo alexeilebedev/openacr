@@ -52,10 +52,10 @@ static acr_ed::FEdaction &acr_ed_edaction_Rename_Target        = ((acr_ed::FEdac
 
 // --- acr_ed.FCfmt..Init
 // Set all fields to initial values.
-inline void acr_ed::FCfmt_Init(acr_ed::FCfmt& cfmt) {
-    cfmt.read = bool(false);
-    cfmt.print = bool(false);
-    cfmt.genop = bool(false);
+inline void acr_ed::FCfmt_Init(acr_ed::FCfmt& parent) {
+    parent.read = bool(false);
+    parent.print = bool(false);
+    parent.genop = bool(false);
 }
 
 // --- acr_ed.FCfmt..Ctor
@@ -70,8 +70,8 @@ inline  acr_ed::FCfmt::~FCfmt() {
 
 // --- acr_ed.FCpptype..Init
 // Set all fields to initial values.
-inline void acr_ed::FCpptype_Init(acr_ed::FCpptype& cpptype) {
-    cpptype.ctor = bool(false);
+inline void acr_ed::FCpptype_Init(acr_ed::FCpptype& parent) {
+    parent.ctor = bool(false);
 }
 
 // --- acr_ed.FCpptype..Ctor
@@ -86,8 +86,8 @@ inline  acr_ed::FCpptype::~FCpptype() {
 
 // --- acr_ed.FCstr..Init
 // Set all fields to initial values.
-inline void acr_ed::FCstr_Init(acr_ed::FCstr& cstr) {
-    cstr.strequiv = bool(false);
+inline void acr_ed::FCstr_Init(acr_ed::FCstr& parent) {
+    parent.strequiv = bool(false);
 }
 
 // --- acr_ed.FCstr..Ctor
@@ -102,48 +102,48 @@ inline  acr_ed::FCstr::~FCstr() {
 
 // --- acr_ed.FCtype.c_field.EmptyQ
 // Return true if index is empty
-inline bool acr_ed::c_field_EmptyQ(acr_ed::FCtype& ctype) {
-    return ctype.c_field_n == 0;
+inline bool acr_ed::c_field_EmptyQ(acr_ed::FCtype& parent) {
+    return parent.c_field_n == 0;
 }
 
 // --- acr_ed.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_ed::FField* acr_ed::c_field_Find(acr_ed::FCtype& ctype, u64 t) {
+inline acr_ed::FField* acr_ed::c_field_Find(acr_ed::FCtype& parent, u64 t) {
     acr_ed::FField *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_field_n;
+    u64 lim = parent.c_field_n;
     if (idx < lim) {
-        retval = ctype.c_field_elems[idx];
+        retval = parent.c_field_elems[idx];
     }
     return retval;
 }
 
 // --- acr_ed.FCtype.c_field.Getary
 // Return array of pointers
-inline algo::aryptr<acr_ed::FField*> acr_ed::c_field_Getary(acr_ed::FCtype& ctype) {
-    return algo::aryptr<acr_ed::FField*>(ctype.c_field_elems, ctype.c_field_n);
+inline algo::aryptr<acr_ed::FField*> acr_ed::c_field_Getary(acr_ed::FCtype& parent) {
+    return algo::aryptr<acr_ed::FField*>(parent.c_field_elems, parent.c_field_n);
 }
 
 // --- acr_ed.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i64 acr_ed::c_field_N(const acr_ed::FCtype& ctype) {
-    return ctype.c_field_n;
+inline i64 acr_ed::c_field_N(const acr_ed::FCtype& parent) {
+    return parent.c_field_n;
 }
 
 // --- acr_ed.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void acr_ed::c_field_RemoveAll(acr_ed::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_field_n; i++) {
+inline void acr_ed::c_field_RemoveAll(acr_ed::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_field_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
+        parent.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
-    ctype.c_field_n = 0;
+    parent.c_field_n = 0;
 }
 
 // --- acr_ed.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline acr_ed::FField& acr_ed::c_field_qFind(acr_ed::FCtype& ctype, u64 idx) {
-    return *ctype.c_field_elems[idx];
+inline acr_ed::FField& acr_ed::c_field_qFind(acr_ed::FCtype& parent, u64 idx) {
+    return *parent.c_field_elems[idx];
 }
 
 // --- acr_ed.FCtype.c_field.InAryQ
@@ -154,156 +154,156 @@ inline bool acr_ed::ctype_c_field_InAryQ(acr_ed::FField& row) {
 
 // --- acr_ed.FCtype.c_field.qLast
 // Reference to last element without bounds checking
-inline acr_ed::FField& acr_ed::c_field_qLast(acr_ed::FCtype& ctype) {
-    return *ctype.c_field_elems[ctype.c_field_n-1];
+inline acr_ed::FField& acr_ed::c_field_qLast(acr_ed::FCtype& parent) {
+    return *parent.c_field_elems[parent.c_field_n-1];
 }
 
 // --- acr_ed.FCtype.c_cstr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_ed::c_cstr_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCstr& row) {
-    acr_ed::FCstr* ptr = ctype.c_cstr;
+inline bool acr_ed::c_cstr_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FCstr& row) {
+    acr_ed::FCstr* ptr = parent.c_cstr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cstr = &row;
+        parent.c_cstr = &row;
     }
     return retval;
 }
 
 // --- acr_ed.FCtype.c_cstr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_ed::c_cstr_Remove(acr_ed::FCtype& ctype, acr_ed::FCstr& row) {
-    acr_ed::FCstr *ptr = ctype.c_cstr;
+inline void acr_ed::c_cstr_Remove(acr_ed::FCtype& parent, acr_ed::FCstr& row) {
+    acr_ed::FCstr *ptr = parent.c_cstr;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cstr = NULL;
+        parent.c_cstr = NULL;
     }
 }
 
 // --- acr_ed.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_ed::c_ssimfile_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FSsimfile& row) {
-    acr_ed::FSsimfile* ptr = ctype.c_ssimfile;
+inline bool acr_ed::c_ssimfile_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FSsimfile& row) {
+    acr_ed::FSsimfile* ptr = parent.c_ssimfile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_ssimfile = &row;
+        parent.c_ssimfile = &row;
     }
     return retval;
 }
 
 // --- acr_ed.FCtype.c_ssimfile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_ed::c_ssimfile_Remove(acr_ed::FCtype& ctype, acr_ed::FSsimfile& row) {
-    acr_ed::FSsimfile *ptr = ctype.c_ssimfile;
+inline void acr_ed::c_ssimfile_Remove(acr_ed::FCtype& parent, acr_ed::FSsimfile& row) {
+    acr_ed::FSsimfile *ptr = parent.c_ssimfile;
     if (LIKELY(ptr == &row)) {
-        ctype.c_ssimfile = NULL;
+        parent.c_ssimfile = NULL;
     }
 }
 
 // --- acr_ed.FCtype.c_pack.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_ed::c_pack_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FPack& row) {
-    acr_ed::FPack* ptr = ctype.c_pack;
+inline bool acr_ed::c_pack_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FPack& row) {
+    acr_ed::FPack* ptr = parent.c_pack;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_pack = &row;
+        parent.c_pack = &row;
     }
     return retval;
 }
 
 // --- acr_ed.FCtype.c_pack.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_ed::c_pack_Remove(acr_ed::FCtype& ctype, acr_ed::FPack& row) {
-    acr_ed::FPack *ptr = ctype.c_pack;
+inline void acr_ed::c_pack_Remove(acr_ed::FCtype& parent, acr_ed::FPack& row) {
+    acr_ed::FPack *ptr = parent.c_pack;
     if (LIKELY(ptr == &row)) {
-        ctype.c_pack = NULL;
+        parent.c_pack = NULL;
     }
 }
 
 // --- acr_ed.FCtype.c_typefld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_ed::c_typefld_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FTypefld& row) {
-    acr_ed::FTypefld* ptr = ctype.c_typefld;
+inline bool acr_ed::c_typefld_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FTypefld& row) {
+    acr_ed::FTypefld* ptr = parent.c_typefld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_typefld = &row;
+        parent.c_typefld = &row;
     }
     return retval;
 }
 
 // --- acr_ed.FCtype.c_typefld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_ed::c_typefld_Remove(acr_ed::FCtype& ctype, acr_ed::FTypefld& row) {
-    acr_ed::FTypefld *ptr = ctype.c_typefld;
+inline void acr_ed::c_typefld_Remove(acr_ed::FCtype& parent, acr_ed::FTypefld& row) {
+    acr_ed::FTypefld *ptr = parent.c_typefld;
     if (LIKELY(ptr == &row)) {
-        ctype.c_typefld = NULL;
+        parent.c_typefld = NULL;
     }
 }
 
 // --- acr_ed.FCtype.c_cpptype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_ed::c_cpptype_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCpptype& row) {
-    acr_ed::FCpptype* ptr = ctype.c_cpptype;
+inline bool acr_ed::c_cpptype_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FCpptype& row) {
+    acr_ed::FCpptype* ptr = parent.c_cpptype;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cpptype = &row;
+        parent.c_cpptype = &row;
     }
     return retval;
 }
 
 // --- acr_ed.FCtype.c_cpptype.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_ed::c_cpptype_Remove(acr_ed::FCtype& ctype, acr_ed::FCpptype& row) {
-    acr_ed::FCpptype *ptr = ctype.c_cpptype;
+inline void acr_ed::c_cpptype_Remove(acr_ed::FCtype& parent, acr_ed::FCpptype& row) {
+    acr_ed::FCpptype *ptr = parent.c_cpptype;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cpptype = NULL;
+        parent.c_cpptype = NULL;
     }
 }
 
 // --- acr_ed.FCtype.c_cfmt.EmptyQ
 // Return true if index is empty
-inline bool acr_ed::c_cfmt_EmptyQ(acr_ed::FCtype& ctype) {
-    return ctype.c_cfmt_n == 0;
+inline bool acr_ed::c_cfmt_EmptyQ(acr_ed::FCtype& parent) {
+    return parent.c_cfmt_n == 0;
 }
 
 // --- acr_ed.FCtype.c_cfmt.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_ed::FCfmt* acr_ed::c_cfmt_Find(acr_ed::FCtype& ctype, u64 t) {
+inline acr_ed::FCfmt* acr_ed::c_cfmt_Find(acr_ed::FCtype& parent, u64 t) {
     acr_ed::FCfmt *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_cfmt_n;
+    u64 lim = parent.c_cfmt_n;
     if (idx < lim) {
-        retval = ctype.c_cfmt_elems[idx];
+        retval = parent.c_cfmt_elems[idx];
     }
     return retval;
 }
 
 // --- acr_ed.FCtype.c_cfmt.Getary
 // Return array of pointers
-inline algo::aryptr<acr_ed::FCfmt*> acr_ed::c_cfmt_Getary(acr_ed::FCtype& ctype) {
-    return algo::aryptr<acr_ed::FCfmt*>(ctype.c_cfmt_elems, ctype.c_cfmt_n);
+inline algo::aryptr<acr_ed::FCfmt*> acr_ed::c_cfmt_Getary(acr_ed::FCtype& parent) {
+    return algo::aryptr<acr_ed::FCfmt*>(parent.c_cfmt_elems, parent.c_cfmt_n);
 }
 
 // --- acr_ed.FCtype.c_cfmt.N
 // Return number of items in the pointer array
-inline i64 acr_ed::c_cfmt_N(const acr_ed::FCtype& ctype) {
-    return ctype.c_cfmt_n;
+inline i64 acr_ed::c_cfmt_N(const acr_ed::FCtype& parent) {
+    return parent.c_cfmt_n;
 }
 
 // --- acr_ed.FCtype.c_cfmt.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void acr_ed::c_cfmt_RemoveAll(acr_ed::FCtype& ctype) {
-    ctype.c_cfmt_n = 0;
+inline void acr_ed::c_cfmt_RemoveAll(acr_ed::FCtype& parent) {
+    parent.c_cfmt_n = 0;
 }
 
 // --- acr_ed.FCtype.c_cfmt.qFind
 // Return reference without bounds checking
-inline acr_ed::FCfmt& acr_ed::c_cfmt_qFind(acr_ed::FCtype& ctype, u64 idx) {
-    return *ctype.c_cfmt_elems[idx];
+inline acr_ed::FCfmt& acr_ed::c_cfmt_qFind(acr_ed::FCtype& parent, u64 idx) {
+    return *parent.c_cfmt_elems[idx];
 }
 
 // --- acr_ed.FCtype.c_cfmt.qLast
 // Reference to last element without bounds checking
-inline acr_ed::FCfmt& acr_ed::c_cfmt_qLast(acr_ed::FCtype& ctype) {
-    return *ctype.c_cfmt_elems[ctype.c_cfmt_n-1];
+inline acr_ed::FCfmt& acr_ed::c_cfmt_qLast(acr_ed::FCtype& parent) {
+    return *parent.c_cfmt_elems[parent.c_cfmt_n-1];
 }
 
 // --- acr_ed.FCtype.c_field_curs.Reset
@@ -368,18 +368,18 @@ inline  acr_ed::FCtype::~FCtype() {
 
 // --- acr_ed.FEdaction.step.Call
 // Invoke function by pointer
-inline void acr_ed::step_Call(acr_ed::FEdaction& edaction) {
-    edaction.step();
+inline void acr_ed::step_Call(acr_ed::FEdaction& parent) {
+    parent.step();
 }
 
 // --- acr_ed.FEdaction..Init
 // Set all fields to initial values.
-inline void acr_ed::FEdaction_Init(acr_ed::FEdaction& edaction) {
-    edaction.needamc = bool(false);
-    edaction.select = bool(false);
-    edaction.step = NULL;
-    edaction.ind_edaction_next = (acr_ed::FEdaction*)-1; // (acr_ed.FDb.ind_edaction) not-in-hash
-    edaction.ind_edaction_hashval = 0; // stored hash value
+inline void acr_ed::FEdaction_Init(acr_ed::FEdaction& parent) {
+    parent.needamc = bool(false);
+    parent.select = bool(false);
+    parent.step = NULL;
+    parent.ind_edaction_next = (acr_ed::FEdaction*)-1; // (acr_ed.FDb.ind_edaction) not-in-hash
+    parent.ind_edaction_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FEdaction..Ctor
@@ -1220,7 +1220,7 @@ inline i32 acr_ed::edaction_N() {
 }
 
 // --- acr_ed.FDb.edaction.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline acr_ed::FEdaction& acr_ed::edaction_qFind(u64 t) {
     return reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data)[u64(t)];
 }
@@ -1894,9 +1894,9 @@ inline  acr_ed::FField::~FField() {
 
 // --- acr_ed.FFprefix..Init
 // Set all fields to initial values.
-inline void acr_ed::FFprefix_Init(acr_ed::FFprefix& fprefix) {
-    fprefix.require = bool(true);
-    fprefix.dflt = bool(true);
+inline void acr_ed::FFprefix_Init(acr_ed::FFprefix& parent) {
+    parent.require = bool(true);
+    parent.dflt = bool(true);
 }
 
 // --- acr_ed.FFprefix..Ctor
@@ -1910,12 +1910,12 @@ inline  acr_ed::FGitfile::FGitfile() {
 
 // --- acr_ed.FListtype..Init
 // Set all fields to initial values.
-inline void acr_ed::FListtype_Init(acr_ed::FListtype& listtype) {
-    listtype.circular = bool(false);
-    listtype.haveprev = bool(false);
-    listtype.instail = bool(false);
-    listtype.ind_listtype_next = (acr_ed::FListtype*)-1; // (acr_ed.FDb.ind_listtype) not-in-hash
-    listtype.ind_listtype_hashval = 0; // stored hash value
+inline void acr_ed::FListtype_Init(acr_ed::FListtype& parent) {
+    parent.circular = bool(false);
+    parent.haveprev = bool(false);
+    parent.instail = bool(false);
+    parent.ind_listtype_next = (acr_ed::FListtype*)-1; // (acr_ed.FDb.ind_listtype) not-in-hash
+    parent.ind_listtype_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FListtype..Ctor
@@ -1934,9 +1934,9 @@ inline  acr_ed::FMsgtype::FMsgtype() {
 
 // --- acr_ed.FNs..Init
 // Set all fields to initial values.
-inline void acr_ed::FNs_Init(acr_ed::FNs& ns) {
-    ns.ind_ns_next = (acr_ed::FNs*)-1; // (acr_ed.FDb.ind_ns) not-in-hash
-    ns.ind_ns_hashval = 0; // stored hash value
+inline void acr_ed::FNs_Init(acr_ed::FNs& parent) {
+    parent.ind_ns_next = (acr_ed::FNs*)-1; // (acr_ed.FDb.ind_ns) not-in-hash
+    parent.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FNs..Ctor
@@ -1951,9 +1951,9 @@ inline  acr_ed::FNs::~FNs() {
 
 // --- acr_ed.FNsdb..Init
 // Set all fields to initial values.
-inline void acr_ed::FNsdb_Init(acr_ed::FNsdb& nsdb) {
-    nsdb.ind_nsdb_next = (acr_ed::FNsdb*)-1; // (acr_ed.FDb.ind_nsdb) not-in-hash
-    nsdb.ind_nsdb_hashval = 0; // stored hash value
+inline void acr_ed::FNsdb_Init(acr_ed::FNsdb& parent) {
+    parent.ind_nsdb_next = (acr_ed::FNsdb*)-1; // (acr_ed.FDb.ind_nsdb) not-in-hash
+    parent.ind_nsdb_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FNsdb..Ctor
@@ -1991,11 +1991,11 @@ inline  acr_ed::FSbpath::FSbpath() {
 
 // --- acr_ed.FSsimfile..Init
 // Set all fields to initial values.
-inline void acr_ed::FSsimfile_Init(acr_ed::FSsimfile& ssimfile) {
-    ssimfile.p_ctype = NULL;
-    ssimfile.p_ns = NULL;
-    ssimfile.ind_ssimfile_next = (acr_ed::FSsimfile*)-1; // (acr_ed.FDb.ind_ssimfile) not-in-hash
-    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
+inline void acr_ed::FSsimfile_Init(acr_ed::FSsimfile& parent) {
+    parent.p_ctype = NULL;
+    parent.p_ns = NULL;
+    parent.ind_ssimfile_next = (acr_ed::FSsimfile*)-1; // (acr_ed.FDb.ind_ssimfile) not-in-hash
+    parent.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FSsimfile..Ctor
@@ -2010,15 +2010,15 @@ inline  acr_ed::FSsimfile::~FSsimfile() {
 
 // --- acr_ed.FTarget.zd_targsrc.EmptyQ
 // Return true if index is empty
-inline bool acr_ed::zd_targsrc_EmptyQ(acr_ed::FTarget& target) {
-    return target.zd_targsrc_head == NULL;
+inline bool acr_ed::zd_targsrc_EmptyQ(acr_ed::FTarget& parent) {
+    return parent.zd_targsrc_head == NULL;
 }
 
 // --- acr_ed.FTarget.zd_targsrc.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline acr_ed::FTargsrc* acr_ed::zd_targsrc_First(acr_ed::FTarget& target) {
+inline acr_ed::FTargsrc* acr_ed::zd_targsrc_First(acr_ed::FTarget& parent) {
     acr_ed::FTargsrc *row = NULL;
-    row = target.zd_targsrc_head;
+    row = parent.zd_targsrc_head;
     return row;
 }
 
@@ -2032,16 +2032,16 @@ inline bool acr_ed::target_zd_targsrc_InLlistQ(acr_ed::FTargsrc& row) {
 
 // --- acr_ed.FTarget.zd_targsrc.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline acr_ed::FTargsrc* acr_ed::zd_targsrc_Last(acr_ed::FTarget& target) {
+inline acr_ed::FTargsrc* acr_ed::zd_targsrc_Last(acr_ed::FTarget& parent) {
     acr_ed::FTargsrc *row = NULL;
-    row = target.zd_targsrc_tail;
+    row = parent.zd_targsrc_tail;
     return row;
 }
 
 // --- acr_ed.FTarget.zd_targsrc.N
 // Return number of items in the linked list
-inline i32 acr_ed::zd_targsrc_N(const acr_ed::FTarget& target) {
-    return target.zd_targsrc_n;
+inline i32 acr_ed::zd_targsrc_N(const acr_ed::FTarget& parent) {
+    return parent.zd_targsrc_n;
 }
 
 // --- acr_ed.FTarget.zd_targsrc.Next
@@ -2058,22 +2058,22 @@ inline acr_ed::FTargsrc* acr_ed::target_zd_targsrc_Prev(acr_ed::FTargsrc &row) {
 
 // --- acr_ed.FTarget.zd_targsrc.qLast
 // Return reference to last element in the index. No bounds checking.
-inline acr_ed::FTargsrc& acr_ed::zd_targsrc_qLast(acr_ed::FTarget& target) {
+inline acr_ed::FTargsrc& acr_ed::zd_targsrc_qLast(acr_ed::FTarget& parent) {
     acr_ed::FTargsrc *row = NULL;
-    row = target.zd_targsrc_tail;
+    row = parent.zd_targsrc_tail;
     return *row;
 }
 
 // --- acr_ed.FTarget..Init
 // Set all fields to initial values.
-inline void acr_ed::FTarget_Init(acr_ed::FTarget& target) {
-    target.score = u32(0);
-    target.zd_targsrc_head = NULL; // (acr_ed.FTarget.zd_targsrc)
-    target.zd_targsrc_n = 0; // (acr_ed.FTarget.zd_targsrc)
-    target.zd_targsrc_tail = NULL; // (acr_ed.FTarget.zd_targsrc)
-    target.p_ns = NULL;
-    target.ind_target_next = (acr_ed::FTarget*)-1; // (acr_ed.FDb.ind_target) not-in-hash
-    target.ind_target_hashval = 0; // stored hash value
+inline void acr_ed::FTarget_Init(acr_ed::FTarget& parent) {
+    parent.score = u32(0);
+    parent.zd_targsrc_head = NULL; // (acr_ed.FTarget.zd_targsrc)
+    parent.zd_targsrc_n = 0; // (acr_ed.FTarget.zd_targsrc)
+    parent.zd_targsrc_tail = NULL; // (acr_ed.FTarget.zd_targsrc)
+    parent.p_ns = NULL;
+    parent.ind_target_next = (acr_ed::FTarget*)-1; // (acr_ed.FDb.ind_target) not-in-hash
+    parent.ind_target_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FTarget.zd_targsrc_curs.Reset
@@ -2113,10 +2113,10 @@ inline  acr_ed::FTarget::~FTarget() {
 
 // --- acr_ed.FTargsrc..Init
 // Set all fields to initial values.
-inline void acr_ed::FTargsrc_Init(acr_ed::FTargsrc& targsrc) {
-    targsrc.p_target = NULL;
-    targsrc.target_zd_targsrc_next = (acr_ed::FTargsrc*)-1; // (acr_ed.FTarget.zd_targsrc) not-in-list
-    targsrc.target_zd_targsrc_prev = NULL; // (acr_ed.FTarget.zd_targsrc)
+inline void acr_ed::FTargsrc_Init(acr_ed::FTargsrc& parent) {
+    parent.p_target = NULL;
+    parent.target_zd_targsrc_next = (acr_ed::FTargsrc*)-1; // (acr_ed.FTarget.zd_targsrc) not-in-list
+    parent.target_zd_targsrc_prev = NULL; // (acr_ed.FTarget.zd_targsrc)
 }
 
 // --- acr_ed.FTargsrc..Ctor

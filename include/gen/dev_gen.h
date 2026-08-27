@@ -37,21 +37,25 @@ extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_arm64;    // 
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64;   // Darwin-clang++.coverage-x86_64    fconst:dev.Builddir.builddir/Darwin-clang++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_debug_arm64;       // Darwin-clang++.debug-arm64        fconst:dev.Builddir.builddir/Darwin-clang++.debug-arm64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_debug_x86_64;      // Darwin-clang++.debug-x86_64       fconst:dev.Builddir.builddir/Darwin-clang++.debug-x86_64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_memcheck_x86_64;   // Darwin-clang++.memcheck-x86_64    fconst:dev.Builddir.builddir/Darwin-clang++.memcheck-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_profile_arm64;     // Darwin-clang++.profile-arm64      fconst:dev.Builddir.builddir/Darwin-clang++.profile-arm64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_profile_x86_64;    // Darwin-clang++.profile-x86_64     fconst:dev.Builddir.builddir/Darwin-clang++.profile-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_release_arm64;     // Darwin-clang++.release-arm64      fconst:dev.Builddir.builddir/Darwin-clang++.release-arm64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_release_x86_64;    // Darwin-clang++.release-x86_64     fconst:dev.Builddir.builddir/Darwin-clang++.release-x86_64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64;   // FreeBSD-clang++.coverage-amd64    fconst:dev.Builddir.builddir/FreeBSD-clang++.coverage-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64;      // FreeBSD-clang++.debug-amd64       fconst:dev.Builddir.builddir/FreeBSD-clang++.debug-amd64
+extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_memcheck_amd64;   // FreeBSD-clang++.memcheck-amd64    fconst:dev.Builddir.builddir/FreeBSD-clang++.memcheck-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64;    // FreeBSD-clang++.profile-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.profile-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_release_amd64;    // FreeBSD-clang++.release-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.release-amd64
 extern const char *  dev_Builddir_builddir_Linux_gPP_coverage_x86_64;        // Linux-g++.coverage-x86_64         fconst:dev.Builddir.builddir/Linux-g++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_debug_x86_64;           // Linux-g++.debug-x86_64            fconst:dev.Builddir.builddir/Linux-g++.debug-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_memcheck_x86_64;        // Linux-g++.memcheck-x86_64         fconst:dev.Builddir.builddir/Linux-g++.memcheck-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_profile_x86_64;         // Linux-g++.profile-x86_64          fconst:dev.Builddir.builddir/Linux-g++.profile-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_release_x86_64;         // Linux-g++.release-x86_64          fconst:dev.Builddir.builddir/Linux-g++.release-x86_64
 extern const char *  dev_Cfg_cfg_;           //             fconst:dev.Cfg.cfg/
 extern const char *  dev_Cfg_cfg_coverage;   // coverage    fconst:dev.Cfg.cfg/coverage
 extern const char *  dev_Cfg_cfg_debug;      // debug       fconst:dev.Cfg.cfg/debug
+extern const char *  dev_Cfg_cfg_memcheck;   // memcheck    fconst:dev.Cfg.cfg/memcheck
 extern const char *  dev_Cfg_cfg_profile;    // profile     fconst:dev.Cfg.cfg/profile
 extern const char *  dev_Cfg_cfg_release;    // release     fconst:dev.Cfg.cfg/release
 extern const char *  dev_Compiler_compiler_;          //            fconst:dev.Compiler.compiler/
@@ -152,6 +156,7 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_pkgdep
     ,dev_FieldId_parent
     ,dev_FieldId_soft
+    ,dev_FieldId_pkgdeptype
     ,dev_FieldId_pkgkey
     ,dev_FieldId_key
     ,dev_FieldId_up
@@ -194,7 +199,7 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_value
 };
 
-enum { dev_FieldIdEnum_N = 118 };
+enum { dev_FieldIdEnum_N = 119 };
 
 extern const char *  dev_License_license_;       //         fconst:dev.License.license/
 extern const char *  dev_License_license_ARND;   // ARND    fconst:dev.License.license/ARND
@@ -240,6 +245,7 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 OptTypePkey;
     typedef algo::Smallstr50 PackagePkey;
     typedef algo::Smallstr100 PkgdepPkey;
+    typedef algo::Smallstr50 PkgdeptypePkey;
     typedef algo::Smallstr150 PkgkeyPkey;
     typedef algo::Smallstr50 PrototransportPkey;
     typedef algo::Smallstr250 ReadmesortPkey;
@@ -289,6 +295,7 @@ namespace dev { struct Noindent; }
 namespace dev { struct OptType; }
 namespace dev { struct Package; }
 namespace dev { struct Pkgdep; }
+namespace dev { struct Pkgdeptype; }
 namespace dev { struct Pkggen; }
 namespace dev { struct Pkgkey; }
 namespace dev { struct Prototransport; }
@@ -1002,13 +1009,14 @@ void                 Package_Print(dev::Package& row, algo::cstring& str) __attr
 
 // --- dev.Pkgdep
 struct Pkgdep { // dev.Pkgdep: OpenACR Package dependency
-    algo::Smallstr100   pkgdep;    //
-    bool                soft;      //   false  Soft dependency: affects package ordering but not forced update
-    algo::Comment       comment;   //
+    algo::Smallstr100   pkgdep;       //
+    bool                soft;         //   false  Soft dependency: affects package ordering but not forced update
+    algo::Smallstr50    pkgdeptype;   //   "require"  How this package stands to its parent
+    algo::Comment       comment;      //
     // func:dev.Pkgdep..Ctor
     inline               Pkgdep() __attribute__((nothrow));
     // func:dev.Pkgdep..FieldwiseCtor
-    explicit inline               Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::strptr& in_pkgdeptype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 // func:dev.Pkgdep.package.Get
 algo::strptr         package_Get(dev::Pkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -1035,6 +1043,24 @@ inline void          Pkgdep_Init(dev::Pkgdep& parent);
 // cfmt:dev.Pkgdep.String  printfmt:Tuple
 // func:dev.Pkgdep..Print
 void                 Pkgdep_Print(dev::Pkgdep& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Pkgdeptype
+struct Pkgdeptype { // dev.Pkgdeptype: How a package stands in relation to its parent
+    algo::Smallstr50   pkgdeptype;   //
+    algo::Comment      comment;      //
+    // func:dev.Pkgdeptype..Ctor
+    inline               Pkgdeptype() __attribute__((nothrow));
+};
+// func:dev.Pkgdeptype..ReadFieldMaybe
+bool                 Pkgdeptype_ReadFieldMaybe(dev::Pkgdeptype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Pkgdeptype from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Pkgdeptype..ReadStrptrMaybe
+bool                 Pkgdeptype_ReadStrptrMaybe(dev::Pkgdeptype &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Pkgdeptype.String  printfmt:Tuple
+// func:dev.Pkgdeptype..Print
+void                 Pkgdeptype_Print(dev::Pkgdeptype& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Pkggen
 struct Pkggen { // dev.Pkggen
@@ -1682,6 +1708,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Netproto &row);
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Noindent &row);// cfmt:dev.Noindent.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Package &row);// cfmt:dev.Package.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdep &row);// cfmt:dev.Pkgdep.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdeptype &row);// cfmt:dev.Pkgdeptype.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkggen &row);// cfmt:dev.Pkggen.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkey &row);// cfmt:dev.Pkgkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Prototransport &row);// cfmt:dev.Prototransport.String

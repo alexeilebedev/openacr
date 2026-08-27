@@ -80,8 +80,41 @@ namespace acr_ed { // update-hdr
     // -------------------------------------------------------------------
     // cpp/acr_ed/field.cpp -- Create, delete, rename field
     //
+
+    // Delete a field from the schema, and rewrite every ssimfile whose rows carry
+    // its values so that the values go with it.
+    //
+    // Dropping the schema row alone is not enough.  acr parses a data row against
+    // the current ctype and ignores an attribute it does not recognize, which is
+    // what lets a tuple survive a schema that has moved on; the same tolerance
+    // leaves the deleted field's values sitting in the ssimfile, invisible to
+    // acr -check, to amc, and to a query of the row itself.
+    //
+    // Reading a row through the new schema and writing it back is what drops the
+    // attribute, so each ssimfile holding rows of the edited ctype is rewritten
+    // once the schema row is gone.
     //     (user-implemented function, prototype is in amc-generated header)
     // void edaction_Delete_Field(); // gstatic/dev.edaction:Delete_Field
+
+    // Rename a field within its ctype, refusing the spellings of -rename that
+    // cannot mean what they look like.
+    //
+    // A bare new name is the ordinary form: `acr_ed -field a.B.c -rename d` renames
+    // the field to a.B.d.  A rename does not move a field between ctypes, so the
+    // ctype is already known, and the full pkey a.B.d means the same thing.
+    //
+    // `-rename field:a.B.d` is the spelling a query uses, and it is not one here.
+    // `acr` reads `field:a.B` as the ctype and writes a record whose pkey no query
+    // finds, so the prefix is refused rather than stripped -- -rename takes a field
+    // name and nothing else.
+    //
+    // A new name carrying a different ctype moves the field to another table.  `acr`
+    // renames the column of the ctype named in the *new* pkey, so where the old
+    // ctype has an ssimfile its rows keep an attribute no field claims -- invisible
+    // to `acr -check`, to `amc` and to a query of the row, which is the state a
+    // field delete was taught to avoid.  The move is refused whenever either side is
+    // ssim-backed, and it is a delete and a create rather than a rename.  Between
+    // two in-memory ctypes there is no column to strand, so it goes through.
     // void edaction_Rename_Field(); // gstatic/dev.edaction:Rename_Field
     // void edaction_Create_Field(); // gstatic/dev.edaction:Create_Field
 

@@ -47,6 +47,40 @@ static void RemovePackage(algo::strptr name) {
     vrfy_(apm_Exec(apm)==0);
 }
 
+static void PushPackage(algo::strptr name) {
+    command::apm_proc apm;
+    apm.cmd.package.expr=name;
+    apm.cmd.checkclean=false;
+    apm.cmd.push=true;
+    apm.cmd.origin=algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm);
+    vrfy_(apm_Exec(apm)==0);
+}
+
+static void ResetPackage(algo::strptr name, algo::strptr ref) {
+    command::apm_proc apm;
+    apm.cmd.package.expr=name;
+    apm.cmd.reset=true;
+    apm.cmd.ref=ref;
+    apm.cmd.origin=algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm);
+    vrfy_(apm_Exec(apm)==0);
+}
+
+// Return the diffstat apm reports for package NAME, without apm's own chatter.
+// A diff run prints the sandbox path it worked in and a closing hint, so its
+// output is never empty and cannot be compared against nothing.  Git's own
+// summary line is what says whether anything differs, and it names a count of
+// files: "1 file changed, 2 insertions(+)".  No such line means no difference.
+static tempstr GetPackageDiffstat(algo::strptr name) {
+    tempstr ret;
+    tempstr out(SysEval(tempstr()<<"apm "<<name<<" -diff -stat",FailokQ(true),1024*100));
+    ind_beg(algo::Line_curs,line,out) {
+        if (FindStr(line," changed")!=-1) {
+            ret << line << eol;
+        }
+    }ind_end;
+    return ret;
+}
+
 // Insert specified line into acr database
 static void AcrInsert(algo::strptr str) {
     strptr filename="temp/atf_ci-apm.ssim";
@@ -78,6 +112,9 @@ static void AddPackageDep(algo::strptr package, algo::strptr parent, bool soft =
     dev::Pkgdep pkgdep;
     pkgdep.pkgdep = dev::Pkgdep_Concat_package_parent(package,parent);
     pkgdep.soft = soft;
+    // pkgdeptype keeps its default of `require`, which is ordering alone: the
+    // sample packages are checked for what their own keys capture, and an
+    // extend relation would subtract one of them from the other
     AcrInsert(tempstr()<<pkgdep);
 }
 
@@ -276,6 +313,39 @@ void atf_ci::CitestApm() {
     }
     vrfy_(SysEval("acr -report:N field:apm.FDb.sample_field",FailokQ(true),1024)
           == "dmmeta.field  field:apm.FDb.sample_field  arg:dmmeta.Ns  reftype:Val  dflt:\"\"  comment:xyz\n");
+
+    // -----------------------------------------------------------------------------
+    Stage("push local changes to the origin, adopt its commit, and read the package as synced");
+    {
+        // The package here holds local additions the origin has never seen: a
+        // file, a record, and edits to a file the origin also edited.  Pushing
+        // sends all of it, the origin commits it, and the baseref moves to that
+        // commit.
+        vrfy(GetPackageDiffstat("sample")!="", "the package should differ from its base before the push");
+        PushPackage("sample");
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm));
+        vrfy_(SysCmd("git add -A")==0);
+        vrfy_(SysCmd("git commit -q -m 'take the local version of sample'")==0);
+        algo_lib::PopDir();
+        ResetPackage("sample","HEAD");
+    }
+    // The baseref now names the commit the origin made of this tree's
+    // projection, so the two sides carry the same package and the diff has
+    // nothing left to report.  This is the whole point of moving the baseref
+    // after a push: a baseref that stays behind describes a version the tree
+    // does not match, every later merge is computed against the wrong base, and
+    // nothing anywhere says so.  An empty diff straight after a sync is the one
+    // observation that catches it.
+    vrfy(GetPackageDiffstat("sample")=="", "the package should match its base after the push and reset");
+    // and the record carries a commit id rather than the word HEAD, which
+    // names no fixed version and resolves differently in every repo that reads it
+    {
+        tempstr out(SysEval("acr -report:N package:sample",FailokQ(true),1024));
+        tempstr line(Trimmed(out));
+        dev::Package package;
+        vrfy_(dev::Package_ReadStrptrMaybe(package,line));
+        vrfy(ch_N(package.baseref)==40, tempstr()<<"baseref should be a commit id, got "<<package.baseref);
+    }
 
     // -----------------------------------------------------------------------------
     Stage("create sample2 package with sample as parent");

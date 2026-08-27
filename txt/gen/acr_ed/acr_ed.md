@@ -3,11 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
-* [Tests](#tests)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -200,14 +202,14 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_ed.FCtype.msghdr|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|acr_ed.FCtype.c_field|[acr_ed.FField](/txt/gen/acr_ed/acr_ed.md#acr_ed-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|acr_ed.FCtype.c_cstr|[acr_ed.FCstr](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_ed.FCtype.p_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_ed.FCtype.c_ssimfile|[acr_ed.FSsimfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fssimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_ed.FCtype.c_pack|[acr_ed.FPack](/txt/gen/acr_ed/acr_ed.md#acr_ed-fpack)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_ed.FCtype.c_typefld|[acr_ed.FTypefld](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftypefld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_ed.FCtype.c_cpptype|[acr_ed.FCpptype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcpptype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|acr_ed.FCtype.c_cfmt|[acr_ed.FCfmt](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcfmt)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|acr_ed.FCtype.c_field|[acr_ed.FField](/txt/gen/acr_ed/acr_ed.md#acr_ed-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|acr_ed.FCtype.c_cstr|[acr_ed.FCstr](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_ed.FCtype.p_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_ed.FCtype.c_ssimfile|[acr_ed.FSsimfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fssimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_ed.FCtype.c_pack|[acr_ed.FPack](/txt/gen/acr_ed/acr_ed.md#acr_ed-fpack)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_ed.FCtype.c_typefld|[acr_ed.FTypefld](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftypefld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_ed.FCtype.c_cpptype|[acr_ed.FCpptype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcpptype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|acr_ed.FCtype.c_cfmt|[acr_ed.FCfmt](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcfmt)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -271,8 +273,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_ed.FEdaction.base|[dev.Edaction](/txt/ssimdb/dev/edaction.md)|[Base](/txt/ssimdb/dev/edaction.md)|||
-|acr_ed.FEdaction.step||[Hook](/txt/exe/amc/reftype.md#hook)|||
-|acr_ed.FEdaction.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr_ed.FEdaction.step||[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|acr_ed.FEdaction.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FEdaction
 <a href="#struct-fedaction"></a>
@@ -308,45 +310,45 @@ struct FEdaction { // acr_ed.FEdaction
 <a href="#acr_ed-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_ed.FDb.ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.ind_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_ed.FDb._db|[acr_ed.FDb](/txt/gen/acr_ed/acr_ed.md#acr_ed-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|acr_ed.FDb.cmdline|[command.acr_ed](/txt/protocol/command/README.md#command-acr_ed)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_ed.FDb.field|[acr_ed.FField](/txt/gen/acr_ed/acr_ed.md#acr_ed-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.ind_field|[acr_ed.FField](/txt/gen/acr_ed/acr_ed.md#acr_ed-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_ed.FDb.ctype|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.fcontents|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Optional file contents|
-|acr_ed.FDb.script|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Script to execute|
-|acr_ed.FDb.out_ssim|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Input for acr command|
-|acr_ed.FDb.ind_ctype|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_ed.FDb.ssimfile|[acr_ed.FSsimfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.ind_ssimfile|[acr_ed.FSsimfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_ed.FDb.cstr|[acr_ed.FCstr](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.vis|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|acr_ed.FDb.listtype|[acr_ed.FListtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-flisttype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.ind_listtype|[acr_ed.FListtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-flisttype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_ed.FDb.fprefix|[acr_ed.FFprefix](/txt/gen/acr_ed/acr_ed.md#acr_ed-ffprefix)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.target|[acr_ed.FTarget](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.ind_target|[acr_ed.FTarget](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftarget)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_ed.FDb.keyfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|acr_ed.FDb.viafld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|acr_ed.FDb.need_amc|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_ed.FDb.targsrc|[acr_ed.FTargsrc](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftargsrc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.abt|[command.abt](/txt/protocol/command/README.md#command-abt)|[Exec](/txt/exe/amc/reftype.md#exec)|||
-|acr_ed.FDb.sbpath|[acr_ed.FSbpath](/txt/gen/acr_ed/acr_ed.md#acr_ed-fsbpath)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.pack|[acr_ed.FPack](/txt/gen/acr_ed/acr_ed.md#acr_ed-fpack)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.typefld|[acr_ed.FTypefld](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftypefld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.cpptype|[acr_ed.FCpptype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcpptype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.cfmt|[acr_ed.FCfmt](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcfmt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.nsdb|[acr_ed.FNsdb](/txt/gen/acr_ed/acr_ed.md#acr_ed-fnsdb)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.ind_nsdb|[acr_ed.FNsdb](/txt/gen/acr_ed/acr_ed.md#acr_ed-fnsdb)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_ed.FDb.could_be_ptr|bool|[Val](/txt/exe/amc/reftype.md#val)||Used to automatically guess Ptr or Ptrary reftype on new fields|
-|acr_ed.FDb.edaction|[acr_ed.FEdaction](/txt/gen/acr_ed/acr_ed.md#acr_ed-fedaction)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|acr_ed.FDb.ind_edaction|[acr_ed.FEdaction](/txt/gen/acr_ed/acr_ed.md#acr_ed-fedaction)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|acr_ed.FDb.gitfile|[acr_ed.FGitfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fgitfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.msgtype|[acr_ed.FMsgtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fmsgtype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.reftype|[acr_ed.FReftype](/txt/gen/acr_ed/acr_ed.md#acr_ed-freftype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_ed.FDb.ind_reftype|[acr_ed.FReftype](/txt/gen/acr_ed/acr_ed.md#acr_ed-freftype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|acr_ed.FDb.ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.ind_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_ed.FDb._db|[acr_ed.FDb](/txt/gen/acr_ed/acr_ed.md#acr_ed-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|acr_ed.FDb.cmdline|[command.acr_ed](/txt/protocol/command/README.md#command-acr_ed)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_ed.FDb.field|[acr_ed.FField](/txt/gen/acr_ed/acr_ed.md#acr_ed-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.ind_field|[acr_ed.FField](/txt/gen/acr_ed/acr_ed.md#acr_ed-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_ed.FDb.ctype|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.fcontents|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Optional file contents|
+|acr_ed.FDb.script|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Script to execute|
+|acr_ed.FDb.out_ssim|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Input for acr command|
+|acr_ed.FDb.ind_ctype|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_ed.FDb.ssimfile|[acr_ed.FSsimfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.ind_ssimfile|[acr_ed.FSsimfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_ed.FDb.cstr|[acr_ed.FCstr](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.vis|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|acr_ed.FDb.listtype|[acr_ed.FListtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-flisttype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.ind_listtype|[acr_ed.FListtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-flisttype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_ed.FDb.fprefix|[acr_ed.FFprefix](/txt/gen/acr_ed/acr_ed.md#acr_ed-ffprefix)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.target|[acr_ed.FTarget](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.ind_target|[acr_ed.FTarget](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftarget)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_ed.FDb.keyfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|acr_ed.FDb.viafld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|acr_ed.FDb.need_amc|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_ed.FDb.targsrc|[acr_ed.FTargsrc](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftargsrc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.abt|[command.abt](/txt/protocol/command/README.md#command-abt)|[Exec](/txt/exe/amc/reftype/Exec.md)|||
+|acr_ed.FDb.sbpath|[acr_ed.FSbpath](/txt/gen/acr_ed/acr_ed.md#acr_ed-fsbpath)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.pack|[acr_ed.FPack](/txt/gen/acr_ed/acr_ed.md#acr_ed-fpack)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.typefld|[acr_ed.FTypefld](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftypefld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.cpptype|[acr_ed.FCpptype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcpptype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.cfmt|[acr_ed.FCfmt](/txt/gen/acr_ed/acr_ed.md#acr_ed-fcfmt)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.nsdb|[acr_ed.FNsdb](/txt/gen/acr_ed/acr_ed.md#acr_ed-fnsdb)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.ind_nsdb|[acr_ed.FNsdb](/txt/gen/acr_ed/acr_ed.md#acr_ed-fnsdb)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_ed.FDb.could_be_ptr|bool|[Val](/txt/exe/amc/reftype/Val.md)||Used to automatically guess Ptr or Ptrary reftype on new fields|
+|acr_ed.FDb.edaction|[acr_ed.FEdaction](/txt/gen/acr_ed/acr_ed.md#acr_ed-fedaction)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|acr_ed.FDb.ind_edaction|[acr_ed.FEdaction](/txt/gen/acr_ed/acr_ed.md#acr_ed-fedaction)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|acr_ed.FDb.gitfile|[acr_ed.FGitfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fgitfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.msgtype|[acr_ed.FMsgtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fmsgtype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.reftype|[acr_ed.FReftype](/txt/gen/acr_ed/acr_ed.md#acr_ed-freftype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_ed.FDb.ind_reftype|[acr_ed.FReftype](/txt/gen/acr_ed/acr_ed.md#acr_ed-freftype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -455,9 +457,9 @@ struct FDb { // acr_ed.FDb: In-memory database for acr_ed
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_ed.FField.msghdr|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|acr_ed.FField.p_ctype|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_ed.FField.p_arg|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_ed.FField.p_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|acr_ed.FField.p_ctype|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_ed.FField.p_arg|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_ed.FField.p_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -809,8 +811,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_ed.FSsimfile.msghdr|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
-|acr_ed.FSsimfile.p_ctype|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|acr_ed.FSsimfile.p_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|acr_ed.FSsimfile.p_ctype|[acr_ed.FCtype](/txt/gen/acr_ed/acr_ed.md#acr_ed-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|acr_ed.FSsimfile.p_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSsimfile
 <a href="#struct-fssimfile"></a>
@@ -852,9 +854,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_ed.FTarget.base|[dev.Target](/txt/ssimdb/dev/target.md)|[Base](/txt/ssimdb/dev/target.md)|||
-|acr_ed.FTarget.score|u32|[Val](/txt/exe/amc/reftype.md#val)||For guessing target from source file|
-|acr_ed.FTarget.zd_targsrc|[acr_ed.FTargsrc](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftargsrc)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|acr_ed.FTarget.p_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|acr_ed.FTarget.score|u32|[Val](/txt/exe/amc/reftype/Val.md)||For guessing target from source file|
+|acr_ed.FTarget.zd_targsrc|[acr_ed.FTargsrc](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftargsrc)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|acr_ed.FTarget.p_ns|[acr_ed.FNs](/txt/gen/acr_ed/acr_ed.md#acr_ed-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTarget
 <a href="#struct-ftarget"></a>
@@ -898,7 +900,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_ed.FTargsrc.base|[dev.Targsrc](/txt/ssimdb/dev/targsrc.md)|[Base](/txt/ssimdb/dev/targsrc.md)|||
-|acr_ed.FTargsrc.p_target|[acr_ed.FTarget](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|acr_ed.FTargsrc.p_target|[acr_ed.FTarget](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTargsrc
 <a href="#struct-ftargsrc"></a>
@@ -976,3 +978,5 @@ These can be executed with `atf_comp <comptest> -v`
 |[acr_ed.CreateSsimfile](/test/atf_comp/acr_ed.CreateSsimfile)|Script to create a new ssimfile|
 |[acr_ed.CreateSsimfileBadNs](/test/atf_comp/acr_ed.CreateSsimfileBadNs)|Create a ssimfile for a non-existence namespace|
 |[acr_ed.CreateTarget](/test/atf_comp/acr_ed.CreateTarget)|Script to create a new target|
+|[acr_ed.DelField](/test/atf_comp/acr_ed.DelField)|Deleting a field also rewrites the ssimfile that stored its values|
+|[acr_ed.RenameField](/test/atf_comp/acr_ed.RenameField)|A field rename resolves a bare name and refuses a query prefix or a new ssim-backed ctype|

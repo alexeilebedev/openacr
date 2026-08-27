@@ -577,7 +577,7 @@ struct AlarmMsg { // fm.AlarmMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:fm.AlarmMsg.base.CopyOut
-void                 parent_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 alarm_msg_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of AlarmMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of AlarmMsg.

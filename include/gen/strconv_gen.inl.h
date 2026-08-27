@@ -32,7 +32,6 @@ inline  strconv::trace::trace() {
 
 // --- strconv.FDb..Uninit
 inline void strconv::FDb_Uninit() {
-    strconv::FDb &row = _db; (void)row;
 }
 
 // --- strconv.FieldId.value.GetEnum

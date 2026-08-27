@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -56,9 +58,9 @@ All allocations are done through global `src_lim::_db` [src_lim.FDb](#src_lim-fd
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_lim.FBadline.base|[dev.Badline](/txt/ssimdb/dev/badline.md)|[Base](/txt/ssimdb/dev/badline.md)|||
-|src_lim.FBadline.regx|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_lim.FBadline._targsrc_regx|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_lim.FBadline.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|src_lim.FBadline.regx|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_lim.FBadline._targsrc_regx|[algo_lib.Regx](/txt/gen/algo_lib/algo_lib.md#algo_lib-regx)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_lim.FBadline.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FBadline
 <a href="#struct-fbadline"></a>
@@ -91,15 +93,15 @@ private:
 <a href="#src_lim-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|src_lim.FDb.include|[src_lim.FInclude](/txt/gen/src_lim/src_lim.md#src_lim-finclude)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_lim.FDb.linelim|[src_lim.FLinelim](/txt/gen/src_lim/src_lim.md#src_lim-flinelim)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_lim.FDb._db|[src_lim.FDb](/txt/gen/src_lim/src_lim.md#src_lim-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|src_lim.FDb.cmdline|[command.src_lim](/txt/protocol/command/README.md#command-src_lim)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_lim.FDb.targsrc|[src_lim.FTargsrc](/txt/gen/src_lim/src_lim.md#src_lim-ftargsrc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_lim.FDb.gitfile|[src_lim.FGitfile](/txt/gen/src_lim/src_lim.md#src_lim-fgitfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|src_lim.FDb.ind_gitfile|[src_lim.FGitfile](/txt/gen/src_lim/src_lim.md#src_lim-fgitfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|src_lim.FDb.outtext|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|src_lim.FDb.badline|[src_lim.FBadline](/txt/gen/src_lim/src_lim.md#src_lim-fbadline)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|src_lim.FDb.include|[src_lim.FInclude](/txt/gen/src_lim/src_lim.md#src_lim-finclude)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_lim.FDb.linelim|[src_lim.FLinelim](/txt/gen/src_lim/src_lim.md#src_lim-flinelim)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_lim.FDb._db|[src_lim.FDb](/txt/gen/src_lim/src_lim.md#src_lim-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|src_lim.FDb.cmdline|[command.src_lim](/txt/protocol/command/README.md#command-src_lim)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_lim.FDb.targsrc|[src_lim.FTargsrc](/txt/gen/src_lim/src_lim.md#src_lim-ftargsrc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_lim.FDb.gitfile|[src_lim.FGitfile](/txt/gen/src_lim/src_lim.md#src_lim-fgitfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|src_lim.FDb.ind_gitfile|[src_lim.FGitfile](/txt/gen/src_lim/src_lim.md#src_lim-fgitfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|src_lim.FDb.outtext|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|src_lim.FDb.badline|[src_lim.FBadline](/txt/gen/src_lim/src_lim.md#src_lim-fbadline)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -133,9 +135,9 @@ struct FDb { // src_lim.FDb: In-memory database for src_lim
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_lim.FGitfile.base|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Base](/txt/ssimdb/dev/gitfile.md)|||
-|src_lim.FGitfile.zd_include|[src_lim.FInclude](/txt/gen/src_lim/src_lim.md#src_lim-finclude)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|src_lim.FGitfile.c_linelim|[src_lim.FLinelim](/txt/gen/src_lim/src_lim.md#src_lim-flinelim)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|src_lim.FGitfile.c_targsrc|[src_lim.FTargsrc](/txt/gen/src_lim/src_lim.md#src_lim-ftargsrc)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|src_lim.FGitfile.zd_include|[src_lim.FInclude](/txt/gen/src_lim/src_lim.md#src_lim-finclude)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|src_lim.FGitfile.c_linelim|[src_lim.FLinelim](/txt/gen/src_lim/src_lim.md#src_lim-flinelim)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|src_lim.FGitfile.c_targsrc|[src_lim.FTargsrc](/txt/gen/src_lim/src_lim.md#src_lim-ftargsrc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FGitfile
 <a href="#struct-fgitfile"></a>
@@ -257,8 +259,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |src_lim.FTargsrc.base|[dev.Targsrc](/txt/ssimdb/dev/targsrc.md)|[Base](/txt/ssimdb/dev/targsrc.md)|||
-|src_lim.FTargsrc.p_gitfile|[src_lim.FGitfile](/txt/gen/src_lim/src_lim.md#src_lim-fgitfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|src_lim.FTargsrc.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|src_lim.FTargsrc.p_gitfile|[src_lim.FGitfile](/txt/gen/src_lim/src_lim.md#src_lim-fgitfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|src_lim.FTargsrc.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FTargsrc
 <a href="#struct-ftargsrc"></a>

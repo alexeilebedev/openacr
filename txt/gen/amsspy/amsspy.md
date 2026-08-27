@@ -1,6 +1,19 @@
 ## amsspy - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [amsspy - List ams sessions and monitor traffic on host](/txt/exe/amsspy/README.md)
+
 ### Sources
 <a href="#sources"></a>
 The source code license is GPL
@@ -42,13 +55,13 @@ All allocations are done through global `amsspy::_db` [amsspy.FDb](#amsspy-fdb) 
 <a href="#amsspy-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amsspy.FDb._db|[amsspy.FDb](/txt/gen/amsspy/amsspy.md#amsspy-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|amsspy.FDb.cmdline|[command.amsspy](/txt/protocol/command/README.md#command-amsspy)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amsspy.FDb.ind_session|[amsspy.FSession](/txt/gen/amsspy/amsspy.md#amsspy-fsession)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amsspy.FDb.session|[amsspy.FSession](/txt/gen/amsspy/amsspy.md#amsspy-fsession)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amsspy.FDb.shm|[amsspy.FShm](/txt/gen/amsspy/amsspy.md#amsspy-fshm)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amsspy.FDb.ind_shm|[amsspy.FShm](/txt/gen/amsspy/amsspy.md#amsspy-fshm)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amsspy.FDb.cd_shm_poll|[amsspy.FShm](/txt/gen/amsspy/amsspy.md#amsspy-fshm)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|amsspy.FDb._db|[amsspy.FDb](/txt/gen/amsspy/amsspy.md#amsspy-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|amsspy.FDb.cmdline|[command.amsspy](/txt/protocol/command/README.md#command-amsspy)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amsspy.FDb.ind_session|[amsspy.FSession](/txt/gen/amsspy/amsspy.md#amsspy-fsession)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amsspy.FDb.session|[amsspy.FSession](/txt/gen/amsspy/amsspy.md#amsspy-fsession)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amsspy.FDb.shm|[amsspy.FShm](/txt/gen/amsspy/amsspy.md#amsspy-fshm)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amsspy.FDb.ind_shm|[amsspy.FShm](/txt/gen/amsspy/amsspy.md#amsspy-fshm)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amsspy.FDb.cd_shm_poll|[amsspy.FShm](/txt/gen/amsspy/amsspy.md#amsspy-fshm)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -79,8 +92,8 @@ struct FDb { // amsspy.FDb
 <a href="#amsspy-fsession-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amsspy.FSession.session|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amsspy.FSession.c_shm|[amsspy.FShm](/txt/gen/amsspy/amsspy.md#amsspy-fshm)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|amsspy.FSession.session|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amsspy.FSession.c_shm|[amsspy.FShm](/txt/gen/amsspy/amsspy.md#amsspy-fshm)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FSession
 <a href="#struct-fsession"></a>
@@ -118,14 +131,14 @@ private:
 <a href="#amsspy-fshm-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amsspy.FShm.shm|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amsspy.FShm.p_session|[amsspy.FSession](/txt/gen/amsspy/amsspy.md#amsspy-fsession)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amsspy.FShm.hdr|u64|[Val](/txt/exe/amc/reftype.md#val)|0|Pointer to mapped Shmhdr (cast from mmap)|
-|amsspy.FShm.mem_size|u64|[Val](/txt/exe/amc/reftype.md#val)|0|Size of mapped memory (for munmap)|
-|amsspy.FShm.roff|u64|[Val](/txt/exe/amc/reftype.md#val)|0|Current read offset into ring buffer|
-|amsspy.FShm.mask|u32|[Val](/txt/exe/amc/reftype.md#val)|0|Offset mask (offset_mask from Shmhdr)|
-|amsspy.FShm.maxlen|u32|[Val](/txt/exe/amc/reftype.md#val)|0|Max message size (max_msg_size from Shmhdr)|
-|amsspy.FShm.buf|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Local message copy buffer|
+|amsspy.FShm.shm|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amsspy.FShm.p_session|[amsspy.FSession](/txt/gen/amsspy/amsspy.md#amsspy-fsession)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amsspy.FShm.hdr|u64|[Val](/txt/exe/amc/reftype/Val.md)|0|Pointer to mapped Shmhdr (cast from mmap)|
+|amsspy.FShm.mem_size|u64|[Val](/txt/exe/amc/reftype/Val.md)|0|Size of mapped memory (for munmap)|
+|amsspy.FShm.roff|u64|[Val](/txt/exe/amc/reftype/Val.md)|0|Current read offset into ring buffer|
+|amsspy.FShm.mask|u32|[Val](/txt/exe/amc/reftype/Val.md)|0|Offset mask (offset_mask from Shmhdr)|
+|amsspy.FShm.maxlen|u32|[Val](/txt/exe/amc/reftype/Val.md)|0|Max message size (max_msg_size from Shmhdr)|
+|amsspy.FShm.buf|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Local message copy buffer|
 
 #### Struct FShm
 <a href="#struct-fshm"></a>

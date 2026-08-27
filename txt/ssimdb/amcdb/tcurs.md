@@ -11,10 +11,10 @@ italicised fields: *curstype* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fi
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|tfunc|[amcdb.Tfunc](/txt/ssimdb/amcdb/tfunc.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|dflt|bool|[Val](/txt/exe/amc/reftype.md#val)||Generate cursor by default? (if not, require fcurs)|
-|*curstype*|*[amcdb.Curstype](/txt/ssimdb/amcdb/curstype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.RR of tfunc*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|tfunc|[amcdb.Tfunc](/txt/ssimdb/amcdb/tfunc.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|dflt|bool|[Val](/txt/exe/amc/reftype/Val.md)||Generate cursor by default? (if not, require fcurs)|
+|*curstype*|*[amcdb.Curstype](/txt/ssimdb/amcdb/curstype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.RR of tfunc*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

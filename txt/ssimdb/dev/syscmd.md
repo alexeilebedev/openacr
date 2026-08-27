@@ -9,15 +9,15 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|syscmd|i64|[Val](/txt/exe/amc/reftype.md#val)||Step number|
-|execkey|i64|[Val](/txt/exe/amc/reftype.md#val)||Execution priority: sequence number, nprereq|
-|command|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Command to execute|
-|pid|i32|[Val](/txt/exe/amc/reftype.md#val)||PID, if running|
-|status|i32|[Val](/txt/exe/amc/reftype.md#val)||Exit status (if command has completed)|
-|nprereq|i32|[Val](/txt/exe/amc/reftype.md#val)||Number of live pre-requisites|
-|fail_prereq|bool|[Val](/txt/exe/amc/reftype.md#val)||Set if one of pre-requisites fails|
-|completed|bool|[Val](/txt/exe/amc/reftype.md#val)||Completed?|
-|maxtime|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Optional max running time (used to use SIGALRM)|
+|syscmd|i64|[Val](/txt/exe/amc/reftype/Val.md)||Step number|
+|execkey|i64|[Val](/txt/exe/amc/reftype/Val.md)||Execution priority: sequence number, nprereq|
+|command|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Command to execute|
+|pid|i32|[Val](/txt/exe/amc/reftype/Val.md)||PID, if running|
+|status|i32|[Val](/txt/exe/amc/reftype/Val.md)||Exit status (if command has completed)|
+|nprereq|i32|[Val](/txt/exe/amc/reftype/Val.md)||Number of live pre-requisites|
+|fail_prereq|bool|[Val](/txt/exe/amc/reftype/Val.md)||Set if one of pre-requisites fails|
+|completed|bool|[Val](/txt/exe/amc/reftype/Val.md)||Completed?|
+|maxtime|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Optional max running time (used to use SIGALRM)|
 
 ### Subsets
 <a href="#subsets"></a>

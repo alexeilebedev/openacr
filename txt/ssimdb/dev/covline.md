@@ -11,12 +11,12 @@ italicised fields: *src, line* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) f
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|covline|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Key: file:line|
-|*src*|*[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*Source file<br>:RL of covline*|
-|*line*|*u32*|*[Val](/txt/exe/amc/reftype.md#val)*||*Source line<br>:RR of covline*|
-|flag|char|[Val](/txt/exe/amc/reftype.md#val)|'N'|Flag|
-|hit|u32|[Val](/txt/exe/amc/reftype.md#val)||Number of hits|
-|text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Line text|
+|covline|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Key: file:line|
+|*src*|*[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*Source file<br>:RL of covline*|
+|*line*|*u32*|*[Val](/txt/exe/amc/reftype/Val.md)*||*Source line<br>:RR of covline*|
+|flag|char|[Val](/txt/exe/amc/reftype/Val.md)|'N'|Flag|
+|hit|u32|[Val](/txt/exe/amc/reftype/Val.md)||Number of hits|
+|text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Line text|
 
 ### Constants
 <a href="#constants"></a>

@@ -42,11 +42,11 @@ inline  lib_sqlite::Cons::Cons() {
 
 // --- lib_sqlite.FConn..Init
 // Set all fields to initial values.
-inline void lib_sqlite::FConn_Init(lib_sqlite::FConn& conn) {
-    conn.db = NULL;
-    conn.conn_next = (lib_sqlite::FConn*)-1; // (lib_sqlite.FDb.conn) not-in-tpool's freelist
-    conn.ind_conn_next = (lib_sqlite::FConn*)-1; // (lib_sqlite.FDb.ind_conn) not-in-hash
-    conn.ind_conn_hashval = 0; // stored hash value
+inline void lib_sqlite::FConn_Init(lib_sqlite::FConn& parent) {
+    parent.db = NULL;
+    parent.conn_next = (lib_sqlite::FConn*)-1; // (lib_sqlite.FDb.conn) not-in-tpool's freelist
+    parent.ind_conn_next = (lib_sqlite::FConn*)-1; // (lib_sqlite.FDb.ind_conn) not-in-hash
+    parent.ind_conn_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FConn..Ctor
@@ -61,48 +61,48 @@ inline  lib_sqlite::FConn::~FConn() {
 
 // --- lib_sqlite.FCtype.c_field.EmptyQ
 // Return true if index is empty
-inline bool lib_sqlite::c_field_EmptyQ(lib_sqlite::FCtype& ctype) {
-    return ctype.c_field_n == 0;
+inline bool lib_sqlite::c_field_EmptyQ(lib_sqlite::FCtype& parent) {
+    return parent.c_field_n == 0;
 }
 
 // --- lib_sqlite.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_sqlite::FField* lib_sqlite::c_field_Find(lib_sqlite::FCtype& ctype, u64 t) {
+inline lib_sqlite::FField* lib_sqlite::c_field_Find(lib_sqlite::FCtype& parent, u64 t) {
     lib_sqlite::FField *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_field_n;
+    u64 lim = parent.c_field_n;
     if (idx < lim) {
-        retval = ctype.c_field_elems[idx];
+        retval = parent.c_field_elems[idx];
     }
     return retval;
 }
 
 // --- lib_sqlite.FCtype.c_field.Getary
 // Return array of pointers
-inline algo::aryptr<lib_sqlite::FField*> lib_sqlite::c_field_Getary(lib_sqlite::FCtype& ctype) {
-    return algo::aryptr<lib_sqlite::FField*>(ctype.c_field_elems, ctype.c_field_n);
+inline algo::aryptr<lib_sqlite::FField*> lib_sqlite::c_field_Getary(lib_sqlite::FCtype& parent) {
+    return algo::aryptr<lib_sqlite::FField*>(parent.c_field_elems, parent.c_field_n);
 }
 
 // --- lib_sqlite.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i64 lib_sqlite::c_field_N(const lib_sqlite::FCtype& ctype) {
-    return ctype.c_field_n;
+inline i64 lib_sqlite::c_field_N(const lib_sqlite::FCtype& parent) {
+    return parent.c_field_n;
 }
 
 // --- lib_sqlite.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void lib_sqlite::c_field_RemoveAll(lib_sqlite::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_field_n; i++) {
+inline void lib_sqlite::c_field_RemoveAll(lib_sqlite::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_field_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
+        parent.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
-    ctype.c_field_n = 0;
+    parent.c_field_n = 0;
 }
 
 // --- lib_sqlite.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline lib_sqlite::FField& lib_sqlite::c_field_qFind(lib_sqlite::FCtype& ctype, u64 idx) {
-    return *ctype.c_field_elems[idx];
+inline lib_sqlite::FField& lib_sqlite::c_field_qFind(lib_sqlite::FCtype& parent, u64 idx) {
+    return *parent.c_field_elems[idx];
 }
 
 // --- lib_sqlite.FCtype.c_field.InAryQ
@@ -113,73 +113,73 @@ inline bool lib_sqlite::ctype_c_field_InAryQ(lib_sqlite::FField& row) {
 
 // --- lib_sqlite.FCtype.c_field.qLast
 // Reference to last element without bounds checking
-inline lib_sqlite::FField& lib_sqlite::c_field_qLast(lib_sqlite::FCtype& ctype) {
-    return *ctype.c_field_elems[ctype.c_field_n-1];
+inline lib_sqlite::FField& lib_sqlite::c_field_qLast(lib_sqlite::FCtype& parent) {
+    return *parent.c_field_elems[parent.c_field_n-1];
 }
 
 // --- lib_sqlite.FCtype.c_sqltype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool lib_sqlite::c_sqltype_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FSqltype& row) {
-    lib_sqlite::FSqltype* ptr = ctype.c_sqltype;
+inline bool lib_sqlite::c_sqltype_InsertMaybe(lib_sqlite::FCtype& parent, lib_sqlite::FSqltype& row) {
+    lib_sqlite::FSqltype* ptr = parent.c_sqltype;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_sqltype = &row;
+        parent.c_sqltype = &row;
     }
     return retval;
 }
 
 // --- lib_sqlite.FCtype.c_sqltype.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void lib_sqlite::c_sqltype_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FSqltype& row) {
-    lib_sqlite::FSqltype *ptr = ctype.c_sqltype;
+inline void lib_sqlite::c_sqltype_Remove(lib_sqlite::FCtype& parent, lib_sqlite::FSqltype& row) {
+    lib_sqlite::FSqltype *ptr = parent.c_sqltype;
     if (LIKELY(ptr == &row)) {
-        ctype.c_sqltype = NULL;
+        parent.c_sqltype = NULL;
     }
 }
 
 // --- lib_sqlite.FCtype.ind_field_name.EmptyQ
 // Return true if hash is empty
-inline bool lib_sqlite::ind_field_name_EmptyQ(lib_sqlite::FCtype& ctype) {
-    return ctype.ind_field_name_n == 0;
+inline bool lib_sqlite::ind_field_name_EmptyQ(lib_sqlite::FCtype& parent) {
+    return parent.ind_field_name_n == 0;
 }
 
 // --- lib_sqlite.FCtype.ind_field_name.N
 // Return number of items in the hash
-inline i32 lib_sqlite::ind_field_name_N(const lib_sqlite::FCtype& ctype) {
-    return ctype.ind_field_name_n;
+inline i32 lib_sqlite::ind_field_name_N(const lib_sqlite::FCtype& parent) {
+    return parent.ind_field_name_n;
 }
 
 // --- lib_sqlite.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool lib_sqlite::c_ssimfile_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FSsimfile& row) {
-    lib_sqlite::FSsimfile* ptr = ctype.c_ssimfile;
+inline bool lib_sqlite::c_ssimfile_InsertMaybe(lib_sqlite::FCtype& parent, lib_sqlite::FSsimfile& row) {
+    lib_sqlite::FSsimfile* ptr = parent.c_ssimfile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_ssimfile = &row;
+        parent.c_ssimfile = &row;
     }
     return retval;
 }
 
 // --- lib_sqlite.FCtype.c_ssimfile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void lib_sqlite::c_ssimfile_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FSsimfile& row) {
-    lib_sqlite::FSsimfile *ptr = ctype.c_ssimfile;
+inline void lib_sqlite::c_ssimfile_Remove(lib_sqlite::FCtype& parent, lib_sqlite::FSsimfile& row) {
+    lib_sqlite::FSsimfile *ptr = parent.c_ssimfile;
     if (LIKELY(ptr == &row)) {
-        ctype.c_ssimfile = NULL;
+        parent.c_ssimfile = NULL;
     }
 }
 
 // --- lib_sqlite.FCtype.zd_row.EmptyQ
 // Return true if index is empty
-inline bool lib_sqlite::zd_row_EmptyQ(lib_sqlite::FCtype& ctype) {
-    return ctype.zd_row_head == NULL;
+inline bool lib_sqlite::zd_row_EmptyQ(lib_sqlite::FCtype& parent) {
+    return parent.zd_row_head == NULL;
 }
 
 // --- lib_sqlite.FCtype.zd_row.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_sqlite::FRow* lib_sqlite::zd_row_First(lib_sqlite::FCtype& ctype) {
+inline lib_sqlite::FRow* lib_sqlite::zd_row_First(lib_sqlite::FCtype& parent) {
     lib_sqlite::FRow *row = NULL;
-    row = ctype.zd_row_head;
+    row = parent.zd_row_head;
     return row;
 }
 
@@ -193,16 +193,16 @@ inline bool lib_sqlite::ctype_zd_row_InLlistQ(lib_sqlite::FRow& row) {
 
 // --- lib_sqlite.FCtype.zd_row.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_sqlite::FRow* lib_sqlite::zd_row_Last(lib_sqlite::FCtype& ctype) {
+inline lib_sqlite::FRow* lib_sqlite::zd_row_Last(lib_sqlite::FCtype& parent) {
     lib_sqlite::FRow *row = NULL;
-    row = ctype.zd_row_tail;
+    row = parent.zd_row_tail;
     return row;
 }
 
 // --- lib_sqlite.FCtype.zd_row.N
 // Return number of items in the linked list
-inline i32 lib_sqlite::zd_row_N(const lib_sqlite::FCtype& ctype) {
-    return ctype.zd_row_n;
+inline i32 lib_sqlite::zd_row_N(const lib_sqlite::FCtype& parent) {
+    return parent.zd_row_n;
 }
 
 // --- lib_sqlite.FCtype.zd_row.Next
@@ -219,68 +219,68 @@ inline lib_sqlite::FRow* lib_sqlite::ctype_zd_row_Prev(lib_sqlite::FRow &row) {
 
 // --- lib_sqlite.FCtype.zd_row.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_sqlite::FRow& lib_sqlite::zd_row_qLast(lib_sqlite::FCtype& ctype) {
+inline lib_sqlite::FRow& lib_sqlite::zd_row_qLast(lib_sqlite::FCtype& parent) {
     lib_sqlite::FRow *row = NULL;
-    row = ctype.zd_row_tail;
+    row = parent.zd_row_tail;
     return *row;
 }
 
 // --- lib_sqlite.FCtype.ind_pkey.EmptyQ
 // Return true if hash is empty
-inline bool lib_sqlite::ind_pkey_EmptyQ(lib_sqlite::FCtype& ctype) {
-    return ctype.ind_pkey_n == 0;
+inline bool lib_sqlite::ind_pkey_EmptyQ(lib_sqlite::FCtype& parent) {
+    return parent.ind_pkey_n == 0;
 }
 
 // --- lib_sqlite.FCtype.ind_pkey.N
 // Return number of items in the hash
-inline i32 lib_sqlite::ind_pkey_N(const lib_sqlite::FCtype& ctype) {
-    return ctype.ind_pkey_n;
+inline i32 lib_sqlite::ind_pkey_N(const lib_sqlite::FCtype& parent) {
+    return parent.ind_pkey_n;
 }
 
 // --- lib_sqlite.FCtype.c_row.EmptyQ
 // Return true if index is empty
-inline bool lib_sqlite::c_row_EmptyQ(lib_sqlite::FCtype& ctype) {
-    return ctype.c_row_n == 0;
+inline bool lib_sqlite::c_row_EmptyQ(lib_sqlite::FCtype& parent) {
+    return parent.c_row_n == 0;
 }
 
 // --- lib_sqlite.FCtype.c_row.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_sqlite::FRow* lib_sqlite::c_row_Find(lib_sqlite::FCtype& ctype, u64 t) {
+inline lib_sqlite::FRow* lib_sqlite::c_row_Find(lib_sqlite::FCtype& parent, u64 t) {
     lib_sqlite::FRow *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_row_n;
+    u64 lim = parent.c_row_n;
     if (idx < lim) {
-        retval = ctype.c_row_elems[idx];
+        retval = parent.c_row_elems[idx];
     }
     return retval;
 }
 
 // --- lib_sqlite.FCtype.c_row.Getary
 // Return array of pointers
-inline algo::aryptr<lib_sqlite::FRow*> lib_sqlite::c_row_Getary(lib_sqlite::FCtype& ctype) {
-    return algo::aryptr<lib_sqlite::FRow*>(ctype.c_row_elems, ctype.c_row_n);
+inline algo::aryptr<lib_sqlite::FRow*> lib_sqlite::c_row_Getary(lib_sqlite::FCtype& parent) {
+    return algo::aryptr<lib_sqlite::FRow*>(parent.c_row_elems, parent.c_row_n);
 }
 
 // --- lib_sqlite.FCtype.c_row.N
 // Return number of items in the pointer array
-inline i64 lib_sqlite::c_row_N(const lib_sqlite::FCtype& ctype) {
-    return ctype.c_row_n;
+inline i64 lib_sqlite::c_row_N(const lib_sqlite::FCtype& parent) {
+    return parent.c_row_n;
 }
 
 // --- lib_sqlite.FCtype.c_row.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void lib_sqlite::c_row_RemoveAll(lib_sqlite::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_row_n; i++) {
+inline void lib_sqlite::c_row_RemoveAll(lib_sqlite::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_row_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_row_elems[i]->ctype_c_row_in_ary = false;
+        parent.c_row_elems[i]->ctype_c_row_in_ary = false;
     }
-    ctype.c_row_n = 0;
+    parent.c_row_n = 0;
 }
 
 // --- lib_sqlite.FCtype.c_row.qFind
 // Return reference without bounds checking
-inline lib_sqlite::FRow& lib_sqlite::c_row_qFind(lib_sqlite::FCtype& ctype, u64 idx) {
-    return *ctype.c_row_elems[idx];
+inline lib_sqlite::FRow& lib_sqlite::c_row_qFind(lib_sqlite::FCtype& parent, u64 idx) {
+    return *parent.c_row_elems[idx];
 }
 
 // --- lib_sqlite.FCtype.c_row.InAryQ
@@ -291,8 +291,8 @@ inline bool lib_sqlite::ctype_c_row_InAryQ(lib_sqlite::FRow& row) {
 
 // --- lib_sqlite.FCtype.c_row.qLast
 // Reference to last element without bounds checking
-inline lib_sqlite::FRow& lib_sqlite::c_row_qLast(lib_sqlite::FCtype& ctype) {
-    return *ctype.c_row_elems[ctype.c_row_n-1];
+inline lib_sqlite::FRow& lib_sqlite::c_row_qLast(lib_sqlite::FCtype& parent) {
+    return *parent.c_row_elems[parent.c_row_n-1];
 }
 
 // --- lib_sqlite.FCtype.c_field_curs.Reset
@@ -1007,21 +1007,21 @@ inline lib_sqlite::FNs& lib_sqlite::_db_ns_curs_Access(_db_ns_curs &curs) {
 
 // --- lib_sqlite.FField.c_substr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool lib_sqlite::c_substr_InsertMaybe(lib_sqlite::FField& field, lib_sqlite::FSubstr& row) {
-    lib_sqlite::FSubstr* ptr = field.c_substr;
+inline bool lib_sqlite::c_substr_InsertMaybe(lib_sqlite::FField& parent, lib_sqlite::FSubstr& row) {
+    lib_sqlite::FSubstr* ptr = parent.c_substr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_substr = &row;
+        parent.c_substr = &row;
     }
     return retval;
 }
 
 // --- lib_sqlite.FField.c_substr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void lib_sqlite::c_substr_Remove(lib_sqlite::FField& field, lib_sqlite::FSubstr& row) {
-    lib_sqlite::FSubstr *ptr = field.c_substr;
+inline void lib_sqlite::c_substr_Remove(lib_sqlite::FField& parent, lib_sqlite::FSubstr& row) {
+    lib_sqlite::FSubstr *ptr = parent.c_substr;
     if (LIKELY(ptr == &row)) {
-        field.c_substr = NULL;
+        parent.c_substr = NULL;
     }
 }
 
@@ -1149,48 +1149,48 @@ inline  lib_sqlite::FIdx::~FIdx() {
 
 // --- lib_sqlite.FNs.c_ssimfile.EmptyQ
 // Return true if index is empty
-inline bool lib_sqlite::c_ssimfile_EmptyQ(lib_sqlite::FNs& ns) {
-    return ns.c_ssimfile_n == 0;
+inline bool lib_sqlite::c_ssimfile_EmptyQ(lib_sqlite::FNs& parent) {
+    return parent.c_ssimfile_n == 0;
 }
 
 // --- lib_sqlite.FNs.c_ssimfile.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_sqlite::FSsimfile* lib_sqlite::c_ssimfile_Find(lib_sqlite::FNs& ns, u64 t) {
+inline lib_sqlite::FSsimfile* lib_sqlite::c_ssimfile_Find(lib_sqlite::FNs& parent, u64 t) {
     lib_sqlite::FSsimfile *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_ssimfile_n;
+    u64 lim = parent.c_ssimfile_n;
     if (idx < lim) {
-        retval = ns.c_ssimfile_elems[idx];
+        retval = parent.c_ssimfile_elems[idx];
     }
     return retval;
 }
 
 // --- lib_sqlite.FNs.c_ssimfile.Getary
 // Return array of pointers
-inline algo::aryptr<lib_sqlite::FSsimfile*> lib_sqlite::c_ssimfile_Getary(lib_sqlite::FNs& ns) {
-    return algo::aryptr<lib_sqlite::FSsimfile*>(ns.c_ssimfile_elems, ns.c_ssimfile_n);
+inline algo::aryptr<lib_sqlite::FSsimfile*> lib_sqlite::c_ssimfile_Getary(lib_sqlite::FNs& parent) {
+    return algo::aryptr<lib_sqlite::FSsimfile*>(parent.c_ssimfile_elems, parent.c_ssimfile_n);
 }
 
 // --- lib_sqlite.FNs.c_ssimfile.N
 // Return number of items in the pointer array
-inline i64 lib_sqlite::c_ssimfile_N(const lib_sqlite::FNs& ns) {
-    return ns.c_ssimfile_n;
+inline i64 lib_sqlite::c_ssimfile_N(const lib_sqlite::FNs& parent) {
+    return parent.c_ssimfile_n;
 }
 
 // --- lib_sqlite.FNs.c_ssimfile.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void lib_sqlite::c_ssimfile_RemoveAll(lib_sqlite::FNs& ns) {
-    for (u64 i = 0; i < ns.c_ssimfile_n; i++) {
+inline void lib_sqlite::c_ssimfile_RemoveAll(lib_sqlite::FNs& parent) {
+    for (u64 i = 0; i < parent.c_ssimfile_n; i++) {
         // mark all elements as not-in-array
-        ns.c_ssimfile_elems[i]->ns_c_ssimfile_in_ary = false;
+        parent.c_ssimfile_elems[i]->ns_c_ssimfile_in_ary = false;
     }
-    ns.c_ssimfile_n = 0;
+    parent.c_ssimfile_n = 0;
 }
 
 // --- lib_sqlite.FNs.c_ssimfile.qFind
 // Return reference without bounds checking
-inline lib_sqlite::FSsimfile& lib_sqlite::c_ssimfile_qFind(lib_sqlite::FNs& ns, u64 idx) {
-    return *ns.c_ssimfile_elems[idx];
+inline lib_sqlite::FSsimfile& lib_sqlite::c_ssimfile_qFind(lib_sqlite::FNs& parent, u64 idx) {
+    return *parent.c_ssimfile_elems[idx];
 }
 
 // --- lib_sqlite.FNs.c_ssimfile.InAryQ
@@ -1201,18 +1201,18 @@ inline bool lib_sqlite::ns_c_ssimfile_InAryQ(lib_sqlite::FSsimfile& row) {
 
 // --- lib_sqlite.FNs.c_ssimfile.qLast
 // Reference to last element without bounds checking
-inline lib_sqlite::FSsimfile& lib_sqlite::c_ssimfile_qLast(lib_sqlite::FNs& ns) {
-    return *ns.c_ssimfile_elems[ns.c_ssimfile_n-1];
+inline lib_sqlite::FSsimfile& lib_sqlite::c_ssimfile_qLast(lib_sqlite::FNs& parent) {
+    return *parent.c_ssimfile_elems[parent.c_ssimfile_n-1];
 }
 
 // --- lib_sqlite.FNs..Init
 // Set all fields to initial values.
-inline void lib_sqlite::FNs_Init(lib_sqlite::FNs& ns) {
-    ns.c_ssimfile_elems = NULL; // (lib_sqlite.FNs.c_ssimfile)
-    ns.c_ssimfile_n = 0; // (lib_sqlite.FNs.c_ssimfile)
-    ns.c_ssimfile_max = 0; // (lib_sqlite.FNs.c_ssimfile)
-    ns.ind_ns_next = (lib_sqlite::FNs*)-1; // (lib_sqlite.FDb.ind_ns) not-in-hash
-    ns.ind_ns_hashval = 0; // stored hash value
+inline void lib_sqlite::FNs_Init(lib_sqlite::FNs& parent) {
+    parent.c_ssimfile_elems = NULL; // (lib_sqlite.FNs.c_ssimfile)
+    parent.c_ssimfile_n = 0; // (lib_sqlite.FNs.c_ssimfile)
+    parent.c_ssimfile_max = 0; // (lib_sqlite.FNs.c_ssimfile)
+    parent.ind_ns_next = (lib_sqlite::FNs*)-1; // (lib_sqlite.FDb.ind_ns) not-in-hash
+    parent.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FNs.c_ssimfile_curs.Reset
@@ -1252,14 +1252,14 @@ inline  lib_sqlite::FNs::~FNs() {
 
 // --- lib_sqlite.FRow..Init
 // Set all fields to initial values.
-inline void lib_sqlite::FRow_Init(lib_sqlite::FRow& trow) {
-    trow.p_ctype = NULL;
-    trow.rowid = i64(0);
-    trow.ctype_c_row_in_ary = bool(false);
-    trow.ctype_zd_row_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.zd_row) not-in-list
-    trow.ctype_zd_row_prev = NULL; // (lib_sqlite.FCtype.zd_row)
-    trow.ctype_ind_pkey_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.ind_pkey) not-in-hash
-    trow.ctype_ind_pkey_hashval = 0; // stored hash value
+inline void lib_sqlite::FRow_Init(lib_sqlite::FRow& parent) {
+    parent.p_ctype = NULL;
+    parent.rowid = i64(0);
+    parent.ctype_c_row_in_ary = bool(false);
+    parent.ctype_zd_row_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.zd_row) not-in-list
+    parent.ctype_zd_row_prev = NULL; // (lib_sqlite.FCtype.zd_row)
+    parent.ctype_ind_pkey_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.ind_pkey) not-in-hash
+    parent.ctype_ind_pkey_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FRow..Ctor
@@ -1283,12 +1283,12 @@ inline  lib_sqlite::FSqltype::~FSqltype() {
 
 // --- lib_sqlite.FSsimfile..Init
 // Set all fields to initial values.
-inline void lib_sqlite::FSsimfile_Init(lib_sqlite::FSsimfile& ssimfile) {
-    ssimfile.p_ctype = NULL;
-    ssimfile.p_ns = NULL;
-    ssimfile.ns_c_ssimfile_in_ary = bool(false);
-    ssimfile.ind_ssimfile_next = (lib_sqlite::FSsimfile*)-1; // (lib_sqlite.FDb.ind_ssimfile) not-in-hash
-    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
+inline void lib_sqlite::FSsimfile_Init(lib_sqlite::FSsimfile& parent) {
+    parent.p_ctype = NULL;
+    parent.p_ns = NULL;
+    parent.ns_c_ssimfile_in_ary = bool(false);
+    parent.ind_ssimfile_next = (lib_sqlite::FSsimfile*)-1; // (lib_sqlite.FDb.ind_ssimfile) not-in-hash
+    parent.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FSsimfile..Ctor
@@ -1303,8 +1303,8 @@ inline  lib_sqlite::FSsimfile::~FSsimfile() {
 
 // --- lib_sqlite.FSubstr..Init
 // Set all fields to initial values.
-inline void lib_sqlite::FSubstr_Init(lib_sqlite::FSubstr& substr) {
-    substr.p_srcfield = NULL;
+inline void lib_sqlite::FSubstr_Init(lib_sqlite::FSubstr& parent) {
+    parent.p_srcfield = NULL;
 }
 
 // --- lib_sqlite.FSubstr..Ctor
@@ -1430,7 +1430,7 @@ inline i64 lib_sqlite::c_curs_N(const lib_sqlite::Vtab& parent) {
 inline void lib_sqlite::c_curs_RemoveAll(lib_sqlite::Vtab& parent) {
     for (u64 i = 0; i < parent.c_curs_n; i++) {
         // mark all elements as not-in-array
-        parent.c_curs_elems[i]->parent_c_curs_in_ary = false;
+        parent.c_curs_elems[i]->vtab_c_curs_in_ary = false;
     }
     parent.c_curs_n = 0;
 }
@@ -1443,8 +1443,8 @@ inline lib_sqlite::VtabCurs& lib_sqlite::c_curs_qFind(lib_sqlite::Vtab& parent, 
 
 // --- lib_sqlite.Vtab.c_curs.InAryQ
 // True if row is in any ptrary instance
-inline bool lib_sqlite::parent_c_curs_InAryQ(lib_sqlite::VtabCurs& row) {
-    return row.parent_c_curs_in_ary;
+inline bool lib_sqlite::vtab_c_curs_InAryQ(lib_sqlite::VtabCurs& row) {
+    return row.vtab_c_curs_in_ary;
 }
 
 // --- lib_sqlite.Vtab.c_curs.qLast

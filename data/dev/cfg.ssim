@@ -1,5 +1,6 @@
 dev.cfg  cfg:""  suffix:""  comment:all
 dev.cfg  cfg:coverage  suffix:c  comment:"coverage measurement"
-dev.cfg  cfg:debug  suffix:d  comment:"bounds-checked build"
+dev.cfg  cfg:debug  suffix:d  comment:"unoptimized, with symbols"
+dev.cfg  cfg:memcheck  suffix:m  comment:"release with memory checks"
 dev.cfg  cfg:profile  suffix:p  comment:"release with various debug options still on"
-dev.cfg  cfg:release  suffix:r  comment:"all bound-checking disabled"
+dev.cfg  cfg:release  suffix:r  comment:"optimized, without symbols"

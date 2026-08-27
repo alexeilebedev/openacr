@@ -364,7 +364,7 @@ void                 nsdb_CopyIn(acr_my::FNsdb &row, dmmeta::Nsdb &in) __attribu
 
 // Set all fields to initial values.
 // func:acr_my.FNsdb..Init
-inline void          FNsdb_Init(acr_my::FNsdb& nsdb);
+inline void          FNsdb_Init(acr_my::FNsdb& parent);
 
 // --- acr_my.FSsimfile
 // create: acr_my.FDb.ssimfile (Lary)
@@ -387,13 +387,13 @@ void                 ssimfile_CopyOut(acr_my::FSsimfile &row, dmmeta::Ssimfile &
 void                 ssimfile_CopyIn(acr_my::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:acr_my.FSsimfile.ssimns.Get
-algo::strptr         ssimns_Get(acr_my::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(acr_my::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_my.FSsimfile.ns.Get
-algo::strptr         ns_Get(acr_my::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_my::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_my.FSsimfile.name.Get
-algo::strptr         name_Get(acr_my::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_my::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 
 // --- acr_my.FieldId

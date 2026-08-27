@@ -3,10 +3,13 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tests](#tests)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -119,6 +122,7 @@ The build target depends on the following libraries
 |---|---|
 |[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
 |[lib_amcdb](/txt/lib/lib_amcdb/README.md)|Library used by amc|
+|[lib_json](/txt/lib/lib_json/README.md)|Full json support library|
 
 ### In Memory DB
 <a href="#in-memory-db"></a>
@@ -512,7 +516,7 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 <a href="#amc-bltinid-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.BltinId.value|u8|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.BltinId.value|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct BltinId
 <a href="#struct-bltinid"></a>
@@ -538,7 +542,7 @@ struct BltinId { // amc.BltinId
 <a href="#amc-cppkeywordid-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.CppkeywordId.id|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.CppkeywordId.id|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct CppkeywordId
 <a href="#struct-cppkeywordid"></a>
@@ -560,8 +564,8 @@ struct CppkeywordId { // amc.CppkeywordId
 <a href="#amc-enumstr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.Enumstr.len|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.Enumstr.str|[algo.RnullStr8](/txt/protocol/algo/README.md#algo-rnullstr8)|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.Enumstr.len|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.Enumstr.str|[algo.RnullStr8](/txt/protocol/algo/README.md#algo-rnullstr8)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Enumstr
 <a href="#struct-enumstr"></a>
@@ -597,7 +601,7 @@ struct Enumstr { // amc.Enumstr: Key
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FAnonfld.msghdr|[dmmeta.Anonfld](/txt/ssimdb/dmmeta/anonfld.md)|[Base](/txt/ssimdb/dmmeta/anonfld.md)|||
-|amc.FAnonfld.anon_idx|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Index of anonymous field (if any)|
+|amc.FAnonfld.anon_idx|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|Index of anonymous field (if any)|
 
 #### Struct FAnonfld
 <a href="#struct-fanonfld"></a>
@@ -666,8 +670,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FBasepool.msghdr|[dmmeta.Basepool](/txt/ssimdb/dmmeta/basepool.md)|[Base](/txt/ssimdb/dmmeta/basepool.md)|||
-|amc.FBasepool.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FBasepool.p_base|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FBasepool.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FBasepool.p_base|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FBasepool
 <a href="#struct-fbasepool"></a>
@@ -707,8 +711,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FBitfld.msghdr|[dmmeta.Bitfld](/txt/ssimdb/dmmeta/bitfld.md)|[Base](/txt/ssimdb/dmmeta/bitfld.md)|||
-|amc.FBitfld.p_srcfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FBitfld.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FBitfld.p_srcfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FBitfld.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FBitfld
 <a href="#struct-fbitfld"></a>
@@ -752,9 +756,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FBlkhash.msghdr|[dmmeta.Blkhash](/txt/ssimdb/dmmeta/blkhash.md)|[Base](/txt/ssimdb/dmmeta/blkhash.md)|||
-|amc.FBlkhash.p_hashfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FBlkhash.p_linfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FBlkhash.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FBlkhash.p_hashfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FBlkhash.p_linfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FBlkhash.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FBlkhash
 <a href="#struct-fblkhash"></a>
@@ -839,7 +843,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCafter.msghdr|[dmmeta.Cafter](/txt/ssimdb/dmmeta/cafter.md)|[Base](/txt/ssimdb/dmmeta/cafter.md)|||
-|amc.FCafter.p_after|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FCafter.p_after|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCafter
 <a href="#struct-fcafter"></a>
@@ -878,7 +882,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCascdel.msghdr|[dmmeta.Cascdel](/txt/ssimdb/dmmeta/cascdel.md)|[Base](/txt/ssimdb/dmmeta/cascdel.md)|||
-|amc.FCascdel.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FCascdel.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCascdel
 <a href="#struct-fcascdel"></a>
@@ -915,8 +919,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCcmdline.base|[dmmeta.Ccmdline](/txt/ssimdb/dmmeta/ccmdline.md)|[Base](/txt/ssimdb/dmmeta/ccmdline.md)|||
-|amc.FCcmdline.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FCcmdline.p_basecmdline|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FCcmdline.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FCcmdline.p_basecmdline|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCcmdline
 <a href="#struct-fccmdline"></a>
@@ -1106,7 +1110,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCfmt.msghdr|[dmmeta.Cfmt](/txt/ssimdb/dmmeta/cfmt.md)|[Base](/txt/ssimdb/dmmeta/cfmt.md)|||
-|amc.FCfmt.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FCfmt.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCfmt
 <a href="#struct-fcfmt"></a>
@@ -1151,7 +1155,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCget.base|[dmmeta.Cget](/txt/ssimdb/dmmeta/cget.md)|[Base](/txt/ssimdb/dmmeta/cget.md)|||
-|amc.FCget.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FCget.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCget
 <a href="#struct-fcget"></a>
@@ -1180,7 +1184,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCharset.base|[dmmeta.Charset](/txt/ssimdb/dmmeta/charset.md)|[Base](/txt/ssimdb/dmmeta/charset.md)|||
-|amc.FCharset.chars|[algo.Charset](/txt/protocol/algo/Charset.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FCharset.chars|[algo.Charset](/txt/protocol/algo/Charset.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FCharset
 <a href="#struct-fcharset"></a>
@@ -1255,7 +1259,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCjsbltin.base|[dmmeta.Cjsbltin](/txt/ssimdb/dmmeta/cjsbltin.md)|[Base](/txt/ssimdb/dmmeta/cjsbltin.md)|||
-|amc.FCjsbltin.p_jsbltin|[amc.FJsbltin](/txt/gen/amc/amc.md#amc-fjsbltin)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FCjsbltin.p_jsbltin|[amc.FJsbltin](/txt/gen/amc/amc.md#amc-fjsbltin)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCjsbltin
 <a href="#struct-fcjsbltin"></a>
@@ -1294,7 +1298,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCjson.base|[dmmeta.Cjson](/txt/ssimdb/dmmeta/cjson.md)|[Base](/txt/ssimdb/dmmeta/cjson.md)|||
-|amc.FCjson.p_jsbltin|[amc.FJsbltin](/txt/gen/amc/amc.md#amc-fjsbltin)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FCjson.p_jsbltin|[amc.FJsbltin](/txt/gen/amc/amc.md#amc-fjsbltin)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCjson
 <a href="#struct-fcjson"></a>
@@ -1441,7 +1445,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCpptype.msghdr|[dmmeta.Cpptype](/txt/ssimdb/dmmeta/cpptype.md)|[Base](/txt/ssimdb/dmmeta/cpptype.md)|||
-|amc.FCpptype.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FCpptype.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCpptype
 <a href="#struct-fcpptype"></a>
@@ -1549,75 +1553,76 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FCtype.msghdr|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|amc.FCtype.zs_cfmt|[amc.FCfmt](/txt/gen/amc/amc.md#amc-fcfmt)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FCtype.cpp_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||type name to use in c++|
-|amc.FCtype.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Struct contents|
-|amc.FCtype.sizecheck|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Size check assertions|
-|amc.FCtype.c_init|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Pointer to constructor|
-|amc.FCtype.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FCtype.c_bltin|[amc.FBltin](/txt/gen/amc/amc.md#amc-fbltin)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FCtype.c_msgtype|[amc.FMsgtype](/txt/gen/amc/amc.md#amc-fmsgtype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_optfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_static|[amc.FStatictuple](/txt/gen/amc/amc.md#amc-fstatictuple)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FCtype.c_cpptype|[amc.FCpptype](/txt/gen/amc/amc.md#amc-fcpptype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_parent|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FCtype.c_ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Ssimfile associated with this ctype|
-|amc.FCtype.c_pack|[amc.FPack](/txt/gen/amc/amc.md#amc-fpack)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_lenfld|[amc.FLenfld](/txt/gen/amc/amc.md#amc-flenfld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||List of pmask fields in this ctype|
-|amc.FCtype.c_typefld|[amc.FTypefld](/txt/gen/amc/amc.md#amc-ftypefld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_datafld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Physical fields (non-fldfunc)|
-|amc.FCtype.zd_inst|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Llist](/txt/exe/amc/reftype.md#llist)||All the places where this ctype is instantiated (collected manually)|
-|amc.FCtype.zs_xref|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Llist](/txt/exe/amc/reftype.md#llist)||List of xrefs where this ctype is a child (collected manually)|
-|amc.FCtype.c_chash|[amc.FChash](/txt/gen/amc/amc.md#amc-fchash)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_ccmp|[amc.FCcmp](/txt/gen/amc/amc.md#amc-fccmp)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_cstr|[amc.FCstr](/txt/gen/amc/amc.md#amc-fcstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_cextern|[amc.FCextern](/txt/gen/amc/amc.md#amc-fcextern)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.signature|[algo.Sha1sig](/txt/protocol/algo/Sha1sig.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FCtype.c_ffunc|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FCtype.zd_cafter|[amc.FCafter](/txt/gen/amc/amc.md#amc-fcafter)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FCtype.c_csize|[amc.FCsize](/txt/gen/amc/amc.md#amc-fcsize)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.zd_access|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Llist](/txt/exe/amc/reftype.md#llist)||All access paths to this field (via field.arg)|
-|amc.FCtype.c_cdflt|[amc.FCdflt](/txt/gen/amc/amc.md#amc-fcdflt)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_argvtype|[amc.FArgvtype](/txt/gen/amc/amc.md#amc-fargvtype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_floadtuples|[amc.FFloadtuples](/txt/gen/amc/amc.md#amc-ffloadtuples)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||tuple sources this command loads at startup|
-|amc.FCtype.c_pkeyfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Field corresponding to pkey of this type|
-|amc.FCtype.c_fcurs|[amc.FFcurs](/txt/gen/amc/amc.md#amc-ffcurs)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FCtype.c_ctypelen|[amc.FCtypelen](/txt/gen/amc/amc.md#amc-fctypelen)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.size_unknown|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FCtype.size_locked|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FCtype.topo_visited|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Temporary|
-|amc.FCtype.enum_visited|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Temporary|
-|amc.FCtype.fields_cloned|bool|[Val](/txt/exe/amc/reftype.md#val)||True if fields from c_cbase have been cloned.|
-|amc.FCtype.original|bool|[Val](/txt/exe/amc/reftype.md#val)||True if this ctype comes from disk|
-|amc.FCtype.plaindata|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FCtype.has_dtor|bool|[Val](/txt/exe/amc/reftype.md#val)||Computed: the ctype owns something a destructor must release or unlink|
-|amc.FCtype.cheap_copy|bool|[Val](/txt/exe/amc/reftype.md#val)||Computed: type is plaindata and fits in MaxCheapCopySize bytes, so pass it by value|
-|amc.FCtype.declared_size|i32|[Val](/txt/exe/amc/reftype.md#val)||Computed at gen:cheapcopy: schema-declared byte size, 0 when the schema does not determine it|
-|amc.FCtype.declared_alignment|i32|[Val](/txt/exe/amc/reftype.md#val)|1|Computed at gen:cheapcopy: alignment implied by declared_size's members|
-|amc.FCtype.alignment|u32|[Val](/txt/exe/amc/reftype.md#val)|1||
-|amc.FCtype.n_padbytes|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FCtype.totsize_byte|u32|[Val](/txt/exe/amc/reftype.md#val)||Total size in bytes of all fields|
-|amc.FCtype.n_xref|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FCtype.next_anon_idx|i32|[Val](/txt/exe/amc/reftype.md#val)|0|sequence to enumerate positional fields|
-|amc.FCtype.c_nossimfile|[amc.FNossimfile](/txt/gen/amc/amc.md#amc-fnossimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.topo_idx|i32|[Val](/txt/exe/amc/reftype.md#val)||Index of ctype in array c_ctype (after topological sort)|
-|amc.FCtype.c_cfast|[amc.FCfast](/txt/gen/amc/amc.md#amc-fcfast)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_ffast|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FCtype.in_copy_priv|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FCtype.zd_varlenfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FCtype.c_jstype|[amc.FJstype](/txt/gen/amc/amc.md#amc-fjstype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_ckafka|[amc.FCkafka](/txt/gen/amc/amc.md#amc-fckafka)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_cjsbltin|[amc.FCjsbltin](/txt/gen/amc/amc.md#amc-fcjsbltin)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_cjson|[amc.FCjson](/txt/gen/amc/amc.md#amc-fcjson)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_ccmdline|[amc.FCcmdline](/txt/gen/amc/amc.md#amc-fccmdline)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_cpbuf|[amc.FCpbuf](/txt/gen/amc/amc.md#amc-fcpbuf)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FCtype.c_fpbufcase|[amc.FFpbufcase](/txt/gen/amc/amc.md#amc-ffpbufcase)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FCtype.in_compute_size|bool|[Val](/txt/exe/amc/reftype.md#val)||ComputeCtypeSize is walking this ctype's body (cycle detection)|
-|amc.FCtype.c_payloadhdr|[amc.FPayloadhdr](/txt/gen/amc/amc.md#amc-fpayloadhdr)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Derived payload header of this header ctype|
-|amc.FCtype.c_msg|[amc.FMsg](/txt/gen/amc/amc.md#amc-fmsg)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Derived message layout of this msg ctype|
-|amc.FCtype.c_pnew|[amc.FPnew](/txt/gen/amc/amc.md#amc-fpnew)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|amc.FCtype.zs_cfmt|[amc.FCfmt](/txt/gen/amc/amc.md#amc-fcfmt)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FCtype.cpp_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||type name to use in c++|
+|amc.FCtype.instname|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Name of a record of this ctype, for composing identifiers|
+|amc.FCtype.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Struct contents|
+|amc.FCtype.sizecheck|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Size check assertions|
+|amc.FCtype.c_init|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Pointer to constructor|
+|amc.FCtype.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FCtype.c_bltin|[amc.FBltin](/txt/gen/amc/amc.md#amc-fbltin)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FCtype.c_msgtype|[amc.FMsgtype](/txt/gen/amc/amc.md#amc-fmsgtype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_optfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_static|[amc.FStatictuple](/txt/gen/amc/amc.md#amc-fstatictuple)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FCtype.c_cpptype|[amc.FCpptype](/txt/gen/amc/amc.md#amc-fcpptype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_parent|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FCtype.c_ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Ssimfile associated with this ctype|
+|amc.FCtype.c_pack|[amc.FPack](/txt/gen/amc/amc.md#amc-fpack)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_lenfld|[amc.FLenfld](/txt/gen/amc/amc.md#amc-flenfld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||List of pmask fields in this ctype|
+|amc.FCtype.c_typefld|[amc.FTypefld](/txt/gen/amc/amc.md#amc-ftypefld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_datafld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Physical fields (non-fldfunc)|
+|amc.FCtype.zd_inst|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Llist](/txt/exe/amc/reftype/Llist.md)||All the places where this ctype is instantiated (collected manually)|
+|amc.FCtype.zs_xref|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Llist](/txt/exe/amc/reftype/Llist.md)||List of xrefs where this ctype is a child (collected manually)|
+|amc.FCtype.c_chash|[amc.FChash](/txt/gen/amc/amc.md#amc-fchash)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_ccmp|[amc.FCcmp](/txt/gen/amc/amc.md#amc-fccmp)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_cstr|[amc.FCstr](/txt/gen/amc/amc.md#amc-fcstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_cextern|[amc.FCextern](/txt/gen/amc/amc.md#amc-fcextern)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.signature|[algo.Signature](/txt/protocol/algo/Signature.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FCtype.c_ffunc|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FCtype.zd_cafter|[amc.FCafter](/txt/gen/amc/amc.md#amc-fcafter)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FCtype.c_csize|[amc.FCsize](/txt/gen/amc/amc.md#amc-fcsize)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.zd_access|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Llist](/txt/exe/amc/reftype/Llist.md)||All access paths to this field (via field.arg)|
+|amc.FCtype.c_cdflt|[amc.FCdflt](/txt/gen/amc/amc.md#amc-fcdflt)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_argvtype|[amc.FArgvtype](/txt/gen/amc/amc.md#amc-fargvtype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_floadtuples|[amc.FFloadtuples](/txt/gen/amc/amc.md#amc-ffloadtuples)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||tuple sources this command loads at startup|
+|amc.FCtype.c_pkeyfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Field corresponding to pkey of this type|
+|amc.FCtype.c_fcurs|[amc.FFcurs](/txt/gen/amc/amc.md#amc-ffcurs)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FCtype.c_ctypelen|[amc.FCtypelen](/txt/gen/amc/amc.md#amc-fctypelen)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.size_unknown|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FCtype.size_locked|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FCtype.topo_visited|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Temporary|
+|amc.FCtype.enum_visited|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Temporary|
+|amc.FCtype.fields_cloned|bool|[Val](/txt/exe/amc/reftype/Val.md)||True if fields from c_cbase have been cloned.|
+|amc.FCtype.original|bool|[Val](/txt/exe/amc/reftype/Val.md)||True if this ctype comes from disk|
+|amc.FCtype.plaindata|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FCtype.has_dtor|bool|[Val](/txt/exe/amc/reftype/Val.md)||Computed: the ctype owns something a destructor must release or unlink|
+|amc.FCtype.cheap_copy|bool|[Val](/txt/exe/amc/reftype/Val.md)||Computed: type is plaindata and fits in MaxCheapCopySize bytes, so pass it by value|
+|amc.FCtype.declared_size|i32|[Val](/txt/exe/amc/reftype/Val.md)||Computed at gen:cheapcopy: schema-declared byte size, 0 when the schema does not determine it|
+|amc.FCtype.declared_alignment|i32|[Val](/txt/exe/amc/reftype/Val.md)|1|Computed at gen:cheapcopy: alignment implied by declared_size's members|
+|amc.FCtype.alignment|u32|[Val](/txt/exe/amc/reftype/Val.md)|1||
+|amc.FCtype.n_padbytes|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FCtype.totsize_byte|u32|[Val](/txt/exe/amc/reftype/Val.md)||Total size in bytes of all fields|
+|amc.FCtype.n_xref|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FCtype.next_anon_idx|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|sequence to enumerate positional fields|
+|amc.FCtype.c_nossimfile|[amc.FNossimfile](/txt/gen/amc/amc.md#amc-fnossimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.topo_idx|i32|[Val](/txt/exe/amc/reftype/Val.md)||Index of ctype in array c_ctype (after topological sort)|
+|amc.FCtype.c_cfast|[amc.FCfast](/txt/gen/amc/amc.md#amc-fcfast)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_ffast|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FCtype.in_copy_priv|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FCtype.zd_varlenfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FCtype.c_jstype|[amc.FJstype](/txt/gen/amc/amc.md#amc-fjstype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_ckafka|[amc.FCkafka](/txt/gen/amc/amc.md#amc-fckafka)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_cjsbltin|[amc.FCjsbltin](/txt/gen/amc/amc.md#amc-fcjsbltin)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_cjson|[amc.FCjson](/txt/gen/amc/amc.md#amc-fcjson)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_ccmdline|[amc.FCcmdline](/txt/gen/amc/amc.md#amc-fccmdline)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_cpbuf|[amc.FCpbuf](/txt/gen/amc/amc.md#amc-fcpbuf)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FCtype.c_fpbufcase|[amc.FFpbufcase](/txt/gen/amc/amc.md#amc-ffpbufcase)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FCtype.in_compute_size|bool|[Val](/txt/exe/amc/reftype/Val.md)||ComputeCtypeSize is walking this ctype's body (cycle detection)|
+|amc.FCtype.c_payloadhdr|[amc.FPayloadhdr](/txt/gen/amc/amc.md#amc-fpayloadhdr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Derived payload header of this header ctype|
+|amc.FCtype.c_msg|[amc.FMsg](/txt/gen/amc/amc.md#amc-fmsg)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Derived message layout of this msg ctype|
+|amc.FCtype.c_pnew|[amc.FPnew](/txt/gen/amc/amc.md#amc-fpnew)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -1631,6 +1636,7 @@ struct FCtype { // amc.FCtype
     amc::FCfmt*           zs_cfmt_head;               // zero-terminated singly linked list
     amc::FCfmt*           zs_cfmt_tail;               // pointer to last element
     algo::cstring         cpp_type;                   // type name to use in c++
+    algo::cstring         instname;                   // Name of a record of this ctype, for composing identifiers
     algo::cstring         body;                       // Struct contents
     algo::cstring         sizecheck;                  // Size check assertions
     amc::FFunc*           c_init;                     // Pointer to constructor. optional pointer
@@ -1668,7 +1674,7 @@ struct FCtype { // amc.FCtype
     amc::FCcmp*           c_ccmp;                     // optional pointer
     amc::FCstr*           c_cstr;                     // optional pointer
     amc::FCextern*        c_cextern;                  // optional pointer
-    algo::Sha1sig         signature;                  //
+    algo::Signature       signature;                  //
     amc::FFunc**          c_ffunc_elems;              // array of pointers
     u64                   c_ffunc_n;                  // current size
     u64                   c_ffunc_max;                // capacity of allocated array
@@ -1915,11 +1921,11 @@ struct FJsbltin { // amc.FJsbltin
 <a href="#amc-genctx-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.Genctx.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.Genctx.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.Genctx.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.Genctx.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.Genctx.p_tfunc|[amc.FTfunc](/txt/gen/amc/amc.md#amc-ftfunc)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.Genctx.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.Genctx.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.Genctx.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.Genctx.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.Genctx.p_tfunc|[amc.FTfunc](/txt/gen/amc/amc.md#amc-ftfunc)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct Genctx
 <a href="#struct-genctx"></a>
@@ -1944,9 +1950,9 @@ struct Genctx { // amc.Genctx
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FTclass.msghdr|[amcdb.Tclass](/txt/ssimdb/amcdb/tclass.md)|[Base](/txt/ssimdb/amcdb/tclass.md)|||
-|amc.FTclass.c_tfunc|[amc.FTfunc](/txt/gen/amc/amc.md#amc-ftfunc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FTclass.step||[Hook](/txt/exe/amc/reftype.md#hook)|||
-|amc.FTclass.c_tcond|[amc.FTcond](/txt/gen/amc/amc.md#amc-ftcond)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|amc.FTclass.c_tfunc|[amc.FTfunc](/txt/gen/amc/amc.md#amc-ftfunc)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FTclass.step||[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|amc.FTclass.c_tcond|[amc.FTcond](/txt/gen/amc/amc.md#amc-ftcond)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FTclass
 <a href="#struct-ftclass"></a>
@@ -1990,211 +1996,211 @@ struct FTclass { // amc.FTclass
 <a href="#amc-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype.md#lpool)||private memory pool|
-|amc.FDb.fsort|[amc.FFsort](/txt/gen/amc/amc.md#amc-ffsort)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb._db|[amc.FDb](/txt/gen/amc/amc.md#amc-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|amc.FDb.ind_cfmt|[amc.FCfmt](/txt/gen/amc/amc.md#amc-fcfmt)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.dispfilter|[amc.FDispfilter](/txt/gen/amc/amc.md#amc-fdispfilter)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.usertracefld|[amc.FUsertracefld](/txt/gen/amc/amc.md#amc-fusertracefld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cfmt|[amc.FCfmt](/txt/gen/amc/amc.md#amc-fcfmt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cmdline|[command.amc](/txt/protocol/command/README.md#command-amc)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FDb.dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.dispatch_msg|[amc.FDispatchmsg](/txt/gen/amc/amc.md#amc-fdispatchmsg)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.basepool|[amc.FBasepool](/txt/gen/amc/amc.md#amc-fbasepool)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.llist|[amc.FLlist](/txt/gen/amc/amc.md#amc-fllist)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.anonfld|[amc.FAnonfld](/txt/gen/amc/amc.md#amc-fanonfld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.xref|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.pnew|[amc.FPnew](/txt/gen/amc/amc.md#amc-fpnew)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fldoffset|[amc.FFldoffset](/txt/gen/amc/amc.md#amc-ffldoffset)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.typefld|[amc.FTypefld](/txt/gen/amc/amc.md#amc-ftypefld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.lenfld|[amc.FLenfld](/txt/gen/amc/amc.md#amc-flenfld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.bltin|[amc.FBltin](/txt/gen/amc/amc.md#amc-fbltin)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.static_tuple|[amc.FStatictuple](/txt/gen/amc/amc.md#amc-fstatictuple)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.msgtype|[amc.FMsgtype](/txt/gen/amc/amc.md#amc-fmsgtype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.gconst|[amc.FGconst](/txt/gen/amc/amc.md#amc-fgconst)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.gstatic|[amc.FGstatic](/txt/gen/amc/amc.md#amc-fgstatic)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.thash|[amc.FThash](/txt/gen/amc/amc.md#amc-fthash)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.jsbltin|[amc.FJsbltin](/txt/gen/amc/amc.md#amc-fjsbltin)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|amc.FDb.outfile|[amc.FOutfile](/txt/gen/amc/amc.md#amc-foutfile)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|amc.FDb.func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.smallstr|[amc.FSmallstr](/txt/gen/amc/amc.md#amc-fsmallstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.numstr|[amc.FNumstr](/txt/gen/amc/amc.md#amc-fnumstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.main|[amc.FMain](/txt/gen/amc/amc.md#amc-fmain)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.reftype|[amc.FReftype](/txt/gen/amc/amc.md#amc-freftype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_bltin|[amc.FBltin](/txt/gen/amc/amc.md#amc-fbltin)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ind_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ind_dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ind_func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ind_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ind_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ind_pnew|[amc.FPnew](/txt/gen/amc/amc.md#amc-fpnew)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ind_xref|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.cpptype|[amc.FCpptype](/txt/gen/amc/amc.md#amc-fcpptype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_cpptype|[amc.FCpptype](/txt/gen/amc/amc.md#amc-fcpptype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.inlary|[amc.FInlary](/txt/gen/amc/amc.md#amc-finlary)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_inlary|[amc.FInlary](/txt/gen/amc/amc.md#amc-finlary)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.tary|[amc.FTary](/txt/gen/amc/amc.md#amc-ftary)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_tary|[amc.FTary](/txt/gen/amc/amc.md#amc-ftary)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.cppfunc|[amc.FCppfunc](/txt/gen/amc/amc.md#amc-fcppfunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.rowid|[amc.FRowid](/txt/gen/amc/amc.md#amc-frowid)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_rowid|[amc.FRowid](/txt/gen/amc/amc.md#amc-frowid)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.cascdel|[amc.FCascdel](/txt/gen/amc/amc.md#amc-fcascdel)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.substr|[amc.FSubstr](/txt/gen/amc/amc.md#amc-fsubstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.bitfld|[amc.FBitfld](/txt/gen/amc/amc.md#amc-fbitfld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.pack|[amc.FPack](/txt/gen/amc/amc.md#amc-fpack)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_pack|[amc.FPack](/txt/gen/amc/amc.md#amc-fpack)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ind_smallstr|[amc.FSmallstr](/txt/gen/amc/amc.md#amc-fsmallstr)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ptrary|[amc.FPtrary](/txt/gen/amc/amc.md#amc-fptrary)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.c_ctype_sorted|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FDb.enumstr|[amc.FEnumstr](/txt/gen/amc/amc.md#amc-fenumstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.enumstr_len|[amc.FEnumstrLen](/txt/gen/amc/amc.md#amc-fenumstrlen)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.bh_enumstr_len|[amc.FEnumstrLen](/txt/gen/amc/amc.md#amc-fenumstrlen)|[Bheap](/txt/exe/amc/reftype.md#bheap)||List of FEnumstrLen by length|
-|amc.FDb.ind_enumstr_len|[amc.FEnumstrLen](/txt/gen/amc/amc.md#amc-fenumstrlen)|[Thash](/txt/exe/amc/reftype.md#thash)||Index of FEnumstrLen by length|
-|amc.FDb.ind_enumstr|[amc.FEnumstr](/txt/gen/amc/amc.md#amc-fenumstr)|[Thash](/txt/exe/amc/reftype.md#thash)||Index of FEnumstr by string value|
-|amc.FDb.fbitset|[amc.FFbitset](/txt/gen/amc/amc.md#amc-ffbitset)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_fbitset|[amc.FFbitset](/txt/gen/amc/amc.md#amc-ffbitset)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.fdec|[amc.FFdec](/txt/gen/amc/amc.md#amc-ffdec)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_fdec|[amc.FFdec](/txt/gen/amc/amc.md#amc-ffdec)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ind_reftype|[amc.FReftype](/txt/gen/amc/amc.md#amc-freftype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.c_ns_sorted|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FDb.finput|[amc.FFinput](/txt/gen/amc/amc.md#amc-ffinput)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.foutput|[amc.FFoutput](/txt/gen/amc/amc.md#amc-ffoutput)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fbuf|[amc.FFbuf](/txt/gen/amc/amc.md#amc-ffbuf)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_fbuf|[amc.FFbuf](/txt/gen/amc/amc.md#amc-ffbuf)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.chash|[amc.FChash](/txt/gen/amc/amc.md#amc-fchash)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_chash|[amc.FChash](/txt/gen/amc/amc.md#amc-fchash)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ccmp|[amc.FCcmp](/txt/gen/amc/amc.md#amc-fccmp)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_ccmp|[amc.FCcmp](/txt/gen/amc/amc.md#amc-fccmp)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.fbigend|[amc.FFbigend](/txt/gen/amc/amc.md#amc-ffbigend)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.zsl_ctype_pack_tran|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Llist](/txt/exe/amc/reftype.md#llist)||Transitive closure on packed ctype|
-|amc.FDb.cstr|[amc.FCstr](/txt/gen/amc/amc.md#amc-fcstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.listtype|[amc.FListtype](/txt/gen/amc/amc.md#amc-flisttype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_listtype|[amc.FListtype](/txt/gen/amc/amc.md#amc-flisttype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.fstep|[amc.FFstep](/txt/gen/amc/amc.md#amc-ffstep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cextern|[amc.FCextern](/txt/gen/amc/amc.md#amc-fcextern)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fdelay|[amc.FFdelay](/txt/gen/amc/amc.md#amc-ffdelay)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.disptrace|[amc.FDisptrace](/txt/gen/amc/amc.md#amc-fdisptrace)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_fstep|[amc.FFstep](/txt/gen/amc/amc.md#amc-ffstep)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.tracefld|[amc.FTracefld](/txt/gen/amc/amc.md#amc-ftracefld)|[Lary](/txt/exe/amc/reftype.md#lary)||Word trace is already taken...|
-|amc.FDb.tracerec|[amc.FTracerec](/txt/gen/amc/amc.md#amc-ftracerec)|[Lary](/txt/exe/amc/reftype.md#lary)||Word trace is already taken...|
-|amc.FDb.dispsig|[amc.FDispsig](/txt/gen/amc/amc.md#amc-fdispsig)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.zs_sig_visit|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FDb.target|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_target|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.targdep|[amc.FTargdep](/txt/gen/amc/amc.md#amc-ftargdep)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.c_malloc|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FDb.dispctx|[amc.FDispctx](/txt/gen/amc/amc.md#amc-fdispctx)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.genctx|[amc.Genctx](/txt/gen/amc/amc.md#amc-genctx)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FDb.fwddecl|[amc.FFwddecl](/txt/gen/amc/amc.md#amc-ffwddecl)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_fwddecl|[amc.FFwddecl](/txt/gen/amc/amc.md#amc-ffwddecl)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.tfunc|[amc.FTfunc](/txt/gen/amc/amc.md#amc-ftfunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_tfunc|[amc.FTfunc](/txt/gen/amc/amc.md#amc-ftfunc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.gen|[amc.FGen](/txt/gen/amc/amc.md#amc-fgen)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.c_curns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FDb.fregx|[amc.FFregx](/txt/gen/amc/amc.md#amc-ffregx)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.tclass|[amc.FTclass](/txt/gen/amc/amc.md#amc-ftclass)|[Inlary](/txt/exe/amc/reftype.md#inlary)|||
-|amc.FDb.ind_tclass|[amc.FTclass](/txt/gen/amc/amc.md#amc-ftclass)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.fcmp|[amc.FFcmp](/txt/gen/amc/amc.md#amc-ffcmp)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fcast|[amc.FFcast](/txt/gen/amc/amc.md#amc-ffcast)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.nocascdel|[amc.FNocascdel](/txt/gen/amc/amc.md#amc-fnocascdel)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cafter|[amc.FCafter](/txt/gen/amc/amc.md#amc-fcafter)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.csize|[amc.FCsize](/txt/gen/amc/amc.md#amc-fcsize)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.nsx|[amc.FNsx](/txt/gen/amc/amc.md#amc-fnsx)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.report|[report.amc](/txt/protocol/report/README.md#report-amc)|[Val](/txt/exe/amc/reftype.md#val)||Final report|
-|amc.FDb.fcompact|[amc.FFcompact](/txt/gen/amc/amc.md#amc-ffcompact)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fcurs|[amc.FFcurs](/txt/gen/amc/amc.md#amc-ffcurs)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cdflt|[amc.FCdflt](/txt/gen/amc/amc.md#amc-fcdflt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.argvtype|[amc.FArgvtype](/txt/gen/amc/amc.md#amc-fargvtype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_main|[amc.FMain](/txt/gen/amc/amc.md#amc-fmain)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.floadtuples|[amc.FFloadtuples](/txt/gen/amc/amc.md#amc-ffloadtuples)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fcmap|[amc.FFcmap](/txt/gen/amc/amc.md#amc-ffcmap)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.lim_ind_func|u32|[Val](/txt/exe/amc/reftype.md#val)||Limit for ind_func table, used to enforce function creation|
-|amc.FDb.zs_ordkeyfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FDb.lockfile|[algo_lib.FLockfile](/txt/gen/algo_lib/algo_lib.md#algo_lib-flockfile)|[Val](/txt/exe/amc/reftype.md#val)||Prevent concurrent execution|
-|amc.FDb.nsproto|[amc.FNsproto](/txt/gen/amc/amc.md#amc-fnsproto)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.nsdb|[amc.FNsdb](/txt/gen/amc/amc.md#amc-fnsdb)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.zd_substr_params|[amc.FSubstr](/txt/gen/amc/amc.md#amc-fsubstr)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FDb.ind_fconst_int|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Thash](/txt/exe/amc/reftype.md#thash)||Used only during generation|
-|amc.FDb.fprefix|[amc.FFprefix](/txt/gen/amc/amc.md#amc-ffprefix)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ftrace|[amc.FFtrace](/txt/gen/amc/amc.md#amc-fftrace)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.c_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FDb.fnoremove|[amc.FFnoremove](/txt/gen/amc/amc.md#amc-ffnoremove)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.c_substr_field|[amc.FSubstr](/txt/gen/amc/amc.md#amc-fsubstr)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FDb.ctypelen|[amc.FCtypelen](/txt/gen/amc/amc.md#amc-fctypelen)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.c_u64|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FDb.ind_fcmap|[amc.FFcmap](/txt/gen/amc/amc.md#amc-ffcmap)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.nossimfile|[amc.FNossimfile](/txt/gen/amc/amc.md#amc-fnossimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.gsymbol|[amc.FGsymbol](/txt/gen/amc/amc.md#amc-fgsymbol)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.sortfld|[amc.FSortfld](/txt/gen/amc/amc.md#amc-fsortfld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cget|[amc.FCget](/txt/gen/amc/amc.md#amc-fcget)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cd_temp_func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FDb.zs_gen_perns|[amc.FGen](/txt/gen/amc/amc.md#amc-fgen)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FDb.hook|[amc.FHook](/txt/gen/amc/amc.md#amc-fhook)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.charset|[amc.FCharset](/txt/gen/amc/amc.md#amc-fcharset)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ValidRnumPad|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype.md#charset)|||
-|amc.FDb.nsinclude|[amc.FNsinclude](/txt/gen/amc/amc.md#amc-fnsinclude)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ssimvolatile|[amc.FSsimvolatile](/txt/gen/amc/amc.md#amc-fssimvolatile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.funique|[amc.FFunique](/txt/gen/amc/amc.md#amc-ffunique)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_fcurs|[amc.FFcurs](/txt/gen/amc/amc.md#amc-ffcurs)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.tcurs|[amc.FTcurs](/txt/gen/amc/amc.md#amc-ftcurs)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cur_gen|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FDb.has_ams_fwd_declare|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FDb.nscpp|[amc.FNscpp](/txt/gen/amc/amc.md#amc-fnscpp)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fflag|[amc.FFflag](/txt/gen/amc/amc.md#amc-ffflag)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_fflag|[amc.FFflag](/txt/gen/amc/amc.md#amc-ffflag)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.falias|[amc.FFalias](/txt/gen/amc/amc.md#amc-ffalias)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.copyright|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FDb.license|[amc.FLicense](/txt/gen/amc/amc.md#amc-flicense)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_license|[amc.FLicense](/txt/gen/amc/amc.md#amc-flicense)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.c_ssimfile_sorted|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Global list of ssimfiles topologically sorted by pkey|
-|amc.FDb.zd_ssimfile_todo|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Llist](/txt/exe/amc/reftype.md#llist)||Temporary, for sorting ssimfiles|
-|amc.FDb.cfast|[amc.FCfast](/txt/gen/amc/amc.md#amc-fcfast)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ffast|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.pmaskfld_member|[amc.FPmaskfldMember](/txt/gen/amc/amc.md#amc-fpmaskfldmember)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ssimsort|[amc.FSsimsort](/txt/gen/amc/amc.md#amc-fssimsort)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fbuftype|[amc.FFbuftype](/txt/gen/amc/amc.md#amc-ffbuftype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_fbuftype|[amc.FFbuftype](/txt/gen/amc/amc.md#amc-ffbuftype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.nsjs|[amc.FNsjs](/txt/gen/amc/amc.md#amc-fnsjs)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.jstype|[amc.FJstype](/txt/gen/amc/amc.md#amc-fjstype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ckafka|[amc.FCkafka](/txt/gen/amc/amc.md#amc-fckafka)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fkafka|[amc.FFkafka](/txt/gen/amc/amc.md#amc-ffkafka)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.userfunc|[amc.FUserfunc](/txt/gen/amc/amc.md#amc-fuserfunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.steptype|[amc.FSteptype](/txt/gen/amc/amc.md#amc-fsteptype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_steptype|[amc.FSteptype](/txt/gen/amc/amc.md#amc-fsteptype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.cjsbltin|[amc.FCjsbltin](/txt/gen/amc/amc.md#amc-fcjsbltin)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cjson|[amc.FCjson](/txt/gen/amc/amc.md#amc-fcjson)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_jsbltin|[amc.FJsbltin](/txt/gen/amc/amc.md#amc-fjsbltin)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.ccmdline|[amc.FCcmdline](/txt/gen/amc/amc.md#amc-fccmdline)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.cpbuf|[amc.FCpbuf](/txt/gen/amc/amc.md#amc-fcpbuf)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fpbuf|[amc.FFpbuf](/txt/gen/amc/amc.md#amc-ffpbuf)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.fpbufcase|[amc.FFpbufcase](/txt/gen/amc/amc.md#amc-ffpbufcase)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ffunc|[amc.FFfunc](/txt/gen/amc/amc.md#amc-fffunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_ffunc|[amc.FFfunc](/txt/gen/amc/amc.md#amc-fffunc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.blkhash|[amc.FBlkhash](/txt/gen/amc/amc.md#amc-fblkhash)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.sideload_noted|bool|[Val](/txt/exe/amc/reftype.md#val)|false|The side-load fallback notice has been printed|
-|amc.FDb.dataroot|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Root for side-loaded table data; -in_dir when it names a directory, else data|
-|amc.FDb.dataroot_dflt|bool|[Val](/txt/exe/amc/reftype.md#val)|false|-in_dir names no directory; side tables load from the default data root|
-|amc.FDb.n_generr|i32|[Val](/txt/exe/amc/reftype.md#val)|-1|exit_code captured when output begins (-1 before): generation errors, excluding write failures|
-|amc.FDb.fcond|[amc.FFcond](/txt/gen/amc/amc.md#amc-ffcond)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.tcond|[amc.FTcond](/txt/gen/amc/amc.md#amc-ftcond)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_tcond|[amc.FTcond](/txt/gen/amc/amc.md#amc-ftcond)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.payloadhdr|[amc.FPayloadhdr](/txt/gen/amc/amc.md#amc-fpayloadhdr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.msg|[amc.FMsg](/txt/gen/amc/amc.md#amc-fmsg)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.msgfield|[amc.FMsgfield](/txt/gen/amc/amc.md#amc-fmsgfield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_msg_typekey|[amc.FMsg](/txt/gen/amc/amc.md#amc-fmsg)|[Thash](/txt/exe/amc/reftype.md#thash)||Msgtype uniqueness per payload header|
-|amc.FDb.pbtype|[amc.FPbtype](/txt/gen/amc/amc.md#amc-fpbtype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_pbtype|[amc.FPbtype](/txt/gen/amc/amc.md#amc-fpbtype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FDb.pbsyntax|[amc.FPbsyntax](/txt/gen/amc/amc.md#amc-fpbsyntax)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|amc.FDb.ind_pbsyntax|[amc.FPbsyntax](/txt/gen/amc/amc.md#amc-fpbsyntax)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|amc.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftype/Lpool.md)||private memory pool|
+|amc.FDb.fsort|[amc.FFsort](/txt/gen/amc/amc.md#amc-ffsort)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb._db|[amc.FDb](/txt/gen/amc/amc.md#amc-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|amc.FDb.ind_cfmt|[amc.FCfmt](/txt/gen/amc/amc.md#amc-fcfmt)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.dispfilter|[amc.FDispfilter](/txt/gen/amc/amc.md#amc-fdispfilter)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.usertracefld|[amc.FUsertracefld](/txt/gen/amc/amc.md#amc-fusertracefld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cfmt|[amc.FCfmt](/txt/gen/amc/amc.md#amc-fcfmt)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cmdline|[command.amc](/txt/protocol/command/README.md#command-amc)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FDb.dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.dispatch_msg|[amc.FDispatchmsg](/txt/gen/amc/amc.md#amc-fdispatchmsg)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.basepool|[amc.FBasepool](/txt/gen/amc/amc.md#amc-fbasepool)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.llist|[amc.FLlist](/txt/gen/amc/amc.md#amc-fllist)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.anonfld|[amc.FAnonfld](/txt/gen/amc/amc.md#amc-fanonfld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.xref|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.pnew|[amc.FPnew](/txt/gen/amc/amc.md#amc-fpnew)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fldoffset|[amc.FFldoffset](/txt/gen/amc/amc.md#amc-ffldoffset)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.typefld|[amc.FTypefld](/txt/gen/amc/amc.md#amc-ftypefld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.lenfld|[amc.FLenfld](/txt/gen/amc/amc.md#amc-flenfld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.bltin|[amc.FBltin](/txt/gen/amc/amc.md#amc-fbltin)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.static_tuple|[amc.FStatictuple](/txt/gen/amc/amc.md#amc-fstatictuple)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.msgtype|[amc.FMsgtype](/txt/gen/amc/amc.md#amc-fmsgtype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.gconst|[amc.FGconst](/txt/gen/amc/amc.md#amc-fgconst)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.gstatic|[amc.FGstatic](/txt/gen/amc/amc.md#amc-fgstatic)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.thash|[amc.FThash](/txt/gen/amc/amc.md#amc-fthash)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.jsbltin|[amc.FJsbltin](/txt/gen/amc/amc.md#amc-fjsbltin)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|amc.FDb.outfile|[amc.FOutfile](/txt/gen/amc/amc.md#amc-foutfile)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|amc.FDb.func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.smallstr|[amc.FSmallstr](/txt/gen/amc/amc.md#amc-fsmallstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.numstr|[amc.FNumstr](/txt/gen/amc/amc.md#amc-fnumstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.main|[amc.FMain](/txt/gen/amc/amc.md#amc-fmain)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.reftype|[amc.FReftype](/txt/gen/amc/amc.md#amc-freftype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_bltin|[amc.FBltin](/txt/gen/amc/amc.md#amc-fbltin)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ind_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ind_dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ind_func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ind_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ind_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ind_pnew|[amc.FPnew](/txt/gen/amc/amc.md#amc-fpnew)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ind_xref|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.cpptype|[amc.FCpptype](/txt/gen/amc/amc.md#amc-fcpptype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_cpptype|[amc.FCpptype](/txt/gen/amc/amc.md#amc-fcpptype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.inlary|[amc.FInlary](/txt/gen/amc/amc.md#amc-finlary)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_inlary|[amc.FInlary](/txt/gen/amc/amc.md#amc-finlary)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.tary|[amc.FTary](/txt/gen/amc/amc.md#amc-ftary)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_tary|[amc.FTary](/txt/gen/amc/amc.md#amc-ftary)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.cppfunc|[amc.FCppfunc](/txt/gen/amc/amc.md#amc-fcppfunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.rowid|[amc.FRowid](/txt/gen/amc/amc.md#amc-frowid)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_rowid|[amc.FRowid](/txt/gen/amc/amc.md#amc-frowid)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.cascdel|[amc.FCascdel](/txt/gen/amc/amc.md#amc-fcascdel)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.substr|[amc.FSubstr](/txt/gen/amc/amc.md#amc-fsubstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.bitfld|[amc.FBitfld](/txt/gen/amc/amc.md#amc-fbitfld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.pack|[amc.FPack](/txt/gen/amc/amc.md#amc-fpack)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_pack|[amc.FPack](/txt/gen/amc/amc.md#amc-fpack)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ind_smallstr|[amc.FSmallstr](/txt/gen/amc/amc.md#amc-fsmallstr)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ptrary|[amc.FPtrary](/txt/gen/amc/amc.md#amc-fptrary)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.c_ctype_sorted|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FDb.enumstr|[amc.FEnumstr](/txt/gen/amc/amc.md#amc-fenumstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.enumstr_len|[amc.FEnumstrLen](/txt/gen/amc/amc.md#amc-fenumstrlen)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.bh_enumstr_len|[amc.FEnumstrLen](/txt/gen/amc/amc.md#amc-fenumstrlen)|[Bheap](/txt/exe/amc/reftype/Bheap.md)||List of FEnumstrLen by length|
+|amc.FDb.ind_enumstr_len|[amc.FEnumstrLen](/txt/gen/amc/amc.md#amc-fenumstrlen)|[Thash](/txt/exe/amc/reftype/Thash.md)||Index of FEnumstrLen by length|
+|amc.FDb.ind_enumstr|[amc.FEnumstr](/txt/gen/amc/amc.md#amc-fenumstr)|[Thash](/txt/exe/amc/reftype/Thash.md)||Index of FEnumstr by string value|
+|amc.FDb.fbitset|[amc.FFbitset](/txt/gen/amc/amc.md#amc-ffbitset)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_fbitset|[amc.FFbitset](/txt/gen/amc/amc.md#amc-ffbitset)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.fdec|[amc.FFdec](/txt/gen/amc/amc.md#amc-ffdec)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_fdec|[amc.FFdec](/txt/gen/amc/amc.md#amc-ffdec)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ind_reftype|[amc.FReftype](/txt/gen/amc/amc.md#amc-freftype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.c_ns_sorted|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FDb.finput|[amc.FFinput](/txt/gen/amc/amc.md#amc-ffinput)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.foutput|[amc.FFoutput](/txt/gen/amc/amc.md#amc-ffoutput)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fbuf|[amc.FFbuf](/txt/gen/amc/amc.md#amc-ffbuf)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_fbuf|[amc.FFbuf](/txt/gen/amc/amc.md#amc-ffbuf)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.chash|[amc.FChash](/txt/gen/amc/amc.md#amc-fchash)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_chash|[amc.FChash](/txt/gen/amc/amc.md#amc-fchash)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ccmp|[amc.FCcmp](/txt/gen/amc/amc.md#amc-fccmp)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_ccmp|[amc.FCcmp](/txt/gen/amc/amc.md#amc-fccmp)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.fbigend|[amc.FFbigend](/txt/gen/amc/amc.md#amc-ffbigend)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.zsl_ctype_pack_tran|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Llist](/txt/exe/amc/reftype/Llist.md)||Transitive closure on packed ctype|
+|amc.FDb.cstr|[amc.FCstr](/txt/gen/amc/amc.md#amc-fcstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.listtype|[amc.FListtype](/txt/gen/amc/amc.md#amc-flisttype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_listtype|[amc.FListtype](/txt/gen/amc/amc.md#amc-flisttype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.fstep|[amc.FFstep](/txt/gen/amc/amc.md#amc-ffstep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cextern|[amc.FCextern](/txt/gen/amc/amc.md#amc-fcextern)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fdelay|[amc.FFdelay](/txt/gen/amc/amc.md#amc-ffdelay)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.disptrace|[amc.FDisptrace](/txt/gen/amc/amc.md#amc-fdisptrace)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_fstep|[amc.FFstep](/txt/gen/amc/amc.md#amc-ffstep)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.tracefld|[amc.FTracefld](/txt/gen/amc/amc.md#amc-ftracefld)|[Lary](/txt/exe/amc/reftype/Lary.md)||Word trace is already taken...|
+|amc.FDb.tracerec|[amc.FTracerec](/txt/gen/amc/amc.md#amc-ftracerec)|[Lary](/txt/exe/amc/reftype/Lary.md)||Word trace is already taken...|
+|amc.FDb.dispsig|[amc.FDispsig](/txt/gen/amc/amc.md#amc-fdispsig)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.zs_sig_visit|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FDb.target|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_target|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.targdep|[amc.FTargdep](/txt/gen/amc/amc.md#amc-ftargdep)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.c_malloc|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FDb.dispctx|[amc.FDispctx](/txt/gen/amc/amc.md#amc-fdispctx)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.genctx|[amc.Genctx](/txt/gen/amc/amc.md#amc-genctx)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FDb.fwddecl|[amc.FFwddecl](/txt/gen/amc/amc.md#amc-ffwddecl)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_fwddecl|[amc.FFwddecl](/txt/gen/amc/amc.md#amc-ffwddecl)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.tfunc|[amc.FTfunc](/txt/gen/amc/amc.md#amc-ftfunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_tfunc|[amc.FTfunc](/txt/gen/amc/amc.md#amc-ftfunc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.gen|[amc.FGen](/txt/gen/amc/amc.md#amc-fgen)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.c_curns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FDb.fregx|[amc.FFregx](/txt/gen/amc/amc.md#amc-ffregx)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.tclass|[amc.FTclass](/txt/gen/amc/amc.md#amc-ftclass)|[Inlary](/txt/exe/amc/reftype/Inlary.md)|||
+|amc.FDb.ind_tclass|[amc.FTclass](/txt/gen/amc/amc.md#amc-ftclass)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.fcmp|[amc.FFcmp](/txt/gen/amc/amc.md#amc-ffcmp)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fcast|[amc.FFcast](/txt/gen/amc/amc.md#amc-ffcast)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.nocascdel|[amc.FNocascdel](/txt/gen/amc/amc.md#amc-fnocascdel)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cafter|[amc.FCafter](/txt/gen/amc/amc.md#amc-fcafter)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.csize|[amc.FCsize](/txt/gen/amc/amc.md#amc-fcsize)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.nsx|[amc.FNsx](/txt/gen/amc/amc.md#amc-fnsx)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.report|[report.amc](/txt/protocol/report/README.md#report-amc)|[Val](/txt/exe/amc/reftype/Val.md)||Final report|
+|amc.FDb.fcompact|[amc.FFcompact](/txt/gen/amc/amc.md#amc-ffcompact)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fcurs|[amc.FFcurs](/txt/gen/amc/amc.md#amc-ffcurs)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cdflt|[amc.FCdflt](/txt/gen/amc/amc.md#amc-fcdflt)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.argvtype|[amc.FArgvtype](/txt/gen/amc/amc.md#amc-fargvtype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_main|[amc.FMain](/txt/gen/amc/amc.md#amc-fmain)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.floadtuples|[amc.FFloadtuples](/txt/gen/amc/amc.md#amc-ffloadtuples)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fcmap|[amc.FFcmap](/txt/gen/amc/amc.md#amc-ffcmap)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.lim_ind_func|u32|[Val](/txt/exe/amc/reftype/Val.md)||Limit for ind_func table, used to enforce function creation|
+|amc.FDb.zs_ordkeyfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FDb.lockfile|[algo_lib.FLockfile](/txt/gen/algo_lib/algo_lib.md#algo_lib-flockfile)|[Val](/txt/exe/amc/reftype/Val.md)||Prevent concurrent execution|
+|amc.FDb.nsproto|[amc.FNsproto](/txt/gen/amc/amc.md#amc-fnsproto)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.nsdb|[amc.FNsdb](/txt/gen/amc/amc.md#amc-fnsdb)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.zd_substr_params|[amc.FSubstr](/txt/gen/amc/amc.md#amc-fsubstr)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FDb.ind_fconst_int|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Thash](/txt/exe/amc/reftype/Thash.md)||Used only during generation|
+|amc.FDb.fprefix|[amc.FFprefix](/txt/gen/amc/amc.md#amc-ffprefix)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ftrace|[amc.FFtrace](/txt/gen/amc/amc.md#amc-fftrace)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.c_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FDb.fnoremove|[amc.FFnoremove](/txt/gen/amc/amc.md#amc-ffnoremove)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.c_substr_field|[amc.FSubstr](/txt/gen/amc/amc.md#amc-fsubstr)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FDb.ctypelen|[amc.FCtypelen](/txt/gen/amc/amc.md#amc-fctypelen)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.c_u64|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FDb.ind_fcmap|[amc.FFcmap](/txt/gen/amc/amc.md#amc-ffcmap)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.nossimfile|[amc.FNossimfile](/txt/gen/amc/amc.md#amc-fnossimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.gsymbol|[amc.FGsymbol](/txt/gen/amc/amc.md#amc-fgsymbol)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.sortfld|[amc.FSortfld](/txt/gen/amc/amc.md#amc-fsortfld)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cget|[amc.FCget](/txt/gen/amc/amc.md#amc-fcget)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cd_temp_func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FDb.zs_gen_perns|[amc.FGen](/txt/gen/amc/amc.md#amc-fgen)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FDb.hook|[amc.FHook](/txt/gen/amc/amc.md#amc-fhook)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.charset|[amc.FCharset](/txt/gen/amc/amc.md#amc-fcharset)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ValidRnumPad|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftype/Charset.md)|||
+|amc.FDb.nsinclude|[amc.FNsinclude](/txt/gen/amc/amc.md#amc-fnsinclude)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ssimvolatile|[amc.FSsimvolatile](/txt/gen/amc/amc.md#amc-fssimvolatile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.funique|[amc.FFunique](/txt/gen/amc/amc.md#amc-ffunique)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_fcurs|[amc.FFcurs](/txt/gen/amc/amc.md#amc-ffcurs)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.tcurs|[amc.FTcurs](/txt/gen/amc/amc.md#amc-ftcurs)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cur_gen|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FDb.has_ams_fwd_declare|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FDb.nscpp|[amc.FNscpp](/txt/gen/amc/amc.md#amc-fnscpp)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fflag|[amc.FFflag](/txt/gen/amc/amc.md#amc-ffflag)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_fflag|[amc.FFflag](/txt/gen/amc/amc.md#amc-ffflag)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.falias|[amc.FFalias](/txt/gen/amc/amc.md#amc-ffalias)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.copyright|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FDb.license|[amc.FLicense](/txt/gen/amc/amc.md#amc-flicense)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_license|[amc.FLicense](/txt/gen/amc/amc.md#amc-flicense)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.c_ssimfile_sorted|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Global list of ssimfiles topologically sorted by pkey|
+|amc.FDb.zd_ssimfile_todo|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Llist](/txt/exe/amc/reftype/Llist.md)||Temporary, for sorting ssimfiles|
+|amc.FDb.cfast|[amc.FCfast](/txt/gen/amc/amc.md#amc-fcfast)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ffast|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.pmaskfld_member|[amc.FPmaskfldMember](/txt/gen/amc/amc.md#amc-fpmaskfldmember)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ssimsort|[amc.FSsimsort](/txt/gen/amc/amc.md#amc-fssimsort)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fbuftype|[amc.FFbuftype](/txt/gen/amc/amc.md#amc-ffbuftype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_fbuftype|[amc.FFbuftype](/txt/gen/amc/amc.md#amc-ffbuftype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.nsjs|[amc.FNsjs](/txt/gen/amc/amc.md#amc-fnsjs)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.jstype|[amc.FJstype](/txt/gen/amc/amc.md#amc-fjstype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ckafka|[amc.FCkafka](/txt/gen/amc/amc.md#amc-fckafka)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fkafka|[amc.FFkafka](/txt/gen/amc/amc.md#amc-ffkafka)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.userfunc|[amc.FUserfunc](/txt/gen/amc/amc.md#amc-fuserfunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.steptype|[amc.FSteptype](/txt/gen/amc/amc.md#amc-fsteptype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_steptype|[amc.FSteptype](/txt/gen/amc/amc.md#amc-fsteptype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.cjsbltin|[amc.FCjsbltin](/txt/gen/amc/amc.md#amc-fcjsbltin)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cjson|[amc.FCjson](/txt/gen/amc/amc.md#amc-fcjson)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_jsbltin|[amc.FJsbltin](/txt/gen/amc/amc.md#amc-fjsbltin)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.ccmdline|[amc.FCcmdline](/txt/gen/amc/amc.md#amc-fccmdline)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.cpbuf|[amc.FCpbuf](/txt/gen/amc/amc.md#amc-fcpbuf)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fpbuf|[amc.FFpbuf](/txt/gen/amc/amc.md#amc-ffpbuf)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.fpbufcase|[amc.FFpbufcase](/txt/gen/amc/amc.md#amc-ffpbufcase)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ffunc|[amc.FFfunc](/txt/gen/amc/amc.md#amc-fffunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_ffunc|[amc.FFfunc](/txt/gen/amc/amc.md#amc-fffunc)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.blkhash|[amc.FBlkhash](/txt/gen/amc/amc.md#amc-fblkhash)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.sideload_noted|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|The side-load fallback notice has been printed|
+|amc.FDb.dataroot|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Root for side-loaded table data; -in_dir when it names a directory, else data|
+|amc.FDb.dataroot_dflt|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|-in_dir names no directory; side tables load from the default data root|
+|amc.FDb.n_generr|i32|[Val](/txt/exe/amc/reftype/Val.md)|-1|exit_code captured when output begins (-1 before): generation errors, excluding write failures|
+|amc.FDb.fcond|[amc.FFcond](/txt/gen/amc/amc.md#amc-ffcond)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.tcond|[amc.FTcond](/txt/gen/amc/amc.md#amc-ftcond)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_tcond|[amc.FTcond](/txt/gen/amc/amc.md#amc-ftcond)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.payloadhdr|[amc.FPayloadhdr](/txt/gen/amc/amc.md#amc-fpayloadhdr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.msg|[amc.FMsg](/txt/gen/amc/amc.md#amc-fmsg)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.msgfield|[amc.FMsgfield](/txt/gen/amc/amc.md#amc-fmsgfield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_msg_typekey|[amc.FMsg](/txt/gen/amc/amc.md#amc-fmsg)|[Thash](/txt/exe/amc/reftype/Thash.md)||Msgtype uniqueness per payload header|
+|amc.FDb.pbtype|[amc.FPbtype](/txt/gen/amc/amc.md#amc-fpbtype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_pbtype|[amc.FPbtype](/txt/gen/amc/amc.md#amc-fpbtype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FDb.pbsyntax|[amc.FPbsyntax](/txt/gen/amc/amc.md#amc-fpbsyntax)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|amc.FDb.ind_pbsyntax|[amc.FPbsyntax](/txt/gen/amc/amc.md#amc-fpbsyntax)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -2658,16 +2664,16 @@ struct FDb { // amc.FDb: In-memory database for amc
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FDispatch.msghdr|[dmmeta.Dispatch](/txt/ssimdb/dmmeta/dispatch.md)|[Base](/txt/ssimdb/dmmeta/dispatch.md)|||
-|amc.FDispatch.dyn|bool|[Val](/txt/exe/amc/reftype.md#val)||Use dynamic memory allocation: new, delete instead of  ByteAry|
-|amc.FDispatch.kafka|bool|[Val](/txt/exe/amc/reftype.md#val)||generate kafka codec|
-|amc.FDispatch.p_ctype_hdr|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FDispatch.p_casetype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Optional casetype|
-|amc.FDispatch.c_dispfilter|[amc.FDispfilter](/txt/gen/amc/amc.md#amc-fdispfilter)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FDispatch.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FDispatch.c_dispatch_msg|[amc.FDispatchmsg](/txt/gen/amc/amc.md#amc-fdispatchmsg)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FDispatch.c_disptrace|[amc.FDisptrace](/txt/gen/amc/amc.md#amc-fdisptrace)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FDispatch.signature|[algo.Sha1sig](/txt/protocol/algo/Sha1sig.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FDispatch.c_dispctx|[amc.FDispctx](/txt/gen/amc/amc.md#amc-fdispctx)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|amc.FDispatch.dyn|bool|[Val](/txt/exe/amc/reftype/Val.md)||Use dynamic memory allocation: new, delete instead of  ByteAry|
+|amc.FDispatch.kafka|bool|[Val](/txt/exe/amc/reftype/Val.md)||generate kafka codec|
+|amc.FDispatch.p_ctype_hdr|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FDispatch.p_casetype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Optional casetype|
+|amc.FDispatch.c_dispfilter|[amc.FDispfilter](/txt/gen/amc/amc.md#amc-fdispfilter)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FDispatch.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FDispatch.c_dispatch_msg|[amc.FDispatchmsg](/txt/gen/amc/amc.md#amc-fdispatchmsg)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FDispatch.c_disptrace|[amc.FDisptrace](/txt/gen/amc/amc.md#amc-fdisptrace)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FDispatch.signature|[algo.Signature](/txt/protocol/algo/Signature.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FDispatch.c_dispctx|[amc.FDispctx](/txt/gen/amc/amc.md#amc-fdispctx)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FDispatch
 <a href="#struct-fdispatch"></a>
@@ -2696,7 +2702,7 @@ struct FDispatch { // amc.FDispatch
     u64                   c_dispatch_msg_n;       // current size
     u64                   c_dispatch_msg_max;     // capacity of allocated array
     amc::FDisptrace*      c_disptrace;            // optional pointer
-    algo::Sha1sig         signature;              //
+    algo::Signature       signature;              //
     amc::FDispctx*        c_dispctx;              // optional pointer
     bool                  ns_c_dispatch_in_ary;   //   false  membership flag
     // x-reference on amc.FDispatch.c_dispfilter prevents copy
@@ -2732,9 +2738,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FDispatchmsg.msghdr|[dmmeta.DispatchMsg](/txt/ssimdb/dmmeta/dispatch_msg.md)|[Base](/txt/ssimdb/dmmeta/dispatch_msg.md)|||
-|amc.FDispatchmsg.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FDispatchmsg.p_dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FDispatchmsg.selector|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FDispatchmsg.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FDispatchmsg.p_dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FDispatchmsg.selector|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDispatchmsg
 <a href="#struct-fdispatchmsg"></a>
@@ -2776,7 +2782,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FDispctx.msghdr|[dmmeta.Dispctx](/txt/ssimdb/dmmeta/dispctx.md)|[Base](/txt/ssimdb/dmmeta/dispctx.md)|||
-|amc.FDispctx.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FDispctx.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FDispctx
 <a href="#struct-fdispctx"></a>
@@ -2857,7 +2863,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FDispsig { // amc.FDispsig
     algo::Smallstr50   dispsig;               //
-    algo::Sha1sig      signature;             //
+    algo::Signature    signature;             //
     bool               ns_c_dispsig_in_ary;   //   false  membership flag
     // func:amc.FDispsig..AssignOp
     inline amc::FDispsig& operator =(const amc::FDispsig &rhs) = delete;
@@ -2883,7 +2889,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FDisptrace.msghdr|[dmmeta.Disptrace](/txt/ssimdb/dmmeta/disptrace.md)|[Base](/txt/ssimdb/dmmeta/disptrace.md)|||
-|amc.FDisptrace.p_dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FDisptrace.p_dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FDisptrace
 <a href="#struct-fdisptrace"></a>
@@ -2920,8 +2926,8 @@ private:
 <a href="#amc-fenumstr-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.FEnumstr.enumstr|[amc.Enumstr](/txt/gen/amc/amc.md#amc-enumstr)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FEnumstr.c_fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||for fconst use|
+|amc.FEnumstr.enumstr|[amc.Enumstr](/txt/gen/amc/amc.md#amc-enumstr)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FEnumstr.c_fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||for fconst use|
 
 #### Struct FEnumstr
 <a href="#struct-fenumstr"></a>
@@ -2960,8 +2966,8 @@ private:
 <a href="#amc-fenumstrlen-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.FEnumstrLen.len|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FEnumstrLen.bh_enumstr|[amc.FEnumstr](/txt/gen/amc/amc.md#amc-fenumstr)|[Bheap](/txt/exe/amc/reftype.md#bheap)||List of FEnumstr by string value|
+|amc.FEnumstrLen.len|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FEnumstrLen.bh_enumstr|[amc.FEnumstr](/txt/gen/amc/amc.md#amc-fenumstr)|[Bheap](/txt/exe/amc/reftype/Bheap.md)||List of FEnumstr by string value|
 
 #### Struct FEnumstrLen
 <a href="#struct-fenumstrlen"></a>
@@ -3001,7 +3007,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFalias.base|[dmmeta.Falias](/txt/ssimdb/dmmeta/falias.md)|[Base](/txt/ssimdb/dmmeta/falias.md)|||
-|amc.FFalias.p_srcfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFalias.p_srcfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFalias
 <a href="#struct-ffalias"></a>
@@ -3040,7 +3046,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFbigend.msghdr|[dmmeta.Fbigend](/txt/ssimdb/dmmeta/fbigend.md)|[Base](/txt/ssimdb/dmmeta/fbigend.md)|||
-|amc.FFbigend.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFbigend.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFbigend
 <a href="#struct-ffbigend"></a>
@@ -3077,7 +3083,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFbitset.msghdr|[dmmeta.Fbitset](/txt/ssimdb/dmmeta/fbitset.md)|[Base](/txt/ssimdb/dmmeta/fbitset.md)|||
-|amc.FFbitset.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFbitset.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFbitset
 <a href="#struct-ffbitset"></a>
@@ -3116,8 +3122,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFbuf.msghdr|[dmmeta.Fbuf](/txt/ssimdb/dmmeta/fbuf.md)|[Base](/txt/ssimdb/dmmeta/fbuf.md)|||
-|amc.FFbuf.p_fbuftype|[amc.FFbuftype](/txt/gen/amc/amc.md#amc-ffbuftype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FFbuf.p_pair|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFbuf.p_fbuftype|[amc.FFbuftype](/txt/gen/amc/amc.md#amc-ffbuftype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FFbuf.p_pair|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFbuf
 <a href="#struct-ffbuf"></a>
@@ -3234,9 +3240,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFcmap.base|[dmmeta.Fcmap](/txt/ssimdb/dmmeta/fcmap.md)|[Base](/txt/ssimdb/dmmeta/fcmap.md)|||
-|amc.FFcmap.p_leftField|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FFcmap.p_rightField|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FFcmap.c_convfunc|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Generated conversion func|
+|amc.FFcmap.p_leftField|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FFcmap.p_rightField|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FFcmap.c_convfunc|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Generated conversion func|
 
 #### Struct FFcmap
 <a href="#struct-ffcmap"></a>
@@ -3350,7 +3356,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFcond.base|[dmmeta.Fcond](/txt/ssimdb/dmmeta/fcond.md)|[Base](/txt/ssimdb/dmmeta/fcond.md)|||
-|amc.FFcond.p_ins|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)||The list field this row inserts into / removes from|
+|amc.FFcond.p_ins|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||The list field this row inserts into / removes from|
 
 #### Struct FFcond
 <a href="#struct-ffcond"></a>
@@ -3392,10 +3398,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFconst.msghdr|[dmmeta.Fconst](/txt/ssimdb/dmmeta/fconst.md)|[Base](/txt/ssimdb/dmmeta/fconst.md)|||
-|amc.FFconst.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FFconst.cpp_value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FFconst.int_val|i64|[Val](/txt/exe/amc/reftype.md#val)||integer value|
-|amc.FFconst.cpp_name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||symbol to use in cpp file|
+|amc.FFconst.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FFconst.cpp_value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FFconst.int_val|i64|[Val](/txt/exe/amc/reftype/Val.md)||integer value|
+|amc.FFconst.cpp_name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||symbol to use in cpp file|
 
 #### Struct FFconst
 <a href="#struct-ffconst"></a>
@@ -3441,7 +3447,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFcurs.base|[dmmeta.Fcurs](/txt/ssimdb/dmmeta/fcurs.md)|[Base](/txt/ssimdb/dmmeta/fcurs.md)|||
-|amc.FFcurs.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFcurs.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFcurs
 <a href="#struct-ffcurs"></a>
@@ -3481,10 +3487,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFdec.msghdr|[dmmeta.Fdec](/txt/ssimdb/dmmeta/fdec.md)|[Base](/txt/ssimdb/dmmeta/fdec.md)|||
-|amc.FFdec.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FFdec.nummin|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FFdec.nummax|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FFdec.issigned|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FFdec.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FFdec.nummin|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FFdec.nummax|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FFdec.issigned|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FFdec
 <a href="#struct-ffdec"></a>
@@ -3563,7 +3569,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFfast.base|[dmmeta.Ffast](/txt/ssimdb/dmmeta/ffast.md)|[Base](/txt/ssimdb/dmmeta/ffast.md)|||
-|amc.FFfast.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFfast.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFfast
 <a href="#struct-fffast"></a>
@@ -3648,7 +3654,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFfunc.base|[dmmeta.Ffunc](/txt/ssimdb/dmmeta/ffunc.md)|[Base](/txt/ssimdb/dmmeta/ffunc.md)|||
-|amc.FFfunc.used|bool|[Val](/txt/exe/amc/reftype.md#val)|false|set when amc emits code for this ffunc|
+|amc.FFfunc.used|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|set when amc emits code for this ffunc|
 
 #### Struct FFfunc
 <a href="#struct-fffunc"></a>
@@ -3688,77 +3694,77 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FField.msghdr|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|amc.FField.c_fsort|[amc.FFsort](/txt/gen/amc/amc.md#amc-ffsort)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fbitset|[amc.FFbitset](/txt/gen/amc/amc.md#amc-ffbitset)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_smallstr|[amc.FSmallstr](/txt/gen/amc/amc.md#amc-fsmallstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_ffunc|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FField.cpp_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||C++ expression to use in declaration|
-|amc.FField.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FField.p_arg|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FField.c_xref|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_anonfld|[amc.FAnonfld](/txt/gen/amc/amc.md#amc-fanonfld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fldoffset|[amc.FFldoffset](/txt/gen/amc/amc.md#amc-ffldoffset)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_basepool|[amc.FBasepool](/txt/gen/amc/amc.md#amc-fbasepool)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_llist|[amc.FLlist](/txt/gen/amc/amc.md#amc-fllist)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_thash|[amc.FThash](/txt/gen/amc/amc.md#amc-fthash)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_inlary|[amc.FInlary](/txt/gen/amc/amc.md#amc-finlary)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_tary|[amc.FTary](/txt/gen/amc/amc.md#amc-ftary)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_rowid|[amc.FRowid](/txt/gen/amc/amc.md#amc-frowid)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_cascdel|[amc.FCascdel](/txt/gen/amc/amc.md#amc-fcascdel)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.rowid|double|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FField.child_rowid|double|[Val](/txt/exe/amc/reftype.md#val)||Rowid increment for next child|
-|amc.FField.c_gstatic|[amc.FGstatic](/txt/gen/amc/amc.md#amc-fgstatic)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_ptrary|[amc.FPtrary](/txt/gen/amc/amc.md#amc-fptrary)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_typefld|[amc.FTypefld](/txt/gen/amc/amc.md#amc-ftypefld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fdec|[amc.FFdec](/txt/gen/amc/amc.md#amc-ffdec)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.p_reftype|[amc.FReftype](/txt/gen/amc/amc.md#amc-freftype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FField.c_fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FField.c_finput|[amc.FFinput](/txt/gen/amc/amc.md#amc-ffinput)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_foutput|[amc.FFoutput](/txt/gen/amc/amc.md#amc-ffoutput)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fbuf|[amc.FFbuf](/txt/gen/amc/amc.md#amc-ffbuf)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fbigend|[amc.FFbigend](/txt/gen/amc/amc.md#amc-ffbigend)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fstep|[amc.FFstep](/txt/gen/amc/amc.md#amc-ffstep)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fregx|[amc.FFregx](/txt/gen/amc/amc.md#amc-ffregx)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fcmp|[amc.FFcmp](/txt/gen/amc/amc.md#amc-ffcmp)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fcast|[amc.FFcast](/txt/gen/amc/amc.md#amc-ffcast)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_gconst|[amc.FGconst](/txt/gen/amc/amc.md#amc-fgconst)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_bitfld|[amc.FBitfld](/txt/gen/amc/amc.md#amc-fbitfld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_cppfunc|[amc.FCppfunc](/txt/gen/amc/amc.md#amc-fcppfunc)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_substr|[amc.FSubstr](/txt/gen/amc/amc.md#amc-fsubstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fcompact|[amc.FFcompact](/txt/gen/amc/amc.md#amc-ffcompact)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.zd_xref_keyfld|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FField.zs_fcmap|[amc.FFcmap](/txt/gen/amc/amc.md#amc-ffcmap)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|amc.FField.c_inkey_fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fnoremove|[amc.FFnoremove](/txt/gen/amc/amc.md#amc-ffnoremove)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_sortfld|[amc.FSortfld](/txt/gen/amc/amc.md#amc-fsortfld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_ftrace|[amc.FFtrace](/txt/gen/amc/amc.md#amc-fftrace)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.reflect|bool|[Val](/txt/exe/amc/reftype.md#val)||Want reflection|
-|amc.FField.ctype_read|bool|[Val](/txt/exe/amc/reftype.md#val)||Field is readable using its ctype's ReadStrptrMaybe function|
-|amc.FField.has_substr|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FField.need_firstchanged|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FField.do_trace|bool|[Val](/txt/exe/amc/reftype.md#val)||Enable tracing|
-|amc.FField.processed|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FField.synthetic|bool|[Val](/txt/exe/amc/reftype.md#val)|false||
-|amc.FField.visit|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Temporary flag|
-|amc.FField.c_hook|[amc.FHook](/txt/gen/amc/amc.md#amc-fhook)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_charset|[amc.FCharset](/txt/gen/amc/amc.md#amc-fcharset)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.bh_bitfld|[amc.FBitfld](/txt/gen/amc/amc.md#amc-fbitfld)|[Bheap](/txt/exe/amc/reftype.md#bheap)|||
-|amc.FField.c_funique|[amc.FFunique](/txt/gen/amc/amc.md#amc-ffunique)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fflag|[amc.FFflag](/txt/gen/amc/amc.md#amc-ffflag)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_falias|[amc.FFalias](/txt/gen/amc/amc.md#amc-ffalias)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_ffast_field|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_ffast_length|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_ffast_mantissa|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_ffast|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FField.c_pmaskfld_member|[amc.FPmaskfldMember](/txt/gen/amc/amc.md#amc-fpmaskfldmember)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FField.c_lenfld|[amc.FLenfld](/txt/gen/amc/amc.md#amc-flenfld)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fkafka|[amc.FFkafka](/txt/gen/amc/amc.md#amc-ffkafka)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fpbuf|[amc.FFpbuf](/txt/gen/amc/amc.md#amc-ffpbuf)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fpbufcase|[amc.FFpbufcase](/txt/gen/amc/amc.md#amc-ffpbufcase)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.zs_ffunc|[amc.FFfunc](/txt/gen/amc/amc.md#amc-fffunc)|[Llist](/txt/exe/amc/reftype.md#llist)||Singly-linked list of ffunc registrations on this field|
-|amc.FField.c_blkhash|[amc.FBlkhash](/txt/gen/amc/amc.md#amc-fblkhash)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FField.c_fcond|[amc.FFcond](/txt/gen/amc/amc.md#amc-ffcond)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||fcond rows watching this field|
+|amc.FField.c_fsort|[amc.FFsort](/txt/gen/amc/amc.md#amc-ffsort)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fbitset|[amc.FFbitset](/txt/gen/amc/amc.md#amc-ffbitset)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_smallstr|[amc.FSmallstr](/txt/gen/amc/amc.md#amc-fsmallstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_ffunc|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FField.cpp_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||C++ expression to use in declaration|
+|amc.FField.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FField.p_arg|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FField.c_xref|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_anonfld|[amc.FAnonfld](/txt/gen/amc/amc.md#amc-fanonfld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fldoffset|[amc.FFldoffset](/txt/gen/amc/amc.md#amc-ffldoffset)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_basepool|[amc.FBasepool](/txt/gen/amc/amc.md#amc-fbasepool)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_llist|[amc.FLlist](/txt/gen/amc/amc.md#amc-fllist)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_thash|[amc.FThash](/txt/gen/amc/amc.md#amc-fthash)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_inlary|[amc.FInlary](/txt/gen/amc/amc.md#amc-finlary)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_tary|[amc.FTary](/txt/gen/amc/amc.md#amc-ftary)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_rowid|[amc.FRowid](/txt/gen/amc/amc.md#amc-frowid)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_cascdel|[amc.FCascdel](/txt/gen/amc/amc.md#amc-fcascdel)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.rowid|double|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FField.child_rowid|double|[Val](/txt/exe/amc/reftype/Val.md)||Rowid increment for next child|
+|amc.FField.c_gstatic|[amc.FGstatic](/txt/gen/amc/amc.md#amc-fgstatic)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_ptrary|[amc.FPtrary](/txt/gen/amc/amc.md#amc-fptrary)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_typefld|[amc.FTypefld](/txt/gen/amc/amc.md#amc-ftypefld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fdec|[amc.FFdec](/txt/gen/amc/amc.md#amc-ffdec)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.p_reftype|[amc.FReftype](/txt/gen/amc/amc.md#amc-freftype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FField.c_fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FField.c_finput|[amc.FFinput](/txt/gen/amc/amc.md#amc-ffinput)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_foutput|[amc.FFoutput](/txt/gen/amc/amc.md#amc-ffoutput)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fbuf|[amc.FFbuf](/txt/gen/amc/amc.md#amc-ffbuf)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fbigend|[amc.FFbigend](/txt/gen/amc/amc.md#amc-ffbigend)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fstep|[amc.FFstep](/txt/gen/amc/amc.md#amc-ffstep)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fregx|[amc.FFregx](/txt/gen/amc/amc.md#amc-ffregx)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fcmp|[amc.FFcmp](/txt/gen/amc/amc.md#amc-ffcmp)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fcast|[amc.FFcast](/txt/gen/amc/amc.md#amc-ffcast)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_gconst|[amc.FGconst](/txt/gen/amc/amc.md#amc-fgconst)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_bitfld|[amc.FBitfld](/txt/gen/amc/amc.md#amc-fbitfld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_cppfunc|[amc.FCppfunc](/txt/gen/amc/amc.md#amc-fcppfunc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_substr|[amc.FSubstr](/txt/gen/amc/amc.md#amc-fsubstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fcompact|[amc.FFcompact](/txt/gen/amc/amc.md#amc-ffcompact)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.zd_xref_keyfld|[amc.FXref](/txt/gen/amc/amc.md#amc-fxref)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FField.zs_fcmap|[amc.FFcmap](/txt/gen/amc/amc.md#amc-ffcmap)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|amc.FField.c_inkey_fconst|[amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fnoremove|[amc.FFnoremove](/txt/gen/amc/amc.md#amc-ffnoremove)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_sortfld|[amc.FSortfld](/txt/gen/amc/amc.md#amc-fsortfld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_ftrace|[amc.FFtrace](/txt/gen/amc/amc.md#amc-fftrace)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.reflect|bool|[Val](/txt/exe/amc/reftype/Val.md)||Want reflection|
+|amc.FField.ctype_read|bool|[Val](/txt/exe/amc/reftype/Val.md)||Field is readable using its ctype's ReadStrptrMaybe function|
+|amc.FField.has_substr|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FField.need_firstchanged|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FField.do_trace|bool|[Val](/txt/exe/amc/reftype/Val.md)||Enable tracing|
+|amc.FField.processed|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FField.synthetic|bool|[Val](/txt/exe/amc/reftype/Val.md)|false||
+|amc.FField.visit|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Temporary flag|
+|amc.FField.c_hook|[amc.FHook](/txt/gen/amc/amc.md#amc-fhook)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_charset|[amc.FCharset](/txt/gen/amc/amc.md#amc-fcharset)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.bh_bitfld|[amc.FBitfld](/txt/gen/amc/amc.md#amc-fbitfld)|[Bheap](/txt/exe/amc/reftype/Bheap.md)|||
+|amc.FField.c_funique|[amc.FFunique](/txt/gen/amc/amc.md#amc-ffunique)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fflag|[amc.FFflag](/txt/gen/amc/amc.md#amc-ffflag)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_falias|[amc.FFalias](/txt/gen/amc/amc.md#amc-ffalias)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_ffast_field|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_ffast_length|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_ffast_mantissa|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_ffast|[amc.FFfast](/txt/gen/amc/amc.md#amc-fffast)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FField.c_pmaskfld_member|[amc.FPmaskfldMember](/txt/gen/amc/amc.md#amc-fpmaskfldmember)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FField.c_lenfld|[amc.FLenfld](/txt/gen/amc/amc.md#amc-flenfld)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fkafka|[amc.FFkafka](/txt/gen/amc/amc.md#amc-ffkafka)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fpbuf|[amc.FFpbuf](/txt/gen/amc/amc.md#amc-ffpbuf)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fpbufcase|[amc.FFpbufcase](/txt/gen/amc/amc.md#amc-ffpbufcase)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.zs_ffunc|[amc.FFfunc](/txt/gen/amc/amc.md#amc-fffunc)|[Llist](/txt/exe/amc/reftype/Llist.md)||Singly-linked list of ffunc registrations on this field|
+|amc.FField.c_blkhash|[amc.FBlkhash](/txt/gen/amc/amc.md#amc-fblkhash)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FField.c_fcond|[amc.FFcond](/txt/gen/amc/amc.md#amc-ffcond)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||fcond rows watching this field|
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -4010,7 +4016,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFinput.msghdr|[dmmeta.Finput](/txt/ssimdb/dmmeta/finput.md)|[Base](/txt/ssimdb/dmmeta/finput.md)|||
-|amc.FFinput.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFinput.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFinput
 <a href="#struct-ffinput"></a>
@@ -4087,7 +4093,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFldoffset.msghdr|[dmmeta.Fldoffset](/txt/ssimdb/dmmeta/fldoffset.md)|[Base](/txt/ssimdb/dmmeta/fldoffset.md)|||
-|amc.FFldoffset.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFldoffset.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFldoffset
 <a href="#struct-ffldoffset"></a>
@@ -4124,7 +4130,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFloadtuples.base|[dmmeta.Floadtuples](/txt/ssimdb/dmmeta/floadtuples.md)|[Base](/txt/ssimdb/dmmeta/floadtuples.md)|||
-|amc.FFloadtuples.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFloadtuples.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFloadtuples
 <a href="#struct-ffloadtuples"></a>
@@ -4268,7 +4274,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFpbufcase.base|[dmmeta.Fpbufcase](/txt/ssimdb/dmmeta/fpbufcase.md)|[Base](/txt/ssimdb/dmmeta/fpbufcase.md)|||
-|amc.FFpbufcase.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFpbufcase.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFpbufcase
 <a href="#struct-ffpbufcase"></a>
@@ -4378,8 +4384,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFsort.msghdr|[dmmeta.Fsort](/txt/ssimdb/dmmeta/fsort.md)|[Base](/txt/ssimdb/dmmeta/fsort.md)|||
-|amc.FFsort.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FFsort.p_sortfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFsort.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FFsort.p_sortfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFsort
 <a href="#struct-ffsort"></a>
@@ -4421,9 +4427,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFstep.msghdr|[dmmeta.Fstep](/txt/ssimdb/dmmeta/fstep.md)|[Base](/txt/ssimdb/dmmeta/fstep.md)|||
-|amc.FFstep.c_fdelay|[amc.FFdelay](/txt/gen/amc/amc.md#amc-ffdelay)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FFstep.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FFstep.p_steptype|[amc.FSteptype](/txt/gen/amc/amc.md#amc-fsteptype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FFstep.c_fdelay|[amc.FFdelay](/txt/gen/amc/amc.md#amc-ffdelay)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FFstep.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FFstep.p_steptype|[amc.FSteptype](/txt/gen/amc/amc.md#amc-fsteptype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FFstep
 <a href="#struct-ffstep"></a>
@@ -4503,35 +4509,35 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FFunc.msghdr|[dmmeta.Func](/txt/ssimdb/dmmeta/func.md)|[Base](/txt/ssimdb/dmmeta/func.md)|||
-|amc.FFunc.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FFunc.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Body of function|
-|amc.FFunc.prepcond|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Preprocessor #if condition|
-|amc.FFunc.proto|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Prototype|
-|amc.FFunc.nonnull|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||List of non-null attributes|
-|amc.FFunc.initializer|[algo.StringAry](/txt/protocol/algo/README.md#algo-stringary)|[Val](/txt/exe/amc/reftype.md#val)||Initializer list (constructors only)|
-|amc.FFunc.ret|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Return type (c++ expression)|
-|amc.FFunc.acrkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Acr key due to which function was created|
-|amc.FFunc.funcarg|[amc.Funcarg](/txt/gen/amc/amc.md#amc-funcarg)|[Tary](/txt/exe/amc/reftype.md#tary)||Array of declared function arguments|
-|amc.FFunc.printed|bool|[Val](/txt/exe/amc/reftype.md#val)||Already printed? (internal)|
-|amc.FFunc.throws|bool|[Val](/txt/exe/amc/reftype.md#val)||Throws exceptions|
-|amc.FFunc.nothrow|bool|[Val](/txt/exe/amc/reftype.md#val)||Definitely doesn't throw exception|
-|amc.FFunc.member|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Function is a member (print inside struct)|
-|amc.FFunc.disable|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Function is enabled (if not, don't print)|
-|amc.FFunc.deprecate|bool|[Val](/txt/exe/amc/reftype.md#val)||Make deprecated?|
-|amc.FFunc.globns|bool|[Val](/txt/exe/amc/reftype.md#val)||Place function outside of namespace when printing|
-|amc.FFunc.ismacro|bool|[Val](/txt/exe/amc/reftype.md#val)||Always inline.|
-|amc.FFunc.isalloc|bool|[Val](/txt/exe/amc/reftype.md#val)||Function returns a new value|
-|amc.FFunc.isconst|bool|[Val](/txt/exe/amc/reftype.md#val)||Member function is const|
-|amc.FFunc.glob|bool|[Val](/txt/exe/amc/reftype.md#val)||Function is not attached to a field (EXPLAIN!!)|
-|amc.FFunc.wur|bool|[Val](/txt/exe/amc/reftype.md#val)||Warn on unused result|
-|amc.FFunc.priv|bool|[Val](/txt/exe/amc/reftype.md#val)||Private to translateion unit (static)|
-|amc.FFunc.pure|bool|[Val](/txt/exe/amc/reftype.md#val)||OK to call fewer times than specified in text|
-|amc.FFunc.isprivate|bool|[Val](/txt/exe/amc/reftype.md#val)||Applies to member functions only -- private|
-|amc.FFunc.finalized|bool|[Val](/txt/exe/amc/reftype.md#val)||Don't add any more code to me|
-|amc.FFunc.isexplicit|bool|[Val](/txt/exe/amc/reftype.md#val)||Is explicit constructor (add 'explicit')|
-|amc.FFunc.istmpl|bool|[Val](/txt/exe/amc/reftype.md#val)||Function is a template|
-|amc.FFunc.deleted|bool|[Val](/txt/exe/amc/reftype.md#val)||Function is marked as deleted|
-|amc.FFunc.inl|bool|[Val](/txt/exe/amc/reftype.md#val)||Make inline?|
+|amc.FFunc.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FFunc.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Body of function|
+|amc.FFunc.prepcond|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Preprocessor #if condition|
+|amc.FFunc.proto|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Prototype|
+|amc.FFunc.nonnull|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||List of non-null attributes|
+|amc.FFunc.initializer|[algo.StringAry](/txt/protocol/algo/README.md#algo-stringary)|[Val](/txt/exe/amc/reftype/Val.md)||Initializer list (constructors only)|
+|amc.FFunc.ret|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Return type (c++ expression)|
+|amc.FFunc.acrkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Acr key due to which function was created|
+|amc.FFunc.funcarg|[amc.Funcarg](/txt/gen/amc/amc.md#amc-funcarg)|[Tary](/txt/exe/amc/reftype/Tary.md)||Array of declared function arguments|
+|amc.FFunc.printed|bool|[Val](/txt/exe/amc/reftype/Val.md)||Already printed? (internal)|
+|amc.FFunc.throws|bool|[Val](/txt/exe/amc/reftype/Val.md)||Throws exceptions|
+|amc.FFunc.nothrow|bool|[Val](/txt/exe/amc/reftype/Val.md)||Definitely doesn't throw exception|
+|amc.FFunc.member|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Function is a member (print inside struct)|
+|amc.FFunc.disable|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|Function is enabled (if not, don't print)|
+|amc.FFunc.deprecate|bool|[Val](/txt/exe/amc/reftype/Val.md)||Make deprecated?|
+|amc.FFunc.globns|bool|[Val](/txt/exe/amc/reftype/Val.md)||Place function outside of namespace when printing|
+|amc.FFunc.ismacro|bool|[Val](/txt/exe/amc/reftype/Val.md)||Always inline.|
+|amc.FFunc.isalloc|bool|[Val](/txt/exe/amc/reftype/Val.md)||Function returns a new value|
+|amc.FFunc.isconst|bool|[Val](/txt/exe/amc/reftype/Val.md)||Member function is const|
+|amc.FFunc.glob|bool|[Val](/txt/exe/amc/reftype/Val.md)||Function is not attached to a field (EXPLAIN!!)|
+|amc.FFunc.wur|bool|[Val](/txt/exe/amc/reftype/Val.md)||Warn on unused result|
+|amc.FFunc.priv|bool|[Val](/txt/exe/amc/reftype/Val.md)||Private to translateion unit (static)|
+|amc.FFunc.pure|bool|[Val](/txt/exe/amc/reftype/Val.md)||OK to call fewer times than specified in text|
+|amc.FFunc.isprivate|bool|[Val](/txt/exe/amc/reftype/Val.md)||Applies to member functions only -- private|
+|amc.FFunc.finalized|bool|[Val](/txt/exe/amc/reftype/Val.md)||Don't add any more code to me|
+|amc.FFunc.isexplicit|bool|[Val](/txt/exe/amc/reftype/Val.md)||Is explicit constructor (add 'explicit')|
+|amc.FFunc.istmpl|bool|[Val](/txt/exe/amc/reftype/Val.md)||Function is a template|
+|amc.FFunc.deleted|bool|[Val](/txt/exe/amc/reftype/Val.md)||Function is marked as deleted|
+|amc.FFunc.inl|bool|[Val](/txt/exe/amc/reftype/Val.md)||Make inline?|
 
 #### Struct FFunc
 <a href="#struct-ffunc"></a>
@@ -4674,8 +4680,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FGconst.msghdr|[dmmeta.Gconst](/txt/ssimdb/dmmeta/gconst.md)|[Base](/txt/ssimdb/dmmeta/gconst.md)|||
-|amc.FGconst.p_namefld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FGconst.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FGconst.p_namefld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FGconst.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FGconst
 <a href="#struct-fgconst"></a>
@@ -4717,8 +4723,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FGen.msghdr|[amcdb.Gen](/txt/ssimdb/amcdb/gen.md)|[Base](/txt/ssimdb/amcdb/gen.md)|||
-|amc.FGen.cycle_total|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FGen.step||[Hook](/txt/exe/amc/reftype.md#hook)|||
+|amc.FGen.cycle_total|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FGen.step||[Hook](/txt/exe/amc/reftype/Hook.md)|||
 
 #### Struct FGen
 <a href="#struct-fgen"></a>
@@ -4758,8 +4764,8 @@ private:
 <a href="#amc-fgenxref-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.FGenXref.ind_seen|[amc.FGenXrefSeen](/txt/gen/amc/amc.md#amc-fgenxrefseen)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|amc.FGenXref.seen|[amc.FGenXrefSeen](/txt/gen/amc/amc.md#amc-fgenxrefseen)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|amc.FGenXref.ind_seen|[amc.FGenXrefSeen](/txt/gen/amc/amc.md#amc-fgenxrefseen)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|amc.FGenXref.seen|[amc.FGenXrefSeen](/txt/gen/amc/amc.md#amc-fgenxrefseen)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FGenXref
 <a href="#struct-fgenxref"></a>
@@ -4785,20 +4791,20 @@ struct FGenXref { // amc.FGenXref
 <a href="#amc-fgenxrefseen-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.FGenXrefSeen.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FGenXrefSeen.via|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Saved via|
-|amc.FGenXrefSeen.xreffld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Saved xreffld|
+|amc.FGenXrefSeen.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FGenXrefSeen.via|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Saved via|
+|amc.FGenXrefSeen.xreffld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Saved xreffld|
 
 #### Struct FGenXrefSeen
 <a href="#struct-fgenxrefseen"></a>
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FGenXrefSeen { // amc.FGenXrefSeen
-    amc::FGenXrefSeen*   parent_ind_seen_next;      // hash next
-    u32                  parent_ind_seen_hashval;   // hash value
-    algo::cstring        value;                     //
-    algo::Smallstr150    via;                       // Saved via
-    algo::Smallstr150    xreffld;                   // Saved xreffld
+    amc::FGenXrefSeen*   gen_xref_ind_seen_next;      // hash next
+    u32                  gen_xref_ind_seen_hashval;   // hash value
+    algo::cstring        value;                       //
+    algo::Smallstr150    via;                         // Saved via
+    algo::Smallstr150    xreffld;                     // Saved xreffld
 private:
     // func:amc.FGenXrefSeen..Ctor
     inline               FGenXrefSeen() __attribute__((nothrow));
@@ -4817,8 +4823,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FGstatic.msghdr|[dmmeta.Gstatic](/txt/ssimdb/dmmeta/gstatic.md)|[Base](/txt/ssimdb/dmmeta/gstatic.md)|||
-|amc.FGstatic.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FGstatic.rowid|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FGstatic.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FGstatic.rowid|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FGstatic
 <a href="#struct-fgstatic"></a>
@@ -4857,8 +4863,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FGsymbol.base|[dmmeta.Gsymbol](/txt/ssimdb/dmmeta/gsymbol.md)|[Base](/txt/ssimdb/dmmeta/gsymbol.md)|||
-|amc.FGsymbol.p_ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FGsymbol.p_symboltype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FGsymbol.p_ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FGsymbol.p_symboltype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FGsymbol
 <a href="#struct-fgsymbol"></a>
@@ -4902,8 +4908,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FHook.base|[dmmeta.Hook](/txt/ssimdb/dmmeta/hook.md)|[Base](/txt/ssimdb/dmmeta/hook.md)|||
-|amc.FHook.p_funcptr|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FHook.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FHook.p_funcptr|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FHook.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FHook
 <a href="#struct-fhook"></a>
@@ -4978,10 +4984,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FJstype.base|[dmmeta.Jstype](/txt/ssimdb/dmmeta/jstype.md)|[Base](/txt/ssimdb/dmmeta/jstype.md)|||
-|amc.FJstype.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FJstype.ctor|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FJstype.args|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FJstype.funcs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FJstype.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FJstype.ctor|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FJstype.args|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FJstype.funcs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FJstype
 <a href="#struct-fjstype"></a>
@@ -5020,7 +5026,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FLenfld.msghdr|[dmmeta.Lenfld](/txt/ssimdb/dmmeta/lenfld.md)|[Base](/txt/ssimdb/dmmeta/lenfld.md)|||
-|amc.FLenfld.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FLenfld.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FLenfld
 <a href="#struct-flenfld"></a>
@@ -5058,7 +5064,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FLicense.base|[dev.License](/txt/ssimdb/dev/license.md)|[Base](/txt/ssimdb/dev/license.md)|||
-|amc.FLicense.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FLicense.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FLicense
 <a href="#struct-flicense"></a>
@@ -5134,7 +5140,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FLlist.msghdr|[dmmeta.Llist](/txt/ssimdb/dmmeta/llist.md)|[Base](/txt/ssimdb/dmmeta/llist.md)|||
-|amc.FLlist.p_listtype|[amc.FListtype](/txt/gen/amc/amc.md#amc-flisttype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FLlist.p_listtype|[amc.FListtype](/txt/gen/amc/amc.md#amc-flisttype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FLlist
 <a href="#struct-fllist"></a>
@@ -5208,7 +5214,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FMsg.base|[dmmeta.Msg](/txt/ssimdb/dmmeta/msg.md)|[Base](/txt/ssimdb/dmmeta/msg.md)|||
-|amc.FMsg.typekey|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)||Dup-detect key: payloadhdr/type|
+|amc.FMsg.typekey|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)||Dup-detect key: payloadhdr/type|
 
 #### Struct FMsg
 <a href="#struct-fmsg"></a>
@@ -5263,6 +5269,8 @@ struct FMsgfield { // amc.FMsgfield: Derived leaf field layout row
     i32                 width;      //   0  Byte width; for a char array the array length
     bool                bigend;     //   false  Field is big-endian
     bool                varlen;     //   false  Varlen tail: extends to the end of the message
+    algo::Smallstr50    strtype;    // Inline-string format (dmmeta.strtype): rpascal, leftpad, rightpad; empty when the field is not an inline string
+    algo::Smallstr10    pad;        // Padding character of a padded inline string, as a byte value; empty when it has none
     algo::cstring       comment;    //
 private:
     // func:amc.FMsgfield..Ctor
@@ -5282,7 +5290,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FMsgtype.msghdr|[dmmeta.Msgtype](/txt/ssimdb/dmmeta/msgtype.md)|[Base](/txt/ssimdb/dmmeta/msgtype.md)|||
-|amc.FMsgtype.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FMsgtype.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FMsgtype
 <a href="#struct-fmsgtype"></a>
@@ -5386,39 +5394,39 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FNs.msghdr|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Base](/txt/ssimdb/dmmeta/ns.md)|||
-|amc.FNs.nhash|i32|[Val](/txt/exe/amc/reftype.md#val)|0|number of hash functions generated (hack)|
-|amc.FNs.curstext|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FNs.c_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_globfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FNs.c_gstatic|[amc.FGstatic](/txt/gen/amc/amc.md#amc-fgstatic)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_main|[amc.FMain](/txt/gen/amc/amc.md#amc-fmain)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FNs.hdr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Ptr](/txt/exe/amc/reftype.md#ptr)||Temporary hack -- pointer to hdr contents|
-|amc.FNs.inl|[algo.cstring](/txt/protocol/algo/cstring.md)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FNs.cpp|[algo.cstring](/txt/protocol/algo/cstring.md)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FNs.include|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|amc.FNs.signature|[algo.Sha1sig](/txt/protocol/algo/Sha1sig.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FNs.signature_input|[algo.Sha1sig](/txt/protocol/algo/Sha1sig.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FNs.c_dispsig|[amc.FDispsig](/txt/gen/amc/amc.md#amc-fdispsig)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_parentns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||Namespaces implied by targdep|
-|amc.FNs.c_cppincl|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||List of .cpp includes|
-|amc.FNs.c_hdrincl|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||List of .h includes|
-|amc.FNs.c_fwddecl|[amc.FFwddecl](/txt/gen/amc/amc.md#amc-ffwddecl)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FNs.c_nsx|[amc.FNsx](/txt/gen/amc/amc.md#amc-fnsx)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FNs.c_target|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FNs.c_pnew|[amc.FPnew](/txt/gen/amc/amc.md#amc-fpnew)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_nsproto|[amc.FNsproto](/txt/gen/amc/amc.md#amc-fnsproto)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FNs.c_nsdb|[amc.FNsdb](/txt/gen/amc/amc.md#amc-fnsdb)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FNs.c_outfile|[amc.FOutfile](/txt/gen/amc/amc.md#amc-foutfile)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_foutput|[amc.FFoutput](/txt/gen/amc/amc.md#amc-ffoutput)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_fstep|[amc.FFstep](/txt/gen/amc/amc.md#amc-ffstep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_gsymbol|[amc.FGsymbol](/txt/gen/amc/amc.md#amc-fgsymbol)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_nsinclude|[amc.FNsinclude](/txt/gen/amc/amc.md#amc-fnsinclude)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FNs.c_nscpp|[amc.FNscpp](/txt/gen/amc/amc.md#amc-fnscpp)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FNs.p_license|[amc.FLicense](/txt/gen/amc/amc.md#amc-flicense)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FNs.c_nsjs|[amc.FNsjs](/txt/gen/amc/amc.md#amc-fnsjs)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|amc.FNs.nhash|i32|[Val](/txt/exe/amc/reftype/Val.md)|0|number of hash functions generated (hack)|
+|amc.FNs.curstext|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FNs.c_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_dispatch|[amc.FDispatch](/txt/gen/amc/amc.md#amc-fdispatch)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_globfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FNs.c_gstatic|[amc.FGstatic](/txt/gen/amc/amc.md#amc-fgstatic)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_main|[amc.FMain](/txt/gen/amc/amc.md#amc-fmain)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FNs.hdr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Ptr](/txt/exe/amc/reftype/Ptr.md)||Temporary hack -- pointer to hdr contents|
+|amc.FNs.inl|[algo.cstring](/txt/protocol/algo/cstring.md)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FNs.cpp|[algo.cstring](/txt/protocol/algo/cstring.md)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FNs.include|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|amc.FNs.signature|[algo.Signature](/txt/protocol/algo/Signature.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FNs.signature_input|[algo.Signature](/txt/protocol/algo/Signature.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FNs.c_dispsig|[amc.FDispsig](/txt/gen/amc/amc.md#amc-fdispsig)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_parentns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||Namespaces implied by targdep|
+|amc.FNs.c_cppincl|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||List of .cpp includes|
+|amc.FNs.c_hdrincl|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||List of .h includes|
+|amc.FNs.c_fwddecl|[amc.FFwddecl](/txt/gen/amc/amc.md#amc-ffwddecl)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FNs.c_nsx|[amc.FNsx](/txt/gen/amc/amc.md#amc-fnsx)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FNs.c_target|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FNs.c_pnew|[amc.FPnew](/txt/gen/amc/amc.md#amc-fpnew)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_nsproto|[amc.FNsproto](/txt/gen/amc/amc.md#amc-fnsproto)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FNs.c_nsdb|[amc.FNsdb](/txt/gen/amc/amc.md#amc-fnsdb)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FNs.c_outfile|[amc.FOutfile](/txt/gen/amc/amc.md#amc-foutfile)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_foutput|[amc.FFoutput](/txt/gen/amc/amc.md#amc-ffoutput)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_fstep|[amc.FFstep](/txt/gen/amc/amc.md#amc-ffstep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_gsymbol|[amc.FGsymbol](/txt/gen/amc/amc.md#amc-fgsymbol)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_nsinclude|[amc.FNsinclude](/txt/gen/amc/amc.md#amc-fnsinclude)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FNs.c_nscpp|[amc.FNscpp](/txt/gen/amc/amc.md#amc-fnscpp)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FNs.p_license|[amc.FLicense](/txt/gen/amc/amc.md#amc-flicense)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FNs.c_nsjs|[amc.FNsjs](/txt/gen/amc/amc.md#amc-fnsjs)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FNs
 <a href="#struct-fns"></a>
@@ -5455,8 +5463,8 @@ struct FNs { // amc.FNs
     algo::cstring*      include_elems;       // pointer to elements
     u64                 include_n;           // number of elements in array
     u64                 include_max;         // max. capacity of array before realloc
-    algo::Sha1sig       signature;           //
-    algo::Sha1sig       signature_input;     //
+    algo::Signature     signature;           //
+    algo::Signature     signature_input;     //
     amc::FDispsig**     c_dispsig_elems;     // array of pointers
     u64                 c_dispsig_n;         // current size
     u64                 c_dispsig_max;       // capacity of allocated array
@@ -5672,8 +5680,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FNsjs.base|[dmmeta.Nsjs](/txt/ssimdb/dmmeta/nsjs.md)|[Base](/txt/ssimdb/dmmeta/nsjs.md)|||
-|amc.FNsjs.imports|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FNsjs.filebody|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FNsjs.imports|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FNsjs.filebody|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FNsjs
 <a href="#struct-fnsjs"></a>
@@ -5745,7 +5753,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FNsx.base|[dmmeta.Nsx](/txt/ssimdb/dmmeta/nsx.md)|[Base](/txt/ssimdb/dmmeta/nsx.md)|||
-|amc.FNsx.p_pool|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FNsx.p_pool|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FNsx
 <a href="#struct-fnsx"></a>
@@ -5787,10 +5795,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FNumstr.msghdr|[dmmeta.Numstr](/txt/ssimdb/dmmeta/numstr.md)|[Base](/txt/ssimdb/dmmeta/numstr.md)|||
-|amc.FNumstr.p_numtype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FNumstr.nummin|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FNumstr.nummax|u64|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FNumstr.issigned|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FNumstr.p_numtype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FNumstr.nummin|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FNumstr.nummax|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FNumstr.issigned|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FNumstr
 <a href="#struct-fnumstr"></a>
@@ -5831,12 +5839,12 @@ private:
 <a href="#amc-foutfile-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|*amc.FOutfile.ns (/RR_RL)*|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|amc.FOutfile.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FOutfile.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FOutfile.ssim|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Ssim content|
-|amc.FOutfile.prev_head|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Helper|
-|amc.FOutfile.outfile|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|*amc.FOutfile.ns (/RR_RL)*|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|amc.FOutfile.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FOutfile.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FOutfile.ssim|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Ssim content|
+|amc.FOutfile.prev_head|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Helper|
+|amc.FOutfile.outfile|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
 
 #### Struct FOutfile
 <a href="#struct-foutfile"></a>
@@ -5875,7 +5883,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FPack.msghdr|[dmmeta.Pack](/txt/ssimdb/dmmeta/pack.md)|[Base](/txt/ssimdb/dmmeta/pack.md)|||
-|amc.FPack.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FPack.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FPack
 <a href="#struct-fpack"></a>
@@ -6036,10 +6044,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FPmaskfld.msghdr|[dmmeta.Pmaskfld](/txt/ssimdb/dmmeta/pmaskfld.md)|[Base](/txt/ssimdb/dmmeta/pmaskfld.md)|||
-|amc.FPmaskfld.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FPmaskfld.nextbit|u32|[Val](/txt/exe/amc/reftype.md#val)||Next bit to allocate|
-|amc.FPmaskfld.c_pmaskfld_member|[amc.FPmaskfldMember](/txt/gen/amc/amc.md#amc-fpmaskfldmember)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FPmaskfld.funcname|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FPmaskfld.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FPmaskfld.nextbit|u32|[Val](/txt/exe/amc/reftype/Val.md)||Next bit to allocate|
+|amc.FPmaskfld.c_pmaskfld_member|[amc.FPmaskfldMember](/txt/gen/amc/amc.md#amc-fpmaskfldmember)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FPmaskfld.funcname|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FPmaskfld
 <a href="#struct-fpmaskfld"></a>
@@ -6087,9 +6095,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FPmaskfldMember.base|[dmmeta.PmaskfldMember](/txt/ssimdb/dmmeta/pmaskfld_member.md)|[Base](/txt/ssimdb/dmmeta/pmaskfld_member.md)|||
-|amc.FPmaskfldMember.bit|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FPmaskfldMember.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FPmaskfldMember.p_pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FPmaskfldMember.bit|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FPmaskfldMember.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FPmaskfldMember.p_pmaskfld|[amc.FPmaskfld](/txt/gen/amc/amc.md#amc-fpmaskfld)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FPmaskfldMember
 <a href="#struct-fpmaskfldmember"></a>
@@ -6133,8 +6141,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FPnew.msghdr|[dmmeta.Pnew](/txt/ssimdb/dmmeta/pnew.md)|[Base](/txt/ssimdb/dmmeta/pnew.md)|||
-|amc.FPnew.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FPnew.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FPnew.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FPnew.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FPnew
 <a href="#struct-fpnew"></a>
@@ -6178,7 +6186,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FPtrary.msghdr|[dmmeta.Ptrary](/txt/ssimdb/dmmeta/ptrary.md)|[Base](/txt/ssimdb/dmmeta/ptrary.md)|||
-|amc.FPtrary.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FPtrary.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FPtrary
 <a href="#struct-fptrary"></a>
@@ -6216,9 +6224,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FReftype.msghdr|[dmmeta.Reftype](/txt/ssimdb/dmmeta/reftype.md)|[Base](/txt/ssimdb/dmmeta/reftype.md)|||
-|amc.FReftype.rowid|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FReftype.p_tclass|[amc.FTclass](/txt/gen/amc/amc.md#amc-ftclass)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FReftype.zs_fprefix|[amc.FFprefix](/txt/gen/amc/amc.md#amc-ffprefix)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|amc.FReftype.rowid|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FReftype.p_tclass|[amc.FTclass](/txt/gen/amc/amc.md#amc-ftclass)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FReftype.zs_fprefix|[amc.FFprefix](/txt/gen/amc/amc.md#amc-ffprefix)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FReftype
 <a href="#struct-freftype"></a>
@@ -6308,8 +6316,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FSmallstr.msghdr|[dmmeta.Smallstr](/txt/ssimdb/dmmeta/smallstr.md)|[Base](/txt/ssimdb/dmmeta/smallstr.md)|||
-|amc.FSmallstr.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FSmallstr.c_numstr|[amc.FNumstr](/txt/gen/amc/amc.md#amc-fnumstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|amc.FSmallstr.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FSmallstr.c_numstr|[amc.FNumstr](/txt/gen/amc/amc.md#amc-fnumstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FSmallstr
 <a href="#struct-fsmallstr"></a>
@@ -6354,7 +6362,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FSortfld.msghdr|[dmmeta.Sortfld](/txt/ssimdb/dmmeta/sortfld.md)|[Base](/txt/ssimdb/dmmeta/sortfld.md)|||
-|amc.FSortfld.p_sortfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FSortfld.p_sortfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSortfld
 <a href="#struct-fsortfld"></a>
@@ -6391,12 +6399,12 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FSsimfile.msghdr|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
-|amc.FSsimfile.ssim|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Ssim content|
-|amc.FSsimfile.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FSsimfile.c_ssimvolatile|[amc.FSsimvolatile](/txt/gen/amc/amc.md#amc-fssimvolatile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FSsimfile.topovisit|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FSsimfile.topoindex|i32|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FSsimfile.input_select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FSsimfile.ssim|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Ssim content|
+|amc.FSsimfile.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FSsimfile.c_ssimvolatile|[amc.FSsimvolatile](/txt/gen/amc/amc.md#amc-fssimvolatile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FSsimfile.topovisit|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FSsimfile.topoindex|i32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FSsimfile.input_select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FSsimfile
 <a href="#struct-fssimfile"></a>
@@ -6445,8 +6453,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FSsimsort.base|[dmmeta.Ssimsort](/txt/ssimdb/dmmeta/ssimsort.md)|[Base](/txt/ssimdb/dmmeta/ssimsort.md)|||
-|amc.FSsimsort.p_ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FSsimsort.p_sortfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FSsimsort.p_ssimfile|[amc.FSsimfile](/txt/gen/amc/amc.md#amc-fssimfile)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FSsimsort.p_sortfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSsimsort
 <a href="#struct-fssimsort"></a>
@@ -6511,9 +6519,9 @@ private:
 <a href="#amc-fstatictuple-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.FStatictuple.ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|amc.FStatictuple.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.FStatictuple.cppident|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FStatictuple.ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|amc.FStatictuple.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.FStatictuple.cppident|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FStatictuple
 <a href="#struct-fstatictuple"></a>
@@ -6584,9 +6592,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FSubstr.msghdr|[dmmeta.Substr](/txt/ssimdb/dmmeta/substr.md)|[Base](/txt/ssimdb/dmmeta/substr.md)|||
-|amc.FSubstr.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FSubstr.p_srcfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FSubstr.range|u64|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.FSubstr.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FSubstr.p_srcfield|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FSubstr.range|u64|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FSubstr
 <a href="#struct-fsubstr"></a>
@@ -6631,8 +6639,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FTargdep.msghdr|[dev.Targdep](/txt/ssimdb/dev/targdep.md)|[Base](/txt/ssimdb/dev/targdep.md)|||
-|amc.FTargdep.p_target|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FTargdep.p_parent|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FTargdep.p_target|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FTargdep.p_parent|[amc.FTarget](/txt/gen/amc/amc.md#amc-ftarget)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTargdep
 <a href="#struct-ftargdep"></a>
@@ -6673,8 +6681,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FTarget.msghdr|[dev.Target](/txt/ssimdb/dev/target.md)|[Base](/txt/ssimdb/dev/target.md)|||
-|amc.FTarget.c_targdep|[amc.FTargdep](/txt/gen/amc/amc.md#amc-ftargdep)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|amc.FTarget.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FTarget.c_targdep|[amc.FTargdep](/txt/gen/amc/amc.md#amc-ftargdep)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|amc.FTarget.p_ns|[amc.FNs](/txt/gen/amc/amc.md#amc-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTarget
 <a href="#struct-ftarget"></a>
@@ -6717,7 +6725,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FTary.msghdr|[dmmeta.Tary](/txt/ssimdb/dmmeta/tary.md)|[Base](/txt/ssimdb/dmmeta/tary.md)|||
-|amc.FTary.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FTary.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTary
 <a href="#struct-ftary"></a>
@@ -6829,8 +6837,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FTfunc.msghdr|[amcdb.Tfunc](/txt/ssimdb/amcdb/tfunc.md)|[Base](/txt/ssimdb/amcdb/tfunc.md)|||
-|amc.FTfunc.step||[Hook](/txt/exe/amc/reftype.md#hook)|||
-|amc.FTfunc.c_tcurs|[amc.FTcurs](/txt/gen/amc/amc.md#amc-ftcurs)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|amc.FTfunc.step||[Hook](/txt/exe/amc/reftype/Hook.md)|||
+|amc.FTfunc.c_tcurs|[amc.FTcurs](/txt/gen/amc/amc.md#amc-ftcurs)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FTfunc
 <a href="#struct-ftfunc"></a>
@@ -6881,8 +6889,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FThash.msghdr|[dmmeta.Thash](/txt/ssimdb/dmmeta/thash.md)|[Base](/txt/ssimdb/dmmeta/thash.md)|||
-|amc.FThash.p_hashfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FThash.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FThash.p_hashfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FThash.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FThash
 <a href="#struct-fthash"></a>
@@ -6980,8 +6988,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FTypefld.msghdr|[dmmeta.Typefld](/txt/ssimdb/dmmeta/typefld.md)|[Base](/txt/ssimdb/dmmeta/typefld.md)|||
-|amc.FTypefld.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FTypefld.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FTypefld.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FTypefld.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FTypefld
 <a href="#struct-ftypefld"></a>
@@ -7078,11 +7086,11 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |amc.FXref.msghdr|[dmmeta.Xref](/txt/ssimdb/dmmeta/xref.md)|[Base](/txt/ssimdb/dmmeta/xref.md)|||
-|amc.FXref.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Xref field|
-|amc.FXref.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)||p_field->p_ctype|
-|amc.FXref.c_nocascdel|[amc.FNocascdel](/txt/gen/amc/amc.md#amc-fnocascdel)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|amc.FXref.p_viafld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.FXref.p_keyfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|amc.FXref.p_field|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Xref field|
+|amc.FXref.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||p_field->p_ctype|
+|amc.FXref.c_nocascdel|[amc.FNocascdel](/txt/gen/amc/amc.md#amc-fnocascdel)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|amc.FXref.p_viafld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.FXref.p_keyfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FXref
 <a href="#struct-fxref"></a>
@@ -7134,13 +7142,13 @@ private:
 <a href="#amc-funcarg-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.Funcarg.type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||C++ expression for declaration|
-|amc.Funcarg.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Argument name|
-|amc.Funcarg.dflt|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Initializer|
-|amc.Funcarg.retval|bool|[Val](/txt/exe/amc/reftype.md#val)||Is return value?|
-|amc.Funcarg.initialized|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.Funcarg.indent|bool|[Val](/txt/exe/amc/reftype.md#val)||Formatting option for prototype|
-|amc.Funcarg.typearg|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.Funcarg.type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||C++ expression for declaration|
+|amc.Funcarg.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Argument name|
+|amc.Funcarg.dflt|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Initializer|
+|amc.Funcarg.retval|bool|[Val](/txt/exe/amc/reftype/Val.md)||Is return value?|
+|amc.Funcarg.initialized|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.Funcarg.indent|bool|[Val](/txt/exe/amc/reftype/Val.md)||Formatting option for prototype|
+|amc.Funcarg.typearg|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Funcarg
 <a href="#struct-funcarg"></a>
@@ -7166,16 +7174,16 @@ struct Funcarg { // amc.Funcarg
 <a href="#amc-genpnew-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.Genpnew.p_func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.Genpnew.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.Genpnew.preamble|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.Genpnew.postamble|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.Genpnew.req_pack|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.Genpnew.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.Genpnew.p_optfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.Genpnew.p_varlenfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|amc.Genpnew.optnolen|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|amc.Genpnew.hasret|bool|[Val](/txt/exe/amc/reftype.md#val)|true||
+|amc.Genpnew.p_func|[amc.FFunc](/txt/gen/amc/amc.md#amc-ffunc)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.Genpnew.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.Genpnew.preamble|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.Genpnew.postamble|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.Genpnew.req_pack|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.Genpnew.p_ctype|[amc.FCtype](/txt/gen/amc/amc.md#amc-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.Genpnew.p_optfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.Genpnew.p_varlenfld|[amc.FField](/txt/gen/amc/amc.md#amc-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|amc.Genpnew.optnolen|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|amc.Genpnew.hasret|bool|[Val](/txt/exe/amc/reftype/Val.md)|true||
 
 #### Struct Genpnew
 <a href="#struct-genpnew"></a>
@@ -7204,7 +7212,7 @@ struct Genpnew { // amc.Genpnew
 <a href="#amc-pnewtype-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|amc.Pnewtype.value|u8|[Val](/txt/exe/amc/reftype.md#val)|||
+|amc.Pnewtype.value|u8|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct Pnewtype
 <a href="#struct-pnewtype"></a>

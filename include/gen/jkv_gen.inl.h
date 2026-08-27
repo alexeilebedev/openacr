@@ -33,7 +33,6 @@ inline  jkv::trace::trace() {
 
 // --- jkv.FDb..Uninit
 inline void jkv::FDb_Uninit() {
-    jkv::FDb &row = _db; (void)row;
 }
 
 // --- jkv.FieldId.value.GetEnum

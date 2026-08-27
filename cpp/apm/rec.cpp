@@ -301,16 +301,78 @@ void apm::LoadRecs() {
         ind_beg(package_zd_pkgkey_curs, pkgkey, package) if (pkgkey.exclude) {
             zd_selrec_RemoveAll();
             SelectPkgkeyRecs(pkgkey);
-            apm::FPkgrec* cur = apm::zd_pkgrec_First(package);
-            while (cur) {
-                apm::FPkgrec* next = apm::package_zd_pkgrec_Next(*cur);
-                if (zd_selrec_InLlistQ(*cur->p_rec)) {
-                    pkgrec_Delete(*cur);
-                }
-                cur = next;
-            }
+            DropSelectedPkgrec(package);
         }ind_end;
     }ind_end;
+
+    // Subtract from each package the records the packages extending it capture.
+    //
+    // A package that extends another is not part of it: a downstream package
+    // builds on a base distribution without shipping inside it, so nothing the
+    // downstream package captures may go out as the base.  Written as regxes,
+    // that fact costs one negative key per leaked record, and a base package
+    // whose downstream is a whole platform carries thousands of them.  They sit
+    // in the base package rather than in the package the records belong to, and
+    // each says only that something does not belong, never whose it is.
+    // Written as a relation it is one `dev.pkgdep` row of type `extend`, and
+    // the records follow from whatever the extending package claims.
+    //
+    // The pass runs after every package has been evaluated rather than inside
+    // the loop above.  That loop visits a package before the packages that
+    // extend it -- a package is evaluated after its parents -- so an extender's
+    // records do not exist yet at the moment its parent is being built.
+    ind_beg(_db_pkgdep_curs,pkgdep,_db) if (pkgdep.pkgdeptype == dev_pkgdeptype_extend) {
+        zd_selrec_RemoveAll();
+        SelectPkgRecs(*pkgdep.p_package);
+        DropSelectedPkgrec(*pkgdep.p_parent,true);
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Whether PKGKEY names REC outright, rather than matching it.
+// A pkgkey and a record are spelled the same way, `<ssimfile>:<pkey>`, so the
+// test is that the two strings agree and that the key holds no pattern.
+// Reaching a record through the reference closure of a literal key does not
+// count: `dmmeta.ns:abt_md` names a namespace and nothing else, whatever its
+// closure goes on to visit.
+bool apm::NamesRecQ(apm::FPkgkey &pkgkey, apm::FRec &rec) {
+    bool ret = key_Get(pkgkey) == rec.rec;
+    if (ret) {
+        algo_lib::Regx value_regx;
+        Regx_ReadAcr(value_regx,Pathcomp(key_Get(pkgkey),":LR"),true);
+        ret = literal_Get(value_regx.flags);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Remove from PACKAGE every pkgrec whose record is currently in zd_selrec.
+// With KEEP_LITERAL, a record the package names outright is kept.
+//
+// The two callers want opposite things of a record both a package and one of
+// its extenders capture.  An exclusion key is the package's own statement that
+// the record is not its, so it removes whatever it matches.  The subtraction a
+// relation derives is a statement about the extender instead, and the extender
+// reaches records it never meant to claim: a downstream package asks for one of
+// its own tables, the reference closure follows those rows into a table the base
+// owns, and the base's rows would leave with them.  Naming a record outright is
+// how a package says the record is its regardless, so that claim survives, and a
+// blanket like `dev.%:%` does not.
+//
+// The walk is by hand rather than by cursor because it deletes the rows it
+// visits, and a cursor over a list may not outlive the removal of its own node.
+void apm::DropSelectedPkgrec(apm::FPackage &package, bool keep_literal DFLTVAL(false)) {
+    apm::FPkgrec* cur = apm::zd_pkgrec_First(package);
+    while (cur) {
+        apm::FPkgrec* next = apm::package_zd_pkgrec_Next(*cur);
+        bool named = keep_literal && NamesRecQ(*cur->p_pkgkey,*cur->p_rec);
+        if (zd_selrec_InLlistQ(*cur->p_rec) && !named) {
+            pkgrec_Delete(*cur);
+        }
+        cur = next;
+    }
 }
 
 // -----------------------------------------------------------------------------

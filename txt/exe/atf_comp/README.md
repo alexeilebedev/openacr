@@ -112,3 +112,4 @@ names the tool or the subsystem its tests drive.
 |[atfdb.testenv](/txt/ssimdb/atfdb/testenv.md)||
 |[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)||
 |[atfdb.unstableattr](/txt/ssimdb/atfdb/unstableattr.md)||
+|[atfdb.unstableline](/txt/ssimdb/atfdb/unstableline.md)|Tuple head of a line the comptest capture drops, presence being host-dependent|

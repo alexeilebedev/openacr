@@ -38,7 +38,7 @@ inline i32           temp_strings_N() __attribute__((__warn_unused_result__, not
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:algo_lib.FDb.temp_strings.Setary
 inline void          temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.FDb.temp_strings.qFind
 inline algo::cstring& temp_strings_qFind(u64 t) __attribute__((nothrow));
 // Read array from string
@@ -55,44 +55,44 @@ inline-command: amc -report:N -proto atf_amc.FTypeA.typec.%
 // Allocate memory for new default row.
 // If out of memory, process is killed.
 // func:atf_amc.FTypeA.typec.Alloc
-atf_amc::FTypeC&     typec_Alloc(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
+atf_amc::FTypeC&     typec_Alloc(atf_amc::FTypeA& parent) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
 // func:atf_amc.FTypeA.typec.AllocMaybe
-atf_amc::FTypeC*     typec_AllocMaybe(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
+atf_amc::FTypeC*     typec_AllocMaybe(atf_amc::FTypeA& parent) __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 // func:atf_amc.FTypeA.typec.InsertMaybe
-atf_amc::FTypeC*     typec_InsertMaybe(atf_amc::FTypeA& typea, const atf_amc::TypeC &value) __attribute__((nothrow));
+atf_amc::FTypeC*     typec_InsertMaybe(atf_amc::FTypeA& parent, const atf_amc::TypeC &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
 // func:atf_amc.FTypeA.typec.AllocMem
-inline void*         typec_AllocMem(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
+inline void*         typec_AllocMem(atf_amc::FTypeA& parent) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_amc.FTypeA.typec.EmptyQ
-inline bool          typec_EmptyQ(atf_amc::FTypeA& typea) __attribute__((nothrow));
+inline bool          typec_EmptyQ(atf_amc::FTypeA& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_amc.FTypeA.typec.Find
-inline atf_amc::FTypeC* typec_Find(atf_amc::FTypeA& typea, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FTypeC* typec_Find(atf_amc::FTypeA& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:atf_amc.FTypeA.typec.Getary
-inline algo::aryptr<atf_amc::FTypeC> typec_Getary(atf_amc::FTypeA& typea) __attribute__((nothrow));
+inline algo::aryptr<atf_amc::FTypeC> typec_Getary(atf_amc::FTypeA& parent) __attribute__((nothrow));
 // Return constant 10 -- max. number of items in the pool
 // func:atf_amc.FTypeA.typec.Max
-inline i32           typec_Max(atf_amc::FTypeA& typea) __attribute__((nothrow));
+inline i32           typec_Max(atf_amc::FTypeA& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_amc.FTypeA.typec.N
-inline i32           typec_N(const atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           typec_N(const atf_amc::FTypeA& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Destroy all elements of Inlary
 // func:atf_amc.FTypeA.typec.RemoveAll
-void                 typec_RemoveAll(atf_amc::FTypeA& typea) __attribute__((nothrow));
+void                 typec_RemoveAll(atf_amc::FTypeA& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:atf_amc.FTypeA.typec.RemoveLast
-void                 typec_RemoveLast(atf_amc::FTypeA& typea) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+void                 typec_RemoveLast(atf_amc::FTypeA& parent) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
 // func:atf_amc.FTypeA.typec.qFind
-inline atf_amc::FTypeC& typec_qFind(atf_amc::FTypeA& typea, u64 t) __attribute__((nothrow));
+inline atf_amc::FTypeC& typec_qFind(atf_amc::FTypeA& parent, u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
 // func:atf_amc.FTypeA.typec.rowid_Get
-inline u64           typec_rowid_Get(atf_amc::FTypeA& typea, atf_amc::FTypeC &row) __attribute__((nothrow));
+inline u64           typec_rowid_Get(atf_amc::FTypeA& parent, atf_amc::FTypeC &row) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_amc.FTypeA.typec.XrefMaybe
@@ -108,10 +108,10 @@ bool                 typec_XrefMaybe(atf_amc::FTypeC &row);
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|min|i32|[Val](/txt/exe/amc/reftype.md#val)||Min. elements to preallocate|
-|max|i32|[Val](/txt/exe/amc/reftype.md#val)||Max. elements|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|min|i32|[Val](/txt/exe/amc/reftype/Val.md)||Min. elements to preallocate|
+|max|i32|[Val](/txt/exe/amc/reftype/Val.md)||Max. elements|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

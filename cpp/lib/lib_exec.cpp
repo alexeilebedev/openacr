@@ -27,7 +27,6 @@
 #ifndef WIN32
 #include <sys/wait.h>
 #include <sys/resource.h>   // setrlimit()
-#include <sys/syscall.h>    // SYS_close_range
 #ifdef __APPLE__
 #include <util.h>           // openpty()
 #elif defined(__FreeBSD__)
@@ -119,36 +118,6 @@ static void SetupRedirect(lib_exec::FSyscmd &cmd) {
 
 // -----------------------------------------------------------------------------
 
-// Close every descriptor above stderr, leaving the exec'd program its three
-// standard streams and nothing else.
-//
-// A command that inherits a descriptor holds what the descriptor holds for as
-// long as it runs, without knowing it: a listening socket keeps its port
-// bound, an unlinked file keeps its blocks, a lock keeps its holder alive.  A
-// gateway's port outliving the gateway and reappearing as "address already in
-// use" under an unrelated process name is this leak read from the far end.
-// The child inherits whatever the parent had open, so the close belongs here,
-// once, rather than at each parent that happens to hold something.
-//
-// close_range does it in one syscall and skips no descriptor; walking the
-// table one close at a time stops at the first hole unless it is bounded by
-// the limit instead, which is what a kernel without the syscall gets.
-static void CloseInheritedFd() {
-    int rc = -1;
-#ifdef SYS_close_range
-    rc = int(syscall(SYS_close_range, 3, ~0U, 0));
-#endif
-    if (rc == -1) {
-        struct rlimit rlim;
-        u64 nfd = getrlimit(RLIMIT_NOFILE, &rlim) == 0 ? u64(rlim.rlim_cur) : 1024;
-        for (u64 i = 3; i < nfd && i < 65536; i++) {
-            (void)close(int(i));
-        }
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 // Open a pty pair for a command that must see a tty on stdin (e.g.
 // session-manager-plugin refuses to start without one, even non-interactively).
 // The slave becomes the child's stdin; the master is parked on the command,
@@ -189,7 +158,7 @@ static void Child(lib_exec::FSyscmd &cmd, algo::Fildes pty_slave) {
         algo::Refurbish(cmd.stdout_fd);
         algo::Refurbish(cmd.stderr_fd);
     }
-    CloseInheritedFd();
+    algo_lib::CloseInheritedFd();
     int ret=0;
     if (ary_N(cmd.args)) {
         char **argv = (char**)alloca((ary_N(cmd.args)+1)*sizeof(*argv));

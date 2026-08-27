@@ -1,0 +1,15 @@
+# start bash cmd:"bash -c '$bindir/acr_ed -field dmmeta.Ns.license -rename licence ; $bindir/acr_ed -field dmmeta.Ns.license -rename field:dmmeta.Ns.licence ; $bindir/acr_ed -field dmmeta.Ns.license -rename dmmeta.Ctype.license ; $bindir/acr_ed -field amc.FNs.p_license -rename amc.FCtype.p_license'"
+# eof bash
+bash -> set -e
+bash -> bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+bash -> EOF
+bash -> bin/acr  -query:field:dmmeta.Ns.license -write:Y -rename:dmmeta.Ns.licence
+bash -> bin/amc
+bash -> acr_ed.error  acr_ed.rename_prefix  rename:field:dmmeta.Ns.licence  comment:"a field name has no ':' in it; -rename takes a name, not a query"
+bash -> acr_ed.error  acr_ed.rename_ctype  field:dmmeta.Ns.license  rename:dmmeta.Ctype.license  comment:"a rename cannot move a field to another ssim-backed ctype; delete and create instead"
+bash -> set -e
+bash -> bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+bash -> EOF
+bash -> bin/acr  -query:field:amc.FNs.p_license -write:Y -rename:amc.FCtype.p_license
+bash -> bin/amc
+# exit bash code:0

@@ -1,5 +1,6 @@
 dev.gitfile  gitfile:sub/README.md
 dev.gitfile  gitfile:sub/b.md
+dev.gitfile  gitfile:sub/c.md
 dev.readmefile  gitfile:sub/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readmefile  gitfile:sub/b.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readmesort  readmesort:sub/c.md  comment:""

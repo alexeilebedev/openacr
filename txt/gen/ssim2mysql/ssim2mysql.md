@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -71,7 +73,7 @@ All allocations are done through global `ssim2mysql::_db` [ssim2mysql.FDb](#ssim
 <a href="#ssim2mysql-fcmd-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssim2mysql.FCmd.cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Command to execute|
+|ssim2mysql.FCmd.cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Command to execute|
 
 #### Struct FCmd
 <a href="#struct-fcmd"></a>
@@ -103,13 +105,13 @@ private:
 <a href="#ssim2mysql-fcolumn-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssim2mysql.FColumn.column|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)||Column name|
-|*ssim2mysql.FColumn.name (.RR)*|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)||Column name|
-|ssim2mysql.FColumn.defval|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Default value (sql expression)|
-|ssim2mysql.FColumn.p_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)||Associated field|
-|ssim2mysql.FColumn.is_int|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|*ssim2mysql.FColumn.ssimfile (.RL)*|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Associated ssimfile|
-|ssim2mysql.FColumn.is_pkey|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|ssim2mysql.FColumn.column|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)||Column name|
+|*ssim2mysql.FColumn.name (.RR)*|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)||Column name|
+|ssim2mysql.FColumn.defval|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Default value (sql expression)|
+|ssim2mysql.FColumn.p_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)||Associated field|
+|ssim2mysql.FColumn.is_int|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*ssim2mysql.FColumn.ssimfile (.RL)*|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Associated ssimfile|
+|ssim2mysql.FColumn.is_pkey|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FColumn
 <a href="#struct-fcolumn"></a>
@@ -148,7 +150,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |ssim2mysql.FCppfunc.msghdr|[dmmeta.Cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|[Base](/txt/ssimdb/dmmeta/cppfunc.md)|||
-|ssim2mysql.FCppfunc.p_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|ssim2mysql.FCppfunc.p_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FCppfunc
 <a href="#struct-fcppfunc"></a>
@@ -187,10 +189,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |ssim2mysql.FCtype.msghdr|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
-|ssim2mysql.FCtype.p_ns|[ssim2mysql.FNs](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fns)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|ssim2mysql.FCtype.c_sqltype|[ssim2mysql.FSqltype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fsqltype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|ssim2mysql.FCtype.c_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
-|ssim2mysql.FCtype.c_ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|ssim2mysql.FCtype.p_ns|[ssim2mysql.FNs](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fns)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|ssim2mysql.FCtype.c_sqltype|[ssim2mysql.FSqltype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fsqltype)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|ssim2mysql.FCtype.c_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
+|ssim2mysql.FCtype.c_ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -239,29 +241,29 @@ private:
 <a href="#ssim2mysql-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssim2mysql.FDb.ind_column|[ssim2mysql.FColumn](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcolumn)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|ssim2mysql.FDb.ns|[ssim2mysql.FNs](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fns)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2mysql.FDb.cmdline|[command.ssim2mysql](/txt/protocol/command/README.md#command-ssim2mysql)|[Val](/txt/exe/amc/reftype.md#val)|||
-|ssim2mysql.FDb.ctype|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2mysql.FDb.field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2mysql.FDb.sqltype|[ssim2mysql.FSqltype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fsqltype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2mysql.FDb.cmd|[ssim2mysql.FCmd](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcmd)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|ssim2mysql.FDb.column|[ssim2mysql.FColumn](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcolumn)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2mysql.FDb._db|[ssim2mysql.FDb](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|ssim2mysql.FDb.ind_ns|[ssim2mysql.FNs](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fns)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|ssim2mysql.FDb.ind_ctype|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|ssim2mysql.FDb.ind_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|ssim2mysql.FDb.substr|[ssim2mysql.FSubstr](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fsubstr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2mysql.FDb.cppfunc|[ssim2mysql.FCppfunc](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcppfunc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2mysql.FDb.ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|ssim2mysql.FDb.ind_ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Thash](/txt/exe/amc/reftype.md#thash)|||
-|ssim2mysql.FDb.zs_cmd|[ssim2mysql.FCmd](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcmd)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|ssim2mysql.FDb.c_cmd_cur|[ssim2mysql.FCmd](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcmd)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|ssim2mysql.FDb.c_ssimfile_cur|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|ssim2mysql.FDb.n_cmd_rows|u32|[Val](/txt/exe/amc/reftype.md#val)|||
-|ssim2mysql.FDb.input|[ssim2mysql.FInput](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-finput)|[Tpool](/txt/exe/amc/reftype.md#tpool)|||
-|ssim2mysql.FDb.zd_ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Llist](/txt/exe/amc/reftype.md#llist)|||
-|ssim2mysql.FDb.cd_input_line|[ssim2mysql.FInput](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-finput)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|ssim2mysql.FDb.ind_column|[ssim2mysql.FColumn](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcolumn)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|ssim2mysql.FDb.ns|[ssim2mysql.FNs](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fns)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2mysql.FDb.cmdline|[command.ssim2mysql](/txt/protocol/command/README.md#command-ssim2mysql)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ssim2mysql.FDb.ctype|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2mysql.FDb.field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2mysql.FDb.sqltype|[ssim2mysql.FSqltype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fsqltype)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2mysql.FDb.cmd|[ssim2mysql.FCmd](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcmd)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|ssim2mysql.FDb.column|[ssim2mysql.FColumn](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcolumn)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2mysql.FDb._db|[ssim2mysql.FDb](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|ssim2mysql.FDb.ind_ns|[ssim2mysql.FNs](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fns)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|ssim2mysql.FDb.ind_ctype|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|ssim2mysql.FDb.ind_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|ssim2mysql.FDb.substr|[ssim2mysql.FSubstr](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fsubstr)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2mysql.FDb.cppfunc|[ssim2mysql.FCppfunc](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcppfunc)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2mysql.FDb.ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|ssim2mysql.FDb.ind_ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Thash](/txt/exe/amc/reftype/Thash.md)|||
+|ssim2mysql.FDb.zs_cmd|[ssim2mysql.FCmd](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcmd)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|ssim2mysql.FDb.c_cmd_cur|[ssim2mysql.FCmd](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcmd)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|ssim2mysql.FDb.c_ssimfile_cur|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|ssim2mysql.FDb.n_cmd_rows|u32|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ssim2mysql.FDb.input|[ssim2mysql.FInput](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-finput)|[Tpool](/txt/exe/amc/reftype/Tpool.md)|||
+|ssim2mysql.FDb.zd_ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
+|ssim2mysql.FDb.cd_input_line|[ssim2mysql.FInput](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-finput)|[Llist](/txt/exe/amc/reftype/Llist.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -324,12 +326,12 @@ struct FDb { // ssim2mysql.FDb: In-memory database for ssim2mysql
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |ssim2mysql.FField.msghdr|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
-|ssim2mysql.FField.p_ctype|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|ssim2mysql.FField.p_arg|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|ssim2mysql.FField.c_cppfunc|[ssim2mysql.FCppfunc](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcppfunc)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|ssim2mysql.FField.c_substr|[ssim2mysql.FSubstr](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fsubstr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
-|ssim2mysql.FField.select|bool|[Val](/txt/exe/amc/reftype.md#val)||Select for inclusion to upload|
-|ssim2mysql.FField.is_pkeyref|bool|[Val](/txt/exe/amc/reftype.md#val)||Field is a pkey reference to something else|
+|ssim2mysql.FField.p_ctype|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|ssim2mysql.FField.p_arg|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|ssim2mysql.FField.c_cppfunc|[ssim2mysql.FCppfunc](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcppfunc)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|ssim2mysql.FField.c_substr|[ssim2mysql.FSubstr](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fsubstr)|[Ptr](/txt/exe/amc/reftype/Ptr.md)|||
+|ssim2mysql.FField.select|bool|[Val](/txt/exe/amc/reftype/Val.md)||Select for inclusion to upload|
+|ssim2mysql.FField.is_pkeyref|bool|[Val](/txt/exe/amc/reftype/Val.md)||Field is a pkey reference to something else|
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -382,9 +384,9 @@ private:
 <a href="#ssim2mysql-finput-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssim2mysql.FInput.in_buf|char|[Fbuf](/txt/exe/amc/reftype.md#fbuf)|'\n'|Socket data comes here|
-|ssim2mysql.FInput.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype.md#val)||Temp tuple|
-|ssim2mysql.FInput.warnstr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Warning string|
+|ssim2mysql.FInput.in_buf|char|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)|'\n'|Socket data comes here|
+|ssim2mysql.FInput.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftype/Val.md)||Temp tuple|
+|ssim2mysql.FInput.warnstr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Warning string|
 
 #### Struct FInput
 <a href="#struct-finput"></a>
@@ -431,7 +433,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |ssim2mysql.FNs.msghdr|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Base](/txt/ssimdb/dmmeta/ns.md)|||
-|ssim2mysql.FNs.c_ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|ssim2mysql.FNs.c_ssimfile|[ssim2mysql.FSsimfile](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fssimfile)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|||
 
 #### Struct FNs
 <a href="#struct-fns"></a>
@@ -508,10 +510,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |ssim2mysql.FSsimfile.msghdr|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
-|ssim2mysql.FSsimfile.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|ssim2mysql.FSsimfile.p_ctype|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
-|ssim2mysql.FSsimfile.truncated|bool|[Val](/txt/exe/amc/reftype.md#val)||Already truncated in database|
-|ssim2mysql.FSsimfile.c_column|[ssim2mysql.FColumn](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcolumn)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)||List of columns|
+|ssim2mysql.FSsimfile.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|ssim2mysql.FSsimfile.p_ctype|[ssim2mysql.FCtype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fctype)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
+|ssim2mysql.FSsimfile.truncated|bool|[Val](/txt/exe/amc/reftype/Val.md)||Already truncated in database|
+|ssim2mysql.FSsimfile.c_column|[ssim2mysql.FColumn](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fcolumn)|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)||List of columns|
 
 #### Struct FSsimfile
 <a href="#struct-fssimfile"></a>
@@ -560,7 +562,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |ssim2mysql.FSubstr.msghdr|[dmmeta.Substr](/txt/ssimdb/dmmeta/substr.md)|[Base](/txt/ssimdb/dmmeta/substr.md)|||
-|ssim2mysql.FSubstr.p_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|ssim2mysql.FSubstr.p_field|[ssim2mysql.FField](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-ffield)|[Upptr](/txt/exe/amc/reftype/Upptr.md)|||
 
 #### Struct FSubstr
 <a href="#struct-fsubstr"></a>

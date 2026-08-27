@@ -283,31 +283,31 @@ inline  samp_meng::Ordkey::Ordkey() {
 
 // --- samp_meng.FOrder.ordkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool samp_meng::ordkey_Lt(samp_meng::FOrder& order, samp_meng::FOrder &rhs) {
-    return samp_meng::Ordkey_Lt(order.ordkey,rhs.ordkey);
+inline bool samp_meng::ordkey_Lt(samp_meng::FOrder& parent, samp_meng::FOrder &rhs) {
+    return samp_meng::Ordkey_Lt(parent.ordkey,rhs.ordkey);
 }
 
 // --- samp_meng.FOrder.ordkey.Cmp
 // Compare two fields.
-inline i32 samp_meng::ordkey_Cmp(samp_meng::FOrder& order, samp_meng::FOrder &rhs) {
+inline i32 samp_meng::ordkey_Cmp(samp_meng::FOrder& parent, samp_meng::FOrder &rhs) {
     i32 retval = 0;
-    retval = samp_meng::Ordkey_Cmp(order.ordkey, rhs.ordkey);
+    retval = samp_meng::Ordkey_Cmp(parent.ordkey, rhs.ordkey);
     return retval;
 }
 
 // --- samp_meng.FOrder..Init
 // Set all fields to initial values.
-inline void samp_meng::FOrder_Init(samp_meng::FOrder& order) {
-    order.order = i64(0);
-    order.p_ordq = NULL;
-    order.qty = u32(0);
-    order.p_user = NULL;
-    order.order_next = (samp_meng::FOrder*)-1; // (samp_meng.FDb.order) not-in-tpool's freelist
-    order.ind_order_next = (samp_meng::FOrder*)-1; // (samp_meng.FDb.ind_order) not-in-hash
-    order.ind_order_hashval = 0; // stored hash value
-    order.ordq_bh_order_idx = -1; // (samp_meng.FOrdq.bh_order) not-in-heap
-    order.user_zd_order_next = (samp_meng::FOrder*)-1; // (samp_meng.FUser.zd_order) not-in-list
-    order.user_zd_order_prev = NULL; // (samp_meng.FUser.zd_order)
+inline void samp_meng::FOrder_Init(samp_meng::FOrder& parent) {
+    parent.order = i64(0);
+    parent.p_ordq = NULL;
+    parent.qty = u32(0);
+    parent.p_user = NULL;
+    parent.order_next = (samp_meng::FOrder*)-1; // (samp_meng.FDb.order) not-in-tpool's freelist
+    parent.ind_order_next = (samp_meng::FOrder*)-1; // (samp_meng.FDb.ind_order) not-in-hash
+    parent.ind_order_hashval = 0; // stored hash value
+    parent.ordq_bh_order_idx = -1; // (samp_meng.FOrdq.bh_order) not-in-heap
+    parent.user_zd_order_next = (samp_meng::FOrder*)-1; // (samp_meng.FUser.zd_order) not-in-list
+    parent.user_zd_order_prev = NULL; // (samp_meng.FUser.zd_order)
 }
 
 // --- samp_meng.FOrder..Ctor
@@ -322,16 +322,16 @@ inline  samp_meng::FOrder::~FOrder() {
 
 // --- samp_meng.FOrdq.bh_order.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::bh_order_EmptyQ(samp_meng::FOrdq& ordq) {
-    return ordq.bh_order_n == 0;
+inline bool samp_meng::bh_order_EmptyQ(samp_meng::FOrdq& parent) {
+    return parent.bh_order_n == 0;
 }
 
 // --- samp_meng.FOrdq.bh_order.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline samp_meng::FOrder* samp_meng::bh_order_First(samp_meng::FOrdq& ordq) {
+inline samp_meng::FOrder* samp_meng::bh_order_First(samp_meng::FOrdq& parent) {
     samp_meng::FOrder *row = NULL;
-    if (ordq.bh_order_n > 0) {
-        row = ordq.bh_order_elems[0];
+    if (parent.bh_order_n > 0) {
+        row = parent.bh_order_elems[0];
     }
     return row;
 }
@@ -346,20 +346,20 @@ inline bool samp_meng::bh_order_InBheapQ(samp_meng::FOrder& row) {
 
 // --- samp_meng.FOrdq.bh_order.N
 // Return number of items in the heap
-inline i32 samp_meng::bh_order_N(const samp_meng::FOrdq& ordq) {
-    return ordq.bh_order_n;
+inline i32 samp_meng::bh_order_N(const samp_meng::FOrdq& parent) {
+    return parent.bh_order_n;
 }
 
 // --- samp_meng.FOrdq..Init
 // Set all fields to initial values.
-inline void samp_meng::FOrdq_Init(samp_meng::FOrdq& ordq) {
-    ordq.side = u8(0);
-    ordq.p_symbol = NULL;
-    ordq.bh_order_max   	= 0; // (samp_meng.FOrdq.bh_order)
-    ordq.bh_order_n     	= 0; // (samp_meng.FOrdq.bh_order)
-    ordq.bh_order_elems 	= NULL; // (samp_meng.FOrdq.bh_order)
-    ordq.symbol_c_ordq_in_ary = bool(false);
-    ordq.ordq_next = (samp_meng::FOrdq*)-1; // (samp_meng.FDb.ordq) not-in-tpool's freelist
+inline void samp_meng::FOrdq_Init(samp_meng::FOrdq& parent) {
+    parent.side = u8(0);
+    parent.p_symbol = NULL;
+    parent.bh_order_max   	= 0; // (samp_meng.FOrdq.bh_order)
+    parent.bh_order_n     	= 0; // (samp_meng.FOrdq.bh_order)
+    parent.bh_order_elems 	= NULL; // (samp_meng.FOrdq.bh_order)
+    parent.symbol_c_ordq_in_ary = bool(false);
+    parent.ordq_next = (samp_meng::FOrdq*)-1; // (samp_meng.FDb.ordq) not-in-tpool's freelist
 }
 
 // --- samp_meng.FOrdq.bh_order_curs.Access
@@ -386,48 +386,48 @@ inline  samp_meng::FOrdq::~FOrdq() {
 
 // --- samp_meng.FSymbol.c_ordq.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::c_ordq_EmptyQ(samp_meng::FSymbol& symbol) {
-    return symbol.c_ordq_n == 0;
+inline bool samp_meng::c_ordq_EmptyQ(samp_meng::FSymbol& parent) {
+    return parent.c_ordq_n == 0;
 }
 
 // --- samp_meng.FSymbol.c_ordq.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_meng::FOrdq* samp_meng::c_ordq_Find(samp_meng::FSymbol& symbol, u64 t) {
+inline samp_meng::FOrdq* samp_meng::c_ordq_Find(samp_meng::FSymbol& parent, u64 t) {
     samp_meng::FOrdq *retval = NULL;
     u64 idx = t;
-    u64 lim = symbol.c_ordq_n;
+    u64 lim = parent.c_ordq_n;
     if (idx < lim) {
-        retval = symbol.c_ordq_elems[idx];
+        retval = parent.c_ordq_elems[idx];
     }
     return retval;
 }
 
 // --- samp_meng.FSymbol.c_ordq.Getary
 // Return array of pointers
-inline algo::aryptr<samp_meng::FOrdq*> samp_meng::c_ordq_Getary(samp_meng::FSymbol& symbol) {
-    return algo::aryptr<samp_meng::FOrdq*>(symbol.c_ordq_elems, symbol.c_ordq_n);
+inline algo::aryptr<samp_meng::FOrdq*> samp_meng::c_ordq_Getary(samp_meng::FSymbol& parent) {
+    return algo::aryptr<samp_meng::FOrdq*>(parent.c_ordq_elems, parent.c_ordq_n);
 }
 
 // --- samp_meng.FSymbol.c_ordq.N
 // Return number of items in the pointer array
-inline i64 samp_meng::c_ordq_N(const samp_meng::FSymbol& symbol) {
-    return symbol.c_ordq_n;
+inline i64 samp_meng::c_ordq_N(const samp_meng::FSymbol& parent) {
+    return parent.c_ordq_n;
 }
 
 // --- samp_meng.FSymbol.c_ordq.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void samp_meng::c_ordq_RemoveAll(samp_meng::FSymbol& symbol) {
-    for (u64 i = 0; i < symbol.c_ordq_n; i++) {
+inline void samp_meng::c_ordq_RemoveAll(samp_meng::FSymbol& parent) {
+    for (u64 i = 0; i < parent.c_ordq_n; i++) {
         // mark all elements as not-in-array
-        symbol.c_ordq_elems[i]->symbol_c_ordq_in_ary = false;
+        parent.c_ordq_elems[i]->symbol_c_ordq_in_ary = false;
     }
-    symbol.c_ordq_n = 0;
+    parent.c_ordq_n = 0;
 }
 
 // --- samp_meng.FSymbol.c_ordq.qFind
 // Return reference without bounds checking
-inline samp_meng::FOrdq& samp_meng::c_ordq_qFind(samp_meng::FSymbol& symbol, u64 idx) {
-    return *symbol.c_ordq_elems[idx];
+inline samp_meng::FOrdq& samp_meng::c_ordq_qFind(samp_meng::FSymbol& parent, u64 idx) {
+    return *parent.c_ordq_elems[idx];
 }
 
 // --- samp_meng.FSymbol.c_ordq.InAryQ
@@ -438,19 +438,19 @@ inline bool samp_meng::symbol_c_ordq_InAryQ(samp_meng::FOrdq& row) {
 
 // --- samp_meng.FSymbol.c_ordq.qLast
 // Reference to last element without bounds checking
-inline samp_meng::FOrdq& samp_meng::c_ordq_qLast(samp_meng::FSymbol& symbol) {
-    return *symbol.c_ordq_elems[symbol.c_ordq_n-1];
+inline samp_meng::FOrdq& samp_meng::c_ordq_qLast(samp_meng::FSymbol& parent) {
+    return *parent.c_ordq_elems[parent.c_ordq_n-1];
 }
 
 // --- samp_meng.FSymbol..Init
 // Set all fields to initial values.
-inline void samp_meng::FSymbol_Init(samp_meng::FSymbol& symbol) {
-    symbol.id = i32(0);
-    symbol.c_ordq_elems = NULL; // (samp_meng.FSymbol.c_ordq)
-    symbol.c_ordq_n = 0; // (samp_meng.FSymbol.c_ordq)
-    symbol.c_ordq_max = 0; // (samp_meng.FSymbol.c_ordq)
-    symbol.ind_symbol_next = (samp_meng::FSymbol*)-1; // (samp_meng.FDb.ind_symbol) not-in-hash
-    symbol.ind_symbol_hashval = 0; // stored hash value
+inline void samp_meng::FSymbol_Init(samp_meng::FSymbol& parent) {
+    parent.id = i32(0);
+    parent.c_ordq_elems = NULL; // (samp_meng.FSymbol.c_ordq)
+    parent.c_ordq_n = 0; // (samp_meng.FSymbol.c_ordq)
+    parent.c_ordq_max = 0; // (samp_meng.FSymbol.c_ordq)
+    parent.ind_symbol_next = (samp_meng::FSymbol*)-1; // (samp_meng.FDb.ind_symbol) not-in-hash
+    parent.ind_symbol_hashval = 0; // stored hash value
 }
 
 // --- samp_meng.FSymbol.c_ordq_curs.Reset
@@ -490,15 +490,15 @@ inline  samp_meng::FSymbol::~FSymbol() {
 
 // --- samp_meng.FUser.zd_order.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::zd_order_EmptyQ(samp_meng::FUser& user) {
-    return user.zd_order_head == NULL;
+inline bool samp_meng::zd_order_EmptyQ(samp_meng::FUser& parent) {
+    return parent.zd_order_head == NULL;
 }
 
 // --- samp_meng.FUser.zd_order.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline samp_meng::FOrder* samp_meng::zd_order_First(samp_meng::FUser& user) {
+inline samp_meng::FOrder* samp_meng::zd_order_First(samp_meng::FUser& parent) {
     samp_meng::FOrder *row = NULL;
-    row = user.zd_order_head;
+    row = parent.zd_order_head;
     return row;
 }
 
@@ -512,16 +512,16 @@ inline bool samp_meng::user_zd_order_InLlistQ(samp_meng::FOrder& row) {
 
 // --- samp_meng.FUser.zd_order.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline samp_meng::FOrder* samp_meng::zd_order_Last(samp_meng::FUser& user) {
+inline samp_meng::FOrder* samp_meng::zd_order_Last(samp_meng::FUser& parent) {
     samp_meng::FOrder *row = NULL;
-    row = user.zd_order_tail;
+    row = parent.zd_order_tail;
     return row;
 }
 
 // --- samp_meng.FUser.zd_order.N
 // Return number of items in the linked list
-inline i32 samp_meng::zd_order_N(const samp_meng::FUser& user) {
-    return user.zd_order_n;
+inline i32 samp_meng::zd_order_N(const samp_meng::FUser& parent) {
+    return parent.zd_order_n;
 }
 
 // --- samp_meng.FUser.zd_order.Next
@@ -538,21 +538,21 @@ inline samp_meng::FOrder* samp_meng::user_zd_order_Prev(samp_meng::FOrder &row) 
 
 // --- samp_meng.FUser.zd_order.qLast
 // Return reference to last element in the index. No bounds checking.
-inline samp_meng::FOrder& samp_meng::zd_order_qLast(samp_meng::FUser& user) {
+inline samp_meng::FOrder& samp_meng::zd_order_qLast(samp_meng::FUser& parent) {
     samp_meng::FOrder *row = NULL;
-    row = user.zd_order_tail;
+    row = parent.zd_order_tail;
     return *row;
 }
 
 // --- samp_meng.FUser..Init
 // Set all fields to initial values.
-inline void samp_meng::FUser_Init(samp_meng::FUser& user) {
-    user.user = i32(0);
-    user.zd_order_head = NULL; // (samp_meng.FUser.zd_order)
-    user.zd_order_n = 0; // (samp_meng.FUser.zd_order)
-    user.zd_order_tail = NULL; // (samp_meng.FUser.zd_order)
-    user.ind_user_next = (samp_meng::FUser*)-1; // (samp_meng.FDb.ind_user) not-in-hash
-    user.ind_user_hashval = 0; // stored hash value
+inline void samp_meng::FUser_Init(samp_meng::FUser& parent) {
+    parent.user = i32(0);
+    parent.zd_order_head = NULL; // (samp_meng.FUser.zd_order)
+    parent.zd_order_n = 0; // (samp_meng.FUser.zd_order)
+    parent.zd_order_tail = NULL; // (samp_meng.FUser.zd_order)
+    parent.ind_user_next = (samp_meng::FUser*)-1; // (samp_meng.FDb.ind_user) not-in-hash
+    parent.ind_user_hashval = 0; // stored hash value
 }
 
 // --- samp_meng.FUser.zd_order_curs.Reset

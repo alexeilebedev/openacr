@@ -26,12 +26,12 @@ italicised fields: *ctype* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) field
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.RL of field*|
-|length|i32|[Val](/txt/exe/amc/reftype.md#val)||Maximum characters in the string|
-|strtype|[dmmeta.Strtype](/txt/ssimdb/dmmeta/strtype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Data format for string|
-|pad|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftype.md#val)||Pad character (if applicable)|
-|strict|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>.RL of field*|
+|length|i32|[Val](/txt/exe/amc/reftype/Val.md)||Maximum characters in the string|
+|strtype|[dmmeta.Strtype](/txt/ssimdb/dmmeta/strtype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)||Data format for string|
+|pad|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftype/Val.md)||Pad character (if applicable)|
+|strict|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Subsets
 <a href="#subsets"></a>

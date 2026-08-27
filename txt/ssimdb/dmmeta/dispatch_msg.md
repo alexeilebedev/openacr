@@ -11,10 +11,10 @@ italicised fields: *dispatch, ctype* are [**fldfunc**](/txt/openacr/ssim.md#fldf
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|dispatch_msg|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*dispatch*|*[dmmeta.Dispatch](/txt/ssimdb/dmmeta/dispatch.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RL of dispatch_msg*|
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RR of dispatch_msg*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|dispatch_msg|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*dispatch*|*[dmmeta.Dispatch](/txt/ssimdb/dmmeta/dispatch.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/RL of dispatch_msg*|
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/RR of dispatch_msg*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Commands
 <a href="#used-in-commands"></a>

@@ -11,9 +11,9 @@ italicised fields: *code, reason* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|status|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*code*|*u16*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br> LL of status*|
-|*reason*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br> LR of status*|
+|status|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*code*|*u16*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br> LL of status*|
+|*reason*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br> LR of status*|
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

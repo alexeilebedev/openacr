@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -48,15 +50,15 @@ All allocations are done through global `acr_my::_db` [acr_my.FDb](#acr_my-fdb) 
 <a href="#acr_my-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|acr_my.FDb.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_my.FDb.data_dir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_my.FDb.data_logdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_my.FDb.ary_ns|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|||
-|acr_my.FDb.started|bool|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_my.FDb._db|[acr_my.FDb](/txt/gen/acr_my/acr_my.md#acr_my-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|acr_my.FDb.cmdline|[command.acr_my](/txt/protocol/command/README.md#command-acr_my)|[Val](/txt/exe/amc/reftype.md#val)|||
-|acr_my.FDb.nsdb|[acr_my.FNsdb](/txt/gen/acr_my/acr_my.md#acr_my-fnsdb)|[Lary](/txt/exe/amc/reftype.md#lary)|||
-|acr_my.FDb.ssimfile|[acr_my.FSsimfile](/txt/gen/acr_my/acr_my.md#acr_my-fssimfile)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|acr_my.FDb.R|[algo_lib.Replscope](/txt/gen/algo_lib/algo_lib.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_my.FDb.data_dir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_my.FDb.data_logdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_my.FDb.ary_ns|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype/Tary.md)|||
+|acr_my.FDb.started|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_my.FDb._db|[acr_my.FDb](/txt/gen/acr_my/acr_my.md#acr_my-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|acr_my.FDb.cmdline|[command.acr_my](/txt/protocol/command/README.md#command-acr_my)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|acr_my.FDb.nsdb|[acr_my.FNsdb](/txt/gen/acr_my/acr_my.md#acr_my-fnsdb)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
+|acr_my.FDb.ssimfile|[acr_my.FSsimfile](/txt/gen/acr_my/acr_my.md#acr_my-fssimfile)|[Lary](/txt/exe/amc/reftype/Lary.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -87,7 +89,7 @@ struct FDb { // acr_my.FDb: In-memory database for acr_my
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |acr_my.FNsdb.base|[dmmeta.Nsdb](/txt/ssimdb/dmmeta/nsdb.md)|[Base](/txt/ssimdb/dmmeta/nsdb.md)|||
-|acr_my.FNsdb.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|acr_my.FNsdb.select|bool|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FNsdb
 <a href="#struct-fnsdb"></a>

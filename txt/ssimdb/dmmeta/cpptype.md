@@ -9,8 +9,8 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|ctor|bool|[Val](/txt/exe/amc/reftype.md#val)|false|if true, generate non-default constructor from all fields|
+|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|ctor|bool|[Val](/txt/exe/amc/reftype/Val.md)|false|if true, generate non-default constructor from all fields|
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

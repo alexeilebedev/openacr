@@ -1,6 +1,6 @@
 dev.readmesort  readmesort:txt/intro  comment:""
 dev.readmesort  readmesort:txt/openacr  comment:""
-dev.readmesort  readmesort:txt/step  comment:"time domain of each real-time module"
+dev.readmesort  readmesort:txt/rule  comment:"design decisions of each namespace, beyond what its source states"
 dev.readmesort  readmesort:txt/start  comment:""
 dev.readmesort  readmesort:txt/fun  comment:""
 dev.readmesort  readmesort:txt/tut  comment:""

@@ -3,10 +3,12 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Description](#description)
-* [Sources](#sources)
-* [Dependencies](#dependencies)
-* [In Memory DB](#in-memory-db)
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
 ### Description
 <a href="#description"></a>
@@ -47,8 +49,8 @@ All allocations are done through global `samp_regx::_db` [samp_regx.FDb](#samp_r
 <a href="#samp_regx-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|samp_regx.FDb._db|[samp_regx.FDb](/txt/gen/samp_regx/samp_regx.md#samp_regx-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
-|samp_regx.FDb.cmdline|[command.samp_regx](/txt/protocol/command/README.md#command-samp_regx)|[Val](/txt/exe/amc/reftype.md#val)|||
+|samp_regx.FDb._db|[samp_regx.FDb](/txt/gen/samp_regx/samp_regx.md#samp_regx-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
+|samp_regx.FDb.cmdline|[command.samp_regx](/txt/protocol/command/README.md#command-samp_regx)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

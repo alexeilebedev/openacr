@@ -147,9 +147,9 @@ void                 covfile_CopyIn(atf_cov::FCovfile &row, dev::Covfile &in) __
 
 // Set all fields to initial values.
 // func:atf_cov.FCovfile..Init
-inline void          FCovfile_Init(atf_cov::FCovfile& covfile);
+inline void          FCovfile_Init(atf_cov::FCovfile& parent);
 // func:atf_cov.FCovfile..Uninit
-void                 FCovfile_Uninit(atf_cov::FCovfile& covfile) __attribute__((nothrow));
+void                 FCovfile_Uninit(atf_cov::FCovfile& parent) __attribute__((nothrow));
 
 // --- atf_cov.FCovline
 // create: atf_cov.FDb.covline (Lary)
@@ -189,16 +189,16 @@ void                 covline_CopyOut(atf_cov::FCovline &row, dev::Covline &out) 
 void                 covline_CopyIn(atf_cov::FCovline &row, dev::Covline &in) __attribute__((nothrow));
 
 // func:atf_cov.FCovline.src.Get
-algo::strptr         src_Get(atf_cov::FCovline& covline) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(atf_cov::FCovline& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_cov.FCovline.line.Get
-u32                  line_Get(atf_cov::FCovline& covline) __attribute__((__warn_unused_result__, nothrow));
+u32                  line_Get(atf_cov::FCovline& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:atf_cov.FCovline..Init
-inline void          FCovline_Init(atf_cov::FCovline& covline);
+inline void          FCovline_Init(atf_cov::FCovline& parent);
 // func:atf_cov.FCovline..Uninit
-void                 FCovline_Uninit(atf_cov::FCovline& covline) __attribute__((nothrow));
+void                 FCovline_Uninit(atf_cov::FCovline& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_cov.FCovline.String  printfmt:Tuple
 // func:atf_cov.FCovline..Print
@@ -239,9 +239,9 @@ void                 covtarget_CopyIn(atf_cov::FCovtarget &row, dev::Covtarget &
 
 // Set all fields to initial values.
 // func:atf_cov.FCovtarget..Init
-inline void          FCovtarget_Init(atf_cov::FCovtarget& covtarget);
+inline void          FCovtarget_Init(atf_cov::FCovtarget& parent);
 // func:atf_cov.FCovtarget..Uninit
-void                 FCovtarget_Uninit(atf_cov::FCovtarget& covtarget) __attribute__((nothrow));
+void                 FCovtarget_Uninit(atf_cov::FCovtarget& parent) __attribute__((nothrow));
 
 // --- atf_cov.trace
 #pragma pack(push,1)
@@ -948,65 +948,65 @@ void                 gitfile_CopyOut(atf_cov::FGitfile &row, dev::Gitfile &out) 
 void                 gitfile_CopyIn(atf_cov::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
 
 // func:atf_cov.FGitfile.ext.Get
-algo::strptr         ext_Get(atf_cov::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(atf_cov::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_cov.FGitfile.c_targsrc.InsertMaybe
-inline bool          c_targsrc_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FTargsrc& row) __attribute__((nothrow));
+inline bool          c_targsrc_InsertMaybe(atf_cov::FGitfile& parent, atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_cov.FGitfile.c_targsrc.Remove
-inline void          c_targsrc_Remove(atf_cov::FGitfile& gitfile, atf_cov::FTargsrc& row) __attribute__((nothrow));
+inline void          c_targsrc_Remove(atf_cov::FGitfile& parent, atf_cov::FTargsrc& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:atf_cov.FGitfile.c_covline.EmptyQ
-inline bool          c_covline_EmptyQ(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
+inline bool          c_covline_EmptyQ(atf_cov::FGitfile& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FGitfile.c_covline.Find
-inline atf_cov::FCovline* c_covline_Find(atf_cov::FGitfile& gitfile, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_cov::FCovline* c_covline_Find(atf_cov::FGitfile& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_cov.FGitfile.c_covline.Getary
-inline algo::aryptr<atf_cov::FCovline*> c_covline_Getary(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
+inline algo::aryptr<atf_cov::FCovline*> c_covline_Getary(atf_cov::FGitfile& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_cov.FGitfile.c_covline.Insert
-void                 c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) __attribute__((nothrow));
+void                 c_covline_Insert(atf_cov::FGitfile& parent, atf_cov::FCovline& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:atf_cov.FGitfile.c_covline.InsertMaybe
-bool                 c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) __attribute__((nothrow));
+bool                 c_covline_InsertMaybe(atf_cov::FGitfile& parent, atf_cov::FCovline& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_cov.FGitfile.c_covline.N
-inline i64           c_covline_N(const atf_cov::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_covline_N(const atf_cov::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_cov.FGitfile.c_covline.Remove
-void                 c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) __attribute__((nothrow));
+void                 c_covline_Remove(atf_cov::FGitfile& parent, atf_cov::FCovline& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:atf_cov.FGitfile.c_covline.RemoveAll
-inline void          c_covline_RemoveAll(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
+inline void          c_covline_RemoveAll(atf_cov::FGitfile& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_cov.FGitfile.c_covline.Reserve
-void                 c_covline_Reserve(atf_cov::FGitfile& gitfile, u64 n) __attribute__((nothrow));
+void                 c_covline_Reserve(atf_cov::FGitfile& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_cov.FGitfile.c_covline.qFind
-inline atf_cov::FCovline& c_covline_qFind(atf_cov::FGitfile& gitfile, u64 idx) __attribute__((nothrow));
+inline atf_cov::FCovline& c_covline_qFind(atf_cov::FGitfile& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_cov.FGitfile.c_covline.InAryQ
 inline bool          gitfile_c_covline_InAryQ(atf_cov::FCovline& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:atf_cov.FGitfile.c_covline.qLast
-inline atf_cov::FCovline& c_covline_qLast(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
+inline atf_cov::FCovline& c_covline_qLast(atf_cov::FGitfile& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_cov.FGitfile.c_covfile.InsertMaybe
-inline bool          c_covfile_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) __attribute__((nothrow));
+inline bool          c_covfile_InsertMaybe(atf_cov::FGitfile& parent, atf_cov::FCovfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_cov.FGitfile.c_covfile.Remove
-inline void          c_covfile_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) __attribute__((nothrow));
+inline void          c_covfile_Remove(atf_cov::FGitfile& parent, atf_cov::FCovfile& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_cov.FGitfile..Init
-inline void          FGitfile_Init(atf_cov::FGitfile& gitfile);
+inline void          FGitfile_Init(atf_cov::FGitfile& parent);
 // func:atf_cov.FGitfile.c_covline_curs.Reset
 inline void          gitfile_c_covline_curs_Reset(gitfile_c_covline_curs &curs, atf_cov::FGitfile &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -1019,7 +1019,7 @@ inline void          gitfile_c_covline_curs_Next(gitfile_c_covline_curs &curs) _
 // func:atf_cov.FGitfile.c_covline_curs.Access
 inline atf_cov::FCovline& gitfile_c_covline_curs_Access(gitfile_c_covline_curs &curs) __attribute__((nothrow));
 // func:atf_cov.FGitfile..Uninit
-void                 FGitfile_Uninit(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
+void                 FGitfile_Uninit(atf_cov::FGitfile& parent) __attribute__((nothrow));
 
 // --- atf_cov.FTarget
 // create: atf_cov.FDb.target (Lary)
@@ -1064,61 +1064,61 @@ void                 target_CopyIn(atf_cov::FTarget &row, dev::Target &in) __att
 
 // Return true if index is empty
 // func:atf_cov.FTarget.c_targsrc.EmptyQ
-inline bool          c_targsrc_EmptyQ(atf_cov::FTarget& target) __attribute__((nothrow));
+inline bool          c_targsrc_EmptyQ(atf_cov::FTarget& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FTarget.c_targsrc.Find
-inline atf_cov::FTargsrc* c_targsrc_Find(atf_cov::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_cov::FTargsrc* c_targsrc_Find(atf_cov::FTarget& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_cov.FTarget.c_targsrc.Getary
-inline algo::aryptr<atf_cov::FTargsrc*> c_targsrc_Getary(atf_cov::FTarget& target) __attribute__((nothrow));
+inline algo::aryptr<atf_cov::FTargsrc*> c_targsrc_Getary(atf_cov::FTarget& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:atf_cov.FTarget.c_targsrc.Insert
-void                 c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row) __attribute__((nothrow));
+void                 c_targsrc_Insert(atf_cov::FTarget& parent, atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:atf_cov.FTarget.c_targsrc.InsertMaybe
-bool                 c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc& row) __attribute__((nothrow));
+bool                 c_targsrc_InsertMaybe(atf_cov::FTarget& parent, atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_cov.FTarget.c_targsrc.N
-inline i64           c_targsrc_N(const atf_cov::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targsrc_N(const atf_cov::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_cov.FTarget.c_targsrc.Remove
-void                 c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row) __attribute__((nothrow));
+void                 c_targsrc_Remove(atf_cov::FTarget& parent, atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:atf_cov.FTarget.c_targsrc.RemoveAll
-inline void          c_targsrc_RemoveAll(atf_cov::FTarget& target) __attribute__((nothrow));
+inline void          c_targsrc_RemoveAll(atf_cov::FTarget& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_cov.FTarget.c_targsrc.Reserve
-void                 c_targsrc_Reserve(atf_cov::FTarget& target, u64 n) __attribute__((nothrow));
+void                 c_targsrc_Reserve(atf_cov::FTarget& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_cov.FTarget.c_targsrc.qFind
-inline atf_cov::FTargsrc& c_targsrc_qFind(atf_cov::FTarget& target, u64 idx) __attribute__((nothrow));
+inline atf_cov::FTargsrc& c_targsrc_qFind(atf_cov::FTarget& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_cov.FTarget.c_targsrc.InAryQ
 inline bool          target_c_targsrc_InAryQ(atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:atf_cov.FTarget.c_targsrc.qLast
-inline atf_cov::FTargsrc& c_targsrc_qLast(atf_cov::FTarget& target) __attribute__((nothrow));
+inline atf_cov::FTargsrc& c_targsrc_qLast(atf_cov::FTarget& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_cov.FTarget.c_covtarget.InsertMaybe
-inline bool          c_covtarget_InsertMaybe(atf_cov::FTarget& target, atf_cov::FCovtarget& row) __attribute__((nothrow));
+inline bool          c_covtarget_InsertMaybe(atf_cov::FTarget& parent, atf_cov::FCovtarget& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_cov.FTarget.c_covtarget.Remove
-inline void          c_covtarget_Remove(atf_cov::FTarget& target, atf_cov::FCovtarget& row) __attribute__((nothrow));
+inline void          c_covtarget_Remove(atf_cov::FTarget& parent, atf_cov::FCovtarget& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_cov.FTarget.c_tgtcov.InsertMaybe
-inline bool          c_tgtcov_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTgtcov& row) __attribute__((nothrow));
+inline bool          c_tgtcov_InsertMaybe(atf_cov::FTarget& parent, atf_cov::FTgtcov& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_cov.FTarget.c_tgtcov.Remove
-inline void          c_tgtcov_Remove(atf_cov::FTarget& target, atf_cov::FTgtcov& row) __attribute__((nothrow));
+inline void          c_tgtcov_Remove(atf_cov::FTarget& parent, atf_cov::FTgtcov& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_cov.FTarget..Init
-inline void          FTarget_Init(atf_cov::FTarget& target);
+inline void          FTarget_Init(atf_cov::FTarget& parent);
 // func:atf_cov.FTarget.c_targsrc_curs.Reset
 inline void          target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, atf_cov::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -1131,7 +1131,7 @@ inline void          target_c_targsrc_curs_Next(target_c_targsrc_curs &curs) __a
 // func:atf_cov.FTarget.c_targsrc_curs.Access
 inline atf_cov::FTargsrc& target_c_targsrc_curs_Access(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // func:atf_cov.FTarget..Uninit
-void                 FTarget_Uninit(atf_cov::FTarget& target) __attribute__((nothrow));
+void                 FTarget_Uninit(atf_cov::FTarget& parent) __attribute__((nothrow));
 
 // --- atf_cov.FTargsrc
 // create: atf_cov.FDb.targsrc (Lary)
@@ -1173,19 +1173,19 @@ void                 targsrc_CopyOut(atf_cov::FTargsrc &row, dev::Targsrc &out) 
 void                 targsrc_CopyIn(atf_cov::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:atf_cov.FTargsrc.target.Get
-algo::strptr         target_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(atf_cov::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_cov.FTargsrc.src.Get
-algo::strptr         src_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(atf_cov::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_cov.FTargsrc.ext.Get
-algo::strptr         ext_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(atf_cov::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:atf_cov.FTargsrc..Init
-inline void          FTargsrc_Init(atf_cov::FTargsrc& targsrc);
+inline void          FTargsrc_Init(atf_cov::FTargsrc& parent);
 // func:atf_cov.FTargsrc..Uninit
-void                 FTargsrc_Uninit(atf_cov::FTargsrc& targsrc) __attribute__((nothrow));
+void                 FTargsrc_Uninit(atf_cov::FTargsrc& parent) __attribute__((nothrow));
 
 // --- atf_cov.FTgtcov
 // create: atf_cov.FDb.tgtcov (Lary)
@@ -1221,9 +1221,9 @@ void                 tgtcov_CopyIn(atf_cov::FTgtcov &row, dev::Tgtcov &in) __att
 
 // Set all fields to initial values.
 // func:atf_cov.FTgtcov..Init
-inline void          FTgtcov_Init(atf_cov::FTgtcov& tgtcov);
+inline void          FTgtcov_Init(atf_cov::FTgtcov& parent);
 // func:atf_cov.FTgtcov..Uninit
-void                 FTgtcov_Uninit(atf_cov::FTgtcov& tgtcov) __attribute__((nothrow));
+void                 FTgtcov_Uninit(atf_cov::FTgtcov& parent) __attribute__((nothrow));
 
 // --- atf_cov.FUncovfunc
 // create: atf_cov.FDb.uncovfunc (Lary)
@@ -1246,7 +1246,7 @@ void                 uncovfunc_CopyOut(atf_cov::FUncovfunc &row, dev::Uncovfunc 
 void                 uncovfunc_CopyIn(atf_cov::FUncovfunc &row, dev::Uncovfunc &in) __attribute__((nothrow));
 
 // func:atf_cov.FUncovfunc.name.Get
-algo::strptr         name_Get(atf_cov::FUncovfunc& uncovfunc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(atf_cov::FUncovfunc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 
 // --- atf_cov.FieldId

@@ -102,9 +102,9 @@ inline lib_netio::FVar& lib_netio::_db_var_curs_Access(_db_var_curs &curs) {
 
 // --- lib_netio.FVar..Init
 // Set all fields to initial values.
-inline void lib_netio::FVar_Init(lib_netio::FVar& var) {
-    var.ind_var_next = (lib_netio::FVar*)-1; // (lib_netio.FDb.ind_var) not-in-hash
-    var.ind_var_hashval = 0; // stored hash value
+inline void lib_netio::FVar_Init(lib_netio::FVar& parent) {
+    parent.ind_var_next = (lib_netio::FVar*)-1; // (lib_netio.FDb.ind_var) not-in-hash
+    parent.ind_var_hashval = 0; // stored hash value
 }
 
 // --- lib_netio.FVar..Ctor

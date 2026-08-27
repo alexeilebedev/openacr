@@ -9,10 +9,10 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
-|typescript|bool|[Val](/txt/exe/amc/reftype.md#val)||Generate typescript|
-|ifaceonly|bool|[Val](/txt/exe/amc/reftype.md#val)||Project ctypes as interfaces named after the ctype; emit no runtime class|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|||
+|typescript|bool|[Val](/txt/exe/amc/reftype/Val.md)||Generate typescript|
+|ifaceonly|bool|[Val](/txt/exe/amc/reftype/Val.md)||Project ctypes as interfaces named after the ctype; emit no runtime class|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

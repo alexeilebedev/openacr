@@ -1,6 +1,21 @@
 ## lib_git - Internals
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
+
+### Description
+<a href="#description"></a>
+for usage, see [lib_git - Helpful git wrappers](/txt/lib/lib_git/README.md)
+
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
@@ -61,6 +76,9 @@ tempstr lib_git::LastCommitLog()
 
 ```c++
 // Return date + gitref string describing most recent commit, e.g. 2017-05-24.21f8ce8
+// The date is the committer date: it says when the commit reached this branch,
+// which survives a rebase; the author date does not move with one, so a stamp
+// built from it reads days stale the moment a lived-on branch merges.
 tempstr lib_git::ShortRef()
 ```
 
@@ -106,7 +124,7 @@ All allocations are done through global `lib_git::_db` [lib_git.FDb](#lib_git-fd
 <a href="#lib_git-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_git.FDb._db|[lib_git.FDb](/txt/gen/lib_git/lib_git.md#lib_git-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
+|lib_git.FDb._db|[lib_git.FDb](/txt/gen/lib_git/lib_git.md#lib_git-fdb)|[Global](/txt/exe/amc/reftype/Global.md)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>

@@ -11,16 +11,16 @@ italicised fields: *ns, name* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fi
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|dispatch|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)||Primary key (ns.name)|
-|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*Parent namespace<br>.RL of dispatch*|
-|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype.md#val)*||*Dispatch name<br>.RR of dispatch*|
-|unk|bool|[Val](/txt/exe/amc/reftype.md#val)||Want default case?|
-|read|bool|[Val](/txt/exe/amc/reftype.md#val)||Generate read function|
-|print|bool|[Val](/txt/exe/amc/reftype.md#val)||Generate print function|
-|haslen|bool|[Val](/txt/exe/amc/reftype.md#val)||Include length in dispatch function|
-|call|bool|[Val](/txt/exe/amc/reftype.md#val)||Generate call to user-defined function|
-|strict|bool|[Val](/txt/exe/amc/reftype.md#val)||Only dispatch if length matches exactly|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|dispatch|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)||Primary key (ns.name)|
+|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*Parent namespace<br>.RL of dispatch*|
+|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*Dispatch name<br>.RR of dispatch*|
+|unk|bool|[Val](/txt/exe/amc/reftype/Val.md)||Want default case?|
+|read|bool|[Val](/txt/exe/amc/reftype/Val.md)||Generate read function|
+|print|bool|[Val](/txt/exe/amc/reftype/Val.md)||Generate print function|
+|haslen|bool|[Val](/txt/exe/amc/reftype/Val.md)||Include length in dispatch function|
+|call|bool|[Val](/txt/exe/amc/reftype/Val.md)||Generate call to user-defined function|
+|strict|bool|[Val](/txt/exe/amc/reftype/Val.md)||Only dispatch if length matches exactly|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Subsets
 <a href="#subsets"></a>

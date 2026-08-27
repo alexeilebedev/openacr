@@ -20,8 +20,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/ws_gen.h"
 #include "include/gen/ws_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"

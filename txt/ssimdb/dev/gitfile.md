@@ -11,8 +11,8 @@ italicised fields: *ext* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gitfile|[algo.Smallstr200](/txt/protocol/algo/README.md#algo-smallstr200)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*ext*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>/RR.LR.RR of gitfile*|
+|gitfile|[algo.Smallstr200](/txt/protocol/algo/README.md#algo-smallstr200)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*ext*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftype/Val.md)*||*<br>/RR.LR.RR of gitfile*|
 
 ### Subsets
 <a href="#subsets"></a>
@@ -42,6 +42,7 @@ These ssimfiles reference dev.gitfile
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
+* [abt_md](/txt/gen/abt_md/abt_md.md) as [abt_md.FGitfile](/txt/gen/abt_md/abt_md.md#abt_md-fgitfile)
 * [acr_ed](/txt/gen/acr_ed/acr_ed.md) as [acr_ed.FGitfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fgitfile)
 * [atf_ci](/txt/gen/atf_ci/atf_ci.md) as [atf_ci.FGitfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fgitfile)
 * [atf_cov](/txt/gen/atf_cov/atf_cov.md) as [atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)

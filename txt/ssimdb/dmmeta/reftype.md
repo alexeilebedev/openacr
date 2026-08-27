@@ -12,18 +12,18 @@ For more information, see [Reftypes](/txt/exe/amc/reftype.md).
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|reftype|[amcdb.Tclass](/txt/ssimdb/amcdb/tclass.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|"Val"||
-|isval|bool|[Val](/txt/exe/amc/reftype.md#val)||True if field makes values of target type|
-|cascins|bool|[Val](/txt/exe/amc/reftype.md#val)||Field is cascade-insert|
-|usebasepool|bool|[Val](/txt/exe/amc/reftype.md#val)||Fields with this type make use of dmmeta.basepool|
-|cancopy|bool|[Val](/txt/exe/amc/reftype.md#val)||This type of field can be copied|
-|needxref|bool|[Val](/txt/exe/amc/reftype.md#val)||Creating a field of this reftype implies an xref (acr_ed)|
-|del|bool|[Val](/txt/exe/amc/reftype.md#val)||Supports random deletion?|
-|up|bool|[Val](/txt/exe/amc/reftype.md#val)||This type of field is a reference|
-|isnew|bool|[Val](/txt/exe/amc/reftype.md#val)||If set, skip this relation in amc_vis|
-|hasalloc|bool|[Val](/txt/exe/amc/reftype.md#val)||Generte Alloc/Delete functions for arg type|
-|inst|bool|[Val](/txt/exe/amc/reftype.md#val)||Field creates an instance of arg type (directly or indirectly)|
-|varlen|bool|[Val](/txt/exe/amc/reftype.md#val)||This pool supports varlen allocations|
+|reftype|[amcdb.Tclass](/txt/ssimdb/amcdb/tclass.md)|[Pkey](/txt/exe/amc/reftype/Pkey.md)|"Val"||
+|isval|bool|[Val](/txt/exe/amc/reftype/Val.md)||True if field makes values of target type|
+|cascins|bool|[Val](/txt/exe/amc/reftype/Val.md)||Field is cascade-insert|
+|usebasepool|bool|[Val](/txt/exe/amc/reftype/Val.md)||Fields with this type make use of dmmeta.basepool|
+|cancopy|bool|[Val](/txt/exe/amc/reftype/Val.md)||This type of field can be copied|
+|needxref|bool|[Val](/txt/exe/amc/reftype/Val.md)||Creating a field of this reftype implies an xref (acr_ed)|
+|del|bool|[Val](/txt/exe/amc/reftype/Val.md)||Supports random deletion?|
+|up|bool|[Val](/txt/exe/amc/reftype/Val.md)||This type of field is a reference|
+|isnew|bool|[Val](/txt/exe/amc/reftype/Val.md)||If set, skip this relation in amc_vis|
+|hasalloc|bool|[Val](/txt/exe/amc/reftype/Val.md)||Generte Alloc/Delete functions for arg type|
+|inst|bool|[Val](/txt/exe/amc/reftype/Val.md)||Field creates an instance of arg type (directly or indirectly)|
+|varlen|bool|[Val](/txt/exe/amc/reftype/Val.md)||This pool supports varlen allocations|
 
 ### Related
 <a href="#related"></a>

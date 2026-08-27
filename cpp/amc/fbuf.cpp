@@ -18,7 +18,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/fbuf.cpp -- Byte buffer
 //
 
@@ -26,6 +26,10 @@
 
 static bool ReadQ(amc::FFbuf &fbuf) {
     return fbufdir_Get(fbuf) == dmmeta_Fbufdir_fbufdir_in;
+}
+
+static bool DgrambufQ(amc::FFbuf &fbuf) {
+    return fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Dgrambuf;
 }
 
 static bool BytebufQ(amc::FFbuf &fbuf) {
@@ -210,11 +214,14 @@ void amc::tclass_Fbuf() {
         }
     }
 
-    bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
+    // A Msgbuf and a Dgrambuf both frame by a length field and both hand the
+    // message back as a pointer into the buffer; they differ in whether bytes
+    // carry across a refill, which only Refill and ScanMsg care about.
+    bool inmsgbuf = (fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf || DgrambufQ(fbuf)) && ReadQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
 
-    // msgbuf must have lenfld
-    vrfy(!inmsgbuf || field.p_arg->c_lenfld, tempstr()<<"Msgbuf requires a type with lenfld. field: "<<field.field);
+    // a length-framed buffer must have lenfld
+    vrfy(!inmsgbuf || field.p_arg->c_lenfld, tempstr()<<"Msgbuf/Dgrambuf requires a type with lenfld. field: "<<field.field);
     vrfy(!linebuf || ch_N(field.dflt.value) > 0, "Linebuf requires dflt (end of line value)");
 
     // the element type's width is checked in gen_check_fbuf, which runs after
@@ -312,7 +319,7 @@ void amc::tfunc_Fbuf_GetMsg() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
-    bool msgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf;
+    bool msgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf || DgrambufQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
     bool bytebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Bytebuf;
     bool custom_scan = amc::FindFfunc(field, "ScanMsg") != NULL;
@@ -322,6 +329,11 @@ void amc::tfunc_Fbuf_GetMsg() {
         Ins(&R, getmsg.comment, "Look for valid message at current position in the buffer.");
         Ins(&R, getmsg.comment, "If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).");
         Ins(&R, getmsg.comment, "If there is no message, read once from underlying file descriptor and try again.");
+        if (DgrambufQ(fbuf)) {
+            Ins(&R, getmsg.comment, "One refill is one datagram: messages already in the buffer are returned");
+            Ins(&R, getmsg.comment, "one at a time, and only an exhausted buffer reads the next datagram.");
+            Ins(&R, getmsg.comment, "Bytes the datagram could not frame are dropped with it, never carried.");
+        }
         if (linebuf) {
             Ins(&R, getmsg.comment, "The message is found by looking for delimiter $dflt.");
             Ins(&R, getmsg.comment, "The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).");
@@ -435,49 +447,85 @@ void amc::tfunc_Fbuf_Refill() {
         amc::FFunc& refill = amc::CreateCurFunc();
         Ins(&R, refill.ret  , "bool",false);
         Ins(&R, refill.proto, "$name_Refill($Parent)",false);
-        Ins(&R, refill.body    , "bool readable = ValidQ($parname.$iohook.fildes);");
-        Ins(&R, refill.body    , "if (readable) {");
-        Ins(&R, refill.body    , "    int fd     = $parname.$iohook.fildes.value;");
-        Ins(&R, refill.body    , "    i32 max    = $name_Max($pararg);");
-        Ins(&R, refill.body    , "    i32 end    = $parname.$name_end;");
-        Ins(&R, refill.body    , "    i32 nbytes = end - $parname.$name_start; // # bytes currently in buffer");
-        Ins(&R, refill.body    , "    i32 nfree  = max - end; // bytes available at the end of buffer");
-        Ins(&R, refill.body    , "    if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)");
-        Ins(&R, refill.body    , "        $name_Shift($pararg);");
-        Ins(&R, refill.body    , "        end = $parname.$name_end;");
-        Ins(&R, refill.body    , "        nfree = max - end;");
-        Ins(&R, refill.body    , "    }");
-        if (fbuf.iotype == dmmeta_fbufiotype_openssl) {
-            Ins(&R, refill.body, "    if ($parname.$name_ssl) {");
-            Ins(&R, refill.body, "        int ret = SSL_read($parname.$name_ssl,$parname.$name_elems + end, nfree);");
-            Ins(&R, refill.body, "        int err = SSL_get_error($parname.$name_ssl,ret);");
-            Ins(&R, refill.body, "        bool fdretry = err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE;");
-            Ins(&R, refill.body, "        bool sslretry = fdretry || err == SSL_ERROR_WANT_CONNECT || err == SSL_ERROR_WANT_ACCEPT || err == SSL_ERROR_WANT_X509_LOOKUP;");
-            Ins(&R, refill.body, "        bool zero = err == SSL_ERROR_ZERO_RETURN;");
-            Ins(&R, refill.body, "        readable = !fdretry;");
-            Ins(&R, refill.body, "        bool error = err && !sslretry;");
-            Ins(&R, refill.body, "        bool eof = error || zero;");
-            Ins(&R, refill.body, "        $parname.$name_end += i32_Max(ret,0); // new end of bytes");
-            Ins(&R, refill.body, "        if (error) {");
-            Ins(&R, refill.body, "            $parname.$name_err = algo::MakeErrcode(algo_Errns_ssl, err);");
-            Ins(&R, refill.body, "        }");
-            Ins(&R, refill.body, "        $parname.$name_eof |= eof;");
-            Ins(&R, refill.body, "    } else {");
-        } {
-            Ins(&R, refill.body, "        ssize_t ret         = read(fd, $parname.$name_elems + end, nfree);");
-            Ins(&R, refill.body, "        readable            = !(ret < 0 && errno == EAGAIN);");
-            Ins(&R, refill.body, "        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd");
-            Ins(&R, refill.body, "        bool eof            = error || (ret == 0 && nfree > 0);");
-            Ins(&R, refill.body, "        $parname.$name_end += i32_Max(ret,0); // new end of bytes");
-            Ins(&R, refill.body, "        if (error) {");
-            Ins(&R, refill.body, "            $parname.$name_err = algo::FromErrno(errno); // fetch errno");
-            Ins(&R, refill.body, "        }");
-            Ins(&R, refill.body, "        $parname.$name_eof |= eof;");
+        if (DgrambufQ(fbuf)) {
+            Ins(&R, refill.comment, "Read one datagram, replacing whatever the buffer held.");
+            Ins(&R, refill.comment, "");
+            Ins(&R, refill.comment, "A datagram is a message boundary, so nothing carries across a refill:");
+            Ins(&R, refill.comment, "the bytes a previous datagram could not frame belong to that datagram");
+            Ins(&R, refill.comment, "and are dropped with it.  That is what makes the buffer immune to a");
+            Ins(&R, refill.comment, "length field it cannot satisfy -- there is no partial message to strand");
+            Ins(&R, refill.comment, "at the buffer's start, so the next read always begins cleanly -- and it");
+            Ins(&R, refill.comment, "is why there is no shift, no growth, and no end of input.");
+            Ins(&R, refill.comment, "Return TRUE while the socket may hold another datagram.");
+            Ins(&R, refill.body   , "bool readable = ValidQ($parname.$iohook.fildes);");
+            Ins(&R, refill.body   , "if (readable) {");
+            Ins(&R, refill.body   , "    $parname.$name_start = 0;");
+            Ins(&R, refill.body   , "    $parname.$name_end = 0;");
+            Ins(&R, refill.body   , "    $parname.$name_msgvalid = false;");
+            Ins(&R, refill.body   , "    ssize_t ret = read($parname.$iohook.fildes.value, $parname.$name_elems, $name_Max($pararg));");
+            Ins(&R, refill.body   , "    readable    = !(ret < 0 && errno == EAGAIN);");
+            Ins(&R, refill.body   , "    // A datagram socket never ends, so a zero-length read is one empty");
+            Ins(&R, refill.body   , "    // datagram rather than eof; only a refusal by the socket is recorded.");
+            Ins(&R, refill.body   , "    if (ret < 0 && errno != EAGAIN) {");
+            Ins(&R, refill.body   , "        $parname.$name_err = algo::FromErrno(errno); // fetch errno");
+            Ins(&R, refill.body   , "    }");
+            Ins(&R, refill.body   , "    $parname.$name_end = i32_Max(i32(ret),0);");
+            Ins(&R, refill.body   , "}");
+        } else {
+            Ins(&R, refill.body    , "bool readable = ValidQ($parname.$iohook.fildes);");
+            Ins(&R, refill.body    , "if (readable) {");
+            Ins(&R, refill.body    , "    int fd     = $parname.$iohook.fildes.value;");
+            Ins(&R, refill.body    , "    i32 max    = $name_Max($pararg);");
+            Ins(&R, refill.body    , "    i32 end    = $parname.$name_end;");
+            Ins(&R, refill.body    , "    i32 nbytes = end - $parname.$name_start; // # bytes currently in buffer");
+            Ins(&R, refill.body    , "    i32 nfree  = max - end; // bytes available at the end of buffer");
+            Ins(&R, refill.body    , "    if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)");
+            Ins(&R, refill.body    , "        $name_Shift($pararg);");
+            Ins(&R, refill.body    , "        end = $parname.$name_end;");
+            Ins(&R, refill.body    , "        nfree = max - end;");
+            Ins(&R, refill.body    , "    }");
+            Ins(&R, refill.body    , "    if (nfree == 0) {");
+            Ins(&R, refill.body    , "        // The buffer is full and holds no complete message, so the framing");
+            Ins(&R, refill.body    , "        // asked for one larger than the buffer can ever hold and the connection");
+            Ins(&R, refill.body    , "        // cannot make progress.  A read into zero room returns zero without eof,");
+            Ins(&R, refill.body    , "        // which would pin the connection on the read list and spin the loop, so");
+            Ins(&R, refill.body    , "        // it is retired here instead.");
+            Ins(&R, refill.body    , "        $parname.$name_eof = true;");
+            Ins(&R, refill.body    , "        $parname.$name_err = algo::FromErrno(E2BIG);");
+            Ins(&R, refill.body    , "        readable = false;");
+            if (fbuf.iotype == dmmeta_fbufiotype_openssl) {
+                Ins(&R, refill.body, "    } else if ($parname.$name_ssl) {");
+                Ins(&R, refill.body, "        int ret = SSL_read($parname.$name_ssl,$parname.$name_elems + end, nfree);");
+                Ins(&R, refill.body, "        int err = SSL_get_error($parname.$name_ssl,ret);");
+                Ins(&R, refill.body, "        bool fdretry = err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE;");
+                Ins(&R, refill.body, "        bool sslretry = fdretry || err == SSL_ERROR_WANT_CONNECT || err == SSL_ERROR_WANT_ACCEPT || err == SSL_ERROR_WANT_X509_LOOKUP;");
+                Ins(&R, refill.body, "        bool zero = err == SSL_ERROR_ZERO_RETURN;");
+                Ins(&R, refill.body, "        readable = !fdretry;");
+                Ins(&R, refill.body, "        bool error = err && !sslretry;");
+                Ins(&R, refill.body, "        bool eof = error || zero;");
+                Ins(&R, refill.body, "        $parname.$name_end += i32_Max(ret,0); // new end of bytes");
+                Ins(&R, refill.body, "        if (error) {");
+                Ins(&R, refill.body, "            $parname.$name_err = algo::MakeErrcode(algo_Errns_ssl, err);");
+                Ins(&R, refill.body, "        }");
+                Ins(&R, refill.body, "        $parname.$name_eof |= eof;");
+                Ins(&R, refill.body, "    } else {");
+            } else {
+                Ins(&R, refill.body, "    } else {");
+            }
+            {
+                Ins(&R, refill.body, "        ssize_t ret         = read(fd, $parname.$name_elems + end, nfree);");
+                Ins(&R, refill.body, "        readable            = !(ret < 0 && errno == EAGAIN);");
+                Ins(&R, refill.body, "        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd");
+                Ins(&R, refill.body, "        bool eof            = error || ret == 0;");
+                Ins(&R, refill.body, "        $parname.$name_end += i32_Max(ret,0); // new end of bytes");
+                Ins(&R, refill.body, "        if (error) {");
+                Ins(&R, refill.body, "            $parname.$name_err = algo::FromErrno(errno); // fetch errno");
+                Ins(&R, refill.body, "        }");
+                Ins(&R, refill.body, "        $parname.$name_eof |= eof;");
+            }
+            Ins(&R, refill.body    , "    }");
+            Ins(&R, refill.body    , "}");
         }
-        if (fbuf.iotype == dmmeta_fbufiotype_openssl) {
-            Ins(&R, refill.body, "    }"); // ssl else
-        }
-        Ins(&R, refill.body    , "}");
         amc::FFcond *ready = amc::FindFcond(field, amc::amcdb_tcond_Fbuf_ready);
         if (ready && ready->rem) {
             Ins(&R, refill.body    , "if (!readable && $parname.$name_epoll_enable) {");
@@ -511,6 +559,7 @@ void amc::tfunc_Fbuf_ScanMsg() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
+    bool dgrambuf = DgrambufQ(fbuf);
     bool msgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf;
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
     bool bytebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Bytebuf;
@@ -529,7 +578,7 @@ void amc::tfunc_Fbuf_ScanMsg() {
         }
         if (!scanmsg.extrn) {
             scanmsg.priv = true;
-            if (linebuf || msgbuf) {
+            if (linebuf || msgbuf || dgrambuf) {
                 Ins(&R, scanmsg.body, "$Cpptype *hdr = ($Cpptype*)($parname.$name_elems + $parname.$name_start);");
             }
             Ins(&R, scanmsg.body    , "i32 avail = $name_N($pararg);");
@@ -553,6 +602,21 @@ void amc::tfunc_Fbuf_ScanMsg() {
             } else if (bytebuf) {
                 Ins(&R, scanmsg.body, "found = avail>0;");// all remaining bytes
                 Ins(&R, scanmsg.body, "msglen = avail;");
+            } else if (dgrambuf) {
+                Ins(&R, scanmsg.body, "// A datagram carries whole messages and nothing partial, so a length");
+                Ins(&R, scanmsg.body, "// this datagram cannot satisfy ends the datagram rather than the");
+                Ins(&R, scanmsg.body, "// buffer.  There is nothing inside a datagram to resynchronize on --");
+                Ins(&R, scanmsg.body, "// the next message would begin wherever this one claimed to end, and");
+                Ins(&R, scanmsg.body, "// that place does not exist -- so no eof is raised and the remaining");
+                Ins(&R, scanmsg.body, "// bytes go when the next refill drops them.");
+                Ins(&R, scanmsg.body, "msglen = ssizeof($Cpptype);");
+                Ins(&R, scanmsg.body, "if (avail >= msglen) {");
+                Ins(&R, scanmsg.body, "    msglen = $lenval; // check rest of the message");
+                Ins(&R, scanmsg.body, "}");
+                Ins(&R, scanmsg.body, "found = msglen >= ssizeof($Cpptype) && avail >= msglen;");
+                Ins(&R, scanmsg.body, "if (!found) {");
+                Ins(&R, scanmsg.body, "    msglen = 0;");
+                Ins(&R, scanmsg.body, "}");
             } else if (msgbuf) {// msgbuf
                 Ins(&R, scanmsg.body, "msglen = ssizeof($Cpptype);");// this is the minimum readable message
                 Ins(&R, scanmsg.body, "if (avail >= msglen) {");
@@ -881,7 +945,7 @@ void amc::tfunc_Fbuf_Outflow() {
     amc::FField &field     = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf       = *field.c_fbuf;
     SetIohook(field);
-    Set(R,"$partrace", Refname(*field.p_ctype));
+    Set(R,"$partrace", Varname(*field.p_ctype));
 
     amc::FFcond *ready = amc::FindFcond(field, amc::amcdb_tcond_Fbuf_ready);
     amc::FFcond *eof = amc::FindFcond(field, amc::amcdb_tcond_Fbuf_eof);
@@ -1081,7 +1145,7 @@ void amc::tfunc_Fbuf_BeginAlloc() {
     amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
     if (BytebufQ(fbuf)) {
-        Set(R,"$partrace", Refname(*field.p_ctype));
+        Set(R,"$partrace", Varname(*field.p_ctype));
         amc::FFunc& func = amc::CreateCurFunc();
         AddRetval(func, "void*", "ret", "NULL");
         Ins(&R, func.comment, "// Return pointer to a block of IN_N contiguous bytes in the buffer.");

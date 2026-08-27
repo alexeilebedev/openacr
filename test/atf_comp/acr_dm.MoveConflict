@@ -1,0 +1,16 @@
+# start bash cmd:'bash -c \'$bindir/acr_dm test/acr_dm/movecfl1.ssim test/acr_dm/movecfl2.ssim test/acr_dm/movecfl3.ssim > $tempdir/merge.ssim; echo merge_code:$?; $bindir/acr_dm test/acr_dm/movecfl1.ssim test/acr_dm/movecfl3.ssim test/acr_dm/movecfl2.ssim > $tempdir/rebase.ssim; cat $tempdir/merge.ssim; grep -v "^[<>=]" $tempdir/merge.ssim > $tempdir/merge.rows; grep -v "^[<>=]" $tempdir/rebase.ssim > $tempdir/rebase.rows; cmp -s $tempdir/merge.rows $tempdir/rebase.rows && echo rebase_same:Y || echo rebase_same:N\''
+# eof bash
+bash -> acr_dm.moveconflict  row:"dmmeta.field  field:ns.C.b"  follows:"dmmeta.field  field:ns.C.c"  wanted:"dmmeta.field  field:ns.C.d"  cycle:N  source:2
+bash -> merge_code:1
+bash -> acr_dm.moveconflict  row:"dmmeta.field  field:ns.C.b"  follows:"dmmeta.field  field:ns.C.c"  wanted:"dmmeta.field  field:ns.C.d"  cycle:N  source:2
+bash -> dmmeta.field  field:ns.C.a  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> dmmeta.field  field:ns.C.c  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> # acr_dm.moveconflict  row:"dmmeta.field  field:ns.C.b"  follows:"dmmeta.field  field:ns.C.c"  wanted:"dmmeta.field  field:ns.C.d"
+bash -> <<<<<<< test/acr_dm/movecfl2.ssim
+bash -> dmmeta.field  field:ns.C.b  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> =======
+bash -> dmmeta.field  field:ns.C.b  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> >>>>>>> test/acr_dm/movecfl3.ssim
+bash -> dmmeta.field  field:ns.C.d  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> rebase_same:Y
+# exit bash code:0

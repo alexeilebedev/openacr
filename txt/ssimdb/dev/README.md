@@ -30,6 +30,7 @@
 &#128196; [dev.opt_type - Type of option (used in tool_opt)](/txt/ssimdb/dev/opt_type.md)<br/>
 &#128196; [dev.package - OpenACR package](/txt/ssimdb/dev/package.md)<br/>
 &#128196; [dev.pkgdep - OpenACR Package dependency](/txt/ssimdb/dev/pkgdep.md)<br/>
+&#128196; [dev.pkgdeptype - How a package stands in relation to its parent](/txt/ssimdb/dev/pkgdeptype.md)<br/>
 &#128196; [dev.pkggen -](/txt/ssimdb/dev/pkggen.md)<br/>
 &#128196; [dev.pkgkey - Keys belonging to the OpenACR package](/txt/ssimdb/dev/pkgkey.md)<br/>
 &#128196; [dev.prototransport - Protocol/transport binding](/txt/ssimdb/dev/prototransport.md)<br/>

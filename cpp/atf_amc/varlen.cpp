@@ -823,7 +823,7 @@ void atf_amc::amctest_NetFrameVarlen() {
 
     // Base CopyOut copies the fbigend storage word by its _be member
     atf_amc::NetFrameHdr hdr;
-    parent_CopyOut(frame, hdr);
+    net_frame_CopyOut(frame, hdr);
     vrfyeq_(kind_Get(hdr), atf_amc_NetFrameHdr_kind_SETTINGS);
     vrfyeq_(len_Get(hdr), u32(12));
 

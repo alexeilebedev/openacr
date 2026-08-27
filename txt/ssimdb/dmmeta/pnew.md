@@ -11,11 +11,11 @@ italicised fields: *ns, ctype, buftype* are [**fldfunc**](/txt/openacr/ssim.md#f
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|pnew|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
-|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LL of pnew*|
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LR.RL of pnew*|
-|*buftype*|*[dmmeta.Buftype](/txt/ssimdb/dmmeta/pnewtype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LR.RR of pnew*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|pnew|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LL of pnew*|
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LR.RL of pnew*|
+|*buftype*|*[dmmeta.Buftype](/txt/ssimdb/dmmeta/pnewtype.md)*|*[Pkey](/txt/exe/amc/reftype/Pkey.md)*||*<br>/LR.RR of pnew*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

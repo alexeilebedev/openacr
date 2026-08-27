@@ -27,7 +27,6 @@ by OpenACR's code generator (amc) from ascii relational tables.
 &#128196; [Code Generation](/txt/openacr/codegen.md)<br/>
 &#128196; [Recipes](/txt/openacr/recipes.md)<br/>
 &#128196; [Runtime Patterns](/txt/openacr/runtime.md)<br/>
-&#128196; [Schema Design and Pitfalls](/txt/openacr/schema.md)<br/>
 &#128196; [Setup And Installation](/txt/openacr/setup.md)<br/>
 &#128196; [Ssim Fundamentals](/txt/openacr/ssim.md)<br/>
 <!-- abt_md.toc_end -->
@@ -82,8 +81,9 @@ state is on `FDb`.  Full coverage:
 [Runtime Patterns](/txt/openacr/runtime.md).
 
 **Schema design** — choosing the right pool, index, and cross-reference
-type determines both the generated API and memory layout.  Common
-pitfalls are collected in [Schema Design and Pitfalls](/txt/openacr/schema.md).
+type determines both the generated API and the memory layout.  The rules
+that choice is made under, and the pitfalls it walks into, are in
+[OpenACR: the rules](/txt/rule/openacr.md).
 
 ### Tools
 <a href="#tools"></a>
@@ -129,6 +129,9 @@ ssimfiles are described in detail under
 ### Further reading
 <a href="#further-reading"></a>
 
+- **The rules**: [OpenACR: the rules](/txt/rule/openacr.md) — the
+  invariants, the glossary, and the traps, at the detail a change is
+  written against.  These pages are the short version of that one.
 - **Setup**: [Setup and Installation](/txt/openacr/setup.md) — install
   dependencies, build, first commands.
 - **Tutorials**: [Tutorials](/txt/tut/README.md) — step-by-step

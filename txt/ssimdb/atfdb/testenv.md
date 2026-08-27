@@ -9,11 +9,11 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|testenv|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
-|value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Value template;  substitutions from the test scope apply|
-|slowonly|bool|[Val](/txt/exe/amc/reftype.md#val)||Set only when the run is instrumented and therefore slow|
-|vardir|bool|[Val](/txt/exe/amc/reftype.md#val)||This directory holds data/atfdb/var.ssim, read once the test signals readiness|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|testenv|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype/Val.md)|||
+|value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype/Val.md)||Value template;  substitutions from the test scope apply|
+|slowonly|bool|[Val](/txt/exe/amc/reftype/Val.md)||Set only when the run is instrumented and therefore slow|
+|vardir|bool|[Val](/txt/exe/amc/reftype/Val.md)||This directory holds data/atfdb/var.ssim, read once the test signals readiness|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype/Val.md)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

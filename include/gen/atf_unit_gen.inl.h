@@ -331,8 +331,8 @@ inline atf_unit::FUnittest& atf_unit::_db_unittest_curs_Access(_db_unittest_curs
 
 // --- atf_unit.FMsg.msg.N
 // Return number of elements in varlen field
-inline u32 atf_unit::msg_N(const atf_unit::FMsg& msg) {
-    u32 length = i32(((atf_unit::FMsg&)msg).len);
+inline u32 atf_unit::msg_N(const atf_unit::FMsg& parent) {
+    u32 length = i32(((atf_unit::FMsg&)parent).len);
     u32 extra_bytes = u32_Max(length,sizeof(atf_unit::FMsg)) - sizeof(atf_unit::FMsg); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(u8));
 }
@@ -380,8 +380,8 @@ inline algo::memptr atf_unit::GetMsgMemptr(const atf_unit::FMsg& row) {
 
 // --- atf_unit.FMsg..Init
 // Set all fields to initial values.
-inline void atf_unit::FMsg_Init(atf_unit::FMsg& msg) {
-    msg.len = i32(0);
+inline void atf_unit::FMsg_Init(atf_unit::FMsg& parent) {
+    parent.len = i32(0);
 }
 
 // --- atf_unit.FMsg..Ctor
@@ -449,13 +449,13 @@ inline  atf_unit::FMsg_curs::FMsg_curs() {
 
 // --- atf_unit.FNumber..Init
 // Set all fields to initial values.
-inline void atf_unit::FNumber_Init(atf_unit::FNumber& number) {
-    number.num = i32(0);
-    number.number_next = (atf_unit::FNumber*)-1; // (atf_unit.FDb.number) not-in-tpool's freelist
-    number.tr_number_up = (atf_unit::FNumber*)-1; // (atf_unit.FDb.tr_number) not in tree
-    number.tr_number_left = NULL;
-    number.tr_number_right = NULL;
-    number.tr_number_depth = 0;
+inline void atf_unit::FNumber_Init(atf_unit::FNumber& parent) {
+    parent.num = i32(0);
+    parent.number_next = (atf_unit::FNumber*)-1; // (atf_unit.FDb.number) not-in-tpool's freelist
+    parent.tr_number_up = (atf_unit::FNumber*)-1; // (atf_unit.FDb.tr_number) not in tree
+    parent.tr_number_left = NULL;
+    parent.tr_number_right = NULL;
+    parent.tr_number_depth = 0;
 }
 
 // --- atf_unit.FNumber..Ctor
@@ -788,21 +788,21 @@ inline  atf_unit::FPerfSort::~FPerfSort() {
 
 // --- atf_unit.FUnittest.step.Call
 // Invoke function by pointer
-inline void atf_unit::step_Call(atf_unit::FUnittest& unittest) {
-    if (unittest.step) {
-        unittest.step();
+inline void atf_unit::step_Call(atf_unit::FUnittest& parent) {
+    if (parent.step) {
+        parent.step();
     }
 }
 
 // --- atf_unit.FUnittest..Init
 // Set all fields to initial values.
-inline void atf_unit::FUnittest_Init(atf_unit::FUnittest& unittest) {
-    unittest.select = bool(false);
-    unittest.success = bool(false);
-    unittest.c_syscmd = NULL;
-    unittest.ind_unittest_next = (atf_unit::FUnittest*)-1; // (atf_unit.FDb.ind_unittest) not-in-hash
-    unittest.ind_unittest_hashval = 0; // stored hash value
-    unittest.step = NULL;
+inline void atf_unit::FUnittest_Init(atf_unit::FUnittest& parent) {
+    parent.select = bool(false);
+    parent.success = bool(false);
+    parent.c_syscmd = NULL;
+    parent.ind_unittest_next = (atf_unit::FUnittest*)-1; // (atf_unit.FDb.ind_unittest) not-in-hash
+    parent.ind_unittest_hashval = 0; // stored hash value
+    parent.step = NULL;
 }
 
 // --- atf_unit.FUnittest..Ctor
@@ -906,7 +906,7 @@ inline void atf_unit::name_Setary(atf_unit::JsonAry& parent, const algo::aryptr<
 }
 
 // --- atf_unit.JsonAry.name.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline algo::Smallstr20& atf_unit::name_qFind(atf_unit::JsonAry& parent, u64 t) {
     return reinterpret_cast<algo::Smallstr20*>(parent.name_data)[u64(t)];
 }
@@ -1181,7 +1181,7 @@ inline void atf_unit::fld_ary_u32_Setary(atf_unit::TestJson& parent, const algo:
 }
 
 // --- atf_unit.TestJson.fld_ary_u32.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline u32& atf_unit::fld_ary_u32_qFind(atf_unit::TestJson& parent, u64 t) {
     return reinterpret_cast<u32*>(parent.fld_ary_u32_data)[u64(t)];
 }
@@ -1245,7 +1245,7 @@ inline void atf_unit::fld_ary_name_Setary(atf_unit::TestJson& parent, const algo
 }
 
 // --- atf_unit.TestJson.fld_ary_name.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline algo::Smallstr20& atf_unit::fld_ary_name_qFind(atf_unit::TestJson& parent, u64 t) {
     return reinterpret_cast<algo::Smallstr20*>(parent.fld_ary_name_data)[u64(t)];
 }

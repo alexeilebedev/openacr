@@ -69,9 +69,9 @@ inline void Finish(Sha1Ctx &ctx) {
 }
 
 // Get the digest
-inline algo::Sha1sig GetDigest(Sha1Ctx &ctx) {
-    algo::Sha1sig ret;
+inline algo::Signature GetDigest(Sha1Ctx &ctx) {
+    algo::Signature ret;
     vrfy(ctx.final_flag,"SHA context has not been finalized");
-    memcpy(ret.sha1sig_elems, ctx.sha_digest, sizeof(ret.sha1sig_elems));
+    memcpy(ret.signature_elems, ctx.sha_digest, sizeof(ret.signature_elems));
     return ret;
 }

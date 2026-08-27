@@ -322,7 +322,7 @@ struct BoardrefMsg { // ams.BoardrefMsg: Reference to a payload on the writer's 
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.BoardrefMsg.base.CopyOut
-void                 parent_CopyOut(ams::BoardrefMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 boardref_msg_CopyOut(ams::BoardrefMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of BoardrefMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of BoardrefMsg.
@@ -782,7 +782,7 @@ struct InputLineMsg { // ams.InputLineMsg: Unrecognized input line
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.InputLineMsg.base.CopyOut
-void                 parent_CopyOut(ams::InputLineMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 input_line_msg_CopyOut(ams::InputLineMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of InputLineMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of InputLineMsg.
@@ -858,7 +858,7 @@ struct LogMsg { // ams.LogMsg: Log message
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.LogMsg.base.CopyOut
-void                 parent_CopyOut(ams::LogMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 log_msg_CopyOut(ams::LogMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of LogMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of LogMsg.
@@ -958,7 +958,7 @@ struct MsgBlock { // ams.MsgBlock: A block of messages from ams commit file
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.MsgBlock.header.CopyOut
-void                 parent_CopyOut(ams::MsgBlock &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 msg_block_CopyOut(ams::MsgBlock &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of MsgBlock by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of MsgBlock.
@@ -1194,7 +1194,7 @@ struct SampMengBookMsg { // ams.SampMengBookMsg: Matcher state: the book's scala
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengBookMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengBookMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_book_msg_CopyOut(ams::SampMengBookMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengBookMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengBookMsg.
@@ -1236,7 +1236,7 @@ struct SampMengCancelOrderMsg { // ams.SampMengCancelOrderMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengCancelOrderMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengCancelOrderMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_cancel_order_msg_CopyOut(ams::SampMengCancelOrderMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengCancelOrderMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengCancelOrderMsg.
@@ -1278,7 +1278,7 @@ struct SampMengCancelReqMsg { // ams.SampMengCancelReqMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengCancelReqMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengCancelReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_cancel_req_msg_CopyOut(ams::SampMengCancelReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengCancelReqMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengCancelReqMsg.
@@ -1320,7 +1320,7 @@ struct SampMengMassCancelReqMsg { // ams.SampMengMassCancelReqMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengMassCancelReqMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengMassCancelReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_mass_cancel_req_msg_CopyOut(ams::SampMengMassCancelReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengMassCancelReqMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengMassCancelReqMsg.
@@ -1395,7 +1395,7 @@ struct SampMengNewOrderMsg { // ams.SampMengNewOrderMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengNewOrderMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengNewOrderMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_new_order_msg_CopyOut(ams::SampMengNewOrderMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengNewOrderMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengNewOrderMsg.
@@ -1441,7 +1441,7 @@ struct SampMengNewOrderReqMsg { // ams.SampMengNewOrderReqMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengNewOrderReqMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengNewOrderReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_new_order_req_msg_CopyOut(ams::SampMengNewOrderReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengNewOrderReqMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengNewOrderReqMsg.
@@ -1483,7 +1483,7 @@ struct SampMengNewSymbolMsg { // ams.SampMengNewSymbolMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengNewSymbolMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengNewSymbolMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_new_symbol_msg_CopyOut(ams::SampMengNewSymbolMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengNewSymbolMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengNewSymbolMsg.
@@ -1525,7 +1525,7 @@ struct SampMengNewSymbolReqMsg { // ams.SampMengNewSymbolReqMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengNewSymbolReqMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengNewSymbolReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_new_symbol_req_msg_CopyOut(ams::SampMengNewSymbolReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengNewSymbolReqMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengNewSymbolReqMsg.
@@ -1567,7 +1567,7 @@ struct SampMengNewUserMsg { // ams.SampMengNewUserMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengNewUserMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengNewUserMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_new_user_msg_CopyOut(ams::SampMengNewUserMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengNewUserMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengNewUserMsg.
@@ -1609,7 +1609,7 @@ struct SampMengNewUserReqMsg { // ams.SampMengNewUserReqMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengNewUserReqMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengNewUserReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_new_user_req_msg_CopyOut(ams::SampMengNewUserReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengNewUserReqMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengNewUserReqMsg.
@@ -1653,7 +1653,7 @@ struct SampMengOrderTradeMsg { // ams.SampMengOrderTradeMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengOrderTradeMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengOrderTradeMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_order_trade_msg_CopyOut(ams::SampMengOrderTradeMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengOrderTradeMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengOrderTradeMsg.
@@ -1701,7 +1701,7 @@ struct SampMengRestingMsg { // ams.SampMengRestingMsg: Matcher state: one order 
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengRestingMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengRestingMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_resting_msg_CopyOut(ams::SampMengRestingMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengRestingMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengRestingMsg.
@@ -1743,7 +1743,7 @@ struct SampMengSymbolrowMsg { // ams.SampMengSymbolrowMsg: Matcher state: one sy
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengSymbolrowMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengSymbolrowMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_symbolrow_msg_CopyOut(ams::SampMengSymbolrowMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengSymbolrowMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengSymbolrowMsg.
@@ -1785,7 +1785,7 @@ struct SampMengTextMsg { // ams.SampMengTextMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengTextMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengTextMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_text_msg_CopyOut(ams::SampMengTextMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengTextMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengTextMsg.
@@ -1855,7 +1855,7 @@ struct SampMengUserrowMsg { // ams.SampMengUserrowMsg: Matcher state: one user
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.SampMengUserrowMsg.base.CopyOut
-void                 parent_CopyOut(ams::SampMengUserrowMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 samp_meng_userrow_msg_CopyOut(ams::SampMengUserrowMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of SampMengUserrowMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of SampMengUserrowMsg.
@@ -1964,7 +1964,7 @@ struct ShmHbMsg { // ams.ShmHbMsg: Shm heartbeat
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.ShmHbMsg.base.CopyOut
-void                 parent_CopyOut(ams::ShmHbMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 shm_hb_msg_CopyOut(ams::ShmHbMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of ShmHbMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of ShmHbMsg.
@@ -2067,7 +2067,7 @@ struct TerminateMsg { // ams.TerminateMsg: Message sent to process to terminate 
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.TerminateMsg.base.CopyOut
-void                 parent_CopyOut(ams::TerminateMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 terminate_msg_CopyOut(ams::TerminateMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of TerminateMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of TerminateMsg.
@@ -2163,7 +2163,7 @@ struct UdpFrame { // ams.UdpFrame: sniffer-captured ethernet frame
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.UdpFrame.header.CopyOut
-void                 parent_CopyOut(ams::UdpFrame &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 udp_frame_CopyOut(ams::UdpFrame &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of UdpFrame by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of UdpFrame.
@@ -2227,7 +2227,7 @@ struct UprocTextMsg { // ams.UprocTextMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ams.UprocTextMsg.base.CopyOut
-void                 parent_CopyOut(ams::UprocTextMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 uproc_text_msg_CopyOut(ams::UprocTextMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of UprocTextMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of UprocTextMsg.

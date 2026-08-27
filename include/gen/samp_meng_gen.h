@@ -109,6 +109,7 @@ struct FDb { // samp_meng.FDb: In-memory database
     u64                    next_order_id;              //   1
     algo::UnTime           now;                        // Clock this matcher stamps orders with: the input record's sequencing time
     u64                    n_in;                       //   0  Input records folded by this incarnation
+    u64                    n_trade;                    //   0  Trades this incarnation emitted
     samp_meng::trace       trace;                      //
 };
 // Read argc,argv into the fields of samp_meng.FDb.cmdline (and any base command line)
@@ -470,16 +471,16 @@ private:
 };
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:samp_meng.FOrder.ordkey.Lt
-inline bool          ordkey_Lt(samp_meng::FOrder& order, samp_meng::FOrder &rhs) __attribute__((nothrow));
+inline bool          ordkey_Lt(samp_meng::FOrder& parent, samp_meng::FOrder &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:samp_meng.FOrder.ordkey.Cmp
-inline i32           ordkey_Cmp(samp_meng::FOrder& order, samp_meng::FOrder &rhs) __attribute__((nothrow));
+inline i32           ordkey_Cmp(samp_meng::FOrder& parent, samp_meng::FOrder &rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:samp_meng.FOrder..Init
-inline void          FOrder_Init(samp_meng::FOrder& order);
+inline void          FOrder_Init(samp_meng::FOrder& parent);
 // func:samp_meng.FOrder..Uninit
-void                 FOrder_Uninit(samp_meng::FOrder& order) __attribute__((nothrow));
+void                 FOrder_Uninit(samp_meng::FOrder& parent) __attribute__((nothrow));
 
 // --- samp_meng.FOrdq
 // create: samp_meng.FDb.ordq (Tpool)
@@ -511,52 +512,52 @@ private:
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
 // func:samp_meng.FOrdq.bh_order.Cascdel
-void                 bh_order_Cascdel(samp_meng::FOrdq& ordq) __attribute__((nothrow));
+void                 bh_order_Cascdel(samp_meng::FOrdq& parent) __attribute__((nothrow));
 // Remove all elements from heap and free memory used by the array.
 // func:samp_meng.FOrdq.bh_order.Dealloc
-void                 bh_order_Dealloc(samp_meng::FOrdq& ordq) __attribute__((nothrow));
+void                 bh_order_Dealloc(samp_meng::FOrdq& parent) __attribute__((nothrow));
 // Return true if index is empty
 // func:samp_meng.FOrdq.bh_order.EmptyQ
-inline bool          bh_order_EmptyQ(samp_meng::FOrdq& ordq) __attribute__((nothrow));
+inline bool          bh_order_EmptyQ(samp_meng::FOrdq& parent) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:samp_meng.FOrdq.bh_order.First
-inline samp_meng::FOrder* bh_order_First(samp_meng::FOrdq& ordq) __attribute__((__warn_unused_result__, nothrow, pure));
+inline samp_meng::FOrder* bh_order_First(samp_meng::FOrdq& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
 // func:samp_meng.FOrdq.bh_order.InBheapQ
 inline bool          bh_order_InBheapQ(samp_meng::FOrder& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
 // func:samp_meng.FOrdq.bh_order.Insert
-void                 bh_order_Insert(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) __attribute__((nothrow));
+void                 bh_order_Insert(samp_meng::FOrdq& parent, samp_meng::FOrder& row) __attribute__((nothrow));
 // Return number of items in the heap
 // func:samp_meng.FOrdq.bh_order.N
-inline i32           bh_order_N(const samp_meng::FOrdq& ordq) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           bh_order_N(const samp_meng::FOrdq& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
 // func:samp_meng.FOrdq.bh_order.Reheap
-i32                  bh_order_Reheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) __attribute__((nothrow));
+i32                  bh_order_Reheap(samp_meng::FOrdq& parent, samp_meng::FOrder& row) __attribute__((nothrow));
 // Key of first element in the heap changed. Move it.
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
 // func:samp_meng.FOrdq.bh_order.ReheapFirst
-i32                  bh_order_ReheapFirst(samp_meng::FOrdq& ordq) __attribute__((nothrow));
+i32                  bh_order_ReheapFirst(samp_meng::FOrdq& parent) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:samp_meng.FOrdq.bh_order.Remove
-void                 bh_order_Remove(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) __attribute__((nothrow));
+void                 bh_order_Remove(samp_meng::FOrdq& parent, samp_meng::FOrder& row) __attribute__((nothrow));
 // Remove all elements from binary heap
 // func:samp_meng.FOrdq.bh_order.RemoveAll
-void                 bh_order_RemoveAll(samp_meng::FOrdq& ordq) __attribute__((nothrow));
+void                 bh_order_RemoveAll(samp_meng::FOrdq& parent) __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
 // func:samp_meng.FOrdq.bh_order.RemoveFirst
-samp_meng::FOrder*   bh_order_RemoveFirst(samp_meng::FOrdq& ordq) __attribute__((nothrow));
+samp_meng::FOrder*   bh_order_RemoveFirst(samp_meng::FOrdq& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements
 // func:samp_meng.FOrdq.bh_order.Reserve
-void                 bh_order_Reserve(samp_meng::FOrdq& ordq, int n) __attribute__((nothrow));
+void                 bh_order_Reserve(samp_meng::FOrdq& parent, int n) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:samp_meng.FOrdq..Init
-inline void          FOrdq_Init(samp_meng::FOrdq& ordq);
+inline void          FOrdq_Init(samp_meng::FOrdq& parent);
 // func:samp_meng.FOrdq.bh_order_curs.Reserve
 void                 ordq_bh_order_curs_Reserve(ordq_bh_order_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -572,7 +573,7 @@ inline samp_meng::FOrder& ordq_bh_order_curs_Access(ordq_bh_order_curs &curs) __
 // func:samp_meng.FOrdq.bh_order_curs.ValidQ
 inline bool          ordq_bh_order_curs_ValidQ(ordq_bh_order_curs &curs) __attribute__((nothrow));
 // func:samp_meng.FOrdq..Uninit
-void                 FOrdq_Uninit(samp_meng::FOrdq& ordq) __attribute__((nothrow));
+void                 FOrdq_Uninit(samp_meng::FOrdq& parent) __attribute__((nothrow));
 
 // --- samp_meng.FSymbol
 // create: samp_meng.FDb.symbol (Lary)
@@ -605,47 +606,47 @@ private:
 };
 // Return true if index is empty
 // func:samp_meng.FSymbol.c_ordq.EmptyQ
-inline bool          c_ordq_EmptyQ(samp_meng::FSymbol& symbol) __attribute__((nothrow));
+inline bool          c_ordq_EmptyQ(samp_meng::FSymbol& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:samp_meng.FSymbol.c_ordq.Find
-inline samp_meng::FOrdq* c_ordq_Find(samp_meng::FSymbol& symbol, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline samp_meng::FOrdq* c_ordq_Find(samp_meng::FSymbol& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:samp_meng.FSymbol.c_ordq.Getary
-inline algo::aryptr<samp_meng::FOrdq*> c_ordq_Getary(samp_meng::FSymbol& symbol) __attribute__((nothrow));
+inline algo::aryptr<samp_meng::FOrdq*> c_ordq_Getary(samp_meng::FSymbol& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:samp_meng.FSymbol.c_ordq.Insert
-void                 c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) __attribute__((nothrow));
+void                 c_ordq_Insert(samp_meng::FSymbol& parent, samp_meng::FOrdq& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:samp_meng.FSymbol.c_ordq.InsertMaybe
-bool                 c_ordq_InsertMaybe(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) __attribute__((nothrow));
+bool                 c_ordq_InsertMaybe(samp_meng::FSymbol& parent, samp_meng::FOrdq& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:samp_meng.FSymbol.c_ordq.N
-inline i64           c_ordq_N(const samp_meng::FSymbol& symbol) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ordq_N(const samp_meng::FSymbol& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:samp_meng.FSymbol.c_ordq.Remove
-void                 c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) __attribute__((nothrow));
+void                 c_ordq_Remove(samp_meng::FSymbol& parent, samp_meng::FOrdq& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:samp_meng.FSymbol.c_ordq.RemoveAll
-inline void          c_ordq_RemoveAll(samp_meng::FSymbol& symbol) __attribute__((nothrow));
+inline void          c_ordq_RemoveAll(samp_meng::FSymbol& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:samp_meng.FSymbol.c_ordq.Reserve
-void                 c_ordq_Reserve(samp_meng::FSymbol& symbol, u64 n) __attribute__((nothrow));
+void                 c_ordq_Reserve(samp_meng::FSymbol& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:samp_meng.FSymbol.c_ordq.qFind
-inline samp_meng::FOrdq& c_ordq_qFind(samp_meng::FSymbol& symbol, u64 idx) __attribute__((nothrow));
+inline samp_meng::FOrdq& c_ordq_qFind(samp_meng::FSymbol& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:samp_meng.FSymbol.c_ordq.InAryQ
 inline bool          symbol_c_ordq_InAryQ(samp_meng::FOrdq& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:samp_meng.FSymbol.c_ordq.qLast
-inline samp_meng::FOrdq& c_ordq_qLast(samp_meng::FSymbol& symbol) __attribute__((nothrow));
+inline samp_meng::FOrdq& c_ordq_qLast(samp_meng::FSymbol& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:samp_meng.FSymbol..Init
-inline void          FSymbol_Init(samp_meng::FSymbol& symbol);
+inline void          FSymbol_Init(samp_meng::FSymbol& parent);
 // func:samp_meng.FSymbol.c_ordq_curs.Reset
 inline void          symbol_c_ordq_curs_Reset(symbol_c_ordq_curs &curs, samp_meng::FSymbol &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -658,7 +659,7 @@ inline void          symbol_c_ordq_curs_Next(symbol_c_ordq_curs &curs) __attribu
 // func:samp_meng.FSymbol.c_ordq_curs.Access
 inline samp_meng::FOrdq& symbol_c_ordq_curs_Access(symbol_c_ordq_curs &curs) __attribute__((nothrow));
 // func:samp_meng.FSymbol..Uninit
-void                 FSymbol_Uninit(samp_meng::FSymbol& symbol) __attribute__((nothrow));
+void                 FSymbol_Uninit(samp_meng::FSymbol& parent) __attribute__((nothrow));
 
 // --- samp_meng.FUser
 // create: samp_meng.FDb.user (Lary)
@@ -690,22 +691,22 @@ private:
 };
 // Return true if index is empty
 // func:samp_meng.FUser.zd_order.EmptyQ
-inline bool          zd_order_EmptyQ(samp_meng::FUser& user) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_order_EmptyQ(samp_meng::FUser& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:samp_meng.FUser.zd_order.First
-inline samp_meng::FOrder* zd_order_First(samp_meng::FUser& user) __attribute__((__warn_unused_result__, nothrow, pure));
+inline samp_meng::FOrder* zd_order_First(samp_meng::FUser& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:samp_meng.FUser.zd_order.InLlistQ
 inline bool          user_zd_order_InLlistQ(samp_meng::FOrder& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:samp_meng.FUser.zd_order.Insert
-void                 zd_order_Insert(samp_meng::FUser& user, samp_meng::FOrder& row) __attribute__((nothrow));
+void                 zd_order_Insert(samp_meng::FUser& parent, samp_meng::FOrder& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:samp_meng.FUser.zd_order.Last
-inline samp_meng::FOrder* zd_order_Last(samp_meng::FUser& user) __attribute__((__warn_unused_result__, nothrow, pure));
+inline samp_meng::FOrder* zd_order_Last(samp_meng::FUser& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:samp_meng.FUser.zd_order.N
-inline i32           zd_order_N(const samp_meng::FUser& user) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_order_N(const samp_meng::FUser& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:samp_meng.FUser.zd_order.Next
 inline samp_meng::FOrder* user_zd_order_Next(samp_meng::FOrder &row) __attribute__((__warn_unused_result__, nothrow));
@@ -714,23 +715,23 @@ inline samp_meng::FOrder* user_zd_order_Next(samp_meng::FOrder &row) __attribute
 inline samp_meng::FOrder* user_zd_order_Prev(samp_meng::FOrder &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:samp_meng.FUser.zd_order.Remove
-void                 zd_order_Remove(samp_meng::FUser& user, samp_meng::FOrder& row) __attribute__((nothrow));
+void                 zd_order_Remove(samp_meng::FUser& parent, samp_meng::FOrder& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:samp_meng.FUser.zd_order.RemoveAll
-void                 zd_order_RemoveAll(samp_meng::FUser& user) __attribute__((nothrow));
+void                 zd_order_RemoveAll(samp_meng::FUser& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:samp_meng.FUser.zd_order.RemoveFirst
-samp_meng::FOrder*   zd_order_RemoveFirst(samp_meng::FUser& user) __attribute__((nothrow));
+samp_meng::FOrder*   zd_order_RemoveFirst(samp_meng::FUser& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:samp_meng.FUser.zd_order.qLast
-inline samp_meng::FOrder& zd_order_qLast(samp_meng::FUser& user) __attribute__((__warn_unused_result__, nothrow));
+inline samp_meng::FOrder& zd_order_qLast(samp_meng::FUser& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:samp_meng.FUser.zd_order.InsertBefore
-void                 zd_order_InsertBefore(samp_meng::FUser& user, samp_meng::FOrder& row, samp_meng::FOrder* before) __attribute__((nothrow));
+void                 zd_order_InsertBefore(samp_meng::FUser& parent, samp_meng::FOrder& row, samp_meng::FOrder* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:samp_meng.FUser..Init
-inline void          FUser_Init(samp_meng::FUser& user);
+inline void          FUser_Init(samp_meng::FUser& parent);
 // cursor points to valid item
 // func:samp_meng.FUser.zd_order_curs.Reset
 inline void          user_zd_order_curs_Reset(user_zd_order_curs &curs, samp_meng::FUser &parent) __attribute__((nothrow));
@@ -744,7 +745,7 @@ inline void          user_zd_order_curs_Next(user_zd_order_curs &curs) __attribu
 // func:samp_meng.FUser.zd_order_curs.Access
 inline samp_meng::FOrder& user_zd_order_curs_Access(user_zd_order_curs &curs) __attribute__((nothrow));
 // func:samp_meng.FUser..Uninit
-void                 FUser_Uninit(samp_meng::FUser& user) __attribute__((nothrow));
+void                 FUser_Uninit(samp_meng::FUser& parent) __attribute__((nothrow));
 
 // --- samp_meng.FieldId
 #pragma pack(push,1)

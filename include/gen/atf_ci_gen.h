@@ -173,22 +173,22 @@ void                 builddir_CopyOut(atf_ci::FBuilddir &row, dev::Builddir &out
 void                 builddir_CopyIn(atf_ci::FBuilddir &row, dev::Builddir &in) __attribute__((nothrow));
 
 // func:atf_ci.FBuilddir.uname.Get
-algo::strptr         uname_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         uname_Get(atf_ci::FBuilddir& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FBuilddir.compiler.Get
-algo::strptr         compiler_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         compiler_Get(atf_ci::FBuilddir& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FBuilddir.cfg.Get
-algo::strptr         cfg_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         cfg_Get(atf_ci::FBuilddir& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FBuilddir.arch.Get
-algo::strptr         arch_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         arch_Get(atf_ci::FBuilddir& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:atf_ci.FBuilddir..Init
-inline void          FBuilddir_Init(atf_ci::FBuilddir& builddir);
+inline void          FBuilddir_Init(atf_ci::FBuilddir& parent);
 // func:atf_ci.FBuilddir..Uninit
-void                 FBuilddir_Uninit(atf_ci::FBuilddir& builddir) __attribute__((nothrow));
+void                 FBuilddir_Uninit(atf_ci::FBuilddir& parent) __attribute__((nothrow));
 
 // --- atf_ci.FCfg
 // create: atf_ci.FDb.cfg (Lary)
@@ -239,7 +239,7 @@ void                 cipackage_CopyIn(atf_ci::FCipackage &row, atfdb::Cipackage 
 
 // Set all fields to initial values.
 // func:atf_ci.FCipackage..Init
-inline void          FCipackage_Init(atf_ci::FCipackage& cipackage);
+inline void          FCipackage_Init(atf_ci::FCipackage& parent);
 
 // --- atf_ci.FCitest
 // create: atf_ci.FDb.citest (Lary)
@@ -283,13 +283,13 @@ void                 citest_CopyIn(atf_ci::FCitest &row, atfdb::Citest &in) __at
 
 // Invoke function by pointer
 // func:atf_ci.FCitest.step.Call
-inline void          step_Call(atf_ci::FCitest& citest) __attribute__((nothrow));
+inline void          step_Call(atf_ci::FCitest& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_ci.FCitest..Init
-inline void          FCitest_Init(atf_ci::FCitest& citest);
+inline void          FCitest_Init(atf_ci::FCitest& parent);
 // func:atf_ci.FCitest..Uninit
-void                 FCitest_Uninit(atf_ci::FCitest& citest) __attribute__((nothrow));
+void                 FCitest_Uninit(atf_ci::FCitest& parent) __attribute__((nothrow));
 
 // --- atf_ci.trace
 #pragma pack(push,1)
@@ -1431,34 +1431,34 @@ void                 gitfile_CopyOut(atf_ci::FGitfile &row, dev::Gitfile &out) _
 void                 gitfile_CopyIn(atf_ci::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
 
 // func:atf_ci.FGitfile.ext.Get
-algo::strptr         ext_Get(atf_ci::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(atf_ci::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_ci.FGitfile.c_noindent.InsertMaybe
-inline bool          c_noindent_InsertMaybe(atf_ci::FGitfile& gitfile, atf_ci::FNoindent& row) __attribute__((nothrow));
+inline bool          c_noindent_InsertMaybe(atf_ci::FGitfile& parent, atf_ci::FNoindent& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_ci.FGitfile.c_noindent.Remove
-inline void          c_noindent_Remove(atf_ci::FGitfile& gitfile, atf_ci::FNoindent& row) __attribute__((nothrow));
+inline void          c_noindent_Remove(atf_ci::FGitfile& parent, atf_ci::FNoindent& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_ci.FGitfile.c_scriptfile.InsertMaybe
-inline bool          c_scriptfile_InsertMaybe(atf_ci::FGitfile& gitfile, atf_ci::FScriptfile& row) __attribute__((nothrow));
+inline bool          c_scriptfile_InsertMaybe(atf_ci::FGitfile& parent, atf_ci::FScriptfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_ci.FGitfile.c_scriptfile.Remove
-inline void          c_scriptfile_Remove(atf_ci::FGitfile& gitfile, atf_ci::FScriptfile& row) __attribute__((nothrow));
+inline void          c_scriptfile_Remove(atf_ci::FGitfile& parent, atf_ci::FScriptfile& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_ci.FGitfile.c_targsrc.InsertMaybe
-inline bool          c_targsrc_InsertMaybe(atf_ci::FGitfile& gitfile, atf_ci::FTargsrc& row) __attribute__((nothrow));
+inline bool          c_targsrc_InsertMaybe(atf_ci::FGitfile& parent, atf_ci::FTargsrc& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_ci.FGitfile.c_targsrc.Remove
-inline void          c_targsrc_Remove(atf_ci::FGitfile& gitfile, atf_ci::FTargsrc& row) __attribute__((nothrow));
+inline void          c_targsrc_Remove(atf_ci::FGitfile& parent, atf_ci::FTargsrc& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_ci.FGitfile..Init
-inline void          FGitfile_Init(atf_ci::FGitfile& gitfile);
+inline void          FGitfile_Init(atf_ci::FGitfile& parent);
 // func:atf_ci.FGitfile..Uninit
-void                 FGitfile_Uninit(atf_ci::FGitfile& gitfile) __attribute__((nothrow));
+void                 FGitfile_Uninit(atf_ci::FGitfile& parent) __attribute__((nothrow));
 
 // --- atf_ci.FMsgfile
 // create: atf_ci.FDb.msgfile (Lary)
@@ -1484,7 +1484,7 @@ void                 msgfile_CopyIn(atf_ci::FMsgfile &row, dev::Msgfile &in) __a
 
 // Set all fields to initial values.
 // func:atf_ci.FMsgfile..Init
-inline void          FMsgfile_Init(atf_ci::FMsgfile& msgfile);
+inline void          FMsgfile_Init(atf_ci::FMsgfile& parent);
 
 // --- atf_ci.FNoindent
 // create: atf_ci.FDb.noindent (Lary)
@@ -1515,7 +1515,7 @@ void                 noindent_CopyOut(atf_ci::FNoindent &row, dev::Noindent &out
 void                 noindent_CopyIn(atf_ci::FNoindent &row, dev::Noindent &in) __attribute__((nothrow));
 
 // func:atf_ci.FNoindent..Uninit
-void                 FNoindent_Uninit(atf_ci::FNoindent& noindent) __attribute__((nothrow));
+void                 FNoindent_Uninit(atf_ci::FNoindent& parent) __attribute__((nothrow));
 
 // --- atf_ci.FNs
 // create: atf_ci.FDb.ns (Lary)
@@ -1551,9 +1551,9 @@ void                 ns_CopyIn(atf_ci::FNs &row, dmmeta::Ns &in) __attribute__((
 
 // Set all fields to initial values.
 // func:atf_ci.FNs..Init
-inline void          FNs_Init(atf_ci::FNs& ns);
+inline void          FNs_Init(atf_ci::FNs& parent);
 // func:atf_ci.FNs..Uninit
-void                 FNs_Uninit(atf_ci::FNs& ns) __attribute__((nothrow));
+void                 FNs_Uninit(atf_ci::FNs& parent) __attribute__((nothrow));
 
 // --- atf_ci.FPackage
 // create: atf_ci.FDb.package (Lary)
@@ -1628,7 +1628,7 @@ void                 readmefile_CopyIn(atf_ci::FReadmefile &row, dev::Readmefile
 
 // Set all fields to initial values.
 // func:atf_ci.FReadmefile..Init
-inline void          FReadmefile_Init(atf_ci::FReadmefile& readmefile);
+inline void          FReadmefile_Init(atf_ci::FReadmefile& parent);
 
 // --- atf_ci.FScriptfile
 // create: atf_ci.FDb.scriptfile (Lary)
@@ -1663,13 +1663,13 @@ void                 scriptfile_CopyOut(atf_ci::FScriptfile &row, dev::Scriptfil
 void                 scriptfile_CopyIn(atf_ci::FScriptfile &row, dev::Scriptfile &in) __attribute__((nothrow));
 
 // func:atf_ci.FScriptfile.name.Get
-algo::strptr         name_Get(atf_ci::FScriptfile& scriptfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(atf_ci::FScriptfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:atf_ci.FScriptfile..Init
-inline void          FScriptfile_Init(atf_ci::FScriptfile& scriptfile);
+inline void          FScriptfile_Init(atf_ci::FScriptfile& parent);
 // func:atf_ci.FScriptfile..Uninit
-void                 FScriptfile_Uninit(atf_ci::FScriptfile& scriptfile) __attribute__((nothrow));
+void                 FScriptfile_Uninit(atf_ci::FScriptfile& parent) __attribute__((nothrow));
 
 // --- atf_ci.FSsimfile
 // create: atf_ci.FDb.ssimfile (Lary)
@@ -1701,19 +1701,19 @@ void                 ssimfile_CopyOut(atf_ci::FSsimfile &row, dmmeta::Ssimfile &
 void                 ssimfile_CopyIn(atf_ci::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:atf_ci.FSsimfile.ssimns.Get
-algo::strptr         ssimns_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(atf_ci::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FSsimfile.ns.Get
-algo::strptr         ns_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(atf_ci::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FSsimfile.name.Get
-algo::strptr         name_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(atf_ci::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:atf_ci.FSsimfile..Init
-inline void          FSsimfile_Init(atf_ci::FSsimfile& ssimfile);
+inline void          FSsimfile_Init(atf_ci::FSsimfile& parent);
 // func:atf_ci.FSsimfile..Uninit
-void                 FSsimfile_Uninit(atf_ci::FSsimfile& ssimfile) __attribute__((nothrow));
+void                 FSsimfile_Uninit(atf_ci::FSsimfile& parent) __attribute__((nothrow));
 
 // --- atf_ci.FTargsrc
 // create: atf_ci.FDb.targsrc (Lary)
@@ -1744,16 +1744,16 @@ void                 targsrc_CopyOut(atf_ci::FTargsrc &row, dev::Targsrc &out) _
 void                 targsrc_CopyIn(atf_ci::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:atf_ci.FTargsrc.target.Get
-algo::strptr         target_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(atf_ci::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FTargsrc.src.Get
-algo::strptr         src_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(atf_ci::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FTargsrc.ext.Get
-algo::strptr         ext_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(atf_ci::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_ci.FTargsrc..Uninit
-void                 FTargsrc_Uninit(atf_ci::FTargsrc& targsrc) __attribute__((nothrow));
+void                 FTargsrc_Uninit(atf_ci::FTargsrc& parent) __attribute__((nothrow));
 
 // --- atf_ci.FieldId
 #pragma pack(push,1)
@@ -1834,9 +1834,9 @@ private:
 };
 // Set all fields to initial values.
 // func:atf_ci.File..Init
-inline void          File_Init(atf_ci::File& file);
+inline void          File_Init(atf_ci::File& parent);
 // func:atf_ci.File..Uninit
-void                 File_Uninit(atf_ci::File& file) __attribute__((nothrow));
+void                 File_Uninit(atf_ci::File& parent) __attribute__((nothrow));
 
 // --- atf_ci.TableId
 struct TableId { // atf_ci.TableId: Index of table in this namespace
@@ -2176,6 +2176,10 @@ void                 citest_apm_reinstall();
 // func:atf_ci...citest_abt_md_after_ssimfile_is_added
 // this function is 'extrn' and implemented by user
 void                 citest_abt_md_after_ssimfile_is_added();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_mem_prep
+// this function is 'extrn' and implemented by user
+void                 citest_mem_prep();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_atf_comp_mem
 // this function is 'extrn' and implemented by user
