@@ -477,11 +477,11 @@ void gcache::ProcessCommandLine() {
 // preprocessor.
 //
 // Saying that last one through -x is what lets a driver other than gcc
-// understand it.  The alternative spelling is -fpreprocessed, which is gcc's own
-// and which clang refuses outright, while both read c++-cpp-output.  It has to
-// be the -x that is already on the command line, put there by dev.tool_opt,
-// because -x applies to the inputs that follow it and one appended after the
-// source would apply to nothing at all.
+// understand it.  The alternative spelling is -fpreprocessed, which is gcc's
+// own and which clang refuses outright.  It has to be the -x that is already on
+// the command line, put there by dev.tool_opt, because -x applies to the inputs
+// that follow it and one appended after the source would apply to nothing at
+// all.
 static tempstr ConvertLang(strptr from, bool precomp, bool cppout) {
     tempstr to(from);
     if (from == "c" || from == "c++") {
@@ -786,7 +786,7 @@ bool gcache::Pch() {
         bool build = (!FileQ(gch) || _db.cmdline.force) && Flock(_db.lockfd.fd,LOCK_EX|LOCK_NB);
         if (build) {
             StringToFile(text,h);
-            int rc = RunCmd(MakeCmd(h,tmp,"-fpreprocessed"));
+            int rc = RunCmd(MakeCmd(h,tmp));
             DeleteFile(h);
             if (rc) {
                 // A precompiled header is an optimization, so failing to build
