@@ -276,7 +276,7 @@ void ams_sendtest::Main() {
     if (isparent) {
         ams_sendtest::_db.c_out=&log0;
 
-        lib_ams::ShmOpen(log0,ams_ShmFlags_write);
+        vrfy_(lib_ams::ShmOpen(log0,ams_ShmFlags_write));
         algo_lib::ApplyTrace(_db.cmdline.trace.expr);
 
         // The board exists before the first child is spawned, so a child never
@@ -294,7 +294,7 @@ void ams_sendtest::Main() {
             child.p_shm = &log0;
             if (_db.cmdline.uc) {
                 child.p_shm = &GetOrCreateShm(ams::GrpId(parent_proc, ams_Grptype_log, i));
-                lib_ams::ShmOpen(*child.p_shm, ams_ShmFlags_write);
+                vrfy_(lib_ams::ShmOpen(*child.p_shm, ams_ShmFlags_write));
             }
             lib_ams::AddReadShmember(*child.p_shm,child.proc_id);
 
