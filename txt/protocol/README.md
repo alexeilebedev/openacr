@@ -1,18 +1,11 @@
 ## Protocols
+<a href="#protocols"></a>
 
+A protocol is a message header and the messages that begin with it.  `msg:%` is
+every header in the tree, each beside the field of it that says which message a
+frame carries; following one gives that header's messages and where each is
+received.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&#128193; [algo - Basic types and functions](/txt/protocol/algo/README.md)<br/>
-&#128193; [ams - Algo Messaging System protocol](/txt/protocol/ams/README.md)<br/>
-&#128193; [atf - Algo Testing Framework](/txt/protocol/atf/README.md)<br/>
-&#128193; [command - Command line descriptions](/txt/protocol/command/README.md)<br/>
-&#128193; [fm - Fault management types](/txt/protocol/fm/README.md)<br/>
-&#128193; [http -](/txt/protocol/http/README.md)<br/>
-&#128193; [ietf - Some IETF structs](/txt/protocol/ietf/README.md)<br/>
-&#128193; [js - Reserved for JavaScript builtin types](/txt/protocol/js/README.md)<br/>
-&#128193; [kafka - Kafka protocol](/txt/protocol/kafka/README.md)<br/>
-&#128193; [report - Command reports](/txt/protocol/report/README.md)<br/>
-&#128193; [ws - WebSocket binary protocol](/txt/protocol/ws/README.md)<br/>
-<!-- abt_md.toc_end -->
+This directory lists all namespaces which have nstype:protocol. This doesn't mean 
+the namespace is a protocol, it just means it doesn't have an in-memory database (FDb)
+and is a collection of types & functions. But all protocols are contained in these namespaces.

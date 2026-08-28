@@ -269,8 +269,8 @@ inline  amc::Enumstr::Enumstr(i32 in_len, const algo::strptr& in_str)
 
 // --- amc.FAnonfld..Init
 // Set all fields to initial values.
-inline void amc::FAnonfld_Init(amc::FAnonfld& anonfld) {
-    anonfld.anon_idx = i32(0);
+inline void amc::FAnonfld_Init(amc::FAnonfld& parent) {
+    parent.anon_idx = i32(0);
 }
 
 // --- amc.FAnonfld..Ctor
@@ -294,9 +294,9 @@ inline  amc::FArgvtype::~FArgvtype() {
 
 // --- amc.FBasepool..Init
 // Set all fields to initial values.
-inline void amc::FBasepool_Init(amc::FBasepool& basepool) {
-    basepool.p_field = NULL;
-    basepool.p_base = NULL;
+inline void amc::FBasepool_Init(amc::FBasepool& parent) {
+    parent.p_field = NULL;
+    parent.p_base = NULL;
 }
 
 // --- amc.FBasepool..Ctor
@@ -311,12 +311,12 @@ inline  amc::FBasepool::~FBasepool() {
 
 // --- amc.FBitfld..Init
 // Set all fields to initial values.
-inline void amc::FBitfld_Init(amc::FBitfld& bitfld) {
-    bitfld.offset = i32(0);
-    bitfld.width = i32(0);
-    bitfld.p_srcfield = NULL;
-    bitfld.p_field = NULL;
-    bitfld.field_bh_bitfld_idx = -1; // (amc.FField.bh_bitfld) not-in-heap
+inline void amc::FBitfld_Init(amc::FBitfld& parent) {
+    parent.offset = i32(0);
+    parent.width = i32(0);
+    parent.p_srcfield = NULL;
+    parent.p_field = NULL;
+    parent.field_bh_bitfld_idx = -1; // (amc.FField.bh_bitfld) not-in-heap
 }
 
 // --- amc.FBitfld..Ctor
@@ -331,11 +331,11 @@ inline  amc::FBitfld::~FBitfld() {
 
 // --- amc.FBlkhash..Init
 // Set all fields to initial values.
-inline void amc::FBlkhash_Init(amc::FBlkhash& blkhash) {
-    blkhash.linbits = u8(0);
-    blkhash.p_hashfld = NULL;
-    blkhash.p_linfld = NULL;
-    blkhash.p_field = NULL;
+inline void amc::FBlkhash_Init(amc::FBlkhash& parent) {
+    parent.linbits = u8(0);
+    parent.p_hashfld = NULL;
+    parent.p_linfld = NULL;
+    parent.p_field = NULL;
 }
 
 // --- amc.FBlkhash..Ctor
@@ -350,12 +350,12 @@ inline  amc::FBlkhash::~FBlkhash() {
 
 // --- amc.FBltin..Init
 // Set all fields to initial values.
-inline void amc::FBltin_Init(amc::FBltin& bltin) {
-    bltin.likeu64 = bool(false);
-    bltin.bigendok = bool(false);
-    bltin.issigned = bool(false);
-    bltin.ind_bltin_next = (amc::FBltin*)-1; // (amc.FDb.ind_bltin) not-in-hash
-    bltin.ind_bltin_hashval = 0; // stored hash value
+inline void amc::FBltin_Init(amc::FBltin& parent) {
+    parent.likeu64 = bool(false);
+    parent.bigendok = bool(false);
+    parent.issigned = bool(false);
+    parent.ind_bltin_next = (amc::FBltin*)-1; // (amc.FDb.ind_bltin) not-in-hash
+    parent.ind_bltin_hashval = 0; // stored hash value
 }
 
 // --- amc.FBltin..Ctor
@@ -370,10 +370,10 @@ inline  amc::FBltin::~FBltin() {
 
 // --- amc.FCafter..Init
 // Set all fields to initial values.
-inline void amc::FCafter_Init(amc::FCafter& cafter) {
-    cafter.p_after = NULL;
-    cafter.ctype_zd_cafter_next = (amc::FCafter*)-1; // (amc.FCtype.zd_cafter) not-in-list
-    cafter.ctype_zd_cafter_prev = NULL; // (amc.FCtype.zd_cafter)
+inline void amc::FCafter_Init(amc::FCafter& parent) {
+    parent.p_after = NULL;
+    parent.ctype_zd_cafter_next = (amc::FCafter*)-1; // (amc.FCtype.zd_cafter) not-in-list
+    parent.ctype_zd_cafter_prev = NULL; // (amc.FCtype.zd_cafter)
 }
 
 // --- amc.FCafter..Ctor
@@ -388,8 +388,8 @@ inline  amc::FCafter::~FCafter() {
 
 // --- amc.FCascdel..Init
 // Set all fields to initial values.
-inline void amc::FCascdel_Init(amc::FCascdel& cascdel) {
-    cascdel.p_field = NULL;
+inline void amc::FCascdel_Init(amc::FCascdel& parent) {
+    parent.p_field = NULL;
 }
 
 // --- amc.FCascdel..Ctor
@@ -404,10 +404,10 @@ inline  amc::FCascdel::~FCascdel() {
 
 // --- amc.FCcmdline..Init
 // Set all fields to initial values.
-inline void amc::FCcmdline_Init(amc::FCcmdline& ccmdline) {
-    ccmdline.read = bool(true);
-    ccmdline.p_ctype = NULL;
-    ccmdline.p_basecmdline = NULL;
+inline void amc::FCcmdline_Init(amc::FCcmdline& parent) {
+    parent.read = bool(true);
+    parent.p_ctype = NULL;
+    parent.p_basecmdline = NULL;
 }
 
 // --- amc.FCcmdline..Ctor
@@ -422,13 +422,13 @@ inline  amc::FCcmdline::~FCcmdline() {
 
 // --- amc.FCcmp..Init
 // Set all fields to initial values.
-inline void amc::FCcmp_Init(amc::FCcmp& ccmp) {
-    ccmp.extrn = bool(false);
-    ccmp.genop = bool(false);
-    ccmp.order = bool(false);
-    ccmp.minmax = bool(false);
-    ccmp.ind_ccmp_next = (amc::FCcmp*)-1; // (amc.FDb.ind_ccmp) not-in-hash
-    ccmp.ind_ccmp_hashval = 0; // stored hash value
+inline void amc::FCcmp_Init(amc::FCcmp& parent) {
+    parent.extrn = bool(false);
+    parent.genop = bool(false);
+    parent.order = bool(false);
+    parent.minmax = bool(false);
+    parent.ind_ccmp_next = (amc::FCcmp*)-1; // (amc.FDb.ind_ccmp) not-in-hash
+    parent.ind_ccmp_hashval = 0; // stored hash value
 }
 
 // --- amc.FCcmp..Ctor
@@ -452,10 +452,10 @@ inline  amc::FCdflt::~FCdflt() {
 
 // --- amc.FCextern..Init
 // Set all fields to initial values.
-inline void amc::FCextern_Init(amc::FCextern& cextern) {
-    cextern.initmemset = bool(false);
-    cextern.isstruct = bool(false);
-    cextern.plaindata = bool(false);
+inline void amc::FCextern_Init(amc::FCextern& parent) {
+    parent.initmemset = bool(false);
+    parent.isstruct = bool(false);
+    parent.plaindata = bool(false);
 }
 
 // --- amc.FCextern..Ctor
@@ -470,9 +470,9 @@ inline  amc::FCextern::~FCextern() {
 
 // --- amc.FCfast..Init
 // Set all fields to initial values.
-inline void amc::FCfast_Init(amc::FCfast& cfast) {
-    cfast.id = u32(0);
-    cfast.reset = bool(false);
+inline void amc::FCfast_Init(amc::FCfast& parent) {
+    parent.id = u32(0);
+    parent.reset = bool(false);
 }
 
 // --- amc.FCfast..Ctor
@@ -497,8 +497,8 @@ inline  amc::FCfmt::~FCfmt() {
 
 // --- amc.FCget..Init
 // Set all fields to initial values.
-inline void amc::FCget_Init(amc::FCget& cget) {
-    cget.p_ctype = NULL;
+inline void amc::FCget_Init(amc::FCget& parent) {
+    parent.p_ctype = NULL;
 }
 
 // --- amc.FCget..Ctor
@@ -508,9 +508,9 @@ inline  amc::FCget::FCget() {
 
 // --- amc.FCharset..Init
 // Set all fields to initial values.
-inline void amc::FCharset_Init(amc::FCharset& charset) {
-    charset.charrange = bool(false);
-    charset.calc = bool(false);
+inline void amc::FCharset_Init(amc::FCharset& parent) {
+    parent.charrange = bool(false);
+    parent.calc = bool(false);
 }
 
 // --- amc.FCharset..Ctor
@@ -525,9 +525,9 @@ inline  amc::FCharset::~FCharset() {
 
 // --- amc.FChash..Init
 // Set all fields to initial values.
-inline void amc::FChash_Init(amc::FChash& chash) {
-    chash.ind_chash_next = (amc::FChash*)-1; // (amc.FDb.ind_chash) not-in-hash
-    chash.ind_chash_hashval = 0; // stored hash value
+inline void amc::FChash_Init(amc::FChash& parent) {
+    parent.ind_chash_next = (amc::FChash*)-1; // (amc.FDb.ind_chash) not-in-hash
+    parent.ind_chash_hashval = 0; // stored hash value
 }
 
 // --- amc.FChash..Ctor
@@ -542,8 +542,8 @@ inline  amc::FChash::~FChash() {
 
 // --- amc.FCjsbltin..Init
 // Set all fields to initial values.
-inline void amc::FCjsbltin_Init(amc::FCjsbltin& cjsbltin) {
-    cjsbltin.p_jsbltin = NULL;
+inline void amc::FCjsbltin_Init(amc::FCjsbltin& parent) {
+    parent.p_jsbltin = NULL;
 }
 
 // --- amc.FCjsbltin..Ctor
@@ -558,8 +558,8 @@ inline  amc::FCjsbltin::~FCjsbltin() {
 
 // --- amc.FCjson..Init
 // Set all fields to initial values.
-inline void amc::FCjson_Init(amc::FCjson& cjson) {
-    cjson.p_jsbltin = NULL;
+inline void amc::FCjson_Init(amc::FCjson& parent) {
+    parent.p_jsbltin = NULL;
 }
 
 // --- amc.FCjson..Ctor
@@ -592,9 +592,9 @@ inline  amc::FCpbuf::~FCpbuf() {
 
 // --- amc.FCppfunc..Init
 // Set all fields to initial values.
-inline void amc::FCppfunc_Init(amc::FCppfunc& cppfunc) {
-    cppfunc.print = bool(false);
-    cppfunc.set = bool(false);
+inline void amc::FCppfunc_Init(amc::FCppfunc& parent) {
+    parent.print = bool(false);
+    parent.set = bool(false);
 }
 
 // --- amc.FCppfunc..Ctor
@@ -609,11 +609,11 @@ inline  amc::FCppfunc::~FCppfunc() {
 
 // --- amc.FCpptype..Init
 // Set all fields to initial values.
-inline void amc::FCpptype_Init(amc::FCpptype& cpptype) {
-    cpptype.ctor = bool(false);
-    cpptype.p_ctype = NULL;
-    cpptype.ind_cpptype_next = (amc::FCpptype*)-1; // (amc.FDb.ind_cpptype) not-in-hash
-    cpptype.ind_cpptype_hashval = 0; // stored hash value
+inline void amc::FCpptype_Init(amc::FCpptype& parent) {
+    parent.ctor = bool(false);
+    parent.p_ctype = NULL;
+    parent.ind_cpptype_next = (amc::FCpptype*)-1; // (amc.FDb.ind_cpptype) not-in-hash
+    parent.ind_cpptype_hashval = 0; // stored hash value
 }
 
 // --- amc.FCpptype..Ctor
@@ -628,9 +628,9 @@ inline  amc::FCpptype::~FCpptype() {
 
 // --- amc.FCsize..Init
 // Set all fields to initial values.
-inline void amc::FCsize_Init(amc::FCsize& csize) {
-    csize.size = u32(0);
-    csize.alignment = u32(1);
+inline void amc::FCsize_Init(amc::FCsize& parent) {
+    parent.size = u32(0);
+    parent.alignment = u32(1);
 }
 
 // --- amc.FCsize..Ctor
@@ -645,8 +645,8 @@ inline  amc::FCsize::~FCsize() {
 
 // --- amc.FCstr..Init
 // Set all fields to initial values.
-inline void amc::FCstr_Init(amc::FCstr& cstr) {
-    cstr.strequiv = bool(false);
+inline void amc::FCstr_Init(amc::FCstr& parent) {
+    parent.strequiv = bool(false);
 }
 
 // --- amc.FCstr..Ctor
@@ -661,15 +661,15 @@ inline  amc::FCstr::~FCstr() {
 
 // --- amc.FCtype.zs_cfmt.EmptyQ
 // Return true if index is empty
-inline bool amc::zs_cfmt_EmptyQ(amc::FCtype& ctype) {
-    return ctype.zs_cfmt_head == NULL;
+inline bool amc::zs_cfmt_EmptyQ(amc::FCtype& parent) {
+    return parent.zs_cfmt_head == NULL;
 }
 
 // --- amc.FCtype.zs_cfmt.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FCfmt* amc::zs_cfmt_First(amc::FCtype& ctype) {
+inline amc::FCfmt* amc::zs_cfmt_First(amc::FCtype& parent) {
     amc::FCfmt *row = NULL;
-    row = ctype.zs_cfmt_head;
+    row = parent.zs_cfmt_head;
     return row;
 }
 
@@ -683,9 +683,9 @@ inline bool amc::ctype_zs_cfmt_InLlistQ(amc::FCfmt& row) {
 
 // --- amc.FCtype.zs_cfmt.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FCfmt* amc::zs_cfmt_Last(amc::FCtype& ctype) {
+inline amc::FCfmt* amc::zs_cfmt_Last(amc::FCtype& parent) {
     amc::FCfmt *row = NULL;
-    row = ctype.zs_cfmt_tail;
+    row = parent.zs_cfmt_tail;
     return row;
 }
 
@@ -697,164 +697,164 @@ inline amc::FCfmt* amc::ctype_zs_cfmt_Next(amc::FCfmt &row) {
 
 // --- amc.FCtype.zs_cfmt.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FCfmt& amc::zs_cfmt_qLast(amc::FCtype& ctype) {
+inline amc::FCfmt& amc::zs_cfmt_qLast(amc::FCtype& parent) {
     amc::FCfmt *row = NULL;
-    row = ctype.zs_cfmt_tail;
+    row = parent.zs_cfmt_tail;
     return *row;
 }
 
 // --- amc.FCtype.c_bltin.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_bltin_InsertMaybe(amc::FCtype& ctype, amc::FBltin& row) {
-    amc::FBltin* ptr = ctype.c_bltin;
+inline bool amc::c_bltin_InsertMaybe(amc::FCtype& parent, amc::FBltin& row) {
+    amc::FBltin* ptr = parent.c_bltin;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_bltin = &row;
+        parent.c_bltin = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_bltin.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_bltin_Remove(amc::FCtype& ctype, amc::FBltin& row) {
-    amc::FBltin *ptr = ctype.c_bltin;
+inline void amc::c_bltin_Remove(amc::FCtype& parent, amc::FBltin& row) {
+    amc::FBltin *ptr = parent.c_bltin;
     if (LIKELY(ptr == &row)) {
-        ctype.c_bltin = NULL;
+        parent.c_bltin = NULL;
     }
 }
 
 // --- amc.FCtype.c_field.EmptyQ
 // Return true if index is empty
-inline bool amc::c_field_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_field_n == 0;
+inline bool amc::c_field_EmptyQ(amc::FCtype& parent) {
+    return parent.c_field_n == 0;
 }
 
 // --- amc.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FField* amc::c_field_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FField* amc::c_field_Find(amc::FCtype& parent, u64 t) {
     amc::FField *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_field_n;
+    u64 lim = parent.c_field_n;
     if (idx < lim) {
-        retval = ctype.c_field_elems[idx];
+        retval = parent.c_field_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_field.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FField*> amc::c_field_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FField*>(ctype.c_field_elems, ctype.c_field_n);
+inline algo::aryptr<amc::FField*> amc::c_field_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FField*>(parent.c_field_elems, parent.c_field_n);
 }
 
 // --- amc.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i64 amc::c_field_N(const amc::FCtype& ctype) {
-    return ctype.c_field_n;
+inline i64 amc::c_field_N(const amc::FCtype& parent) {
+    return parent.c_field_n;
 }
 
 // --- amc.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_field_RemoveAll(amc::FCtype& ctype) {
-    ctype.c_field_n = 0;
+inline void amc::c_field_RemoveAll(amc::FCtype& parent) {
+    parent.c_field_n = 0;
 }
 
 // --- amc.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline amc::FField& amc::c_field_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_field_elems[idx];
+inline amc::FField& amc::c_field_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_field_elems[idx];
 }
 
 // --- amc.FCtype.c_field.qLast
 // Reference to last element without bounds checking
-inline amc::FField& amc::c_field_qLast(amc::FCtype& ctype) {
-    return *ctype.c_field_elems[ctype.c_field_n-1];
+inline amc::FField& amc::c_field_qLast(amc::FCtype& parent) {
+    return *parent.c_field_elems[parent.c_field_n-1];
 }
 
 // --- amc.FCtype.c_msgtype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_msgtype_InsertMaybe(amc::FCtype& ctype, amc::FMsgtype& row) {
-    amc::FMsgtype* ptr = ctype.c_msgtype;
+inline bool amc::c_msgtype_InsertMaybe(amc::FCtype& parent, amc::FMsgtype& row) {
+    amc::FMsgtype* ptr = parent.c_msgtype;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_msgtype = &row;
+        parent.c_msgtype = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_msgtype.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_msgtype_Remove(amc::FCtype& ctype, amc::FMsgtype& row) {
-    amc::FMsgtype *ptr = ctype.c_msgtype;
+inline void amc::c_msgtype_Remove(amc::FCtype& parent, amc::FMsgtype& row) {
+    amc::FMsgtype *ptr = parent.c_msgtype;
     if (LIKELY(ptr == &row)) {
-        ctype.c_msgtype = NULL;
+        parent.c_msgtype = NULL;
     }
 }
 
 // --- amc.FCtype.c_optfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_optfld_InsertMaybe(amc::FCtype& ctype, amc::FField& row) {
-    amc::FField* ptr = ctype.c_optfld;
+inline bool amc::c_optfld_InsertMaybe(amc::FCtype& parent, amc::FField& row) {
+    amc::FField* ptr = parent.c_optfld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_optfld = &row;
+        parent.c_optfld = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_optfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_optfld_Remove(amc::FCtype& ctype, amc::FField& row) {
-    amc::FField *ptr = ctype.c_optfld;
+inline void amc::c_optfld_Remove(amc::FCtype& parent, amc::FField& row) {
+    amc::FField *ptr = parent.c_optfld;
     if (LIKELY(ptr == &row)) {
-        ctype.c_optfld = NULL;
+        parent.c_optfld = NULL;
     }
 }
 
 // --- amc.FCtype.c_static.EmptyQ
 // Return true if index is empty
-inline bool amc::c_static_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_static_n == 0;
+inline bool amc::c_static_EmptyQ(amc::FCtype& parent) {
+    return parent.c_static_n == 0;
 }
 
 // --- amc.FCtype.c_static.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FStatictuple* amc::c_static_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FStatictuple* amc::c_static_Find(amc::FCtype& parent, u64 t) {
     amc::FStatictuple *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_static_n;
+    u64 lim = parent.c_static_n;
     if (idx < lim) {
-        retval = ctype.c_static_elems[idx];
+        retval = parent.c_static_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_static.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FStatictuple*> amc::c_static_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FStatictuple*>(ctype.c_static_elems, ctype.c_static_n);
+inline algo::aryptr<amc::FStatictuple*> amc::c_static_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FStatictuple*>(parent.c_static_elems, parent.c_static_n);
 }
 
 // --- amc.FCtype.c_static.N
 // Return number of items in the pointer array
-inline i64 amc::c_static_N(const amc::FCtype& ctype) {
-    return ctype.c_static_n;
+inline i64 amc::c_static_N(const amc::FCtype& parent) {
+    return parent.c_static_n;
 }
 
 // --- amc.FCtype.c_static.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_static_RemoveAll(amc::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_static_n; i++) {
+inline void amc::c_static_RemoveAll(amc::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_static_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_static_elems[i]->ctype_c_static_in_ary = false;
+        parent.c_static_elems[i]->ctype_c_static_in_ary = false;
     }
-    ctype.c_static_n = 0;
+    parent.c_static_n = 0;
 }
 
 // --- amc.FCtype.c_static.qFind
 // Return reference without bounds checking
-inline amc::FStatictuple& amc::c_static_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_static_elems[idx];
+inline amc::FStatictuple& amc::c_static_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_static_elems[idx];
 }
 
 // --- amc.FCtype.c_static.InAryQ
@@ -865,182 +865,182 @@ inline bool amc::ctype_c_static_InAryQ(amc::FStatictuple& row) {
 
 // --- amc.FCtype.c_static.qLast
 // Reference to last element without bounds checking
-inline amc::FStatictuple& amc::c_static_qLast(amc::FCtype& ctype) {
-    return *ctype.c_static_elems[ctype.c_static_n-1];
+inline amc::FStatictuple& amc::c_static_qLast(amc::FCtype& parent) {
+    return *parent.c_static_elems[parent.c_static_n-1];
 }
 
 // --- amc.FCtype.c_cpptype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cpptype_InsertMaybe(amc::FCtype& ctype, amc::FCpptype& row) {
-    amc::FCpptype* ptr = ctype.c_cpptype;
+inline bool amc::c_cpptype_InsertMaybe(amc::FCtype& parent, amc::FCpptype& row) {
+    amc::FCpptype* ptr = parent.c_cpptype;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cpptype = &row;
+        parent.c_cpptype = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_cpptype.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cpptype_Remove(amc::FCtype& ctype, amc::FCpptype& row) {
-    amc::FCpptype *ptr = ctype.c_cpptype;
+inline void amc::c_cpptype_Remove(amc::FCtype& parent, amc::FCpptype& row) {
+    amc::FCpptype *ptr = parent.c_cpptype;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cpptype = NULL;
+        parent.c_cpptype = NULL;
     }
 }
 
 // --- amc.FCtype.c_parent.EmptyQ
 // Return true if index is empty
-inline bool amc::c_parent_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_parent_n == 0;
+inline bool amc::c_parent_EmptyQ(amc::FCtype& parent) {
+    return parent.c_parent_n == 0;
 }
 
 // --- amc.FCtype.c_parent.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FCtype* amc::c_parent_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FCtype* amc::c_parent_Find(amc::FCtype& parent, u64 t) {
     amc::FCtype *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_parent_n;
+    u64 lim = parent.c_parent_n;
     if (idx < lim) {
-        retval = ctype.c_parent_elems[idx];
+        retval = parent.c_parent_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_parent.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FCtype*> amc::c_parent_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FCtype*>(ctype.c_parent_elems, ctype.c_parent_n);
+inline algo::aryptr<amc::FCtype*> amc::c_parent_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FCtype*>(parent.c_parent_elems, parent.c_parent_n);
 }
 
 // --- amc.FCtype.c_parent.N
 // Return number of items in the pointer array
-inline i64 amc::c_parent_N(const amc::FCtype& ctype) {
-    return ctype.c_parent_n;
+inline i64 amc::c_parent_N(const amc::FCtype& parent) {
+    return parent.c_parent_n;
 }
 
 // --- amc.FCtype.c_parent.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_parent_RemoveAll(amc::FCtype& ctype) {
-    ctype.c_parent_n = 0;
+inline void amc::c_parent_RemoveAll(amc::FCtype& parent) {
+    parent.c_parent_n = 0;
 }
 
 // --- amc.FCtype.c_parent.qFind
 // Return reference without bounds checking
-inline amc::FCtype& amc::c_parent_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_parent_elems[idx];
+inline amc::FCtype& amc::c_parent_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_parent_elems[idx];
 }
 
 // --- amc.FCtype.c_parent.qLast
 // Reference to last element without bounds checking
-inline amc::FCtype& amc::c_parent_qLast(amc::FCtype& ctype) {
-    return *ctype.c_parent_elems[ctype.c_parent_n-1];
+inline amc::FCtype& amc::c_parent_qLast(amc::FCtype& parent) {
+    return *parent.c_parent_elems[parent.c_parent_n-1];
 }
 
 // --- amc.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ssimfile_InsertMaybe(amc::FCtype& ctype, amc::FSsimfile& row) {
-    amc::FSsimfile* ptr = ctype.c_ssimfile;
+inline bool amc::c_ssimfile_InsertMaybe(amc::FCtype& parent, amc::FSsimfile& row) {
+    amc::FSsimfile* ptr = parent.c_ssimfile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_ssimfile = &row;
+        parent.c_ssimfile = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_ssimfile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ssimfile_Remove(amc::FCtype& ctype, amc::FSsimfile& row) {
-    amc::FSsimfile *ptr = ctype.c_ssimfile;
+inline void amc::c_ssimfile_Remove(amc::FCtype& parent, amc::FSsimfile& row) {
+    amc::FSsimfile *ptr = parent.c_ssimfile;
     if (LIKELY(ptr == &row)) {
-        ctype.c_ssimfile = NULL;
+        parent.c_ssimfile = NULL;
     }
 }
 
 // --- amc.FCtype.c_pack.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_pack_InsertMaybe(amc::FCtype& ctype, amc::FPack& row) {
-    amc::FPack* ptr = ctype.c_pack;
+inline bool amc::c_pack_InsertMaybe(amc::FCtype& parent, amc::FPack& row) {
+    amc::FPack* ptr = parent.c_pack;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_pack = &row;
+        parent.c_pack = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_pack.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_pack_Remove(amc::FCtype& ctype, amc::FPack& row) {
-    amc::FPack *ptr = ctype.c_pack;
+inline void amc::c_pack_Remove(amc::FCtype& parent, amc::FPack& row) {
+    amc::FPack *ptr = parent.c_pack;
     if (LIKELY(ptr == &row)) {
-        ctype.c_pack = NULL;
+        parent.c_pack = NULL;
     }
 }
 
 // --- amc.FCtype.c_lenfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_lenfld_InsertMaybe(amc::FCtype& ctype, amc::FLenfld& row) {
-    amc::FLenfld* ptr = ctype.c_lenfld;
+inline bool amc::c_lenfld_InsertMaybe(amc::FCtype& parent, amc::FLenfld& row) {
+    amc::FLenfld* ptr = parent.c_lenfld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_lenfld = &row;
+        parent.c_lenfld = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_lenfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_lenfld_Remove(amc::FCtype& ctype, amc::FLenfld& row) {
-    amc::FLenfld *ptr = ctype.c_lenfld;
+inline void amc::c_lenfld_Remove(amc::FCtype& parent, amc::FLenfld& row) {
+    amc::FLenfld *ptr = parent.c_lenfld;
     if (LIKELY(ptr == &row)) {
-        ctype.c_lenfld = NULL;
+        parent.c_lenfld = NULL;
     }
 }
 
 // --- amc.FCtype.c_pmaskfld.EmptyQ
 // Return true if index is empty
-inline bool amc::c_pmaskfld_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_pmaskfld_n == 0;
+inline bool amc::c_pmaskfld_EmptyQ(amc::FCtype& parent) {
+    return parent.c_pmaskfld_n == 0;
 }
 
 // --- amc.FCtype.c_pmaskfld.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FPmaskfld* amc::c_pmaskfld_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FPmaskfld* amc::c_pmaskfld_Find(amc::FCtype& parent, u64 t) {
     amc::FPmaskfld *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_pmaskfld_n;
+    u64 lim = parent.c_pmaskfld_n;
     if (idx < lim) {
-        retval = ctype.c_pmaskfld_elems[idx];
+        retval = parent.c_pmaskfld_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_pmaskfld.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FPmaskfld*> amc::c_pmaskfld_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FPmaskfld*>(ctype.c_pmaskfld_elems, ctype.c_pmaskfld_n);
+inline algo::aryptr<amc::FPmaskfld*> amc::c_pmaskfld_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FPmaskfld*>(parent.c_pmaskfld_elems, parent.c_pmaskfld_n);
 }
 
 // --- amc.FCtype.c_pmaskfld.N
 // Return number of items in the pointer array
-inline i64 amc::c_pmaskfld_N(const amc::FCtype& ctype) {
-    return ctype.c_pmaskfld_n;
+inline i64 amc::c_pmaskfld_N(const amc::FCtype& parent) {
+    return parent.c_pmaskfld_n;
 }
 
 // --- amc.FCtype.c_pmaskfld.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_pmaskfld_RemoveAll(amc::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_pmaskfld_n; i++) {
+inline void amc::c_pmaskfld_RemoveAll(amc::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_pmaskfld_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_pmaskfld_elems[i]->ctype_c_pmaskfld_in_ary = false;
+        parent.c_pmaskfld_elems[i]->ctype_c_pmaskfld_in_ary = false;
     }
-    ctype.c_pmaskfld_n = 0;
+    parent.c_pmaskfld_n = 0;
 }
 
 // --- amc.FCtype.c_pmaskfld.qFind
 // Return reference without bounds checking
-inline amc::FPmaskfld& amc::c_pmaskfld_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_pmaskfld_elems[idx];
+inline amc::FPmaskfld& amc::c_pmaskfld_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_pmaskfld_elems[idx];
 }
 
 // --- amc.FCtype.c_pmaskfld.InAryQ
@@ -1051,74 +1051,74 @@ inline bool amc::ctype_c_pmaskfld_InAryQ(amc::FPmaskfld& row) {
 
 // --- amc.FCtype.c_pmaskfld.qLast
 // Reference to last element without bounds checking
-inline amc::FPmaskfld& amc::c_pmaskfld_qLast(amc::FCtype& ctype) {
-    return *ctype.c_pmaskfld_elems[ctype.c_pmaskfld_n-1];
+inline amc::FPmaskfld& amc::c_pmaskfld_qLast(amc::FCtype& parent) {
+    return *parent.c_pmaskfld_elems[parent.c_pmaskfld_n-1];
 }
 
 // --- amc.FCtype.c_typefld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_typefld_InsertMaybe(amc::FCtype& ctype, amc::FTypefld& row) {
-    amc::FTypefld* ptr = ctype.c_typefld;
+inline bool amc::c_typefld_InsertMaybe(amc::FCtype& parent, amc::FTypefld& row) {
+    amc::FTypefld* ptr = parent.c_typefld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_typefld = &row;
+        parent.c_typefld = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_typefld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_typefld_Remove(amc::FCtype& ctype, amc::FTypefld& row) {
-    amc::FTypefld *ptr = ctype.c_typefld;
+inline void amc::c_typefld_Remove(amc::FCtype& parent, amc::FTypefld& row) {
+    amc::FTypefld *ptr = parent.c_typefld;
     if (LIKELY(ptr == &row)) {
-        ctype.c_typefld = NULL;
+        parent.c_typefld = NULL;
     }
 }
 
 // --- amc.FCtype.c_datafld.EmptyQ
 // Return true if index is empty
-inline bool amc::c_datafld_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_datafld_n == 0;
+inline bool amc::c_datafld_EmptyQ(amc::FCtype& parent) {
+    return parent.c_datafld_n == 0;
 }
 
 // --- amc.FCtype.c_datafld.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FField* amc::c_datafld_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FField* amc::c_datafld_Find(amc::FCtype& parent, u64 t) {
     amc::FField *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_datafld_n;
+    u64 lim = parent.c_datafld_n;
     if (idx < lim) {
-        retval = ctype.c_datafld_elems[idx];
+        retval = parent.c_datafld_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_datafld.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FField*> amc::c_datafld_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FField*>(ctype.c_datafld_elems, ctype.c_datafld_n);
+inline algo::aryptr<amc::FField*> amc::c_datafld_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FField*>(parent.c_datafld_elems, parent.c_datafld_n);
 }
 
 // --- amc.FCtype.c_datafld.N
 // Return number of items in the pointer array
-inline i64 amc::c_datafld_N(const amc::FCtype& ctype) {
-    return ctype.c_datafld_n;
+inline i64 amc::c_datafld_N(const amc::FCtype& parent) {
+    return parent.c_datafld_n;
 }
 
 // --- amc.FCtype.c_datafld.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_datafld_RemoveAll(amc::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_datafld_n; i++) {
+inline void amc::c_datafld_RemoveAll(amc::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_datafld_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_datafld_elems[i]->ctype_c_datafld_in_ary = false;
+        parent.c_datafld_elems[i]->ctype_c_datafld_in_ary = false;
     }
-    ctype.c_datafld_n = 0;
+    parent.c_datafld_n = 0;
 }
 
 // --- amc.FCtype.c_datafld.qFind
 // Return reference without bounds checking
-inline amc::FField& amc::c_datafld_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_datafld_elems[idx];
+inline amc::FField& amc::c_datafld_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_datafld_elems[idx];
 }
 
 // --- amc.FCtype.c_datafld.InAryQ
@@ -1129,21 +1129,21 @@ inline bool amc::ctype_c_datafld_InAryQ(amc::FField& row) {
 
 // --- amc.FCtype.c_datafld.qLast
 // Reference to last element without bounds checking
-inline amc::FField& amc::c_datafld_qLast(amc::FCtype& ctype) {
-    return *ctype.c_datafld_elems[ctype.c_datafld_n-1];
+inline amc::FField& amc::c_datafld_qLast(amc::FCtype& parent) {
+    return *parent.c_datafld_elems[parent.c_datafld_n-1];
 }
 
 // --- amc.FCtype.zd_inst.EmptyQ
 // Return true if index is empty
-inline bool amc::zd_inst_EmptyQ(amc::FCtype& ctype) {
-    return ctype.zd_inst_head == NULL;
+inline bool amc::zd_inst_EmptyQ(amc::FCtype& parent) {
+    return parent.zd_inst_head == NULL;
 }
 
 // --- amc.FCtype.zd_inst.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FField* amc::zd_inst_First(amc::FCtype& ctype) {
+inline amc::FField* amc::zd_inst_First(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_inst_head;
+    row = parent.zd_inst_head;
     return row;
 }
 
@@ -1157,16 +1157,16 @@ inline bool amc::ctype_zd_inst_InLlistQ(amc::FField& row) {
 
 // --- amc.FCtype.zd_inst.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FField* amc::zd_inst_Last(amc::FCtype& ctype) {
+inline amc::FField* amc::zd_inst_Last(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_inst_tail;
+    row = parent.zd_inst_tail;
     return row;
 }
 
 // --- amc.FCtype.zd_inst.N
 // Return number of items in the linked list
-inline i32 amc::zd_inst_N(const amc::FCtype& ctype) {
-    return ctype.zd_inst_n;
+inline i32 amc::zd_inst_N(const amc::FCtype& parent) {
+    return parent.zd_inst_n;
 }
 
 // --- amc.FCtype.zd_inst.Next
@@ -1183,23 +1183,23 @@ inline amc::FField* amc::ctype_zd_inst_Prev(amc::FField &row) {
 
 // --- amc.FCtype.zd_inst.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FField& amc::zd_inst_qLast(amc::FCtype& ctype) {
+inline amc::FField& amc::zd_inst_qLast(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_inst_tail;
+    row = parent.zd_inst_tail;
     return *row;
 }
 
 // --- amc.FCtype.zs_xref.EmptyQ
 // Return true if index is empty
-inline bool amc::zs_xref_EmptyQ(amc::FCtype& ctype) {
-    return ctype.zs_xref_head == NULL;
+inline bool amc::zs_xref_EmptyQ(amc::FCtype& parent) {
+    return parent.zs_xref_head == NULL;
 }
 
 // --- amc.FCtype.zs_xref.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FXref* amc::zs_xref_First(amc::FCtype& ctype) {
+inline amc::FXref* amc::zs_xref_First(amc::FCtype& parent) {
     amc::FXref *row = NULL;
-    row = ctype.zs_xref_head;
+    row = parent.zs_xref_head;
     return row;
 }
 
@@ -1213,16 +1213,16 @@ inline bool amc::ctype_zs_xref_InLlistQ(amc::FXref& row) {
 
 // --- amc.FCtype.zs_xref.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FXref* amc::zs_xref_Last(amc::FCtype& ctype) {
+inline amc::FXref* amc::zs_xref_Last(amc::FCtype& parent) {
     amc::FXref *row = NULL;
-    row = ctype.zs_xref_tail;
+    row = parent.zs_xref_tail;
     return row;
 }
 
 // --- amc.FCtype.zs_xref.N
 // Return number of items in the linked list
-inline i32 amc::zs_xref_N(const amc::FCtype& ctype) {
-    return ctype.zs_xref_n;
+inline i32 amc::zs_xref_N(const amc::FCtype& parent) {
+    return parent.zs_xref_n;
 }
 
 // --- amc.FCtype.zs_xref.Next
@@ -1233,151 +1233,151 @@ inline amc::FXref* amc::ctype_zs_xref_Next(amc::FXref &row) {
 
 // --- amc.FCtype.zs_xref.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FXref& amc::zs_xref_qLast(amc::FCtype& ctype) {
+inline amc::FXref& amc::zs_xref_qLast(amc::FCtype& parent) {
     amc::FXref *row = NULL;
-    row = ctype.zs_xref_tail;
+    row = parent.zs_xref_tail;
     return *row;
 }
 
 // --- amc.FCtype.c_chash.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_chash_InsertMaybe(amc::FCtype& ctype, amc::FChash& row) {
-    amc::FChash* ptr = ctype.c_chash;
+inline bool amc::c_chash_InsertMaybe(amc::FCtype& parent, amc::FChash& row) {
+    amc::FChash* ptr = parent.c_chash;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_chash = &row;
+        parent.c_chash = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_chash.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_chash_Remove(amc::FCtype& ctype, amc::FChash& row) {
-    amc::FChash *ptr = ctype.c_chash;
+inline void amc::c_chash_Remove(amc::FCtype& parent, amc::FChash& row) {
+    amc::FChash *ptr = parent.c_chash;
     if (LIKELY(ptr == &row)) {
-        ctype.c_chash = NULL;
+        parent.c_chash = NULL;
     }
 }
 
 // --- amc.FCtype.c_ccmp.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ccmp_InsertMaybe(amc::FCtype& ctype, amc::FCcmp& row) {
-    amc::FCcmp* ptr = ctype.c_ccmp;
+inline bool amc::c_ccmp_InsertMaybe(amc::FCtype& parent, amc::FCcmp& row) {
+    amc::FCcmp* ptr = parent.c_ccmp;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_ccmp = &row;
+        parent.c_ccmp = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_ccmp.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ccmp_Remove(amc::FCtype& ctype, amc::FCcmp& row) {
-    amc::FCcmp *ptr = ctype.c_ccmp;
+inline void amc::c_ccmp_Remove(amc::FCtype& parent, amc::FCcmp& row) {
+    amc::FCcmp *ptr = parent.c_ccmp;
     if (LIKELY(ptr == &row)) {
-        ctype.c_ccmp = NULL;
+        parent.c_ccmp = NULL;
     }
 }
 
 // --- amc.FCtype.c_cstr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cstr_InsertMaybe(amc::FCtype& ctype, amc::FCstr& row) {
-    amc::FCstr* ptr = ctype.c_cstr;
+inline bool amc::c_cstr_InsertMaybe(amc::FCtype& parent, amc::FCstr& row) {
+    amc::FCstr* ptr = parent.c_cstr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cstr = &row;
+        parent.c_cstr = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_cstr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cstr_Remove(amc::FCtype& ctype, amc::FCstr& row) {
-    amc::FCstr *ptr = ctype.c_cstr;
+inline void amc::c_cstr_Remove(amc::FCtype& parent, amc::FCstr& row) {
+    amc::FCstr *ptr = parent.c_cstr;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cstr = NULL;
+        parent.c_cstr = NULL;
     }
 }
 
 // --- amc.FCtype.c_cextern.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cextern_InsertMaybe(amc::FCtype& ctype, amc::FCextern& row) {
-    amc::FCextern* ptr = ctype.c_cextern;
+inline bool amc::c_cextern_InsertMaybe(amc::FCtype& parent, amc::FCextern& row) {
+    amc::FCextern* ptr = parent.c_cextern;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cextern = &row;
+        parent.c_cextern = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_cextern.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cextern_Remove(amc::FCtype& ctype, amc::FCextern& row) {
-    amc::FCextern *ptr = ctype.c_cextern;
+inline void amc::c_cextern_Remove(amc::FCtype& parent, amc::FCextern& row) {
+    amc::FCextern *ptr = parent.c_cextern;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cextern = NULL;
+        parent.c_cextern = NULL;
     }
 }
 
 // --- amc.FCtype.c_ffunc.EmptyQ
 // Return true if index is empty
-inline bool amc::c_ffunc_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_ffunc_n == 0;
+inline bool amc::c_ffunc_EmptyQ(amc::FCtype& parent) {
+    return parent.c_ffunc_n == 0;
 }
 
 // --- amc.FCtype.c_ffunc.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFunc* amc::c_ffunc_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FFunc* amc::c_ffunc_Find(amc::FCtype& parent, u64 t) {
     amc::FFunc *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_ffunc_n;
+    u64 lim = parent.c_ffunc_n;
     if (idx < lim) {
-        retval = ctype.c_ffunc_elems[idx];
+        retval = parent.c_ffunc_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_ffunc.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFunc*> amc::c_ffunc_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FFunc*>(ctype.c_ffunc_elems, ctype.c_ffunc_n);
+inline algo::aryptr<amc::FFunc*> amc::c_ffunc_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FFunc*>(parent.c_ffunc_elems, parent.c_ffunc_n);
 }
 
 // --- amc.FCtype.c_ffunc.N
 // Return number of items in the pointer array
-inline i64 amc::c_ffunc_N(const amc::FCtype& ctype) {
-    return ctype.c_ffunc_n;
+inline i64 amc::c_ffunc_N(const amc::FCtype& parent) {
+    return parent.c_ffunc_n;
 }
 
 // --- amc.FCtype.c_ffunc.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_ffunc_RemoveAll(amc::FCtype& ctype) {
-    ctype.c_ffunc_n = 0;
+inline void amc::c_ffunc_RemoveAll(amc::FCtype& parent) {
+    parent.c_ffunc_n = 0;
 }
 
 // --- amc.FCtype.c_ffunc.qFind
 // Return reference without bounds checking
-inline amc::FFunc& amc::c_ffunc_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_ffunc_elems[idx];
+inline amc::FFunc& amc::c_ffunc_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_ffunc_elems[idx];
 }
 
 // --- amc.FCtype.c_ffunc.qLast
 // Reference to last element without bounds checking
-inline amc::FFunc& amc::c_ffunc_qLast(amc::FCtype& ctype) {
-    return *ctype.c_ffunc_elems[ctype.c_ffunc_n-1];
+inline amc::FFunc& amc::c_ffunc_qLast(amc::FCtype& parent) {
+    return *parent.c_ffunc_elems[parent.c_ffunc_n-1];
 }
 
 // --- amc.FCtype.zd_cafter.EmptyQ
 // Return true if index is empty
-inline bool amc::zd_cafter_EmptyQ(amc::FCtype& ctype) {
-    return ctype.zd_cafter_head == NULL;
+inline bool amc::zd_cafter_EmptyQ(amc::FCtype& parent) {
+    return parent.zd_cafter_head == NULL;
 }
 
 // --- amc.FCtype.zd_cafter.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FCafter* amc::zd_cafter_First(amc::FCtype& ctype) {
+inline amc::FCafter* amc::zd_cafter_First(amc::FCtype& parent) {
     amc::FCafter *row = NULL;
-    row = ctype.zd_cafter_head;
+    row = parent.zd_cafter_head;
     return row;
 }
 
@@ -1391,16 +1391,16 @@ inline bool amc::ctype_zd_cafter_InLlistQ(amc::FCafter& row) {
 
 // --- amc.FCtype.zd_cafter.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FCafter* amc::zd_cafter_Last(amc::FCtype& ctype) {
+inline amc::FCafter* amc::zd_cafter_Last(amc::FCtype& parent) {
     amc::FCafter *row = NULL;
-    row = ctype.zd_cafter_tail;
+    row = parent.zd_cafter_tail;
     return row;
 }
 
 // --- amc.FCtype.zd_cafter.N
 // Return number of items in the linked list
-inline i32 amc::zd_cafter_N(const amc::FCtype& ctype) {
-    return ctype.zd_cafter_n;
+inline i32 amc::zd_cafter_N(const amc::FCtype& parent) {
+    return parent.zd_cafter_n;
 }
 
 // --- amc.FCtype.zd_cafter.Next
@@ -1417,43 +1417,43 @@ inline amc::FCafter* amc::ctype_zd_cafter_Prev(amc::FCafter &row) {
 
 // --- amc.FCtype.zd_cafter.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FCafter& amc::zd_cafter_qLast(amc::FCtype& ctype) {
+inline amc::FCafter& amc::zd_cafter_qLast(amc::FCtype& parent) {
     amc::FCafter *row = NULL;
-    row = ctype.zd_cafter_tail;
+    row = parent.zd_cafter_tail;
     return *row;
 }
 
 // --- amc.FCtype.c_csize.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_csize_InsertMaybe(amc::FCtype& ctype, amc::FCsize& row) {
-    amc::FCsize* ptr = ctype.c_csize;
+inline bool amc::c_csize_InsertMaybe(amc::FCtype& parent, amc::FCsize& row) {
+    amc::FCsize* ptr = parent.c_csize;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_csize = &row;
+        parent.c_csize = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_csize.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_csize_Remove(amc::FCtype& ctype, amc::FCsize& row) {
-    amc::FCsize *ptr = ctype.c_csize;
+inline void amc::c_csize_Remove(amc::FCtype& parent, amc::FCsize& row) {
+    amc::FCsize *ptr = parent.c_csize;
     if (LIKELY(ptr == &row)) {
-        ctype.c_csize = NULL;
+        parent.c_csize = NULL;
     }
 }
 
 // --- amc.FCtype.zd_access.EmptyQ
 // Return true if index is empty
-inline bool amc::zd_access_EmptyQ(amc::FCtype& ctype) {
-    return ctype.zd_access_head == NULL;
+inline bool amc::zd_access_EmptyQ(amc::FCtype& parent) {
+    return parent.zd_access_head == NULL;
 }
 
 // --- amc.FCtype.zd_access.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FField* amc::zd_access_First(amc::FCtype& ctype) {
+inline amc::FField* amc::zd_access_First(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_access_head;
+    row = parent.zd_access_head;
     return row;
 }
 
@@ -1467,16 +1467,16 @@ inline bool amc::ctype_zd_access_InLlistQ(amc::FField& row) {
 
 // --- amc.FCtype.zd_access.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FField* amc::zd_access_Last(amc::FCtype& ctype) {
+inline amc::FField* amc::zd_access_Last(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_access_tail;
+    row = parent.zd_access_tail;
     return row;
 }
 
 // --- amc.FCtype.zd_access.N
 // Return number of items in the linked list
-inline i32 amc::zd_access_N(const amc::FCtype& ctype) {
-    return ctype.zd_access_n;
+inline i32 amc::zd_access_N(const amc::FCtype& parent) {
+    return parent.zd_access_n;
 }
 
 // --- amc.FCtype.zd_access.Next
@@ -1493,96 +1493,96 @@ inline amc::FField* amc::ctype_zd_access_Prev(amc::FField &row) {
 
 // --- amc.FCtype.zd_access.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FField& amc::zd_access_qLast(amc::FCtype& ctype) {
+inline amc::FField& amc::zd_access_qLast(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_access_tail;
+    row = parent.zd_access_tail;
     return *row;
 }
 
 // --- amc.FCtype.c_cdflt.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cdflt_InsertMaybe(amc::FCtype& ctype, amc::FCdflt& row) {
-    amc::FCdflt* ptr = ctype.c_cdflt;
+inline bool amc::c_cdflt_InsertMaybe(amc::FCtype& parent, amc::FCdflt& row) {
+    amc::FCdflt* ptr = parent.c_cdflt;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cdflt = &row;
+        parent.c_cdflt = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_cdflt.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cdflt_Remove(amc::FCtype& ctype, amc::FCdflt& row) {
-    amc::FCdflt *ptr = ctype.c_cdflt;
+inline void amc::c_cdflt_Remove(amc::FCtype& parent, amc::FCdflt& row) {
+    amc::FCdflt *ptr = parent.c_cdflt;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cdflt = NULL;
+        parent.c_cdflt = NULL;
     }
 }
 
 // --- amc.FCtype.c_argvtype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_argvtype_InsertMaybe(amc::FCtype& ctype, amc::FArgvtype& row) {
-    amc::FArgvtype* ptr = ctype.c_argvtype;
+inline bool amc::c_argvtype_InsertMaybe(amc::FCtype& parent, amc::FArgvtype& row) {
+    amc::FArgvtype* ptr = parent.c_argvtype;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_argvtype = &row;
+        parent.c_argvtype = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_argvtype.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_argvtype_Remove(amc::FCtype& ctype, amc::FArgvtype& row) {
-    amc::FArgvtype *ptr = ctype.c_argvtype;
+inline void amc::c_argvtype_Remove(amc::FCtype& parent, amc::FArgvtype& row) {
+    amc::FArgvtype *ptr = parent.c_argvtype;
     if (LIKELY(ptr == &row)) {
-        ctype.c_argvtype = NULL;
+        parent.c_argvtype = NULL;
     }
 }
 
 // --- amc.FCtype.c_floadtuples.EmptyQ
 // Return true if index is empty
-inline bool amc::c_floadtuples_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_floadtuples_n == 0;
+inline bool amc::c_floadtuples_EmptyQ(amc::FCtype& parent) {
+    return parent.c_floadtuples_n == 0;
 }
 
 // --- amc.FCtype.c_floadtuples.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFloadtuples* amc::c_floadtuples_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FFloadtuples* amc::c_floadtuples_Find(amc::FCtype& parent, u64 t) {
     amc::FFloadtuples *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_floadtuples_n;
+    u64 lim = parent.c_floadtuples_n;
     if (idx < lim) {
-        retval = ctype.c_floadtuples_elems[idx];
+        retval = parent.c_floadtuples_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_floadtuples.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFloadtuples*> amc::c_floadtuples_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FFloadtuples*>(ctype.c_floadtuples_elems, ctype.c_floadtuples_n);
+inline algo::aryptr<amc::FFloadtuples*> amc::c_floadtuples_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FFloadtuples*>(parent.c_floadtuples_elems, parent.c_floadtuples_n);
 }
 
 // --- amc.FCtype.c_floadtuples.N
 // Return number of items in the pointer array
-inline i64 amc::c_floadtuples_N(const amc::FCtype& ctype) {
-    return ctype.c_floadtuples_n;
+inline i64 amc::c_floadtuples_N(const amc::FCtype& parent) {
+    return parent.c_floadtuples_n;
 }
 
 // --- amc.FCtype.c_floadtuples.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_floadtuples_RemoveAll(amc::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_floadtuples_n; i++) {
+inline void amc::c_floadtuples_RemoveAll(amc::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_floadtuples_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_floadtuples_elems[i]->ctype_c_floadtuples_in_ary = false;
+        parent.c_floadtuples_elems[i]->ctype_c_floadtuples_in_ary = false;
     }
-    ctype.c_floadtuples_n = 0;
+    parent.c_floadtuples_n = 0;
 }
 
 // --- amc.FCtype.c_floadtuples.qFind
 // Return reference without bounds checking
-inline amc::FFloadtuples& amc::c_floadtuples_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_floadtuples_elems[idx];
+inline amc::FFloadtuples& amc::c_floadtuples_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_floadtuples_elems[idx];
 }
 
 // --- amc.FCtype.c_floadtuples.InAryQ
@@ -1593,54 +1593,54 @@ inline bool amc::ctype_c_floadtuples_InAryQ(amc::FFloadtuples& row) {
 
 // --- amc.FCtype.c_floadtuples.qLast
 // Reference to last element without bounds checking
-inline amc::FFloadtuples& amc::c_floadtuples_qLast(amc::FCtype& ctype) {
-    return *ctype.c_floadtuples_elems[ctype.c_floadtuples_n-1];
+inline amc::FFloadtuples& amc::c_floadtuples_qLast(amc::FCtype& parent) {
+    return *parent.c_floadtuples_elems[parent.c_floadtuples_n-1];
 }
 
 // --- amc.FCtype.c_fcurs.EmptyQ
 // Return true if index is empty
-inline bool amc::c_fcurs_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_fcurs_n == 0;
+inline bool amc::c_fcurs_EmptyQ(amc::FCtype& parent) {
+    return parent.c_fcurs_n == 0;
 }
 
 // --- amc.FCtype.c_fcurs.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFcurs* amc::c_fcurs_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FFcurs* amc::c_fcurs_Find(amc::FCtype& parent, u64 t) {
     amc::FFcurs *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_fcurs_n;
+    u64 lim = parent.c_fcurs_n;
     if (idx < lim) {
-        retval = ctype.c_fcurs_elems[idx];
+        retval = parent.c_fcurs_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_fcurs.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFcurs*> amc::c_fcurs_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FFcurs*>(ctype.c_fcurs_elems, ctype.c_fcurs_n);
+inline algo::aryptr<amc::FFcurs*> amc::c_fcurs_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FFcurs*>(parent.c_fcurs_elems, parent.c_fcurs_n);
 }
 
 // --- amc.FCtype.c_fcurs.N
 // Return number of items in the pointer array
-inline i64 amc::c_fcurs_N(const amc::FCtype& ctype) {
-    return ctype.c_fcurs_n;
+inline i64 amc::c_fcurs_N(const amc::FCtype& parent) {
+    return parent.c_fcurs_n;
 }
 
 // --- amc.FCtype.c_fcurs.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_fcurs_RemoveAll(amc::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_fcurs_n; i++) {
+inline void amc::c_fcurs_RemoveAll(amc::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_fcurs_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_fcurs_elems[i]->ctype_c_fcurs_in_ary = false;
+        parent.c_fcurs_elems[i]->ctype_c_fcurs_in_ary = false;
     }
-    ctype.c_fcurs_n = 0;
+    parent.c_fcurs_n = 0;
 }
 
 // --- amc.FCtype.c_fcurs.qFind
 // Return reference without bounds checking
-inline amc::FFcurs& amc::c_fcurs_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_fcurs_elems[idx];
+inline amc::FFcurs& amc::c_fcurs_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_fcurs_elems[idx];
 }
 
 // --- amc.FCtype.c_fcurs.InAryQ
@@ -1651,114 +1651,114 @@ inline bool amc::ctype_c_fcurs_InAryQ(amc::FFcurs& row) {
 
 // --- amc.FCtype.c_fcurs.qLast
 // Reference to last element without bounds checking
-inline amc::FFcurs& amc::c_fcurs_qLast(amc::FCtype& ctype) {
-    return *ctype.c_fcurs_elems[ctype.c_fcurs_n-1];
+inline amc::FFcurs& amc::c_fcurs_qLast(amc::FCtype& parent) {
+    return *parent.c_fcurs_elems[parent.c_fcurs_n-1];
 }
 
 // --- amc.FCtype.c_ctypelen.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ctypelen_InsertMaybe(amc::FCtype& ctype, amc::FCtypelen& row) {
-    amc::FCtypelen* ptr = ctype.c_ctypelen;
+inline bool amc::c_ctypelen_InsertMaybe(amc::FCtype& parent, amc::FCtypelen& row) {
+    amc::FCtypelen* ptr = parent.c_ctypelen;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_ctypelen = &row;
+        parent.c_ctypelen = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_ctypelen.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ctypelen_Remove(amc::FCtype& ctype, amc::FCtypelen& row) {
-    amc::FCtypelen *ptr = ctype.c_ctypelen;
+inline void amc::c_ctypelen_Remove(amc::FCtype& parent, amc::FCtypelen& row) {
+    amc::FCtypelen *ptr = parent.c_ctypelen;
     if (LIKELY(ptr == &row)) {
-        ctype.c_ctypelen = NULL;
+        parent.c_ctypelen = NULL;
     }
 }
 
 // --- amc.FCtype.c_nossimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_nossimfile_InsertMaybe(amc::FCtype& ctype, amc::FNossimfile& row) {
-    amc::FNossimfile* ptr = ctype.c_nossimfile;
+inline bool amc::c_nossimfile_InsertMaybe(amc::FCtype& parent, amc::FNossimfile& row) {
+    amc::FNossimfile* ptr = parent.c_nossimfile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_nossimfile = &row;
+        parent.c_nossimfile = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_nossimfile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_nossimfile_Remove(amc::FCtype& ctype, amc::FNossimfile& row) {
-    amc::FNossimfile *ptr = ctype.c_nossimfile;
+inline void amc::c_nossimfile_Remove(amc::FCtype& parent, amc::FNossimfile& row) {
+    amc::FNossimfile *ptr = parent.c_nossimfile;
     if (LIKELY(ptr == &row)) {
-        ctype.c_nossimfile = NULL;
+        parent.c_nossimfile = NULL;
     }
 }
 
 // --- amc.FCtype.c_cfast.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cfast_InsertMaybe(amc::FCtype& ctype, amc::FCfast& row) {
-    amc::FCfast* ptr = ctype.c_cfast;
+inline bool amc::c_cfast_InsertMaybe(amc::FCtype& parent, amc::FCfast& row) {
+    amc::FCfast* ptr = parent.c_cfast;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cfast = &row;
+        parent.c_cfast = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_cfast.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cfast_Remove(amc::FCtype& ctype, amc::FCfast& row) {
-    amc::FCfast *ptr = ctype.c_cfast;
+inline void amc::c_cfast_Remove(amc::FCtype& parent, amc::FCfast& row) {
+    amc::FCfast *ptr = parent.c_cfast;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cfast = NULL;
+        parent.c_cfast = NULL;
     }
 }
 
 // --- amc.FCtype.c_ffast.EmptyQ
 // Return true if index is empty
-inline bool amc::c_ffast_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_ffast_n == 0;
+inline bool amc::c_ffast_EmptyQ(amc::FCtype& parent) {
+    return parent.c_ffast_n == 0;
 }
 
 // --- amc.FCtype.c_ffast.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFfast* amc::c_ffast_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FFfast* amc::c_ffast_Find(amc::FCtype& parent, u64 t) {
     amc::FFfast *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_ffast_n;
+    u64 lim = parent.c_ffast_n;
     if (idx < lim) {
-        retval = ctype.c_ffast_elems[idx];
+        retval = parent.c_ffast_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_ffast.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFfast*> amc::c_ffast_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FFfast*>(ctype.c_ffast_elems, ctype.c_ffast_n);
+inline algo::aryptr<amc::FFfast*> amc::c_ffast_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FFfast*>(parent.c_ffast_elems, parent.c_ffast_n);
 }
 
 // --- amc.FCtype.c_ffast.N
 // Return number of items in the pointer array
-inline i64 amc::c_ffast_N(const amc::FCtype& ctype) {
-    return ctype.c_ffast_n;
+inline i64 amc::c_ffast_N(const amc::FCtype& parent) {
+    return parent.c_ffast_n;
 }
 
 // --- amc.FCtype.c_ffast.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_ffast_RemoveAll(amc::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_ffast_n; i++) {
+inline void amc::c_ffast_RemoveAll(amc::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_ffast_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_ffast_elems[i]->ctype_c_ffast_in_ary = false;
+        parent.c_ffast_elems[i]->ctype_c_ffast_in_ary = false;
     }
-    ctype.c_ffast_n = 0;
+    parent.c_ffast_n = 0;
 }
 
 // --- amc.FCtype.c_ffast.qFind
 // Return reference without bounds checking
-inline amc::FFfast& amc::c_ffast_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_ffast_elems[idx];
+inline amc::FFfast& amc::c_ffast_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_ffast_elems[idx];
 }
 
 // --- amc.FCtype.c_ffast.InAryQ
@@ -1769,21 +1769,21 @@ inline bool amc::ctype_c_ffast_InAryQ(amc::FFfast& row) {
 
 // --- amc.FCtype.c_ffast.qLast
 // Reference to last element without bounds checking
-inline amc::FFfast& amc::c_ffast_qLast(amc::FCtype& ctype) {
-    return *ctype.c_ffast_elems[ctype.c_ffast_n-1];
+inline amc::FFfast& amc::c_ffast_qLast(amc::FCtype& parent) {
+    return *parent.c_ffast_elems[parent.c_ffast_n-1];
 }
 
 // --- amc.FCtype.zd_varlenfld.EmptyQ
 // Return true if index is empty
-inline bool amc::zd_varlenfld_EmptyQ(amc::FCtype& ctype) {
-    return ctype.zd_varlenfld_head == NULL;
+inline bool amc::zd_varlenfld_EmptyQ(amc::FCtype& parent) {
+    return parent.zd_varlenfld_head == NULL;
 }
 
 // --- amc.FCtype.zd_varlenfld.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FField* amc::zd_varlenfld_First(amc::FCtype& ctype) {
+inline amc::FField* amc::zd_varlenfld_First(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_varlenfld_head;
+    row = parent.zd_varlenfld_head;
     return row;
 }
 
@@ -1797,16 +1797,16 @@ inline bool amc::ctype_zd_varlenfld_InLlistQ(amc::FField& row) {
 
 // --- amc.FCtype.zd_varlenfld.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FField* amc::zd_varlenfld_Last(amc::FCtype& ctype) {
+inline amc::FField* amc::zd_varlenfld_Last(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_varlenfld_tail;
+    row = parent.zd_varlenfld_tail;
     return row;
 }
 
 // --- amc.FCtype.zd_varlenfld.N
 // Return number of items in the linked list
-inline i32 amc::zd_varlenfld_N(const amc::FCtype& ctype) {
-    return ctype.zd_varlenfld_n;
+inline i32 amc::zd_varlenfld_N(const amc::FCtype& parent) {
+    return parent.zd_varlenfld_n;
 }
 
 // --- amc.FCtype.zd_varlenfld.Next
@@ -1823,176 +1823,176 @@ inline amc::FField* amc::ctype_zd_varlenfld_Prev(amc::FField &row) {
 
 // --- amc.FCtype.zd_varlenfld.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FField& amc::zd_varlenfld_qLast(amc::FCtype& ctype) {
+inline amc::FField& amc::zd_varlenfld_qLast(amc::FCtype& parent) {
     amc::FField *row = NULL;
-    row = ctype.zd_varlenfld_tail;
+    row = parent.zd_varlenfld_tail;
     return *row;
 }
 
 // --- amc.FCtype.c_jstype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_jstype_InsertMaybe(amc::FCtype& ctype, amc::FJstype& row) {
-    amc::FJstype* ptr = ctype.c_jstype;
+inline bool amc::c_jstype_InsertMaybe(amc::FCtype& parent, amc::FJstype& row) {
+    amc::FJstype* ptr = parent.c_jstype;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_jstype = &row;
+        parent.c_jstype = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_jstype.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_jstype_Remove(amc::FCtype& ctype, amc::FJstype& row) {
-    amc::FJstype *ptr = ctype.c_jstype;
+inline void amc::c_jstype_Remove(amc::FCtype& parent, amc::FJstype& row) {
+    amc::FJstype *ptr = parent.c_jstype;
     if (LIKELY(ptr == &row)) {
-        ctype.c_jstype = NULL;
+        parent.c_jstype = NULL;
     }
 }
 
 // --- amc.FCtype.c_ckafka.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ckafka_InsertMaybe(amc::FCtype& ctype, amc::FCkafka& row) {
-    amc::FCkafka* ptr = ctype.c_ckafka;
+inline bool amc::c_ckafka_InsertMaybe(amc::FCtype& parent, amc::FCkafka& row) {
+    amc::FCkafka* ptr = parent.c_ckafka;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_ckafka = &row;
+        parent.c_ckafka = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_ckafka.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ckafka_Remove(amc::FCtype& ctype, amc::FCkafka& row) {
-    amc::FCkafka *ptr = ctype.c_ckafka;
+inline void amc::c_ckafka_Remove(amc::FCtype& parent, amc::FCkafka& row) {
+    amc::FCkafka *ptr = parent.c_ckafka;
     if (LIKELY(ptr == &row)) {
-        ctype.c_ckafka = NULL;
+        parent.c_ckafka = NULL;
     }
 }
 
 // --- amc.FCtype.c_cjsbltin.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cjsbltin_InsertMaybe(amc::FCtype& ctype, amc::FCjsbltin& row) {
-    amc::FCjsbltin* ptr = ctype.c_cjsbltin;
+inline bool amc::c_cjsbltin_InsertMaybe(amc::FCtype& parent, amc::FCjsbltin& row) {
+    amc::FCjsbltin* ptr = parent.c_cjsbltin;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cjsbltin = &row;
+        parent.c_cjsbltin = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_cjsbltin.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cjsbltin_Remove(amc::FCtype& ctype, amc::FCjsbltin& row) {
-    amc::FCjsbltin *ptr = ctype.c_cjsbltin;
+inline void amc::c_cjsbltin_Remove(amc::FCtype& parent, amc::FCjsbltin& row) {
+    amc::FCjsbltin *ptr = parent.c_cjsbltin;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cjsbltin = NULL;
+        parent.c_cjsbltin = NULL;
     }
 }
 
 // --- amc.FCtype.c_cjson.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cjson_InsertMaybe(amc::FCtype& ctype, amc::FCjson& row) {
-    amc::FCjson* ptr = ctype.c_cjson;
+inline bool amc::c_cjson_InsertMaybe(amc::FCtype& parent, amc::FCjson& row) {
+    amc::FCjson* ptr = parent.c_cjson;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cjson = &row;
+        parent.c_cjson = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_cjson.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cjson_Remove(amc::FCtype& ctype, amc::FCjson& row) {
-    amc::FCjson *ptr = ctype.c_cjson;
+inline void amc::c_cjson_Remove(amc::FCtype& parent, amc::FCjson& row) {
+    amc::FCjson *ptr = parent.c_cjson;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cjson = NULL;
+        parent.c_cjson = NULL;
     }
 }
 
 // --- amc.FCtype.c_ccmdline.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ccmdline_InsertMaybe(amc::FCtype& ctype, amc::FCcmdline& row) {
-    amc::FCcmdline* ptr = ctype.c_ccmdline;
+inline bool amc::c_ccmdline_InsertMaybe(amc::FCtype& parent, amc::FCcmdline& row) {
+    amc::FCcmdline* ptr = parent.c_ccmdline;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_ccmdline = &row;
+        parent.c_ccmdline = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_ccmdline.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ccmdline_Remove(amc::FCtype& ctype, amc::FCcmdline& row) {
-    amc::FCcmdline *ptr = ctype.c_ccmdline;
+inline void amc::c_ccmdline_Remove(amc::FCtype& parent, amc::FCcmdline& row) {
+    amc::FCcmdline *ptr = parent.c_ccmdline;
     if (LIKELY(ptr == &row)) {
-        ctype.c_ccmdline = NULL;
+        parent.c_ccmdline = NULL;
     }
 }
 
 // --- amc.FCtype.c_cpbuf.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cpbuf_InsertMaybe(amc::FCtype& ctype, amc::FCpbuf& row) {
-    amc::FCpbuf* ptr = ctype.c_cpbuf;
+inline bool amc::c_cpbuf_InsertMaybe(amc::FCtype& parent, amc::FCpbuf& row) {
+    amc::FCpbuf* ptr = parent.c_cpbuf;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_cpbuf = &row;
+        parent.c_cpbuf = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_cpbuf.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cpbuf_Remove(amc::FCtype& ctype, amc::FCpbuf& row) {
-    amc::FCpbuf *ptr = ctype.c_cpbuf;
+inline void amc::c_cpbuf_Remove(amc::FCtype& parent, amc::FCpbuf& row) {
+    amc::FCpbuf *ptr = parent.c_cpbuf;
     if (LIKELY(ptr == &row)) {
-        ctype.c_cpbuf = NULL;
+        parent.c_cpbuf = NULL;
     }
 }
 
 // --- amc.FCtype.c_fpbufcase.EmptyQ
 // Return true if index is empty
-inline bool amc::c_fpbufcase_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_fpbufcase_n == 0;
+inline bool amc::c_fpbufcase_EmptyQ(amc::FCtype& parent) {
+    return parent.c_fpbufcase_n == 0;
 }
 
 // --- amc.FCtype.c_fpbufcase.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFpbufcase* amc::c_fpbufcase_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FFpbufcase* amc::c_fpbufcase_Find(amc::FCtype& parent, u64 t) {
     amc::FFpbufcase *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_fpbufcase_n;
+    u64 lim = parent.c_fpbufcase_n;
     if (idx < lim) {
-        retval = ctype.c_fpbufcase_elems[idx];
+        retval = parent.c_fpbufcase_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_fpbufcase.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFpbufcase*> amc::c_fpbufcase_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FFpbufcase*>(ctype.c_fpbufcase_elems, ctype.c_fpbufcase_n);
+inline algo::aryptr<amc::FFpbufcase*> amc::c_fpbufcase_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FFpbufcase*>(parent.c_fpbufcase_elems, parent.c_fpbufcase_n);
 }
 
 // --- amc.FCtype.c_fpbufcase.N
 // Return number of items in the pointer array
-inline i64 amc::c_fpbufcase_N(const amc::FCtype& ctype) {
-    return ctype.c_fpbufcase_n;
+inline i64 amc::c_fpbufcase_N(const amc::FCtype& parent) {
+    return parent.c_fpbufcase_n;
 }
 
 // --- amc.FCtype.c_fpbufcase.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_fpbufcase_RemoveAll(amc::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_fpbufcase_n; i++) {
+inline void amc::c_fpbufcase_RemoveAll(amc::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_fpbufcase_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_fpbufcase_elems[i]->ctype_c_fpbufcase_in_ary = false;
+        parent.c_fpbufcase_elems[i]->ctype_c_fpbufcase_in_ary = false;
     }
-    ctype.c_fpbufcase_n = 0;
+    parent.c_fpbufcase_n = 0;
 }
 
 // --- amc.FCtype.c_fpbufcase.qFind
 // Return reference without bounds checking
-inline amc::FFpbufcase& amc::c_fpbufcase_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_fpbufcase_elems[idx];
+inline amc::FFpbufcase& amc::c_fpbufcase_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_fpbufcase_elems[idx];
 }
 
 // --- amc.FCtype.c_fpbufcase.InAryQ
@@ -2003,94 +2003,94 @@ inline bool amc::ctype_c_fpbufcase_InAryQ(amc::FFpbufcase& row) {
 
 // --- amc.FCtype.c_fpbufcase.qLast
 // Reference to last element without bounds checking
-inline amc::FFpbufcase& amc::c_fpbufcase_qLast(amc::FCtype& ctype) {
-    return *ctype.c_fpbufcase_elems[ctype.c_fpbufcase_n-1];
+inline amc::FFpbufcase& amc::c_fpbufcase_qLast(amc::FCtype& parent) {
+    return *parent.c_fpbufcase_elems[parent.c_fpbufcase_n-1];
 }
 
 // --- amc.FCtype.c_payloadhdr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_payloadhdr_InsertMaybe(amc::FCtype& ctype, amc::FPayloadhdr& row) {
-    amc::FPayloadhdr* ptr = ctype.c_payloadhdr;
+inline bool amc::c_payloadhdr_InsertMaybe(amc::FCtype& parent, amc::FPayloadhdr& row) {
+    amc::FPayloadhdr* ptr = parent.c_payloadhdr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_payloadhdr = &row;
+        parent.c_payloadhdr = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_payloadhdr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_payloadhdr_Remove(amc::FCtype& ctype, amc::FPayloadhdr& row) {
-    amc::FPayloadhdr *ptr = ctype.c_payloadhdr;
+inline void amc::c_payloadhdr_Remove(amc::FCtype& parent, amc::FPayloadhdr& row) {
+    amc::FPayloadhdr *ptr = parent.c_payloadhdr;
     if (LIKELY(ptr == &row)) {
-        ctype.c_payloadhdr = NULL;
+        parent.c_payloadhdr = NULL;
     }
 }
 
 // --- amc.FCtype.c_msg.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_msg_InsertMaybe(amc::FCtype& ctype, amc::FMsg& row) {
-    amc::FMsg* ptr = ctype.c_msg;
+inline bool amc::c_msg_InsertMaybe(amc::FCtype& parent, amc::FMsg& row) {
+    amc::FMsg* ptr = parent.c_msg;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_msg = &row;
+        parent.c_msg = &row;
     }
     return retval;
 }
 
 // --- amc.FCtype.c_msg.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_msg_Remove(amc::FCtype& ctype, amc::FMsg& row) {
-    amc::FMsg *ptr = ctype.c_msg;
+inline void amc::c_msg_Remove(amc::FCtype& parent, amc::FMsg& row) {
+    amc::FMsg *ptr = parent.c_msg;
     if (LIKELY(ptr == &row)) {
-        ctype.c_msg = NULL;
+        parent.c_msg = NULL;
     }
 }
 
 // --- amc.FCtype.c_pnew.EmptyQ
 // Return true if index is empty
-inline bool amc::c_pnew_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_pnew_n == 0;
+inline bool amc::c_pnew_EmptyQ(amc::FCtype& parent) {
+    return parent.c_pnew_n == 0;
 }
 
 // --- amc.FCtype.c_pnew.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FPnew* amc::c_pnew_Find(amc::FCtype& ctype, u64 t) {
+inline amc::FPnew* amc::c_pnew_Find(amc::FCtype& parent, u64 t) {
     amc::FPnew *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_pnew_n;
+    u64 lim = parent.c_pnew_n;
     if (idx < lim) {
-        retval = ctype.c_pnew_elems[idx];
+        retval = parent.c_pnew_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FCtype.c_pnew.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FPnew*> amc::c_pnew_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FPnew*>(ctype.c_pnew_elems, ctype.c_pnew_n);
+inline algo::aryptr<amc::FPnew*> amc::c_pnew_Getary(amc::FCtype& parent) {
+    return algo::aryptr<amc::FPnew*>(parent.c_pnew_elems, parent.c_pnew_n);
 }
 
 // --- amc.FCtype.c_pnew.N
 // Return number of items in the pointer array
-inline i64 amc::c_pnew_N(const amc::FCtype& ctype) {
-    return ctype.c_pnew_n;
+inline i64 amc::c_pnew_N(const amc::FCtype& parent) {
+    return parent.c_pnew_n;
 }
 
 // --- amc.FCtype.c_pnew.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_pnew_RemoveAll(amc::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_pnew_n; i++) {
+inline void amc::c_pnew_RemoveAll(amc::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_pnew_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_pnew_elems[i]->ctype_c_pnew_in_ary = false;
+        parent.c_pnew_elems[i]->ctype_c_pnew_in_ary = false;
     }
-    ctype.c_pnew_n = 0;
+    parent.c_pnew_n = 0;
 }
 
 // --- amc.FCtype.c_pnew.qFind
 // Return reference without bounds checking
-inline amc::FPnew& amc::c_pnew_qFind(amc::FCtype& ctype, u64 idx) {
-    return *ctype.c_pnew_elems[idx];
+inline amc::FPnew& amc::c_pnew_qFind(amc::FCtype& parent, u64 idx) {
+    return *parent.c_pnew_elems[idx];
 }
 
 // --- amc.FCtype.c_pnew.InAryQ
@@ -2101,8 +2101,8 @@ inline bool amc::ctype_c_pnew_InAryQ(amc::FPnew& row) {
 
 // --- amc.FCtype.c_pnew.qLast
 // Reference to last element without bounds checking
-inline amc::FPnew& amc::c_pnew_qLast(amc::FCtype& ctype) {
-    return *ctype.c_pnew_elems[ctype.c_pnew_n-1];
+inline amc::FPnew& amc::c_pnew_qLast(amc::FCtype& parent) {
+    return *parent.c_pnew_elems[parent.c_pnew_n-1];
 }
 
 // --- amc.FCtype.zs_cfmt_curs.Reset
@@ -2542,11 +2542,11 @@ inline  amc::FCtype::~FCtype() {
 
 // --- amc.FCtypelen..Init
 // Set all fields to initial values.
-inline void amc::FCtypelen_Init(amc::FCtypelen& ctypelen) {
-    ctypelen.len = u32(0);
-    ctypelen.alignment = i32(0);
-    ctypelen.padbytes = i32(0);
-    ctypelen.plaindata = bool(false);
+inline void amc::FCtypelen_Init(amc::FCtypelen& parent) {
+    parent.len = u32(0);
+    parent.alignment = i32(0);
+    parent.padbytes = i32(0);
+    parent.plaindata = bool(false);
 }
 
 // --- amc.FCtypelen..Ctor
@@ -2561,9 +2561,9 @@ inline  amc::FCtypelen::~FCtypelen() {
 
 // --- amc.FJsbltin..Init
 // Set all fields to initial values.
-inline void amc::FJsbltin_Init(amc::FJsbltin& jsbltin) {
-    jsbltin.ind_jsbltin_next = (amc::FJsbltin*)-1; // (amc.FDb.ind_jsbltin) not-in-hash
-    jsbltin.ind_jsbltin_hashval = 0; // stored hash value
+inline void amc::FJsbltin_Init(amc::FJsbltin& parent) {
+    parent.ind_jsbltin_next = (amc::FJsbltin*)-1; // (amc.FDb.ind_jsbltin) not-in-hash
+    parent.ind_jsbltin_hashval = 0; // stored hash value
 }
 
 // --- amc.FJsbltin..Ctor
@@ -2592,48 +2592,48 @@ inline  amc::Genctx::Genctx() {
 
 // --- amc.FTclass.c_tfunc.EmptyQ
 // Return true if index is empty
-inline bool amc::c_tfunc_EmptyQ(amc::FTclass& tclass) {
-    return tclass.c_tfunc_n == 0;
+inline bool amc::c_tfunc_EmptyQ(amc::FTclass& parent) {
+    return parent.c_tfunc_n == 0;
 }
 
 // --- amc.FTclass.c_tfunc.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FTfunc* amc::c_tfunc_Find(amc::FTclass& tclass, u64 t) {
+inline amc::FTfunc* amc::c_tfunc_Find(amc::FTclass& parent, u64 t) {
     amc::FTfunc *retval = NULL;
     u64 idx = t;
-    u64 lim = tclass.c_tfunc_n;
+    u64 lim = parent.c_tfunc_n;
     if (idx < lim) {
-        retval = tclass.c_tfunc_elems[idx];
+        retval = parent.c_tfunc_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FTclass.c_tfunc.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FTfunc*> amc::c_tfunc_Getary(amc::FTclass& tclass) {
-    return algo::aryptr<amc::FTfunc*>(tclass.c_tfunc_elems, tclass.c_tfunc_n);
+inline algo::aryptr<amc::FTfunc*> amc::c_tfunc_Getary(amc::FTclass& parent) {
+    return algo::aryptr<amc::FTfunc*>(parent.c_tfunc_elems, parent.c_tfunc_n);
 }
 
 // --- amc.FTclass.c_tfunc.N
 // Return number of items in the pointer array
-inline i64 amc::c_tfunc_N(const amc::FTclass& tclass) {
-    return tclass.c_tfunc_n;
+inline i64 amc::c_tfunc_N(const amc::FTclass& parent) {
+    return parent.c_tfunc_n;
 }
 
 // --- amc.FTclass.c_tfunc.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_tfunc_RemoveAll(amc::FTclass& tclass) {
-    for (u64 i = 0; i < tclass.c_tfunc_n; i++) {
+inline void amc::c_tfunc_RemoveAll(amc::FTclass& parent) {
+    for (u64 i = 0; i < parent.c_tfunc_n; i++) {
         // mark all elements as not-in-array
-        tclass.c_tfunc_elems[i]->tclass_c_tfunc_in_ary = false;
+        parent.c_tfunc_elems[i]->tclass_c_tfunc_in_ary = false;
     }
-    tclass.c_tfunc_n = 0;
+    parent.c_tfunc_n = 0;
 }
 
 // --- amc.FTclass.c_tfunc.qFind
 // Return reference without bounds checking
-inline amc::FTfunc& amc::c_tfunc_qFind(amc::FTclass& tclass, u64 idx) {
-    return *tclass.c_tfunc_elems[idx];
+inline amc::FTfunc& amc::c_tfunc_qFind(amc::FTclass& parent, u64 idx) {
+    return *parent.c_tfunc_elems[idx];
 }
 
 // --- amc.FTclass.c_tfunc.InAryQ
@@ -2644,60 +2644,60 @@ inline bool amc::tclass_c_tfunc_InAryQ(amc::FTfunc& row) {
 
 // --- amc.FTclass.c_tfunc.qLast
 // Reference to last element without bounds checking
-inline amc::FTfunc& amc::c_tfunc_qLast(amc::FTclass& tclass) {
-    return *tclass.c_tfunc_elems[tclass.c_tfunc_n-1];
+inline amc::FTfunc& amc::c_tfunc_qLast(amc::FTclass& parent) {
+    return *parent.c_tfunc_elems[parent.c_tfunc_n-1];
 }
 
 // --- amc.FTclass.step.Call
 // Invoke function by pointer
-inline void amc::step_Call(amc::FTclass& tclass) {
-    tclass.step();
+inline void amc::step_Call(amc::FTclass& parent) {
+    parent.step();
 }
 
 // --- amc.FTclass.c_tcond.EmptyQ
 // Return true if index is empty
-inline bool amc::c_tcond_EmptyQ(amc::FTclass& tclass) {
-    return tclass.c_tcond_n == 0;
+inline bool amc::c_tcond_EmptyQ(amc::FTclass& parent) {
+    return parent.c_tcond_n == 0;
 }
 
 // --- amc.FTclass.c_tcond.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FTcond* amc::c_tcond_Find(amc::FTclass& tclass, u64 t) {
+inline amc::FTcond* amc::c_tcond_Find(amc::FTclass& parent, u64 t) {
     amc::FTcond *retval = NULL;
     u64 idx = t;
-    u64 lim = tclass.c_tcond_n;
+    u64 lim = parent.c_tcond_n;
     if (idx < lim) {
-        retval = tclass.c_tcond_elems[idx];
+        retval = parent.c_tcond_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FTclass.c_tcond.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FTcond*> amc::c_tcond_Getary(amc::FTclass& tclass) {
-    return algo::aryptr<amc::FTcond*>(tclass.c_tcond_elems, tclass.c_tcond_n);
+inline algo::aryptr<amc::FTcond*> amc::c_tcond_Getary(amc::FTclass& parent) {
+    return algo::aryptr<amc::FTcond*>(parent.c_tcond_elems, parent.c_tcond_n);
 }
 
 // --- amc.FTclass.c_tcond.N
 // Return number of items in the pointer array
-inline i64 amc::c_tcond_N(const amc::FTclass& tclass) {
-    return tclass.c_tcond_n;
+inline i64 amc::c_tcond_N(const amc::FTclass& parent) {
+    return parent.c_tcond_n;
 }
 
 // --- amc.FTclass.c_tcond.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_tcond_RemoveAll(amc::FTclass& tclass) {
-    for (u64 i = 0; i < tclass.c_tcond_n; i++) {
+inline void amc::c_tcond_RemoveAll(amc::FTclass& parent) {
+    for (u64 i = 0; i < parent.c_tcond_n; i++) {
         // mark all elements as not-in-array
-        tclass.c_tcond_elems[i]->tclass_c_tcond_in_ary = false;
+        parent.c_tcond_elems[i]->tclass_c_tcond_in_ary = false;
     }
-    tclass.c_tcond_n = 0;
+    parent.c_tcond_n = 0;
 }
 
 // --- amc.FTclass.c_tcond.qFind
 // Return reference without bounds checking
-inline amc::FTcond& amc::c_tcond_qFind(amc::FTclass& tclass, u64 idx) {
-    return *tclass.c_tcond_elems[idx];
+inline amc::FTcond& amc::c_tcond_qFind(amc::FTclass& parent, u64 idx) {
+    return *parent.c_tcond_elems[idx];
 }
 
 // --- amc.FTclass.c_tcond.InAryQ
@@ -2708,8 +2708,8 @@ inline bool amc::tclass_c_tcond_InAryQ(amc::FTcond& row) {
 
 // --- amc.FTclass.c_tcond.qLast
 // Reference to last element without bounds checking
-inline amc::FTcond& amc::c_tcond_qLast(amc::FTclass& tclass) {
-    return *tclass.c_tcond_elems[tclass.c_tcond_n-1];
+inline amc::FTcond& amc::c_tcond_qLast(amc::FTclass& parent) {
+    return *parent.c_tcond_elems[parent.c_tcond_n-1];
 }
 
 // --- amc.FTclass.c_tfunc_curs.Reset
@@ -2739,16 +2739,16 @@ inline amc::FTfunc& amc::tclass_c_tfunc_curs_Access(tclass_c_tfunc_curs &curs) {
 
 // --- amc.FTclass..Init
 // Set all fields to initial values.
-inline void amc::FTclass_Init(amc::FTclass& tclass) {
-    tclass.c_tfunc_elems = NULL; // (amc.FTclass.c_tfunc)
-    tclass.c_tfunc_n = 0; // (amc.FTclass.c_tfunc)
-    tclass.c_tfunc_max = 0; // (amc.FTclass.c_tfunc)
-    tclass.c_tcond_elems = NULL; // (amc.FTclass.c_tcond)
-    tclass.c_tcond_n = 0; // (amc.FTclass.c_tcond)
-    tclass.c_tcond_max = 0; // (amc.FTclass.c_tcond)
-    tclass.step = NULL;
-    tclass.ind_tclass_next = (amc::FTclass*)-1; // (amc.FDb.ind_tclass) not-in-hash
-    tclass.ind_tclass_hashval = 0; // stored hash value
+inline void amc::FTclass_Init(amc::FTclass& parent) {
+    parent.c_tfunc_elems = NULL; // (amc.FTclass.c_tfunc)
+    parent.c_tfunc_n = 0; // (amc.FTclass.c_tfunc)
+    parent.c_tfunc_max = 0; // (amc.FTclass.c_tfunc)
+    parent.c_tcond_elems = NULL; // (amc.FTclass.c_tcond)
+    parent.c_tcond_n = 0; // (amc.FTclass.c_tcond)
+    parent.c_tcond_max = 0; // (amc.FTclass.c_tcond)
+    parent.step = NULL;
+    parent.ind_tclass_next = (amc::FTclass*)-1; // (amc.FDb.ind_tclass) not-in-hash
+    parent.ind_tclass_hashval = 0; // stored hash value
 }
 
 // --- amc.FTclass.c_tcond_curs.Reset
@@ -3811,7 +3811,7 @@ inline i32 amc::jsbltin_N() {
 }
 
 // --- amc.FDb.jsbltin.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline amc::FJsbltin& amc::jsbltin_qFind(u64 t) {
     return reinterpret_cast<amc::FJsbltin*>(_db.jsbltin_data)[u64(t)];
 }
@@ -6260,7 +6260,7 @@ inline i32 amc::tclass_N() {
 }
 
 // --- amc.FDb.tclass.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline amc::FTclass& amc::tclass_qFind(u64 t) {
     return reinterpret_cast<amc::FTclass*>(_db.tclass_data)[u64(t)];
 }
@@ -12745,68 +12745,68 @@ inline amc::FPbsyntax& amc::_db_pbsyntax_curs_Access(_db_pbsyntax_curs &curs) {
 
 // --- amc.FDispatch.c_dispfilter.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_dispfilter_InsertMaybe(amc::FDispatch& dispatch, amc::FDispfilter& row) {
-    amc::FDispfilter* ptr = dispatch.c_dispfilter;
+inline bool amc::c_dispfilter_InsertMaybe(amc::FDispatch& parent, amc::FDispfilter& row) {
+    amc::FDispfilter* ptr = parent.c_dispfilter;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        dispatch.c_dispfilter = &row;
+        parent.c_dispfilter = &row;
     }
     return retval;
 }
 
 // --- amc.FDispatch.c_dispfilter.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_dispfilter_Remove(amc::FDispatch& dispatch, amc::FDispfilter& row) {
-    amc::FDispfilter *ptr = dispatch.c_dispfilter;
+inline void amc::c_dispfilter_Remove(amc::FDispatch& parent, amc::FDispfilter& row) {
+    amc::FDispfilter *ptr = parent.c_dispfilter;
     if (LIKELY(ptr == &row)) {
-        dispatch.c_dispfilter = NULL;
+        parent.c_dispfilter = NULL;
     }
 }
 
 // --- amc.FDispatch.c_dispatch_msg.EmptyQ
 // Return true if index is empty
-inline bool amc::c_dispatch_msg_EmptyQ(amc::FDispatch& dispatch) {
-    return dispatch.c_dispatch_msg_n == 0;
+inline bool amc::c_dispatch_msg_EmptyQ(amc::FDispatch& parent) {
+    return parent.c_dispatch_msg_n == 0;
 }
 
 // --- amc.FDispatch.c_dispatch_msg.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FDispatchmsg* amc::c_dispatch_msg_Find(amc::FDispatch& dispatch, u64 t) {
+inline amc::FDispatchmsg* amc::c_dispatch_msg_Find(amc::FDispatch& parent, u64 t) {
     amc::FDispatchmsg *retval = NULL;
     u64 idx = t;
-    u64 lim = dispatch.c_dispatch_msg_n;
+    u64 lim = parent.c_dispatch_msg_n;
     if (idx < lim) {
-        retval = dispatch.c_dispatch_msg_elems[idx];
+        retval = parent.c_dispatch_msg_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FDispatch.c_dispatch_msg.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FDispatchmsg*> amc::c_dispatch_msg_Getary(amc::FDispatch& dispatch) {
-    return algo::aryptr<amc::FDispatchmsg*>(dispatch.c_dispatch_msg_elems, dispatch.c_dispatch_msg_n);
+inline algo::aryptr<amc::FDispatchmsg*> amc::c_dispatch_msg_Getary(amc::FDispatch& parent) {
+    return algo::aryptr<amc::FDispatchmsg*>(parent.c_dispatch_msg_elems, parent.c_dispatch_msg_n);
 }
 
 // --- amc.FDispatch.c_dispatch_msg.N
 // Return number of items in the pointer array
-inline i64 amc::c_dispatch_msg_N(const amc::FDispatch& dispatch) {
-    return dispatch.c_dispatch_msg_n;
+inline i64 amc::c_dispatch_msg_N(const amc::FDispatch& parent) {
+    return parent.c_dispatch_msg_n;
 }
 
 // --- amc.FDispatch.c_dispatch_msg.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_dispatch_msg_RemoveAll(amc::FDispatch& dispatch) {
-    for (u64 i = 0; i < dispatch.c_dispatch_msg_n; i++) {
+inline void amc::c_dispatch_msg_RemoveAll(amc::FDispatch& parent) {
+    for (u64 i = 0; i < parent.c_dispatch_msg_n; i++) {
         // mark all elements as not-in-array
-        dispatch.c_dispatch_msg_elems[i]->dispatch_c_dispatch_msg_in_ary = false;
+        parent.c_dispatch_msg_elems[i]->dispatch_c_dispatch_msg_in_ary = false;
     }
-    dispatch.c_dispatch_msg_n = 0;
+    parent.c_dispatch_msg_n = 0;
 }
 
 // --- amc.FDispatch.c_dispatch_msg.qFind
 // Return reference without bounds checking
-inline amc::FDispatchmsg& amc::c_dispatch_msg_qFind(amc::FDispatch& dispatch, u64 idx) {
-    return *dispatch.c_dispatch_msg_elems[idx];
+inline amc::FDispatchmsg& amc::c_dispatch_msg_qFind(amc::FDispatch& parent, u64 idx) {
+    return *parent.c_dispatch_msg_elems[idx];
 }
 
 // --- amc.FDispatch.c_dispatch_msg.InAryQ
@@ -12817,47 +12817,47 @@ inline bool amc::dispatch_c_dispatch_msg_InAryQ(amc::FDispatchmsg& row) {
 
 // --- amc.FDispatch.c_dispatch_msg.qLast
 // Reference to last element without bounds checking
-inline amc::FDispatchmsg& amc::c_dispatch_msg_qLast(amc::FDispatch& dispatch) {
-    return *dispatch.c_dispatch_msg_elems[dispatch.c_dispatch_msg_n-1];
+inline amc::FDispatchmsg& amc::c_dispatch_msg_qLast(amc::FDispatch& parent) {
+    return *parent.c_dispatch_msg_elems[parent.c_dispatch_msg_n-1];
 }
 
 // --- amc.FDispatch.c_disptrace.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_disptrace_InsertMaybe(amc::FDispatch& dispatch, amc::FDisptrace& row) {
-    amc::FDisptrace* ptr = dispatch.c_disptrace;
+inline bool amc::c_disptrace_InsertMaybe(amc::FDispatch& parent, amc::FDisptrace& row) {
+    amc::FDisptrace* ptr = parent.c_disptrace;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        dispatch.c_disptrace = &row;
+        parent.c_disptrace = &row;
     }
     return retval;
 }
 
 // --- amc.FDispatch.c_disptrace.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_disptrace_Remove(amc::FDispatch& dispatch, amc::FDisptrace& row) {
-    amc::FDisptrace *ptr = dispatch.c_disptrace;
+inline void amc::c_disptrace_Remove(amc::FDispatch& parent, amc::FDisptrace& row) {
+    amc::FDisptrace *ptr = parent.c_disptrace;
     if (LIKELY(ptr == &row)) {
-        dispatch.c_disptrace = NULL;
+        parent.c_disptrace = NULL;
     }
 }
 
 // --- amc.FDispatch.c_dispctx.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_dispctx_InsertMaybe(amc::FDispatch& dispatch, amc::FDispctx& row) {
-    amc::FDispctx* ptr = dispatch.c_dispctx;
+inline bool amc::c_dispctx_InsertMaybe(amc::FDispatch& parent, amc::FDispctx& row) {
+    amc::FDispctx* ptr = parent.c_dispctx;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        dispatch.c_dispctx = &row;
+        parent.c_dispctx = &row;
     }
     return retval;
 }
 
 // --- amc.FDispatch.c_dispctx.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_dispctx_Remove(amc::FDispatch& dispatch, amc::FDispctx& row) {
-    amc::FDispctx *ptr = dispatch.c_dispctx;
+inline void amc::c_dispctx_Remove(amc::FDispatch& parent, amc::FDispctx& row) {
+    amc::FDispctx *ptr = parent.c_dispctx;
     if (LIKELY(ptr == &row)) {
-        dispatch.c_dispctx = NULL;
+        parent.c_dispctx = NULL;
     }
 }
 
@@ -12898,10 +12898,10 @@ inline  amc::FDispatch::~FDispatch() {
 
 // --- amc.FDispatchmsg..Init
 // Set all fields to initial values.
-inline void amc::FDispatchmsg_Init(amc::FDispatchmsg& dispatch_msg) {
-    dispatch_msg.p_ctype = NULL;
-    dispatch_msg.p_dispatch = NULL;
-    dispatch_msg.dispatch_c_dispatch_msg_in_ary = bool(false);
+inline void amc::FDispatchmsg_Init(amc::FDispatchmsg& parent) {
+    parent.p_ctype = NULL;
+    parent.p_dispatch = NULL;
+    parent.dispatch_c_dispatch_msg_in_ary = bool(false);
 }
 
 // --- amc.FDispatchmsg..Ctor
@@ -12916,8 +12916,8 @@ inline  amc::FDispatchmsg::~FDispatchmsg() {
 
 // --- amc.FDispctx..Init
 // Set all fields to initial values.
-inline void amc::FDispctx_Init(amc::FDispctx& dispctx) {
-    dispctx.p_ctype = NULL;
+inline void amc::FDispctx_Init(amc::FDispctx& parent) {
+    parent.p_ctype = NULL;
 }
 
 // --- amc.FDispctx..Ctor
@@ -12932,8 +12932,8 @@ inline  amc::FDispctx::~FDispctx() {
 
 // --- amc.FDispfilter..Init
 // Set all fields to initial values.
-inline void amc::FDispfilter_Init(amc::FDispfilter& dispfilter) {
-    dispfilter.match_all = bool(false);
+inline void amc::FDispfilter_Init(amc::FDispfilter& parent) {
+    parent.match_all = bool(false);
 }
 
 // --- amc.FDispfilter..Ctor
@@ -12948,8 +12948,8 @@ inline  amc::FDispfilter::~FDispfilter() {
 
 // --- amc.FDispsig..Init
 // Set all fields to initial values.
-inline void amc::FDispsig_Init(amc::FDispsig& dispsig) {
-    dispsig.ns_c_dispsig_in_ary = bool(false);
+inline void amc::FDispsig_Init(amc::FDispsig& parent) {
+    parent.ns_c_dispsig_in_ary = bool(false);
 }
 
 // --- amc.FDispsig..Ctor
@@ -12964,9 +12964,9 @@ inline  amc::FDispsig::~FDispsig() {
 
 // --- amc.FDisptrace..Init
 // Set all fields to initial values.
-inline void amc::FDisptrace_Init(amc::FDisptrace& disptrace) {
-    disptrace.cycle = bool(false);
-    disptrace.p_dispatch = NULL;
+inline void amc::FDisptrace_Init(amc::FDisptrace& parent) {
+    parent.cycle = bool(false);
+    parent.p_dispatch = NULL;
 }
 
 // --- amc.FDisptrace..Ctor
@@ -12981,61 +12981,61 @@ inline  amc::FDisptrace::~FDisptrace() {
 
 // --- amc.FEnumstr.c_fconst.EmptyQ
 // Return true if index is empty
-inline bool amc::c_fconst_EmptyQ(amc::FEnumstr& enumstr) {
-    return enumstr.c_fconst_n == 0;
+inline bool amc::c_fconst_EmptyQ(amc::FEnumstr& parent) {
+    return parent.c_fconst_n == 0;
 }
 
 // --- amc.FEnumstr.c_fconst.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFconst* amc::c_fconst_Find(amc::FEnumstr& enumstr, u64 t) {
+inline amc::FFconst* amc::c_fconst_Find(amc::FEnumstr& parent, u64 t) {
     amc::FFconst *retval = NULL;
     u64 idx = t;
-    u64 lim = enumstr.c_fconst_n;
+    u64 lim = parent.c_fconst_n;
     if (idx < lim) {
-        retval = enumstr.c_fconst_elems[idx];
+        retval = parent.c_fconst_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FEnumstr.c_fconst.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFconst*> amc::c_fconst_Getary(amc::FEnumstr& enumstr) {
-    return algo::aryptr<amc::FFconst*>(enumstr.c_fconst_elems, enumstr.c_fconst_n);
+inline algo::aryptr<amc::FFconst*> amc::c_fconst_Getary(amc::FEnumstr& parent) {
+    return algo::aryptr<amc::FFconst*>(parent.c_fconst_elems, parent.c_fconst_n);
 }
 
 // --- amc.FEnumstr.c_fconst.N
 // Return number of items in the pointer array
-inline i64 amc::c_fconst_N(const amc::FEnumstr& enumstr) {
-    return enumstr.c_fconst_n;
+inline i64 amc::c_fconst_N(const amc::FEnumstr& parent) {
+    return parent.c_fconst_n;
 }
 
 // --- amc.FEnumstr.c_fconst.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_fconst_RemoveAll(amc::FEnumstr& enumstr) {
-    enumstr.c_fconst_n = 0;
+inline void amc::c_fconst_RemoveAll(amc::FEnumstr& parent) {
+    parent.c_fconst_n = 0;
 }
 
 // --- amc.FEnumstr.c_fconst.qFind
 // Return reference without bounds checking
-inline amc::FFconst& amc::c_fconst_qFind(amc::FEnumstr& enumstr, u64 idx) {
-    return *enumstr.c_fconst_elems[idx];
+inline amc::FFconst& amc::c_fconst_qFind(amc::FEnumstr& parent, u64 idx) {
+    return *parent.c_fconst_elems[idx];
 }
 
 // --- amc.FEnumstr.c_fconst.qLast
 // Reference to last element without bounds checking
-inline amc::FFconst& amc::c_fconst_qLast(amc::FEnumstr& enumstr) {
-    return *enumstr.c_fconst_elems[enumstr.c_fconst_n-1];
+inline amc::FFconst& amc::c_fconst_qLast(amc::FEnumstr& parent) {
+    return *parent.c_fconst_elems[parent.c_fconst_n-1];
 }
 
 // --- amc.FEnumstr..Init
 // Set all fields to initial values.
-inline void amc::FEnumstr_Init(amc::FEnumstr& enumstr) {
-    enumstr.c_fconst_elems = NULL; // (amc.FEnumstr.c_fconst)
-    enumstr.c_fconst_n = 0; // (amc.FEnumstr.c_fconst)
-    enumstr.c_fconst_max = 0; // (amc.FEnumstr.c_fconst)
-    enumstr.ind_enumstr_next = (amc::FEnumstr*)-1; // (amc.FDb.ind_enumstr) not-in-hash
-    enumstr.ind_enumstr_hashval = 0; // stored hash value
-    enumstr.enumstr_len_bh_enumstr_idx = -1; // (amc.FEnumstrLen.bh_enumstr) not-in-heap
+inline void amc::FEnumstr_Init(amc::FEnumstr& parent) {
+    parent.c_fconst_elems = NULL; // (amc.FEnumstr.c_fconst)
+    parent.c_fconst_n = 0; // (amc.FEnumstr.c_fconst)
+    parent.c_fconst_max = 0; // (amc.FEnumstr.c_fconst)
+    parent.ind_enumstr_next = (amc::FEnumstr*)-1; // (amc.FDb.ind_enumstr) not-in-hash
+    parent.ind_enumstr_hashval = 0; // stored hash value
+    parent.enumstr_len_bh_enumstr_idx = -1; // (amc.FEnumstrLen.bh_enumstr) not-in-heap
 }
 
 // --- amc.FEnumstr.c_fconst_curs.Reset
@@ -13075,16 +13075,16 @@ inline  amc::FEnumstr::~FEnumstr() {
 
 // --- amc.FEnumstrLen.bh_enumstr.EmptyQ
 // Return true if index is empty
-inline bool amc::bh_enumstr_EmptyQ(amc::FEnumstrLen& enumstr_len) {
-    return enumstr_len.bh_enumstr_n == 0;
+inline bool amc::bh_enumstr_EmptyQ(amc::FEnumstrLen& parent) {
+    return parent.bh_enumstr_n == 0;
 }
 
 // --- amc.FEnumstrLen.bh_enumstr.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FEnumstr* amc::bh_enumstr_First(amc::FEnumstrLen& enumstr_len) {
+inline amc::FEnumstr* amc::bh_enumstr_First(amc::FEnumstrLen& parent) {
     amc::FEnumstr *row = NULL;
-    if (enumstr_len.bh_enumstr_n > 0) {
-        row = enumstr_len.bh_enumstr_elems[0];
+    if (parent.bh_enumstr_n > 0) {
+        row = parent.bh_enumstr_elems[0];
     }
     return row;
 }
@@ -13099,20 +13099,20 @@ inline bool amc::bh_enumstr_InBheapQ(amc::FEnumstr& row) {
 
 // --- amc.FEnumstrLen.bh_enumstr.N
 // Return number of items in the heap
-inline i32 amc::bh_enumstr_N(const amc::FEnumstrLen& enumstr_len) {
-    return enumstr_len.bh_enumstr_n;
+inline i32 amc::bh_enumstr_N(const amc::FEnumstrLen& parent) {
+    return parent.bh_enumstr_n;
 }
 
 // --- amc.FEnumstrLen..Init
 // Set all fields to initial values.
-inline void amc::FEnumstrLen_Init(amc::FEnumstrLen& enumstr_len) {
-    enumstr_len.len = i32(0);
-    enumstr_len.bh_enumstr_max   	= 0; // (amc.FEnumstrLen.bh_enumstr)
-    enumstr_len.bh_enumstr_n     	= 0; // (amc.FEnumstrLen.bh_enumstr)
-    enumstr_len.bh_enumstr_elems 	= NULL; // (amc.FEnumstrLen.bh_enumstr)
-    enumstr_len.bh_enumstr_len_idx = -1; // (amc.FDb.bh_enumstr_len) not-in-heap
-    enumstr_len.ind_enumstr_len_next = (amc::FEnumstrLen*)-1; // (amc.FDb.ind_enumstr_len) not-in-hash
-    enumstr_len.ind_enumstr_len_hashval = 0; // stored hash value
+inline void amc::FEnumstrLen_Init(amc::FEnumstrLen& parent) {
+    parent.len = i32(0);
+    parent.bh_enumstr_max   	= 0; // (amc.FEnumstrLen.bh_enumstr)
+    parent.bh_enumstr_n     	= 0; // (amc.FEnumstrLen.bh_enumstr)
+    parent.bh_enumstr_elems 	= NULL; // (amc.FEnumstrLen.bh_enumstr)
+    parent.bh_enumstr_len_idx = -1; // (amc.FDb.bh_enumstr_len) not-in-heap
+    parent.ind_enumstr_len_next = (amc::FEnumstrLen*)-1; // (amc.FDb.ind_enumstr_len) not-in-hash
+    parent.ind_enumstr_len_hashval = 0; // stored hash value
 }
 
 // --- amc.FEnumstrLen.bh_enumstr_curs.Access
@@ -13139,8 +13139,8 @@ inline  amc::FEnumstrLen::~FEnumstrLen() {
 
 // --- amc.FFalias..Init
 // Set all fields to initial values.
-inline void amc::FFalias_Init(amc::FFalias& falias) {
-    falias.p_srcfield = NULL;
+inline void amc::FFalias_Init(amc::FFalias& parent) {
+    parent.p_srcfield = NULL;
 }
 
 // --- amc.FFalias..Ctor
@@ -13155,8 +13155,8 @@ inline  amc::FFalias::~FFalias() {
 
 // --- amc.FFbigend..Init
 // Set all fields to initial values.
-inline void amc::FFbigend_Init(amc::FFbigend& fbigend) {
-    fbigend.p_field = NULL;
+inline void amc::FFbigend_Init(amc::FFbigend& parent) {
+    parent.p_field = NULL;
 }
 
 // --- amc.FFbigend..Ctor
@@ -13171,10 +13171,10 @@ inline  amc::FFbigend::~FFbigend() {
 
 // --- amc.FFbitset..Init
 // Set all fields to initial values.
-inline void amc::FFbitset_Init(amc::FFbitset& fbitset) {
-    fbitset.p_field = NULL;
-    fbitset.ind_fbitset_next = (amc::FFbitset*)-1; // (amc.FDb.ind_fbitset) not-in-hash
-    fbitset.ind_fbitset_hashval = 0; // stored hash value
+inline void amc::FFbitset_Init(amc::FFbitset& parent) {
+    parent.p_field = NULL;
+    parent.ind_fbitset_next = (amc::FFbitset*)-1; // (amc.FDb.ind_fbitset) not-in-hash
+    parent.ind_fbitset_hashval = 0; // stored hash value
 }
 
 // --- amc.FFbitset..Ctor
@@ -13189,14 +13189,14 @@ inline  amc::FFbitset::~FFbitset() {
 
 // --- amc.FFbuf..Init
 // Set all fields to initial values.
-inline void amc::FFbuf_Init(amc::FFbuf& fbuf) {
-    fbuf.max = u32(0);
-    fbuf.iotype = algo::strptr("standard");
-    fbuf.pair = algo::strptr("");
-    fbuf.p_fbuftype = NULL;
-    fbuf.p_pair = NULL;
-    fbuf.ind_fbuf_next = (amc::FFbuf*)-1; // (amc.FDb.ind_fbuf) not-in-hash
-    fbuf.ind_fbuf_hashval = 0; // stored hash value
+inline void amc::FFbuf_Init(amc::FFbuf& parent) {
+    parent.max = u32(0);
+    parent.iotype = algo::strptr("standard");
+    parent.pair = algo::strptr("");
+    parent.p_fbuftype = NULL;
+    parent.p_pair = NULL;
+    parent.ind_fbuf_next = (amc::FFbuf*)-1; // (amc.FDb.ind_fbuf) not-in-hash
+    parent.ind_fbuf_hashval = 0; // stored hash value
 }
 
 // --- amc.FFbuf..Ctor
@@ -13211,10 +13211,10 @@ inline  amc::FFbuf::~FFbuf() {
 
 // --- amc.FFbuftype..Init
 // Set all fields to initial values.
-inline void amc::FFbuftype_Init(amc::FFbuftype& fbuftype) {
-    fbuftype.skipbytes = bool(false);
-    fbuftype.ind_fbuftype_next = (amc::FFbuftype*)-1; // (amc.FDb.ind_fbuftype) not-in-hash
-    fbuftype.ind_fbuftype_hashval = 0; // stored hash value
+inline void amc::FFbuftype_Init(amc::FFbuftype& parent) {
+    parent.skipbytes = bool(false);
+    parent.ind_fbuftype_next = (amc::FFbuftype*)-1; // (amc.FDb.ind_fbuftype) not-in-hash
+    parent.ind_fbuftype_hashval = 0; // stored hash value
 }
 
 // --- amc.FFbuftype..Ctor
@@ -13248,10 +13248,10 @@ inline  amc::FFcmap::~FFcmap() {
 
 // --- amc.FFcmp..Init
 // Set all fields to initial values.
-inline void amc::FFcmp_Init(amc::FFcmp& fcmp) {
-    fcmp.versionsort = bool(false);
-    fcmp.casesens = bool(true);
-    fcmp.extrn = bool(false);
+inline void amc::FFcmp_Init(amc::FFcmp& parent) {
+    parent.versionsort = bool(false);
+    parent.casesens = bool(true);
+    parent.extrn = bool(false);
 }
 
 // --- amc.FFcmp..Ctor
@@ -13275,11 +13275,11 @@ inline  amc::FFcompact::~FFcompact() {
 
 // --- amc.FFcond..Init
 // Set all fields to initial values.
-inline void amc::FFcond_Init(amc::FFcond& fcond) {
-    fcond.via = algo::strptr("");
-    fcond.rem = bool(true);
-    fcond.p_ins = NULL;
-    fcond.field_c_fcond_in_ary = bool(false);
+inline void amc::FFcond_Init(amc::FFcond& parent) {
+    parent.via = algo::strptr("");
+    parent.rem = bool(true);
+    parent.p_ins = NULL;
+    parent.field_c_fcond_in_ary = bool(false);
 }
 
 // --- amc.FFcond..Ctor
@@ -13304,11 +13304,11 @@ inline  amc::FFconst::~FFconst() {
 
 // --- amc.FFcurs..Init
 // Set all fields to initial values.
-inline void amc::FFcurs_Init(amc::FFcurs& fcurs) {
-    fcurs.p_field = NULL;
-    fcurs.ctype_c_fcurs_in_ary = bool(false);
-    fcurs.ind_fcurs_next = (amc::FFcurs*)-1; // (amc.FDb.ind_fcurs) not-in-hash
-    fcurs.ind_fcurs_hashval = 0; // stored hash value
+inline void amc::FFcurs_Init(amc::FFcurs& parent) {
+    parent.p_field = NULL;
+    parent.ctype_c_fcurs_in_ary = bool(false);
+    parent.ind_fcurs_next = (amc::FFcurs*)-1; // (amc.FDb.ind_fcurs) not-in-hash
+    parent.ind_fcurs_hashval = 0; // stored hash value
 }
 
 // --- amc.FFcurs..Ctor
@@ -13323,15 +13323,15 @@ inline  amc::FFcurs::~FFcurs() {
 
 // --- amc.FFdec..Init
 // Set all fields to initial values.
-inline void amc::FFdec_Init(amc::FFdec& fdec) {
-    fdec.nplace = i32(0);
-    fdec.fixedfmt = bool(false);
-    fdec.p_field = NULL;
-    fdec.nummin = u64(0);
-    fdec.nummax = u64(0);
-    fdec.issigned = bool(false);
-    fdec.ind_fdec_next = (amc::FFdec*)-1; // (amc.FDb.ind_fdec) not-in-hash
-    fdec.ind_fdec_hashval = 0; // stored hash value
+inline void amc::FFdec_Init(amc::FFdec& parent) {
+    parent.nplace = i32(0);
+    parent.fixedfmt = bool(false);
+    parent.p_field = NULL;
+    parent.nummin = u64(0);
+    parent.nummax = u64(0);
+    parent.issigned = bool(false);
+    parent.ind_fdec_next = (amc::FFdec*)-1; // (amc.FDb.ind_fdec) not-in-hash
+    parent.ind_fdec_hashval = 0; // stored hash value
 }
 
 // --- amc.FFdec..Ctor
@@ -13346,8 +13346,8 @@ inline  amc::FFdec::~FFdec() {
 
 // --- amc.FFdelay..Init
 // Set all fields to initial values.
-inline void amc::FFdelay_Init(amc::FFdelay& fdelay) {
-    fdelay.scale = bool(false);
+inline void amc::FFdelay_Init(amc::FFdelay& parent) {
+    parent.scale = bool(false);
 }
 
 // --- amc.FFdelay..Ctor
@@ -13372,11 +13372,11 @@ inline  amc::FFfast::~FFfast() {
 
 // --- amc.FFflag..Init
 // Set all fields to initial values.
-inline void amc::FFflag_Init(amc::FFflag& fflag) {
-    fflag.cumulative = bool(false);
-    fflag.emptyval = algo::strptr("");
-    fflag.ind_fflag_next = (amc::FFflag*)-1; // (amc.FDb.ind_fflag) not-in-hash
-    fflag.ind_fflag_hashval = 0; // stored hash value
+inline void amc::FFflag_Init(amc::FFflag& parent) {
+    parent.cumulative = bool(false);
+    parent.emptyval = algo::strptr("");
+    parent.ind_fflag_next = (amc::FFflag*)-1; // (amc.FDb.ind_fflag) not-in-hash
+    parent.ind_fflag_hashval = 0; // stored hash value
 }
 
 // --- amc.FFflag..Ctor
@@ -13391,12 +13391,12 @@ inline  amc::FFflag::~FFflag() {
 
 // --- amc.FFfunc..Init
 // Set all fields to initial values.
-inline void amc::FFfunc_Init(amc::FFfunc& ffunc) {
-    ffunc.extrn = bool(false);
-    ffunc.used = bool(false);
-    ffunc.ind_ffunc_next = (amc::FFfunc*)-1; // (amc.FDb.ind_ffunc) not-in-hash
-    ffunc.ind_ffunc_hashval = 0; // stored hash value
-    ffunc.field_zs_ffunc_next = (amc::FFfunc*)-1; // (amc.FField.zs_ffunc) not-in-list
+inline void amc::FFfunc_Init(amc::FFfunc& parent) {
+    parent.extrn = bool(false);
+    parent.used = bool(false);
+    parent.ind_ffunc_next = (amc::FFfunc*)-1; // (amc.FDb.ind_ffunc) not-in-hash
+    parent.ind_ffunc_hashval = 0; // stored hash value
+    parent.field_zs_ffunc_next = (amc::FFfunc*)-1; // (amc.FField.zs_ffunc) not-in-list
 }
 
 // --- amc.FFfunc..Ctor
@@ -13411,456 +13411,456 @@ inline  amc::FFfunc::~FFfunc() {
 
 // --- amc.FField.c_fsort.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fsort_InsertMaybe(amc::FField& field, amc::FFsort& row) {
-    amc::FFsort* ptr = field.c_fsort;
+inline bool amc::c_fsort_InsertMaybe(amc::FField& parent, amc::FFsort& row) {
+    amc::FFsort* ptr = parent.c_fsort;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fsort = &row;
+        parent.c_fsort = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fsort.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fsort_Remove(amc::FField& field, amc::FFsort& row) {
-    amc::FFsort *ptr = field.c_fsort;
+inline void amc::c_fsort_Remove(amc::FField& parent, amc::FFsort& row) {
+    amc::FFsort *ptr = parent.c_fsort;
     if (LIKELY(ptr == &row)) {
-        field.c_fsort = NULL;
+        parent.c_fsort = NULL;
     }
 }
 
 // --- amc.FField.c_fbitset.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fbitset_InsertMaybe(amc::FField& field, amc::FFbitset& row) {
-    amc::FFbitset* ptr = field.c_fbitset;
+inline bool amc::c_fbitset_InsertMaybe(amc::FField& parent, amc::FFbitset& row) {
+    amc::FFbitset* ptr = parent.c_fbitset;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fbitset = &row;
+        parent.c_fbitset = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fbitset.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fbitset_Remove(amc::FField& field, amc::FFbitset& row) {
-    amc::FFbitset *ptr = field.c_fbitset;
+inline void amc::c_fbitset_Remove(amc::FField& parent, amc::FFbitset& row) {
+    amc::FFbitset *ptr = parent.c_fbitset;
     if (LIKELY(ptr == &row)) {
-        field.c_fbitset = NULL;
+        parent.c_fbitset = NULL;
     }
 }
 
 // --- amc.FField.c_smallstr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_smallstr_InsertMaybe(amc::FField& field, amc::FSmallstr& row) {
-    amc::FSmallstr* ptr = field.c_smallstr;
+inline bool amc::c_smallstr_InsertMaybe(amc::FField& parent, amc::FSmallstr& row) {
+    amc::FSmallstr* ptr = parent.c_smallstr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_smallstr = &row;
+        parent.c_smallstr = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_smallstr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_smallstr_Remove(amc::FField& field, amc::FSmallstr& row) {
-    amc::FSmallstr *ptr = field.c_smallstr;
+inline void amc::c_smallstr_Remove(amc::FField& parent, amc::FSmallstr& row) {
+    amc::FSmallstr *ptr = parent.c_smallstr;
     if (LIKELY(ptr == &row)) {
-        field.c_smallstr = NULL;
+        parent.c_smallstr = NULL;
     }
 }
 
 // --- amc.FField.c_ffunc.EmptyQ
 // Return true if index is empty
-inline bool amc::c_ffunc_EmptyQ(amc::FField& field) {
-    return field.c_ffunc_n == 0;
+inline bool amc::c_ffunc_EmptyQ(amc::FField& parent) {
+    return parent.c_ffunc_n == 0;
 }
 
 // --- amc.FField.c_ffunc.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFunc* amc::c_ffunc_Find(amc::FField& field, u64 t) {
+inline amc::FFunc* amc::c_ffunc_Find(amc::FField& parent, u64 t) {
     amc::FFunc *retval = NULL;
     u64 idx = t;
-    u64 lim = field.c_ffunc_n;
+    u64 lim = parent.c_ffunc_n;
     if (idx < lim) {
-        retval = field.c_ffunc_elems[idx];
+        retval = parent.c_ffunc_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FField.c_ffunc.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFunc*> amc::c_ffunc_Getary(amc::FField& field) {
-    return algo::aryptr<amc::FFunc*>(field.c_ffunc_elems, field.c_ffunc_n);
+inline algo::aryptr<amc::FFunc*> amc::c_ffunc_Getary(amc::FField& parent) {
+    return algo::aryptr<amc::FFunc*>(parent.c_ffunc_elems, parent.c_ffunc_n);
 }
 
 // --- amc.FField.c_ffunc.N
 // Return number of items in the pointer array
-inline i64 amc::c_ffunc_N(const amc::FField& field) {
-    return field.c_ffunc_n;
+inline i64 amc::c_ffunc_N(const amc::FField& parent) {
+    return parent.c_ffunc_n;
 }
 
 // --- amc.FField.c_ffunc.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_ffunc_RemoveAll(amc::FField& field) {
-    field.c_ffunc_n = 0;
+inline void amc::c_ffunc_RemoveAll(amc::FField& parent) {
+    parent.c_ffunc_n = 0;
 }
 
 // --- amc.FField.c_ffunc.qFind
 // Return reference without bounds checking
-inline amc::FFunc& amc::c_ffunc_qFind(amc::FField& field, u64 idx) {
-    return *field.c_ffunc_elems[idx];
+inline amc::FFunc& amc::c_ffunc_qFind(amc::FField& parent, u64 idx) {
+    return *parent.c_ffunc_elems[idx];
 }
 
 // --- amc.FField.c_ffunc.qLast
 // Reference to last element without bounds checking
-inline amc::FFunc& amc::c_ffunc_qLast(amc::FField& field) {
-    return *field.c_ffunc_elems[field.c_ffunc_n-1];
+inline amc::FFunc& amc::c_ffunc_qLast(amc::FField& parent) {
+    return *parent.c_ffunc_elems[parent.c_ffunc_n-1];
 }
 
 // --- amc.FField.c_xref.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_xref_InsertMaybe(amc::FField& field, amc::FXref& row) {
-    amc::FXref* ptr = field.c_xref;
+inline bool amc::c_xref_InsertMaybe(amc::FField& parent, amc::FXref& row) {
+    amc::FXref* ptr = parent.c_xref;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_xref = &row;
+        parent.c_xref = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_xref.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_xref_Remove(amc::FField& field, amc::FXref& row) {
-    amc::FXref *ptr = field.c_xref;
+inline void amc::c_xref_Remove(amc::FField& parent, amc::FXref& row) {
+    amc::FXref *ptr = parent.c_xref;
     if (LIKELY(ptr == &row)) {
-        field.c_xref = NULL;
+        parent.c_xref = NULL;
     }
 }
 
 // --- amc.FField.c_anonfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_anonfld_InsertMaybe(amc::FField& field, amc::FAnonfld& row) {
-    amc::FAnonfld* ptr = field.c_anonfld;
+inline bool amc::c_anonfld_InsertMaybe(amc::FField& parent, amc::FAnonfld& row) {
+    amc::FAnonfld* ptr = parent.c_anonfld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_anonfld = &row;
+        parent.c_anonfld = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_anonfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_anonfld_Remove(amc::FField& field, amc::FAnonfld& row) {
-    amc::FAnonfld *ptr = field.c_anonfld;
+inline void amc::c_anonfld_Remove(amc::FField& parent, amc::FAnonfld& row) {
+    amc::FAnonfld *ptr = parent.c_anonfld;
     if (LIKELY(ptr == &row)) {
-        field.c_anonfld = NULL;
+        parent.c_anonfld = NULL;
     }
 }
 
 // --- amc.FField.c_fldoffset.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fldoffset_InsertMaybe(amc::FField& field, amc::FFldoffset& row) {
-    amc::FFldoffset* ptr = field.c_fldoffset;
+inline bool amc::c_fldoffset_InsertMaybe(amc::FField& parent, amc::FFldoffset& row) {
+    amc::FFldoffset* ptr = parent.c_fldoffset;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fldoffset = &row;
+        parent.c_fldoffset = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fldoffset.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fldoffset_Remove(amc::FField& field, amc::FFldoffset& row) {
-    amc::FFldoffset *ptr = field.c_fldoffset;
+inline void amc::c_fldoffset_Remove(amc::FField& parent, amc::FFldoffset& row) {
+    amc::FFldoffset *ptr = parent.c_fldoffset;
     if (LIKELY(ptr == &row)) {
-        field.c_fldoffset = NULL;
+        parent.c_fldoffset = NULL;
     }
 }
 
 // --- amc.FField.c_basepool.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_basepool_InsertMaybe(amc::FField& field, amc::FBasepool& row) {
-    amc::FBasepool* ptr = field.c_basepool;
+inline bool amc::c_basepool_InsertMaybe(amc::FField& parent, amc::FBasepool& row) {
+    amc::FBasepool* ptr = parent.c_basepool;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_basepool = &row;
+        parent.c_basepool = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_basepool.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_basepool_Remove(amc::FField& field, amc::FBasepool& row) {
-    amc::FBasepool *ptr = field.c_basepool;
+inline void amc::c_basepool_Remove(amc::FField& parent, amc::FBasepool& row) {
+    amc::FBasepool *ptr = parent.c_basepool;
     if (LIKELY(ptr == &row)) {
-        field.c_basepool = NULL;
+        parent.c_basepool = NULL;
     }
 }
 
 // --- amc.FField.c_llist.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_llist_InsertMaybe(amc::FField& field, amc::FLlist& row) {
-    amc::FLlist* ptr = field.c_llist;
+inline bool amc::c_llist_InsertMaybe(amc::FField& parent, amc::FLlist& row) {
+    amc::FLlist* ptr = parent.c_llist;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_llist = &row;
+        parent.c_llist = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_llist.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_llist_Remove(amc::FField& field, amc::FLlist& row) {
-    amc::FLlist *ptr = field.c_llist;
+inline void amc::c_llist_Remove(amc::FField& parent, amc::FLlist& row) {
+    amc::FLlist *ptr = parent.c_llist;
     if (LIKELY(ptr == &row)) {
-        field.c_llist = NULL;
+        parent.c_llist = NULL;
     }
 }
 
 // --- amc.FField.c_thash.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_thash_InsertMaybe(amc::FField& field, amc::FThash& row) {
-    amc::FThash* ptr = field.c_thash;
+inline bool amc::c_thash_InsertMaybe(amc::FField& parent, amc::FThash& row) {
+    amc::FThash* ptr = parent.c_thash;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_thash = &row;
+        parent.c_thash = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_thash.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_thash_Remove(amc::FField& field, amc::FThash& row) {
-    amc::FThash *ptr = field.c_thash;
+inline void amc::c_thash_Remove(amc::FField& parent, amc::FThash& row) {
+    amc::FThash *ptr = parent.c_thash;
     if (LIKELY(ptr == &row)) {
-        field.c_thash = NULL;
+        parent.c_thash = NULL;
     }
 }
 
 // --- amc.FField.c_inlary.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_inlary_InsertMaybe(amc::FField& field, amc::FInlary& row) {
-    amc::FInlary* ptr = field.c_inlary;
+inline bool amc::c_inlary_InsertMaybe(amc::FField& parent, amc::FInlary& row) {
+    amc::FInlary* ptr = parent.c_inlary;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_inlary = &row;
+        parent.c_inlary = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_inlary.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_inlary_Remove(amc::FField& field, amc::FInlary& row) {
-    amc::FInlary *ptr = field.c_inlary;
+inline void amc::c_inlary_Remove(amc::FField& parent, amc::FInlary& row) {
+    amc::FInlary *ptr = parent.c_inlary;
     if (LIKELY(ptr == &row)) {
-        field.c_inlary = NULL;
+        parent.c_inlary = NULL;
     }
 }
 
 // --- amc.FField.c_tary.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_tary_InsertMaybe(amc::FField& field, amc::FTary& row) {
-    amc::FTary* ptr = field.c_tary;
+inline bool amc::c_tary_InsertMaybe(amc::FField& parent, amc::FTary& row) {
+    amc::FTary* ptr = parent.c_tary;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_tary = &row;
+        parent.c_tary = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_tary.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_tary_Remove(amc::FField& field, amc::FTary& row) {
-    amc::FTary *ptr = field.c_tary;
+inline void amc::c_tary_Remove(amc::FField& parent, amc::FTary& row) {
+    amc::FTary *ptr = parent.c_tary;
     if (LIKELY(ptr == &row)) {
-        field.c_tary = NULL;
+        parent.c_tary = NULL;
     }
 }
 
 // --- amc.FField.c_rowid.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_rowid_InsertMaybe(amc::FField& field, amc::FRowid& row) {
-    amc::FRowid* ptr = field.c_rowid;
+inline bool amc::c_rowid_InsertMaybe(amc::FField& parent, amc::FRowid& row) {
+    amc::FRowid* ptr = parent.c_rowid;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_rowid = &row;
+        parent.c_rowid = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_rowid.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_rowid_Remove(amc::FField& field, amc::FRowid& row) {
-    amc::FRowid *ptr = field.c_rowid;
+inline void amc::c_rowid_Remove(amc::FField& parent, amc::FRowid& row) {
+    amc::FRowid *ptr = parent.c_rowid;
     if (LIKELY(ptr == &row)) {
-        field.c_rowid = NULL;
+        parent.c_rowid = NULL;
     }
 }
 
 // --- amc.FField.c_cascdel.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cascdel_InsertMaybe(amc::FField& field, amc::FCascdel& row) {
-    amc::FCascdel* ptr = field.c_cascdel;
+inline bool amc::c_cascdel_InsertMaybe(amc::FField& parent, amc::FCascdel& row) {
+    amc::FCascdel* ptr = parent.c_cascdel;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_cascdel = &row;
+        parent.c_cascdel = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_cascdel.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cascdel_Remove(amc::FField& field, amc::FCascdel& row) {
-    amc::FCascdel *ptr = field.c_cascdel;
+inline void amc::c_cascdel_Remove(amc::FField& parent, amc::FCascdel& row) {
+    amc::FCascdel *ptr = parent.c_cascdel;
     if (LIKELY(ptr == &row)) {
-        field.c_cascdel = NULL;
+        parent.c_cascdel = NULL;
     }
 }
 
 // --- amc.FField.c_gstatic.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_gstatic_InsertMaybe(amc::FField& field, amc::FGstatic& row) {
-    amc::FGstatic* ptr = field.c_gstatic;
+inline bool amc::c_gstatic_InsertMaybe(amc::FField& parent, amc::FGstatic& row) {
+    amc::FGstatic* ptr = parent.c_gstatic;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_gstatic = &row;
+        parent.c_gstatic = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_gstatic.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_gstatic_Remove(amc::FField& field, amc::FGstatic& row) {
-    amc::FGstatic *ptr = field.c_gstatic;
+inline void amc::c_gstatic_Remove(amc::FField& parent, amc::FGstatic& row) {
+    amc::FGstatic *ptr = parent.c_gstatic;
     if (LIKELY(ptr == &row)) {
-        field.c_gstatic = NULL;
+        parent.c_gstatic = NULL;
     }
 }
 
 // --- amc.FField.c_ptrary.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ptrary_InsertMaybe(amc::FField& field, amc::FPtrary& row) {
-    amc::FPtrary* ptr = field.c_ptrary;
+inline bool amc::c_ptrary_InsertMaybe(amc::FField& parent, amc::FPtrary& row) {
+    amc::FPtrary* ptr = parent.c_ptrary;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_ptrary = &row;
+        parent.c_ptrary = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_ptrary.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ptrary_Remove(amc::FField& field, amc::FPtrary& row) {
-    amc::FPtrary *ptr = field.c_ptrary;
+inline void amc::c_ptrary_Remove(amc::FField& parent, amc::FPtrary& row) {
+    amc::FPtrary *ptr = parent.c_ptrary;
     if (LIKELY(ptr == &row)) {
-        field.c_ptrary = NULL;
+        parent.c_ptrary = NULL;
     }
 }
 
 // --- amc.FField.c_pmaskfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_pmaskfld_InsertMaybe(amc::FField& field, amc::FPmaskfld& row) {
-    amc::FPmaskfld* ptr = field.c_pmaskfld;
+inline bool amc::c_pmaskfld_InsertMaybe(amc::FField& parent, amc::FPmaskfld& row) {
+    amc::FPmaskfld* ptr = parent.c_pmaskfld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_pmaskfld = &row;
+        parent.c_pmaskfld = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_pmaskfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_pmaskfld_Remove(amc::FField& field, amc::FPmaskfld& row) {
-    amc::FPmaskfld *ptr = field.c_pmaskfld;
+inline void amc::c_pmaskfld_Remove(amc::FField& parent, amc::FPmaskfld& row) {
+    amc::FPmaskfld *ptr = parent.c_pmaskfld;
     if (LIKELY(ptr == &row)) {
-        field.c_pmaskfld = NULL;
+        parent.c_pmaskfld = NULL;
     }
 }
 
 // --- amc.FField.c_typefld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_typefld_InsertMaybe(amc::FField& field, amc::FTypefld& row) {
-    amc::FTypefld* ptr = field.c_typefld;
+inline bool amc::c_typefld_InsertMaybe(amc::FField& parent, amc::FTypefld& row) {
+    amc::FTypefld* ptr = parent.c_typefld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_typefld = &row;
+        parent.c_typefld = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_typefld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_typefld_Remove(amc::FField& field, amc::FTypefld& row) {
-    amc::FTypefld *ptr = field.c_typefld;
+inline void amc::c_typefld_Remove(amc::FField& parent, amc::FTypefld& row) {
+    amc::FTypefld *ptr = parent.c_typefld;
     if (LIKELY(ptr == &row)) {
-        field.c_typefld = NULL;
+        parent.c_typefld = NULL;
     }
 }
 
 // --- amc.FField.c_fdec.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fdec_InsertMaybe(amc::FField& field, amc::FFdec& row) {
-    amc::FFdec* ptr = field.c_fdec;
+inline bool amc::c_fdec_InsertMaybe(amc::FField& parent, amc::FFdec& row) {
+    amc::FFdec* ptr = parent.c_fdec;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fdec = &row;
+        parent.c_fdec = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fdec.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fdec_Remove(amc::FField& field, amc::FFdec& row) {
-    amc::FFdec *ptr = field.c_fdec;
+inline void amc::c_fdec_Remove(amc::FField& parent, amc::FFdec& row) {
+    amc::FFdec *ptr = parent.c_fdec;
     if (LIKELY(ptr == &row)) {
-        field.c_fdec = NULL;
+        parent.c_fdec = NULL;
     }
 }
 
 // --- amc.FField.c_fconst.EmptyQ
 // Return true if index is empty
-inline bool amc::c_fconst_EmptyQ(amc::FField& field) {
-    return field.c_fconst_n == 0;
+inline bool amc::c_fconst_EmptyQ(amc::FField& parent) {
+    return parent.c_fconst_n == 0;
 }
 
 // --- amc.FField.c_fconst.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFconst* amc::c_fconst_Find(amc::FField& field, u64 t) {
+inline amc::FFconst* amc::c_fconst_Find(amc::FField& parent, u64 t) {
     amc::FFconst *retval = NULL;
     u64 idx = t;
-    u64 lim = field.c_fconst_n;
+    u64 lim = parent.c_fconst_n;
     if (idx < lim) {
-        retval = field.c_fconst_elems[idx];
+        retval = parent.c_fconst_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FField.c_fconst.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFconst*> amc::c_fconst_Getary(amc::FField& field) {
-    return algo::aryptr<amc::FFconst*>(field.c_fconst_elems, field.c_fconst_n);
+inline algo::aryptr<amc::FFconst*> amc::c_fconst_Getary(amc::FField& parent) {
+    return algo::aryptr<amc::FFconst*>(parent.c_fconst_elems, parent.c_fconst_n);
 }
 
 // --- amc.FField.c_fconst.N
 // Return number of items in the pointer array
-inline i64 amc::c_fconst_N(const amc::FField& field) {
-    return field.c_fconst_n;
+inline i64 amc::c_fconst_N(const amc::FField& parent) {
+    return parent.c_fconst_n;
 }
 
 // --- amc.FField.c_fconst.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_fconst_RemoveAll(amc::FField& field) {
-    for (u64 i = 0; i < field.c_fconst_n; i++) {
+inline void amc::c_fconst_RemoveAll(amc::FField& parent) {
+    for (u64 i = 0; i < parent.c_fconst_n; i++) {
         // mark all elements as not-in-array
-        field.c_fconst_elems[i]->field_c_fconst_in_ary = false;
+        parent.c_fconst_elems[i]->field_c_fconst_in_ary = false;
     }
-    field.c_fconst_n = 0;
+    parent.c_fconst_n = 0;
 }
 
 // --- amc.FField.c_fconst.qFind
 // Return reference without bounds checking
-inline amc::FFconst& amc::c_fconst_qFind(amc::FField& field, u64 idx) {
-    return *field.c_fconst_elems[idx];
+inline amc::FFconst& amc::c_fconst_qFind(amc::FField& parent, u64 idx) {
+    return *parent.c_fconst_elems[idx];
 }
 
 // --- amc.FField.c_fconst.InAryQ
@@ -13871,281 +13871,281 @@ inline bool amc::field_c_fconst_InAryQ(amc::FFconst& row) {
 
 // --- amc.FField.c_fconst.qLast
 // Reference to last element without bounds checking
-inline amc::FFconst& amc::c_fconst_qLast(amc::FField& field) {
-    return *field.c_fconst_elems[field.c_fconst_n-1];
+inline amc::FFconst& amc::c_fconst_qLast(amc::FField& parent) {
+    return *parent.c_fconst_elems[parent.c_fconst_n-1];
 }
 
 // --- amc.FField.c_finput.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_finput_InsertMaybe(amc::FField& field, amc::FFinput& row) {
-    amc::FFinput* ptr = field.c_finput;
+inline bool amc::c_finput_InsertMaybe(amc::FField& parent, amc::FFinput& row) {
+    amc::FFinput* ptr = parent.c_finput;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_finput = &row;
+        parent.c_finput = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_finput.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_finput_Remove(amc::FField& field, amc::FFinput& row) {
-    amc::FFinput *ptr = field.c_finput;
+inline void amc::c_finput_Remove(amc::FField& parent, amc::FFinput& row) {
+    amc::FFinput *ptr = parent.c_finput;
     if (LIKELY(ptr == &row)) {
-        field.c_finput = NULL;
+        parent.c_finput = NULL;
     }
 }
 
 // --- amc.FField.c_foutput.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_foutput_InsertMaybe(amc::FField& field, amc::FFoutput& row) {
-    amc::FFoutput* ptr = field.c_foutput;
+inline bool amc::c_foutput_InsertMaybe(amc::FField& parent, amc::FFoutput& row) {
+    amc::FFoutput* ptr = parent.c_foutput;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_foutput = &row;
+        parent.c_foutput = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_foutput.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_foutput_Remove(amc::FField& field, amc::FFoutput& row) {
-    amc::FFoutput *ptr = field.c_foutput;
+inline void amc::c_foutput_Remove(amc::FField& parent, amc::FFoutput& row) {
+    amc::FFoutput *ptr = parent.c_foutput;
     if (LIKELY(ptr == &row)) {
-        field.c_foutput = NULL;
+        parent.c_foutput = NULL;
     }
 }
 
 // --- amc.FField.c_fbuf.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fbuf_InsertMaybe(amc::FField& field, amc::FFbuf& row) {
-    amc::FFbuf* ptr = field.c_fbuf;
+inline bool amc::c_fbuf_InsertMaybe(amc::FField& parent, amc::FFbuf& row) {
+    amc::FFbuf* ptr = parent.c_fbuf;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fbuf = &row;
+        parent.c_fbuf = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fbuf.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fbuf_Remove(amc::FField& field, amc::FFbuf& row) {
-    amc::FFbuf *ptr = field.c_fbuf;
+inline void amc::c_fbuf_Remove(amc::FField& parent, amc::FFbuf& row) {
+    amc::FFbuf *ptr = parent.c_fbuf;
     if (LIKELY(ptr == &row)) {
-        field.c_fbuf = NULL;
+        parent.c_fbuf = NULL;
     }
 }
 
 // --- amc.FField.c_fbigend.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fbigend_InsertMaybe(amc::FField& field, amc::FFbigend& row) {
-    amc::FFbigend* ptr = field.c_fbigend;
+inline bool amc::c_fbigend_InsertMaybe(amc::FField& parent, amc::FFbigend& row) {
+    amc::FFbigend* ptr = parent.c_fbigend;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fbigend = &row;
+        parent.c_fbigend = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fbigend.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fbigend_Remove(amc::FField& field, amc::FFbigend& row) {
-    amc::FFbigend *ptr = field.c_fbigend;
+inline void amc::c_fbigend_Remove(amc::FField& parent, amc::FFbigend& row) {
+    amc::FFbigend *ptr = parent.c_fbigend;
     if (LIKELY(ptr == &row)) {
-        field.c_fbigend = NULL;
+        parent.c_fbigend = NULL;
     }
 }
 
 // --- amc.FField.c_fstep.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fstep_InsertMaybe(amc::FField& field, amc::FFstep& row) {
-    amc::FFstep* ptr = field.c_fstep;
+inline bool amc::c_fstep_InsertMaybe(amc::FField& parent, amc::FFstep& row) {
+    amc::FFstep* ptr = parent.c_fstep;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fstep = &row;
+        parent.c_fstep = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fstep.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fstep_Remove(amc::FField& field, amc::FFstep& row) {
-    amc::FFstep *ptr = field.c_fstep;
+inline void amc::c_fstep_Remove(amc::FField& parent, amc::FFstep& row) {
+    amc::FFstep *ptr = parent.c_fstep;
     if (LIKELY(ptr == &row)) {
-        field.c_fstep = NULL;
+        parent.c_fstep = NULL;
     }
 }
 
 // --- amc.FField.c_fregx.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fregx_InsertMaybe(amc::FField& field, amc::FFregx& row) {
-    amc::FFregx* ptr = field.c_fregx;
+inline bool amc::c_fregx_InsertMaybe(amc::FField& parent, amc::FFregx& row) {
+    amc::FFregx* ptr = parent.c_fregx;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fregx = &row;
+        parent.c_fregx = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fregx.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fregx_Remove(amc::FField& field, amc::FFregx& row) {
-    amc::FFregx *ptr = field.c_fregx;
+inline void amc::c_fregx_Remove(amc::FField& parent, amc::FFregx& row) {
+    amc::FFregx *ptr = parent.c_fregx;
     if (LIKELY(ptr == &row)) {
-        field.c_fregx = NULL;
+        parent.c_fregx = NULL;
     }
 }
 
 // --- amc.FField.c_fcmp.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fcmp_InsertMaybe(amc::FField& field, amc::FFcmp& row) {
-    amc::FFcmp* ptr = field.c_fcmp;
+inline bool amc::c_fcmp_InsertMaybe(amc::FField& parent, amc::FFcmp& row) {
+    amc::FFcmp* ptr = parent.c_fcmp;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fcmp = &row;
+        parent.c_fcmp = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fcmp.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fcmp_Remove(amc::FField& field, amc::FFcmp& row) {
-    amc::FFcmp *ptr = field.c_fcmp;
+inline void amc::c_fcmp_Remove(amc::FField& parent, amc::FFcmp& row) {
+    amc::FFcmp *ptr = parent.c_fcmp;
     if (LIKELY(ptr == &row)) {
-        field.c_fcmp = NULL;
+        parent.c_fcmp = NULL;
     }
 }
 
 // --- amc.FField.c_fcast.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fcast_InsertMaybe(amc::FField& field, amc::FFcast& row) {
-    amc::FFcast* ptr = field.c_fcast;
+inline bool amc::c_fcast_InsertMaybe(amc::FField& parent, amc::FFcast& row) {
+    amc::FFcast* ptr = parent.c_fcast;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fcast = &row;
+        parent.c_fcast = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fcast.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fcast_Remove(amc::FField& field, amc::FFcast& row) {
-    amc::FFcast *ptr = field.c_fcast;
+inline void amc::c_fcast_Remove(amc::FField& parent, amc::FFcast& row) {
+    amc::FFcast *ptr = parent.c_fcast;
     if (LIKELY(ptr == &row)) {
-        field.c_fcast = NULL;
+        parent.c_fcast = NULL;
     }
 }
 
 // --- amc.FField.c_gconst.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_gconst_InsertMaybe(amc::FField& field, amc::FGconst& row) {
-    amc::FGconst* ptr = field.c_gconst;
+inline bool amc::c_gconst_InsertMaybe(amc::FField& parent, amc::FGconst& row) {
+    amc::FGconst* ptr = parent.c_gconst;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_gconst = &row;
+        parent.c_gconst = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_gconst.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_gconst_Remove(amc::FField& field, amc::FGconst& row) {
-    amc::FGconst *ptr = field.c_gconst;
+inline void amc::c_gconst_Remove(amc::FField& parent, amc::FGconst& row) {
+    amc::FGconst *ptr = parent.c_gconst;
     if (LIKELY(ptr == &row)) {
-        field.c_gconst = NULL;
+        parent.c_gconst = NULL;
     }
 }
 
 // --- amc.FField.c_bitfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_bitfld_InsertMaybe(amc::FField& field, amc::FBitfld& row) {
-    amc::FBitfld* ptr = field.c_bitfld;
+inline bool amc::c_bitfld_InsertMaybe(amc::FField& parent, amc::FBitfld& row) {
+    amc::FBitfld* ptr = parent.c_bitfld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_bitfld = &row;
+        parent.c_bitfld = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_bitfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_bitfld_Remove(amc::FField& field, amc::FBitfld& row) {
-    amc::FBitfld *ptr = field.c_bitfld;
+inline void amc::c_bitfld_Remove(amc::FField& parent, amc::FBitfld& row) {
+    amc::FBitfld *ptr = parent.c_bitfld;
     if (LIKELY(ptr == &row)) {
-        field.c_bitfld = NULL;
+        parent.c_bitfld = NULL;
     }
 }
 
 // --- amc.FField.c_cppfunc.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_cppfunc_InsertMaybe(amc::FField& field, amc::FCppfunc& row) {
-    amc::FCppfunc* ptr = field.c_cppfunc;
+inline bool amc::c_cppfunc_InsertMaybe(amc::FField& parent, amc::FCppfunc& row) {
+    amc::FCppfunc* ptr = parent.c_cppfunc;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_cppfunc = &row;
+        parent.c_cppfunc = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_cppfunc.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_cppfunc_Remove(amc::FField& field, amc::FCppfunc& row) {
-    amc::FCppfunc *ptr = field.c_cppfunc;
+inline void amc::c_cppfunc_Remove(amc::FField& parent, amc::FCppfunc& row) {
+    amc::FCppfunc *ptr = parent.c_cppfunc;
     if (LIKELY(ptr == &row)) {
-        field.c_cppfunc = NULL;
+        parent.c_cppfunc = NULL;
     }
 }
 
 // --- amc.FField.c_substr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_substr_InsertMaybe(amc::FField& field, amc::FSubstr& row) {
-    amc::FSubstr* ptr = field.c_substr;
+inline bool amc::c_substr_InsertMaybe(amc::FField& parent, amc::FSubstr& row) {
+    amc::FSubstr* ptr = parent.c_substr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_substr = &row;
+        parent.c_substr = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_substr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_substr_Remove(amc::FField& field, amc::FSubstr& row) {
-    amc::FSubstr *ptr = field.c_substr;
+inline void amc::c_substr_Remove(amc::FField& parent, amc::FSubstr& row) {
+    amc::FSubstr *ptr = parent.c_substr;
     if (LIKELY(ptr == &row)) {
-        field.c_substr = NULL;
+        parent.c_substr = NULL;
     }
 }
 
 // --- amc.FField.c_fcompact.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fcompact_InsertMaybe(amc::FField& field, amc::FFcompact& row) {
-    amc::FFcompact* ptr = field.c_fcompact;
+inline bool amc::c_fcompact_InsertMaybe(amc::FField& parent, amc::FFcompact& row) {
+    amc::FFcompact* ptr = parent.c_fcompact;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fcompact = &row;
+        parent.c_fcompact = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fcompact.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fcompact_Remove(amc::FField& field, amc::FFcompact& row) {
-    amc::FFcompact *ptr = field.c_fcompact;
+inline void amc::c_fcompact_Remove(amc::FField& parent, amc::FFcompact& row) {
+    amc::FFcompact *ptr = parent.c_fcompact;
     if (LIKELY(ptr == &row)) {
-        field.c_fcompact = NULL;
+        parent.c_fcompact = NULL;
     }
 }
 
 // --- amc.FField.zd_xref_keyfld.EmptyQ
 // Return true if index is empty
-inline bool amc::zd_xref_keyfld_EmptyQ(amc::FField& field) {
-    return field.zd_xref_keyfld_head == NULL;
+inline bool amc::zd_xref_keyfld_EmptyQ(amc::FField& parent) {
+    return parent.zd_xref_keyfld_head == NULL;
 }
 
 // --- amc.FField.zd_xref_keyfld.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FXref* amc::zd_xref_keyfld_First(amc::FField& field) {
+inline amc::FXref* amc::zd_xref_keyfld_First(amc::FField& parent) {
     amc::FXref *row = NULL;
-    row = field.zd_xref_keyfld_head;
+    row = parent.zd_xref_keyfld_head;
     return row;
 }
 
@@ -14159,16 +14159,16 @@ inline bool amc::field_zd_xref_keyfld_InLlistQ(amc::FXref& row) {
 
 // --- amc.FField.zd_xref_keyfld.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FXref* amc::zd_xref_keyfld_Last(amc::FField& field) {
+inline amc::FXref* amc::zd_xref_keyfld_Last(amc::FField& parent) {
     amc::FXref *row = NULL;
-    row = field.zd_xref_keyfld_tail;
+    row = parent.zd_xref_keyfld_tail;
     return row;
 }
 
 // --- amc.FField.zd_xref_keyfld.N
 // Return number of items in the linked list
-inline i32 amc::zd_xref_keyfld_N(const amc::FField& field) {
-    return field.zd_xref_keyfld_n;
+inline i32 amc::zd_xref_keyfld_N(const amc::FField& parent) {
+    return parent.zd_xref_keyfld_n;
 }
 
 // --- amc.FField.zd_xref_keyfld.Next
@@ -14185,23 +14185,23 @@ inline amc::FXref* amc::field_zd_xref_keyfld_Prev(amc::FXref &row) {
 
 // --- amc.FField.zd_xref_keyfld.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FXref& amc::zd_xref_keyfld_qLast(amc::FField& field) {
+inline amc::FXref& amc::zd_xref_keyfld_qLast(amc::FField& parent) {
     amc::FXref *row = NULL;
-    row = field.zd_xref_keyfld_tail;
+    row = parent.zd_xref_keyfld_tail;
     return *row;
 }
 
 // --- amc.FField.zs_fcmap.EmptyQ
 // Return true if index is empty
-inline bool amc::zs_fcmap_EmptyQ(amc::FField& field) {
-    return field.zs_fcmap_head == NULL;
+inline bool amc::zs_fcmap_EmptyQ(amc::FField& parent) {
+    return parent.zs_fcmap_head == NULL;
 }
 
 // --- amc.FField.zs_fcmap.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FFcmap* amc::zs_fcmap_First(amc::FField& field) {
+inline amc::FFcmap* amc::zs_fcmap_First(amc::FField& parent) {
     amc::FFcmap *row = NULL;
-    row = field.zs_fcmap_head;
+    row = parent.zs_fcmap_head;
     return row;
 }
 
@@ -14215,9 +14215,9 @@ inline bool amc::field_zs_fcmap_InLlistQ(amc::FFcmap& row) {
 
 // --- amc.FField.zs_fcmap.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FFcmap* amc::zs_fcmap_Last(amc::FField& field) {
+inline amc::FFcmap* amc::zs_fcmap_Last(amc::FField& parent) {
     amc::FFcmap *row = NULL;
-    row = field.zs_fcmap_tail;
+    row = parent.zs_fcmap_tail;
     return row;
 }
 
@@ -14229,124 +14229,124 @@ inline amc::FFcmap* amc::field_zs_fcmap_Next(amc::FFcmap &row) {
 
 // --- amc.FField.zs_fcmap.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FFcmap& amc::zs_fcmap_qLast(amc::FField& field) {
+inline amc::FFcmap& amc::zs_fcmap_qLast(amc::FField& parent) {
     amc::FFcmap *row = NULL;
-    row = field.zs_fcmap_tail;
+    row = parent.zs_fcmap_tail;
     return *row;
 }
 
 // --- amc.FField.c_fnoremove.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fnoremove_InsertMaybe(amc::FField& field, amc::FFnoremove& row) {
-    amc::FFnoremove* ptr = field.c_fnoremove;
+inline bool amc::c_fnoremove_InsertMaybe(amc::FField& parent, amc::FFnoremove& row) {
+    amc::FFnoremove* ptr = parent.c_fnoremove;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fnoremove = &row;
+        parent.c_fnoremove = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fnoremove.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fnoremove_Remove(amc::FField& field, amc::FFnoremove& row) {
-    amc::FFnoremove *ptr = field.c_fnoremove;
+inline void amc::c_fnoremove_Remove(amc::FField& parent, amc::FFnoremove& row) {
+    amc::FFnoremove *ptr = parent.c_fnoremove;
     if (LIKELY(ptr == &row)) {
-        field.c_fnoremove = NULL;
+        parent.c_fnoremove = NULL;
     }
 }
 
 // --- amc.FField.c_sortfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_sortfld_InsertMaybe(amc::FField& field, amc::FSortfld& row) {
-    amc::FSortfld* ptr = field.c_sortfld;
+inline bool amc::c_sortfld_InsertMaybe(amc::FField& parent, amc::FSortfld& row) {
+    amc::FSortfld* ptr = parent.c_sortfld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_sortfld = &row;
+        parent.c_sortfld = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_sortfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_sortfld_Remove(amc::FField& field, amc::FSortfld& row) {
-    amc::FSortfld *ptr = field.c_sortfld;
+inline void amc::c_sortfld_Remove(amc::FField& parent, amc::FSortfld& row) {
+    amc::FSortfld *ptr = parent.c_sortfld;
     if (LIKELY(ptr == &row)) {
-        field.c_sortfld = NULL;
+        parent.c_sortfld = NULL;
     }
 }
 
 // --- amc.FField.c_ftrace.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ftrace_InsertMaybe(amc::FField& field, amc::FFtrace& row) {
-    amc::FFtrace* ptr = field.c_ftrace;
+inline bool amc::c_ftrace_InsertMaybe(amc::FField& parent, amc::FFtrace& row) {
+    amc::FFtrace* ptr = parent.c_ftrace;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_ftrace = &row;
+        parent.c_ftrace = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_ftrace.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ftrace_Remove(amc::FField& field, amc::FFtrace& row) {
-    amc::FFtrace *ptr = field.c_ftrace;
+inline void amc::c_ftrace_Remove(amc::FField& parent, amc::FFtrace& row) {
+    amc::FFtrace *ptr = parent.c_ftrace;
     if (LIKELY(ptr == &row)) {
-        field.c_ftrace = NULL;
+        parent.c_ftrace = NULL;
     }
 }
 
 // --- amc.FField.c_hook.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_hook_InsertMaybe(amc::FField& field, amc::FHook& row) {
-    amc::FHook* ptr = field.c_hook;
+inline bool amc::c_hook_InsertMaybe(amc::FField& parent, amc::FHook& row) {
+    amc::FHook* ptr = parent.c_hook;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_hook = &row;
+        parent.c_hook = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_hook.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_hook_Remove(amc::FField& field, amc::FHook& row) {
-    amc::FHook *ptr = field.c_hook;
+inline void amc::c_hook_Remove(amc::FField& parent, amc::FHook& row) {
+    amc::FHook *ptr = parent.c_hook;
     if (LIKELY(ptr == &row)) {
-        field.c_hook = NULL;
+        parent.c_hook = NULL;
     }
 }
 
 // --- amc.FField.c_charset.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_charset_InsertMaybe(amc::FField& field, amc::FCharset& row) {
-    amc::FCharset* ptr = field.c_charset;
+inline bool amc::c_charset_InsertMaybe(amc::FField& parent, amc::FCharset& row) {
+    amc::FCharset* ptr = parent.c_charset;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_charset = &row;
+        parent.c_charset = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_charset.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_charset_Remove(amc::FField& field, amc::FCharset& row) {
-    amc::FCharset *ptr = field.c_charset;
+inline void amc::c_charset_Remove(amc::FField& parent, amc::FCharset& row) {
+    amc::FCharset *ptr = parent.c_charset;
     if (LIKELY(ptr == &row)) {
-        field.c_charset = NULL;
+        parent.c_charset = NULL;
     }
 }
 
 // --- amc.FField.bh_bitfld.EmptyQ
 // Return true if index is empty
-inline bool amc::bh_bitfld_EmptyQ(amc::FField& field) {
-    return field.bh_bitfld_n == 0;
+inline bool amc::bh_bitfld_EmptyQ(amc::FField& parent) {
+    return parent.bh_bitfld_n == 0;
 }
 
 // --- amc.FField.bh_bitfld.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FBitfld* amc::bh_bitfld_First(amc::FField& field) {
+inline amc::FBitfld* amc::bh_bitfld_First(amc::FField& parent) {
     amc::FBitfld *row = NULL;
-    if (field.bh_bitfld_n > 0) {
-        row = field.bh_bitfld_elems[0];
+    if (parent.bh_bitfld_n > 0) {
+        row = parent.bh_bitfld_elems[0];
     }
     return row;
 }
@@ -14361,174 +14361,174 @@ inline bool amc::bh_bitfld_InBheapQ(amc::FBitfld& row) {
 
 // --- amc.FField.bh_bitfld.N
 // Return number of items in the heap
-inline i32 amc::bh_bitfld_N(const amc::FField& field) {
-    return field.bh_bitfld_n;
+inline i32 amc::bh_bitfld_N(const amc::FField& parent) {
+    return parent.bh_bitfld_n;
 }
 
 // --- amc.FField.c_funique.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_funique_InsertMaybe(amc::FField& field, amc::FFunique& row) {
-    amc::FFunique* ptr = field.c_funique;
+inline bool amc::c_funique_InsertMaybe(amc::FField& parent, amc::FFunique& row) {
+    amc::FFunique* ptr = parent.c_funique;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_funique = &row;
+        parent.c_funique = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_funique.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_funique_Remove(amc::FField& field, amc::FFunique& row) {
-    amc::FFunique *ptr = field.c_funique;
+inline void amc::c_funique_Remove(amc::FField& parent, amc::FFunique& row) {
+    amc::FFunique *ptr = parent.c_funique;
     if (LIKELY(ptr == &row)) {
-        field.c_funique = NULL;
+        parent.c_funique = NULL;
     }
 }
 
 // --- amc.FField.c_fflag.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fflag_InsertMaybe(amc::FField& field, amc::FFflag& row) {
-    amc::FFflag* ptr = field.c_fflag;
+inline bool amc::c_fflag_InsertMaybe(amc::FField& parent, amc::FFflag& row) {
+    amc::FFflag* ptr = parent.c_fflag;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fflag = &row;
+        parent.c_fflag = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fflag.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fflag_Remove(amc::FField& field, amc::FFflag& row) {
-    amc::FFflag *ptr = field.c_fflag;
+inline void amc::c_fflag_Remove(amc::FField& parent, amc::FFflag& row) {
+    amc::FFflag *ptr = parent.c_fflag;
     if (LIKELY(ptr == &row)) {
-        field.c_fflag = NULL;
+        parent.c_fflag = NULL;
     }
 }
 
 // --- amc.FField.c_falias.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_falias_InsertMaybe(amc::FField& field, amc::FFalias& row) {
-    amc::FFalias* ptr = field.c_falias;
+inline bool amc::c_falias_InsertMaybe(amc::FField& parent, amc::FFalias& row) {
+    amc::FFalias* ptr = parent.c_falias;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_falias = &row;
+        parent.c_falias = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_falias.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_falias_Remove(amc::FField& field, amc::FFalias& row) {
-    amc::FFalias *ptr = field.c_falias;
+inline void amc::c_falias_Remove(amc::FField& parent, amc::FFalias& row) {
+    amc::FFalias *ptr = parent.c_falias;
     if (LIKELY(ptr == &row)) {
-        field.c_falias = NULL;
+        parent.c_falias = NULL;
     }
 }
 
 // --- amc.FField.c_ffast_field.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ffast_field_InsertMaybe(amc::FField& field, amc::FFfast& row) {
-    amc::FFfast* ptr = field.c_ffast_field;
+inline bool amc::c_ffast_field_InsertMaybe(amc::FField& parent, amc::FFfast& row) {
+    amc::FFfast* ptr = parent.c_ffast_field;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_ffast_field = &row;
+        parent.c_ffast_field = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_ffast_field.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ffast_field_Remove(amc::FField& field, amc::FFfast& row) {
-    amc::FFfast *ptr = field.c_ffast_field;
+inline void amc::c_ffast_field_Remove(amc::FField& parent, amc::FFfast& row) {
+    amc::FFfast *ptr = parent.c_ffast_field;
     if (LIKELY(ptr == &row)) {
-        field.c_ffast_field = NULL;
+        parent.c_ffast_field = NULL;
     }
 }
 
 // --- amc.FField.c_ffast_length.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ffast_length_InsertMaybe(amc::FField& field, amc::FFfast& row) {
-    amc::FFfast* ptr = field.c_ffast_length;
+inline bool amc::c_ffast_length_InsertMaybe(amc::FField& parent, amc::FFfast& row) {
+    amc::FFfast* ptr = parent.c_ffast_length;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_ffast_length = &row;
+        parent.c_ffast_length = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_ffast_length.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ffast_length_Remove(amc::FField& field, amc::FFfast& row) {
-    amc::FFfast *ptr = field.c_ffast_length;
+inline void amc::c_ffast_length_Remove(amc::FField& parent, amc::FFfast& row) {
+    amc::FFfast *ptr = parent.c_ffast_length;
     if (LIKELY(ptr == &row)) {
-        field.c_ffast_length = NULL;
+        parent.c_ffast_length = NULL;
     }
 }
 
 // --- amc.FField.c_ffast_mantissa.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ffast_mantissa_InsertMaybe(amc::FField& field, amc::FFfast& row) {
-    amc::FFfast* ptr = field.c_ffast_mantissa;
+inline bool amc::c_ffast_mantissa_InsertMaybe(amc::FField& parent, amc::FFfast& row) {
+    amc::FFfast* ptr = parent.c_ffast_mantissa;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_ffast_mantissa = &row;
+        parent.c_ffast_mantissa = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_ffast_mantissa.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ffast_mantissa_Remove(amc::FField& field, amc::FFfast& row) {
-    amc::FFfast *ptr = field.c_ffast_mantissa;
+inline void amc::c_ffast_mantissa_Remove(amc::FField& parent, amc::FFfast& row) {
+    amc::FFfast *ptr = parent.c_ffast_mantissa;
     if (LIKELY(ptr == &row)) {
-        field.c_ffast_mantissa = NULL;
+        parent.c_ffast_mantissa = NULL;
     }
 }
 
 // --- amc.FField.c_ffast.EmptyQ
 // Return true if index is empty
-inline bool amc::c_ffast_EmptyQ(amc::FField& field) {
-    return field.c_ffast_n == 0;
+inline bool amc::c_ffast_EmptyQ(amc::FField& parent) {
+    return parent.c_ffast_n == 0;
 }
 
 // --- amc.FField.c_ffast.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFfast* amc::c_ffast_Find(amc::FField& field, u64 t) {
+inline amc::FFfast* amc::c_ffast_Find(amc::FField& parent, u64 t) {
     amc::FFfast *retval = NULL;
     u64 idx = t;
-    u64 lim = field.c_ffast_n;
+    u64 lim = parent.c_ffast_n;
     if (idx < lim) {
-        retval = field.c_ffast_elems[idx];
+        retval = parent.c_ffast_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FField.c_ffast.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFfast*> amc::c_ffast_Getary(amc::FField& field) {
-    return algo::aryptr<amc::FFfast*>(field.c_ffast_elems, field.c_ffast_n);
+inline algo::aryptr<amc::FFfast*> amc::c_ffast_Getary(amc::FField& parent) {
+    return algo::aryptr<amc::FFfast*>(parent.c_ffast_elems, parent.c_ffast_n);
 }
 
 // --- amc.FField.c_ffast.N
 // Return number of items in the pointer array
-inline i64 amc::c_ffast_N(const amc::FField& field) {
-    return field.c_ffast_n;
+inline i64 amc::c_ffast_N(const amc::FField& parent) {
+    return parent.c_ffast_n;
 }
 
 // --- amc.FField.c_ffast.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_ffast_RemoveAll(amc::FField& field) {
-    for (u64 i = 0; i < field.c_ffast_n; i++) {
+inline void amc::c_ffast_RemoveAll(amc::FField& parent) {
+    for (u64 i = 0; i < parent.c_ffast_n; i++) {
         // mark all elements as not-in-array
-        field.c_ffast_elems[i]->field_c_ffast_in_ary = false;
+        parent.c_ffast_elems[i]->field_c_ffast_in_ary = false;
     }
-    field.c_ffast_n = 0;
+    parent.c_ffast_n = 0;
 }
 
 // --- amc.FField.c_ffast.qFind
 // Return reference without bounds checking
-inline amc::FFfast& amc::c_ffast_qFind(amc::FField& field, u64 idx) {
-    return *field.c_ffast_elems[idx];
+inline amc::FFfast& amc::c_ffast_qFind(amc::FField& parent, u64 idx) {
+    return *parent.c_ffast_elems[idx];
 }
 
 // --- amc.FField.c_ffast.InAryQ
@@ -14539,54 +14539,54 @@ inline bool amc::field_c_ffast_InAryQ(amc::FFfast& row) {
 
 // --- amc.FField.c_ffast.qLast
 // Reference to last element without bounds checking
-inline amc::FFfast& amc::c_ffast_qLast(amc::FField& field) {
-    return *field.c_ffast_elems[field.c_ffast_n-1];
+inline amc::FFfast& amc::c_ffast_qLast(amc::FField& parent) {
+    return *parent.c_ffast_elems[parent.c_ffast_n-1];
 }
 
 // --- amc.FField.c_pmaskfld_member.EmptyQ
 // Return true if index is empty
-inline bool amc::c_pmaskfld_member_EmptyQ(amc::FField& field) {
-    return field.c_pmaskfld_member_n == 0;
+inline bool amc::c_pmaskfld_member_EmptyQ(amc::FField& parent) {
+    return parent.c_pmaskfld_member_n == 0;
 }
 
 // --- amc.FField.c_pmaskfld_member.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FPmaskfldMember* amc::c_pmaskfld_member_Find(amc::FField& field, u64 t) {
+inline amc::FPmaskfldMember* amc::c_pmaskfld_member_Find(amc::FField& parent, u64 t) {
     amc::FPmaskfldMember *retval = NULL;
     u64 idx = t;
-    u64 lim = field.c_pmaskfld_member_n;
+    u64 lim = parent.c_pmaskfld_member_n;
     if (idx < lim) {
-        retval = field.c_pmaskfld_member_elems[idx];
+        retval = parent.c_pmaskfld_member_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FField.c_pmaskfld_member.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FPmaskfldMember*> amc::c_pmaskfld_member_Getary(amc::FField& field) {
-    return algo::aryptr<amc::FPmaskfldMember*>(field.c_pmaskfld_member_elems, field.c_pmaskfld_member_n);
+inline algo::aryptr<amc::FPmaskfldMember*> amc::c_pmaskfld_member_Getary(amc::FField& parent) {
+    return algo::aryptr<amc::FPmaskfldMember*>(parent.c_pmaskfld_member_elems, parent.c_pmaskfld_member_n);
 }
 
 // --- amc.FField.c_pmaskfld_member.N
 // Return number of items in the pointer array
-inline i64 amc::c_pmaskfld_member_N(const amc::FField& field) {
-    return field.c_pmaskfld_member_n;
+inline i64 amc::c_pmaskfld_member_N(const amc::FField& parent) {
+    return parent.c_pmaskfld_member_n;
 }
 
 // --- amc.FField.c_pmaskfld_member.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_pmaskfld_member_RemoveAll(amc::FField& field) {
-    for (u64 i = 0; i < field.c_pmaskfld_member_n; i++) {
+inline void amc::c_pmaskfld_member_RemoveAll(amc::FField& parent) {
+    for (u64 i = 0; i < parent.c_pmaskfld_member_n; i++) {
         // mark all elements as not-in-array
-        field.c_pmaskfld_member_elems[i]->field_c_pmaskfld_member_in_ary = false;
+        parent.c_pmaskfld_member_elems[i]->field_c_pmaskfld_member_in_ary = false;
     }
-    field.c_pmaskfld_member_n = 0;
+    parent.c_pmaskfld_member_n = 0;
 }
 
 // --- amc.FField.c_pmaskfld_member.qFind
 // Return reference without bounds checking
-inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qFind(amc::FField& field, u64 idx) {
-    return *field.c_pmaskfld_member_elems[idx];
+inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qFind(amc::FField& parent, u64 idx) {
+    return *parent.c_pmaskfld_member_elems[idx];
 }
 
 // --- amc.FField.c_pmaskfld_member.InAryQ
@@ -14597,101 +14597,101 @@ inline bool amc::field_c_pmaskfld_member_InAryQ(amc::FPmaskfldMember& row) {
 
 // --- amc.FField.c_pmaskfld_member.qLast
 // Reference to last element without bounds checking
-inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qLast(amc::FField& field) {
-    return *field.c_pmaskfld_member_elems[field.c_pmaskfld_member_n-1];
+inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qLast(amc::FField& parent) {
+    return *parent.c_pmaskfld_member_elems[parent.c_pmaskfld_member_n-1];
 }
 
 // --- amc.FField.c_lenfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_lenfld_InsertMaybe(amc::FField& field, amc::FLenfld& row) {
-    amc::FLenfld* ptr = field.c_lenfld;
+inline bool amc::c_lenfld_InsertMaybe(amc::FField& parent, amc::FLenfld& row) {
+    amc::FLenfld* ptr = parent.c_lenfld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_lenfld = &row;
+        parent.c_lenfld = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_lenfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_lenfld_Remove(amc::FField& field, amc::FLenfld& row) {
-    amc::FLenfld *ptr = field.c_lenfld;
+inline void amc::c_lenfld_Remove(amc::FField& parent, amc::FLenfld& row) {
+    amc::FLenfld *ptr = parent.c_lenfld;
     if (LIKELY(ptr == &row)) {
-        field.c_lenfld = NULL;
+        parent.c_lenfld = NULL;
     }
 }
 
 // --- amc.FField.c_fkafka.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fkafka_InsertMaybe(amc::FField& field, amc::FFkafka& row) {
-    amc::FFkafka* ptr = field.c_fkafka;
+inline bool amc::c_fkafka_InsertMaybe(amc::FField& parent, amc::FFkafka& row) {
+    amc::FFkafka* ptr = parent.c_fkafka;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fkafka = &row;
+        parent.c_fkafka = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fkafka.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fkafka_Remove(amc::FField& field, amc::FFkafka& row) {
-    amc::FFkafka *ptr = field.c_fkafka;
+inline void amc::c_fkafka_Remove(amc::FField& parent, amc::FFkafka& row) {
+    amc::FFkafka *ptr = parent.c_fkafka;
     if (LIKELY(ptr == &row)) {
-        field.c_fkafka = NULL;
+        parent.c_fkafka = NULL;
     }
 }
 
 // --- amc.FField.c_fpbuf.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fpbuf_InsertMaybe(amc::FField& field, amc::FFpbuf& row) {
-    amc::FFpbuf* ptr = field.c_fpbuf;
+inline bool amc::c_fpbuf_InsertMaybe(amc::FField& parent, amc::FFpbuf& row) {
+    amc::FFpbuf* ptr = parent.c_fpbuf;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fpbuf = &row;
+        parent.c_fpbuf = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fpbuf.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fpbuf_Remove(amc::FField& field, amc::FFpbuf& row) {
-    amc::FFpbuf *ptr = field.c_fpbuf;
+inline void amc::c_fpbuf_Remove(amc::FField& parent, amc::FFpbuf& row) {
+    amc::FFpbuf *ptr = parent.c_fpbuf;
     if (LIKELY(ptr == &row)) {
-        field.c_fpbuf = NULL;
+        parent.c_fpbuf = NULL;
     }
 }
 
 // --- amc.FField.c_fpbufcase.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fpbufcase_InsertMaybe(amc::FField& field, amc::FFpbufcase& row) {
-    amc::FFpbufcase* ptr = field.c_fpbufcase;
+inline bool amc::c_fpbufcase_InsertMaybe(amc::FField& parent, amc::FFpbufcase& row) {
+    amc::FFpbufcase* ptr = parent.c_fpbufcase;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fpbufcase = &row;
+        parent.c_fpbufcase = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_fpbufcase.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fpbufcase_Remove(amc::FField& field, amc::FFpbufcase& row) {
-    amc::FFpbufcase *ptr = field.c_fpbufcase;
+inline void amc::c_fpbufcase_Remove(amc::FField& parent, amc::FFpbufcase& row) {
+    amc::FFpbufcase *ptr = parent.c_fpbufcase;
     if (LIKELY(ptr == &row)) {
-        field.c_fpbufcase = NULL;
+        parent.c_fpbufcase = NULL;
     }
 }
 
 // --- amc.FField.zs_ffunc.EmptyQ
 // Return true if index is empty
-inline bool amc::zs_ffunc_EmptyQ(amc::FField& field) {
-    return field.zs_ffunc_head == NULL;
+inline bool amc::zs_ffunc_EmptyQ(amc::FField& parent) {
+    return parent.zs_ffunc_head == NULL;
 }
 
 // --- amc.FField.zs_ffunc.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FFfunc* amc::zs_ffunc_First(amc::FField& field) {
+inline amc::FFfunc* amc::zs_ffunc_First(amc::FField& parent) {
     amc::FFfunc *row = NULL;
-    row = field.zs_ffunc_head;
+    row = parent.zs_ffunc_head;
     return row;
 }
 
@@ -14705,9 +14705,9 @@ inline bool amc::field_zs_ffunc_InLlistQ(amc::FFfunc& row) {
 
 // --- amc.FField.zs_ffunc.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FFfunc* amc::zs_ffunc_Last(amc::FField& field) {
+inline amc::FFfunc* amc::zs_ffunc_Last(amc::FField& parent) {
     amc::FFfunc *row = NULL;
-    row = field.zs_ffunc_tail;
+    row = parent.zs_ffunc_tail;
     return row;
 }
 
@@ -14719,76 +14719,76 @@ inline amc::FFfunc* amc::field_zs_ffunc_Next(amc::FFfunc &row) {
 
 // --- amc.FField.zs_ffunc.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FFfunc& amc::zs_ffunc_qLast(amc::FField& field) {
+inline amc::FFfunc& amc::zs_ffunc_qLast(amc::FField& parent) {
     amc::FFfunc *row = NULL;
-    row = field.zs_ffunc_tail;
+    row = parent.zs_ffunc_tail;
     return *row;
 }
 
 // --- amc.FField.c_blkhash.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_blkhash_InsertMaybe(amc::FField& field, amc::FBlkhash& row) {
-    amc::FBlkhash* ptr = field.c_blkhash;
+inline bool amc::c_blkhash_InsertMaybe(amc::FField& parent, amc::FBlkhash& row) {
+    amc::FBlkhash* ptr = parent.c_blkhash;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_blkhash = &row;
+        parent.c_blkhash = &row;
     }
     return retval;
 }
 
 // --- amc.FField.c_blkhash.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_blkhash_Remove(amc::FField& field, amc::FBlkhash& row) {
-    amc::FBlkhash *ptr = field.c_blkhash;
+inline void amc::c_blkhash_Remove(amc::FField& parent, amc::FBlkhash& row) {
+    amc::FBlkhash *ptr = parent.c_blkhash;
     if (LIKELY(ptr == &row)) {
-        field.c_blkhash = NULL;
+        parent.c_blkhash = NULL;
     }
 }
 
 // --- amc.FField.c_fcond.EmptyQ
 // Return true if index is empty
-inline bool amc::c_fcond_EmptyQ(amc::FField& field) {
-    return field.c_fcond_n == 0;
+inline bool amc::c_fcond_EmptyQ(amc::FField& parent) {
+    return parent.c_fcond_n == 0;
 }
 
 // --- amc.FField.c_fcond.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFcond* amc::c_fcond_Find(amc::FField& field, u64 t) {
+inline amc::FFcond* amc::c_fcond_Find(amc::FField& parent, u64 t) {
     amc::FFcond *retval = NULL;
     u64 idx = t;
-    u64 lim = field.c_fcond_n;
+    u64 lim = parent.c_fcond_n;
     if (idx < lim) {
-        retval = field.c_fcond_elems[idx];
+        retval = parent.c_fcond_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FField.c_fcond.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFcond*> amc::c_fcond_Getary(amc::FField& field) {
-    return algo::aryptr<amc::FFcond*>(field.c_fcond_elems, field.c_fcond_n);
+inline algo::aryptr<amc::FFcond*> amc::c_fcond_Getary(amc::FField& parent) {
+    return algo::aryptr<amc::FFcond*>(parent.c_fcond_elems, parent.c_fcond_n);
 }
 
 // --- amc.FField.c_fcond.N
 // Return number of items in the pointer array
-inline i64 amc::c_fcond_N(const amc::FField& field) {
-    return field.c_fcond_n;
+inline i64 amc::c_fcond_N(const amc::FField& parent) {
+    return parent.c_fcond_n;
 }
 
 // --- amc.FField.c_fcond.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_fcond_RemoveAll(amc::FField& field) {
-    for (u64 i = 0; i < field.c_fcond_n; i++) {
+inline void amc::c_fcond_RemoveAll(amc::FField& parent) {
+    for (u64 i = 0; i < parent.c_fcond_n; i++) {
         // mark all elements as not-in-array
-        field.c_fcond_elems[i]->field_c_fcond_in_ary = false;
+        parent.c_fcond_elems[i]->field_c_fcond_in_ary = false;
     }
-    field.c_fcond_n = 0;
+    parent.c_fcond_n = 0;
 }
 
 // --- amc.FField.c_fcond.qFind
 // Return reference without bounds checking
-inline amc::FFcond& amc::c_fcond_qFind(amc::FField& field, u64 idx) {
-    return *field.c_fcond_elems[idx];
+inline amc::FFcond& amc::c_fcond_qFind(amc::FField& parent, u64 idx) {
+    return *parent.c_fcond_elems[idx];
 }
 
 // --- amc.FField.c_fcond.InAryQ
@@ -14799,8 +14799,8 @@ inline bool amc::field_c_fcond_InAryQ(amc::FFcond& row) {
 
 // --- amc.FField.c_fcond.qLast
 // Reference to last element without bounds checking
-inline amc::FFcond& amc::c_fcond_qLast(amc::FField& field) {
-    return *field.c_fcond_elems[field.c_fcond_n-1];
+inline amc::FFcond& amc::c_fcond_qLast(amc::FField& parent) {
+    return *parent.c_fcond_elems[parent.c_fcond_n-1];
 }
 
 // --- amc.FField.c_ffunc_curs.Reset
@@ -15027,10 +15027,10 @@ inline  amc::FField::~FField() {
 
 // --- amc.FFinput..Init
 // Set all fields to initial values.
-inline void amc::FFinput_Init(amc::FFinput& finput) {
-    finput.update = bool(false);
-    finput.strict = bool(true);
-    finput.p_field = NULL;
+inline void amc::FFinput_Init(amc::FFinput& parent) {
+    parent.update = bool(false);
+    parent.strict = bool(true);
+    parent.p_field = NULL;
 }
 
 // --- amc.FFinput..Ctor
@@ -15045,8 +15045,8 @@ inline  amc::FFinput::~FFinput() {
 
 // --- amc.FFkafka..Init
 // Set all fields to initial values.
-inline void amc::FFkafka_Init(amc::FFkafka& fkafka) {
-    fkafka.tag = u64(0);
+inline void amc::FFkafka_Init(amc::FFkafka& parent) {
+    parent.tag = u64(0);
 }
 
 // --- amc.FFkafka..Ctor
@@ -15061,9 +15061,9 @@ inline  amc::FFkafka::~FFkafka() {
 
 // --- amc.FFldoffset..Init
 // Set all fields to initial values.
-inline void amc::FFldoffset_Init(amc::FFldoffset& fldoffset) {
-    fldoffset.offset = i32(0);
-    fldoffset.p_field = NULL;
+inline void amc::FFldoffset_Init(amc::FFldoffset& parent) {
+    parent.offset = i32(0);
+    parent.p_field = NULL;
 }
 
 // --- amc.FFldoffset..Ctor
@@ -15078,11 +15078,11 @@ inline  amc::FFldoffset::~FFldoffset() {
 
 // --- amc.FFloadtuples..Init
 // Set all fields to initial values.
-inline void amc::FFloadtuples_Init(amc::FFloadtuples& floadtuples) {
-    floadtuples.autoscan = bool(true);
-    floadtuples.optional = bool(false);
-    floadtuples.p_field = NULL;
-    floadtuples.ctype_c_floadtuples_in_ary = bool(false);
+inline void amc::FFloadtuples_Init(amc::FFloadtuples& parent) {
+    parent.autoscan = bool(true);
+    parent.optional = bool(false);
+    parent.p_field = NULL;
+    parent.ctype_c_floadtuples_in_ary = bool(false);
 }
 
 // --- amc.FFloadtuples..Ctor
@@ -15106,8 +15106,8 @@ inline  amc::FFnoremove::~FFnoremove() {
 
 // --- amc.FFoutput..Init
 // Set all fields to initial values.
-inline void amc::FFoutput_Init(amc::FFoutput& foutput) {
-    foutput.ns_c_foutput_in_ary = bool(false);
+inline void amc::FFoutput_Init(amc::FFoutput& parent) {
+    parent.ns_c_foutput_in_ary = bool(false);
 }
 
 // --- amc.FFoutput..Ctor
@@ -15122,10 +15122,10 @@ inline  amc::FFoutput::~FFoutput() {
 
 // --- amc.FFpbuf..Init
 // Set all fields to initial values.
-inline void amc::FFpbuf_Init(amc::FFpbuf& fpbuf) {
-    fpbuf.field_number = u32(0);
-    fpbuf.pb_type = algo::strptr("");
-    fpbuf.packed = bool(false);
+inline void amc::FFpbuf_Init(amc::FFpbuf& parent) {
+    parent.field_number = u32(0);
+    parent.pb_type = algo::strptr("");
+    parent.packed = bool(false);
 }
 
 // --- amc.FFpbuf..Ctor
@@ -15140,9 +15140,9 @@ inline  amc::FFpbuf::~FFpbuf() {
 
 // --- amc.FFpbufcase..Init
 // Set all fields to initial values.
-inline void amc::FFpbufcase_Init(amc::FFpbufcase& fpbufcase) {
-    fpbufcase.p_field = NULL;
-    fpbufcase.ctype_c_fpbufcase_in_ary = bool(false);
+inline void amc::FFpbufcase_Init(amc::FFpbufcase& parent) {
+    parent.p_field = NULL;
+    parent.ctype_c_fpbufcase_in_ary = bool(false);
 }
 
 // --- amc.FFpbufcase..Ctor
@@ -15157,10 +15157,10 @@ inline  amc::FFpbufcase::~FFpbufcase() {
 
 // --- amc.FFprefix..Init
 // Set all fields to initial values.
-inline void amc::FFprefix_Init(amc::FFprefix& fprefix) {
-    fprefix.require = bool(true);
-    fprefix.dflt = bool(true);
-    fprefix.reftype_zs_fprefix_next = (amc::FFprefix*)-1; // (amc.FReftype.zs_fprefix) not-in-list
+inline void amc::FFprefix_Init(amc::FFprefix& parent) {
+    parent.require = bool(true);
+    parent.dflt = bool(true);
+    parent.reftype_zs_fprefix_next = (amc::FFprefix*)-1; // (amc.FReftype.zs_fprefix) not-in-list
 }
 
 // --- amc.FFprefix..Ctor
@@ -15175,8 +15175,8 @@ inline  amc::FFprefix::~FFprefix() {
 
 // --- amc.FFregx..Init
 // Set all fields to initial values.
-inline void amc::FFregx_Init(amc::FFregx& fregx) {
-    fregx.partial = bool(false);
+inline void amc::FFregx_Init(amc::FFregx& parent) {
+    parent.partial = bool(false);
 }
 
 // --- amc.FFregx..Ctor
@@ -15191,9 +15191,9 @@ inline  amc::FFregx::~FFregx() {
 
 // --- amc.FFsort..Init
 // Set all fields to initial values.
-inline void amc::FFsort_Init(amc::FFsort& fsort) {
-    fsort.p_field = NULL;
-    fsort.p_sortfld = NULL;
+inline void amc::FFsort_Init(amc::FFsort& parent) {
+    parent.p_field = NULL;
+    parent.p_sortfld = NULL;
 }
 
 // --- amc.FFsort..Ctor
@@ -15208,21 +15208,21 @@ inline  amc::FFsort::~FFsort() {
 
 // --- amc.FFstep.c_fdelay.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_fdelay_InsertMaybe(amc::FFstep& fstep, amc::FFdelay& row) {
-    amc::FFdelay* ptr = fstep.c_fdelay;
+inline bool amc::c_fdelay_InsertMaybe(amc::FFstep& parent, amc::FFdelay& row) {
+    amc::FFdelay* ptr = parent.c_fdelay;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        fstep.c_fdelay = &row;
+        parent.c_fdelay = &row;
     }
     return retval;
 }
 
 // --- amc.FFstep.c_fdelay.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_fdelay_Remove(amc::FFstep& fstep, amc::FFdelay& row) {
-    amc::FFdelay *ptr = fstep.c_fdelay;
+inline void amc::c_fdelay_Remove(amc::FFstep& parent, amc::FFdelay& row) {
+    amc::FFdelay *ptr = parent.c_fdelay;
     if (LIKELY(ptr == &row)) {
-        fstep.c_fdelay = NULL;
+        parent.c_fdelay = NULL;
     }
 }
 
@@ -15247,69 +15247,69 @@ inline  amc::FFtrace::~FFtrace() {
 
 // --- amc.FFunc.funcarg.EmptyQ
 // Return true if index is empty
-inline bool amc::funcarg_EmptyQ(amc::FFunc& func) {
-    return func.funcarg_n == 0;
+inline bool amc::funcarg_EmptyQ(amc::FFunc& parent) {
+    return parent.funcarg_n == 0;
 }
 
 // --- amc.FFunc.funcarg.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::Funcarg* amc::funcarg_Find(amc::FFunc& func, u64 t) {
+inline amc::Funcarg* amc::funcarg_Find(amc::FFunc& parent, u64 t) {
     u64 idx = t;
-    u64 lim = func.funcarg_n;
+    u64 lim = parent.funcarg_n;
     if (idx >= lim) return NULL;
-    return func.funcarg_elems + idx;
+    return parent.funcarg_elems + idx;
 }
 
 // --- amc.FFunc.funcarg.Getary
 // Return array pointer by value
-inline algo::aryptr<amc::Funcarg> amc::funcarg_Getary(const amc::FFunc& func) {
-    return algo::aryptr<amc::Funcarg>(func.funcarg_elems, func.funcarg_n);
+inline algo::aryptr<amc::Funcarg> amc::funcarg_Getary(const amc::FFunc& parent) {
+    return algo::aryptr<amc::Funcarg>(parent.funcarg_elems, parent.funcarg_n);
 }
 
 // --- amc.FFunc.funcarg.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc::Funcarg* amc::funcarg_Last(amc::FFunc& func) {
-    return funcarg_Find(func, u64(func.funcarg_n-1));
+inline amc::Funcarg* amc::funcarg_Last(amc::FFunc& parent) {
+    return funcarg_Find(parent, u64(parent.funcarg_n-1));
 }
 
 // --- amc.FFunc.funcarg.Max
 // Return max. number of items in the array
-inline i64 amc::funcarg_Max(amc::FFunc& func) {
-    (void)func;
-    return func.funcarg_max;
+inline i64 amc::funcarg_Max(amc::FFunc& parent) {
+    (void)parent;
+    return parent.funcarg_max;
 }
 
 // --- amc.FFunc.funcarg.N
 // Return number of items in the array
-inline i64 amc::funcarg_N(const amc::FFunc& func) {
-    return func.funcarg_n;
+inline i64 amc::funcarg_N(const amc::FFunc& parent) {
+    return parent.funcarg_n;
 }
 
 // --- amc.FFunc.funcarg.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void amc::funcarg_Reserve(amc::FFunc& func, i64 n) {
-    u64 new_n = func.funcarg_n + n;
-    if (UNLIKELY(new_n > func.funcarg_max)) {
-        funcarg_AbsReserve(func, new_n);
+inline void amc::funcarg_Reserve(amc::FFunc& parent, i64 n) {
+    u64 new_n = parent.funcarg_n + n;
+    if (UNLIKELY(new_n > parent.funcarg_max)) {
+        funcarg_AbsReserve(parent, new_n);
     }
 }
 
 // --- amc.FFunc.funcarg.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc::Funcarg& amc::funcarg_qFind(amc::FFunc& func, u64 t) {
-    return func.funcarg_elems[t];
+inline amc::Funcarg& amc::funcarg_qFind(amc::FFunc& parent, u64 t) {
+    return parent.funcarg_elems[t];
 }
 
 // --- amc.FFunc.funcarg.qLast
 // Return reference to last element of array. No bounds checking
-inline amc::Funcarg& amc::funcarg_qLast(amc::FFunc& func) {
-    return funcarg_qFind(func, u64(func.funcarg_n-1));
+inline amc::Funcarg& amc::funcarg_qLast(amc::FFunc& parent) {
+    return funcarg_qFind(parent, u64(parent.funcarg_n-1));
 }
 
 // --- amc.FFunc.funcarg.rowid_Get
 // Return row id of specified element
-inline u64 amc::funcarg_rowid_Get(amc::FFunc& func, amc::Funcarg &elem) {
-    u64 id = &elem - func.funcarg_elems;
+inline u64 amc::funcarg_rowid_Get(amc::FFunc& parent, amc::Funcarg &elem) {
+    u64 id = &elem - parent.funcarg_elems;
     return u64(id);
 }
 
@@ -15359,10 +15359,10 @@ inline  amc::FFunique::~FFunique() {
 
 // --- amc.FFwddecl..Init
 // Set all fields to initial values.
-inline void amc::FFwddecl_Init(amc::FFwddecl& fwddecl) {
-    fwddecl.ns_c_fwddecl_in_ary = bool(false);
-    fwddecl.ind_fwddecl_next = (amc::FFwddecl*)-1; // (amc.FDb.ind_fwddecl) not-in-hash
-    fwddecl.ind_fwddecl_hashval = 0; // stored hash value
+inline void amc::FFwddecl_Init(amc::FFwddecl& parent) {
+    parent.ns_c_fwddecl_in_ary = bool(false);
+    parent.ind_fwddecl_next = (amc::FFwddecl*)-1; // (amc.FDb.ind_fwddecl) not-in-hash
+    parent.ind_fwddecl_hashval = 0; // stored hash value
 }
 
 // --- amc.FFwddecl..Ctor
@@ -15377,10 +15377,10 @@ inline  amc::FFwddecl::~FFwddecl() {
 
 // --- amc.FGconst..Init
 // Set all fields to initial values.
-inline void amc::FGconst_Init(amc::FGconst& gconst) {
-    gconst.wantenum = bool(true);
-    gconst.p_namefld = NULL;
-    gconst.p_field = NULL;
+inline void amc::FGconst_Init(amc::FGconst& parent) {
+    parent.wantenum = bool(true);
+    parent.p_namefld = NULL;
+    parent.p_field = NULL;
 }
 
 // --- amc.FGconst..Ctor
@@ -15395,19 +15395,19 @@ inline  amc::FGconst::~FGconst() {
 
 // --- amc.FGen.step.Call
 // Invoke function by pointer
-inline void amc::step_Call(amc::FGen& gen) {
-    if (gen.step) {
-        gen.step();
+inline void amc::step_Call(amc::FGen& parent) {
+    if (parent.step) {
+        parent.step();
     }
 }
 
 // --- amc.FGen..Init
 // Set all fields to initial values.
-inline void amc::FGen_Init(amc::FGen& gen) {
-    gen.perns = bool(false);
-    gen.cycle_total = u64(0);
-    gen.zs_gen_perns_next = (amc::FGen*)-1; // (amc.FDb.zs_gen_perns) not-in-list
-    gen.step = NULL;
+inline void amc::FGen_Init(amc::FGen& parent) {
+    parent.perns = bool(false);
+    parent.cycle_total = u64(0);
+    parent.zs_gen_perns_next = (amc::FGen*)-1; // (amc.FDb.zs_gen_perns) not-in-list
+    parent.step = NULL;
 }
 
 // --- amc.FGen..Ctor
@@ -15511,9 +15511,9 @@ inline  amc::FGenXref::~FGenXref() {
 
 // --- amc.FGenXrefSeen..Init
 // Set all fields to initial values.
-inline void amc::FGenXrefSeen_Init(amc::FGenXrefSeen& seen) {
-    seen.parent_ind_seen_next = (amc::FGenXrefSeen*)-1; // (amc.FGenXref.ind_seen) not-in-hash
-    seen.parent_ind_seen_hashval = 0; // stored hash value
+inline void amc::FGenXrefSeen_Init(amc::FGenXrefSeen& parent) {
+    parent.gen_xref_ind_seen_next = (amc::FGenXrefSeen*)-1; // (amc.FGenXref.ind_seen) not-in-hash
+    parent.gen_xref_ind_seen_hashval = 0; // stored hash value
 }
 
 // --- amc.FGenXrefSeen..Ctor
@@ -15523,10 +15523,10 @@ inline  amc::FGenXrefSeen::FGenXrefSeen() {
 
 // --- amc.FGstatic..Init
 // Set all fields to initial values.
-inline void amc::FGstatic_Init(amc::FGstatic& gstatic) {
-    gstatic.p_field = NULL;
-    gstatic.rowid = u32(0);
-    gstatic.ns_c_gstatic_in_ary = bool(false);
+inline void amc::FGstatic_Init(amc::FGstatic& parent) {
+    parent.p_field = NULL;
+    parent.rowid = u32(0);
+    parent.ns_c_gstatic_in_ary = bool(false);
 }
 
 // --- amc.FGstatic..Ctor
@@ -15541,10 +15541,10 @@ inline  amc::FGstatic::~FGstatic() {
 
 // --- amc.FGsymbol..Init
 // Set all fields to initial values.
-inline void amc::FGsymbol_Init(amc::FGsymbol& gsymbol) {
-    gsymbol.p_ssimfile = NULL;
-    gsymbol.p_symboltype = NULL;
-    gsymbol.ns_c_gsymbol_in_ary = bool(false);
+inline void amc::FGsymbol_Init(amc::FGsymbol& parent) {
+    parent.p_ssimfile = NULL;
+    parent.p_symboltype = NULL;
+    parent.ns_c_gsymbol_in_ary = bool(false);
 }
 
 // --- amc.FGsymbol..Ctor
@@ -15559,9 +15559,9 @@ inline  amc::FGsymbol::~FGsymbol() {
 
 // --- amc.FHook..Init
 // Set all fields to initial values.
-inline void amc::FHook_Init(amc::FHook& hook) {
-    hook.p_funcptr = NULL;
-    hook.p_field = NULL;
+inline void amc::FHook_Init(amc::FHook& parent) {
+    parent.p_funcptr = NULL;
+    parent.p_field = NULL;
 }
 
 // --- amc.FHook..Ctor
@@ -15576,11 +15576,11 @@ inline  amc::FHook::~FHook() {
 
 // --- amc.FInlary..Init
 // Set all fields to initial values.
-inline void amc::FInlary_Init(amc::FInlary& inlary) {
-    inlary.min = i32(0);
-    inlary.max = i32(0);
-    inlary.ind_inlary_next = (amc::FInlary*)-1; // (amc.FDb.ind_inlary) not-in-hash
-    inlary.ind_inlary_hashval = 0; // stored hash value
+inline void amc::FInlary_Init(amc::FInlary& parent) {
+    parent.min = i32(0);
+    parent.max = i32(0);
+    parent.ind_inlary_next = (amc::FInlary*)-1; // (amc.FDb.ind_inlary) not-in-hash
+    parent.ind_inlary_hashval = 0; // stored hash value
 }
 
 // --- amc.FInlary..Ctor
@@ -15604,10 +15604,10 @@ inline  amc::FJstype::~FJstype() {
 
 // --- amc.FLenfld..Init
 // Set all fields to initial values.
-inline void amc::FLenfld_Init(amc::FLenfld& lenfld) {
-    lenfld.extra = i32(0);
-    lenfld.scale = i32(1);
-    lenfld.p_field = NULL;
+inline void amc::FLenfld_Init(amc::FLenfld& parent) {
+    parent.extra = i32(0);
+    parent.scale = i32(1);
+    parent.p_field = NULL;
 }
 
 // --- amc.FLenfld..Ctor
@@ -15622,9 +15622,9 @@ inline  amc::FLenfld::~FLenfld() {
 
 // --- amc.FLicense..Init
 // Set all fields to initial values.
-inline void amc::FLicense_Init(amc::FLicense& license) {
-    license.ind_license_next = (amc::FLicense*)-1; // (amc.FDb.ind_license) not-in-hash
-    license.ind_license_hashval = 0; // stored hash value
+inline void amc::FLicense_Init(amc::FLicense& parent) {
+    parent.ind_license_next = (amc::FLicense*)-1; // (amc.FDb.ind_license) not-in-hash
+    parent.ind_license_hashval = 0; // stored hash value
 }
 
 // --- amc.FLicense..Ctor
@@ -15639,12 +15639,12 @@ inline  amc::FLicense::~FLicense() {
 
 // --- amc.FListtype..Init
 // Set all fields to initial values.
-inline void amc::FListtype_Init(amc::FListtype& listtype) {
-    listtype.circular = bool(false);
-    listtype.haveprev = bool(false);
-    listtype.instail = bool(false);
-    listtype.ind_listtype_next = (amc::FListtype*)-1; // (amc.FDb.ind_listtype) not-in-hash
-    listtype.ind_listtype_hashval = 0; // stored hash value
+inline void amc::FListtype_Init(amc::FListtype& parent) {
+    parent.circular = bool(false);
+    parent.haveprev = bool(false);
+    parent.instail = bool(false);
+    parent.ind_listtype_next = (amc::FListtype*)-1; // (amc.FDb.ind_listtype) not-in-hash
+    parent.ind_listtype_hashval = 0; // stored hash value
 }
 
 // --- amc.FListtype..Ctor
@@ -15659,10 +15659,10 @@ inline  amc::FListtype::~FListtype() {
 
 // --- amc.FLlist..Init
 // Set all fields to initial values.
-inline void amc::FLlist_Init(amc::FLlist& llist) {
-    llist.havetail = bool(true);
-    llist.havecount = bool(false);
-    llist.p_listtype = NULL;
+inline void amc::FLlist_Init(amc::FLlist& parent) {
+    parent.havetail = bool(true);
+    parent.havecount = bool(false);
+    parent.p_listtype = NULL;
 }
 
 // --- amc.FLlist..Ctor
@@ -15677,10 +15677,10 @@ inline  amc::FLlist::~FLlist() {
 
 // --- amc.FMain..Init
 // Set all fields to initial values.
-inline void amc::FMain_Init(amc::FMain& main) {
-    main.ismodule = bool(false);
-    main.ind_main_next = (amc::FMain*)-1; // (amc.FDb.ind_main) not-in-hash
-    main.ind_main_hashval = 0; // stored hash value
+inline void amc::FMain_Init(amc::FMain& parent) {
+    parent.ismodule = bool(false);
+    parent.ind_main_next = (amc::FMain*)-1; // (amc.FDb.ind_main) not-in-hash
+    parent.ind_main_hashval = 0; // stored hash value
 }
 
 // --- amc.FMain..Ctor
@@ -15695,11 +15695,11 @@ inline  amc::FMain::~FMain() {
 
 // --- amc.FMsg..Init
 // Set all fields to initial values.
-inline void amc::FMsg_Init(amc::FMsg& msg) {
-    msg.type = u64(0);
-    msg.len = i32(0);
-    msg.ind_msg_typekey_next = (amc::FMsg*)-1; // (amc.FDb.ind_msg_typekey) not-in-hash
-    msg.ind_msg_typekey_hashval = 0; // stored hash value
+inline void amc::FMsg_Init(amc::FMsg& parent) {
+    parent.type = u64(0);
+    parent.len = i32(0);
+    parent.ind_msg_typekey_next = (amc::FMsg*)-1; // (amc.FDb.ind_msg_typekey) not-in-hash
+    parent.ind_msg_typekey_hashval = 0; // stored hash value
 }
 
 // --- amc.FMsg..Ctor
@@ -15712,15 +15712,6 @@ inline  amc::FMsg::~FMsg() {
     amc::FMsg_Uninit(*this);
 }
 
-// --- amc.FMsgfield..Init
-// Set all fields to initial values.
-inline void amc::FMsgfield_Init(amc::FMsgfield& msgfield) {
-    msgfield.offset = i32(0);
-    msgfield.width = i32(0);
-    msgfield.bigend = bool(false);
-    msgfield.varlen = bool(false);
-}
-
 // --- amc.FMsgfield..Ctor
 inline  amc::FMsgfield::FMsgfield() {
     amc::FMsgfield_Init(*this);
@@ -15728,8 +15719,8 @@ inline  amc::FMsgfield::FMsgfield() {
 
 // --- amc.FMsgtype..Init
 // Set all fields to initial values.
-inline void amc::FMsgtype_Init(amc::FMsgtype& msgtype) {
-    msgtype.p_ctype = NULL;
+inline void amc::FMsgtype_Init(amc::FMsgtype& parent) {
+    parent.p_ctype = NULL;
 }
 
 // --- amc.FMsgtype..Ctor
@@ -15762,48 +15753,48 @@ inline  amc::FNossimfile::~FNossimfile() {
 
 // --- amc.FNs.c_ctype.EmptyQ
 // Return true if index is empty
-inline bool amc::c_ctype_EmptyQ(amc::FNs& ns) {
-    return ns.c_ctype_n == 0;
+inline bool amc::c_ctype_EmptyQ(amc::FNs& parent) {
+    return parent.c_ctype_n == 0;
 }
 
 // --- amc.FNs.c_ctype.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FCtype* amc::c_ctype_Find(amc::FNs& ns, u64 t) {
+inline amc::FCtype* amc::c_ctype_Find(amc::FNs& parent, u64 t) {
     amc::FCtype *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_ctype_n;
+    u64 lim = parent.c_ctype_n;
     if (idx < lim) {
-        retval = ns.c_ctype_elems[idx];
+        retval = parent.c_ctype_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_ctype.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FCtype*> amc::c_ctype_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FCtype*>(ns.c_ctype_elems, ns.c_ctype_n);
+inline algo::aryptr<amc::FCtype*> amc::c_ctype_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FCtype*>(parent.c_ctype_elems, parent.c_ctype_n);
 }
 
 // --- amc.FNs.c_ctype.N
 // Return number of items in the pointer array
-inline i64 amc::c_ctype_N(const amc::FNs& ns) {
-    return ns.c_ctype_n;
+inline i64 amc::c_ctype_N(const amc::FNs& parent) {
+    return parent.c_ctype_n;
 }
 
 // --- amc.FNs.c_ctype.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_ctype_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_ctype_n; i++) {
+inline void amc::c_ctype_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_ctype_n; i++) {
         // mark all elements as not-in-array
-        ns.c_ctype_elems[i]->ns_c_ctype_in_ary = false;
+        parent.c_ctype_elems[i]->ns_c_ctype_in_ary = false;
     }
-    ns.c_ctype_n = 0;
+    parent.c_ctype_n = 0;
 }
 
 // --- amc.FNs.c_ctype.qFind
 // Return reference without bounds checking
-inline amc::FCtype& amc::c_ctype_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_ctype_elems[idx];
+inline amc::FCtype& amc::c_ctype_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_ctype_elems[idx];
 }
 
 // --- amc.FNs.c_ctype.InAryQ
@@ -15814,54 +15805,54 @@ inline bool amc::ns_c_ctype_InAryQ(amc::FCtype& row) {
 
 // --- amc.FNs.c_ctype.qLast
 // Reference to last element without bounds checking
-inline amc::FCtype& amc::c_ctype_qLast(amc::FNs& ns) {
-    return *ns.c_ctype_elems[ns.c_ctype_n-1];
+inline amc::FCtype& amc::c_ctype_qLast(amc::FNs& parent) {
+    return *parent.c_ctype_elems[parent.c_ctype_n-1];
 }
 
 // --- amc.FNs.c_func.EmptyQ
 // Return true if index is empty
-inline bool amc::c_func_EmptyQ(amc::FNs& ns) {
-    return ns.c_func_n == 0;
+inline bool amc::c_func_EmptyQ(amc::FNs& parent) {
+    return parent.c_func_n == 0;
 }
 
 // --- amc.FNs.c_func.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFunc* amc::c_func_Find(amc::FNs& ns, u64 t) {
+inline amc::FFunc* amc::c_func_Find(amc::FNs& parent, u64 t) {
     amc::FFunc *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_func_n;
+    u64 lim = parent.c_func_n;
     if (idx < lim) {
-        retval = ns.c_func_elems[idx];
+        retval = parent.c_func_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_func.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFunc*> amc::c_func_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FFunc*>(ns.c_func_elems, ns.c_func_n);
+inline algo::aryptr<amc::FFunc*> amc::c_func_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FFunc*>(parent.c_func_elems, parent.c_func_n);
 }
 
 // --- amc.FNs.c_func.N
 // Return number of items in the pointer array
-inline i64 amc::c_func_N(const amc::FNs& ns) {
-    return ns.c_func_n;
+inline i64 amc::c_func_N(const amc::FNs& parent) {
+    return parent.c_func_n;
 }
 
 // --- amc.FNs.c_func.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_func_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_func_n; i++) {
+inline void amc::c_func_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_func_n; i++) {
         // mark all elements as not-in-array
-        ns.c_func_elems[i]->ns_c_func_in_ary = false;
+        parent.c_func_elems[i]->ns_c_func_in_ary = false;
     }
-    ns.c_func_n = 0;
+    parent.c_func_n = 0;
 }
 
 // --- amc.FNs.c_func.qFind
 // Return reference without bounds checking
-inline amc::FFunc& amc::c_func_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_func_elems[idx];
+inline amc::FFunc& amc::c_func_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_func_elems[idx];
 }
 
 // --- amc.FNs.c_func.InAryQ
@@ -15872,54 +15863,54 @@ inline bool amc::ns_c_func_InAryQ(amc::FFunc& row) {
 
 // --- amc.FNs.c_func.qLast
 // Reference to last element without bounds checking
-inline amc::FFunc& amc::c_func_qLast(amc::FNs& ns) {
-    return *ns.c_func_elems[ns.c_func_n-1];
+inline amc::FFunc& amc::c_func_qLast(amc::FNs& parent) {
+    return *parent.c_func_elems[parent.c_func_n-1];
 }
 
 // --- amc.FNs.c_dispatch.EmptyQ
 // Return true if index is empty
-inline bool amc::c_dispatch_EmptyQ(amc::FNs& ns) {
-    return ns.c_dispatch_n == 0;
+inline bool amc::c_dispatch_EmptyQ(amc::FNs& parent) {
+    return parent.c_dispatch_n == 0;
 }
 
 // --- amc.FNs.c_dispatch.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FDispatch* amc::c_dispatch_Find(amc::FNs& ns, u64 t) {
+inline amc::FDispatch* amc::c_dispatch_Find(amc::FNs& parent, u64 t) {
     amc::FDispatch *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_dispatch_n;
+    u64 lim = parent.c_dispatch_n;
     if (idx < lim) {
-        retval = ns.c_dispatch_elems[idx];
+        retval = parent.c_dispatch_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_dispatch.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FDispatch*> amc::c_dispatch_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FDispatch*>(ns.c_dispatch_elems, ns.c_dispatch_n);
+inline algo::aryptr<amc::FDispatch*> amc::c_dispatch_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FDispatch*>(parent.c_dispatch_elems, parent.c_dispatch_n);
 }
 
 // --- amc.FNs.c_dispatch.N
 // Return number of items in the pointer array
-inline i64 amc::c_dispatch_N(const amc::FNs& ns) {
-    return ns.c_dispatch_n;
+inline i64 amc::c_dispatch_N(const amc::FNs& parent) {
+    return parent.c_dispatch_n;
 }
 
 // --- amc.FNs.c_dispatch.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_dispatch_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_dispatch_n; i++) {
+inline void amc::c_dispatch_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_dispatch_n; i++) {
         // mark all elements as not-in-array
-        ns.c_dispatch_elems[i]->ns_c_dispatch_in_ary = false;
+        parent.c_dispatch_elems[i]->ns_c_dispatch_in_ary = false;
     }
-    ns.c_dispatch_n = 0;
+    parent.c_dispatch_n = 0;
 }
 
 // --- amc.FNs.c_dispatch.qFind
 // Return reference without bounds checking
-inline amc::FDispatch& amc::c_dispatch_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_dispatch_elems[idx];
+inline amc::FDispatch& amc::c_dispatch_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_dispatch_elems[idx];
 }
 
 // --- amc.FNs.c_dispatch.InAryQ
@@ -15930,74 +15921,74 @@ inline bool amc::ns_c_dispatch_InAryQ(amc::FDispatch& row) {
 
 // --- amc.FNs.c_dispatch.qLast
 // Reference to last element without bounds checking
-inline amc::FDispatch& amc::c_dispatch_qLast(amc::FNs& ns) {
-    return *ns.c_dispatch_elems[ns.c_dispatch_n-1];
+inline amc::FDispatch& amc::c_dispatch_qLast(amc::FNs& parent) {
+    return *parent.c_dispatch_elems[parent.c_dispatch_n-1];
 }
 
 // --- amc.FNs.c_globfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_globfld_InsertMaybe(amc::FNs& ns, amc::FField& row) {
-    amc::FField* ptr = ns.c_globfld;
+inline bool amc::c_globfld_InsertMaybe(amc::FNs& parent, amc::FField& row) {
+    amc::FField* ptr = parent.c_globfld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ns.c_globfld = &row;
+        parent.c_globfld = &row;
     }
     return retval;
 }
 
 // --- amc.FNs.c_globfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_globfld_Remove(amc::FNs& ns, amc::FField& row) {
-    amc::FField *ptr = ns.c_globfld;
+inline void amc::c_globfld_Remove(amc::FNs& parent, amc::FField& row) {
+    amc::FField *ptr = parent.c_globfld;
     if (LIKELY(ptr == &row)) {
-        ns.c_globfld = NULL;
+        parent.c_globfld = NULL;
     }
 }
 
 // --- amc.FNs.c_gstatic.EmptyQ
 // Return true if index is empty
-inline bool amc::c_gstatic_EmptyQ(amc::FNs& ns) {
-    return ns.c_gstatic_n == 0;
+inline bool amc::c_gstatic_EmptyQ(amc::FNs& parent) {
+    return parent.c_gstatic_n == 0;
 }
 
 // --- amc.FNs.c_gstatic.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FGstatic* amc::c_gstatic_Find(amc::FNs& ns, u64 t) {
+inline amc::FGstatic* amc::c_gstatic_Find(amc::FNs& parent, u64 t) {
     amc::FGstatic *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_gstatic_n;
+    u64 lim = parent.c_gstatic_n;
     if (idx < lim) {
-        retval = ns.c_gstatic_elems[idx];
+        retval = parent.c_gstatic_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_gstatic.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FGstatic*> amc::c_gstatic_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FGstatic*>(ns.c_gstatic_elems, ns.c_gstatic_n);
+inline algo::aryptr<amc::FGstatic*> amc::c_gstatic_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FGstatic*>(parent.c_gstatic_elems, parent.c_gstatic_n);
 }
 
 // --- amc.FNs.c_gstatic.N
 // Return number of items in the pointer array
-inline i64 amc::c_gstatic_N(const amc::FNs& ns) {
-    return ns.c_gstatic_n;
+inline i64 amc::c_gstatic_N(const amc::FNs& parent) {
+    return parent.c_gstatic_n;
 }
 
 // --- amc.FNs.c_gstatic.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_gstatic_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_gstatic_n; i++) {
+inline void amc::c_gstatic_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_gstatic_n; i++) {
         // mark all elements as not-in-array
-        ns.c_gstatic_elems[i]->ns_c_gstatic_in_ary = false;
+        parent.c_gstatic_elems[i]->ns_c_gstatic_in_ary = false;
     }
-    ns.c_gstatic_n = 0;
+    parent.c_gstatic_n = 0;
 }
 
 // --- amc.FNs.c_gstatic.qFind
 // Return reference without bounds checking
-inline amc::FGstatic& amc::c_gstatic_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_gstatic_elems[idx];
+inline amc::FGstatic& amc::c_gstatic_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_gstatic_elems[idx];
 }
 
 // --- amc.FNs.c_gstatic.InAryQ
@@ -16008,142 +15999,142 @@ inline bool amc::ns_c_gstatic_InAryQ(amc::FGstatic& row) {
 
 // --- amc.FNs.c_gstatic.qLast
 // Reference to last element without bounds checking
-inline amc::FGstatic& amc::c_gstatic_qLast(amc::FNs& ns) {
-    return *ns.c_gstatic_elems[ns.c_gstatic_n-1];
+inline amc::FGstatic& amc::c_gstatic_qLast(amc::FNs& parent) {
+    return *parent.c_gstatic_elems[parent.c_gstatic_n-1];
 }
 
 // --- amc.FNs.c_main.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_main_InsertMaybe(amc::FNs& ns, amc::FMain& row) {
-    amc::FMain* ptr = ns.c_main;
+inline bool amc::c_main_InsertMaybe(amc::FNs& parent, amc::FMain& row) {
+    amc::FMain* ptr = parent.c_main;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ns.c_main = &row;
+        parent.c_main = &row;
     }
     return retval;
 }
 
 // --- amc.FNs.c_main.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_main_Remove(amc::FNs& ns, amc::FMain& row) {
-    amc::FMain *ptr = ns.c_main;
+inline void amc::c_main_Remove(amc::FNs& parent, amc::FMain& row) {
+    amc::FMain *ptr = parent.c_main;
     if (LIKELY(ptr == &row)) {
-        ns.c_main = NULL;
+        parent.c_main = NULL;
     }
 }
 
 // --- amc.FNs.include.EmptyQ
 // Return true if index is empty
-inline bool amc::include_EmptyQ(amc::FNs& ns) {
-    return ns.include_n == 0;
+inline bool amc::include_EmptyQ(amc::FNs& parent) {
+    return parent.include_n == 0;
 }
 
 // --- amc.FNs.include.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* amc::include_Find(amc::FNs& ns, u64 t) {
+inline algo::cstring* amc::include_Find(amc::FNs& parent, u64 t) {
     u64 idx = t;
-    u64 lim = ns.include_n;
+    u64 lim = parent.include_n;
     if (idx >= lim) return NULL;
-    return ns.include_elems + idx;
+    return parent.include_elems + idx;
 }
 
 // --- amc.FNs.include.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> amc::include_Getary(const amc::FNs& ns) {
-    return algo::aryptr<algo::cstring>(ns.include_elems, ns.include_n);
+inline algo::aryptr<algo::cstring> amc::include_Getary(const amc::FNs& parent) {
+    return algo::aryptr<algo::cstring>(parent.include_elems, parent.include_n);
 }
 
 // --- amc.FNs.include.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* amc::include_Last(amc::FNs& ns) {
-    return include_Find(ns, u64(ns.include_n-1));
+inline algo::cstring* amc::include_Last(amc::FNs& parent) {
+    return include_Find(parent, u64(parent.include_n-1));
 }
 
 // --- amc.FNs.include.Max
 // Return max. number of items in the array
-inline i64 amc::include_Max(amc::FNs& ns) {
-    (void)ns;
-    return ns.include_max;
+inline i64 amc::include_Max(amc::FNs& parent) {
+    (void)parent;
+    return parent.include_max;
 }
 
 // --- amc.FNs.include.N
 // Return number of items in the array
-inline i64 amc::include_N(const amc::FNs& ns) {
-    return ns.include_n;
+inline i64 amc::include_N(const amc::FNs& parent) {
+    return parent.include_n;
 }
 
 // --- amc.FNs.include.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void amc::include_Reserve(amc::FNs& ns, i64 n) {
-    u64 new_n = ns.include_n + n;
-    if (UNLIKELY(new_n > ns.include_max)) {
-        include_AbsReserve(ns, new_n);
+inline void amc::include_Reserve(amc::FNs& parent, i64 n) {
+    u64 new_n = parent.include_n + n;
+    if (UNLIKELY(new_n > parent.include_max)) {
+        include_AbsReserve(parent, new_n);
     }
 }
 
 // --- amc.FNs.include.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& amc::include_qFind(amc::FNs& ns, u64 t) {
-    return ns.include_elems[t];
+inline algo::cstring& amc::include_qFind(amc::FNs& parent, u64 t) {
+    return parent.include_elems[t];
 }
 
 // --- amc.FNs.include.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& amc::include_qLast(amc::FNs& ns) {
-    return include_qFind(ns, u64(ns.include_n-1));
+inline algo::cstring& amc::include_qLast(amc::FNs& parent) {
+    return include_qFind(parent, u64(parent.include_n-1));
 }
 
 // --- amc.FNs.include.rowid_Get
 // Return row id of specified element
-inline u64 amc::include_rowid_Get(amc::FNs& ns, algo::cstring &elem) {
-    u64 id = &elem - ns.include_elems;
+inline u64 amc::include_rowid_Get(amc::FNs& parent, algo::cstring &elem) {
+    u64 id = &elem - parent.include_elems;
     return u64(id);
 }
 
 // --- amc.FNs.c_dispsig.EmptyQ
 // Return true if index is empty
-inline bool amc::c_dispsig_EmptyQ(amc::FNs& ns) {
-    return ns.c_dispsig_n == 0;
+inline bool amc::c_dispsig_EmptyQ(amc::FNs& parent) {
+    return parent.c_dispsig_n == 0;
 }
 
 // --- amc.FNs.c_dispsig.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FDispsig* amc::c_dispsig_Find(amc::FNs& ns, u64 t) {
+inline amc::FDispsig* amc::c_dispsig_Find(amc::FNs& parent, u64 t) {
     amc::FDispsig *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_dispsig_n;
+    u64 lim = parent.c_dispsig_n;
     if (idx < lim) {
-        retval = ns.c_dispsig_elems[idx];
+        retval = parent.c_dispsig_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_dispsig.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FDispsig*> amc::c_dispsig_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FDispsig*>(ns.c_dispsig_elems, ns.c_dispsig_n);
+inline algo::aryptr<amc::FDispsig*> amc::c_dispsig_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FDispsig*>(parent.c_dispsig_elems, parent.c_dispsig_n);
 }
 
 // --- amc.FNs.c_dispsig.N
 // Return number of items in the pointer array
-inline i64 amc::c_dispsig_N(const amc::FNs& ns) {
-    return ns.c_dispsig_n;
+inline i64 amc::c_dispsig_N(const amc::FNs& parent) {
+    return parent.c_dispsig_n;
 }
 
 // --- amc.FNs.c_dispsig.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_dispsig_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_dispsig_n; i++) {
+inline void amc::c_dispsig_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_dispsig_n; i++) {
         // mark all elements as not-in-array
-        ns.c_dispsig_elems[i]->ns_c_dispsig_in_ary = false;
+        parent.c_dispsig_elems[i]->ns_c_dispsig_in_ary = false;
     }
-    ns.c_dispsig_n = 0;
+    parent.c_dispsig_n = 0;
 }
 
 // --- amc.FNs.c_dispsig.qFind
 // Return reference without bounds checking
-inline amc::FDispsig& amc::c_dispsig_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_dispsig_elems[idx];
+inline amc::FDispsig& amc::c_dispsig_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_dispsig_elems[idx];
 }
 
 // --- amc.FNs.c_dispsig.InAryQ
@@ -16154,198 +16145,198 @@ inline bool amc::ns_c_dispsig_InAryQ(amc::FDispsig& row) {
 
 // --- amc.FNs.c_dispsig.qLast
 // Reference to last element without bounds checking
-inline amc::FDispsig& amc::c_dispsig_qLast(amc::FNs& ns) {
-    return *ns.c_dispsig_elems[ns.c_dispsig_n-1];
+inline amc::FDispsig& amc::c_dispsig_qLast(amc::FNs& parent) {
+    return *parent.c_dispsig_elems[parent.c_dispsig_n-1];
 }
 
 // --- amc.FNs.c_parentns.EmptyQ
 // Return true if index is empty
-inline bool amc::c_parentns_EmptyQ(amc::FNs& ns) {
-    return ns.c_parentns_n == 0;
+inline bool amc::c_parentns_EmptyQ(amc::FNs& parent) {
+    return parent.c_parentns_n == 0;
 }
 
 // --- amc.FNs.c_parentns.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FNs* amc::c_parentns_Find(amc::FNs& ns, u64 t) {
+inline amc::FNs* amc::c_parentns_Find(amc::FNs& parent, u64 t) {
     amc::FNs *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_parentns_n;
+    u64 lim = parent.c_parentns_n;
     if (idx < lim) {
-        retval = ns.c_parentns_elems[idx];
+        retval = parent.c_parentns_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_parentns.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FNs*> amc::c_parentns_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FNs*>(ns.c_parentns_elems, ns.c_parentns_n);
+inline algo::aryptr<amc::FNs*> amc::c_parentns_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FNs*>(parent.c_parentns_elems, parent.c_parentns_n);
 }
 
 // --- amc.FNs.c_parentns.N
 // Return number of items in the pointer array
-inline i64 amc::c_parentns_N(const amc::FNs& ns) {
-    return ns.c_parentns_n;
+inline i64 amc::c_parentns_N(const amc::FNs& parent) {
+    return parent.c_parentns_n;
 }
 
 // --- amc.FNs.c_parentns.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_parentns_RemoveAll(amc::FNs& ns) {
-    ns.c_parentns_n = 0;
+inline void amc::c_parentns_RemoveAll(amc::FNs& parent) {
+    parent.c_parentns_n = 0;
 }
 
 // --- amc.FNs.c_parentns.qFind
 // Return reference without bounds checking
-inline amc::FNs& amc::c_parentns_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_parentns_elems[idx];
+inline amc::FNs& amc::c_parentns_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_parentns_elems[idx];
 }
 
 // --- amc.FNs.c_parentns.qLast
 // Reference to last element without bounds checking
-inline amc::FNs& amc::c_parentns_qLast(amc::FNs& ns) {
-    return *ns.c_parentns_elems[ns.c_parentns_n-1];
+inline amc::FNs& amc::c_parentns_qLast(amc::FNs& parent) {
+    return *parent.c_parentns_elems[parent.c_parentns_n-1];
 }
 
 // --- amc.FNs.c_cppincl.EmptyQ
 // Return true if index is empty
-inline bool amc::c_cppincl_EmptyQ(amc::FNs& ns) {
-    return ns.c_cppincl_n == 0;
+inline bool amc::c_cppincl_EmptyQ(amc::FNs& parent) {
+    return parent.c_cppincl_n == 0;
 }
 
 // --- amc.FNs.c_cppincl.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FNs* amc::c_cppincl_Find(amc::FNs& ns, u64 t) {
+inline amc::FNs* amc::c_cppincl_Find(amc::FNs& parent, u64 t) {
     amc::FNs *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_cppincl_n;
+    u64 lim = parent.c_cppincl_n;
     if (idx < lim) {
-        retval = ns.c_cppincl_elems[idx];
+        retval = parent.c_cppincl_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_cppincl.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FNs*> amc::c_cppincl_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FNs*>(ns.c_cppincl_elems, ns.c_cppincl_n);
+inline algo::aryptr<amc::FNs*> amc::c_cppincl_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FNs*>(parent.c_cppincl_elems, parent.c_cppincl_n);
 }
 
 // --- amc.FNs.c_cppincl.N
 // Return number of items in the pointer array
-inline i64 amc::c_cppincl_N(const amc::FNs& ns) {
-    return ns.c_cppincl_n;
+inline i64 amc::c_cppincl_N(const amc::FNs& parent) {
+    return parent.c_cppincl_n;
 }
 
 // --- amc.FNs.c_cppincl.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_cppincl_RemoveAll(amc::FNs& ns) {
-    ns.c_cppincl_n = 0;
+inline void amc::c_cppincl_RemoveAll(amc::FNs& parent) {
+    parent.c_cppincl_n = 0;
 }
 
 // --- amc.FNs.c_cppincl.qFind
 // Return reference without bounds checking
-inline amc::FNs& amc::c_cppincl_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_cppincl_elems[idx];
+inline amc::FNs& amc::c_cppincl_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_cppincl_elems[idx];
 }
 
 // --- amc.FNs.c_cppincl.qLast
 // Reference to last element without bounds checking
-inline amc::FNs& amc::c_cppincl_qLast(amc::FNs& ns) {
-    return *ns.c_cppincl_elems[ns.c_cppincl_n-1];
+inline amc::FNs& amc::c_cppincl_qLast(amc::FNs& parent) {
+    return *parent.c_cppincl_elems[parent.c_cppincl_n-1];
 }
 
 // --- amc.FNs.c_hdrincl.EmptyQ
 // Return true if index is empty
-inline bool amc::c_hdrincl_EmptyQ(amc::FNs& ns) {
-    return ns.c_hdrincl_n == 0;
+inline bool amc::c_hdrincl_EmptyQ(amc::FNs& parent) {
+    return parent.c_hdrincl_n == 0;
 }
 
 // --- amc.FNs.c_hdrincl.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FNs* amc::c_hdrincl_Find(amc::FNs& ns, u64 t) {
+inline amc::FNs* amc::c_hdrincl_Find(amc::FNs& parent, u64 t) {
     amc::FNs *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_hdrincl_n;
+    u64 lim = parent.c_hdrincl_n;
     if (idx < lim) {
-        retval = ns.c_hdrincl_elems[idx];
+        retval = parent.c_hdrincl_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_hdrincl.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FNs*> amc::c_hdrincl_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FNs*>(ns.c_hdrincl_elems, ns.c_hdrincl_n);
+inline algo::aryptr<amc::FNs*> amc::c_hdrincl_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FNs*>(parent.c_hdrincl_elems, parent.c_hdrincl_n);
 }
 
 // --- amc.FNs.c_hdrincl.N
 // Return number of items in the pointer array
-inline i64 amc::c_hdrincl_N(const amc::FNs& ns) {
-    return ns.c_hdrincl_n;
+inline i64 amc::c_hdrincl_N(const amc::FNs& parent) {
+    return parent.c_hdrincl_n;
 }
 
 // --- amc.FNs.c_hdrincl.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_hdrincl_RemoveAll(amc::FNs& ns) {
-    ns.c_hdrincl_n = 0;
+inline void amc::c_hdrincl_RemoveAll(amc::FNs& parent) {
+    parent.c_hdrincl_n = 0;
 }
 
 // --- amc.FNs.c_hdrincl.qFind
 // Return reference without bounds checking
-inline amc::FNs& amc::c_hdrincl_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_hdrincl_elems[idx];
+inline amc::FNs& amc::c_hdrincl_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_hdrincl_elems[idx];
 }
 
 // --- amc.FNs.c_hdrincl.qLast
 // Reference to last element without bounds checking
-inline amc::FNs& amc::c_hdrincl_qLast(amc::FNs& ns) {
-    return *ns.c_hdrincl_elems[ns.c_hdrincl_n-1];
+inline amc::FNs& amc::c_hdrincl_qLast(amc::FNs& parent) {
+    return *parent.c_hdrincl_elems[parent.c_hdrincl_n-1];
 }
 
 // --- amc.FNs.c_fwddecl.EmptyQ
 // Return true if index is empty
-inline bool amc::c_fwddecl_EmptyQ(amc::FNs& ns) {
-    return ns.c_fwddecl_n == 0;
+inline bool amc::c_fwddecl_EmptyQ(amc::FNs& parent) {
+    return parent.c_fwddecl_n == 0;
 }
 
 // --- amc.FNs.c_fwddecl.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFwddecl* amc::c_fwddecl_Find(amc::FNs& ns, u64 t) {
+inline amc::FFwddecl* amc::c_fwddecl_Find(amc::FNs& parent, u64 t) {
     amc::FFwddecl *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_fwddecl_n;
+    u64 lim = parent.c_fwddecl_n;
     if (idx < lim) {
-        retval = ns.c_fwddecl_elems[idx];
+        retval = parent.c_fwddecl_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_fwddecl.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFwddecl*> amc::c_fwddecl_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FFwddecl*>(ns.c_fwddecl_elems, ns.c_fwddecl_n);
+inline algo::aryptr<amc::FFwddecl*> amc::c_fwddecl_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FFwddecl*>(parent.c_fwddecl_elems, parent.c_fwddecl_n);
 }
 
 // --- amc.FNs.c_fwddecl.N
 // Return number of items in the pointer array
-inline i64 amc::c_fwddecl_N(const amc::FNs& ns) {
-    return ns.c_fwddecl_n;
+inline i64 amc::c_fwddecl_N(const amc::FNs& parent) {
+    return parent.c_fwddecl_n;
 }
 
 // --- amc.FNs.c_fwddecl.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_fwddecl_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_fwddecl_n; i++) {
+inline void amc::c_fwddecl_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_fwddecl_n; i++) {
         // mark all elements as not-in-array
-        ns.c_fwddecl_elems[i]->ns_c_fwddecl_in_ary = false;
+        parent.c_fwddecl_elems[i]->ns_c_fwddecl_in_ary = false;
     }
-    ns.c_fwddecl_n = 0;
+    parent.c_fwddecl_n = 0;
 }
 
 // --- amc.FNs.c_fwddecl.qFind
 // Return reference without bounds checking
-inline amc::FFwddecl& amc::c_fwddecl_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_fwddecl_elems[idx];
+inline amc::FFwddecl& amc::c_fwddecl_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_fwddecl_elems[idx];
 }
 
 // --- amc.FNs.c_fwddecl.InAryQ
@@ -16356,94 +16347,94 @@ inline bool amc::ns_c_fwddecl_InAryQ(amc::FFwddecl& row) {
 
 // --- amc.FNs.c_fwddecl.qLast
 // Reference to last element without bounds checking
-inline amc::FFwddecl& amc::c_fwddecl_qLast(amc::FNs& ns) {
-    return *ns.c_fwddecl_elems[ns.c_fwddecl_n-1];
+inline amc::FFwddecl& amc::c_fwddecl_qLast(amc::FNs& parent) {
+    return *parent.c_fwddecl_elems[parent.c_fwddecl_n-1];
 }
 
 // --- amc.FNs.c_nsx.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_nsx_InsertMaybe(amc::FNs& ns, amc::FNsx& row) {
-    amc::FNsx* ptr = ns.c_nsx;
+inline bool amc::c_nsx_InsertMaybe(amc::FNs& parent, amc::FNsx& row) {
+    amc::FNsx* ptr = parent.c_nsx;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ns.c_nsx = &row;
+        parent.c_nsx = &row;
     }
     return retval;
 }
 
 // --- amc.FNs.c_nsx.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_nsx_Remove(amc::FNs& ns, amc::FNsx& row) {
-    amc::FNsx *ptr = ns.c_nsx;
+inline void amc::c_nsx_Remove(amc::FNs& parent, amc::FNsx& row) {
+    amc::FNsx *ptr = parent.c_nsx;
     if (LIKELY(ptr == &row)) {
-        ns.c_nsx = NULL;
+        parent.c_nsx = NULL;
     }
 }
 
 // --- amc.FNs.c_target.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_target_InsertMaybe(amc::FNs& ns, amc::FTarget& row) {
-    amc::FTarget* ptr = ns.c_target;
+inline bool amc::c_target_InsertMaybe(amc::FNs& parent, amc::FTarget& row) {
+    amc::FTarget* ptr = parent.c_target;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ns.c_target = &row;
+        parent.c_target = &row;
     }
     return retval;
 }
 
 // --- amc.FNs.c_target.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_target_Remove(amc::FNs& ns, amc::FTarget& row) {
-    amc::FTarget *ptr = ns.c_target;
+inline void amc::c_target_Remove(amc::FNs& parent, amc::FTarget& row) {
+    amc::FTarget *ptr = parent.c_target;
     if (LIKELY(ptr == &row)) {
-        ns.c_target = NULL;
+        parent.c_target = NULL;
     }
 }
 
 // --- amc.FNs.c_pnew.EmptyQ
 // Return true if index is empty
-inline bool amc::c_pnew_EmptyQ(amc::FNs& ns) {
-    return ns.c_pnew_n == 0;
+inline bool amc::c_pnew_EmptyQ(amc::FNs& parent) {
+    return parent.c_pnew_n == 0;
 }
 
 // --- amc.FNs.c_pnew.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FPnew* amc::c_pnew_Find(amc::FNs& ns, u64 t) {
+inline amc::FPnew* amc::c_pnew_Find(amc::FNs& parent, u64 t) {
     amc::FPnew *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_pnew_n;
+    u64 lim = parent.c_pnew_n;
     if (idx < lim) {
-        retval = ns.c_pnew_elems[idx];
+        retval = parent.c_pnew_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_pnew.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FPnew*> amc::c_pnew_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FPnew*>(ns.c_pnew_elems, ns.c_pnew_n);
+inline algo::aryptr<amc::FPnew*> amc::c_pnew_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FPnew*>(parent.c_pnew_elems, parent.c_pnew_n);
 }
 
 // --- amc.FNs.c_pnew.N
 // Return number of items in the pointer array
-inline i64 amc::c_pnew_N(const amc::FNs& ns) {
-    return ns.c_pnew_n;
+inline i64 amc::c_pnew_N(const amc::FNs& parent) {
+    return parent.c_pnew_n;
 }
 
 // --- amc.FNs.c_pnew.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_pnew_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_pnew_n; i++) {
+inline void amc::c_pnew_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_pnew_n; i++) {
         // mark all elements as not-in-array
-        ns.c_pnew_elems[i]->ns_c_pnew_in_ary = false;
+        parent.c_pnew_elems[i]->ns_c_pnew_in_ary = false;
     }
-    ns.c_pnew_n = 0;
+    parent.c_pnew_n = 0;
 }
 
 // --- amc.FNs.c_pnew.qFind
 // Return reference without bounds checking
-inline amc::FPnew& amc::c_pnew_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_pnew_elems[idx];
+inline amc::FPnew& amc::c_pnew_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_pnew_elems[idx];
 }
 
 // --- amc.FNs.c_pnew.InAryQ
@@ -16454,94 +16445,94 @@ inline bool amc::ns_c_pnew_InAryQ(amc::FPnew& row) {
 
 // --- amc.FNs.c_pnew.qLast
 // Reference to last element without bounds checking
-inline amc::FPnew& amc::c_pnew_qLast(amc::FNs& ns) {
-    return *ns.c_pnew_elems[ns.c_pnew_n-1];
+inline amc::FPnew& amc::c_pnew_qLast(amc::FNs& parent) {
+    return *parent.c_pnew_elems[parent.c_pnew_n-1];
 }
 
 // --- amc.FNs.c_nsproto.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_nsproto_InsertMaybe(amc::FNs& ns, amc::FNsproto& row) {
-    amc::FNsproto* ptr = ns.c_nsproto;
+inline bool amc::c_nsproto_InsertMaybe(amc::FNs& parent, amc::FNsproto& row) {
+    amc::FNsproto* ptr = parent.c_nsproto;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ns.c_nsproto = &row;
+        parent.c_nsproto = &row;
     }
     return retval;
 }
 
 // --- amc.FNs.c_nsproto.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_nsproto_Remove(amc::FNs& ns, amc::FNsproto& row) {
-    amc::FNsproto *ptr = ns.c_nsproto;
+inline void amc::c_nsproto_Remove(amc::FNs& parent, amc::FNsproto& row) {
+    amc::FNsproto *ptr = parent.c_nsproto;
     if (LIKELY(ptr == &row)) {
-        ns.c_nsproto = NULL;
+        parent.c_nsproto = NULL;
     }
 }
 
 // --- amc.FNs.c_nsdb.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_nsdb_InsertMaybe(amc::FNs& ns, amc::FNsdb& row) {
-    amc::FNsdb* ptr = ns.c_nsdb;
+inline bool amc::c_nsdb_InsertMaybe(amc::FNs& parent, amc::FNsdb& row) {
+    amc::FNsdb* ptr = parent.c_nsdb;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ns.c_nsdb = &row;
+        parent.c_nsdb = &row;
     }
     return retval;
 }
 
 // --- amc.FNs.c_nsdb.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_nsdb_Remove(amc::FNs& ns, amc::FNsdb& row) {
-    amc::FNsdb *ptr = ns.c_nsdb;
+inline void amc::c_nsdb_Remove(amc::FNs& parent, amc::FNsdb& row) {
+    amc::FNsdb *ptr = parent.c_nsdb;
     if (LIKELY(ptr == &row)) {
-        ns.c_nsdb = NULL;
+        parent.c_nsdb = NULL;
     }
 }
 
 // --- amc.FNs.c_outfile.EmptyQ
 // Return true if index is empty
-inline bool amc::c_outfile_EmptyQ(amc::FNs& ns) {
-    return ns.c_outfile_n == 0;
+inline bool amc::c_outfile_EmptyQ(amc::FNs& parent) {
+    return parent.c_outfile_n == 0;
 }
 
 // --- amc.FNs.c_outfile.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FOutfile* amc::c_outfile_Find(amc::FNs& ns, u64 t) {
+inline amc::FOutfile* amc::c_outfile_Find(amc::FNs& parent, u64 t) {
     amc::FOutfile *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_outfile_n;
+    u64 lim = parent.c_outfile_n;
     if (idx < lim) {
-        retval = ns.c_outfile_elems[idx];
+        retval = parent.c_outfile_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_outfile.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FOutfile*> amc::c_outfile_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FOutfile*>(ns.c_outfile_elems, ns.c_outfile_n);
+inline algo::aryptr<amc::FOutfile*> amc::c_outfile_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FOutfile*>(parent.c_outfile_elems, parent.c_outfile_n);
 }
 
 // --- amc.FNs.c_outfile.N
 // Return number of items in the pointer array
-inline i64 amc::c_outfile_N(const amc::FNs& ns) {
-    return ns.c_outfile_n;
+inline i64 amc::c_outfile_N(const amc::FNs& parent) {
+    return parent.c_outfile_n;
 }
 
 // --- amc.FNs.c_outfile.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_outfile_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_outfile_n; i++) {
+inline void amc::c_outfile_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_outfile_n; i++) {
         // mark all elements as not-in-array
-        ns.c_outfile_elems[i]->ns_c_outfile_in_ary = false;
+        parent.c_outfile_elems[i]->ns_c_outfile_in_ary = false;
     }
-    ns.c_outfile_n = 0;
+    parent.c_outfile_n = 0;
 }
 
 // --- amc.FNs.c_outfile.qFind
 // Return reference without bounds checking
-inline amc::FOutfile& amc::c_outfile_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_outfile_elems[idx];
+inline amc::FOutfile& amc::c_outfile_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_outfile_elems[idx];
 }
 
 // --- amc.FNs.c_outfile.InAryQ
@@ -16552,54 +16543,54 @@ inline bool amc::ns_c_outfile_InAryQ(amc::FOutfile& row) {
 
 // --- amc.FNs.c_outfile.qLast
 // Reference to last element without bounds checking
-inline amc::FOutfile& amc::c_outfile_qLast(amc::FNs& ns) {
-    return *ns.c_outfile_elems[ns.c_outfile_n-1];
+inline amc::FOutfile& amc::c_outfile_qLast(amc::FNs& parent) {
+    return *parent.c_outfile_elems[parent.c_outfile_n-1];
 }
 
 // --- amc.FNs.c_foutput.EmptyQ
 // Return true if index is empty
-inline bool amc::c_foutput_EmptyQ(amc::FNs& ns) {
-    return ns.c_foutput_n == 0;
+inline bool amc::c_foutput_EmptyQ(amc::FNs& parent) {
+    return parent.c_foutput_n == 0;
 }
 
 // --- amc.FNs.c_foutput.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFoutput* amc::c_foutput_Find(amc::FNs& ns, u64 t) {
+inline amc::FFoutput* amc::c_foutput_Find(amc::FNs& parent, u64 t) {
     amc::FFoutput *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_foutput_n;
+    u64 lim = parent.c_foutput_n;
     if (idx < lim) {
-        retval = ns.c_foutput_elems[idx];
+        retval = parent.c_foutput_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_foutput.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFoutput*> amc::c_foutput_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FFoutput*>(ns.c_foutput_elems, ns.c_foutput_n);
+inline algo::aryptr<amc::FFoutput*> amc::c_foutput_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FFoutput*>(parent.c_foutput_elems, parent.c_foutput_n);
 }
 
 // --- amc.FNs.c_foutput.N
 // Return number of items in the pointer array
-inline i64 amc::c_foutput_N(const amc::FNs& ns) {
-    return ns.c_foutput_n;
+inline i64 amc::c_foutput_N(const amc::FNs& parent) {
+    return parent.c_foutput_n;
 }
 
 // --- amc.FNs.c_foutput.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_foutput_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_foutput_n; i++) {
+inline void amc::c_foutput_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_foutput_n; i++) {
         // mark all elements as not-in-array
-        ns.c_foutput_elems[i]->ns_c_foutput_in_ary = false;
+        parent.c_foutput_elems[i]->ns_c_foutput_in_ary = false;
     }
-    ns.c_foutput_n = 0;
+    parent.c_foutput_n = 0;
 }
 
 // --- amc.FNs.c_foutput.qFind
 // Return reference without bounds checking
-inline amc::FFoutput& amc::c_foutput_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_foutput_elems[idx];
+inline amc::FFoutput& amc::c_foutput_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_foutput_elems[idx];
 }
 
 // --- amc.FNs.c_foutput.InAryQ
@@ -16610,54 +16601,54 @@ inline bool amc::ns_c_foutput_InAryQ(amc::FFoutput& row) {
 
 // --- amc.FNs.c_foutput.qLast
 // Reference to last element without bounds checking
-inline amc::FFoutput& amc::c_foutput_qLast(amc::FNs& ns) {
-    return *ns.c_foutput_elems[ns.c_foutput_n-1];
+inline amc::FFoutput& amc::c_foutput_qLast(amc::FNs& parent) {
+    return *parent.c_foutput_elems[parent.c_foutput_n-1];
 }
 
 // --- amc.FNs.c_fstep.EmptyQ
 // Return true if index is empty
-inline bool amc::c_fstep_EmptyQ(amc::FNs& ns) {
-    return ns.c_fstep_n == 0;
+inline bool amc::c_fstep_EmptyQ(amc::FNs& parent) {
+    return parent.c_fstep_n == 0;
 }
 
 // --- amc.FNs.c_fstep.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FFstep* amc::c_fstep_Find(amc::FNs& ns, u64 t) {
+inline amc::FFstep* amc::c_fstep_Find(amc::FNs& parent, u64 t) {
     amc::FFstep *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_fstep_n;
+    u64 lim = parent.c_fstep_n;
     if (idx < lim) {
-        retval = ns.c_fstep_elems[idx];
+        retval = parent.c_fstep_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_fstep.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FFstep*> amc::c_fstep_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FFstep*>(ns.c_fstep_elems, ns.c_fstep_n);
+inline algo::aryptr<amc::FFstep*> amc::c_fstep_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FFstep*>(parent.c_fstep_elems, parent.c_fstep_n);
 }
 
 // --- amc.FNs.c_fstep.N
 // Return number of items in the pointer array
-inline i64 amc::c_fstep_N(const amc::FNs& ns) {
-    return ns.c_fstep_n;
+inline i64 amc::c_fstep_N(const amc::FNs& parent) {
+    return parent.c_fstep_n;
 }
 
 // --- amc.FNs.c_fstep.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_fstep_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_fstep_n; i++) {
+inline void amc::c_fstep_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_fstep_n; i++) {
         // mark all elements as not-in-array
-        ns.c_fstep_elems[i]->ns_c_fstep_in_ary = false;
+        parent.c_fstep_elems[i]->ns_c_fstep_in_ary = false;
     }
-    ns.c_fstep_n = 0;
+    parent.c_fstep_n = 0;
 }
 
 // --- amc.FNs.c_fstep.qFind
 // Return reference without bounds checking
-inline amc::FFstep& amc::c_fstep_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_fstep_elems[idx];
+inline amc::FFstep& amc::c_fstep_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_fstep_elems[idx];
 }
 
 // --- amc.FNs.c_fstep.InAryQ
@@ -16668,54 +16659,54 @@ inline bool amc::ns_c_fstep_InAryQ(amc::FFstep& row) {
 
 // --- amc.FNs.c_fstep.qLast
 // Reference to last element without bounds checking
-inline amc::FFstep& amc::c_fstep_qLast(amc::FNs& ns) {
-    return *ns.c_fstep_elems[ns.c_fstep_n-1];
+inline amc::FFstep& amc::c_fstep_qLast(amc::FNs& parent) {
+    return *parent.c_fstep_elems[parent.c_fstep_n-1];
 }
 
 // --- amc.FNs.c_gsymbol.EmptyQ
 // Return true if index is empty
-inline bool amc::c_gsymbol_EmptyQ(amc::FNs& ns) {
-    return ns.c_gsymbol_n == 0;
+inline bool amc::c_gsymbol_EmptyQ(amc::FNs& parent) {
+    return parent.c_gsymbol_n == 0;
 }
 
 // --- amc.FNs.c_gsymbol.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FGsymbol* amc::c_gsymbol_Find(amc::FNs& ns, u64 t) {
+inline amc::FGsymbol* amc::c_gsymbol_Find(amc::FNs& parent, u64 t) {
     amc::FGsymbol *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_gsymbol_n;
+    u64 lim = parent.c_gsymbol_n;
     if (idx < lim) {
-        retval = ns.c_gsymbol_elems[idx];
+        retval = parent.c_gsymbol_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_gsymbol.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FGsymbol*> amc::c_gsymbol_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FGsymbol*>(ns.c_gsymbol_elems, ns.c_gsymbol_n);
+inline algo::aryptr<amc::FGsymbol*> amc::c_gsymbol_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FGsymbol*>(parent.c_gsymbol_elems, parent.c_gsymbol_n);
 }
 
 // --- amc.FNs.c_gsymbol.N
 // Return number of items in the pointer array
-inline i64 amc::c_gsymbol_N(const amc::FNs& ns) {
-    return ns.c_gsymbol_n;
+inline i64 amc::c_gsymbol_N(const amc::FNs& parent) {
+    return parent.c_gsymbol_n;
 }
 
 // --- amc.FNs.c_gsymbol.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_gsymbol_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_gsymbol_n; i++) {
+inline void amc::c_gsymbol_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_gsymbol_n; i++) {
         // mark all elements as not-in-array
-        ns.c_gsymbol_elems[i]->ns_c_gsymbol_in_ary = false;
+        parent.c_gsymbol_elems[i]->ns_c_gsymbol_in_ary = false;
     }
-    ns.c_gsymbol_n = 0;
+    parent.c_gsymbol_n = 0;
 }
 
 // --- amc.FNs.c_gsymbol.qFind
 // Return reference without bounds checking
-inline amc::FGsymbol& amc::c_gsymbol_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_gsymbol_elems[idx];
+inline amc::FGsymbol& amc::c_gsymbol_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_gsymbol_elems[idx];
 }
 
 // --- amc.FNs.c_gsymbol.InAryQ
@@ -16726,54 +16717,54 @@ inline bool amc::ns_c_gsymbol_InAryQ(amc::FGsymbol& row) {
 
 // --- amc.FNs.c_gsymbol.qLast
 // Reference to last element without bounds checking
-inline amc::FGsymbol& amc::c_gsymbol_qLast(amc::FNs& ns) {
-    return *ns.c_gsymbol_elems[ns.c_gsymbol_n-1];
+inline amc::FGsymbol& amc::c_gsymbol_qLast(amc::FNs& parent) {
+    return *parent.c_gsymbol_elems[parent.c_gsymbol_n-1];
 }
 
 // --- amc.FNs.c_nsinclude.EmptyQ
 // Return true if index is empty
-inline bool amc::c_nsinclude_EmptyQ(amc::FNs& ns) {
-    return ns.c_nsinclude_n == 0;
+inline bool amc::c_nsinclude_EmptyQ(amc::FNs& parent) {
+    return parent.c_nsinclude_n == 0;
 }
 
 // --- amc.FNs.c_nsinclude.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FNsinclude* amc::c_nsinclude_Find(amc::FNs& ns, u64 t) {
+inline amc::FNsinclude* amc::c_nsinclude_Find(amc::FNs& parent, u64 t) {
     amc::FNsinclude *retval = NULL;
     u64 idx = t;
-    u64 lim = ns.c_nsinclude_n;
+    u64 lim = parent.c_nsinclude_n;
     if (idx < lim) {
-        retval = ns.c_nsinclude_elems[idx];
+        retval = parent.c_nsinclude_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FNs.c_nsinclude.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FNsinclude*> amc::c_nsinclude_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FNsinclude*>(ns.c_nsinclude_elems, ns.c_nsinclude_n);
+inline algo::aryptr<amc::FNsinclude*> amc::c_nsinclude_Getary(amc::FNs& parent) {
+    return algo::aryptr<amc::FNsinclude*>(parent.c_nsinclude_elems, parent.c_nsinclude_n);
 }
 
 // --- amc.FNs.c_nsinclude.N
 // Return number of items in the pointer array
-inline i64 amc::c_nsinclude_N(const amc::FNs& ns) {
-    return ns.c_nsinclude_n;
+inline i64 amc::c_nsinclude_N(const amc::FNs& parent) {
+    return parent.c_nsinclude_n;
 }
 
 // --- amc.FNs.c_nsinclude.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_nsinclude_RemoveAll(amc::FNs& ns) {
-    for (u64 i = 0; i < ns.c_nsinclude_n; i++) {
+inline void amc::c_nsinclude_RemoveAll(amc::FNs& parent) {
+    for (u64 i = 0; i < parent.c_nsinclude_n; i++) {
         // mark all elements as not-in-array
-        ns.c_nsinclude_elems[i]->ns_c_nsinclude_in_ary = false;
+        parent.c_nsinclude_elems[i]->ns_c_nsinclude_in_ary = false;
     }
-    ns.c_nsinclude_n = 0;
+    parent.c_nsinclude_n = 0;
 }
 
 // --- amc.FNs.c_nsinclude.qFind
 // Return reference without bounds checking
-inline amc::FNsinclude& amc::c_nsinclude_qFind(amc::FNs& ns, u64 idx) {
-    return *ns.c_nsinclude_elems[idx];
+inline amc::FNsinclude& amc::c_nsinclude_qFind(amc::FNs& parent, u64 idx) {
+    return *parent.c_nsinclude_elems[idx];
 }
 
 // --- amc.FNs.c_nsinclude.InAryQ
@@ -16784,47 +16775,47 @@ inline bool amc::ns_c_nsinclude_InAryQ(amc::FNsinclude& row) {
 
 // --- amc.FNs.c_nsinclude.qLast
 // Reference to last element without bounds checking
-inline amc::FNsinclude& amc::c_nsinclude_qLast(amc::FNs& ns) {
-    return *ns.c_nsinclude_elems[ns.c_nsinclude_n-1];
+inline amc::FNsinclude& amc::c_nsinclude_qLast(amc::FNs& parent) {
+    return *parent.c_nsinclude_elems[parent.c_nsinclude_n-1];
 }
 
 // --- amc.FNs.c_nscpp.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_nscpp_InsertMaybe(amc::FNs& ns, amc::FNscpp& row) {
-    amc::FNscpp* ptr = ns.c_nscpp;
+inline bool amc::c_nscpp_InsertMaybe(amc::FNs& parent, amc::FNscpp& row) {
+    amc::FNscpp* ptr = parent.c_nscpp;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ns.c_nscpp = &row;
+        parent.c_nscpp = &row;
     }
     return retval;
 }
 
 // --- amc.FNs.c_nscpp.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_nscpp_Remove(amc::FNs& ns, amc::FNscpp& row) {
-    amc::FNscpp *ptr = ns.c_nscpp;
+inline void amc::c_nscpp_Remove(amc::FNs& parent, amc::FNscpp& row) {
+    amc::FNscpp *ptr = parent.c_nscpp;
     if (LIKELY(ptr == &row)) {
-        ns.c_nscpp = NULL;
+        parent.c_nscpp = NULL;
     }
 }
 
 // --- amc.FNs.c_nsjs.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_nsjs_InsertMaybe(amc::FNs& ns, amc::FNsjs& row) {
-    amc::FNsjs* ptr = ns.c_nsjs;
+inline bool amc::c_nsjs_InsertMaybe(amc::FNs& parent, amc::FNsjs& row) {
+    amc::FNsjs* ptr = parent.c_nsjs;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ns.c_nsjs = &row;
+        parent.c_nsjs = &row;
     }
     return retval;
 }
 
 // --- amc.FNs.c_nsjs.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_nsjs_Remove(amc::FNs& ns, amc::FNsjs& row) {
-    amc::FNsjs *ptr = ns.c_nsjs;
+inline void amc::c_nsjs_Remove(amc::FNs& parent, amc::FNsjs& row) {
+    amc::FNsjs *ptr = parent.c_nsjs;
     if (LIKELY(ptr == &row)) {
-        ns.c_nsjs = NULL;
+        parent.c_nsjs = NULL;
     }
 }
 
@@ -17258,9 +17249,9 @@ inline  amc::FNsdb::~FNsdb() {
 
 // --- amc.FNsinclude..Init
 // Set all fields to initial values.
-inline void amc::FNsinclude_Init(amc::FNsinclude& nsinclude) {
-    nsinclude.sys = bool(false);
-    nsinclude.ns_c_nsinclude_in_ary = bool(false);
+inline void amc::FNsinclude_Init(amc::FNsinclude& parent) {
+    parent.sys = bool(false);
+    parent.ns_c_nsinclude_in_ary = bool(false);
 }
 
 // --- amc.FNsinclude..Ctor
@@ -17275,9 +17266,9 @@ inline  amc::FNsinclude::~FNsinclude() {
 
 // --- amc.FNsjs..Init
 // Set all fields to initial values.
-inline void amc::FNsjs_Init(amc::FNsjs& nsjs) {
-    nsjs.typescript = bool(false);
-    nsjs.ifaceonly = bool(false);
+inline void amc::FNsjs_Init(amc::FNsjs& parent) {
+    parent.typescript = bool(false);
+    parent.ifaceonly = bool(false);
 }
 
 // --- amc.FNsjs..Ctor
@@ -17301,12 +17292,12 @@ inline  amc::FNsproto::~FNsproto() {
 
 // --- amc.FNsx..Init
 // Set all fields to initial values.
-inline void amc::FNsx_Init(amc::FNsx& nsx) {
-    nsx.genthrow = bool(false);
-    nsx.correct_getorcreate = bool(false);
-    nsx.sortxref = bool(false);
-    nsx.pack = bool(false);
-    nsx.p_pool = NULL;
+inline void amc::FNsx_Init(amc::FNsx& parent) {
+    parent.genthrow = bool(false);
+    parent.correct_getorcreate = bool(false);
+    parent.sortxref = bool(false);
+    parent.pack = bool(false);
+    parent.p_pool = NULL;
 }
 
 // --- amc.FNsx..Ctor
@@ -17321,13 +17312,13 @@ inline  amc::FNsx::~FNsx() {
 
 // --- amc.FNumstr..Init
 // Set all fields to initial values.
-inline void amc::FNumstr_Init(amc::FNumstr& numstr) {
-    numstr.base = i32(0);
-    numstr.min_len = i32(0);
-    numstr.p_numtype = NULL;
-    numstr.nummin = u64(0);
-    numstr.nummax = u64(0);
-    numstr.issigned = bool(false);
+inline void amc::FNumstr_Init(amc::FNumstr& parent) {
+    parent.base = i32(0);
+    parent.min_len = i32(0);
+    parent.p_numtype = NULL;
+    parent.nummin = u64(0);
+    parent.nummax = u64(0);
+    parent.issigned = bool(false);
 }
 
 // --- amc.FNumstr..Ctor
@@ -17342,10 +17333,10 @@ inline  amc::FNumstr::~FNumstr() {
 
 // --- amc.FOutfile..Init
 // Set all fields to initial values.
-inline void amc::FOutfile_Init(amc::FOutfile& outfile) {
-    outfile.p_ns = NULL;
-    outfile.ns_c_outfile_in_ary = bool(false);
-    outfile.outfile_next = (amc::FOutfile*)-1; // (amc.FDb.outfile) not-in-tpool's freelist
+inline void amc::FOutfile_Init(amc::FOutfile& parent) {
+    parent.p_ns = NULL;
+    parent.ns_c_outfile_in_ary = bool(false);
+    parent.outfile_next = (amc::FOutfile*)-1; // (amc.FDb.outfile) not-in-tpool's freelist
 }
 
 // --- amc.FOutfile..Ctor
@@ -17360,10 +17351,10 @@ inline  amc::FOutfile::~FOutfile() {
 
 // --- amc.FPack..Init
 // Set all fields to initial values.
-inline void amc::FPack_Init(amc::FPack& pack) {
-    pack.p_ctype = NULL;
-    pack.ind_pack_next = (amc::FPack*)-1; // (amc.FDb.ind_pack) not-in-hash
-    pack.ind_pack_hashval = 0; // stored hash value
+inline void amc::FPack_Init(amc::FPack& parent) {
+    parent.p_ctype = NULL;
+    parent.ind_pack_next = (amc::FPack*)-1; // (amc.FDb.ind_pack) not-in-hash
+    parent.ind_pack_hashval = 0; // stored hash value
 }
 
 // --- amc.FPack..Ctor
@@ -17388,10 +17379,10 @@ inline  amc::FPayloadhdr::~FPayloadhdr() {
 
 // --- amc.FPbsyntax..Init
 // Set all fields to initial values.
-inline void amc::FPbsyntax_Init(amc::FPbsyntax& pbsyntax) {
-    pbsyntax.implicit_presence = bool(false);
-    pbsyntax.ind_pbsyntax_next = (amc::FPbsyntax*)-1; // (amc.FDb.ind_pbsyntax) not-in-hash
-    pbsyntax.ind_pbsyntax_hashval = 0; // stored hash value
+inline void amc::FPbsyntax_Init(amc::FPbsyntax& parent) {
+    parent.implicit_presence = bool(false);
+    parent.ind_pbsyntax_next = (amc::FPbsyntax*)-1; // (amc.FDb.ind_pbsyntax) not-in-hash
+    parent.ind_pbsyntax_hashval = 0; // stored hash value
 }
 
 // --- amc.FPbsyntax..Ctor
@@ -17406,11 +17397,11 @@ inline  amc::FPbsyntax::~FPbsyntax() {
 
 // --- amc.FPbtype..Init
 // Set all fields to initial values.
-inline void amc::FPbtype_Init(amc::FPbtype& pbtype) {
-    pbtype.wire_type = u8(0);
-    pbtype.argtype = algo::strptr("");
-    pbtype.ind_pbtype_next = (amc::FPbtype*)-1; // (amc.FDb.ind_pbtype) not-in-hash
-    pbtype.ind_pbtype_hashval = 0; // stored hash value
+inline void amc::FPbtype_Init(amc::FPbtype& parent) {
+    parent.wire_type = u8(0);
+    parent.argtype = algo::strptr("");
+    parent.ind_pbtype_next = (amc::FPbtype*)-1; // (amc.FDb.ind_pbtype) not-in-hash
+    parent.ind_pbtype_hashval = 0; // stored hash value
 }
 
 // --- amc.FPbtype..Ctor
@@ -17425,48 +17416,48 @@ inline  amc::FPbtype::~FPbtype() {
 
 // --- amc.FPmaskfld.c_pmaskfld_member.EmptyQ
 // Return true if index is empty
-inline bool amc::c_pmaskfld_member_EmptyQ(amc::FPmaskfld& pmaskfld) {
-    return pmaskfld.c_pmaskfld_member_n == 0;
+inline bool amc::c_pmaskfld_member_EmptyQ(amc::FPmaskfld& parent) {
+    return parent.c_pmaskfld_member_n == 0;
 }
 
 // --- amc.FPmaskfld.c_pmaskfld_member.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FPmaskfldMember* amc::c_pmaskfld_member_Find(amc::FPmaskfld& pmaskfld, u64 t) {
+inline amc::FPmaskfldMember* amc::c_pmaskfld_member_Find(amc::FPmaskfld& parent, u64 t) {
     amc::FPmaskfldMember *retval = NULL;
     u64 idx = t;
-    u64 lim = pmaskfld.c_pmaskfld_member_n;
+    u64 lim = parent.c_pmaskfld_member_n;
     if (idx < lim) {
-        retval = pmaskfld.c_pmaskfld_member_elems[idx];
+        retval = parent.c_pmaskfld_member_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FPmaskfld.c_pmaskfld_member.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FPmaskfldMember*> amc::c_pmaskfld_member_Getary(amc::FPmaskfld& pmaskfld) {
-    return algo::aryptr<amc::FPmaskfldMember*>(pmaskfld.c_pmaskfld_member_elems, pmaskfld.c_pmaskfld_member_n);
+inline algo::aryptr<amc::FPmaskfldMember*> amc::c_pmaskfld_member_Getary(amc::FPmaskfld& parent) {
+    return algo::aryptr<amc::FPmaskfldMember*>(parent.c_pmaskfld_member_elems, parent.c_pmaskfld_member_n);
 }
 
 // --- amc.FPmaskfld.c_pmaskfld_member.N
 // Return number of items in the pointer array
-inline i64 amc::c_pmaskfld_member_N(const amc::FPmaskfld& pmaskfld) {
-    return pmaskfld.c_pmaskfld_member_n;
+inline i64 amc::c_pmaskfld_member_N(const amc::FPmaskfld& parent) {
+    return parent.c_pmaskfld_member_n;
 }
 
 // --- amc.FPmaskfld.c_pmaskfld_member.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_pmaskfld_member_RemoveAll(amc::FPmaskfld& pmaskfld) {
-    for (u64 i = 0; i < pmaskfld.c_pmaskfld_member_n; i++) {
+inline void amc::c_pmaskfld_member_RemoveAll(amc::FPmaskfld& parent) {
+    for (u64 i = 0; i < parent.c_pmaskfld_member_n; i++) {
         // mark all elements as not-in-array
-        pmaskfld.c_pmaskfld_member_elems[i]->pmaskfld_c_pmaskfld_member_in_ary = false;
+        parent.c_pmaskfld_member_elems[i]->pmaskfld_c_pmaskfld_member_in_ary = false;
     }
-    pmaskfld.c_pmaskfld_member_n = 0;
+    parent.c_pmaskfld_member_n = 0;
 }
 
 // --- amc.FPmaskfld.c_pmaskfld_member.qFind
 // Return reference without bounds checking
-inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qFind(amc::FPmaskfld& pmaskfld, u64 idx) {
-    return *pmaskfld.c_pmaskfld_member_elems[idx];
+inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qFind(amc::FPmaskfld& parent, u64 idx) {
+    return *parent.c_pmaskfld_member_elems[idx];
 }
 
 // --- amc.FPmaskfld.c_pmaskfld_member.InAryQ
@@ -17477,22 +17468,22 @@ inline bool amc::pmaskfld_c_pmaskfld_member_InAryQ(amc::FPmaskfldMember& row) {
 
 // --- amc.FPmaskfld.c_pmaskfld_member.qLast
 // Reference to last element without bounds checking
-inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qLast(amc::FPmaskfld& pmaskfld) {
-    return *pmaskfld.c_pmaskfld_member_elems[pmaskfld.c_pmaskfld_member_n-1];
+inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qLast(amc::FPmaskfld& parent) {
+    return *parent.c_pmaskfld_member_elems[parent.c_pmaskfld_member_n-1];
 }
 
 // --- amc.FPmaskfld..Init
 // Set all fields to initial values.
-inline void amc::FPmaskfld_Init(amc::FPmaskfld& pmaskfld) {
-    pmaskfld.filter_print = bool(true);
-    pmaskfld.p_field = NULL;
-    pmaskfld.nextbit = u32(0);
-    pmaskfld.c_pmaskfld_member_elems = NULL; // (amc.FPmaskfld.c_pmaskfld_member)
-    pmaskfld.c_pmaskfld_member_n = 0; // (amc.FPmaskfld.c_pmaskfld_member)
-    pmaskfld.c_pmaskfld_member_max = 0; // (amc.FPmaskfld.c_pmaskfld_member)
-    pmaskfld.ctype_c_pmaskfld_in_ary = bool(false);
-    pmaskfld.ind_pmaskfld_next = (amc::FPmaskfld*)-1; // (amc.FDb.ind_pmaskfld) not-in-hash
-    pmaskfld.ind_pmaskfld_hashval = 0; // stored hash value
+inline void amc::FPmaskfld_Init(amc::FPmaskfld& parent) {
+    parent.filter_print = bool(true);
+    parent.p_field = NULL;
+    parent.nextbit = u32(0);
+    parent.c_pmaskfld_member_elems = NULL; // (amc.FPmaskfld.c_pmaskfld_member)
+    parent.c_pmaskfld_member_n = 0; // (amc.FPmaskfld.c_pmaskfld_member)
+    parent.c_pmaskfld_member_max = 0; // (amc.FPmaskfld.c_pmaskfld_member)
+    parent.ctype_c_pmaskfld_in_ary = bool(false);
+    parent.ind_pmaskfld_next = (amc::FPmaskfld*)-1; // (amc.FDb.ind_pmaskfld) not-in-hash
+    parent.ind_pmaskfld_hashval = 0; // stored hash value
 }
 
 // --- amc.FPmaskfld.c_pmaskfld_member_curs.Reset
@@ -17532,12 +17523,12 @@ inline  amc::FPmaskfld::~FPmaskfld() {
 
 // --- amc.FPmaskfldMember..Init
 // Set all fields to initial values.
-inline void amc::FPmaskfldMember_Init(amc::FPmaskfldMember& pmaskfld_member) {
-    pmaskfld_member.bit = u32(0);
-    pmaskfld_member.p_field = NULL;
-    pmaskfld_member.p_pmaskfld = NULL;
-    pmaskfld_member.field_c_pmaskfld_member_in_ary = bool(false);
-    pmaskfld_member.pmaskfld_c_pmaskfld_member_in_ary = bool(false);
+inline void amc::FPmaskfldMember_Init(amc::FPmaskfldMember& parent) {
+    parent.bit = u32(0);
+    parent.p_field = NULL;
+    parent.p_pmaskfld = NULL;
+    parent.field_c_pmaskfld_member_in_ary = bool(false);
+    parent.pmaskfld_c_pmaskfld_member_in_ary = bool(false);
 }
 
 // --- amc.FPmaskfldMember..Ctor
@@ -17552,13 +17543,13 @@ inline  amc::FPmaskfldMember::~FPmaskfldMember() {
 
 // --- amc.FPnew..Init
 // Set all fields to initial values.
-inline void amc::FPnew_Init(amc::FPnew& pnew) {
-    pnew.p_ctype = NULL;
-    pnew.p_ns = NULL;
-    pnew.ctype_c_pnew_in_ary = bool(false);
-    pnew.ns_c_pnew_in_ary = bool(false);
-    pnew.ind_pnew_next = (amc::FPnew*)-1; // (amc.FDb.ind_pnew) not-in-hash
-    pnew.ind_pnew_hashval = 0; // stored hash value
+inline void amc::FPnew_Init(amc::FPnew& parent) {
+    parent.p_ctype = NULL;
+    parent.p_ns = NULL;
+    parent.ctype_c_pnew_in_ary = bool(false);
+    parent.ns_c_pnew_in_ary = bool(false);
+    parent.ind_pnew_next = (amc::FPnew*)-1; // (amc.FDb.ind_pnew) not-in-hash
+    parent.ind_pnew_hashval = 0; // stored hash value
 }
 
 // --- amc.FPnew..Ctor
@@ -17573,10 +17564,10 @@ inline  amc::FPnew::~FPnew() {
 
 // --- amc.FPtrary..Init
 // Set all fields to initial values.
-inline void amc::FPtrary_Init(amc::FPtrary& ptrary) {
-    ptrary.unique = bool(false);
-    ptrary.heaplike = bool(false);
-    ptrary.p_field = NULL;
+inline void amc::FPtrary_Init(amc::FPtrary& parent) {
+    parent.unique = bool(false);
+    parent.heaplike = bool(false);
+    parent.p_field = NULL;
 }
 
 // --- amc.FPtrary..Ctor
@@ -17591,15 +17582,15 @@ inline  amc::FPtrary::~FPtrary() {
 
 // --- amc.FReftype.zs_fprefix.EmptyQ
 // Return true if index is empty
-inline bool amc::zs_fprefix_EmptyQ(amc::FReftype& reftype) {
-    return reftype.zs_fprefix_head == NULL;
+inline bool amc::zs_fprefix_EmptyQ(amc::FReftype& parent) {
+    return parent.zs_fprefix_head == NULL;
 }
 
 // --- amc.FReftype.zs_fprefix.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc::FFprefix* amc::zs_fprefix_First(amc::FReftype& reftype) {
+inline amc::FFprefix* amc::zs_fprefix_First(amc::FReftype& parent) {
     amc::FFprefix *row = NULL;
-    row = reftype.zs_fprefix_head;
+    row = parent.zs_fprefix_head;
     return row;
 }
 
@@ -17613,9 +17604,9 @@ inline bool amc::reftype_zs_fprefix_InLlistQ(amc::FFprefix& row) {
 
 // --- amc.FReftype.zs_fprefix.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc::FFprefix* amc::zs_fprefix_Last(amc::FReftype& reftype) {
+inline amc::FFprefix* amc::zs_fprefix_Last(amc::FReftype& parent) {
     amc::FFprefix *row = NULL;
-    row = reftype.zs_fprefix_tail;
+    row = parent.zs_fprefix_tail;
     return row;
 }
 
@@ -17627,9 +17618,9 @@ inline amc::FFprefix* amc::reftype_zs_fprefix_Next(amc::FFprefix &row) {
 
 // --- amc.FReftype.zs_fprefix.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc::FFprefix& amc::zs_fprefix_qLast(amc::FReftype& reftype) {
+inline amc::FFprefix& amc::zs_fprefix_qLast(amc::FReftype& parent) {
     amc::FFprefix *row = NULL;
-    row = reftype.zs_fprefix_tail;
+    row = parent.zs_fprefix_tail;
     return *row;
 }
 
@@ -17670,9 +17661,9 @@ inline  amc::FReftype::~FReftype() {
 
 // --- amc.FRowid..Init
 // Set all fields to initial values.
-inline void amc::FRowid_Init(amc::FRowid& rowid) {
-    rowid.ind_rowid_next = (amc::FRowid*)-1; // (amc.FDb.ind_rowid) not-in-hash
-    rowid.ind_rowid_hashval = 0; // stored hash value
+inline void amc::FRowid_Init(amc::FRowid& parent) {
+    parent.ind_rowid_next = (amc::FRowid*)-1; // (amc.FDb.ind_rowid) not-in-hash
+    parent.ind_rowid_hashval = 0; // stored hash value
 }
 
 // --- amc.FRowid..Ctor
@@ -17687,33 +17678,33 @@ inline  amc::FRowid::~FRowid() {
 
 // --- amc.FSmallstr.c_numstr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_numstr_InsertMaybe(amc::FSmallstr& smallstr, amc::FNumstr& row) {
-    amc::FNumstr* ptr = smallstr.c_numstr;
+inline bool amc::c_numstr_InsertMaybe(amc::FSmallstr& parent, amc::FNumstr& row) {
+    amc::FNumstr* ptr = parent.c_numstr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        smallstr.c_numstr = &row;
+        parent.c_numstr = &row;
     }
     return retval;
 }
 
 // --- amc.FSmallstr.c_numstr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_numstr_Remove(amc::FSmallstr& smallstr, amc::FNumstr& row) {
-    amc::FNumstr *ptr = smallstr.c_numstr;
+inline void amc::c_numstr_Remove(amc::FSmallstr& parent, amc::FNumstr& row) {
+    amc::FNumstr *ptr = parent.c_numstr;
     if (LIKELY(ptr == &row)) {
-        smallstr.c_numstr = NULL;
+        parent.c_numstr = NULL;
     }
 }
 
 // --- amc.FSmallstr..Init
 // Set all fields to initial values.
-inline void amc::FSmallstr_Init(amc::FSmallstr& smallstr) {
-    smallstr.length = i32(0);
-    smallstr.strict = bool(false);
-    smallstr.p_field = NULL;
-    smallstr.c_numstr = NULL;
-    smallstr.ind_smallstr_next = (amc::FSmallstr*)-1; // (amc.FDb.ind_smallstr) not-in-hash
-    smallstr.ind_smallstr_hashval = 0; // stored hash value
+inline void amc::FSmallstr_Init(amc::FSmallstr& parent) {
+    parent.length = i32(0);
+    parent.strict = bool(false);
+    parent.p_field = NULL;
+    parent.c_numstr = NULL;
+    parent.ind_smallstr_next = (amc::FSmallstr*)-1; // (amc.FDb.ind_smallstr) not-in-hash
+    parent.ind_smallstr_hashval = 0; // stored hash value
 }
 
 // --- amc.FSmallstr..Ctor
@@ -17728,8 +17719,8 @@ inline  amc::FSmallstr::~FSmallstr() {
 
 // --- amc.FSortfld..Init
 // Set all fields to initial values.
-inline void amc::FSortfld_Init(amc::FSortfld& sortfld) {
-    sortfld.p_sortfld = NULL;
+inline void amc::FSortfld_Init(amc::FSortfld& parent) {
+    parent.p_sortfld = NULL;
 }
 
 // --- amc.FSortfld..Ctor
@@ -17744,21 +17735,21 @@ inline  amc::FSortfld::~FSortfld() {
 
 // --- amc.FSsimfile.c_ssimvolatile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_ssimvolatile_InsertMaybe(amc::FSsimfile& ssimfile, amc::FSsimvolatile& row) {
-    amc::FSsimvolatile* ptr = ssimfile.c_ssimvolatile;
+inline bool amc::c_ssimvolatile_InsertMaybe(amc::FSsimfile& parent, amc::FSsimvolatile& row) {
+    amc::FSsimvolatile* ptr = parent.c_ssimvolatile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ssimfile.c_ssimvolatile = &row;
+        parent.c_ssimvolatile = &row;
     }
     return retval;
 }
 
 // --- amc.FSsimfile.c_ssimvolatile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_ssimvolatile_Remove(amc::FSsimfile& ssimfile, amc::FSsimvolatile& row) {
-    amc::FSsimvolatile *ptr = ssimfile.c_ssimvolatile;
+inline void amc::c_ssimvolatile_Remove(amc::FSsimfile& parent, amc::FSsimvolatile& row) {
+    amc::FSsimvolatile *ptr = parent.c_ssimvolatile;
     if (LIKELY(ptr == &row)) {
-        ssimfile.c_ssimvolatile = NULL;
+        parent.c_ssimvolatile = NULL;
     }
 }
 
@@ -17774,9 +17765,9 @@ inline  amc::FSsimfile::~FSsimfile() {
 
 // --- amc.FSsimsort..Init
 // Set all fields to initial values.
-inline void amc::FSsimsort_Init(amc::FSsimsort& ssimsort) {
-    ssimsort.p_ssimfile = NULL;
-    ssimsort.p_sortfld = NULL;
+inline void amc::FSsimsort_Init(amc::FSsimsort& parent) {
+    parent.p_ssimfile = NULL;
+    parent.p_sortfld = NULL;
 }
 
 // --- amc.FSsimsort..Ctor
@@ -17795,8 +17786,8 @@ inline  amc::FSsimvolatile::~FSsimvolatile() {
 
 // --- amc.FStatictuple..Init
 // Set all fields to initial values.
-inline void amc::FStatictuple_Init(amc::FStatictuple& static_tuple) {
-    static_tuple.ctype_c_static_in_ary = bool(false);
+inline void amc::FStatictuple_Init(amc::FStatictuple& parent) {
+    parent.ctype_c_static_in_ary = bool(false);
 }
 
 // --- amc.FStatictuple..Ctor
@@ -17811,9 +17802,9 @@ inline  amc::FStatictuple::~FStatictuple() {
 
 // --- amc.FSteptype..Init
 // Set all fields to initial values.
-inline void amc::FSteptype_Init(amc::FSteptype& steptype) {
-    steptype.ind_steptype_next = (amc::FSteptype*)-1; // (amc.FDb.ind_steptype) not-in-hash
-    steptype.ind_steptype_hashval = 0; // stored hash value
+inline void amc::FSteptype_Init(amc::FSteptype& parent) {
+    parent.ind_steptype_next = (amc::FSteptype*)-1; // (amc.FDb.ind_steptype) not-in-hash
+    parent.ind_steptype_hashval = 0; // stored hash value
 }
 
 // --- amc.FSteptype..Ctor
@@ -17828,13 +17819,13 @@ inline  amc::FSteptype::~FSteptype() {
 
 // --- amc.FSubstr..Init
 // Set all fields to initial values.
-inline void amc::FSubstr_Init(amc::FSubstr& substr) {
-    substr.p_field = NULL;
-    substr.p_srcfield = NULL;
-    substr.range = u64(0);
-    substr.c_substr_field_in_ary = bool(false);
-    substr.zd_substr_params_next = (amc::FSubstr*)-1; // (amc.FDb.zd_substr_params) not-in-list
-    substr.zd_substr_params_prev = NULL; // (amc.FDb.zd_substr_params)
+inline void amc::FSubstr_Init(amc::FSubstr& parent) {
+    parent.p_field = NULL;
+    parent.p_srcfield = NULL;
+    parent.range = u64(0);
+    parent.c_substr_field_in_ary = bool(false);
+    parent.zd_substr_params_next = (amc::FSubstr*)-1; // (amc.FDb.zd_substr_params) not-in-list
+    parent.zd_substr_params_prev = NULL; // (amc.FDb.zd_substr_params)
 }
 
 // --- amc.FSubstr..Ctor
@@ -17849,10 +17840,10 @@ inline  amc::FSubstr::~FSubstr() {
 
 // --- amc.FTargdep..Init
 // Set all fields to initial values.
-inline void amc::FTargdep_Init(amc::FTargdep& targdep) {
-    targdep.p_target = NULL;
-    targdep.p_parent = NULL;
-    targdep.target_c_targdep_in_ary = bool(false);
+inline void amc::FTargdep_Init(amc::FTargdep& parent) {
+    parent.p_target = NULL;
+    parent.p_parent = NULL;
+    parent.target_c_targdep_in_ary = bool(false);
 }
 
 // --- amc.FTargdep..Ctor
@@ -17867,48 +17858,48 @@ inline  amc::FTargdep::~FTargdep() {
 
 // --- amc.FTarget.c_targdep.EmptyQ
 // Return true if index is empty
-inline bool amc::c_targdep_EmptyQ(amc::FTarget& target) {
-    return target.c_targdep_n == 0;
+inline bool amc::c_targdep_EmptyQ(amc::FTarget& parent) {
+    return parent.c_targdep_n == 0;
 }
 
 // --- amc.FTarget.c_targdep.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FTargdep* amc::c_targdep_Find(amc::FTarget& target, u64 t) {
+inline amc::FTargdep* amc::c_targdep_Find(amc::FTarget& parent, u64 t) {
     amc::FTargdep *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_targdep_n;
+    u64 lim = parent.c_targdep_n;
     if (idx < lim) {
-        retval = target.c_targdep_elems[idx];
+        retval = parent.c_targdep_elems[idx];
     }
     return retval;
 }
 
 // --- amc.FTarget.c_targdep.Getary
 // Return array of pointers
-inline algo::aryptr<amc::FTargdep*> amc::c_targdep_Getary(amc::FTarget& target) {
-    return algo::aryptr<amc::FTargdep*>(target.c_targdep_elems, target.c_targdep_n);
+inline algo::aryptr<amc::FTargdep*> amc::c_targdep_Getary(amc::FTarget& parent) {
+    return algo::aryptr<amc::FTargdep*>(parent.c_targdep_elems, parent.c_targdep_n);
 }
 
 // --- amc.FTarget.c_targdep.N
 // Return number of items in the pointer array
-inline i64 amc::c_targdep_N(const amc::FTarget& target) {
-    return target.c_targdep_n;
+inline i64 amc::c_targdep_N(const amc::FTarget& parent) {
+    return parent.c_targdep_n;
 }
 
 // --- amc.FTarget.c_targdep.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc::c_targdep_RemoveAll(amc::FTarget& target) {
-    for (u64 i = 0; i < target.c_targdep_n; i++) {
+inline void amc::c_targdep_RemoveAll(amc::FTarget& parent) {
+    for (u64 i = 0; i < parent.c_targdep_n; i++) {
         // mark all elements as not-in-array
-        target.c_targdep_elems[i]->target_c_targdep_in_ary = false;
+        parent.c_targdep_elems[i]->target_c_targdep_in_ary = false;
     }
-    target.c_targdep_n = 0;
+    parent.c_targdep_n = 0;
 }
 
 // --- amc.FTarget.c_targdep.qFind
 // Return reference without bounds checking
-inline amc::FTargdep& amc::c_targdep_qFind(amc::FTarget& target, u64 idx) {
-    return *target.c_targdep_elems[idx];
+inline amc::FTargdep& amc::c_targdep_qFind(amc::FTarget& parent, u64 idx) {
+    return *parent.c_targdep_elems[idx];
 }
 
 // --- amc.FTarget.c_targdep.InAryQ
@@ -17919,19 +17910,19 @@ inline bool amc::target_c_targdep_InAryQ(amc::FTargdep& row) {
 
 // --- amc.FTarget.c_targdep.qLast
 // Reference to last element without bounds checking
-inline amc::FTargdep& amc::c_targdep_qLast(amc::FTarget& target) {
-    return *target.c_targdep_elems[target.c_targdep_n-1];
+inline amc::FTargdep& amc::c_targdep_qLast(amc::FTarget& parent) {
+    return *parent.c_targdep_elems[parent.c_targdep_n-1];
 }
 
 // --- amc.FTarget..Init
 // Set all fields to initial values.
-inline void amc::FTarget_Init(amc::FTarget& target) {
-    target.c_targdep_elems = NULL; // (amc.FTarget.c_targdep)
-    target.c_targdep_n = 0; // (amc.FTarget.c_targdep)
-    target.c_targdep_max = 0; // (amc.FTarget.c_targdep)
-    target.p_ns = NULL;
-    target.ind_target_next = (amc::FTarget*)-1; // (amc.FDb.ind_target) not-in-hash
-    target.ind_target_hashval = 0; // stored hash value
+inline void amc::FTarget_Init(amc::FTarget& parent) {
+    parent.c_targdep_elems = NULL; // (amc.FTarget.c_targdep)
+    parent.c_targdep_n = 0; // (amc.FTarget.c_targdep)
+    parent.c_targdep_max = 0; // (amc.FTarget.c_targdep)
+    parent.p_ns = NULL;
+    parent.ind_target_next = (amc::FTarget*)-1; // (amc.FDb.ind_target) not-in-hash
+    parent.ind_target_hashval = 0; // stored hash value
 }
 
 // --- amc.FTarget.c_targdep_curs.Reset
@@ -17971,11 +17962,11 @@ inline  amc::FTarget::~FTarget() {
 
 // --- amc.FTary..Init
 // Set all fields to initial values.
-inline void amc::FTary_Init(amc::FTary& tary) {
-    tary.aliased = bool(false);
-    tary.p_field = NULL;
-    tary.ind_tary_next = (amc::FTary*)-1; // (amc.FDb.ind_tary) not-in-hash
-    tary.ind_tary_hashval = 0; // stored hash value
+inline void amc::FTary_Init(amc::FTary& parent) {
+    parent.aliased = bool(false);
+    parent.p_field = NULL;
+    parent.ind_tary_next = (amc::FTary*)-1; // (amc.FDb.ind_tary) not-in-hash
+    parent.ind_tary_hashval = 0; // stored hash value
 }
 
 // --- amc.FTary..Ctor
@@ -17990,10 +17981,10 @@ inline  amc::FTary::~FTary() {
 
 // --- amc.FTcond..Init
 // Set all fields to initial values.
-inline void amc::FTcond_Init(amc::FTcond& tcond) {
-    tcond.tclass_c_tcond_in_ary = bool(false);
-    tcond.ind_tcond_next = (amc::FTcond*)-1; // (amc.FDb.ind_tcond) not-in-hash
-    tcond.ind_tcond_hashval = 0; // stored hash value
+inline void amc::FTcond_Init(amc::FTcond& parent) {
+    parent.tclass_c_tcond_in_ary = bool(false);
+    parent.ind_tcond_next = (amc::FTcond*)-1; // (amc.FDb.ind_tcond) not-in-hash
+    parent.ind_tcond_hashval = 0; // stored hash value
 }
 
 // --- amc.FTcond..Ctor
@@ -18008,8 +17999,8 @@ inline  amc::FTcond::~FTcond() {
 
 // --- amc.FTcurs..Init
 // Set all fields to initial values.
-inline void amc::FTcurs_Init(amc::FTcurs& tcurs) {
-    tcurs.dflt = bool(false);
+inline void amc::FTcurs_Init(amc::FTcurs& parent) {
+    parent.dflt = bool(false);
 }
 
 // --- amc.FTcurs..Ctor
@@ -18024,29 +18015,29 @@ inline  amc::FTcurs::~FTcurs() {
 
 // --- amc.FTfunc.step.Call
 // Invoke function by pointer
-inline void amc::step_Call(amc::FTfunc& tfunc) {
-    if (tfunc.step) {
-        tfunc.step();
+inline void amc::step_Call(amc::FTfunc& parent) {
+    if (parent.step) {
+        parent.step();
     }
 }
 
 // --- amc.FTfunc.c_tcurs.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_tcurs_InsertMaybe(amc::FTfunc& tfunc, amc::FTcurs& row) {
-    amc::FTcurs* ptr = tfunc.c_tcurs;
+inline bool amc::c_tcurs_InsertMaybe(amc::FTfunc& parent, amc::FTcurs& row) {
+    amc::FTcurs* ptr = parent.c_tcurs;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        tfunc.c_tcurs = &row;
+        parent.c_tcurs = &row;
     }
     return retval;
 }
 
 // --- amc.FTfunc.c_tcurs.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_tcurs_Remove(amc::FTfunc& tfunc, amc::FTcurs& row) {
-    amc::FTcurs *ptr = tfunc.c_tcurs;
+inline void amc::c_tcurs_Remove(amc::FTfunc& parent, amc::FTcurs& row) {
+    amc::FTcurs *ptr = parent.c_tcurs;
     if (LIKELY(ptr == &row)) {
-        tfunc.c_tcurs = NULL;
+        parent.c_tcurs = NULL;
     }
 }
 
@@ -18062,10 +18053,10 @@ inline  amc::FTfunc::~FTfunc() {
 
 // --- amc.FThash..Init
 // Set all fields to initial values.
-inline void amc::FThash_Init(amc::FThash& thash) {
-    thash.unique = bool(true);
-    thash.p_hashfld = NULL;
-    thash.p_field = NULL;
+inline void amc::FThash_Init(amc::FThash& parent) {
+    parent.unique = bool(true);
+    parent.p_hashfld = NULL;
+    parent.p_field = NULL;
 }
 
 // --- amc.FThash..Ctor
@@ -18088,9 +18079,9 @@ inline  amc::FTracerec::FTracerec() {
 
 // --- amc.FTypefld..Init
 // Set all fields to initial values.
-inline void amc::FTypefld_Init(amc::FTypefld& typefld) {
-    typefld.p_field = NULL;
-    typefld.p_ctype = NULL;
+inline void amc::FTypefld_Init(amc::FTypefld& parent) {
+    parent.p_field = NULL;
+    parent.p_ctype = NULL;
 }
 
 // --- amc.FTypefld..Ctor
@@ -18113,21 +18104,21 @@ inline  amc::FUsertracefld::FUsertracefld() {
 
 // --- amc.FXref.c_nocascdel.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc::c_nocascdel_InsertMaybe(amc::FXref& xref, amc::FNocascdel& row) {
-    amc::FNocascdel* ptr = xref.c_nocascdel;
+inline bool amc::c_nocascdel_InsertMaybe(amc::FXref& parent, amc::FNocascdel& row) {
+    amc::FNocascdel* ptr = parent.c_nocascdel;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        xref.c_nocascdel = &row;
+        parent.c_nocascdel = &row;
     }
     return retval;
 }
 
 // --- amc.FXref.c_nocascdel.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc::c_nocascdel_Remove(amc::FXref& xref, amc::FNocascdel& row) {
-    amc::FNocascdel *ptr = xref.c_nocascdel;
+inline void amc::c_nocascdel_Remove(amc::FXref& parent, amc::FNocascdel& row) {
+    amc::FNocascdel *ptr = parent.c_nocascdel;
     if (LIKELY(ptr == &row)) {
-        xref.c_nocascdel = NULL;
+        parent.c_nocascdel = NULL;
     }
 }
 

@@ -212,9 +212,45 @@ static void BacktraceSymbols_Print(algo::aryptr<void*> addrlist, algo::cstring &
 
 // -----------------------------------------------------------------------------
 
+// Emit TEXT to stderr, and append it to the fatal-record file when one is
+// named, allocating nothing on either path.
+//
+// A fail-stop most often reports an allocation that failed, and a report of
+// memory exhaustion cannot ask for memory to describe itself.  So the writes
+// are raw ones: the record path was composed and zero-terminated when memory
+// was plentiful (algo_lib::Userinit), and the file is opened for append at the
+// moment of the death, which needs no heap.  Append rather than truncate, so a
+// second failure adds to the account of the first instead of erasing it.
+static void FatalEmit(algo::strptr text) {
+    algo::WriteFile(algo::Fildes(2), (u8*)text.elems, text.n_elems);
+    if (algo_lib::_db.fatalerr_file.ch_n > 0) {
+        int fd = open(algo_lib::_db.fatalerr_file.ch_elems, O_WRONLY | O_CREAT | O_APPEND, 0644);
+        if (fd >= 0) {
+            algo::WriteFile(algo::Fildes(fd), (u8*)text.elems, text.n_elems);
+            (void)close(fd);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Emit the trace counters of every in-memory database, one database at a time.
+//
+// Reading a database's counters means calling through the function pointers its
+// generated reflection installed, so a table that cannot be printed kills the
+// process here -- and counters composed whole would then take every database that
+// printed cleanly down with them.  Each database is named before its table is
+// touched and its line goes out before the next is read, so the record ends at
+// the database that could not be printed and names it.
 static void PrintTraceCounters(cstring &out) {
+    ch_RemoveAll(out);
     out << "algo_lib.crash_trace  comment:'Current values of trace counters are shown below'"<<eol;
+    FatalEmit(algo::strptr(out.ch_elems, out.ch_n));
     ind_beg(algo_lib::_db_imdb_curs,imdb,algo_lib::_db) {
+        ch_RemoveAll(out);
+        out << "algo_lib.crash_imdb  " << Keyval("imdb",imdb.imdb) << eol;
+        FatalEmit(algo::strptr(out.ch_elems, out.ch_n));
+        ch_RemoveAll(out);
         algo_lib::FImtable* imtable = algo_lib::ind_imtable_Find(tempstr()<<imdb.imdb<<".trace");
         algo::ImrowPtr row = imtable && imtable->c_RowidFind ? imtable->c_RowidFind(0) : algo::ImrowPtr();
         if (imtable && row && imtable->Print) {
@@ -237,15 +273,22 @@ static void PrintTraceCounters(cstring &out) {
                 out<<eol;
             }
         }
+        FatalEmit(algo::strptr(out.ch_elems, out.ch_n));
     }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
+// Emit everything a fail-stop reports after its backtrace: the trace counters of
+// every in-memory database, then whatever the fatalerror hook adds.  Each part
+// emits its own text, so this composes nothing itself and leaves the buffer
+// empty for its caller.
 static void PrintTraces() {
     cstring &out=algo_lib::_db.fatalerr;
     PrintTraceCounters(out);
+    ch_RemoveAll(out);
     algo_lib::h_fatalerror_Call();
+    FatalEmit(algo::strptr(out.ch_elems, out.ch_n));
 }
 
 // -----------------------------------------------------------------------------
@@ -315,26 +358,6 @@ void algo::ShowStackTrace(uintptr_t start_ip, cstring &out) {
 
 // -----------------------------------------------------------------------------
 
-// Emit TEXT to stderr, and append it to the fatal-record file when one is
-// named, allocating nothing on either path.
-//
-// A fail-stop most often reports an allocation that failed, and a report of
-// memory exhaustion cannot ask for memory to describe itself.  So the writes
-// are raw ones: the record path was composed and zero-terminated when memory
-// was plentiful (algo_lib::Userinit), and the file is opened for append at the
-// moment of the death, which needs no heap.  Append rather than truncate, so a
-// second failure adds to the account of the first instead of erasing it.
-static void FatalEmit(algo::strptr text) {
-    algo::WriteFile(algo::Fildes(2), (u8*)text.elems, text.n_elems);
-    if (algo_lib::_db.fatalerr_file.ch_n > 0) {
-        int fd = open(algo_lib::_db.fatalerr_file.ch_elems, O_WRONLY | O_CREAT | O_APPEND, 0644);
-        if (fd >= 0) {
-            algo::WriteFile(algo::Fildes(fd), (u8*)text.elems, text.n_elems);
-            (void)close(fd);
-        }
-    }
-}
-
 void algo::FatalErrorExit(const char *a) NORETURN {
     // State the cause before attempting anything that could fail to state it.
     //
@@ -348,10 +371,15 @@ void algo::FatalErrorExit(const char *a) NORETURN {
     //
     // The general fact is that the report path must not depend on the resource
     // whose absence it exists to report.  So the cause goes out first, through
-    // writes that allocate nothing, and only then is the enrichment -- the
-    // build, the backtrace, the trace counters -- composed and emitted.  A
-    // second entry means that enrichment is what failed, and it adds its own
-    // cause to a record that already carries the original one.
+    // writes that allocate nothing.
+    //
+    // The same reasoning divides the enrichment.  The build, the backtrace and
+    // the trace counters are composed and emitted one at a time rather than
+    // together, so a piece that dies while being built cannot take the pieces
+    // before it down with it -- and the record then names the stage that died by
+    // being the last one present.  A second entry means the enrichment is what
+    // failed, and it adds its own cause to a record that already carries the
+    // original one.
     FatalEmit("algo.fatal_error\n");
     FatalEmit(a);
     FatalEmit("\n");
@@ -361,9 +389,12 @@ void algo::FatalErrorExit(const char *a) NORETURN {
         cstring &out = algo_lib::_db.fatalerr;
         ch_RemoveAll(out);
         out << " "<<gitinfo_Get()<<eol;
-        ShowStackTrace((uintptr_t)&FatalErrorExit, out);
-        PrintTraces();
         FatalEmit(algo::strptr(out.ch_elems, out.ch_n));
+        ch_RemoveAll(out);
+        ShowStackTrace((uintptr_t)&FatalErrorExit, out);
+        FatalEmit(algo::strptr(out.ch_elems, out.ch_n));
+        ch_RemoveAll(out);
+        PrintTraces();
     }
 #if defined (_WIN32) && defined(_DEBUG)
     DebugBreak();

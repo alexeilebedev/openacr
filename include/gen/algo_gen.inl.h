@@ -665,7 +665,7 @@ inline void algo::ch_Setary(algo::Charset& parent, const algo::aryptr<u64> &rhs)
 }
 
 // --- algo.Charset.ch.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline u64& algo::ch_qFind(algo::Charset& parent, u64 t) {
     return parent.ch_elems[u64(t)];
 }
@@ -7309,7 +7309,7 @@ inline void algo::value_Setary(algo::Md5Digest& parent, const algo::aryptr<u8> &
 }
 
 // --- algo.Md5Digest.value.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline u8& algo::value_qFind(algo::Md5Digest& parent, u64 t) {
     return parent.value_elems[u64(t)];
 }
@@ -16534,150 +16534,150 @@ inline  algo::SeqType::SeqType(u64 in_value)
  {
 }
 
-// --- algo.Sha1sig.sha1sig.Fill
+// --- algo.Signature.signature.Fill
 // Set all elements of fixed array to value RHS
-inline void algo::sha1sig_Fill(algo::Sha1sig& parent, const u8 &rhs) {
+inline void algo::signature_Fill(algo::Signature& parent, const u8 &rhs) {
     for (int i = 0; i < 20; i++) {
-        parent.sha1sig_elems[i] = rhs;
+        parent.signature_elems[i] = rhs;
     }
 }
 
-// --- algo.Sha1sig.sha1sig.Find
+// --- algo.Signature.signature.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* algo::sha1sig_Find(algo::Sha1sig& parent, u64 t) {
+inline u8* algo::signature_Find(algo::Signature& parent, u64 t) {
     u64 idx = t;
     u64 lim = 20;
-    return idx < lim ? parent.sha1sig_elems + idx : NULL; // unsigned comparison with limit
+    return idx < lim ? parent.signature_elems + idx : NULL; // unsigned comparison with limit
 }
 
-// --- algo.Sha1sig.sha1sig.Getary
-// Access fixed array sha1sig as aryptr.
-inline algo::aryptr<u8> algo::sha1sig_Getary(algo::Sha1sig& parent) {
-    return algo::aryptr<u8>(parent.sha1sig_elems, 20);
+// --- algo.Signature.signature.Getary
+// Access fixed array signature as aryptr.
+inline algo::aryptr<u8> algo::signature_Getary(algo::Signature& parent) {
+    return algo::aryptr<u8>(parent.signature_elems, 20);
 }
 
-// --- algo.Sha1sig.sha1sig.Max
+// --- algo.Signature.signature.Max
 // Return max number of items in the array
-inline i32 algo::sha1sig_Max(algo::Sha1sig& parent) {
+inline i32 algo::signature_Max(algo::Signature& parent) {
     (void)parent;
     return 20;
 }
 
-// --- algo.Sha1sig.sha1sig.N
+// --- algo.Signature.signature.N
 // Return number of items in the array
-inline i32 algo::sha1sig_N(const algo::Sha1sig& parent) {
+inline i32 algo::signature_N(const algo::Signature& parent) {
     (void)parent;//only to avoid -Wunused-parameter
     return 20;
 }
 
-// --- algo.Sha1sig.sha1sig.Setary
+// --- algo.Signature.signature.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void algo::sha1sig_Setary(algo::Sha1sig& parent, const algo::aryptr<u8> &rhs) {
+inline void algo::signature_Setary(algo::Signature& parent, const algo::aryptr<u8> &rhs) {
     int n = i32_Min(20, rhs.n_elems);
-    memcpy(parent.sha1sig_elems, rhs.elems, sizeof(u8)*n);
+    memcpy(parent.signature_elems, rhs.elems, sizeof(u8)*n);
 }
 
-// --- algo.Sha1sig.sha1sig.qFind
-// 'quick' Access row by row id. No bounds checking in release.
-inline u8& algo::sha1sig_qFind(algo::Sha1sig& parent, u64 t) {
-    return parent.sha1sig_elems[u64(t)];
+// --- algo.Signature.signature.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline u8& algo::signature_qFind(algo::Signature& parent, u64 t) {
+    return parent.signature_elems[u64(t)];
 }
 
-// --- algo.Sha1sig.sha1sig_curs.Reset
+// --- algo.Signature.signature_curs.Reset
 // cursor points to valid item
-inline void algo::Sha1sig_sha1sig_curs_Reset(Sha1sig_sha1sig_curs &curs, algo::Sha1sig &parent) {
+inline void algo::Signature_signature_curs_Reset(Signature_signature_curs &curs, algo::Signature &parent) {
     curs.parent = &parent;
     curs.index = 0;
 }
 
-// --- algo.Sha1sig.sha1sig_curs.ValidQ
+// --- algo.Signature.signature_curs.ValidQ
 // cursor points to valid item
-inline bool algo::Sha1sig_sha1sig_curs_ValidQ(Sha1sig_sha1sig_curs &curs) {
+inline bool algo::Signature_signature_curs_ValidQ(Signature_signature_curs &curs) {
     return u64(curs.index) < u64(20);
 }
 
-// --- algo.Sha1sig.sha1sig_curs.Next
+// --- algo.Signature.signature_curs.Next
 // proceed to next item
-inline void algo::Sha1sig_sha1sig_curs_Next(Sha1sig_sha1sig_curs &curs) {
+inline void algo::Signature_signature_curs_Next(Signature_signature_curs &curs) {
     curs.index++;
 }
 
-// --- algo.Sha1sig.sha1sig_curs.Access
+// --- algo.Signature.signature_curs.Access
 // item access
-inline u8& algo::Sha1sig_sha1sig_curs_Access(Sha1sig_sha1sig_curs &curs) {
-    return sha1sig_qFind((*curs.parent), u64(curs.index));
+inline u8& algo::Signature_signature_curs_Access(Signature_signature_curs &curs) {
+    return signature_qFind((*curs.parent), u64(curs.index));
 }
 
-// --- algo.Sha1sig..EqOp
-inline bool algo::Sha1sig::operator ==(const algo::Sha1sig &rhs) const {
-    return algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+// --- algo.Signature..EqOp
+inline bool algo::Signature::operator ==(const algo::Signature &rhs) const {
+    return algo::Signature_Eq(const_cast<algo::Signature&>(*this),const_cast<algo::Signature&>(rhs));
 }
 
-// --- algo.Sha1sig..NeOp
-inline bool algo::Sha1sig::operator !=(const algo::Sha1sig &rhs) const {
-    return !algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+// --- algo.Signature..NeOp
+inline bool algo::Signature::operator !=(const algo::Signature &rhs) const {
+    return !algo::Signature_Eq(const_cast<algo::Signature&>(*this),const_cast<algo::Signature&>(rhs));
 }
 
-// --- algo.Sha1sig..LtOp
-inline bool algo::Sha1sig::operator <(const algo::Sha1sig &rhs) const {
-    return algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+// --- algo.Signature..LtOp
+inline bool algo::Signature::operator <(const algo::Signature &rhs) const {
+    return algo::Signature_Lt(const_cast<algo::Signature&>(*this),const_cast<algo::Signature&>(rhs));
 }
 
-// --- algo.Sha1sig..GtOp
-inline bool algo::Sha1sig::operator >(const algo::Sha1sig &rhs) const {
-    return algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(rhs),const_cast<algo::Sha1sig&>(*this));
+// --- algo.Signature..GtOp
+inline bool algo::Signature::operator >(const algo::Signature &rhs) const {
+    return algo::Signature_Lt(const_cast<algo::Signature&>(rhs),const_cast<algo::Signature&>(*this));
 }
 
-// --- algo.Sha1sig..LeOp
-inline bool algo::Sha1sig::operator <=(const algo::Sha1sig &rhs) const {
-    return !algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(rhs),const_cast<algo::Sha1sig&>(*this));
+// --- algo.Signature..LeOp
+inline bool algo::Signature::operator <=(const algo::Signature &rhs) const {
+    return !algo::Signature_Lt(const_cast<algo::Signature&>(rhs),const_cast<algo::Signature&>(*this));
 }
 
-// --- algo.Sha1sig..GeOp
-inline bool algo::Sha1sig::operator >=(const algo::Sha1sig &rhs) const {
-    return !algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+// --- algo.Signature..GeOp
+inline bool algo::Signature::operator >=(const algo::Signature &rhs) const {
+    return !algo::Signature_Lt(const_cast<algo::Signature&>(*this),const_cast<algo::Signature&>(rhs));
 }
 
-// --- algo.Sha1sig..Lt
-inline bool algo::Sha1sig_Lt(algo::Sha1sig& lhs, algo::Sha1sig& rhs) {
-    return sha1sig_Cmp(lhs,rhs) < 0;
+// --- algo.Signature..Lt
+inline bool algo::Signature_Lt(algo::Signature& lhs, algo::Signature& rhs) {
+    return signature_Cmp(lhs,rhs) < 0;
 }
 
-// --- algo.Sha1sig..Cmp
-inline i32 algo::Sha1sig_Cmp(algo::Sha1sig& lhs, algo::Sha1sig& rhs) {
+// --- algo.Signature..Cmp
+inline i32 algo::Signature_Cmp(algo::Signature& lhs, algo::Signature& rhs) {
     i32 retval = 0;
-    retval = sha1sig_Cmp(lhs,rhs);
+    retval = signature_Cmp(lhs,rhs);
     return retval;
 }
 
-// --- algo.Sha1sig..Init
+// --- algo.Signature..Init
 // Set all fields to initial values.
-inline void algo::Sha1sig_Init(algo::Sha1sig& parent) {
+inline void algo::Signature_Init(algo::Signature& parent) {
     for (int i = 0; i < 20; i++) {
-        parent.sha1sig_elems[i] = 0;
+        parent.signature_elems[i] = 0;
     }
 }
 
-// --- algo.Sha1sig..Eq
-inline bool algo::Sha1sig_Eq(algo::Sha1sig& lhs, algo::Sha1sig& rhs) {
+// --- algo.Signature..Eq
+inline bool algo::Signature_Eq(algo::Signature& lhs, algo::Signature& rhs) {
     bool retval = true;
-    retval = sha1sig_Eq(lhs,rhs);
+    retval = signature_Eq(lhs,rhs);
     return retval;
 }
 
-// --- algo.Sha1sig..Update
+// --- algo.Signature..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::Sha1sig_Update(algo::Sha1sig &lhs, algo::Sha1sig& rhs) {
-    bool ret = !Sha1sig_Eq(lhs, rhs); // compare values
+inline bool algo::Signature_Update(algo::Signature &lhs, algo::Signature& rhs) {
+    bool ret = !Signature_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
     }
     return ret;
 }
 
-// --- algo.Sha1sig..Ctor
-inline  algo::Sha1sig::Sha1sig() {
-    algo::Sha1sig_Init(*this);
+// --- algo.Signature..Ctor
+inline  algo::Signature::Signature() {
+    algo::Signature_Init(*this);
 }
 
 // --- algo.Smallstr1.ch.Add
@@ -20698,7 +20698,7 @@ inline void algo::value_Setary(algo::Uuid& parent, const algo::aryptr<u8> &rhs) 
 }
 
 // --- algo.Uuid.value.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline u8& algo::value_qFind(algo::Uuid& parent, u64 t) {
     return parent.value_elems[u64(t)];
 }
@@ -21297,8 +21297,8 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::SeqType 
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Sha1sig &row) {// cfmt:algo.Sha1sig.String
-    algo::Sha1sig_Print(const_cast<algo::Sha1sig&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Signature &row) {// cfmt:algo.Signature.String
+    algo::Signature_Print(const_cast<algo::Signature&>(row), str);
     return str;
 }
 

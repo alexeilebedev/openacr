@@ -9,7 +9,7 @@ to and from wire formats.
 
 To create a new protocol, insert these records and run amc:
 
-```
+```bash
 $ acr -insert -write
    dmmeta.ns  ns:prot1  nstype:protocol  comment:"Some protocol"
       dmmeta.nsproto  ns:prot1  comment:""
@@ -22,7 +22,7 @@ You will need to manually add the resulting source files to git (`git add */gen/
 And include them in some target so that they are compiled and linked in.
 Typically all protocols are linked into `lib_prot`:
 
-```
+```bash
 $ acr -insert -write
     dev.targsrc  targsrc:lib_prot/cpp/gen/prot1_gen.cpp        comment:""
     dev.targsrc  targsrc:lib_prot/include/gen/prot1_gen.h      comment:""
@@ -38,7 +38,7 @@ in the namespace a c++ symbol, and adding an ability to read field names from st
 
 An alternative is to use `acr_ed:`
 
-```
+```bash
 $ acr_ed -create -target prot1 -nstype protocol -write
 ```
 
@@ -55,7 +55,7 @@ are known as TLV protocols.
 To define a message header, define a ctype and annotate its fields with `typefld` and `lenfld`
 records. When defining a message header, we will need to define at least one message to go with it.
 
-```
+```ssim
 $ acr -insert -write
 dmmeta.ctype  ctype:prot1.MsgHeader  comment:""
   dmmeta.cpptype  ctype:prot1.MsgHeader  ctor:Y
@@ -113,7 +113,7 @@ Another useful type `amc` automatically provides is the cursor.
 User can iterate over a memory range using a `MsgHeader&` that automatically skips to the next message
 and provides bounds checking.
 
-```
+```c++
 memptr bytes;
 ind_beg(prot1::MsgHeader_curs, msg, bytes) {
     // msg is a MsgHeader&
@@ -122,7 +122,7 @@ ind_beg(prot1::MsgHeader_curs, msg, bytes) {
 
 The code for any generated message can be examined with `amc`:
 
-```
+```c++
 $ amc prot1.HeartbeatMsg
 
 // --- prot1.HeartbeatMsg
@@ -149,7 +149,7 @@ With `Dispatch`, you declare a set of ctypes and one or more associated actions.
 Amc generates a switch statement (encased in a function) and performs one of these actions.
 Here is an example:
 
-```
+```ssim
 dmmeta.dispatch  dispatch:prot1.In  unk:N  read:N  print:Y  haslen:Y  call:Y  strict:N  comment:""
 dmmeta.dispatch_msg  dispatch_msg:prot1.In/prot1.HeartbeatMsg       comment:""
 dmmeta.dispatch_msg  dispatch_msg:prot1.In/prot1.LoginMsg       comment:""
@@ -162,7 +162,7 @@ The `dispatch` record controls a generator of switch statements.
  after checking input parameters. For the code above, this generates the following lines in the header
  `include/gen/prot1_gen.h`:
  
-```
+```c++
 // User-implemented callback function for dispatch In
 void                 In_HeartbeatMsg(prot1::HeartbeatMsg &msg, u32 msg_len);
 // User-implemented callback function for dispatch In
@@ -175,7 +175,7 @@ effectively names the switch statement. If `strict:Y` is specified, the paramete
 message size exactly. Otherwise, it just has to be enough to fit the message.
 The return value is the size of the dispatched message, or 0 if no function was called.
 
-```
+```c++
 // --- prot1.In..DispatchRaw
 int prot1::InDispatchRaw(prot1::InCase type, u8 *msg, u32 len) {
     int ret = 0;
@@ -207,7 +207,7 @@ int prot1::InDispatch(prot1::MsgHeader& msg, u32 msg_len) {
 Each `dispatch` results in corresponding `Case` type (see above discussion for the default Case
 type that covers all messages). So, with `read:Y`, the following code is generated:
 
-```
+```c++
 // --- prot1.In..ReadStrptr
 // Parse ascii representation of message into binary, appending new data to BUF.
 prot1::InCase prot1::In_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
@@ -225,14 +225,14 @@ and can look at any set of messages, in which the resulting `Case` message descr
 This is specified with `dispctx` record:
 
 Example:
-```
+```ssim
 dmmeta.dispctx  dispatch:prot1.In                   ctype:prot1.Ctx     comment:""
 ```
 
 The generated code is affected as follows. First, `prot1.Ctx` is added
 as the first argument of `Dispatch`. It is passed to each callback function:
 
-```
+```c++
 int                  OmegaDispatch(prot1.Ctx &ctx, omega::Header& msg, u32 msg_len);
 
 // User-implemented callback function for dispatch Omega
@@ -252,7 +252,7 @@ used to ensure that an application is never passed an incompatible binary input.
 ### Disptrace - tracing the number of cycles spent in a dispatch
 <a href="#disptrace"></a>
 
-```
+```ssim
 dmmeta.disptrace dispatch:prot1.In cycles:Y
 ```
 
@@ -272,7 +272,7 @@ When generating code for a protocol, `amc` automatically generates a `MsgHeaderM
 found message type. The purpose of this type is to provide recursive reading and printing of messages
 using the following two functions:
 
-```
+```c++
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len
@@ -296,7 +296,7 @@ With `Opt`, the field is optional: there is 0 or 1 copies of the field, dependin
 With `Varlen`, there is an array of 0 or more fields, again depending on message length. Let's declare
 a `Varlen` field:
 
-```
+```ssim
     dmmeta.ctype  ctype:prot1.DataMsg  comment:""
     dmmeta.cpptype  ctype:prot1.DataMsg  ctor:Y
     dmmeta.msgtype  ctype:prot1.DataMsg  type:3
@@ -309,7 +309,7 @@ For the `Varlen` field, the `_Getary` function is generated, which returns a poi
 to N elements in memory, as well as `_N` function which counts the elements.
 The `_Addr` function returns the address of the elements.
 
-```
+```c++
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
 algo::aryptr<u8>     data_Getary(prot1::DataMsg& parent) __attribute__((nothrow));
 u8*                  data_Addr(prot1::DataMsg& parent);
@@ -324,7 +324,7 @@ Since `amc` does not use C++ inheritance in generated code (this is intentional)
 are provided to take advantage of the shared memory layout in some cases. When `amc` determines that a
 message shares its memory layout with a `Base` type, it generates functions `_Castdown` and `_Castbase`.
 
-```
+```bash
 $ amc prot1.DataMsg.Cast% -proto
 // Check if prot1::MsgHeader is an instance of DataMsg by checking the type field
 // If it is, return the pointer of target type.
@@ -343,7 +343,7 @@ its length must be at least `sizeof(DataMsg)`, otherwise the function will retur
 To ask `amc` to generate a field-wise comparison function for a given ctype,
 use the `ccmp` record. We will use `ietf.Ipport` as an example
 
-```
+```ssim
 dmmeta.ccmp  ctype:ietf.Ipport  extrn:N  genop:Y  order:Y  minmax:Y  comment:""
 ```
 
@@ -358,7 +358,7 @@ but generates forward declarations for all functions and assumes the user will p
 
 Altogether, the following prototypes are generated for the example above:
 
-```
+```c++
 in all cases:
 bool                 Ipport_Eq(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
 
@@ -386,7 +386,7 @@ When a field is stored in memory in a big-endian format, use `fbigend` to reflec
 Other than that, use the same type for the field. `amc` will rename the underlying storage field
 (adding a `_be` suffix) so that callers don't access it directly, and generates `_Get` and `_Set` functions:
 
-```
+```c++
       dmmeta.field  field:sxou11.TimeInForce.value  arg:u32  reftype:Val  dflt:""  comment:""
               dmmeta.fbigend  field:sxou11.TimeInForce.value  comment:""
 
@@ -409,6 +409,6 @@ inline void sxou11::value_Set(sxou11::TimeInForce& parent, u32 rhs) {
 The `nsx` record holds various namespace options. Of interest here is the `pack` option,
 which simply requires that all ctypes that are part of the namespace are marked as `pack`.
 
-```
+```ssim
 dmmeta.nsx  ns:prot1     pack:Y ...
 ```

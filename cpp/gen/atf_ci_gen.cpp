@@ -35,8 +35,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
@@ -51,7 +49,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
 lib_git::FDb     lib_git::_db;      // dependency found via dev.targdep
@@ -123,29 +120,28 @@ void atf_ci::builddir_CopyIn(atf_ci::FBuilddir &row, dev::Builddir &in) {
 }
 
 // --- atf_ci.FBuilddir.uname.Get
-algo::strptr atf_ci::uname_Get(atf_ci::FBuilddir& builddir) {
-    return algo::Pathcomp(builddir.builddir, ".LL-LL");
+algo::strptr atf_ci::uname_Get(atf_ci::FBuilddir& parent) {
+    return algo::Pathcomp(parent.builddir, ".LL-LL");
 }
 
 // --- atf_ci.FBuilddir.compiler.Get
-algo::strptr atf_ci::compiler_Get(atf_ci::FBuilddir& builddir) {
-    return algo::Pathcomp(builddir.builddir, ".LL-LR");
+algo::strptr atf_ci::compiler_Get(atf_ci::FBuilddir& parent) {
+    return algo::Pathcomp(parent.builddir, ".LL-LR");
 }
 
 // --- atf_ci.FBuilddir.cfg.Get
-algo::strptr atf_ci::cfg_Get(atf_ci::FBuilddir& builddir) {
-    return algo::Pathcomp(builddir.builddir, ".LR-LL");
+algo::strptr atf_ci::cfg_Get(atf_ci::FBuilddir& parent) {
+    return algo::Pathcomp(parent.builddir, ".LR-LL");
 }
 
 // --- atf_ci.FBuilddir.arch.Get
-algo::strptr atf_ci::arch_Get(atf_ci::FBuilddir& builddir) {
-    return algo::Pathcomp(builddir.builddir, ".LR-LR");
+algo::strptr atf_ci::arch_Get(atf_ci::FBuilddir& parent) {
+    return algo::Pathcomp(parent.builddir, ".LR-LR");
 }
 
 // --- atf_ci.FBuilddir..Uninit
-void atf_ci::FBuilddir_Uninit(atf_ci::FBuilddir& builddir) {
-    atf_ci::FBuilddir &row = builddir; (void)row;
-    ind_builddir_Remove(row); // remove builddir from index ind_builddir
+void atf_ci::FBuilddir_Uninit(atf_ci::FBuilddir& parent) {
+    ind_builddir_Remove(parent); // remove builddir from index ind_builddir
 }
 
 // --- atf_ci.FCfg.base.CopyOut
@@ -207,9 +203,8 @@ void atf_ci::citest_CopyIn(atf_ci::FCitest &row, atfdb::Citest &in) {
 }
 
 // --- atf_ci.FCitest..Uninit
-void atf_ci::FCitest_Uninit(atf_ci::FCitest& citest) {
-    atf_ci::FCitest &row = citest; (void)row;
-    ind_citest_Remove(row); // remove citest from index ind_citest
+void atf_ci::FCitest_Uninit(atf_ci::FCitest& parent) {
+    ind_citest_Remove(parent); // remove citest from index ind_citest
 }
 
 // --- atf_ci.trace..Print
@@ -718,6 +713,7 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:tempcode  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check for temp code inserted for testing only\"", atf_ci::citest_tempcode }
         ,{ "atfdb.citest  citest:lineendings  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Correct windows-style line endings in known text files\"", atf_ci::citest_lineendings }
         ,{ "atfdb.citest  citest:update_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Update scriptfile table\"", atf_ci::citest_update_script }
+        ,{ "atfdb.citest  citest:install_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check that install scripts pin a version and verify what they fetch\"", atf_ci::citest_install_script }
         ,{ "atfdb.citest  citest:indent_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Indent any bash script file\"", atf_ci::citest_indent_script }
         ,{ "atfdb.citest  citest:normalize_acr_my  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Round trip ssim databases through MariaDB and back\"", atf_ci::citest_normalize_acr_my }
         ,{ "atfdb.citest  citest:cppcheck  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Cppcheck static code analysis\"", atf_ci::citest_cppcheck }
@@ -738,8 +734,9 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:acr_ed_target  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
         ,{ "atfdb.citest  citest:apm  cijob:comp  sandbox:Y  timeout:1200  failfast:N  comment:\"Test APM\"", atf_ci::citest_apm }
         ,{ "atfdb.citest  citest:apm_reinstall  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Check that packages are removable\"", atf_ci::citest_apm_reinstall }
-        ,{ "atfdb.citest  citest:abt_md_after_ssimfile_is_added  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Test that directory README.md is updated with all new .md files\"", atf_ci::citest_abt_md_after_ssimfile_is_added }
-        ,{ "atfdb.citest  citest:atf_comp_mem  cijob:memcheck  sandbox:N  timeout:1200  failfast:N  comment:\"Run component tests in memcheck mode (slow)\"", atf_ci::citest_atf_comp_mem }
+        ,{ "atfdb.citest  citest:doc_after_ssimfile_is_added  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"A table created now is listed by its namespace page, with nothing regenerated\"", atf_ci::citest_doc_after_ssimfile_is_added }
+        ,{ "atfdb.citest  citest:mem_prep  cijob:memcheck  sandbox:N  timeout:1200  failfast:Y  comment:\"Build the memcheck binaries (must run first)\"", atf_ci::citest_mem_prep }
+        ,{ "atfdb.citest  citest:atf_comp_mem  cijob:memcheck  sandbox:N  timeout:2400  failfast:N  comment:\"Run component tests in memcheck mode against cfg:memcheck\"", atf_ci::citest_atf_comp_mem }
         ,{ "atfdb.citest  citest:check_citest  cijob:comp  sandbox:N  timeout:600  failfast:N  comment:\"Check whether citests are correctly placed\"", atf_ci::citest_check_citest }
         ,{ "atfdb.citest  citest:cov_finalize  cijob:coverage  sandbox:N  timeout:600  failfast:N  comment:\"gcov-merge per-citest covdirs into dev.tgtcov (must run last)\"", atf_ci::citest_cov_finalize }
         ,{ "atfdb.citest  citest:ams_sendtest  cijob:comp  sandbox:N  timeout:600  failfast:N  comment:\"Move data through every ams lane shape, and past a slow reader\"", atf_ci::citest_ams_sendtest }
@@ -3326,7 +3323,6 @@ void atf_ci::FDb_Init() {
 
 // --- atf_ci.FDb..Uninit
 void atf_ci::FDb_Uninit() {
-    atf_ci::FDb &row = _db; (void)row;
 
     // atf_ci.FDb.package.Uninit (Lary)  //
     // skip destruction in global scope
@@ -3408,14 +3404,13 @@ void atf_ci::gitfile_CopyIn(atf_ci::FGitfile &row, dev::Gitfile &in) {
 }
 
 // --- atf_ci.FGitfile.ext.Get
-algo::strptr atf_ci::ext_Get(atf_ci::FGitfile& gitfile) {
-    return algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR");
+algo::strptr atf_ci::ext_Get(atf_ci::FGitfile& parent) {
+    return algo::Pathcomp(parent.gitfile, "/RR.LR.RR");
 }
 
 // --- atf_ci.FGitfile..Uninit
-void atf_ci::FGitfile_Uninit(atf_ci::FGitfile& gitfile) {
-    atf_ci::FGitfile &row = gitfile; (void)row;
-    ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
+void atf_ci::FGitfile_Uninit(atf_ci::FGitfile& parent) {
+    ind_gitfile_Remove(parent); // remove gitfile from index ind_gitfile
 }
 
 // --- atf_ci.FMsgfile.base.CopyOut
@@ -3449,11 +3444,10 @@ void atf_ci::noindent_CopyIn(atf_ci::FNoindent &row, dev::Noindent &in) {
 }
 
 // --- atf_ci.FNoindent..Uninit
-void atf_ci::FNoindent_Uninit(atf_ci::FNoindent& noindent) {
-    atf_ci::FNoindent &row = noindent; (void)row;
-    atf_ci::FGitfile* p_gitfile = atf_ci::ind_gitfile_Find(row.gitfile);
+void atf_ci::FNoindent_Uninit(atf_ci::FNoindent& parent) {
+    atf_ci::FGitfile* p_gitfile = atf_ci::ind_gitfile_Find(parent.gitfile);
     if (p_gitfile)  {
-        c_noindent_Remove(*p_gitfile, row);// remove noindent from index c_noindent
+        c_noindent_Remove(*p_gitfile, parent);// remove noindent from index c_noindent
     }
 }
 
@@ -3476,9 +3470,8 @@ void atf_ci::ns_CopyIn(atf_ci::FNs &row, dmmeta::Ns &in) {
 }
 
 // --- atf_ci.FNs..Uninit
-void atf_ci::FNs_Uninit(atf_ci::FNs& ns) {
-    atf_ci::FNs &row = ns; (void)row;
-    ind_ns_Remove(row); // remove ns from index ind_ns
+void atf_ci::FNs_Uninit(atf_ci::FNs& parent) {
+    ind_ns_Remove(parent); // remove ns from index ind_ns
 }
 
 // --- atf_ci.FPackage.base.CopyOut
@@ -3552,17 +3545,16 @@ void atf_ci::scriptfile_CopyIn(atf_ci::FScriptfile &row, dev::Scriptfile &in) {
 }
 
 // --- atf_ci.FScriptfile.name.Get
-algo::strptr atf_ci::name_Get(atf_ci::FScriptfile& scriptfile) {
-    return algo::Pathcomp(scriptfile.gitfile, "/RR");
+algo::strptr atf_ci::name_Get(atf_ci::FScriptfile& parent) {
+    return algo::Pathcomp(parent.gitfile, "/RR");
 }
 
 // --- atf_ci.FScriptfile..Uninit
-void atf_ci::FScriptfile_Uninit(atf_ci::FScriptfile& scriptfile) {
-    atf_ci::FScriptfile &row = scriptfile; (void)row;
-    ind_scriptfile_Remove(row); // remove scriptfile from index ind_scriptfile
-    atf_ci::FGitfile* p_gitfile = atf_ci::ind_gitfile_Find(row.gitfile);
+void atf_ci::FScriptfile_Uninit(atf_ci::FScriptfile& parent) {
+    ind_scriptfile_Remove(parent); // remove scriptfile from index ind_scriptfile
+    atf_ci::FGitfile* p_gitfile = atf_ci::ind_gitfile_Find(parent.gitfile);
     if (p_gitfile)  {
-        c_scriptfile_Remove(*p_gitfile, row);// remove scriptfile from index c_scriptfile
+        c_scriptfile_Remove(*p_gitfile, parent);// remove scriptfile from index c_scriptfile
     }
 }
 
@@ -3581,24 +3573,23 @@ void atf_ci::ssimfile_CopyIn(atf_ci::FSsimfile &row, dmmeta::Ssimfile &in) {
 }
 
 // --- atf_ci.FSsimfile.ssimns.Get
-algo::strptr atf_ci::ssimns_Get(atf_ci::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr atf_ci::ssimns_Get(atf_ci::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- atf_ci.FSsimfile.ns.Get
-algo::strptr atf_ci::ns_Get(atf_ci::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr atf_ci::ns_Get(atf_ci::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- atf_ci.FSsimfile.name.Get
-algo::strptr atf_ci::name_Get(atf_ci::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
+algo::strptr atf_ci::name_Get(atf_ci::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".RR");
 }
 
 // --- atf_ci.FSsimfile..Uninit
-void atf_ci::FSsimfile_Uninit(atf_ci::FSsimfile& ssimfile) {
-    atf_ci::FSsimfile &row = ssimfile; (void)row;
-    ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
+void atf_ci::FSsimfile_Uninit(atf_ci::FSsimfile& parent) {
+    ind_ssimfile_Remove(parent); // remove ssimfile from index ind_ssimfile
 }
 
 // --- atf_ci.FTargsrc.base.CopyOut
@@ -3616,26 +3607,25 @@ void atf_ci::targsrc_CopyIn(atf_ci::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- atf_ci.FTargsrc.target.Get
-algo::strptr atf_ci::target_Get(atf_ci::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LL");
+algo::strptr atf_ci::target_Get(atf_ci::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LL");
 }
 
 // --- atf_ci.FTargsrc.src.Get
-algo::strptr atf_ci::src_Get(atf_ci::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LR");
+algo::strptr atf_ci::src_Get(atf_ci::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LR");
 }
 
 // --- atf_ci.FTargsrc.ext.Get
-algo::strptr atf_ci::ext_Get(atf_ci::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, ".RR");
+algo::strptr atf_ci::ext_Get(atf_ci::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, ".RR");
 }
 
 // --- atf_ci.FTargsrc..Uninit
-void atf_ci::FTargsrc_Uninit(atf_ci::FTargsrc& targsrc) {
-    atf_ci::FTargsrc &row = targsrc; (void)row;
-    atf_ci::FGitfile* p_src = atf_ci::ind_gitfile_Find(src_Get(row));
+void atf_ci::FTargsrc_Uninit(atf_ci::FTargsrc& parent) {
+    atf_ci::FGitfile* p_src = atf_ci::ind_gitfile_Find(src_Get(parent));
     if (p_src)  {
-        c_targsrc_Remove(*p_src, row);// remove targsrc from index c_targsrc
+        c_targsrc_Remove(*p_src, parent);// remove targsrc from index c_targsrc
     }
 }
 
@@ -3716,9 +3706,8 @@ void atf_ci::FieldId_Print(atf_ci::FieldId row, algo::cstring& str) {
 }
 
 // --- atf_ci.File..Uninit
-void atf_ci::File_Uninit(atf_ci::File& file) {
-    atf_ci::File &row = file; (void)row;
-    ind_file_Remove(row); // remove file from index ind_file
+void atf_ci::File_Uninit(atf_ci::File& parent) {
+    ind_file_Remove(parent); // remove file from index ind_file
 }
 
 // --- atf_ci.TableId.value.ToCstr
@@ -3951,7 +3940,6 @@ void atf_ci::StaticCheck() {
 // --- atf_ci...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ctype::FDb_Init();
         lib_git::FDb_Init();
@@ -3974,7 +3962,6 @@ int main(int argc, char **argv) {
         lib_git::FDb_Uninit();
         lib_ctype::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

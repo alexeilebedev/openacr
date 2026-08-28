@@ -17,7 +17,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/hook.cpp -- Hook (function pointer)
 //
 // TODO: use hook arg to provide a parameter to the hook
@@ -44,7 +44,7 @@ void amc::NewFieldHook(amc::FHook &hook) {
     amc::FField &field = *hook.p_field;
 
     dmmeta::Ctype ctype;
-    ctype.ctype=tempstr() << ns_Get(*field.p_ctype) << "." << Refname(*field.p_ctype) << "_" << name_Get(field) << "_hook";
+    ctype.ctype=tempstr() << ns_Get(*field.p_ctype) << "." << Varname(*field.p_ctype) << "_" << name_Get(field) << "_hook";
     hook.p_funcptr = amc::ctype_InsertMaybe(ctype);
     vrfy(hook.p_funcptr, "internal error processing hook");
 

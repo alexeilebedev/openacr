@@ -13,7 +13,7 @@ an xref target — no other index inserts rows into an Upptr.
 It is the receiving end of the **via:** path on an xref
 declared elsewhere.
 
-```
+```ssim
 dmmeta.field  field:abt.FTargdep.p_parent  arg:abt.FTarget  reftype:Upptr  dflt:""  comment:"parent target"
 ```
 
@@ -101,7 +101,7 @@ job is to declare the storage and let the rest of amc see it.
 `abt` indexes targets by name in a Thash; every target
 dependency has a Upptr back to its parent target:
 
-```
+```ssim
 dmmeta.field  field:abt.FTargdep.p_parent  arg:abt.FTarget  reftype:Upptr
 
 dmmeta.field  field:abt.FTarget.c_targdep  arg:abt.FTargdep  reftype:Ptrary

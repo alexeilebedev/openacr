@@ -123,7 +123,7 @@ void atf_unit::Main_StartTest(atf_unit::FUnittest &test, lib_exec::FSyscmd *star
               );
     } else {
         command::atf_unit_proc cmd;
-        cmd.path=algo_lib::_db.argv[0];
+        cmd.path=algo::GetExePath();
         cmd.cmd.unittest.expr   = test.unittest;
         cmd.cmd.capture         = atf_unit::_db.cmdline.capture;
         cmd.cmd.perf_secs       = atf_unit::_db.cmdline.perf_secs;

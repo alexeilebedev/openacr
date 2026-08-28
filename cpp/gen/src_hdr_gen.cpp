@@ -33,8 +33,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_git_gen.h"
@@ -43,7 +41,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_git::FDb    lib_git::_db;     // dependency found via dev.targdep
 src_hdr::FDb    src_hdr::_db;     // dependency found via dev.targdep
@@ -94,9 +91,8 @@ namespace src_hdr { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- src_hdr.FCopyline..Uninit
-void src_hdr::FCopyline_Uninit(src_hdr::FCopyline& fcopyline) {
-    src_hdr::FCopyline &row = fcopyline; (void)row;
-    ind_fcopyline_Remove(row); // remove fcopyline from index ind_fcopyline
+void src_hdr::FCopyline_Uninit(src_hdr::FCopyline& parent) {
+    ind_fcopyline_Remove(parent); // remove fcopyline from index ind_fcopyline
 }
 
 // --- src_hdr.FCopyright.base.CopyOut
@@ -116,11 +112,10 @@ void src_hdr::copyright_CopyIn(src_hdr::FCopyright &row, dev::Copyright &in) {
 }
 
 // --- src_hdr.FCopyright..Uninit
-void src_hdr::FCopyright_Uninit(src_hdr::FCopyright& copyright) {
-    src_hdr::FCopyright &row = copyright; (void)row;
-    c_dflt_copyright_Remove(row); // remove copyright from index c_dflt_copyright
-    ind_copyright_Remove(row); // remove copyright from index ind_copyright
-    bh_copyright_Remove(row); // remove copyright from index bh_copyright
+void src_hdr::FCopyright_Uninit(src_hdr::FCopyright& parent) {
+    c_dflt_copyright_Remove(parent); // remove copyright from index c_dflt_copyright
+    ind_copyright_Remove(parent); // remove copyright from index ind_copyright
+    bh_copyright_Remove(parent); // remove copyright from index bh_copyright
 }
 
 // --- src_hdr.trace..Print
@@ -1480,6 +1475,7 @@ void* src_hdr::fcopyline_AllocMem() {
     if (row) {
         _db.fcopyline_free = row->fcopyline_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(src_hdr::FCopyline));
     return row;
 }
 
@@ -1489,6 +1485,7 @@ void src_hdr::fcopyline_FreeMem(src_hdr::FCopyline &row) {
     if (UNLIKELY(row.fcopyline_next != (src_hdr::FCopyline*)-1)) {
         FatalErrorExit("src_hdr.tpool_double_delete  pool:src_hdr.FDb.fcopyline  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(src_hdr::FCopyline)); // before the free list threads through the element
     row.fcopyline_next = _db.fcopyline_free; // insert into free list
     _db.fcopyline_free  = &row;
 }
@@ -2319,7 +2316,6 @@ void src_hdr::FDb_Init() {
 
 // --- src_hdr.FDb..Uninit
 void src_hdr::FDb_Uninit() {
-    src_hdr::FDb &row = _db; (void)row;
 
     // src_hdr.FDb.bh_copyright.Uninit (Bheap)  //
     // skip destruction in global scope
@@ -2376,9 +2372,8 @@ void src_hdr::license_CopyIn(src_hdr::FLicense &row, dev::License &in) {
 }
 
 // --- src_hdr.FLicense..Uninit
-void src_hdr::FLicense_Uninit(src_hdr::FLicense& license) {
-    src_hdr::FLicense &row = license; (void)row;
-    ind_license_Remove(row); // remove license from index ind_license
+void src_hdr::FLicense_Uninit(src_hdr::FLicense& parent) {
+    ind_license_Remove(parent); // remove license from index ind_license
 }
 
 // --- src_hdr.FNs.base.CopyOut
@@ -2400,9 +2395,8 @@ void src_hdr::ns_CopyIn(src_hdr::FNs &row, dmmeta::Ns &in) {
 }
 
 // --- src_hdr.FNs..Uninit
-void src_hdr::FNs_Uninit(src_hdr::FNs& ns) {
-    src_hdr::FNs &row = ns; (void)row;
-    ind_ns_Remove(row); // remove ns from index ind_ns
+void src_hdr::FNs_Uninit(src_hdr::FNs& parent) {
+    ind_ns_Remove(parent); // remove ns from index ind_ns
 }
 
 // --- src_hdr.FNsx.base.CopyOut
@@ -2430,11 +2424,10 @@ void src_hdr::nsx_CopyIn(src_hdr::FNsx &row, dmmeta::Nsx &in) {
 }
 
 // --- src_hdr.FNsx..Uninit
-void src_hdr::FNsx_Uninit(src_hdr::FNsx& nsx) {
-    src_hdr::FNsx &row = nsx; (void)row;
-    src_hdr::FNs* p_ns = src_hdr::ind_ns_Find(row.ns);
+void src_hdr::FNsx_Uninit(src_hdr::FNsx& parent) {
+    src_hdr::FNs* p_ns = src_hdr::ind_ns_Find(parent.ns);
     if (p_ns)  {
-        c_nsx_Remove(*p_ns, row);// remove nsx from index c_nsx
+        c_nsx_Remove(*p_ns, parent);// remove nsx from index c_nsx
     }
 }
 
@@ -2455,8 +2448,8 @@ void src_hdr::scriptfile_CopyIn(src_hdr::FScriptfile &row, dev::Scriptfile &in) 
 }
 
 // --- src_hdr.FScriptfile.name.Get
-algo::strptr src_hdr::name_Get(src_hdr::FScriptfile& scriptfile) {
-    return algo::Pathcomp(scriptfile.gitfile, "/RR");
+algo::strptr src_hdr::name_Get(src_hdr::FScriptfile& parent) {
+    return algo::Pathcomp(parent.gitfile, "/RR");
 }
 
 // --- src_hdr.FSrc..Init
@@ -2482,11 +2475,11 @@ void src_hdr::target_CopyIn(src_hdr::FTarget &row, dev::Target &in) {
 // --- src_hdr.FTarget.c_targsrc.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void src_hdr::c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
+void src_hdr::c_targsrc_Insert(src_hdr::FTarget& parent, src_hdr::FTargsrc& row) {
     if (!row.target_c_targsrc_in_ary) {
-        c_targsrc_Reserve(target, 1);
-        u64 n  = target.c_targsrc_n++;
-        target.c_targsrc_elems[n] = &row;
+        c_targsrc_Reserve(parent, 1);
+        u64 n  = parent.c_targsrc_n++;
+        parent.c_targsrc_elems[n] = &row;
         row.target_c_targsrc_in_ary = true;
     }
 }
@@ -2495,18 +2488,18 @@ void src_hdr::c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row)
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
+bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FTarget& parent, src_hdr::FTargsrc& row) {
     bool retval = !target_c_targsrc_InAryQ(row);
-    c_targsrc_Insert(target,row); // check is performed in _Insert again
+    c_targsrc_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- src_hdr.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
-    i64 n = target.c_targsrc_n;
+void src_hdr::c_targsrc_Remove(src_hdr::FTarget& parent, src_hdr::FTargsrc& row) {
+    i64 n = parent.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
-        src_hdr::FTargsrc* *elems = target.c_targsrc_elems;
+        src_hdr::FTargsrc* *elems = parent.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2515,7 +2508,7 @@ void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row)
                 i64 j = i + 1;
                 size_t nbytes = sizeof(src_hdr::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targsrc_n = n - 1;
+                parent.c_targsrc_n = n - 1;
                 break;
             }
         }
@@ -2524,28 +2517,27 @@ void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row)
 
 // --- src_hdr.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void src_hdr::c_targsrc_Reserve(src_hdr::FTarget& target, u64 n) {
-    u64 old_max = target.c_targsrc_max;
-    if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targsrc_n + n), 4);
+void src_hdr::c_targsrc_Reserve(src_hdr::FTarget& parent, u64 n) {
+    u64 old_max = parent.c_targsrc_max;
+    if (UNLIKELY(parent.c_targsrc_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_targsrc_n + n), 4);
         u64 old_size = old_max * sizeof(src_hdr::FTargsrc*);
         u64 new_size = new_max * sizeof(src_hdr::FTargsrc*);
-        void *new_mem = algo_lib::malloc_ReallocMem(target.c_targsrc_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_targsrc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("src_hdr.out_of_memory  field:src_hdr.FTarget.c_targsrc");
         }
-        target.c_targsrc_elems = (src_hdr::FTargsrc**)new_mem;
-        target.c_targsrc_max = new_max;
+        parent.c_targsrc_elems = (src_hdr::FTargsrc**)new_mem;
+        parent.c_targsrc_max = new_max;
     }
 }
 
 // --- src_hdr.FTarget..Uninit
-void src_hdr::FTarget_Uninit(src_hdr::FTarget& target) {
-    src_hdr::FTarget &row = target; (void)row;
-    ind_target_Remove(row); // remove target from index ind_target
+void src_hdr::FTarget_Uninit(src_hdr::FTarget& parent) {
+    ind_target_Remove(parent); // remove target from index ind_target
 
     // src_hdr.FTarget.c_targsrc.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(target.c_targsrc_elems, sizeof(src_hdr::FTargsrc*)*target.c_targsrc_max); // (src_hdr.FTarget.c_targsrc)
+    algo_lib::malloc_FreeMem(parent.c_targsrc_elems, sizeof(src_hdr::FTargsrc*)*parent.c_targsrc_max); // (src_hdr.FTarget.c_targsrc)
 }
 
 // --- src_hdr.FTargsrc.base.CopyOut
@@ -2563,26 +2555,25 @@ void src_hdr::targsrc_CopyIn(src_hdr::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- src_hdr.FTargsrc.target.Get
-algo::strptr src_hdr::target_Get(src_hdr::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LL");
+algo::strptr src_hdr::target_Get(src_hdr::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LL");
 }
 
 // --- src_hdr.FTargsrc.src.Get
-algo::strptr src_hdr::src_Get(src_hdr::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LR");
+algo::strptr src_hdr::src_Get(src_hdr::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LR");
 }
 
 // --- src_hdr.FTargsrc.ext.Get
-algo::strptr src_hdr::ext_Get(src_hdr::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, ".RR");
+algo::strptr src_hdr::ext_Get(src_hdr::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, ".RR");
 }
 
 // --- src_hdr.FTargsrc..Uninit
-void src_hdr::FTargsrc_Uninit(src_hdr::FTargsrc& targsrc) {
-    src_hdr::FTargsrc &row = targsrc; (void)row;
-    src_hdr::FTarget* p_target = src_hdr::ind_target_Find(target_Get(row));
+void src_hdr::FTargsrc_Uninit(src_hdr::FTargsrc& parent) {
+    src_hdr::FTarget* p_target = src_hdr::ind_target_Find(target_Get(parent));
     if (p_target)  {
-        c_targsrc_Remove(*p_target, row);// remove targsrc from index c_targsrc
+        c_targsrc_Remove(*p_target, parent);// remove targsrc from index c_targsrc
     }
 }
 
@@ -2829,7 +2820,6 @@ void src_hdr::StaticCheck() {
 // --- src_hdr...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_git::FDb_Init();
         src_hdr::FDb_Init();
@@ -2850,7 +2840,6 @@ int main(int argc, char **argv) {
         src_hdr::FDb_Uninit();
         lib_git::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

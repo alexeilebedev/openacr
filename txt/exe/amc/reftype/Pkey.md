@@ -12,13 +12,13 @@ By the time code generation runs, no `Pkey` fields remain —
 they have all been replaced.  This means there are zero
 `Pkey.*` tfuncs.
 
-```
+```ssim
 dmmeta.field  field:dmmeta.Ctype.ctype  arg:dmmeta.Ctype  reftype:Pkey  dflt:""  comment:""
 ```
 
 After the rewrite, this field looks identical to:
 
-```
+```ssim
 dmmeta.field  field:dmmeta.Ctype.ctype  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
 ```
 
@@ -79,7 +79,7 @@ get whatever `Val` generates: `Get`, `Set`, `Init`, `Print`,
 
 - **Schema-only construct.**  Pkey vanishes by the time amc
   emits C++.  Don't look for `Pkey.*` tfuncs in
-  `data/amcdb/tfunc.ssim` — none exist.
+  `ssimfile:amcdb.tfunc` — none exist.
 - **Not an automatic xref.**  Pkey only chooses the storage
   type; it does not generate any lookup or referential-
   integrity check.  Combine with `dmmeta.xref` if you want
@@ -105,7 +105,7 @@ get whatever `Val` generates: `Get`, `Set`, `Init`, `Print`,
 Look at almost any dmmeta table — most `field:<table>.X`
 records use `reftype:Pkey`:
 
-```
+```ssim
 dmmeta.field  field:dmmeta.Field.field    arg:dmmeta.Field   reftype:Pkey
 dmmeta.field  field:dmmeta.Field.arg      arg:dmmeta.Ctype   reftype:Pkey
 dmmeta.field  field:dmmeta.Field.reftype  arg:dmmeta.Reftype reftype:Pkey

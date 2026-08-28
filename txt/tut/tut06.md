@@ -37,7 +37,7 @@ An Fbuf is a `reftype:Fbuf` field on a ctype, with a
 `dmmeta.fbuf` row that describes its direction (`in`/`out`),
 the header ctype, and the index that receives parsed messages.
 
-```
+```ssim
 dmmeta.field  field:gate.FConn.in_buf  arg:gate.MsgHdr  reftype:Fbuf
   dmmeta.fbuf   field:gate.FConn.in_buf  fbufdir:in
   dmmeta.fcond  fcond:gate.FConn.in_buf/ready  ins:gate.FDb.cd_in_msg  rem:Y
@@ -61,7 +61,7 @@ Suppose `gate.MsgHdr` is a 4-byte header with a `len` field
 (declared via `dmmeta.lenfld`) and a `type` discriminator
 (declared via `dmmeta.typefld`).  The ssim wiring:
 
-```
+```ssim
 dmmeta.ctype  ctype:gate.FConn
   dmmeta.field  field:gate.FConn.in_buf  arg:gate.MsgHdr  reftype:Fbuf
     dmmeta.fbuf  field:gate.FConn.in_buf  fbufdir:in

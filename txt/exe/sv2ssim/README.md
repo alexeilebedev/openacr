@@ -1,25 +1,9 @@
 ## sv2ssim - sv2ssim - Separated Value file processor
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Test cases](#test-cases)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [sv2ssim - Internals](/txt/gen/sv2ssim/sv2ssim.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 sv2ssim: sv2ssim - Separated Value file processor
 Usage: sv2ssim [-fname:]<string> [options]
     OPTION          TYPE    DFLT    COMMENT
@@ -57,7 +41,7 @@ The main configuration comes from the `svtype` table, which helps the tool map o
 When more than one svtype matches, it selects one with the lowest size (`maxwid`). If all else fails, `algo.cstring`
 is chosen as the type.
 
-```
+```ssim
 inline-command: acr svtype -report:N
 dmmeta.svtype  ctype:algo.Smallstr10   maxwid:10          fixedwid1:0  fixedwid2:0  comment:""
 dmmeta.svtype  ctype:algo.Smallstr100  maxwid:100         fixedwid1:0  fixedwid2:0  comment:""
@@ -81,7 +65,7 @@ dmmeta.svtype  ctype:u64               maxwid:64          fixedwid1:0  fixedwid2
 ### Test cases
 <a href="#test-cases"></a>
 
-```
+```ssim
 inline-command: acr comptest:sv2ssim.%
 atfdb.comptest  comptest:sv2ssim.Convert1         timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
 atfdb.comptest  comptest:sv2ssim.Convert1Signed   timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
@@ -94,7 +78,7 @@ report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_m
 ### Examples
 <a href="#examples"></a>
 
-```
+```bash
 inline-command: cat test/csv/2.csv; echo; sv2ssim test/csv/2.csv -ctype a.B -schema -data -prefer_signed
 "Month", "1958", "1959", "1960"
 "JAN",  340,  360,  417
@@ -168,12 +152,3 @@ dmmeta.field  field:a.B._1960  arg:i32  reftype:Val  dflt:""  comment:_1960
 
 #### -prefer_signed -- Prefer signed types when given a choice
 <a href="#-prefer_signed"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`sv2ssim` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.svtype](/txt/ssimdb/dmmeta/svtype.md)|Table for determining ctype from separated value file|

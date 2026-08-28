@@ -12,7 +12,7 @@ The dominant use of Hook is in **gstatic tables**, where each
 row binds compile-time-known function names to dispatch entries
 (see [Global / gstatics](/txt/exe/amc/reftype/Global.md#gstatics)).
 
-```
+```ssim
 dmmeta.field  field:abt_md.FMdsection.step  arg:abt_md.FFileSection  reftype:Hook  dflt:""  comment:""
   dmmeta.hook   field:abt_md.FMdsection.step
 ```
@@ -127,7 +127,7 @@ the gstatic mechanism.
 
 A run-of-the-mill instance hook with one untyped argument:
 
-```
+```ssim
 dmmeta.ctype  ctype:atf_amc.FAction
   dmmeta.field  field:atf_amc.FAction.on_complete  arg:atf_amc.FAction  reftype:Hook
     dmmeta.hook  field:atf_amc.FAction.on_complete
@@ -152,7 +152,7 @@ of rows with hook fields, where amc generates one user-extern
 function per row.  amc's own gen table is the canonical
 example:
 
-```
+```ssim
 dmmeta.ctype    ctype:amcdb.Gen
   dmmeta.field  field:amcdb.Gen.step  arg:""  reftype:Hook
     dmmeta.hook  field:amcdb.Gen.step

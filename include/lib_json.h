@@ -136,18 +136,20 @@ namespace lib_json { // update-hdr
     // Get node value as u32
     // If the path is not found, or the value is malformatted, DFLT is returned.
     // true/false is converted to 0/1
+    // A string node holding digits reads as the number it spells.
     //
     // PARENT    node to start from
     // PATH      dot-separated list of field keys
     u32 u32_Get(lib_json::FNode* parent, strptr path, int dflt = 0);
 
-    // Get node value as u32
+    // Get node value as i32
     // If the path is not found, or the value is malformatted, DFLT is returned.
     // true/false is converted to 0/1
+    // A string node holding digits reads as the number it spells.
     //
     // PARENT    node to start from
     // PATH      dot-separated list of field keys
-    u32 i32_Get(lib_json::FNode* parent, strptr path, int dflt = 0);
+    i32 i32_Get(lib_json::FNode* parent, strptr path, int dflt = 0);
 
     // Get node value as bool
     // number is converted: zero - false, nonzero true

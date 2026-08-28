@@ -1,120 +1,72 @@
 ## Runtime Patterns
 <a href="#runtime-patterns"></a>
 
-How OpenACR-generated processes are expected to behave at runtime —
-step functions, the natural-exit model, and subprocess invocation.
+Every OpenACR executable is one thread running one loop.  There are no locks
+and no background threads, because there is nothing to lock against: all state
+lives in the namespace's in-memory database, and only the loop touches it.
 
-### Step functions (fstep)
-<a href="#step-functions-fstep-"></a>
+### Steps
+<a href="#steps"></a>
 
-In `ns::<field>_Step()`, the field's list / heap is guaranteed
-non-empty.  `zd_*` and `bh_*` first-element accesses don't need a
-NULL check.
+The loop's body is a fixed sequence of *steps*.  A step is a C++ function bound
+by a `dmmeta.fstep` record to a list, a heap or a timer, and the loop calls it
+when that collection has something in it or that timer is due.  So control flow
+is the step order rather than the call order, and a program of this shape is
+not read top to bottom.
 
-Avoid hot-polling: if a `_Step()` condition will never resolve for
-an element, remove that element from the list so the list drains.
-Add a one-line comment explaining why the removal is safe — the
-heuristic isn't always obvious.
+Two properties follow, and they are what make the shape worth using.  A step
+returns after a bounded quantum of work, so every other step runs at a rate
+that can be reasoned about.  And because the loop never waits on anyone, real
+time is packed densely, which is where the throughput comes from.
 
-**An `InlineRecur` step with no delay stops the main loop from ever
-sleeping.**  `MainLoop` repeats while `next_loop < limit`, and the
-generated `Call` for a recurring step pins `next_loop` to
-`clock + <field>_delay`.  A delay left at its zero default therefore
-pins `next_loop` to the current clock on every pass, the loop's
-condition never goes false, and the process spins at a full core.
-Nothing reports it: the program is correct, only hot.  So a recurring
-step sets its cadence explicitly with `<field>_SetDelay(...)` — and
-the enable flag defaults to `false` when the step has nothing to do
-until some setup runs, since the pin happens whenever the flag is on,
-whether the step body does any work or not.
+A step therefore never blocks, and a step that finds it cannot act right now
+does not spin: it takes the element off its collection and arranges to be armed
+again when the condition clears.  What arms it has to be named, because a wait
+with nothing to end it is invisible -- the program builds, passes its tests,
+and simply stops moving that data.
 
-The cost lands on whoever links the code, which makes this sharper in
-a **library** than in an executable.  A spinning executable wastes one
-core; the same step moved into a library, enabled by default, spins
-every client that links it.  What surfaced was not a CPU report but an unrelated test
-failing — a retention test whose publisher could no longer keep up
-with its own budget, reported as "too little was published".  A test
-that starts failing only when run alongside others, and passes alone,
-is the signature.
+### Natural exit
+<a href="#natural-exit"></a>
 
-### Natural exit model
-<a href="#natural-exit-model"></a>
+A server exits when it has nothing left to do, and by no other route.
+`algo_lib::MainLoop` ends when the next scheduling cycle is at infinity: no
+I/O hook registered, no non-empty step collection, no scheduled timer.  Shutting
+one down is therefore a matter of draining whatever is holding the loop open,
+rather than of asking it to stop.
 
-A *server* process — one whose purpose is to stay up servicing
-peers, not to run a fixed task and exit — must exit only by
-*natural exit*: `algo_lib::MainLoop` ends when the next scheduling
-cycle is at infinity, i.e. there are no FIohooks registered, no
-non-empty fstep lists, and no scheduled timehooks.  Do not call
-`algo_lib::ReqExitMainLoop()` to force shutdown; it papers over a
-state bug.
+Reaching for `algo_lib::ReqExitMainLoop()` in a server papers over a state bug,
+and the bug is that something is still registered which should not be.
+[/txt/rule/openacr.md](/txt/rule/openacr.md) lists what can hold the loop open
+and how each is drained.  A fixed-task CLI tool is a different case: its work
+is bounded and exiting is the normal terminus.
 
-To shut down a server cleanly, drain the state that's keeping
-MainLoop alive:
+### State lives on FDb
+<a href="#state-lives-on-fdb"></a>
 
-- **Inbound shm** — mark `c_shmhdr->eof = true` (writer death) or
-  `cd_poll_read_Remove(shm)` (peer signaled end-of-stream, e.g.
-  `ams.TerminateMsg`).  `cd_poll_read_Step` drains remaining
-  messages and drops the shm.
-- **Outbound shm** — write-only shms aren't polled; they don't
-  keep MainLoop alive — no action needed.
-- **Signaled mode** — `lib_ams::SetSignaledMode(true)` arms a
-  signalfd and registers it as an FIohook, so that a peer's
-  SIGRTMIN wakes the loop.  That hook stays registered for as long
-  as the process stays in signaled mode, and a registered FIohook
-  is one of the three things natural exit requires the absence of.
-  A process in signaled mode therefore has no natural exit at all:
-  it runs until `algo_lib::_db.limit`, whatever else it has
-  drained.  Leaving signaled mode removes the hook, and
-  `lib_ams::Uninit` does that as its first act — but `Uninit` runs
-  after MainLoop, so a server that must exit on its own has to
-  call `lib_ams::SetSignaledMode(false)` as part of the drain.
-- **Stdin (`fdin`)** — `fdin_RemoveAll()` on EOF.  If a stdio-mode
-  loopback shm is in `cd_poll_read`, drop it too
-  (`lib_ams::_db.c_loopback_shm`).
-- **Forked children** — a recurring `algo_lib::FTimehook` (e.g.
-  1 s) calls `waitpid(-1, ..., WNOHANG)` in a loop, calls
-  `lib_ams::ProcExit(pid, status)` per reap; when waitpid returns
-  `< 0` (ECHILD), `bh_timehook_Remove(th)` so the bheap empties.
-  SIGCHLD handler does only `algo_lib::ThScheduleIn(th, 0)` to wake
-  the loop.  **Install the SIGCHLD handler and schedule the
-  timehook *before* forking** — a fast-exiting child can race the
-  default ignore-handler.  `lib_ams::ProcExit` cascades: it marks
-  shms tied to the dead proc as eof so `cd_poll_read` drains them.
-- **FCmd Fbuf (e.g. ams_bridge pipe mode)** — in-fbuf EOF triggers
-  `cd_cmd_eof_Step`; remove the FCmd and any shm reads that no
-  longer have a producer.
+Each namespace has one singleton, `FDb`, and every pool, index and global value
+hangs off it.  A file-scope `static` would do the same job invisibly, and that
+is the objection: state on `FDb` is a field with a `dmmeta.field` row, so `acr`
+can print it, `amc` can generate its reader and printer, and an xref can reach
+it.  A hidden global takes part in none of that.
 
-`ReqExit` is acceptable in fixed-task CLI tools where the work is
-bounded and exit is the normal terminus.  It is not acceptable in
-servers; if you find yourself reaching for it, find the source
-that's keeping MainLoop alive and drain it.
+Values that belong together get their own ctype and one `FDb` field of that
+type, which is how a report or a parse buffer is held.
 
-### Subprocess invocation
-<a href="#subprocess-invocation"></a>
+### Calling another tool
+<a href="#calling-another-tool"></a>
 
-To invoke another amc-generated exe, use its
-`command::<target>_proc` struct and `<target>_ExecX`:
+Every generated executable comes with a `command::<target>_proc` struct that
+starts it, waits for it and kills it.  Filling in the fields and calling
+`<target>_ExecX` is how one tool runs another, and it beats assembling a
+command line because the arguments are typed and the quoting is the generator's
+problem rather than yours.
 
 ```cpp
-command::acr_proc acr_cmd;
-acr_cmd.cmd.query   = tempstr() << "amsdb.proctype:" << proctype;
-acr_cmd.cmd.print   = true;
-acr_ExecX(acr_cmd);   // throws on non-zero exit
+command::acr_proc acr;
+acr.cmd.query = "dmmeta.ns:acr%";
+acr.cmd.print = true;
+acr_ExecX(acr);              // throws algo_lib::ErrorX on a non-zero exit
 ```
 
-- `_Exec` returns the exit code.
-- `_ExecX` throws `algo_lib::ErrorX` on non-zero exit.
-- Setting `_fstdout="|"` makes `_Start` create a pipe and expose
-  the read end as `_from_stdout` for line-by-line stdout reads
-  (closed by `_Wait`).  `apm::CreateMergeFiles` in `cpp/apm/update.cpp`
-  reads a child's output that way with a `FileLine_curs`.
-
-### State lives on `FDb`
-<a href="#state-lives-on-fdb-"></a>
-
-Never use file-scope `static` mutable state.  Add a Val field to
-`<ns>.FDb` and access it as `_db.foo`.  State kept on `FDb` is queryable
-through `acr`, travels with copy and print, and takes part in xrefs, none
-of which a hidden global can do.  A group of values that belong together
-— the running totals of a report, a parse buffer — gets its own ctype and
-one `FDb` field of that type.
+`_Exec` returns the exit code instead of throwing, and setting `_fstdout="|"`
+before `_Start` exposes the child's stdout as a readable stream.

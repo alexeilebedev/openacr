@@ -3,7 +3,6 @@ dmmeta.llist  field:abt.FDb.zs_origsel_target  havetail:Y  havecount:N  comment:
 dmmeta.llist  field:abt.FDb.zs_sel_target  havetail:Y  havecount:Y  comment:""
 dmmeta.llist  field:abt.FDb.zs_srcfile_read  havetail:Y  havecount:N  comment:""
 dmmeta.llist  field:abt.FSrcfile.zd_include  havetail:Y  havecount:Y  comment:""
-dmmeta.llist  field:abt_md.FDb.zd_scanns  havetail:Y  havecount:Y  comment:""
 dmmeta.llist  field:abt_md.FMdsection.zd_file_section  havetail:Y  havecount:Y  comment:""
 dmmeta.llist  field:abt_md.FNs.zd_finput  havetail:Y  havecount:Y  comment:""
 dmmeta.llist  field:acr.FCtype.zd_arg  havetail:Y  havecount:Y  comment:""

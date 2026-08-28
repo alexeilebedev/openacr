@@ -432,6 +432,25 @@ void algo::SetupExitSignals(bool sigint DFLTVAL(true)) {
     signal(SIGPIPE, SIG_IGN);
 }
 
+// Install HANDLER for SIGTERM, SIGINT and SIGHUP, with all three masked while it
+// runs so a repeat signal cannot re-enter it.  Use it where the process must
+// release children or shared memory before exiting, rather than die on the
+// default disposition with nothing unwound.
+void algo::SetupTeardownSignal(void (*handler)(int)) {
+    struct sigaction sigact;
+    sigact.sa_handler = handler;
+    sigact.sa_flags = 0;
+    sigemptyset(&sigact.sa_mask);
+    int sig_arr[] = {SIGTERM, SIGINT, SIGHUP};
+    // the mask is complete before the first handler goes in
+    for (int i = 0; i < 3; i++) {
+        sigaddset(&sigact.sa_mask, sig_arr[i]);
+    }
+    for (int i = 0; i < 3; i++) {
+        (void)sigaction(sig_arr[i], &sigact, 0);
+    }
+}
+
 void algo_lib::bh_timehook_Step() {
     algo_lib::FTimehook *timehook = algo_lib::bh_timehook_First();
     if (timehook->recurrent) {
@@ -467,15 +486,20 @@ bool algo_lib::dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck) {
 
 // -----------------------------------------------------------------------------
 
-// Signature of dispatch DISPSIG as this binary was compiled with, empty when the
-// binary carries no such dispatch.  Every executable loads its own namespace's
-// rows into this table at startup, so the answer is a fact about the running
-// program and not about any data it has read.
-tempstr algo_lib::GetDispsig(algo::strptr dispsig) {
-    tempstr ret;
+// Signature of dispatch DISPSIG as this binary was compiled with -- the digest
+// itself, zero when the binary carries no such dispatch.  Every executable loads
+// its own namespace's rows into this table at startup, so the answer is a fact
+// about the running program and not about any data it has read.
+//
+// The digest is what a comparison wants and what a binary protocol carries, so
+// it is what this returns; the 40-character hex form is a rendering of it, which
+// `tempstr() << GetDispsig(...)` produces where a reader or a text field needs
+// one.
+algo::Signature algo_lib::GetDispsig(algo::strptr dispsig) {
+    algo::Signature ret;
     algo_lib::FDispsigcheck *dispsigcheck = algo_lib::ind_dispsigcheck_Find(dispsig);
     if (dispsigcheck) {
-        ret << dispsigcheck->signature;
+        ret = dispsigcheck->signature;
     }
     return ret;
 }

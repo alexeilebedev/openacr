@@ -24,7 +24,6 @@ inline  lib_ws::trace::trace() {
 
 // --- lib_ws.FDb..Uninit
 inline void lib_ws::FDb_Uninit() {
-    lib_ws::FDb &row = _db; (void)row;
 }
 
 // --- lib_ws.FieldId.value.GetEnum

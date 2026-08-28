@@ -37,15 +37,12 @@
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb       lib_json::_db;        // dependency found via dev.targdep
 algo_lib::FDb       algo_lib::_db;        // dependency found via dev.targdep
 lib_ams::FDb        lib_ams::_db;         // dependency found via dev.targdep
 ams_sendtest::FDb   ams_sendtest::_db;    // dependency found via dev.targdep
@@ -67,23 +64,23 @@ namespace ams_sendtest { // gen:ns_print_proto
 // --- ams_sendtest.FChild.child.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int ams_sendtest::child_Start(ams_sendtest::FChild& child) {
+int ams_sendtest::child_Start(ams_sendtest::FChild& parent) {
     int retval = 0;
-    if (child.child_pid == 0) {
-        verblog(child_ToCmdline(child)); // maybe print command
+    if (parent.child_pid == 0) {
+        verblog(child_ToCmdline(parent)); // maybe print command
 #ifdef WIN32
-        algo_lib::ResolveExecFname(child.child_path);
-        tempstr cmdline(child_ToCmdline(child));
-        child.child_pid = dospawn(Zeroterm(child.child_path),Zeroterm(cmdline),child.child_timeout,child.child_fstdin,child.child_fstdout,child.child_fstderr);
+        algo_lib::ResolveExecFname(parent.child_path);
+        tempstr cmdline(child_ToCmdline(parent));
+        parent.child_pid = dospawn(Zeroterm(parent.child_path),Zeroterm(cmdline),parent.child_timeout,parent.child_fstdin,parent.child_fstdout,parent.child_fstderr);
 #else
-        int in_pipe[2]  = {-1,-1}; // [0]=child stdin (read), [1]=child.child_to_stdin (write)
-        int out_pipe[2] = {-1,-1}; // [0]=child.child_from_stdout (read), [1]=child stdout (write)
-        int err_pipe[2] = {-1,-1}; // [0]=child.child_from_stderr (read), [1]=child stderr (write)
-        if (child.child_fstdin  == "|" && pipe(in_pipe)  == 0) { child.child_to_stdin.value    = in_pipe[1];  }
-        if (child.child_fstdout == "|" && pipe(out_pipe) == 0) { child.child_from_stdout.value = out_pipe[0]; }
-        if (child.child_fstderr == "|" && pipe(err_pipe) == 0) { child.child_from_stderr.value = err_pipe[0]; }
-        child.child_pid = fork();
-        if (child.child_pid == 0) { // child
+        int in_pipe[2]  = {-1,-1}; // [0]=child stdin (read), [1]=parent.child_to_stdin (write)
+        int out_pipe[2] = {-1,-1}; // [0]=parent.child_from_stdout (read), [1]=child stdout (write)
+        int err_pipe[2] = {-1,-1}; // [0]=parent.child_from_stderr (read), [1]=child stderr (write)
+        if (parent.child_fstdin  == "|" && pipe(in_pipe)  == 0) { parent.child_to_stdin.value    = in_pipe[1];  }
+        if (parent.child_fstdout == "|" && pipe(out_pipe) == 0) { parent.child_from_stdout.value = out_pipe[0]; }
+        if (parent.child_fstderr == "|" && pipe(err_pipe) == 0) { parent.child_from_stderr.value = err_pipe[0]; }
+        parent.child_pid = fork();
+        if (parent.child_pid == 0) { // child
             algo_lib::DieWithParent();
             // inherited signal handlers stay live until exec, so a kill aimed at
             // the child in the fork-to-exec window would run the parent's handler
@@ -94,33 +91,33 @@ int ams_sendtest::child_Start(ams_sendtest::FChild& child) {
             (void)signal(SIGHUP , SIG_DFL);
             (void)signal(SIGQUIT, SIG_DFL);
             (void)signal(SIGALRM, SIG_DFL);
-            if (child.child_pgroup) {
+            if (parent.child_pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
                 (void)setpgid(0, 0);
             }
-            if (child.child_timeout > 0) {
-                alarm(child.child_timeout);
+            if (parent.child_timeout > 0) {
+                alarm(parent.child_timeout);
             }
-            if (child.child_memlimitmb > 0) {
+            if (parent.child_memlimitmb > 0) {
                 // memory ceiling: soft and hard, so a child that drops
                 // privileges cannot raise it; the child sees allocation
                 // failure at the limit instead of inviting the OOM killer
                 struct rlimit rlim;
-                rlim.rlim_cur = rlim_t(child.child_memlimitmb) * 1000000;
+                rlim.rlim_cur = rlim_t(parent.child_memlimitmb) * 1000000;
                 rlim.rlim_max = rlim.rlim_cur;
                 (void)setrlimit(RLIMIT_AS, &rlim);
             }
-            if (retval==0) retval=algo_lib::ApplyRedirect(child.child_fstdin , 0, in_pipe[0]);
-            if (retval==0) retval=algo_lib::ApplyRedirect(child.child_fstdout, 1, out_pipe[1]);
-            if (retval==0) retval=algo_lib::ApplyRedirect(child.child_fstderr, 2, err_pipe[1]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.child_fstdin , 0, in_pipe[0]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.child_fstdout, 1, out_pipe[1]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.child_fstderr, 2, err_pipe[1]);
             if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);
             if (in_pipe[1]  >= 0) (void)close(in_pipe[1]);
             if (out_pipe[0] >= 0) (void)close(out_pipe[0]);
             if (out_pipe[1] >= 0) (void)close(out_pipe[1]);
             if (err_pipe[0] >= 0) (void)close(err_pipe[0]);
             if (err_pipe[1] >= 0) (void)close(err_pipe[1]);
-            if (retval==0) retval= child_Execv(child);
+            if (retval==0) retval= child_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("ams_sendtest.child_execv"
@@ -129,220 +126,220 @@ int ams_sendtest::child_Start(ams_sendtest::FChild& child) {
                 <<Keyval("comment","Execv failed"));
             }
             _exit(127); // if failed to start, exit anyway
-        } else if (child.child_pid == -1) {
+        } else if (parent.child_pid == -1) {
             retval = errno; // failed to fork
-        } else if (child.child_pgroup) {
+        } else if (parent.child_pgroup) {
             // mirror the child's setpgid: the group must exist the moment fork
             // returns, or a group kill racing the child's first quantum finds no
             // group, loses the signal, and the unkilled child boots into whatever
             // the killer already tore down.  EACCES -- the child exec'd first, its
             // own setpgid won -- is the benign side of the race.
-            (void)setpgid(child.child_pid, child.child_pid);
+            (void)setpgid(parent.child_pid, parent.child_pid);
         }
         if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);  // parent keeps write end (to_stdin)
         if (out_pipe[1] >= 0) (void)close(out_pipe[1]); // parent keeps read end (from_stdout)
         if (err_pipe[1] >= 0) (void)close(err_pipe[1]); // parent keeps read end (from_stderr)
 #endif
     }
-    child.child_status = child.child_pid > 0 ? 0 : -1; // if didn't start, set error status
+    parent.child_status = parent.child_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
 }
 
 // --- ams_sendtest.FChild.child.Kill
 // Kill subprocess and wait
-void ams_sendtest::child_Kill(ams_sendtest::FChild& child) {
-    if (child.child_pid > 0) {
-        kill(child.child_pgroup ? -child.child_pid : child.child_pid,9); // pgroup child dies as a whole group
-        child_Wait(child);
+void ams_sendtest::child_Kill(ams_sendtest::FChild& parent) {
+    if (parent.child_pid > 0) {
+        kill(parent.child_pgroup ? -parent.child_pid : parent.child_pid,9); // pgroup child dies as a whole group
+        child_Wait(parent);
     }
 }
 
 // --- ams_sendtest.FChild.child.Wait
 // Wait for subprocess to return
-void ams_sendtest::child_Wait(ams_sendtest::FChild& child) {
-    algo_lib::Close(child.child_to_stdin);
-    if (child.child_pid > 0) {
+void ams_sendtest::child_Wait(ams_sendtest::FChild& parent) {
+    algo_lib::Close(parent.child_to_stdin);
+    if (parent.child_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
         do {
             // really wait for subprocess to exit
-            rc = waitpid(child.child_pid,&wait_status,wait_flags);
+            rc = waitpid(parent.child_pid,&wait_status,wait_flags);
         } while (rc==-1 && errno==EINTR);
-        if (rc == child.child_pid) {
-            child.child_status = wait_status;
-            child.child_pid = 0;
+        if (rc == parent.child_pid) {
+            parent.child_status = wait_status;
+            parent.child_pid = 0;
         }
     }
-    algo_lib::Close(child.child_from_stdout);
-    algo_lib::Close(child.child_from_stderr);
+    algo_lib::Close(parent.child_from_stdout);
+    algo_lib::Close(parent.child_from_stderr);
 }
 
 // --- ams_sendtest.FChild.child.Exec
 // Start + Wait
 // Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
-int ams_sendtest::child_Exec(ams_sendtest::FChild& child) {
-    child_Start(child);
-    child_Wait(child);
-    return child.child_status;
+int ams_sendtest::child_Exec(ams_sendtest::FChild& parent) {
+    child_Start(parent);
+    child_Wait(parent);
+    return parent.child_status;
 }
 
 // --- ams_sendtest.FChild.child.ExecX
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
-void ams_sendtest::child_ExecX(ams_sendtest::FChild& child) {
-    int rc = child_Exec(child);
-    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",child_ToCmdline(child))
-    << Keyval("comment",algo::DescribeWaitStatus(child.child_status)));
+void ams_sendtest::child_ExecX(ams_sendtest::FChild& parent) {
+    int rc = child_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",child_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.child_status)));
 }
 
 // --- ams_sendtest.FChild.child.Execv
 // Call execv()
 // Call execv with specified parameters
-int ams_sendtest::child_Execv(ams_sendtest::FChild& child) {
+int ams_sendtest::child_Execv(ams_sendtest::FChild& parent) {
     int ret = 0;
     algo::StringAry args;
-    child_ToArgv(child, args);
+    child_ToArgv(parent, args);
     char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
     ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
     argv[ary_N(args)] = NULL;
-    // if child.child_path is relative, search for it in PATH
-    algo_lib::ResolveExecFname(child.child_path);
-    ret = execv(Zeroterm(child.child_path),argv);
+    // if parent.child_path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.child_path);
+    ret = execv(Zeroterm(parent.child_path),argv);
     return ret;
 }
 
 // --- ams_sendtest.FChild.child.ToCmdline
-algo::tempstr ams_sendtest::child_ToCmdline(ams_sendtest::FChild& child) {
+algo::tempstr ams_sendtest::child_ToCmdline(ams_sendtest::FChild& parent) {
     algo::tempstr retval;
-    retval << child.child_path << " ";
-    command::ams_sendtest_PrintArgv(child.child_cmd,retval);
-    if (algo_lib::RedirectFileQ(child.child_fstdin)) {
-        retval << " " << child.child_fstdin;
+    retval << parent.child_path << " ";
+    command::ams_sendtest_PrintArgv(parent.child_cmd,retval);
+    if (algo_lib::RedirectFileQ(parent.child_fstdin)) {
+        retval << " " << parent.child_fstdin;
     }
-    if (algo_lib::RedirectFileQ(child.child_fstdout)) {
-        retval << " " << child.child_fstdout;
+    if (algo_lib::RedirectFileQ(parent.child_fstdout)) {
+        retval << " " << parent.child_fstdout;
     }
-    if (algo_lib::RedirectFileQ(child.child_fstderr)) {
-        retval << " 2" << child.child_fstderr;
+    if (algo_lib::RedirectFileQ(parent.child_fstderr)) {
+        retval << " 2" << parent.child_fstderr;
     }
     return retval;
 }
 
 // --- ams_sendtest.FChild.child.ToArgv
 // Form array from the command line
-void ams_sendtest::child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& args) {
+void ams_sendtest::child_ToArgv(ams_sendtest::FChild& parent, algo::StringAry& args) {
     ary_RemoveAll(args);
-    ary_Alloc(args) << child.child_path;
+    ary_Alloc(args) << parent.child_path;
 
-    if (child.child_cmd.in != "data") {
+    if (parent.child_cmd.in != "data") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-in:";
-        cstring_Print(child.child_cmd.in, *arg);
+        cstring_Print(parent.child_cmd.in, *arg);
     }
 
-    if (child.child_cmd.id != 0) {
+    if (parent.child_cmd.id != 0) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-id:";
-        i32_Print(child.child_cmd.id, *arg);
+        i32_Print(parent.child_cmd.id, *arg);
     }
 
-    if (child.child_cmd.file_prefix != "") {
+    if (parent.child_cmd.file_prefix != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-file_prefix:";
-        cstring_Print(child.child_cmd.file_prefix, *arg);
+        cstring_Print(parent.child_cmd.file_prefix, *arg);
     }
 
-    if (child.child_cmd.nchild != 1) {
+    if (parent.child_cmd.nchild != 1) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-nchild:";
-        i32_Print(child.child_cmd.nchild, *arg);
+        i32_Print(parent.child_cmd.nchild, *arg);
     }
 
-    if (child.child_cmd.blocking != false) {
+    if (parent.child_cmd.blocking != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-blocking:";
-        bool_Print(child.child_cmd.blocking, *arg);
+        bool_Print(parent.child_cmd.blocking, *arg);
     }
 
-    if (child.child_cmd.nmsg != 100000) {
+    if (parent.child_cmd.nmsg != 100000) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-nmsg:";
-        i32_Print(child.child_cmd.nmsg, *arg);
+        i32_Print(parent.child_cmd.nmsg, *arg);
     }
 
-    if (child.child_cmd.trace.expr != "") {
+    if (parent.child_cmd.trace.expr != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-trace:";
-        command::trace_Print(child.child_cmd, *arg);
+        command::trace_Print(parent.child_cmd, *arg);
     }
 
-    if (child.child_cmd.timeout != 30) {
+    if (parent.child_cmd.timeout != 30) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-timeout:";
-        i32_Print(child.child_cmd.timeout, *arg);
+        i32_Print(parent.child_cmd.timeout, *arg);
     }
 
-    if (child.child_cmd.recvdelay_ns != 0) {
+    if (parent.child_cmd.recvdelay_ns != 0) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-recvdelay_ns:";
-        i64_Print(child.child_cmd.recvdelay_ns, *arg);
+        i64_Print(parent.child_cmd.recvdelay_ns, *arg);
     }
 
-    if (child.child_cmd.senddelay_ns != 0) {
+    if (parent.child_cmd.senddelay_ns != 0) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-senddelay_ns:";
-        i64_Print(child.child_cmd.senddelay_ns, *arg);
+        i64_Print(parent.child_cmd.senddelay_ns, *arg);
     }
 
-    if (child.child_cmd.msgsize_min != 64) {
+    if (parent.child_cmd.msgsize_min != 64) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-msgsize_min:";
-        i32_Print(child.child_cmd.msgsize_min, *arg);
+        i32_Print(parent.child_cmd.msgsize_min, *arg);
     }
 
-    if (child.child_cmd.msgsize_max != 256) {
+    if (parent.child_cmd.msgsize_max != 256) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-msgsize_max:";
-        i32_Print(child.child_cmd.msgsize_max, *arg);
+        i32_Print(parent.child_cmd.msgsize_max, *arg);
     }
 
-    if (child.child_cmd.bufsize != 655360) {
+    if (parent.child_cmd.bufsize != 655360) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-bufsize:";
-        i32_Print(child.child_cmd.bufsize, *arg);
+        i32_Print(parent.child_cmd.bufsize, *arg);
     }
 
-    if (child.child_cmd.recvdelay != 0) {
+    if (parent.child_cmd.recvdelay != 0) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-recvdelay:";
-        i64_Print(child.child_cmd.recvdelay, *arg);
+        i64_Print(parent.child_cmd.recvdelay, *arg);
     }
 
-    if (child.child_cmd.signaled != false) {
+    if (parent.child_cmd.signaled != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-signaled:";
-        bool_Print(child.child_cmd.signaled, *arg);
+        bool_Print(parent.child_cmd.signaled, *arg);
     }
 
-    if (child.child_cmd.board != false) {
+    if (parent.child_cmd.board != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-board:";
-        bool_Print(child.child_cmd.board, *arg);
+        bool_Print(parent.child_cmd.board, *arg);
     }
 
-    if (child.child_cmd.board_pin != 4) {
+    if (parent.child_cmd.board_pin != 4) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-board_pin:";
-        i32_Print(child.child_cmd.board_pin, *arg);
+        i32_Print(parent.child_cmd.board_pin, *arg);
     }
 
-    if (child.child_cmd.uc != false) {
+    if (parent.child_cmd.uc != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-uc:";
-        bool_Print(child.child_cmd.uc, *arg);
+        bool_Print(parent.child_cmd.uc, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
@@ -354,22 +351,21 @@ void ams_sendtest::child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& ar
 
 // --- ams_sendtest.FChild..Init
 // Set all fields to initial values.
-void ams_sendtest::FChild_Init(ams_sendtest::FChild& child) {
-    child.child_path = algo::strptr("bin/ams_sendtest");
-    child.child_pid = pid_t(0);
-    child.child_timeout = i32(0);
-    child.child_memlimitmb = u32(0);
-    child.child_status = i32(0);
-    child.child_pgroup = bool(false);
-    child.p_shm = NULL;
+void ams_sendtest::FChild_Init(ams_sendtest::FChild& parent) {
+    parent.child_path = algo::strptr("bin/ams_sendtest");
+    parent.child_pid = pid_t(0);
+    parent.child_timeout = i32(0);
+    parent.child_memlimitmb = u32(0);
+    parent.child_status = i32(0);
+    parent.child_pgroup = bool(false);
+    parent.p_shm = NULL;
 }
 
 // --- ams_sendtest.FChild..Uninit
-void ams_sendtest::FChild_Uninit(ams_sendtest::FChild& child) {
-    ams_sendtest::FChild &row = child; (void)row;
+void ams_sendtest::FChild_Uninit(ams_sendtest::FChild& parent) {
 
     // ams_sendtest.FChild.child.Uninit (Exec)  //
-    child_Kill(child); // kill child, ensure forward progress
+    child_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- ams_sendtest.FTest..Print
@@ -717,7 +713,6 @@ void ams_sendtest::FDb_Init() {
 
 // --- ams_sendtest.FDb..Uninit
 void ams_sendtest::FDb_Uninit() {
-    ams_sendtest::FDb &row = _db; (void)row;
 
     // ams_sendtest.FDb.child.Uninit (Lary)  //
     // skip destruction in global scope
@@ -811,7 +806,6 @@ void ams_sendtest::StaticCheck() {
 // --- ams_sendtest...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ams::FDb_Init();
         ams_sendtest::FDb_Init();
@@ -832,7 +826,6 @@ int main(int argc, char **argv) {
         ams_sendtest::FDb_Uninit();
         lib_ams::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

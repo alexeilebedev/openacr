@@ -31,13 +31,10 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 ssim2csv::FDb   ssim2csv::_db;    // dependency found via dev.targdep
 
@@ -1317,7 +1314,6 @@ void ssim2csv::FDb_Init() {
 
 // --- ssim2csv.FDb..Uninit
 void ssim2csv::FDb_Uninit() {
-    ssim2csv::FDb &row = _db; (void)row;
 
     // ssim2csv.FDb.flatten.Uninit (Tary)  //
     // remove all elements from ssim2csv.FDb.flatten
@@ -1351,9 +1347,8 @@ void ssim2csv::FDb_Uninit() {
 }
 
 // --- ssim2csv.FExpand..Uninit
-void ssim2csv::FExpand_Uninit(ssim2csv::FExpand& expand) {
-    ssim2csv::FExpand &row = expand; (void)row;
-    ind_expand_Remove(row); // remove expand from index ind_expand
+void ssim2csv::FExpand_Uninit(ssim2csv::FExpand& parent) {
+    ind_expand_Remove(parent); // remove expand from index ind_expand
 }
 
 // --- ssim2csv.FExpand..Print
@@ -1378,9 +1373,8 @@ void ssim2csv::FFlatten_Print(ssim2csv::FFlatten& row, algo::cstring& str) {
 }
 
 // --- ssim2csv.FOutfile..Uninit
-void ssim2csv::FOutfile_Uninit(ssim2csv::FOutfile& outfile) {
-    ssim2csv::FOutfile &row = outfile; (void)row;
-    ind_outfile_Remove(row); // remove outfile from index ind_outfile
+void ssim2csv::FOutfile_Uninit(ssim2csv::FOutfile& parent) {
+    ind_outfile_Remove(parent); // remove outfile from index ind_outfile
 }
 
 // --- ssim2csv.FOutfile..Print
@@ -1488,7 +1482,6 @@ void ssim2csv::StaticCheck() {
 // --- ssim2csv...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         ssim2csv::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1507,7 +1500,6 @@ int main(int argc, char **argv) {
     try {
         ssim2csv::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

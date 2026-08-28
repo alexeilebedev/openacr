@@ -217,7 +217,7 @@ AMC generates (each bullet links to its reference page):
 * statically loaded tables baked into the binary — [I/O](/txt/exe/amc/io.md)
 * scheduling constructs (steps) for real-time modules — [Runtime](/txt/exe/amc/runtime.md)
 * cycle accounting ('traces') for steps and dispatches — [Trace counters](/txt/exe/amc/trace.md)
-* C++ symbols projected from ssim columns — see [Internals](/txt/gen/amc/amc.md)
+* C++ symbols projected from ssim columns — see `doc ns:amc`
 
 #### Code-emission hygiene
 <a href="#code-emission-hygiene"></a>
@@ -277,9 +277,8 @@ enumerated by some state field or an enum, and collects the code for
 processing the distinct cases into one place, making it possible to think
 about post-conditions again.
 
-`Amc` loads about 115 ssim tables.  The list is on the
-[README](/txt/exe/amc/README.md#inputs) page and can be
-regenerated at any time with `acr_in amc -list`.  The exact tuples
+`Amc` loads about 115 ssim tables.  `ns:amc` lists them, and `acr_in amc
+-list` prints the same list at a terminal.  The exact tuples
 that flow into amc on a given run can be dumped with `acr_in amc
 -data`.  About 20% of these tables are responsible for 80% of the
 generated code; the rest deal with finer details.

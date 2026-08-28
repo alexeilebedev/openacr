@@ -55,10 +55,10 @@ void                 status_CopyOut(lib_http::FStatus &row, httpdb::Status &out)
 void                 status_CopyIn(lib_http::FStatus &row, httpdb::Status &in) __attribute__((nothrow));
 
 // func:lib_http.FStatus.code.Get
-u16                  code_Get(lib_http::FStatus& status) __attribute__((__warn_unused_result__, nothrow));
+u16                  code_Get(lib_http::FStatus& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:lib_http.FStatus.reason.Get
-algo::strptr         reason_Get(lib_http::FStatus& status) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         reason_Get(lib_http::FStatus& parent) __attribute__((__warn_unused_result__, nothrow));
 
 
 // --- lib_http.trace
@@ -152,7 +152,7 @@ void                 status_RemoveLast() __attribute__((nothrow));
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:lib_http.FDb.status.Setary
 inline void          status_Setary(const algo::aryptr<lib_http::FStatus> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:lib_http.FDb.status.qFind
 inline lib_http::FStatus& status_qFind(u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address

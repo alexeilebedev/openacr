@@ -1,30 +1,6 @@
 ## lib_ws - WebSocket library
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Restrictions and limitations](#restrictions-and-limitations)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Introduction](#introduction)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Data model](#data-model)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Library initialization](#library-initialization)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Creating and starting new server](#creating-and-starting-new-server)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Registering hooks](#registering-hooks)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [h_open](#h_open)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [h_message](#h_message)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [h_close](#h_close)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sending messages](#sending-messages)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Ping/pong](#ping-pong)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Tuning server limits](#tuning-server-limits)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example](#example)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [lib_ws - Internals](/txt/gen/lib_ws/lib_ws.md)<br/>
-
 ### Description
 <a href="#description"></a>
 
@@ -88,7 +64,7 @@ Library data model consists of two entities:
 - `FConn` - server connection identified by two pairs - server bind address/port and client address/port;
 
 Connection has state machine for HTTP protocol, there are the following states:
-```
+```ssim
 inline-command: acr dmmeta.fconst:ws.HttpState.value/%
 dmmeta.fconst  fconst:ws.HttpState.value/INIT     value:0  comment:"created connection, waiting request-line"
 dmmeta.fconst  fconst:ws.HttpState.value/REQLINE  value:1  comment:"request-line received, waiting first header"
@@ -102,7 +78,7 @@ Protocol constructs are defined within `ws` namespace.
 
 WebSocket Status is defined on `wsdb.status` table.
 
-```
+```ssim
 inline-command: acr wsdb.status
 wsdb.status  code:1000  reason:"Normal closure"                 local_only:N  comment:""
 wsdb.status  code:1001  reason:"Going away"                     local_only:N  comment:"Server going down or browser page close"
@@ -129,7 +105,7 @@ Not needed - done statically.
 ### Creating and starting new server
 <a href="#creating-and-starting-new-server"></a>
 
-```
+```c++
 lib_ws::FServer *StartServer(strptr addr);
 ```
 
@@ -140,7 +116,7 @@ Default port is tunable on the library basis (initial value is 80).
 If ip address is omitted, 0.0.0.0 (aka INADDR_ANY) is used.
 
 Valid calls are:
-```
+```bash
 StartServer("1.2.3.4:5000");
 StartServer(":5000");          // 0.0.0.0:5000
 StartServer("1.2.3.4");        // 1.2.3.4:80
@@ -154,7 +130,7 @@ Returned server context may be tuned as appropriate.
 <a href="#registering-hooks"></a>
 
 Three hooks are available
-```
+```c++
 lib_ws::_db.h_open - new connection
 lib_ws::_db.h_message - incoming text or binary message on connection
 lib_ws::_db.h_close - connection close
@@ -162,7 +138,7 @@ lib_ws::_db.h_close - connection close
 ```
 
 All three hooks has the same signature - server connection context as an argument.
-```
+```c++
 HookFunction(void*,lib_ws::FConn& conn);
 ```
 
@@ -202,12 +178,12 @@ WebSocket frame is constructed directly on connection write buffer (conn.wrbuf),
 and sent immediately if socket is ready, or later if not.
 
 Core API to send messages:
-```
+```c++
 void lib_ws::SendMessage(lib_ws::FConn &conn, ws_OpcodeEnum opcode, strptr payload);
 ```
 
 And basic helpers:
-```
+```c++
 void SendTextMessage(lib_ws::FConn &conn, strptr payload);
 void SendBinaryMessage(lib_ws::FConn &conn, algo::memptr payload);
 ```
@@ -215,7 +191,7 @@ void SendBinaryMessage(lib_ws::FConn &conn, algo::memptr payload);
 Other helpers are intended to be used internally, do not call them directly.
 
 Example:
-```
+```bash
 SendTextMessage(conn,"Hello!")
 ```
 
@@ -230,7 +206,7 @@ If code is not set, 1006 will be used. If reason is omited, it is filled from `w
 
 Example:
 
-```
+```c++
 value_SetEnum(conn.code,ws_StatusCode_Internal_Error);
 conn.reason = "Assertion failed: ...";
 Close(conn);

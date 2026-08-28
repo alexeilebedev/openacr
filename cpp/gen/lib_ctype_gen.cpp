@@ -33,8 +33,6 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
@@ -258,11 +256,10 @@ void lib_ctype::bltin_CopyIn(lib_ctype::FBltin &row, amcdb::Bltin &in) {
 }
 
 // --- lib_ctype.FBltin..Uninit
-void lib_ctype::FBltin_Uninit(lib_ctype::FBltin& bltin) {
-    lib_ctype::FBltin &row = bltin; (void)row;
-    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
+void lib_ctype::FBltin_Uninit(lib_ctype::FBltin& parent) {
+    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_bltin_Remove(*p_ctype, row);// remove bltin from index c_bltin
+        c_bltin_Remove(*p_ctype, parent);// remove bltin from index c_bltin
     }
 }
 
@@ -287,11 +284,10 @@ void lib_ctype::cdflt_CopyIn(lib_ctype::FCdflt &row, dmmeta::Cdflt &in) {
 }
 
 // --- lib_ctype.FCdflt..Uninit
-void lib_ctype::FCdflt_Uninit(lib_ctype::FCdflt& cdflt) {
-    lib_ctype::FCdflt &row = cdflt; (void)row;
-    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
+void lib_ctype::FCdflt_Uninit(lib_ctype::FCdflt& parent) {
+    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_cdflt_Remove(*p_ctype, row);// remove cdflt from index c_cdflt
+        c_cdflt_Remove(*p_ctype, parent);// remove cdflt from index c_cdflt
     }
 }
 
@@ -320,34 +316,33 @@ void lib_ctype::cfmt_CopyIn(lib_ctype::FCfmt &row, dmmeta::Cfmt &in) {
 }
 
 // --- lib_ctype.FCfmt.ctype.Get
-algo::strptr lib_ctype::ctype_Get(lib_ctype::FCfmt& cfmt) {
-    return algo::Pathcomp(cfmt.cfmt, ".RL");
+algo::strptr lib_ctype::ctype_Get(lib_ctype::FCfmt& parent) {
+    return algo::Pathcomp(parent.cfmt, ".RL");
 }
 
 // --- lib_ctype.FCfmt.strfmt.Get
-algo::strptr lib_ctype::strfmt_Get(lib_ctype::FCfmt& cfmt) {
-    return algo::Pathcomp(cfmt.cfmt, ".RR");
+algo::strptr lib_ctype::strfmt_Get(lib_ctype::FCfmt& parent) {
+    return algo::Pathcomp(parent.cfmt, ".RR");
 }
 
 // --- lib_ctype.FCfmt..Init
 // Set all fields to initial values.
-void lib_ctype::FCfmt_Init(lib_ctype::FCfmt& cfmt) {
-    cfmt.read = bool(false);
-    cfmt.print = bool(false);
-    cfmt.genop = bool(false);
-    cfmt.ctype_c_cfmt_in_ary = bool(false);
-    cfmt.ind_cfmt_next = (lib_ctype::FCfmt*)-1; // (lib_ctype.FDb.ind_cfmt) not-in-hash
-    cfmt.ind_cfmt_hashval = 0; // stored hash value
+void lib_ctype::FCfmt_Init(lib_ctype::FCfmt& parent) {
+    parent.read = bool(false);
+    parent.print = bool(false);
+    parent.genop = bool(false);
+    parent.ctype_c_cfmt_in_ary = bool(false);
+    parent.ind_cfmt_next = (lib_ctype::FCfmt*)-1; // (lib_ctype.FDb.ind_cfmt) not-in-hash
+    parent.ind_cfmt_hashval = 0; // stored hash value
 }
 
 // --- lib_ctype.FCfmt..Uninit
-void lib_ctype::FCfmt_Uninit(lib_ctype::FCfmt& cfmt) {
-    lib_ctype::FCfmt &row = cfmt; (void)row;
-    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(ctype_Get(row));
+void lib_ctype::FCfmt_Uninit(lib_ctype::FCfmt& parent) {
+    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_cfmt_Remove(*p_ctype, row);// remove cfmt from index c_cfmt
+        c_cfmt_Remove(*p_ctype, parent);// remove cfmt from index c_cfmt
     }
-    ind_cfmt_Remove(row); // remove cfmt from index ind_cfmt
+    ind_cfmt_Remove(parent); // remove cfmt from index ind_cfmt
 }
 
 // --- lib_ctype.FCfmt..Print
@@ -401,11 +396,10 @@ void lib_ctype::cppfunc_CopyIn(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &in) {
 }
 
 // --- lib_ctype.FCppfunc..Uninit
-void lib_ctype::FCppfunc_Uninit(lib_ctype::FCppfunc& cppfunc) {
-    lib_ctype::FCppfunc &row = cppfunc; (void)row;
-    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
+void lib_ctype::FCppfunc_Uninit(lib_ctype::FCppfunc& parent) {
+    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(parent.field);
     if (p_field)  {
-        c_cppfunc_Remove(*p_field, row);// remove cppfunc from index c_cppfunc
+        c_cppfunc_Remove(*p_field, parent);// remove cppfunc from index c_cppfunc
     }
 }
 
@@ -424,23 +418,23 @@ void lib_ctype::ctype_CopyIn(lib_ctype::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- lib_ctype.FCtype.ns.Get
-algo::strptr lib_ctype::ns_Get(lib_ctype::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RL");
+algo::strptr lib_ctype::ns_Get(lib_ctype::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RL");
 }
 
 // --- lib_ctype.FCtype.name.Get
-algo::strptr lib_ctype::name_Get(lib_ctype::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RR");
+algo::strptr lib_ctype::name_Get(lib_ctype::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RR");
 }
 
 // --- lib_ctype.FCtype.c_field.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void lib_ctype::c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
+void lib_ctype::c_field_Insert(lib_ctype::FCtype& parent, lib_ctype::FField& row) {
     if (!row.ctype_c_field_in_ary) {
-        c_field_Reserve(ctype, 1);
-        u64 n  = ctype.c_field_n++;
-        ctype.c_field_elems[n] = &row;
+        c_field_Reserve(parent, 1);
+        u64 n  = parent.c_field_n++;
+        parent.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
 }
@@ -449,18 +443,18 @@ void lib_ctype::c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField& row)
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_ctype::c_field_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
+bool lib_ctype::c_field_InsertMaybe(lib_ctype::FCtype& parent, lib_ctype::FField& row) {
     bool retval = !ctype_c_field_InAryQ(row);
-    c_field_Insert(ctype,row); // check is performed in _Insert again
+    c_field_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- lib_ctype.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_ctype::c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
-    i64 n = ctype.c_field_n;
+void lib_ctype::c_field_Remove(lib_ctype::FCtype& parent, lib_ctype::FField& row) {
+    i64 n = parent.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
-        lib_ctype::FField* *elems = ctype.c_field_elems;
+        lib_ctype::FField* *elems = parent.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -469,7 +463,7 @@ void lib_ctype::c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row)
                 i64 j = i + 1;
                 size_t nbytes = sizeof(lib_ctype::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_field_n = n - 1;
+                parent.c_field_n = n - 1;
                 break;
             }
         }
@@ -478,29 +472,29 @@ void lib_ctype::c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row)
 
 // --- lib_ctype.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void lib_ctype::c_field_Reserve(lib_ctype::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_field_max;
-    if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+void lib_ctype::c_field_Reserve(lib_ctype::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_field_max;
+    if (UNLIKELY(parent.c_field_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_field_n + n), 4);
         u64 old_size = old_max * sizeof(lib_ctype::FField*);
         u64 new_size = new_max * sizeof(lib_ctype::FField*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ctype.out_of_memory  field:lib_ctype.FCtype.c_field");
         }
-        ctype.c_field_elems = (lib_ctype::FField**)new_mem;
-        ctype.c_field_max = new_max;
+        parent.c_field_elems = (lib_ctype::FField**)new_mem;
+        parent.c_field_max = new_max;
     }
 }
 
 // --- lib_ctype.FCtype.c_cfmt.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void lib_ctype::c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
+void lib_ctype::c_cfmt_Insert(lib_ctype::FCtype& parent, lib_ctype::FCfmt& row) {
     if (!row.ctype_c_cfmt_in_ary) {
-        c_cfmt_Reserve(ctype, 1);
-        u64 n  = ctype.c_cfmt_n++;
-        ctype.c_cfmt_elems[n] = &row;
+        c_cfmt_Reserve(parent, 1);
+        u64 n  = parent.c_cfmt_n++;
+        parent.c_cfmt_elems[n] = &row;
         row.ctype_c_cfmt_in_ary = true;
     }
 }
@@ -509,18 +503,18 @@ void lib_ctype::c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_ctype::c_cfmt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
+bool lib_ctype::c_cfmt_InsertMaybe(lib_ctype::FCtype& parent, lib_ctype::FCfmt& row) {
     bool retval = !ctype_c_cfmt_InAryQ(row);
-    c_cfmt_Insert(ctype,row); // check is performed in _Insert again
+    c_cfmt_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- lib_ctype.FCtype.c_cfmt.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
-    i64 n = ctype.c_cfmt_n;
+void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& parent, lib_ctype::FCfmt& row) {
+    i64 n = parent.c_cfmt_n;
     if (bool_Update(row.ctype_c_cfmt_in_ary,false)) {
-        lib_ctype::FCfmt* *elems = ctype.c_cfmt_elems;
+        lib_ctype::FCfmt* *elems = parent.c_cfmt_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -529,7 +523,7 @@ void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(lib_ctype::FCfmt*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_cfmt_n = n - 1;
+                parent.c_cfmt_n = n - 1;
                 break;
             }
         }
@@ -538,47 +532,46 @@ void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
 
 // --- lib_ctype.FCtype.c_cfmt.Reserve
 // Reserve space in index for N more elements;
-void lib_ctype::c_cfmt_Reserve(lib_ctype::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_cfmt_max;
-    if (UNLIKELY(ctype.c_cfmt_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_cfmt_n + n), 4);
+void lib_ctype::c_cfmt_Reserve(lib_ctype::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_cfmt_max;
+    if (UNLIKELY(parent.c_cfmt_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_cfmt_n + n), 4);
         u64 old_size = old_max * sizeof(lib_ctype::FCfmt*);
         u64 new_size = new_max * sizeof(lib_ctype::FCfmt*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_cfmt_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_cfmt_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ctype.out_of_memory  field:lib_ctype.FCtype.c_cfmt");
         }
-        ctype.c_cfmt_elems = (lib_ctype::FCfmt**)new_mem;
-        ctype.c_cfmt_max = new_max;
+        parent.c_cfmt_elems = (lib_ctype::FCfmt**)new_mem;
+        parent.c_cfmt_max = new_max;
     }
 }
 
 // --- lib_ctype.FCtype..Init
 // Set all fields to initial values.
-void lib_ctype::FCtype_Init(lib_ctype::FCtype& ctype) {
-    ctype.c_field_elems = NULL; // (lib_ctype.FCtype.c_field)
-    ctype.c_field_n = 0; // (lib_ctype.FCtype.c_field)
-    ctype.c_field_max = 0; // (lib_ctype.FCtype.c_field)
-    ctype.c_cdflt = NULL;
-    ctype.c_cfmt_elems = NULL; // (lib_ctype.FCtype.c_cfmt)
-    ctype.c_cfmt_n = 0; // (lib_ctype.FCtype.c_cfmt)
-    ctype.c_cfmt_max = 0; // (lib_ctype.FCtype.c_cfmt)
-    ctype.c_bltin = NULL;
-    ctype.c_sqltype = NULL;
-    ctype.ind_ctype_next = (lib_ctype::FCtype*)-1; // (lib_ctype.FDb.ind_ctype) not-in-hash
-    ctype.ind_ctype_hashval = 0; // stored hash value
+void lib_ctype::FCtype_Init(lib_ctype::FCtype& parent) {
+    parent.c_field_elems = NULL; // (lib_ctype.FCtype.c_field)
+    parent.c_field_n = 0; // (lib_ctype.FCtype.c_field)
+    parent.c_field_max = 0; // (lib_ctype.FCtype.c_field)
+    parent.c_cdflt = NULL;
+    parent.c_cfmt_elems = NULL; // (lib_ctype.FCtype.c_cfmt)
+    parent.c_cfmt_n = 0; // (lib_ctype.FCtype.c_cfmt)
+    parent.c_cfmt_max = 0; // (lib_ctype.FCtype.c_cfmt)
+    parent.c_bltin = NULL;
+    parent.c_sqltype = NULL;
+    parent.ind_ctype_next = (lib_ctype::FCtype*)-1; // (lib_ctype.FDb.ind_ctype) not-in-hash
+    parent.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- lib_ctype.FCtype..Uninit
-void lib_ctype::FCtype_Uninit(lib_ctype::FCtype& ctype) {
-    lib_ctype::FCtype &row = ctype; (void)row;
-    ind_ctype_Remove(row); // remove ctype from index ind_ctype
+void lib_ctype::FCtype_Uninit(lib_ctype::FCtype& parent) {
+    ind_ctype_Remove(parent); // remove ctype from index ind_ctype
 
     // lib_ctype.FCtype.c_cfmt.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(ctype.c_cfmt_elems, sizeof(lib_ctype::FCfmt*)*ctype.c_cfmt_max); // (lib_ctype.FCtype.c_cfmt)
+    algo_lib::malloc_FreeMem(parent.c_cfmt_elems, sizeof(lib_ctype::FCfmt*)*parent.c_cfmt_max); // (lib_ctype.FCtype.c_cfmt)
 
     // lib_ctype.FCtype.c_field.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(ctype.c_field_elems, sizeof(lib_ctype::FField*)*ctype.c_field_max); // (lib_ctype.FCtype.c_field)
+    algo_lib::malloc_FreeMem(parent.c_field_elems, sizeof(lib_ctype::FField*)*parent.c_field_max); // (lib_ctype.FCtype.c_field)
 }
 
 // --- lib_ctype.trace..Print
@@ -3134,7 +3127,6 @@ void lib_ctype::FDb_Init() {
 
 // --- lib_ctype.FDb..Uninit
 void lib_ctype::FDb_Uninit() {
-    lib_ctype::FDb &row = _db; (void)row;
 
     // lib_ctype.FDb.sqltype.Uninit (Lary)  //
     // skip destruction in global scope
@@ -3208,23 +3200,22 @@ void lib_ctype::fconst_CopyIn(lib_ctype::FFconst &row, dmmeta::Fconst &in) {
 }
 
 // --- lib_ctype.FFconst.field.Get
-algo::strptr lib_ctype::field_Get(lib_ctype::FFconst& fconst) {
-    return algo::Pathcomp(fconst.fconst, "/LL");
+algo::strptr lib_ctype::field_Get(lib_ctype::FFconst& parent) {
+    return algo::Pathcomp(parent.fconst, "/LL");
 }
 
 // --- lib_ctype.FFconst.name.Get
-algo::strptr lib_ctype::name_Get(lib_ctype::FFconst& fconst) {
-    return algo::Pathcomp(fconst.fconst, "/LR");
+algo::strptr lib_ctype::name_Get(lib_ctype::FFconst& parent) {
+    return algo::Pathcomp(parent.fconst, "/LR");
 }
 
 // --- lib_ctype.FFconst..Uninit
-void lib_ctype::FFconst_Uninit(lib_ctype::FFconst& fconst) {
-    lib_ctype::FFconst &row = fconst; (void)row;
-    ind_fconst_Remove(row); // remove fconst from index ind_fconst
-    ind_fconst_key_Remove(row); // remove fconst from index ind_fconst_key
-    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(field_Get(row));
+void lib_ctype::FFconst_Uninit(lib_ctype::FFconst& parent) {
+    ind_fconst_Remove(parent); // remove fconst from index ind_fconst
+    ind_fconst_key_Remove(parent); // remove fconst from index ind_fconst_key
+    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(field_Get(parent));
     if (p_field)  {
-        zd_fconst_Remove(*p_field, row);// remove fconst from index zd_fconst
+        zd_fconst_Remove(*p_field, parent);// remove fconst from index zd_fconst
     }
 }
 
@@ -3269,66 +3260,66 @@ void lib_ctype::field_CopyIn(lib_ctype::FField &row, dmmeta::Field &in) {
 }
 
 // --- lib_ctype.FField.ctype.Get
-algo::strptr lib_ctype::ctype_Get(lib_ctype::FField& field) {
-    return algo::Pathcomp(field.field, ".RL");
+algo::strptr lib_ctype::ctype_Get(lib_ctype::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- lib_ctype.FField.ns.Get
-algo::strptr lib_ctype::ns_Get(lib_ctype::FField& field) {
-    return algo::Pathcomp(field.field, ".RL.RL");
+algo::strptr lib_ctype::ns_Get(lib_ctype::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL.RL");
 }
 
 // --- lib_ctype.FField.name.Get
-algo::strptr lib_ctype::name_Get(lib_ctype::FField& field) {
-    return algo::Pathcomp(field.field, ".RR");
+algo::strptr lib_ctype::name_Get(lib_ctype::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RR");
 }
 
 // --- lib_ctype.FField.zd_fconst.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void lib_ctype::zd_fconst_Insert(lib_ctype::FField& field, lib_ctype::FFconst& row) {
+void lib_ctype::zd_fconst_Insert(lib_ctype::FField& parent, lib_ctype::FFconst& row) {
     if (!field_zd_fconst_InLlistQ(row)) {
-        lib_ctype::FFconst* old_tail = field.zd_fconst_tail;
+        lib_ctype::FFconst* old_tail = parent.zd_fconst_tail;
         row.field_zd_fconst_next = NULL;
         row.field_zd_fconst_prev = old_tail;
-        field.zd_fconst_tail = &row;
+        parent.zd_fconst_tail = &row;
         lib_ctype::FFconst **new_row_a = &old_tail->field_zd_fconst_next;
-        lib_ctype::FFconst **new_row_b = &field.zd_fconst_head;
+        lib_ctype::FFconst **new_row_b = &parent.zd_fconst_head;
         lib_ctype::FFconst **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        field.zd_fconst_n++;
+        parent.zd_fconst_n++;
     }
 }
 
 // --- lib_ctype.FField.zd_fconst.Remove
 // Remove element from index. If element is not in index, do nothing.
-void lib_ctype::zd_fconst_Remove(lib_ctype::FField& field, lib_ctype::FFconst& row) {
+void lib_ctype::zd_fconst_Remove(lib_ctype::FField& parent, lib_ctype::FFconst& row) {
     if (field_zd_fconst_InLlistQ(row)) {
-        lib_ctype::FFconst* old_head       = field.zd_fconst_head;
+        lib_ctype::FFconst* old_head       = parent.zd_fconst_head;
         (void)old_head; // in case it's not used
         lib_ctype::FFconst* prev = row.field_zd_fconst_prev;
         lib_ctype::FFconst* next = row.field_zd_fconst_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         lib_ctype::FFconst **new_next_a = &prev->field_zd_fconst_next;
-        lib_ctype::FFconst **new_next_b = &field.zd_fconst_head;
+        lib_ctype::FFconst **new_next_b = &parent.zd_fconst_head;
         lib_ctype::FFconst **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         lib_ctype::FFconst **new_prev_a = &next->field_zd_fconst_prev;
-        lib_ctype::FFconst **new_prev_b = &field.zd_fconst_tail;
+        lib_ctype::FFconst **new_prev_b = &parent.zd_fconst_tail;
         lib_ctype::FFconst **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        field.zd_fconst_n--;
+        parent.zd_fconst_n--;
         row.field_zd_fconst_next=(lib_ctype::FFconst*)-1; // not-in-list
     }
 }
 
 // --- lib_ctype.FField.zd_fconst.RemoveAll
 // Empty the index. (The rows are not deleted)
-void lib_ctype::zd_fconst_RemoveAll(lib_ctype::FField& field) {
-    lib_ctype::FFconst* row = field.zd_fconst_head;
-    field.zd_fconst_head = NULL;
-    field.zd_fconst_tail = NULL;
-    field.zd_fconst_n = 0;
+void lib_ctype::zd_fconst_RemoveAll(lib_ctype::FField& parent) {
+    lib_ctype::FFconst* row = parent.zd_fconst_head;
+    parent.zd_fconst_head = NULL;
+    parent.zd_fconst_tail = NULL;
+    parent.zd_fconst_n = 0;
     while (row) {
         lib_ctype::FFconst* row_next = row->field_zd_fconst_next;
         row->field_zd_fconst_next  = (lib_ctype::FFconst*)-1;
@@ -3339,17 +3330,17 @@ void lib_ctype::zd_fconst_RemoveAll(lib_ctype::FField& field) {
 
 // --- lib_ctype.FField.zd_fconst.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-lib_ctype::FFconst* lib_ctype::zd_fconst_RemoveFirst(lib_ctype::FField& field) {
+lib_ctype::FFconst* lib_ctype::zd_fconst_RemoveFirst(lib_ctype::FField& parent) {
     lib_ctype::FFconst *row = NULL;
-    row = field.zd_fconst_head;
+    row = parent.zd_fconst_head;
     if (row) {
         lib_ctype::FFconst *next = row->field_zd_fconst_next;
-        field.zd_fconst_head = next;
+        parent.zd_fconst_head = next;
         lib_ctype::FFconst **new_end_a = &next->field_zd_fconst_prev;
-        lib_ctype::FFconst **new_end_b = &field.zd_fconst_tail;
+        lib_ctype::FFconst **new_end_b = &parent.zd_fconst_tail;
         lib_ctype::FFconst **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        field.zd_fconst_n--;
+        parent.zd_fconst_n--;
         row->field_zd_fconst_next = (lib_ctype::FFconst*)-1; // mark as not-in-list
     }
     return row;
@@ -3357,30 +3348,30 @@ lib_ctype::FFconst* lib_ctype::zd_fconst_RemoveFirst(lib_ctype::FField& field) {
 
 // --- lib_ctype.FField.zd_fconst.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void lib_ctype::zd_fconst_InsertBefore(lib_ctype::FField& field, lib_ctype::FFconst& row, lib_ctype::FFconst* before) {
+void lib_ctype::zd_fconst_InsertBefore(lib_ctype::FField& parent, lib_ctype::FFconst& row, lib_ctype::FFconst* before) {
     if (!field_zd_fconst_InLlistQ(row) && &row != before) {
         lib_ctype::FFconst* next = before;
-        lib_ctype::FFconst* prev = next ? next->field_zd_fconst_prev : field.zd_fconst_tail;
+        lib_ctype::FFconst* prev = next ? next->field_zd_fconst_prev : parent.zd_fconst_tail;
         row.field_zd_fconst_next = next;
         row.field_zd_fconst_prev = prev;
         lib_ctype::FFconst **prev_link_a = &prev->field_zd_fconst_next;
-        lib_ctype::FFconst **prev_link_b = &field.zd_fconst_head;
+        lib_ctype::FFconst **prev_link_b = &parent.zd_fconst_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         lib_ctype::FFconst **next_link_a = &next->field_zd_fconst_prev;
-        lib_ctype::FFconst **next_link_b = &field.zd_fconst_tail;
+        lib_ctype::FFconst **next_link_b = &parent.zd_fconst_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        field.zd_fconst_n++;
+        parent.zd_fconst_n++;
     }
 }
 
 // --- lib_ctype.FField.c_substr_srcfield.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void lib_ctype::c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
+void lib_ctype::c_substr_srcfield_Insert(lib_ctype::FField& parent, lib_ctype::FSubstr& row) {
     if (!row.field_c_substr_srcfield_in_ary) {
-        c_substr_srcfield_Reserve(field, 1);
-        u64 n  = field.c_substr_srcfield_n++;
-        field.c_substr_srcfield_elems[n] = &row;
+        c_substr_srcfield_Reserve(parent, 1);
+        u64 n  = parent.c_substr_srcfield_n++;
+        parent.c_substr_srcfield_elems[n] = &row;
         row.field_c_substr_srcfield_in_ary = true;
     }
 }
@@ -3389,18 +3380,18 @@ void lib_ctype::c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctype::FS
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_ctype::c_substr_srcfield_InsertMaybe(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
+bool lib_ctype::c_substr_srcfield_InsertMaybe(lib_ctype::FField& parent, lib_ctype::FSubstr& row) {
     bool retval = !field_c_substr_srcfield_InAryQ(row);
-    c_substr_srcfield_Insert(field,row); // check is performed in _Insert again
+    c_substr_srcfield_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- lib_ctype.FField.c_substr_srcfield.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
-    i64 n = field.c_substr_srcfield_n;
+void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& parent, lib_ctype::FSubstr& row) {
+    i64 n = parent.c_substr_srcfield_n;
     if (bool_Update(row.field_c_substr_srcfield_in_ary,false)) {
-        lib_ctype::FSubstr* *elems = field.c_substr_srcfield_elems;
+        lib_ctype::FSubstr* *elems = parent.c_substr_srcfield_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -3409,7 +3400,7 @@ void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FS
                 i64 j = i + 1;
                 size_t nbytes = sizeof(lib_ctype::FSubstr*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                field.c_substr_srcfield_n = n - 1;
+                parent.c_substr_srcfield_n = n - 1;
                 break;
             }
         }
@@ -3418,55 +3409,54 @@ void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FS
 
 // --- lib_ctype.FField.c_substr_srcfield.Reserve
 // Reserve space in index for N more elements;
-void lib_ctype::c_substr_srcfield_Reserve(lib_ctype::FField& field, u64 n) {
-    u64 old_max = field.c_substr_srcfield_max;
-    if (UNLIKELY(field.c_substr_srcfield_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, field.c_substr_srcfield_n + n), 4);
+void lib_ctype::c_substr_srcfield_Reserve(lib_ctype::FField& parent, u64 n) {
+    u64 old_max = parent.c_substr_srcfield_max;
+    if (UNLIKELY(parent.c_substr_srcfield_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_substr_srcfield_n + n), 4);
         u64 old_size = old_max * sizeof(lib_ctype::FSubstr*);
         u64 new_size = new_max * sizeof(lib_ctype::FSubstr*);
-        void *new_mem = algo_lib::malloc_ReallocMem(field.c_substr_srcfield_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_substr_srcfield_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ctype.out_of_memory  field:lib_ctype.FField.c_substr_srcfield");
         }
-        field.c_substr_srcfield_elems = (lib_ctype::FSubstr**)new_mem;
-        field.c_substr_srcfield_max = new_max;
+        parent.c_substr_srcfield_elems = (lib_ctype::FSubstr**)new_mem;
+        parent.c_substr_srcfield_max = new_max;
     }
 }
 
 // --- lib_ctype.FField..Init
 // Set all fields to initial values.
-void lib_ctype::FField_Init(lib_ctype::FField& field) {
-    field.reftype = algo::strptr("Val");
-    field.istuple_computed = bool(false);
-    field.c_ftuple = NULL;
-    field.p_arg = NULL;
-    field.has_fconst = bool(false);
-    field.istuple = bool(false);
-    field.zd_fconst_head = NULL; // (lib_ctype.FField.zd_fconst)
-    field.zd_fconst_n = 0; // (lib_ctype.FField.zd_fconst)
-    field.zd_fconst_tail = NULL; // (lib_ctype.FField.zd_fconst)
-    field.c_cppfunc = NULL;
-    field.c_substr = NULL;
-    field.c_unstablefld = NULL;
-    field.c_substr_srcfield_elems = NULL; // (lib_ctype.FField.c_substr_srcfield)
-    field.c_substr_srcfield_n = 0; // (lib_ctype.FField.c_substr_srcfield)
-    field.c_substr_srcfield_max = 0; // (lib_ctype.FField.c_substr_srcfield)
-    field.ctype_c_field_in_ary = bool(false);
-    field.ind_field_next = (lib_ctype::FField*)-1; // (lib_ctype.FDb.ind_field) not-in-hash
-    field.ind_field_hashval = 0; // stored hash value
+void lib_ctype::FField_Init(lib_ctype::FField& parent) {
+    parent.reftype = algo::strptr("Val");
+    parent.istuple_computed = bool(false);
+    parent.c_ftuple = NULL;
+    parent.p_arg = NULL;
+    parent.has_fconst = bool(false);
+    parent.istuple = bool(false);
+    parent.zd_fconst_head = NULL; // (lib_ctype.FField.zd_fconst)
+    parent.zd_fconst_n = 0; // (lib_ctype.FField.zd_fconst)
+    parent.zd_fconst_tail = NULL; // (lib_ctype.FField.zd_fconst)
+    parent.c_cppfunc = NULL;
+    parent.c_substr = NULL;
+    parent.c_unstablefld = NULL;
+    parent.c_substr_srcfield_elems = NULL; // (lib_ctype.FField.c_substr_srcfield)
+    parent.c_substr_srcfield_n = 0; // (lib_ctype.FField.c_substr_srcfield)
+    parent.c_substr_srcfield_max = 0; // (lib_ctype.FField.c_substr_srcfield)
+    parent.ctype_c_field_in_ary = bool(false);
+    parent.ind_field_next = (lib_ctype::FField*)-1; // (lib_ctype.FDb.ind_field) not-in-hash
+    parent.ind_field_hashval = 0; // stored hash value
 }
 
 // --- lib_ctype.FField..Uninit
-void lib_ctype::FField_Uninit(lib_ctype::FField& field) {
-    lib_ctype::FField &row = field; (void)row;
-    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(ctype_Get(row));
+void lib_ctype::FField_Uninit(lib_ctype::FField& parent) {
+    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_field_Remove(*p_ctype, row);// remove field from index c_field
+        c_field_Remove(*p_ctype, parent);// remove field from index c_field
     }
-    ind_field_Remove(row); // remove field from index ind_field
+    ind_field_Remove(parent); // remove field from index ind_field
 
     // lib_ctype.FField.c_substr_srcfield.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(field.c_substr_srcfield_elems, sizeof(lib_ctype::FSubstr*)*field.c_substr_srcfield_max); // (lib_ctype.FField.c_substr_srcfield)
+    algo_lib::malloc_FreeMem(parent.c_substr_srcfield_elems, sizeof(lib_ctype::FSubstr*)*parent.c_substr_srcfield_max); // (lib_ctype.FField.c_substr_srcfield)
 }
 
 // --- lib_ctype.FField..Print
@@ -3531,11 +3521,10 @@ void lib_ctype::ftuple_CopyIn(lib_ctype::FFtuple &row, dmmeta::Ftuple &in) {
 }
 
 // --- lib_ctype.FFtuple..Uninit
-void lib_ctype::FFtuple_Uninit(lib_ctype::FFtuple& ftuple) {
-    lib_ctype::FFtuple &row = ftuple; (void)row;
-    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
+void lib_ctype::FFtuple_Uninit(lib_ctype::FFtuple& parent) {
+    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(parent.field);
     if (p_field)  {
-        c_ftuple_Remove(*p_field, row);// remove ftuple from index c_ftuple
+        c_ftuple_Remove(*p_field, parent);// remove ftuple from index c_ftuple
     }
 }
 
@@ -3556,11 +3545,10 @@ void lib_ctype::sqltype_CopyIn(lib_ctype::FSqltype &row, dmmeta::Sqltype &in) {
 }
 
 // --- lib_ctype.FSqltype..Uninit
-void lib_ctype::FSqltype_Uninit(lib_ctype::FSqltype& sqltype) {
-    lib_ctype::FSqltype &row = sqltype; (void)row;
-    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
+void lib_ctype::FSqltype_Uninit(lib_ctype::FSqltype& parent) {
+    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_sqltype_Remove(*p_ctype, row);// remove sqltype from index c_sqltype
+        c_sqltype_Remove(*p_ctype, parent);// remove sqltype from index c_sqltype
     }
 }
 
@@ -3579,24 +3567,23 @@ void lib_ctype::ssimfile_CopyIn(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &in)
 }
 
 // --- lib_ctype.FSsimfile.ssimns.Get
-algo::strptr lib_ctype::ssimns_Get(lib_ctype::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr lib_ctype::ssimns_Get(lib_ctype::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- lib_ctype.FSsimfile.ns.Get
-algo::strptr lib_ctype::ns_Get(lib_ctype::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr lib_ctype::ns_Get(lib_ctype::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- lib_ctype.FSsimfile.name.Get
-algo::strptr lib_ctype::name_Get(lib_ctype::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
+algo::strptr lib_ctype::name_Get(lib_ctype::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".RR");
 }
 
 // --- lib_ctype.FSsimfile..Uninit
-void lib_ctype::FSsimfile_Uninit(lib_ctype::FSsimfile& ssimfile) {
-    lib_ctype::FSsimfile &row = ssimfile; (void)row;
-    ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
+void lib_ctype::FSsimfile_Uninit(lib_ctype::FSsimfile& parent) {
+    ind_ssimfile_Remove(parent); // remove ssimfile from index ind_ssimfile
 }
 
 // --- lib_ctype.FSubstr.base.CopyOut
@@ -3616,15 +3603,14 @@ void lib_ctype::substr_CopyIn(lib_ctype::FSubstr &row, dmmeta::Substr &in) {
 }
 
 // --- lib_ctype.FSubstr..Uninit
-void lib_ctype::FSubstr_Uninit(lib_ctype::FSubstr& substr) {
-    lib_ctype::FSubstr &row = substr; (void)row;
-    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
+void lib_ctype::FSubstr_Uninit(lib_ctype::FSubstr& parent) {
+    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(parent.field);
     if (p_field)  {
-        c_substr_Remove(*p_field, row);// remove substr from index c_substr
+        c_substr_Remove(*p_field, parent);// remove substr from index c_substr
     }
-    lib_ctype::FField* p_srcfield = lib_ctype::ind_field_Find(row.srcfield);
+    lib_ctype::FField* p_srcfield = lib_ctype::ind_field_Find(parent.srcfield);
     if (p_srcfield)  {
-        c_substr_srcfield_Remove(*p_srcfield, row);// remove substr from index c_substr_srcfield
+        c_substr_srcfield_Remove(*p_srcfield, parent);// remove substr from index c_substr_srcfield
     }
 }
 
@@ -3643,11 +3629,10 @@ void lib_ctype::unstablefld_CopyIn(lib_ctype::FUnstablefld &row, dev::Unstablefl
 }
 
 // --- lib_ctype.FUnstablefld..Uninit
-void lib_ctype::FUnstablefld_Uninit(lib_ctype::FUnstablefld& unstablefld) {
-    lib_ctype::FUnstablefld &row = unstablefld; (void)row;
-    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
+void lib_ctype::FUnstablefld_Uninit(lib_ctype::FUnstablefld& parent) {
+    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(parent.field);
     if (p_field)  {
-        c_unstablefld_Remove(*p_field, row);// remove unstablefld from index c_unstablefld
+        c_unstablefld_Remove(*p_field, parent);// remove unstablefld from index c_unstablefld
     }
 }
 

@@ -32,9 +32,9 @@
 
 // --- atf_ci.FBuilddir..Init
 // Set all fields to initial values.
-inline void atf_ci::FBuilddir_Init(atf_ci::FBuilddir& builddir) {
-    builddir.ind_builddir_next = (atf_ci::FBuilddir*)-1; // (atf_ci.FDb.ind_builddir) not-in-hash
-    builddir.ind_builddir_hashval = 0; // stored hash value
+inline void atf_ci::FBuilddir_Init(atf_ci::FBuilddir& parent) {
+    parent.ind_builddir_next = (atf_ci::FBuilddir*)-1; // (atf_ci.FDb.ind_builddir) not-in-hash
+    parent.ind_builddir_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FBuilddir..Ctor
@@ -53,9 +53,9 @@ inline  atf_ci::FCfg::FCfg() {
 
 // --- atf_ci.FCipackage..Init
 // Set all fields to initial values.
-inline void atf_ci::FCipackage_Init(atf_ci::FCipackage& cipackage) {
-    cipackage.remove = bool(false);
-    cipackage.build = bool(false);
+inline void atf_ci::FCipackage_Init(atf_ci::FCipackage& parent) {
+    parent.remove = bool(false);
+    parent.build = bool(false);
 }
 
 // --- atf_ci.FCipackage..Ctor
@@ -65,23 +65,23 @@ inline  atf_ci::FCipackage::FCipackage() {
 
 // --- atf_ci.FCitest.step.Call
 // Invoke function by pointer
-inline void atf_ci::step_Call(atf_ci::FCitest& citest) {
-    if (citest.step) {
-        citest.step();
+inline void atf_ci::step_Call(atf_ci::FCitest& parent) {
+    if (parent.step) {
+        parent.step();
     }
 }
 
 // --- atf_ci.FCitest..Init
 // Set all fields to initial values.
-inline void atf_ci::FCitest_Init(atf_ci::FCitest& citest) {
-    citest.cijob = algo::strptr("normalize");
-    citest.sandbox = bool(false);
-    citest.timeout = i32(600);
-    citest.failfast = bool(false);
-    citest.nerr = i32(0);
-    citest.step = NULL;
-    citest.ind_citest_next = (atf_ci::FCitest*)-1; // (atf_ci.FDb.ind_citest) not-in-hash
-    citest.ind_citest_hashval = 0; // stored hash value
+inline void atf_ci::FCitest_Init(atf_ci::FCitest& parent) {
+    parent.cijob = algo::strptr("normalize");
+    parent.sandbox = bool(false);
+    parent.timeout = i32(600);
+    parent.failfast = bool(false);
+    parent.nerr = i32(0);
+    parent.step = NULL;
+    parent.ind_citest_next = (atf_ci::FCitest*)-1; // (atf_ci.FDb.ind_citest) not-in-hash
+    parent.ind_citest_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FCitest..Ctor
@@ -1193,72 +1193,72 @@ inline  atf_ci::FExecLimit::FExecLimit() {
 
 // --- atf_ci.FGitfile.c_noindent.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool atf_ci::c_noindent_InsertMaybe(atf_ci::FGitfile& gitfile, atf_ci::FNoindent& row) {
-    atf_ci::FNoindent* ptr = gitfile.c_noindent;
+inline bool atf_ci::c_noindent_InsertMaybe(atf_ci::FGitfile& parent, atf_ci::FNoindent& row) {
+    atf_ci::FNoindent* ptr = parent.c_noindent;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        gitfile.c_noindent = &row;
+        parent.c_noindent = &row;
     }
     return retval;
 }
 
 // --- atf_ci.FGitfile.c_noindent.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void atf_ci::c_noindent_Remove(atf_ci::FGitfile& gitfile, atf_ci::FNoindent& row) {
-    atf_ci::FNoindent *ptr = gitfile.c_noindent;
+inline void atf_ci::c_noindent_Remove(atf_ci::FGitfile& parent, atf_ci::FNoindent& row) {
+    atf_ci::FNoindent *ptr = parent.c_noindent;
     if (LIKELY(ptr == &row)) {
-        gitfile.c_noindent = NULL;
+        parent.c_noindent = NULL;
     }
 }
 
 // --- atf_ci.FGitfile.c_scriptfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool atf_ci::c_scriptfile_InsertMaybe(atf_ci::FGitfile& gitfile, atf_ci::FScriptfile& row) {
-    atf_ci::FScriptfile* ptr = gitfile.c_scriptfile;
+inline bool atf_ci::c_scriptfile_InsertMaybe(atf_ci::FGitfile& parent, atf_ci::FScriptfile& row) {
+    atf_ci::FScriptfile* ptr = parent.c_scriptfile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        gitfile.c_scriptfile = &row;
+        parent.c_scriptfile = &row;
     }
     return retval;
 }
 
 // --- atf_ci.FGitfile.c_scriptfile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void atf_ci::c_scriptfile_Remove(atf_ci::FGitfile& gitfile, atf_ci::FScriptfile& row) {
-    atf_ci::FScriptfile *ptr = gitfile.c_scriptfile;
+inline void atf_ci::c_scriptfile_Remove(atf_ci::FGitfile& parent, atf_ci::FScriptfile& row) {
+    atf_ci::FScriptfile *ptr = parent.c_scriptfile;
     if (LIKELY(ptr == &row)) {
-        gitfile.c_scriptfile = NULL;
+        parent.c_scriptfile = NULL;
     }
 }
 
 // --- atf_ci.FGitfile.c_targsrc.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool atf_ci::c_targsrc_InsertMaybe(atf_ci::FGitfile& gitfile, atf_ci::FTargsrc& row) {
-    atf_ci::FTargsrc* ptr = gitfile.c_targsrc;
+inline bool atf_ci::c_targsrc_InsertMaybe(atf_ci::FGitfile& parent, atf_ci::FTargsrc& row) {
+    atf_ci::FTargsrc* ptr = parent.c_targsrc;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        gitfile.c_targsrc = &row;
+        parent.c_targsrc = &row;
     }
     return retval;
 }
 
 // --- atf_ci.FGitfile.c_targsrc.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void atf_ci::c_targsrc_Remove(atf_ci::FGitfile& gitfile, atf_ci::FTargsrc& row) {
-    atf_ci::FTargsrc *ptr = gitfile.c_targsrc;
+inline void atf_ci::c_targsrc_Remove(atf_ci::FGitfile& parent, atf_ci::FTargsrc& row) {
+    atf_ci::FTargsrc *ptr = parent.c_targsrc;
     if (LIKELY(ptr == &row)) {
-        gitfile.c_targsrc = NULL;
+        parent.c_targsrc = NULL;
     }
 }
 
 // --- atf_ci.FGitfile..Init
 // Set all fields to initial values.
-inline void atf_ci::FGitfile_Init(atf_ci::FGitfile& gitfile) {
-    gitfile.c_noindent = NULL;
-    gitfile.c_scriptfile = NULL;
-    gitfile.c_targsrc = NULL;
-    gitfile.ind_gitfile_next = (atf_ci::FGitfile*)-1; // (atf_ci.FDb.ind_gitfile) not-in-hash
-    gitfile.ind_gitfile_hashval = 0; // stored hash value
+inline void atf_ci::FGitfile_Init(atf_ci::FGitfile& parent) {
+    parent.c_noindent = NULL;
+    parent.c_scriptfile = NULL;
+    parent.c_targsrc = NULL;
+    parent.ind_gitfile_next = (atf_ci::FGitfile*)-1; // (atf_ci.FDb.ind_gitfile) not-in-hash
+    parent.ind_gitfile_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FGitfile..Ctor
@@ -1273,8 +1273,8 @@ inline  atf_ci::FGitfile::~FGitfile() {
 
 // --- atf_ci.FMsgfile..Init
 // Set all fields to initial values.
-inline void atf_ci::FMsgfile_Init(atf_ci::FMsgfile& msgfile) {
-    msgfile.strict = bool(false);
+inline void atf_ci::FMsgfile_Init(atf_ci::FMsgfile& parent) {
+    parent.strict = bool(false);
 }
 
 // --- atf_ci.FMsgfile..Ctor
@@ -1293,9 +1293,9 @@ inline  atf_ci::FNoindent::~FNoindent() {
 
 // --- atf_ci.FNs..Init
 // Set all fields to initial values.
-inline void atf_ci::FNs_Init(atf_ci::FNs& ns) {
-    ns.ind_ns_next = (atf_ci::FNs*)-1; // (atf_ci.FDb.ind_ns) not-in-hash
-    ns.ind_ns_hashval = 0; // stored hash value
+inline void atf_ci::FNs_Init(atf_ci::FNs& parent) {
+    parent.ind_ns_next = (atf_ci::FNs*)-1; // (atf_ci.FDb.ind_ns) not-in-hash
+    parent.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FNs..Ctor
@@ -1318,9 +1318,9 @@ inline  atf_ci::FPkggen::FPkggen() {
 
 // --- atf_ci.FReadmefile..Init
 // Set all fields to initial values.
-inline void atf_ci::FReadmefile_Init(atf_ci::FReadmefile& readmefile) {
-    readmefile.inl = bool(false);
-    readmefile.sandbox = bool(false);
+inline void atf_ci::FReadmefile_Init(atf_ci::FReadmefile& parent) {
+    parent.inl = bool(false);
+    parent.sandbox = bool(false);
 }
 
 // --- atf_ci.FReadmefile..Ctor
@@ -1330,9 +1330,9 @@ inline  atf_ci::FReadmefile::FReadmefile() {
 
 // --- atf_ci.FScriptfile..Init
 // Set all fields to initial values.
-inline void atf_ci::FScriptfile_Init(atf_ci::FScriptfile& scriptfile) {
-    scriptfile.ind_scriptfile_next = (atf_ci::FScriptfile*)-1; // (atf_ci.FDb.ind_scriptfile) not-in-hash
-    scriptfile.ind_scriptfile_hashval = 0; // stored hash value
+inline void atf_ci::FScriptfile_Init(atf_ci::FScriptfile& parent) {
+    parent.ind_scriptfile_next = (atf_ci::FScriptfile*)-1; // (atf_ci.FDb.ind_scriptfile) not-in-hash
+    parent.ind_scriptfile_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FScriptfile..Ctor
@@ -1347,9 +1347,9 @@ inline  atf_ci::FScriptfile::~FScriptfile() {
 
 // --- atf_ci.FSsimfile..Init
 // Set all fields to initial values.
-inline void atf_ci::FSsimfile_Init(atf_ci::FSsimfile& ssimfile) {
-    ssimfile.ind_ssimfile_next = (atf_ci::FSsimfile*)-1; // (atf_ci.FDb.ind_ssimfile) not-in-hash
-    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
+inline void atf_ci::FSsimfile_Init(atf_ci::FSsimfile& parent) {
+    parent.ind_ssimfile_next = (atf_ci::FSsimfile*)-1; // (atf_ci.FDb.ind_ssimfile) not-in-hash
+    parent.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FSsimfile..Ctor
@@ -1412,11 +1412,11 @@ inline  atf_ci::FieldId::FieldId(atf_ci_FieldIdEnum arg) {
 
 // --- atf_ci.File..Init
 // Set all fields to initial values.
-inline void atf_ci::File_Init(atf_ci::File& file) {
-    file.file_exists = bool(false);
-    file.record_exists = bool(false);
-    file.ind_file_next = (atf_ci::File*)-1; // (atf_ci.FDb.ind_file) not-in-hash
-    file.ind_file_hashval = 0; // stored hash value
+inline void atf_ci::File_Init(atf_ci::File& parent) {
+    parent.file_exists = bool(false);
+    parent.record_exists = bool(false);
+    parent.ind_file_next = (atf_ci::File*)-1; // (atf_ci.FDb.ind_file) not-in-hash
+    parent.ind_file_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.File..Ctor

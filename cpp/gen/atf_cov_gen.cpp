@@ -35,13 +35,10 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/report_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_cov::FDb    atf_cov::_db;     // dependency found via dev.targdep
 
@@ -98,11 +95,10 @@ void atf_cov::covfile_CopyIn(atf_cov::FCovfile &row, dev::Covfile &in) {
 }
 
 // --- atf_cov.FCovfile..Uninit
-void atf_cov::FCovfile_Uninit(atf_cov::FCovfile& covfile) {
-    atf_cov::FCovfile &row = covfile; (void)row;
-    atf_cov::FGitfile* p_covfile = atf_cov::ind_gitfile_Find(row.covfile);
+void atf_cov::FCovfile_Uninit(atf_cov::FCovfile& parent) {
+    atf_cov::FGitfile* p_covfile = atf_cov::ind_gitfile_Find(parent.covfile);
     if (p_covfile)  {
-        c_covfile_Remove(*p_covfile, row);// remove covfile from index c_covfile
+        c_covfile_Remove(*p_covfile, parent);// remove covfile from index c_covfile
     }
 }
 
@@ -125,25 +121,24 @@ void atf_cov::covline_CopyIn(atf_cov::FCovline &row, dev::Covline &in) {
 }
 
 // --- atf_cov.FCovline.src.Get
-algo::strptr atf_cov::src_Get(atf_cov::FCovline& covline) {
-    return algo::Pathcomp(covline.covline, ":RL");
+algo::strptr atf_cov::src_Get(atf_cov::FCovline& parent) {
+    return algo::Pathcomp(parent.covline, ":RL");
 }
 
 // --- atf_cov.FCovline.line.Get
-u32 atf_cov::line_Get(atf_cov::FCovline& covline) {
+u32 atf_cov::line_Get(atf_cov::FCovline& parent) {
     u32 ret;
     ret = 0; // default value
-    (void)u32_ReadStrptrMaybe(ret, algo::Pathcomp(covline.covline, ":RR"));
+    (void)u32_ReadStrptrMaybe(ret, algo::Pathcomp(parent.covline, ":RR"));
     return ret;
 }
 
 // --- atf_cov.FCovline..Uninit
-void atf_cov::FCovline_Uninit(atf_cov::FCovline& covline) {
-    atf_cov::FCovline &row = covline; (void)row;
-    ind_covline_Remove(row); // remove covline from index ind_covline
-    atf_cov::FGitfile* p_src = atf_cov::ind_gitfile_Find(src_Get(row));
+void atf_cov::FCovline_Uninit(atf_cov::FCovline& parent) {
+    ind_covline_Remove(parent); // remove covline from index ind_covline
+    atf_cov::FGitfile* p_src = atf_cov::ind_gitfile_Find(src_Get(parent));
     if (p_src)  {
-        c_covline_Remove(*p_src, row);// remove covline from index c_covline
+        c_covline_Remove(*p_src, parent);// remove covline from index c_covline
     }
 }
 
@@ -195,11 +190,10 @@ void atf_cov::covtarget_CopyIn(atf_cov::FCovtarget &row, dev::Covtarget &in) {
 }
 
 // --- atf_cov.FCovtarget..Uninit
-void atf_cov::FCovtarget_Uninit(atf_cov::FCovtarget& covtarget) {
-    atf_cov::FCovtarget &row = covtarget; (void)row;
-    atf_cov::FTarget* p_covtarget = atf_cov::ind_target_Find(row.covtarget);
+void atf_cov::FCovtarget_Uninit(atf_cov::FCovtarget& parent) {
+    atf_cov::FTarget* p_covtarget = atf_cov::ind_target_Find(parent.covtarget);
     if (p_covtarget)  {
-        c_covtarget_Remove(*p_covtarget, row);// remove covtarget from index c_covtarget
+        c_covtarget_Remove(*p_covtarget, parent);// remove covtarget from index c_covtarget
     }
 }
 
@@ -2185,7 +2179,6 @@ void atf_cov::FDb_Init() {
 
 // --- atf_cov.FDb..Uninit
 void atf_cov::FDb_Uninit() {
-    atf_cov::FDb &row = _db; (void)row;
 
     // atf_cov.FDb.uncovfunc.Uninit (Lary)  //
     // skip destruction in global scope
@@ -2240,18 +2233,18 @@ void atf_cov::gitfile_CopyIn(atf_cov::FGitfile &row, dev::Gitfile &in) {
 }
 
 // --- atf_cov.FGitfile.ext.Get
-algo::strptr atf_cov::ext_Get(atf_cov::FGitfile& gitfile) {
-    return algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR");
+algo::strptr atf_cov::ext_Get(atf_cov::FGitfile& parent) {
+    return algo::Pathcomp(parent.gitfile, "/RR.LR.RR");
 }
 
 // --- atf_cov.FGitfile.c_covline.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void atf_cov::c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
+void atf_cov::c_covline_Insert(atf_cov::FGitfile& parent, atf_cov::FCovline& row) {
     if (!row.gitfile_c_covline_in_ary) {
-        c_covline_Reserve(gitfile, 1);
-        u64 n  = gitfile.c_covline_n++;
-        gitfile.c_covline_elems[n] = &row;
+        c_covline_Reserve(parent, 1);
+        u64 n  = parent.c_covline_n++;
+        parent.c_covline_elems[n] = &row;
         row.gitfile_c_covline_in_ary = true;
     }
 }
@@ -2260,18 +2253,18 @@ void atf_cov::c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& ro
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_cov::c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
+bool atf_cov::c_covline_InsertMaybe(atf_cov::FGitfile& parent, atf_cov::FCovline& row) {
     bool retval = !gitfile_c_covline_InAryQ(row);
-    c_covline_Insert(gitfile,row); // check is performed in _Insert again
+    c_covline_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- atf_cov.FGitfile.c_covline.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_cov::c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
-    i64 n = gitfile.c_covline_n;
+void atf_cov::c_covline_Remove(atf_cov::FGitfile& parent, atf_cov::FCovline& row) {
+    i64 n = parent.c_covline_n;
     if (bool_Update(row.gitfile_c_covline_in_ary,false)) {
-        atf_cov::FCovline* *elems = gitfile.c_covline_elems;
+        atf_cov::FCovline* *elems = parent.c_covline_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2280,7 +2273,7 @@ void atf_cov::c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& ro
                 i64 j = i + 1;
                 size_t nbytes = sizeof(atf_cov::FCovline*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gitfile.c_covline_n = n - 1;
+                parent.c_covline_n = n - 1;
                 break;
             }
         }
@@ -2289,28 +2282,27 @@ void atf_cov::c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& ro
 
 // --- atf_cov.FGitfile.c_covline.Reserve
 // Reserve space in index for N more elements;
-void atf_cov::c_covline_Reserve(atf_cov::FGitfile& gitfile, u64 n) {
-    u64 old_max = gitfile.c_covline_max;
-    if (UNLIKELY(gitfile.c_covline_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, gitfile.c_covline_n + n), 4);
+void atf_cov::c_covline_Reserve(atf_cov::FGitfile& parent, u64 n) {
+    u64 old_max = parent.c_covline_max;
+    if (UNLIKELY(parent.c_covline_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_covline_n + n), 4);
         u64 old_size = old_max * sizeof(atf_cov::FCovline*);
         u64 new_size = new_max * sizeof(atf_cov::FCovline*);
-        void *new_mem = algo_lib::malloc_ReallocMem(gitfile.c_covline_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_covline_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_cov.out_of_memory  field:atf_cov.FGitfile.c_covline");
         }
-        gitfile.c_covline_elems = (atf_cov::FCovline**)new_mem;
-        gitfile.c_covline_max = new_max;
+        parent.c_covline_elems = (atf_cov::FCovline**)new_mem;
+        parent.c_covline_max = new_max;
     }
 }
 
 // --- atf_cov.FGitfile..Uninit
-void atf_cov::FGitfile_Uninit(atf_cov::FGitfile& gitfile) {
-    atf_cov::FGitfile &row = gitfile; (void)row;
-    ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
+void atf_cov::FGitfile_Uninit(atf_cov::FGitfile& parent) {
+    ind_gitfile_Remove(parent); // remove gitfile from index ind_gitfile
 
     // atf_cov.FGitfile.c_covline.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(gitfile.c_covline_elems, sizeof(atf_cov::FCovline*)*gitfile.c_covline_max); // (atf_cov.FGitfile.c_covline)
+    algo_lib::malloc_FreeMem(parent.c_covline_elems, sizeof(atf_cov::FCovline*)*parent.c_covline_max); // (atf_cov.FGitfile.c_covline)
 }
 
 // --- atf_cov.FTarget.base.CopyOut
@@ -2328,11 +2320,11 @@ void atf_cov::target_CopyIn(atf_cov::FTarget &row, dev::Target &in) {
 // --- atf_cov.FTarget.c_targsrc.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void atf_cov::c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
+void atf_cov::c_targsrc_Insert(atf_cov::FTarget& parent, atf_cov::FTargsrc& row) {
     if (!row.target_c_targsrc_in_ary) {
-        c_targsrc_Reserve(target, 1);
-        u64 n  = target.c_targsrc_n++;
-        target.c_targsrc_elems[n] = &row;
+        c_targsrc_Reserve(parent, 1);
+        u64 n  = parent.c_targsrc_n++;
+        parent.c_targsrc_elems[n] = &row;
         row.target_c_targsrc_in_ary = true;
     }
 }
@@ -2341,18 +2333,18 @@ void atf_cov::c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row)
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
+bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FTarget& parent, atf_cov::FTargsrc& row) {
     bool retval = !target_c_targsrc_InAryQ(row);
-    c_targsrc_Insert(target,row); // check is performed in _Insert again
+    c_targsrc_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- atf_cov.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_cov::c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
-    i64 n = target.c_targsrc_n;
+void atf_cov::c_targsrc_Remove(atf_cov::FTarget& parent, atf_cov::FTargsrc& row) {
+    i64 n = parent.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
-        atf_cov::FTargsrc* *elems = target.c_targsrc_elems;
+        atf_cov::FTargsrc* *elems = parent.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -2361,7 +2353,7 @@ void atf_cov::c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row)
                 i64 j = i + 1;
                 size_t nbytes = sizeof(atf_cov::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targsrc_n = n - 1;
+                parent.c_targsrc_n = n - 1;
                 break;
             }
         }
@@ -2370,28 +2362,27 @@ void atf_cov::c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row)
 
 // --- atf_cov.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void atf_cov::c_targsrc_Reserve(atf_cov::FTarget& target, u64 n) {
-    u64 old_max = target.c_targsrc_max;
-    if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targsrc_n + n), 4);
+void atf_cov::c_targsrc_Reserve(atf_cov::FTarget& parent, u64 n) {
+    u64 old_max = parent.c_targsrc_max;
+    if (UNLIKELY(parent.c_targsrc_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_targsrc_n + n), 4);
         u64 old_size = old_max * sizeof(atf_cov::FTargsrc*);
         u64 new_size = new_max * sizeof(atf_cov::FTargsrc*);
-        void *new_mem = algo_lib::malloc_ReallocMem(target.c_targsrc_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_targsrc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_cov.out_of_memory  field:atf_cov.FTarget.c_targsrc");
         }
-        target.c_targsrc_elems = (atf_cov::FTargsrc**)new_mem;
-        target.c_targsrc_max = new_max;
+        parent.c_targsrc_elems = (atf_cov::FTargsrc**)new_mem;
+        parent.c_targsrc_max = new_max;
     }
 }
 
 // --- atf_cov.FTarget..Uninit
-void atf_cov::FTarget_Uninit(atf_cov::FTarget& target) {
-    atf_cov::FTarget &row = target; (void)row;
-    ind_target_Remove(row); // remove target from index ind_target
+void atf_cov::FTarget_Uninit(atf_cov::FTarget& parent) {
+    ind_target_Remove(parent); // remove target from index ind_target
 
     // atf_cov.FTarget.c_targsrc.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(target.c_targsrc_elems, sizeof(atf_cov::FTargsrc*)*target.c_targsrc_max); // (atf_cov.FTarget.c_targsrc)
+    algo_lib::malloc_FreeMem(parent.c_targsrc_elems, sizeof(atf_cov::FTargsrc*)*parent.c_targsrc_max); // (atf_cov.FTarget.c_targsrc)
 }
 
 // --- atf_cov.FTargsrc.base.CopyOut
@@ -2409,31 +2400,30 @@ void atf_cov::targsrc_CopyIn(atf_cov::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- atf_cov.FTargsrc.target.Get
-algo::strptr atf_cov::target_Get(atf_cov::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LL");
+algo::strptr atf_cov::target_Get(atf_cov::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LL");
 }
 
 // --- atf_cov.FTargsrc.src.Get
-algo::strptr atf_cov::src_Get(atf_cov::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LR");
+algo::strptr atf_cov::src_Get(atf_cov::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LR");
 }
 
 // --- atf_cov.FTargsrc.ext.Get
-algo::strptr atf_cov::ext_Get(atf_cov::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, ".RR");
+algo::strptr atf_cov::ext_Get(atf_cov::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, ".RR");
 }
 
 // --- atf_cov.FTargsrc..Uninit
-void atf_cov::FTargsrc_Uninit(atf_cov::FTargsrc& targsrc) {
-    atf_cov::FTargsrc &row = targsrc; (void)row;
-    ind_targsrc_Remove(row); // remove targsrc from index ind_targsrc
-    atf_cov::FTarget* p_target = atf_cov::ind_target_Find(target_Get(row));
+void atf_cov::FTargsrc_Uninit(atf_cov::FTargsrc& parent) {
+    ind_targsrc_Remove(parent); // remove targsrc from index ind_targsrc
+    atf_cov::FTarget* p_target = atf_cov::ind_target_Find(target_Get(parent));
     if (p_target)  {
-        c_targsrc_Remove(*p_target, row);// remove targsrc from index c_targsrc
+        c_targsrc_Remove(*p_target, parent);// remove targsrc from index c_targsrc
     }
-    atf_cov::FGitfile* p_src = atf_cov::ind_gitfile_Find(src_Get(row));
+    atf_cov::FGitfile* p_src = atf_cov::ind_gitfile_Find(src_Get(parent));
     if (p_src)  {
-        c_targsrc_Remove(*p_src, row);// remove targsrc from index c_targsrc
+        c_targsrc_Remove(*p_src, parent);// remove targsrc from index c_targsrc
     }
 }
 
@@ -2454,12 +2444,11 @@ void atf_cov::tgtcov_CopyIn(atf_cov::FTgtcov &row, dev::Tgtcov &in) {
 }
 
 // --- atf_cov.FTgtcov..Uninit
-void atf_cov::FTgtcov_Uninit(atf_cov::FTgtcov& tgtcov) {
-    atf_cov::FTgtcov &row = tgtcov; (void)row;
-    ind_tgtcov_Remove(row); // remove tgtcov from index ind_tgtcov
-    atf_cov::FTarget* p_target = atf_cov::ind_target_Find(row.target);
+void atf_cov::FTgtcov_Uninit(atf_cov::FTgtcov& parent) {
+    ind_tgtcov_Remove(parent); // remove tgtcov from index ind_tgtcov
+    atf_cov::FTarget* p_target = atf_cov::ind_target_Find(parent.target);
     if (p_target)  {
-        c_tgtcov_Remove(*p_target, row);// remove tgtcov from index c_tgtcov
+        c_tgtcov_Remove(*p_target, parent);// remove tgtcov from index c_tgtcov
     }
 }
 
@@ -2476,8 +2465,8 @@ void atf_cov::uncovfunc_CopyIn(atf_cov::FUncovfunc &row, dev::Uncovfunc &in) {
 }
 
 // --- atf_cov.FUncovfunc.name.Get
-algo::strptr atf_cov::name_Get(atf_cov::FUncovfunc& uncovfunc) {
-    return algo::Pathcomp(uncovfunc.uncovfunc, "(LL");
+algo::strptr atf_cov::name_Get(atf_cov::FUncovfunc& parent) {
+    return algo::Pathcomp(parent.uncovfunc, "(LL");
 }
 
 // --- atf_cov.FieldId.value.ToCstr
@@ -2806,7 +2795,6 @@ void atf_cov::StaticCheck() {
 // --- atf_cov...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         atf_cov::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -2825,7 +2813,6 @@ int main(int argc, char **argv) {
     try {
         atf_cov::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

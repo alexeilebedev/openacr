@@ -13,7 +13,7 @@ to/from `double` and decimal text — and a `Print` that emits
 the value with the same number of decimal places, so the
 round-trip through text is exact.
 
-```
+```ssim
 dmmeta.field   field:omx.Order.price  arg:i64  reftype:Val  dflt:""  comment:"price in dollars"
   dmmeta.fdec  field:omx.Order.price  nplace:9  fixedfmt:N
 ```
@@ -159,7 +159,7 @@ what most APIs want.
 
 Money-cents:
 
-```
+```ssim
 dmmeta.field   field:billing.Invoice.amount  arg:i64  reftype:Val  dflt:""  comment:"USD"
   dmmeta.fdec  field:billing.Invoice.amount  nplace:2  fixedfmt:N
 ```
@@ -175,7 +175,7 @@ amount_Print(inv, out);                  // "1234.56"
 
 Nanosecond-precision price:
 
-```
+```ssim
 dmmeta.field   field:omx.Order.price  arg:i64  reftype:Val  dflt:""
   dmmeta.fdec  field:omx.Order.price  nplace:9  fixedfmt:N
 ```

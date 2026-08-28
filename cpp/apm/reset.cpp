@@ -22,6 +22,11 @@
 #include "include/algo.h"
 #include "include/apm.h"
 
+// Set the selected package's origin and baseref from the command line.
+// A ref given with -ref is resolved against the origin before it is stored, so
+// what lands in the record is a commit id.  Storing the name instead would let
+// the origin move the branch afterwards, and the record would then describe a
+// version this tree has never merged while still reading as the version it has.
 void apm::Main_Reset() {
     vrfy(zd_sel_package_N()==1, "-reset requires a single package to be selected");
     cstring acrscript;
@@ -32,7 +37,9 @@ void apm::Main_Reset() {
             out.origin=_db.cmdline.origin;
         }
         if (_db.cmdline.ref != "") {
-            out.baseref=_db.cmdline.ref;
+            tempstr gitref = FetchPackageOrigin(out.package,out.origin,_db.cmdline.ref);
+            vrfy(gitref!="", tempstr()<<"failed to resolve "<<_db.cmdline.ref<<" in "<<out.origin);
+            out.baseref=gitref;
         }
         acrscript << out << eol;
     }ind_end;

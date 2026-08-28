@@ -1,0 +1,5 @@
+# SHA1 = AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+dev.gitfile  gitfile:cpp/one.cpp
+# SHA1 = CCCCCCCCCCCCCCCCCCCCCCCCCCCC
+dev.gitfile  gitfile:cpp/two.cpp
+# end of manifest

@@ -14,7 +14,7 @@ If you only need keyed lookup, [Thash](/txt/exe/amc/reftype/Thash.md)
 is faster.  If you only need a single min/max, use
 [Bheap](/txt/exe/amc/reftype/Bheap.md).
 
-```
+```ssim
 dmmeta.field  field:atf_unit.FDb.tr_number  arg:atf_unit.FNumber  reftype:Atree  dflt:""  comment:""
   dmmeta.sortfld  field:atf_unit.FDb.tr_number  sortfld:atf_unit.FNumber.value  comment:""
 ```
@@ -72,7 +72,7 @@ This is the same convention as [Bheap](/txt/exe/amc/reftype/Bheap.md).
 
 Required.  Atree refuses to generate without a `dmmeta.sortfld`:
 
-```
+```ssim
 dmmeta.sortfld  field:atf_unit.FDb.tr_number  sortfld:atf_unit.FNumber.value
 ```
 

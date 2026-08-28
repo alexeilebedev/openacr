@@ -143,6 +143,19 @@ inline  dev::Covtarget::Covtarget() {
 inline  dev::Dbgtarget::Dbgtarget() {
 }
 
+// --- dev.Docpage..Init
+// Set all fields to initial values.
+inline void dev::Docpage_Init(dev::Docpage& parent) {
+    parent.word = bool(false);
+    parent.bare = bool(false);
+    parent.bytable = bool(false);
+}
+
+// --- dev.Docpage..Ctor
+inline  dev::Docpage::Docpage() {
+    dev::Docpage_Init(*this);
+}
+
 // --- dev.Edaction..Init
 // Set all fields to initial values.
 inline void dev::Edaction_Init(dev::Edaction& parent) {
@@ -212,10 +225,11 @@ inline  dev::Gitinfo::Gitinfo() {
 }
 
 // --- dev.Gitinfo..FieldwiseCtor
-inline  dev::Gitinfo::Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_package, const algo::strptr& in_gitref, algo::UnTime in_builddate, const algo::Comment& in_comment)
+inline  dev::Gitinfo::Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_package, const algo::strptr& in_gitref, algo::UnTime in_commitdate, algo::UnTime in_builddate, const algo::Comment& in_comment)
     : gitinfo(in_gitinfo)
     , package(in_package)
     , gitref(in_gitref)
+    , commitdate(in_commitdate)
     , builddate(in_builddate)
     , comment(in_comment)
  {
@@ -328,6 +342,7 @@ inline  dev::Package::Package(const algo::strptr& in_package, const algo::strptr
 // Set all fields to initial values.
 inline void dev::Pkgdep_Init(dev::Pkgdep& parent) {
     parent.soft = bool(false);
+    parent.pkgdeptype = algo::strptr("require");
 }
 
 // --- dev.Pkgdep..Ctor
@@ -336,11 +351,16 @@ inline  dev::Pkgdep::Pkgdep() {
 }
 
 // --- dev.Pkgdep..FieldwiseCtor
-inline  dev::Pkgdep::Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::Comment& in_comment)
+inline  dev::Pkgdep::Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::strptr& in_pkgdeptype, const algo::Comment& in_comment)
     : pkgdep(in_pkgdep)
     , soft(in_soft)
+    , pkgdeptype(in_pkgdeptype)
     , comment(in_comment)
  {
+}
+
+// --- dev.Pkgdeptype..Ctor
+inline  dev::Pkgdeptype::Pkgdeptype() {
 }
 
 // --- dev.Pkggen..Ctor
@@ -394,10 +414,6 @@ inline  dev::Readmefile::Readmefile(const algo::strptr& in_gitfile, bool in_inl,
     , filter(in_filter)
     , comment(in_comment)
  {
-}
-
-// --- dev.Readmesort..Ctor
-inline  dev::Readmesort::Readmesort() {
 }
 
 // --- dev.Rpm..Ctor
@@ -602,6 +618,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Dbgtarget
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Docpage &row) {// cfmt:dev.Docpage.String
+    dev::Docpage_Print(const_cast<dev::Docpage&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Edaction &row) {// cfmt:dev.Edaction.String
     dev::Edaction_Print(const_cast<dev::Edaction&>(row), str);
     return str;
@@ -677,6 +698,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgdep &r
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgdeptype &row) {// cfmt:dev.Pkgdeptype.String
+    dev::Pkgdeptype_Print(const_cast<dev::Pkgdeptype&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkggen &row) {// cfmt:dev.Pkggen.String
     dev::Pkggen_Print(const_cast<dev::Pkggen&>(row), str);
     return str;
@@ -694,11 +720,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Prototran
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readmefile &row) {// cfmt:dev.Readmefile.String
     dev::Readmefile_Print(const_cast<dev::Readmefile&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readmesort &row) {// cfmt:dev.Readmesort.String
-    dev::Readmesort_Print(const_cast<dev::Readmesort&>(row), str);
     return str;
 }
 

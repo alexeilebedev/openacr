@@ -171,9 +171,9 @@ static tempstr ComputeSha1(strptr gitfile) {
     tempstr content = algo::FileToString(gitfile);
     Update(sha1,algo::strptr_ToMemptr(content));
     Finish(sha1);
-    algo::Sha1sig sig = GetDigest(sha1);
+    algo::Signature sig = GetDigest(sha1);
     tempstr out;
-    strptr_PrintBase64(algo::memptr_ToStrptr(sha1sig_Getary(sig)), out);
+    strptr_PrintBase64(algo::memptr_ToStrptr(signature_Getary(sig)), out);
     return out;
 }
 
@@ -186,7 +186,6 @@ static bool GenFileQ(strptr gitfile) {
     ret |= StartsWithQ(gitfile, "include/gen/");
     ret |= StartsWithQ(gitfile, "js/gen/");
     ret |= StartsWithQ(gitfile, "ts/gen/");
-    ret |= StartsWithQ(gitfile, "txt/gen/");
     ret |= StartsWithQ(gitfile, "txt/ssimdb/");
     return ret;
 }

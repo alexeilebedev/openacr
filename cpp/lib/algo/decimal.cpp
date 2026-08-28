@@ -134,9 +134,23 @@ bool algo::Decimal_ReadStrptrMaybe(algo::Decimal &parent, algo::strptr in_str) {
     return TryParseDecimal(iter,parent);
 }
 
-// Convert Decimal to double
+// Convert Decimal to double.  PARENT is printed and the text parsed back, so the
+// answer is whatever this tree's own parser makes of that decimal.
+//
+// The obvious form, mantissa times pow(10, exponent), is a second and
+// disagreeing definition of what a decimal means.  No power of ten above 10^22
+// is representable in a double, so pow answers with whatever accuracy its libm
+// has for a large integral exponent, while the parser builds its scale by
+// repeated multiplication -- two roundings that need not land on the same
+// double.  On 10^-63 the two are 2.7e-16 apart under glibc and further apart
+// under Apple's libm, which is a difference in the platform rather than in the
+// number.  Printing and parsing leaves one definition, and it is the parser's.
 double algo::Decimal_GetDouble(algo::Decimal parent) {
-    return double(parent.mantissa) * pow(10.,parent.exponent);
+    tempstr str;
+    Decimal_Print(parent,str);
+    double ret(0);
+    double_ReadStrptrMaybe(ret,str);
+    return ret;
 }
 
 // Convert double to Decimal

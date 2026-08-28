@@ -18,7 +18,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/msgschema.cpp
 //
 // Derive the message-layout tables dmmeta.payloadhdr, dmmeta.msg and
@@ -72,8 +72,13 @@ static bool ScalarArgQ(amc::FCtype &ctype) {
 }
 
 // Append one leaf field row of MSG: dotted NAME at byte OFFSET, read as
-// scalar ctype ARG of WIDTH bytes (for a fixed char array, the array length).
-static void AddMsgfield(amc::FMsg &msg, algo::strptr name, int offset, algo::strptr arg, int width, bool bigend, bool varlen) {
+// ctype ARG of WIDTH bytes (for a fixed char array, the array length).
+// The row is returned so a caller can describe what the columns above cannot.
+//
+// ARG is a leaf scalar for every field with a width, and the element ctype for a varlen
+// tail, which has none: a tail of char is text and a tail of a message ctype is a run of
+// framed messages, and a reader of the row wants to be told which.
+static amc::FMsgfield &AddMsgfield(amc::FMsg &msg, algo::strptr name, int offset, algo::strptr arg, int width, bool bigend, bool varlen) {
     amc::FMsgfield &row = amc::msgfield_Alloc();
     row.msgfield = tempstr() << msg.ctype << "/" << name;
     row.offset = offset;
@@ -82,6 +87,24 @@ static void AddMsgfield(amc::FMsg &msg, algo::strptr name, int offset, algo::str
     row.bigend = bigend;
     row.varlen = varlen;
     (void)amc::msgfield_XrefMaybe(row);
+    return row;
+}
+
+// Say on ROW how the inline string of ctype ARG ends: an rpascal string by the
+// count in its last byte, a padded one where its padding begins.  The padding
+// character is written as its byte value, and a format that pads with nothing
+// writes nothing.
+static void StrtypeSet(amc::FMsgfield &row, amc::FCtype &arg) {
+    ind_beg(amc::ctype_c_field_curs, field, arg) {
+        if (field.c_smallstr) {
+            u64 pad = 0;
+            algo::strptr expr = field.c_smallstr->pad.value;
+            row.strtype = field.c_smallstr->strtype;
+            if (ch_N(expr) > 0 && MsgtypeEvalMaybe(expr, pad)) {
+                row.pad = tempstr() << pad;
+            }
+        }
+    }ind_end;
 }
 
 // Walk the physical fields of CTYPE, advancing OFFSET past each one, and
@@ -105,14 +128,14 @@ static bool WalkMsgfield(amc::FCtype &ctype, amc::FMsg *msg, algo::strptr prefix
             } else if (field.reftype == dmmeta_Reftype_reftype_Bitfld) {
                 // computed from its source field; no storage of its own
             } else if (field.reftype == dmmeta_Reftype_reftype_Opt) {
-                // optional binary tail; not part of the fixed layout
+                // an optional trailing message; it begins past the fixed
+                // layout this walk measures, and AddOpttail describes it
             } else if (field.reftype == dmmeta_Reftype_reftype_Varlen) {
-                if (arg.ctype == "char" || arg.ctype == "u8") {
-                    if (emit) {
-                        AddMsgfield(*msg, name, offset, arg.ctype, 0, false, true);
-                    }
-                } else {
-                    ok = false;
+                // a varlen is the last field of its message, so what it holds cannot
+                // shift anything after it: the row says where the tail begins and the
+                // arg says what it is made of, whether that is a byte or a message
+                if (emit) {
+                    AddMsgfield(*msg, name, offset, arg.ctype, 0, false, true);
                 }
             } else if (field.reftype == dmmeta_Reftype_reftype_Inlary) {
                 bool fixed_char = FixaryQ(field) && arg.ctype == "char" && field.c_inlary;
@@ -136,7 +159,8 @@ static bool WalkMsgfield(amc::FCtype &ctype, amc::FMsg *msg, algo::strptr prefix
                     }
                 } else if (arg.c_cstr) {
                     if (emit) {
-                        AddMsgfield(*msg, name, offset, "char", size, false, false);
+                        amc::FMsgfield &row = AddMsgfield(*msg, name, offset, "char", size, false, false);
+                        StrtypeSet(row, arg);
                     }
                 } else if (c_field_N(arg) > 0) {
                     tempstr subprefix;
@@ -206,6 +230,18 @@ static amc::FPayloadhdr *GetOrCreatePayloadhdr(amc::FCtype &hdr) {
     return ret;
 }
 
+// Describe the Opt tail of CTYPE as a varlen field of MSG: the wrapped message
+// its carrier holds past the end of its own storage, where the generated
+// accessor reads it.  Only a tail whose ctype is a payload header is
+// described; nothing else says where the tail's type and length sit.
+static void AddOpttail(amc::FMsg &msg, amc::FCtype &ctype) {
+    ind_beg(amc::ctype_c_field_curs, field, ctype) {
+        if (field.reftype == dmmeta_Reftype_reftype_Opt && GetOrCreatePayloadhdr(*field.p_arg)) {
+            AddMsgfield(msg, name_Get(field), ctype.totsize_byte, field.p_arg->ctype, 0, false, true);
+        }
+    }ind_end;
+}
+
 // Derive dmmeta.payloadhdr, dmmeta.msg and dmmeta.msgfield rows for every
 // message ctype whose ultimate base is a header with typefld and lenfld,
 // and enforce that msgtype numbers are unique within one payload header.
@@ -246,6 +282,7 @@ void amc::gen_msgschema() {
                 if (unique && amc::msg_XrefMaybe(msg)) {
                     int offset = 0;
                     (void)WalkMsgfield(ctype, &msg, "", offset, true);
+                    AddOpttail(msg, ctype);
                 }
             }
         }

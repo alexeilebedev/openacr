@@ -201,9 +201,9 @@ private:
 };
 // Set all fields to initial values.
 // func:lib_netio.FVar..Init
-inline void          FVar_Init(lib_netio::FVar& var);
+inline void          FVar_Init(lib_netio::FVar& parent);
 // func:lib_netio.FVar..Uninit
-void                 FVar_Uninit(lib_netio::FVar& var) __attribute__((nothrow));
+void                 FVar_Uninit(lib_netio::FVar& parent) __attribute__((nothrow));
 
 // --- lib_netio.FieldId
 #pragma pack(push,1)

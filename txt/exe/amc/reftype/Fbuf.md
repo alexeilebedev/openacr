@@ -15,7 +15,7 @@ Fbuf is the basis of every network/Unix-socket protocol in
 X2.  It supports line, byte, and length-delimited message
 framing, plus an extern hook for custom protocols.
 
-```
+```ssim
 dmmeta.field  field:atf_amc.Msgbuf.in_buf  arg:atf_amc.MsgHeader  reftype:Fbuf  dflt:""  comment:"Message-based buffer"
   dmmeta.fbuf  field:atf_amc.Msgbuf.in_buf  fbufdir:in  max:64  fbuftype:Msgbuf  iotype:standard
   dmmeta.fcond  fcond:atf_amc.Msgbuf.in_buf/ready  ins:atf_amc.FDb.cd_in_msg  via:""  rem:Y
@@ -100,7 +100,7 @@ the next message; amc generates it per `fbuftype`.  To frame messages
 yourself, override it with an
 [ffunc](/txt/exe/amc/backend/tclass-tfunc.md#ffunc):
 
-```
+```ssim
 dmmeta.ffunc  ffunc:<field>.ScanMsg  extrn:Y  comment:"custom framing"
 ```
 

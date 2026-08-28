@@ -33,13 +33,13 @@
 
 // --- src_func.FCtypelen..Init
 // Set all fields to initial values.
-inline void src_func::FCtypelen_Init(src_func::FCtypelen& ctypelen) {
-    ctypelen.len = u32(0);
-    ctypelen.alignment = i32(0);
-    ctypelen.padbytes = i32(0);
-    ctypelen.plaindata = bool(false);
-    ctypelen.ind_ctypelen_next = (src_func::FCtypelen*)-1; // (src_func.FDb.ind_ctypelen) not-in-hash
-    ctypelen.ind_ctypelen_hashval = 0; // stored hash value
+inline void src_func::FCtypelen_Init(src_func::FCtypelen& parent) {
+    parent.len = u32(0);
+    parent.alignment = i32(0);
+    parent.padbytes = i32(0);
+    parent.plaindata = bool(false);
+    parent.ind_ctypelen_next = (src_func::FCtypelen*)-1; // (src_func.FDb.ind_ctypelen) not-in-hash
+    parent.ind_ctypelen_hashval = 0; // stored hash value
 }
 
 // --- src_func.FCtypelen..Ctor
@@ -653,8 +653,8 @@ inline src_func::FGitfile& src_func::_db_gitfile_curs_Access(_db_gitfile_curs &c
 
 // --- src_func.FFunc.sortkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool src_func::sortkey_Lt(src_func::FFunc& func, src_func::FFunc &rhs) {
-    return sortkey_Cmp(func,rhs) < 0;
+inline bool src_func::sortkey_Lt(src_func::FFunc& parent, src_func::FFunc &rhs) {
+    return sortkey_Cmp(parent,rhs) < 0;
 }
 
 // --- src_func.FFunc..Ctor
@@ -669,9 +669,9 @@ inline  src_func::FFunc::~FFunc() {
 
 // --- src_func.FGenaffix..Init
 // Set all fields to initial values.
-inline void src_func::FGenaffix_Init(src_func::FGenaffix& genaffix) {
-    genaffix.ind_genaffix_next = (src_func::FGenaffix*)-1; // (src_func.FDb.ind_genaffix) not-in-hash
-    genaffix.ind_genaffix_hashval = 0; // stored hash value
+inline void src_func::FGenaffix_Init(src_func::FGenaffix& parent) {
+    parent.ind_genaffix_next = (src_func::FGenaffix*)-1; // (src_func.FDb.ind_genaffix) not-in-hash
+    parent.ind_genaffix_hashval = 0; // stored hash value
 }
 
 // --- src_func.FGenaffix..Ctor
@@ -686,9 +686,9 @@ inline  src_func::FGenaffix::~FGenaffix() {
 
 // --- src_func.FGitfile..Init
 // Set all fields to initial values.
-inline void src_func::FGitfile_Init(src_func::FGitfile& gitfile) {
-    gitfile.ind_gitfile_next = (src_func::FGitfile*)-1; // (src_func.FDb.ind_gitfile) not-in-hash
-    gitfile.ind_gitfile_hashval = 0; // stored hash value
+inline void src_func::FGitfile_Init(src_func::FGitfile& parent) {
+    parent.ind_gitfile_next = (src_func::FGitfile*)-1; // (src_func.FDb.ind_gitfile) not-in-hash
+    parent.ind_gitfile_hashval = 0; // stored hash value
 }
 
 // --- src_func.FGitfile..Ctor
@@ -703,15 +703,15 @@ inline  src_func::FGitfile::~FGitfile() {
 
 // --- src_func.FTarget.cd_targsrc.EmptyQ
 // Return true if index is empty
-inline bool src_func::cd_targsrc_EmptyQ(src_func::FTarget& target) {
-    return target.cd_targsrc_head == NULL;
+inline bool src_func::cd_targsrc_EmptyQ(src_func::FTarget& parent) {
+    return parent.cd_targsrc_head == NULL;
 }
 
 // --- src_func.FTarget.cd_targsrc.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline src_func::FTargsrc* src_func::cd_targsrc_First(src_func::FTarget& target) {
+inline src_func::FTargsrc* src_func::cd_targsrc_First(src_func::FTarget& parent) {
     src_func::FTargsrc *row = NULL;
-    row = target.cd_targsrc_head;
+    row = parent.cd_targsrc_head;
     return row;
 }
 
@@ -725,16 +725,16 @@ inline bool src_func::target_cd_targsrc_InLlistQ(src_func::FTargsrc& row) {
 
 // --- src_func.FTarget.cd_targsrc.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline src_func::FTargsrc* src_func::cd_targsrc_Last(src_func::FTarget& target) {
+inline src_func::FTargsrc* src_func::cd_targsrc_Last(src_func::FTarget& parent) {
     src_func::FTargsrc *row = NULL;
-    row = target.cd_targsrc_head ? target.cd_targsrc_head->target_cd_targsrc_prev : NULL;
+    row = parent.cd_targsrc_head ? parent.cd_targsrc_head->target_cd_targsrc_prev : NULL;
     return row;
 }
 
 // --- src_func.FTarget.cd_targsrc.N
 // Return number of items in the linked list
-inline i32 src_func::cd_targsrc_N(const src_func::FTarget& target) {
-    return target.cd_targsrc_n;
+inline i32 src_func::cd_targsrc_N(const src_func::FTarget& parent) {
+    return parent.cd_targsrc_n;
 }
 
 // --- src_func.FTarget.cd_targsrc.Next
@@ -751,19 +751,19 @@ inline src_func::FTargsrc* src_func::target_cd_targsrc_Prev(src_func::FTargsrc &
 
 // --- src_func.FTarget.cd_targsrc.qLast
 // Return reference to last element in the index. No bounds checking.
-inline src_func::FTargsrc& src_func::cd_targsrc_qLast(src_func::FTarget& target) {
+inline src_func::FTargsrc& src_func::cd_targsrc_qLast(src_func::FTarget& parent) {
     src_func::FTargsrc *row = NULL;
-    row = target.cd_targsrc_head ? target.cd_targsrc_head->target_cd_targsrc_prev : NULL;
+    row = parent.cd_targsrc_head ? parent.cd_targsrc_head->target_cd_targsrc_prev : NULL;
     return *row;
 }
 
 // --- src_func.FTarget..Init
 // Set all fields to initial values.
-inline void src_func::FTarget_Init(src_func::FTarget& target) {
-    target.cd_targsrc_head = NULL; // (src_func.FTarget.cd_targsrc)
-    target.cd_targsrc_n = 0; // (src_func.FTarget.cd_targsrc)
-    target.ind_target_next = (src_func::FTarget*)-1; // (src_func.FDb.ind_target) not-in-hash
-    target.ind_target_hashval = 0; // stored hash value
+inline void src_func::FTarget_Init(src_func::FTarget& parent) {
+    parent.cd_targsrc_head = NULL; // (src_func.FTarget.cd_targsrc)
+    parent.cd_targsrc_n = 0; // (src_func.FTarget.cd_targsrc)
+    parent.ind_target_next = (src_func::FTarget*)-1; // (src_func.FDb.ind_target) not-in-hash
+    parent.ind_target_hashval = 0; // stored hash value
 }
 
 // --- src_func.FTarget.cd_targsrc_curs.Reset
@@ -807,15 +807,15 @@ inline  src_func::FTarget::~FTarget() {
 
 // --- src_func.FTargsrc.zd_func.EmptyQ
 // Return true if index is empty
-inline bool src_func::zd_func_EmptyQ(src_func::FTargsrc& targsrc) {
-    return targsrc.zd_func_head == NULL;
+inline bool src_func::zd_func_EmptyQ(src_func::FTargsrc& parent) {
+    return parent.zd_func_head == NULL;
 }
 
 // --- src_func.FTargsrc.zd_func.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline src_func::FFunc* src_func::zd_func_First(src_func::FTargsrc& targsrc) {
+inline src_func::FFunc* src_func::zd_func_First(src_func::FTargsrc& parent) {
     src_func::FFunc *row = NULL;
-    row = targsrc.zd_func_head;
+    row = parent.zd_func_head;
     return row;
 }
 
@@ -829,16 +829,16 @@ inline bool src_func::targsrc_zd_func_InLlistQ(src_func::FFunc& row) {
 
 // --- src_func.FTargsrc.zd_func.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline src_func::FFunc* src_func::zd_func_Last(src_func::FTargsrc& targsrc) {
+inline src_func::FFunc* src_func::zd_func_Last(src_func::FTargsrc& parent) {
     src_func::FFunc *row = NULL;
-    row = targsrc.zd_func_tail;
+    row = parent.zd_func_tail;
     return row;
 }
 
 // --- src_func.FTargsrc.zd_func.N
 // Return number of items in the linked list
-inline i32 src_func::zd_func_N(const src_func::FTargsrc& targsrc) {
-    return targsrc.zd_func_n;
+inline i32 src_func::zd_func_N(const src_func::FTargsrc& parent) {
+    return parent.zd_func_n;
 }
 
 // --- src_func.FTargsrc.zd_func.Next
@@ -855,23 +855,23 @@ inline src_func::FFunc* src_func::targsrc_zd_func_Prev(src_func::FFunc &row) {
 
 // --- src_func.FTargsrc.zd_func.qLast
 // Return reference to last element in the index. No bounds checking.
-inline src_func::FFunc& src_func::zd_func_qLast(src_func::FTargsrc& targsrc) {
+inline src_func::FFunc& src_func::zd_func_qLast(src_func::FTargsrc& parent) {
     src_func::FFunc *row = NULL;
-    row = targsrc.zd_func_tail;
+    row = parent.zd_func_tail;
     return *row;
 }
 
 // --- src_func.FTargsrc..Init
 // Set all fields to initial values.
-inline void src_func::FTargsrc_Init(src_func::FTargsrc& targsrc) {
-    targsrc.zd_func_head = NULL; // (src_func.FTargsrc.zd_func)
-    targsrc.zd_func_n = 0; // (src_func.FTargsrc.zd_func)
-    targsrc.zd_func_tail = NULL; // (src_func.FTargsrc.zd_func)
-    targsrc.p_target = NULL;
-    targsrc.select = bool(false);
-    targsrc.counter = i32(0);
-    targsrc.target_cd_targsrc_next = (src_func::FTargsrc*)-1; // (src_func.FTarget.cd_targsrc) not-in-list
-    targsrc.target_cd_targsrc_prev = NULL; // (src_func.FTarget.cd_targsrc)
+inline void src_func::FTargsrc_Init(src_func::FTargsrc& parent) {
+    parent.zd_func_head = NULL; // (src_func.FTargsrc.zd_func)
+    parent.zd_func_n = 0; // (src_func.FTargsrc.zd_func)
+    parent.zd_func_tail = NULL; // (src_func.FTargsrc.zd_func)
+    parent.p_target = NULL;
+    parent.select = bool(false);
+    parent.counter = i32(0);
+    parent.target_cd_targsrc_next = (src_func::FTargsrc*)-1; // (src_func.FTarget.cd_targsrc) not-in-list
+    parent.target_cd_targsrc_prev = NULL; // (src_func.FTarget.cd_targsrc)
 }
 
 // --- src_func.FTargsrc.zd_func_curs.Reset
@@ -911,15 +911,15 @@ inline  src_func::FTargsrc::~FTargsrc() {
 
 // --- src_func.FUserfunc.zd_func.EmptyQ
 // Return true if index is empty
-inline bool src_func::zd_func_EmptyQ(src_func::FUserfunc& userfunc) {
-    return userfunc.zd_func_head == NULL;
+inline bool src_func::zd_func_EmptyQ(src_func::FUserfunc& parent) {
+    return parent.zd_func_head == NULL;
 }
 
 // --- src_func.FUserfunc.zd_func.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline src_func::FFunc* src_func::zd_func_First(src_func::FUserfunc& userfunc) {
+inline src_func::FFunc* src_func::zd_func_First(src_func::FUserfunc& parent) {
     src_func::FFunc *row = NULL;
-    row = userfunc.zd_func_head;
+    row = parent.zd_func_head;
     return row;
 }
 
@@ -933,16 +933,16 @@ inline bool src_func::userfunc_zd_func_InLlistQ(src_func::FFunc& row) {
 
 // --- src_func.FUserfunc.zd_func.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline src_func::FFunc* src_func::zd_func_Last(src_func::FUserfunc& userfunc) {
+inline src_func::FFunc* src_func::zd_func_Last(src_func::FUserfunc& parent) {
     src_func::FFunc *row = NULL;
-    row = userfunc.zd_func_tail;
+    row = parent.zd_func_tail;
     return row;
 }
 
 // --- src_func.FUserfunc.zd_func.N
 // Return number of items in the linked list
-inline i32 src_func::zd_func_N(const src_func::FUserfunc& userfunc) {
-    return userfunc.zd_func_n;
+inline i32 src_func::zd_func_N(const src_func::FUserfunc& parent) {
+    return parent.zd_func_n;
 }
 
 // --- src_func.FUserfunc.zd_func.Next
@@ -959,23 +959,23 @@ inline src_func::FFunc* src_func::userfunc_zd_func_Prev(src_func::FFunc &row) {
 
 // --- src_func.FUserfunc.zd_func.qLast
 // Return reference to last element in the index. No bounds checking.
-inline src_func::FFunc& src_func::zd_func_qLast(src_func::FUserfunc& userfunc) {
+inline src_func::FFunc& src_func::zd_func_qLast(src_func::FUserfunc& parent) {
     src_func::FFunc *row = NULL;
-    row = userfunc.zd_func_tail;
+    row = parent.zd_func_tail;
     return *row;
 }
 
 // --- src_func.FUserfunc..Init
 // Set all fields to initial values.
-inline void src_func::FUserfunc_Init(src_func::FUserfunc& userfunc) {
-    userfunc.zd_func_head = NULL; // (src_func.FUserfunc.zd_func)
-    userfunc.zd_func_n = 0; // (src_func.FUserfunc.zd_func)
-    userfunc.zd_func_tail = NULL; // (src_func.FUserfunc.zd_func)
-    userfunc.proto = algo::strptr("");
-    userfunc.ind_userfunc_next = (src_func::FUserfunc*)-1; // (src_func.FDb.ind_userfunc) not-in-hash
-    userfunc.ind_userfunc_hashval = 0; // stored hash value
-    userfunc.ind_userfunc_cppname_next = (src_func::FUserfunc*)-1; // (src_func.FDb.ind_userfunc_cppname) not-in-hash
-    userfunc.ind_userfunc_cppname_hashval = 0; // stored hash value
+inline void src_func::FUserfunc_Init(src_func::FUserfunc& parent) {
+    parent.zd_func_head = NULL; // (src_func.FUserfunc.zd_func)
+    parent.zd_func_n = 0; // (src_func.FUserfunc.zd_func)
+    parent.zd_func_tail = NULL; // (src_func.FUserfunc.zd_func)
+    parent.proto = algo::strptr("");
+    parent.ind_userfunc_next = (src_func::FUserfunc*)-1; // (src_func.FDb.ind_userfunc) not-in-hash
+    parent.ind_userfunc_hashval = 0; // stored hash value
+    parent.ind_userfunc_cppname_next = (src_func::FUserfunc*)-1; // (src_func.FDb.ind_userfunc_cppname) not-in-hash
+    parent.ind_userfunc_cppname_hashval = 0; // stored hash value
 }
 
 // --- src_func.FUserfunc.zd_func_curs.Reset

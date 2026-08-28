@@ -8,7 +8,7 @@ writes mask/shift through the host field
 into wire-format integers without duplicating the bit-twiddling
 boilerplate in every protocol.
 
-```
+```ssim
 dmmeta.field   field:algo.Errcode.errgrp  arg:i32  reftype:Bitfld  dflt:""  comment:""
   dmmeta.bitfld  field:algo.Errcode.errgrp  name:errgrp  offset:24  width:8  srcfield:algo.Errcode.value
 ```
@@ -119,7 +119,7 @@ before masking.
 
 Packing five flags into a single `u8`:
 
-```
+```ssim
 dmmeta.ctype  ctype:net.TcpFlags
   dmmeta.field    field:net.TcpFlags.bits  arg:u8  reftype:Val
 

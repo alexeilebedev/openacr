@@ -31,7 +31,6 @@ inline  lib_mysql::trace::trace() {
 
 // --- lib_mysql.FDb..Uninit
 inline void lib_mysql::FDb_Uninit() {
-    lib_mysql::FDb &row = _db; (void)row;
     mysql_Cleanup(); // dmmeta.ffunc:lib_mysql.FDb.mysql/Cleanup
 }
 
@@ -76,14 +75,13 @@ inline  lib_mysql::FieldId::FieldId(lib_mysql_FieldIdEnum arg) {
 
 // --- lib_mysql.Res..Init
 // Set all fields to initial values.
-inline void lib_mysql::Res_Init(lib_mysql::Res& res) {
-    res.res = NULL;
+inline void lib_mysql::Res_Init(lib_mysql::Res& parent) {
+    parent.res = NULL;
 }
 
 // --- lib_mysql.Res..Uninit
-inline void lib_mysql::Res_Uninit(lib_mysql::Res& res) {
-    lib_mysql::Res &row = res; (void)row;
-    res_Cleanup(res); // dmmeta.ffunc:lib_mysql.Res.res/Cleanup
+inline void lib_mysql::Res_Uninit(lib_mysql::Res& parent) {
+    res_Cleanup(parent); // dmmeta.ffunc:lib_mysql.Res.res/Cleanup
 }
 
 // --- lib_mysql.Res..Ctor

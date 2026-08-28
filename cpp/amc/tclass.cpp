@@ -17,7 +17,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/tclass.cpp -- Driver for tfuncs
 //
 
@@ -30,18 +30,18 @@ void amc::ResetVars(amc::Genctx &ctx) {
     amc::FNs &ns = *ctx.p_ns;
     amc::FCtype *parent = ctx.p_ctype;
     amc::FField *field = ctx.p_field;
-    ind_replvar_Cascdel(R);// clean out varsx
+    algo_lib::Reset(R);// clean out vars
     Set(R, "$ns", ns.ns);
 
     if (parent) {
-        tempstr parname = Refname(*parent);// _db or pool name, or the word 'parent'
+        tempstr parname = Refname(*parent);// _db for a global, otherwise the word 'parent'
         amc::FField *pool=FirstInst(*parent);
         bool glob = GlobalQ(*parent);
 
         Set(R, "$Partype"  , parent->cpp_type); // parent's c++ type, e.g. abt::FTarget
         Set(R, "$Name"     , name_Get(*parent)); // name without namespace, e.g. FTarget
         Set(R, "$Parname"  , (pool ? strptr(name_Get(*pool)) : strptr(name_Get(*parent)))); // target or FTarget
-        Set(R, "$parname"  , parname); // target
+        Set(R, "$parname"  , parname); // parent, or _db
         Set(R, "$pararg"   , glob ? strptr("") : parname); // target, or empty string -- parent's name when passed as argument to function
         Set(R, "$Parent"   , glob ? strptr("") : strptr("$Partype& $parname")); // abt::FTarget& target
         Set(R, "$Cparent"  , glob ? strptr("") : "const $Parent");
@@ -49,7 +49,7 @@ void amc::ResetVars(amc::Genctx &ctx) {
         if (field) {
             Set(R, "$field"    , field->field);
             Set(R, "$name"     , name_Get(*field));
-            Set(R, "$xfname"   , glob ? "$name" : "$parname_$name");// prefix for fields added to child record - must include parent name for disambiguation
+            Set(R, "$xfname"   , glob ? tempstr("$name") : tempstr()<<Instname(*parent)<<"_$name");// name of a field added to the child record -- carries the parent ctype's name so two parents do not collide
             Set(R, "$Cpptype"  , field->p_arg->cpp_type);
             Set(R, "$Ctype"    , name_Get(*field->p_arg));
             if (field->p_reftype->usebasepool) {
@@ -151,6 +151,28 @@ amc::FField *amc::GetBasepool(amc::FField &field) {
         }
     }
     return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// TRUE when FIELD is a pool that marks each block it hands out, so a memory
+// checker accounts for the blocks one at a time instead of for the pool's whole
+// address space.
+//
+// Only a pool that carves may mark, and each block may be marked by exactly one
+// pool.  Consider an Lpool that refills from another Lpool: the outer pool marks
+// the 2MB block it lends, the inner pool marks the records it cuts from that
+// block, and the checker now holds two blocks that overlap.  Memcheck refuses
+// the overlap and aborts the run when its leak search finds the pair.  So a pool
+// whose base pool appears here unmarks the block it receives before carving it,
+// and the record marks that follow are the only ones left.
+//
+// Malloc and Sbrk are absent for opposite reasons.  Every block malloc returns
+// is one the checker already knows, and it drops such a block from the leak
+// search by itself once marked blocks appear inside it.  Sbrk hands out
+// mappings, which the checker never accounted for in the first place.
+bool amc::MemcheckedPoolQ(amc::FField &field) {
+    return field.reftype == dmmeta_Reftype_reftype_Lpool || field.reftype == dmmeta_Reftype_reftype_Tpool;
 }
 
 // -----------------------------------------------------------------------------

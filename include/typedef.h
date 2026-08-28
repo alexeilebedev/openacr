@@ -58,6 +58,10 @@ typedef void               *thread_ret_t;
 
 #if defined(__MACH__)
 typedef u64 off64_t;
+// Supplied by cpp/lib/algo/macos.cpp, which is the whole of the macOS
+// adaptation layer.  Darwin's libc stops at pipe, so a caller asking for
+// O_CLOEXEC on both ends needs this declaration to reach that definition.
+int pipe2(int fd[2], int flags);
 #endif
 
 namespace algo_lib {

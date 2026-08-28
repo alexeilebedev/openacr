@@ -894,7 +894,6 @@ inline void          Frame_curs_Next(kafka::Frame_curs& curs) __attribute__((not
 inline void          Frame_curs_Init(kafka::Frame_curs& parent);
 
 // --- kafka.GroupRecordKeyHeader
-// access: kafka.OffsetCommitKey.base (Base)
 struct GroupRecordKeyHeader { // kafka.GroupRecordKeyHeader
     i16   type;      //   0
     i16   version;   //   0
@@ -979,7 +978,6 @@ bool                 GroupRecordKeyHeaderMsgsCase_ReadStrptrMaybe(kafka::GroupRe
 inline void          GroupRecordKeyHeaderMsgsCase_Init(kafka::GroupRecordKeyHeaderMsgsCase& parent);
 
 // --- kafka.GroupRecordValueHeader
-// access: kafka.OffsetCommitValue.base (Base)
 struct GroupRecordValueHeader { // kafka.GroupRecordValueHeader
     i16   type;      //   0
     i16   version;   //   0
@@ -1158,7 +1156,7 @@ struct OffsetCommitKey { // kafka.OffsetCommitKey
 };
 // Copy fields out of row
 // func:kafka.OffsetCommitKey.base.CopyOut
-void                 parent_CopyOut(kafka::OffsetCommitKey &row, kafka::GroupRecordKeyHeader &out) __attribute__((nothrow));
+void                 offset_commit_key_CopyOut(kafka::OffsetCommitKey &row, kafka::GroupRecordKeyHeader &out) __attribute__((nothrow));
 // Check if kafka::GroupRecordKeyHeader is an instance of OffsetCommitKey by checking the type field
 // If it is, return the pointer of target type.
 // If not successful, quietly return NULL.
@@ -1195,7 +1193,7 @@ struct OffsetCommitValue { // kafka.OffsetCommitValue
 };
 // Copy fields out of row
 // func:kafka.OffsetCommitValue.base.CopyOut
-void                 parent_CopyOut(kafka::OffsetCommitValue &row, kafka::GroupRecordValueHeader &out) __attribute__((nothrow));
+void                 offset_commit_value_CopyOut(kafka::OffsetCommitValue &row, kafka::GroupRecordValueHeader &out) __attribute__((nothrow));
 // Check if kafka::GroupRecordValueHeader is an instance of OffsetCommitValue by checking the type field
 // If it is, return the pointer of target type.
 // If not successful, quietly return NULL.

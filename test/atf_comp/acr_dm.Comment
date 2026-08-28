@@ -1,0 +1,10 @@
+# start acr_dm cmd:"$bindir/acr_dm test/acr_dm/comment1.ssim test/acr_dm/comment2.ssim test/acr_dm/comment3.ssim"
+# eof acr_dm
+acr_dm -> # SHA1 = AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+acr_dm -> dev.gitfile  gitfile:cpp/one.cpp
+acr_dm -> # SHA1 = DDDDDDDDDDDDDDDDDDDDDDDDDDDD
+acr_dm -> dev.gitfile  gitfile:cpp/new.cpp
+acr_dm -> # SHA1 = CCCCCCCCCCCCCCCCCCCCCCCCCCCC
+acr_dm -> dev.gitfile  gitfile:cpp/two.cpp
+acr_dm -> # end of manifest
+# exit acr_dm code:0

@@ -161,10 +161,10 @@ inline  acr_compl::FArgvtype::~FArgvtype() {
 
 // --- acr_compl.FCcmdline..Init
 // Set all fields to initial values.
-inline void acr_compl::FCcmdline_Init(acr_compl::FCcmdline& ccmdline) {
-    ccmdline.read = bool(true);
-    ccmdline.p_ctype = NULL;
-    ccmdline.p_basecmdline = NULL;
+inline void acr_compl::FCcmdline_Init(acr_compl::FCcmdline& parent) {
+    parent.read = bool(true);
+    parent.p_ctype = NULL;
+    parent.p_basecmdline = NULL;
 }
 
 // --- acr_compl.FCcmdline..Ctor
@@ -174,11 +174,11 @@ inline  acr_compl::FCcmdline::FCcmdline() {
 
 // --- acr_compl.FCmd..Init
 // Set all fields to initial values.
-inline void acr_compl::FCmd_Init(acr_compl::FCmd& cmd) {
-    cmd.p_ctype = NULL;
-    cmd.p_basectype = NULL;
-    cmd.ind_cmd_next = (acr_compl::FCmd*)-1; // (acr_compl.FDb.ind_cmd) not-in-hash
-    cmd.ind_cmd_hashval = 0; // stored hash value
+inline void acr_compl::FCmd_Init(acr_compl::FCmd& parent) {
+    parent.p_ctype = NULL;
+    parent.p_basectype = NULL;
+    parent.ind_cmd_next = (acr_compl::FCmd*)-1; // (acr_compl.FDb.ind_cmd) not-in-hash
+    parent.ind_cmd_hashval = 0; // stored hash value
 }
 
 // --- acr_compl.FCmd..Ctor
@@ -193,24 +193,24 @@ inline  acr_compl::FCmd::~FCmd() {
 
 // --- acr_compl.FCompletion.badness.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool acr_compl::badness_Lt(acr_compl::FCompletion& completion, acr_compl::FCompletion &rhs) {
-    return acr_compl::Badness_Lt(completion.badness,rhs.badness);
+inline bool acr_compl::badness_Lt(acr_compl::FCompletion& parent, acr_compl::FCompletion &rhs) {
+    return acr_compl::Badness_Lt(parent.badness,rhs.badness);
 }
 
 // --- acr_compl.FCompletion.badness.Cmp
 // Compare two fields.
-inline i32 acr_compl::badness_Cmp(acr_compl::FCompletion& completion, acr_compl::FCompletion &rhs) {
+inline i32 acr_compl::badness_Cmp(acr_compl::FCompletion& parent, acr_compl::FCompletion &rhs) {
     i32 retval = 0;
-    retval = acr_compl::Badness_Cmp(completion.badness, rhs.badness);
+    retval = acr_compl::Badness_Cmp(parent.badness, rhs.badness);
     return retval;
 }
 
 // --- acr_compl.FCompletion..Init
 // Set all fields to initial values.
-inline void acr_compl::FCompletion_Init(acr_compl::FCompletion& completion) {
-    completion.nospace = bool(false);
-    completion.field = NULL;
-    completion.bh_completion_idx = -1; // (acr_compl.FDb.bh_completion) not-in-heap
+inline void acr_compl::FCompletion_Init(acr_compl::FCompletion& parent) {
+    parent.nospace = bool(false);
+    parent.field = NULL;
+    parent.bh_completion_idx = -1; // (acr_compl.FDb.bh_completion) not-in-heap
 }
 
 // --- acr_compl.FCompletion..Ctor
@@ -229,48 +229,48 @@ inline  acr_compl::FComplsource::FComplsource() {
 
 // --- acr_compl.FCtype.c_field.EmptyQ
 // Return true if index is empty
-inline bool acr_compl::c_field_EmptyQ(acr_compl::FCtype& ctype) {
-    return ctype.c_field_n == 0;
+inline bool acr_compl::c_field_EmptyQ(acr_compl::FCtype& parent) {
+    return parent.c_field_n == 0;
 }
 
 // --- acr_compl.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_compl::FField* acr_compl::c_field_Find(acr_compl::FCtype& ctype, u64 t) {
+inline acr_compl::FField* acr_compl::c_field_Find(acr_compl::FCtype& parent, u64 t) {
     acr_compl::FField *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_field_n;
+    u64 lim = parent.c_field_n;
     if (idx < lim) {
-        retval = ctype.c_field_elems[idx];
+        retval = parent.c_field_elems[idx];
     }
     return retval;
 }
 
 // --- acr_compl.FCtype.c_field.Getary
 // Return array of pointers
-inline algo::aryptr<acr_compl::FField*> acr_compl::c_field_Getary(acr_compl::FCtype& ctype) {
-    return algo::aryptr<acr_compl::FField*>(ctype.c_field_elems, ctype.c_field_n);
+inline algo::aryptr<acr_compl::FField*> acr_compl::c_field_Getary(acr_compl::FCtype& parent) {
+    return algo::aryptr<acr_compl::FField*>(parent.c_field_elems, parent.c_field_n);
 }
 
 // --- acr_compl.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i64 acr_compl::c_field_N(const acr_compl::FCtype& ctype) {
-    return ctype.c_field_n;
+inline i64 acr_compl::c_field_N(const acr_compl::FCtype& parent) {
+    return parent.c_field_n;
 }
 
 // --- acr_compl.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void acr_compl::c_field_RemoveAll(acr_compl::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_field_n; i++) {
+inline void acr_compl::c_field_RemoveAll(acr_compl::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_field_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
+        parent.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
-    ctype.c_field_n = 0;
+    parent.c_field_n = 0;
 }
 
 // --- acr_compl.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline acr_compl::FField& acr_compl::c_field_qFind(acr_compl::FCtype& ctype, u64 idx) {
-    return *ctype.c_field_elems[idx];
+inline acr_compl::FField& acr_compl::c_field_qFind(acr_compl::FCtype& parent, u64 idx) {
+    return *parent.c_field_elems[idx];
 }
 
 // --- acr_compl.FCtype.c_field.InAryQ
@@ -281,94 +281,94 @@ inline bool acr_compl::ctype_c_field_InAryQ(acr_compl::FField& row) {
 
 // --- acr_compl.FCtype.c_field.qLast
 // Reference to last element without bounds checking
-inline acr_compl::FField& acr_compl::c_field_qLast(acr_compl::FCtype& ctype) {
-    return *ctype.c_field_elems[ctype.c_field_n-1];
+inline acr_compl::FField& acr_compl::c_field_qLast(acr_compl::FCtype& parent) {
+    return *parent.c_field_elems[parent.c_field_n-1];
 }
 
 // --- acr_compl.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_compl::c_ssimfile_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FSsimfile& row) {
-    acr_compl::FSsimfile* ptr = ctype.c_ssimfile;
+inline bool acr_compl::c_ssimfile_InsertMaybe(acr_compl::FCtype& parent, acr_compl::FSsimfile& row) {
+    acr_compl::FSsimfile* ptr = parent.c_ssimfile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_ssimfile = &row;
+        parent.c_ssimfile = &row;
     }
     return retval;
 }
 
 // --- acr_compl.FCtype.c_ssimfile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_compl::c_ssimfile_Remove(acr_compl::FCtype& ctype, acr_compl::FSsimfile& row) {
-    acr_compl::FSsimfile *ptr = ctype.c_ssimfile;
+inline void acr_compl::c_ssimfile_Remove(acr_compl::FCtype& parent, acr_compl::FSsimfile& row) {
+    acr_compl::FSsimfile *ptr = parent.c_ssimfile;
     if (LIKELY(ptr == &row)) {
-        ctype.c_ssimfile = NULL;
+        parent.c_ssimfile = NULL;
     }
 }
 
 // --- acr_compl.FCtype.c_argvtype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_compl::c_argvtype_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FArgvtype& row) {
-    acr_compl::FArgvtype* ptr = ctype.c_argvtype;
+inline bool acr_compl::c_argvtype_InsertMaybe(acr_compl::FCtype& parent, acr_compl::FArgvtype& row) {
+    acr_compl::FArgvtype* ptr = parent.c_argvtype;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_argvtype = &row;
+        parent.c_argvtype = &row;
     }
     return retval;
 }
 
 // --- acr_compl.FCtype.c_argvtype.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_compl::c_argvtype_Remove(acr_compl::FCtype& ctype, acr_compl::FArgvtype& row) {
-    acr_compl::FArgvtype *ptr = ctype.c_argvtype;
+inline void acr_compl::c_argvtype_Remove(acr_compl::FCtype& parent, acr_compl::FArgvtype& row) {
+    acr_compl::FArgvtype *ptr = parent.c_argvtype;
     if (LIKELY(ptr == &row)) {
-        ctype.c_argvtype = NULL;
+        parent.c_argvtype = NULL;
     }
 }
 
 // --- acr_compl.FCtype.c_floadtuples.EmptyQ
 // Return true if index is empty
-inline bool acr_compl::c_floadtuples_EmptyQ(acr_compl::FCtype& ctype) {
-    return ctype.c_floadtuples_n == 0;
+inline bool acr_compl::c_floadtuples_EmptyQ(acr_compl::FCtype& parent) {
+    return parent.c_floadtuples_n == 0;
 }
 
 // --- acr_compl.FCtype.c_floadtuples.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_compl::FFloadtuples* acr_compl::c_floadtuples_Find(acr_compl::FCtype& ctype, u64 t) {
+inline acr_compl::FFloadtuples* acr_compl::c_floadtuples_Find(acr_compl::FCtype& parent, u64 t) {
     acr_compl::FFloadtuples *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_floadtuples_n;
+    u64 lim = parent.c_floadtuples_n;
     if (idx < lim) {
-        retval = ctype.c_floadtuples_elems[idx];
+        retval = parent.c_floadtuples_elems[idx];
     }
     return retval;
 }
 
 // --- acr_compl.FCtype.c_floadtuples.Getary
 // Return array of pointers
-inline algo::aryptr<acr_compl::FFloadtuples*> acr_compl::c_floadtuples_Getary(acr_compl::FCtype& ctype) {
-    return algo::aryptr<acr_compl::FFloadtuples*>(ctype.c_floadtuples_elems, ctype.c_floadtuples_n);
+inline algo::aryptr<acr_compl::FFloadtuples*> acr_compl::c_floadtuples_Getary(acr_compl::FCtype& parent) {
+    return algo::aryptr<acr_compl::FFloadtuples*>(parent.c_floadtuples_elems, parent.c_floadtuples_n);
 }
 
 // --- acr_compl.FCtype.c_floadtuples.N
 // Return number of items in the pointer array
-inline i64 acr_compl::c_floadtuples_N(const acr_compl::FCtype& ctype) {
-    return ctype.c_floadtuples_n;
+inline i64 acr_compl::c_floadtuples_N(const acr_compl::FCtype& parent) {
+    return parent.c_floadtuples_n;
 }
 
 // --- acr_compl.FCtype.c_floadtuples.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void acr_compl::c_floadtuples_RemoveAll(acr_compl::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_floadtuples_n; i++) {
+inline void acr_compl::c_floadtuples_RemoveAll(acr_compl::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_floadtuples_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_floadtuples_elems[i]->ctype_c_floadtuples_in_ary = false;
+        parent.c_floadtuples_elems[i]->ctype_c_floadtuples_in_ary = false;
     }
-    ctype.c_floadtuples_n = 0;
+    parent.c_floadtuples_n = 0;
 }
 
 // --- acr_compl.FCtype.c_floadtuples.qFind
 // Return reference without bounds checking
-inline acr_compl::FFloadtuples& acr_compl::c_floadtuples_qFind(acr_compl::FCtype& ctype, u64 idx) {
-    return *ctype.c_floadtuples_elems[idx];
+inline acr_compl::FFloadtuples& acr_compl::c_floadtuples_qFind(acr_compl::FCtype& parent, u64 idx) {
+    return *parent.c_floadtuples_elems[idx];
 }
 
 // --- acr_compl.FCtype.c_floadtuples.InAryQ
@@ -379,8 +379,8 @@ inline bool acr_compl::ctype_c_floadtuples_InAryQ(acr_compl::FFloadtuples& row) 
 
 // --- acr_compl.FCtype.c_floadtuples.qLast
 // Reference to last element without bounds checking
-inline acr_compl::FFloadtuples& acr_compl::c_floadtuples_qLast(acr_compl::FCtype& ctype) {
-    return *ctype.c_floadtuples_elems[ctype.c_floadtuples_n-1];
+inline acr_compl::FFloadtuples& acr_compl::c_floadtuples_qLast(acr_compl::FCtype& parent) {
+    return *parent.c_floadtuples_elems[parent.c_floadtuples_n-1];
 }
 
 // --- acr_compl.FCtype.c_field_curs.Reset
@@ -435,17 +435,17 @@ inline acr_compl::FFloadtuples& acr_compl::ctype_c_floadtuples_curs_Access(ctype
 
 // --- acr_compl.FCtype..Init
 // Set all fields to initial values.
-inline void acr_compl::FCtype_Init(acr_compl::FCtype& ctype) {
-    ctype.c_field_elems = NULL; // (acr_compl.FCtype.c_field)
-    ctype.c_field_n = 0; // (acr_compl.FCtype.c_field)
-    ctype.c_field_max = 0; // (acr_compl.FCtype.c_field)
-    ctype.c_ssimfile = NULL;
-    ctype.c_argvtype = NULL;
-    ctype.c_floadtuples_elems = NULL; // (acr_compl.FCtype.c_floadtuples)
-    ctype.c_floadtuples_n = 0; // (acr_compl.FCtype.c_floadtuples)
-    ctype.c_floadtuples_max = 0; // (acr_compl.FCtype.c_floadtuples)
-    ctype.ind_ctype_next = (acr_compl::FCtype*)-1; // (acr_compl.FDb.ind_ctype) not-in-hash
-    ctype.ind_ctype_hashval = 0; // stored hash value
+inline void acr_compl::FCtype_Init(acr_compl::FCtype& parent) {
+    parent.c_field_elems = NULL; // (acr_compl.FCtype.c_field)
+    parent.c_field_n = 0; // (acr_compl.FCtype.c_field)
+    parent.c_field_max = 0; // (acr_compl.FCtype.c_field)
+    parent.c_ssimfile = NULL;
+    parent.c_argvtype = NULL;
+    parent.c_floadtuples_elems = NULL; // (acr_compl.FCtype.c_floadtuples)
+    parent.c_floadtuples_n = 0; // (acr_compl.FCtype.c_floadtuples)
+    parent.c_floadtuples_max = 0; // (acr_compl.FCtype.c_floadtuples)
+    parent.ind_ctype_next = (acr_compl::FCtype*)-1; // (acr_compl.FDb.ind_ctype) not-in-hash
+    parent.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- acr_compl.FCtype..Ctor
@@ -1768,9 +1768,9 @@ inline acr_compl::FFloadtuples& acr_compl::_db_floadtuples_curs_Access(_db_fload
 
 // --- acr_compl.FFalias..Init
 // Set all fields to initial values.
-inline void acr_compl::FFalias_Init(acr_compl::FFalias& falias) {
-    falias.p_srcfield = NULL;
-    falias.p_field = NULL;
+inline void acr_compl::FFalias_Init(acr_compl::FFalias& parent) {
+    parent.p_srcfield = NULL;
+    parent.p_field = NULL;
 }
 
 // --- acr_compl.FFalias..Ctor
@@ -1785,8 +1785,8 @@ inline  acr_compl::FFalias::~FFalias() {
 
 // --- acr_compl.FFconst..Init
 // Set all fields to initial values.
-inline void acr_compl::FFconst_Init(acr_compl::FFconst& fconst) {
-    fconst.field_c_fconst_in_ary = bool(false);
+inline void acr_compl::FFconst_Init(acr_compl::FFconst& parent) {
+    parent.field_c_fconst_in_ary = bool(false);
 }
 
 // --- acr_compl.FFconst..Ctor
@@ -1801,9 +1801,9 @@ inline  acr_compl::FFconst::~FFconst() {
 
 // --- acr_compl.FFflag..Init
 // Set all fields to initial values.
-inline void acr_compl::FFflag_Init(acr_compl::FFflag& fflag) {
-    fflag.cumulative = bool(false);
-    fflag.emptyval = algo::strptr("");
+inline void acr_compl::FFflag_Init(acr_compl::FFflag& parent) {
+    parent.cumulative = bool(false);
+    parent.emptyval = algo::strptr("");
 }
 
 // --- acr_compl.FFflag..Ctor
@@ -1818,68 +1818,68 @@ inline  acr_compl::FFflag::~FFflag() {
 
 // --- acr_compl.FField.c_anonfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_compl::c_anonfld_InsertMaybe(acr_compl::FField& field, acr_compl::FAnonfld& row) {
-    acr_compl::FAnonfld* ptr = field.c_anonfld;
+inline bool acr_compl::c_anonfld_InsertMaybe(acr_compl::FField& parent, acr_compl::FAnonfld& row) {
+    acr_compl::FAnonfld* ptr = parent.c_anonfld;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_anonfld = &row;
+        parent.c_anonfld = &row;
     }
     return retval;
 }
 
 // --- acr_compl.FField.c_anonfld.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_compl::c_anonfld_Remove(acr_compl::FField& field, acr_compl::FAnonfld& row) {
-    acr_compl::FAnonfld *ptr = field.c_anonfld;
+inline void acr_compl::c_anonfld_Remove(acr_compl::FField& parent, acr_compl::FAnonfld& row) {
+    acr_compl::FAnonfld *ptr = parent.c_anonfld;
     if (LIKELY(ptr == &row)) {
-        field.c_anonfld = NULL;
+        parent.c_anonfld = NULL;
     }
 }
 
 // --- acr_compl.FField.c_fconst.EmptyQ
 // Return true if index is empty
-inline bool acr_compl::c_fconst_EmptyQ(acr_compl::FField& field) {
-    return field.c_fconst_n == 0;
+inline bool acr_compl::c_fconst_EmptyQ(acr_compl::FField& parent) {
+    return parent.c_fconst_n == 0;
 }
 
 // --- acr_compl.FField.c_fconst.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_compl::FFconst* acr_compl::c_fconst_Find(acr_compl::FField& field, u64 t) {
+inline acr_compl::FFconst* acr_compl::c_fconst_Find(acr_compl::FField& parent, u64 t) {
     acr_compl::FFconst *retval = NULL;
     u64 idx = t;
-    u64 lim = field.c_fconst_n;
+    u64 lim = parent.c_fconst_n;
     if (idx < lim) {
-        retval = field.c_fconst_elems[idx];
+        retval = parent.c_fconst_elems[idx];
     }
     return retval;
 }
 
 // --- acr_compl.FField.c_fconst.Getary
 // Return array of pointers
-inline algo::aryptr<acr_compl::FFconst*> acr_compl::c_fconst_Getary(acr_compl::FField& field) {
-    return algo::aryptr<acr_compl::FFconst*>(field.c_fconst_elems, field.c_fconst_n);
+inline algo::aryptr<acr_compl::FFconst*> acr_compl::c_fconst_Getary(acr_compl::FField& parent) {
+    return algo::aryptr<acr_compl::FFconst*>(parent.c_fconst_elems, parent.c_fconst_n);
 }
 
 // --- acr_compl.FField.c_fconst.N
 // Return number of items in the pointer array
-inline i64 acr_compl::c_fconst_N(const acr_compl::FField& field) {
-    return field.c_fconst_n;
+inline i64 acr_compl::c_fconst_N(const acr_compl::FField& parent) {
+    return parent.c_fconst_n;
 }
 
 // --- acr_compl.FField.c_fconst.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void acr_compl::c_fconst_RemoveAll(acr_compl::FField& field) {
-    for (u64 i = 0; i < field.c_fconst_n; i++) {
+inline void acr_compl::c_fconst_RemoveAll(acr_compl::FField& parent) {
+    for (u64 i = 0; i < parent.c_fconst_n; i++) {
         // mark all elements as not-in-array
-        field.c_fconst_elems[i]->field_c_fconst_in_ary = false;
+        parent.c_fconst_elems[i]->field_c_fconst_in_ary = false;
     }
-    field.c_fconst_n = 0;
+    parent.c_fconst_n = 0;
 }
 
 // --- acr_compl.FField.c_fconst.qFind
 // Return reference without bounds checking
-inline acr_compl::FFconst& acr_compl::c_fconst_qFind(acr_compl::FField& field, u64 idx) {
-    return *field.c_fconst_elems[idx];
+inline acr_compl::FFconst& acr_compl::c_fconst_qFind(acr_compl::FField& parent, u64 idx) {
+    return *parent.c_fconst_elems[idx];
 }
 
 // --- acr_compl.FField.c_fconst.InAryQ
@@ -1890,96 +1890,96 @@ inline bool acr_compl::field_c_fconst_InAryQ(acr_compl::FFconst& row) {
 
 // --- acr_compl.FField.c_fconst.qLast
 // Reference to last element without bounds checking
-inline acr_compl::FFconst& acr_compl::c_fconst_qLast(acr_compl::FField& field) {
-    return *field.c_fconst_elems[field.c_fconst_n-1];
+inline acr_compl::FFconst& acr_compl::c_fconst_qLast(acr_compl::FField& parent) {
+    return *parent.c_fconst_elems[parent.c_fconst_n-1];
 }
 
 // --- acr_compl.FField.c_fflag.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_compl::c_fflag_InsertMaybe(acr_compl::FField& field, acr_compl::FFflag& row) {
-    acr_compl::FFflag* ptr = field.c_fflag;
+inline bool acr_compl::c_fflag_InsertMaybe(acr_compl::FField& parent, acr_compl::FFflag& row) {
+    acr_compl::FFflag* ptr = parent.c_fflag;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_fflag = &row;
+        parent.c_fflag = &row;
     }
     return retval;
 }
 
 // --- acr_compl.FField.c_fflag.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_compl::c_fflag_Remove(acr_compl::FField& field, acr_compl::FFflag& row) {
-    acr_compl::FFflag *ptr = field.c_fflag;
+inline void acr_compl::c_fflag_Remove(acr_compl::FField& parent, acr_compl::FFflag& row) {
+    acr_compl::FFflag *ptr = parent.c_fflag;
     if (LIKELY(ptr == &row)) {
-        field.c_fflag = NULL;
+        parent.c_fflag = NULL;
     }
 }
 
 // --- acr_compl.FField.c_falias.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool acr_compl::c_falias_InsertMaybe(acr_compl::FField& field, acr_compl::FFalias& row) {
-    acr_compl::FFalias* ptr = field.c_falias;
+inline bool acr_compl::c_falias_InsertMaybe(acr_compl::FField& parent, acr_compl::FFalias& row) {
+    acr_compl::FFalias* ptr = parent.c_falias;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_falias = &row;
+        parent.c_falias = &row;
     }
     return retval;
 }
 
 // --- acr_compl.FField.c_falias.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void acr_compl::c_falias_Remove(acr_compl::FField& field, acr_compl::FFalias& row) {
-    acr_compl::FFalias *ptr = field.c_falias;
+inline void acr_compl::c_falias_Remove(acr_compl::FField& parent, acr_compl::FFalias& row) {
+    acr_compl::FFalias *ptr = parent.c_falias;
     if (LIKELY(ptr == &row)) {
-        field.c_falias = NULL;
+        parent.c_falias = NULL;
     }
 }
 
 // --- acr_compl.FField.c_falias_srcfield.EmptyQ
 // Return true if index is empty
-inline bool acr_compl::c_falias_srcfield_EmptyQ(acr_compl::FField& field) {
-    return field.c_falias_srcfield_n == 0;
+inline bool acr_compl::c_falias_srcfield_EmptyQ(acr_compl::FField& parent) {
+    return parent.c_falias_srcfield_n == 0;
 }
 
 // --- acr_compl.FField.c_falias_srcfield.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_compl::FFalias* acr_compl::c_falias_srcfield_Find(acr_compl::FField& field, u64 t) {
+inline acr_compl::FFalias* acr_compl::c_falias_srcfield_Find(acr_compl::FField& parent, u64 t) {
     acr_compl::FFalias *retval = NULL;
     u64 idx = t;
-    u64 lim = field.c_falias_srcfield_n;
+    u64 lim = parent.c_falias_srcfield_n;
     if (idx < lim) {
-        retval = field.c_falias_srcfield_elems[idx];
+        retval = parent.c_falias_srcfield_elems[idx];
     }
     return retval;
 }
 
 // --- acr_compl.FField.c_falias_srcfield.Getary
 // Return array of pointers
-inline algo::aryptr<acr_compl::FFalias*> acr_compl::c_falias_srcfield_Getary(acr_compl::FField& field) {
-    return algo::aryptr<acr_compl::FFalias*>(field.c_falias_srcfield_elems, field.c_falias_srcfield_n);
+inline algo::aryptr<acr_compl::FFalias*> acr_compl::c_falias_srcfield_Getary(acr_compl::FField& parent) {
+    return algo::aryptr<acr_compl::FFalias*>(parent.c_falias_srcfield_elems, parent.c_falias_srcfield_n);
 }
 
 // --- acr_compl.FField.c_falias_srcfield.N
 // Return number of items in the pointer array
-inline i64 acr_compl::c_falias_srcfield_N(const acr_compl::FField& field) {
-    return field.c_falias_srcfield_n;
+inline i64 acr_compl::c_falias_srcfield_N(const acr_compl::FField& parent) {
+    return parent.c_falias_srcfield_n;
 }
 
 // --- acr_compl.FField.c_falias_srcfield.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void acr_compl::c_falias_srcfield_RemoveAll(acr_compl::FField& field) {
-    field.c_falias_srcfield_n = 0;
+inline void acr_compl::c_falias_srcfield_RemoveAll(acr_compl::FField& parent) {
+    parent.c_falias_srcfield_n = 0;
 }
 
 // --- acr_compl.FField.c_falias_srcfield.qFind
 // Return reference without bounds checking
-inline acr_compl::FFalias& acr_compl::c_falias_srcfield_qFind(acr_compl::FField& field, u64 idx) {
-    return *field.c_falias_srcfield_elems[idx];
+inline acr_compl::FFalias& acr_compl::c_falias_srcfield_qFind(acr_compl::FField& parent, u64 idx) {
+    return *parent.c_falias_srcfield_elems[idx];
 }
 
 // --- acr_compl.FField.c_falias_srcfield.qLast
 // Reference to last element without bounds checking
-inline acr_compl::FFalias& acr_compl::c_falias_srcfield_qLast(acr_compl::FField& field) {
-    return *field.c_falias_srcfield_elems[field.c_falias_srcfield_n-1];
+inline acr_compl::FFalias& acr_compl::c_falias_srcfield_qLast(acr_compl::FField& parent) {
+    return *parent.c_falias_srcfield_elems[parent.c_falias_srcfield_n-1];
 }
 
 // --- acr_compl.FField.c_fconst_curs.Reset
@@ -2044,9 +2044,9 @@ inline  acr_compl::FField::~FField() {
 
 // --- acr_compl.FFinsertwhen..Init
 // Set all fields to initial values.
-inline void acr_compl::FFinsertwhen_Init(acr_compl::FFinsertwhen& finsertwhen) {
-    finsertwhen.ind_finsertwhen_next = (acr_compl::FFinsertwhen*)-1; // (acr_compl.FDb.ind_finsertwhen) not-in-hash
-    finsertwhen.ind_finsertwhen_hashval = 0; // stored hash value
+inline void acr_compl::FFinsertwhen_Init(acr_compl::FFinsertwhen& parent) {
+    parent.ind_finsertwhen_next = (acr_compl::FFinsertwhen*)-1; // (acr_compl.FDb.ind_finsertwhen) not-in-hash
+    parent.ind_finsertwhen_hashval = 0; // stored hash value
 }
 
 // --- acr_compl.FFinsertwhen..Ctor
@@ -2061,13 +2061,13 @@ inline  acr_compl::FFinsertwhen::~FFinsertwhen() {
 
 // --- acr_compl.FFloadtuples..Init
 // Set all fields to initial values.
-inline void acr_compl::FFloadtuples_Init(acr_compl::FFloadtuples& floadtuples) {
-    floadtuples.autoscan = bool(true);
-    floadtuples.optional = bool(false);
-    floadtuples.p_field = NULL;
-    floadtuples.ctype_c_floadtuples_in_ary = bool(false);
-    floadtuples.ind_floadtuples_next = (acr_compl::FFloadtuples*)-1; // (acr_compl.FDb.ind_floadtuples) not-in-hash
-    floadtuples.ind_floadtuples_hashval = 0; // stored hash value
+inline void acr_compl::FFloadtuples_Init(acr_compl::FFloadtuples& parent) {
+    parent.autoscan = bool(true);
+    parent.optional = bool(false);
+    parent.p_field = NULL;
+    parent.ctype_c_floadtuples_in_ary = bool(false);
+    parent.ind_floadtuples_next = (acr_compl::FFloadtuples*)-1; // (acr_compl.FDb.ind_floadtuples) not-in-hash
+    parent.ind_floadtuples_hashval = 0; // stored hash value
 }
 
 // --- acr_compl.FFloadtuples..Ctor
@@ -2082,10 +2082,10 @@ inline  acr_compl::FFloadtuples::~FFloadtuples() {
 
 // --- acr_compl.FSsimfile..Init
 // Set all fields to initial values.
-inline void acr_compl::FSsimfile_Init(acr_compl::FSsimfile& ssimfile) {
-    ssimfile.p_ctype = NULL;
-    ssimfile.ind_ssimfile_next = (acr_compl::FSsimfile*)-1; // (acr_compl.FDb.ind_ssimfile) not-in-hash
-    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
+inline void acr_compl::FSsimfile_Init(acr_compl::FSsimfile& parent) {
+    parent.p_ctype = NULL;
+    parent.ind_ssimfile_next = (acr_compl::FSsimfile*)-1; // (acr_compl.FDb.ind_ssimfile) not-in-hash
+    parent.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- acr_compl.FSsimfile..Ctor

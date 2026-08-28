@@ -10,7 +10,7 @@ construction.  Every amc-generated executable gets a
 program can drive another binary as a child with two lines of
 C++.
 
-```
+```ssim
 dmmeta.field  field:acr_ed.FDb.abt  arg:command.abt  reftype:Exec  dflt:""  comment:""
 ```
 
@@ -78,7 +78,7 @@ Source: `cpp/amc/exec.cpp`.
 
 `Start` does the unix dance:
 
-```
+```bash
 fork() -> 0:                       // child
   algo_lib::DieWithParent();       // prctl(PR_SET_PDEATHSIG) on linux
   if (timeout > 0) alarm(timeout);

@@ -32,7 +32,6 @@ inline  bash2html::trace::trace() {
 
 // --- bash2html.FDb..Uninit
 inline void bash2html::FDb_Uninit() {
-    bash2html::FDb &row = _db; (void)row;
 }
 
 // --- bash2html.FieldId.value.GetEnum

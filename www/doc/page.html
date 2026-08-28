@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<!--
+  The page doc fills in.  Every name in double braces below is replaced once, by
+  name, in one pass: the title names the location, the stylesheet is
+  www/doc/doc.css inlined so that a page saved to disk still carries its own
+  style, home is the documentation index, help is this tool's own manual, action is
+  the URL prefix the box submits to, query is the canonical text of the page, shown is that same text with its
+  words linked, nav is the navigation pane -- element and all, since a page with
+  nothing to put in it carries none -- body is the location itself, and the two
+  footer names are the moment of the commit the running binary was built from and
+  that commit's ref.  A name doc does not know is left as it stands.
+
+  Nothing outside those braces is touched, and this comment names none of them
+  outright -- a comment that spelled a placeholder would have that placeholder
+  filled in, and the page would open with its own stylesheet quoted at the top.
+
+  The box has two faces in one slot, because an input cannot hold links and a line
+  of links cannot be typed into.  The input is what a browser without javascript
+  shows, and it works: it is a real form and Enter submits it.  The linked line is
+  the enhancement, revealed by the script at the foot, and clicking anywhere in it
+  that is not a link selects the location for editing.  The script also appends the
+  fragment, which is the one part of the state that never reaches the server.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>{{title}}</title>
+<style>
+{{css}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="home" href="{{home}}">doc</a>
+  <a class="help" href="{{help}}">help</a>
+  <form class="find" action="{{action}}" method="get">
+    <div class="shown" title="click to edit, or / from anywhere">{{shown}}</div>
+    <input class="text" type="text" name="q" value="{{query}}" placeholder="a key, or a table:record" autocomplete="off" spellcheck="false"/>
+  </form>
+</header>
+<div class="frame">
+{{nav}}
+<main class="page">
+{{body}}
+</main>
+</div>
+<footer class="foot">
+  <span class="when">{{commit}}</span>
+  <span class="ref">{{gitref}}</span>
+</footer>
+<script>
+/*
+  The box reads as one line of text whose words are links, and becomes an input the
+  moment a reader wants to change it.  Two faces rather than one, because neither
+  element can do both: an input holds no anchors, and a line of anchors cannot be
+  typed into -- and one element that is contenteditable cannot tell a click meant to
+  follow a link from a click meant to place the caret.
+
+  The input is what the page shows on its own, so nothing here is needed for the box
+  to work.  What the script adds is the linked line, and the fragment.
+
+  A click places the caret and selects nothing, because a reader who clicks a line is
+  reaching into the text they can see -- and a selection would mean their next keystroke
+  wiped it.  The `/` and Ctrl-K shortcuts do select, and they select the location rather
+  than the whole line: the flags before it are how much of a record the reader asked to be
+  shown, which is a standing decision, so starting a new key leaves it in force.
+
+  The text itself is never touched: both faces carry the page's own canonical text, so
+  what a reader clicks into is exactly what they were looking at.
+
+  The fragment is the one part of a page's state the server never learns: a browser
+  keeps it, so nothing sent to a server can carry it and nothing rendered there can
+  show it.  So the script appends it to both faces, and keeps doing so as it changes.
+  A reader who followed a table of contents entry then has the whole of where they are
+  in the box, and submitting it takes them back.
+*/
+(function () {
+  var find = document.querySelector('.find');
+  var shown = find && find.querySelector('.shown');
+  var text = find && find.querySelector('.text');
+  if (find && shown && text) {
+    var base = text.value;
+    var basehtml = shown.innerHTML;
+    var mark = function () {
+      var frag = window.location.hash;
+      text.value = base + frag;
+      shown.innerHTML = basehtml + (frag ? '<span class="frag"></span>' : '');
+      if (frag) {
+        shown.querySelector('.frag').textContent = frag;
+      }
+    };
+    var edit = function (pick) {
+      var value = text.value;
+      var at = value.length;
+      var space;
+      if (pick) {
+        at = 0;
+        while (value.charAt(at) === '-') {
+          space = value.indexOf(' ', at);
+          if (space < 0) {
+            break;
+          }
+          at = space + 1;
+        }
+      }
+      find.classList.remove('js');
+      text.focus();
+      text.setSelectionRange(at, value.length);
+    };
+    mark();
+    window.addEventListener('hashchange', mark);
+    find.classList.add('js');
+    shown.addEventListener('click', function (ev) {
+      if (!ev.target.closest('a')) {
+        edit(false);
+      }
+    });
+    text.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape') {
+        mark();
+        find.classList.add('js');
+      }
+    });
+    text.addEventListener('blur', function () {
+      find.classList.add('js');
+    });
+    document.addEventListener('keydown', function (ev) {
+      var at = document.activeElement;
+      var typing = at && (at.tagName === 'INPUT' || at.tagName === 'TEXTAREA' || at.isContentEditable);
+      var slash = ev.key === '/' && !typing && !ev.ctrlKey && !ev.metaKey && !ev.altKey;
+      var kay = (ev.key === 'k' || ev.key === 'K') && (ev.ctrlKey || ev.metaKey);
+      if (slash || kay) {
+        ev.preventDefault();
+        edit(true);
+      }
+    });
+  }
+})();
+/*
+  A mermaid block is a picture, and the library that draws it is fetched only by a page
+  that carries one -- four pages of the twelve hundred.  A page with none loads nothing,
+  which is why this asks before it appends.
+
+  What is in the element until then is the source as it was written, so a browser with no
+  network, or one the library fails to load in, shows what the terminal shows.  A reader is
+  never left with a blank where a picture should be.
+*/
+(function () {
+  var diagram = document.querySelectorAll('pre.mermaid');
+  var tag;
+  if (diagram.length) {
+    tag = document.createElement('script');
+    tag.type = 'module';
+    tag.textContent =
+      "import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';\n" +
+      "mermaid.initialize({ startOnLoad: true, theme: 'dark' });";
+    document.body.appendChild(tag);
+  }
+})();
+/*
+  The glyph in a box header copies that box.  A listing is selectable text and always
+  was, so nothing here is needed to get the text out of the page -- what this saves is
+  the selecting, on a box that is taller than the screen.
+*/
+(function () {
+  var boxes = document.querySelectorAll('.box .copy');
+  var i;
+  for (i = 0; i < boxes.length; i++) {
+    boxes[i].addEventListener('click', function (ev) {
+      var box = ev.target.closest('.box');
+      var pre = box && box.querySelector('pre');
+      var text = pre ? pre.textContent : '';
+      var glyph = ev.target.closest('.copy');
+      if (text && glyph && navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+        glyph.classList.add('ok');
+        setTimeout(function () { glyph.classList.remove('ok'); }, 900);
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

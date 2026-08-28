@@ -45,6 +45,9 @@ namespace lib_git { // update-hdr
     tempstr CurrentBranch();
 
     // Return date + gitref string describing most recent commit, e.g. 2017-05-24.21f8ce8
+    // The date is the committer date: it says when the commit reached this branch,
+    // which survives a rebase; the author date does not move with one, so a stamp
+    // built from it reads days stale the moment a lived-on branch merges.
     tempstr ShortRef();
 
     // Return most recent log entry

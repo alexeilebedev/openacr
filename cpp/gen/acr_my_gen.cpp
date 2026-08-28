@@ -33,13 +33,10 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_my::FDb     acr_my::_db;      // dependency found via dev.targdep
 
@@ -724,7 +721,6 @@ void acr_my::FDb_Init() {
 
 // --- acr_my.FDb..Uninit
 void acr_my::FDb_Uninit() {
-    acr_my::FDb &row = _db; (void)row;
 
     // acr_my.FDb.ssimfile.Uninit (Lary)  //
     // skip destruction in global scope
@@ -768,18 +764,18 @@ void acr_my::ssimfile_CopyIn(acr_my::FSsimfile &row, dmmeta::Ssimfile &in) {
 }
 
 // --- acr_my.FSsimfile.ssimns.Get
-algo::strptr acr_my::ssimns_Get(acr_my::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr acr_my::ssimns_Get(acr_my::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- acr_my.FSsimfile.ns.Get
-algo::strptr acr_my::ns_Get(acr_my::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr acr_my::ns_Get(acr_my::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- acr_my.FSsimfile.name.Get
-algo::strptr acr_my::name_Get(acr_my::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
+algo::strptr acr_my::name_Get(acr_my::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".RR");
 }
 
 // --- acr_my.FieldId.value.ToCstr
@@ -965,7 +961,6 @@ void acr_my::StaticCheck() {
 // --- acr_my...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_my::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -984,7 +979,6 @@ int main(int argc, char **argv) {
     try {
         acr_my::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

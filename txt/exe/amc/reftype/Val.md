@@ -8,7 +8,7 @@ no indirection, no extra machinery.
 
 The vast majority of fields in amc-generated code are `Val`s.
 
-```
+```ssim
 dmmeta.field  field:algo.UnTime.value  arg:i64  reftype:Val  dflt:""  comment:"unix time * 1e9 + nanoseconds"
 ```
 
@@ -102,7 +102,7 @@ directly: `parent.<name>`.
 
 A nanosecond timestamp:
 
-```
+```ssim
 dmmeta.ctype  ctype:algo.UnTime
   dmmeta.field  field:algo.UnTime.value  arg:i64  reftype:Val  dflt:""
 ```
@@ -122,7 +122,7 @@ inline UnTime::UnTime() {
 
 A big-endian wire-format field:
 
-```
+```ssim
 dmmeta.field  field:net.TcpHdr.seq  arg:u32  reftype:Val
   dmmeta.fbigend  field:net.TcpHdr.seq
 ```

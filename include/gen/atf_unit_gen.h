@@ -300,7 +300,7 @@ atf_unit::FNumber*   tr_number_First() __attribute__((__warn_unused_result__, no
 inline bool          tr_number_InTreeQ(atf_unit::FNumber& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into the tree. If row is already in the tree, do nothing.
 // func:atf_unit.FDb.tr_number.InsertImpl
-void                 tr_number_InsertImpl(atf_unit::FNumber* parent, atf_unit::FNumber& row) __attribute__((nothrow));
+void                 tr_number_InsertImpl(atf_unit::FNumber* up, atf_unit::FNumber& row) __attribute__((nothrow));
 // Insert row into the tree. If row is already in the tree, do nothing.
 // func:atf_unit.FDb.tr_number.Insert
 void                 tr_number_Insert(atf_unit::FNumber& row) __attribute__((nothrow));
@@ -555,16 +555,16 @@ private:
 };
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
 // func:atf_unit.FMsg.msg.Getary
-algo::aryptr<u8>     msg_Getary(atf_unit::FMsg& msg) __attribute__((nothrow));
+algo::aryptr<u8>     msg_Getary(atf_unit::FMsg& parent) __attribute__((nothrow));
 // func:atf_unit.FMsg.msg.Addr
-u8*                  msg_Addr(atf_unit::FMsg& msg);
+u8*                  msg_Addr(atf_unit::FMsg& parent);
 // Return number of elements in varlen field
 // func:atf_unit.FMsg.msg.N
-inline u32           msg_N(const atf_unit::FMsg& msg) __attribute__((__warn_unused_result__, nothrow, pure));
+inline u32           msg_N(const atf_unit::FMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Convert msg to a string.
 // Array is printed as a regular string.
 // func:atf_unit.FMsg.msg.Print
-void                 msg_Print(atf_unit::FMsg& msg, algo::cstring &rhs) __attribute__((nothrow));
+void                 msg_Print(atf_unit::FMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
 
 // func:atf_unit.FMsg.msg_curs.Reset
 inline void          msg_msg_curs_Reset(msg_msg_curs &curs, atf_unit::FMsg &parent) __attribute__((nothrow));
@@ -585,7 +585,7 @@ inline i32           GetMsgLength(const atf_unit::FMsg& parent) __attribute__((n
 inline algo::memptr  GetMsgMemptr(const atf_unit::FMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.FMsg..Init
-inline void          FMsg_Init(atf_unit::FMsg& msg);
+inline void          FMsg_Init(atf_unit::FMsg& parent);
 
 // --- atf_unit.FMsg_curs
 #pragma pack(push,1)
@@ -636,9 +636,9 @@ private:
 };
 // Set all fields to initial values.
 // func:atf_unit.FNumber..Init
-inline void          FNumber_Init(atf_unit::FNumber& number);
+inline void          FNumber_Init(atf_unit::FNumber& parent);
 // func:atf_unit.FNumber..Uninit
-void                 FNumber_Uninit(atf_unit::FNumber& number) __attribute__((nothrow));
+void                 FNumber_Uninit(atf_unit::FNumber& parent) __attribute__((nothrow));
 
 // --- atf_unit.FPerfSort
 struct FPerfSort { // atf_unit.FPerfSort: Function to test double sorting
@@ -1014,20 +1014,20 @@ void                 unittest_CopyOut(atf_unit::FUnittest &row, atfdb::Unittest 
 void                 unittest_CopyIn(atf_unit::FUnittest &row, atfdb::Unittest &in) __attribute__((nothrow));
 
 // func:atf_unit.FUnittest.ns.Get
-algo::strptr         ns_Get(atf_unit::FUnittest& unittest) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(atf_unit::FUnittest& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_unit.FUnittest.testname.Get
-algo::strptr         testname_Get(atf_unit::FUnittest& unittest) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         testname_Get(atf_unit::FUnittest& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Invoke function by pointer
 // func:atf_unit.FUnittest.step.Call
-inline void          step_Call(atf_unit::FUnittest& unittest) __attribute__((nothrow));
+inline void          step_Call(atf_unit::FUnittest& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_unit.FUnittest..Init
-inline void          FUnittest_Init(atf_unit::FUnittest& unittest);
+inline void          FUnittest_Init(atf_unit::FUnittest& parent);
 // func:atf_unit.FUnittest..Uninit
-void                 FUnittest_Uninit(atf_unit::FUnittest& unittest) __attribute__((nothrow));
+void                 FUnittest_Uninit(atf_unit::FUnittest& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_unit.FUnittest.String  printfmt:Tuple
 // func:atf_unit.FUnittest..Print
@@ -1134,7 +1134,7 @@ void                 name_RemoveLast(atf_unit::JsonAry& parent) __attribute__((n
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:atf_unit.JsonAry.name.Setary
 inline void          name_Setary(atf_unit::JsonAry& parent, const algo::aryptr<algo::Smallstr20> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:atf_unit.JsonAry.name.qFind
 inline algo::Smallstr20& name_qFind(atf_unit::JsonAry& parent, u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
@@ -1329,7 +1329,7 @@ void                 fld_ary_u32_RemoveLast(atf_unit::TestJson& parent) __attrib
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:atf_unit.TestJson.fld_ary_u32.Setary
 inline void          fld_ary_u32_Setary(atf_unit::TestJson& parent, const algo::aryptr<u32> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:atf_unit.TestJson.fld_ary_u32.qFind
 inline u32&          fld_ary_u32_qFind(atf_unit::TestJson& parent, u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
@@ -1374,7 +1374,7 @@ void                 fld_ary_name_RemoveLast(atf_unit::TestJson& parent) __attri
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:atf_unit.TestJson.fld_ary_name.Setary
 inline void          fld_ary_name_Setary(atf_unit::TestJson& parent, const algo::aryptr<algo::Smallstr20> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:atf_unit.TestJson.fld_ary_name.qFind
 inline algo::Smallstr20& fld_ary_name_qFind(atf_unit::TestJson& parent, u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address

@@ -37,8 +37,6 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
 #include "include/gen/lib_amcdb_gen.inl.h"
 #include "include/gen/lib_ctype_gen.h"
@@ -51,7 +49,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
 lib_git::FDb     lib_git::_db;      // dependency found via dev.targdep
@@ -59,6 +56,11 @@ apm::FDb         apm::_db;          // dependency found via dev.targdep
 
 namespace apm { // gen:ns_gsymbol
     const algo::strptr dev_package_openacr("openacr");
+} // gen:ns_gsymbol
+namespace apm { // gen:ns_gsymbol
+    const algo::strptr dev_pkgdeptype_contain("contain");
+    const algo::strptr dev_pkgdeptype_extend("extend");
+    const algo::strptr dev_pkgdeptype_require("require");
 } // gen:ns_gsymbol
 namespace apm { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
@@ -137,11 +139,10 @@ void apm::bltin_CopyIn(apm::FBltin &row, amcdb::Bltin &in) {
 }
 
 // --- apm.FBltin..Uninit
-void apm::FBltin_Uninit(apm::FBltin& bltin) {
-    apm::FBltin &row = bltin; (void)row;
-    apm::FCtype* p_ctype = apm::ind_ctype_Find(row.ctype);
+void apm::FBltin_Uninit(apm::FBltin& parent) {
+    apm::FCtype* p_ctype = apm::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_bltin_Remove(*p_ctype, row);// remove bltin from index c_bltin
+        c_bltin_Remove(*p_ctype, parent);// remove bltin from index c_bltin
     }
 }
 
@@ -160,23 +161,23 @@ void apm::ctype_CopyIn(apm::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- apm.FCtype.ns.Get
-algo::strptr apm::ns_Get(apm::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RL");
+algo::strptr apm::ns_Get(apm::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RL");
 }
 
 // --- apm.FCtype.name.Get
-algo::strptr apm::name_Get(apm::FCtype& ctype) {
-    return algo::Pathcomp(ctype.ctype, ".RR");
+algo::strptr apm::name_Get(apm::FCtype& parent) {
+    return algo::Pathcomp(parent.ctype, ".RR");
 }
 
 // --- apm.FCtype.c_field.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void apm::c_field_Insert(apm::FCtype& ctype, apm::FField& row) {
+void apm::c_field_Insert(apm::FCtype& parent, apm::FField& row) {
     if (!row.ctype_c_field_in_ary) {
-        c_field_Reserve(ctype, 1);
-        u64 n  = ctype.c_field_n++;
-        ctype.c_field_elems[n] = &row;
+        c_field_Reserve(parent, 1);
+        u64 n  = parent.c_field_n++;
+        parent.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
 }
@@ -185,18 +186,18 @@ void apm::c_field_Insert(apm::FCtype& ctype, apm::FField& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool apm::c_field_InsertMaybe(apm::FCtype& ctype, apm::FField& row) {
+bool apm::c_field_InsertMaybe(apm::FCtype& parent, apm::FField& row) {
     bool retval = !ctype_c_field_InAryQ(row);
-    c_field_Insert(ctype,row); // check is performed in _Insert again
+    c_field_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- apm.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void apm::c_field_Remove(apm::FCtype& ctype, apm::FField& row) {
-    i64 n = ctype.c_field_n;
+void apm::c_field_Remove(apm::FCtype& parent, apm::FField& row) {
+    i64 n = parent.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
-        apm::FField* *elems = ctype.c_field_elems;
+        apm::FField* *elems = parent.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -205,7 +206,7 @@ void apm::c_field_Remove(apm::FCtype& ctype, apm::FField& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(apm::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_field_n = n - 1;
+                parent.c_field_n = n - 1;
                 break;
             }
         }
@@ -214,29 +215,29 @@ void apm::c_field_Remove(apm::FCtype& ctype, apm::FField& row) {
 
 // --- apm.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void apm::c_field_Reserve(apm::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_field_max;
-    if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+void apm::c_field_Reserve(apm::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_field_max;
+    if (UNLIKELY(parent.c_field_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_field_n + n), 4);
         u64 old_size = old_max * sizeof(apm::FField*);
         u64 new_size = new_max * sizeof(apm::FField*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("apm.out_of_memory  field:apm.FCtype.c_field");
         }
-        ctype.c_field_elems = (apm::FField**)new_mem;
-        ctype.c_field_max = new_max;
+        parent.c_field_elems = (apm::FField**)new_mem;
+        parent.c_field_max = new_max;
     }
 }
 
 // --- apm.FCtype.c_ssimreq.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void apm::c_ssimreq_Insert(apm::FCtype& ctype, apm::FSsimreq& row) {
+void apm::c_ssimreq_Insert(apm::FCtype& parent, apm::FSsimreq& row) {
     if (!row.ctype_c_ssimreq_in_ary) {
-        c_ssimreq_Reserve(ctype, 1);
-        u64 n  = ctype.c_ssimreq_n++;
-        ctype.c_ssimreq_elems[n] = &row;
+        c_ssimreq_Reserve(parent, 1);
+        u64 n  = parent.c_ssimreq_n++;
+        parent.c_ssimreq_elems[n] = &row;
         row.ctype_c_ssimreq_in_ary = true;
     }
 }
@@ -245,18 +246,18 @@ void apm::c_ssimreq_Insert(apm::FCtype& ctype, apm::FSsimreq& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool apm::c_ssimreq_InsertMaybe(apm::FCtype& ctype, apm::FSsimreq& row) {
+bool apm::c_ssimreq_InsertMaybe(apm::FCtype& parent, apm::FSsimreq& row) {
     bool retval = !ctype_c_ssimreq_InAryQ(row);
-    c_ssimreq_Insert(ctype,row); // check is performed in _Insert again
+    c_ssimreq_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- apm.FCtype.c_ssimreq.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void apm::c_ssimreq_Remove(apm::FCtype& ctype, apm::FSsimreq& row) {
-    i64 n = ctype.c_ssimreq_n;
+void apm::c_ssimreq_Remove(apm::FCtype& parent, apm::FSsimreq& row) {
+    i64 n = parent.c_ssimreq_n;
     if (bool_Update(row.ctype_c_ssimreq_in_ary,false)) {
-        apm::FSsimreq* *elems = ctype.c_ssimreq_elems;
+        apm::FSsimreq* *elems = parent.c_ssimreq_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -265,7 +266,7 @@ void apm::c_ssimreq_Remove(apm::FCtype& ctype, apm::FSsimreq& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(apm::FSsimreq*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_ssimreq_n = n - 1;
+                parent.c_ssimreq_n = n - 1;
                 break;
             }
         }
@@ -274,31 +275,30 @@ void apm::c_ssimreq_Remove(apm::FCtype& ctype, apm::FSsimreq& row) {
 
 // --- apm.FCtype.c_ssimreq.Reserve
 // Reserve space in index for N more elements;
-void apm::c_ssimreq_Reserve(apm::FCtype& ctype, u64 n) {
-    u64 old_max = ctype.c_ssimreq_max;
-    if (UNLIKELY(ctype.c_ssimreq_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_ssimreq_n + n), 4);
+void apm::c_ssimreq_Reserve(apm::FCtype& parent, u64 n) {
+    u64 old_max = parent.c_ssimreq_max;
+    if (UNLIKELY(parent.c_ssimreq_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_ssimreq_n + n), 4);
         u64 old_size = old_max * sizeof(apm::FSsimreq*);
         u64 new_size = new_max * sizeof(apm::FSsimreq*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_ssimreq_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_ssimreq_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("apm.out_of_memory  field:apm.FCtype.c_ssimreq");
         }
-        ctype.c_ssimreq_elems = (apm::FSsimreq**)new_mem;
-        ctype.c_ssimreq_max = new_max;
+        parent.c_ssimreq_elems = (apm::FSsimreq**)new_mem;
+        parent.c_ssimreq_max = new_max;
     }
 }
 
 // --- apm.FCtype..Uninit
-void apm::FCtype_Uninit(apm::FCtype& ctype) {
-    apm::FCtype &row = ctype; (void)row;
-    ind_ctype_Remove(row); // remove ctype from index ind_ctype
+void apm::FCtype_Uninit(apm::FCtype& parent) {
+    ind_ctype_Remove(parent); // remove ctype from index ind_ctype
 
     // apm.FCtype.c_ssimreq.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(ctype.c_ssimreq_elems, sizeof(apm::FSsimreq*)*ctype.c_ssimreq_max); // (apm.FCtype.c_ssimreq)
+    algo_lib::malloc_FreeMem(parent.c_ssimreq_elems, sizeof(apm::FSsimreq*)*parent.c_ssimreq_max); // (apm.FCtype.c_ssimreq)
 
     // apm.FCtype.c_field.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(ctype.c_field_elems, sizeof(apm::FField*)*ctype.c_field_max); // (apm.FCtype.c_field)
+    algo_lib::malloc_FreeMem(parent.c_field_elems, sizeof(apm::FField*)*parent.c_field_max); // (apm.FCtype.c_field)
 }
 
 // --- apm.trace..Print
@@ -403,7 +403,7 @@ static void apm::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'c8e1a2c820c81ccf27eddd1b20ee50972563dc24'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'8eea5356efc2f8db4ded3f6fc87700e77a6f97ac'");
 }
 
 // --- apm.FDb._db.InsertStrptrMaybe
@@ -2434,6 +2434,7 @@ void* apm::rec_AllocMem() {
     if (row) {
         _db.rec_free = row->rec_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(apm::FRec));
     return row;
 }
 
@@ -2443,6 +2444,7 @@ void apm::rec_FreeMem(apm::FRec &row) {
     if (UNLIKELY(row.rec_next != (apm::FRec*)-1)) {
         FatalErrorExit("apm.tpool_double_delete  pool:apm.FDb.rec  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(apm::FRec)); // before the free list threads through the element
     row.rec_next = _db.rec_free; // insert into free list
     _db.rec_free  = &row;
 }
@@ -3294,6 +3296,7 @@ void* apm::pkgrec_AllocMem() {
     if (row) {
         _db.pkgrec_free = row->pkgrec_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(apm::FPkgrec));
     return row;
 }
 
@@ -3303,6 +3306,7 @@ void apm::pkgrec_FreeMem(apm::FPkgrec &row) {
     if (UNLIKELY(row.pkgrec_next != (apm::FPkgrec*)-1)) {
         FatalErrorExit("apm.tpool_double_delete  pool:apm.FDb.pkgrec  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(apm::FPkgrec)); // before the free list threads through the element
     row.pkgrec_next = _db.pkgrec_free; // insert into free list
     _db.pkgrec_free  = &row;
 }
@@ -4522,7 +4526,6 @@ void apm::FDb_Init() {
 
 // --- apm.FDb..Uninit
 void apm::FDb_Uninit() {
-    apm::FDb &row = _db; (void)row;
 
     // apm.FDb.bltin.Uninit (Lary)  //
     // skip destruction in global scope
@@ -4615,46 +4618,44 @@ void apm::field_CopyIn(apm::FField &row, dmmeta::Field &in) {
 }
 
 // --- apm.FField.ctype.Get
-algo::strptr apm::ctype_Get(apm::FField& field) {
-    return algo::Pathcomp(field.field, ".RL");
+algo::strptr apm::ctype_Get(apm::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL");
 }
 
 // --- apm.FField.ns.Get
-algo::strptr apm::ns_Get(apm::FField& field) {
-    return algo::Pathcomp(field.field, ".RL.RL");
+algo::strptr apm::ns_Get(apm::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RL.RL");
 }
 
 // --- apm.FField.name.Get
-algo::strptr apm::name_Get(apm::FField& field) {
-    return algo::Pathcomp(field.field, ".RR");
+algo::strptr apm::name_Get(apm::FField& parent) {
+    return algo::Pathcomp(parent.field, ".RR");
 }
 
 // --- apm.FField..Init
 // Set all fields to initial values.
-void apm::FField_Init(apm::FField& field) {
-    field.reftype = algo::strptr("Val");
-    field.p_ctype = NULL;
-    field.c_substr = NULL;
-    field.p_arg = NULL;
-    field.ctype_c_field_in_ary = bool(false);
-    field.ind_field_next = (apm::FField*)-1; // (apm.FDb.ind_field) not-in-hash
-    field.ind_field_hashval = 0; // stored hash value
+void apm::FField_Init(apm::FField& parent) {
+    parent.reftype = algo::strptr("Val");
+    parent.p_ctype = NULL;
+    parent.c_substr = NULL;
+    parent.p_arg = NULL;
+    parent.ctype_c_field_in_ary = bool(false);
+    parent.ind_field_next = (apm::FField*)-1; // (apm.FDb.ind_field) not-in-hash
+    parent.ind_field_hashval = 0; // stored hash value
 }
 
 // --- apm.FField..Uninit
-void apm::FField_Uninit(apm::FField& field) {
-    apm::FField &row = field; (void)row;
-    ind_field_Remove(row); // remove field from index ind_field
-    apm::FCtype* p_ctype = apm::ind_ctype_Find(ctype_Get(row));
+void apm::FField_Uninit(apm::FField& parent) {
+    ind_field_Remove(parent); // remove field from index ind_field
+    apm::FCtype* p_ctype = apm::ind_ctype_Find(ctype_Get(parent));
     if (p_ctype)  {
-        c_field_Remove(*p_ctype, row);// remove field from index c_field
+        c_field_Remove(*p_ctype, parent);// remove field from index c_field
     }
 }
 
 // --- apm.FMergefile..Uninit
-void apm::FMergefile_Uninit(apm::FMergefile& mergefile) {
-    apm::FMergefile &row = mergefile; (void)row;
-    ind_mergefile_Remove(row); // remove mergefile from index ind_mergefile
+void apm::FMergefile_Uninit(apm::FMergefile& parent) {
+    ind_mergefile_Remove(parent); // remove mergefile from index ind_mergefile
 }
 
 // --- apm.FMergefile..Print
@@ -4687,9 +4688,8 @@ void apm::FMergefile_Print(apm::FMergefile& row, algo::cstring& str) {
 }
 
 // --- apm.FMkdir..Uninit
-void apm::FMkdir_Uninit(apm::FMkdir& mkdir) {
-    apm::FMkdir &row = mkdir; (void)row;
-    ind_mkdir_Remove(row); // remove mkdir from index ind_mkdir
+void apm::FMkdir_Uninit(apm::FMkdir& parent) {
+    ind_mkdir_Remove(parent); // remove mkdir from index ind_mkdir
 }
 
 // --- apm.FNs.base.CopyOut
@@ -4732,50 +4732,50 @@ void apm::package_CopyIn(apm::FPackage &row, dev::Package &in) {
 
 // --- apm.FPackage.zd_pkgkey.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void apm::zd_pkgkey_Insert(apm::FPackage& package, apm::FPkgkey& row) {
+void apm::zd_pkgkey_Insert(apm::FPackage& parent, apm::FPkgkey& row) {
     if (!package_zd_pkgkey_InLlistQ(row)) {
-        apm::FPkgkey* old_tail = package.zd_pkgkey_tail;
+        apm::FPkgkey* old_tail = parent.zd_pkgkey_tail;
         row.package_zd_pkgkey_next = NULL;
         row.package_zd_pkgkey_prev = old_tail;
-        package.zd_pkgkey_tail = &row;
+        parent.zd_pkgkey_tail = &row;
         apm::FPkgkey **new_row_a = &old_tail->package_zd_pkgkey_next;
-        apm::FPkgkey **new_row_b = &package.zd_pkgkey_head;
+        apm::FPkgkey **new_row_b = &parent.zd_pkgkey_head;
         apm::FPkgkey **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        package.zd_pkgkey_n++;
+        parent.zd_pkgkey_n++;
     }
 }
 
 // --- apm.FPackage.zd_pkgkey.Remove
 // Remove element from index. If element is not in index, do nothing.
-void apm::zd_pkgkey_Remove(apm::FPackage& package, apm::FPkgkey& row) {
+void apm::zd_pkgkey_Remove(apm::FPackage& parent, apm::FPkgkey& row) {
     if (package_zd_pkgkey_InLlistQ(row)) {
-        apm::FPkgkey* old_head       = package.zd_pkgkey_head;
+        apm::FPkgkey* old_head       = parent.zd_pkgkey_head;
         (void)old_head; // in case it's not used
         apm::FPkgkey* prev = row.package_zd_pkgkey_prev;
         apm::FPkgkey* next = row.package_zd_pkgkey_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         apm::FPkgkey **new_next_a = &prev->package_zd_pkgkey_next;
-        apm::FPkgkey **new_next_b = &package.zd_pkgkey_head;
+        apm::FPkgkey **new_next_b = &parent.zd_pkgkey_head;
         apm::FPkgkey **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         apm::FPkgkey **new_prev_a = &next->package_zd_pkgkey_prev;
-        apm::FPkgkey **new_prev_b = &package.zd_pkgkey_tail;
+        apm::FPkgkey **new_prev_b = &parent.zd_pkgkey_tail;
         apm::FPkgkey **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        package.zd_pkgkey_n--;
+        parent.zd_pkgkey_n--;
         row.package_zd_pkgkey_next=(apm::FPkgkey*)-1; // not-in-list
     }
 }
 
 // --- apm.FPackage.zd_pkgkey.RemoveAll
 // Empty the index. (The rows are not deleted)
-void apm::zd_pkgkey_RemoveAll(apm::FPackage& package) {
-    apm::FPkgkey* row = package.zd_pkgkey_head;
-    package.zd_pkgkey_head = NULL;
-    package.zd_pkgkey_tail = NULL;
-    package.zd_pkgkey_n = 0;
+void apm::zd_pkgkey_RemoveAll(apm::FPackage& parent) {
+    apm::FPkgkey* row = parent.zd_pkgkey_head;
+    parent.zd_pkgkey_head = NULL;
+    parent.zd_pkgkey_tail = NULL;
+    parent.zd_pkgkey_n = 0;
     while (row) {
         apm::FPkgkey* row_next = row->package_zd_pkgkey_next;
         row->package_zd_pkgkey_next  = (apm::FPkgkey*)-1;
@@ -4786,17 +4786,17 @@ void apm::zd_pkgkey_RemoveAll(apm::FPackage& package) {
 
 // --- apm.FPackage.zd_pkgkey.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-apm::FPkgkey* apm::zd_pkgkey_RemoveFirst(apm::FPackage& package) {
+apm::FPkgkey* apm::zd_pkgkey_RemoveFirst(apm::FPackage& parent) {
     apm::FPkgkey *row = NULL;
-    row = package.zd_pkgkey_head;
+    row = parent.zd_pkgkey_head;
     if (row) {
         apm::FPkgkey *next = row->package_zd_pkgkey_next;
-        package.zd_pkgkey_head = next;
+        parent.zd_pkgkey_head = next;
         apm::FPkgkey **new_end_a = &next->package_zd_pkgkey_prev;
-        apm::FPkgkey **new_end_b = &package.zd_pkgkey_tail;
+        apm::FPkgkey **new_end_b = &parent.zd_pkgkey_tail;
         apm::FPkgkey **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        package.zd_pkgkey_n--;
+        parent.zd_pkgkey_n--;
         row->package_zd_pkgkey_next = (apm::FPkgkey*)-1; // mark as not-in-list
     }
     return row;
@@ -4804,30 +4804,30 @@ apm::FPkgkey* apm::zd_pkgkey_RemoveFirst(apm::FPackage& package) {
 
 // --- apm.FPackage.zd_pkgkey.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void apm::zd_pkgkey_InsertBefore(apm::FPackage& package, apm::FPkgkey& row, apm::FPkgkey* before) {
+void apm::zd_pkgkey_InsertBefore(apm::FPackage& parent, apm::FPkgkey& row, apm::FPkgkey* before) {
     if (!package_zd_pkgkey_InLlistQ(row) && &row != before) {
         apm::FPkgkey* next = before;
-        apm::FPkgkey* prev = next ? next->package_zd_pkgkey_prev : package.zd_pkgkey_tail;
+        apm::FPkgkey* prev = next ? next->package_zd_pkgkey_prev : parent.zd_pkgkey_tail;
         row.package_zd_pkgkey_next = next;
         row.package_zd_pkgkey_prev = prev;
         apm::FPkgkey **prev_link_a = &prev->package_zd_pkgkey_next;
-        apm::FPkgkey **prev_link_b = &package.zd_pkgkey_head;
+        apm::FPkgkey **prev_link_b = &parent.zd_pkgkey_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         apm::FPkgkey **next_link_a = &next->package_zd_pkgkey_prev;
-        apm::FPkgkey **next_link_b = &package.zd_pkgkey_tail;
+        apm::FPkgkey **next_link_b = &parent.zd_pkgkey_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        package.zd_pkgkey_n++;
+        parent.zd_pkgkey_n++;
     }
 }
 
 // --- apm.FPackage.c_pkgdep.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void apm::c_pkgdep_Insert(apm::FPackage& package, apm::FPkgdep& row) {
+void apm::c_pkgdep_Insert(apm::FPackage& parent, apm::FPkgdep& row) {
     if (!row.package_c_pkgdep_in_ary) {
-        c_pkgdep_Reserve(package, 1);
-        u64 n  = package.c_pkgdep_n++;
-        package.c_pkgdep_elems[n] = &row;
+        c_pkgdep_Reserve(parent, 1);
+        u64 n  = parent.c_pkgdep_n++;
+        parent.c_pkgdep_elems[n] = &row;
         row.package_c_pkgdep_in_ary = true;
     }
 }
@@ -4836,18 +4836,18 @@ void apm::c_pkgdep_Insert(apm::FPackage& package, apm::FPkgdep& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool apm::c_pkgdep_InsertMaybe(apm::FPackage& package, apm::FPkgdep& row) {
+bool apm::c_pkgdep_InsertMaybe(apm::FPackage& parent, apm::FPkgdep& row) {
     bool retval = !package_c_pkgdep_InAryQ(row);
-    c_pkgdep_Insert(package,row); // check is performed in _Insert again
+    c_pkgdep_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- apm.FPackage.c_pkgdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void apm::c_pkgdep_Remove(apm::FPackage& package, apm::FPkgdep& row) {
-    i64 n = package.c_pkgdep_n;
+void apm::c_pkgdep_Remove(apm::FPackage& parent, apm::FPkgdep& row) {
+    i64 n = parent.c_pkgdep_n;
     if (bool_Update(row.package_c_pkgdep_in_ary,false)) {
-        apm::FPkgdep* *elems = package.c_pkgdep_elems;
+        apm::FPkgdep* *elems = parent.c_pkgdep_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -4856,7 +4856,7 @@ void apm::c_pkgdep_Remove(apm::FPackage& package, apm::FPkgdep& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(apm::FPkgdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                package.c_pkgdep_n = n - 1;
+                parent.c_pkgdep_n = n - 1;
                 break;
             }
         }
@@ -4865,29 +4865,29 @@ void apm::c_pkgdep_Remove(apm::FPackage& package, apm::FPkgdep& row) {
 
 // --- apm.FPackage.c_pkgdep.Reserve
 // Reserve space in index for N more elements;
-void apm::c_pkgdep_Reserve(apm::FPackage& package, u64 n) {
-    u64 old_max = package.c_pkgdep_max;
-    if (UNLIKELY(package.c_pkgdep_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, package.c_pkgdep_n + n), 4);
+void apm::c_pkgdep_Reserve(apm::FPackage& parent, u64 n) {
+    u64 old_max = parent.c_pkgdep_max;
+    if (UNLIKELY(parent.c_pkgdep_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_pkgdep_n + n), 4);
         u64 old_size = old_max * sizeof(apm::FPkgdep*);
         u64 new_size = new_max * sizeof(apm::FPkgdep*);
-        void *new_mem = algo_lib::malloc_ReallocMem(package.c_pkgdep_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_pkgdep_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("apm.out_of_memory  field:apm.FPackage.c_pkgdep");
         }
-        package.c_pkgdep_elems = (apm::FPkgdep**)new_mem;
-        package.c_pkgdep_max = new_max;
+        parent.c_pkgdep_elems = (apm::FPkgdep**)new_mem;
+        parent.c_pkgdep_max = new_max;
     }
 }
 
 // --- apm.FPackage.c_pkgdep_parent.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void apm::c_pkgdep_parent_Insert(apm::FPackage& package, apm::FPkgdep& row) {
+void apm::c_pkgdep_parent_Insert(apm::FPackage& parent, apm::FPkgdep& row) {
     if (!row.package_c_pkgdep_parent_in_ary) {
-        c_pkgdep_parent_Reserve(package, 1);
-        u64 n  = package.c_pkgdep_parent_n++;
-        package.c_pkgdep_parent_elems[n] = &row;
+        c_pkgdep_parent_Reserve(parent, 1);
+        u64 n  = parent.c_pkgdep_parent_n++;
+        parent.c_pkgdep_parent_elems[n] = &row;
         row.package_c_pkgdep_parent_in_ary = true;
     }
 }
@@ -4896,18 +4896,18 @@ void apm::c_pkgdep_parent_Insert(apm::FPackage& package, apm::FPkgdep& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool apm::c_pkgdep_parent_InsertMaybe(apm::FPackage& package, apm::FPkgdep& row) {
+bool apm::c_pkgdep_parent_InsertMaybe(apm::FPackage& parent, apm::FPkgdep& row) {
     bool retval = !package_c_pkgdep_parent_InAryQ(row);
-    c_pkgdep_parent_Insert(package,row); // check is performed in _Insert again
+    c_pkgdep_parent_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- apm.FPackage.c_pkgdep_parent.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void apm::c_pkgdep_parent_Remove(apm::FPackage& package, apm::FPkgdep& row) {
-    i64 n = package.c_pkgdep_parent_n;
+void apm::c_pkgdep_parent_Remove(apm::FPackage& parent, apm::FPkgdep& row) {
+    i64 n = parent.c_pkgdep_parent_n;
     if (bool_Update(row.package_c_pkgdep_parent_in_ary,false)) {
-        apm::FPkgdep* *elems = package.c_pkgdep_parent_elems;
+        apm::FPkgdep* *elems = parent.c_pkgdep_parent_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -4916,7 +4916,7 @@ void apm::c_pkgdep_parent_Remove(apm::FPackage& package, apm::FPkgdep& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(apm::FPkgdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                package.c_pkgdep_parent_n = n - 1;
+                parent.c_pkgdep_parent_n = n - 1;
                 break;
             }
         }
@@ -4925,67 +4925,67 @@ void apm::c_pkgdep_parent_Remove(apm::FPackage& package, apm::FPkgdep& row) {
 
 // --- apm.FPackage.c_pkgdep_parent.Reserve
 // Reserve space in index for N more elements;
-void apm::c_pkgdep_parent_Reserve(apm::FPackage& package, u64 n) {
-    u64 old_max = package.c_pkgdep_parent_max;
-    if (UNLIKELY(package.c_pkgdep_parent_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, package.c_pkgdep_parent_n + n), 4);
+void apm::c_pkgdep_parent_Reserve(apm::FPackage& parent, u64 n) {
+    u64 old_max = parent.c_pkgdep_parent_max;
+    if (UNLIKELY(parent.c_pkgdep_parent_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_pkgdep_parent_n + n), 4);
         u64 old_size = old_max * sizeof(apm::FPkgdep*);
         u64 new_size = new_max * sizeof(apm::FPkgdep*);
-        void *new_mem = algo_lib::malloc_ReallocMem(package.c_pkgdep_parent_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_pkgdep_parent_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("apm.out_of_memory  field:apm.FPackage.c_pkgdep_parent");
         }
-        package.c_pkgdep_parent_elems = (apm::FPkgdep**)new_mem;
-        package.c_pkgdep_parent_max = new_max;
+        parent.c_pkgdep_parent_elems = (apm::FPkgdep**)new_mem;
+        parent.c_pkgdep_parent_max = new_max;
     }
 }
 
 // --- apm.FPackage.zd_pkgrec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void apm::zd_pkgrec_Insert(apm::FPackage& package, apm::FPkgrec& row) {
+void apm::zd_pkgrec_Insert(apm::FPackage& parent, apm::FPkgrec& row) {
     if (!package_zd_pkgrec_InLlistQ(row)) {
-        apm::FPkgrec* old_tail = package.zd_pkgrec_tail;
+        apm::FPkgrec* old_tail = parent.zd_pkgrec_tail;
         row.package_zd_pkgrec_next = NULL;
         row.package_zd_pkgrec_prev = old_tail;
-        package.zd_pkgrec_tail = &row;
+        parent.zd_pkgrec_tail = &row;
         apm::FPkgrec **new_row_a = &old_tail->package_zd_pkgrec_next;
-        apm::FPkgrec **new_row_b = &package.zd_pkgrec_head;
+        apm::FPkgrec **new_row_b = &parent.zd_pkgrec_head;
         apm::FPkgrec **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        package.zd_pkgrec_n++;
+        parent.zd_pkgrec_n++;
     }
 }
 
 // --- apm.FPackage.zd_pkgrec.Remove
 // Remove element from index. If element is not in index, do nothing.
-void apm::zd_pkgrec_Remove(apm::FPackage& package, apm::FPkgrec& row) {
+void apm::zd_pkgrec_Remove(apm::FPackage& parent, apm::FPkgrec& row) {
     if (package_zd_pkgrec_InLlistQ(row)) {
-        apm::FPkgrec* old_head       = package.zd_pkgrec_head;
+        apm::FPkgrec* old_head       = parent.zd_pkgrec_head;
         (void)old_head; // in case it's not used
         apm::FPkgrec* prev = row.package_zd_pkgrec_prev;
         apm::FPkgrec* next = row.package_zd_pkgrec_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         apm::FPkgrec **new_next_a = &prev->package_zd_pkgrec_next;
-        apm::FPkgrec **new_next_b = &package.zd_pkgrec_head;
+        apm::FPkgrec **new_next_b = &parent.zd_pkgrec_head;
         apm::FPkgrec **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         apm::FPkgrec **new_prev_a = &next->package_zd_pkgrec_prev;
-        apm::FPkgrec **new_prev_b = &package.zd_pkgrec_tail;
+        apm::FPkgrec **new_prev_b = &parent.zd_pkgrec_tail;
         apm::FPkgrec **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        package.zd_pkgrec_n--;
+        parent.zd_pkgrec_n--;
         row.package_zd_pkgrec_next=(apm::FPkgrec*)-1; // not-in-list
     }
 }
 
 // --- apm.FPackage.zd_pkgrec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void apm::zd_pkgrec_RemoveAll(apm::FPackage& package) {
-    apm::FPkgrec* row = package.zd_pkgrec_head;
-    package.zd_pkgrec_head = NULL;
-    package.zd_pkgrec_tail = NULL;
-    package.zd_pkgrec_n = 0;
+void apm::zd_pkgrec_RemoveAll(apm::FPackage& parent) {
+    apm::FPkgrec* row = parent.zd_pkgrec_head;
+    parent.zd_pkgrec_head = NULL;
+    parent.zd_pkgrec_tail = NULL;
+    parent.zd_pkgrec_n = 0;
     while (row) {
         apm::FPkgrec* row_next = row->package_zd_pkgrec_next;
         row->package_zd_pkgrec_next  = (apm::FPkgrec*)-1;
@@ -4996,17 +4996,17 @@ void apm::zd_pkgrec_RemoveAll(apm::FPackage& package) {
 
 // --- apm.FPackage.zd_pkgrec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-apm::FPkgrec* apm::zd_pkgrec_RemoveFirst(apm::FPackage& package) {
+apm::FPkgrec* apm::zd_pkgrec_RemoveFirst(apm::FPackage& parent) {
     apm::FPkgrec *row = NULL;
-    row = package.zd_pkgrec_head;
+    row = parent.zd_pkgrec_head;
     if (row) {
         apm::FPkgrec *next = row->package_zd_pkgrec_next;
-        package.zd_pkgrec_head = next;
+        parent.zd_pkgrec_head = next;
         apm::FPkgrec **new_end_a = &next->package_zd_pkgrec_prev;
-        apm::FPkgrec **new_end_b = &package.zd_pkgrec_tail;
+        apm::FPkgrec **new_end_b = &parent.zd_pkgrec_tail;
         apm::FPkgrec **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        package.zd_pkgrec_n--;
+        parent.zd_pkgrec_n--;
         row->package_zd_pkgrec_next = (apm::FPkgrec*)-1; // mark as not-in-list
     }
     return row;
@@ -5014,61 +5014,60 @@ apm::FPkgrec* apm::zd_pkgrec_RemoveFirst(apm::FPackage& package) {
 
 // --- apm.FPackage.zd_pkgrec.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void apm::zd_pkgrec_InsertBefore(apm::FPackage& package, apm::FPkgrec& row, apm::FPkgrec* before) {
+void apm::zd_pkgrec_InsertBefore(apm::FPackage& parent, apm::FPkgrec& row, apm::FPkgrec* before) {
     if (!package_zd_pkgrec_InLlistQ(row) && &row != before) {
         apm::FPkgrec* next = before;
-        apm::FPkgrec* prev = next ? next->package_zd_pkgrec_prev : package.zd_pkgrec_tail;
+        apm::FPkgrec* prev = next ? next->package_zd_pkgrec_prev : parent.zd_pkgrec_tail;
         row.package_zd_pkgrec_next = next;
         row.package_zd_pkgrec_prev = prev;
         apm::FPkgrec **prev_link_a = &prev->package_zd_pkgrec_next;
-        apm::FPkgrec **prev_link_b = &package.zd_pkgrec_head;
+        apm::FPkgrec **prev_link_b = &parent.zd_pkgrec_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         apm::FPkgrec **next_link_a = &next->package_zd_pkgrec_prev;
-        apm::FPkgrec **next_link_b = &package.zd_pkgrec_tail;
+        apm::FPkgrec **next_link_b = &parent.zd_pkgrec_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        package.zd_pkgrec_n++;
+        parent.zd_pkgrec_n++;
     }
 }
 
 // --- apm.FPackage..Init
 // Set all fields to initial values.
-void apm::FPackage_Init(apm::FPackage& package) {
-    package.zd_pkgkey_head = NULL; // (apm.FPackage.zd_pkgkey)
-    package.zd_pkgkey_n = 0; // (apm.FPackage.zd_pkgkey)
-    package.zd_pkgkey_tail = NULL; // (apm.FPackage.zd_pkgkey)
-    package.c_pkgdep_elems = NULL; // (apm.FPackage.c_pkgdep)
-    package.c_pkgdep_n = 0; // (apm.FPackage.c_pkgdep)
-    package.c_pkgdep_max = 0; // (apm.FPackage.c_pkgdep)
-    package.c_pkgdep_parent_elems = NULL; // (apm.FPackage.c_pkgdep_parent)
-    package.c_pkgdep_parent_n = 0; // (apm.FPackage.c_pkgdep_parent)
-    package.c_pkgdep_parent_max = 0; // (apm.FPackage.c_pkgdep_parent)
-    package.zd_pkgrec_head = NULL; // (apm.FPackage.zd_pkgrec)
-    package.zd_pkgrec_n = 0; // (apm.FPackage.zd_pkgrec)
-    package.zd_pkgrec_tail = NULL; // (apm.FPackage.zd_pkgrec)
-    package.visited = bool(false);
-    package.zd_sel_package_next = (apm::FPackage*)-1; // (apm.FDb.zd_sel_package) not-in-list
-    package.zd_sel_package_prev = NULL; // (apm.FDb.zd_sel_package)
-    package.zd_temp_package_next = (apm::FPackage*)-1; // (apm.FDb.zd_temp_package) not-in-list
-    package.zd_temp_package_prev = NULL; // (apm.FDb.zd_temp_package)
-    package.ind_package_next = (apm::FPackage*)-1; // (apm.FDb.ind_package) not-in-hash
-    package.ind_package_hashval = 0; // stored hash value
-    package.zd_topo_package_next = (apm::FPackage*)-1; // (apm.FDb.zd_topo_package) not-in-list
-    package.zd_topo_package_prev = NULL; // (apm.FDb.zd_topo_package)
+void apm::FPackage_Init(apm::FPackage& parent) {
+    parent.zd_pkgkey_head = NULL; // (apm.FPackage.zd_pkgkey)
+    parent.zd_pkgkey_n = 0; // (apm.FPackage.zd_pkgkey)
+    parent.zd_pkgkey_tail = NULL; // (apm.FPackage.zd_pkgkey)
+    parent.c_pkgdep_elems = NULL; // (apm.FPackage.c_pkgdep)
+    parent.c_pkgdep_n = 0; // (apm.FPackage.c_pkgdep)
+    parent.c_pkgdep_max = 0; // (apm.FPackage.c_pkgdep)
+    parent.c_pkgdep_parent_elems = NULL; // (apm.FPackage.c_pkgdep_parent)
+    parent.c_pkgdep_parent_n = 0; // (apm.FPackage.c_pkgdep_parent)
+    parent.c_pkgdep_parent_max = 0; // (apm.FPackage.c_pkgdep_parent)
+    parent.zd_pkgrec_head = NULL; // (apm.FPackage.zd_pkgrec)
+    parent.zd_pkgrec_n = 0; // (apm.FPackage.zd_pkgrec)
+    parent.zd_pkgrec_tail = NULL; // (apm.FPackage.zd_pkgrec)
+    parent.visited = bool(false);
+    parent.zd_sel_package_next = (apm::FPackage*)-1; // (apm.FDb.zd_sel_package) not-in-list
+    parent.zd_sel_package_prev = NULL; // (apm.FDb.zd_sel_package)
+    parent.zd_temp_package_next = (apm::FPackage*)-1; // (apm.FDb.zd_temp_package) not-in-list
+    parent.zd_temp_package_prev = NULL; // (apm.FDb.zd_temp_package)
+    parent.ind_package_next = (apm::FPackage*)-1; // (apm.FDb.ind_package) not-in-hash
+    parent.ind_package_hashval = 0; // stored hash value
+    parent.zd_topo_package_next = (apm::FPackage*)-1; // (apm.FDb.zd_topo_package) not-in-list
+    parent.zd_topo_package_prev = NULL; // (apm.FDb.zd_topo_package)
 }
 
 // --- apm.FPackage..Uninit
-void apm::FPackage_Uninit(apm::FPackage& package) {
-    apm::FPackage &row = package; (void)row;
-    zd_sel_package_Remove(row); // remove package from index zd_sel_package
-    zd_temp_package_Remove(row); // remove package from index zd_temp_package
-    ind_package_Remove(row); // remove package from index ind_package
-    zd_topo_package_Remove(row); // remove package from index zd_topo_package
+void apm::FPackage_Uninit(apm::FPackage& parent) {
+    zd_sel_package_Remove(parent); // remove package from index zd_sel_package
+    zd_temp_package_Remove(parent); // remove package from index zd_temp_package
+    ind_package_Remove(parent); // remove package from index ind_package
+    zd_topo_package_Remove(parent); // remove package from index zd_topo_package
 
     // apm.FPackage.c_pkgdep_parent.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(package.c_pkgdep_parent_elems, sizeof(apm::FPkgdep*)*package.c_pkgdep_parent_max); // (apm.FPackage.c_pkgdep_parent)
+    algo_lib::malloc_FreeMem(parent.c_pkgdep_parent_elems, sizeof(apm::FPkgdep*)*parent.c_pkgdep_parent_max); // (apm.FPackage.c_pkgdep_parent)
 
     // apm.FPackage.c_pkgdep.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(package.c_pkgdep_elems, sizeof(apm::FPkgdep*)*package.c_pkgdep_max); // (apm.FPackage.c_pkgdep)
+    algo_lib::malloc_FreeMem(parent.c_pkgdep_elems, sizeof(apm::FPkgdep*)*parent.c_pkgdep_max); // (apm.FPackage.c_pkgdep)
 }
 
 // --- apm.FPkgdep.base.CopyOut
@@ -5076,6 +5075,7 @@ void apm::FPackage_Uninit(apm::FPackage& package) {
 void apm::pkgdep_CopyOut(apm::FPkgdep &row, dev::Pkgdep &out) {
     out.pkgdep = row.pkgdep;
     out.soft = row.soft;
+    out.pkgdeptype = row.pkgdeptype;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -5084,29 +5084,40 @@ void apm::pkgdep_CopyOut(apm::FPkgdep &row, dev::Pkgdep &out) {
 void apm::pkgdep_CopyIn(apm::FPkgdep &row, dev::Pkgdep &in) {
     row.pkgdep = in.pkgdep;
     row.soft = in.soft;
+    row.pkgdeptype = in.pkgdeptype;
     row.comment = in.comment;
 }
 
 // --- apm.FPkgdep.package.Get
-algo::strptr apm::package_Get(apm::FPkgdep& pkgdep) {
-    return algo::Pathcomp(pkgdep.pkgdep, ".RL");
+algo::strptr apm::package_Get(apm::FPkgdep& parent) {
+    return algo::Pathcomp(parent.pkgdep, ".RL");
 }
 
 // --- apm.FPkgdep.parent.Get
-algo::strptr apm::parent_Get(apm::FPkgdep& pkgdep) {
-    return algo::Pathcomp(pkgdep.pkgdep, ".RR");
+algo::strptr apm::parent_Get(apm::FPkgdep& parent) {
+    return algo::Pathcomp(parent.pkgdep, ".RR");
+}
+
+// --- apm.FPkgdep..Init
+// Set all fields to initial values.
+void apm::FPkgdep_Init(apm::FPkgdep& parent) {
+    parent.soft = bool(false);
+    parent.pkgdeptype = algo::strptr("require");
+    parent.p_parent = NULL;
+    parent.p_package = NULL;
+    parent.package_c_pkgdep_in_ary = bool(false);
+    parent.package_c_pkgdep_parent_in_ary = bool(false);
 }
 
 // --- apm.FPkgdep..Uninit
-void apm::FPkgdep_Uninit(apm::FPkgdep& pkgdep) {
-    apm::FPkgdep &row = pkgdep; (void)row;
-    apm::FPackage* p_package = apm::ind_package_Find(package_Get(row));
+void apm::FPkgdep_Uninit(apm::FPkgdep& parent) {
+    apm::FPackage* p_package = apm::ind_package_Find(package_Get(parent));
     if (p_package)  {
-        c_pkgdep_Remove(*p_package, row);// remove pkgdep from index c_pkgdep
+        c_pkgdep_Remove(*p_package, parent);// remove pkgdep from index c_pkgdep
     }
-    apm::FPackage* p_parent = apm::ind_package_Find(parent_Get(row));
+    apm::FPackage* p_parent = apm::ind_package_Find(parent_Get(parent));
     if (p_parent)  {
-        c_pkgdep_parent_Remove(*p_parent, row);// remove pkgdep from index c_pkgdep_parent
+        c_pkgdep_parent_Remove(*p_parent, parent);// remove pkgdep from index c_pkgdep_parent
     }
 }
 
@@ -5131,23 +5142,23 @@ void apm::pkgkey_CopyIn(apm::FPkgkey &row, dev::Pkgkey &in) {
 }
 
 // --- apm.FPkgkey.package.Get
-algo::strptr apm::package_Get(apm::FPkgkey& pkgkey) {
-    return algo::Pathcomp(pkgkey.pkgkey, "/LL");
+algo::strptr apm::package_Get(apm::FPkgkey& parent) {
+    return algo::Pathcomp(parent.pkgkey, "/LL");
 }
 
 // --- apm.FPkgkey.key.Get
-algo::strptr apm::key_Get(apm::FPkgkey& pkgkey) {
-    return algo::Pathcomp(pkgkey.pkgkey, "/LR");
+algo::strptr apm::key_Get(apm::FPkgkey& parent) {
+    return algo::Pathcomp(parent.pkgkey, "/LR");
 }
 
 // --- apm.FPkgkey.c_pkgrec.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void apm::c_pkgrec_Insert(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
+void apm::c_pkgrec_Insert(apm::FPkgkey& parent, apm::FPkgrec& row) {
     if (!row.pkgkey_c_pkgrec_in_ary) {
-        c_pkgrec_Reserve(pkgkey, 1);
-        u64 n  = pkgkey.c_pkgrec_n++;
-        pkgkey.c_pkgrec_elems[n] = &row;
+        c_pkgrec_Reserve(parent, 1);
+        u64 n  = parent.c_pkgrec_n++;
+        parent.c_pkgrec_elems[n] = &row;
         row.pkgkey_c_pkgrec_in_ary = true;
     }
 }
@@ -5156,18 +5167,18 @@ void apm::c_pkgrec_Insert(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool apm::c_pkgrec_InsertMaybe(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
+bool apm::c_pkgrec_InsertMaybe(apm::FPkgkey& parent, apm::FPkgrec& row) {
     bool retval = !pkgkey_c_pkgrec_InAryQ(row);
-    c_pkgrec_Insert(pkgkey,row); // check is performed in _Insert again
+    c_pkgrec_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- apm.FPkgkey.c_pkgrec.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void apm::c_pkgrec_Remove(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
-    i64 n = pkgkey.c_pkgrec_n;
+void apm::c_pkgrec_Remove(apm::FPkgkey& parent, apm::FPkgrec& row) {
+    i64 n = parent.c_pkgrec_n;
     if (bool_Update(row.pkgkey_c_pkgrec_in_ary,false)) {
-        apm::FPkgrec* *elems = pkgkey.c_pkgrec_elems;
+        apm::FPkgrec* *elems = parent.c_pkgrec_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -5176,7 +5187,7 @@ void apm::c_pkgrec_Remove(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(apm::FPkgrec*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                pkgkey.c_pkgrec_n = n - 1;
+                parent.c_pkgrec_n = n - 1;
                 break;
             }
         }
@@ -5185,76 +5196,74 @@ void apm::c_pkgrec_Remove(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
 
 // --- apm.FPkgkey.c_pkgrec.Reserve
 // Reserve space in index for N more elements;
-void apm::c_pkgrec_Reserve(apm::FPkgkey& pkgkey, u64 n) {
-    u64 old_max = pkgkey.c_pkgrec_max;
-    if (UNLIKELY(pkgkey.c_pkgrec_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, pkgkey.c_pkgrec_n + n), 4);
+void apm::c_pkgrec_Reserve(apm::FPkgkey& parent, u64 n) {
+    u64 old_max = parent.c_pkgrec_max;
+    if (UNLIKELY(parent.c_pkgrec_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_pkgrec_n + n), 4);
         u64 old_size = old_max * sizeof(apm::FPkgrec*);
         u64 new_size = new_max * sizeof(apm::FPkgrec*);
-        void *new_mem = algo_lib::malloc_ReallocMem(pkgkey.c_pkgrec_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_pkgrec_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("apm.out_of_memory  field:apm.FPkgkey.c_pkgrec");
         }
-        pkgkey.c_pkgrec_elems = (apm::FPkgrec**)new_mem;
-        pkgkey.c_pkgrec_max = new_max;
+        parent.c_pkgrec_elems = (apm::FPkgrec**)new_mem;
+        parent.c_pkgrec_max = new_max;
     }
 }
 
 // --- apm.FPkgkey..Init
 // Set all fields to initial values.
-void apm::FPkgkey_Init(apm::FPkgkey& pkgkey) {
-    pkgkey.up = bool(false);
-    pkgkey.down = bool(false);
-    pkgkey.exclude = bool(false);
-    pkgkey.n_explicit = u32(0);
-    pkgkey.n_up = u32(0);
-    pkgkey.n_down = u32(0);
-    pkgkey.c_pkgrec_elems = NULL; // (apm.FPkgkey.c_pkgrec)
-    pkgkey.c_pkgrec_n = 0; // (apm.FPkgkey.c_pkgrec)
-    pkgkey.c_pkgrec_max = 0; // (apm.FPkgkey.c_pkgrec)
-    pkgkey.ind_pkgkey_next = (apm::FPkgkey*)-1; // (apm.FDb.ind_pkgkey) not-in-hash
-    pkgkey.ind_pkgkey_hashval = 0; // stored hash value
-    pkgkey.package_zd_pkgkey_next = (apm::FPkgkey*)-1; // (apm.FPackage.zd_pkgkey) not-in-list
-    pkgkey.package_zd_pkgkey_prev = NULL; // (apm.FPackage.zd_pkgkey)
+void apm::FPkgkey_Init(apm::FPkgkey& parent) {
+    parent.up = bool(false);
+    parent.down = bool(false);
+    parent.exclude = bool(false);
+    parent.n_explicit = u32(0);
+    parent.n_up = u32(0);
+    parent.n_down = u32(0);
+    parent.c_pkgrec_elems = NULL; // (apm.FPkgkey.c_pkgrec)
+    parent.c_pkgrec_n = 0; // (apm.FPkgkey.c_pkgrec)
+    parent.c_pkgrec_max = 0; // (apm.FPkgkey.c_pkgrec)
+    parent.ind_pkgkey_next = (apm::FPkgkey*)-1; // (apm.FDb.ind_pkgkey) not-in-hash
+    parent.ind_pkgkey_hashval = 0; // stored hash value
+    parent.package_zd_pkgkey_next = (apm::FPkgkey*)-1; // (apm.FPackage.zd_pkgkey) not-in-list
+    parent.package_zd_pkgkey_prev = NULL; // (apm.FPackage.zd_pkgkey)
 }
 
 // --- apm.FPkgkey..Uninit
-void apm::FPkgkey_Uninit(apm::FPkgkey& pkgkey) {
-    apm::FPkgkey &row = pkgkey; (void)row;
-    apm::FPackage* p_package = apm::ind_package_Find(package_Get(row));
+void apm::FPkgkey_Uninit(apm::FPkgkey& parent) {
+    apm::FPackage* p_package = apm::ind_package_Find(package_Get(parent));
     if (p_package)  {
-        zd_pkgkey_Remove(*p_package, row);// remove pkgkey from index zd_pkgkey
+        zd_pkgkey_Remove(*p_package, parent);// remove pkgkey from index zd_pkgkey
     }
-    ind_pkgkey_Remove(row); // remove pkgkey from index ind_pkgkey
+    ind_pkgkey_Remove(parent); // remove pkgkey from index ind_pkgkey
 
     // apm.FPkgkey.c_pkgrec.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(pkgkey.c_pkgrec_elems, sizeof(apm::FPkgrec*)*pkgkey.c_pkgrec_max); // (apm.FPkgkey.c_pkgrec)
+    algo_lib::malloc_FreeMem(parent.c_pkgrec_elems, sizeof(apm::FPkgrec*)*parent.c_pkgrec_max); // (apm.FPkgkey.c_pkgrec)
 }
 
 // --- apm.FPkgrec..Uninit
-void apm::FPkgrec_Uninit(apm::FPkgrec& pkgrec) {
-    apm::FPkgrec &row = pkgrec; (void)row;
-    apm::FPackage* p_p_package = row.p_package;
+void apm::FPkgrec_Uninit(apm::FPkgrec& parent) {
+    apm::FPackage* p_p_package = parent.p_package;
     if (p_p_package)  {
-        zd_pkgrec_Remove(*p_p_package, row);// remove pkgrec from index zd_pkgrec
+        zd_pkgrec_Remove(*p_p_package, parent);// remove pkgrec from index zd_pkgrec
     }
-    apm::FRec* p_p_rec = row.p_rec;
+    apm::FRec* p_p_rec = parent.p_rec;
     if (p_p_rec)  {
-        zd_rec_pkgrec_Remove(*p_p_rec, row);// remove pkgrec from index zd_rec_pkgrec
+        zd_rec_pkgrec_Remove(*p_p_rec, parent);// remove pkgrec from index zd_rec_pkgrec
     }
-    apm::FPkgkey* p_p_pkgkey = row.p_pkgkey;
+    apm::FPkgkey* p_p_pkgkey = parent.p_pkgkey;
     if (p_p_pkgkey)  {
-        c_pkgrec_Remove(*p_p_pkgkey, row);// remove pkgrec from index c_pkgrec
+        c_pkgrec_Remove(*p_p_pkgkey, parent);// remove pkgrec from index c_pkgrec
     }
 }
 
 // --- apm.FRec.c_parent.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void apm::c_parent_Insert(apm::FRec& rec, apm::FRec& row) {
-    c_parent_Reserve(rec, 1);
-    u64 n  = rec.c_parent_n++;
-    rec.c_parent_elems[n] = &row;
+void apm::c_parent_Insert(apm::FRec& parent, apm::FRec& row) {
+    c_parent_Reserve(parent, 1);
+    u64 n  = parent.c_parent_n++;
+    parent.c_parent_elems[n] = &row;
 }
 
 // --- apm.FRec.c_parent.ScanInsertMaybe
@@ -5262,62 +5271,62 @@ void apm::c_parent_Insert(apm::FRec& rec, apm::FRec& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool apm::c_parent_ScanInsertMaybe(apm::FRec& rec, apm::FRec& row) {
+bool apm::c_parent_ScanInsertMaybe(apm::FRec& parent, apm::FRec& row) {
     bool retval = true;
-    u64 n  = rec.c_parent_n;
+    u64 n  = parent.c_parent_n;
     for (u64 i = 0; i < n; i++) {
-        if (rec.c_parent_elems[i] == &row) {
+        if (parent.c_parent_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_parent_Insert(rec,row); // row known absent; the append is Insert's
+        c_parent_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- apm.FRec.c_parent.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void apm::c_parent_Remove(apm::FRec& rec, apm::FRec& row) {
-    i64 n = rec.c_parent_n;
+void apm::c_parent_Remove(apm::FRec& parent, apm::FRec& row) {
+    i64 n = parent.c_parent_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (rec.c_parent_elems[i] == &row) {
+        if (parent.c_parent_elems[i] == &row) {
         } else {
             if (j != i) {
-                rec.c_parent_elems[j] = rec.c_parent_elems[i];
+                parent.c_parent_elems[j] = parent.c_parent_elems[i];
             }
             j++;
         }
     }
-    rec.c_parent_n = j;
+    parent.c_parent_n = j;
 }
 
 // --- apm.FRec.c_parent.Reserve
 // Reserve space in index for N more elements;
-void apm::c_parent_Reserve(apm::FRec& rec, u64 n) {
-    u64 old_max = rec.c_parent_max;
-    if (UNLIKELY(rec.c_parent_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, rec.c_parent_n + n), 4);
+void apm::c_parent_Reserve(apm::FRec& parent, u64 n) {
+    u64 old_max = parent.c_parent_max;
+    if (UNLIKELY(parent.c_parent_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_parent_n + n), 4);
         u64 old_size = old_max * sizeof(apm::FRec*);
         u64 new_size = new_max * sizeof(apm::FRec*);
-        void *new_mem = algo_lib::malloc_ReallocMem(rec.c_parent_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_parent_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("apm.out_of_memory  field:apm.FRec.c_parent");
         }
-        rec.c_parent_elems = (apm::FRec**)new_mem;
-        rec.c_parent_max = new_max;
+        parent.c_parent_elems = (apm::FRec**)new_mem;
+        parent.c_parent_max = new_max;
     }
 }
 
 // --- apm.FRec.c_child.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void apm::c_child_Insert(apm::FRec& rec, apm::FRec& row) {
-    c_child_Reserve(rec, 1);
-    u64 n  = rec.c_child_n++;
-    rec.c_child_elems[n] = &row;
+void apm::c_child_Insert(apm::FRec& parent, apm::FRec& row) {
+    c_child_Reserve(parent, 1);
+    u64 n  = parent.c_child_n++;
+    parent.c_child_elems[n] = &row;
 }
 
 // --- apm.FRec.c_child.ScanInsertMaybe
@@ -5325,109 +5334,109 @@ void apm::c_child_Insert(apm::FRec& rec, apm::FRec& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool apm::c_child_ScanInsertMaybe(apm::FRec& rec, apm::FRec& row) {
+bool apm::c_child_ScanInsertMaybe(apm::FRec& parent, apm::FRec& row) {
     bool retval = true;
-    u64 n  = rec.c_child_n;
+    u64 n  = parent.c_child_n;
     for (u64 i = 0; i < n; i++) {
-        if (rec.c_child_elems[i] == &row) {
+        if (parent.c_child_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        c_child_Insert(rec,row); // row known absent; the append is Insert's
+        c_child_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
 
 // --- apm.FRec.c_child.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void apm::c_child_Remove(apm::FRec& rec, apm::FRec& row) {
-    i64 n = rec.c_child_n;
+void apm::c_child_Remove(apm::FRec& parent, apm::FRec& row) {
+    i64 n = parent.c_child_n;
     i64 j=0;
     for (i64 i=0; i<n; i++) {
-        if (rec.c_child_elems[i] == &row) {
+        if (parent.c_child_elems[i] == &row) {
         } else {
             if (j != i) {
-                rec.c_child_elems[j] = rec.c_child_elems[i];
+                parent.c_child_elems[j] = parent.c_child_elems[i];
             }
             j++;
         }
     }
-    rec.c_child_n = j;
+    parent.c_child_n = j;
 }
 
 // --- apm.FRec.c_child.Reserve
 // Reserve space in index for N more elements;
-void apm::c_child_Reserve(apm::FRec& rec, u64 n) {
-    u64 old_max = rec.c_child_max;
-    if (UNLIKELY(rec.c_child_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, rec.c_child_n + n), 4);
+void apm::c_child_Reserve(apm::FRec& parent, u64 n) {
+    u64 old_max = parent.c_child_max;
+    if (UNLIKELY(parent.c_child_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_child_n + n), 4);
         u64 old_size = old_max * sizeof(apm::FRec*);
         u64 new_size = new_max * sizeof(apm::FRec*);
-        void *new_mem = algo_lib::malloc_ReallocMem(rec.c_child_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_child_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("apm.out_of_memory  field:apm.FRec.c_child");
         }
-        rec.c_child_elems = (apm::FRec**)new_mem;
-        rec.c_child_max = new_max;
+        parent.c_child_elems = (apm::FRec**)new_mem;
+        parent.c_child_max = new_max;
     }
 }
 
 // --- apm.FRec.zd_rec_pkgrec.Cascdel
 // Delete all elements in the linked list.
-void apm::zd_rec_pkgrec_Cascdel(apm::FRec& rec) {
-    while (apm::FPkgrec *zd_rec_pkgrec_first = zd_rec_pkgrec_First(rec)) {
+void apm::zd_rec_pkgrec_Cascdel(apm::FRec& parent) {
+    while (apm::FPkgrec *zd_rec_pkgrec_first = zd_rec_pkgrec_First(parent)) {
         pkgrec_Delete(*zd_rec_pkgrec_first);
     }
 }
 
 // --- apm.FRec.zd_rec_pkgrec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void apm::zd_rec_pkgrec_Insert(apm::FRec& rec, apm::FPkgrec& row) {
+void apm::zd_rec_pkgrec_Insert(apm::FRec& parent, apm::FPkgrec& row) {
     if (!rec_zd_rec_pkgrec_InLlistQ(row)) {
-        apm::FPkgrec* old_tail = rec.zd_rec_pkgrec_tail;
+        apm::FPkgrec* old_tail = parent.zd_rec_pkgrec_tail;
         row.rec_zd_rec_pkgrec_next = NULL;
         row.rec_zd_rec_pkgrec_prev = old_tail;
-        rec.zd_rec_pkgrec_tail = &row;
+        parent.zd_rec_pkgrec_tail = &row;
         apm::FPkgrec **new_row_a = &old_tail->rec_zd_rec_pkgrec_next;
-        apm::FPkgrec **new_row_b = &rec.zd_rec_pkgrec_head;
+        apm::FPkgrec **new_row_b = &parent.zd_rec_pkgrec_head;
         apm::FPkgrec **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        rec.zd_rec_pkgrec_n++;
+        parent.zd_rec_pkgrec_n++;
     }
 }
 
 // --- apm.FRec.zd_rec_pkgrec.Remove
 // Remove element from index. If element is not in index, do nothing.
-void apm::zd_rec_pkgrec_Remove(apm::FRec& rec, apm::FPkgrec& row) {
+void apm::zd_rec_pkgrec_Remove(apm::FRec& parent, apm::FPkgrec& row) {
     if (rec_zd_rec_pkgrec_InLlistQ(row)) {
-        apm::FPkgrec* old_head       = rec.zd_rec_pkgrec_head;
+        apm::FPkgrec* old_head       = parent.zd_rec_pkgrec_head;
         (void)old_head; // in case it's not used
         apm::FPkgrec* prev = row.rec_zd_rec_pkgrec_prev;
         apm::FPkgrec* next = row.rec_zd_rec_pkgrec_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         apm::FPkgrec **new_next_a = &prev->rec_zd_rec_pkgrec_next;
-        apm::FPkgrec **new_next_b = &rec.zd_rec_pkgrec_head;
+        apm::FPkgrec **new_next_b = &parent.zd_rec_pkgrec_head;
         apm::FPkgrec **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         apm::FPkgrec **new_prev_a = &next->rec_zd_rec_pkgrec_prev;
-        apm::FPkgrec **new_prev_b = &rec.zd_rec_pkgrec_tail;
+        apm::FPkgrec **new_prev_b = &parent.zd_rec_pkgrec_tail;
         apm::FPkgrec **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        rec.zd_rec_pkgrec_n--;
+        parent.zd_rec_pkgrec_n--;
         row.rec_zd_rec_pkgrec_next=(apm::FPkgrec*)-1; // not-in-list
     }
 }
 
 // --- apm.FRec.zd_rec_pkgrec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void apm::zd_rec_pkgrec_RemoveAll(apm::FRec& rec) {
-    apm::FPkgrec* row = rec.zd_rec_pkgrec_head;
-    rec.zd_rec_pkgrec_head = NULL;
-    rec.zd_rec_pkgrec_tail = NULL;
-    rec.zd_rec_pkgrec_n = 0;
+void apm::zd_rec_pkgrec_RemoveAll(apm::FRec& parent) {
+    apm::FPkgrec* row = parent.zd_rec_pkgrec_head;
+    parent.zd_rec_pkgrec_head = NULL;
+    parent.zd_rec_pkgrec_tail = NULL;
+    parent.zd_rec_pkgrec_n = 0;
     while (row) {
         apm::FPkgrec* row_next = row->rec_zd_rec_pkgrec_next;
         row->rec_zd_rec_pkgrec_next  = (apm::FPkgrec*)-1;
@@ -5438,17 +5447,17 @@ void apm::zd_rec_pkgrec_RemoveAll(apm::FRec& rec) {
 
 // --- apm.FRec.zd_rec_pkgrec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-apm::FPkgrec* apm::zd_rec_pkgrec_RemoveFirst(apm::FRec& rec) {
+apm::FPkgrec* apm::zd_rec_pkgrec_RemoveFirst(apm::FRec& parent) {
     apm::FPkgrec *row = NULL;
-    row = rec.zd_rec_pkgrec_head;
+    row = parent.zd_rec_pkgrec_head;
     if (row) {
         apm::FPkgrec *next = row->rec_zd_rec_pkgrec_next;
-        rec.zd_rec_pkgrec_head = next;
+        parent.zd_rec_pkgrec_head = next;
         apm::FPkgrec **new_end_a = &next->rec_zd_rec_pkgrec_prev;
-        apm::FPkgrec **new_end_b = &rec.zd_rec_pkgrec_tail;
+        apm::FPkgrec **new_end_b = &parent.zd_rec_pkgrec_tail;
         apm::FPkgrec **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        rec.zd_rec_pkgrec_n--;
+        parent.zd_rec_pkgrec_n--;
         row->rec_zd_rec_pkgrec_next = (apm::FPkgrec*)-1; // mark as not-in-list
     }
     return row;
@@ -5456,40 +5465,39 @@ apm::FPkgrec* apm::zd_rec_pkgrec_RemoveFirst(apm::FRec& rec) {
 
 // --- apm.FRec.zd_rec_pkgrec.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void apm::zd_rec_pkgrec_InsertBefore(apm::FRec& rec, apm::FPkgrec& row, apm::FPkgrec* before) {
+void apm::zd_rec_pkgrec_InsertBefore(apm::FRec& parent, apm::FPkgrec& row, apm::FPkgrec* before) {
     if (!rec_zd_rec_pkgrec_InLlistQ(row) && &row != before) {
         apm::FPkgrec* next = before;
-        apm::FPkgrec* prev = next ? next->rec_zd_rec_pkgrec_prev : rec.zd_rec_pkgrec_tail;
+        apm::FPkgrec* prev = next ? next->rec_zd_rec_pkgrec_prev : parent.zd_rec_pkgrec_tail;
         row.rec_zd_rec_pkgrec_next = next;
         row.rec_zd_rec_pkgrec_prev = prev;
         apm::FPkgrec **prev_link_a = &prev->rec_zd_rec_pkgrec_next;
-        apm::FPkgrec **prev_link_b = &rec.zd_rec_pkgrec_head;
+        apm::FPkgrec **prev_link_b = &parent.zd_rec_pkgrec_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         apm::FPkgrec **next_link_a = &next->rec_zd_rec_pkgrec_prev;
-        apm::FPkgrec **next_link_b = &rec.zd_rec_pkgrec_tail;
+        apm::FPkgrec **next_link_b = &parent.zd_rec_pkgrec_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        rec.zd_rec_pkgrec_n++;
+        parent.zd_rec_pkgrec_n++;
     }
 }
 
 // --- apm.FRec..Uninit
-void apm::FRec_Uninit(apm::FRec& rec) {
-    apm::FRec &row = rec; (void)row;
-    zd_rec_pkgrec_Cascdel(rec); // dmmeta.cascdel:apm.FRec.zd_rec_pkgrec
-    ind_rec_Remove(row); // remove rec from index ind_rec
-    zd_rec_Remove(row); // remove rec from index zd_rec
-    apm::FSsimfile* p_p_ssimfile = row.p_ssimfile;
+void apm::FRec_Uninit(apm::FRec& parent) {
+    zd_rec_pkgrec_Cascdel(parent); // dmmeta.cascdel:apm.FRec.zd_rec_pkgrec
+    ind_rec_Remove(parent); // remove rec from index ind_rec
+    zd_rec_Remove(parent); // remove rec from index zd_rec
+    apm::FSsimfile* p_p_ssimfile = parent.p_ssimfile;
     if (p_p_ssimfile)  {
-        zd_ssimfile_rec_Remove(*p_p_ssimfile, row);// remove rec from index zd_ssimfile_rec
+        zd_ssimfile_rec_Remove(*p_p_ssimfile, parent);// remove rec from index zd_ssimfile_rec
     }
-    zd_selrec_Remove(row); // remove rec from index zd_selrec
-    zd_chooserec_Remove(row); // remove rec from index zd_chooserec
+    zd_selrec_Remove(parent); // remove rec from index zd_selrec
+    zd_chooserec_Remove(parent); // remove rec from index zd_chooserec
 
     // apm.FRec.c_child.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(rec.c_child_elems, sizeof(apm::FRec*)*rec.c_child_max); // (apm.FRec.c_child)
+    algo_lib::malloc_FreeMem(parent.c_child_elems, sizeof(apm::FRec*)*parent.c_child_max); // (apm.FRec.c_child)
 
     // apm.FRec.c_parent.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(rec.c_parent_elems, sizeof(apm::FRec*)*rec.c_parent_max); // (apm.FRec.c_parent)
+    algo_lib::malloc_FreeMem(parent.c_parent_elems, sizeof(apm::FRec*)*parent.c_parent_max); // (apm.FRec.c_parent)
 }
 
 // --- apm.FSsimfile.base.CopyOut
@@ -5507,66 +5515,66 @@ void apm::ssimfile_CopyIn(apm::FSsimfile &row, dmmeta::Ssimfile &in) {
 }
 
 // --- apm.FSsimfile.ssimns.Get
-algo::strptr apm::ssimns_Get(apm::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr apm::ssimns_Get(apm::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- apm.FSsimfile.ns.Get
-algo::strptr apm::ns_Get(apm::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
+algo::strptr apm::ns_Get(apm::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".LL");
 }
 
 // --- apm.FSsimfile.name.Get
-algo::strptr apm::name_Get(apm::FSsimfile& ssimfile) {
-    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
+algo::strptr apm::name_Get(apm::FSsimfile& parent) {
+    return algo::Pathcomp(parent.ssimfile, ".RR");
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void apm::zd_ssimfile_rec_Insert(apm::FSsimfile& ssimfile, apm::FRec& row) {
+void apm::zd_ssimfile_rec_Insert(apm::FSsimfile& parent, apm::FRec& row) {
     if (!ssimfile_zd_ssimfile_rec_InLlistQ(row)) {
-        apm::FRec* old_tail = ssimfile.zd_ssimfile_rec_tail;
+        apm::FRec* old_tail = parent.zd_ssimfile_rec_tail;
         row.ssimfile_zd_ssimfile_rec_next = NULL;
         row.ssimfile_zd_ssimfile_rec_prev = old_tail;
-        ssimfile.zd_ssimfile_rec_tail = &row;
+        parent.zd_ssimfile_rec_tail = &row;
         apm::FRec **new_row_a = &old_tail->ssimfile_zd_ssimfile_rec_next;
-        apm::FRec **new_row_b = &ssimfile.zd_ssimfile_rec_head;
+        apm::FRec **new_row_b = &parent.zd_ssimfile_rec_head;
         apm::FRec **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        ssimfile.zd_ssimfile_rec_n++;
+        parent.zd_ssimfile_rec_n++;
     }
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec.Remove
 // Remove element from index. If element is not in index, do nothing.
-void apm::zd_ssimfile_rec_Remove(apm::FSsimfile& ssimfile, apm::FRec& row) {
+void apm::zd_ssimfile_rec_Remove(apm::FSsimfile& parent, apm::FRec& row) {
     if (ssimfile_zd_ssimfile_rec_InLlistQ(row)) {
-        apm::FRec* old_head       = ssimfile.zd_ssimfile_rec_head;
+        apm::FRec* old_head       = parent.zd_ssimfile_rec_head;
         (void)old_head; // in case it's not used
         apm::FRec* prev = row.ssimfile_zd_ssimfile_rec_prev;
         apm::FRec* next = row.ssimfile_zd_ssimfile_rec_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         apm::FRec **new_next_a = &prev->ssimfile_zd_ssimfile_rec_next;
-        apm::FRec **new_next_b = &ssimfile.zd_ssimfile_rec_head;
+        apm::FRec **new_next_b = &parent.zd_ssimfile_rec_head;
         apm::FRec **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         apm::FRec **new_prev_a = &next->ssimfile_zd_ssimfile_rec_prev;
-        apm::FRec **new_prev_b = &ssimfile.zd_ssimfile_rec_tail;
+        apm::FRec **new_prev_b = &parent.zd_ssimfile_rec_tail;
         apm::FRec **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        ssimfile.zd_ssimfile_rec_n--;
+        parent.zd_ssimfile_rec_n--;
         row.ssimfile_zd_ssimfile_rec_next=(apm::FRec*)-1; // not-in-list
     }
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void apm::zd_ssimfile_rec_RemoveAll(apm::FSsimfile& ssimfile) {
-    apm::FRec* row = ssimfile.zd_ssimfile_rec_head;
-    ssimfile.zd_ssimfile_rec_head = NULL;
-    ssimfile.zd_ssimfile_rec_tail = NULL;
-    ssimfile.zd_ssimfile_rec_n = 0;
+void apm::zd_ssimfile_rec_RemoveAll(apm::FSsimfile& parent) {
+    apm::FRec* row = parent.zd_ssimfile_rec_head;
+    parent.zd_ssimfile_rec_head = NULL;
+    parent.zd_ssimfile_rec_tail = NULL;
+    parent.zd_ssimfile_rec_n = 0;
     while (row) {
         apm::FRec* row_next = row->ssimfile_zd_ssimfile_rec_next;
         row->ssimfile_zd_ssimfile_rec_next  = (apm::FRec*)-1;
@@ -5577,17 +5585,17 @@ void apm::zd_ssimfile_rec_RemoveAll(apm::FSsimfile& ssimfile) {
 
 // --- apm.FSsimfile.zd_ssimfile_rec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-apm::FRec* apm::zd_ssimfile_rec_RemoveFirst(apm::FSsimfile& ssimfile) {
+apm::FRec* apm::zd_ssimfile_rec_RemoveFirst(apm::FSsimfile& parent) {
     apm::FRec *row = NULL;
-    row = ssimfile.zd_ssimfile_rec_head;
+    row = parent.zd_ssimfile_rec_head;
     if (row) {
         apm::FRec *next = row->ssimfile_zd_ssimfile_rec_next;
-        ssimfile.zd_ssimfile_rec_head = next;
+        parent.zd_ssimfile_rec_head = next;
         apm::FRec **new_end_a = &next->ssimfile_zd_ssimfile_rec_prev;
-        apm::FRec **new_end_b = &ssimfile.zd_ssimfile_rec_tail;
+        apm::FRec **new_end_b = &parent.zd_ssimfile_rec_tail;
         apm::FRec **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        ssimfile.zd_ssimfile_rec_n--;
+        parent.zd_ssimfile_rec_n--;
         row->ssimfile_zd_ssimfile_rec_next = (apm::FRec*)-1; // mark as not-in-list
     }
     return row;
@@ -5595,29 +5603,28 @@ apm::FRec* apm::zd_ssimfile_rec_RemoveFirst(apm::FSsimfile& ssimfile) {
 
 // --- apm.FSsimfile.zd_ssimfile_rec.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void apm::zd_ssimfile_rec_InsertBefore(apm::FSsimfile& ssimfile, apm::FRec& row, apm::FRec* before) {
+void apm::zd_ssimfile_rec_InsertBefore(apm::FSsimfile& parent, apm::FRec& row, apm::FRec* before) {
     if (!ssimfile_zd_ssimfile_rec_InLlistQ(row) && &row != before) {
         apm::FRec* next = before;
-        apm::FRec* prev = next ? next->ssimfile_zd_ssimfile_rec_prev : ssimfile.zd_ssimfile_rec_tail;
+        apm::FRec* prev = next ? next->ssimfile_zd_ssimfile_rec_prev : parent.zd_ssimfile_rec_tail;
         row.ssimfile_zd_ssimfile_rec_next = next;
         row.ssimfile_zd_ssimfile_rec_prev = prev;
         apm::FRec **prev_link_a = &prev->ssimfile_zd_ssimfile_rec_next;
-        apm::FRec **prev_link_b = &ssimfile.zd_ssimfile_rec_head;
+        apm::FRec **prev_link_b = &parent.zd_ssimfile_rec_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         apm::FRec **next_link_a = &next->ssimfile_zd_ssimfile_rec_prev;
-        apm::FRec **next_link_b = &ssimfile.zd_ssimfile_rec_tail;
+        apm::FRec **next_link_b = &parent.zd_ssimfile_rec_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        ssimfile.zd_ssimfile_rec_n++;
+        parent.zd_ssimfile_rec_n++;
     }
 }
 
 // --- apm.FSsimfile..Uninit
-void apm::FSsimfile_Uninit(apm::FSsimfile& ssimfile) {
-    apm::FSsimfile &row = ssimfile; (void)row;
-    ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
-    apm::FCtype* p_ctype = apm::ind_ctype_Find(row.ctype);
+void apm::FSsimfile_Uninit(apm::FSsimfile& parent) {
+    ind_ssimfile_Remove(parent); // remove ssimfile from index ind_ssimfile
+    apm::FCtype* p_ctype = apm::ind_ctype_Find(parent.ctype);
     if (p_ctype)  {
-        c_ssimfile_Remove(*p_ctype, row);// remove ssimfile from index c_ssimfile
+        c_ssimfile_Remove(*p_ctype, parent);// remove ssimfile from index c_ssimfile
     }
 }
 
@@ -5642,48 +5649,47 @@ void apm::ssimreq_CopyIn(apm::FSsimreq &row, dmmeta::Ssimreq &in) {
 }
 
 // --- apm.FSsimreq.parent_field.Get
-algo::strptr apm::parent_field_Get(apm::FSsimreq& ssimreq) {
-    return algo::Pathcomp(ssimreq.parent, ":LL");
+algo::strptr apm::parent_field_Get(apm::FSsimreq& parent) {
+    return algo::Pathcomp(parent.parent, ":LL");
 }
 
 // --- apm.FSsimreq.parent_ctype.Get
-algo::strptr apm::parent_ctype_Get(apm::FSsimreq& ssimreq) {
-    return algo::Pathcomp(ssimreq.parent, ":LL.RL");
+algo::strptr apm::parent_ctype_Get(apm::FSsimreq& parent) {
+    return algo::Pathcomp(parent.parent, ":LL.RL");
 }
 
 // --- apm.FSsimreq.value.Get
-algo::strptr apm::value_Get(apm::FSsimreq& ssimreq) {
-    return algo::Pathcomp(ssimreq.parent, ":LR");
+algo::strptr apm::value_Get(apm::FSsimreq& parent) {
+    return algo::Pathcomp(parent.parent, ":LR");
 }
 
 // --- apm.FSsimreq.child_ssimfile.Get
-algo::strptr apm::child_ssimfile_Get(apm::FSsimreq& ssimreq) {
-    return algo::Pathcomp(ssimreq.ssimreq, ":LL");
+algo::strptr apm::child_ssimfile_Get(apm::FSsimreq& parent) {
+    return algo::Pathcomp(parent.ssimreq, ":LL");
 }
 
 // --- apm.FSsimreq.child_key.Get
-algo::strptr apm::child_key_Get(apm::FSsimreq& ssimreq) {
-    return algo::Pathcomp(ssimreq.ssimreq, ":RR");
+algo::strptr apm::child_key_Get(apm::FSsimreq& parent) {
+    return algo::Pathcomp(parent.ssimreq, ":RR");
 }
 
 // --- apm.FSsimreq..Init
 // Set all fields to initial values.
-void apm::FSsimreq_Init(apm::FSsimreq& ssimreq) {
-    ssimreq.reqchild = bool(false);
-    ssimreq.bidir = bool(false);
-    ssimreq.p_child_ssimfile = NULL;
-    ssimreq.p_ctype = NULL;
-    ssimreq.p_field = NULL;
-    ssimreq.exclude = bool(false);
-    ssimreq.ctype_c_ssimreq_in_ary = bool(false);
+void apm::FSsimreq_Init(apm::FSsimreq& parent) {
+    parent.reqchild = bool(false);
+    parent.bidir = bool(false);
+    parent.p_child_ssimfile = NULL;
+    parent.p_ctype = NULL;
+    parent.p_field = NULL;
+    parent.exclude = bool(false);
+    parent.ctype_c_ssimreq_in_ary = bool(false);
 }
 
 // --- apm.FSsimreq..Uninit
-void apm::FSsimreq_Uninit(apm::FSsimreq& ssimreq) {
-    apm::FSsimreq &row = ssimreq; (void)row;
-    apm::FCtype* p_parent_ctype = apm::ind_ctype_Find(parent_ctype_Get(row));
+void apm::FSsimreq_Uninit(apm::FSsimreq& parent) {
+    apm::FCtype* p_parent_ctype = apm::ind_ctype_Find(parent_ctype_Get(parent));
     if (p_parent_ctype)  {
-        c_ssimreq_Remove(*p_parent_ctype, row);// remove ssimreq from index c_ssimreq
+        c_ssimreq_Remove(*p_parent_ctype, parent);// remove ssimreq from index c_ssimreq
     }
 }
 
@@ -5704,13 +5710,12 @@ void apm::ssimsort_CopyIn(apm::FSsimsort &row, dmmeta::Ssimsort &in) {
 }
 
 // --- apm.FSsimsort..Uninit
-void apm::FSsimsort_Uninit(apm::FSsimsort& ssimsort) {
-    apm::FSsimsort &row = ssimsort; (void)row;
-    apm::FSsimfile* p_ssimfile = apm::ind_ssimfile_Find(row.ssimfile);
+void apm::FSsimsort_Uninit(apm::FSsimsort& parent) {
+    apm::FSsimfile* p_ssimfile = apm::ind_ssimfile_Find(parent.ssimfile);
     if (p_ssimfile)  {
-        c_ssimsort_Remove(*p_ssimfile, row);// remove ssimsort from index c_ssimsort
+        c_ssimsort_Remove(*p_ssimfile, parent);// remove ssimsort from index c_ssimsort
     }
-    ind_ssimsort_Remove(row); // remove ssimsort from index ind_ssimsort
+    ind_ssimsort_Remove(parent); // remove ssimsort from index ind_ssimsort
 }
 
 // --- apm.FSubstr.base.CopyOut
@@ -5730,11 +5735,10 @@ void apm::substr_CopyIn(apm::FSubstr &row, dmmeta::Substr &in) {
 }
 
 // --- apm.FSubstr..Uninit
-void apm::FSubstr_Uninit(apm::FSubstr& substr) {
-    apm::FSubstr &row = substr; (void)row;
-    apm::FField* p_field = apm::ind_field_Find(row.field);
+void apm::FSubstr_Uninit(apm::FSubstr& parent) {
+    apm::FField* p_field = apm::ind_field_Find(parent.field);
     if (p_field)  {
-        c_substr_Remove(*p_field, row);// remove substr from index c_substr
+        c_substr_Remove(*p_field, parent);// remove substr from index c_substr
     }
 }
 
@@ -6021,7 +6025,6 @@ void apm::StaticCheck() {
 // --- apm...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ctype::FDb_Init();
         lib_git::FDb_Init();
@@ -6044,7 +6047,6 @@ int main(int argc, char **argv) {
         lib_git::FDb_Uninit();
         lib_ctype::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

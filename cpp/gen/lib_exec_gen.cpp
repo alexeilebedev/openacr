@@ -31,8 +31,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 lib_exec::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
@@ -1190,7 +1188,6 @@ void lib_exec::FDb_Init() {
 
 // --- lib_exec.FDb..Uninit
 void lib_exec::FDb_Uninit() {
-    lib_exec::FDb &row = _db; (void)row;
 
     // lib_exec.FDb.bh_syscmd.Uninit (Bheap)  //Heap of all commands in dependency order
     // skip destruction in global scope
@@ -1234,11 +1231,11 @@ void lib_exec::syscmd_CopyIn(lib_exec::FSyscmd &row, dev::Syscmd &in) {
 // --- lib_exec.FSyscmd.c_prior.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void lib_exec::c_prior_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
+void lib_exec::c_prior_Insert(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) {
     if (!row.syscmd_c_prior_in_ary) {
-        c_prior_Reserve(syscmd, 1);
-        u64 n  = syscmd.c_prior_n++;
-        syscmd.c_prior_elems[n] = &row;
+        c_prior_Reserve(parent, 1);
+        u64 n  = parent.c_prior_n++;
+        parent.c_prior_elems[n] = &row;
         row.syscmd_c_prior_in_ary = true;
     }
 }
@@ -1247,18 +1244,18 @@ void lib_exec::c_prior_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& r
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_exec::c_prior_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
+bool lib_exec::c_prior_InsertMaybe(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) {
     bool retval = !syscmd_c_prior_InAryQ(row);
-    c_prior_Insert(syscmd,row); // check is performed in _Insert again
+    c_prior_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- lib_exec.FSyscmd.c_prior.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_exec::c_prior_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
-    i64 n = syscmd.c_prior_n;
+void lib_exec::c_prior_Remove(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) {
+    i64 n = parent.c_prior_n;
     if (bool_Update(row.syscmd_c_prior_in_ary,false)) {
-        lib_exec::FSyscmddep* *elems = syscmd.c_prior_elems;
+        lib_exec::FSyscmddep* *elems = parent.c_prior_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -1267,7 +1264,7 @@ void lib_exec::c_prior_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& r
                 i64 j = i + 1;
                 size_t nbytes = sizeof(lib_exec::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                syscmd.c_prior_n = n - 1;
+                parent.c_prior_n = n - 1;
                 break;
             }
         }
@@ -1276,29 +1273,29 @@ void lib_exec::c_prior_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& r
 
 // --- lib_exec.FSyscmd.c_prior.Reserve
 // Reserve space in index for N more elements;
-void lib_exec::c_prior_Reserve(lib_exec::FSyscmd& syscmd, u64 n) {
-    u64 old_max = syscmd.c_prior_max;
-    if (UNLIKELY(syscmd.c_prior_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, syscmd.c_prior_n + n), 4);
+void lib_exec::c_prior_Reserve(lib_exec::FSyscmd& parent, u64 n) {
+    u64 old_max = parent.c_prior_max;
+    if (UNLIKELY(parent.c_prior_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_prior_n + n), 4);
         u64 old_size = old_max * sizeof(lib_exec::FSyscmddep*);
         u64 new_size = new_max * sizeof(lib_exec::FSyscmddep*);
-        void *new_mem = algo_lib::malloc_ReallocMem(syscmd.c_prior_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_prior_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_exec.out_of_memory  field:lib_exec.FSyscmd.c_prior");
         }
-        syscmd.c_prior_elems = (lib_exec::FSyscmddep**)new_mem;
-        syscmd.c_prior_max = new_max;
+        parent.c_prior_elems = (lib_exec::FSyscmddep**)new_mem;
+        parent.c_prior_max = new_max;
     }
 }
 
 // --- lib_exec.FSyscmd.c_next.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void lib_exec::c_next_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
+void lib_exec::c_next_Insert(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) {
     if (!row.syscmd_c_next_in_ary) {
-        c_next_Reserve(syscmd, 1);
-        u64 n  = syscmd.c_next_n++;
-        syscmd.c_next_elems[n] = &row;
+        c_next_Reserve(parent, 1);
+        u64 n  = parent.c_next_n++;
+        parent.c_next_elems[n] = &row;
         row.syscmd_c_next_in_ary = true;
     }
 }
@@ -1307,18 +1304,18 @@ void lib_exec::c_next_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& ro
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_exec::c_next_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
+bool lib_exec::c_next_InsertMaybe(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) {
     bool retval = !syscmd_c_next_InAryQ(row);
-    c_next_Insert(syscmd,row); // check is performed in _Insert again
+    c_next_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- lib_exec.FSyscmd.c_next.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_exec::c_next_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
-    i64 n = syscmd.c_next_n;
+void lib_exec::c_next_Remove(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) {
+    i64 n = parent.c_next_n;
     if (bool_Update(row.syscmd_c_next_in_ary,false)) {
-        lib_exec::FSyscmddep* *elems = syscmd.c_next_elems;
+        lib_exec::FSyscmddep* *elems = parent.c_next_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -1327,7 +1324,7 @@ void lib_exec::c_next_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& ro
                 i64 j = i + 1;
                 size_t nbytes = sizeof(lib_exec::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                syscmd.c_next_n = n - 1;
+                parent.c_next_n = n - 1;
                 break;
             }
         }
@@ -1336,61 +1333,60 @@ void lib_exec::c_next_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& ro
 
 // --- lib_exec.FSyscmd.c_next.Reserve
 // Reserve space in index for N more elements;
-void lib_exec::c_next_Reserve(lib_exec::FSyscmd& syscmd, u64 n) {
-    u64 old_max = syscmd.c_next_max;
-    if (UNLIKELY(syscmd.c_next_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, syscmd.c_next_n + n), 4);
+void lib_exec::c_next_Reserve(lib_exec::FSyscmd& parent, u64 n) {
+    u64 old_max = parent.c_next_max;
+    if (UNLIKELY(parent.c_next_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_next_n + n), 4);
         u64 old_size = old_max * sizeof(lib_exec::FSyscmddep*);
         u64 new_size = new_max * sizeof(lib_exec::FSyscmddep*);
-        void *new_mem = algo_lib::malloc_ReallocMem(syscmd.c_next_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_next_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_exec.out_of_memory  field:lib_exec.FSyscmd.c_next");
         }
-        syscmd.c_next_elems = (lib_exec::FSyscmddep**)new_mem;
-        syscmd.c_next_max = new_max;
+        parent.c_next_elems = (lib_exec::FSyscmddep**)new_mem;
+        parent.c_next_max = new_max;
     }
 }
 
 // --- lib_exec.FSyscmd..Init
 // Set all fields to initial values.
-void lib_exec::FSyscmd_Init(lib_exec::FSyscmd& syscmd) {
-    syscmd.syscmd = i64(0);
-    syscmd.pid = i32(0);
-    syscmd.status = i32(0);
-    syscmd.nprereq = i32(0);
-    syscmd.fail_prereq = bool(false);
-    syscmd.completed = bool(false);
-    syscmd.maxtime = i32(0);
-    syscmd.c_prior_elems = NULL; // (lib_exec.FSyscmd.c_prior)
-    syscmd.c_prior_n = 0; // (lib_exec.FSyscmd.c_prior)
-    syscmd.c_prior_max = 0; // (lib_exec.FSyscmd.c_prior)
-    syscmd.c_next_elems = NULL; // (lib_exec.FSyscmd.c_next)
-    syscmd.c_next_n = 0; // (lib_exec.FSyscmd.c_next)
-    syscmd.c_next_max = 0; // (lib_exec.FSyscmd.c_next)
-    syscmd.rowid = i32(0);
-    syscmd.redir_out = bool(true);
-    syscmd.show_out = bool(true);
-    syscmd.pty_in = bool(false);
-    syscmd.signal = i32(0);
-    syscmd.ind_running_next = (lib_exec::FSyscmd*)-1; // (lib_exec.FDb.ind_running) not-in-hash
-    syscmd.ind_running_hashval = 0; // stored hash value
-    syscmd.bh_syscmd_idx = -1; // (lib_exec.FDb.bh_syscmd) not-in-heap
-    syscmd.zd_started_next = (lib_exec::FSyscmd*)-1; // (lib_exec.FDb.zd_started) not-in-list
-    syscmd.zd_started_prev = NULL; // (lib_exec.FDb.zd_started)
+void lib_exec::FSyscmd_Init(lib_exec::FSyscmd& parent) {
+    parent.syscmd = i64(0);
+    parent.pid = i32(0);
+    parent.status = i32(0);
+    parent.nprereq = i32(0);
+    parent.fail_prereq = bool(false);
+    parent.completed = bool(false);
+    parent.maxtime = i32(0);
+    parent.c_prior_elems = NULL; // (lib_exec.FSyscmd.c_prior)
+    parent.c_prior_n = 0; // (lib_exec.FSyscmd.c_prior)
+    parent.c_prior_max = 0; // (lib_exec.FSyscmd.c_prior)
+    parent.c_next_elems = NULL; // (lib_exec.FSyscmd.c_next)
+    parent.c_next_n = 0; // (lib_exec.FSyscmd.c_next)
+    parent.c_next_max = 0; // (lib_exec.FSyscmd.c_next)
+    parent.rowid = i32(0);
+    parent.redir_out = bool(true);
+    parent.show_out = bool(true);
+    parent.pty_in = bool(false);
+    parent.signal = i32(0);
+    parent.ind_running_next = (lib_exec::FSyscmd*)-1; // (lib_exec.FDb.ind_running) not-in-hash
+    parent.ind_running_hashval = 0; // stored hash value
+    parent.bh_syscmd_idx = -1; // (lib_exec.FDb.bh_syscmd) not-in-heap
+    parent.zd_started_next = (lib_exec::FSyscmd*)-1; // (lib_exec.FDb.zd_started) not-in-list
+    parent.zd_started_prev = NULL; // (lib_exec.FDb.zd_started)
 }
 
 // --- lib_exec.FSyscmd..Uninit
-void lib_exec::FSyscmd_Uninit(lib_exec::FSyscmd& syscmd) {
-    lib_exec::FSyscmd &row = syscmd; (void)row;
-    ind_running_Remove(row); // remove syscmd from index ind_running
-    bh_syscmd_Remove(row); // remove syscmd from index bh_syscmd
-    zd_started_Remove(row); // remove syscmd from index zd_started
+void lib_exec::FSyscmd_Uninit(lib_exec::FSyscmd& parent) {
+    ind_running_Remove(parent); // remove syscmd from index ind_running
+    bh_syscmd_Remove(parent); // remove syscmd from index bh_syscmd
+    zd_started_Remove(parent); // remove syscmd from index zd_started
 
     // lib_exec.FSyscmd.c_next.Uninit (Ptrary)  //Set of dependencies where this command is the 'before'
-    algo_lib::malloc_FreeMem(syscmd.c_next_elems, sizeof(lib_exec::FSyscmddep*)*syscmd.c_next_max); // (lib_exec.FSyscmd.c_next)
+    algo_lib::malloc_FreeMem(parent.c_next_elems, sizeof(lib_exec::FSyscmddep*)*parent.c_next_max); // (lib_exec.FSyscmd.c_next)
 
     // lib_exec.FSyscmd.c_prior.Uninit (Ptrary)  //Set of dependencies where this command is the 'after'
-    algo_lib::malloc_FreeMem(syscmd.c_prior_elems, sizeof(lib_exec::FSyscmddep*)*syscmd.c_prior_max); // (lib_exec.FSyscmd.c_prior)
+    algo_lib::malloc_FreeMem(parent.c_prior_elems, sizeof(lib_exec::FSyscmddep*)*parent.c_prior_max); // (lib_exec.FSyscmd.c_prior)
 }
 
 // --- lib_exec.FSyscmd..Print
@@ -1470,15 +1466,14 @@ void lib_exec::syscmddep_CopyIn(lib_exec::FSyscmddep &row, dev::Syscmddep &in) {
 }
 
 // --- lib_exec.FSyscmddep..Uninit
-void lib_exec::FSyscmddep_Uninit(lib_exec::FSyscmddep& syscmddep) {
-    lib_exec::FSyscmddep &row = syscmddep; (void)row;
-    lib_exec::FSyscmd* p_child = lib_exec::syscmd_Find(row.child);
+void lib_exec::FSyscmddep_Uninit(lib_exec::FSyscmddep& parent) {
+    lib_exec::FSyscmd* p_child = lib_exec::syscmd_Find(parent.child);
     if (p_child)  {
-        c_prior_Remove(*p_child, row);// remove syscmddep from index c_prior
+        c_prior_Remove(*p_child, parent);// remove syscmddep from index c_prior
     }
-    lib_exec::FSyscmd* p_parent = lib_exec::syscmd_Find(row.parent);
+    lib_exec::FSyscmd* p_parent = lib_exec::syscmd_Find(parent.parent);
     if (p_parent)  {
-        c_next_Remove(*p_parent, row);// remove syscmddep from index c_next
+        c_next_Remove(*p_parent, parent);// remove syscmddep from index c_next
     }
 }
 

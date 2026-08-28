@@ -389,69 +389,69 @@ inline  algo_lib::Cmdline::Cmdline() {
 
 // --- algo_lib.CsvParse.ary_tok.EmptyQ
 // Return true if index is empty
-inline bool algo_lib::ary_tok_EmptyQ(algo_lib::CsvParse& csvparse) {
-    return csvparse.ary_tok_n == 0;
+inline bool algo_lib::ary_tok_EmptyQ(algo_lib::CsvParse& parent) {
+    return parent.ary_tok_n == 0;
 }
 
 // --- algo_lib.CsvParse.ary_tok.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* algo_lib::ary_tok_Find(algo_lib::CsvParse& csvparse, u64 t) {
+inline algo::cstring* algo_lib::ary_tok_Find(algo_lib::CsvParse& parent, u64 t) {
     u64 idx = t;
-    u64 lim = csvparse.ary_tok_n;
+    u64 lim = parent.ary_tok_n;
     if (idx >= lim) return NULL;
-    return csvparse.ary_tok_elems + idx;
+    return parent.ary_tok_elems + idx;
 }
 
 // --- algo_lib.CsvParse.ary_tok.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> algo_lib::ary_tok_Getary(const algo_lib::CsvParse& csvparse) {
-    return algo::aryptr<algo::cstring>(csvparse.ary_tok_elems, csvparse.ary_tok_n);
+inline algo::aryptr<algo::cstring> algo_lib::ary_tok_Getary(const algo_lib::CsvParse& parent) {
+    return algo::aryptr<algo::cstring>(parent.ary_tok_elems, parent.ary_tok_n);
 }
 
 // --- algo_lib.CsvParse.ary_tok.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* algo_lib::ary_tok_Last(algo_lib::CsvParse& csvparse) {
-    return ary_tok_Find(csvparse, u64(csvparse.ary_tok_n-1));
+inline algo::cstring* algo_lib::ary_tok_Last(algo_lib::CsvParse& parent) {
+    return ary_tok_Find(parent, u64(parent.ary_tok_n-1));
 }
 
 // --- algo_lib.CsvParse.ary_tok.Max
 // Return max. number of items in the array
-inline i64 algo_lib::ary_tok_Max(algo_lib::CsvParse& csvparse) {
-    (void)csvparse;
-    return csvparse.ary_tok_max;
+inline i64 algo_lib::ary_tok_Max(algo_lib::CsvParse& parent) {
+    (void)parent;
+    return parent.ary_tok_max;
 }
 
 // --- algo_lib.CsvParse.ary_tok.N
 // Return number of items in the array
-inline i64 algo_lib::ary_tok_N(const algo_lib::CsvParse& csvparse) {
-    return csvparse.ary_tok_n;
+inline i64 algo_lib::ary_tok_N(const algo_lib::CsvParse& parent) {
+    return parent.ary_tok_n;
 }
 
 // --- algo_lib.CsvParse.ary_tok.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::ary_tok_Reserve(algo_lib::CsvParse& csvparse, i64 n) {
-    u64 new_n = csvparse.ary_tok_n + n;
-    if (UNLIKELY(new_n > csvparse.ary_tok_max)) {
-        ary_tok_AbsReserve(csvparse, new_n);
+inline void algo_lib::ary_tok_Reserve(algo_lib::CsvParse& parent, i64 n) {
+    u64 new_n = parent.ary_tok_n + n;
+    if (UNLIKELY(new_n > parent.ary_tok_max)) {
+        ary_tok_AbsReserve(parent, new_n);
     }
 }
 
 // --- algo_lib.CsvParse.ary_tok.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& algo_lib::ary_tok_qFind(algo_lib::CsvParse& csvparse, u64 t) {
-    return csvparse.ary_tok_elems[t];
+inline algo::cstring& algo_lib::ary_tok_qFind(algo_lib::CsvParse& parent, u64 t) {
+    return parent.ary_tok_elems[t];
 }
 
 // --- algo_lib.CsvParse.ary_tok.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& algo_lib::ary_tok_qLast(algo_lib::CsvParse& csvparse) {
-    return ary_tok_qFind(csvparse, u64(csvparse.ary_tok_n-1));
+inline algo::cstring& algo_lib::ary_tok_qLast(algo_lib::CsvParse& parent) {
+    return ary_tok_qFind(parent, u64(parent.ary_tok_n-1));
 }
 
 // --- algo_lib.CsvParse.ary_tok.rowid_Get
 // Return row id of specified element
-inline u64 algo_lib::ary_tok_rowid_Get(algo_lib::CsvParse& csvparse, algo::cstring &elem) {
-    u64 id = &elem - csvparse.ary_tok_elems;
+inline u64 algo_lib::ary_tok_rowid_Get(algo_lib::CsvParse& parent, algo::cstring &elem) {
+    u64 id = &elem - parent.ary_tok_elems;
     return u64(id);
 }
 
@@ -482,14 +482,14 @@ inline algo::cstring& algo_lib::csvparse_ary_tok_curs_Access(csvparse_ary_tok_cu
 
 // --- algo_lib.CsvParse..Init
 // Set all fields to initial values.
-inline void algo_lib::CsvParse_Init(algo_lib::CsvParse& csvparse) {
-    csvparse.sep = char(',');
-    csvparse.quotechar1 = char('\"');
-    csvparse.quotechar2 = char('\'');
-    csvparse.ary_tok_elems 	= 0; // (algo_lib.CsvParse.ary_tok)
-    csvparse.ary_tok_n     	= 0; // (algo_lib.CsvParse.ary_tok)
-    csvparse.ary_tok_max   	= 0; // (algo_lib.CsvParse.ary_tok)
-    csvparse.openquote = bool(true);
+inline void algo_lib::CsvParse_Init(algo_lib::CsvParse& parent) {
+    parent.sep = char(',');
+    parent.quotechar1 = char('\"');
+    parent.quotechar2 = char('\'');
+    parent.ary_tok_elems 	= 0; // (algo_lib.CsvParse.ary_tok)
+    parent.ary_tok_n     	= 0; // (algo_lib.CsvParse.ary_tok)
+    parent.ary_tok_max   	= 0; // (algo_lib.CsvParse.ary_tok)
+    parent.openquote = bool(true);
 }
 
 // --- algo_lib.CsvParse..Ctor
@@ -522,14 +522,125 @@ inline  algo_lib::ErrorX::ErrorX(const algo::strptr& in_str)
  {
 }
 
+// --- algo_lib.RegxM.slot.EmptyQ
+// Return true if index is empty
+inline bool algo_lib::slot_EmptyQ(algo_lib::RegxM& parent) {
+    return parent.slot_n == 0;
+}
+
+// --- algo_lib.RegxM.slot.Find
+// Look up row by row id. Return NULL if out of range
+inline i32* algo_lib::slot_Find(algo_lib::RegxM& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.slot_n;
+    if (idx >= lim) return NULL;
+    return parent.slot_elems + idx;
+}
+
+// --- algo_lib.RegxM.slot.Getary
+// Return array pointer by value
+inline algo::aryptr<i32> algo_lib::slot_Getary(const algo_lib::RegxM& parent) {
+    return algo::aryptr<i32>(parent.slot_elems, parent.slot_n);
+}
+
+// --- algo_lib.RegxM.slot.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline i32* algo_lib::slot_Last(algo_lib::RegxM& parent) {
+    return slot_Find(parent, u64(parent.slot_n-1));
+}
+
+// --- algo_lib.RegxM.slot.Max
+// Return max. number of items in the array
+inline i64 algo_lib::slot_Max(algo_lib::RegxM& parent) {
+    (void)parent;
+    return parent.slot_max;
+}
+
+// --- algo_lib.RegxM.slot.N
+// Return number of items in the array
+inline i64 algo_lib::slot_N(const algo_lib::RegxM& parent) {
+    return parent.slot_n;
+}
+
+// --- algo_lib.RegxM.slot.RemoveAll
+inline void algo_lib::slot_RemoveAll(algo_lib::RegxM& parent) {
+    parent.slot_n = 0;
+}
+
+// --- algo_lib.RegxM.slot.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo_lib::slot_Reserve(algo_lib::RegxM& parent, i64 n) {
+    u64 new_n = parent.slot_n + n;
+    if (UNLIKELY(new_n > parent.slot_max)) {
+        slot_AbsReserve(parent, new_n);
+    }
+}
+
+// --- algo_lib.RegxM.slot.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline i32& algo_lib::slot_qFind(algo_lib::RegxM& parent, u64 t) {
+    return parent.slot_elems[t];
+}
+
+// --- algo_lib.RegxM.slot.qLast
+// Return reference to last element of array. No bounds checking
+inline i32& algo_lib::slot_qLast(algo_lib::RegxM& parent) {
+    return slot_qFind(parent, u64(parent.slot_n-1));
+}
+
+// --- algo_lib.RegxM.slot.rowid_Get
+// Return row id of specified element
+inline u64 algo_lib::slot_rowid_Get(algo_lib::RegxM& parent, i32 &elem) {
+    u64 id = &elem - parent.slot_elems;
+    return u64(id);
+}
+
+// --- algo_lib.RegxM.slot_curs.Next
+// proceed to next item
+inline void algo_lib::RegxM_slot_curs_Next(RegxM_slot_curs &curs) {
+    curs.index++;
+}
+
+// --- algo_lib.RegxM.slot_curs.Reset
+inline void algo_lib::RegxM_slot_curs_Reset(RegxM_slot_curs &curs, algo_lib::RegxM &parent) {
+    curs.elems = parent.slot_elems;
+    curs.n_elems = parent.slot_n;
+    curs.index = 0;
+}
+
+// --- algo_lib.RegxM.slot_curs.ValidQ
+// cursor points to valid item
+inline bool algo_lib::RegxM_slot_curs_ValidQ(RegxM_slot_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo_lib.RegxM.slot_curs.Access
+// item access
+inline i32& algo_lib::RegxM_slot_curs_Access(RegxM_slot_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo_lib.RegxM..Init
+// Set all fields to initial values.
+inline void algo_lib::RegxM_Init(algo_lib::RegxM& parent) {
+    parent.slot_elems 	= 0; // (algo_lib.RegxM.slot)
+    parent.slot_n     	= 0; // (algo_lib.RegxM.slot)
+    parent.slot_max   	= 0; // (algo_lib.RegxM.slot)
+}
+
 // --- algo_lib.RegxM..Ctor
 inline  algo_lib::RegxM::RegxM() {
+    algo_lib::RegxM_Init(*this);
+}
+
+// --- algo_lib.RegxM..Dtor
+inline  algo_lib::RegxM::~RegxM() {
+    algo_lib::RegxM_Uninit(*this);
 }
 
 // --- algo_lib.FFildes..Uninit
-inline void algo_lib::FFildes_Uninit(algo_lib::FFildes& fildes) {
-    algo_lib::FFildes &row = fildes; (void)row;
-    fd_Cleanup(fildes); // dmmeta.ffunc:algo_lib.FFildes.fd/Cleanup
+inline void algo_lib::FFildes_Uninit(algo_lib::FFildes& parent) {
+    fd_Cleanup(parent); // dmmeta.ffunc:algo_lib.FFildes.fd/Cleanup
 }
 
 // --- algo_lib.FFildes..Ctor
@@ -549,7 +660,6 @@ inline void algo_lib::FLockfile_Init(algo_lib::FLockfile& parent) {
 
 // --- algo_lib.FLockfile..Uninit
 inline void algo_lib::FLockfile_Uninit(algo_lib::FLockfile& parent) {
-    algo_lib::FLockfile &row = parent; (void)row;
     fildes_Cleanup(parent); // dmmeta.ffunc:algo_lib.FLockfile.fildes/Cleanup
 }
 
@@ -565,54 +675,54 @@ inline  algo_lib::FLockfile::~FLockfile() {
 
 // --- algo_lib.FTimehook.time.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool algo_lib::time_Lt(algo_lib::FTimehook& timehook, algo_lib::FTimehook &rhs) {
-    return algo::SchedTime_Lt(timehook.time,rhs.time);
+inline bool algo_lib::time_Lt(algo_lib::FTimehook& parent, algo_lib::FTimehook &rhs) {
+    return algo::SchedTime_Lt(parent.time,rhs.time);
 }
 
 // --- algo_lib.FTimehook.time.Cmp
 // Compare two fields.
-inline i32 algo_lib::time_Cmp(algo_lib::FTimehook& timehook, algo_lib::FTimehook &rhs) {
+inline i32 algo_lib::time_Cmp(algo_lib::FTimehook& parent, algo_lib::FTimehook &rhs) {
     i32 retval = 0;
-    retval = algo::SchedTime_Cmp(timehook.time, rhs.time);
+    retval = algo::SchedTime_Cmp(parent.time, rhs.time);
     return retval;
 }
 
 // --- algo_lib.FTimehook.hook.Call
 // Invoke function by pointer
-inline void algo_lib::hook_Call(algo_lib::FTimehook& timehook, algo_lib::FTimehook& arg) {
-    if (timehook.hook) {
-        timehook.hook((void*)timehook.hook_ctx, arg);
+inline void algo_lib::hook_Call(algo_lib::FTimehook& parent, algo_lib::FTimehook& arg) {
+    if (parent.hook) {
+        parent.hook((void*)parent.hook_ctx, arg);
     }
 }
 
 // --- algo_lib.FTimehook.hook.Set0
 // Assign 0-argument hook with no context pointer
-inline void algo_lib::hook_Set0(algo_lib::FTimehook& timehook, void (*fcn)() ) {
-    timehook.hook_ctx = 0;
-    timehook.hook = (algo_lib::timehook_hook_hook)fcn;
+inline void algo_lib::hook_Set0(algo_lib::FTimehook& parent, void (*fcn)() ) {
+    parent.hook_ctx = 0;
+    parent.hook = (algo_lib::timehook_hook_hook)fcn;
 }
 
 // --- algo_lib.FTimehook.hook.Set1
 // Assign 1-argument hook with context pointer
-template<class T> inline void algo_lib::hook_Set1(algo_lib::FTimehook& timehook, T& ctx, void (*fcn)(T&) ) {
-    timehook.hook_ctx = (u64)&ctx;
-    timehook.hook = (algo_lib::timehook_hook_hook)fcn;
+template<class T> inline void algo_lib::hook_Set1(algo_lib::FTimehook& parent, T& ctx, void (*fcn)(T&) ) {
+    parent.hook_ctx = (u64)&ctx;
+    parent.hook = (algo_lib::timehook_hook_hook)fcn;
 }
 
 // --- algo_lib.FTimehook.hook.Set2
 // Assign 2-argument hook with context pointer
-template<class T> inline void algo_lib::hook_Set2(algo_lib::FTimehook& timehook, T& ctx, void (*fcn)(T&, algo_lib::FTimehook& arg) ) {
-    timehook.hook_ctx = (u64)&ctx;
-    timehook.hook = (algo_lib::timehook_hook_hook)fcn;
+template<class T> inline void algo_lib::hook_Set2(algo_lib::FTimehook& parent, T& ctx, void (*fcn)(T&, algo_lib::FTimehook& arg) ) {
+    parent.hook_ctx = (u64)&ctx;
+    parent.hook = (algo_lib::timehook_hook_hook)fcn;
 }
 
 // --- algo_lib.FTimehook..Init
 // Set all fields to initial values.
-inline void algo_lib::FTimehook_Init(algo_lib::FTimehook& timehook) {
-    timehook.recurrent = bool(false);
-    timehook.hook = NULL;
-    timehook.hook_ctx = 0;
-    timehook.bh_timehook_idx = -1; // (algo_lib.FDb.bh_timehook) not-in-heap
+inline void algo_lib::FTimehook_Init(algo_lib::FTimehook& parent) {
+    parent.recurrent = bool(false);
+    parent.hook = NULL;
+    parent.hook_ctx = 0;
+    parent.bh_timehook_idx = -1; // (algo_lib.FDb.bh_timehook) not-in-heap
 }
 
 // --- algo_lib.FTimehook..Ctor
@@ -627,14 +737,14 @@ inline  algo_lib::FTimehook::~FTimehook() {
 
 // --- algo_lib.FImdb..Init
 // Set all fields to initial values.
-inline void algo_lib::FImdb_Init(algo_lib::FImdb& imdb) {
-    memset(&imdb.InsertStrptrMaybe, 0, sizeof(imdb.InsertStrptrMaybe));
-    memset(&imdb.RemoveStrptrMaybe, 0, sizeof(imdb.RemoveStrptrMaybe));
-    memset(&imdb.Step, 0, sizeof(imdb.Step));
-    memset(&imdb.MainLoop, 0, sizeof(imdb.MainLoop));
-    memset(&imdb.GetTrace, 0, sizeof(imdb.GetTrace));
-    imdb.ind_imdb_next = (algo_lib::FImdb*)-1; // (algo_lib.FDb.ind_imdb) not-in-hash
-    imdb.ind_imdb_hashval = 0; // stored hash value
+inline void algo_lib::FImdb_Init(algo_lib::FImdb& parent) {
+    memset(&parent.InsertStrptrMaybe, 0, sizeof(parent.InsertStrptrMaybe));
+    memset(&parent.RemoveStrptrMaybe, 0, sizeof(parent.RemoveStrptrMaybe));
+    memset(&parent.Step, 0, sizeof(parent.Step));
+    memset(&parent.MainLoop, 0, sizeof(parent.MainLoop));
+    memset(&parent.GetTrace, 0, sizeof(parent.GetTrace));
+    parent.ind_imdb_next = (algo_lib::FImdb*)-1; // (algo_lib.FDb.ind_imdb) not-in-hash
+    parent.ind_imdb_hashval = 0; // stored hash value
 }
 
 // --- algo_lib.FImdb..Ctor
@@ -658,9 +768,9 @@ inline bool algo_lib::trace_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 0.
 inline void algo_lib::trace_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 0;
-    u8 t2    = (u8(rhs) & 0x01) << 0;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 0;
+    u16 t2    = (u16(rhs) & 0x01) << 0;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.capture.Get
@@ -674,9 +784,9 @@ inline bool algo_lib::capture_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
 inline void algo_lib::capture_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 1;
-    u8 t2    = (u8(rhs) & 0x01) << 1;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 1;
+    u16 t2    = (u16(rhs) & 0x01) << 1;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.valid.Get
@@ -690,9 +800,9 @@ inline bool algo_lib::valid_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 2.
 inline void algo_lib::valid_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 2;
-    u8 t2    = (u8(rhs) & 0x01) << 2;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 2;
+    u16 t2    = (u16(rhs) & 0x01) << 2;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.literal.Get
@@ -706,9 +816,9 @@ inline bool algo_lib::literal_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 3.
 inline void algo_lib::literal_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 3;
-    u8 t2    = (u8(rhs) & 0x01) << 3;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 3;
+    u16 t2    = (u16(rhs) & 0x01) << 3;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.accepts_all.Get
@@ -722,9 +832,9 @@ inline bool algo_lib::accepts_all_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 4.
 inline void algo_lib::accepts_all_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 4;
-    u8 t2    = (u8(rhs) & 0x01) << 4;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 4;
+    u16 t2    = (u16(rhs) & 0x01) << 4;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.fullmatch.Get
@@ -738,15 +848,57 @@ inline bool algo_lib::fullmatch_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 5.
 inline void algo_lib::fullmatch_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 5;
-    u8 t2    = (u8(rhs) & 0x01) << 5;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 5;
+    u16 t2    = (u16(rhs) & 0x01) << 5;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
-// --- algo_lib.RegxFlags..Init
-// Set all fields to initial values.
-inline void algo_lib::RegxFlags_Init(algo_lib::RegxFlags& parent) {
-    parent.value = u8(0);
+// --- algo_lib.RegxFlags.fixed.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 6.
+inline bool algo_lib::fixed_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 6) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.fixed.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 6.
+inline void algo_lib::fixed_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u16 t1    = u16(0x01) << 6;
+    u16 t2    = (u16(rhs) & 0x01) << 6;
+    parent.value = u16((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags.anchorbeg.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 7.
+inline bool algo_lib::anchorbeg_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 7) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.anchorbeg.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 7.
+inline void algo_lib::anchorbeg_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u16 t1    = u16(0x01) << 7;
+    u16 t2    = (u16(rhs) & 0x01) << 7;
+    parent.value = u16((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags.anchorend.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 8.
+inline bool algo_lib::anchorend_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 8) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.anchorend.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 8.
+inline void algo_lib::anchorend_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u16 t1    = u16(0x01) << 8;
+    u16 t2    = (u16(rhs) & 0x01) << 8;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags..Ctor
@@ -755,14 +907,14 @@ inline  algo_lib::RegxFlags::RegxFlags() {
 }
 
 // --- algo_lib.RegxFlags..FieldwiseCtor
-inline  algo_lib::RegxFlags::RegxFlags(u8 in_value)
+inline  algo_lib::RegxFlags::RegxFlags(u16 in_value)
     : value(in_value)
  {
 }
 
 // --- algo_lib.RegxFlags..EnumCtor
 inline  algo_lib::RegxFlags::RegxFlags(algo_lib_RegxFlagsEnum arg) {
-    this->value = u8(arg);
+    this->value = u16(arg);
 }
 
 // --- algo_lib.RegxStyle.value.GetEnum
@@ -806,69 +958,69 @@ inline  algo_lib::RegxStyle::RegxStyle(algo_lib_RegxStyleEnum arg) {
 
 // --- algo_lib.Regx.state.EmptyQ
 // Return true if index is empty
-inline bool algo_lib::state_EmptyQ(algo_lib::Regx& regx) {
-    return regx.state_n == 0;
+inline bool algo_lib::state_EmptyQ(algo_lib::Regx& parent) {
+    return parent.state_n == 0;
 }
 
 // --- algo_lib.Regx.state.Find
 // Look up row by row id. Return NULL if out of range
-inline algo_lib::RegxState* algo_lib::state_Find(algo_lib::Regx& regx, u64 t) {
+inline algo_lib::RegxState* algo_lib::state_Find(algo_lib::Regx& parent, u64 t) {
     u64 idx = t;
-    u64 lim = regx.state_n;
+    u64 lim = parent.state_n;
     if (idx >= lim) return NULL;
-    return regx.state_elems + idx;
+    return parent.state_elems + idx;
 }
 
 // --- algo_lib.Regx.state.Getary
 // Return array pointer by value
-inline algo::aryptr<algo_lib::RegxState> algo_lib::state_Getary(const algo_lib::Regx& regx) {
-    return algo::aryptr<algo_lib::RegxState>(regx.state_elems, regx.state_n);
+inline algo::aryptr<algo_lib::RegxState> algo_lib::state_Getary(const algo_lib::Regx& parent) {
+    return algo::aryptr<algo_lib::RegxState>(parent.state_elems, parent.state_n);
 }
 
 // --- algo_lib.Regx.state.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo_lib::RegxState* algo_lib::state_Last(algo_lib::Regx& regx) {
-    return state_Find(regx, u64(regx.state_n-1));
+inline algo_lib::RegxState* algo_lib::state_Last(algo_lib::Regx& parent) {
+    return state_Find(parent, u64(parent.state_n-1));
 }
 
 // --- algo_lib.Regx.state.Max
 // Return max. number of items in the array
-inline i64 algo_lib::state_Max(algo_lib::Regx& regx) {
-    (void)regx;
-    return regx.state_max;
+inline i64 algo_lib::state_Max(algo_lib::Regx& parent) {
+    (void)parent;
+    return parent.state_max;
 }
 
 // --- algo_lib.Regx.state.N
 // Return number of items in the array
-inline i64 algo_lib::state_N(const algo_lib::Regx& regx) {
-    return regx.state_n;
+inline i64 algo_lib::state_N(const algo_lib::Regx& parent) {
+    return parent.state_n;
 }
 
 // --- algo_lib.Regx.state.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::state_Reserve(algo_lib::Regx& regx, i64 n) {
-    u64 new_n = regx.state_n + n;
-    if (UNLIKELY(new_n > regx.state_max)) {
-        state_AbsReserve(regx, new_n);
+inline void algo_lib::state_Reserve(algo_lib::Regx& parent, i64 n) {
+    u64 new_n = parent.state_n + n;
+    if (UNLIKELY(new_n > parent.state_max)) {
+        state_AbsReserve(parent, new_n);
     }
 }
 
 // --- algo_lib.Regx.state.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo_lib::RegxState& algo_lib::state_qFind(algo_lib::Regx& regx, u64 t) {
-    return regx.state_elems[t];
+inline algo_lib::RegxState& algo_lib::state_qFind(algo_lib::Regx& parent, u64 t) {
+    return parent.state_elems[t];
 }
 
 // --- algo_lib.Regx.state.qLast
 // Return reference to last element of array. No bounds checking
-inline algo_lib::RegxState& algo_lib::state_qLast(algo_lib::Regx& regx) {
-    return state_qFind(regx, u64(regx.state_n-1));
+inline algo_lib::RegxState& algo_lib::state_qLast(algo_lib::Regx& parent) {
+    return state_qFind(parent, u64(parent.state_n-1));
 }
 
 // --- algo_lib.Regx.state.rowid_Get
 // Return row id of specified element
-inline u64 algo_lib::state_rowid_Get(algo_lib::Regx& regx, algo_lib::RegxState &elem) {
-    u64 id = &elem - regx.state_elems;
+inline u64 algo_lib::state_rowid_Get(algo_lib::Regx& parent, algo_lib::RegxState &elem) {
+    u64 id = &elem - parent.state_elems;
     return u64(id);
 }
 
@@ -899,10 +1051,11 @@ inline algo_lib::RegxState& algo_lib::regx_state_curs_Access(regx_state_curs &cu
 
 // --- algo_lib.Regx..Init
 // Set all fields to initial values.
-inline void algo_lib::Regx_Init(algo_lib::Regx& regx) {
-    regx.state_elems 	= 0; // (algo_lib.Regx.state)
-    regx.state_n     	= 0; // (algo_lib.Regx.state)
-    regx.state_max   	= 0; // (algo_lib.Regx.state)
+inline void algo_lib::Regx_Init(algo_lib::Regx& parent) {
+    parent.state_elems 	= 0; // (algo_lib.Regx.state)
+    parent.state_n     	= 0; // (algo_lib.Regx.state)
+    parent.state_max   	= 0; // (algo_lib.Regx.state)
+    parent.ngroup = i32(0);
 }
 
 // --- algo_lib.Regx..Ctor
@@ -927,39 +1080,39 @@ inline  algo_lib::FLogcat::~FLogcat() {
 
 // --- algo_lib.FErrns.decode.Call
 // Invoke function by pointer
-inline void algo_lib::decode_Call(algo_lib::FErrns& errns, i32& arg) {
-    if (errns.decode) {
-        errns.decode((void*)errns.decode_ctx, arg);
+inline void algo_lib::decode_Call(algo_lib::FErrns& parent, i32& arg) {
+    if (parent.decode) {
+        parent.decode((void*)parent.decode_ctx, arg);
     }
 }
 
 // --- algo_lib.FErrns.decode.Set0
 // Assign 0-argument hook with no context pointer
-inline void algo_lib::decode_Set0(algo_lib::FErrns& errns, void (*fcn)() ) {
-    errns.decode_ctx = 0;
-    errns.decode = (algo_lib::errns_decode_hook)fcn;
+inline void algo_lib::decode_Set0(algo_lib::FErrns& parent, void (*fcn)() ) {
+    parent.decode_ctx = 0;
+    parent.decode = (algo_lib::errns_decode_hook)fcn;
 }
 
 // --- algo_lib.FErrns.decode.Set1
 // Assign 1-argument hook with context pointer
-template<class T> inline void algo_lib::decode_Set1(algo_lib::FErrns& errns, T& ctx, void (*fcn)(T&) ) {
-    errns.decode_ctx = (u64)&ctx;
-    errns.decode = (algo_lib::errns_decode_hook)fcn;
+template<class T> inline void algo_lib::decode_Set1(algo_lib::FErrns& parent, T& ctx, void (*fcn)(T&) ) {
+    parent.decode_ctx = (u64)&ctx;
+    parent.decode = (algo_lib::errns_decode_hook)fcn;
 }
 
 // --- algo_lib.FErrns.decode.Set2
 // Assign 2-argument hook with context pointer
-template<class T> inline void algo_lib::decode_Set2(algo_lib::FErrns& errns, T& ctx, void (*fcn)(T&, i32& arg) ) {
-    errns.decode_ctx = (u64)&ctx;
-    errns.decode = (algo_lib::errns_decode_hook)fcn;
+template<class T> inline void algo_lib::decode_Set2(algo_lib::FErrns& parent, T& ctx, void (*fcn)(T&, i32& arg) ) {
+    parent.decode_ctx = (u64)&ctx;
+    parent.decode = (algo_lib::errns_decode_hook)fcn;
 }
 
 // --- algo_lib.FErrns..Init
 // Set all fields to initial values.
-inline void algo_lib::FErrns_Init(algo_lib::FErrns& errns) {
-    errns.errns = i32(0);
-    errns.decode = NULL;
-    errns.decode_ctx = 0;
+inline void algo_lib::FErrns_Init(algo_lib::FErrns& parent) {
+    parent.errns = i32(0);
+    parent.decode = NULL;
+    parent.decode_ctx = 0;
 }
 
 // --- algo_lib.FErrns..Ctor
@@ -1017,7 +1170,7 @@ inline void algo_lib::temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs
 }
 
 // --- algo_lib.FDb.temp_strings.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline algo::cstring& algo_lib::temp_strings_qFind(u64 t) {
     return _db.temp_strings_elems[u64(t)];
 }
@@ -1050,6 +1203,36 @@ inline bool algo_lib::SsimBreakValueQ(u32 ch) {
 // --- algo_lib.FDb.SsimQuotesafe.Match
 inline bool algo_lib::SsimQuotesafeQ(u32 ch) {
     return ch_GetBit(_db.SsimQuotesafe, ch);
+}
+
+// --- algo_lib.FDb.bh_timehook.EmptyQ
+// Return true if index is empty
+inline bool algo_lib::bh_timehook_EmptyQ() {
+    return _db.bh_timehook_n == 0;
+}
+
+// --- algo_lib.FDb.bh_timehook.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline algo_lib::FTimehook* algo_lib::bh_timehook_First() {
+    algo_lib::FTimehook *row = NULL;
+    if (_db.bh_timehook_n > 0) {
+        row = _db.bh_timehook_elems[0];
+    }
+    return row;
+}
+
+// --- algo_lib.FDb.bh_timehook.InBheapQ
+// Return true if row is in index, false otherwise
+inline bool algo_lib::bh_timehook_InBheapQ(algo_lib::FTimehook& row) {
+    bool result = false;
+    result = row.bh_timehook_idx != -1;
+    return result;
+}
+
+// --- algo_lib.FDb.bh_timehook.N
+// Return number of items in the heap
+inline i32 algo_lib::bh_timehook_N() {
+    return _db.bh_timehook_n;
 }
 
 // --- algo_lib.FDb.imtable.EmptyQ
@@ -1104,36 +1287,6 @@ inline bool algo_lib::ind_imtable_EmptyQ() {
 // Return number of items in the hash
 inline i32 algo_lib::ind_imtable_N() {
     return _db.ind_imtable_n;
-}
-
-// --- algo_lib.FDb.bh_timehook.EmptyQ
-// Return true if index is empty
-inline bool algo_lib::bh_timehook_EmptyQ() {
-    return _db.bh_timehook_n == 0;
-}
-
-// --- algo_lib.FDb.bh_timehook.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline algo_lib::FTimehook* algo_lib::bh_timehook_First() {
-    algo_lib::FTimehook *row = NULL;
-    if (_db.bh_timehook_n > 0) {
-        row = _db.bh_timehook_elems[0];
-    }
-    return row;
-}
-
-// --- algo_lib.FDb.bh_timehook.InBheapQ
-// Return true if row is in index, false otherwise
-inline bool algo_lib::bh_timehook_InBheapQ(algo_lib::FTimehook& row) {
-    bool result = false;
-    result = row.bh_timehook_idx != -1;
-    return result;
-}
-
-// --- algo_lib.FDb.bh_timehook.N
-// Return number of items in the heap
-inline i32 algo_lib::bh_timehook_N() {
-    return _db.bh_timehook_n;
 }
 
 // --- algo_lib.FDb.dispsigcheck.EmptyQ
@@ -1233,7 +1386,7 @@ inline i32 algo_lib::imdb_N() {
 }
 
 // --- algo_lib.FDb.imdb.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline algo_lib::FImdb& algo_lib::imdb_qFind(u64 t) {
     return reinterpret_cast<algo_lib::FImdb*>(_db.imdb_data)[u64(t)];
 }
@@ -1461,7 +1614,7 @@ inline i32 algo_lib::logcat_N() {
 }
 
 // --- algo_lib.FDb.logcat.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline algo_lib::FLogcat& algo_lib::logcat_qFind(u64 t) {
     return reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data)[u64(t)];
 }
@@ -1647,7 +1800,7 @@ inline i32 algo_lib::errns_N() {
 }
 
 // --- algo_lib.FDb.errns.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline algo_lib::FErrns& algo_lib::errns_qFind(i32 t) {
     return _db.errns_elems[u64(t)];
 }
@@ -1682,6 +1835,18 @@ inline algo::cstring& algo_lib::_db_temp_strings_curs_Access(_db_temp_strings_cu
     return temp_strings_qFind(u64(curs.index));
 }
 
+// --- algo_lib.FDb.bh_timehook_curs.Access
+// Access current element. If not more elements, return NULL
+inline algo_lib::FTimehook& algo_lib::_db_bh_timehook_curs_Access(_db_bh_timehook_curs &curs) {
+    return *curs.temp_elems[0];
+}
+
+// --- algo_lib.FDb.bh_timehook_curs.ValidQ
+// Return true if Access() will return non-NULL.
+inline bool algo_lib::_db_bh_timehook_curs_ValidQ(_db_bh_timehook_curs &curs) {
+    return curs.temp_n > 0;
+}
+
 // --- algo_lib.FDb.imtable_curs.Reset
 // cursor points to valid item
 inline void algo_lib::_db_imtable_curs_Reset(_db_imtable_curs &curs, algo_lib::FDb &parent) {
@@ -1705,18 +1870,6 @@ inline void algo_lib::_db_imtable_curs_Next(_db_imtable_curs &curs) {
 // item access
 inline algo_lib::FImtable& algo_lib::_db_imtable_curs_Access(_db_imtable_curs &curs) {
     return imtable_qFind(u64(curs.index));
-}
-
-// --- algo_lib.FDb.bh_timehook_curs.Access
-// Access current element. If not more elements, return NULL
-inline algo_lib::FTimehook& algo_lib::_db_bh_timehook_curs_Access(_db_bh_timehook_curs &curs) {
-    return *curs.temp_elems[0];
-}
-
-// --- algo_lib.FDb.bh_timehook_curs.ValidQ
-// Return true if Access() will return non-NULL.
-inline bool algo_lib::_db_bh_timehook_curs_ValidQ(_db_bh_timehook_curs &curs) {
-    return curs.temp_n > 0;
 }
 
 // --- algo_lib.FDb.dispsigcheck_curs.Reset
@@ -1871,9 +2024,9 @@ inline algo_lib::FErrns& algo_lib::_db_errns_curs_Access(_db_errns_curs &curs) {
 
 // --- algo_lib.FDispsigcheck..Init
 // Set all fields to initial values.
-inline void algo_lib::FDispsigcheck_Init(algo_lib::FDispsigcheck& dispsigcheck) {
-    dispsigcheck.ind_dispsigcheck_next = (algo_lib::FDispsigcheck*)-1; // (algo_lib.FDb.ind_dispsigcheck) not-in-hash
-    dispsigcheck.ind_dispsigcheck_hashval = 0; // stored hash value
+inline void algo_lib::FDispsigcheck_Init(algo_lib::FDispsigcheck& parent) {
+    parent.ind_dispsigcheck_next = (algo_lib::FDispsigcheck*)-1; // (algo_lib.FDb.ind_dispsigcheck) not-in-hash
+    parent.ind_dispsigcheck_hashval = 0; // stored hash value
 }
 
 // --- algo_lib.FDispsigcheck..Ctor
@@ -1888,14 +2041,14 @@ inline  algo_lib::FDispsigcheck::~FDispsigcheck() {
 
 // --- algo_lib.FImtable..Init
 // Set all fields to initial values.
-inline void algo_lib::FImtable_Init(algo_lib::FImtable& imtable) {
-    memset(&imtable.c_RowidFind, 0, sizeof(imtable.c_RowidFind));
-    memset(&imtable.XrefX, 0, sizeof(imtable.XrefX));
-    memset(&imtable.NItems, 0, sizeof(imtable.NItems));
-    memset(&imtable.Print, 0, sizeof(imtable.Print));
-    imtable.size = i32(0);
-    imtable.ind_imtable_next = (algo_lib::FImtable*)-1; // (algo_lib.FDb.ind_imtable) not-in-hash
-    imtable.ind_imtable_hashval = 0; // stored hash value
+inline void algo_lib::FImtable_Init(algo_lib::FImtable& parent) {
+    memset(&parent.c_RowidFind, 0, sizeof(parent.c_RowidFind));
+    memset(&parent.XrefX, 0, sizeof(parent.XrefX));
+    memset(&parent.NItems, 0, sizeof(parent.NItems));
+    memset(&parent.Print, 0, sizeof(parent.Print));
+    parent.size = i32(0);
+    parent.ind_imtable_next = (algo_lib::FImtable*)-1; // (algo_lib.FDb.ind_imtable) not-in-hash
+    parent.ind_imtable_hashval = 0; // stored hash value
 }
 
 // --- algo_lib.FImtable..Ctor
@@ -1910,46 +2063,45 @@ inline  algo_lib::FImtable::~FImtable() {
 
 // --- algo_lib.FIohook.callback.Call
 // Invoke function by pointer
-inline void algo_lib::callback_Call(algo_lib::FIohook& iohook, algo_lib::FIohook& arg) {
-    if (iohook.callback) {
-        iohook.callback((void*)iohook.callback_ctx, arg);
+inline void algo_lib::callback_Call(algo_lib::FIohook& parent, algo_lib::FIohook& arg) {
+    if (parent.callback) {
+        parent.callback((void*)parent.callback_ctx, arg);
     }
 }
 
 // --- algo_lib.FIohook.callback.Set0
 // Assign 0-argument hook with no context pointer
-inline void algo_lib::callback_Set0(algo_lib::FIohook& iohook, void (*fcn)() ) {
-    iohook.callback_ctx = 0;
-    iohook.callback = (algo_lib::iohook_callback_hook)fcn;
+inline void algo_lib::callback_Set0(algo_lib::FIohook& parent, void (*fcn)() ) {
+    parent.callback_ctx = 0;
+    parent.callback = (algo_lib::iohook_callback_hook)fcn;
 }
 
 // --- algo_lib.FIohook.callback.Set1
 // Assign 1-argument hook with context pointer
-template<class T> inline void algo_lib::callback_Set1(algo_lib::FIohook& iohook, T& ctx, void (*fcn)(T&) ) {
-    iohook.callback_ctx = (u64)&ctx;
-    iohook.callback = (algo_lib::iohook_callback_hook)fcn;
+template<class T> inline void algo_lib::callback_Set1(algo_lib::FIohook& parent, T& ctx, void (*fcn)(T&) ) {
+    parent.callback_ctx = (u64)&ctx;
+    parent.callback = (algo_lib::iohook_callback_hook)fcn;
 }
 
 // --- algo_lib.FIohook.callback.Set2
 // Assign 2-argument hook with context pointer
-template<class T> inline void algo_lib::callback_Set2(algo_lib::FIohook& iohook, T& ctx, void (*fcn)(T&, algo_lib::FIohook& arg) ) {
-    iohook.callback_ctx = (u64)&ctx;
-    iohook.callback = (algo_lib::iohook_callback_hook)fcn;
+template<class T> inline void algo_lib::callback_Set2(algo_lib::FIohook& parent, T& ctx, void (*fcn)(T&, algo_lib::FIohook& arg) ) {
+    parent.callback_ctx = (u64)&ctx;
+    parent.callback = (algo_lib::iohook_callback_hook)fcn;
 }
 
 // --- algo_lib.FIohook..Init
 // Set all fields to initial values.
-inline void algo_lib::FIohook_Init(algo_lib::FIohook& iohook) {
-    iohook.in_epoll = bool(false);
-    iohook.nodelete = bool(false);
-    iohook.callback = NULL;
-    iohook.callback_ctx = 0;
+inline void algo_lib::FIohook_Init(algo_lib::FIohook& parent) {
+    parent.in_epoll = bool(false);
+    parent.nodelete = bool(false);
+    parent.callback = NULL;
+    parent.callback_ctx = 0;
 }
 
 // --- algo_lib.FIohook..Uninit
-inline void algo_lib::FIohook_Uninit(algo_lib::FIohook& iohook) {
-    algo_lib::FIohook &row = iohook; (void)row;
-    fildes_Cleanup(iohook); // dmmeta.ffunc:algo_lib.FIohook.fildes/Cleanup
+inline void algo_lib::FIohook_Uninit(algo_lib::FIohook& parent) {
+    fildes_Cleanup(parent); // dmmeta.ffunc:algo_lib.FIohook.fildes/Cleanup
 }
 
 // --- algo_lib.FIohook..Ctor
@@ -1972,30 +2124,8 @@ inline  algo_lib::FProc::~FProc() {
     algo_lib::FProc_Uninit(*this);
 }
 
-// --- algo_lib.FReplvar..Init
-// Set all fields to initial values.
-inline void algo_lib::FReplvar_Init(algo_lib::FReplvar& replvar) {
-    replvar.p_replscope = NULL;
-    replvar.nsubst = i32(0);
-    replvar.partial = bool(false);
-    replvar.replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.FDb.replvar) not-in-tpool's freelist
-    replvar.replscope_ind_replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.Replscope.ind_replvar) not-in-hash
-    replvar.replscope_ind_replvar_hashval = 0; // stored hash value
-}
-
-// --- algo_lib.FReplvar..Ctor
-inline  algo_lib::FReplvar::FReplvar() {
-    algo_lib::FReplvar_Init(*this);
-}
-
-// --- algo_lib.FReplvar..Dtor
-inline  algo_lib::FReplvar::~FReplvar() {
-    algo_lib::FReplvar_Uninit(*this);
-}
-
 // --- algo_lib.FTempfile..Uninit
 inline void algo_lib::FTempfile_Uninit(algo_lib::FTempfile& parent) {
-    algo_lib::FTempfile &row = parent; (void)row;
     fildes_Cleanup(parent); // dmmeta.ffunc:algo_lib.FTempfile.fildes/Cleanup
 }
 
@@ -2010,13 +2140,13 @@ inline  algo_lib::FTempfile::~FTempfile() {
 
 // --- algo_lib.FTxtcell..Init
 // Set all fields to initial values.
-inline void algo_lib::FTxtcell_Init(algo_lib::FTxtcell& txtcell) {
-    txtcell.p_txtrow = NULL;
-    txtcell.justify = algo_TextJustEnum(algo_TextJust_j_left);
-    txtcell.span = i32(1);
-    txtcell.width = i32(0);
-    txtcell.txtrow_c_txtcell_in_ary = bool(false);
-    txtcell.txtcell_next = (algo_lib::FTxtcell*)-1; // (algo_lib.FDb.txtcell) not-in-tpool's freelist
+inline void algo_lib::FTxtcell_Init(algo_lib::FTxtcell& parent) {
+    parent.p_txtrow = NULL;
+    parent.justify = algo_TextJustEnum(algo_TextJust_j_left);
+    parent.span = i32(1);
+    parent.width = i32(0);
+    parent.txtrow_c_txtcell_in_ary = bool(false);
+    parent.txtcell_next = (algo_lib::FTxtcell*)-1; // (algo_lib.FDb.txtcell) not-in-tpool's freelist
 }
 
 // --- algo_lib.FTxtcell..Ctor
@@ -2044,54 +2174,54 @@ inline  algo_lib::FTxtcell::FTxtcell(algo_lib::FTxtrow* in_p_txtrow, algo::TextJ
 
 // --- algo_lib.FTxtrow.sortkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool algo_lib::sortkey_Lt(algo_lib::FTxtrow& txtrow, algo_lib::FTxtrow &rhs) {
-    return sortkey_Cmp(txtrow,rhs) < 0;
+inline bool algo_lib::sortkey_Lt(algo_lib::FTxtrow& parent, algo_lib::FTxtrow &rhs) {
+    return sortkey_Cmp(parent,rhs) < 0;
 }
 
 // --- algo_lib.FTxtrow.c_txtcell.EmptyQ
 // Return true if index is empty
-inline bool algo_lib::c_txtcell_EmptyQ(algo_lib::FTxtrow& txtrow) {
-    return txtrow.c_txtcell_n == 0;
+inline bool algo_lib::c_txtcell_EmptyQ(algo_lib::FTxtrow& parent) {
+    return parent.c_txtcell_n == 0;
 }
 
 // --- algo_lib.FTxtrow.c_txtcell.Find
 // Look up row by row id. Return NULL if out of range
-inline algo_lib::FTxtcell* algo_lib::c_txtcell_Find(algo_lib::FTxtrow& txtrow, u64 t) {
+inline algo_lib::FTxtcell* algo_lib::c_txtcell_Find(algo_lib::FTxtrow& parent, u64 t) {
     algo_lib::FTxtcell *retval = NULL;
     u64 idx = t;
-    u64 lim = txtrow.c_txtcell_n;
+    u64 lim = parent.c_txtcell_n;
     if (idx < lim) {
-        retval = txtrow.c_txtcell_elems[idx];
+        retval = parent.c_txtcell_elems[idx];
     }
     return retval;
 }
 
 // --- algo_lib.FTxtrow.c_txtcell.Getary
 // Return array of pointers
-inline algo::aryptr<algo_lib::FTxtcell*> algo_lib::c_txtcell_Getary(algo_lib::FTxtrow& txtrow) {
-    return algo::aryptr<algo_lib::FTxtcell*>(txtrow.c_txtcell_elems, txtrow.c_txtcell_n);
+inline algo::aryptr<algo_lib::FTxtcell*> algo_lib::c_txtcell_Getary(algo_lib::FTxtrow& parent) {
+    return algo::aryptr<algo_lib::FTxtcell*>(parent.c_txtcell_elems, parent.c_txtcell_n);
 }
 
 // --- algo_lib.FTxtrow.c_txtcell.N
 // Return number of items in the pointer array
-inline i64 algo_lib::c_txtcell_N(const algo_lib::FTxtrow& txtrow) {
-    return txtrow.c_txtcell_n;
+inline i64 algo_lib::c_txtcell_N(const algo_lib::FTxtrow& parent) {
+    return parent.c_txtcell_n;
 }
 
 // --- algo_lib.FTxtrow.c_txtcell.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void algo_lib::c_txtcell_RemoveAll(algo_lib::FTxtrow& txtrow) {
-    for (u64 i = 0; i < txtrow.c_txtcell_n; i++) {
+inline void algo_lib::c_txtcell_RemoveAll(algo_lib::FTxtrow& parent) {
+    for (u64 i = 0; i < parent.c_txtcell_n; i++) {
         // mark all elements as not-in-array
-        txtrow.c_txtcell_elems[i]->txtrow_c_txtcell_in_ary = false;
+        parent.c_txtcell_elems[i]->txtrow_c_txtcell_in_ary = false;
     }
-    txtrow.c_txtcell_n = 0;
+    parent.c_txtcell_n = 0;
 }
 
 // --- algo_lib.FTxtrow.c_txtcell.qFind
 // Return reference without bounds checking
-inline algo_lib::FTxtcell& algo_lib::c_txtcell_qFind(algo_lib::FTxtrow& txtrow, u64 idx) {
-    return *txtrow.c_txtcell_elems[idx];
+inline algo_lib::FTxtcell& algo_lib::c_txtcell_qFind(algo_lib::FTxtrow& parent, u64 idx) {
+    return *parent.c_txtcell_elems[idx];
 }
 
 // --- algo_lib.FTxtrow.c_txtcell.InAryQ
@@ -2102,21 +2232,21 @@ inline bool algo_lib::txtrow_c_txtcell_InAryQ(algo_lib::FTxtcell& row) {
 
 // --- algo_lib.FTxtrow.c_txtcell.qLast
 // Reference to last element without bounds checking
-inline algo_lib::FTxtcell& algo_lib::c_txtcell_qLast(algo_lib::FTxtrow& txtrow) {
-    return *txtrow.c_txtcell_elems[txtrow.c_txtcell_n-1];
+inline algo_lib::FTxtcell& algo_lib::c_txtcell_qLast(algo_lib::FTxtrow& parent) {
+    return *parent.c_txtcell_elems[parent.c_txtcell_n-1];
 }
 
 // --- algo_lib.FTxtrow..Init
 // Set all fields to initial values.
-inline void algo_lib::FTxtrow_Init(algo_lib::FTxtrow& txtrow) {
-    txtrow.p_txttbl = NULL;
-    txtrow.select = bool(true);
-    txtrow.ishdr = bool(false);
-    txtrow.c_txtcell_elems = NULL; // (algo_lib.FTxtrow.c_txtcell)
-    txtrow.c_txtcell_n = 0; // (algo_lib.FTxtrow.c_txtcell)
-    txtrow.c_txtcell_max = 0; // (algo_lib.FTxtrow.c_txtcell)
-    txtrow.txttbl_c_txtrow_in_ary = bool(false);
-    txtrow.txtrow_next = (algo_lib::FTxtrow*)-1; // (algo_lib.FDb.txtrow) not-in-tpool's freelist
+inline void algo_lib::FTxtrow_Init(algo_lib::FTxtrow& parent) {
+    parent.p_txttbl = NULL;
+    parent.select = bool(true);
+    parent.ishdr = bool(false);
+    parent.c_txtcell_elems = NULL; // (algo_lib.FTxtrow.c_txtcell)
+    parent.c_txtcell_n = 0; // (algo_lib.FTxtrow.c_txtcell)
+    parent.c_txtcell_max = 0; // (algo_lib.FTxtrow.c_txtcell)
+    parent.txttbl_c_txtrow_in_ary = bool(false);
+    parent.txtrow_next = (algo_lib::FTxtrow*)-1; // (algo_lib.FDb.txtrow) not-in-tpool's freelist
 }
 
 // --- algo_lib.FTxtrow.c_txtcell_curs.Reset
@@ -2156,48 +2286,48 @@ inline  algo_lib::FTxtrow::~FTxtrow() {
 
 // --- algo_lib.FTxttbl.c_txtrow.EmptyQ
 // Return true if index is empty
-inline bool algo_lib::c_txtrow_EmptyQ(algo_lib::FTxttbl& txttbl) {
-    return txttbl.c_txtrow_n == 0;
+inline bool algo_lib::c_txtrow_EmptyQ(algo_lib::FTxttbl& parent) {
+    return parent.c_txtrow_n == 0;
 }
 
 // --- algo_lib.FTxttbl.c_txtrow.Find
 // Look up row by row id. Return NULL if out of range
-inline algo_lib::FTxtrow* algo_lib::c_txtrow_Find(algo_lib::FTxttbl& txttbl, u64 t) {
+inline algo_lib::FTxtrow* algo_lib::c_txtrow_Find(algo_lib::FTxttbl& parent, u64 t) {
     algo_lib::FTxtrow *retval = NULL;
     u64 idx = t;
-    u64 lim = txttbl.c_txtrow_n;
+    u64 lim = parent.c_txtrow_n;
     if (idx < lim) {
-        retval = txttbl.c_txtrow_elems[idx];
+        retval = parent.c_txtrow_elems[idx];
     }
     return retval;
 }
 
 // --- algo_lib.FTxttbl.c_txtrow.Getary
 // Return array of pointers
-inline algo::aryptr<algo_lib::FTxtrow*> algo_lib::c_txtrow_Getary(algo_lib::FTxttbl& txttbl) {
-    return algo::aryptr<algo_lib::FTxtrow*>(txttbl.c_txtrow_elems, txttbl.c_txtrow_n);
+inline algo::aryptr<algo_lib::FTxtrow*> algo_lib::c_txtrow_Getary(algo_lib::FTxttbl& parent) {
+    return algo::aryptr<algo_lib::FTxtrow*>(parent.c_txtrow_elems, parent.c_txtrow_n);
 }
 
 // --- algo_lib.FTxttbl.c_txtrow.N
 // Return number of items in the pointer array
-inline i64 algo_lib::c_txtrow_N(const algo_lib::FTxttbl& txttbl) {
-    return txttbl.c_txtrow_n;
+inline i64 algo_lib::c_txtrow_N(const algo_lib::FTxttbl& parent) {
+    return parent.c_txtrow_n;
 }
 
 // --- algo_lib.FTxttbl.c_txtrow.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void algo_lib::c_txtrow_RemoveAll(algo_lib::FTxttbl& txttbl) {
-    for (u64 i = 0; i < txttbl.c_txtrow_n; i++) {
+inline void algo_lib::c_txtrow_RemoveAll(algo_lib::FTxttbl& parent) {
+    for (u64 i = 0; i < parent.c_txtrow_n; i++) {
         // mark all elements as not-in-array
-        txttbl.c_txtrow_elems[i]->txttbl_c_txtrow_in_ary = false;
+        parent.c_txtrow_elems[i]->txttbl_c_txtrow_in_ary = false;
     }
-    txttbl.c_txtrow_n = 0;
+    parent.c_txtrow_n = 0;
 }
 
 // --- algo_lib.FTxttbl.c_txtrow.qFind
 // Return reference without bounds checking
-inline algo_lib::FTxtrow& algo_lib::c_txtrow_qFind(algo_lib::FTxttbl& txttbl, u64 idx) {
-    return *txttbl.c_txtrow_elems[idx];
+inline algo_lib::FTxtrow& algo_lib::c_txtrow_qFind(algo_lib::FTxttbl& parent, u64 idx) {
+    return *parent.c_txtrow_elems[idx];
 }
 
 // --- algo_lib.FTxttbl.c_txtrow.InAryQ
@@ -2208,8 +2338,8 @@ inline bool algo_lib::txttbl_c_txtrow_InAryQ(algo_lib::FTxtrow& row) {
 
 // --- algo_lib.FTxttbl.c_txtrow.qLast
 // Reference to last element without bounds checking
-inline algo_lib::FTxtrow& algo_lib::c_txtrow_qLast(algo_lib::FTxttbl& txttbl) {
-    return *txttbl.c_txtrow_elems[txttbl.c_txtrow_n-1];
+inline algo_lib::FTxtrow& algo_lib::c_txtrow_qLast(algo_lib::FTxttbl& parent) {
+    return *parent.c_txtrow_elems[parent.c_txtrow_n-1];
 }
 
 // --- algo_lib.FTxttbl.c_txtrow_curs.Reset
@@ -2239,13 +2369,13 @@ inline algo_lib::FTxtrow& algo_lib::txttbl_c_txtrow_curs_Access(txttbl_c_txtrow_
 
 // --- algo_lib.FTxttbl..Init
 // Set all fields to initial values.
-inline void algo_lib::FTxttbl_Init(algo_lib::FTxttbl& txttbl) {
-    txttbl.c_txtrow_elems = NULL; // (algo_lib.FTxttbl.c_txtrow)
-    txttbl.c_txtrow_n = 0; // (algo_lib.FTxttbl.c_txtrow)
-    txttbl.c_txtrow_max = 0; // (algo_lib.FTxttbl.c_txtrow)
-    txttbl.col_space = i32(2);
-    txttbl.normalized = bool(false);
-    txttbl.style = bool(false);
+inline void algo_lib::FTxttbl_Init(algo_lib::FTxttbl& parent) {
+    parent.c_txtrow_elems = NULL; // (algo_lib.FTxttbl.c_txtrow)
+    parent.c_txtrow_n = 0; // (algo_lib.FTxttbl.c_txtrow)
+    parent.c_txtrow_max = 0; // (algo_lib.FTxttbl.c_txtrow)
+    parent.col_space = i32(2);
+    parent.normalized = bool(false);
+    parent.style = bool(false);
 }
 
 // --- algo_lib.FTxttbl..Ctor
@@ -2349,7 +2479,7 @@ inline void algo_lib::temp_buf_Setary(algo_lib::InTextFile& parent, const algo::
 }
 
 // --- algo_lib.InTextFile.temp_buf.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline u8& algo_lib::temp_buf_qFind(algo_lib::InTextFile& parent, u64 t) {
     return reinterpret_cast<u8*>(parent.temp_buf_data)[u64(t)];
 }
@@ -2419,7 +2549,6 @@ inline  algo_lib::InTextFile::InTextFile(const algo_lib::InTextFile &rhs)
 
 // --- algo_lib.Mmap..Uninit
 inline void algo_lib::Mmap_Uninit(algo_lib::Mmap& parent) {
-    algo_lib::Mmap &row = parent; (void)row;
     mem_Cleanup(parent); // dmmeta.ffunc:algo_lib.Mmap.mem/Cleanup
 }
 
@@ -2587,69 +2716,69 @@ inline  algo_lib::RegxOp::RegxOp(u8 in_op, u8 in_consume, u16 in_imm)
 
 // --- algo_lib.RegxParse.ary_expr.EmptyQ
 // Return true if index is empty
-inline bool algo_lib::ary_expr_EmptyQ(algo_lib::RegxParse& regxparse) {
-    return regxparse.ary_expr_n == 0;
+inline bool algo_lib::ary_expr_EmptyQ(algo_lib::RegxParse& parent) {
+    return parent.ary_expr_n == 0;
 }
 
 // --- algo_lib.RegxParse.ary_expr.Find
 // Look up row by row id. Return NULL if out of range
-inline algo_lib::RegxExpr* algo_lib::ary_expr_Find(algo_lib::RegxParse& regxparse, u64 t) {
+inline algo_lib::RegxExpr* algo_lib::ary_expr_Find(algo_lib::RegxParse& parent, u64 t) {
     u64 idx = t;
-    u64 lim = regxparse.ary_expr_n;
+    u64 lim = parent.ary_expr_n;
     if (idx >= lim) return NULL;
-    return regxparse.ary_expr_elems + idx;
+    return parent.ary_expr_elems + idx;
 }
 
 // --- algo_lib.RegxParse.ary_expr.Getary
 // Return array pointer by value
-inline algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_Getary(const algo_lib::RegxParse& regxparse) {
-    return algo::aryptr<algo_lib::RegxExpr>(regxparse.ary_expr_elems, regxparse.ary_expr_n);
+inline algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_Getary(const algo_lib::RegxParse& parent) {
+    return algo::aryptr<algo_lib::RegxExpr>(parent.ary_expr_elems, parent.ary_expr_n);
 }
 
 // --- algo_lib.RegxParse.ary_expr.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo_lib::RegxExpr* algo_lib::ary_expr_Last(algo_lib::RegxParse& regxparse) {
-    return ary_expr_Find(regxparse, u64(regxparse.ary_expr_n-1));
+inline algo_lib::RegxExpr* algo_lib::ary_expr_Last(algo_lib::RegxParse& parent) {
+    return ary_expr_Find(parent, u64(parent.ary_expr_n-1));
 }
 
 // --- algo_lib.RegxParse.ary_expr.Max
 // Return max. number of items in the array
-inline i64 algo_lib::ary_expr_Max(algo_lib::RegxParse& regxparse) {
-    (void)regxparse;
-    return regxparse.ary_expr_max;
+inline i64 algo_lib::ary_expr_Max(algo_lib::RegxParse& parent) {
+    (void)parent;
+    return parent.ary_expr_max;
 }
 
 // --- algo_lib.RegxParse.ary_expr.N
 // Return number of items in the array
-inline i64 algo_lib::ary_expr_N(const algo_lib::RegxParse& regxparse) {
-    return regxparse.ary_expr_n;
+inline i64 algo_lib::ary_expr_N(const algo_lib::RegxParse& parent) {
+    return parent.ary_expr_n;
 }
 
 // --- algo_lib.RegxParse.ary_expr.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::ary_expr_Reserve(algo_lib::RegxParse& regxparse, i64 n) {
-    u64 new_n = regxparse.ary_expr_n + n;
-    if (UNLIKELY(new_n > regxparse.ary_expr_max)) {
-        ary_expr_AbsReserve(regxparse, new_n);
+inline void algo_lib::ary_expr_Reserve(algo_lib::RegxParse& parent, i64 n) {
+    u64 new_n = parent.ary_expr_n + n;
+    if (UNLIKELY(new_n > parent.ary_expr_max)) {
+        ary_expr_AbsReserve(parent, new_n);
     }
 }
 
 // --- algo_lib.RegxParse.ary_expr.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo_lib::RegxExpr& algo_lib::ary_expr_qFind(algo_lib::RegxParse& regxparse, u64 t) {
-    return regxparse.ary_expr_elems[t];
+inline algo_lib::RegxExpr& algo_lib::ary_expr_qFind(algo_lib::RegxParse& parent, u64 t) {
+    return parent.ary_expr_elems[t];
 }
 
 // --- algo_lib.RegxParse.ary_expr.qLast
 // Return reference to last element of array. No bounds checking
-inline algo_lib::RegxExpr& algo_lib::ary_expr_qLast(algo_lib::RegxParse& regxparse) {
-    return ary_expr_qFind(regxparse, u64(regxparse.ary_expr_n-1));
+inline algo_lib::RegxExpr& algo_lib::ary_expr_qLast(algo_lib::RegxParse& parent) {
+    return ary_expr_qFind(parent, u64(parent.ary_expr_n-1));
 }
 
 // --- algo_lib.RegxParse.ary_expr.rowid_Get
 // Return row id of specified element
-inline u64 algo_lib::ary_expr_rowid_Get(algo_lib::RegxParse& regxparse, algo_lib::RegxExpr &elem) {
-    u64 id = &elem - regxparse.ary_expr_elems;
+inline u64 algo_lib::ary_expr_rowid_Get(algo_lib::RegxParse& parent, algo_lib::RegxExpr &elem) {
+    u64 id = &elem - parent.ary_expr_elems;
     return u64(id);
 }
 
@@ -2680,12 +2809,12 @@ inline algo_lib::RegxExpr& algo_lib::regxparse_ary_expr_curs_Access(regxparse_ar
 
 // --- algo_lib.RegxParse..Init
 // Set all fields to initial values.
-inline void algo_lib::RegxParse_Init(algo_lib::RegxParse& regxparse) {
-    regxparse.nextgroup = i32(0);
-    regxparse.p_regx = NULL;
-    regxparse.ary_expr_elems 	= 0; // (algo_lib.RegxParse.ary_expr)
-    regxparse.ary_expr_n     	= 0; // (algo_lib.RegxParse.ary_expr)
-    regxparse.ary_expr_max   	= 0; // (algo_lib.RegxParse.ary_expr)
+inline void algo_lib::RegxParse_Init(algo_lib::RegxParse& parent) {
+    parent.nextgroup = i32(0);
+    parent.p_regx = NULL;
+    parent.ary_expr_elems 	= 0; // (algo_lib.RegxParse.ary_expr)
+    parent.ary_expr_n     	= 0; // (algo_lib.RegxParse.ary_expr)
+    parent.ary_expr_max   	= 0; // (algo_lib.RegxParse.ary_expr)
 }
 
 // --- algo_lib.RegxParse..Ctor
@@ -2698,50 +2827,130 @@ inline  algo_lib::RegxParse::~RegxParse() {
     algo_lib::RegxParse_Uninit(*this);
 }
 
-// --- algo_lib.RegxState..Init
-// Set all fields to initial values.
-inline void algo_lib::RegxState_Init(algo_lib::RegxState& parent) {
-    parent.lparen = i32(0);
-}
-
 // --- algo_lib.RegxState..Ctor
 inline  algo_lib::RegxState::RegxState() {
-    algo_lib::RegxState_Init(*this);
 }
 
-// --- algo_lib.Replscope.ind_replvar.EmptyQ
-// Return true if hash is empty
-inline bool algo_lib::ind_replvar_EmptyQ(algo_lib::Replscope& replscope) {
-    return replscope.ind_replvar_n == 0;
+// --- algo_lib.Replnode..Init
+// Set all fields to initial values.
+inline void algo_lib::Replnode_Init(algo_lib::Replnode& parent) {
+    parent.child = i32(-1);
+    parent.next = i32(-1);
+    parent.up = i32(-1);
 }
 
-// --- algo_lib.Replscope.ind_replvar.N
-// Return number of items in the hash
-inline i32 algo_lib::ind_replvar_N(const algo_lib::Replscope& replscope) {
-    return replscope.ind_replvar_n;
+// --- algo_lib.Replnode..Ctor
+inline  algo_lib::Replnode::Replnode() {
+    algo_lib::Replnode_Init(*this);
 }
 
-// --- algo_lib.Replscope.ind_replvar_curs.ValidQ
-// cursor points to valid item
-inline bool algo_lib::replscope_ind_replvar_curs_ValidQ(replscope_ind_replvar_curs &curs) {
-    return *curs.prow != NULL;
+// --- algo_lib.Replscope.node.EmptyQ
+// Return true if index is empty
+inline bool algo_lib::node_EmptyQ(algo_lib::Replscope& parent) {
+    return parent.node_n == 0;
 }
 
-// --- algo_lib.Replscope.ind_replvar_curs.Next
-// proceed to next item
-inline void algo_lib::replscope_ind_replvar_curs_Next(replscope_ind_replvar_curs &curs) {
-    curs.prow = &(*curs.prow)->replscope_ind_replvar_next;
-    while (!*curs.prow) {
-        curs.bucket += 1;
-        if (curs.bucket >= curs.parent->ind_replvar_buckets_n) break;
-        curs.prow = &curs.parent->ind_replvar_buckets_elems[curs.bucket];
+// --- algo_lib.Replscope.node.Find
+// Look up row by row id. Return NULL if out of range
+inline algo_lib::Replnode* algo_lib::node_Find(algo_lib::Replscope& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.node_n;
+    if (idx >= lim) return NULL;
+    return parent.node_elems + idx;
+}
+
+// --- algo_lib.Replscope.node.Getary
+// Return array pointer by value
+inline algo::aryptr<algo_lib::Replnode> algo_lib::node_Getary(const algo_lib::Replscope& parent) {
+    return algo::aryptr<algo_lib::Replnode>(parent.node_elems, parent.node_n);
+}
+
+// --- algo_lib.Replscope.node.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo_lib::Replnode* algo_lib::node_Last(algo_lib::Replscope& parent) {
+    return node_Find(parent, u64(parent.node_n-1));
+}
+
+// --- algo_lib.Replscope.node.Max
+// Return max. number of items in the array
+inline i64 algo_lib::node_Max(algo_lib::Replscope& parent) {
+    (void)parent;
+    return parent.node_max;
+}
+
+// --- algo_lib.Replscope.node.N
+// Return number of items in the array
+inline i64 algo_lib::node_N(const algo_lib::Replscope& parent) {
+    return parent.node_n;
+}
+
+// --- algo_lib.Replscope.node.RemoveAll
+inline void algo_lib::node_RemoveAll(algo_lib::Replscope& parent) {
+    parent.node_n = 0;
+}
+
+// --- algo_lib.Replscope.node.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo_lib::node_Reserve(algo_lib::Replscope& parent, i64 n) {
+    u64 new_n = parent.node_n + n;
+    if (UNLIKELY(new_n > parent.node_max)) {
+        node_AbsReserve(parent, new_n);
     }
 }
 
-// --- algo_lib.Replscope.ind_replvar_curs.Access
+// --- algo_lib.Replscope.node.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo_lib::Replnode& algo_lib::node_qFind(algo_lib::Replscope& parent, u64 t) {
+    return parent.node_elems[t];
+}
+
+// --- algo_lib.Replscope.node.qLast
+// Return reference to last element of array. No bounds checking
+inline algo_lib::Replnode& algo_lib::node_qLast(algo_lib::Replscope& parent) {
+    return node_qFind(parent, u64(parent.node_n-1));
+}
+
+// --- algo_lib.Replscope.node.rowid_Get
+// Return row id of specified element
+inline u64 algo_lib::node_rowid_Get(algo_lib::Replscope& parent, algo_lib::Replnode &elem) {
+    u64 id = &elem - parent.node_elems;
+    return u64(id);
+}
+
+// --- algo_lib.Replscope.node_curs.Next
+// proceed to next item
+inline void algo_lib::replscope_node_curs_Next(replscope_node_curs &curs) {
+    curs.index++;
+}
+
+// --- algo_lib.Replscope.node_curs.Reset
+inline void algo_lib::replscope_node_curs_Reset(replscope_node_curs &curs, algo_lib::Replscope &parent) {
+    curs.elems = parent.node_elems;
+    curs.n_elems = parent.node_n;
+    curs.index = 0;
+}
+
+// --- algo_lib.Replscope.node_curs.ValidQ
+// cursor points to valid item
+inline bool algo_lib::replscope_node_curs_ValidQ(replscope_node_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo_lib.Replscope.node_curs.Access
 // item access
-inline algo_lib::FReplvar& algo_lib::replscope_ind_replvar_curs_Access(replscope_ind_replvar_curs &curs) {
-    return **curs.prow;
+inline algo_lib::Replnode& algo_lib::replscope_node_curs_Access(replscope_node_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo_lib.Replscope..Init
+// Set all fields to initial values.
+inline void algo_lib::Replscope_Init(algo_lib::Replscope& parent) {
+    parent.eatcomma = bool(true);
+    parent.strict = u8(0);
+    parent.node_elems 	= 0; // (algo_lib.Replscope.node)
+    parent.node_n     	= 0; // (algo_lib.Replscope.node)
+    parent.node_max   	= 0; // (algo_lib.Replscope.node)
+    parent.dead = i32(0);
 }
 
 // --- algo_lib.Replscope..Ctor
@@ -2823,74 +3032,74 @@ inline  algo_lib::TableId::TableId(algo_lib_TableIdEnum arg) {
 
 // --- algo_lib.Tabulate.width.EmptyQ
 // Return true if index is empty
-inline bool algo_lib::width_EmptyQ(algo_lib::Tabulate& tabulate) {
-    return tabulate.width_n == 0;
+inline bool algo_lib::width_EmptyQ(algo_lib::Tabulate& parent) {
+    return parent.width_n == 0;
 }
 
 // --- algo_lib.Tabulate.width.Find
 // Look up row by row id. Return NULL if out of range
-inline i32* algo_lib::width_Find(algo_lib::Tabulate& tabulate, u64 t) {
+inline i32* algo_lib::width_Find(algo_lib::Tabulate& parent, u64 t) {
     u64 idx = t;
-    u64 lim = tabulate.width_n;
+    u64 lim = parent.width_n;
     if (idx >= lim) return NULL;
-    return tabulate.width_elems + idx;
+    return parent.width_elems + idx;
 }
 
 // --- algo_lib.Tabulate.width.Getary
 // Return array pointer by value
-inline algo::aryptr<i32> algo_lib::width_Getary(const algo_lib::Tabulate& tabulate) {
-    return algo::aryptr<i32>(tabulate.width_elems, tabulate.width_n);
+inline algo::aryptr<i32> algo_lib::width_Getary(const algo_lib::Tabulate& parent) {
+    return algo::aryptr<i32>(parent.width_elems, parent.width_n);
 }
 
 // --- algo_lib.Tabulate.width.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline i32* algo_lib::width_Last(algo_lib::Tabulate& tabulate) {
-    return width_Find(tabulate, u64(tabulate.width_n-1));
+inline i32* algo_lib::width_Last(algo_lib::Tabulate& parent) {
+    return width_Find(parent, u64(parent.width_n-1));
 }
 
 // --- algo_lib.Tabulate.width.Max
 // Return max. number of items in the array
-inline i64 algo_lib::width_Max(algo_lib::Tabulate& tabulate) {
-    (void)tabulate;
-    return tabulate.width_max;
+inline i64 algo_lib::width_Max(algo_lib::Tabulate& parent) {
+    (void)parent;
+    return parent.width_max;
 }
 
 // --- algo_lib.Tabulate.width.N
 // Return number of items in the array
-inline i64 algo_lib::width_N(const algo_lib::Tabulate& tabulate) {
-    return tabulate.width_n;
+inline i64 algo_lib::width_N(const algo_lib::Tabulate& parent) {
+    return parent.width_n;
 }
 
 // --- algo_lib.Tabulate.width.RemoveAll
-inline void algo_lib::width_RemoveAll(algo_lib::Tabulate& tabulate) {
-    tabulate.width_n = 0;
+inline void algo_lib::width_RemoveAll(algo_lib::Tabulate& parent) {
+    parent.width_n = 0;
 }
 
 // --- algo_lib.Tabulate.width.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::width_Reserve(algo_lib::Tabulate& tabulate, i64 n) {
-    u64 new_n = tabulate.width_n + n;
-    if (UNLIKELY(new_n > tabulate.width_max)) {
-        width_AbsReserve(tabulate, new_n);
+inline void algo_lib::width_Reserve(algo_lib::Tabulate& parent, i64 n) {
+    u64 new_n = parent.width_n + n;
+    if (UNLIKELY(new_n > parent.width_max)) {
+        width_AbsReserve(parent, new_n);
     }
 }
 
 // --- algo_lib.Tabulate.width.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline i32& algo_lib::width_qFind(algo_lib::Tabulate& tabulate, u64 t) {
-    return tabulate.width_elems[t];
+inline i32& algo_lib::width_qFind(algo_lib::Tabulate& parent, u64 t) {
+    return parent.width_elems[t];
 }
 
 // --- algo_lib.Tabulate.width.qLast
 // Return reference to last element of array. No bounds checking
-inline i32& algo_lib::width_qLast(algo_lib::Tabulate& tabulate) {
-    return width_qFind(tabulate, u64(tabulate.width_n-1));
+inline i32& algo_lib::width_qLast(algo_lib::Tabulate& parent) {
+    return width_qFind(parent, u64(parent.width_n-1));
 }
 
 // --- algo_lib.Tabulate.width.rowid_Get
 // Return row id of specified element
-inline u64 algo_lib::width_rowid_Get(algo_lib::Tabulate& tabulate, i32 &elem) {
-    u64 id = &elem - tabulate.width_elems;
+inline u64 algo_lib::width_rowid_Get(algo_lib::Tabulate& parent, i32 &elem) {
+    u64 id = &elem - parent.width_elems;
     return u64(id);
 }
 
@@ -2921,10 +3130,10 @@ inline i32& algo_lib::tabulate_width_curs_Access(tabulate_width_curs &curs) {
 
 // --- algo_lib.Tabulate..Init
 // Set all fields to initial values.
-inline void algo_lib::Tabulate_Init(algo_lib::Tabulate& tabulate) {
-    tabulate.width_elems 	= 0; // (algo_lib.Tabulate.width)
-    tabulate.width_n     	= 0; // (algo_lib.Tabulate.width)
-    tabulate.width_max   	= 0; // (algo_lib.Tabulate.width)
+inline void algo_lib::Tabulate_Init(algo_lib::Tabulate& parent) {
+    parent.width_elems 	= 0; // (algo_lib.Tabulate.width)
+    parent.width_n     	= 0; // (algo_lib.Tabulate.width)
+    parent.width_max   	= 0; // (algo_lib.Tabulate.width)
 }
 
 // --- algo_lib.Tabulate..Ctor

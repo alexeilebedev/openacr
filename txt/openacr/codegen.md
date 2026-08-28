@@ -1,166 +1,90 @@
 ## Code Generation
 <a href="#code-generation"></a>
 
-How OpenACR turns ssim records into C++ — the ssim → amc → C++
-pipeline, the source-file/header workflow, and the doc-regen tools.
+`amc` reads the ssim database and writes C++.  Over 95% of the code in this
+project arrives that way, so understanding what `amc` produces from what is
+most of understanding the codebase.
 
 ### The pipeline
 <a href="#the-pipeline"></a>
 
-ssimfile → amc → C++:
-
-1. **Schema in `data/`** — ssimfiles are the source of truth.
-2. **`amc` generates** `cpp/gen/*.cpp` and `include/gen/*.h` —
-   never hand-edit those files.
-3. **`acr_ed -create`** adds fields/ctypes (writes ssim + runs
-   amc).  Since records are just text, you can also
-   `echo ... | acr -insert -write` directly.  Validate with
-   `acr -check %` (referential integrity) and `acr -check % -x`
-   (cross-refs, gitfile presence).  `acr_ed` rejects bad changes;
-   `amc` catches common bad patterns.
-
-`amc` runs with no args and globally regenerates.  There is no
-partial mode.  Query mode: `amc <ctype>` prints a struct, `amc
-<func>` prints a function source — rarely needed.
-
-On a branch that modifies amc itself, rebuild it (`abt amc -build
--install`) before running it.  A stale `bin/amc` exits clean but
-emits the previous generator's output, silently deleting the
-branch's generated code; the deletion surfaces later as unrelated
-compile errors in `cpp/gen/` consumers.
-
-The same staleness bites after a rebase or merge that brings in
-upstream amc changes: the installed `bin/amc` still embodies the
-pre-rebase generator, and running it rewrites every generated file
-back to the old output (the symptom is a huge `cpp/gen/` diff far
-beyond the branch's own schema changes).  When a rebase conflicts
-on a generated file, do not resolve it by picking a side: restore
-the generated tree to the merged index, take the upstream version
-of any generated pair that amc's own build needs to compile,
-rebuild amc, and only then rerun it — the regenerated files are
-then the true union of both sides' schemas.
-
-A stale generator can also fail outright instead of mis-generating.
-It reports a schema violation against a ctype the branch never
-touched — `amc.dangling_pointer` naming an upstream field, followed
-by `amc.no_output` — because the old generator is judging the merged
-schema by its own rules.  That pair reads like a schema mistake and
-is not one: confirm the ssim inputs match upstream (`git diff
-origin/master -- data/`), then rebuild amc and rerun.
-
-`acr_ed` reference:
-[/txt/exe/acr_ed/README.md](/txt/exe/acr_ed/README.md).
-Per-executable docs: `txt/exe/<exe>/README.md` (see
-`acr ns -where nstype:exe`).
-
-### Source files & headers
-<a href="#source-files-headers"></a>
-
-- New source file: `acr_ed -create -srcfile <srcfile> -target
-  <target> -write`.
-- After adding a function, run `update-hdr` to refresh prototypes.
-  Never write prototypes by hand.
-- **Comment blocks belong to the function below them.** Move /
-  delete the preceding `// …` lines with the function.
-- Default arguments use `DFLTVAL`, e.g. `void F(int a, int b
-  DFLTVAL(0))` — the macro expands only in the header (no-op in
-  the source).  C++ disallows restating defaults.
-
-### New script under `bin/`
-<a href="#new-script-under-bin-"></a>
-
-```bash
-acr_ed -create -srcfile bin/<name> [-license <pkey>] [-comment "…"] -write
+```text
+data/*.ssim  →  amc  →  cpp/gen/*.cpp, include/gen/*.h  →  abt  →  bin/
 ```
 
-Creates the file (default `#!/usr/bin/env bash` shebang if it
-doesn't exist), inserts `dev.gitfile` + `dev.scriptfile` + the
-`txt/script/<name>.md` readme stub, runs `src_hdr -update_copyright`
-to stamp the header.  `-license` defaults to `GPL`; pick from
-`acr license` (e.g. `GPL`, `X2`, `ARND`).  `-comment` lands in the
-scriptfile record.  Copyright text itself lives in the file header
-(managed by `src_hdr`), not in any table.
+The schema in `data/` is the source of truth.  `amc` reads every ssimfile and
+emits, for each namespace, a complete in-memory database: the pools that hold
+records, the hash indexes and lists that reach them, the cursors that walk
+them, the step dispatch, the command-line parser, and the readers and printers
+for every ctype.  Hand-written code under `cpp/<ns>/` calls those generated
+APIs and holds the logic that is genuinely particular to the program.
 
-### Adding a message handler
-<a href="#adding-a-message-handler"></a>
+`amc` takes no arguments and regenerates the whole tree; there is no partial
+mode.  Its output is committed, which is what makes the pipeline checkable: a
+rebuilt `amc` regenerating the tree byte-for-byte is the proof that the schema
+and the code still agree.
 
-1. Insert a `dmmeta.dispatch_msg` record.
-2. Run `amc`.
-3. Run `src_func -createmissing` to stub the new function.
+Nothing under `cpp/gen`, `include/gen` or `ts/gen` is ever edited by hand.  An
+edit there survives until the next `amc` run, and the way to change generated
+code is to change the record it came from, or to change the generator.
 
-For dispatch `<ns>.<disp>`, all handler functions must live in
-`cpp/<ns>/<disp>.cpp` named `void ns::Disp_<MessageType>(...)`.
-The file must contain *all* such functions and only them.
-
-### AMC executables — common conventions
-<a href="#amc-executables-common-conventions"></a>
-
-All amc-generated exes accept:
-
-- `-v` / `-verbose`, `-d` / `-debug` — repeatable to raise level.
-- `-h` / `-help`, `-version`, `-signature` — diagnostic.
-
-Per-tool syntax: `acr field:command.<ns>.%` (add `-t` for
-transitive closure).
-
-Tools that read ssimfiles support `-in` (default `"data"`).
+### Editing the schema
+<a href="#editing-the-schema"></a>
 
 ```bash
-acr_in <ns regx>             # files a tool loads
-acr_in <ns regx> -data       # actual tuples loaded
-acr_in -r <ssimfile regx>    # which tools read this ssimfile
-# Custom inputs: run `acr_in -data`, edit the result, pass via -in.
+acr_ed -create -field <ns>.FCtype.<name> -arg <ctype> -write
+acr_ed -create -srcfile cpp/<ns>/<file>.cpp -target <ns> -write
+acr_ed -create -srcfile txt/.../xyz.md -write
 ```
 
-### Documentation
-<a href="#documentation"></a>
+`acr_ed` writes the records and runs `amc` in one step, and it prints the
+script it is about to run when `-write` is left off.  Records are just text, so
+`echo ... | acr -insert -write` works too; what `acr_ed` adds is the set of
+companion records an entity needs and the ordering between them.  Full
+reference: [/txt/exe/acr_ed/README.md](/txt/exe/acr_ed/README.md).
 
-- Imperative tense everywhere: "update key; write file" not
-  "updates key, writes file".
-- Markdown lives in `txt/`.
-- New md file: `acr_ed -create -srcfile txt/.../xyz.md`.  Delete:
-  `acr_ed -del -srcfile ...`.
-- Generated sections match patterns in the `mdsection` ssimfile
-  (`acr mdsection`).  Regenerate: `abt_md <mdfile regx>`.
-- Inline commands appear as `inline-command: ...` in a preformatted
-  block; the output replaces the rest of the block.  Skip eval:
-  `abt_md <mdfile> -evalcmd:N`.
-- Refresh docs for a namespace: `abt_md -ns:<ns regx>`.
-- Check links / syntax: `abt_md -check` (`-external` checks
-  external URLs too — needs network).  `-check` only checks: it never
-  regenerates, so a section that has drifted from its ssim rows passes it
-  and fails `quickreadme` under `bin/normalize` instead.  Run plain
-  `bin/abt_md` first, then `-check`.
-- Plain `bin/abt_md` does not refresh every generated section.  The
-  cmdline field tables under `txt/protocol/command/README.md`, and the
-  `Syntax` block of each `txt/exe/<tool>/README.md`, are regenerated by
-  the `quickreadme` citest and not by `abt_md` — so a `dmmeta.field` row
-  you add or edit still reads as the old value after `abt_md` and
-  `abt_md -check` both pass, and only `bin/normalize` catches it.  This
-  bites hardest after a rebase whose conflicts you resolved by taking
-  the upstream side of those files.  Run `bin/normalize`, or
-  `atf_ci -cijob:normalize -citest:quickreadme`, before believing a
-  cmdline change is fully regenerated.
-- After inserting a new command-line field, run `bin/abt_md` **twice**.
-  The first run emits the new `#### -<flag>` block without the blank line
-  every other block ends with, and the second run adds it; a single run
-  therefore leaves a diff that the next person's `abt_md` produces and
-  `checkclean` rejects.  Confirmed on `command.glrunner.sweep_max`: run
-  one, no blank line; run two, blank line; run three, no change.
-- Everything under `txt/gen/` is generated, so a rebase conflict there is
-  never resolved by hand.  Take the upstream side of every conflicting file
-  (`git checkout --ours <file>` while the rebase is stopped), finish the
-  rebase, then run `abt_md` and commit what it regenerates.  Merging the two
-  sides by eye means reproducing the generator's output by hand, which is
-  both slower and wrong.
-- Renaming or moving a doc file also moves its hash in the package manifest
-  `apm/gen/<package>.ssim`.  Regenerate it with `apm -package:<package> -generate`,
-  which is what the `apm_gen` citest of the `normalize` cijob checks; the
-  rename otherwise looks complete and fails the pre-merge gate.
+After adding a function, run `update-hdr` to refresh its prototype.  Never
+write a prototype by hand, and move a function's leading comment block with the
+function -- the comment belongs to the declaration below it, and `update-hdr`
+copies both.  A default argument is written in the source as `DFLTVAL(X)`,
+because C++ disallows restating a default and `update-hdr` is what turns it
+into `= X` in the header.
 
-### Reference
-<a href="#reference"></a>
+### Message handlers
+<a href="#message-handlers"></a>
 
-- Querying / editing the ssim db: [acr.md](acr.md).
-- Schema rules and pitfalls: [schema.md](schema.md).
-- Build and test: [build.md](build.md).
+A handler is dispatched from a table rather than from a switch.  Insert a
+`dmmeta.dispatch_msg` record, run `amc`, then `src_func -createmissing` to stub
+the function.  For dispatch `<ns>.<disp>` every handler lives in
+`cpp/<ns>/<disp>.cpp`, named `void ns::Disp_<MessageType>(...)`, and that file
+holds all of them and nothing else.
+
+### What every generated executable accepts
+<a href="#what-every-generated-executable-accepts"></a>
+
+The command line is generated from `dmmeta.field` rows on `command.<ns>`, so
+every tool shares the same parser and the same conventions: `-v` / `-verbose`
+and `-d` / `-debug` repeat to raise a level, and `-h`, `-version` and
+`-signature` are diagnostic.  A tool that reads ssimfiles also takes `-in`,
+defaulting to `data`.
+
+```bash
+acr field:command.<ns>.%     # the options of one tool, from the schema
+acr_in <ns regx>             # the ssimfiles it loads
+acr_in <ns regx> -data       # the tuples it loads
+acr_in -r <ssimfile regx>    # which tools read this table
+```
+
+### Documentation is generated too
+<a href="#documentation-is-generated-too"></a>
+
+`abt_md` is to `txt/` what `amc` is to `cpp/gen`.  A heading matching a pattern
+in `acr mdsection` owns a generated section beneath it; an `inline-command:`
+line inside a preformatted block is executed and its output replaces the rest
+of the block; the `<a href="#...">` anchor under every heading is written by
+the tool rather than by hand.  Prose is imperative and present tense: "update
+key; write file".
+
+The ways a generated document can be stale while every local check passes are
+in [/txt/rule/openacr.md](/txt/rule/openacr.md), along with the traps a stale
+`amc` produces.

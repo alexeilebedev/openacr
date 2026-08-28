@@ -1,35 +1,32 @@
 ## atf_cov - Line coverage
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Test coverage](#test-coverage)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Code coverage](#code-coverage)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Line coverage](#line-coverage)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [One-liner](#one-liner)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Changing directory to store coverage data](#changing-directory-to-store-coverage-data)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Running instrumented executable](#running-instrumented-executable)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Redirecting log to a file](#redirecting-log-to-a-file)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Running Gcov](#running-gcov)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Treating source files as infeasible](#treating-source-files-as-infeasible)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Generating coverage reports](#generating-coverage-reports)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Writing out in-memory coverage database to files](#writing-out-in-memory-coverage-database-to-files)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Merging data from multiple runs](#merging-data-from-multiple-runs)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Loading ssim coverage data from prevous run](#loading-ssim-coverage-data-from-prevous-run)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Checking and capturing coverage](#checking-and-capturing-coverage)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Code a kill test reaches scores zero](#code-a-kill-test-reaches-scores-zero)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Viewing coverage summary](#viewing-coverage-summary)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Output files](#output-files)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [atf_cov - Internals](/txt/gen/atf_cov/atf_cov.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+atf_cov: Line coverage
+Usage: atf_cov [options]
+    OPTION        TYPE    DFLT                              COMMENT
+    -in           string  "data"                            Input directory or filename, - for stdin
+    -covdir       string  "temp/covdata"                    Output directory to save coverage data
+    -logfile      string  ""                                Log file
+    -runcmd       string  ""                                command to run
+    -exclude      regx    "(extern|include/gen|cpp/gen)/%"  Exclude gitfiles (external, generated)
+    -mergepath    string  ""                                colon-separated dir list to load .cov.ssim files from
+    -gcov                                                   run gcov
+    -ssim                                                   write out ssim files
+    -report                                                 write out all reports
+    -capture                                                Write coverage information into tgtcov table
+    -xmlpretty                                              Generate pretty-formatted XML
+    -summary              Y                                 Show summary figures
+    -check                                                  Check coverage information against tgtcov table
+    -incremental                                            Keep *.gcda files from previous run
+    -verbose      flag                                      Verbosity level (0..255); alias -v; cumulative
+    -debug        flag                                      Debug level (0..255); alias -d; cumulative
+    -help                                                   Print help and exit; alias -h
+    -version                                                Print version and exit
+    -signature                                              Show signatures and exit; alias -sig
+```
 
 ### Description
 <a href="#description"></a>
@@ -55,7 +52,7 @@ Test coverage levels can range from 0% to 100%.
 When calculating coverage for any test design technique,
 the following formula shall be used:
 
-```
+```bash
          N
     C = --- * 100%
          T
@@ -122,7 +119,7 @@ although may be hit or not are typically treated as infeasible, and thus discoun
 
 One liner to perform whole processing at once:
 
-```
+```bash
 abt % -cfg coverage && \
 atf_cov -covdir temp/covdata -runcmd build/coverage/acr -gcov -ssim -report
 ```
@@ -166,7 +163,7 @@ with options appropriate to the compiler to produce GNU GCC coverage database fi
 written on  directory specified on environment variable `GCC_PROFILE_DIR`.
 
 GCC options are:
-```
+```bash
 -ftest-coverage -fprofile-arcs -fprofile-dir=%q{GCC_PROFILE_DIR} -coverage
 ```
 
@@ -185,17 +182,17 @@ This is useful when wrapping `-runcmd` in the pipeline, in order to not garble c
 Example:
 
 Original pipeline:
-```
+```text
 producer | command | consumer
 ```
 
 Wrong wrapping:
-```
+```text
 producer | atf_cov -runcmd command | consumer
 ```
 
 Right wrapping:
-```
+```text
 producer | atf_cov -runcmd command -logfile atf_cov.log | consumer
 ```
 
@@ -237,7 +234,7 @@ Reports contains summary figures for files, targets, total.
 Total figures are broken down by targets, which in turn are broken down by files.
 
 Total- and target-based data format is defined as `dev.covtarget` table:
-```
+```ssim
 inline-command: acr dmmeta.field:dev.Covtarget.%
 dmmeta.field  field:dev.Covtarget.covtarget  arg:dev.Target    reftype:Pkey  dflt:""  comment:Target
 dmmeta.field  field:dev.Covtarget.total      arg:u32           reftype:Val   dflt:""  comment:"Total lines"
@@ -252,7 +249,7 @@ For total figures hard-coded keyword 'TOTAL' is used as target name.
 
 File-based data format is defined as `dev.covfile` table:
 
-```
+```ssim
 inline-command: acr dmmeta.field:dev.Covfile.%
 dmmeta.field  field:dev.Covfile.covfile  arg:dev.Gitfile   reftype:Pkey  dflt:""  comment:"Source file"
 dmmeta.field  field:dev.Covfile.total    arg:u32           reftype:Val   dflt:""  comment:"Total lines"
@@ -281,7 +278,7 @@ is replaced by '#' in order to avoid creating deep directory structure.
 
 Ssim file format is described as 'dev.covline' table:
 
-```
+```ssim
 inline-command: acr dmmeta.field:dev.Covline.%
 dmmeta.field  field:dev.Covline.covline  arg:algo.cstring  reftype:Val   dflt:""     comment:"Key: file:line"
 dmmeta.field  field:dev.Covline.src      arg:dev.Gitfile   reftype:Pkey  dflt:""     comment:"Source file"
@@ -295,7 +292,7 @@ report.acr  n_select:6  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_m
 Key of this table is colon-separated pair (source file, source line).
 
 Line is flagged as follows:
-```
+```ssim
 inline-command: acr dmmeta.fconst:dev.Covline.%
 dmmeta.fconst  fconst:dev.Covline.flag/N  value:"'N'"  comment:Non-executable
 dmmeta.fconst  fconst:dev.Covline.flag/E  value:"'E'"  comment:Executable
@@ -314,12 +311,12 @@ Coverage data being loaded may be represented either as bare .gcda files (unproc
 or as ssim coverage database (already processed by `-gcov` and written out with `-ssim`)
 
 To merge **ssim** coverage data from *dir1* and *dir2*, and generate reports on *dir3*:
-```
+```bash
 atf_cov -mergepath dir1:dir2 -covdir dir3 -report
 ```
 
 To merge **gcda** coverage data from *dir1* and *dir2*, and generate reports on *dir3*:
-```
+```bash
 atf_cov -mergepath dir1:dir2 -covdir dir3 -report -gcov
 ```
 
@@ -337,13 +334,13 @@ from ssim files written with `-ssim` option, without rerunning command and gcov.
 
 To save target figures in order to be checked against later, run:
 
-```
+```bash
 atf_cov -capture
 ```
 
 To check figures against saved, run:
 
-```
+```bash
 atf_cov -check
 ```
 
@@ -434,17 +431,3 @@ Atf_cov generates output files on `-covdata` directory;
 
 #### -incremental -- Keep *.gcda files from previous run
 <a href="#-incremental"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`atf_cov` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.covfile](/txt/ssimdb/dev/covfile.md)||
-|[dev.covline](/txt/ssimdb/dev/covline.md)||
-|[dev.covtarget](/txt/ssimdb/dev/covtarget.md)||
-|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[dev.tgtcov](/txt/ssimdb/dev/tgtcov.md)|Captured line coverate information by target|

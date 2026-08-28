@@ -246,7 +246,7 @@ amcdb.tfunc  tfunc:Inlary.RemoveLast  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur
 amcdb.tfunc  tfunc:Inlary.RowidFind  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"find row by row id"
 amcdb.tfunc  tfunc:Inlary.Setary  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"Set contents of fixed array to RHS; Input length is trimmed as necessary"
 amcdb.tfunc  tfunc:Inlary.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:""
-amcdb.tfunc  tfunc:Inlary.qFind  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"'quick' Access row by row id. No bounds checking in release."
+amcdb.tfunc  tfunc:Inlary.qFind  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"'quick' Access row by row id. No bounds checking."
 amcdb.tfunc  tfunc:Inlary.rowid_Get  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"Compute row id of element given element's address"
 amcdb.tfunc  tfunc:Inlary.Eq  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:Y  ismacro:N  comment:""
 amcdb.tfunc  tfunc:Inlary.Cmp  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:""

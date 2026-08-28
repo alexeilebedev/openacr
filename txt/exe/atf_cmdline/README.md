@@ -1,17 +1,40 @@
 ## atf_cmdline - Test tool for command line parsing
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [atf_cmdline - Internals](/txt/gen/atf_cmdline/atf_cmdline.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+atf_cmdline: Test tool for command line parsing
+Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<string> [[-amnum:]<int>] [options]
+    OPTION      TYPE    DFLT    COMMENT
+    -in         string  "data"  Input directory or filename, - for stdin
+    -exec                       Execv itself
+    [astr]      string          Required anon string
+    [anum]      int     0       Anon number
+    [adbl]      double  0.0     Anon double
+    [aflag]                     Anon flag
+    -str        string          Required string
+    -num        int     0       Required Number
+    -dbl        double  0.0     Required double
+    -flag                       Required flag
+    -dstr       string  "blah"  Predefined string
+    -dnum       int     -33     Predefined number
+    -ddbl       double  0.0001  Predefined double
+    -dflag              Y       Predefined flag
+    -mstr...    string          String array
+    -mnum...    int             Number array
+    -mdbl...    double          Double array
+    [amnum]...  int             Anon number array
+    -fconst     enum    high    Fconst for field (high|medium|low)
+    -cconst     enum    None    Fconst for arg ctype (January|February|March|April|May|June|July|August|September|October|November|December|None)
+    -dregx      regx    "%"     Predefined regx
+    -dpkey      string  ""      Predefined pkey
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
+    -help                       Print help and exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
+```
 
 ### Options
 <a href="#options"></a>
@@ -80,10 +103,3 @@
 
 #### -dpkey -- Predefined pkey
 <a href="#-dpkey"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`atf_cmdline` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|

@@ -29,15 +29,12 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_dm::FDb     acr_dm::_db;      // dependency found via dev.targdep
 
@@ -59,13 +56,13 @@ namespace acr_dm { // gen:ns_print_proto
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:acr_dm.FTuple.bh_child.Downheap
-    static int           bh_child_Downheap(acr_dm::FTuple& tuple, acr_dm::FTuple& row, int idx) __attribute__((nothrow));
+    static int           bh_child_Downheap(acr_dm::FTuple& parent, acr_dm::FTuple& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
     // func:acr_dm.FTuple.bh_child.Upheap
-    static int           bh_child_Upheap(acr_dm::FTuple& tuple, acr_dm::FTuple& row, int idx) __attribute__((nothrow));
+    static int           bh_child_Upheap(acr_dm::FTuple& parent, acr_dm::FTuple& row, int idx) __attribute__((nothrow));
     // func:acr_dm.FTuple.bh_child.ElemLt
-    inline static bool   bh_child_ElemLt(acr_dm::FTuple& tuple, acr_dm::FTuple &a, acr_dm::FTuple &b) __attribute__((nothrow));
+    inline static bool   bh_child_ElemLt(acr_dm::FTuple& parent, acr_dm::FTuple &a, acr_dm::FTuple &b) __attribute__((nothrow));
     // func:acr_dm.FTuple.bh_child_curs.Add
     static void          tuple_bh_child_curs_Add(tuple_bh_child_curs &curs, acr_dm::FTuple& row);
     // func:acr_dm...SizeCheck
@@ -74,41 +71,41 @@ namespace acr_dm { // gen:ns_print_proto
 
 // --- acr_dm.FAttr.zs_value.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void acr_dm::zs_value_Insert(acr_dm::FAttr& attr, acr_dm::FValue& row) {
+void acr_dm::zs_value_Insert(acr_dm::FAttr& parent, acr_dm::FValue& row) {
     if (!attr_zs_value_InLlistQ(row)) {
-        acr_dm::FValue* old_tail       = attr.zs_value_tail;
+        acr_dm::FValue* old_tail       = parent.zs_value_tail;
         row.attr_zs_value_next  = NULL;
-        attr.zs_value_tail = &row;
+        parent.zs_value_tail = &row;
         acr_dm::FValue **new_row_a = &old_tail->attr_zs_value_next;
-        acr_dm::FValue **new_row_b = &attr.zs_value_head;
+        acr_dm::FValue **new_row_b = &parent.zs_value_head;
         acr_dm::FValue **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        attr.zs_value_n++;
+        parent.zs_value_n++;
     }
 }
 
 // --- acr_dm.FAttr.zs_value.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void acr_dm::zs_value_Remove(acr_dm::FAttr& attr, acr_dm::FValue& row) {
+void acr_dm::zs_value_Remove(acr_dm::FAttr& parent, acr_dm::FValue& row) {
     if (attr_zs_value_InLlistQ(row)) {
-        acr_dm::FValue* old_head       = attr.zs_value_head;
+        acr_dm::FValue* old_head       = parent.zs_value_head;
         (void)old_head; // in case it's not used
         acr_dm::FValue* prev=NULL;
-        acr_dm::FValue* cur     = attr.zs_value_head;
+        acr_dm::FValue* cur     = parent.zs_value_head;
         while (cur) {  // search for element by pointer
             acr_dm::FValue* next = cur->attr_zs_value_next;
             if (cur == &row) {
-                attr.zs_value_n--;  // adjust count
+                parent.zs_value_n--;  // adjust count
 
                 if (!next) {
-                    attr.zs_value_tail = prev;  // adjust tail pointer
+                    parent.zs_value_tail = prev;  // adjust tail pointer
                 }
                 // disconnect element from linked list
                 if (prev) {
                     prev->attr_zs_value_next = next;
                 } else {
-                    attr.zs_value_head = next;
+                    parent.zs_value_head = next;
                 }
                 row.attr_zs_value_next = (acr_dm::FValue*)-1; // not-in-list
                 break;
@@ -121,11 +118,11 @@ void acr_dm::zs_value_Remove(acr_dm::FAttr& attr, acr_dm::FValue& row) {
 
 // --- acr_dm.FAttr.zs_value.RemoveAll
 // Empty the index. (The rows are not deleted)
-void acr_dm::zs_value_RemoveAll(acr_dm::FAttr& attr) {
-    acr_dm::FValue* row = attr.zs_value_head;
-    attr.zs_value_head = NULL;
-    attr.zs_value_tail = NULL;
-    attr.zs_value_n = 0;
+void acr_dm::zs_value_RemoveAll(acr_dm::FAttr& parent) {
+    acr_dm::FValue* row = parent.zs_value_head;
+    parent.zs_value_head = NULL;
+    parent.zs_value_tail = NULL;
+    parent.zs_value_n = 0;
     while (row) {
         acr_dm::FValue* row_next = row->attr_zs_value_next;
         row->attr_zs_value_next  = (acr_dm::FValue*)-1;
@@ -135,28 +132,27 @@ void acr_dm::zs_value_RemoveAll(acr_dm::FAttr& attr) {
 
 // --- acr_dm.FAttr.zs_value.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-acr_dm::FValue* acr_dm::zs_value_RemoveFirst(acr_dm::FAttr& attr) {
+acr_dm::FValue* acr_dm::zs_value_RemoveFirst(acr_dm::FAttr& parent) {
     acr_dm::FValue *row = NULL;
-    row = attr.zs_value_head;
+    row = parent.zs_value_head;
     if (row) {
         acr_dm::FValue *next = row->attr_zs_value_next;
-        attr.zs_value_head = next;
+        parent.zs_value_head = next;
         // clear list's tail pointer if list is empty.
         if (!next) {
-            attr.zs_value_tail = NULL;
+            parent.zs_value_tail = NULL;
         }
-        attr.zs_value_n--;
+        parent.zs_value_n--;
         row->attr_zs_value_next = (acr_dm::FValue*)-1; // mark as not-in-list
     }
     return row;
 }
 
 // --- acr_dm.FAttr..Uninit
-void acr_dm::FAttr_Uninit(acr_dm::FAttr& attr) {
-    acr_dm::FAttr &row = attr; (void)row;
-    acr_dm::FTuple* p_p_tuple = row.p_tuple;
+void acr_dm::FAttr_Uninit(acr_dm::FAttr& parent) {
+    acr_dm::FTuple* p_p_tuple = parent.p_tuple;
     if (p_p_tuple)  {
-        zs_attr_Remove(*p_p_tuple, row);// remove attr from index zs_attr
+        zs_attr_Remove(*p_p_tuple, parent);// remove attr from index zs_attr
     }
 }
 
@@ -806,7 +802,6 @@ void acr_dm::FDb_Init() {
 
 // --- acr_dm.FDb..Uninit
 void acr_dm::FDb_Uninit() {
-    acr_dm::FDb &row = _db; (void)row;
 
     // acr_dm.FDb.value.Uninit (Lary)  //
     // skip destruction in global scope
@@ -823,41 +818,41 @@ void acr_dm::FDb_Uninit() {
 
 // --- acr_dm.FTuple.zs_attr.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void acr_dm::zs_attr_Insert(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
+void acr_dm::zs_attr_Insert(acr_dm::FTuple& parent, acr_dm::FAttr& row) {
     if (!tuple_zs_attr_InLlistQ(row)) {
-        acr_dm::FAttr* old_tail       = tuple.zs_attr_tail;
+        acr_dm::FAttr* old_tail       = parent.zs_attr_tail;
         row.tuple_zs_attr_next  = NULL;
-        tuple.zs_attr_tail = &row;
+        parent.zs_attr_tail = &row;
         acr_dm::FAttr **new_row_a = &old_tail->tuple_zs_attr_next;
-        acr_dm::FAttr **new_row_b = &tuple.zs_attr_head;
+        acr_dm::FAttr **new_row_b = &parent.zs_attr_head;
         acr_dm::FAttr **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        tuple.zs_attr_n++;
+        parent.zs_attr_n++;
     }
 }
 
 // --- acr_dm.FTuple.zs_attr.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void acr_dm::zs_attr_Remove(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
+void acr_dm::zs_attr_Remove(acr_dm::FTuple& parent, acr_dm::FAttr& row) {
     if (tuple_zs_attr_InLlistQ(row)) {
-        acr_dm::FAttr* old_head       = tuple.zs_attr_head;
+        acr_dm::FAttr* old_head       = parent.zs_attr_head;
         (void)old_head; // in case it's not used
         acr_dm::FAttr* prev=NULL;
-        acr_dm::FAttr* cur     = tuple.zs_attr_head;
+        acr_dm::FAttr* cur     = parent.zs_attr_head;
         while (cur) {  // search for element by pointer
             acr_dm::FAttr* next = cur->tuple_zs_attr_next;
             if (cur == &row) {
-                tuple.zs_attr_n--;  // adjust count
+                parent.zs_attr_n--;  // adjust count
 
                 if (!next) {
-                    tuple.zs_attr_tail = prev;  // adjust tail pointer
+                    parent.zs_attr_tail = prev;  // adjust tail pointer
                 }
                 // disconnect element from linked list
                 if (prev) {
                     prev->tuple_zs_attr_next = next;
                 } else {
-                    tuple.zs_attr_head = next;
+                    parent.zs_attr_head = next;
                 }
                 row.tuple_zs_attr_next = (acr_dm::FAttr*)-1; // not-in-list
                 break;
@@ -870,11 +865,11 @@ void acr_dm::zs_attr_Remove(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
 
 // --- acr_dm.FTuple.zs_attr.RemoveAll
 // Empty the index. (The rows are not deleted)
-void acr_dm::zs_attr_RemoveAll(acr_dm::FTuple& tuple) {
-    acr_dm::FAttr* row = tuple.zs_attr_head;
-    tuple.zs_attr_head = NULL;
-    tuple.zs_attr_tail = NULL;
-    tuple.zs_attr_n = 0;
+void acr_dm::zs_attr_RemoveAll(acr_dm::FTuple& parent) {
+    acr_dm::FAttr* row = parent.zs_attr_head;
+    parent.zs_attr_head = NULL;
+    parent.zs_attr_tail = NULL;
+    parent.zs_attr_n = 0;
     while (row) {
         acr_dm::FAttr* row_next = row->tuple_zs_attr_next;
         row->tuple_zs_attr_next  = (acr_dm::FAttr*)-1;
@@ -884,17 +879,17 @@ void acr_dm::zs_attr_RemoveAll(acr_dm::FTuple& tuple) {
 
 // --- acr_dm.FTuple.zs_attr.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-acr_dm::FAttr* acr_dm::zs_attr_RemoveFirst(acr_dm::FTuple& tuple) {
+acr_dm::FAttr* acr_dm::zs_attr_RemoveFirst(acr_dm::FTuple& parent) {
     acr_dm::FAttr *row = NULL;
-    row = tuple.zs_attr_head;
+    row = parent.zs_attr_head;
     if (row) {
         acr_dm::FAttr *next = row->tuple_zs_attr_next;
-        tuple.zs_attr_head = next;
+        parent.zs_attr_head = next;
         // clear list's tail pointer if list is empty.
         if (!next) {
-            tuple.zs_attr_tail = NULL;
+            parent.zs_attr_tail = NULL;
         }
-        tuple.zs_attr_n--;
+        parent.zs_attr_n--;
         row->tuple_zs_attr_next = (acr_dm::FAttr*)-1; // mark as not-in-list
     }
     return row;
@@ -902,31 +897,31 @@ acr_dm::FAttr* acr_dm::zs_attr_RemoveFirst(acr_dm::FTuple& tuple) {
 
 // --- acr_dm.FTuple.bh_child.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void acr_dm::bh_child_Dealloc(acr_dm::FTuple& tuple) {
-    bh_child_RemoveAll(tuple);
-    algo_lib::malloc_FreeMem(tuple.bh_child_elems, sizeof(acr_dm::FTuple*)*tuple.bh_child_max);
-    tuple.bh_child_max   = 0;
-    tuple.bh_child_elems = NULL;
+void acr_dm::bh_child_Dealloc(acr_dm::FTuple& parent) {
+    bh_child_RemoveAll(parent);
+    algo_lib::malloc_FreeMem(parent.bh_child_elems, sizeof(acr_dm::FTuple*)*parent.bh_child_max);
+    parent.bh_child_max   = 0;
+    parent.bh_child_elems = NULL;
 }
 
 // --- acr_dm.FTuple.bh_child.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int acr_dm::bh_child_Downheap(acr_dm::FTuple& tuple, acr_dm::FTuple& row, int idx) {
-    acr_dm::FTuple* *elems = tuple.bh_child_elems;
-    int n = tuple.bh_child_n;
+static int acr_dm::bh_child_Downheap(acr_dm::FTuple& parent, acr_dm::FTuple& row, int idx) {
+    acr_dm::FTuple* *elems = parent.bh_child_elems;
+    int n = parent.bh_child_n;
     int child = idx*2+1;
     while (child < n) {
         acr_dm::FTuple* p = elems[child]; // left child
         int rchild = child+1;
         if (rchild < n) {
             acr_dm::FTuple* q = elems[rchild]; // right child
-            if (bh_child_ElemLt(tuple, *q,*p)) {
+            if (bh_child_ElemLt(parent, *q,*p)) {
                 child = rchild;
                 p     = q;
             }
         }
-        if (!bh_child_ElemLt(tuple, *p,row)) {
+        if (!bh_child_ElemLt(parent, *p,row)) {
             break;
         }
         p->tuple_bh_child_idx   = idx;
@@ -939,33 +934,33 @@ static int acr_dm::bh_child_Downheap(acr_dm::FTuple& tuple, acr_dm::FTuple& row,
 
 // --- acr_dm.FTuple.bh_child.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void acr_dm::bh_child_Insert(acr_dm::FTuple& tuple, acr_dm::FTuple& row) {
+void acr_dm::bh_child_Insert(acr_dm::FTuple& parent, acr_dm::FTuple& row) {
     if (LIKELY(row.tuple_bh_child_idx == -1)) {
-        bh_child_Reserve(tuple, 1);
-        int n = tuple.bh_child_n;
-        tuple.bh_child_n = n + 1;
-        int new_idx = bh_child_Upheap(tuple, row, n);
+        bh_child_Reserve(parent, 1);
+        int n = parent.bh_child_n;
+        parent.bh_child_n = n + 1;
+        int new_idx = bh_child_Upheap(parent, row, n);
         row.tuple_bh_child_idx = new_idx;
-        tuple.bh_child_elems[new_idx] = &row;
+        parent.bh_child_elems[new_idx] = &row;
     }
 }
 
 // --- acr_dm.FTuple.bh_child.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 acr_dm::bh_child_Reheap(acr_dm::FTuple& tuple, acr_dm::FTuple& row) {
+i32 acr_dm::bh_child_Reheap(acr_dm::FTuple& parent, acr_dm::FTuple& row) {
     int old_idx = row.tuple_bh_child_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
-        bh_child_Reserve(tuple, 1);
-        old_idx = tuple.bh_child_n++;
+        bh_child_Reserve(parent, 1);
+        old_idx = parent.bh_child_n++;
     }
-    int new_idx = bh_child_Upheap(tuple, row, old_idx);
+    int new_idx = bh_child_Upheap(parent, row, old_idx);
     if (!isnew && new_idx == old_idx) {
-        new_idx = bh_child_Downheap(tuple, row, old_idx);
+        new_idx = bh_child_Downheap(parent, row, old_idx);
     }
     row.tuple_bh_child_idx = new_idx;
-    tuple.bh_child_elems[new_idx] = &row;
+    parent.bh_child_elems[new_idx] = &row;
     return new_idx;
 }
 
@@ -974,31 +969,31 @@ i32 acr_dm::bh_child_Reheap(acr_dm::FTuple& tuple, acr_dm::FTuple& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 acr_dm::bh_child_ReheapFirst(acr_dm::FTuple& tuple) {
-    acr_dm::FTuple &row = *tuple.bh_child_elems[0];
-    i32 new_idx = bh_child_Downheap(tuple, row, 0);
+i32 acr_dm::bh_child_ReheapFirst(acr_dm::FTuple& parent) {
+    acr_dm::FTuple &row = *parent.bh_child_elems[0];
+    i32 new_idx = bh_child_Downheap(parent, row, 0);
     row.tuple_bh_child_idx = new_idx;
-    tuple.bh_child_elems[new_idx] = &row;
+    parent.bh_child_elems[new_idx] = &row;
     return new_idx;
 }
 
 // --- acr_dm.FTuple.bh_child.Remove
 // Remove element from index. If element is not in index, do nothing.
-void acr_dm::bh_child_Remove(acr_dm::FTuple& tuple, acr_dm::FTuple& row) {
+void acr_dm::bh_child_Remove(acr_dm::FTuple& parent, acr_dm::FTuple& row) {
     if (bh_child_InBheapQ(row)) {
         int old_idx = row.tuple_bh_child_idx;
-        if (tuple.bh_child_elems[old_idx] == &row) { // sanity check: heap points back to row
+        if (parent.bh_child_elems[old_idx] == &row) { // sanity check: heap points back to row
             row.tuple_bh_child_idx = -1;           // mark not in heap
-            i32 n = tuple.bh_child_n - 1; // index of last element in heap
-            tuple.bh_child_n = n;         // decrease count
+            i32 n = parent.bh_child_n - 1; // index of last element in heap
+            parent.bh_child_n = n;         // decrease count
             if (old_idx != n) {
-                acr_dm::FTuple *elem = tuple.bh_child_elems[n];
-                int new_idx = bh_child_Upheap(tuple, *elem, old_idx);
+                acr_dm::FTuple *elem = parent.bh_child_elems[n];
+                int new_idx = bh_child_Upheap(parent, *elem, old_idx);
                 if (new_idx == old_idx) {
-                    new_idx = bh_child_Downheap(tuple, *elem, old_idx);
+                    new_idx = bh_child_Downheap(parent, *elem, old_idx);
                 }
                 elem->tuple_bh_child_idx = new_idx;
-                tuple.bh_child_elems[new_idx] = elem;
+                parent.bh_child_elems[new_idx] = elem;
             }
         }
     }
@@ -1006,29 +1001,29 @@ void acr_dm::bh_child_Remove(acr_dm::FTuple& tuple, acr_dm::FTuple& row) {
 
 // --- acr_dm.FTuple.bh_child.RemoveAll
 // Remove all elements from binary heap
-void acr_dm::bh_child_RemoveAll(acr_dm::FTuple& tuple) {
-    int n = tuple.bh_child_n;
+void acr_dm::bh_child_RemoveAll(acr_dm::FTuple& parent) {
+    int n = parent.bh_child_n;
     for (int i = n - 1; i>=0; i--) {
-        tuple.bh_child_elems[i]->tuple_bh_child_idx = -1; // mark not-in-heap
+        parent.bh_child_elems[i]->tuple_bh_child_idx = -1; // mark not-in-heap
     }
-    tuple.bh_child_n = 0;
+    parent.bh_child_n = 0;
 }
 
 // --- acr_dm.FTuple.bh_child.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-acr_dm::FTuple* acr_dm::bh_child_RemoveFirst(acr_dm::FTuple& tuple) {
+acr_dm::FTuple* acr_dm::bh_child_RemoveFirst(acr_dm::FTuple& parent) {
     acr_dm::FTuple *row = NULL;
-    if (tuple.bh_child_n > 0) {
-        row = tuple.bh_child_elems[0];
+    if (parent.bh_child_n > 0) {
+        row = parent.bh_child_elems[0];
         row->tuple_bh_child_idx = -1;           // mark not in heap
-        i32 n = tuple.bh_child_n - 1; // index of last element in heap
-        tuple.bh_child_n = n;         // decrease count
+        i32 n = parent.bh_child_n - 1; // index of last element in heap
+        parent.bh_child_n = n;         // decrease count
         if (n) {
-            acr_dm::FTuple &elem = *tuple.bh_child_elems[n];
-            int new_idx = bh_child_Downheap(tuple, elem, 0);
+            acr_dm::FTuple &elem = *parent.bh_child_elems[n];
+            int new_idx = bh_child_Downheap(parent, elem, 0);
             elem.tuple_bh_child_idx = new_idx;
-            tuple.bh_child_elems[new_idx] = &elem;
+            parent.bh_child_elems[new_idx] = &elem;
         }
     }
     return row;
@@ -1036,30 +1031,30 @@ acr_dm::FTuple* acr_dm::bh_child_RemoveFirst(acr_dm::FTuple& tuple) {
 
 // --- acr_dm.FTuple.bh_child.Reserve
 // Reserve space in index for N more elements
-void acr_dm::bh_child_Reserve(acr_dm::FTuple& tuple, int n) {
-    i32 old_max = tuple.bh_child_max;
-    if (UNLIKELY(tuple.bh_child_n + n > old_max)) {
+void acr_dm::bh_child_Reserve(acr_dm::FTuple& parent, int n) {
+    i32 old_max = parent.bh_child_max;
+    if (UNLIKELY(parent.bh_child_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
         u32 old_size = old_max * sizeof(acr_dm::FTuple*);
         u32 new_size = new_max * sizeof(acr_dm::FTuple*);
-        void *new_mem = algo_lib::malloc_ReallocMem(tuple.bh_child_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.bh_child_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr_dm.out_of_memory  field:acr_dm.FTuple.bh_child");
         }
-        tuple.bh_child_elems = (acr_dm::FTuple**)new_mem;
-        tuple.bh_child_max = new_max;
+        parent.bh_child_elems = (acr_dm::FTuple**)new_mem;
+        parent.bh_child_max = new_max;
     }
 }
 
 // --- acr_dm.FTuple.bh_child.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int acr_dm::bh_child_Upheap(acr_dm::FTuple& tuple, acr_dm::FTuple& row, int idx) {
-    acr_dm::FTuple* *elems = tuple.bh_child_elems;
+static int acr_dm::bh_child_Upheap(acr_dm::FTuple& parent, acr_dm::FTuple& row, int idx) {
+    acr_dm::FTuple* *elems = parent.bh_child_elems;
     while (idx>0) {
         int j = (idx-1)/2;
         acr_dm::FTuple* p = elems[j];
-        if (!bh_child_ElemLt(tuple, row, *p)) {
+        if (!bh_child_ElemLt(parent, row, *p)) {
             break;
         }
         p->tuple_bh_child_idx = idx;
@@ -1070,9 +1065,27 @@ static int acr_dm::bh_child_Upheap(acr_dm::FTuple& tuple, acr_dm::FTuple& row, i
 }
 
 // --- acr_dm.FTuple.bh_child.ElemLt
-inline static bool acr_dm::bh_child_ElemLt(acr_dm::FTuple& tuple, acr_dm::FTuple &a, acr_dm::FTuple &b) {
-    (void)tuple;
+inline static bool acr_dm::bh_child_ElemLt(acr_dm::FTuple& parent, acr_dm::FTuple &a, acr_dm::FTuple &b) {
+    (void)parent;
     return sortkey_Lt(a, b);
+}
+
+// --- acr_dm.FTuple..Init
+// Set all fields to initial values.
+void acr_dm::FTuple_Init(acr_dm::FTuple& parent) {
+    parent.zs_attr_head = NULL; // (acr_dm.FTuple.zs_attr)
+    parent.zs_attr_n = 0; // (acr_dm.FTuple.zs_attr)
+    parent.zs_attr_tail = NULL; // (acr_dm.FTuple.zs_attr)
+    parent.p_anchor = NULL;
+    parent.bh_child_max   	= 0; // (acr_dm.FTuple.bh_child)
+    parent.bh_child_n     	= 0; // (acr_dm.FTuple.bh_child)
+    parent.bh_child_elems 	= NULL; // (acr_dm.FTuple.bh_child)
+    parent.baseseq = i32(-1);
+    parent.moveconflict = bool(false);
+    parent.p_wanted = NULL;
+    parent.ind_tuple_next = (acr_dm::FTuple*)-1; // (acr_dm.FDb.ind_tuple) not-in-hash
+    parent.ind_tuple_hashval = 0; // stored hash value
+    parent.tuple_bh_child_idx = -1; // (acr_dm.FTuple.bh_child) not-in-heap
 }
 
 // --- acr_dm.FTuple.bh_child_curs.Add
@@ -1164,20 +1177,18 @@ void acr_dm::tuple_bh_child_curs_Next(tuple_bh_child_curs &curs) {
 }
 
 // --- acr_dm.FTuple..Uninit
-void acr_dm::FTuple_Uninit(acr_dm::FTuple& tuple) {
-    acr_dm::FTuple &row = tuple; (void)row;
-    ind_tuple_Remove(row); // remove tuple from index ind_tuple
+void acr_dm::FTuple_Uninit(acr_dm::FTuple& parent) {
+    ind_tuple_Remove(parent); // remove tuple from index ind_tuple
 
     // acr_dm.FTuple.bh_child.Uninit (Bheap)  //Rows anchored on this one, in output order
-    algo_lib::malloc_FreeMem((u8*)tuple.bh_child_elems, sizeof(acr_dm::FTuple*)*tuple.bh_child_max); // (acr_dm.FTuple.bh_child)
+    algo_lib::malloc_FreeMem((u8*)parent.bh_child_elems, sizeof(acr_dm::FTuple*)*parent.bh_child_max); // (acr_dm.FTuple.bh_child)
 }
 
 // --- acr_dm.FValue..Uninit
-void acr_dm::FValue_Uninit(acr_dm::FValue& value) {
-    acr_dm::FValue &row = value; (void)row;
-    acr_dm::FAttr* p_p_attr = row.p_attr;
+void acr_dm::FValue_Uninit(acr_dm::FValue& parent) {
+    acr_dm::FAttr* p_p_attr = parent.p_attr;
     if (p_p_attr)  {
-        zs_value_Remove(*p_p_attr, row);// remove value from index zs_value
+        zs_value_Remove(*p_p_attr, parent);// remove value from index zs_value
     }
 }
 
@@ -1269,7 +1280,6 @@ void acr_dm::StaticCheck() {
 // --- acr_dm...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_dm::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1288,7 +1298,6 @@ int main(int argc, char **argv) {
     try {
         acr_dm::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

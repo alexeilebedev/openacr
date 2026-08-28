@@ -61,6 +61,34 @@ void apm::Main_Check() {
     // if any record belongs to more than one package, then
     // there must be a package dependency between a later package and an earlier package
 
+    // A package and the packages extending it must not claim the same namespace.
+    //
+    // A downstream package claiming a namespace the base publishes is claiming
+    // something it merely depends on.  With the exclusions written out by hand
+    // nothing noticed, because a record is allowed to belong to two packages and
+    // the base's list simply did not exclude that namespace.  Once a package's
+    // content is reduced by what its extenders capture, the same double claim
+    // silently takes every record of that namespace out of the distribution,
+    // which is a change nobody asked for and no test names.
+    //
+    // The report is per namespace rather than per record, because the namespace
+    // is where the decision is: one of the two packages does not own it.
+    ind_beg(_db_pkgdep_curs,pkgdep,_db) if (pkgdep.pkgdeptype == dev_pkgdeptype_extend) {
+        ind_beg(package_zd_pkgkey_curs,pkgkey,*pkgdep.p_package) if (!pkgkey.exclude) {
+            tempstr ns(Pathcomp(key_Get(pkgkey),":LR"));
+            tempstr parent_key(dev::Pkgkey_Concat_package_key(pkgdep.p_parent->package,tempstr()<<"dmmeta.ns:"<<ns));
+            apm::FPkgkey *found = StartsWithQ(key_Get(pkgkey),"dmmeta.ns:") ? ind_pkgkey_Find(parent_key) : NULL;
+            if (found && !found->exclude) {
+                prlog("apm.doubleclaim"
+                      <<Keyval("ns",ns)
+                      <<Keyval("package",pkgdep.p_package->package)
+                      <<Keyval("parent",pkgdep.p_parent->package)
+                      <<Keyval("comment","both claim this namespace; the extender's claim removes the parent's records"));
+                algo_lib::_db.exit_code=1;
+            }
+        }ind_end;
+    }ind_end;
+
     // package must have its own entry under pkgkey
     // because pkgkeys are part of the package definition
     ind_beg(_db_zd_sel_package_curs,package,_db) {

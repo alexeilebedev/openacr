@@ -33,6 +33,7 @@ dmmeta.ns  ns:bash2html  nstype:exe  license:GPL  comment:"Convert bash output a
 dmmeta.ns  ns:command  nstype:protocol  license:GPL  comment:"Command line descriptions"
 dmmeta.ns  ns:dev  nstype:ssimdb  license:GPL  comment:"Tables supporting compilation of programs"
 dmmeta.ns  ns:dmmeta  nstype:ssimdb  license:GPL  comment:"Tables holding metadata (data model meta)"
+dmmeta.ns  ns:doc  nstype:exe  license:GPL  comment:"Render a markdown document to the terminal"
 dmmeta.ns  ns:fm  nstype:protocol  license:GPL  comment:"Fault management types"
 dmmeta.ns  ns:gcache  nstype:exe  license:GPL  comment:"Compiler cache"
 dmmeta.ns  ns:http  nstype:protocol  license:ARND  comment:""

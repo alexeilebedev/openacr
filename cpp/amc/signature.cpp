@@ -18,7 +18,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/signature.cpp -- Signature calculation for protocols
 //
 
@@ -187,8 +187,8 @@ void amc::gen_prep_signature() {
 // that means H(A,B) == H(B,A)
 // sum byte-wise without carry
 // exception if length does not match
-void amc::CombineSignaturesUnordered(algo::Sha1sig &dst, algo::Sha1sig src) {
-    frep_(i,sha1sig_N(dst)) {
-        sha1sig_qFind(dst,i) += sha1sig_qFind(src,i);
+void amc::CombineSignaturesUnordered(algo::Signature &dst, algo::Signature src) {
+    frep_(i,signature_N(dst)) {
+        signature_qFind(dst,i) += signature_qFind(src,i);
     }
 }

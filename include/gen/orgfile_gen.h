@@ -372,47 +372,47 @@ private:
 };
 // Return true if index is empty
 // func:orgfile.FFilehash.c_filename.EmptyQ
-inline bool          c_filename_EmptyQ(orgfile::FFilehash& filehash) __attribute__((nothrow));
+inline bool          c_filename_EmptyQ(orgfile::FFilehash& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:orgfile.FFilehash.c_filename.Find
-inline orgfile::FFilename* c_filename_Find(orgfile::FFilehash& filehash, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline orgfile::FFilename* c_filename_Find(orgfile::FFilehash& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:orgfile.FFilehash.c_filename.Getary
-inline algo::aryptr<orgfile::FFilename*> c_filename_Getary(orgfile::FFilehash& filehash) __attribute__((nothrow));
+inline algo::aryptr<orgfile::FFilename*> c_filename_Getary(orgfile::FFilehash& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:orgfile.FFilehash.c_filename.Insert
-void                 c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename& row) __attribute__((nothrow));
+void                 c_filename_Insert(orgfile::FFilehash& parent, orgfile::FFilename& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:orgfile.FFilehash.c_filename.InsertMaybe
-bool                 c_filename_InsertMaybe(orgfile::FFilehash& filehash, orgfile::FFilename& row) __attribute__((nothrow));
+bool                 c_filename_InsertMaybe(orgfile::FFilehash& parent, orgfile::FFilename& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:orgfile.FFilehash.c_filename.N
-inline i64           c_filename_N(const orgfile::FFilehash& filehash) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_filename_N(const orgfile::FFilehash& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:orgfile.FFilehash.c_filename.Remove
-void                 c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename& row) __attribute__((nothrow));
+void                 c_filename_Remove(orgfile::FFilehash& parent, orgfile::FFilename& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:orgfile.FFilehash.c_filename.RemoveAll
-inline void          c_filename_RemoveAll(orgfile::FFilehash& filehash) __attribute__((nothrow));
+inline void          c_filename_RemoveAll(orgfile::FFilehash& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:orgfile.FFilehash.c_filename.Reserve
-void                 c_filename_Reserve(orgfile::FFilehash& filehash, u64 n) __attribute__((nothrow));
+void                 c_filename_Reserve(orgfile::FFilehash& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:orgfile.FFilehash.c_filename.qFind
-inline orgfile::FFilename& c_filename_qFind(orgfile::FFilehash& filehash, u64 idx) __attribute__((nothrow));
+inline orgfile::FFilename& c_filename_qFind(orgfile::FFilehash& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:orgfile.FFilehash.c_filename.InAryQ
 inline bool          filehash_c_filename_InAryQ(orgfile::FFilename& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:orgfile.FFilehash.c_filename.qLast
-inline orgfile::FFilename& c_filename_qLast(orgfile::FFilehash& filehash) __attribute__((nothrow));
+inline orgfile::FFilename& c_filename_qLast(orgfile::FFilehash& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:orgfile.FFilehash..Init
-inline void          FFilehash_Init(orgfile::FFilehash& filehash);
+inline void          FFilehash_Init(orgfile::FFilehash& parent);
 // func:orgfile.FFilehash.c_filename_curs.Reset
 inline void          filehash_c_filename_curs_Reset(filehash_c_filename_curs &curs, orgfile::FFilehash &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -425,7 +425,7 @@ inline void          filehash_c_filename_curs_Next(filehash_c_filename_curs &cur
 // func:orgfile.FFilehash.c_filename_curs.Access
 inline orgfile::FFilename& filehash_c_filename_curs_Access(filehash_c_filename_curs &curs) __attribute__((nothrow));
 // func:orgfile.FFilehash..Uninit
-void                 FFilehash_Uninit(orgfile::FFilehash& filehash) __attribute__((nothrow));
+void                 FFilehash_Uninit(orgfile::FFilehash& parent) __attribute__((nothrow));
 
 // --- orgfile.FFilename
 // create: orgfile.FDb.filename (Tpool)
@@ -456,9 +456,9 @@ private:
 };
 // Set all fields to initial values.
 // func:orgfile.FFilename..Init
-inline void          FFilename_Init(orgfile::FFilename& filename);
+inline void          FFilename_Init(orgfile::FFilename& parent);
 // func:orgfile.FFilename..Uninit
-void                 FFilename_Uninit(orgfile::FFilename& filename) __attribute__((nothrow));
+void                 FFilename_Uninit(orgfile::FFilename& parent) __attribute__((nothrow));
 
 // --- orgfile.FTimefmt
 // create: orgfile.FDb.timefmt (Lary)
@@ -484,7 +484,7 @@ void                 timefmt_CopyIn(orgfile::FTimefmt &row, dev::Timefmt &in) __
 
 // Set all fields to initial values.
 // func:orgfile.FTimefmt..Init
-inline void          FTimefmt_Init(orgfile::FTimefmt& timefmt);
+inline void          FTimefmt_Init(orgfile::FTimefmt& parent);
 
 // --- orgfile.FieldId
 #pragma pack(push,1)

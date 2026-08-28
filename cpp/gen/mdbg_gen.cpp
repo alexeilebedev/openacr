@@ -31,15 +31,12 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 mdbg::FDb       mdbg::_db;        // dependency found via dev.targdep
 
@@ -78,31 +75,30 @@ void mdbg::builddir_CopyIn(mdbg::FBuilddir &row, dev::Builddir &in) {
 }
 
 // --- mdbg.FBuilddir.uname.Get
-algo::strptr mdbg::uname_Get(mdbg::FBuilddir& builddir) {
-    return algo::Pathcomp(builddir.builddir, ".LL-LL");
+algo::strptr mdbg::uname_Get(mdbg::FBuilddir& parent) {
+    return algo::Pathcomp(parent.builddir, ".LL-LL");
 }
 
 // --- mdbg.FBuilddir.compiler.Get
-algo::strptr mdbg::compiler_Get(mdbg::FBuilddir& builddir) {
-    return algo::Pathcomp(builddir.builddir, ".LL-LR");
+algo::strptr mdbg::compiler_Get(mdbg::FBuilddir& parent) {
+    return algo::Pathcomp(parent.builddir, ".LL-LR");
 }
 
 // --- mdbg.FBuilddir.cfg.Get
-algo::strptr mdbg::cfg_Get(mdbg::FBuilddir& builddir) {
-    return algo::Pathcomp(builddir.builddir, ".LR-LL");
+algo::strptr mdbg::cfg_Get(mdbg::FBuilddir& parent) {
+    return algo::Pathcomp(parent.builddir, ".LR-LL");
 }
 
 // --- mdbg.FBuilddir.arch.Get
-algo::strptr mdbg::arch_Get(mdbg::FBuilddir& builddir) {
-    return algo::Pathcomp(builddir.builddir, ".LR-LR");
+algo::strptr mdbg::arch_Get(mdbg::FBuilddir& parent) {
+    return algo::Pathcomp(parent.builddir, ".LR-LR");
 }
 
 // --- mdbg.FBuilddir..Uninit
-void mdbg::FBuilddir_Uninit(mdbg::FBuilddir& builddir) {
-    mdbg::FBuilddir &row = builddir; (void)row;
-    mdbg::FCfg* p_cfg = mdbg::ind_cfg_Find(cfg_Get(row));
+void mdbg::FBuilddir_Uninit(mdbg::FBuilddir& parent) {
+    mdbg::FCfg* p_cfg = mdbg::ind_cfg_Find(cfg_Get(parent));
     if (p_cfg)  {
-        c_builddir_Remove(*p_cfg, row);// remove builddir from index c_builddir
+        c_builddir_Remove(*p_cfg, parent);// remove builddir from index c_builddir
     }
 }
 
@@ -125,11 +121,11 @@ void mdbg::cfg_CopyIn(mdbg::FCfg &row, dev::Cfg &in) {
 // --- mdbg.FCfg.c_builddir.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void mdbg::c_builddir_Insert(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
+void mdbg::c_builddir_Insert(mdbg::FCfg& parent, mdbg::FBuilddir& row) {
     if (!row.cfg_c_builddir_in_ary) {
-        c_builddir_Reserve(cfg, 1);
-        u64 n  = cfg.c_builddir_n++;
-        cfg.c_builddir_elems[n] = &row;
+        c_builddir_Reserve(parent, 1);
+        u64 n  = parent.c_builddir_n++;
+        parent.c_builddir_elems[n] = &row;
         row.cfg_c_builddir_in_ary = true;
     }
 }
@@ -138,18 +134,18 @@ void mdbg::c_builddir_Insert(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool mdbg::c_builddir_InsertMaybe(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
+bool mdbg::c_builddir_InsertMaybe(mdbg::FCfg& parent, mdbg::FBuilddir& row) {
     bool retval = !cfg_c_builddir_InAryQ(row);
-    c_builddir_Insert(cfg,row); // check is performed in _Insert again
+    c_builddir_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- mdbg.FCfg.c_builddir.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void mdbg::c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
-    i64 n = cfg.c_builddir_n;
+void mdbg::c_builddir_Remove(mdbg::FCfg& parent, mdbg::FBuilddir& row) {
+    i64 n = parent.c_builddir_n;
     if (bool_Update(row.cfg_c_builddir_in_ary,false)) {
-        mdbg::FBuilddir* *elems = cfg.c_builddir_elems;
+        mdbg::FBuilddir* *elems = parent.c_builddir_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -158,7 +154,7 @@ void mdbg::c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(mdbg::FBuilddir*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                cfg.c_builddir_n = n - 1;
+                parent.c_builddir_n = n - 1;
                 break;
             }
         }
@@ -167,28 +163,27 @@ void mdbg::c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
 
 // --- mdbg.FCfg.c_builddir.Reserve
 // Reserve space in index for N more elements;
-void mdbg::c_builddir_Reserve(mdbg::FCfg& cfg, u64 n) {
-    u64 old_max = cfg.c_builddir_max;
-    if (UNLIKELY(cfg.c_builddir_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, cfg.c_builddir_n + n), 4);
+void mdbg::c_builddir_Reserve(mdbg::FCfg& parent, u64 n) {
+    u64 old_max = parent.c_builddir_max;
+    if (UNLIKELY(parent.c_builddir_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_builddir_n + n), 4);
         u64 old_size = old_max * sizeof(mdbg::FBuilddir*);
         u64 new_size = new_max * sizeof(mdbg::FBuilddir*);
-        void *new_mem = mdbg::lpool_ReallocMem(cfg.c_builddir_elems, old_size, new_size);
+        void *new_mem = mdbg::lpool_ReallocMem(parent.c_builddir_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("mdbg.out_of_memory  field:mdbg.FCfg.c_builddir");
         }
-        cfg.c_builddir_elems = (mdbg::FBuilddir**)new_mem;
-        cfg.c_builddir_max = new_max;
+        parent.c_builddir_elems = (mdbg::FBuilddir**)new_mem;
+        parent.c_builddir_max = new_max;
     }
 }
 
 // --- mdbg.FCfg..Uninit
-void mdbg::FCfg_Uninit(mdbg::FCfg& cfg) {
-    mdbg::FCfg &row = cfg; (void)row;
-    ind_cfg_Remove(row); // remove cfg from index ind_cfg
+void mdbg::FCfg_Uninit(mdbg::FCfg& parent) {
+    ind_cfg_Remove(parent); // remove cfg from index ind_cfg
 
     // mdbg.FCfg.c_builddir.Uninit (Ptrary)  //
-    mdbg::lpool_FreeMem(cfg.c_builddir_elems, sizeof(mdbg::FBuilddir*)*cfg.c_builddir_max); // (mdbg.FCfg.c_builddir)
+    mdbg::lpool_FreeMem(parent.c_builddir_elems, sizeof(mdbg::FBuilddir*)*parent.c_builddir_max); // (mdbg.FCfg.c_builddir)
 }
 
 // --- mdbg.trace..Print
@@ -206,6 +201,7 @@ void mdbg::trace_Print(mdbg::trace& row, algo::cstring& str) {
 void mdbg::lpool_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    algo_lib::MemcheckFree(mem, size); // before the free list threads through the record
     if (mem && cell < 11) {
         // a blk-class record returns to its blk, found by address mask
         lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
@@ -320,6 +316,7 @@ void* mdbg::lpool_AllocMem(u64 size) {
             blk->next = NULL;
         }
     }
+    algo_lib::MemcheckAlloc(retval, size);
     return retval;
 }
 
@@ -1134,7 +1131,6 @@ void mdbg::FDb_Init() {
 
 // --- mdbg.FDb..Uninit
 void mdbg::FDb_Uninit() {
-    mdbg::FDb &row = _db; (void)row;
 
     // mdbg.FDb.dbgtarget.Uninit (Lary)  //
     // skip destruction in global scope
@@ -1362,7 +1358,6 @@ void mdbg::StaticCheck() {
 // --- mdbg...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         mdbg::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1381,7 +1376,6 @@ int main(int argc, char **argv) {
     try {
         mdbg::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -1,0 +1,14 @@
+# start bash cmd:"bash -c '$bindir/acr_ed -del -field dmmeta.Ns.license && $bindir/acr_ed -del -field amc.FNs.p_license'"
+# eof bash
+bash -> set -e
+bash -> bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+bash -> EOF
+bash -> bin/acr  -query:field:dmmeta.Ns.license -del:Y -write:Y
+bash -> bin/acr  -query:dmmeta.ns:% -write:Y -print:N
+bash -> bin/amc
+bash -> set -e
+bash -> bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+bash -> EOF
+bash -> bin/acr  -query:field:amc.FNs.p_license -del:Y -write:Y
+bash -> bin/amc
+# exit bash code:0

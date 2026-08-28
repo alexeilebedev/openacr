@@ -14,7 +14,7 @@ operations apiece.  It is the right choice when many rows of
 the same type are allocated and individually deleted (sessions,
 connections, request contexts, …).
 
-```
+```ssim
 dmmeta.field  field:ssim2mysql.FDb.cmd  arg:ssim2mysql.FCmd  reftype:Tpool  dflt:""  comment:""
   dmmeta.basepool  field:ssim2mysql.FDb.cmd  base:algo_lib.FDb.lpool
 ```

@@ -19,7 +19,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/lpool.cpp -- Variable-length free pool
 //
 // Lpool serves size classes of powers of two, from 2^minlevels up.
@@ -107,6 +107,7 @@ void amc::tfunc_Lpool_FreeMem() {
     Ins(&R, func.comment, "SIZE must be of the same class the memory was allocated with.");
     Ins(&R, func.body, "size = u64_Max(size,1ULL<<$minlevels);");
     Ins(&R, func.body, "u64 cell = algo::u64_BitScanReverse(size-1) + 1 - $minlevels;");
+    Ins(&R, func.body, "algo_lib::MemcheckFree(mem, size); // before the free list threads through the record");
     Ins(&R, func.body, "if (mem && cell < $blkcls) {");
     Ins(&R, func.body, "    // a blk-class record returns to its blk, found by address mask");
     Ins(&R, func.body, "    $name_Lpblk *blk = ($name_Lpblk*)((u64)mem & ~(u64)$blkmask);");
@@ -156,8 +157,18 @@ void amc::tfunc_Lpool_FreeMem() {
 // free level at or above the request, splitting oversized upper halves back
 // onto the free lists, and are refilled from the base pool at huge-page
 // friendly sizes when every suitable level is empty.
+//
+// Each handout is marked for the memory checker, which is what makes a record
+// this pool lent and never got back readable as a leak.  Without the mark the
+// checker sees the pool's refills and nothing else: one 2MB block, live from
+// the moment it was mapped, whatever the program did with the records inside
+// it.  The refill is unmarked in the same breath where the base pool marks its
+// own handouts, since a block and the records carved from it may not both be
+// blocks the checker holds (see amc::MemcheckedPoolQ).
 void amc::tfunc_Lpool_AllocMem() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField *basepool = GetBasepool(*amc::_db.genctx.p_field);
+    bool unmark = basepool && MemcheckedPoolQ(*basepool);
     amc::FFunc& func = amc::CreateCurFunc(true);
     AddRetval(func, "void*","retval","NULL");
     AddProtoArg(func, "u64","size");
@@ -191,6 +202,9 @@ void amc::tfunc_Lpool_AllocMem() {
     Ins(&R, func.body, "    if (UNLIKELY(!rawmem)) {");
     Ins(&R, func.body, "        i = u64_Max(rawcell, 21-$minlevels); // 2MB min -- allow huge page to be used");
     Ins(&R, func.body, "        rawmem = $basepool_AllocMem(1ULL<<(i+$minlevels));");
+    if (unmark) {
+        Ins(&R, func.body, "        algo_lib::MemcheckFree(rawmem, 1ULL<<(i+$minlevels)); // the records carved below are what the checker accounts for");
+    }
     Ins(&R, func.body, "    }");
     Ins(&R, func.body, "    if (LIKELY(rawmem)) {");
     Ins(&R, func.body, "        // if block is more than 2x as large as needed, return the upper half to the free");
@@ -240,6 +254,7 @@ void amc::tfunc_Lpool_AllocMem() {
     if (HaveCountQ(*amc::_db.genctx.p_field)) {
         Ins(&R, func.body, "$parname.$name_n += retval != NULL;");
     }
+    Ins(&R, func.body, "algo_lib::MemcheckAlloc(retval, size);");
     // the alloc trace counter is owned by the typed alloc layer
     // (Pool.AllocMaybe / Pool.AllocExtraMaybe), which every traced lpool has:
     // do_trace requires a non-u8 arg. Counting here as well would double-count.

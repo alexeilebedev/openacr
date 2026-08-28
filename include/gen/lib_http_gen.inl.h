@@ -117,7 +117,7 @@ inline void lib_http::status_Setary(const algo::aryptr<lib_http::FStatus> &rhs) 
 }
 
 // --- lib_http.FDb.status.qFind
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 inline lib_http::FStatus& lib_http::status_qFind(u64 t) {
     return reinterpret_cast<lib_http::FStatus*>(_db.status_data)[u64(t)];
 }

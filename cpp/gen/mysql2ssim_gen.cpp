@@ -29,15 +29,12 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_mysql_gen.h"
 #include "include/gen/lib_mysql_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb     lib_json::_db;      // dependency found via dev.targdep
 algo_lib::FDb     algo_lib::_db;      // dependency found via dev.targdep
 lib_mysql::FDb    lib_mysql::_db;     // dependency found via dev.targdep
 mysql2ssim::FDb   mysql2ssim::_db;    // dependency found via dev.targdep
@@ -673,7 +670,6 @@ void mysql2ssim::FDb_Init() {
 
 // --- mysql2ssim.FDb..Uninit
 void mysql2ssim::FDb_Uninit() {
-    mysql2ssim::FDb &row = _db; (void)row;
 
     // mysql2ssim.FDb.in_tables.Uninit (Tary)  //
     // remove all elements from mysql2ssim.FDb.in_tables
@@ -908,7 +904,6 @@ void mysql2ssim::vals_RemRegion(mysql2ssim::FTobltin& parent, i64 beg, i64 n) {
 
 // --- mysql2ssim.FTobltin..Uninit
 void mysql2ssim::FTobltin_Uninit(mysql2ssim::FTobltin& parent) {
-    mysql2ssim::FTobltin &row = parent; (void)row;
 
     // mysql2ssim.FTobltin.vals.Uninit (Tary)  //Used during schema extraction
     // remove all elements from mysql2ssim.FTobltin.vals
@@ -1024,7 +1019,6 @@ void mysql2ssim::StaticCheck() {
 // --- mysql2ssim...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_mysql::FDb_Init();
         mysql2ssim::FDb_Init();
@@ -1045,7 +1039,6 @@ int main(int argc, char **argv) {
         mysql2ssim::FDb_Uninit();
         lib_mysql::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

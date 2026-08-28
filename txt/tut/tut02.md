@@ -184,7 +184,7 @@ If we want our query tool to find this data, we would need to specify exactly
 which ssimfiles and namespaces we want in our system. We would also need a description 
 of the various columns, and what they refer to.
 
-We will place the list of ssimfiles in the ssimfile called `data/dmmeta/ssimfile.ssim` 
+We will place the list of ssimfiles in the ssimfile called `ssimfile:dmmeta.ssimfile` 
 and in it, by the above convention, each tuple will start work the word `dmmeta.ssimfile`. 
 The ns `dmmeta` is short for *Data Model Meta-information*.
 The entries will be sorted alphabetically.
@@ -200,7 +200,7 @@ Notice that the `dmmeta.ssimfile` entry, referring to the file itself, is
 part of that list.
 
 We will then place the list of known namespaces in the
-table `data/dmmeta/ns.ssim` and these will all be tagged as `dmmeta.ns`.
+table `ssimfile:dmmeta.ns` and these will all be tagged as `dmmeta.ns`.
 Because we already have a namespace `dmmeta`, we will include its definition.
 So far we have two namespaces:
 

@@ -310,9 +310,9 @@ void                 sandbox_CopyIn(wt::FSandbox &row, dev::Sandbox &in) __attri
 
 // Set all fields to initial values.
 // func:wt.FSandbox..Init
-inline void          FSandbox_Init(wt::FSandbox& sandbox);
+inline void          FSandbox_Init(wt::FSandbox& parent);
 // func:wt.FSandbox..Uninit
-void                 FSandbox_Uninit(wt::FSandbox& sandbox) __attribute__((nothrow));
+void                 FSandbox_Uninit(wt::FSandbox& parent) __attribute__((nothrow));
 
 // --- wt.FSbpath
 // create: wt.FDb.sbpath (Lary)

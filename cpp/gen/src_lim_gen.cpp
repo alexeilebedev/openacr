@@ -33,13 +33,10 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 src_lim::FDb    src_lim::_db;     // dependency found via dev.targdep
 
@@ -377,7 +374,7 @@ static void src_lim::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_lim.Input'  signature:'9e513c2367288902b5b540ab22363dcd67609c11'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_lim.Input'  signature:'98614a6fba86b39470c7150acae9e52ff4c0f0ab'");
 }
 
 // --- src_lim.FDb._db.InsertStrptrMaybe
@@ -1070,7 +1067,6 @@ void src_lim::FDb_Init() {
 
 // --- src_lim.FDb..Uninit
 void src_lim::FDb_Uninit() {
-    src_lim::FDb &row = _db; (void)row;
 
     // src_lim.FDb.badline.Uninit (Lary)  //
     // skip destruction in global scope
@@ -1104,56 +1100,56 @@ void src_lim::gitfile_CopyIn(src_lim::FGitfile &row, dev::Gitfile &in) {
 }
 
 // --- src_lim.FGitfile.ext.Get
-algo::strptr src_lim::ext_Get(src_lim::FGitfile& gitfile) {
-    return algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR");
+algo::strptr src_lim::ext_Get(src_lim::FGitfile& parent) {
+    return algo::Pathcomp(parent.gitfile, "/RR.LR.RR");
 }
 
 // --- src_lim.FGitfile.zd_include.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void src_lim::zd_include_Insert(src_lim::FGitfile& gitfile, src_lim::FInclude& row) {
+void src_lim::zd_include_Insert(src_lim::FGitfile& parent, src_lim::FInclude& row) {
     if (!gitfile_zd_include_InLlistQ(row)) {
-        src_lim::FInclude* old_tail = gitfile.zd_include_tail;
+        src_lim::FInclude* old_tail = parent.zd_include_tail;
         row.gitfile_zd_include_next = NULL;
         row.gitfile_zd_include_prev = old_tail;
-        gitfile.zd_include_tail = &row;
+        parent.zd_include_tail = &row;
         src_lim::FInclude **new_row_a = &old_tail->gitfile_zd_include_next;
-        src_lim::FInclude **new_row_b = &gitfile.zd_include_head;
+        src_lim::FInclude **new_row_b = &parent.zd_include_head;
         src_lim::FInclude **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        gitfile.zd_include_n++;
+        parent.zd_include_n++;
     }
 }
 
 // --- src_lim.FGitfile.zd_include.Remove
 // Remove element from index. If element is not in index, do nothing.
-void src_lim::zd_include_Remove(src_lim::FGitfile& gitfile, src_lim::FInclude& row) {
+void src_lim::zd_include_Remove(src_lim::FGitfile& parent, src_lim::FInclude& row) {
     if (gitfile_zd_include_InLlistQ(row)) {
-        src_lim::FInclude* old_head       = gitfile.zd_include_head;
+        src_lim::FInclude* old_head       = parent.zd_include_head;
         (void)old_head; // in case it's not used
         src_lim::FInclude* prev = row.gitfile_zd_include_prev;
         src_lim::FInclude* next = row.gitfile_zd_include_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         src_lim::FInclude **new_next_a = &prev->gitfile_zd_include_next;
-        src_lim::FInclude **new_next_b = &gitfile.zd_include_head;
+        src_lim::FInclude **new_next_b = &parent.zd_include_head;
         src_lim::FInclude **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         src_lim::FInclude **new_prev_a = &next->gitfile_zd_include_prev;
-        src_lim::FInclude **new_prev_b = &gitfile.zd_include_tail;
+        src_lim::FInclude **new_prev_b = &parent.zd_include_tail;
         src_lim::FInclude **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        gitfile.zd_include_n--;
+        parent.zd_include_n--;
         row.gitfile_zd_include_next=(src_lim::FInclude*)-1; // not-in-list
     }
 }
 
 // --- src_lim.FGitfile.zd_include.RemoveAll
 // Empty the index. (The rows are not deleted)
-void src_lim::zd_include_RemoveAll(src_lim::FGitfile& gitfile) {
-    src_lim::FInclude* row = gitfile.zd_include_head;
-    gitfile.zd_include_head = NULL;
-    gitfile.zd_include_tail = NULL;
-    gitfile.zd_include_n = 0;
+void src_lim::zd_include_RemoveAll(src_lim::FGitfile& parent) {
+    src_lim::FInclude* row = parent.zd_include_head;
+    parent.zd_include_head = NULL;
+    parent.zd_include_tail = NULL;
+    parent.zd_include_n = 0;
     while (row) {
         src_lim::FInclude* row_next = row->gitfile_zd_include_next;
         row->gitfile_zd_include_next  = (src_lim::FInclude*)-1;
@@ -1164,17 +1160,17 @@ void src_lim::zd_include_RemoveAll(src_lim::FGitfile& gitfile) {
 
 // --- src_lim.FGitfile.zd_include.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-src_lim::FInclude* src_lim::zd_include_RemoveFirst(src_lim::FGitfile& gitfile) {
+src_lim::FInclude* src_lim::zd_include_RemoveFirst(src_lim::FGitfile& parent) {
     src_lim::FInclude *row = NULL;
-    row = gitfile.zd_include_head;
+    row = parent.zd_include_head;
     if (row) {
         src_lim::FInclude *next = row->gitfile_zd_include_next;
-        gitfile.zd_include_head = next;
+        parent.zd_include_head = next;
         src_lim::FInclude **new_end_a = &next->gitfile_zd_include_prev;
-        src_lim::FInclude **new_end_b = &gitfile.zd_include_tail;
+        src_lim::FInclude **new_end_b = &parent.zd_include_tail;
         src_lim::FInclude **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        gitfile.zd_include_n--;
+        parent.zd_include_n--;
         row->gitfile_zd_include_next = (src_lim::FInclude*)-1; // mark as not-in-list
     }
     return row;
@@ -1182,26 +1178,25 @@ src_lim::FInclude* src_lim::zd_include_RemoveFirst(src_lim::FGitfile& gitfile) {
 
 // --- src_lim.FGitfile.zd_include.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void src_lim::zd_include_InsertBefore(src_lim::FGitfile& gitfile, src_lim::FInclude& row, src_lim::FInclude* before) {
+void src_lim::zd_include_InsertBefore(src_lim::FGitfile& parent, src_lim::FInclude& row, src_lim::FInclude* before) {
     if (!gitfile_zd_include_InLlistQ(row) && &row != before) {
         src_lim::FInclude* next = before;
-        src_lim::FInclude* prev = next ? next->gitfile_zd_include_prev : gitfile.zd_include_tail;
+        src_lim::FInclude* prev = next ? next->gitfile_zd_include_prev : parent.zd_include_tail;
         row.gitfile_zd_include_next = next;
         row.gitfile_zd_include_prev = prev;
         src_lim::FInclude **prev_link_a = &prev->gitfile_zd_include_next;
-        src_lim::FInclude **prev_link_b = &gitfile.zd_include_head;
+        src_lim::FInclude **prev_link_b = &parent.zd_include_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         src_lim::FInclude **next_link_a = &next->gitfile_zd_include_prev;
-        src_lim::FInclude **next_link_b = &gitfile.zd_include_tail;
+        src_lim::FInclude **next_link_b = &parent.zd_include_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        gitfile.zd_include_n++;
+        parent.zd_include_n++;
     }
 }
 
 // --- src_lim.FGitfile..Uninit
-void src_lim::FGitfile_Uninit(src_lim::FGitfile& gitfile) {
-    src_lim::FGitfile &row = gitfile; (void)row;
-    ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
+void src_lim::FGitfile_Uninit(src_lim::FGitfile& parent) {
+    ind_gitfile_Remove(parent); // remove gitfile from index ind_gitfile
 }
 
 // --- src_lim.FInclude.base.CopyOut
@@ -1221,21 +1216,20 @@ void src_lim::include_CopyIn(src_lim::FInclude &row, dev::Include &in) {
 }
 
 // --- src_lim.FInclude.srcfile.Get
-algo::strptr src_lim::srcfile_Get(src_lim::FInclude& include) {
-    return algo::Pathcomp(include.include, ":LL");
+algo::strptr src_lim::srcfile_Get(src_lim::FInclude& parent) {
+    return algo::Pathcomp(parent.include, ":LL");
 }
 
 // --- src_lim.FInclude.filename.Get
-algo::strptr src_lim::filename_Get(src_lim::FInclude& include) {
-    return algo::Pathcomp(include.include, ":LR");
+algo::strptr src_lim::filename_Get(src_lim::FInclude& parent) {
+    return algo::Pathcomp(parent.include, ":LR");
 }
 
 // --- src_lim.FInclude..Uninit
-void src_lim::FInclude_Uninit(src_lim::FInclude& include) {
-    src_lim::FInclude &row = include; (void)row;
-    src_lim::FGitfile* p_srcfile = src_lim::ind_gitfile_Find(srcfile_Get(row));
+void src_lim::FInclude_Uninit(src_lim::FInclude& parent) {
+    src_lim::FGitfile* p_srcfile = src_lim::ind_gitfile_Find(srcfile_Get(parent));
     if (p_srcfile)  {
-        zd_include_Remove(*p_srcfile, row);// remove include from index zd_include
+        zd_include_Remove(*p_srcfile, parent);// remove include from index zd_include
     }
 }
 
@@ -1268,11 +1262,10 @@ void src_lim::linelim_CopyIn(src_lim::FLinelim &row, dev::Linelim &in) {
 }
 
 // --- src_lim.FLinelim..Uninit
-void src_lim::FLinelim_Uninit(src_lim::FLinelim& linelim) {
-    src_lim::FLinelim &row = linelim; (void)row;
-    src_lim::FGitfile* p_gitfile = src_lim::ind_gitfile_Find(row.gitfile);
+void src_lim::FLinelim_Uninit(src_lim::FLinelim& parent) {
+    src_lim::FGitfile* p_gitfile = src_lim::ind_gitfile_Find(parent.gitfile);
     if (p_gitfile)  {
-        c_linelim_Remove(*p_gitfile, row);// remove linelim from index c_linelim
+        c_linelim_Remove(*p_gitfile, parent);// remove linelim from index c_linelim
     }
 }
 
@@ -1291,26 +1284,25 @@ void src_lim::targsrc_CopyIn(src_lim::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- src_lim.FTargsrc.target.Get
-algo::strptr src_lim::target_Get(src_lim::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LL");
+algo::strptr src_lim::target_Get(src_lim::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LL");
 }
 
 // --- src_lim.FTargsrc.src.Get
-algo::strptr src_lim::src_Get(src_lim::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LR");
+algo::strptr src_lim::src_Get(src_lim::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LR");
 }
 
 // --- src_lim.FTargsrc.ext.Get
-algo::strptr src_lim::ext_Get(src_lim::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, ".RR");
+algo::strptr src_lim::ext_Get(src_lim::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, ".RR");
 }
 
 // --- src_lim.FTargsrc..Uninit
-void src_lim::FTargsrc_Uninit(src_lim::FTargsrc& targsrc) {
-    src_lim::FTargsrc &row = targsrc; (void)row;
-    src_lim::FGitfile* p_src = src_lim::ind_gitfile_Find(src_Get(row));
+void src_lim::FTargsrc_Uninit(src_lim::FTargsrc& parent) {
+    src_lim::FGitfile* p_src = src_lim::ind_gitfile_Find(src_Get(parent));
     if (p_src)  {
-        c_targsrc_Remove(*p_src, row);// remove targsrc from index c_targsrc
+        c_targsrc_Remove(*p_src, parent);// remove targsrc from index c_targsrc
     }
 }
 
@@ -1519,7 +1511,6 @@ void src_lim::StaticCheck() {
 // --- src_lim...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         src_lim::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1538,7 +1529,6 @@ int main(int argc, char **argv) {
     try {
         src_lim::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

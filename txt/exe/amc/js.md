@@ -10,7 +10,7 @@ protocols without hand-maintaining a separate schema — the
 TypeScript types are *the same types* the C++ engine knows
 about.
 
-```
+```ssim
 dmmeta.nsjs  ns:ams  typescript:Y  ifaceonly:N  comment:""
 ```
 
@@ -318,14 +318,14 @@ The namespace opts in first, and the row that produces
 functions rather than interfaces alone is the one carrying
 `ifaceonly:N`:
 
-```
+```ssim
 dmmeta.nsjs  ns:ams  typescript:Y  ifaceonly:N
 ```
 
 A ctype in that namespace gets a codec once it also carries a
 `dmmeta.pack` row:
 
-```
+```ssim
 dmmeta.pack  ctype:ams.LogMsg
 ```
 

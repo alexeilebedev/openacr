@@ -9,7 +9,7 @@ you have a pointer to the row; iteration is O(n) over the
 chain.  Because the links live inside the element, a single
 element can be on as many independent Llists as you declare.
 
-```
+```ssim
 dmmeta.field  field:abt.FDb.zs_srcfile_read  arg:abt.FSrcfile  reftype:Llist  dflt:""  comment:""
   dmmeta.llist  field:abt.FDb.zs_srcfile_read  havetail:Y  havecount:N  listtype:zs  comment:""
 ```
@@ -187,7 +187,7 @@ The `abt` build tool keeps a worklist of source files waiting
 to be parsed.  The list lives in `FDb` as a zero-terminated
 singly-linked queue:
 
-```
+```ssim
 dmmeta.ctype  ctype:abt.FSrcfile
   dmmeta.field  field:abt.FSrcfile.zs_srcfile_read_next  arg:abt.FSrcfile  reftype:Upptr ...
 

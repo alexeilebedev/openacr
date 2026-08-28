@@ -19,7 +19,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/lary.cpp -- Level array with permanent pointers
 //
 
@@ -145,7 +145,7 @@ void amc::tfunc_Lary_RemoveAll() {
         amc::FFunc& removelast = amc::CreateCurFunc();
         Ins(&R, removelast.ret     , "void", false);
         Ins(&R, removelast.proto   , "$name_RemoveAll($Parent)", false);
-        Set(R, "$partrace", Refname(*field.p_ctype));
+        Set(R, "$partrace", Varname(*field.p_ctype));
         if (field.do_trace) {
             Ins(&R, removelast.body, "$ns::_db.trace.del_$partrace_$name += $parname.$name_n;");
         }
@@ -167,7 +167,7 @@ void amc::tfunc_Lary_RemoveLast() {
     bool dtor = HasDtorQ(*field.p_arg);
 
     amc::FFunc& remlast = amc::CreateCurFunc();
-    Set(R, "$partrace", Refname(*field.p_ctype));
+    Set(R, "$partrace", Varname(*field.p_ctype));
     Ins(&R, remlast.ret     , "void", false);
     Ins(&R, remlast.proto   , "$name_RemoveLast($Parent)", false);
     Ins(&R, remlast.body    , "u64 n = $parname.$name_n;");

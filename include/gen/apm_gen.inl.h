@@ -33,10 +33,10 @@
 
 // --- apm.FBltin..Init
 // Set all fields to initial values.
-inline void apm::FBltin_Init(apm::FBltin& bltin) {
-    bltin.likeu64 = bool(false);
-    bltin.bigendok = bool(false);
-    bltin.issigned = bool(false);
+inline void apm::FBltin_Init(apm::FBltin& parent) {
+    parent.likeu64 = bool(false);
+    parent.bigendok = bool(false);
+    parent.issigned = bool(false);
 }
 
 // --- apm.FBltin..Ctor
@@ -51,68 +51,68 @@ inline  apm::FBltin::~FBltin() {
 
 // --- apm.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool apm::c_ssimfile_InsertMaybe(apm::FCtype& ctype, apm::FSsimfile& row) {
-    apm::FSsimfile* ptr = ctype.c_ssimfile;
+inline bool apm::c_ssimfile_InsertMaybe(apm::FCtype& parent, apm::FSsimfile& row) {
+    apm::FSsimfile* ptr = parent.c_ssimfile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_ssimfile = &row;
+        parent.c_ssimfile = &row;
     }
     return retval;
 }
 
 // --- apm.FCtype.c_ssimfile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void apm::c_ssimfile_Remove(apm::FCtype& ctype, apm::FSsimfile& row) {
-    apm::FSsimfile *ptr = ctype.c_ssimfile;
+inline void apm::c_ssimfile_Remove(apm::FCtype& parent, apm::FSsimfile& row) {
+    apm::FSsimfile *ptr = parent.c_ssimfile;
     if (LIKELY(ptr == &row)) {
-        ctype.c_ssimfile = NULL;
+        parent.c_ssimfile = NULL;
     }
 }
 
 // --- apm.FCtype.c_field.EmptyQ
 // Return true if index is empty
-inline bool apm::c_field_EmptyQ(apm::FCtype& ctype) {
-    return ctype.c_field_n == 0;
+inline bool apm::c_field_EmptyQ(apm::FCtype& parent) {
+    return parent.c_field_n == 0;
 }
 
 // --- apm.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline apm::FField* apm::c_field_Find(apm::FCtype& ctype, u64 t) {
+inline apm::FField* apm::c_field_Find(apm::FCtype& parent, u64 t) {
     apm::FField *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_field_n;
+    u64 lim = parent.c_field_n;
     if (idx < lim) {
-        retval = ctype.c_field_elems[idx];
+        retval = parent.c_field_elems[idx];
     }
     return retval;
 }
 
 // --- apm.FCtype.c_field.Getary
 // Return array of pointers
-inline algo::aryptr<apm::FField*> apm::c_field_Getary(apm::FCtype& ctype) {
-    return algo::aryptr<apm::FField*>(ctype.c_field_elems, ctype.c_field_n);
+inline algo::aryptr<apm::FField*> apm::c_field_Getary(apm::FCtype& parent) {
+    return algo::aryptr<apm::FField*>(parent.c_field_elems, parent.c_field_n);
 }
 
 // --- apm.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i64 apm::c_field_N(const apm::FCtype& ctype) {
-    return ctype.c_field_n;
+inline i64 apm::c_field_N(const apm::FCtype& parent) {
+    return parent.c_field_n;
 }
 
 // --- apm.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void apm::c_field_RemoveAll(apm::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_field_n; i++) {
+inline void apm::c_field_RemoveAll(apm::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_field_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
+        parent.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
-    ctype.c_field_n = 0;
+    parent.c_field_n = 0;
 }
 
 // --- apm.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline apm::FField& apm::c_field_qFind(apm::FCtype& ctype, u64 idx) {
-    return *ctype.c_field_elems[idx];
+inline apm::FField& apm::c_field_qFind(apm::FCtype& parent, u64 idx) {
+    return *parent.c_field_elems[idx];
 }
 
 // --- apm.FCtype.c_field.InAryQ
@@ -123,54 +123,54 @@ inline bool apm::ctype_c_field_InAryQ(apm::FField& row) {
 
 // --- apm.FCtype.c_field.qLast
 // Reference to last element without bounds checking
-inline apm::FField& apm::c_field_qLast(apm::FCtype& ctype) {
-    return *ctype.c_field_elems[ctype.c_field_n-1];
+inline apm::FField& apm::c_field_qLast(apm::FCtype& parent) {
+    return *parent.c_field_elems[parent.c_field_n-1];
 }
 
 // --- apm.FCtype.c_ssimreq.EmptyQ
 // Return true if index is empty
-inline bool apm::c_ssimreq_EmptyQ(apm::FCtype& ctype) {
-    return ctype.c_ssimreq_n == 0;
+inline bool apm::c_ssimreq_EmptyQ(apm::FCtype& parent) {
+    return parent.c_ssimreq_n == 0;
 }
 
 // --- apm.FCtype.c_ssimreq.Find
 // Look up row by row id. Return NULL if out of range
-inline apm::FSsimreq* apm::c_ssimreq_Find(apm::FCtype& ctype, u64 t) {
+inline apm::FSsimreq* apm::c_ssimreq_Find(apm::FCtype& parent, u64 t) {
     apm::FSsimreq *retval = NULL;
     u64 idx = t;
-    u64 lim = ctype.c_ssimreq_n;
+    u64 lim = parent.c_ssimreq_n;
     if (idx < lim) {
-        retval = ctype.c_ssimreq_elems[idx];
+        retval = parent.c_ssimreq_elems[idx];
     }
     return retval;
 }
 
 // --- apm.FCtype.c_ssimreq.Getary
 // Return array of pointers
-inline algo::aryptr<apm::FSsimreq*> apm::c_ssimreq_Getary(apm::FCtype& ctype) {
-    return algo::aryptr<apm::FSsimreq*>(ctype.c_ssimreq_elems, ctype.c_ssimreq_n);
+inline algo::aryptr<apm::FSsimreq*> apm::c_ssimreq_Getary(apm::FCtype& parent) {
+    return algo::aryptr<apm::FSsimreq*>(parent.c_ssimreq_elems, parent.c_ssimreq_n);
 }
 
 // --- apm.FCtype.c_ssimreq.N
 // Return number of items in the pointer array
-inline i64 apm::c_ssimreq_N(const apm::FCtype& ctype) {
-    return ctype.c_ssimreq_n;
+inline i64 apm::c_ssimreq_N(const apm::FCtype& parent) {
+    return parent.c_ssimreq_n;
 }
 
 // --- apm.FCtype.c_ssimreq.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void apm::c_ssimreq_RemoveAll(apm::FCtype& ctype) {
-    for (u64 i = 0; i < ctype.c_ssimreq_n; i++) {
+inline void apm::c_ssimreq_RemoveAll(apm::FCtype& parent) {
+    for (u64 i = 0; i < parent.c_ssimreq_n; i++) {
         // mark all elements as not-in-array
-        ctype.c_ssimreq_elems[i]->ctype_c_ssimreq_in_ary = false;
+        parent.c_ssimreq_elems[i]->ctype_c_ssimreq_in_ary = false;
     }
-    ctype.c_ssimreq_n = 0;
+    parent.c_ssimreq_n = 0;
 }
 
 // --- apm.FCtype.c_ssimreq.qFind
 // Return reference without bounds checking
-inline apm::FSsimreq& apm::c_ssimreq_qFind(apm::FCtype& ctype, u64 idx) {
-    return *ctype.c_ssimreq_elems[idx];
+inline apm::FSsimreq& apm::c_ssimreq_qFind(apm::FCtype& parent, u64 idx) {
+    return *parent.c_ssimreq_elems[idx];
 }
 
 // --- apm.FCtype.c_ssimreq.InAryQ
@@ -181,27 +181,27 @@ inline bool apm::ctype_c_ssimreq_InAryQ(apm::FSsimreq& row) {
 
 // --- apm.FCtype.c_ssimreq.qLast
 // Reference to last element without bounds checking
-inline apm::FSsimreq& apm::c_ssimreq_qLast(apm::FCtype& ctype) {
-    return *ctype.c_ssimreq_elems[ctype.c_ssimreq_n-1];
+inline apm::FSsimreq& apm::c_ssimreq_qLast(apm::FCtype& parent) {
+    return *parent.c_ssimreq_elems[parent.c_ssimreq_n-1];
 }
 
 // --- apm.FCtype.c_bltin.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool apm::c_bltin_InsertMaybe(apm::FCtype& ctype, apm::FBltin& row) {
-    apm::FBltin* ptr = ctype.c_bltin;
+inline bool apm::c_bltin_InsertMaybe(apm::FCtype& parent, apm::FBltin& row) {
+    apm::FBltin* ptr = parent.c_bltin;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ctype.c_bltin = &row;
+        parent.c_bltin = &row;
     }
     return retval;
 }
 
 // --- apm.FCtype.c_bltin.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void apm::c_bltin_Remove(apm::FCtype& ctype, apm::FBltin& row) {
-    apm::FBltin *ptr = ctype.c_bltin;
+inline void apm::c_bltin_Remove(apm::FCtype& parent, apm::FBltin& row) {
+    apm::FBltin *ptr = parent.c_bltin;
     if (LIKELY(ptr == &row)) {
-        ctype.c_bltin = NULL;
+        parent.c_bltin = NULL;
     }
 }
 
@@ -257,17 +257,17 @@ inline apm::FSsimreq& apm::ctype_c_ssimreq_curs_Access(ctype_c_ssimreq_curs &cur
 
 // --- apm.FCtype..Init
 // Set all fields to initial values.
-inline void apm::FCtype_Init(apm::FCtype& ctype) {
-    ctype.c_ssimfile = NULL;
-    ctype.c_field_elems = NULL; // (apm.FCtype.c_field)
-    ctype.c_field_n = 0; // (apm.FCtype.c_field)
-    ctype.c_field_max = 0; // (apm.FCtype.c_field)
-    ctype.c_ssimreq_elems = NULL; // (apm.FCtype.c_ssimreq)
-    ctype.c_ssimreq_n = 0; // (apm.FCtype.c_ssimreq)
-    ctype.c_ssimreq_max = 0; // (apm.FCtype.c_ssimreq)
-    ctype.c_bltin = NULL;
-    ctype.ind_ctype_next = (apm::FCtype*)-1; // (apm.FDb.ind_ctype) not-in-hash
-    ctype.ind_ctype_hashval = 0; // stored hash value
+inline void apm::FCtype_Init(apm::FCtype& parent) {
+    parent.c_ssimfile = NULL;
+    parent.c_field_elems = NULL; // (apm.FCtype.c_field)
+    parent.c_field_n = 0; // (apm.FCtype.c_field)
+    parent.c_field_max = 0; // (apm.FCtype.c_field)
+    parent.c_ssimreq_elems = NULL; // (apm.FCtype.c_ssimreq)
+    parent.c_ssimreq_n = 0; // (apm.FCtype.c_ssimreq)
+    parent.c_ssimreq_max = 0; // (apm.FCtype.c_ssimreq)
+    parent.c_bltin = NULL;
+    parent.ind_ctype_next = (apm::FCtype*)-1; // (apm.FDb.ind_ctype) not-in-hash
+    parent.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- apm.FCtype..Ctor
@@ -1855,21 +1855,21 @@ inline apm::FBltin& apm::_db_bltin_curs_Access(_db_bltin_curs &curs) {
 
 // --- apm.FField.c_substr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool apm::c_substr_InsertMaybe(apm::FField& field, apm::FSubstr& row) {
-    apm::FSubstr* ptr = field.c_substr;
+inline bool apm::c_substr_InsertMaybe(apm::FField& parent, apm::FSubstr& row) {
+    apm::FSubstr* ptr = parent.c_substr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        field.c_substr = &row;
+        parent.c_substr = &row;
     }
     return retval;
 }
 
 // --- apm.FField.c_substr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void apm::c_substr_Remove(apm::FField& field, apm::FSubstr& row) {
-    apm::FSubstr *ptr = field.c_substr;
+inline void apm::c_substr_Remove(apm::FField& parent, apm::FSubstr& row) {
+    apm::FSubstr *ptr = parent.c_substr;
     if (LIKELY(ptr == &row)) {
-        field.c_substr = NULL;
+        parent.c_substr = NULL;
     }
 }
 
@@ -1885,12 +1885,12 @@ inline  apm::FField::~FField() {
 
 // --- apm.FMergefile..Init
 // Set all fields to initial values.
-inline void apm::FMergefile_Init(apm::FMergefile& mergefile) {
-    mergefile.base_mode = i32(0);
-    mergefile.ours_mode = i32(0);
-    mergefile.theirs_mode = i32(0);
-    mergefile.ind_mergefile_next = (apm::FMergefile*)-1; // (apm.FDb.ind_mergefile) not-in-hash
-    mergefile.ind_mergefile_hashval = 0; // stored hash value
+inline void apm::FMergefile_Init(apm::FMergefile& parent) {
+    parent.base_mode = i32(0);
+    parent.ours_mode = i32(0);
+    parent.theirs_mode = i32(0);
+    parent.ind_mergefile_next = (apm::FMergefile*)-1; // (apm.FDb.ind_mergefile) not-in-hash
+    parent.ind_mergefile_hashval = 0; // stored hash value
 }
 
 // --- apm.FMergefile..Ctor
@@ -1905,9 +1905,9 @@ inline  apm::FMergefile::~FMergefile() {
 
 // --- apm.FMkdir..Init
 // Set all fields to initial values.
-inline void apm::FMkdir_Init(apm::FMkdir& mkdir) {
-    mkdir.ind_mkdir_next = (apm::FMkdir*)-1; // (apm.FDb.ind_mkdir) not-in-hash
-    mkdir.ind_mkdir_hashval = 0; // stored hash value
+inline void apm::FMkdir_Init(apm::FMkdir& parent) {
+    parent.ind_mkdir_next = (apm::FMkdir*)-1; // (apm.FDb.ind_mkdir) not-in-hash
+    parent.ind_mkdir_hashval = 0; // stored hash value
 }
 
 // --- apm.FMkdir..Ctor
@@ -1926,15 +1926,15 @@ inline  apm::FNs::FNs() {
 
 // --- apm.FPackage.zd_pkgkey.EmptyQ
 // Return true if index is empty
-inline bool apm::zd_pkgkey_EmptyQ(apm::FPackage& package) {
-    return package.zd_pkgkey_head == NULL;
+inline bool apm::zd_pkgkey_EmptyQ(apm::FPackage& parent) {
+    return parent.zd_pkgkey_head == NULL;
 }
 
 // --- apm.FPackage.zd_pkgkey.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline apm::FPkgkey* apm::zd_pkgkey_First(apm::FPackage& package) {
+inline apm::FPkgkey* apm::zd_pkgkey_First(apm::FPackage& parent) {
     apm::FPkgkey *row = NULL;
-    row = package.zd_pkgkey_head;
+    row = parent.zd_pkgkey_head;
     return row;
 }
 
@@ -1948,16 +1948,16 @@ inline bool apm::package_zd_pkgkey_InLlistQ(apm::FPkgkey& row) {
 
 // --- apm.FPackage.zd_pkgkey.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline apm::FPkgkey* apm::zd_pkgkey_Last(apm::FPackage& package) {
+inline apm::FPkgkey* apm::zd_pkgkey_Last(apm::FPackage& parent) {
     apm::FPkgkey *row = NULL;
-    row = package.zd_pkgkey_tail;
+    row = parent.zd_pkgkey_tail;
     return row;
 }
 
 // --- apm.FPackage.zd_pkgkey.N
 // Return number of items in the linked list
-inline i32 apm::zd_pkgkey_N(const apm::FPackage& package) {
-    return package.zd_pkgkey_n;
+inline i32 apm::zd_pkgkey_N(const apm::FPackage& parent) {
+    return parent.zd_pkgkey_n;
 }
 
 // --- apm.FPackage.zd_pkgkey.Next
@@ -1974,56 +1974,56 @@ inline apm::FPkgkey* apm::package_zd_pkgkey_Prev(apm::FPkgkey &row) {
 
 // --- apm.FPackage.zd_pkgkey.qLast
 // Return reference to last element in the index. No bounds checking.
-inline apm::FPkgkey& apm::zd_pkgkey_qLast(apm::FPackage& package) {
+inline apm::FPkgkey& apm::zd_pkgkey_qLast(apm::FPackage& parent) {
     apm::FPkgkey *row = NULL;
-    row = package.zd_pkgkey_tail;
+    row = parent.zd_pkgkey_tail;
     return *row;
 }
 
 // --- apm.FPackage.c_pkgdep.EmptyQ
 // Return true if index is empty
-inline bool apm::c_pkgdep_EmptyQ(apm::FPackage& package) {
-    return package.c_pkgdep_n == 0;
+inline bool apm::c_pkgdep_EmptyQ(apm::FPackage& parent) {
+    return parent.c_pkgdep_n == 0;
 }
 
 // --- apm.FPackage.c_pkgdep.Find
 // Look up row by row id. Return NULL if out of range
-inline apm::FPkgdep* apm::c_pkgdep_Find(apm::FPackage& package, u64 t) {
+inline apm::FPkgdep* apm::c_pkgdep_Find(apm::FPackage& parent, u64 t) {
     apm::FPkgdep *retval = NULL;
     u64 idx = t;
-    u64 lim = package.c_pkgdep_n;
+    u64 lim = parent.c_pkgdep_n;
     if (idx < lim) {
-        retval = package.c_pkgdep_elems[idx];
+        retval = parent.c_pkgdep_elems[idx];
     }
     return retval;
 }
 
 // --- apm.FPackage.c_pkgdep.Getary
 // Return array of pointers
-inline algo::aryptr<apm::FPkgdep*> apm::c_pkgdep_Getary(apm::FPackage& package) {
-    return algo::aryptr<apm::FPkgdep*>(package.c_pkgdep_elems, package.c_pkgdep_n);
+inline algo::aryptr<apm::FPkgdep*> apm::c_pkgdep_Getary(apm::FPackage& parent) {
+    return algo::aryptr<apm::FPkgdep*>(parent.c_pkgdep_elems, parent.c_pkgdep_n);
 }
 
 // --- apm.FPackage.c_pkgdep.N
 // Return number of items in the pointer array
-inline i64 apm::c_pkgdep_N(const apm::FPackage& package) {
-    return package.c_pkgdep_n;
+inline i64 apm::c_pkgdep_N(const apm::FPackage& parent) {
+    return parent.c_pkgdep_n;
 }
 
 // --- apm.FPackage.c_pkgdep.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void apm::c_pkgdep_RemoveAll(apm::FPackage& package) {
-    for (u64 i = 0; i < package.c_pkgdep_n; i++) {
+inline void apm::c_pkgdep_RemoveAll(apm::FPackage& parent) {
+    for (u64 i = 0; i < parent.c_pkgdep_n; i++) {
         // mark all elements as not-in-array
-        package.c_pkgdep_elems[i]->package_c_pkgdep_in_ary = false;
+        parent.c_pkgdep_elems[i]->package_c_pkgdep_in_ary = false;
     }
-    package.c_pkgdep_n = 0;
+    parent.c_pkgdep_n = 0;
 }
 
 // --- apm.FPackage.c_pkgdep.qFind
 // Return reference without bounds checking
-inline apm::FPkgdep& apm::c_pkgdep_qFind(apm::FPackage& package, u64 idx) {
-    return *package.c_pkgdep_elems[idx];
+inline apm::FPkgdep& apm::c_pkgdep_qFind(apm::FPackage& parent, u64 idx) {
+    return *parent.c_pkgdep_elems[idx];
 }
 
 // --- apm.FPackage.c_pkgdep.InAryQ
@@ -2034,54 +2034,54 @@ inline bool apm::package_c_pkgdep_InAryQ(apm::FPkgdep& row) {
 
 // --- apm.FPackage.c_pkgdep.qLast
 // Reference to last element without bounds checking
-inline apm::FPkgdep& apm::c_pkgdep_qLast(apm::FPackage& package) {
-    return *package.c_pkgdep_elems[package.c_pkgdep_n-1];
+inline apm::FPkgdep& apm::c_pkgdep_qLast(apm::FPackage& parent) {
+    return *parent.c_pkgdep_elems[parent.c_pkgdep_n-1];
 }
 
 // --- apm.FPackage.c_pkgdep_parent.EmptyQ
 // Return true if index is empty
-inline bool apm::c_pkgdep_parent_EmptyQ(apm::FPackage& package) {
-    return package.c_pkgdep_parent_n == 0;
+inline bool apm::c_pkgdep_parent_EmptyQ(apm::FPackage& parent) {
+    return parent.c_pkgdep_parent_n == 0;
 }
 
 // --- apm.FPackage.c_pkgdep_parent.Find
 // Look up row by row id. Return NULL if out of range
-inline apm::FPkgdep* apm::c_pkgdep_parent_Find(apm::FPackage& package, u64 t) {
+inline apm::FPkgdep* apm::c_pkgdep_parent_Find(apm::FPackage& parent, u64 t) {
     apm::FPkgdep *retval = NULL;
     u64 idx = t;
-    u64 lim = package.c_pkgdep_parent_n;
+    u64 lim = parent.c_pkgdep_parent_n;
     if (idx < lim) {
-        retval = package.c_pkgdep_parent_elems[idx];
+        retval = parent.c_pkgdep_parent_elems[idx];
     }
     return retval;
 }
 
 // --- apm.FPackage.c_pkgdep_parent.Getary
 // Return array of pointers
-inline algo::aryptr<apm::FPkgdep*> apm::c_pkgdep_parent_Getary(apm::FPackage& package) {
-    return algo::aryptr<apm::FPkgdep*>(package.c_pkgdep_parent_elems, package.c_pkgdep_parent_n);
+inline algo::aryptr<apm::FPkgdep*> apm::c_pkgdep_parent_Getary(apm::FPackage& parent) {
+    return algo::aryptr<apm::FPkgdep*>(parent.c_pkgdep_parent_elems, parent.c_pkgdep_parent_n);
 }
 
 // --- apm.FPackage.c_pkgdep_parent.N
 // Return number of items in the pointer array
-inline i64 apm::c_pkgdep_parent_N(const apm::FPackage& package) {
-    return package.c_pkgdep_parent_n;
+inline i64 apm::c_pkgdep_parent_N(const apm::FPackage& parent) {
+    return parent.c_pkgdep_parent_n;
 }
 
 // --- apm.FPackage.c_pkgdep_parent.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void apm::c_pkgdep_parent_RemoveAll(apm::FPackage& package) {
-    for (u64 i = 0; i < package.c_pkgdep_parent_n; i++) {
+inline void apm::c_pkgdep_parent_RemoveAll(apm::FPackage& parent) {
+    for (u64 i = 0; i < parent.c_pkgdep_parent_n; i++) {
         // mark all elements as not-in-array
-        package.c_pkgdep_parent_elems[i]->package_c_pkgdep_parent_in_ary = false;
+        parent.c_pkgdep_parent_elems[i]->package_c_pkgdep_parent_in_ary = false;
     }
-    package.c_pkgdep_parent_n = 0;
+    parent.c_pkgdep_parent_n = 0;
 }
 
 // --- apm.FPackage.c_pkgdep_parent.qFind
 // Return reference without bounds checking
-inline apm::FPkgdep& apm::c_pkgdep_parent_qFind(apm::FPackage& package, u64 idx) {
-    return *package.c_pkgdep_parent_elems[idx];
+inline apm::FPkgdep& apm::c_pkgdep_parent_qFind(apm::FPackage& parent, u64 idx) {
+    return *parent.c_pkgdep_parent_elems[idx];
 }
 
 // --- apm.FPackage.c_pkgdep_parent.InAryQ
@@ -2092,21 +2092,21 @@ inline bool apm::package_c_pkgdep_parent_InAryQ(apm::FPkgdep& row) {
 
 // --- apm.FPackage.c_pkgdep_parent.qLast
 // Reference to last element without bounds checking
-inline apm::FPkgdep& apm::c_pkgdep_parent_qLast(apm::FPackage& package) {
-    return *package.c_pkgdep_parent_elems[package.c_pkgdep_parent_n-1];
+inline apm::FPkgdep& apm::c_pkgdep_parent_qLast(apm::FPackage& parent) {
+    return *parent.c_pkgdep_parent_elems[parent.c_pkgdep_parent_n-1];
 }
 
 // --- apm.FPackage.zd_pkgrec.EmptyQ
 // Return true if index is empty
-inline bool apm::zd_pkgrec_EmptyQ(apm::FPackage& package) {
-    return package.zd_pkgrec_head == NULL;
+inline bool apm::zd_pkgrec_EmptyQ(apm::FPackage& parent) {
+    return parent.zd_pkgrec_head == NULL;
 }
 
 // --- apm.FPackage.zd_pkgrec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline apm::FPkgrec* apm::zd_pkgrec_First(apm::FPackage& package) {
+inline apm::FPkgrec* apm::zd_pkgrec_First(apm::FPackage& parent) {
     apm::FPkgrec *row = NULL;
-    row = package.zd_pkgrec_head;
+    row = parent.zd_pkgrec_head;
     return row;
 }
 
@@ -2120,16 +2120,16 @@ inline bool apm::package_zd_pkgrec_InLlistQ(apm::FPkgrec& row) {
 
 // --- apm.FPackage.zd_pkgrec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline apm::FPkgrec* apm::zd_pkgrec_Last(apm::FPackage& package) {
+inline apm::FPkgrec* apm::zd_pkgrec_Last(apm::FPackage& parent) {
     apm::FPkgrec *row = NULL;
-    row = package.zd_pkgrec_tail;
+    row = parent.zd_pkgrec_tail;
     return row;
 }
 
 // --- apm.FPackage.zd_pkgrec.N
 // Return number of items in the linked list
-inline i32 apm::zd_pkgrec_N(const apm::FPackage& package) {
-    return package.zd_pkgrec_n;
+inline i32 apm::zd_pkgrec_N(const apm::FPackage& parent) {
+    return parent.zd_pkgrec_n;
 }
 
 // --- apm.FPackage.zd_pkgrec.Next
@@ -2146,9 +2146,9 @@ inline apm::FPkgrec* apm::package_zd_pkgrec_Prev(apm::FPkgrec &row) {
 
 // --- apm.FPackage.zd_pkgrec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline apm::FPkgrec& apm::zd_pkgrec_qLast(apm::FPackage& package) {
+inline apm::FPkgrec& apm::zd_pkgrec_qLast(apm::FPackage& parent) {
     apm::FPkgrec *row = NULL;
-    row = package.zd_pkgrec_tail;
+    row = parent.zd_pkgrec_tail;
     return *row;
 }
 
@@ -2262,16 +2262,6 @@ inline  apm::FPackage::~FPackage() {
     apm::FPackage_Uninit(*this);
 }
 
-// --- apm.FPkgdep..Init
-// Set all fields to initial values.
-inline void apm::FPkgdep_Init(apm::FPkgdep& pkgdep) {
-    pkgdep.soft = bool(false);
-    pkgdep.p_parent = NULL;
-    pkgdep.p_package = NULL;
-    pkgdep.package_c_pkgdep_in_ary = bool(false);
-    pkgdep.package_c_pkgdep_parent_in_ary = bool(false);
-}
-
 // --- apm.FPkgdep..Ctor
 inline  apm::FPkgdep::FPkgdep() {
     apm::FPkgdep_Init(*this);
@@ -2284,48 +2274,48 @@ inline  apm::FPkgdep::~FPkgdep() {
 
 // --- apm.FPkgkey.c_pkgrec.EmptyQ
 // Return true if index is empty
-inline bool apm::c_pkgrec_EmptyQ(apm::FPkgkey& pkgkey) {
-    return pkgkey.c_pkgrec_n == 0;
+inline bool apm::c_pkgrec_EmptyQ(apm::FPkgkey& parent) {
+    return parent.c_pkgrec_n == 0;
 }
 
 // --- apm.FPkgkey.c_pkgrec.Find
 // Look up row by row id. Return NULL if out of range
-inline apm::FPkgrec* apm::c_pkgrec_Find(apm::FPkgkey& pkgkey, u64 t) {
+inline apm::FPkgrec* apm::c_pkgrec_Find(apm::FPkgkey& parent, u64 t) {
     apm::FPkgrec *retval = NULL;
     u64 idx = t;
-    u64 lim = pkgkey.c_pkgrec_n;
+    u64 lim = parent.c_pkgrec_n;
     if (idx < lim) {
-        retval = pkgkey.c_pkgrec_elems[idx];
+        retval = parent.c_pkgrec_elems[idx];
     }
     return retval;
 }
 
 // --- apm.FPkgkey.c_pkgrec.Getary
 // Return array of pointers
-inline algo::aryptr<apm::FPkgrec*> apm::c_pkgrec_Getary(apm::FPkgkey& pkgkey) {
-    return algo::aryptr<apm::FPkgrec*>(pkgkey.c_pkgrec_elems, pkgkey.c_pkgrec_n);
+inline algo::aryptr<apm::FPkgrec*> apm::c_pkgrec_Getary(apm::FPkgkey& parent) {
+    return algo::aryptr<apm::FPkgrec*>(parent.c_pkgrec_elems, parent.c_pkgrec_n);
 }
 
 // --- apm.FPkgkey.c_pkgrec.N
 // Return number of items in the pointer array
-inline i64 apm::c_pkgrec_N(const apm::FPkgkey& pkgkey) {
-    return pkgkey.c_pkgrec_n;
+inline i64 apm::c_pkgrec_N(const apm::FPkgkey& parent) {
+    return parent.c_pkgrec_n;
 }
 
 // --- apm.FPkgkey.c_pkgrec.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void apm::c_pkgrec_RemoveAll(apm::FPkgkey& pkgkey) {
-    for (u64 i = 0; i < pkgkey.c_pkgrec_n; i++) {
+inline void apm::c_pkgrec_RemoveAll(apm::FPkgkey& parent) {
+    for (u64 i = 0; i < parent.c_pkgrec_n; i++) {
         // mark all elements as not-in-array
-        pkgkey.c_pkgrec_elems[i]->pkgkey_c_pkgrec_in_ary = false;
+        parent.c_pkgrec_elems[i]->pkgkey_c_pkgrec_in_ary = false;
     }
-    pkgkey.c_pkgrec_n = 0;
+    parent.c_pkgrec_n = 0;
 }
 
 // --- apm.FPkgkey.c_pkgrec.qFind
 // Return reference without bounds checking
-inline apm::FPkgrec& apm::c_pkgrec_qFind(apm::FPkgkey& pkgkey, u64 idx) {
-    return *pkgkey.c_pkgrec_elems[idx];
+inline apm::FPkgrec& apm::c_pkgrec_qFind(apm::FPkgkey& parent, u64 idx) {
+    return *parent.c_pkgrec_elems[idx];
 }
 
 // --- apm.FPkgkey.c_pkgrec.InAryQ
@@ -2336,8 +2326,8 @@ inline bool apm::pkgkey_c_pkgrec_InAryQ(apm::FPkgrec& row) {
 
 // --- apm.FPkgkey.c_pkgrec.qLast
 // Reference to last element without bounds checking
-inline apm::FPkgrec& apm::c_pkgrec_qLast(apm::FPkgkey& pkgkey) {
-    return *pkgkey.c_pkgrec_elems[pkgkey.c_pkgrec_n-1];
+inline apm::FPkgrec& apm::c_pkgrec_qLast(apm::FPkgkey& parent) {
+    return *parent.c_pkgrec_elems[parent.c_pkgrec_n-1];
 }
 
 // --- apm.FPkgkey.c_pkgrec_curs.Reset
@@ -2377,16 +2367,16 @@ inline  apm::FPkgkey::~FPkgkey() {
 
 // --- apm.FPkgrec..Init
 // Set all fields to initial values.
-inline void apm::FPkgrec_Init(apm::FPkgrec& pkgrec) {
-    pkgrec.p_package = NULL;
-    pkgrec.p_rec = NULL;
-    pkgrec.p_pkgkey = NULL;
-    pkgrec.pkgkey_c_pkgrec_in_ary = bool(false);
-    pkgrec.pkgrec_next = (apm::FPkgrec*)-1; // (apm.FDb.pkgrec) not-in-tpool's freelist
-    pkgrec.package_zd_pkgrec_next = (apm::FPkgrec*)-1; // (apm.FPackage.zd_pkgrec) not-in-list
-    pkgrec.package_zd_pkgrec_prev = NULL; // (apm.FPackage.zd_pkgrec)
-    pkgrec.rec_zd_rec_pkgrec_next = (apm::FPkgrec*)-1; // (apm.FRec.zd_rec_pkgrec) not-in-list
-    pkgrec.rec_zd_rec_pkgrec_prev = NULL; // (apm.FRec.zd_rec_pkgrec)
+inline void apm::FPkgrec_Init(apm::FPkgrec& parent) {
+    parent.p_package = NULL;
+    parent.p_rec = NULL;
+    parent.p_pkgkey = NULL;
+    parent.pkgkey_c_pkgrec_in_ary = bool(false);
+    parent.pkgrec_next = (apm::FPkgrec*)-1; // (apm.FDb.pkgrec) not-in-tpool's freelist
+    parent.package_zd_pkgrec_next = (apm::FPkgrec*)-1; // (apm.FPackage.zd_pkgrec) not-in-list
+    parent.package_zd_pkgrec_prev = NULL; // (apm.FPackage.zd_pkgrec)
+    parent.rec_zd_rec_pkgrec_next = (apm::FPkgrec*)-1; // (apm.FRec.zd_rec_pkgrec) not-in-list
+    parent.rec_zd_rec_pkgrec_prev = NULL; // (apm.FRec.zd_rec_pkgrec)
 }
 
 // --- apm.FPkgrec..Ctor
@@ -2401,111 +2391,111 @@ inline  apm::FPkgrec::~FPkgrec() {
 
 // --- apm.FRec.c_parent.EmptyQ
 // Return true if index is empty
-inline bool apm::c_parent_EmptyQ(apm::FRec& rec) {
-    return rec.c_parent_n == 0;
+inline bool apm::c_parent_EmptyQ(apm::FRec& parent) {
+    return parent.c_parent_n == 0;
 }
 
 // --- apm.FRec.c_parent.Find
 // Look up row by row id. Return NULL if out of range
-inline apm::FRec* apm::c_parent_Find(apm::FRec& rec, u64 t) {
+inline apm::FRec* apm::c_parent_Find(apm::FRec& parent, u64 t) {
     apm::FRec *retval = NULL;
     u64 idx = t;
-    u64 lim = rec.c_parent_n;
+    u64 lim = parent.c_parent_n;
     if (idx < lim) {
-        retval = rec.c_parent_elems[idx];
+        retval = parent.c_parent_elems[idx];
     }
     return retval;
 }
 
 // --- apm.FRec.c_parent.Getary
 // Return array of pointers
-inline algo::aryptr<apm::FRec*> apm::c_parent_Getary(apm::FRec& rec) {
-    return algo::aryptr<apm::FRec*>(rec.c_parent_elems, rec.c_parent_n);
+inline algo::aryptr<apm::FRec*> apm::c_parent_Getary(apm::FRec& parent) {
+    return algo::aryptr<apm::FRec*>(parent.c_parent_elems, parent.c_parent_n);
 }
 
 // --- apm.FRec.c_parent.N
 // Return number of items in the pointer array
-inline i64 apm::c_parent_N(const apm::FRec& rec) {
-    return rec.c_parent_n;
+inline i64 apm::c_parent_N(const apm::FRec& parent) {
+    return parent.c_parent_n;
 }
 
 // --- apm.FRec.c_parent.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void apm::c_parent_RemoveAll(apm::FRec& rec) {
-    rec.c_parent_n = 0;
+inline void apm::c_parent_RemoveAll(apm::FRec& parent) {
+    parent.c_parent_n = 0;
 }
 
 // --- apm.FRec.c_parent.qFind
 // Return reference without bounds checking
-inline apm::FRec& apm::c_parent_qFind(apm::FRec& rec, u64 idx) {
-    return *rec.c_parent_elems[idx];
+inline apm::FRec& apm::c_parent_qFind(apm::FRec& parent, u64 idx) {
+    return *parent.c_parent_elems[idx];
 }
 
 // --- apm.FRec.c_parent.qLast
 // Reference to last element without bounds checking
-inline apm::FRec& apm::c_parent_qLast(apm::FRec& rec) {
-    return *rec.c_parent_elems[rec.c_parent_n-1];
+inline apm::FRec& apm::c_parent_qLast(apm::FRec& parent) {
+    return *parent.c_parent_elems[parent.c_parent_n-1];
 }
 
 // --- apm.FRec.c_child.EmptyQ
 // Return true if index is empty
-inline bool apm::c_child_EmptyQ(apm::FRec& rec) {
-    return rec.c_child_n == 0;
+inline bool apm::c_child_EmptyQ(apm::FRec& parent) {
+    return parent.c_child_n == 0;
 }
 
 // --- apm.FRec.c_child.Find
 // Look up row by row id. Return NULL if out of range
-inline apm::FRec* apm::c_child_Find(apm::FRec& rec, u64 t) {
+inline apm::FRec* apm::c_child_Find(apm::FRec& parent, u64 t) {
     apm::FRec *retval = NULL;
     u64 idx = t;
-    u64 lim = rec.c_child_n;
+    u64 lim = parent.c_child_n;
     if (idx < lim) {
-        retval = rec.c_child_elems[idx];
+        retval = parent.c_child_elems[idx];
     }
     return retval;
 }
 
 // --- apm.FRec.c_child.Getary
 // Return array of pointers
-inline algo::aryptr<apm::FRec*> apm::c_child_Getary(apm::FRec& rec) {
-    return algo::aryptr<apm::FRec*>(rec.c_child_elems, rec.c_child_n);
+inline algo::aryptr<apm::FRec*> apm::c_child_Getary(apm::FRec& parent) {
+    return algo::aryptr<apm::FRec*>(parent.c_child_elems, parent.c_child_n);
 }
 
 // --- apm.FRec.c_child.N
 // Return number of items in the pointer array
-inline i64 apm::c_child_N(const apm::FRec& rec) {
-    return rec.c_child_n;
+inline i64 apm::c_child_N(const apm::FRec& parent) {
+    return parent.c_child_n;
 }
 
 // --- apm.FRec.c_child.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void apm::c_child_RemoveAll(apm::FRec& rec) {
-    rec.c_child_n = 0;
+inline void apm::c_child_RemoveAll(apm::FRec& parent) {
+    parent.c_child_n = 0;
 }
 
 // --- apm.FRec.c_child.qFind
 // Return reference without bounds checking
-inline apm::FRec& apm::c_child_qFind(apm::FRec& rec, u64 idx) {
-    return *rec.c_child_elems[idx];
+inline apm::FRec& apm::c_child_qFind(apm::FRec& parent, u64 idx) {
+    return *parent.c_child_elems[idx];
 }
 
 // --- apm.FRec.c_child.qLast
 // Reference to last element without bounds checking
-inline apm::FRec& apm::c_child_qLast(apm::FRec& rec) {
-    return *rec.c_child_elems[rec.c_child_n-1];
+inline apm::FRec& apm::c_child_qLast(apm::FRec& parent) {
+    return *parent.c_child_elems[parent.c_child_n-1];
 }
 
 // --- apm.FRec.zd_rec_pkgrec.EmptyQ
 // Return true if index is empty
-inline bool apm::zd_rec_pkgrec_EmptyQ(apm::FRec& rec) {
-    return rec.zd_rec_pkgrec_head == NULL;
+inline bool apm::zd_rec_pkgrec_EmptyQ(apm::FRec& parent) {
+    return parent.zd_rec_pkgrec_head == NULL;
 }
 
 // --- apm.FRec.zd_rec_pkgrec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline apm::FPkgrec* apm::zd_rec_pkgrec_First(apm::FRec& rec) {
+inline apm::FPkgrec* apm::zd_rec_pkgrec_First(apm::FRec& parent) {
     apm::FPkgrec *row = NULL;
-    row = rec.zd_rec_pkgrec_head;
+    row = parent.zd_rec_pkgrec_head;
     return row;
 }
 
@@ -2519,16 +2509,16 @@ inline bool apm::rec_zd_rec_pkgrec_InLlistQ(apm::FPkgrec& row) {
 
 // --- apm.FRec.zd_rec_pkgrec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline apm::FPkgrec* apm::zd_rec_pkgrec_Last(apm::FRec& rec) {
+inline apm::FPkgrec* apm::zd_rec_pkgrec_Last(apm::FRec& parent) {
     apm::FPkgrec *row = NULL;
-    row = rec.zd_rec_pkgrec_tail;
+    row = parent.zd_rec_pkgrec_tail;
     return row;
 }
 
 // --- apm.FRec.zd_rec_pkgrec.N
 // Return number of items in the linked list
-inline i32 apm::zd_rec_pkgrec_N(const apm::FRec& rec) {
-    return rec.zd_rec_pkgrec_n;
+inline i32 apm::zd_rec_pkgrec_N(const apm::FRec& parent) {
+    return parent.zd_rec_pkgrec_n;
 }
 
 // --- apm.FRec.zd_rec_pkgrec.Next
@@ -2545,37 +2535,37 @@ inline apm::FPkgrec* apm::rec_zd_rec_pkgrec_Prev(apm::FPkgrec &row) {
 
 // --- apm.FRec.zd_rec_pkgrec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline apm::FPkgrec& apm::zd_rec_pkgrec_qLast(apm::FRec& rec) {
+inline apm::FPkgrec& apm::zd_rec_pkgrec_qLast(apm::FRec& parent) {
     apm::FPkgrec *row = NULL;
-    row = rec.zd_rec_pkgrec_tail;
+    row = parent.zd_rec_pkgrec_tail;
     return *row;
 }
 
 // --- apm.FRec..Init
 // Set all fields to initial values.
-inline void apm::FRec_Init(apm::FRec& rec) {
-    rec.p_ssimfile = NULL;
-    rec.c_parent_elems = NULL; // (apm.FRec.c_parent)
-    rec.c_parent_n = 0; // (apm.FRec.c_parent)
-    rec.c_parent_max = 0; // (apm.FRec.c_parent)
-    rec.c_child_elems = NULL; // (apm.FRec.c_child)
-    rec.c_child_n = 0; // (apm.FRec.c_child)
-    rec.c_child_max = 0; // (apm.FRec.c_child)
-    rec.level = i32(0);
-    rec.zd_rec_pkgrec_head = NULL; // (apm.FRec.zd_rec_pkgrec)
-    rec.zd_rec_pkgrec_n = 0; // (apm.FRec.zd_rec_pkgrec)
-    rec.zd_rec_pkgrec_tail = NULL; // (apm.FRec.zd_rec_pkgrec)
-    rec.rec_next = (apm::FRec*)-1; // (apm.FDb.rec) not-in-tpool's freelist
-    rec.ind_rec_next = (apm::FRec*)-1; // (apm.FDb.ind_rec) not-in-hash
-    rec.ind_rec_hashval = 0; // stored hash value
-    rec.zd_rec_next = (apm::FRec*)-1; // (apm.FDb.zd_rec) not-in-list
-    rec.zd_rec_prev = NULL; // (apm.FDb.zd_rec)
-    rec.zd_selrec_next = (apm::FRec*)-1; // (apm.FDb.zd_selrec) not-in-list
-    rec.zd_selrec_prev = NULL; // (apm.FDb.zd_selrec)
-    rec.zd_chooserec_next = (apm::FRec*)-1; // (apm.FDb.zd_chooserec) not-in-list
-    rec.zd_chooserec_prev = NULL; // (apm.FDb.zd_chooserec)
-    rec.ssimfile_zd_ssimfile_rec_next = (apm::FRec*)-1; // (apm.FSsimfile.zd_ssimfile_rec) not-in-list
-    rec.ssimfile_zd_ssimfile_rec_prev = NULL; // (apm.FSsimfile.zd_ssimfile_rec)
+inline void apm::FRec_Init(apm::FRec& parent) {
+    parent.p_ssimfile = NULL;
+    parent.c_parent_elems = NULL; // (apm.FRec.c_parent)
+    parent.c_parent_n = 0; // (apm.FRec.c_parent)
+    parent.c_parent_max = 0; // (apm.FRec.c_parent)
+    parent.c_child_elems = NULL; // (apm.FRec.c_child)
+    parent.c_child_n = 0; // (apm.FRec.c_child)
+    parent.c_child_max = 0; // (apm.FRec.c_child)
+    parent.level = i32(0);
+    parent.zd_rec_pkgrec_head = NULL; // (apm.FRec.zd_rec_pkgrec)
+    parent.zd_rec_pkgrec_n = 0; // (apm.FRec.zd_rec_pkgrec)
+    parent.zd_rec_pkgrec_tail = NULL; // (apm.FRec.zd_rec_pkgrec)
+    parent.rec_next = (apm::FRec*)-1; // (apm.FDb.rec) not-in-tpool's freelist
+    parent.ind_rec_next = (apm::FRec*)-1; // (apm.FDb.ind_rec) not-in-hash
+    parent.ind_rec_hashval = 0; // stored hash value
+    parent.zd_rec_next = (apm::FRec*)-1; // (apm.FDb.zd_rec) not-in-list
+    parent.zd_rec_prev = NULL; // (apm.FDb.zd_rec)
+    parent.zd_selrec_next = (apm::FRec*)-1; // (apm.FDb.zd_selrec) not-in-list
+    parent.zd_selrec_prev = NULL; // (apm.FDb.zd_selrec)
+    parent.zd_chooserec_next = (apm::FRec*)-1; // (apm.FDb.zd_chooserec) not-in-list
+    parent.zd_chooserec_prev = NULL; // (apm.FDb.zd_chooserec)
+    parent.ssimfile_zd_ssimfile_rec_next = (apm::FRec*)-1; // (apm.FSsimfile.zd_ssimfile_rec) not-in-list
+    parent.ssimfile_zd_ssimfile_rec_prev = NULL; // (apm.FSsimfile.zd_ssimfile_rec)
 }
 
 // --- apm.FRec.c_parent_curs.Reset
@@ -2665,35 +2655,35 @@ inline  apm::FRec::~FRec() {
 
 // --- apm.FSsimfile.c_ssimsort.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool apm::c_ssimsort_InsertMaybe(apm::FSsimfile& ssimfile, apm::FSsimsort& row) {
-    apm::FSsimsort* ptr = ssimfile.c_ssimsort;
+inline bool apm::c_ssimsort_InsertMaybe(apm::FSsimfile& parent, apm::FSsimsort& row) {
+    apm::FSsimsort* ptr = parent.c_ssimsort;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ssimfile.c_ssimsort = &row;
+        parent.c_ssimsort = &row;
     }
     return retval;
 }
 
 // --- apm.FSsimfile.c_ssimsort.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void apm::c_ssimsort_Remove(apm::FSsimfile& ssimfile, apm::FSsimsort& row) {
-    apm::FSsimsort *ptr = ssimfile.c_ssimsort;
+inline void apm::c_ssimsort_Remove(apm::FSsimfile& parent, apm::FSsimsort& row) {
+    apm::FSsimsort *ptr = parent.c_ssimsort;
     if (LIKELY(ptr == &row)) {
-        ssimfile.c_ssimsort = NULL;
+        parent.c_ssimsort = NULL;
     }
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec.EmptyQ
 // Return true if index is empty
-inline bool apm::zd_ssimfile_rec_EmptyQ(apm::FSsimfile& ssimfile) {
-    return ssimfile.zd_ssimfile_rec_head == NULL;
+inline bool apm::zd_ssimfile_rec_EmptyQ(apm::FSsimfile& parent) {
+    return parent.zd_ssimfile_rec_head == NULL;
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline apm::FRec* apm::zd_ssimfile_rec_First(apm::FSsimfile& ssimfile) {
+inline apm::FRec* apm::zd_ssimfile_rec_First(apm::FSsimfile& parent) {
     apm::FRec *row = NULL;
-    row = ssimfile.zd_ssimfile_rec_head;
+    row = parent.zd_ssimfile_rec_head;
     return row;
 }
 
@@ -2707,16 +2697,16 @@ inline bool apm::ssimfile_zd_ssimfile_rec_InLlistQ(apm::FRec& row) {
 
 // --- apm.FSsimfile.zd_ssimfile_rec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline apm::FRec* apm::zd_ssimfile_rec_Last(apm::FSsimfile& ssimfile) {
+inline apm::FRec* apm::zd_ssimfile_rec_Last(apm::FSsimfile& parent) {
     apm::FRec *row = NULL;
-    row = ssimfile.zd_ssimfile_rec_tail;
+    row = parent.zd_ssimfile_rec_tail;
     return row;
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec.N
 // Return number of items in the linked list
-inline i32 apm::zd_ssimfile_rec_N(const apm::FSsimfile& ssimfile) {
-    return ssimfile.zd_ssimfile_rec_n;
+inline i32 apm::zd_ssimfile_rec_N(const apm::FSsimfile& parent) {
+    return parent.zd_ssimfile_rec_n;
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec.Next
@@ -2733,22 +2723,22 @@ inline apm::FRec* apm::ssimfile_zd_ssimfile_rec_Prev(apm::FRec &row) {
 
 // --- apm.FSsimfile.zd_ssimfile_rec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline apm::FRec& apm::zd_ssimfile_rec_qLast(apm::FSsimfile& ssimfile) {
+inline apm::FRec& apm::zd_ssimfile_rec_qLast(apm::FSsimfile& parent) {
     apm::FRec *row = NULL;
-    row = ssimfile.zd_ssimfile_rec_tail;
+    row = parent.zd_ssimfile_rec_tail;
     return *row;
 }
 
 // --- apm.FSsimfile..Init
 // Set all fields to initial values.
-inline void apm::FSsimfile_Init(apm::FSsimfile& ssimfile) {
-    ssimfile.p_ctype = NULL;
-    ssimfile.c_ssimsort = NULL;
-    ssimfile.zd_ssimfile_rec_head = NULL; // (apm.FSsimfile.zd_ssimfile_rec)
-    ssimfile.zd_ssimfile_rec_n = 0; // (apm.FSsimfile.zd_ssimfile_rec)
-    ssimfile.zd_ssimfile_rec_tail = NULL; // (apm.FSsimfile.zd_ssimfile_rec)
-    ssimfile.ind_ssimfile_next = (apm::FSsimfile*)-1; // (apm.FDb.ind_ssimfile) not-in-hash
-    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
+inline void apm::FSsimfile_Init(apm::FSsimfile& parent) {
+    parent.p_ctype = NULL;
+    parent.c_ssimsort = NULL;
+    parent.zd_ssimfile_rec_head = NULL; // (apm.FSsimfile.zd_ssimfile_rec)
+    parent.zd_ssimfile_rec_n = 0; // (apm.FSsimfile.zd_ssimfile_rec)
+    parent.zd_ssimfile_rec_tail = NULL; // (apm.FSsimfile.zd_ssimfile_rec)
+    parent.ind_ssimfile_next = (apm::FSsimfile*)-1; // (apm.FDb.ind_ssimfile) not-in-hash
+    parent.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec_curs.Reset
@@ -2798,9 +2788,9 @@ inline  apm::FSsimreq::~FSsimreq() {
 
 // --- apm.FSsimsort..Init
 // Set all fields to initial values.
-inline void apm::FSsimsort_Init(apm::FSsimsort& ssimsort) {
-    ssimsort.ind_ssimsort_next = (apm::FSsimsort*)-1; // (apm.FDb.ind_ssimsort) not-in-hash
-    ssimsort.ind_ssimsort_hashval = 0; // stored hash value
+inline void apm::FSsimsort_Init(apm::FSsimsort& parent) {
+    parent.ind_ssimsort_next = (apm::FSsimsort*)-1; // (apm.FDb.ind_ssimsort) not-in-hash
+    parent.ind_ssimsort_hashval = 0; // stored hash value
 }
 
 // --- apm.FSsimsort..Ctor
@@ -2815,8 +2805,8 @@ inline  apm::FSsimsort::~FSsimsort() {
 
 // --- apm.FSubstr..Init
 // Set all fields to initial values.
-inline void apm::FSubstr_Init(apm::FSubstr& substr) {
-    substr.p_srcfield = NULL;
+inline void apm::FSubstr_Init(apm::FSubstr& parent) {
+    parent.p_srcfield = NULL;
 }
 
 // --- apm.FSubstr..Ctor

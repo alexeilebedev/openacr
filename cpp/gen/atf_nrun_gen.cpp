@@ -29,15 +29,12 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_nrun::FDb   atf_nrun::_db;    // dependency found via dev.targdep
 
@@ -687,7 +684,6 @@ void atf_nrun::FDb_Init() {
 
 // --- atf_nrun.FDb..Uninit
 void atf_nrun::FDb_Uninit() {
-    atf_nrun::FDb &row = _db; (void)row;
 
     // atf_nrun.FDb.ind_running.Uninit (Thash)  //Running job
     // skip destruction of ind_running in global scope
@@ -699,23 +695,23 @@ void atf_nrun::FDb_Uninit() {
 // --- atf_nrun.FEntry.job.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int atf_nrun::job_Start(atf_nrun::FEntry& fentry) {
+int atf_nrun::job_Start(atf_nrun::FEntry& parent) {
     int retval = 0;
-    if (fentry.job_pid == 0) {
-        verblog(job_ToCmdline(fentry)); // maybe print command
+    if (parent.job_pid == 0) {
+        verblog(job_ToCmdline(parent)); // maybe print command
 #ifdef WIN32
-        algo_lib::ResolveExecFname(fentry.job_path);
-        tempstr cmdline(job_ToCmdline(fentry));
-        fentry.job_pid = dospawn(Zeroterm(fentry.job_path),Zeroterm(cmdline),fentry.job_timeout,fentry.job_fstdin,fentry.job_fstdout,fentry.job_fstderr);
+        algo_lib::ResolveExecFname(parent.job_path);
+        tempstr cmdline(job_ToCmdline(parent));
+        parent.job_pid = dospawn(Zeroterm(parent.job_path),Zeroterm(cmdline),parent.job_timeout,parent.job_fstdin,parent.job_fstdout,parent.job_fstderr);
 #else
-        int in_pipe[2]  = {-1,-1}; // [0]=child stdin (read), [1]=fentry.job_to_stdin (write)
-        int out_pipe[2] = {-1,-1}; // [0]=fentry.job_from_stdout (read), [1]=child stdout (write)
-        int err_pipe[2] = {-1,-1}; // [0]=fentry.job_from_stderr (read), [1]=child stderr (write)
-        if (fentry.job_fstdin  == "|" && pipe(in_pipe)  == 0) { fentry.job_to_stdin.value    = in_pipe[1];  }
-        if (fentry.job_fstdout == "|" && pipe(out_pipe) == 0) { fentry.job_from_stdout.value = out_pipe[0]; }
-        if (fentry.job_fstderr == "|" && pipe(err_pipe) == 0) { fentry.job_from_stderr.value = err_pipe[0]; }
-        fentry.job_pid = fork();
-        if (fentry.job_pid == 0) { // child
+        int in_pipe[2]  = {-1,-1}; // [0]=child stdin (read), [1]=parent.job_to_stdin (write)
+        int out_pipe[2] = {-1,-1}; // [0]=parent.job_from_stdout (read), [1]=child stdout (write)
+        int err_pipe[2] = {-1,-1}; // [0]=parent.job_from_stderr (read), [1]=child stderr (write)
+        if (parent.job_fstdin  == "|" && pipe(in_pipe)  == 0) { parent.job_to_stdin.value    = in_pipe[1];  }
+        if (parent.job_fstdout == "|" && pipe(out_pipe) == 0) { parent.job_from_stdout.value = out_pipe[0]; }
+        if (parent.job_fstderr == "|" && pipe(err_pipe) == 0) { parent.job_from_stderr.value = err_pipe[0]; }
+        parent.job_pid = fork();
+        if (parent.job_pid == 0) { // child
             algo_lib::DieWithParent();
             // inherited signal handlers stay live until exec, so a kill aimed at
             // the child in the fork-to-exec window would run the parent's handler
@@ -726,33 +722,33 @@ int atf_nrun::job_Start(atf_nrun::FEntry& fentry) {
             (void)signal(SIGHUP , SIG_DFL);
             (void)signal(SIGQUIT, SIG_DFL);
             (void)signal(SIGALRM, SIG_DFL);
-            if (fentry.job_pgroup) {
+            if (parent.job_pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
                 (void)setpgid(0, 0);
             }
-            if (fentry.job_timeout > 0) {
-                alarm(fentry.job_timeout);
+            if (parent.job_timeout > 0) {
+                alarm(parent.job_timeout);
             }
-            if (fentry.job_memlimitmb > 0) {
+            if (parent.job_memlimitmb > 0) {
                 // memory ceiling: soft and hard, so a child that drops
                 // privileges cannot raise it; the child sees allocation
                 // failure at the limit instead of inviting the OOM killer
                 struct rlimit rlim;
-                rlim.rlim_cur = rlim_t(fentry.job_memlimitmb) * 1000000;
+                rlim.rlim_cur = rlim_t(parent.job_memlimitmb) * 1000000;
                 rlim.rlim_max = rlim.rlim_cur;
                 (void)setrlimit(RLIMIT_AS, &rlim);
             }
-            if (retval==0) retval=algo_lib::ApplyRedirect(fentry.job_fstdin , 0, in_pipe[0]);
-            if (retval==0) retval=algo_lib::ApplyRedirect(fentry.job_fstdout, 1, out_pipe[1]);
-            if (retval==0) retval=algo_lib::ApplyRedirect(fentry.job_fstderr, 2, err_pipe[1]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.job_fstdin , 0, in_pipe[0]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.job_fstdout, 1, out_pipe[1]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.job_fstderr, 2, err_pipe[1]);
             if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);
             if (in_pipe[1]  >= 0) (void)close(in_pipe[1]);
             if (out_pipe[0] >= 0) (void)close(out_pipe[0]);
             if (out_pipe[1] >= 0) (void)close(out_pipe[1]);
             if (err_pipe[0] >= 0) (void)close(err_pipe[0]);
             if (err_pipe[1] >= 0) (void)close(err_pipe[1]);
-            if (retval==0) retval= job_Execv(fentry);
+            if (retval==0) retval= job_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("atf_nrun.job_execv"
@@ -761,145 +757,144 @@ int atf_nrun::job_Start(atf_nrun::FEntry& fentry) {
                 <<Keyval("comment","Execv failed"));
             }
             _exit(127); // if failed to start, exit anyway
-        } else if (fentry.job_pid == -1) {
+        } else if (parent.job_pid == -1) {
             retval = errno; // failed to fork
-        } else if (fentry.job_pgroup) {
+        } else if (parent.job_pgroup) {
             // mirror the child's setpgid: the group must exist the moment fork
             // returns, or a group kill racing the child's first quantum finds no
             // group, loses the signal, and the unkilled child boots into whatever
             // the killer already tore down.  EACCES -- the child exec'd first, its
             // own setpgid won -- is the benign side of the race.
-            (void)setpgid(fentry.job_pid, fentry.job_pid);
+            (void)setpgid(parent.job_pid, parent.job_pid);
         }
         if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);  // parent keeps write end (to_stdin)
         if (out_pipe[1] >= 0) (void)close(out_pipe[1]); // parent keeps read end (from_stdout)
         if (err_pipe[1] >= 0) (void)close(err_pipe[1]); // parent keeps read end (from_stderr)
 #endif
     }
-    fentry.job_status = fentry.job_pid > 0 ? 0 : -1; // if didn't start, set error status
+    parent.job_status = parent.job_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
 }
 
 // --- atf_nrun.FEntry.job.Kill
 // Kill subprocess and wait
-void atf_nrun::job_Kill(atf_nrun::FEntry& fentry) {
-    if (fentry.job_pid > 0) {
-        kill(fentry.job_pgroup ? -fentry.job_pid : fentry.job_pid,9); // pgroup child dies as a whole group
-        job_Wait(fentry);
+void atf_nrun::job_Kill(atf_nrun::FEntry& parent) {
+    if (parent.job_pid > 0) {
+        kill(parent.job_pgroup ? -parent.job_pid : parent.job_pid,9); // pgroup child dies as a whole group
+        job_Wait(parent);
     }
 }
 
 // --- atf_nrun.FEntry.job.Wait
 // Wait for subprocess to return
-void atf_nrun::job_Wait(atf_nrun::FEntry& fentry) {
-    algo_lib::Close(fentry.job_to_stdin);
-    if (fentry.job_pid > 0) {
+void atf_nrun::job_Wait(atf_nrun::FEntry& parent) {
+    algo_lib::Close(parent.job_to_stdin);
+    if (parent.job_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
         do {
             // really wait for subprocess to exit
-            rc = waitpid(fentry.job_pid,&wait_status,wait_flags);
+            rc = waitpid(parent.job_pid,&wait_status,wait_flags);
         } while (rc==-1 && errno==EINTR);
-        if (rc == fentry.job_pid) {
-            fentry.job_status = wait_status;
-            fentry.job_pid = 0;
+        if (rc == parent.job_pid) {
+            parent.job_status = wait_status;
+            parent.job_pid = 0;
         }
     }
-    algo_lib::Close(fentry.job_from_stdout);
-    algo_lib::Close(fentry.job_from_stderr);
+    algo_lib::Close(parent.job_from_stdout);
+    algo_lib::Close(parent.job_from_stderr);
 }
 
 // --- atf_nrun.FEntry.job.Exec
 // Start + Wait
 // Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
-int atf_nrun::job_Exec(atf_nrun::FEntry& fentry) {
-    job_Start(fentry);
-    job_Wait(fentry);
-    return fentry.job_status;
+int atf_nrun::job_Exec(atf_nrun::FEntry& parent) {
+    job_Start(parent);
+    job_Wait(parent);
+    return parent.job_status;
 }
 
 // --- atf_nrun.FEntry.job.ExecX
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
-void atf_nrun::job_ExecX(atf_nrun::FEntry& fentry) {
-    int rc = job_Exec(fentry);
-    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",job_ToCmdline(fentry))
-    << Keyval("comment",algo::DescribeWaitStatus(fentry.job_status)));
+void atf_nrun::job_ExecX(atf_nrun::FEntry& parent) {
+    int rc = job_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",job_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.job_status)));
 }
 
 // --- atf_nrun.FEntry.job.Execv
 // Call execv()
 // Call execv with specified parameters
-int atf_nrun::job_Execv(atf_nrun::FEntry& fentry) {
+int atf_nrun::job_Execv(atf_nrun::FEntry& parent) {
     int ret = 0;
     algo::StringAry args;
-    job_ToArgv(fentry, args);
+    job_ToArgv(parent, args);
     char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
     ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
     argv[ary_N(args)] = NULL;
-    // if fentry.job_path is relative, search for it in PATH
-    algo_lib::ResolveExecFname(fentry.job_path);
-    ret = execv(Zeroterm(fentry.job_path),argv);
+    // if parent.job_path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.job_path);
+    ret = execv(Zeroterm(parent.job_path),argv);
     return ret;
 }
 
 // --- atf_nrun.FEntry.job.ToCmdline
-algo::tempstr atf_nrun::job_ToCmdline(atf_nrun::FEntry& fentry) {
+algo::tempstr atf_nrun::job_ToCmdline(atf_nrun::FEntry& parent) {
     algo::tempstr retval;
-    retval << fentry.job_path << " ";
-    command::bash_PrintArgv(fentry.job_cmd,retval);
-    if (algo_lib::RedirectFileQ(fentry.job_fstdin)) {
-        retval << " " << fentry.job_fstdin;
+    retval << parent.job_path << " ";
+    command::bash_PrintArgv(parent.job_cmd,retval);
+    if (algo_lib::RedirectFileQ(parent.job_fstdin)) {
+        retval << " " << parent.job_fstdin;
     }
-    if (algo_lib::RedirectFileQ(fentry.job_fstdout)) {
-        retval << " " << fentry.job_fstdout;
+    if (algo_lib::RedirectFileQ(parent.job_fstdout)) {
+        retval << " " << parent.job_fstdout;
     }
-    if (algo_lib::RedirectFileQ(fentry.job_fstderr)) {
-        retval << " 2" << fentry.job_fstderr;
+    if (algo_lib::RedirectFileQ(parent.job_fstderr)) {
+        retval << " 2" << parent.job_fstderr;
     }
     return retval;
 }
 
 // --- atf_nrun.FEntry.job.ToArgv
 // Form array from the command line
-void atf_nrun::job_ToArgv(atf_nrun::FEntry& fentry, algo::StringAry& args) {
+void atf_nrun::job_ToArgv(atf_nrun::FEntry& parent, algo::StringAry& args) {
     ary_RemoveAll(args);
-    ary_Alloc(args) << fentry.job_path;
+    ary_Alloc(args) << parent.job_path;
 
-    if (fentry.job_cmd.c != "") {
+    if (parent.job_cmd.c != "") {
         ary_Alloc(args) << "-c";
         cstring *arg = &ary_Alloc(args);
-        cstring_Print(fentry.job_cmd.c, *arg);
+        cstring_Print(parent.job_cmd.c, *arg);
     }
 }
 
 // --- atf_nrun.FEntry..Init
 // Set all fields to initial values.
-void atf_nrun::FEntry_Init(atf_nrun::FEntry& fentry) {
-    fentry.pid = i32(0);
-    fentry.job_path = algo::strptr("bin/bash");
-    fentry.job_pid = pid_t(0);
-    fentry.job_timeout = i32(0);
-    fentry.job_memlimitmb = u32(0);
-    fentry.job_status = i32(0);
-    fentry.job_pgroup = bool(false);
-    fentry.ind_running_next = (atf_nrun::FEntry*)-1; // (atf_nrun.FDb.ind_running) not-in-hash
-    fentry.ind_running_hashval = 0; // stored hash value
-    fentry.zd_todo_next = (atf_nrun::FEntry*)-1; // (atf_nrun.FDb.zd_todo) not-in-list
-    fentry.zd_todo_prev = NULL; // (atf_nrun.FDb.zd_todo)
+void atf_nrun::FEntry_Init(atf_nrun::FEntry& parent) {
+    parent.pid = i32(0);
+    parent.job_path = algo::strptr("bin/bash");
+    parent.job_pid = pid_t(0);
+    parent.job_timeout = i32(0);
+    parent.job_memlimitmb = u32(0);
+    parent.job_status = i32(0);
+    parent.job_pgroup = bool(false);
+    parent.ind_running_next = (atf_nrun::FEntry*)-1; // (atf_nrun.FDb.ind_running) not-in-hash
+    parent.ind_running_hashval = 0; // stored hash value
+    parent.zd_todo_next = (atf_nrun::FEntry*)-1; // (atf_nrun.FDb.zd_todo) not-in-list
+    parent.zd_todo_prev = NULL; // (atf_nrun.FDb.zd_todo)
 }
 
 // --- atf_nrun.FEntry..Uninit
-void atf_nrun::FEntry_Uninit(atf_nrun::FEntry& fentry) {
-    atf_nrun::FEntry &row = fentry; (void)row;
-    ind_running_Remove(row); // remove fentry from index ind_running
-    zd_todo_Remove(row); // remove fentry from index zd_todo
+void atf_nrun::FEntry_Uninit(atf_nrun::FEntry& parent) {
+    ind_running_Remove(parent); // remove fentry from index ind_running
+    zd_todo_Remove(parent); // remove fentry from index zd_todo
 
     // atf_nrun.FEntry.job.Uninit (Exec)  //Subprocess
-    job_Kill(fentry); // kill child, ensure forward progress
+    job_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- atf_nrun.FieldId.value.ToCstr
@@ -990,7 +985,6 @@ void atf_nrun::StaticCheck() {
 // --- atf_nrun...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         atf_nrun::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1009,7 +1003,6 @@ int main(int argc, char **argv) {
     try {
         atf_nrun::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

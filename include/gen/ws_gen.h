@@ -295,7 +295,7 @@ struct CloseMsg { // ws.CloseMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.CloseMsg.base.CopyOut
-void                 parent_CopyOut(ws::CloseMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 close_msg_CopyOut(ws::CloseMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of CloseMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of CloseMsg.
@@ -366,7 +366,7 @@ struct ConnectMsg { // ws.ConnectMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.ConnectMsg.base.CopyOut
-void                 parent_CopyOut(ws::ConnectMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 connect_msg_CopyOut(ws::ConnectMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of ConnectMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of ConnectMsg.
@@ -469,7 +469,7 @@ struct DataMsg { // ws.DataMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.DataMsg.base.CopyOut
-void                 parent_CopyOut(ws::DataMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 data_msg_CopyOut(ws::DataMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of DataMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of DataMsg.
@@ -592,7 +592,7 @@ struct Frame { // ws.Frame
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.Frame.base.CopyOut
-void                 parent_CopyOut(ws::Frame &row, ws::FrameHeader &out) __attribute__((nothrow));
+void                 frame_CopyOut(ws::Frame &row, ws::FrameHeader &out) __attribute__((nothrow));
 // func:ws.Frame.base.Castbase
 inline ws::FrameHeader& Castbase(ws::Frame& parent);
 
@@ -705,7 +705,7 @@ struct Frame16 { // ws.Frame16
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.Frame16.base.CopyOut
-void                 parent_CopyOut(ws::Frame16 &row, ws::FrameHeader &out) __attribute__((nothrow));
+void                 frame16_CopyOut(ws::Frame16 &row, ws::FrameHeader &out) __attribute__((nothrow));
 // Check if ws::FrameHeader is an instance of Frame16 by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of Frame16.
@@ -869,7 +869,7 @@ struct Frame64 { // ws.Frame64
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.Frame64.base.CopyOut
-void                 parent_CopyOut(ws::Frame64 &row, ws::FrameHeader &out) __attribute__((nothrow));
+void                 frame64_CopyOut(ws::Frame64 &row, ws::FrameHeader &out) __attribute__((nothrow));
 // Check if ws::FrameHeader is an instance of Frame64 by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of Frame64.
@@ -1020,12 +1020,6 @@ inline void          Frame64_curs_Next(ws::Frame64_curs& curs) __attribute__((no
 inline void          Frame64_curs_Init(ws::Frame64_curs& parent);
 
 // --- ws.FrameHeader
-// access: ws.Frame.base (Base)
-// access: ws.Frame16.base (Base)
-// access: ws.Frame64.base (Base)
-// access: ws.FrameMasked.base (Base)
-// access: ws.FrameMasked16.base (Base)
-// access: ws.FrameMasked64.base (Base)
 #pragma pack(push,1)
 struct FrameHeader { // ws.FrameHeader
     u8   byte0;   //   0
@@ -1163,7 +1157,7 @@ struct FrameMasked { // ws.FrameMasked
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.FrameMasked.base.CopyOut
-void                 parent_CopyOut(ws::FrameMasked &row, ws::FrameHeader &out) __attribute__((nothrow));
+void                 frame_masked_CopyOut(ws::FrameMasked &row, ws::FrameHeader &out) __attribute__((nothrow));
 // func:ws.FrameMasked.base.Castbase
 inline ws::FrameHeader& Castbase(ws::FrameMasked& parent);
 
@@ -1277,7 +1271,7 @@ struct FrameMasked16 { // ws.FrameMasked16
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.FrameMasked16.base.CopyOut
-void                 parent_CopyOut(ws::FrameMasked16 &row, ws::FrameHeader &out) __attribute__((nothrow));
+void                 frame_masked16_CopyOut(ws::FrameMasked16 &row, ws::FrameHeader &out) __attribute__((nothrow));
 // Check if ws::FrameHeader is an instance of FrameMasked16 by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of FrameMasked16.
@@ -1442,7 +1436,7 @@ struct FrameMasked64 { // ws.FrameMasked64
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.FrameMasked64.base.CopyOut
-void                 parent_CopyOut(ws::FrameMasked64 &row, ws::FrameHeader &out) __attribute__((nothrow));
+void                 frame_masked64_CopyOut(ws::FrameMasked64 &row, ws::FrameHeader &out) __attribute__((nothrow));
 // Check if ws::FrameHeader is an instance of FrameMasked64 by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of FrameMasked64.
@@ -1655,7 +1649,7 @@ struct ServerStartMsg { // ws.ServerStartMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.ServerStartMsg.base.CopyOut
-void                 parent_CopyOut(ws::ServerStartMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 server_start_msg_CopyOut(ws::ServerStartMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of ServerStartMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of ServerStartMsg.
@@ -1697,7 +1691,7 @@ struct ServerStopMsg { // ws.ServerStopMsg
 #pragma pack(pop)
 // Copy fields out of row
 // func:ws.ServerStopMsg.base.CopyOut
-void                 parent_CopyOut(ws::ServerStopMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+void                 server_stop_msg_CopyOut(ws::ServerStopMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
 // Check if ams::MsgHeader is an instance of ServerStopMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of ServerStopMsg.

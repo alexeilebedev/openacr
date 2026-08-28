@@ -189,15 +189,23 @@ void apm::Main_Update() {
     bool ok=true;
     ind_beg(_db_zd_sel_package_curs,package,_db) {
         // fetch updated version of package
-        tempstr new_package_gitref = FetchPackageOrigin(package.origin,"HEAD");
+        tempstr new_package_gitref = FetchPackageOrigin(package.package,package.origin,"HEAD");
         vrfy(new_package_gitref!="",tempstr()<<"failed to fetch "<<package.package);
         verblog("apm.update"
                 <<Keyval("package",package.package)
                 <<Keyval("new_baseref",new_package_gitref));
         // fetch base version of package
-        (void)FetchPackageOrigin(package.origin,package.baseref);
+        // An empty baseref is what -install leaves behind, and it means the
+        // current directory: there is no earlier version of the package here to
+        // fetch, so the merge takes this tree as its base.  Any other baseref
+        // names a commit in the origin and has to resolve to one.
+        tempstr base_gitref(package.baseref);
+        if (package.baseref != "") {
+            base_gitref = FetchPackageOrigin(package.package,package.origin,package.baseref);
+            vrfy(base_gitref!="",tempstr()<<"failed to resolve base version "<<package.baseref<<" of package "<<package.package);
+        }
         // create sandbox for original package version
-        ok = CreatePackageSandbox(_db.base_sandbox,package.baseref)==0;
+        ok = CreatePackageSandbox(_db.base_sandbox,base_gitref)==0;
         if (ok) {
             // update package baseref to the version being fetched
             package.baseref=new_package_gitref;

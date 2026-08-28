@@ -1,20 +1,25 @@
 ## samp_make - sample program for Makefile management
 <a href="#samp_make"></a>
 This program is a sample program covered in [Tutorial 9: Transitioning from Makefile to OpenACR build](/txt/tut/tut09.md).
-It parses a specified Makefile, produces all requisite ssimfiles, and generates Makefile(s) from its [Inputs](#inputs).
+It parses a specified Makefile, produces all requisite ssimfiles, and generates Makefile(s) from the tables `ns:samp_make` lists.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [samp_make - Internals](/txt/gen/samp_make/samp_make.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+samp_make: sample program for Makefile management
+Usage: samp_make [options]
+    OPTION       TYPE    DFLT                              COMMENT
+    -in          string  "data"                            Input directory or filename, - for stdin
+    -target      regx    "%"                               Create Makefile for selected targets
+    -parse_make                                            Parse extern/gnumake/Simple-Makefile
+    -makefile    string  "extern/gnumake/Simple-Makefile"  (with parse_make) makefile to parse
+    -write                                                 P(with parse_make) write ssimfiles, otherwise print them
+    -verbose     flag                                      Verbosity level (0..255); alias -v; cumulative
+    -debug       flag                                      Debug level (0..255); alias -d; cumulative
+    -help                                                  Print help and exit; alias -h
+    -version                                               Print version and exit
+    -signature                                             Show signatures and exit; alias -sig
+```
 
 ### Options
 <a href="#options"></a>
@@ -32,28 +37,3 @@ It parses a specified Makefile, produces all requisite ssimfiles, and generates 
 
 #### -write -- P(with parse_make) write ssimfiles, otherwise print them
 <a href="#-write"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`samp_make` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[sampdb.gitfile](/txt/ssimdb/sampdb/gitfile.md)|samp_make list of gitfile sources|
-|[sampdb.targdep](/txt/ssimdb/sampdb/targdep.md)|samp_make targets dependencies|
-|[sampdb.target](/txt/ssimdb/sampdb/target.md)|samp_make targets list|
-|[sampdb.targrec](/txt/ssimdb/sampdb/targrec.md)|samp_make recipe for a target|
-|[sampdb.targsrc](/txt/ssimdb/sampdb/targsrc.md)|samp_make targets source dependencies|
-
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/gen/samp_make_gen.cpp](/cpp/gen/samp_make_gen.cpp)||
-|[cpp/samp_make/samp_make.cpp](/cpp/samp_make/samp_make.cpp)||
-|[include/gen/samp_make_gen.h](/include/gen/samp_make_gen.h)||
-|[include/gen/samp_make_gen.inl.h](/include/gen/samp_make_gen.inl.h)||
-|[include/samp_make.h](/include/samp_make.h)||

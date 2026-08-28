@@ -8,15 +8,15 @@ We will first go through all data definitions, and after the data is defined, re
 <a href="#automatic-reference-set"></a>
 * [samp_make - sample program for Makefile management](/txt/exe/samp_make/README.md)
 
-* [sampdb.gitfile - samp_make list of gitfile sources](/txt/ssimdb/sampdb/gitfile.md)
+* [sampdb.gitfile - samp_make list of gitfile sources](/txt/ssimdb/sampdb/README.md)
 
-* [sampdb.targdep - samp_make targets dependencies](/txt/ssimdb/sampdb/targdep.md)
+* [sampdb.targdep - samp_make targets dependencies](/txt/ssimdb/sampdb/README.md)
 
-* [sampdb.target - samp_make targets list](/txt/ssimdb/sampdb/target.md)
+* [sampdb.target - samp_make targets list](/txt/ssimdb/sampdb/README.md)
 
-* [sampdb.targrec - samp_make recipe for a target](/txt/ssimdb/sampdb/targrec.md)
+* [sampdb.targrec - samp_make recipe for a target](/txt/ssimdb/sampdb/README.md)
 
-* [sampdb.targsrc - samp_make targets source dependencies](/txt/ssimdb/sampdb/targsrc.md)
+* [sampdb.targsrc - samp_make targets source dependencies](/txt/ssimdb/sampdb/README.md)
 
 ### Problem Statement
 <a href="#problem-statement"></a>
@@ -24,7 +24,7 @@ We want to transform "hand-written" process of writing the Makefile into a proce
 
 ``GNU Make`` is driven by its ``Makefile`` - [A Simple Makefile](https://www.gnu.org/software/make/manual/make.html#Simple-Makefile) from the documentation is given below:
 
-```
+```bash
 edit : main.o kbd.o command.o display.o \
        insert.o search.o files.o utils.o
         cc -o edit main.o kbd.o command.o display.o \
@@ -57,7 +57,7 @@ We will record the facts into [ssim tuples](/txt/ssimdb/sampdb/README.md) datase
 
 ### List of Targets
 <a href="#list-of-targets"></a>
-First, there is a list of targets - all left-aligned names in Makefile. Lets' define a table named [sampdb.target](/txt/ssimdb/sampdb/target.md). It will contain all targets from the Makefile. Targets are unique by definition, so the first column of our table is the primary key.
+First, there is a list of targets - all left-aligned names in Makefile. Lets' define a table named [sampdb.target](/txt/ssimdb/sampdb/README.md). It will contain all targets from the Makefile. Targets are unique by definition, so the first column of our table is the primary key.
 
 |TARGET|
 |---|
@@ -74,17 +74,17 @@ First, there is a list of targets - all left-aligned names in Makefile. Lets' de
 
 ### List of Targets combined with the ``precondition`` Sources
 <a href="#list-of-targets-combined-with-the-precondition-sources"></a>
-Next, we want to record what source files correspond to each target. Here we want to relate the fact that each target might have a list of source files as a precondition. So we want to express in the records that ``command.o``, the target, will have ``command.c`` source file as a precondition. To express it as a primary key we  combine ``target`` name with the ``source`` name, separated by a character, in this case "/". This table has a ``composite`` key that is split into target and source keys. The split is expressed the table definition below (copied here from [sampdb.targsrc](/txt/ssimdb/sampdb/targsrc.md) reference). There are two implied fields in the primary key targsrc field. They are tied to our [List of Targets](#list-of-targets), and defined below [List of Sources](#list-of-sources)
+Next, we want to record what source files correspond to each target. Here we want to relate the fact that each target might have a list of source files as a precondition. So we want to express in the records that ``command.o``, the target, will have ``command.c`` source file as a precondition. To express it as a primary key we  combine ``target`` name with the ``source`` name, separated by a character, in this case "/". This table has a ``composite`` key that is split into target and source keys. The split is expressed the table definition below (copied here from [sampdb.targsrc](/txt/ssimdb/sampdb/README.md) reference). There are two implied fields in the primary key targsrc field. They are tied to our [List of Targets](#list-of-targets), and defined below [List of Sources](#list-of-sources)
 
 italicised fields: *target, src* are [*Ssim Fundamentals*](/txt/openacr/ssim.md) fields
 
-|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|Field|[Type](/txt/ssimdb/dmmeta/README.md)|[Reftype](/txt/ssimdb/dmmeta/README.md#dmmeta-reftype)|Default|Comment|
 |---|---|---|---|---|
 |targsrc|algo.Smallstr50|Val|||
-|*target*|*[sampdb.Target](/txt/ssimdb/sampdb/target.md)*|*Pkey*||*<br>/LL of targsrc*|
-|*src*|*[sampdb.Gitfile](/txt/ssimdb/sampdb/gitfile.md)*|*Pkey*||*<br>/LR of targsrc*|
+|*target*|*[sampdb.Target](/txt/ssimdb/sampdb/README.md)*|*Pkey*||*<br>/LL of targsrc*|
+|*src*|*[sampdb.Gitfile](/txt/ssimdb/sampdb/README.md)*|*Pkey*||*<br>/LR of targsrc*|
 
- The table [sampdb.targsrc](/txt/ssimdb/sampdb/targsrc.md) records will look like this:
+ The table [sampdb.targsrc](/txt/ssimdb/sampdb/README.md) records will look like this:
 
 |TARGSRC|
 |---|
@@ -114,7 +114,7 @@ italicised fields: *target, src* are [*Ssim Fundamentals*](/txt/openacr/ssim.md)
 
 ### List of Sources
 <a href="#list-of-sources"></a>
-We will have a table of all sources. We can match it to git controlled files: [samdb.gitfile](/txt/ssimdb/sampdb/gitfile.md). This table is the **foreign** key to [List of Targets with Sources](#list-of-targets-combined-with-the-precondition-sources) - it validates the **src** ***fldfunc*** key there.
+We will have a table of all sources. We can match it to git controlled files: [samdb.gitfile](/txt/ssimdb/sampdb/README.md). This table is the **foreign** key to [List of Targets with Sources](#list-of-targets-combined-with-the-precondition-sources) - it validates the **src** ***fldfunc*** key there.
 
 |GITFILE|COMMENT|
 |---|---|
@@ -132,7 +132,7 @@ We will have a table of all sources. We can match it to git controlled files: [s
 
 ### List of Targets combined with ``precondition`` Targets
 <a href="#list-of-targets-combined-with-precondition-targets"></a>
-Targets dependance on each other, as in preconditions, will be expressed by a table [samp.targdep](/txt/ssimdb/sampdb/targdep.md).  Here we use the same **fldfunc** approach, with "." as the separator. Our **fdlfunc** here are *Target* and *Parent*, both referring to our [List of Targets](#list-of-targets). For the precise table definition see reference [samp.targdep](/txt/ssimdb/sampdb/targdep.md). 
+Targets dependance on each other, as in preconditions, will be expressed by a table [samp.targdep](/txt/ssimdb/sampdb/README.md).  Here we use the same **fldfunc** approach, with "." as the separator. Our **fdlfunc** here are *Target* and *Parent*, both referring to our [List of Targets](#list-of-targets). For the precise table definition see reference [samp.targdep](/txt/ssimdb/sampdb/README.md). 
 
 |TARGDEP|
 |---|
@@ -156,7 +156,7 @@ Targets dependance on each other, as in preconditions, will be expressed by a ta
 
 ### List of Recipes for each Target
 <a href="#list-of-recipes-for-each-target"></a>
-Finally, we will have a recipe table for each target: [sampdb.targrec](/txt/ssimdb/sampdb/targrec.md). Again we are tying [List of Targets](#list-of-targets) to the columns, this time directly, without **fldfunc**.
+Finally, we will have a recipe table for each target: [sampdb.targrec](/txt/ssimdb/sampdb/README.md). Again we are tying [List of Targets](#list-of-targets) to the columns, this time directly, without **fldfunc**.
 
 |TARGET|RECIPE|COMMENT|
 |---|---|---|
@@ -175,9 +175,9 @@ Finally, we will have a recipe table for each target: [sampdb.targrec](/txt/ssim
 <a href="#all-data-dependencies-visualized"></a>
 All these tables together represent the full extent of the information contained in the Makefile.
 
-The information comes *cross-referenced* via Primary and Foreign key constraints. The constraints tie all records together into a [Transitive Closure](https://en.wikipedia.org/wiki/Transitive_closure) set. The actual dependencies and the set are fully visible via [acr](/txt/exe/acr/README.md) command, with the output below. The command returns all relations defined for each record in the target table [sampdb.target](/txt/ssimdb/sampdb/target.md) for a selected target, selected targets, or for the totality of it:
+The information comes *cross-referenced* via Primary and Foreign key constraints. The constraints tie all records together into a [Transitive Closure](https://en.wikipedia.org/wiki/Transitive_closure) set. The actual dependencies and the set are fully visible via [acr](/txt/exe/acr/README.md) command, with the output below. The command returns all relations defined for each record in the target table [sampdb.target](/txt/ssimdb/sampdb/README.md) for a selected target, selected targets, or for the totality of it:
 
-```
+```ssim
 $ acr sampdb.target:edit -t
 sampdb.target  target:edit  dflt:Y  comment:""
   sampdb.targdep  targdep:edit.command.o  rec:Y  pre:Y  comment:""
@@ -195,7 +195,7 @@ sampdb.targdep  targdep:clean.edit  rec:Y  pre:N  comment:""
 
 selected targets
 
-```
+```ssim
 $ acr sampdb.target:'edit|clean' -t
 sampdb.target  target:clean  dflt:N  comment:""
   sampdb.targdep  targdep:clean.command.o  rec:Y  pre:N  comment:""
@@ -224,7 +224,7 @@ sampdb.target  target:edit  dflt:Y  comment:""
 
 or for all targets
 
-```
+```ssim
 $ acr sampdb.target -t
 
 sampdb.target  target:clean  dflt:N  comment:""
@@ -303,7 +303,7 @@ report.acr  n_select:60  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_
 <a href="#using-the-defined-tables-to-generate-makefile"></a>
 Now we can use this information in a cpp program [samp_make](/txt/exe/samp_make/README.md), and restore Makefile by iterating over these tables and reconstructing the Makefile. The result will look like this:
 
-```
+```bash
 $samp_make -target:%
 
 edit : command.o display.o files.o insert.o kbd.o main.o search.o 
@@ -332,7 +332,7 @@ clean :
 
 Now we can create new targets or amend this target by adding/removing the information into the tables and not dealing with the actual Makefile syntax. We can generate each individual target is we wish so: target parameter takes a ``regex`` of targets. 
 
-```
+```bash
 $ samp_make -target:'clean|insert.o'
 clean :
         rm command.o display.o edit files.o insert.o kbd.o main.o search.o utils.o

@@ -201,16 +201,16 @@ void                 cfmt_CopyOut(acr_ed::FCfmt &row, dmmeta::Cfmt &out) __attri
 void                 cfmt_CopyIn(acr_ed::FCfmt &row, dmmeta::Cfmt &in) __attribute__((nothrow));
 
 // func:acr_ed.FCfmt.ctype.Get
-algo::strptr         ctype_Get(acr_ed::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(acr_ed::FCfmt& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FCfmt.strfmt.Get
-algo::strptr         strfmt_Get(acr_ed::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         strfmt_Get(acr_ed::FCfmt& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_ed.FCfmt..Init
-inline void          FCfmt_Init(acr_ed::FCfmt& cfmt);
+inline void          FCfmt_Init(acr_ed::FCfmt& parent);
 // func:acr_ed.FCfmt..Uninit
-void                 FCfmt_Uninit(acr_ed::FCfmt& cfmt) __attribute__((nothrow));
+void                 FCfmt_Uninit(acr_ed::FCfmt& parent) __attribute__((nothrow));
 
 // --- acr_ed.FCpptype
 // create: acr_ed.FDb.cpptype (Lary)
@@ -242,9 +242,9 @@ void                 cpptype_CopyIn(acr_ed::FCpptype &row, dmmeta::Cpptype &in) 
 
 // Set all fields to initial values.
 // func:acr_ed.FCpptype..Init
-inline void          FCpptype_Init(acr_ed::FCpptype& cpptype);
+inline void          FCpptype_Init(acr_ed::FCpptype& parent);
 // func:acr_ed.FCpptype..Uninit
-void                 FCpptype_Uninit(acr_ed::FCpptype& cpptype) __attribute__((nothrow));
+void                 FCpptype_Uninit(acr_ed::FCpptype& parent) __attribute__((nothrow));
 
 // --- acr_ed.FCstr
 // create: acr_ed.FDb.cstr (Lary)
@@ -276,9 +276,9 @@ void                 cstr_CopyIn(acr_ed::FCstr &row, dmmeta::Cstr &in) __attribu
 
 // Set all fields to initial values.
 // func:acr_ed.FCstr..Init
-inline void          FCstr_Init(acr_ed::FCstr& cstr);
+inline void          FCstr_Init(acr_ed::FCstr& parent);
 // func:acr_ed.FCstr..Uninit
-void                 FCstr_Uninit(acr_ed::FCstr& cstr) __attribute__((nothrow));
+void                 FCstr_Uninit(acr_ed::FCstr& parent) __attribute__((nothrow));
 
 // --- acr_ed.FCtype
 // create: acr_ed.FDb.ctype (Lary)
@@ -341,123 +341,123 @@ void                 ctype_CopyOut(acr_ed::FCtype &row, dmmeta::Ctype &out) __at
 void                 ctype_CopyIn(acr_ed::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:acr_ed.FCtype.ns.Get
-algo::strptr         ns_Get(acr_ed::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_ed::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FCtype.name.Get
-algo::strptr         name_Get(acr_ed::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_ed::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:acr_ed.FCtype.c_field.EmptyQ
-inline bool          c_field_EmptyQ(acr_ed::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_field_EmptyQ(acr_ed::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_ed.FCtype.c_field.Find
-inline acr_ed::FField* c_field_Find(acr_ed::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_ed::FField* c_field_Find(acr_ed::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr_ed.FCtype.c_field.Getary
-inline algo::aryptr<acr_ed::FField*> c_field_Getary(acr_ed::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<acr_ed::FField*> c_field_Getary(acr_ed::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:acr_ed.FCtype.c_field.Insert
-void                 c_field_Insert(acr_ed::FCtype& ctype, acr_ed::FField& row) __attribute__((nothrow));
+void                 c_field_Insert(acr_ed::FCtype& parent, acr_ed::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:acr_ed.FCtype.c_field.InsertMaybe
-bool                 c_field_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FField& row) __attribute__((nothrow));
+bool                 c_field_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr_ed.FCtype.c_field.N
-inline i64           c_field_N(const acr_ed::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_N(const acr_ed::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr_ed.FCtype.c_field.Remove
-void                 c_field_Remove(acr_ed::FCtype& ctype, acr_ed::FField& row) __attribute__((nothrow));
+void                 c_field_Remove(acr_ed::FCtype& parent, acr_ed::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr_ed.FCtype.c_field.RemoveAll
-inline void          c_field_RemoveAll(acr_ed::FCtype& ctype) __attribute__((nothrow));
+inline void          c_field_RemoveAll(acr_ed::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr_ed.FCtype.c_field.Reserve
-void                 c_field_Reserve(acr_ed::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_field_Reserve(acr_ed::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr_ed.FCtype.c_field.qFind
-inline acr_ed::FField& c_field_qFind(acr_ed::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline acr_ed::FField& c_field_qFind(acr_ed::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr_ed.FCtype.c_field.InAryQ
 inline bool          ctype_c_field_InAryQ(acr_ed::FField& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr_ed.FCtype.c_field.qLast
-inline acr_ed::FField& c_field_qLast(acr_ed::FCtype& ctype) __attribute__((nothrow));
+inline acr_ed::FField& c_field_qLast(acr_ed::FCtype& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_ed.FCtype.c_cstr.InsertMaybe
-inline bool          c_cstr_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCstr& row) __attribute__((nothrow));
+inline bool          c_cstr_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FCstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_ed.FCtype.c_cstr.Remove
-inline void          c_cstr_Remove(acr_ed::FCtype& ctype, acr_ed::FCstr& row) __attribute__((nothrow));
+inline void          c_cstr_Remove(acr_ed::FCtype& parent, acr_ed::FCstr& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_ed.FCtype.c_ssimfile.InsertMaybe
-inline bool          c_ssimfile_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FSsimfile& row) __attribute__((nothrow));
+inline bool          c_ssimfile_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FSsimfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_ed.FCtype.c_ssimfile.Remove
-inline void          c_ssimfile_Remove(acr_ed::FCtype& ctype, acr_ed::FSsimfile& row) __attribute__((nothrow));
+inline void          c_ssimfile_Remove(acr_ed::FCtype& parent, acr_ed::FSsimfile& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_ed.FCtype.c_pack.InsertMaybe
-inline bool          c_pack_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FPack& row) __attribute__((nothrow));
+inline bool          c_pack_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FPack& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_ed.FCtype.c_pack.Remove
-inline void          c_pack_Remove(acr_ed::FCtype& ctype, acr_ed::FPack& row) __attribute__((nothrow));
+inline void          c_pack_Remove(acr_ed::FCtype& parent, acr_ed::FPack& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_ed.FCtype.c_typefld.InsertMaybe
-inline bool          c_typefld_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FTypefld& row) __attribute__((nothrow));
+inline bool          c_typefld_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FTypefld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_ed.FCtype.c_typefld.Remove
-inline void          c_typefld_Remove(acr_ed::FCtype& ctype, acr_ed::FTypefld& row) __attribute__((nothrow));
+inline void          c_typefld_Remove(acr_ed::FCtype& parent, acr_ed::FTypefld& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr_ed.FCtype.c_cpptype.InsertMaybe
-inline bool          c_cpptype_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCpptype& row) __attribute__((nothrow));
+inline bool          c_cpptype_InsertMaybe(acr_ed::FCtype& parent, acr_ed::FCpptype& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_ed.FCtype.c_cpptype.Remove
-inline void          c_cpptype_Remove(acr_ed::FCtype& ctype, acr_ed::FCpptype& row) __attribute__((nothrow));
+inline void          c_cpptype_Remove(acr_ed::FCtype& parent, acr_ed::FCpptype& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr_ed.FCtype.c_cfmt.EmptyQ
-inline bool          c_cfmt_EmptyQ(acr_ed::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_cfmt_EmptyQ(acr_ed::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_ed.FCtype.c_cfmt.Find
-inline acr_ed::FCfmt* c_cfmt_Find(acr_ed::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_ed::FCfmt* c_cfmt_Find(acr_ed::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr_ed.FCtype.c_cfmt.Getary
-inline algo::aryptr<acr_ed::FCfmt*> c_cfmt_Getary(acr_ed::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<acr_ed::FCfmt*> c_cfmt_Getary(acr_ed::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:acr_ed.FCtype.c_cfmt.Insert
-void                 c_cfmt_Insert(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) __attribute__((nothrow));
+void                 c_cfmt_Insert(acr_ed::FCtype& parent, acr_ed::FCfmt& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:acr_ed.FCtype.c_cfmt.ScanInsertMaybe
-bool                 c_cfmt_ScanInsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) __attribute__((nothrow));
+bool                 c_cfmt_ScanInsertMaybe(acr_ed::FCtype& parent, acr_ed::FCfmt& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr_ed.FCtype.c_cfmt.N
-inline i64           c_cfmt_N(const acr_ed::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_cfmt_N(const acr_ed::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr_ed.FCtype.c_cfmt.Remove
-void                 c_cfmt_Remove(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) __attribute__((nothrow));
+void                 c_cfmt_Remove(acr_ed::FCtype& parent, acr_ed::FCfmt& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr_ed.FCtype.c_cfmt.RemoveAll
-inline void          c_cfmt_RemoveAll(acr_ed::FCtype& ctype) __attribute__((nothrow));
+inline void          c_cfmt_RemoveAll(acr_ed::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr_ed.FCtype.c_cfmt.Reserve
-void                 c_cfmt_Reserve(acr_ed::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_cfmt_Reserve(acr_ed::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr_ed.FCtype.c_cfmt.qFind
-inline acr_ed::FCfmt& c_cfmt_qFind(acr_ed::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline acr_ed::FCfmt& c_cfmt_qFind(acr_ed::FCtype& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr_ed.FCtype.c_cfmt.qLast
-inline acr_ed::FCfmt& c_cfmt_qLast(acr_ed::FCtype& ctype) __attribute__((nothrow));
+inline acr_ed::FCfmt& c_cfmt_qLast(acr_ed::FCtype& parent) __attribute__((nothrow));
 
 // func:acr_ed.FCtype.c_field_curs.Reset
 inline void          ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_ed::FCtype &parent) __attribute__((nothrow));
@@ -483,9 +483,9 @@ inline void          ctype_c_cfmt_curs_Next(ctype_c_cfmt_curs &curs) __attribute
 inline acr_ed::FCfmt& ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_ed.FCtype..Init
-void                 FCtype_Init(acr_ed::FCtype& ctype);
+void                 FCtype_Init(acr_ed::FCtype& parent);
 // func:acr_ed.FCtype..Uninit
-void                 FCtype_Uninit(acr_ed::FCtype& ctype) __attribute__((nothrow));
+void                 FCtype_Uninit(acr_ed::FCtype& parent) __attribute__((nothrow));
 
 // --- acr_ed.FEdaction
 // create: acr_ed.FDb.edaction (Inlary)
@@ -517,20 +517,20 @@ void                 edaction_CopyOut(acr_ed::FEdaction &row, dev::Edaction &out
 void                 edaction_CopyIn(acr_ed::FEdaction &row, dev::Edaction &in) __attribute__((nothrow));
 
 // func:acr_ed.FEdaction.edacttype.Get
-algo::strptr         edacttype_Get(acr_ed::FEdaction& edaction) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         edacttype_Get(acr_ed::FEdaction& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FEdaction.name.Get
-algo::strptr         name_Get(acr_ed::FEdaction& edaction) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_ed::FEdaction& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Invoke function by pointer
 // func:acr_ed.FEdaction.step.Call
-inline void          step_Call(acr_ed::FEdaction& edaction) __attribute__((nothrow));
+inline void          step_Call(acr_ed::FEdaction& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr_ed.FEdaction..Init
-inline void          FEdaction_Init(acr_ed::FEdaction& edaction);
+inline void          FEdaction_Init(acr_ed::FEdaction& parent);
 // func:acr_ed.FEdaction..Uninit
-void                 FEdaction_Uninit(acr_ed::FEdaction& edaction) __attribute__((nothrow));
+void                 FEdaction_Uninit(acr_ed::FEdaction& parent) __attribute__((nothrow));
 
 // --- acr_ed.trace
 #pragma pack(push,1)
@@ -1602,7 +1602,7 @@ void                 edaction_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr_ed.FDb.edaction.RemoveLast
 void                 edaction_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:acr_ed.FDb.edaction.qFind
 inline acr_ed::FEdaction& edaction_qFind(u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
@@ -2078,19 +2078,19 @@ void                 field_CopyOut(acr_ed::FField &row, dmmeta::Field &out) __at
 void                 field_CopyIn(acr_ed::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:acr_ed.FField.ctype.Get
-algo::strptr         ctype_Get(acr_ed::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(acr_ed::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FField.ns.Get
-algo::strptr         ns_Get(acr_ed::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_ed::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FField.name.Get
-algo::strptr         name_Get(acr_ed::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_ed::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_ed.FField..Init
-void                 FField_Init(acr_ed::FField& field);
+void                 FField_Init(acr_ed::FField& parent);
 // func:acr_ed.FField..Uninit
-void                 FField_Uninit(acr_ed::FField& field) __attribute__((nothrow));
+void                 FField_Uninit(acr_ed::FField& parent) __attribute__((nothrow));
 
 // --- acr_ed.FFprefix
 // create: acr_ed.FDb.fprefix (Lary)
@@ -2115,14 +2115,14 @@ void                 fprefix_CopyOut(acr_ed::FFprefix &row, dmmeta::Fprefix &out
 void                 fprefix_CopyIn(acr_ed::FFprefix &row, dmmeta::Fprefix &in) __attribute__((nothrow));
 
 // func:acr_ed.FFprefix.prefix.Get
-algo::strptr         prefix_Get(acr_ed::FFprefix& fprefix) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         prefix_Get(acr_ed::FFprefix& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FFprefix.reftype.Get
-algo::strptr         reftype_Get(acr_ed::FFprefix& fprefix) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         reftype_Get(acr_ed::FFprefix& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_ed.FFprefix..Init
-inline void          FFprefix_Init(acr_ed::FFprefix& fprefix);
+inline void          FFprefix_Init(acr_ed::FFprefix& parent);
 
 // --- acr_ed.FGitfile
 // create: acr_ed.FDb.gitfile (Lary)
@@ -2145,7 +2145,7 @@ void                 gitfile_CopyOut(acr_ed::FGitfile &row, dev::Gitfile &out) _
 void                 gitfile_CopyIn(acr_ed::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
 
 // func:acr_ed.FGitfile.ext.Get
-algo::strptr         ext_Get(acr_ed::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(acr_ed::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 
 // --- acr_ed.FListtype
@@ -2182,9 +2182,9 @@ void                 listtype_CopyIn(acr_ed::FListtype &row, dmmeta::Listtype &i
 
 // Set all fields to initial values.
 // func:acr_ed.FListtype..Init
-inline void          FListtype_Init(acr_ed::FListtype& listtype);
+inline void          FListtype_Init(acr_ed::FListtype& parent);
 // func:acr_ed.FListtype..Uninit
-void                 FListtype_Uninit(acr_ed::FListtype& listtype) __attribute__((nothrow));
+void                 FListtype_Uninit(acr_ed::FListtype& parent) __attribute__((nothrow));
 
 // --- acr_ed.FMsgtype
 // create: acr_ed.FDb.msgtype (Lary)
@@ -2245,9 +2245,9 @@ void                 ns_CopyIn(acr_ed::FNs &row, dmmeta::Ns &in) __attribute__((
 
 // Set all fields to initial values.
 // func:acr_ed.FNs..Init
-inline void          FNs_Init(acr_ed::FNs& ns);
+inline void          FNs_Init(acr_ed::FNs& parent);
 // func:acr_ed.FNs..Uninit
-void                 FNs_Uninit(acr_ed::FNs& ns) __attribute__((nothrow));
+void                 FNs_Uninit(acr_ed::FNs& parent) __attribute__((nothrow));
 
 // --- acr_ed.FNsdb
 // create: acr_ed.FDb.nsdb (Lary)
@@ -2281,9 +2281,9 @@ void                 nsdb_CopyIn(acr_ed::FNsdb &row, dmmeta::Nsdb &in) __attribu
 
 // Set all fields to initial values.
 // func:acr_ed.FNsdb..Init
-inline void          FNsdb_Init(acr_ed::FNsdb& nsdb);
+inline void          FNsdb_Init(acr_ed::FNsdb& parent);
 // func:acr_ed.FNsdb..Uninit
-void                 FNsdb_Uninit(acr_ed::FNsdb& nsdb) __attribute__((nothrow));
+void                 FNsdb_Uninit(acr_ed::FNsdb& parent) __attribute__((nothrow));
 
 // --- acr_ed.FPack
 // create: acr_ed.FDb.pack (Lary)
@@ -2314,7 +2314,7 @@ void                 pack_CopyOut(acr_ed::FPack &row, dmmeta::Pack &out) __attri
 void                 pack_CopyIn(acr_ed::FPack &row, dmmeta::Pack &in) __attribute__((nothrow));
 
 // func:acr_ed.FPack..Uninit
-void                 FPack_Uninit(acr_ed::FPack& pack) __attribute__((nothrow));
+void                 FPack_Uninit(acr_ed::FPack& parent) __attribute__((nothrow));
 
 // --- acr_ed.FReftype
 // create: acr_ed.FDb.reftype (Lary)
@@ -2358,9 +2358,9 @@ void                 reftype_CopyIn(acr_ed::FReftype &row, dmmeta::Reftype &in) 
 
 // Set all fields to initial values.
 // func:acr_ed.FReftype..Init
-void                 FReftype_Init(acr_ed::FReftype& reftype);
+void                 FReftype_Init(acr_ed::FReftype& parent);
 // func:acr_ed.FReftype..Uninit
-void                 FReftype_Uninit(acr_ed::FReftype& reftype) __attribute__((nothrow));
+void                 FReftype_Uninit(acr_ed::FReftype& parent) __attribute__((nothrow));
 
 // --- acr_ed.FSbpath
 // create: acr_ed.FDb.sbpath (Lary)
@@ -2421,19 +2421,19 @@ void                 ssimfile_CopyOut(acr_ed::FSsimfile &row, dmmeta::Ssimfile &
 void                 ssimfile_CopyIn(acr_ed::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:acr_ed.FSsimfile.ssimns.Get
-algo::strptr         ssimns_Get(acr_ed::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(acr_ed::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FSsimfile.ns.Get
-algo::strptr         ns_Get(acr_ed::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(acr_ed::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FSsimfile.name.Get
-algo::strptr         name_Get(acr_ed::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(acr_ed::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_ed.FSsimfile..Init
-inline void          FSsimfile_Init(acr_ed::FSsimfile& ssimfile);
+inline void          FSsimfile_Init(acr_ed::FSsimfile& parent);
 // func:acr_ed.FSsimfile..Uninit
-void                 FSsimfile_Uninit(acr_ed::FSsimfile& ssimfile) __attribute__((nothrow));
+void                 FSsimfile_Uninit(acr_ed::FSsimfile& parent) __attribute__((nothrow));
 
 // --- acr_ed.FTarget
 // create: acr_ed.FDb.target (Lary)
@@ -2475,22 +2475,22 @@ void                 target_CopyIn(acr_ed::FTarget &row, dev::Target &in) __attr
 
 // Return true if index is empty
 // func:acr_ed.FTarget.zd_targsrc.EmptyQ
-inline bool          zd_targsrc_EmptyQ(acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_targsrc_EmptyQ(acr_ed::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr_ed.FTarget.zd_targsrc.First
-inline acr_ed::FTargsrc* zd_targsrc_First(acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr_ed::FTargsrc* zd_targsrc_First(acr_ed::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr_ed.FTarget.zd_targsrc.InLlistQ
 inline bool          target_zd_targsrc_InLlistQ(acr_ed::FTargsrc& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr_ed.FTarget.zd_targsrc.Insert
-void                 zd_targsrc_Insert(acr_ed::FTarget& target, acr_ed::FTargsrc& row) __attribute__((nothrow));
+void                 zd_targsrc_Insert(acr_ed::FTarget& parent, acr_ed::FTargsrc& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr_ed.FTarget.zd_targsrc.Last
-inline acr_ed::FTargsrc* zd_targsrc_Last(acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr_ed::FTargsrc* zd_targsrc_Last(acr_ed::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:acr_ed.FTarget.zd_targsrc.N
-inline i32           zd_targsrc_N(const acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_targsrc_N(const acr_ed::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr_ed.FTarget.zd_targsrc.Next
 inline acr_ed::FTargsrc* target_zd_targsrc_Next(acr_ed::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
@@ -2499,23 +2499,23 @@ inline acr_ed::FTargsrc* target_zd_targsrc_Next(acr_ed::FTargsrc &row) __attribu
 inline acr_ed::FTargsrc* target_zd_targsrc_Prev(acr_ed::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_ed.FTarget.zd_targsrc.Remove
-void                 zd_targsrc_Remove(acr_ed::FTarget& target, acr_ed::FTargsrc& row) __attribute__((nothrow));
+void                 zd_targsrc_Remove(acr_ed::FTarget& parent, acr_ed::FTargsrc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr_ed.FTarget.zd_targsrc.RemoveAll
-void                 zd_targsrc_RemoveAll(acr_ed::FTarget& target) __attribute__((nothrow));
+void                 zd_targsrc_RemoveAll(acr_ed::FTarget& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:acr_ed.FTarget.zd_targsrc.RemoveFirst
-acr_ed::FTargsrc*    zd_targsrc_RemoveFirst(acr_ed::FTarget& target) __attribute__((nothrow));
+acr_ed::FTargsrc*    zd_targsrc_RemoveFirst(acr_ed::FTarget& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr_ed.FTarget.zd_targsrc.qLast
-inline acr_ed::FTargsrc& zd_targsrc_qLast(acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow));
+inline acr_ed::FTargsrc& zd_targsrc_qLast(acr_ed::FTarget& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:acr_ed.FTarget.zd_targsrc.InsertBefore
-void                 zd_targsrc_InsertBefore(acr_ed::FTarget& target, acr_ed::FTargsrc& row, acr_ed::FTargsrc* before) __attribute__((nothrow));
+void                 zd_targsrc_InsertBefore(acr_ed::FTarget& parent, acr_ed::FTargsrc& row, acr_ed::FTargsrc* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr_ed.FTarget..Init
-inline void          FTarget_Init(acr_ed::FTarget& target);
+inline void          FTarget_Init(acr_ed::FTarget& parent);
 // cursor points to valid item
 // func:acr_ed.FTarget.zd_targsrc_curs.Reset
 inline void          target_zd_targsrc_curs_Reset(target_zd_targsrc_curs &curs, acr_ed::FTarget &parent) __attribute__((nothrow));
@@ -2529,7 +2529,7 @@ inline void          target_zd_targsrc_curs_Next(target_zd_targsrc_curs &curs) _
 // func:acr_ed.FTarget.zd_targsrc_curs.Access
 inline acr_ed::FTargsrc& target_zd_targsrc_curs_Access(target_zd_targsrc_curs &curs) __attribute__((nothrow));
 // func:acr_ed.FTarget..Uninit
-void                 FTarget_Uninit(acr_ed::FTarget& target) __attribute__((nothrow));
+void                 FTarget_Uninit(acr_ed::FTarget& parent) __attribute__((nothrow));
 
 // --- acr_ed.FTargsrc
 // create: acr_ed.FDb.targsrc (Lary)
@@ -2565,19 +2565,19 @@ void                 targsrc_CopyOut(acr_ed::FTargsrc &row, dev::Targsrc &out) _
 void                 targsrc_CopyIn(acr_ed::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:acr_ed.FTargsrc.target.Get
-algo::strptr         target_Get(acr_ed::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(acr_ed::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FTargsrc.src.Get
-algo::strptr         src_Get(acr_ed::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(acr_ed::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FTargsrc.ext.Get
-algo::strptr         ext_Get(acr_ed::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(acr_ed::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr_ed.FTargsrc..Init
-inline void          FTargsrc_Init(acr_ed::FTargsrc& targsrc);
+inline void          FTargsrc_Init(acr_ed::FTargsrc& parent);
 // func:acr_ed.FTargsrc..Uninit
-void                 FTargsrc_Uninit(acr_ed::FTargsrc& targsrc) __attribute__((nothrow));
+void                 FTargsrc_Uninit(acr_ed::FTargsrc& parent) __attribute__((nothrow));
 
 // --- acr_ed.FTypefld
 // create: acr_ed.FDb.typefld (Lary)
@@ -2608,10 +2608,10 @@ void                 typefld_CopyOut(acr_ed::FTypefld &row, dmmeta::Typefld &out
 void                 typefld_CopyIn(acr_ed::FTypefld &row, dmmeta::Typefld &in) __attribute__((nothrow));
 
 // func:acr_ed.FTypefld.ctype.Get
-algo::strptr         ctype_Get(acr_ed::FTypefld& typefld) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(acr_ed::FTypefld& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:acr_ed.FTypefld..Uninit
-void                 FTypefld_Uninit(acr_ed::FTypefld& typefld) __attribute__((nothrow));
+void                 FTypefld_Uninit(acr_ed::FTypefld& parent) __attribute__((nothrow));
 
 // --- acr_ed.FieldId
 #pragma pack(push,1)

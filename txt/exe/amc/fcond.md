@@ -28,7 +28,7 @@ because that is the part a reader has to be able to follow.
 ### The record
 <a href="#the-record"></a>
 
-```
+```ssim
 dmmeta.fcond  fcond:atf_amc.FCondtest.state/run  ins:atf_amc.FDb.zd_condtest_run  via:""  rem:Y  comment:""
 ```
 
@@ -124,7 +124,7 @@ the conditions it can report, as `amcdb.tcond` records keyed
 `<tclass>.<name>` — the same shape as the `amcdb.tfunc` records that
 declare the functions a tclass generates:
 
-```
+```ssim
 amcdb.tcond  tcond:Fbuf.ready  comment:"the buffer has work: bytes to write out, or a message to read"
 amcdb.tcond  tcond:Fbuf.eof    comment:"the buffer reached end of life: no more data will ever pass through it"
 amcdb.tcond  tcond:Fbuf.space  comment:"a congested out buffer drained past its low-water mark"
@@ -135,7 +135,7 @@ responsibility is: fcond owns the membership — which index, through
 which pointer, removed on the falling edge or not — while the tclass
 owns when the condition flips.
 
-```
+```ssim
 dmmeta.fcond  fcond:<ns>.FConn.out/ready  ins:<ns>.FDb.cd_conn_outflow  via:""  rem:Y  comment:""
 dmmeta.fcond  fcond:<ns>.FConn.out/space  ins:<ns>.FDb.cd_session_space  via:<ns>.FConn.p_session  rem:N  comment:""
 ```
@@ -200,7 +200,7 @@ record with a state field (fconsts `idle`, `run`, `done`) that must
 sit on a rotation while running, a bool `ready` that arms a work
 queue, and a `done` state that parks the record's parent:
 
-```
+```ssim
 dmmeta.fcond  fcond:atf_amc.FCondtest.state/idle  ins:atf_amc.FDb.zd_condtest_idle   via:""  rem:Y  comment:"mirror of the default value: membership starts at birth"
 dmmeta.fcond  fcond:atf_amc.FCondtest.state/run   ins:atf_amc.FDb.zd_condtest_run    via:""  rem:Y  comment:"mirror: on the list iff running"
 dmmeta.fcond  fcond:atf_amc.FCondtest.state/done  ins:atf_amc.FDb.zd_condpar_done    via:atf_amc.FCondtest.p_parent  rem:Y  comment:"via mirror: parent listed while child done"

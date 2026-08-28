@@ -8,7 +8,7 @@ the element bit-width to find the right element, then
 manipulates a single bit within it.  No extra storage is added
 — the underlying integer storage *is* the bit vector.
 
-```
+```ssim
 dmmeta.field      field:atf_amc.Bitset.fld64  arg:u64  reftype:Val  dflt:""  comment:""
   dmmeta.fbitset  field:atf_amc.Bitset.fld64
 ```
@@ -153,7 +153,7 @@ Source: `cpp/amc/bitset.cpp`.
 
 A 64-bit bool array packed into a single `u64`:
 
-```
+```ssim
 dmmeta.ctype  ctype:net.IfaceFlags
   dmmeta.field  field:net.IfaceFlags.bits  arg:u64  reftype:Val
     dmmeta.fbitset  field:net.IfaceFlags.bits
@@ -170,7 +170,7 @@ ind_beg(net::IfaceFlags_bits_bitcurs, idx, fl) {
 
 A growable bitset on a `Tary<u8>`:
 
-```
+```ssim
 dmmeta.ctype  ctype:algo_lib.Bitset
   dmmeta.field  field:algo_lib.Bitset.ary  arg:u8  reftype:Tary
     dmmeta.fbitset  field:algo_lib.Bitset.ary

@@ -33,19 +33,19 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
 #include "include/gen/lib_amcdb_gen.inl.h"
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 ssimfilt::FDb    ssimfilt::_db;     // dependency found via dev.targdep
 
 namespace ssimfilt { // gen:ns_print_proto
@@ -825,7 +825,6 @@ void ssimfilt::FDb_Init() {
 
 // --- ssimfilt.FDb..Uninit
 void ssimfilt::FDb_Uninit() {
-    ssimfilt::FDb &row = _db; (void)row;
 
     // ssimfilt.FDb.ind_unstablefld.Uninit (Thash)  //
     // skip destruction of ind_unstablefld in global scope
@@ -858,9 +857,8 @@ void ssimfilt::unstablefld_CopyIn(ssimfilt::FUnstablefld &row, dev::Unstablefld 
 }
 
 // --- ssimfilt.FUnstablefld..Uninit
-void ssimfilt::FUnstablefld_Uninit(ssimfilt::FUnstablefld& unstablefld) {
-    ssimfilt::FUnstablefld &row = unstablefld; (void)row;
-    ind_unstablefld_Remove(row); // remove unstablefld from index ind_unstablefld
+void ssimfilt::FUnstablefld_Uninit(ssimfilt::FUnstablefld& parent) {
+    ind_unstablefld_Remove(parent); // remove unstablefld from index ind_unstablefld
 }
 
 // --- ssimfilt.FieldId.value.ToCstr
@@ -941,14 +939,14 @@ void ssimfilt::FieldId_Print(ssimfilt::FieldId row, algo::cstring& str) {
 
 // --- ssimfilt.KVRegx.key.Print
 // Print back to string
-void ssimfilt::key_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) {
-    Regx_Print(matchfield.key, out);
+void ssimfilt::key_Print(ssimfilt::KVRegx& parent, algo::cstring &out) {
+    Regx_Print(parent.key, out);
 }
 
 // --- ssimfilt.KVRegx.value.Print
 // Print back to string
-void ssimfilt::value_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) {
-    Regx_Print(matchfield.value, out);
+void ssimfilt::value_Print(ssimfilt::KVRegx& parent, algo::cstring &out) {
+    Regx_Print(parent.value, out);
 }
 
 // --- ssimfilt.TableId.value.ToCstr
@@ -1044,9 +1042,9 @@ void ssimfilt::StaticCheck() {
 // --- ssimfilt...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ctype::FDb_Init();
+        lib_json::FDb_Init();
         ssimfilt::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -1063,9 +1061,9 @@ int main(int argc, char **argv) {
     }
     try {
         ssimfilt::FDb_Uninit();
+        lib_json::FDb_Uninit();
         lib_ctype::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

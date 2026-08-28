@@ -510,7 +510,7 @@ void fm::Description_Print(fm::Description& row, algo::cstring& str) {
 
 // --- fm.AlarmMsg.base.CopyOut
 // Copy fields out of row
-void fm::parent_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) {
+void fm::alarm_msg_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter

@@ -468,9 +468,9 @@ inline ssim2csv::FFlatten& ssim2csv::_db_flatten_curs_Access(_db_flatten_curs &c
 
 // --- ssim2csv.FExpand..Init
 // Set all fields to initial values.
-inline void ssim2csv::FExpand_Init(ssim2csv::FExpand& expand) {
-    expand.ind_expand_next = (ssim2csv::FExpand*)-1; // (ssim2csv.FDb.ind_expand) not-in-hash
-    expand.ind_expand_hashval = 0; // stored hash value
+inline void ssim2csv::FExpand_Init(ssim2csv::FExpand& parent) {
+    parent.ind_expand_next = (ssim2csv::FExpand*)-1; // (ssim2csv.FDb.ind_expand) not-in-hash
+    parent.ind_expand_hashval = 0; // stored hash value
 }
 
 // --- ssim2csv.FExpand..Ctor
@@ -489,9 +489,9 @@ inline  ssim2csv::FFlatten::FFlatten() {
 
 // --- ssim2csv.FOutfile..Init
 // Set all fields to initial values.
-inline void ssim2csv::FOutfile_Init(ssim2csv::FOutfile& outfile) {
-    outfile.ind_outfile_next = (ssim2csv::FOutfile*)-1; // (ssim2csv.FDb.ind_outfile) not-in-hash
-    outfile.ind_outfile_hashval = 0; // stored hash value
+inline void ssim2csv::FOutfile_Init(ssim2csv::FOutfile& parent) {
+    parent.ind_outfile_next = (ssim2csv::FOutfile*)-1; // (ssim2csv.FDb.ind_outfile) not-in-hash
+    parent.ind_outfile_hashval = 0; // stored hash value
 }
 
 // --- ssim2csv.FOutfile..Ctor

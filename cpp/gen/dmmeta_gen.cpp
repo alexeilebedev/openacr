@@ -66,9 +66,10 @@ const char *dmmeta_Fbufdir_fbufdir_in    = "in";
 const char *dmmeta_Fbufdir_fbufdir_out   = "out";
 
 // compile-time string constants for dmmeta.Fbuftype.fbuftype
-const char *dmmeta_Fbuftype_fbuftype_Bytebuf   = "Bytebuf";
-const char *dmmeta_Fbuftype_fbuftype_Linebuf   = "Linebuf";
-const char *dmmeta_Fbuftype_fbuftype_Msgbuf    = "Msgbuf";
+const char *dmmeta_Fbuftype_fbuftype_Bytebuf    = "Bytebuf";
+const char *dmmeta_Fbuftype_fbuftype_Dgrambuf   = "Dgrambuf";
+const char *dmmeta_Fbuftype_fbuftype_Linebuf    = "Linebuf";
+const char *dmmeta_Fbuftype_fbuftype_Msgbuf     = "Msgbuf";
 
 // compile-time string constants for dmmeta.Hashtype.hashtype
 const char *dmmeta_Hashtype_hashtype_Extern   = "Extern";
@@ -112,6 +113,7 @@ const char *dmmeta_Ns_ns_bash2html      = "bash2html";
 const char *dmmeta_Ns_ns_command        = "command";
 const char *dmmeta_Ns_ns_dev            = "dev";
 const char *dmmeta_Ns_ns_dmmeta         = "dmmeta";
+const char *dmmeta_Ns_ns_doc            = "doc";
 const char *dmmeta_Ns_ns_fm             = "fm";
 const char *dmmeta_Ns_ns_gcache         = "gcache";
 const char *dmmeta_Ns_ns_http           = "http";
@@ -259,6 +261,7 @@ const char *dmmeta_Ssimfile_ssimfile_atfdb_tfilt                 = "atfdb.tfilt"
 const char *dmmeta_Ssimfile_ssimfile_atfdb_tifilt                = "atfdb.tifilt";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_unittest              = "atfdb.unittest";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_unstableattr          = "atfdb.unstableattr";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_unstableline          = "atfdb.unstableline";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_var                   = "atfdb.var";
 const char *dmmeta_Ssimfile_ssimfile_dev_arch                    = "dev.arch";
 const char *dmmeta_Ssimfile_ssimfile_dev_badline                 = "dev.badline";
@@ -270,6 +273,7 @@ const char *dmmeta_Ssimfile_ssimfile_dev_covfile                 = "dev.covfile"
 const char *dmmeta_Ssimfile_ssimfile_dev_covline                 = "dev.covline";
 const char *dmmeta_Ssimfile_ssimfile_dev_covtarget               = "dev.covtarget";
 const char *dmmeta_Ssimfile_ssimfile_dev_dbgtarget               = "dev.dbgtarget";
+const char *dmmeta_Ssimfile_ssimfile_dev_docpage                 = "dev.docpage";
 const char *dmmeta_Ssimfile_ssimfile_dev_edaction                = "dev.edaction";
 const char *dmmeta_Ssimfile_ssimfile_dev_edacttype               = "dev.edacttype";
 const char *dmmeta_Ssimfile_ssimfile_dev_gitfile                 = "dev.gitfile";
@@ -287,11 +291,11 @@ const char *dmmeta_Ssimfile_ssimfile_dev_noindent         = "dev.noindent";
 const char *dmmeta_Ssimfile_ssimfile_dev_opt_type         = "dev.opt_type";
 const char *dmmeta_Ssimfile_ssimfile_dev_package          = "dev.package";
 const char *dmmeta_Ssimfile_ssimfile_dev_pkgdep           = "dev.pkgdep";
+const char *dmmeta_Ssimfile_ssimfile_dev_pkgdeptype       = "dev.pkgdeptype";
 const char *dmmeta_Ssimfile_ssimfile_dev_pkggen           = "dev.pkggen";
 const char *dmmeta_Ssimfile_ssimfile_dev_pkgkey           = "dev.pkgkey";
 const char *dmmeta_Ssimfile_ssimfile_dev_prototransport   = "dev.prototransport";
 const char *dmmeta_Ssimfile_ssimfile_dev_readmefile       = "dev.readmefile";
-const char *dmmeta_Ssimfile_ssimfile_dev_readmesort       = "dev.readmesort";
 const char *dmmeta_Ssimfile_ssimfile_dev_rpm              = "dev.rpm";
 const char *dmmeta_Ssimfile_ssimfile_dev_sandbox          = "dev.sandbox";
 
@@ -2597,7 +2601,7 @@ bool dmmeta::Dispsig_ReadFieldMaybe(dmmeta::Dispsig& parent, algo::strptr field,
             retval = false;
         } break;
         case dmmeta_FieldId_signature: {
-            retval = algo::Sha1sig_ReadStrptrMaybe(parent.signature, strval);
+            retval = algo::Signature_ReadStrptrMaybe(parent.signature, strval);
         } break;
         default: {
             retval = false;
@@ -2632,7 +2636,7 @@ void dmmeta::Dispsig_Print(dmmeta::Dispsig& row, algo::cstring& str) {
     algo::Smallstr50_Print(row.dispsig, temp);
     PrintAttrSpaceReset(str,"dispsig", temp);
 
-    algo::Sha1sig_Print(row.signature, temp);
+    algo::Signature_Print(row.signature, temp);
     PrintAttrSpaceReset(str,"signature", temp);
 }
 
@@ -2646,7 +2650,7 @@ bool dmmeta::Dispsigcheck_ReadFieldMaybe(dmmeta::Dispsigcheck& parent, algo::str
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dispsig, strval);
         } break;
         case dmmeta_FieldId_signature: {
-            retval = algo::Sha1sig_ReadStrptrMaybe(parent.signature, strval);
+            retval = algo::Signature_ReadStrptrMaybe(parent.signature, strval);
         } break;
         default: {
             retval = false;
@@ -2681,7 +2685,7 @@ void dmmeta::Dispsigcheck_Print(dmmeta::Dispsigcheck& row, algo::cstring& str) {
     algo::Smallstr50_Print(row.dispsig, temp);
     PrintAttrSpaceReset(str,"dispsig", temp);
 
-    algo::Sha1sig_Print(row.signature, temp);
+    algo::Signature_Print(row.signature, temp);
     PrintAttrSpaceReset(str,"signature", temp);
 }
 
@@ -4797,6 +4801,8 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_msg            : ret = "msg";  break;
         case dmmeta_FieldId_bigend         : ret = "bigend";  break;
         case dmmeta_FieldId_varlen         : ret = "varlen";  break;
+        case dmmeta_FieldId_strtype        : ret = "strtype";  break;
+        case dmmeta_FieldId_pad            : ret = "pad";  break;
         case dmmeta_FieldId_xref           : ret = "xref";  break;
         case dmmeta_FieldId_nstype         : ret = "nstype";  break;
         case dmmeta_FieldId_license        : ret = "license";  break;
@@ -4840,8 +4846,6 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_hasalloc       : ret = "hasalloc";  break;
         case dmmeta_FieldId_inst           : ret = "inst";  break;
         case dmmeta_FieldId_length         : ret = "length";  break;
-        case dmmeta_FieldId_strtype        : ret = "strtype";  break;
-        case dmmeta_FieldId_pad            : ret = "pad";  break;
         case dmmeta_FieldId_ssimns         : ret = "ssimns";  break;
         case dmmeta_FieldId_ssimreq        : ret = "ssimreq";  break;
         case dmmeta_FieldId_parent         : ret = "parent";  break;
@@ -7968,6 +7972,12 @@ bool dmmeta::Msgfield_ReadFieldMaybe(dmmeta::Msgfield& parent, algo::strptr fiel
         case dmmeta_FieldId_varlen: {
             retval = bool_ReadStrptrMaybe(parent.varlen, strval);
         } break;
+        case dmmeta_FieldId_strtype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.strtype, strval);
+        } break;
+        case dmmeta_FieldId_pad: {
+            retval = algo::Smallstr10_ReadStrptrMaybe(parent.pad, strval);
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -7994,6 +8004,15 @@ bool dmmeta::Msgfield_ReadStrptrMaybe(dmmeta::Msgfield &parent, algo::strptr in_
     return retval;
 }
 
+// --- dmmeta.Msgfield..Init
+// Set all fields to initial values.
+void dmmeta::Msgfield_Init(dmmeta::Msgfield& parent) {
+    parent.offset = i32(0);
+    parent.width = i32(0);
+    parent.bigend = bool(false);
+    parent.varlen = bool(false);
+}
+
 // --- dmmeta.Msgfield..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Msgfield.String  printfmt:Tuple
@@ -8018,6 +8037,12 @@ void dmmeta::Msgfield_Print(dmmeta::Msgfield& row, algo::cstring& str) {
 
     bool_Print(row.varlen, temp);
     PrintAttrSpaceReset(str,"varlen", temp);
+
+    algo::Smallstr50_Print(row.strtype, temp);
+    PrintAttrSpaceReset(str,"strtype", temp);
+
+    algo::Smallstr10_Print(row.pad, temp);
+    PrintAttrSpaceReset(str,"pad", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

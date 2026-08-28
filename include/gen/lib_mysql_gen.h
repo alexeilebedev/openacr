@@ -181,13 +181,13 @@ struct Res { // lib_mysql.Res
 // User-defined cleanup function invoked for field res of lib_mysql::Res
 // func:lib_mysql.Res.res.Cleanup
 // this function is 'extrn' and implemented by user
-void                 res_Cleanup(lib_mysql::Res& res) __attribute__((nothrow));
+void                 res_Cleanup(lib_mysql::Res& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:lib_mysql.Res..Init
-inline void          Res_Init(lib_mysql::Res& res);
+inline void          Res_Init(lib_mysql::Res& parent);
 // func:lib_mysql.Res..Uninit
-inline void          Res_Uninit(lib_mysql::Res& res) __attribute__((nothrow));
+inline void          Res_Uninit(lib_mysql::Res& parent) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_mysql { // gen:ns_func
 // func:lib_mysql...StaticCheck

@@ -190,11 +190,6 @@ void acr_ed::edaction_Create_Target() {
     }
     acr_ed::RegisterFile(Subst(R,"txt/$nstype/$target/README.md"), "");
 
-    // create gen file
-    if (is_exe) {
-        acr_ed::RegisterFile(Subst(R,"txt/gen/$target/$target.md"), "");
-    }
-
     // update headers
     {
         command::src_hdr src_hdr;
@@ -287,19 +282,6 @@ void acr_ed::edaction_Rename_Target() {
         Ins(&R, script2, "sed -i 's/namespace $oldtarg/namespace $newtarg/g' $newsrc");
     }ind_end;
     acr_ed::_db.script << script2;
-
-    if (ns->nstype == dmmeta_Nstype_nstype_exe) {
-        Ins(&R, acr_ed::_db.script, "mkdir -p txt/gen/$newtarg");
-        Ins(&R, acr_ed::_db.script, "git mv txt/gen/$oldtarg/$oldtarg.md txt/gen/$newtarg/$newtarg.md");
-        {
-            command::acr acr;
-            acr.query << "gitfile:txt/gen/$oldtarg/$oldtarg.md";
-            acr.rename << "txt/gen/$newtarg/$newtarg.md";
-            acr.write = true;
-            acr.report = false;
-            Ins(&R, acr_ed::_db.script, acr_ToCmdline(acr));
-        }
-    }
 
     if (ns->nstype == dmmeta_Nstype_nstype_exe) {
         Ins(&R, acr_ed::_db.script, "ln -sf ../build/release/$newtarg bin/$oldtarg");

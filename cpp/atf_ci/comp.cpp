@@ -349,7 +349,13 @@ void atf_ci::citest_acr_ed_target() {
 // -----------------------------------------------------------------------------
 
 // Runs in sandbox
-void atf_ci::citest_abt_md_after_ssimfile_is_added() {
+//
+// A table created now is listed by its namespace's page, and nothing was regenerated to
+// make that true: the list comes from dmmeta.ssimfile when the page is asked for, so the
+// page is right the moment the row exists.  The check that used to stand here asked
+// whether abt_md had written a markdown file per table and named it in a directory
+// README, which is the arrangement this replaced.
+void atf_ci::citest_doc_after_ssimfile_is_added() {
     // create a new ssimfile
     {
         command::acr_ed_proc acr_ed;
@@ -359,12 +365,7 @@ void atf_ci::citest_abt_md_after_ssimfile_is_added() {
         acr_ed_ExecX(acr_ed);
     }
 
-    // run abt_md to produce xyz.md and add it into README.md
-    command::abt_md_proc abt_md;
-    abt_md.cmd.readmefile.expr = "txt/ssimdb/dev/%";
-    abt_md_ExecX(abt_md);
-
-    vrfy_(SysCmd("grep 'dev.xyz' txt/ssimdb/dev/README.md")==0);
+    vrfy_(SysCmd("bin/doc txt/ssimdb/dev -pager:N -color:N -width:100 | grep 'dev.xyz'")==0);
 }
 
 void atf_ci::citest_apm() {

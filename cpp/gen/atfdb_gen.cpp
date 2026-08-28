@@ -507,6 +507,7 @@ const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
         case atfdb_FieldId_unittest        : ret = "unittest";  break;
         case atfdb_FieldId_ns              : ret = "ns";  break;
         case atfdb_FieldId_unstableattr    : ret = "unstableattr";  break;
+        case atfdb_FieldId_unstableline    : ret = "unstableline";  break;
         case atfdb_FieldId_var             : ret = "var";  break;
     }
     return ret;
@@ -686,6 +687,7 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('u','n','s','t','a','b','l','e'): {
                     if (memcmp(rhs.elems+8,"attr",4)==0) { value_SetEnum(parent,atfdb_FieldId_unstableattr); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"line",4)==0) { value_SetEnum(parent,atfdb_FieldId_unstableline); ret = true; break; }
                     break;
                 }
             }
@@ -1307,6 +1309,55 @@ void atfdb::Unstableattr_Print(atfdb::Unstableattr& row, algo::cstring& str) {
 
     algo::Smallstr100_Print(row.unstableattr, temp);
     PrintAttrSpaceReset(str,"unstableattr", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- atfdb.Unstableline..ReadFieldMaybe
+bool atfdb::Unstableline_ReadFieldMaybe(atfdb::Unstableline& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atfdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atfdb_FieldId_unstableline: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.unstableline, strval);
+        } break;
+        case atfdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atfdb.Unstableline..ReadStrptrMaybe
+// Read fields of atfdb::Unstableline from an ascii string.
+// The format of the string is an ssim Tuple
+bool atfdb::Unstableline_ReadStrptrMaybe(atfdb::Unstableline &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atfdb.unstableline") || algo::StripTypeTag(in_str, "atfdb.Unstableline");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Unstableline_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atfdb.Unstableline..Print
+// print string representation of ROW to string STR
+// cfmt:atfdb.Unstableline.String  printfmt:Tuple
+void atfdb::Unstableline_Print(atfdb::Unstableline& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atfdb.unstableline";
+
+    algo::Smallstr50_Print(row.unstableline, temp);
+    PrintAttrSpaceReset(str,"unstableline", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

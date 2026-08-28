@@ -1,0 +1,11 @@
+# start acr_dm cmd:"$bindir/acr_dm test/acr_dm/reorder1.ssim test/acr_dm/reorder2.ssim test/acr_dm/nosuchfile.ssim"
+# eof acr_dm
+acr_dm -> acr_dm.mergefail  comment:"no such file: test/acr_dm/nosuchfile.ssim"
+acr_dm -> <<<<<<< test/acr_dm/reorder2.ssim
+acr_dm -> dmmeta.field  field:ns.Alpha.c  arg:i32  reftype:Val  dflt:""  comment:""
+acr_dm -> dmmeta.field  field:ns.Alpha.a  arg:i32  reftype:Val  dflt:""  comment:""
+acr_dm -> dmmeta.field  field:ns.Alpha.b  arg:i32  reftype:Val  dflt:""  comment:""
+acr_dm -> dmmeta.field  field:ns.Beta.x  arg:i32  reftype:Val  dflt:""  comment:""
+acr_dm -> =======
+acr_dm -> >>>>>>> test/acr_dm/nosuchfile.ssim
+# exit acr_dm code:1

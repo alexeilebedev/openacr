@@ -31,8 +31,6 @@
 #include "include/gen/sampdb_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -41,7 +39,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 samp_make::FDb   samp_make::_db;    // dependency found via dev.targdep
 
@@ -1720,7 +1717,6 @@ void samp_make::FDb_Init() {
 
 // --- samp_make.FDb..Uninit
 void samp_make::FDb_Uninit() {
-    samp_make::FDb &row = _db; (void)row;
 
     // samp_make.FDb.c_target.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(_db.c_target_elems, sizeof(samp_make::FTarget*)*_db.c_target_max); // (samp_make.FDb.c_target)
@@ -1771,9 +1767,8 @@ void samp_make::gitfile_CopyIn(samp_make::FGitfile &row, sampdb::Gitfile &in) {
 }
 
 // --- samp_make.FGitfile..Uninit
-void samp_make::FGitfile_Uninit(samp_make::FGitfile& gitfile) {
-    samp_make::FGitfile &row = gitfile; (void)row;
-    ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
+void samp_make::FGitfile_Uninit(samp_make::FGitfile& parent) {
+    ind_gitfile_Remove(parent); // remove gitfile from index ind_gitfile
 }
 
 // --- samp_make.FTargdep.base.CopyOut
@@ -1795,22 +1790,21 @@ void samp_make::targdep_CopyIn(samp_make::FTargdep &row, sampdb::Targdep &in) {
 }
 
 // --- samp_make.FTargdep.target.Get
-algo::strptr samp_make::target_Get(samp_make::FTargdep& targdep) {
-    return algo::Pathcomp(targdep.targdep, ".LL");
+algo::strptr samp_make::target_Get(samp_make::FTargdep& parent) {
+    return algo::Pathcomp(parent.targdep, ".LL");
 }
 
 // --- samp_make.FTargdep.parent.Get
-algo::strptr samp_make::parent_Get(samp_make::FTargdep& targdep) {
-    return algo::Pathcomp(targdep.targdep, ".LR");
+algo::strptr samp_make::parent_Get(samp_make::FTargdep& parent) {
+    return algo::Pathcomp(parent.targdep, ".LR");
 }
 
 // --- samp_make.FTargdep..Uninit
-void samp_make::FTargdep_Uninit(samp_make::FTargdep& targdep) {
-    samp_make::FTargdep &row = targdep; (void)row;
-    ind_targdep_Remove(row); // remove targdep from index ind_targdep
-    samp_make::FTarget* p_target = samp_make::ind_target_Find(target_Get(row));
+void samp_make::FTargdep_Uninit(samp_make::FTargdep& parent) {
+    ind_targdep_Remove(parent); // remove targdep from index ind_targdep
+    samp_make::FTarget* p_target = samp_make::ind_target_Find(target_Get(parent));
     if (p_target)  {
-        c_targdep_Remove(*p_target, row);// remove targdep from index c_targdep
+        c_targdep_Remove(*p_target, parent);// remove targdep from index c_targdep
     }
 }
 
@@ -1833,11 +1827,11 @@ void samp_make::target_CopyIn(samp_make::FTarget &row, sampdb::Target &in) {
 // --- samp_make.FTarget.c_targsrc.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void samp_make::c_targsrc_Insert(samp_make::FTarget& target, samp_make::FTargsrc& row) {
+void samp_make::c_targsrc_Insert(samp_make::FTarget& parent, samp_make::FTargsrc& row) {
     if (!row.target_c_targsrc_in_ary) {
-        c_targsrc_Reserve(target, 1);
-        u64 n  = target.c_targsrc_n++;
-        target.c_targsrc_elems[n] = &row;
+        c_targsrc_Reserve(parent, 1);
+        u64 n  = parent.c_targsrc_n++;
+        parent.c_targsrc_elems[n] = &row;
         row.target_c_targsrc_in_ary = true;
     }
 }
@@ -1846,18 +1840,18 @@ void samp_make::c_targsrc_Insert(samp_make::FTarget& target, samp_make::FTargsrc
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool samp_make::c_targsrc_InsertMaybe(samp_make::FTarget& target, samp_make::FTargsrc& row) {
+bool samp_make::c_targsrc_InsertMaybe(samp_make::FTarget& parent, samp_make::FTargsrc& row) {
     bool retval = !target_c_targsrc_InAryQ(row);
-    c_targsrc_Insert(target,row); // check is performed in _Insert again
+    c_targsrc_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- samp_make.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void samp_make::c_targsrc_Remove(samp_make::FTarget& target, samp_make::FTargsrc& row) {
-    i64 n = target.c_targsrc_n;
+void samp_make::c_targsrc_Remove(samp_make::FTarget& parent, samp_make::FTargsrc& row) {
+    i64 n = parent.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
-        samp_make::FTargsrc* *elems = target.c_targsrc_elems;
+        samp_make::FTargsrc* *elems = parent.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -1866,7 +1860,7 @@ void samp_make::c_targsrc_Remove(samp_make::FTarget& target, samp_make::FTargsrc
                 i64 j = i + 1;
                 size_t nbytes = sizeof(samp_make::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targsrc_n = n - 1;
+                parent.c_targsrc_n = n - 1;
                 break;
             }
         }
@@ -1875,29 +1869,29 @@ void samp_make::c_targsrc_Remove(samp_make::FTarget& target, samp_make::FTargsrc
 
 // --- samp_make.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void samp_make::c_targsrc_Reserve(samp_make::FTarget& target, u64 n) {
-    u64 old_max = target.c_targsrc_max;
-    if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targsrc_n + n), 4);
+void samp_make::c_targsrc_Reserve(samp_make::FTarget& parent, u64 n) {
+    u64 old_max = parent.c_targsrc_max;
+    if (UNLIKELY(parent.c_targsrc_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_targsrc_n + n), 4);
         u64 old_size = old_max * sizeof(samp_make::FTargsrc*);
         u64 new_size = new_max * sizeof(samp_make::FTargsrc*);
-        void *new_mem = algo_lib::malloc_ReallocMem(target.c_targsrc_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_targsrc_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("samp_make.out_of_memory  field:samp_make.FTarget.c_targsrc");
         }
-        target.c_targsrc_elems = (samp_make::FTargsrc**)new_mem;
-        target.c_targsrc_max = new_max;
+        parent.c_targsrc_elems = (samp_make::FTargsrc**)new_mem;
+        parent.c_targsrc_max = new_max;
     }
 }
 
 // --- samp_make.FTarget.c_targdep.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void samp_make::c_targdep_Insert(samp_make::FTarget& target, samp_make::FTargdep& row) {
+void samp_make::c_targdep_Insert(samp_make::FTarget& parent, samp_make::FTargdep& row) {
     if (!row.target_c_targdep_in_ary) {
-        c_targdep_Reserve(target, 1);
-        u64 n  = target.c_targdep_n++;
-        target.c_targdep_elems[n] = &row;
+        c_targdep_Reserve(parent, 1);
+        u64 n  = parent.c_targdep_n++;
+        parent.c_targdep_elems[n] = &row;
         row.target_c_targdep_in_ary = true;
     }
 }
@@ -1906,18 +1900,18 @@ void samp_make::c_targdep_Insert(samp_make::FTarget& target, samp_make::FTargdep
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool samp_make::c_targdep_InsertMaybe(samp_make::FTarget& target, samp_make::FTargdep& row) {
+bool samp_make::c_targdep_InsertMaybe(samp_make::FTarget& parent, samp_make::FTargdep& row) {
     bool retval = !target_c_targdep_InAryQ(row);
-    c_targdep_Insert(target,row); // check is performed in _Insert again
+    c_targdep_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- samp_make.FTarget.c_targdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void samp_make::c_targdep_Remove(samp_make::FTarget& target, samp_make::FTargdep& row) {
-    i64 n = target.c_targdep_n;
+void samp_make::c_targdep_Remove(samp_make::FTarget& parent, samp_make::FTargdep& row) {
+    i64 n = parent.c_targdep_n;
     if (bool_Update(row.target_c_targdep_in_ary,false)) {
-        samp_make::FTargdep* *elems = target.c_targdep_elems;
+        samp_make::FTargdep* *elems = parent.c_targdep_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -1926,7 +1920,7 @@ void samp_make::c_targdep_Remove(samp_make::FTarget& target, samp_make::FTargdep
                 i64 j = i + 1;
                 size_t nbytes = sizeof(samp_make::FTargdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targdep_n = n - 1;
+                parent.c_targdep_n = n - 1;
                 break;
             }
         }
@@ -1935,48 +1929,47 @@ void samp_make::c_targdep_Remove(samp_make::FTarget& target, samp_make::FTargdep
 
 // --- samp_make.FTarget.c_targdep.Reserve
 // Reserve space in index for N more elements;
-void samp_make::c_targdep_Reserve(samp_make::FTarget& target, u64 n) {
-    u64 old_max = target.c_targdep_max;
-    if (UNLIKELY(target.c_targdep_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, target.c_targdep_n + n), 4);
+void samp_make::c_targdep_Reserve(samp_make::FTarget& parent, u64 n) {
+    u64 old_max = parent.c_targdep_max;
+    if (UNLIKELY(parent.c_targdep_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_targdep_n + n), 4);
         u64 old_size = old_max * sizeof(samp_make::FTargdep*);
         u64 new_size = new_max * sizeof(samp_make::FTargdep*);
-        void *new_mem = algo_lib::malloc_ReallocMem(target.c_targdep_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_targdep_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("samp_make.out_of_memory  field:samp_make.FTarget.c_targdep");
         }
-        target.c_targdep_elems = (samp_make::FTargdep**)new_mem;
-        target.c_targdep_max = new_max;
+        parent.c_targdep_elems = (samp_make::FTargdep**)new_mem;
+        parent.c_targdep_max = new_max;
     }
 }
 
 // --- samp_make.FTarget..Init
 // Set all fields to initial values.
-void samp_make::FTarget_Init(samp_make::FTarget& target) {
-    target.dflt = bool(false);
-    target.select = bool(false);
-    target.c_targsrc_elems = NULL; // (samp_make.FTarget.c_targsrc)
-    target.c_targsrc_n = 0; // (samp_make.FTarget.c_targsrc)
-    target.c_targsrc_max = 0; // (samp_make.FTarget.c_targsrc)
-    target.c_targdep_elems = NULL; // (samp_make.FTarget.c_targdep)
-    target.c_targdep_n = 0; // (samp_make.FTarget.c_targdep)
-    target.c_targdep_max = 0; // (samp_make.FTarget.c_targdep)
-    target.c_targrec = NULL;
-    target.c_target_in_ary = bool(false);
-    target.ind_target_next = (samp_make::FTarget*)-1; // (samp_make.FDb.ind_target) not-in-hash
-    target.ind_target_hashval = 0; // stored hash value
+void samp_make::FTarget_Init(samp_make::FTarget& parent) {
+    parent.dflt = bool(false);
+    parent.select = bool(false);
+    parent.c_targsrc_elems = NULL; // (samp_make.FTarget.c_targsrc)
+    parent.c_targsrc_n = 0; // (samp_make.FTarget.c_targsrc)
+    parent.c_targsrc_max = 0; // (samp_make.FTarget.c_targsrc)
+    parent.c_targdep_elems = NULL; // (samp_make.FTarget.c_targdep)
+    parent.c_targdep_n = 0; // (samp_make.FTarget.c_targdep)
+    parent.c_targdep_max = 0; // (samp_make.FTarget.c_targdep)
+    parent.c_targrec = NULL;
+    parent.c_target_in_ary = bool(false);
+    parent.ind_target_next = (samp_make::FTarget*)-1; // (samp_make.FDb.ind_target) not-in-hash
+    parent.ind_target_hashval = 0; // stored hash value
 }
 
 // --- samp_make.FTarget..Uninit
-void samp_make::FTarget_Uninit(samp_make::FTarget& target) {
-    samp_make::FTarget &row = target; (void)row;
-    ind_target_Remove(row); // remove target from index ind_target
+void samp_make::FTarget_Uninit(samp_make::FTarget& parent) {
+    ind_target_Remove(parent); // remove target from index ind_target
 
     // samp_make.FTarget.c_targdep.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(target.c_targdep_elems, sizeof(samp_make::FTargdep*)*target.c_targdep_max); // (samp_make.FTarget.c_targdep)
+    algo_lib::malloc_FreeMem(parent.c_targdep_elems, sizeof(samp_make::FTargdep*)*parent.c_targdep_max); // (samp_make.FTarget.c_targdep)
 
     // samp_make.FTarget.c_targsrc.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(target.c_targsrc_elems, sizeof(samp_make::FTargsrc*)*target.c_targsrc_max); // (samp_make.FTarget.c_targsrc)
+    algo_lib::malloc_FreeMem(parent.c_targsrc_elems, sizeof(samp_make::FTargsrc*)*parent.c_targsrc_max); // (samp_make.FTarget.c_targsrc)
 }
 
 // --- samp_make.FTargrec.base.CopyOut
@@ -1996,12 +1989,11 @@ void samp_make::targrec_CopyIn(samp_make::FTargrec &row, sampdb::Targrec &in) {
 }
 
 // --- samp_make.FTargrec..Uninit
-void samp_make::FTargrec_Uninit(samp_make::FTargrec& targrec) {
-    samp_make::FTargrec &row = targrec; (void)row;
-    ind_targrec_Remove(row); // remove targrec from index ind_targrec
-    samp_make::FTarget* p_target = samp_make::ind_target_Find(row.target);
+void samp_make::FTargrec_Uninit(samp_make::FTargrec& parent) {
+    ind_targrec_Remove(parent); // remove targrec from index ind_targrec
+    samp_make::FTarget* p_target = samp_make::ind_target_Find(parent.target);
     if (p_target)  {
-        c_targrec_Remove(*p_target, row);// remove targrec from index c_targrec
+        c_targrec_Remove(*p_target, parent);// remove targrec from index c_targrec
     }
 }
 
@@ -2024,22 +2016,21 @@ void samp_make::targsrc_CopyIn(samp_make::FTargsrc &row, sampdb::Targsrc &in) {
 }
 
 // --- samp_make.FTargsrc.target.Get
-algo::strptr samp_make::target_Get(samp_make::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LL");
+algo::strptr samp_make::target_Get(samp_make::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LL");
 }
 
 // --- samp_make.FTargsrc.src.Get
-algo::strptr samp_make::src_Get(samp_make::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LR");
+algo::strptr samp_make::src_Get(samp_make::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LR");
 }
 
 // --- samp_make.FTargsrc..Uninit
-void samp_make::FTargsrc_Uninit(samp_make::FTargsrc& targsrc) {
-    samp_make::FTargsrc &row = targsrc; (void)row;
-    ind_targsrc_Remove(row); // remove targsrc from index ind_targsrc
-    samp_make::FTarget* p_target = samp_make::ind_target_Find(target_Get(row));
+void samp_make::FTargsrc_Uninit(samp_make::FTargsrc& parent) {
+    ind_targsrc_Remove(parent); // remove targsrc from index ind_targsrc
+    samp_make::FTarget* p_target = samp_make::ind_target_Find(target_Get(parent));
     if (p_target)  {
-        c_targsrc_Remove(*p_target, row);// remove targsrc from index c_targsrc
+        c_targsrc_Remove(*p_target, parent);// remove targsrc from index c_targsrc
     }
 }
 
@@ -2241,7 +2232,6 @@ void samp_make::StaticCheck() {
 // --- samp_make...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         samp_make::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -2260,7 +2250,6 @@ int main(int argc, char **argv) {
     try {
         samp_make::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

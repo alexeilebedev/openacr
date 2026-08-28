@@ -24,6 +24,34 @@ Packages can have dependencies, as described in the `dev.pkgdep` table.
 When installing a package, its dependencies are installed as well. When removing a package, its dependent packages
 are removed as part of the transaction.
 
+Each dependency also names *how* the two packages stand to each other, through
+`dev.pkgdeptype`:
+
+|`pkgdeptype`|Meaning|
+|---|---|
+|`contain`|The parent distributes this package, so the parent's content covers it.|
+|`extend`|This package builds on the parent without shipping in it, so the parent's content excludes whatever this package captures.|
+|`require`|This package needs the parent built first, and neither one's content touches the other's.|
+
+`extend` is what keeps a downstream tree out of an upstream distribution. A
+package that declares itself an extension of a base is not published as part of
+that base, and that holds without the base's definition listing the downstream
+package's namespaces one by one. The exclusion follows from the relation, and
+the records follow from whatever the extending package claims.
+
+Two rules decide the edges. A record a package **names outright** -- a pkgkey
+with no pattern in its value, such as `dev.netproto:https` -- stays with that
+package even when an extender's reference closure reaches it; a blanket like
+`dev.%:%` does not override the relation. And the subtraction runs after every
+package has been evaluated, because packages are evaluated parents first and an
+extender's records do not exist yet while its parent is being built.
+
+`apm -check` reports a namespace claimed by both a package and one of its
+extenders as `apm.doubleclaim`. That is a modelling error rather than a
+preference: one of the two packages does not own the namespace, and until it is
+settled the extender's claim quietly removes the parent's records from the
+distribution.
+
 Logically, ssimfiles are just collections of set elements. Thus, one ssimfile may contain records from
 different packages, as determined by `pkgkey` table.
 `apm` takes care of merging changes made to ssimfiles, reducing merge conflicts to a minimum.
@@ -31,27 +59,9 @@ different packages, as determined by `pkgkey` table.
 Apm doesn't require the two projects to have any common history; All that's required is the gitref
 in the package repo corresponding to the last synchronization point.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Limitations](#limitations)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Package definition](#package-definition)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Merge conflicts](#merge-conflicts)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sandboxes](#sandboxes)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [apm - Internals](/txt/exe/apm/internals.md)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [apm - Internals](/txt/gen/apm/apm.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 apm: Algo Package Manager
 Usage: apm [[-package:]<regx>] [options]
     OPTION       TYPE    DFLT    COMMENT
@@ -109,7 +119,7 @@ x
 #### -install -- Install new package (specify -origin)
 <a href="#-install"></a>
 
-```
+```bash
 apm <packagename> -install
 git commit -m <message>
 ```
@@ -122,7 +132,7 @@ with `soft:Y`, meaning that updating given package should not entail updating al
 #### -update -- Update new package (-origin)
 <a href="#-update"></a>
 
-```
+```bash
 apm <packagename> -update
 git commit -m <message>
 ```
@@ -133,7 +143,7 @@ in `pkgdep` table.
 #### -diff -- Diff package with respect to installed version
 <a href="#-diff"></a>
 
-```
+```bash
 apm <packagename> -diff [-R]
 ```
 
@@ -144,7 +154,7 @@ The options `-showrec`, `-showfile` can be used to constrain the shown differenc
 #### -remove -- Remove specified package
 <a href="#-remove"></a>
 
-```
+```bash
 apm <packagename> -remove
 git commit -m <message>
 ```
@@ -159,18 +169,31 @@ Example:
 Print all records comprising the package. For files, `gitfile` record is printed.
 With `-t` option, any records from dependent packages are included as well.
 
-```
+```bash
 apm <packagename> -showrec
 ```
 
 #### -reset -- Reset package baseref/origin to those provided by the command line
 <a href="#-reset"></a>
 
-The reset command can be used to change the dev.package record to
-update the package origin URL or the baseref. Use with caution.
+The reset command changes the `dev.package` record, so that a package can be
+pointed at a different origin, or declared to match a different version of it.
+Use with caution: the baseref is what every later merge is computed against,
+and moving it declares a synchronization that may not have happened.
 
-```
+```bash
 apm <packagename> -reset [-origin <URL>] [-ref <baseref>]
+```
+
+`-ref` is resolved against the origin before it is stored, and the commit it
+resolves to is what lands in the record. So `-ref:HEAD` records the origin's
+current commit rather than the word `HEAD`, which is how the baseref is set
+after a push has been committed on the far side:
+
+```bash
+apm <packagename> -push -origin:<dir>
+(cd <dir> && git commit -m "...")
+apm <packagename> -reset -ref:HEAD -origin:<URL>
 ```
 
 #### -checkclean -- Ensure that changes are applied to a clean directory
@@ -198,7 +221,7 @@ Show `git diff --stat` -like output when used with `-diff`.
 Apm can read a file with ssim tuples and annotate each tuple with the names of packages to which
 this tuple belongs.
 Example:
-```
+```bash
 acr ctype:command.xyz -t | apm -annotate
 ...
 ```
@@ -208,7 +231,17 @@ acr ctype:command.xyz -t | apm -annotate
 
 A package is defined by the `dev.package` record. The record specifies package name, git commit
 corresponding to the base version of the package. The ref DOES NOT refer to the git history
-of the current repo, it refers to the history of the ORIGIN's repo. The table `dev.pkgkey` specifies
+of the current repo, it refers to the history of the ORIGIN's repo.
+
+That commit is fetched by bringing the origin's heads into `refs/apm/<package>/`
+and resolving the ref there. Fetching the commit id on its own does not work:
+a refspec is matched by name against the refs the origin advertises, and a
+commit id is not one of them.
+
+The `origin` and `baseref` fields describe where this repo stands with respect
+to the package, so they are meaningless in any other repo. When `-push` sends
+the package's own `dev.package` record to the origin, it rewrites those two
+fields to `.` and `HEAD` -- what a publisher says about a package it defines. The table `dev.pkgkey` specifies
 which files and records are part of the package.
 
 You can define a new package by manually creating these records, then commit the changes. Use "." for origin,
@@ -268,7 +301,7 @@ to be a conflict.
 ### Sandboxes
 <a href="#sandboxes"></a>
 
-apm uses [sandboxes](/txt/ssimdb/dev/sandbox.md) to hold intermediate state.
+apm uses [sandboxes](/txt/ssimdb/dev/README.md) to hold intermediate state.
 The new package is always fetched into the `apm-theirs` sandbox, and the common ancestor is instantiated
 in `apm-base` sandbox.
 
@@ -363,7 +396,8 @@ when evaluating package contents on the remote side.
 <a href="#-reset"></a>
 
 This option updates the local `package` record with values provided in
-`-ref` and `-origin`.
+`-ref` and `-origin`. The ref is resolved against the origin first, so the
+record ends up holding a commit id.
 
 #### -checkclean -- Ensure that changes are applied to a clean directory
 <a href="#-checkclean"></a>
@@ -387,7 +421,7 @@ before proceeding.
 This option is used for package definitions. With it, you can check packages any given ssim record
 belongs to. The argument is the file to read, `-` for stdin.
 
-```
+```bash
 $ acr gitfile:README.md | apm -annotate -
 dev.gitfile  gitfile:README.md  pkgkey:openacr/dev.%:%  pkgkey:openacr/dev.gitfile:README.md
 ```
@@ -403,33 +437,3 @@ To check files, simply use the `gitfile` table.
 
 #### -binpath -- (internal use)
 <a href="#-binpath"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`apm` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dev.package](/txt/ssimdb/dev/package.md)|OpenACR package|
-|[dev.pkgdep](/txt/ssimdb/dev/pkgdep.md)|OpenACR Package dependency|
-|[dev.pkgkey](/txt/ssimdb/dev/pkgkey.md)|Keys belonging to the OpenACR package|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
-|[dmmeta.ssimsort](/txt/ssimdb/dmmeta/ssimsort.md)|Define sort order for ssimfile|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|

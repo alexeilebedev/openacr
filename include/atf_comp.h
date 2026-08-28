@@ -469,6 +469,42 @@ namespace atf_comp { // update-hdr
     // time.
     // void comptest_acr_dm_Symmetry(); // gstatic/atfdb.comptest:acr_dm.Symmetry
 
+    // Upstream moved ns.Alpha.c to the front of its ctype and the branch appended
+    // ns.Beta.y, which are edits to two different parts of the file and have to survive
+    // together.  A row's position inside its ctype is the member order of a generated
+    // struct, so a merge that hands back the base file's order gives the branch a struct
+    // upstream never asked for and no gate objects: the schema is consistent with itself,
+    // and only upstream's own copy says otherwise.  So c comes first here, and the rebase
+    // -- the same three files with ours and theirs swapped -- produces the same file.
+    // void comptest_acr_dm_Reorder(); // gstatic/atfdb.comptest:acr_dm.Reorder
+
+    // Both files move ns.C.b, one after ns.C.c and the other after ns.C.d, which is two
+    // files changing one thing to two different values -- a conflict, the same as it would
+    // be for an attribute.  The two sides of the marker block are the same row twice,
+    // because the text of a row carries no trace of where it sits, so the line above the
+    // block names the two positions that disagreed.
+    // A conflict still leaves the row somewhere, and the rebase -- the same files with ours
+    // and theirs swapped -- has to leave it in the same place, which is why the two
+    // positions are ordered by key rather than by the file that claimed one first.  The
+    // marker labels do name the file in each slot, and those do swap, so the comparison is
+    // of everything else.
+    // void comptest_acr_dm_MoveConflict(); // gstatic/atfdb.comptest:acr_dm.MoveConflict
+
+    // A line that names no row belongs to the row below it, which is what apm writes above
+    // each dev.gitfile row of its manifest: a checksum of the file that row names.  Held
+    // that way, the line merges as the row's own text -- ours changes the checksum above
+    // cpp/two.cpp, theirs adds cpp/new.cpp with a checksum of its own, and both survive
+    // with each comment still above its row.  The last line belongs to no row at all, and
+    // a file's tail comes out after every row there is.
+    // void comptest_acr_dm_Comment(); // gstatic/atfdb.comptest:acr_dm.Comment
+
+    // The third file is not there, and a file that is not there would otherwise read as a
+    // file with no rows in it: the merge would report that theirs deleted every row, write
+    // an empty result, and exit zero.  What comes out instead is both of the files that do
+    // exist, whole, between markers, which is the shape of every failure the driver cannot
+    // merge past.
+    // void comptest_acr_dm_MergeFail(); // gstatic/atfdb.comptest:acr_dm.MergeFail
+
     // -------------------------------------------------------------------
     // cpp/atf_comp/acr_ed.cpp
     //
@@ -479,6 +515,18 @@ namespace atf_comp { // update-hdr
     // void comptest_acr_ed_CreateSsimfile(); // gstatic/atfdb.comptest:acr_ed.CreateSsimfile
     // void comptest_acr_ed_CreateSsimfileBadNs(); // gstatic/atfdb.comptest:acr_ed.CreateSsimfileBadNs
     // void comptest_acr_ed_CreateTarget(); // gstatic/atfdb.comptest:acr_ed.CreateTarget
+
+    // A field delete drops the schema row and then rewrites the ssimfile that held
+    // the field's values.  A field on an in-memory ctype has no such file, so the
+    // second invocation emits the delete alone.
+    // void comptest_acr_ed_DelField(); // gstatic/atfdb.comptest:acr_ed.DelField
+
+    // A field rename resolves a bare new name against the field's own ctype, and
+    // refuses the two spellings that cannot mean what they look like: a query
+    // prefix, and a new ctype whose old rows would keep a column no field claims.
+    // Between two in-memory ctypes there is no such column, so the move goes
+    // through.
+    // void comptest_acr_ed_RenameField(); // gstatic/atfdb.comptest:acr_ed.RenameField
 
     // -------------------------------------------------------------------
     // cpp/atf_comp/acr_in.cpp
@@ -2033,6 +2081,8 @@ namespace atf_comp { // update-hdr
     // -------------------------------------------------------------------
     // cpp/atf_comp/atf_comp.cpp
     //
+
+    // Run every selected comptest and report how many passed.
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // main:atf_comp
 
@@ -2272,8 +2322,17 @@ namespace atf_comp { // update-hdr
     // react to their own broken pipes.
     void ProcWrite(atf_comp::FProc &proc, strptr msg);
 
+    // Send SIGNAL to the process group PROC leads, and report whether a live process
+    // received it.  The one place that decides which pid a comptest's processes are
+    // reached by, and usable from a signal handler because kill is its only call.
+    bool ProcSignal(atf_comp::FProc &proc, int signal);
+
+    // Send SIGNAL to every process group this run created.
+    void ProcSignalAll(int signal);
+
     // Send SIGNAL to the process group PROC leads, which holds the shell the
-    // command runs under together with any tool that shell forked.
+    // command runs under together with any tool that shell forked.  Records the kill
+    // so ProcWait reports the status as -1 rather than an exit code.
     void ProcKill(atf_comp::FProc &proc, int signal);
 
     // Close process stdin (signal EOF)

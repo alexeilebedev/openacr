@@ -130,7 +130,7 @@ of rows is also a declarative dispatch table.
 This is how amc's own gen pipeline works
 (`amcdb.gen` is a gstatic in `amc.FDb`):
 
-```
+```ssim
 amcdb.gen  gen:prep_signature  perns:N  comment:"..."
 amcdb.gen  gen:select_ns       perns:N  comment:"..."
 ...
@@ -253,7 +253,7 @@ Dispatch is O(1) per line.
 
 A namespace with finputs, foutput, and a gstatic:
 
-```
+```ssim
 dmmeta.ns        ns:myapp  nstype:exe
 dmmeta.ctype     ctype:myapp.FDb
 

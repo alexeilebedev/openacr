@@ -474,91 +474,91 @@ void                 syscmd_CopyIn(lib_exec::FSyscmd &row, dev::Syscmd &in) __at
 
 // func:lib_exec.FSyscmd.execkey.Get
 // this function is 'extrn' and implemented by user
-i64                  execkey_Get(lib_exec::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow));
+i64                  execkey_Get(lib_exec::FSyscmd& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:lib_exec.FSyscmd.c_prior.EmptyQ
-inline bool          c_prior_EmptyQ(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
+inline bool          c_prior_EmptyQ(lib_exec::FSyscmd& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:lib_exec.FSyscmd.c_prior.Find
-inline lib_exec::FSyscmddep* c_prior_Find(lib_exec::FSyscmd& syscmd, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline lib_exec::FSyscmddep* c_prior_Find(lib_exec::FSyscmd& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:lib_exec.FSyscmd.c_prior.Getary
-inline algo::aryptr<lib_exec::FSyscmddep*> c_prior_Getary(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
+inline algo::aryptr<lib_exec::FSyscmddep*> c_prior_Getary(lib_exec::FSyscmd& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:lib_exec.FSyscmd.c_prior.Insert
-void                 c_prior_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
+void                 c_prior_Insert(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:lib_exec.FSyscmd.c_prior.InsertMaybe
-bool                 c_prior_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
+bool                 c_prior_InsertMaybe(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:lib_exec.FSyscmd.c_prior.N
-inline i64           c_prior_N(const lib_exec::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_prior_N(const lib_exec::FSyscmd& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:lib_exec.FSyscmd.c_prior.Remove
-void                 c_prior_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
+void                 c_prior_Remove(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:lib_exec.FSyscmd.c_prior.RemoveAll
-inline void          c_prior_RemoveAll(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
+inline void          c_prior_RemoveAll(lib_exec::FSyscmd& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:lib_exec.FSyscmd.c_prior.Reserve
-void                 c_prior_Reserve(lib_exec::FSyscmd& syscmd, u64 n) __attribute__((nothrow));
+void                 c_prior_Reserve(lib_exec::FSyscmd& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:lib_exec.FSyscmd.c_prior.qFind
-inline lib_exec::FSyscmddep& c_prior_qFind(lib_exec::FSyscmd& syscmd, u64 idx) __attribute__((nothrow));
+inline lib_exec::FSyscmddep& c_prior_qFind(lib_exec::FSyscmd& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:lib_exec.FSyscmd.c_prior.InAryQ
 inline bool          syscmd_c_prior_InAryQ(lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:lib_exec.FSyscmd.c_prior.qLast
-inline lib_exec::FSyscmddep& c_prior_qLast(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
+inline lib_exec::FSyscmddep& c_prior_qLast(lib_exec::FSyscmd& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:lib_exec.FSyscmd.c_next.EmptyQ
-inline bool          c_next_EmptyQ(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
+inline bool          c_next_EmptyQ(lib_exec::FSyscmd& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:lib_exec.FSyscmd.c_next.Find
-inline lib_exec::FSyscmddep* c_next_Find(lib_exec::FSyscmd& syscmd, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline lib_exec::FSyscmddep* c_next_Find(lib_exec::FSyscmd& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:lib_exec.FSyscmd.c_next.Getary
-inline algo::aryptr<lib_exec::FSyscmddep*> c_next_Getary(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
+inline algo::aryptr<lib_exec::FSyscmddep*> c_next_Getary(lib_exec::FSyscmd& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:lib_exec.FSyscmd.c_next.Insert
-void                 c_next_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
+void                 c_next_Insert(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:lib_exec.FSyscmd.c_next.InsertMaybe
-bool                 c_next_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
+bool                 c_next_InsertMaybe(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:lib_exec.FSyscmd.c_next.N
-inline i64           c_next_N(const lib_exec::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_next_N(const lib_exec::FSyscmd& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:lib_exec.FSyscmd.c_next.Remove
-void                 c_next_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
+void                 c_next_Remove(lib_exec::FSyscmd& parent, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:lib_exec.FSyscmd.c_next.RemoveAll
-inline void          c_next_RemoveAll(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
+inline void          c_next_RemoveAll(lib_exec::FSyscmd& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:lib_exec.FSyscmd.c_next.Reserve
-void                 c_next_Reserve(lib_exec::FSyscmd& syscmd, u64 n) __attribute__((nothrow));
+void                 c_next_Reserve(lib_exec::FSyscmd& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:lib_exec.FSyscmd.c_next.qFind
-inline lib_exec::FSyscmddep& c_next_qFind(lib_exec::FSyscmd& syscmd, u64 idx) __attribute__((nothrow));
+inline lib_exec::FSyscmddep& c_next_qFind(lib_exec::FSyscmd& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:lib_exec.FSyscmd.c_next.InAryQ
 inline bool          syscmd_c_next_InAryQ(lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:lib_exec.FSyscmd.c_next.qLast
-inline lib_exec::FSyscmddep& c_next_qLast(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
+inline lib_exec::FSyscmddep& c_next_qLast(lib_exec::FSyscmd& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:lib_exec.FSyscmd..Init
-void                 FSyscmd_Init(lib_exec::FSyscmd& syscmd);
+void                 FSyscmd_Init(lib_exec::FSyscmd& parent);
 // func:lib_exec.FSyscmd.c_prior_curs.Reset
 inline void          syscmd_c_prior_curs_Reset(syscmd_c_prior_curs &curs, lib_exec::FSyscmd &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -582,7 +582,7 @@ inline void          syscmd_c_next_curs_Next(syscmd_c_next_curs &curs) __attribu
 // func:lib_exec.FSyscmd.c_next_curs.Access
 inline lib_exec::FSyscmddep& syscmd_c_next_curs_Access(syscmd_c_next_curs &curs) __attribute__((nothrow));
 // func:lib_exec.FSyscmd..Uninit
-void                 FSyscmd_Uninit(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
+void                 FSyscmd_Uninit(lib_exec::FSyscmd& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:lib_exec.FSyscmd.String  printfmt:Tuple
 // func:lib_exec.FSyscmd..Print
@@ -627,9 +627,9 @@ void                 syscmddep_CopyIn(lib_exec::FSyscmddep &row, dev::Syscmddep 
 
 // Set all fields to initial values.
 // func:lib_exec.FSyscmddep..Init
-inline void          FSyscmddep_Init(lib_exec::FSyscmddep& syscmddep);
+inline void          FSyscmddep_Init(lib_exec::FSyscmddep& parent);
 // func:lib_exec.FSyscmddep..Uninit
-void                 FSyscmddep_Uninit(lib_exec::FSyscmddep& syscmddep) __attribute__((nothrow));
+void                 FSyscmddep_Uninit(lib_exec::FSyscmddep& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:lib_exec.FSyscmddep.String  printfmt:Tuple
 // func:lib_exec.FSyscmddep..Print

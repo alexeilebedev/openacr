@@ -519,7 +519,17 @@ namespace algo { // update-hdr
     // Read Decimal from string
     // bool Decimal_ReadStrptrMaybe(algo::Decimal &parent, algo::strptr in_str); // cfmt:algo.Decimal.String
 
-    // Convert Decimal to double
+    // Convert Decimal to double.  PARENT is printed and the text parsed back, so the
+    // answer is whatever this tree's own parser makes of that decimal.
+    //
+    // The obvious form, mantissa times pow(10, exponent), is a second and
+    // disagreeing definition of what a decimal means.  No power of ten above 10^22
+    // is representable in a double, so pow answers with whatever accuracy its libm
+    // has for a large integral exponent, while the parser builds its scale by
+    // repeated multiplication -- two roundings that need not land on the same
+    // double.  On 10^-63 the two are 2.7e-16 apart under glibc and further apart
+    // under Apple's libm, which is a difference in the platform rather than in the
+    // number.  Printing and parsing leaves one definition, and it is the parser's.
     double Decimal_GetDouble(algo::Decimal parent);
 
     // Convert double to Decimal
@@ -802,6 +812,37 @@ namespace algo { // update-hdr
     // this function will return string "y", not "temp/y"), use GetFullPath for
     // full service
     tempstr ReadLink(strptr path);
+
+    // Cores this process may actually run on, which is not always what the machine
+    // has.
+    //
+    // A container, a cpuset or a taskset narrows the set a process is allowed to use,
+    // and a decision about whether the work fits the hardware has to be made against
+    // what the process may use rather than against what lscpu reports -- a caller that
+    // read the machine's total would size itself for eight cores while pinned to two.
+    // So the affinity mask is the reading, and the machine's online count is the
+    // fallback for a kernel that refuses it.  The mask is a Linux facility, and
+    // `cpu_set_t` exists nowhere else, so on every other system the online count is
+    // the whole answer.
+    i32 GetNcore();
+
+    // Return the path of the binary this process is running, symlinks resolved.
+    // The answer is empty only where the kernel refuses to say.
+    //
+    // A tool that re-executes itself, or that looks for a sibling beside itself,
+    // needs the file it is really running rather than the word it was started with.
+    // The two differ in every ordinary invocation: `atf_unit` found on PATH gives an
+    // argv[0] of "atf_unit", a name with no directory in it that exec cannot resolve
+    // on its own, and `bin/atf_unit` gives a path to a symlink into a build tree
+    // rather than to the binary the link points at.  A process that re-executes
+    // argv[0] therefore fails outright in the first case, and a process that looks
+    // beside argv[0] searches the wrong directory in the second.
+    //
+    // Linux answers through /proc/self/exe, which is a link the kernel resolves for
+    // the caller.  Darwin has no /proc and answers through _NSGetExecutablePath,
+    // which returns the path as given, so that one is resolved here.  argv[0]
+    // remains the last resort, and it is the answer on a system with neither.
+    tempstr GetExePath();
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/fmt.cpp -- Print to string / Read from string
@@ -1147,8 +1188,16 @@ namespace algo { // update-hdr
 
     // print binary octet string as hex
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Sha1sig_Print(algo::Sha1sig &sha1sig, algo::cstring &out); // cfmt:algo.Sha1sig.String
-    // bool Sha1sig_ReadStrptrMaybe(algo::Sha1sig &sha1sig, algo::strptr str); // cfmt:algo.Sha1sig.String
+    // void Signature_Print(algo::Signature &signature, algo::cstring &out); // cfmt:algo.Signature.String
+
+    // TRUE when SIGNATURE is the zero digest, which is what an absent signature
+    // reads as: a message whose sender filled none in, or a binary carrying no such
+    // dispatch.  Absence and disagreement are different answers -- a party that
+    // states no signature is making no claim -- so every comparison that may face an
+    // unstated one asks this first.
+    bool NullSignatureQ(const algo::Signature &signature);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // bool Signature_ReadStrptrMaybe(algo::Signature &signature, algo::strptr str); // cfmt:algo.Signature.String
 
     // Return length of valid UTF-8 sequence starting at position POS in string S.
     // Returns 0 if the byte at POS is not a valid UTF-8 lead byte or if the
@@ -1372,6 +1421,12 @@ namespace algo { // update-hdr
     // Return success value. Errno provides more info.
     bool LockAllMemory();
     void SetupExitSignals(bool sigint = true);
+
+    // Install HANDLER for SIGTERM, SIGINT and SIGHUP, with all three masked while it
+    // runs so a repeat signal cannot re-enter it.  Use it where the process must
+    // release children or shared memory before exiting, rather than die on the
+    // default disposition with nothing unwound.
+    void SetupTeardownSignal(void (*handler)(int));
     const tempstr GetHostname();
     const tempstr GetDomainname();
 
@@ -1546,6 +1601,14 @@ namespace algo { // update-hdr
     // SubstringIndex("a.b.c", '.', -2) -> "b.c"
     // SubstringIndex("a.b.c", '.', -3) -> "a.b.c"
     strptr SubstringIndex(strptr str, char c, i64 idx);
+
+    // Find the first occurrence of T in S at or after FROM, and return its index,
+    // or -1 when T is not there or is empty.
+    // The case-sensitive search steps position by position with memchr on T's
+    // first character, so the positions where T cannot begin are skipped by a
+    // vector instruction rather than visited by the loop.  That matters because a
+    // full comparison is only worth starting where the first character already
+    // agrees, and on ordinary text that is a small fraction of the positions.
     i64 FindFrom(strptr s, strptr t, i64 from, bool case_sensitive);
     i64 FindFrom(strptr s, strptr t, i64 from);
     i64 FindFrom(strptr s, char c, i64 from);
@@ -2254,6 +2317,23 @@ namespace algo_lib { // update-hdr
     // the first executable file that's found is the result.
     void ResolveExecFname(algo::cstring &fname);
 
+    // Close every descriptor above stderr, leaving an exec'd program its three
+    // standard streams and nothing else.  Call this in the child, after the fork
+    // and before the exec.
+    //
+    // A command that inherits a descriptor holds what the descriptor holds for as
+    // long as it runs, without knowing it: a listening socket keeps its port
+    // bound, an unlinked file keeps its blocks, a lock keeps its holder alive.  A
+    // gateway's port outliving the gateway and reappearing as "address already in
+    // use" under an unrelated process name is this leak read from the far end.
+    // The child inherits whatever the parent had open, so the close belongs in one
+    // place rather than at each parent that happens to hold something.
+    //
+    // close_range does it in one syscall and skips no descriptor; walking the
+    // table one close at a time stops at the first hole unless it is bounded by
+    // the limit instead, which is what a kernel without the syscall gets.
+    void CloseInheritedFd();
+
     // -------------------------------------------------------------------
     // cpp/lib/algo/fmt.cpp -- Print to string / Read from string
     //
@@ -2308,11 +2388,16 @@ namespace algo_lib { // update-hdr
     // Check signature on incoming data
     // bool dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck); // ffunc:algo_lib.FDb.dispsigcheck.InputMaybe
 
-    // Signature of dispatch DISPSIG as this binary was compiled with, empty when the
-    // binary carries no such dispatch.  Every executable loads its own namespace's
-    // rows into this table at startup, so the answer is a fact about the running
-    // program and not about any data it has read.
-    tempstr GetDispsig(algo::strptr dispsig);
+    // Signature of dispatch DISPSIG as this binary was compiled with -- the digest
+    // itself, zero when the binary carries no such dispatch.  Every executable loads
+    // its own namespace's rows into this table at startup, so the answer is a fact
+    // about the running program and not about any data it has read.
+    //
+    // The digest is what a comparison wants and what a binary protocol carries, so
+    // it is what this returns; the 40-character hex form is a rendering of it, which
+    // `tempstr() << GetDispsig(...)` produces where a reader or a text field needs
+    // one.
+    algo::Signature GetDispsig(algo::strptr dispsig);
 
     // Die when parent process dies
     void DieWithParent();
@@ -2464,6 +2549,13 @@ namespace algo_lib { // update-hdr
 
     // Attach mmapfile MMAPFILE to FD.
     // Return success code.
+    //
+    // The mapping is MAP_SHARED, so it tracks the file and a write another handle
+    // makes shows through it.  MAP_PRIVATE would leave that unsaid: the standard
+    // does not decide whether a later write to the file reaches a private mapping,
+    // Linux lets it through and Darwin does not, so the same call would answer two
+    // different things.  Nothing is written through the mapping -- it is PROT_READ
+    // -- so sharing costs nothing and the behavior is the same everywhere.
     bool MmapFile_LoadFd(MmapFile &mmapfile, algo::Fildes fd);
 
     // Attach mmapfile MMAPFILE to FNAME
@@ -2595,6 +2687,11 @@ namespace algo_lib { // update-hdr
     // cpp/lib/algo/replscope.cpp
     //
 
+    // Print SCOPE as the variables it defines, since the trie holding them is a
+    // representation rather than a thing a reader wants to see.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Replscope_Print(algo_lib::Replscope &row, algo::cstring &str); // cfmt:algo_lib.Replscope.String
+
     // Set value of key KEY value VALUE
     // KEY        string to replace
     // VALUE      value to replace it with
@@ -2605,6 +2702,8 @@ namespace algo_lib { // update-hdr
     // This will trigger an error when field.comment contains a $ sign and the substitution fails.
     // Use
     // Set(R, "$var", field.comment, false);
+    // A value with no dollar sign in it substitutes to itself, so the expansion
+    // pass runs only when there is a dollar sign to expand.
     //
     void Set(algo_lib::Replscope &scope, strptr from, strptr to, bool subst = true);
 
@@ -2617,6 +2716,9 @@ namespace algo_lib { // update-hdr
 
     // Perform $-substitutions in TEXT and return new value.
     tempstr Subst(algo_lib::Replscope &scope, strptr text);
+
+    // Forget every variable SCOPE defines, and the storage their values occupy.
+    void Reset(algo_lib::Replscope &scope);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/string.cpp -- cstring functions
@@ -2696,6 +2798,39 @@ namespace algo_lib { // update-hdr
     // combines them.  A caller testing only ENABLED would print through a throttle;
     // one testing only SUPPRESS would print a category nobody asked for.
     inline bool LogcatOnQ(algo_lib::FLogcat &logcat);
+
+    // Tell the memory checker that a pool has just handed the program the SIZE bytes
+    // at MEM, so that the checker accounts for that block from here on and reports it
+    // if the program drops its last pointer to it.  MEM is the address the pool
+    // returned and SIZE the size the caller asked for; a failed allocation passes
+    // NULL, which the checker ignores.  In a build without the annotations the call
+    // is nothing at all, so an allocator carries no trace of it.
+    //
+    // A pool takes one big block from its base pool and carves its records out of it,
+    // so a checker that knows only about the big block sees a single live allocation
+    // no matter which record leaked.  Marking each record moves the accounting to the
+    // granularity the program allocates at, and the stack the checker then reports is
+    // the one that asked for the record.
+    //
+    // The block is marked defined rather than undefined, which is the state pool
+    // memory has anyway: a fresh block from the base pool is zeroed, and a recycled
+    // record still holds whatever was last written into it.  Marking it undefined
+    // would report a field read before anything wrote it, which is a real defect and
+    // a different one from a leak, so it belongs to a change that goes looking for it.
+    inline void MemcheckAlloc(void *mem, u64 size);
+
+    // Tell the memory checker that the block at MEM, SIZE bytes long, is no longer one
+    // the program holds -- either the pool has taken it back, or the pool is about to
+    // carve it into records of its own and will mark those instead.  MEM is the
+    // address a matching MemcheckAlloc marked, SIZE the size it marked; NULL is
+    // ignored.  Nothing at all in a build without the annotations.
+    //
+    // The block stays readable and writable afterwards, and that is what lets the pool
+    // go on using it.  A pool threads its free list through the memory it is not
+    // lending out, so a freed record holds the pointer to the next free one; a checker
+    // told to treat the block as unmapped would report the pool's own bookkeeping as
+    // an invalid write, once per free.
+    inline void MemcheckFree(void *mem, u64 size);
 }
 
 

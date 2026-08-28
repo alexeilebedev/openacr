@@ -123,9 +123,9 @@ void                 ctypelen_CopyIn(src_func::FCtypelen &row, dmmeta::Ctypelen 
 
 // Set all fields to initial values.
 // func:src_func.FCtypelen..Init
-inline void          FCtypelen_Init(src_func::FCtypelen& ctypelen);
+inline void          FCtypelen_Init(src_func::FCtypelen& parent);
 // func:src_func.FCtypelen..Uninit
-void                 FCtypelen_Uninit(src_func::FCtypelen& ctypelen) __attribute__((nothrow));
+void                 FCtypelen_Uninit(src_func::FCtypelen& parent) __attribute__((nothrow));
 
 // --- src_func.trace
 #pragma pack(push,1)
@@ -891,17 +891,17 @@ private:
 };
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:src_func.FFunc.sortkey.Lt
-inline bool          sortkey_Lt(src_func::FFunc& func, src_func::FFunc &rhs) __attribute__((nothrow));
+inline bool          sortkey_Lt(src_func::FFunc& parent, src_func::FFunc &rhs) __attribute__((nothrow));
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
 // func:src_func.FFunc.sortkey.Cmp
-i32                  sortkey_Cmp(src_func::FFunc& func, src_func::FFunc &rhs) __attribute__((nothrow));
+i32                  sortkey_Cmp(src_func::FFunc& parent, src_func::FFunc &rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:src_func.FFunc..Init
-void                 FFunc_Init(src_func::FFunc& func);
+void                 FFunc_Init(src_func::FFunc& parent);
 // func:src_func.FFunc..Uninit
-void                 FFunc_Uninit(src_func::FFunc& func) __attribute__((nothrow));
+void                 FFunc_Uninit(src_func::FFunc& parent) __attribute__((nothrow));
 
 // --- src_func.FGenaffix
 // create: src_func.FDb.genaffix (Lary)
@@ -927,9 +927,9 @@ private:
 };
 // Set all fields to initial values.
 // func:src_func.FGenaffix..Init
-inline void          FGenaffix_Init(src_func::FGenaffix& genaffix);
+inline void          FGenaffix_Init(src_func::FGenaffix& parent);
 // func:src_func.FGenaffix..Uninit
-void                 FGenaffix_Uninit(src_func::FGenaffix& genaffix) __attribute__((nothrow));
+void                 FGenaffix_Uninit(src_func::FGenaffix& parent) __attribute__((nothrow));
 
 // --- src_func.FGitfile
 // create: src_func.FDb.gitfile (Lary)
@@ -961,13 +961,13 @@ void                 gitfile_CopyOut(src_func::FGitfile &row, dev::Gitfile &out)
 void                 gitfile_CopyIn(src_func::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
 
 // func:src_func.FGitfile.ext.Get
-algo::strptr         ext_Get(src_func::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(src_func::FGitfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_func.FGitfile..Init
-inline void          FGitfile_Init(src_func::FGitfile& gitfile);
+inline void          FGitfile_Init(src_func::FGitfile& parent);
 // func:src_func.FGitfile..Uninit
-void                 FGitfile_Uninit(src_func::FGitfile& gitfile) __attribute__((nothrow));
+void                 FGitfile_Uninit(src_func::FGitfile& parent) __attribute__((nothrow));
 
 // --- src_func.FTarget
 // create: src_func.FDb.target (Lary)
@@ -1004,22 +1004,22 @@ void                 target_CopyIn(src_func::FTarget &row, dev::Target &in) __at
 
 // Return true if index is empty
 // func:src_func.FTarget.cd_targsrc.EmptyQ
-inline bool          cd_targsrc_EmptyQ(src_func::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          cd_targsrc_EmptyQ(src_func::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:src_func.FTarget.cd_targsrc.First
-inline src_func::FTargsrc* cd_targsrc_First(src_func::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_func::FTargsrc* cd_targsrc_First(src_func::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:src_func.FTarget.cd_targsrc.InLlistQ
 inline bool          target_cd_targsrc_InLlistQ(src_func::FTargsrc& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:src_func.FTarget.cd_targsrc.Insert
-void                 cd_targsrc_Insert(src_func::FTarget& target, src_func::FTargsrc& row) __attribute__((nothrow));
+void                 cd_targsrc_Insert(src_func::FTarget& parent, src_func::FTargsrc& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:src_func.FTarget.cd_targsrc.Last
-inline src_func::FTargsrc* cd_targsrc_Last(src_func::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_func::FTargsrc* cd_targsrc_Last(src_func::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:src_func.FTarget.cd_targsrc.N
-inline i32           cd_targsrc_N(const src_func::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           cd_targsrc_N(const src_func::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:src_func.FTarget.cd_targsrc.Next
 inline src_func::FTargsrc* target_cd_targsrc_Next(src_func::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
@@ -1028,24 +1028,24 @@ inline src_func::FTargsrc* target_cd_targsrc_Next(src_func::FTargsrc &row) __att
 inline src_func::FTargsrc* target_cd_targsrc_Prev(src_func::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_func.FTarget.cd_targsrc.Remove
-void                 cd_targsrc_Remove(src_func::FTarget& target, src_func::FTargsrc& row) __attribute__((nothrow));
+void                 cd_targsrc_Remove(src_func::FTarget& parent, src_func::FTargsrc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:src_func.FTarget.cd_targsrc.RemoveAll
-void                 cd_targsrc_RemoveAll(src_func::FTarget& target) __attribute__((nothrow));
+void                 cd_targsrc_RemoveAll(src_func::FTarget& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:src_func.FTarget.cd_targsrc.RemoveFirst
-src_func::FTargsrc*  cd_targsrc_RemoveFirst(src_func::FTarget& target) __attribute__((nothrow));
+src_func::FTargsrc*  cd_targsrc_RemoveFirst(src_func::FTarget& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
 // func:src_func.FTarget.cd_targsrc.RotateFirst
-src_func::FTargsrc*  cd_targsrc_RotateFirst(src_func::FTarget& target) __attribute__((nothrow));
+src_func::FTargsrc*  cd_targsrc_RotateFirst(src_func::FTarget& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:src_func.FTarget.cd_targsrc.qLast
-inline src_func::FTargsrc& cd_targsrc_qLast(src_func::FTarget& target) __attribute__((__warn_unused_result__, nothrow));
+inline src_func::FTargsrc& cd_targsrc_qLast(src_func::FTarget& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_func.FTarget..Init
-inline void          FTarget_Init(src_func::FTarget& target);
+inline void          FTarget_Init(src_func::FTarget& parent);
 // cursor points to valid item
 // func:src_func.FTarget.cd_targsrc_curs.Reset
 inline void          target_cd_targsrc_curs_Reset(target_cd_targsrc_curs &curs, src_func::FTarget &parent) __attribute__((nothrow));
@@ -1059,7 +1059,7 @@ inline void          target_cd_targsrc_curs_Next(target_cd_targsrc_curs &curs) _
 // func:src_func.FTarget.cd_targsrc_curs.Access
 inline src_func::FTargsrc& target_cd_targsrc_curs_Access(target_cd_targsrc_curs &curs) __attribute__((nothrow));
 // func:src_func.FTarget..Uninit
-void                 FTarget_Uninit(src_func::FTarget& target) __attribute__((nothrow));
+void                 FTarget_Uninit(src_func::FTarget& parent) __attribute__((nothrow));
 
 // --- src_func.FTargsrc
 // create: src_func.FDb.targsrc (Lary)
@@ -1104,32 +1104,32 @@ void                 targsrc_CopyOut(src_func::FTargsrc &row, dev::Targsrc &out)
 void                 targsrc_CopyIn(src_func::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:src_func.FTargsrc.target.Get
-algo::strptr         target_Get(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(src_func::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_func.FTargsrc.src.Get
-algo::strptr         src_Get(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(src_func::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_func.FTargsrc.ext.Get
-algo::strptr         ext_Get(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(src_func::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:src_func.FTargsrc.zd_func.EmptyQ
-inline bool          zd_func_EmptyQ(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_func_EmptyQ(src_func::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:src_func.FTargsrc.zd_func.First
-inline src_func::FFunc* zd_func_First(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_func::FFunc* zd_func_First(src_func::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:src_func.FTargsrc.zd_func.InLlistQ
 inline bool          targsrc_zd_func_InLlistQ(src_func::FFunc& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:src_func.FTargsrc.zd_func.Insert
-void                 zd_func_Insert(src_func::FTargsrc& targsrc, src_func::FFunc& row) __attribute__((nothrow));
+void                 zd_func_Insert(src_func::FTargsrc& parent, src_func::FFunc& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:src_func.FTargsrc.zd_func.Last
-inline src_func::FFunc* zd_func_Last(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_func::FFunc* zd_func_Last(src_func::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:src_func.FTargsrc.zd_func.N
-inline i32           zd_func_N(const src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_func_N(const src_func::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:src_func.FTargsrc.zd_func.Next
 inline src_func::FFunc* targsrc_zd_func_Next(src_func::FFunc &row) __attribute__((__warn_unused_result__, nothrow));
@@ -1138,23 +1138,23 @@ inline src_func::FFunc* targsrc_zd_func_Next(src_func::FFunc &row) __attribute__
 inline src_func::FFunc* targsrc_zd_func_Prev(src_func::FFunc &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_func.FTargsrc.zd_func.Remove
-void                 zd_func_Remove(src_func::FTargsrc& targsrc, src_func::FFunc& row) __attribute__((nothrow));
+void                 zd_func_Remove(src_func::FTargsrc& parent, src_func::FFunc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:src_func.FTargsrc.zd_func.RemoveAll
-void                 zd_func_RemoveAll(src_func::FTargsrc& targsrc) __attribute__((nothrow));
+void                 zd_func_RemoveAll(src_func::FTargsrc& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:src_func.FTargsrc.zd_func.RemoveFirst
-src_func::FFunc*     zd_func_RemoveFirst(src_func::FTargsrc& targsrc) __attribute__((nothrow));
+src_func::FFunc*     zd_func_RemoveFirst(src_func::FTargsrc& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:src_func.FTargsrc.zd_func.qLast
-inline src_func::FFunc& zd_func_qLast(src_func::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+inline src_func::FFunc& zd_func_qLast(src_func::FTargsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:src_func.FTargsrc.zd_func.InsertBefore
-void                 zd_func_InsertBefore(src_func::FTargsrc& targsrc, src_func::FFunc& row, src_func::FFunc* before) __attribute__((nothrow));
+void                 zd_func_InsertBefore(src_func::FTargsrc& parent, src_func::FFunc& row, src_func::FFunc* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:src_func.FTargsrc..Init
-inline void          FTargsrc_Init(src_func::FTargsrc& targsrc);
+inline void          FTargsrc_Init(src_func::FTargsrc& parent);
 // cursor points to valid item
 // func:src_func.FTargsrc.zd_func_curs.Reset
 inline void          targsrc_zd_func_curs_Reset(targsrc_zd_func_curs &curs, src_func::FTargsrc &parent) __attribute__((nothrow));
@@ -1168,7 +1168,7 @@ inline void          targsrc_zd_func_curs_Next(targsrc_zd_func_curs &curs) __att
 // func:src_func.FTargsrc.zd_func_curs.Access
 inline src_func::FFunc& targsrc_zd_func_curs_Access(targsrc_zd_func_curs &curs) __attribute__((nothrow));
 // func:src_func.FTargsrc..Uninit
-void                 FTargsrc_Uninit(src_func::FTargsrc& targsrc) __attribute__((nothrow));
+void                 FTargsrc_Uninit(src_func::FTargsrc& parent) __attribute__((nothrow));
 
 // --- src_func.FUserfunc
 // create: src_func.FDb.userfunc (Lary)
@@ -1214,22 +1214,22 @@ void                 userfunc_CopyIn(src_func::FUserfunc &row, dmmeta::Userfunc 
 
 // Return true if index is empty
 // func:src_func.FUserfunc.zd_func.EmptyQ
-inline bool          zd_func_EmptyQ(src_func::FUserfunc& userfunc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_func_EmptyQ(src_func::FUserfunc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:src_func.FUserfunc.zd_func.First
-inline src_func::FFunc* zd_func_First(src_func::FUserfunc& userfunc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_func::FFunc* zd_func_First(src_func::FUserfunc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:src_func.FUserfunc.zd_func.InLlistQ
 inline bool          userfunc_zd_func_InLlistQ(src_func::FFunc& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:src_func.FUserfunc.zd_func.Insert
-void                 zd_func_Insert(src_func::FUserfunc& userfunc, src_func::FFunc& row) __attribute__((nothrow));
+void                 zd_func_Insert(src_func::FUserfunc& parent, src_func::FFunc& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:src_func.FUserfunc.zd_func.Last
-inline src_func::FFunc* zd_func_Last(src_func::FUserfunc& userfunc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_func::FFunc* zd_func_Last(src_func::FUserfunc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:src_func.FUserfunc.zd_func.N
-inline i32           zd_func_N(const src_func::FUserfunc& userfunc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_func_N(const src_func::FUserfunc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:src_func.FUserfunc.zd_func.Next
 inline src_func::FFunc* userfunc_zd_func_Next(src_func::FFunc &row) __attribute__((__warn_unused_result__, nothrow));
@@ -1238,23 +1238,23 @@ inline src_func::FFunc* userfunc_zd_func_Next(src_func::FFunc &row) __attribute_
 inline src_func::FFunc* userfunc_zd_func_Prev(src_func::FFunc &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_func.FUserfunc.zd_func.Remove
-void                 zd_func_Remove(src_func::FUserfunc& userfunc, src_func::FFunc& row) __attribute__((nothrow));
+void                 zd_func_Remove(src_func::FUserfunc& parent, src_func::FFunc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:src_func.FUserfunc.zd_func.RemoveAll
-void                 zd_func_RemoveAll(src_func::FUserfunc& userfunc) __attribute__((nothrow));
+void                 zd_func_RemoveAll(src_func::FUserfunc& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:src_func.FUserfunc.zd_func.RemoveFirst
-src_func::FFunc*     zd_func_RemoveFirst(src_func::FUserfunc& userfunc) __attribute__((nothrow));
+src_func::FFunc*     zd_func_RemoveFirst(src_func::FUserfunc& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:src_func.FUserfunc.zd_func.qLast
-inline src_func::FFunc& zd_func_qLast(src_func::FUserfunc& userfunc) __attribute__((__warn_unused_result__, nothrow));
+inline src_func::FFunc& zd_func_qLast(src_func::FUserfunc& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:src_func.FUserfunc.zd_func.InsertBefore
-void                 zd_func_InsertBefore(src_func::FUserfunc& userfunc, src_func::FFunc& row, src_func::FFunc* before) __attribute__((nothrow));
+void                 zd_func_InsertBefore(src_func::FUserfunc& parent, src_func::FFunc& row, src_func::FFunc* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:src_func.FUserfunc..Init
-inline void          FUserfunc_Init(src_func::FUserfunc& userfunc);
+inline void          FUserfunc_Init(src_func::FUserfunc& parent);
 // cursor points to valid item
 // func:src_func.FUserfunc.zd_func_curs.Reset
 inline void          userfunc_zd_func_curs_Reset(userfunc_zd_func_curs &curs, src_func::FUserfunc &parent) __attribute__((nothrow));
@@ -1268,7 +1268,7 @@ inline void          userfunc_zd_func_curs_Next(userfunc_zd_func_curs &curs) __a
 // func:src_func.FUserfunc.zd_func_curs.Access
 inline src_func::FFunc& userfunc_zd_func_curs_Access(userfunc_zd_func_curs &curs) __attribute__((nothrow));
 // func:src_func.FUserfunc..Uninit
-void                 FUserfunc_Uninit(src_func::FUserfunc& userfunc) __attribute__((nothrow));
+void                 FUserfunc_Uninit(src_func::FUserfunc& parent) __attribute__((nothrow));
 
 // --- src_func.FieldId
 #pragma pack(push,1)

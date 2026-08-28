@@ -272,6 +272,18 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_pertest_timeout: ret = "pertest_timeout";  break;
         case command_FieldId_check_untracked: ret = "check_untracked";  break;
         case command_FieldId_test          : ret = "test";  break;
+        case command_FieldId_showcmd       : ret = "showcmd";  break;
+        case command_FieldId_vis           : ret = "vis";  break;
+        case command_FieldId_code          : ret = "code";  break;
+        case command_FieldId_width         : ret = "width";  break;
+        case command_FieldId_color         : ret = "color";  break;
+        case command_FieldId_force_color   : ret = "force_color";  break;
+        case command_FieldId_pager         : ret = "pager";  break;
+        case command_FieldId_links         : ret = "links";  break;
+        case command_FieldId_follow        : ret = "follow";  break;
+        case command_FieldId_html          : ret = "html";  break;
+        case command_FieldId_server        : ret = "server";  break;
+        case command_FieldId_bind          : ret = "bind";  break;
         case command_FieldId_stats         : ret = "stats";  break;
         case command_FieldId_enable        : ret = "enable";  break;
         case command_FieldId_disable       : ret = "disable";  break;
@@ -522,6 +534,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('v','i','a'): {
                     value_SetEnum(parent,command_FieldId_via); ret = true; break;
                 }
+                case LE_STR3('v','i','s'): {
+                    value_SetEnum(parent,command_FieldId_vis); ret = true; break;
+                }
                 case LE_STR3('x','n','s'): {
                     value_SetEnum(parent,command_FieldId_xns); ret = true; break;
                 }
@@ -550,6 +565,12 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('b','c','m','d'): {
                     value_SetEnum(parent,command_FieldId_bcmd); ret = true; break;
+                }
+                case LE_STR4('b','i','n','d'): {
+                    value_SetEnum(parent,command_FieldId_bind); ret = true; break;
+                }
+                case LE_STR4('c','o','d','e'): {
+                    value_SetEnum(parent,command_FieldId_code); ret = true; break;
                 }
                 case LE_STR4('d','a','t','a'): {
                     value_SetEnum(parent,command_FieldId_data); ret = true; break;
@@ -598,6 +619,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('h','a','s','h'): {
                     value_SetEnum(parent,command_FieldId_hash); ret = true; break;
+                }
+                case LE_STR4('h','t','m','l'): {
+                    value_SetEnum(parent,command_FieldId_html); ret = true; break;
                 }
                 case LE_STR4('i','f','f','y'): {
                     value_SetEnum(parent,command_FieldId_iffy); ret = true; break;
@@ -724,6 +748,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('c','l','e','a','n'): {
                     value_SetEnum(parent,command_FieldId_clean); ret = true; break;
                 }
+                case LE_STR5('c','o','l','o','r'): {
+                    value_SetEnum(parent,command_FieldId_color); ret = true; break;
+                }
                 case LE_STR5('c','t','y','p','e'): {
                     value_SetEnum(parent,command_FieldId_ctype); ret = true; break;
                 }
@@ -763,6 +790,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('f','s','t','e','p'): {
                     value_SetEnum(parent,command_FieldId_fstep); ret = true; break;
                 }
+                case LE_STR5('l','i','n','k','s'): {
+                    value_SetEnum(parent,command_FieldId_links); ret = true; break;
+                }
                 case LE_STR5('l','o','o','s','e'): {
                     value_SetEnum(parent,command_FieldId_loose); ret = true; break;
                 }
@@ -783,6 +813,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('o','t','h','e','r'): {
                     value_SetEnum(parent,command_FieldId_other); ret = true; break;
+                }
+                case LE_STR5('p','a','g','e','r'): {
+                    value_SetEnum(parent,command_FieldId_pager); ret = true; break;
                 }
                 case LE_STR5('p','o','i','n','t'): {
                     value_SetEnum(parent,command_FieldId_point); ret = true; break;
@@ -828,6 +861,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('w','h','e','r','e'): {
                     value_SetEnum(parent,command_FieldId_where); ret = true; break;
+                }
+                case LE_STR5('w','i','d','t','h'): {
+                    value_SetEnum(parent,command_FieldId_width); ret = true; break;
                 }
                 case LE_STR5('w','r','i','t','e'): {
                     value_SetEnum(parent,command_FieldId_write); ret = true; break;
@@ -884,6 +920,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('f','i','n','p','u','t'): {
                     value_SetEnum(parent,command_FieldId_finput); ret = true; break;
+                }
+                case LE_STR6('f','o','l','l','o','w'): {
+                    value_SetEnum(parent,command_FieldId_follow); ret = true; break;
                 }
                 case LE_STR6('f','o','r','m','a','t'): {
                     value_SetEnum(parent,command_FieldId_format); ret = true; break;
@@ -947,6 +986,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('s','e','l','e','r','r'): {
                     value_SetEnum(parent,command_FieldId_selerr); ret = true; break;
+                }
+                case LE_STR6('s','e','r','v','e','r'): {
+                    value_SetEnum(parent,command_FieldId_server); ret = true; break;
                 }
                 case LE_STR6('s','t','r','i','n','g'): {
                     value_SetEnum(parent,command_FieldId_string); ret = true; break;
@@ -1108,6 +1150,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('s','e','s','s','i','o','n'): {
                     value_SetEnum(parent,command_FieldId_session); ret = true; break;
+                }
+                case LE_STR7('s','h','o','w','c','m','d'): {
+                    value_SetEnum(parent,command_FieldId_showcmd); ret = true; break;
                 }
                 case LE_STR7('s','h','o','w','c','p','p'): {
                     value_SetEnum(parent,command_FieldId_showcpp); ret = true; break;
@@ -1344,6 +1389,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('f','i','l','e','_','p','r','e'): {
                     if (memcmp(rhs.elems+8,"fix",3)==0) { value_SetEnum(parent,command_FieldId_file_prefix); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('f','o','r','c','e','_','c','o'): {
+                    if (memcmp(rhs.elems+8,"lor",3)==0) { value_SetEnum(parent,command_FieldId_force_color); ret = true; break; }
                     break;
                 }
                 case LE_STR8('i','g','n','o','r','e','Q','u'): {
@@ -3074,7 +3123,6 @@ void command::abt_md_proc_Init(command::abt_md_proc& parent) {
 
 // --- command.abt_md_proc..Uninit
 void command::abt_md_proc_Uninit(command::abt_md_proc& parent) {
-    command::abt_md_proc &row = parent; (void)row;
 
     // command.abt_md_proc.abt_md.Uninit (Exec)  //
     abt_md_Kill(parent); // kill child, ensure forward progress
@@ -3429,7 +3477,6 @@ void command::abt_proc_Init(command::abt_proc& parent) {
 
 // --- command.abt_proc..Uninit
 void command::abt_proc_Uninit(command::abt_proc& parent) {
-    command::abt_proc &row = parent; (void)row;
 
     // command.abt_proc.abt.Uninit (Exec)  //
     abt_Kill(parent); // kill child, ensure forward progress
@@ -4102,7 +4149,6 @@ void command::acr_Init(command::acr& parent) {
 
 // --- command.acr..Uninit
 void command::acr_Uninit(command::acr& parent) {
-    command::acr &row = parent; (void)row;
 
     // command.acr.field.Uninit (Tary)  //Fields to select
     // remove all elements from command.acr.field
@@ -5582,7 +5628,6 @@ void command::acr_compl_proc_Init(command::acr_compl_proc& parent) {
 
 // --- command.acr_compl_proc..Uninit
 void command::acr_compl_proc_Uninit(command::acr_compl_proc& parent) {
-    command::acr_compl_proc &row = parent; (void)row;
 
     // command.acr_compl_proc.acr_compl.Uninit (Exec)  //
     acr_compl_Kill(parent); // kill child, ensure forward progress
@@ -5857,7 +5902,6 @@ bool command::acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field,
 
 // --- command.acr_dm..Uninit
 void command::acr_dm_Uninit(command::acr_dm& parent) {
-    command::acr_dm &row = parent; (void)row;
 
     // command.acr_dm.arg.Uninit (Tary)  //Files to merge: older ours theirs...
     // remove all elements from command.acr_dm.arg
@@ -6364,7 +6408,6 @@ void command::acr_dm_proc_Init(command::acr_dm_proc& parent) {
 
 // --- command.acr_dm_proc..Uninit
 void command::acr_dm_proc_Uninit(command::acr_dm_proc& parent) {
-    command::acr_dm_proc &row = parent; (void)row;
 
     // command.acr_dm_proc.acr_dm.Uninit (Exec)  //
     acr_dm_Kill(parent); // kill child, ensure forward progress
@@ -7932,7 +7975,6 @@ void command::acr_ed_proc_Init(command::acr_ed_proc& parent) {
 
 // --- command.acr_ed_proc..Uninit
 void command::acr_ed_proc_Uninit(command::acr_ed_proc& parent) {
-    command::acr_ed_proc &row = parent; (void)row;
 
     // command.acr_ed_proc.acr_ed.Uninit (Exec)  //
     acr_ed_Kill(parent); // kill child, ensure forward progress
@@ -8643,7 +8685,6 @@ void command::acr_in_proc_Init(command::acr_in_proc& parent) {
 
 // --- command.acr_in_proc..Uninit
 void command::acr_in_proc_Uninit(command::acr_in_proc& parent) {
-    command::acr_in_proc &row = parent; (void)row;
 
     // command.acr_in_proc.acr_in.Uninit (Exec)  //
     acr_in_Kill(parent); // kill child, ensure forward progress
@@ -9330,7 +9371,6 @@ void command::acr_my_proc_Init(command::acr_my_proc& parent) {
 
 // --- command.acr_my_proc..Uninit
 void command::acr_my_proc_Uninit(command::acr_my_proc& parent) {
-    command::acr_my_proc &row = parent; (void)row;
 
     // command.acr_my_proc.acr_my.Uninit (Exec)  //
     acr_my_Kill(parent); // kill child, ensure forward progress
@@ -9761,7 +9801,6 @@ void command::acr_proc_Init(command::acr_proc& parent) {
 
 // --- command.acr_proc..Uninit
 void command::acr_proc_Uninit(command::acr_proc& parent) {
-    command::acr_proc &row = parent; (void)row;
 
     // command.acr_proc.acr.Uninit (Exec)  //
     acr_Kill(parent); // kill child, ensure forward progress
@@ -10632,7 +10671,6 @@ void command::amc_gc_proc_Init(command::amc_gc_proc& parent) {
 
 // --- command.amc_gc_proc..Uninit
 void command::amc_gc_proc_Uninit(command::amc_gc_proc& parent) {
-    command::amc_gc_proc &row = parent; (void)row;
 
     // command.amc_gc_proc.amc_gc.Uninit (Exec)  //
     amc_gc_Kill(parent); // kill child, ensure forward progress
@@ -10885,7 +10923,6 @@ void command::amc_proc_Init(command::amc_proc& parent) {
 
 // --- command.amc_proc..Uninit
 void command::amc_proc_Uninit(command::amc_proc& parent) {
-    command::amc_proc &row = parent; (void)row;
 
     // command.amc_proc.amc.Uninit (Exec)  //
     amc_Kill(parent); // kill child, ensure forward progress
@@ -11491,7 +11528,6 @@ void command::amc_vis_proc_Init(command::amc_vis_proc& parent) {
 
 // --- command.amc_vis_proc..Uninit
 void command::amc_vis_proc_Uninit(command::amc_vis_proc& parent) {
-    command::amc_vis_proc &row = parent; (void)row;
 
     // command.amc_vis_proc.amc_vis.Uninit (Exec)  //
     amc_vis_Kill(parent); // kill child, ensure forward progress
@@ -12325,7 +12361,6 @@ void command::ams_sendtest_proc_Init(command::ams_sendtest_proc& parent) {
 
 // --- command.ams_sendtest_proc..Uninit
 void command::ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent) {
-    command::ams_sendtest_proc &row = parent; (void)row;
 
     // command.ams_sendtest_proc.ams_sendtest.Uninit (Exec)  //
     ams_sendtest_Kill(parent); // kill child, ensure forward progress
@@ -13006,7 +13041,6 @@ void command::amsspy_proc_Init(command::amsspy_proc& parent) {
 
 // --- command.amsspy_proc..Uninit
 void command::amsspy_proc_Uninit(command::amsspy_proc& parent) {
-    command::amsspy_proc &row = parent; (void)row;
 
     // command.amsspy_proc.amsspy.Uninit (Exec)  //
     amsspy_Kill(parent); // kill child, ensure forward progress
@@ -14128,7 +14162,6 @@ void command::apm_proc_Init(command::apm_proc& parent) {
 
 // --- command.apm_proc..Uninit
 void command::apm_proc_Uninit(command::apm_proc& parent) {
-    command::apm_proc &row = parent; (void)row;
 
     // command.apm_proc.apm.Uninit (Exec)  //
     apm_Kill(parent); // kill child, ensure forward progress
@@ -14631,7 +14664,6 @@ void command::aqlite_proc_Init(command::aqlite_proc& parent) {
 
 // --- command.aqlite_proc..Uninit
 void command::aqlite_proc_Uninit(command::aqlite_proc& parent) {
-    command::aqlite_proc &row = parent; (void)row;
 
     // command.aqlite_proc.aqlite.Uninit (Exec)  //
     aqlite_Kill(parent); // kill child, ensure forward progress
@@ -15131,7 +15163,6 @@ void command::atf_amc_proc_Init(command::atf_amc_proc& parent) {
 
 // --- command.atf_amc_proc..Uninit
 void command::atf_amc_proc_Uninit(command::atf_amc_proc& parent) {
-    command::atf_amc_proc &row = parent; (void)row;
 
     // command.atf_amc_proc.atf_amc.Uninit (Exec)  //
     atf_amc_Kill(parent); // kill child, ensure forward progress
@@ -15696,7 +15727,6 @@ void command::atf_ci_proc_Init(command::atf_ci_proc& parent) {
 
 // --- command.atf_ci_proc..Uninit
 void command::atf_ci_proc_Uninit(command::atf_ci_proc& parent) {
-    command::atf_ci_proc &row = parent; (void)row;
 
     // command.atf_ci_proc.atf_ci.Uninit (Exec)  //
     atf_ci_Kill(parent); // kill child, ensure forward progress
@@ -16751,7 +16781,6 @@ void command::atf_cmdline_Init(command::atf_cmdline& parent) {
 
 // --- command.atf_cmdline..Uninit
 void command::atf_cmdline_Uninit(command::atf_cmdline& parent) {
-    command::atf_cmdline &row = parent; (void)row;
 
     // command.atf_cmdline.amnum.Uninit (Tary)  //Anon number array
     // remove all elements from command.atf_cmdline.amnum
@@ -17628,7 +17657,6 @@ void command::atf_cmdline_proc_Init(command::atf_cmdline_proc& parent) {
 
 // --- command.atf_cmdline_proc..Uninit
 void command::atf_cmdline_proc_Uninit(command::atf_cmdline_proc& parent) {
-    command::atf_cmdline_proc &row = parent; (void)row;
 
     // command.atf_cmdline_proc.atf_cmdline.Uninit (Exec)  //
     atf_cmdline_Kill(parent); // kill child, ensure forward progress
@@ -18357,7 +18385,6 @@ void command::atf_comp_proc_Init(command::atf_comp_proc& parent) {
 
 // --- command.atf_comp_proc..Uninit
 void command::atf_comp_proc_Uninit(command::atf_comp_proc& parent) {
-    command::atf_comp_proc &row = parent; (void)row;
 
     // command.atf_comp_proc.atf_comp.Uninit (Exec)  //
     atf_comp_Kill(parent); // kill child, ensure forward progress
@@ -19099,7 +19126,6 @@ void command::atf_cov_proc_Init(command::atf_cov_proc& parent) {
 
 // --- command.atf_cov_proc..Uninit
 void command::atf_cov_proc_Uninit(command::atf_cov_proc& parent) {
-    command::atf_cov_proc &row = parent; (void)row;
 
     // command.atf_cov_proc.atf_cov.Uninit (Exec)  //
     atf_cov_Kill(parent); // kill child, ensure forward progress
@@ -19693,7 +19719,6 @@ void command::atf_fuzz_proc_Init(command::atf_fuzz_proc& parent) {
 
 // --- command.atf_fuzz_proc..Uninit
 void command::atf_fuzz_proc_Uninit(command::atf_fuzz_proc& parent) {
-    command::atf_fuzz_proc &row = parent; (void)row;
 
     // command.atf_fuzz_proc.atf_fuzz.Uninit (Exec)  //
     atf_fuzz_Kill(parent); // kill child, ensure forward progress
@@ -20142,7 +20167,6 @@ void command::atf_nrun_proc_Init(command::atf_nrun_proc& parent) {
 
 // --- command.atf_nrun_proc..Uninit
 void command::atf_nrun_proc_Uninit(command::atf_nrun_proc& parent) {
-    command::atf_nrun_proc &row = parent; (void)row;
 
     // command.atf_nrun_proc.atf_nrun.Uninit (Exec)  //
     atf_nrun_Kill(parent); // kill child, ensure forward progress
@@ -20798,7 +20822,6 @@ void command::atf_unit_proc_Init(command::atf_unit_proc& parent) {
 
 // --- command.atf_unit_proc..Uninit
 void command::atf_unit_proc_Uninit(command::atf_unit_proc& parent) {
-    command::atf_unit_proc &row = parent; (void)row;
 
     // command.atf_unit_proc.atf_unit.Uninit (Exec)  //
     atf_unit_Kill(parent); // kill child, ensure forward progress
@@ -21235,7 +21258,6 @@ void command::bash2html_proc_Init(command::bash2html_proc& parent) {
 
 // --- command.bash2html_proc..Uninit
 void command::bash2html_proc_Uninit(command::bash2html_proc& parent) {
-    command::bash2html_proc &row = parent; (void)row;
 
     // command.bash2html_proc.bash2html.Uninit (Exec)  //
     bash2html_Kill(parent); // kill child, ensure forward progress
@@ -21434,10 +21456,888 @@ void command::bash_proc_Init(command::bash_proc& parent) {
 
 // --- command.bash_proc..Uninit
 void command::bash_proc_Uninit(command::bash_proc& parent) {
-    command::bash_proc &row = parent; (void)row;
 
     // command.bash_proc.bash.Uninit (Exec)  //Must be bash to support $'' for string quoting
     bash_Kill(parent); // kill child, ensure forward progress
+}
+const char *command::doc_help = "doc: Render a markdown document to the terminal\n"
+"Usage: doc [[-key:]<string>] [options]\n"
+"    OPTION        TYPE    DFLT    COMMENT\n"
+"    -in           string  \"data\"  Input directory or filename, - for stdin\n"
+"    [key]         string  \"\"      Document to show: a shorthand key, a regx, or a path\n"
+"    -q                            Read the key as an ssim query, never as a page doc synthesizes\n"
+"    -section      string  \"\"      Show only sections whose heading matches this regx\n"
+"    -meta                         Show the schema of the selection instead of its records (acr -meta)\n"
+"    -showcmd                      Show the command line behind every box, in place of what each one answered\n"
+"    -vis                          Show the access paths of the ctypes on the page (amc_vis)\n"
+"    -code                         Show the C++ amc generated for the ctypes on the page, and their functions\n"
+"    -data                         Show the rows of the table the page is about (acr <ssimfile>)\n"
+"    -list                         List matching documents instead of rendering one\n"
+"    -width        int     0       Measure in columns; 0 takes it from the terminal\n"
+"    -color                Y       Style the output when stdout is a terminal\n"
+"    -force_color                  Style the output even when stdout is not a terminal\n"
+"    -pager                Y       Page the output when stdout is a terminal\n"
+"    -links                        List the page's followable links instead of showing it\n"
+"    -follow       int     0       Show the document reached by following this link of the page\n"
+"    -html                         Render the page as HTML instead of for a terminal\n"
+"    -server       string  \"\"      URL prefix every generated link carries\n"
+"    -bind         string  \"\"      Serve HTTP at this ip:port instead of showing one page\n"
+"    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug        flag            Debug level (0..255); alias -d; cumulative\n"
+"    -help                         Print help and exit; alias -h\n"
+"    -version                      Print version and exit\n"
+"    -signature                    Show signatures and exit; alias -sig\n";
+
+// --- command.doc..ReadFieldMaybe
+bool command::doc_ReadFieldMaybe(command::doc& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+        } break;
+        case command_FieldId_key: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.key, strval);
+        } break;
+        case command_FieldId_q: {
+            retval = bool_ReadStrptrMaybe(parent.q, strval);
+        } break;
+        case command_FieldId_section: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.section, strval);
+        } break;
+        case command_FieldId_meta: {
+            retval = bool_ReadStrptrMaybe(parent.meta, strval);
+        } break;
+        case command_FieldId_showcmd: {
+            retval = bool_ReadStrptrMaybe(parent.showcmd, strval);
+        } break;
+        case command_FieldId_vis: {
+            retval = bool_ReadStrptrMaybe(parent.vis, strval);
+        } break;
+        case command_FieldId_code: {
+            retval = bool_ReadStrptrMaybe(parent.code, strval);
+        } break;
+        case command_FieldId_data: {
+            retval = bool_ReadStrptrMaybe(parent.data, strval);
+        } break;
+        case command_FieldId_list: {
+            retval = bool_ReadStrptrMaybe(parent.list, strval);
+        } break;
+        case command_FieldId_width: {
+            retval = u32_ReadStrptrMaybe(parent.width, strval);
+        } break;
+        case command_FieldId_color: {
+            retval = bool_ReadStrptrMaybe(parent.color, strval);
+        } break;
+        case command_FieldId_force_color: {
+            retval = bool_ReadStrptrMaybe(parent.force_color, strval);
+        } break;
+        case command_FieldId_pager: {
+            retval = bool_ReadStrptrMaybe(parent.pager, strval);
+        } break;
+        case command_FieldId_links: {
+            retval = bool_ReadStrptrMaybe(parent.links, strval);
+        } break;
+        case command_FieldId_follow: {
+            retval = u32_ReadStrptrMaybe(parent.follow, strval);
+        } break;
+        case command_FieldId_html: {
+            retval = bool_ReadStrptrMaybe(parent.html, strval);
+        } break;
+        case command_FieldId_server: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.server, strval);
+        } break;
+        case command_FieldId_bind: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.bind, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.doc..Init
+// Set all fields to initial values.
+void command::doc_Init(command::doc& parent) {
+    parent.in = algo::strptr("data");
+    parent.key = algo::strptr("");
+    parent.q = bool(false);
+    parent.section = algo::strptr("");
+    parent.meta = bool(false);
+    parent.showcmd = bool(false);
+    parent.vis = bool(false);
+    parent.code = bool(false);
+    parent.data = bool(false);
+    parent.list = bool(false);
+    parent.width = u32(0);
+    parent.color = bool(true);
+    parent.force_color = bool(false);
+    parent.pager = bool(true);
+    parent.links = bool(false);
+    parent.follow = u32(0);
+    parent.html = bool(false);
+    parent.server = algo::strptr("");
+    parent.bind = algo::strptr("");
+}
+
+// --- command.doc..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::doc_ToCmdline(command::doc& row) {
+    tempstr ret;
+    ret << "bin/doc ";
+    doc_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.doc..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.doc.Argv  printfmt:Tuple
+void command::doc_PrintArgv(command::doc& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    cstring_Print(row.key, temp);
+    str << " -key:";
+    strptr_PrintBash(temp,str);
+    if (!(row.q == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.q, temp);
+        str << " -q:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.section == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.section, temp);
+        str << " -section:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.meta == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.meta, temp);
+        str << " -meta:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.showcmd == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.showcmd, temp);
+        str << " -showcmd:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.vis == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.vis, temp);
+        str << " -vis:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.code == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.code, temp);
+        str << " -code:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.data == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.data, temp);
+        str << " -data:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.list == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.list, temp);
+        str << " -list:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.width == 0)) {
+        ch_RemoveAll(temp);
+        u32_Print(row.width, temp);
+        str << " -width:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.color == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.color, temp);
+        str << " -color:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.force_color == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.force_color, temp);
+        str << " -force_color:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.pager == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.pager, temp);
+        str << " -pager:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.links == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.links, temp);
+        str << " -links:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.follow == 0)) {
+        ch_RemoveAll(temp);
+        u32_Print(row.follow, temp);
+        str << " -follow:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.html == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.html, temp);
+        str << " -html:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.server == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.server, temp);
+        str << " -server:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.bind == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.bind, temp);
+        str << " -bind:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.doc..ToArgv
+// Build argv from ROW into ARGS; args[0] is the command name
+// cfmt:command.doc.Argv  printfmt:Tuple
+void command::doc_ToArgv(command::doc& row, algo::StringAry& args) {
+    algo::tempstr temp;
+    (void)temp;
+    ary_RemoveAll(args);
+    ary_Alloc(args) << "bin/doc"; // command path
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        ary_Alloc(args) << "-in:" << temp;
+    }
+    ch_RemoveAll(temp);
+    cstring_Print(row.key, temp);
+    ary_Alloc(args) << "-key:" << temp;
+    if (!(row.q == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.q, temp);
+        ary_Alloc(args) << "-q:" << temp;
+    }
+    if (!(row.section == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.section, temp);
+        ary_Alloc(args) << "-section:" << temp;
+    }
+    if (!(row.meta == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.meta, temp);
+        ary_Alloc(args) << "-meta:" << temp;
+    }
+    if (!(row.showcmd == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.showcmd, temp);
+        ary_Alloc(args) << "-showcmd:" << temp;
+    }
+    if (!(row.vis == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.vis, temp);
+        ary_Alloc(args) << "-vis:" << temp;
+    }
+    if (!(row.code == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.code, temp);
+        ary_Alloc(args) << "-code:" << temp;
+    }
+    if (!(row.data == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.data, temp);
+        ary_Alloc(args) << "-data:" << temp;
+    }
+    if (!(row.list == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.list, temp);
+        ary_Alloc(args) << "-list:" << temp;
+    }
+    if (!(row.width == 0)) {
+        ch_RemoveAll(temp);
+        u32_Print(row.width, temp);
+        ary_Alloc(args) << "-width:" << temp;
+    }
+    if (!(row.color == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.color, temp);
+        ary_Alloc(args) << "-color:" << temp;
+    }
+    if (!(row.force_color == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.force_color, temp);
+        ary_Alloc(args) << "-force_color:" << temp;
+    }
+    if (!(row.pager == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.pager, temp);
+        ary_Alloc(args) << "-pager:" << temp;
+    }
+    if (!(row.links == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.links, temp);
+        ary_Alloc(args) << "-links:" << temp;
+    }
+    if (!(row.follow == 0)) {
+        ch_RemoveAll(temp);
+        u32_Print(row.follow, temp);
+        ary_Alloc(args) << "-follow:" << temp;
+    }
+    if (!(row.html == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.html, temp);
+        ary_Alloc(args) << "-html:" << temp;
+    }
+    if (!(row.server == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.server, temp);
+        ary_Alloc(args) << "-server:" << temp;
+    }
+    if (!(row.bind == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.bind, temp);
+        ary_Alloc(args) << "-bind:" << temp;
+    }
+}
+
+// --- command.doc..GetAnon
+algo::strptr command::doc_GetAnon(command::doc &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("key", 3);
+        default: return algo::strptr();
+    }
+}
+
+// --- command.doc..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::doc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_key: { //
+            *out_anon = true;
+        } break;
+        case command_FieldId_q: { // bool: no argument required but value may be specified as q:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_section: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_meta: { // bool: no argument required but value may be specified as meta:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_showcmd: { // bool: no argument required but value may be specified as showcmd:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_vis: { // bool: no argument required but value may be specified as vis:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_code: { // bool: no argument required but value may be specified as code:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_data: { // bool: no argument required but value may be specified as data:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_list: { // bool: no argument required but value may be specified as list:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_width: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_color: { // bool: no argument required but value may be specified as color:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_force_color: { // bool: no argument required but value may be specified as force_color:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_pager: { // bool: no argument required but value may be specified as pager:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_links: { // bool: no argument required but value may be specified as links:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_follow: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_html: { // bool: no argument required but value may be specified as html:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_server: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_bind: { //
+            *out_anon = false;
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    return retval;
+}
+
+// --- command.doc..ReadArgv
+// Field-aware command-line reader over a word array
+// Read command-line ARGS (already split into words) into the fields of PARENT.
+// Field-aware: a value-taking option consumes the next word; errors go to ERR.
+bool command::doc_ReadArgv(command::doc &parent, algo::StringAry &args, algo::cstring &err) {
+    bool retval = true;
+    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
+    int needarg=-1;// how many args the current option still wants
+    int anonidx=0;
+    algo::strptr nextanon = command::doc_GetAnon(parent, anonidx);
+    algo::strptr attrname;
+    bool isanon=false; // true if attrname is anonfld (positional)
+    algo_lib::FieldId baseattrid;
+    command::FieldId attrid;
+    bool endopt=false;
+    int whichns=0;// 0=base, 1=leaf
+    for (int argidx=0; argidx < ary_N(args); argidx++) {
+        algo::strptr arg = ary_qFind(args, argidx);
+        algo::strptr attrval;
+        algo::strptr dfltval;
+        bool haveval=false;
+        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
+        if (endopt || needarg>0 || !dash) {
+            attrval=arg;
+            haveval=true;
+        } else {
+            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
+            int skip = int(dash) + dashdash;
+            attrname=ch_RestFrom(arg,skip);
+            if (skip==2 && elems_N(arg)==2) {
+                endopt=true;
+                continue;
+            }
+            algo::i32_Range colon = TFind(attrname,':');
+            if (colon.beg < colon.end) {
+                attrval=ch_RestFrom(attrname,colon.end);
+                attrname=ch_FirstN(attrname,colon.beg);
+                haveval=true;
+            }
+            whichns=0;
+            needarg=-1;
+            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
+                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
+            }
+            if (needarg<0) {
+                whichns=1;
+                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
+                    needarg = command::doc_NArgs(attrid,dfltval,&isanon);
+                }
+            }
+            if (attrval == "" && dfltval != "") {
+                attrval=dfltval;
+                haveval=true;
+            }
+            if (needarg<0) {
+                err<<"doc: unknown option "<<Keyval("value",arg)<<eol;
+            } else {
+                if (isanon) {
+                    if (attrname == nextanon) { // named positional given as -name: treat as unnamed
+                        attrname = "";
+                    } else if (nextanon != "") { // disallow out-of-order positional
+                        err<<"doc: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
+                    }
+                }
+            }
+        }
+        if (ch_N(attrname) == 0) { // positional: assign to the next anonfld
+            attrname = nextanon;
+            nextanon = command::doc_GetAnon(parent, ++anonidx);
+            command::FieldId_ReadStrptrMaybe(attrid,attrname);
+            whichns=1;
+        }
+        if (ch_N(attrname) == 0) {
+            err << "doc: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
+        } else if (haveval) {
+            bool ret=false;
+            if (whichns == 0) {
+                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
+            }
+            if (whichns==1) {
+                ret=command::doc_ReadFieldMaybe(parent, attrname, attrval);
+                switch(attrid.value) {
+                    default:break;
+                }
+            }
+            if (!ret) {
+                err<<"doc: error in "<<Keyval("option",attrname)<<Keyval("value",attrval)<<eol;
+            }
+            needarg--;
+            if (needarg <= 0) {
+                attrname="";// forget which argument was being filled
+            }
+        }
+    }
+    retval = (ch_N(err) == 0);
+    return retval;
+}
+
+// --- command.doc_proc.doc.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::doc_Start(command::doc_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(doc_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(doc_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        int in_pipe[2]  = {-1,-1}; // [0]=child stdin (read), [1]=parent.to_stdin (write)
+        int out_pipe[2] = {-1,-1}; // [0]=parent.from_stdout (read), [1]=child stdout (write)
+        int err_pipe[2] = {-1,-1}; // [0]=parent.from_stderr (read), [1]=child stderr (write)
+        if (parent.fstdin  == "|" && pipe(in_pipe)  == 0) { parent.to_stdin.value    = in_pipe[1];  }
+        if (parent.fstdout == "|" && pipe(out_pipe) == 0) { parent.from_stdout.value = out_pipe[0]; }
+        if (parent.fstderr == "|" && pipe(err_pipe) == 0) { parent.from_stderr.value = err_pipe[0]; }
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            // inherited signal handlers stay live until exec, so a kill aimed at
+            // the child in the fork-to-exec window would run the parent's handler
+            // in the child and be consumed instead of killing; restore the default
+            // dispositions so the signal does what the sender means
+            (void)signal(SIGTERM, SIG_DFL);
+            (void)signal(SIGINT , SIG_DFL);
+            (void)signal(SIGHUP , SIG_DFL);
+            (void)signal(SIGQUIT, SIG_DFL);
+            (void)signal(SIGALRM, SIG_DFL);
+            if (parent.pgroup) {
+                // own process group: a kill by the child's pid alone would
+                // orphan its descendants alive; the group is one killable unit
+                (void)setpgid(0, 0);
+            }
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (parent.memlimitmb > 0) {
+                // memory ceiling: soft and hard, so a child that drops
+                // privileges cannot raise it; the child sees allocation
+                // failure at the limit instead of inviting the OOM killer
+                struct rlimit rlim;
+                rlim.rlim_cur = rlim_t(parent.memlimitmb) * 1000000;
+                rlim.rlim_max = rlim.rlim_cur;
+                (void)setrlimit(RLIMIT_AS, &rlim);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0, in_pipe[0]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1, out_pipe[1]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2, err_pipe[1]);
+            if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);
+            if (in_pipe[1]  >= 0) (void)close(in_pipe[1]);
+            if (out_pipe[0] >= 0) (void)close(out_pipe[0]);
+            if (out_pipe[1] >= 0) (void)close(out_pipe[1]);
+            if (err_pipe[0] >= 0) (void)close(err_pipe[0]);
+            if (err_pipe[1] >= 0) (void)close(err_pipe[1]);
+            if (retval==0) retval= doc_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.doc_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        } else if (parent.pgroup) {
+            // mirror the child's setpgid: the group must exist the moment fork
+            // returns, or a group kill racing the child's first quantum finds no
+            // group, loses the signal, and the unkilled child boots into whatever
+            // the killer already tore down.  EACCES -- the child exec'd first, its
+            // own setpgid won -- is the benign side of the race.
+            (void)setpgid(parent.pid, parent.pid);
+        }
+        if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);  // parent keeps write end (to_stdin)
+        if (out_pipe[1] >= 0) (void)close(out_pipe[1]); // parent keeps read end (from_stdout)
+        if (err_pipe[1] >= 0) (void)close(err_pipe[1]); // parent keeps read end (from_stderr)
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.doc_proc.doc.Kill
+// Kill subprocess and wait
+void command::doc_Kill(command::doc_proc& parent) {
+    if (parent.pid > 0) {
+        kill(parent.pgroup ? -parent.pid : parent.pid,9); // pgroup child dies as a whole group
+        doc_Wait(parent);
+    }
+}
+
+// --- command.doc_proc.doc.Wait
+// Wait for subprocess to return
+void command::doc_Wait(command::doc_proc& parent) {
+    algo_lib::Close(parent.to_stdin);
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+    algo_lib::Close(parent.from_stdout);
+    algo_lib::Close(parent.from_stderr);
+}
+
+// --- command.doc_proc.doc.Exec
+// Start + Wait
+// Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
+int command::doc_Exec(command::doc_proc& parent) {
+    doc_Start(parent);
+    doc_Wait(parent);
+    return parent.status;
+}
+
+// --- command.doc_proc.doc.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::doc_ExecX(command::doc_proc& parent) {
+    int rc = doc_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",doc_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.doc_proc.doc.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::doc_Execv(command::doc_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    doc_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.doc_proc.doc.ToCmdline
+algo::tempstr command::doc_ToCmdline(command::doc_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::doc_PrintArgv(parent.cmd,retval);
+    if (algo_lib::RedirectFileQ(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (algo_lib::RedirectFileQ(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (algo_lib::RedirectFileQ(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.doc_proc.doc.ToArgv
+// Form array from the command line
+void command::doc_ToArgv(command::doc_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.key != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-key:";
+        cstring_Print(parent.cmd.key, *arg);
+    }
+
+    if (parent.cmd.q != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-q:";
+        bool_Print(parent.cmd.q, *arg);
+    }
+
+    if (parent.cmd.section != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-section:";
+        cstring_Print(parent.cmd.section, *arg);
+    }
+
+    if (parent.cmd.meta != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-meta:";
+        bool_Print(parent.cmd.meta, *arg);
+    }
+
+    if (parent.cmd.showcmd != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showcmd:";
+        bool_Print(parent.cmd.showcmd, *arg);
+    }
+
+    if (parent.cmd.vis != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-vis:";
+        bool_Print(parent.cmd.vis, *arg);
+    }
+
+    if (parent.cmd.code != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-code:";
+        bool_Print(parent.cmd.code, *arg);
+    }
+
+    if (parent.cmd.data != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-data:";
+        bool_Print(parent.cmd.data, *arg);
+    }
+
+    if (parent.cmd.list != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-list:";
+        bool_Print(parent.cmd.list, *arg);
+    }
+
+    if (parent.cmd.width != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-width:";
+        u32_Print(parent.cmd.width, *arg);
+    }
+
+    if (parent.cmd.color != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-color:";
+        bool_Print(parent.cmd.color, *arg);
+    }
+
+    if (parent.cmd.force_color != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-force_color:";
+        bool_Print(parent.cmd.force_color, *arg);
+    }
+
+    if (parent.cmd.pager != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pager:";
+        bool_Print(parent.cmd.pager, *arg);
+    }
+
+    if (parent.cmd.links != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-links:";
+        bool_Print(parent.cmd.links, *arg);
+    }
+
+    if (parent.cmd.follow != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-follow:";
+        u32_Print(parent.cmd.follow, *arg);
+    }
+
+    if (parent.cmd.html != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-html:";
+        bool_Print(parent.cmd.html, *arg);
+    }
+
+    if (parent.cmd.server != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-server:";
+        cstring_Print(parent.cmd.server, *arg);
+    }
+
+    if (parent.cmd.bind != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-bind:";
+        cstring_Print(parent.cmd.bind, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.debug; ++i) {
+        ary_Alloc(args) << "-debug";
+    }
+}
+
+// --- command.doc_proc..Init
+// Set all fields to initial values.
+void command::doc_proc_Init(command::doc_proc& parent) {
+    parent.path = algo::strptr("bin/doc");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.memlimitmb = u32(0);
+    parent.status = i32(0);
+    parent.pgroup = bool(false);
+}
+
+// --- command.doc_proc..Uninit
+void command::doc_proc_Uninit(command::doc_proc& parent) {
+
+    // command.doc_proc.doc.Uninit (Exec)  //
+    doc_Kill(parent); // kill child, ensure forward progress
 }
 const char *command::gcache_help = "gcache: Compiler cache\n"
 "Usage: gcache [[-cmd:]<string>] [options]\n"
@@ -21761,7 +22661,6 @@ void command::gcache_Init(command::gcache& parent) {
 
 // --- command.gcache..Uninit
 void command::gcache_Uninit(command::gcache& parent) {
-    command::gcache &row = parent; (void)row;
 
     // command.gcache.cmd.Uninit (Tary)  //Command to execute
     // remove all elements from command.gcache.cmd
@@ -22511,7 +23410,6 @@ void command::gcache_proc_Init(command::gcache_proc& parent) {
 
 // --- command.gcache_proc..Uninit
 void command::gcache_proc_Uninit(command::gcache_proc& parent) {
-    command::gcache_proc &row = parent; (void)row;
 
     // command.gcache_proc.gcache.Uninit (Exec)  //
     gcache_Kill(parent); // kill child, ensure forward progress
@@ -22725,7 +23623,6 @@ void command::generic_proc_Init(command::generic_proc& parent) {
 
 // --- command.generic_proc..Uninit
 void command::generic_proc_Uninit(command::generic_proc& parent) {
-    command::generic_proc &row = parent; (void)row;
 
     // command.generic_proc.name.Uninit (Exec)  //
     name_Kill(parent); // kill child, ensure forward progress
@@ -23077,7 +23974,6 @@ bool command::jkv_ReadFieldMaybe(command::jkv& parent, algo::strptr field, algo:
 
 // --- command.jkv..Uninit
 void command::jkv_Uninit(command::jkv& parent) {
-    command::jkv &row = parent; (void)row;
 
     // command.jkv.kv.Uninit (Tary)  //JSON Keyvals
     // remove all elements from command.jkv.kv
@@ -23608,7 +24504,6 @@ void command::jkv_proc_Init(command::jkv_proc& parent) {
 
 // --- command.jkv_proc..Uninit
 void command::jkv_proc_Uninit(command::jkv_proc& parent) {
-    command::jkv_proc &row = parent; (void)row;
 
     // command.jkv_proc.jkv.Uninit (Exec)  //
     jkv_Kill(parent); // kill child, ensure forward progress
@@ -24170,7 +25065,6 @@ void command::mdbg_Init(command::mdbg& parent) {
 
 // --- command.mdbg..Uninit
 void command::mdbg_Uninit(command::mdbg& parent) {
-    command::mdbg &row = parent; (void)row;
 
     // command.mdbg.b.Uninit (Tary)  //Set breakpoint, e.g. 'a.cpp:123 if cond1', 'func#3'
     // remove all elements from command.mdbg.b
@@ -24945,7 +25839,6 @@ void command::mdbg_proc_Init(command::mdbg_proc& parent) {
 
 // --- command.mdbg_proc..Uninit
 void command::mdbg_proc_Uninit(command::mdbg_proc& parent) {
-    command::mdbg_proc &row = parent; (void)row;
 
     // command.mdbg_proc.mdbg.Uninit (Exec)  //
     mdbg_Kill(parent); // kill child, ensure forward progress
@@ -25527,7 +26420,6 @@ void command::mysql2ssim_proc_Init(command::mysql2ssim_proc& parent) {
 
 // --- command.mysql2ssim_proc..Uninit
 void command::mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) {
-    command::mysql2ssim_proc &row = parent; (void)row;
 
     // command.mysql2ssim_proc.mysql2ssim.Uninit (Exec)  //
     mysql2ssim_Kill(parent); // kill child, ensure forward progress
@@ -26057,7 +26949,6 @@ void command::orgfile_proc_Init(command::orgfile_proc& parent) {
 
 // --- command.orgfile_proc..Uninit
 void command::orgfile_proc_Uninit(command::orgfile_proc& parent) {
-    command::orgfile_proc &row = parent; (void)row;
 
     // command.orgfile_proc.orgfile.Uninit (Exec)  //
     orgfile_Kill(parent); // kill child, ensure forward progress
@@ -26562,7 +27453,6 @@ void command::samp_make_proc_Init(command::samp_make_proc& parent) {
 
 // --- command.samp_make_proc..Uninit
 void command::samp_make_proc_Uninit(command::samp_make_proc& parent) {
-    command::samp_make_proc &row = parent; (void)row;
 
     // command.samp_make_proc.samp_make.Uninit (Exec)  //
     samp_make_Kill(parent); // kill child, ensure forward progress
@@ -26943,7 +27833,6 @@ void command::samp_meng_proc_Init(command::samp_meng_proc& parent) {
 
 // --- command.samp_meng_proc..Uninit
 void command::samp_meng_proc_Uninit(command::samp_meng_proc& parent) {
-    command::samp_meng_proc &row = parent; (void)row;
 
     // command.samp_meng_proc.samp_meng.Uninit (Exec)  //
     samp_meng_Kill(parent); // kill child, ensure forward progress
@@ -27549,7 +28438,6 @@ void command::samp_regx_proc_Init(command::samp_regx_proc& parent) {
 
 // --- command.samp_regx_proc..Uninit
 void command::samp_regx_proc_Uninit(command::samp_regx_proc& parent) {
-    command::samp_regx_proc &row = parent; (void)row;
 
     // command.samp_regx_proc.samp_regx.Uninit (Exec)  //
     samp_regx_Kill(parent); // kill child, ensure forward progress
@@ -28696,7 +29584,6 @@ void command::src_func_proc_Init(command::src_func_proc& parent) {
 
 // --- command.src_func_proc..Uninit
 void command::src_func_proc_Uninit(command::src_func_proc& parent) {
-    command::src_func_proc &row = parent; (void)row;
 
     // command.src_func_proc.src_func.Uninit (Exec)  //
     src_func_Kill(parent); // kill child, ensure forward progress
@@ -29243,7 +30130,6 @@ void command::src_hdr_proc_Init(command::src_hdr_proc& parent) {
 
 // --- command.src_hdr_proc..Uninit
 void command::src_hdr_proc_Uninit(command::src_hdr_proc& parent) {
-    command::src_hdr_proc &row = parent; (void)row;
 
     // command.src_hdr_proc.src_hdr.Uninit (Exec)  //
     src_hdr_Kill(parent); // kill child, ensure forward progress
@@ -29857,7 +30743,6 @@ void command::src_lim_proc_Init(command::src_lim_proc& parent) {
 
 // --- command.src_lim_proc..Uninit
 void command::src_lim_proc_Uninit(command::src_lim_proc& parent) {
-    command::src_lim_proc &row = parent; (void)row;
 
     // command.src_lim_proc.src_lim.Uninit (Exec)  //
     src_lim_Kill(parent); // kill child, ensure forward progress
@@ -30263,7 +31148,6 @@ void command::ssim2csv_proc_Init(command::ssim2csv_proc& parent) {
 
 // --- command.ssim2csv_proc..Uninit
 void command::ssim2csv_proc_Uninit(command::ssim2csv_proc& parent) {
-    command::ssim2csv_proc &row = parent; (void)row;
 
     // command.ssim2csv_proc.ssim2csv.Uninit (Exec)  //
     ssim2csv_Kill(parent); // kill child, ensure forward progress
@@ -30911,7 +31795,6 @@ void command::ssim2mysql_proc_Init(command::ssim2mysql_proc& parent) {
 
 // --- command.ssim2mysql_proc..Uninit
 void command::ssim2mysql_proc_Uninit(command::ssim2mysql_proc& parent) {
-    command::ssim2mysql_proc &row = parent; (void)row;
 
     // command.ssim2mysql_proc.ssim2mysql.Uninit (Exec)  //
     ssim2mysql_Kill(parent); // kill child, ensure forward progress
@@ -31553,7 +32436,6 @@ void command::ssimfilt_Init(command::ssimfilt& parent) {
 
 // --- command.ssimfilt..Uninit
 void command::ssimfilt_Uninit(command::ssimfilt& parent) {
-    command::ssimfilt &row = parent; (void)row;
 
     // command.ssimfilt.field.Uninit (Tary)  //(project) Select fields for output (regx)
     // remove all elements from command.ssimfilt.field
@@ -32105,7 +32987,6 @@ void command::ssimfilt_proc_Init(command::ssimfilt_proc& parent) {
 
 // --- command.ssimfilt_proc..Uninit
 void command::ssimfilt_proc_Uninit(command::ssimfilt_proc& parent) {
-    command::ssimfilt_proc &row = parent; (void)row;
 
     // command.ssimfilt_proc.ssimfilt.Uninit (Exec)  //
     ssimfilt_Kill(parent); // kill child, ensure forward progress
@@ -32612,7 +33493,6 @@ void command::strconv_proc_Init(command::strconv_proc& parent) {
 
 // --- command.strconv_proc..Uninit
 void command::strconv_proc_Uninit(command::strconv_proc& parent) {
-    command::strconv_proc &row = parent; (void)row;
 
     // command.strconv_proc.strconv.Uninit (Exec)  //
     strconv_Kill(parent); // kill child, ensure forward progress
@@ -33324,7 +34204,6 @@ void command::sv2ssim_proc_Init(command::sv2ssim_proc& parent) {
 
 // --- command.sv2ssim_proc..Uninit
 void command::sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) {
-    command::sv2ssim_proc &row = parent; (void)row;
 
     // command.sv2ssim_proc.sv2ssim.Uninit (Exec)  //
     sv2ssim_Kill(parent); // kill child, ensure forward progress
@@ -33901,7 +34780,6 @@ void command::wt_Init(command::wt& parent) {
 
 // --- command.wt..Uninit
 void command::wt_Uninit(command::wt& parent) {
-    command::wt &row = parent; (void)row;
 
     // command.wt.files.Uninit (Tary)  //Shell regx to diff
     // remove all elements from command.wt.files
@@ -34680,7 +35558,6 @@ void command::wt_proc_Init(command::wt_proc& parent) {
 
 // --- command.wt_proc..Uninit
 void command::wt_proc_Uninit(command::wt_proc& parent) {
-    command::wt_proc &row = parent; (void)row;
 
     // command.wt_proc.wt.Uninit (Exec)  //
     wt_Kill(parent); // kill child, ensure forward progress

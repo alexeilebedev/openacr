@@ -1,0 +1,807 @@
+/*
+  The stylesheet doc inlines into every page it writes.  The palette is the one
+  ts/website/src/styles/global.css sets: a warm cream tint over near-black, with
+  hsl(42 63% 80%) -- the brand colour -- carrying every link, marker and rule.
+  The same records and the same documents are read in the browser and at the
+  terminal, so nothing here invents a second scheme for them.
+
+  A heading carries the one colour beside it: a gold saturated enough to be told from
+  both the cream of the body and the paler cream of a link, and matched to the amber the
+  terminal draws a heading in.  A page is mostly prose, and what a reader scanning one
+  is looking for is where each part starts.
+*/
+
+:root {
+  --bg: hsl(42 10% 3%);
+  --fg: hsl(42 24% 91%);
+  --dim: hsl(42 8% 74%);
+  --brand: hsl(42 63% 80%);
+  --head: hsl(45 92% 74%);
+  --card: hsl(42 10% 5%);
+  --raise: hsl(42 10% 8%);
+  --line: hsl(42 18% 15%);
+  --faint: hsl(42 5% 13%);
+  --code: hsl(42 8% 15%);
+  --sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+::selection {
+  background: var(--brand);
+  color: hsl(42 10% 8%);
+}
+
+a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-color: hsl(42 63% 80% / 0.3);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.2s;
+}
+
+a:hover {
+  text-decoration-color: var(--brand);
+}
+
+/* --- the bar across the top: home, the breadcrumb, the search box --- */
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.home,
+.help {
+  font-family: var(--mono);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8125rem;
+  text-decoration: none;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+}
+
+.home:hover,
+.help:hover {
+  border-color: var(--brand);
+}
+
+.help {
+  color: var(--dim);
+}
+
+/*
+  The box shows the canonical text of the page, once, with its words linked -- and
+  becomes an input when a reader clicks into it.  The two faces occupy the same slot
+  and are styled alike, so the swap does not move anything: same font, same size, same
+  padding, same border.
+
+  The input is what shows on its own, and the script swaps to the linked line, which
+  is why the rule that hides one of them is the one carrying the js class.
+*/
+.find {
+  margin: 0 auto 0 0;
+  flex: 1 1 24rem;
+  min-width: 0;
+}
+
+.find .shown,
+.find .text {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  width: 100%;
+  display: block;
+  background: var(--bg);
+  color: var(--fg);
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.find .shown {
+  display: none;
+  cursor: text;
+}
+
+.find.js .shown {
+  display: block;
+}
+
+.find.js .text {
+  display: none;
+}
+
+.find .shown:hover {
+  border-color: hsl(42 8% 30%);
+}
+
+.find .shown .flag,
+.find .shown .frag {
+  color: var(--dim);
+}
+
+.find .shown a {
+  text-decoration-color: hsl(42 63% 80% / 0.45);
+}
+
+.find .text::placeholder {
+  color: hsl(42 8% 40%);
+}
+
+.find .text:focus {
+  outline: none;
+  border-color: var(--brand);
+}
+
+/* --- the frame: navigation pane beside the page --- */
+
+.frame {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.side {
+  flex: 0 0 13rem;
+  position: sticky;
+  top: 4.25rem;
+  max-height: calc(100vh - 5.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(42 18% 25%) transparent;
+  scrollbar-gutter: stable;
+  font-size: 0.875rem;
+}
+
+/* the pane is often taller than the screen, and a bar nobody can see is a page that
+   looks truncated */
+.side::-webkit-scrollbar {
+  width: 8px;
+}
+
+.side::-webkit-scrollbar-thumb {
+  background: hsl(42 18% 25%);
+  border-radius: 4px;
+}
+
+.side::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.side h4 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin: 1.25rem 0 0.5rem;
+}
+
+.side h4:first-child {
+  margin-top: 0;
+}
+
+.side ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.side li {
+  margin: 0;
+}
+
+.side a {
+  display: block;
+  padding: 0.25rem 0.6rem;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+  color: var(--dim);
+}
+
+.side a:hover {
+  color: var(--brand);
+  border-left-color: var(--line);
+}
+
+.side li.l2 a {
+  padding-left: 1.4rem;
+}
+
+.side li.l3 a {
+  padding-left: 2.2rem;
+}
+
+.side li.l4 a {
+  padding-left: 3rem;
+}
+
+.side a.on {
+  color: var(--brand);
+  border-left-color: var(--brand);
+  background: var(--card);
+}
+
+.page {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/*
+  The measure belongs to prose and not to the column.  A sentence is read once from end
+  to end, and past about ninety characters the eye loses the start of the next line -- so
+  paragraphs, headings and lists are held to a measure wherever the window is wider.
+
+  A listing is not read that way.  Its lines mean themselves at the column they were
+  written in, and holding one to the measure only makes it scroll sideways over text the
+  window had room for.  So a box takes the whole width the frame gives the page, and the
+  prose around it keeps the measure.
+*/
+.page h1,
+.page h2,
+.page h3,
+.page h4,
+.page p,
+.page ul,
+.page ol,
+.page table,
+.page blockquote,
+.page .note {
+  max-width: 60rem;
+}
+
+/* --- the document itself --- */
+
+/*
+  A document opens with one `##` naming what it is, and every section under it is a
+  `###`.  So h2 is the page's title and h3 is a chapter of it, and they are drawn as
+  two different things rather than as two sizes of the same thing: the title carries a
+  rule under it and sits in the brand colour, and a chapter is bold text at the size
+  the eye reads a heading at.
+
+  Every heading is also a scroll target, and the bar across the top is sticky -- so a
+  heading scrolled to would sit under it.  scroll-margin-top is what leaves it clear,
+  and it is on anything carrying an id, since a line of a listing is a target too.
+*/
+
+.page h1 {
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0 0 1rem;
+}
+
+.page h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--head);
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.page h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 2rem 0 0.6rem;
+  color: var(--head);
+}
+
+.page h4 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--head);
+}
+
+.page h1,
+.page h2,
+.page h3,
+.page h4,
+.page [id] {
+  scroll-margin-top: 4.5rem;
+}
+
+.page p {
+  margin: 0 0 1rem;
+}
+
+.page strong {
+  color: hsl(42 30% 92%);
+  font-weight: 600;
+}
+
+.page ul {
+  padding-inline-start: 0;
+  list-style: none;
+  margin: 0 0 1rem;
+}
+
+.page ul > li {
+  position: relative;
+  padding-inline-start: 1.25em;
+  margin: 0.25rem 0;
+}
+
+.page ul > li::before {
+  content: '+';
+  position: absolute;
+  left: 0;
+  color: var(--brand);
+}
+
+.page li.l2 {
+  margin-left: 1.25rem;
+}
+
+.page li.l3 {
+  margin-left: 2.5rem;
+}
+
+.page li.l4 {
+  margin-left: 3.75rem;
+}
+
+.page ul ul,
+.page ul ol {
+  padding-inline-start: 1.25em;
+}
+
+.page ol {
+  margin: 0 0 1rem;
+  padding-inline-start: 1.5em;
+}
+
+.page ol li::marker {
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.page blockquote {
+  margin: 1.25rem 0;
+  border-left: 3px solid var(--brand);
+  background: hsl(42 10% 6%);
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  color: hsl(42 20% 82%);
+}
+
+.page blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.page hr {
+  border: 0;
+  height: 1px;
+  margin: 2.5rem 0;
+  overflow: visible;
+  text-align: center;
+  user-select: none;
+  background: var(--faint);
+}
+
+.page hr::before {
+  content: '+ + +';
+  position: relative;
+  top: -0.75em;
+  padding: 0 0.75rem;
+  background: var(--bg);
+  color: var(--brand);
+  font-size: 0.875rem;
+  letter-spacing: 0.3em;
+}
+
+/* --- tables --- */
+
+.tablebox {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--faint);
+  border-radius: 0.5rem;
+}
+
+.page table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.page thead th {
+  background: var(--raise);
+  color: var(--brand);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid hsl(42 5% 20%);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.page tbody td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--faint);
+  vertical-align: top;
+}
+
+.page tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.page tbody tr:hover {
+  background: hsl(42 10% 6%);
+}
+
+/* --- code --- */
+
+.page code {
+  font-family: var(--mono);
+  background: var(--code);
+  border: 1px solid hsl(42 5% 22%);
+  border-radius: 0.25rem;
+  padding: 0.075rem 0.35rem;
+  font-size: 0.875em;
+  color: var(--brand);
+}
+
+.page pre {
+  background: var(--code);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  padding: 0.9rem 1.1rem;
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.page pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  color: var(--fg);
+}
+
+/*
+  The listing colours are the ones the terminal paints, so a fenced block, a
+  record and a prototype read the same in both places.  doc groups adjacent cells
+  of one colour into a span and names the colour here.
+*/
+.c-red       { color: hsl(0 60% 68%); }
+.c-green     { color: hsl(110 40% 62%); }
+.c-yellow    { color: hsl(45 70% 65%); }
+.c-blue      { color: hsl(210 60% 70%); }
+.c-magenta   { color: hsl(300 45% 72%); }
+.c-cyan      { color: hsl(185 45% 65%); }
+.c-white     { color: hsl(42 24% 91%); }
+.c-paleblue  { color: #afd7ff; }
+.c-skyblue   { color: #87d7ff; }
+.c-amber     { color: #ffd7af; }
+.c-palegreen { color: #87ffaf; }
+.a-dim       { color: var(--dim); }
+.a-bold      { font-weight: 600; }
+.a-italic    { font-style: italic; }
+
+/* --- notes doc writes for itself: the command a page came from, and its like --- */
+
+.note details.query {
+  display: inline;
+}
+
+.note details.query > summary {
+  display: inline;
+  cursor: pointer;
+  list-style: none;
+  border-bottom: 1px dotted var(--line);
+}
+
+.note details.query > summary::-webkit-details-marker {
+  display: none;
+}
+
+.note details.query[open] > summary {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.note {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--dim);
+  margin: 0 0 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.miss {
+  color: hsl(0 60% 68%);
+}
+
+/*
+  --- a page of records: the tabs, the sections that open ---
+
+  The tabs are the three questions about one selection and exactly one of them is
+  showing, so the marked one is a tab that has joined the page it names -- it keeps the
+  page's own background and gives up the rule beneath it.
+*/
+
+/*
+  The tabs sit on the top edge of the box that holds what they apply to, so a reader
+  sees the three of them naming that box and not the page under it.  The selected one
+  takes the box header's background and covers the box's own top border, which is what
+  joins the two; nothing wraps them, since a border around a border would say there is
+  a third thing there.
+
+  What joins them is the box's own top margin going, and the rule names the strip rather
+  than the section it happens to be in: a strip stands over the box that follows it
+  wherever one is written, and keying the join to `#records` left the strip over a
+  function's source floating a margin above what it named.
+*/
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin: 1.2rem 0 0;
+  padding: 0 0.5rem;
+}
+
+.tabs + .box {
+  margin-top: 0;
+}
+
+/*
+  A link inside a listing keeps the colour the lexer gave the token, because the colour is
+  what the token is and the link is where it leads.  The underline arrives on hover, since
+  a usage block naming twenty options would otherwise be twenty underlines and a reader
+  would lose the shape of the block.
+*/
+pre a {
+  color: inherit;
+  text-decoration: none;
+}
+
+pre a:hover {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+}
+
+a.tab {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  text-decoration: none;
+  color: var(--dim);
+}
+
+a.tab:hover {
+  color: var(--brand);
+}
+
+a.tab.on {
+  color: var(--brand);
+  background: var(--raise);
+  border-color: var(--line);
+  position: relative;
+  z-index: 1;
+  margin-bottom: -1px;
+  padding-bottom: calc(0.35rem + 1px);
+}
+
+.page h3.fold {
+  margin-bottom: 0.4rem;
+}
+
+.page h3.fold a {
+  text-decoration: none;
+  color: var(--head);
+}
+
+.page h3.fold .tri {
+  display: inline-block;
+  width: 1.4rem;
+  font-size: 2em;
+  line-height: 0.6;
+  vertical-align: -0.12em;
+  color: var(--dim);
+}
+
+/*
+  A record's colours say what each token is -- a name, a value, a quoted value -- and
+  every one of them may also be a link.  Those are two facts, so the link takes the one
+  channel the colour is not using: it keeps the colour of whatever it wraps and is
+  underlined.
+*/
+a.rec {
+  color: inherit;
+}
+
+/*
+  --- a box of text, and the header that says what is in it ---
+
+  Every listing on a page sits in a box whose header names its format and, where there
+  is one, the place it came from.  The stripes are drawn by a gradient rather than by an
+  element per line: the lines of a listing do not wrap, so a background repeating every
+  two line-heights lands on the lines exactly, and nothing has to be wrapped to be
+  striped.
+*/
+
+.box {
+  margin: 0.9rem 0 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.box .cap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.3rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--raise);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
+.box .cap .fmt {
+  overflow-wrap: anywhere;
+}
+
+.box .cap .copy {
+  display: inline-flex;
+  cursor: pointer;
+  opacity: 0.55;
+  user-select: none;
+}
+
+/* two sheets of paper, the front one opaque so that it hides the corner of the one behind */
+.box .cap .copy svg rect {
+  fill: var(--raise);
+  stroke: currentColor;
+  stroke-width: 1.3;
+}
+
+.box .cap .copy:hover {
+  opacity: 1;
+}
+
+/* the glyph stays what it is and says it copied by colour, since replacing it with a tick
+   would take the drawing off the page */
+.box .cap .copy.ok {
+  opacity: 1;
+  color: var(--brand);
+}
+
+/*
+  Each line of a box is a span, and the number in front of it is generated content: a
+  browser leaves generated content out of a selection, so a reader dragging over the code
+  copies the code and not the gutter.
+*/
+
+.box pre {
+  position: relative;
+  padding-left: 5.6ch;
+}
+
+/*
+  A diagram box holds its source until the library has drawn the picture, and the picture
+  after that.  The source needs no gutter, since a line number means nothing in it, and
+  the picture is centred and made to fit rather than allowed to widen the page.
+*/
+.box pre.mermaid {
+  padding-left: 0.9rem;
+  text-align: center;
+}
+
+.box pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.box pre .gut {
+  position: absolute;
+  left: 0;
+  top: 0.9rem;
+  width: 4.4ch;
+  text-align: right;
+  color: hsl(42 8% 34%);
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+}
+
+.box pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  line-height: 1.5rem;
+  background: var(--code);
+  background-image: repeating-linear-gradient(hsl(42 10% 15% / 0) 0 1.5rem,
+                                              hsl(42 24% 91% / 0.028) 1.5rem 3rem);
+  background-position: 0 0.9rem;
+}
+
+/* --- the footer: which commit this was built from --- */
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 2rem;
+  border-top: 1px solid var(--faint);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
+.foot .ref {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 60rem) {
+  .frame {
+    flex-direction: column;
+  }
+  .side {
+    position: static;
+    flex: 1 1 auto;
+    width: 100%;
+  }
+  .find {
+    flex: 1 1 100%;
+  }
+  .top {
+    gap: 0.6rem;
+  }
+}

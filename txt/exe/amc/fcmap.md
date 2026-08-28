@@ -9,7 +9,7 @@ namespaces (a WebSocket status code → an internal disconnect
 reason, a Kafka API key → an amc message type, a vendor's FIX
 tag → your canonical message-type fconst).
 
-```
+```ssim
 dmmeta.fcmap  fcmap:ws_to_int  leftField:ws.Disconnect.code  leftVal:1000
               rightField:lib_ws.Reason.code  rightVal:normal  bidir:Y
 dmmeta.fcmap  fcmap:ws_to_int  leftField:ws.Disconnect.code  leftVal:1006
@@ -83,7 +83,7 @@ undefined).
 Set `leftVal:*` to declare a default for any left value not
 otherwise enumerated:
 
-```
+```ssim
 dmmeta.fcmap  fcmap:vendor_to_amc  leftField:vendor.Msg.type  leftVal:*
               rightField:amc.Msg.type  rightVal:Unknown  bidir:N
 ```
@@ -132,7 +132,7 @@ to set the bool to false.
 
 Mapping WebSocket close codes to internal reason enums:
 
-```
+```ssim
 dmmeta.fcmap  fcmap:ws_to_int  leftField:ws.Disconnect.code  leftVal:1000
               rightField:lib_ws.Reason.code  rightVal:normal  bidir:Y
 dmmeta.fcmap  fcmap:ws_to_int  leftField:ws.Disconnect.code  leftVal:1001
@@ -154,7 +154,9 @@ void ws::Disconnect_To_lib_ws_Reason(ws::Disconnect& rhs, lib_ws::Reason& lhs) {
         default:                      lhs.code = lib_ws_Reason_code_other;      break;
     }
 }
-void ws::Disconnect_From_lib_ws_Reason(const lib_ws::Reason& rhs, ws::Disconnect& lhs) { … }
+void ws::Disconnect_From_lib_ws_Reason(const lib_ws::Reason& rhs, ws::Disconnect& lhs) {
+    // the same switch, read right to left
+}
 ```
 
 Calls in user code:

@@ -40,15 +40,11 @@ enum amsdb_FieldIdEnum {    // amsdb.FieldId.value
     ,amsdb_FieldId_ns
     ,amsdb_FieldId_overheadmb
     ,amsdb_FieldId_hugemb
-    ,amsdb_FieldId_pathbyte
-    ,amsdb_FieldId_userbyte
-    ,amsdb_FieldId_openbyte
-    ,amsdb_FieldId_connbyte
     ,amsdb_FieldId_hbtimeout
     ,amsdb_FieldId_value
 };
 
-enum { amsdb_FieldIdEnum_N = 15 };
+enum { amsdb_FieldIdEnum_N = 11 };
 
 namespace amsdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 GrptypePkey;
@@ -167,12 +163,8 @@ struct Proctype { // amsdb.Proctype
     algo::cstring      ns;           // dmmeta.ns can be missing if the module is external, don't set it as xref
     u32                overheadmb;   //   0  Measured base memory overhead MB (10^6) beyond topo budgets; 0=no derived proc limit
     u32                hugemb;       //   0  Huge-page heap ceiling MB (10^6); 0 = maps none, as a forking supervisor must
-    u32                pathbyte;     //   0  Measured bytes of address space per path entry; times topo maxpath it is the path term of the derived proc limit (0=no term)
-    u32                userbyte;     //   0  Measured bytes of address space per user; times topo maxuser it is the user term of the derived proc limit (0=no term)
-    u32                openbyte;     //   0  Measured bytes of address space per open-stream row; times topo maxopen it is the open term of the derived proc limit (0=no term)
-    u32                connbyte;     //   0  Measured bytes of address space per client connection; times topo maxconn it is the conn term of the derived proc limit (0=no term)
-    algo::Comment      comment;      //
     i32                hbtimeout;    //   30  Heartbeat timeout sec: the supervisor kills a module silent this long
+    algo::Comment      comment;      //
     // func:amsdb.Proctype..Ctor
     inline               Proctype() __attribute__((nothrow));
 };
@@ -184,7 +176,7 @@ bool                 Proctype_ReadFieldMaybe(amsdb::Proctype& parent, algo::strp
 bool                 Proctype_ReadStrptrMaybe(amsdb::Proctype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amsdb.Proctype..Init
-void                 Proctype_Init(amsdb::Proctype& parent);
+inline void          Proctype_Init(amsdb::Proctype& parent);
 // print string representation of ROW to string STR
 // cfmt:amsdb.Proctype.String  printfmt:Tuple
 // func:amsdb.Proctype..Print

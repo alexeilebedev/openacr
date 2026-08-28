@@ -59,7 +59,7 @@ namespace ams { // gen:ns_print_proto
 
 // --- ams.BoardrefMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::BoardrefMsg &row, ams::MsgHeader &out) {
+void ams::boardref_msg_CopyOut(ams::BoardrefMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -1174,7 +1174,7 @@ void ams::GrpmemberId_Print(ams::GrpmemberId row, algo::cstring& str) {
 
 // --- ams.InputLineMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::InputLineMsg &row, ams::MsgHeader &out) {
+void ams::input_line_msg_CopyOut(ams::InputLineMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -1271,7 +1271,7 @@ void ams::InputLineMsg_Print(ams::InputLineMsg& row, algo::cstring& str) {
 
 // --- ams.LogMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::LogMsg &row, ams::MsgHeader &out) {
+void ams::log_msg_CopyOut(ams::LogMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -1410,7 +1410,7 @@ void ams::LogMsg_Print(ams::LogMsg& row, algo::cstring& str) {
 
 // --- ams.MsgBlock.header.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::MsgBlock &row, ams::MsgHeader &out) {
+void ams::msg_block_CopyOut(ams::MsgBlock &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2059,7 +2059,7 @@ void ams::SampFoldstate_Print(ams::SampFoldstate row, algo::cstring& str) {
 
 // --- ams.SampMengBookMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengBookMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_book_msg_CopyOut(ams::SampMengBookMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2120,7 +2120,7 @@ void ams::SampMengBookMsg_Print(ams::SampMengBookMsg row, algo::cstring& str) {
 
 // --- ams.SampMengCancelOrderMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengCancelOrderMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_cancel_order_msg_CopyOut(ams::SampMengCancelOrderMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2181,7 +2181,7 @@ void ams::SampMengCancelOrderMsg_Print(ams::SampMengCancelOrderMsg row, algo::cs
 
 // --- ams.SampMengCancelReqMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengCancelReqMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_cancel_req_msg_CopyOut(ams::SampMengCancelReqMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2242,7 +2242,7 @@ void ams::SampMengCancelReqMsg_Print(ams::SampMengCancelReqMsg row, algo::cstrin
 
 // --- ams.SampMengMassCancelReqMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengMassCancelReqMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_mass_cancel_req_msg_CopyOut(ams::SampMengMassCancelReqMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2319,7 +2319,7 @@ void ams::SampMengSymbol_Print(ams::SampMengSymbol& row, algo::cstring& str) {
 
 // --- ams.SampMengNewOrderMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengNewOrderMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_new_order_msg_CopyOut(ams::SampMengNewOrderMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2404,7 +2404,7 @@ void ams::SampMengNewOrderMsg_Print(ams::SampMengNewOrderMsg& row, algo::cstring
 
 // --- ams.SampMengNewOrderReqMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengNewOrderReqMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_new_order_req_msg_CopyOut(ams::SampMengNewOrderReqMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2489,7 +2489,7 @@ void ams::SampMengNewOrderReqMsg_Print(ams::SampMengNewOrderReqMsg& row, algo::c
 
 // --- ams.SampMengNewSymbolMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengNewSymbolMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_new_symbol_msg_CopyOut(ams::SampMengNewSymbolMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2550,7 +2550,7 @@ void ams::SampMengNewSymbolMsg_Print(ams::SampMengNewSymbolMsg& row, algo::cstri
 
 // --- ams.SampMengNewSymbolReqMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengNewSymbolReqMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_new_symbol_req_msg_CopyOut(ams::SampMengNewSymbolReqMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2611,7 +2611,7 @@ void ams::SampMengNewSymbolReqMsg_Print(ams::SampMengNewSymbolReqMsg& row, algo:
 
 // --- ams.SampMengNewUserMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengNewUserMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_new_user_msg_CopyOut(ams::SampMengNewUserMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2672,7 +2672,7 @@ void ams::SampMengNewUserMsg_Print(ams::SampMengNewUserMsg row, algo::cstring& s
 
 // --- ams.SampMengNewUserReqMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengNewUserReqMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_new_user_req_msg_CopyOut(ams::SampMengNewUserReqMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2733,7 +2733,7 @@ void ams::SampMengNewUserReqMsg_Print(ams::SampMengNewUserReqMsg row, algo::cstr
 
 // --- ams.SampMengOrderTradeMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengOrderTradeMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_order_trade_msg_CopyOut(ams::SampMengOrderTradeMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2806,7 +2806,7 @@ void ams::SampMengOrderTradeMsg_Print(ams::SampMengOrderTradeMsg& row, algo::cst
 
 // --- ams.SampMengRestingMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengRestingMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_resting_msg_CopyOut(ams::SampMengRestingMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2903,7 +2903,7 @@ void ams::SampMengRestingMsg_Print(ams::SampMengRestingMsg& row, algo::cstring& 
 
 // --- ams.SampMengSymbolrowMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengSymbolrowMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_symbolrow_msg_CopyOut(ams::SampMengSymbolrowMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2964,7 +2964,7 @@ void ams::SampMengSymbolrowMsg_Print(ams::SampMengSymbolrowMsg& row, algo::cstri
 
 // --- ams.SampMengTextMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengTextMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_text_msg_CopyOut(ams::SampMengTextMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3055,7 +3055,7 @@ void ams::SampMengTextMsg_Print(ams::SampMengTextMsg& row, algo::cstring& str) {
 
 // --- ams.SampMengUserrowMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SampMengUserrowMsg &row, ams::MsgHeader &out) {
+void ams::samp_meng_userrow_msg_CopyOut(ams::SampMengUserrowMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3263,7 +3263,7 @@ algo::strptr ams::ShmFlags_GetAnon(ams::ShmFlags &parent, i32 idx) {
 
 // --- ams.ShmHbMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::ShmHbMsg &row, ams::MsgHeader &out) {
+void ams::shm_hb_msg_CopyOut(ams::ShmHbMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3568,7 +3568,7 @@ void ams::Shmhdr_Print(ams::Shmhdr& row, algo::cstring& str) {
 
 // --- ams.TerminateMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::TerminateMsg &row, ams::MsgHeader &out) {
+void ams::terminate_msg_CopyOut(ams::TerminateMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3691,7 +3691,7 @@ void ams::value_SetStrptr(ams::Trafficclass& parent, algo::strptr rhs, ams_Traff
 
 // --- ams.UdpFrame.header.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::UdpFrame &row, ams::MsgHeader &out) {
+void ams::udp_frame_CopyOut(ams::UdpFrame &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3744,7 +3744,7 @@ void ams::UdpFrame_Print(ams::UdpFrame& row, algo::cstring& str) {
 
 // --- ams.UprocTextMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::UprocTextMsg &row, ams::MsgHeader &out) {
+void ams::uproc_text_msg_CopyOut(ams::UprocTextMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter

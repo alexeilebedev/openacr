@@ -213,25 +213,36 @@ static int NoCaseStrCmp(const char *A ,const char *B, size_t count) {
     return( 0 );
 }
 
+// Find the first occurrence of T in S at or after FROM, and return its index,
+// or -1 when T is not there or is empty.
+// The case-sensitive search steps position by position with memchr on T's
+// first character, so the positions where T cannot begin are skipped by a
+// vector instruction rather than visited by the loop.  That matters because a
+// full comparison is only worth starting where the first character already
+// agrees, and on ordinary text that is a small fraction of the positions.
 i64 algo::FindFrom(strptr s, strptr t, i64 from, bool case_sensitive) {
     u64 n = elems_N(t);
-    if (n > (u64)s.n_elems || !n) {
-        return -1;
-    }
-    if (case_sensitive) {
-        for (i64 i=from, lim=s.n_elems-n+1; i<lim; i++) {
-            if (memcmp(s.elems+i, t.elems, n)==0) {
-                return i;
+    i64 ret = -1;
+    i64 lim = s.n_elems - n + 1;
+    if (n <= (u64)s.n_elems && n) {
+        i64 i = from;
+        while (i < lim && ret == -1) {
+            if (case_sensitive) {
+                const char *at = (const char*)memchr(s.elems+i, t.elems[0], lim-i);
+                if (at) {
+                    i = at - s.elems;
+                    ret = memcmp(s.elems+i, t.elems, n)==0 ? i : -1;
+                    i++;
+                } else {
+                    i = lim;
+                }
+            } else {
+                ret = CompareNoCase(strptr(s.elems+i,n), strptr(t.elems, n))==0 ? i : -1;
+                i++;
             }
         }
-    } else {
-        for (i64 i=from, lim=s.n_elems-n+1; i<lim; i++) {
-            if (CompareNoCase(strptr(s.elems+i,n), strptr(t.elems, n))==0) {
-                return i;
-            }
-        }
     }
-    return -1;
+    return ret;
 }
 
 i64 algo::FindFrom(strptr s, strptr t, i64 from) {

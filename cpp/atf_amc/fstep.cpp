@@ -45,10 +45,25 @@ static void IncrNum() {
     atf_amc::_db.timehook_recur_counter++;
 }
 
+// Check that a TimeHookRecur keeps calling its callback, and never faster than
+// the period it was given.
+//
+// How many times it fires in a window measures the platform's sleep as much as
+// it measures this mechanism.  bh_timehook_Step reschedules the hook from the
+// loop's own clock rather than from the deadline it just met, so the period is a
+// floor: a cycle that returns late pushes the next firing out by however late it
+// was, and the rate that results is whatever nanosleep manages.  A tenth of a
+// second at a hundredth-second period fires ten times on Linux and three times
+// on a macOS runner, and neither of those is the mechanism misbehaving.
+//
+// So the window is a whole second, long enough that even a coarse sleep leaves
+// plenty of firings, and the two bounds state what the mechanism does promise.
+// It keeps firing, which a count of five will not reach if recurrence stops
+// after the first call.  And it never outruns its period, which is a hundred
+// firings in the window plus the immediate one at the start.
 void atf_amc::amctest_fstep_TimeHookRecur() {
-    // check the TimeHookRecur is scheduling things repeatedly
     bool success=false;
-    for (int retry=0; retry<60 && !success; retry++) {
+    for (int retry=0; retry<3 && !success; retry++) {
         if (retry>0) {
             atf_amc::_db.timehook_recur_counter=0;
             sleep(1);
@@ -56,12 +71,14 @@ void atf_amc::amctest_fstep_TimeHookRecur() {
         algo_lib::FTimehook th;
         hook_Set0(th, IncrNum);
         ThScheduleRecur(th,algo::ToSchedTime(0.01));
-        algo_lib::_db.limit = algo::CurrSchedTime() + algo::ToSchedTime(0.1);
+        algo_lib::_db.limit = algo::CurrSchedTime() + algo::ToSchedTime(1.0);
         MainLoop();
-        prlog(atf_amc::_db.timehook_recur_counter<<" <=> "<<7);
-        success = atf_amc::_db.timehook_recur_counter>=7 && atf_amc::_db.timehook_recur_counter<=10;
+        verblog("atf_amc.timehook_recur"<<Keyval("n_fire",atf_amc::_db.timehook_recur_counter));
+        success = atf_amc::_db.timehook_recur_counter>=5 && atf_amc::_db.timehook_recur_counter<=101;
     }
-    vrfy_(success);
+    vrfy(success, tempstr()<<"atf_amc.timehook_recur"
+         <<Keyval("n_fire",atf_amc::_db.timehook_recur_counter)
+         <<Keyval("comment","a second at a hundredth-second period fires often, and at most 101 times"));
 }
 
 // -----------------------------------------------------------------------------

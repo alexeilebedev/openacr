@@ -119,9 +119,9 @@ void                 bltin_CopyIn(sv2ssim::FBltin &row, amcdb::Bltin &in) __attr
 
 // Set all fields to initial values.
 // func:sv2ssim.FBltin..Init
-inline void          FBltin_Init(sv2ssim::FBltin& bltin);
+inline void          FBltin_Init(sv2ssim::FBltin& parent);
 // func:sv2ssim.FBltin..Uninit
-void                 FBltin_Uninit(sv2ssim::FBltin& bltin) __attribute__((nothrow));
+void                 FBltin_Uninit(sv2ssim::FBltin& parent) __attribute__((nothrow));
 
 // --- sv2ssim.trace
 #pragma pack(push,1)
@@ -606,7 +606,7 @@ private:
 };
 // Set all fields to initial values.
 // func:sv2ssim.FField..Init
-void                 FField_Init(sv2ssim::FField& field);
+void                 FField_Init(sv2ssim::FField& parent);
 // func:sv2ssim.FField..ReadFieldMaybe
 bool                 FField_ReadFieldMaybe(sv2ssim::FField& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of sv2ssim::FField from an ascii string.
@@ -614,7 +614,7 @@ bool                 FField_ReadFieldMaybe(sv2ssim::FField& parent, algo::strptr
 // func:sv2ssim.FField..ReadStrptrMaybe
 bool                 FField_ReadStrptrMaybe(sv2ssim::FField &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:sv2ssim.FField..Uninit
-void                 FField_Uninit(sv2ssim::FField& field) __attribute__((nothrow));
+void                 FField_Uninit(sv2ssim::FField& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:sv2ssim.FField.String  printfmt:Tuple
 // func:sv2ssim.FField..Print
@@ -646,7 +646,7 @@ void                 svtype_CopyIn(sv2ssim::FSvtype &row, dmmeta::Svtype &in) __
 
 // Set all fields to initial values.
 // func:sv2ssim.FSvtype..Init
-inline void          FSvtype_Init(sv2ssim::FSvtype& svtype);
+inline void          FSvtype_Init(sv2ssim::FSvtype& parent);
 
 // --- sv2ssim.FieldId
 #pragma pack(push,1)

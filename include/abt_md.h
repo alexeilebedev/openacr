@@ -89,7 +89,6 @@ namespace abt_md { // update-hdr
     // - Finally, check that the resulting section body doesn't have unbalanced backticks
     // (it's possible since the inline-command output might contain backticks).
     void UpdateSection(abt_md::FFileSection &file_section);
-    bool TocQ(abt_md::FFileSection &section);
     bool TitleQ(abt_md::FFileSection &section);
 
     // Load specified readme into memory as FILE_SECTION records.
@@ -138,58 +137,73 @@ namespace abt_md { // update-hdr
     // (so "A & B" and "A: B" both anchor as "a-b"; "-link" stays as "-link")
     // All characters are lowercased
     tempstr MdAnchor(algo::strptr str);
-    algo::strptr FileIcon();
-    algo::strptr FolderIcon();
 
     // Print anchor to OUT and add it to a global table
     void AddAnchor(algo::strptr name, cstring &out);
     tempstr Backticks(algo::strptr text);
-    tempstr Preformatted(algo::strptr text);
+    tempstr Preformatted(algo::strptr text, algo::strptr lang);
     tempstr CodeBlock(algo::strptr text);
 
     // Return markdown link pointing to page URL and optional anchor ANCHOR
     // The displayed string is NAME
     tempstr Link(algo::strptr name, algo::strptr url, algo::strptr anchor = "");
 
-    // Construct a link to file FNAME
-    // using the first line of FNAME as the link text
-    tempstr LinkToMd(strptr fname);
-
     // Link within repo to a given file
     // The URL is given as a relative pathname with respect to the root
     tempstr LinkToFileAbs(algo::strptr name, algo::strptr url, algo::strptr anchor = "");
 
-    // Link to the md file for given ssimfile
+    // Link to whatever documents SSIMFILE, with NAME as the link text.
+    //
+    // A namespace's tables are documented in one file, txt/ssimdb/<ns>/README.md, and a table
+    // somebody wrote about has a section there under a heading naming it -- so the anchor of
+    // that heading is the table's own name and the link carries it.  A table nobody wrote
+    // about has no such heading, and the link then names the namespace's documentation
+    // alone, which is where a reader of that link is going anyway.  Emitting the anchor
+    // regardless would make `abt_md -check` right to complain: an anchor naming no heading is
+    // a link that lands somewhere the writer did not mean.
+    //
+    // ANCHOR is not taken here, because the anchor is the ssimfile.
     tempstr LinkToSsimfile(algo::strptr name, algo::strptr ssimfile, algo::strptr anchor = "");
+
+    // Mark every ssimfile a namespace README carries a section about.
+    //
+    // The section's heading is the table's name, and that heading is what a link to the
+    // table anchors on, so this walk is what decides whether such a link carries an anchor
+    // at all.  It reads each ssimdb namespace's README once, before any document is
+    // generated, since a link written into one document may name a table of another.
+    void Main_ScanSsimdoc();
 
     // Link to documentation for given namespace (could be lib,protocol,exe,ssimdb)
     tempstr LinkToNs(strptr ns, algo::strptr anchor = "");
 
-    // Link to gen documentation for given namespace (could be lib,protocol,exe,ssimdb)
-    // The link text is NAME
-    // the namespace is NS
-    // Optional anchor is ANCHOR
-    // For executables and libraries, a separate gen file is used
-    tempstr LinkToGen(algo::strptr name, abt_md::FNs &ns, algo::strptr anchor = "");
+    // Link to the page documenting REFTYPE.
+    //
+    // Every reftype has a page of its own under txt/exe/amc/reftype, and the link
+    // goes straight to it.  The index beside them, txt/exe/amc/reftype.md, groups the
+    // reftypes so a reader who does not yet know which one they want can find it --
+    // but a reader who arrives from a field's reftype column already knows, and
+    // landing them on an index entry that says "see the page" costs them a click for
+    // nothing.
     tempstr LinkToReftype(algo::strptr reftype);
+
+    // Link to whatever documents CTYPE, or name it as a code span when nothing does.
+    //
+    // A ctype that is a table has the ssimdb page of that table, and a ctype with a file of
+    // its own is linked to that file.  Everything else is a type nothing in txt/ describes,
+    // and what a reader wants of one is its declaration and the code amc made of it -- which
+    // is the page `doc ctype:<name>` opens.
+    //
+    // A markdown link may name a path and a fragment and nothing else, so a file cannot spell
+    // that page as a target.  What it can do is write the name as a code span, which doc reads
+    // as the name of a ctype and turns into a link to that ctype's page; a browser looking at
+    // the file on the server renders it as the name, which is what it is.
     tempstr LinkToCtype(abt_md::FCtype &ctype);
-    tempstr TypeComment(abt_md::FCtype &ctype);
 
     // Compute base type, or return CTYPE if none
     abt_md::FCtype *GetBaseType(abt_md::FCtype &ctype);
 
     // Create an HTML comment
     tempstr MdComment(algo::strptr str);
-
-    // Create table of contents link from string
-    // The string should be a section heading for which markdown generates a link target;
-    // We just repeat its algorithm and generate a link to that target
-    tempstr LinkToSection(strptr str);
-
-    // Populate global table DIRENT with a directory listing
-    // matching PATTERN, that can be read in sorted order
-    // (Dir_curs does not provide sorted order)
-    void PopulateDirent(abt_md::FDirscan &dirscan, strptr pattern);
     int Sortkey(abt_md::FMdsection &mdsection, int i);
 
     // Determine header depth level of current line by counting leading #'s
@@ -198,6 +212,7 @@ namespace abt_md { // update-hdr
     // Update loaded readme file:
     // - generate missing sections
     // - evaluate all commands using sandbox (if specified)
+    // - record the document's title on its dev.readmefile row
     // - save readme to disk
     void UpdateReadme();
 
@@ -221,6 +236,21 @@ namespace abt_md { // update-hdr
     // line the subprocess writes passes through to stderr unchanged.
     // A subprocess that exits abnormally has emitted no checkerr line for the
     // validations it never ran, so its wait status fails the run too.
+    // Write the recorded titles back into the database they were read from.
+    //
+    // Every processed row is sent, not only the ones whose title moved, because acr decides
+    // whether the file changes: a run over a tree already up to date updates nothing and
+    // writes nothing, and tracking which rows moved would be a second answer to a question
+    // acr already answers.
+    //
+    // acr is told the same -in this run was given, so the rows land where they came from.
+    // An -in naming one ssimfile, or stdin, is a fragment somebody assembled by hand rather
+    // than a database this tool may edit, so such a run records nothing at all -- which is
+    // also what keeps a comptest driving abt_md from a scratch directory out of data/.
+    //
+    // A dry run sends nothing, and neither does a check: the whole of what either promises
+    // is that it leaves the tree alone.
+    void Main_SaveReadmetitle();
     void Main_RunBatchCheck();
 
     // Report every dev.mdsection that claims to generate a section it can never
@@ -287,26 +317,7 @@ namespace abt_md { // update-hdr
     //
     void DescribeCtype(abt_md::FCtype *ctype, cstring &out);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void mdsection_Tables(abt_md::FFileSection &section); // gstatic/dev.mdsection:Tables
-    // void mdsection_Attributes(abt_md::FFileSection &section); // gstatic/dev.mdsection:Attributes
-    abt_md::FSsimfile *FieldSsimfile(abt_md::FCtype &ctype);
-    void PopulateScanNs(abt_md::FNs &ns);
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void mdsection_Inputs(abt_md::FFileSection &section); // gstatic/dev.mdsection:Inputs
-    // void mdsection_InputMessages(abt_md::FFileSection &section); // gstatic/dev.mdsection:InputMessages
-    abt_md::FCtype *GenerateFieldsTable(abt_md::FCtype &ctype, cstring &text_out, cstring &base_note);
-
-    // Extract generated info and combine into a table
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void mdsection_Imdb(abt_md::FFileSection &section); // gstatic/dev.mdsection:Imdb
     // void mdsection_Options(abt_md::FFileSection &section); // gstatic/dev.mdsection:Options
-    // void mdsection_Ctypes(abt_md::FFileSection &section); // gstatic/dev.mdsection:Ctypes
-
-    // Regenerate the Functions section by forking src_func.  This is one
-    // fork per executable readme — for a full repo regen that's ~50.
-    // evalcmd:N disables it so fast "refresh doc structure" runs don't
-    // pay the fork tax; the previous Functions text is left in place.
-    // void mdsection_Functions(abt_md::FFileSection &section); // gstatic/dev.mdsection:Functions
 
     // Update title of document
     // - For namespace, pull namespace name and comment from ns table
@@ -322,41 +333,12 @@ namespace abt_md { // update-hdr
     // source is the generated file, not the binary.
     // void mdsection_Syntax(abt_md::FFileSection &section); // gstatic/dev.mdsection:Syntax
 
-    // Table of contents
-    // for README file, create links to subdirectories
-    // for non-README file, create links to sections inside file
-    // The README.md files must form a tree covering all files.
-    // Thus, non-README must not include links to other files in the same directory into ToC,
-    // but can include those links outside of ToC
-    // void mdsection_Toc(abt_md::FFileSection &section); // gstatic/dev.mdsection:Toc
-
-    // Create links to other files in the same directory
-    // void mdsection_Chapters(abt_md::FFileSection &section); // gstatic/dev.mdsection:Chapters
-
-    // Create links to other files in the same directory
-    // void mdsection_Internals(abt_md::FFileSection &section); // gstatic/dev.mdsection:Internals
-    // void mdsection_Sources(abt_md::FFileSection &section); // gstatic/dev.mdsection:Sources
-    // void mdsection_Dependencies(abt_md::FFileSection &section); // gstatic/dev.mdsection:Dependencies
-    // void mdsection_Description(abt_md::FFileSection &section); // gstatic/dev.mdsection:Description
+    // A Description is prose somebody wrote, and nothing here generates one.
+    // void mdsection_Description(abt_md::FFileSection &); // gstatic/dev.mdsection:Description
     // void mdsection_Content(abt_md::FFileSection &); // gstatic/dev.mdsection:Content
     // void mdsection_Limitations(abt_md::FFileSection &); // gstatic/dev.mdsection:Limitations
     // void mdsection_Example(abt_md::FFileSection &); // gstatic/dev.mdsection:Example
 
-    // Update tests section
-    // Scan component tests for this namespace and print a table
-    // void mdsection_Tests(abt_md::FFileSection &section); // gstatic/dev.mdsection:Tests
-
     // Update copyright section
     // void mdsection_Copyright(abt_md::FFileSection &); // gstatic/dev.mdsection:Copyright
-    // void mdsection_Subsets(abt_md::FFileSection &section); // gstatic/dev.mdsection:Subsets
-
-    // Show related ssimfiles (those that reference this ssimfile NOT through pkey)
-    // void mdsection_Related(abt_md::FFileSection &section); // gstatic/dev.mdsection:Related
-
-    // Show related ssimfiles (those that reference this ssimfile NOT through pkey)
-    // void mdsection_CmdlineUses(abt_md::FFileSection &section); // gstatic/dev.mdsection:CmdlineUses
-
-    // Show related ssimfiles (those that reference this ssimfile NOT through pkey)
-    // void mdsection_ImdbUses(abt_md::FFileSection &section); // gstatic/dev.mdsection:ImdbUses
-    // void mdsection_Constants(abt_md::FFileSection &section); // gstatic/dev.mdsection:Constants
 }

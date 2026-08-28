@@ -19,7 +19,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Header: include/amc.h -- Main header
 //
 
@@ -99,7 +99,7 @@ namespace amc { // update-hdr
     // Finds the child that violates the balance. Left child if no disbalance.
     // void tfunc_Atree_TallerChild(); // gstatic/amcdb.tfunc:Atree.TallerChild
 
-    // Disconnect the node from its parent.
+    // Disconnect the node from its up.
     // void tfunc_Atree_Disconnect(); // gstatic/amcdb.tfunc:Atree.Disconnect
 
     // Rotates the tree from the direction from->to
@@ -119,7 +119,7 @@ namespace amc { // update-hdr
     // Notice that after rebalance a node can go deeper down the tree.
     // void tfunc_Atree_Propagate(); // gstatic/amcdb.tfunc:Atree.Propagate
 
-    // Iterate down the tree starting from the parent and place
+    // Iterate down the tree starting from the up and place
     // the element in the appropriate leaf.
     // Note that balance might be broken after this operation.
     // void tfunc_Atree_InsertImpl(); // gstatic/amcdb.tfunc:Atree.InsertImpl
@@ -153,7 +153,7 @@ namespace amc { // update-hdr
     // 2. If that element has a child, swap it with the child by turning from child.
     // 3. Swap the element to be removed with the next.
     // 4. Remove the element.
-    // 5. Propagate up from the next's parent.
+    // 5. Propagate up from the next's up.
     // void tfunc_Atree_Remove(); // gstatic/amcdb.tfunc:Atree.Remove
 
     // First element that is greater or equal to the given value
@@ -453,7 +453,7 @@ namespace amc { // update-hdr
 
     // Introduce local variable that points to the parent side of XREF
     // by evaluating the path provided by xref + xreffld + xrefvia records.
-    bool ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func, amc::FGenXref &frame, bool check_null);
+    bool ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func, amc::FGenXref &frame, bool check_null, algo::strptr rowname);
     //     (user-implemented function, prototype is in amc-generated header)
     // void tfunc_Ctype_XrefMaybe(); // gstatic/amcdb.tfunc:Ctype.XrefMaybe
     // void tfunc_Ctype_Unref(); // gstatic/amcdb.tfunc:Ctype.Unref
@@ -1826,6 +1826,14 @@ namespace amc { // update-hdr
     // free level at or above the request, splitting oversized upper halves back
     // onto the free lists, and are refilled from the base pool at huge-page
     // friendly sizes when every suitable level is empty.
+    //
+    // Each handout is marked for the memory checker, which is what makes a record
+    // this pool lent and never got back readable as a leak.  Without the mark the
+    // checker sees the pool's refills and nothing else: one 2MB block, live from
+    // the moment it was mapped, whatever the program did with the records inside
+    // it.  The refill is unmarked in the same breath where the base pool marks its
+    // own handouts, since a block and the records carved from it may not both be
+    // blocks the checker holds (see amc::MemcheckedPoolQ).
     // void tfunc_Lpool_AllocMem(); // gstatic/amcdb.tfunc:Lpool.AllocMem
 
     // Generate the lpool's pre-reservation function: allocate NBUF buffers of
@@ -1997,8 +2005,54 @@ namespace amc { // update-hdr
     // of type Global.
     bool GlobalQ(amc::FCtype &ctype);
 
-    // Pick a name with which to refer to a record of type CTYPE
-    tempstr Refname(amc::FCtype &ctype, algo::strptr dflt = "parent");
+    // Append to OUT the instname of a ctype named NAME (the name with no namespace):
+    // the lower_under form of that name, with a leading F dropped.
+    // The F marks a ctype that lives in a pool and is not part of the name, so
+    // FTarget gives target.  A word boundary is a capital that follows a lowercase
+    // letter or a digit, which makes AbcDef into abc_def and H2Stream into
+    // h2_stream, while a run of capitals carries no boundary and ABCDef stays
+    // abcdef.
+    void strptr_PrintInstname(algo::strptr name, algo::cstring &out);
+
+    // The name CTYPE contributes to a generated identifier -- a trace counter, a
+    // static hook function, a hook ctype, a ptrary membership field.
+    // Derived from the ctype's own name, so it does not depend on which fields
+    // happen to instantiate the ctype, or on the order those fields are declared in.
+    // Stored on the ctype: the derivation runs once per ctype and every later reader
+    // gets the field.  It runs on first read rather than in a generation pass
+    // because the two constraints on such a pass cannot both be met -- gen_trace
+    // composes an identifier from an instname and runs sixth, while gen_proc,
+    // gen_msgcurs and gen_clonefconst create ctypes of their own much later, and
+    // ResetVars asks for the instname of every one of them.
+    strptr Instname(amc::FCtype &ctype);
+
+    // The name of the variable that holds a record of CTYPE.
+    // A global ctype is held by the namespace global, whose name is the instname
+    // behind an underscore: _db.  Every other record is held by whatever field
+    // instantiates it, and that field is named after the ctype, so the instname
+    // names it.
+    // Identifiers that read as a path to a value are built from this rather than
+    // from the instname alone, because the underscore is part of the global's name:
+    // a trace counter over the malloc pool is _db.trace.alloc__db_malloc, and the
+    // metric layer recovers the pool's name by stripping the three leading
+    // components that spelling gives it.
+    tempstr Varname(amc::FCtype &ctype);
+
+    // The name a generated function body uses to refer to a record of CTYPE.
+    // A global ctype has exactly one record and the body names it directly, as the
+    // namespace global: the instname behind an underscore, which is _db.
+    // Every other record arrives as the function's first argument, and that
+    // argument is named parent in every generated function without exception.
+    // One fixed word is what makes the name safe, and a name derived from the ctype
+    // is not.  Consider lib_sqlite.FRow, whose body opens by aliasing its argument
+    // to row -- the name every generated body uses for the record it is about.  A
+    // parameter also called row would shadow that alias, so the schema names the
+    // parameter trow instead, and 33 ctypes in the tree would collide the same way
+    // if the parameter took the ctype's name.  A single reserved word cannot
+    // collide, and it also removes the need for two generators to agree: the Atree
+    // child Init and the ctype's own Init write the same parameter by construction
+    // rather than by both deriving the same string.
+    tempstr Refname(amc::FCtype &ctype);
 
     // Returns TRUE if the field is an inline value, except for Varlen and Opt
     bool ValQ(amc::FField &field);
@@ -2784,7 +2838,7 @@ namespace amc { // update-hdr
     // that means H(A,B) == H(B,A)
     // sum byte-wise without carry
     // exception if length does not match
-    void CombineSignaturesUnordered(algo::Sha1sig &dst, algo::Sha1sig src);
+    void CombineSignaturesUnordered(algo::Signature &dst, algo::Signature src);
 
     // -------------------------------------------------------------------
     // cpp/amc/size.cpp -- Compute struct sizes
@@ -3047,6 +3101,24 @@ namespace amc { // update-hdr
     // Field doesn't have a custom pool, then the namespace custom pool (as specified in nsx table)
     // is used.
     amc::FField *GetBasepool(amc::FField &field);
+
+    // TRUE when FIELD is a pool that marks each block it hands out, so a memory
+    // checker accounts for the blocks one at a time instead of for the pool's whole
+    // address space.
+    //
+    // Only a pool that carves may mark, and each block may be marked by exactly one
+    // pool.  Consider an Lpool that refills from another Lpool: the outer pool marks
+    // the 2MB block it lends, the inner pool marks the records it cuts from that
+    // block, and the checker now holds two blocks that overlap.  Memcheck refuses
+    // the overlap and aborts the run when its leak search finds the pair.  So a pool
+    // whose base pool appears here unmarks the block it receives before carving it,
+    // and the record marks that follow are the only ones left.
+    //
+    // Malloc and Sbrk are absent for opposite reasons.  Every block malloc returns
+    // is one the checker already knows, and it drops such a block from the leak
+    // search by itself once marked blocks appear inside it.  Sbrk hands out
+    // mappings, which the checker never accounted for in the first place.
+    bool MemcheckedPoolQ(amc::FField &field);
 
     // Call tfunc generators for every field in this ctype
     // Each field triggers zero or more tclass generators

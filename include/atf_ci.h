@@ -91,7 +91,13 @@ namespace atf_ci { // update-hdr
     // void citest_acr_ed_target(); // gstatic/atfdb.citest:acr_ed_target
 
     // Runs in sandbox
-    // void citest_abt_md_after_ssimfile_is_added(); // gstatic/atfdb.citest:abt_md_after_ssimfile_is_added
+    //
+    // A table created now is listed by its namespace's page, and nothing was regenerated to
+    // make that true: the list comes from dmmeta.ssimfile when the page is asked for, so the
+    // page is right the moment the row exists.  The check that used to stand here asked
+    // whether abt_md had written a markdown file per table and named it in a directory
+    // README, which is the arrangement this replaced.
+    // void citest_doc_after_ssimfile_is_added(); // gstatic/atfdb.citest:doc_after_ssimfile_is_added
     // void citest_apm(); // gstatic/atfdb.citest:apm
     // void citest_apm_reinstall(); // gstatic/atfdb.citest:apm_reinstall
 
@@ -172,7 +178,26 @@ namespace atf_ci { // update-hdr
     // -------------------------------------------------------------------
     // cpp/atf_ci/memcheck.cpp
     //
+
+    // First memcheck citest: build every target with the memcheck cfg, which is the
+    // configuration the memcheck run drives.
+    //
+    // That cfg is release with valgrind's client requests compiled in and nothing
+    // else changed.  The requests are what let a checker account for the records
+    // inside an amc pool, and they are not free when nothing is watching -- a dozen
+    // instructions on every allocation and every free -- so the configuration that
+    // ships does not carry them.  Keeping the optimization identical to release is
+    // the point of a separate cfg rather than reusing debug: the binary a checker
+    // examines is generated the way the shipped one is, so what it finds is what the
+    // shipped code would do.
+    //
+    // No -install, so bin/ keeps pointing at the release build; the run reaches the
+    // annotated binaries through atf_comp's -cfg:memcheck instead.
     //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_mem_prep(); // gstatic/atfdb.citest:mem_prep
+
+    // Run every comptest under valgrind memcheck against the annotated build that
+    // mem_prep produced.
     // void citest_atf_comp_mem(); // gstatic/atfdb.citest:atf_comp_mem
 
     // -------------------------------------------------------------------
@@ -245,4 +270,17 @@ namespace atf_ci { // update-hdr
     // forbidden words, so it names every one of them by construction.
     // void citest_apm_nodownstream(); // gstatic/atfdb.citest:apm_nodownstream
     // void citest_apm_gen(); // gstatic/atfdb.citest:apm_gen
+
+    // Refuse an install script that cannot say what it installs.
+    // Each bin/install-% script is inlined verbatim into the generated image build
+    // scripts, where it runs as root, so whoever answers for the endpoint it reads
+    // from chooses what lands in the image.  Four defects make that unanswerable,
+    // and none of them is ever needed: piping a fetch into a shell, turning the
+    // certificate check off, naming latest in a url, and cloning a repository
+    // without moving it to a named revision.
+    // A clone is carried until a checkout or a reset moves it, so a file that
+    // clones twice has to move each one, and a clone moved on its own line is
+    // already satisfied.  A comment line is skipped whatever it is indented by,
+    // because bash ignores it wherever the generator puts it.
+    // void citest_install_script(); // gstatic/atfdb.citest:install_script
 }

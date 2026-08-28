@@ -19,7 +19,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/ctype.cpp -- Ctype code generators
 //
 
@@ -97,7 +97,6 @@ void amc::tfunc_Ctype_Uninit() {
         Ins(&R, uninit.proto, "$Name_Uninit()", false);
         AddProtoArg(uninit, Refto(ctype.cpp_type), refname, !GlobalQ(ctype));
         AddRetval(uninit, "void", "", "");
-        Ins(&R, uninit.body, "$Partype &row = $parname; (void)row;");
         uninit.inl = c_field_N(ctype)<10;
         int naction=0;
 
@@ -131,11 +130,11 @@ void amc::tfunc_Ctype_Uninit() {
             ind_beg(amc::ctype_zs_xref_curs, xref, ctype) if (xref.p_field->reftype != dmmeta_Reftype_reftype_Upptr) {
                 Set(R, "$xrefname", name_Get(xref));
                 if (ns.c_globfld && xref.p_field->p_ctype == ns.c_globfld->p_ctype) {
-                    Ins(&R, uninit.body, "$xrefname_Remove(row); // remove $name from index $xrefname");
+                    Ins(&R, uninit.body, "$xrefname_Remove($parname); // remove $name from index $xrefname");
                 } else {
-                    ComputeAccess(R,ctype,xref,uninit,frame, false);
+                    ComputeAccess(R,ctype,xref,uninit,frame,false,Subst(R,"$parname"));
                     Ins(&R, uninit.body, "if (p_$parent)  {");
-                    Ins(&R, uninit.body, "    $xrefname_Remove(*p_$parent, row);// remove $name from index $xrefname");
+                    Ins(&R, uninit.body, "    $xrefname_Remove(*p_$parent, $parname);// remove $name from index $xrefname");
                     Ins(&R, uninit.body, "}");
                 }
                 uninit.inl=false;// the operation isn't fast anyway, so uninline the function
@@ -197,7 +196,7 @@ static void CheckSeen(amc::FGenXrefSeen &seen, amc::FXref &xref) {
 // -----------------------------------------------------------------------------
 
 // Generate null-acces check for xref function
-static void ComputeAccess_CheckNull(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func) {
+static void ComputeAccess_CheckNull(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func, algo::strptr rowname) {
     amc::FField     *xreffld = GetKeyfld(xref);
     amc::FField *viafld = GetViafld(xref);
     if (xreffld->reftype == dmmeta_Reftype_reftype_Upptr) {
@@ -207,7 +206,7 @@ static void ComputeAccess_CheckNull(algo_lib::Replscope &R, amc::FCtype &ctype, 
         Ins(&R, func.body, "}");
     } else if (viafld) {
         Set(R, "$via",viafld->field);
-        Set(R, "$getrow", FieldvalExpr(&ctype, *xreffld, "row"));
+        Set(R, "$getrow", FieldvalExpr(&ctype, *xreffld, rowname));
         Ins(&R, func.body, "if (UNLIKELY(!p_$parent)) {");
         Ins(&R, func.body, "    algo_lib::ResetErrtext() << \"$ns.bad_xref  index:$via\" << Keyval(\"key\", $getrow);");
         Ins(&R, func.body, "    return false;");
@@ -224,7 +223,7 @@ static void ComputeAccess_CheckNull(algo_lib::Replscope &R, amc::FCtype &ctype, 
 
 // Introduce local variable that points to the parent side of XREF
 // by evaluating the path provided by xref + xreffld + xrefvia records.
-bool amc::ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func, amc::FGenXref &frame, bool check_null) {
+bool amc::ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func, amc::FGenXref &frame, bool check_null, algo::strptr rowname) {
     bool retval=false;
     amc::FField *keyfld = GetKeyfld(xref);
     amc::FField *viafld = GetViafld(xref);
@@ -232,7 +231,7 @@ bool amc::ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &
         dmmeta::FieldPkey xreffldname(name_Get(*keyfld));
         dmmeta::FieldPkey via(viafld ? strptr(viafld->field) : strptr());
         Set(R, "$parent", xreffldname);
-        Set(R, "$access", FieldvalExpr(&ctype, *keyfld, "row"));// execute early to allow more error checking
+        Set(R, "$access", FieldvalExpr(&ctype, *keyfld, rowname));// execute early to allow more error checking
         amc::FGenXrefSeen *seen = ind_seen_Find(frame,xreffldname);
         if (seen) {
             CheckSeen(*seen,xref);
@@ -252,7 +251,7 @@ bool amc::ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &
             Set(R, "$ParType", parentrow->cpp_type);
             Ins(&R, func.body, "$ParType* p_$parent = $access;");
             if (check_null) {
-                ComputeAccess_CheckNull(R,ctype,xref,func);
+                ComputeAccess_CheckNull(R,ctype,xref,func,rowname);
             }
             retval=true;
         }
@@ -299,7 +298,7 @@ void amc::tfunc_Ctype_XrefMaybe() {
                 Set(R, "$xrefname", name_Get(xref));
                 Set(R, "$xrefkey", xref.field);
                 Set(R, "$ns"  , ns.ns);
-                ComputeAccess(R,ctype,xref,xrefmaybe,frame,true);
+                ComputeAccess(R,ctype,xref,xrefmaybe,frame,true,"row");
                 Set(R, "$inscond", xref.inscond.value);
                 bool glob2 = xref.p_field->p_ctype == ns.c_globfld->p_ctype;
                 Set(R, "$thisparname", glob2 || !keyfld ? strptr() : strptr(tempstr() << "*p_"<<name_Get(*keyfld)));

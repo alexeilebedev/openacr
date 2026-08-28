@@ -1,0 +1,28 @@
+# Leaks inside a program this repo does not build.
+#
+# The memcheck wrap follows children, because a comptest step often reaches the
+# tool under test through a shell -- so the shell is traced too, and so is
+# whatever else the step runs.  bash releases neither its command table nor its
+# shell-variable hash before it exits, and sed and cp keep their buffers to the
+# end, so every comptest whose script runs one of them reports those leaks under
+# its own name.  A leak in a program this repo does not build is not a finding
+# about this repo, which is the same reason the wrap stops tracing the C++
+# toolchain.
+#
+# Scoped to leaks on purpose.  An invalid read or write inside one of these
+# programs is still reported, because that one may well be ours -- a bad buffer
+# handed to a helper is our defect and not the helper's.
+{
+   leak-in-a-traced-program-under-usr-bin
+   Memcheck:Leak
+   match-leak-kinds: all
+   ...
+   obj:/usr/bin/*
+}
+{
+   leak-in-a-traced-program-under-bin
+   Memcheck:Leak
+   match-leak-kinds: all
+   ...
+   obj:/bin/*
+}

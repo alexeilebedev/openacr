@@ -293,10 +293,13 @@ void abt_md::EvalInlineCommand(abt_md::FFileSection &file_section) {
                 prerr(readmefile.gitfile<<":"<<lineno<<": command failed ("<<algo::DescribeWaitStatus(rc)<<"): "<<cmd);
                 algo_lib::_db.exit_code++;
             }
-            if (readmefile.filter == "") {
-                readmefile.filter = "cat";
-            }
-            out << SysEval(tempstr()<<readmefile.filter<<" <"<<tempfile,FailokQ(true),1024*1024*10);
+            // an empty filter means the output is taken as it comes, which is what cat
+            // does.  It is read as a default here and not written onto the record: the
+            // record is the file's own dev.readmefile row, and this tool saves that row
+            // to carry the document's title, so a default assigned to it would land in
+            // the ssimfile as though somebody had asked for it.
+            algo::strptr filter(ch_N(readmefile.filter) > 0 ? algo::strptr(readmefile.filter) : algo::strptr("cat"));
+            out << SysEval(tempstr()<<filter<<" <"<<tempfile,FailokQ(true),1024*1024*10);
             inlinecommand=true;
         } else if (StartsWithQ(line, "```")) {
             out << line << eol;
@@ -494,14 +497,52 @@ static void QueueCommandLine(algo::strptr text, u32 lineno) {
 // A value carrying `%` is a query rather than a key -- it names a set, and a
 // set that happens to be empty is not an error -- and one carrying `<` is a
 // template the reader fills in. Neither is looked up.
+//
+// A table's own short name is read as one further form, because that is how a
+// document names a table: `ssimfile:x2db.product` says which table, where the
+// qualified `dmmeta.ssimfile:x2db.product` says which row of the catalog and
+// reads sideways in a sentence.
+//
+// The short name is admitted only where it cannot be anything else, and the
+// test for that is what the table is keyed by. A table whose primary key is a
+// table name is a table about tables, so a span naming one is a reference to a
+// table and the value either names a table or names none. Every other short
+// name stays refused, and each refusal is a span some document already writes:
+// `cascdel:Y` is an attribute inside a tuple, `cfmt:Argv` and `sandbox:Y` are
+// values rather than keys, `field:dmmeta.Field.zs_fcb` is a key a sentence
+// calls nonsense on purpose, `command::x2sup.trace` is C++, and
+// `func:doc.NavText` is a location doc answers rather than a row of
+// `dmmeta.func`. Requiring the namespace, as the qualified form does, tells
+// none of those apart -- what does is that none of their leaves is a catalog.
+//
+// `only` holds the candidate while there is exactly one, and a second match clears
+// it, so the pointer is its own single-match test.
+static bool ShortkeyQ(algo::strptr ssimfile) {
+    abt_md::FSsimfile *only = NULL;
+    int nfound = 0;
+    ind_beg(abt_md::_db_ssimfile_curs, cand, abt_md::_db) {
+        if (Pathcomp(cand.ssimfile, ".RR") == ssimfile) {
+            only = nfound == 0 ? &cand : NULL;
+            nfound++;
+        }
+    }ind_end;
+    bool catalog = false;
+    if (only) {
+        abt_md::FField *p_field = only->p_ctype ? c_field_Find(*only->p_ctype, 0) : NULL;
+        catalog = p_field
+            && (only->ssimfile == "dmmeta.ssimfile" || p_field->arg == "dmmeta.Ssimfile");
+    }
+    return catalog;
+}
+
 static void QueueAcrKey(algo::strptr text, u32 lineno) {
     abt_md::FReadmefile &readmefile = *abt_md::_db.c_readmefile;
     int colon = algo::FindStr(text, ":");
     strptr ssimfile = colon == -1 ? strptr() : algo::FirstN(text, colon);
     strptr value = colon == -1 ? strptr() : algo::RestFrom(text, colon + 1);
-    bool keyshape = colon > 0
-        && ch_N(value) > 0
-        && algo::FindStr(ssimfile, ".") != -1
+    bool named = colon > 0 && ch_N(value) > 0
+        && (algo::FindStr(ssimfile, ".") != -1 || ShortkeyQ(ssimfile));
+    bool keyshape = named
         && algo::FindStr(value, "%") == -1
         && algo::FindStr(value, "<") == -1;
     // The key is queued only when the tuple that would select it can be
@@ -624,12 +665,6 @@ void abt_md::UpdateSection(abt_md::FFileSection &file_section) {
 
 // -----------------------------------------------------------------------------
 
-bool abt_md::TocQ(abt_md::FFileSection &section) {
-    return section.p_mdsection && section.p_mdsection->mdsection == abt_md_mdsection_Toc.mdsection;
-}
-
-// -----------------------------------------------------------------------------
-
 bool abt_md::TitleQ(abt_md::FFileSection &section) {
     return section.p_mdsection && section.p_mdsection->mdsection == abt_md_mdsection_Title.mdsection;
 }
@@ -650,7 +685,7 @@ bool abt_md::TitleQ(abt_md::FFileSection &section) {
 // section split can no longer be trusted, so the function returns false
 // and the caller refuses to rewrite the file.
 bool abt_md::LoadSections(abt_md::FReadmefile &readmefile) {
-    ind_replvar_Cascdel(_db.R);// clean up
+    algo_lib::Reset(_db.R);// clean up
     if (readmefile.p_ns) {
         Set(_db.R,"$ns",readmefile.p_ns->ns);
     }

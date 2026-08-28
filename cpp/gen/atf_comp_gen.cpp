@@ -35,15 +35,12 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_comp::FDb   atf_comp::_db;    // dependency found via dev.targdep
 
@@ -59,6 +56,8 @@ namespace atf_comp { // gen:ns_print_proto
     static bool          unstableattr_InputMaybe(atfdb::Unstableattr &elem) __attribute__((nothrow));
     // func:atf_comp.FDb.testenv.InputMaybe
     static bool          testenv_InputMaybe(atfdb::Testenv &elem) __attribute__((nothrow));
+    // func:atf_comp.FDb.unstableline.InputMaybe
+    static bool          unstableline_InputMaybe(atfdb::Unstableline &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:atf_comp.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -68,11 +67,11 @@ namespace atf_comp { // gen:ns_print_proto
     // Internal function to scan for a message
     //
     // func:atf_comp.FProc.in.ScanMsg
-    static void          in_ScanMsg(atf_comp::FProc& proc) __attribute__((nothrow));
+    static void          in_ScanMsg(atf_comp::FProc& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_comp.FProc.in.Shift
-    static void          in_Shift(atf_comp::FProc& proc) __attribute__((nothrow));
+    static void          in_Shift(atf_comp::FProc& parent) __attribute__((nothrow));
     // func:atf_comp...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
@@ -100,35 +99,34 @@ void atf_comp::comptest_CopyIn(atf_comp::FComptest &row, atfdb::Comptest &in) {
 }
 
 // --- atf_comp.FComptest.target.Get
-algo::strptr atf_comp::target_Get(atf_comp::FComptest& comptest) {
-    return algo::Pathcomp(comptest.comptest, ".LL");
+algo::strptr atf_comp::target_Get(atf_comp::FComptest& parent) {
+    return algo::Pathcomp(parent.comptest, ".LL");
 }
 
 // --- atf_comp.FComptest.testname.Get
-algo::strptr atf_comp::testname_Get(atf_comp::FComptest& comptest) {
-    return algo::Pathcomp(comptest.comptest, ".LR");
+algo::strptr atf_comp::testname_Get(atf_comp::FComptest& parent) {
+    return algo::Pathcomp(parent.comptest, ".LR");
 }
 
 // --- atf_comp.FComptest..Init
 // Set all fields to initial values.
-void atf_comp::FComptest_Init(atf_comp::FComptest& comptest) {
-    comptest.timeout = i32(10);
-    comptest.memcheck = bool(true);
-    comptest.coverage = bool(true);
-    comptest.stablefld = bool(false);
-    comptest.c_tfilt = NULL;
-    comptest.step = NULL;
-    comptest.ind_comptest_next = (atf_comp::FComptest*)-1; // (atf_comp.FDb.ind_comptest) not-in-hash
-    comptest.ind_comptest_hashval = 0; // stored hash value
-    comptest.zd_select_next = (atf_comp::FComptest*)-1; // (atf_comp.FDb.zd_select) not-in-list
-    comptest.zd_select_prev = NULL; // (atf_comp.FDb.zd_select)
+void atf_comp::FComptest_Init(atf_comp::FComptest& parent) {
+    parent.timeout = i32(10);
+    parent.memcheck = bool(true);
+    parent.coverage = bool(true);
+    parent.stablefld = bool(false);
+    parent.c_tfilt = NULL;
+    parent.step = NULL;
+    parent.ind_comptest_next = (atf_comp::FComptest*)-1; // (atf_comp.FDb.ind_comptest) not-in-hash
+    parent.ind_comptest_hashval = 0; // stored hash value
+    parent.zd_select_next = (atf_comp::FComptest*)-1; // (atf_comp.FDb.zd_select) not-in-list
+    parent.zd_select_prev = NULL; // (atf_comp.FDb.zd_select)
 }
 
 // --- atf_comp.FComptest..Uninit
-void atf_comp::FComptest_Uninit(atf_comp::FComptest& comptest) {
-    atf_comp::FComptest &row = comptest; (void)row;
-    ind_comptest_Remove(row); // remove comptest from index ind_comptest
-    zd_select_Remove(row); // remove comptest from index zd_select
+void atf_comp::FComptest_Uninit(atf_comp::FComptest& parent) {
+    ind_comptest_Remove(parent); // remove comptest from index ind_comptest
+    zd_select_Remove(parent); // remove comptest from index zd_select
 }
 
 // --- atf_comp.trace..Print
@@ -233,7 +231,7 @@ static void atf_comp::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'0b0b294e21c8a9bf8d1eb91c4312963a9f23e6d5'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'6e7752a43041c3b41b4fc1ec8bbbbcc5c58c2b36'");
 }
 
 // --- atf_comp.FDb._db.InsertStrptrMaybe
@@ -262,6 +260,12 @@ bool atf_comp::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && testenv_InputMaybe(elem);
             break;
         }
+        case atf_comp_TableId_atfdb_Unstableline: { // finput:atf_comp.FDb.unstableline
+            atfdb::Unstableline elem;
+            retval = atfdb::Unstableline_ReadStrptrMaybe(elem, str);
+            retval = retval && unstableline_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -281,6 +285,7 @@ bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = atf_comp::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.unstableline"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.unstableattr"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tfilt"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.testenv"),recursive);
@@ -368,6 +373,12 @@ bool atf_comp::RemoveStrptrMaybe(algo::strptr str) {
         }
         case atf_comp_TableId_atfdb_Testenv: { // finput:atf_comp.FDb.testenv
             // finput atf_comp.FDb.testenv: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_comp_TableId_atfdb_Unstableline: { // finput:atf_comp.FDb.unstableline
+            // finput atf_comp.FDb.unstableline: random delete unsupported
             // (need reftype del:Y plus a Thash on the pkey)
             retval = false;
             break;
@@ -505,7 +516,7 @@ static void atf_comp::comptest_LoadStatic() {
         ,{ "atfdb.comptest  comptest:acr.Meta1  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select meta-information\"", atf_comp::comptest_acr_Meta1 }
         ,{ "atfdb.comptest  comptest:acr.Meta2  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select meta-information\"", atf_comp::comptest_acr_Meta2 }
         ,{ "atfdb.comptest  comptest:acr.Meta3  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select meta-information\"", atf_comp::comptest_acr_Meta3 }
-        ,{ "atfdb.comptest  comptest:acr.NullTrunc  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Trunc with reinsertion has no effect\"", atf_comp::comptest_acr_NullTrunc }
+        ,{ "atfdb.comptest  comptest:acr.NullTrunc  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"Trunc with reinsertion has no effect; a pool over real malloc aliases its first element with the chunk, so the annotation is wrong, not the test\"", atf_comp::comptest_acr_NullTrunc }
         ,{ "atfdb.comptest  comptest:acr.QueryCtype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select one record\"", atf_comp::comptest_acr_QueryCtype }
         ,{ "atfdb.comptest  comptest:acr.RenameCollision  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Rename with collision\"", atf_comp::comptest_acr_RenameCollision }
         ,{ "atfdb.comptest  comptest:acr.RenameField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"-rename -field renames affected attributes in dataset\"", atf_comp::comptest_acr_RenameField }
@@ -666,11 +677,15 @@ static void atf_comp::comptest_LoadStatic() {
         ,{ "atfdb.comptest  comptest:acr_compl.T08  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T08 }
         ,{ "atfdb.comptest  comptest:acr_compl.T09  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T09 }
         ,{ "atfdb.comptest  comptest:acr_compl.T10  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T10 }
+        ,{ "atfdb.comptest  comptest:acr_dm.Comment  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Comment }
         ,{ "atfdb.comptest  comptest:acr_dm.Conflict  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Conflict }
         ,{ "atfdb.comptest  comptest:acr_dm.DeepRun  timeout:60  memcheck:N  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_DeepRun }
         ,{ "atfdb.comptest  comptest:acr_dm.FieldOrder  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_FieldOrder }
         ,{ "atfdb.comptest  comptest:acr_dm.Merge  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Merge }
+        ,{ "atfdb.comptest  comptest:acr_dm.MergeFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_MergeFail }
+        ,{ "atfdb.comptest  comptest:acr_dm.MoveConflict  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_MoveConflict }
         ,{ "atfdb.comptest  comptest:acr_dm.RenameTuple  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_RenameTuple }
+        ,{ "atfdb.comptest  comptest:acr_dm.Reorder  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Reorder }
         ,{ "atfdb.comptest  comptest:acr_dm.Symmetry  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Symmetry }
         ,{ "atfdb.comptest  comptest:acr_ed.CreateCtype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Create a regular ctype\"", atf_comp::comptest_acr_ed_CreateCtype }
         ,{ "atfdb.comptest  comptest:acr_ed.CreateMsg  timeout:10  memcheck:Y  coverage:Y  stablefld:Y  comment:\"Create a message\"", atf_comp::comptest_acr_ed_CreateMsg }
@@ -678,6 +693,8 @@ static void atf_comp::comptest_LoadStatic() {
         ,{ "atfdb.comptest  comptest:acr_ed.CreateSsimfile  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Script to create a new ssimfile\"", atf_comp::comptest_acr_ed_CreateSsimfile }
         ,{ "atfdb.comptest  comptest:acr_ed.CreateSsimfileBadNs  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Create a ssimfile for a non-existence namespace\"", atf_comp::comptest_acr_ed_CreateSsimfileBadNs }
         ,{ "atfdb.comptest  comptest:acr_ed.CreateTarget  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Script to create a new target\"", atf_comp::comptest_acr_ed_CreateTarget }
+        ,{ "atfdb.comptest  comptest:acr_ed.DelField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Deleting a field also rewrites the ssimfile that stored its values\"", atf_comp::comptest_acr_ed_DelField }
+        ,{ "atfdb.comptest  comptest:acr_ed.RenameField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A field rename resolves a bare name and refuses a query prefix or a new ssim-backed ctype\"", atf_comp::comptest_acr_ed_RenameField }
         ,{ "atfdb.comptest  comptest:acr_in.Reverse  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_in_Reverse }
         ,{ "atfdb.comptest  comptest:acr_in.Simple  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_in_Simple }
         ,{ "atfdb.comptest  comptest:acr_in.Tree  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_in_Tree }
@@ -1807,6 +1824,237 @@ bool atf_comp::testenv_XrefMaybe(atf_comp::FTestenv &row) {
     return retval;
 }
 
+// --- atf_comp.FDb.unstableline.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_comp::FUnstableline& atf_comp::unstableline_Alloc() {
+    atf_comp::FUnstableline* row = unstableline_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_comp.out_of_mem  field:atf_comp.FDb.unstableline  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_comp.FDb.unstableline.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_comp::FUnstableline* atf_comp::unstableline_AllocMaybe() {
+    atf_comp::FUnstableline *row = (atf_comp::FUnstableline*)unstableline_AllocMem();
+    if (row) {
+        new (row) atf_comp::FUnstableline; // call constructor
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.unstableline.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_comp::FUnstableline* atf_comp::unstableline_InsertMaybe(const atfdb::Unstableline &value) {
+    atf_comp::FUnstableline *row = &unstableline_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    unstableline_CopyIn(*row,const_cast<atfdb::Unstableline&>(value));
+    bool ok = unstableline_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        unstableline_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.unstableline.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_comp::unstableline_AllocMem() {
+    u64 new_nelems     = _db.unstableline_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_comp::FUnstableline*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.unstableline_lary[bsr];
+        if (!lev) {
+            lev=(atf_comp::FUnstableline*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FUnstableline) * (u64(1)<<bsr));
+            _db.unstableline_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.unstableline_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_comp.FDb.unstableline.RemoveAll
+// Remove all elements from Lary
+void atf_comp::unstableline_RemoveAll() {
+    for (u64 n = _db.unstableline_n; n>0; ) {
+        n--;
+        unstableline_qFind(u64(n)).~FUnstableline(); // destroy last element
+        _db.unstableline_n = i64(n);
+    }
+}
+
+// --- atf_comp.FDb.unstableline.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_comp::unstableline_RemoveLast() {
+    u64 n = _db.unstableline_n;
+    if (n > 0) {
+        n -= 1;
+        unstableline_qFind(u64(n)).~FUnstableline();
+        _db.unstableline_n = i64(n);
+    }
+}
+
+// --- atf_comp.FDb.unstableline.InputMaybe
+static bool atf_comp::unstableline_InputMaybe(atfdb::Unstableline &elem) {
+    bool retval = true;
+    retval = unstableline_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- atf_comp.FDb.unstableline.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_comp::unstableline_XrefMaybe(atf_comp::FUnstableline &row) {
+    bool retval = true;
+    (void)row;
+    // insert unstableline into index ind_unstableline
+    if (true) { // user-defined insert condition
+        bool success = ind_unstableline_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_comp.duplicate_key  xref:atf_comp.FDb.ind_unstableline"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.ind_unstableline.Find
+// Find row by key. Return NULL if not found.
+atf_comp::FUnstableline* atf_comp::ind_unstableline_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_unstableline_buckets_n - 1);
+    atf_comp::FUnstableline *ret = _db.ind_unstableline_buckets_elems[index];
+    for (; ret && !((*ret).unstableline == key); ret = ret->ind_unstableline_next) {
+    }
+    return ret;
+}
+
+// --- atf_comp.FDb.ind_unstableline.FindX
+// Look up row by key and return reference. Throw exception if not found
+atf_comp::FUnstableline& atf_comp::ind_unstableline_FindX(const algo::strptr& key) {
+    atf_comp::FUnstableline* ret = ind_unstableline_Find(key);
+    vrfy(ret, tempstr() << "atf_comp.key_error  table:ind_unstableline  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- atf_comp.FDb.ind_unstableline.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_comp::FUnstableline& atf_comp::ind_unstableline_GetOrCreate(const algo::strptr& key) {
+    atf_comp::FUnstableline* ret = ind_unstableline_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &unstableline_Alloc();
+        (*ret).unstableline = key;
+        bool good = unstableline_XrefMaybe(*ret);
+        if (!good) {
+            unstableline_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "atf_comp.create_error  table:ind_unstableline  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- atf_comp.FDb.ind_unstableline.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool atf_comp::ind_unstableline_InsertMaybe(atf_comp::FUnstableline& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_unstableline_next == (atf_comp::FUnstableline*)-1)) {// check if in hash already
+        row.ind_unstableline_hashval = algo::Smallstr50_Hash(0, row.unstableline);
+        ind_unstableline_Reserve(1);
+        u32 index = row.ind_unstableline_hashval & (_db.ind_unstableline_buckets_n - 1);
+        atf_comp::FUnstableline* *prev = &_db.ind_unstableline_buckets_elems[index];
+        do {
+            atf_comp::FUnstableline* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).unstableline == row.unstableline) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_unstableline_next;
+        } while (true);
+        if (retval) {
+            row.ind_unstableline_next = *prev;
+            _db.ind_unstableline_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.ind_unstableline.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void atf_comp::ind_unstableline_Remove(atf_comp::FUnstableline& row) {
+    if (LIKELY(row.ind_unstableline_next != (atf_comp::FUnstableline*)-1)) {// check if in hash already
+        u32 index = row.ind_unstableline_hashval & (_db.ind_unstableline_buckets_n - 1);
+        atf_comp::FUnstableline* *prev = &_db.ind_unstableline_buckets_elems[index]; // addr of pointer to current element
+        while (atf_comp::FUnstableline *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_unstableline_next; // unlink (singly linked list)
+                _db.ind_unstableline_n--;
+                row.ind_unstableline_next = (atf_comp::FUnstableline*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_unstableline_next;
+        }
+    }
+}
+
+// --- atf_comp.FDb.ind_unstableline.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void atf_comp::ind_unstableline_Reserve(int n) {
+    ind_unstableline_AbsReserve(_db.ind_unstableline_n + n);
+}
+
+// --- atf_comp.FDb.ind_unstableline.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_comp::ind_unstableline_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_unstableline_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(atf_comp::FUnstableline*);
+        u32 new_size = new_nbuckets * sizeof(atf_comp::FUnstableline*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        atf_comp::FUnstableline* *new_buckets = (atf_comp::FUnstableline**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("atf_comp.out_of_memory  field:atf_comp.FDb.ind_unstableline");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_unstableline_buckets_n; i++) {
+            atf_comp::FUnstableline* elem = _db.ind_unstableline_buckets_elems[i];
+            while (elem) {
+                atf_comp::FUnstableline &row        = *elem;
+                atf_comp::FUnstableline* next       = row.ind_unstableline_next;
+                u32 index          = row.ind_unstableline_hashval & (new_nbuckets-1);
+                row.ind_unstableline_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_unstableline_buckets_elems, old_size);
+        _db.ind_unstableline_buckets_elems = new_buckets;
+        _db.ind_unstableline_buckets_n = new_nbuckets;
+    }
+}
+
 // --- atf_comp.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_comp::trace_RowidFind(int t) {
@@ -1908,6 +2156,25 @@ void atf_comp::FDb_Init() {
         _db.testenv_lary[i]  = testenv_first;
         testenv_first    += 1ULL<<i;
     }
+    // initialize LAry unstableline (atf_comp.FDb.unstableline)
+    _db.unstableline_n = 0;
+    memset(_db.unstableline_lary, 0, sizeof(_db.unstableline_lary)); // zero out all level pointers
+    atf_comp::FUnstableline* unstableline_first = (atf_comp::FUnstableline*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FUnstableline) * (u64(1)<<4));
+    if (!unstableline_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.unstableline_lary[i]  = unstableline_first;
+        unstableline_first    += 1ULL<<i;
+    }
+    // initialize hash table for atf_comp::FUnstableline;
+    _db.ind_unstableline_n             	= 0; // (atf_comp.FDb.ind_unstableline)
+    _db.ind_unstableline_buckets_n     	= 4; // (atf_comp.FDb.ind_unstableline)
+    _db.ind_unstableline_buckets_elems 	= (atf_comp::FUnstableline**)algo_lib::malloc_AllocMem(sizeof(atf_comp::FUnstableline*)*_db.ind_unstableline_buckets_n); // initial buckets (atf_comp.FDb.ind_unstableline)
+    if (!_db.ind_unstableline_buckets_elems) {
+        FatalErrorExit("out of memory"); // (atf_comp.FDb.ind_unstableline)
+    }
+    memset(_db.ind_unstableline_buckets_elems, 0, sizeof(atf_comp::FUnstableline*)*_db.ind_unstableline_buckets_n); // (atf_comp.FDb.ind_unstableline)
 
     atf_comp::InitReflection();
     comptest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_comp.FDb.comptest  load atf_comp.FComptest records
@@ -1915,7 +2182,12 @@ void atf_comp::FDb_Init() {
 
 // --- atf_comp.FDb..Uninit
 void atf_comp::FDb_Uninit() {
-    atf_comp::FDb &row = _db; (void)row;
+
+    // atf_comp.FDb.ind_unstableline.Uninit (Thash)  //
+    // skip destruction of ind_unstableline in global scope
+
+    // atf_comp.FDb.unstableline.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // atf_comp.FDb.testenv.Uninit (Lary)  //
     // skip destruction in global scope
@@ -1946,15 +2218,15 @@ void atf_comp::FDb_Uninit() {
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by atf_comp::FProc.in via FIohook field.
-void atf_comp::in_BeginRead(atf_comp::FProc& proc, algo::Fildes fd) {
-    proc.in_iohook.fildes = fd;
+void atf_comp::in_BeginRead(atf_comp::FProc& parent, algo::Fildes fd) {
+    parent.in_iohook.fildes = fd;
 }
 
 // --- atf_comp.FProc.in.EndRead
 // Set EOF flag
-void atf_comp::in_EndRead(atf_comp::FProc& proc) {
-    if (ValidQ(proc.in_iohook.fildes)) {
-        proc.in_eof = true;
+void atf_comp::in_EndRead(atf_comp::FProc& parent) {
+    if (ValidQ(parent.in_iohook.fildes)) {
+        parent.in_eof = true;
     }
 }
 
@@ -1970,21 +2242,21 @@ void atf_comp::in_EndRead(atf_comp::FProc& proc) {
 // SkipMsg will skip both the line and the delimiter.
 // A partial line at the end of input is NOT returned.
 // 
-algo::aryptr<char> atf_comp::in_GetMsg(atf_comp::FProc& proc) {
+algo::aryptr<char> atf_comp::in_GetMsg(atf_comp::FProc& parent) {
     algo::aryptr<char> ret;
-    if (!proc.in_msgvalid) {
-        in_ScanMsg(proc);
-        if (!proc.in_msgvalid) {
-            bool readable = in_Refill(proc);
+    if (!parent.in_msgvalid) {
+        in_ScanMsg(parent);
+        if (!parent.in_msgvalid) {
+            bool readable = in_Refill(parent);
             if (readable) {
-                in_ScanMsg(proc);
+                in_ScanMsg(parent);
             }
         }
     }
-    char *hdr = (char*)(proc.in_elems + proc.in_start);
-    if (proc.in_msgvalid) {
+    char *hdr = (char*)(parent.in_elems + parent.in_start);
+    if (parent.in_msgvalid) {
         ret.elems = hdr;
-        ret.n_elems = proc.in_msglen;
+        ret.n_elems = parent.in_msglen;
     }
     return ret;
 }
@@ -1994,42 +2266,53 @@ algo::aryptr<char> atf_comp::in_GetMsg(atf_comp::FProc& proc) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_comp::in_Realloc(atf_comp::FProc& proc, int new_max) {
-    new_max = i32_Max(new_max, proc.in_end);
-    u8 *new_mem = proc.in_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(proc.in_elems, proc.in_max, new_max)
+void atf_comp::in_Realloc(atf_comp::FProc& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_end);
+    u8 *new_mem = parent.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_elems, parent.in_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("atf_comp.fbuf_nomem  field:atf_comp.FProc.in  comment:'out of memory'");
     }
-    proc.in_elems = new_mem;
-    proc.in_max = new_max;
+    parent.in_elems = new_mem;
+    parent.in_max = new_max;
 }
 
 // --- atf_comp.FProc.in.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool atf_comp::in_Refill(atf_comp::FProc& proc) {
-    bool readable = ValidQ(proc.in_iohook.fildes);
+bool atf_comp::in_Refill(atf_comp::FProc& parent) {
+    bool readable = ValidQ(parent.in_iohook.fildes);
     if (readable) {
-        int fd     = proc.in_iohook.fildes.value;
-        i32 max    = in_Max(proc);
-        i32 end    = proc.in_end;
-        i32 nbytes = end - proc.in_start; // # bytes currently in buffer
+        int fd     = parent.in_iohook.fildes.value;
+        i32 max    = in_Max(parent);
+        i32 end    = parent.in_end;
+        i32 nbytes = end - parent.in_start; // # bytes currently in buffer
         i32 nfree  = max - end; // bytes available at the end of buffer
         if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
-            in_Shift(proc);
-            end = proc.in_end;
+            in_Shift(parent);
+            end = parent.in_end;
             nfree = max - end;
         }
-        ssize_t ret         = read(fd, proc.in_elems + end, nfree);
-        readable            = !(ret < 0 && errno == EAGAIN);
-        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
-        bool eof            = error || (ret == 0 && nfree > 0);
-        proc.in_end += i32_Max(ret,0); // new end of bytes
-        if (error) {
-            proc.in_err = algo::FromErrno(errno); // fetch errno
+        if (nfree == 0) {
+            // The buffer is full and holds no complete message, so the framing
+            // asked for one larger than the buffer can ever hold and the connection
+            // cannot make progress.  A read into zero room returns zero without eof,
+            // which would pin the connection on the read list and spin the loop, so
+            // it is retired here instead.
+            parent.in_eof = true;
+            parent.in_err = algo::FromErrno(E2BIG);
+            readable = false;
+        } else {
+            ssize_t ret         = read(fd, parent.in_elems + end, nfree);
+            readable            = !(ret < 0 && errno == EAGAIN);
+            bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
+            bool eof            = error || ret == 0;
+            parent.in_end += i32_Max(ret,0); // new end of bytes
+            if (error) {
+                parent.in_err = algo::FromErrno(errno); // fetch errno
+            }
+            parent.in_eof |= eof;
         }
-        proc.in_eof |= eof;
     }
     return readable;
 }
@@ -2037,74 +2320,74 @@ bool atf_comp::in_Refill(atf_comp::FProc& proc) {
 // --- atf_comp.FProc.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_comp::in_RemoveAll(atf_comp::FProc& proc) {
-    proc.in_start    = 0;
-    proc.in_end      = 0;
-    proc.in_msgvalid = false;
+void atf_comp::in_RemoveAll(atf_comp::FProc& parent) {
+    parent.in_start    = 0;
+    parent.in_end      = 0;
+    parent.in_msgvalid = false;
 }
 
 // --- atf_comp.FProc.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_comp::in_ScanMsg(atf_comp::FProc& proc) {
-    char *hdr = (char*)(proc.in_elems + proc.in_start);
-    i32 avail = in_N(proc);
+static void atf_comp::in_ScanMsg(atf_comp::FProc& parent) {
+    char *hdr = (char*)(parent.in_elems + parent.in_start);
+    i32 avail = in_N(parent);
     i32 msglen;
     bool found = false;
     // scan for delimiter starting from the previous place where we left off.
-    // at the end, save offset back to proc so we don't have to re-scan.
+    // at the end, save offset back to parent so we don't have to re-scan.
     // returned message length **does not include delimiter**.
     // a line that exceeds buffer length is not returned.
-    for (msglen = proc.in_msglen; msglen < avail; msglen += sizeof(char)) {
+    for (msglen = parent.in_msglen; msglen < avail; msglen += sizeof(char)) {
         if (hdr[msglen] == '\n') { // delimiter?
             found = true;
             break;
         }
     }
-    if (!found && msglen >= in_Max(proc)) {
-        proc.in_eof = true; // cause user to detect eof
-        proc.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    if (!found && msglen >= in_Max(parent)) {
+        parent.in_eof = true; // cause user to detect eof
+        parent.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
     }
-    proc.in_msglen = msglen;
-    proc.in_msgvalid = found;
+    parent.in_msglen = msglen;
+    parent.in_msgvalid = found;
 }
 
 // --- atf_comp.FProc.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_comp::in_Shift(atf_comp::FProc& proc) {
-    i32 start = proc.in_start;
-    i32 bytes_n = proc.in_end - start;
+static void atf_comp::in_Shift(atf_comp::FProc& parent) {
+    i32 start = parent.in_start;
+    i32 bytes_n = parent.in_end - start;
     if (bytes_n > 0) {
-        memmove(proc.in_elems, proc.in_elems + start, bytes_n);
+        memmove(parent.in_elems, parent.in_elems + start, bytes_n);
     }
-    proc.in_end = bytes_n;
-    proc.in_start = 0;
+    parent.in_end = bytes_n;
+    parent.in_start = 0;
 }
 
 // --- atf_comp.FProc.in.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_comp::in_SkipBytes(atf_comp::FProc& proc, int n) {
-    int avail = proc.in_end - proc.in_start;
+void atf_comp::in_SkipBytes(atf_comp::FProc& parent, int n) {
+    int avail = parent.in_end - parent.in_start;
     n = i32_Min(n,avail);
-    proc.in_start += n;
-    proc.in_msgvalid = false;
+    parent.in_start += n;
+    parent.in_msgvalid = false;
 }
 
 // --- atf_comp.FProc.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_comp::in_SkipMsg(atf_comp::FProc& proc) {
-    if (proc.in_msgvalid) {
-        int skip = proc.in_msglen;
+void atf_comp::in_SkipMsg(atf_comp::FProc& parent) {
+    if (parent.in_msgvalid) {
+        int skip = parent.in_msglen;
         skip += ssizeof(char); // delimiter
-        i32 start = proc.in_start;
+        i32 start = parent.in_start;
         start += skip;
-        proc.in_start = start;
-        proc.in_msgvalid = false;
-        proc.in_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_start = start;
+        parent.in_msgvalid = false;
+        parent.in_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -2114,19 +2397,19 @@ void atf_comp::in_SkipMsg(atf_comp::FProc& proc) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_comp::in_WriteAll(atf_comp::FProc& proc, u8 *in, i32 in_n) {
-    int max = in_Max(proc);
+bool atf_comp::in_WriteAll(atf_comp::FProc& parent, u8 *in, i32 in_n) {
+    int max = in_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (proc.in_end + in_n > max) {
-        in_Shift(proc);
+    if (parent.in_end + in_n > max) {
+        in_Shift(parent);
     }
     // now try to write the message.
-    i32 end = proc.in_end;
+    i32 end = parent.in_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(proc.in_elems + end, in, in_n);
-            proc.in_end = end + in_n;
+            memcpy(parent.in_elems + end, in, in_n);
+            parent.in_end = end + in_n;
         }
     }
     return fits;
@@ -2135,45 +2418,44 @@ bool atf_comp::in_WriteAll(atf_comp::FProc& proc, u8 *in, i32 in_n) {
 // --- atf_comp.FProc.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_comp::in_WriteReserve(atf_comp::FProc& proc, u8 *in, i32 in_n) {
-    if (proc.in_end - proc.in_start + in_n > in_Max(proc)) {
-        in_Realloc(proc, proc.in_max + i32_Max(proc.in_max, in_n));
+void atf_comp::in_WriteReserve(atf_comp::FProc& parent, u8 *in, i32 in_n) {
+    if (parent.in_end - parent.in_start + in_n > in_Max(parent)) {
+        in_Realloc(parent, parent.in_max + i32_Max(parent.in_max, in_n));
     }
-    if (!in_WriteAll(proc, in, in_n)) {
+    if (!in_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in: out of memory");
     }
 }
 
 // --- atf_comp.FProc..Init
 // Set all fields to initial values.
-void atf_comp::FProc_Init(atf_comp::FProc& proc) {
-    proc.status = i32(-1);
-    proc.memcheck_log = algo::strptr("");
-    proc.in_elems = NULL; // in: initialize
-    proc.in_max = 0; // in: initialize
-    proc.in_end = 0; // in: initialize
-    proc.in_start = 0; // in: initialize
-    proc.in_eof = false; // in: initialize
-    proc.in_msgvalid = false; // in: initialize
-    proc.in_msglen = 0; // in: initialize
-    proc.in_epoll_enable = true; // in: initialize
-    in_Realloc(proc, 65536);
-    proc.killed = bool(false);
-    proc.ind_proc_next = (atf_comp::FProc*)-1; // (atf_comp.FDb.ind_proc) not-in-hash
-    proc.ind_proc_hashval = 0; // stored hash value
+void atf_comp::FProc_Init(atf_comp::FProc& parent) {
+    parent.status = i32(-1);
+    parent.memcheck_log = algo::strptr("");
+    parent.in_elems = NULL; // in: initialize
+    parent.in_max = 0; // in: initialize
+    parent.in_end = 0; // in: initialize
+    parent.in_start = 0; // in: initialize
+    parent.in_eof = false; // in: initialize
+    parent.in_msgvalid = false; // in: initialize
+    parent.in_msglen = 0; // in: initialize
+    parent.in_epoll_enable = true; // in: initialize
+    in_Realloc(parent, 65536);
+    parent.killed = bool(false);
+    parent.ind_proc_next = (atf_comp::FProc*)-1; // (atf_comp.FDb.ind_proc) not-in-hash
+    parent.ind_proc_hashval = 0; // stored hash value
 }
 
 // --- atf_comp.FProc..Uninit
-void atf_comp::FProc_Uninit(atf_comp::FProc& proc) {
-    atf_comp::FProc &row = proc; (void)row;
-    ind_proc_Remove(row); // remove proc from index ind_proc
+void atf_comp::FProc_Uninit(atf_comp::FProc& parent) {
+    ind_proc_Remove(parent); // remove proc from index ind_proc
 
     // atf_comp.FProc.in.Uninit (Fbuf)  //Line-buffered subprocess stdout
-    if (proc.in_elems) {
-        algo_lib::malloc_FreeMem(proc.in_elems, proc.in_max); // (atf_comp.FProc.in) in_max is the byte size Realloc allocated
+    if (parent.in_elems) {
+        algo_lib::malloc_FreeMem(parent.in_elems, parent.in_max); // (atf_comp.FProc.in) in_max is the byte size Realloc allocated
     }
-    proc.in_elems = NULL;
-    proc.in_max = 0;
+    parent.in_elems = NULL;
+    parent.in_max = 0;
 }
 
 // --- atf_comp.FTestenv.base.CopyOut
@@ -2213,11 +2495,10 @@ void atf_comp::tfilt_CopyIn(atf_comp::FTfilt &row, atfdb::Tfilt &in) {
 }
 
 // --- atf_comp.FTfilt..Uninit
-void atf_comp::FTfilt_Uninit(atf_comp::FTfilt& tfilt) {
-    atf_comp::FTfilt &row = tfilt; (void)row;
-    atf_comp::FComptest* p_comptest = atf_comp::ind_comptest_Find(row.comptest);
+void atf_comp::FTfilt_Uninit(atf_comp::FTfilt& parent) {
+    atf_comp::FComptest* p_comptest = atf_comp::ind_comptest_Find(parent.comptest);
     if (p_comptest)  {
-        c_tfilt_Remove(*p_comptest, row);// remove tfilt from index c_tfilt
+        c_tfilt_Remove(*p_comptest, parent);// remove tfilt from index c_tfilt
     }
 }
 
@@ -2236,16 +2517,34 @@ void atf_comp::unstableattr_CopyIn(atf_comp::FUnstableattr &row, atfdb::Unstable
 }
 
 // --- atf_comp.FUnstableattr..Uninit
-void atf_comp::FUnstableattr_Uninit(atf_comp::FUnstableattr& unstableattr) {
-    atf_comp::FUnstableattr &row = unstableattr; (void)row;
-    ind_unstableattr_Remove(row); // remove unstableattr from index ind_unstableattr
+void atf_comp::FUnstableattr_Uninit(atf_comp::FUnstableattr& parent) {
+    ind_unstableattr_Remove(parent); // remove unstableattr from index ind_unstableattr
 }
 
 // --- atf_comp.FUnstablefld.base.CopyOut
 // Copy fields out of row
-void atf_comp::parent_CopyOut(atf_comp::FUnstablefld &row, dev::Unstablefld &out) {
+void atf_comp::unstablefld_CopyOut(atf_comp::FUnstablefld &row, dev::Unstablefld &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
+}
+
+// --- atf_comp.FUnstableline.base.CopyOut
+// Copy fields out of row
+void atf_comp::unstableline_CopyOut(atf_comp::FUnstableline &row, atfdb::Unstableline &out) {
+    out.unstableline = row.unstableline;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- atf_comp.FUnstableline.base.CopyIn
+// Copy fields in to row
+void atf_comp::unstableline_CopyIn(atf_comp::FUnstableline &row, atfdb::Unstableline &in) {
+    row.unstableline = in.unstableline;
+    row.comment = in.comment;
+}
+
+// --- atf_comp.FUnstableline..Uninit
+void atf_comp::FUnstableline_Uninit(atf_comp::FUnstableline& parent) {
+    ind_unstableline_Remove(parent); // remove unstableline from index ind_unstableline
 }
 
 // --- atf_comp.FieldId.value.ToCstr
@@ -2333,6 +2632,7 @@ const char* atf_comp::value_ToCstr(const atf_comp::TableId& parent) {
         case atf_comp_TableId_atfdb_Testenv: ret = "atfdb.Testenv";  break;
         case atf_comp_TableId_atfdb_Tfilt  : ret = "atfdb.Tfilt";  break;
         case atf_comp_TableId_atfdb_Unstableattr: ret = "atfdb.Unstableattr";  break;
+        case atf_comp_TableId_atfdb_Unstableline: ret = "atfdb.Unstableline";  break;
     }
     return ret;
 }
@@ -2386,10 +2686,12 @@ bool atf_comp::value_SetStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs)
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','d','b','.','U','n'): {
                     if (memcmp(rhs.elems+8,"stableattr",10)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_Unstableattr); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"stableline",10)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_Unstableline); ret = true; break; }
                     break;
                 }
                 case LE_STR8('a','t','f','d','b','.','u','n'): {
                     if (memcmp(rhs.elems+8,"stableattr",10)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_unstableattr); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"stableline",10)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_unstableline); ret = true; break; }
                     break;
                 }
             }
@@ -2446,7 +2748,6 @@ void atf_comp::StaticCheck() {
 // --- atf_comp...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         atf_comp::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -2465,7 +2766,6 @@ int main(int argc, char **argv) {
     try {
         atf_comp::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -9,7 +9,7 @@ plain array of pointers: amc generates the comparator from
 `sortfld_Lt` (or `<` on the field value) and re-sifts
 automatically whenever an element's key changes.
 
-```
+```ssim
 dmmeta.field  field:abt.FDb.bh_syscmd  arg:abt.FSyscmd  reftype:Bheap  dflt:""  comment:""
   dmmeta.sortfld  field:abt.FDb.bh_syscmd  sortfld:abt.FSyscmd.starttime  comment:""
 ```
@@ -70,7 +70,7 @@ falls back to `a.sortfld < b.sortfld`.
 Required.  Bheap ICE's at code-gen time if the field has no
 `dmmeta.sortfld`:
 
-```
+```ssim
 dmmeta.sortfld  field:abt.FDb.bh_syscmd  sortfld:abt.FSyscmd.starttime
 ```
 

@@ -512,9 +512,9 @@ inline samp_make::FTarget& samp_make::_db_c_target_curs_Access(_db_c_target_curs
 
 // --- samp_make.FGitfile..Init
 // Set all fields to initial values.
-inline void samp_make::FGitfile_Init(samp_make::FGitfile& gitfile) {
-    gitfile.ind_gitfile_next = (samp_make::FGitfile*)-1; // (samp_make.FDb.ind_gitfile) not-in-hash
-    gitfile.ind_gitfile_hashval = 0; // stored hash value
+inline void samp_make::FGitfile_Init(samp_make::FGitfile& parent) {
+    parent.ind_gitfile_next = (samp_make::FGitfile*)-1; // (samp_make.FDb.ind_gitfile) not-in-hash
+    parent.ind_gitfile_hashval = 0; // stored hash value
 }
 
 // --- samp_make.FGitfile..Ctor
@@ -529,14 +529,14 @@ inline  samp_make::FGitfile::~FGitfile() {
 
 // --- samp_make.FTargdep..Init
 // Set all fields to initial values.
-inline void samp_make::FTargdep_Init(samp_make::FTargdep& targdep) {
-    targdep.rec = bool(false);
-    targdep.pre = bool(false);
-    targdep.p_parent = NULL;
-    targdep.p_target = NULL;
-    targdep.target_c_targdep_in_ary = bool(false);
-    targdep.ind_targdep_next = (samp_make::FTargdep*)-1; // (samp_make.FDb.ind_targdep) not-in-hash
-    targdep.ind_targdep_hashval = 0; // stored hash value
+inline void samp_make::FTargdep_Init(samp_make::FTargdep& parent) {
+    parent.rec = bool(false);
+    parent.pre = bool(false);
+    parent.p_parent = NULL;
+    parent.p_target = NULL;
+    parent.target_c_targdep_in_ary = bool(false);
+    parent.ind_targdep_next = (samp_make::FTargdep*)-1; // (samp_make.FDb.ind_targdep) not-in-hash
+    parent.ind_targdep_hashval = 0; // stored hash value
 }
 
 // --- samp_make.FTargdep..Ctor
@@ -551,48 +551,48 @@ inline  samp_make::FTargdep::~FTargdep() {
 
 // --- samp_make.FTarget.c_targsrc.EmptyQ
 // Return true if index is empty
-inline bool samp_make::c_targsrc_EmptyQ(samp_make::FTarget& target) {
-    return target.c_targsrc_n == 0;
+inline bool samp_make::c_targsrc_EmptyQ(samp_make::FTarget& parent) {
+    return parent.c_targsrc_n == 0;
 }
 
 // --- samp_make.FTarget.c_targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_make::FTargsrc* samp_make::c_targsrc_Find(samp_make::FTarget& target, u64 t) {
+inline samp_make::FTargsrc* samp_make::c_targsrc_Find(samp_make::FTarget& parent, u64 t) {
     samp_make::FTargsrc *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_targsrc_n;
+    u64 lim = parent.c_targsrc_n;
     if (idx < lim) {
-        retval = target.c_targsrc_elems[idx];
+        retval = parent.c_targsrc_elems[idx];
     }
     return retval;
 }
 
 // --- samp_make.FTarget.c_targsrc.Getary
 // Return array of pointers
-inline algo::aryptr<samp_make::FTargsrc*> samp_make::c_targsrc_Getary(samp_make::FTarget& target) {
-    return algo::aryptr<samp_make::FTargsrc*>(target.c_targsrc_elems, target.c_targsrc_n);
+inline algo::aryptr<samp_make::FTargsrc*> samp_make::c_targsrc_Getary(samp_make::FTarget& parent) {
+    return algo::aryptr<samp_make::FTargsrc*>(parent.c_targsrc_elems, parent.c_targsrc_n);
 }
 
 // --- samp_make.FTarget.c_targsrc.N
 // Return number of items in the pointer array
-inline i64 samp_make::c_targsrc_N(const samp_make::FTarget& target) {
-    return target.c_targsrc_n;
+inline i64 samp_make::c_targsrc_N(const samp_make::FTarget& parent) {
+    return parent.c_targsrc_n;
 }
 
 // --- samp_make.FTarget.c_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void samp_make::c_targsrc_RemoveAll(samp_make::FTarget& target) {
-    for (u64 i = 0; i < target.c_targsrc_n; i++) {
+inline void samp_make::c_targsrc_RemoveAll(samp_make::FTarget& parent) {
+    for (u64 i = 0; i < parent.c_targsrc_n; i++) {
         // mark all elements as not-in-array
-        target.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
+        parent.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
     }
-    target.c_targsrc_n = 0;
+    parent.c_targsrc_n = 0;
 }
 
 // --- samp_make.FTarget.c_targsrc.qFind
 // Return reference without bounds checking
-inline samp_make::FTargsrc& samp_make::c_targsrc_qFind(samp_make::FTarget& target, u64 idx) {
-    return *target.c_targsrc_elems[idx];
+inline samp_make::FTargsrc& samp_make::c_targsrc_qFind(samp_make::FTarget& parent, u64 idx) {
+    return *parent.c_targsrc_elems[idx];
 }
 
 // --- samp_make.FTarget.c_targsrc.InAryQ
@@ -603,54 +603,54 @@ inline bool samp_make::target_c_targsrc_InAryQ(samp_make::FTargsrc& row) {
 
 // --- samp_make.FTarget.c_targsrc.qLast
 // Reference to last element without bounds checking
-inline samp_make::FTargsrc& samp_make::c_targsrc_qLast(samp_make::FTarget& target) {
-    return *target.c_targsrc_elems[target.c_targsrc_n-1];
+inline samp_make::FTargsrc& samp_make::c_targsrc_qLast(samp_make::FTarget& parent) {
+    return *parent.c_targsrc_elems[parent.c_targsrc_n-1];
 }
 
 // --- samp_make.FTarget.c_targdep.EmptyQ
 // Return true if index is empty
-inline bool samp_make::c_targdep_EmptyQ(samp_make::FTarget& target) {
-    return target.c_targdep_n == 0;
+inline bool samp_make::c_targdep_EmptyQ(samp_make::FTarget& parent) {
+    return parent.c_targdep_n == 0;
 }
 
 // --- samp_make.FTarget.c_targdep.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_make::FTargdep* samp_make::c_targdep_Find(samp_make::FTarget& target, u64 t) {
+inline samp_make::FTargdep* samp_make::c_targdep_Find(samp_make::FTarget& parent, u64 t) {
     samp_make::FTargdep *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_targdep_n;
+    u64 lim = parent.c_targdep_n;
     if (idx < lim) {
-        retval = target.c_targdep_elems[idx];
+        retval = parent.c_targdep_elems[idx];
     }
     return retval;
 }
 
 // --- samp_make.FTarget.c_targdep.Getary
 // Return array of pointers
-inline algo::aryptr<samp_make::FTargdep*> samp_make::c_targdep_Getary(samp_make::FTarget& target) {
-    return algo::aryptr<samp_make::FTargdep*>(target.c_targdep_elems, target.c_targdep_n);
+inline algo::aryptr<samp_make::FTargdep*> samp_make::c_targdep_Getary(samp_make::FTarget& parent) {
+    return algo::aryptr<samp_make::FTargdep*>(parent.c_targdep_elems, parent.c_targdep_n);
 }
 
 // --- samp_make.FTarget.c_targdep.N
 // Return number of items in the pointer array
-inline i64 samp_make::c_targdep_N(const samp_make::FTarget& target) {
-    return target.c_targdep_n;
+inline i64 samp_make::c_targdep_N(const samp_make::FTarget& parent) {
+    return parent.c_targdep_n;
 }
 
 // --- samp_make.FTarget.c_targdep.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void samp_make::c_targdep_RemoveAll(samp_make::FTarget& target) {
-    for (u64 i = 0; i < target.c_targdep_n; i++) {
+inline void samp_make::c_targdep_RemoveAll(samp_make::FTarget& parent) {
+    for (u64 i = 0; i < parent.c_targdep_n; i++) {
         // mark all elements as not-in-array
-        target.c_targdep_elems[i]->target_c_targdep_in_ary = false;
+        parent.c_targdep_elems[i]->target_c_targdep_in_ary = false;
     }
-    target.c_targdep_n = 0;
+    parent.c_targdep_n = 0;
 }
 
 // --- samp_make.FTarget.c_targdep.qFind
 // Return reference without bounds checking
-inline samp_make::FTargdep& samp_make::c_targdep_qFind(samp_make::FTarget& target, u64 idx) {
-    return *target.c_targdep_elems[idx];
+inline samp_make::FTargdep& samp_make::c_targdep_qFind(samp_make::FTarget& parent, u64 idx) {
+    return *parent.c_targdep_elems[idx];
 }
 
 // --- samp_make.FTarget.c_targdep.InAryQ
@@ -661,27 +661,27 @@ inline bool samp_make::target_c_targdep_InAryQ(samp_make::FTargdep& row) {
 
 // --- samp_make.FTarget.c_targdep.qLast
 // Reference to last element without bounds checking
-inline samp_make::FTargdep& samp_make::c_targdep_qLast(samp_make::FTarget& target) {
-    return *target.c_targdep_elems[target.c_targdep_n-1];
+inline samp_make::FTargdep& samp_make::c_targdep_qLast(samp_make::FTarget& parent) {
+    return *parent.c_targdep_elems[parent.c_targdep_n-1];
 }
 
 // --- samp_make.FTarget.c_targrec.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool samp_make::c_targrec_InsertMaybe(samp_make::FTarget& target, samp_make::FTargrec& row) {
-    samp_make::FTargrec* ptr = target.c_targrec;
+inline bool samp_make::c_targrec_InsertMaybe(samp_make::FTarget& parent, samp_make::FTargrec& row) {
+    samp_make::FTargrec* ptr = parent.c_targrec;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        target.c_targrec = &row;
+        parent.c_targrec = &row;
     }
     return retval;
 }
 
 // --- samp_make.FTarget.c_targrec.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void samp_make::c_targrec_Remove(samp_make::FTarget& target, samp_make::FTargrec& row) {
-    samp_make::FTargrec *ptr = target.c_targrec;
+inline void samp_make::c_targrec_Remove(samp_make::FTarget& parent, samp_make::FTargrec& row) {
+    samp_make::FTargrec *ptr = parent.c_targrec;
     if (LIKELY(ptr == &row)) {
-        target.c_targrec = NULL;
+        parent.c_targrec = NULL;
     }
 }
 
@@ -747,9 +747,9 @@ inline  samp_make::FTarget::~FTarget() {
 
 // --- samp_make.FTargrec..Init
 // Set all fields to initial values.
-inline void samp_make::FTargrec_Init(samp_make::FTargrec& targrec) {
-    targrec.ind_targrec_next = (samp_make::FTargrec*)-1; // (samp_make.FDb.ind_targrec) not-in-hash
-    targrec.ind_targrec_hashval = 0; // stored hash value
+inline void samp_make::FTargrec_Init(samp_make::FTargrec& parent) {
+    parent.ind_targrec_next = (samp_make::FTargrec*)-1; // (samp_make.FDb.ind_targrec) not-in-hash
+    parent.ind_targrec_hashval = 0; // stored hash value
 }
 
 // --- samp_make.FTargrec..Ctor
@@ -764,12 +764,12 @@ inline  samp_make::FTargrec::~FTargrec() {
 
 // --- samp_make.FTargsrc..Init
 // Set all fields to initial values.
-inline void samp_make::FTargsrc_Init(samp_make::FTargsrc& targsrc) {
-    targsrc.pre = bool(false);
-    targsrc.rec = bool(false);
-    targsrc.target_c_targsrc_in_ary = bool(false);
-    targsrc.ind_targsrc_next = (samp_make::FTargsrc*)-1; // (samp_make.FDb.ind_targsrc) not-in-hash
-    targsrc.ind_targsrc_hashval = 0; // stored hash value
+inline void samp_make::FTargsrc_Init(samp_make::FTargsrc& parent) {
+    parent.pre = bool(false);
+    parent.rec = bool(false);
+    parent.target_c_targsrc_in_ary = bool(false);
+    parent.ind_targsrc_next = (samp_make::FTargsrc*)-1; // (samp_make.FDb.ind_targsrc) not-in-hash
+    parent.ind_targsrc_hashval = 0; // stored hash value
 }
 
 // --- samp_make.FTargsrc..Ctor

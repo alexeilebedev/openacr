@@ -18,7 +18,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/pool.cpp -- Generic pool functions
 //
 // #AL# TODO: Pool.Delete: HANDLE NOREMOVE
@@ -169,7 +169,7 @@ static void GenAllocFunc(algo_lib::Replscope &R, amc::FFunc &func, amc::FField &
         Ins(&R, func.body    , "    }");
     }
     if (field.do_trace) {
-        Set(R, "$partrace", Refname(*field.p_ctype));
+        Set(R, "$partrace", Varname(*field.p_ctype));
         Ins(&R, func.body, "    ++$ns::_db.trace.alloc_$partrace_$name;");
     }
     Ins(&R, func.body    , "}");
@@ -363,7 +363,7 @@ void amc::tfunc_Pool_InsertMaybe() {
         } else {
             Ins(&R, ins.body    , "$Cpptype *row = &$name_Alloc($pararg); // if out of memory, process dies. if input error, return NULL.");
         }
-        Ins(&R, ins.body    , "$name_CopyIn(*row,const_cast<$Basetype&>(value));");
+        Ins(&R, ins.body    , tempstr()<<Instname(*field.p_arg)<<"_CopyIn(*row,const_cast<$Basetype&>(value));");
         Ins(&R, ins.body    , "bool ok = $name_XrefMaybe(*row); // this may return false");
         Ins(&R, ins.body    , "if (!ok) {");
         if (HasRemoveLastQ(*field.p_reftype)) {
@@ -519,7 +519,7 @@ void amc::tfunc_Pool_Delete() {
         amc::FFunc& fdel = amc::CreateCurFunc(true);
         AddRetval(fdel,"void","","");
         AddProtoArg(fdel, Subst(R,"$Cpptype &"), "row");
-        Set(R, "$partrace", Refname(*field.p_ctype));
+        Set(R, "$partrace", Varname(*field.p_ctype));
         Ins(&R, fdel.comment, "Remove row from all global and cross indices, then deallocate row");
         bool haslen = PoolVarlenQ(field);
         if (haslen) {

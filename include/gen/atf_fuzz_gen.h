@@ -304,11 +304,11 @@ void                 fuzzstrat_CopyIn(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstra
 
 // Invoke function by pointer
 // func:atf_fuzz.FFuzzstrat.step.Call
-inline void          step_Call(atf_fuzz::FFuzzstrat& fuzzstrat) __attribute__((nothrow));
+inline void          step_Call(atf_fuzz::FFuzzstrat& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_fuzz.FFuzzstrat..Init
-inline void          FFuzzstrat_Init(atf_fuzz::FFuzzstrat& fuzzstrat);
+inline void          FFuzzstrat_Init(atf_fuzz::FFuzzstrat& parent);
 
 // --- atf_fuzz.FTarget
 // create: atf_fuzz.FDb.target (Lary)
@@ -342,9 +342,9 @@ void                 target_CopyIn(atf_fuzz::FTarget &row, dev::Target &in) __at
 
 // Set all fields to initial values.
 // func:atf_fuzz.FTarget..Init
-inline void          FTarget_Init(atf_fuzz::FTarget& target);
+inline void          FTarget_Init(atf_fuzz::FTarget& parent);
 // func:atf_fuzz.FTarget..Uninit
-void                 FTarget_Uninit(atf_fuzz::FTarget& target) __attribute__((nothrow));
+void                 FTarget_Uninit(atf_fuzz::FTarget& parent) __attribute__((nothrow));
 
 // --- atf_fuzz.FieldId
 #pragma pack(push,1)

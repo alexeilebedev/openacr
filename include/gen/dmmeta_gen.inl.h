@@ -424,7 +424,7 @@ inline  dmmeta::Dispsigcheck::Dispsigcheck() {
 }
 
 // --- dmmeta.Dispsigcheck..FieldwiseCtor
-inline  dmmeta::Dispsigcheck::Dispsigcheck(const algo::strptr& in_dispsig, const algo::Sha1sig& in_signature)
+inline  dmmeta::Dispsigcheck::Dispsigcheck(const algo::strptr& in_dispsig, const algo::Signature& in_signature)
     : dispsig(in_dispsig)
     , signature(in_signature)
  {
@@ -1152,15 +1152,6 @@ inline void dmmeta::Msg_Init(dmmeta::Msg& parent) {
 // --- dmmeta.Msg..Ctor
 inline  dmmeta::Msg::Msg() {
     dmmeta::Msg_Init(*this);
-}
-
-// --- dmmeta.Msgfield..Init
-// Set all fields to initial values.
-inline void dmmeta::Msgfield_Init(dmmeta::Msgfield& parent) {
-    parent.offset = i32(0);
-    parent.width = i32(0);
-    parent.bigend = bool(false);
-    parent.varlen = bool(false);
 }
 
 // --- dmmeta.Msgfield..Ctor

@@ -1,0 +1,4 @@
+dmmeta.field  field:ns.C.a  arg:i32  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:ns.C.b  arg:i32  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:ns.C.c  arg:i32  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:ns.C.d  arg:i32  reftype:Val  dflt:""  comment:""

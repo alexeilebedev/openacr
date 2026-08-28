@@ -4,31 +4,9 @@
 GCACHE is compiler cache paired with ABT.  When enabled, ABT automatically
 detects and uses it.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Enable and disable](#enable-and-disable)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Invocation](#invocation)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Precompiled header support](#precompiled-header-support)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Hash algorithm](#hash-algorithm)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Directory structure](#directory-structure)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Garbage collection](#garbage-collection)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Debugging](#debugging)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Logging](#logging)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Privacy](#privacy)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [gcache - Internals](/txt/gen/gcache/gcache.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 gcache: Compiler cache
 Usage: gcache [[-cmd:]<string>] [options]
     OPTION      TYPE    DFLT           COMMENT
@@ -69,13 +47,13 @@ A number of scripts facilitates managing this directory:
 
 To enable gcache, use:
 
-```
+```bash
 gcache -install
 ```
 
 To disable gcache, use:
 
-```
+```bash
 gcache -disable
 ```
 
@@ -87,7 +65,7 @@ Or remove the softlink `.gcache`.
 **bin/gcache** is tool executable, which shall be put in front of compiler
 command, for example:
 
-```
+```bash
 gcache -- g++ -c sample.cpp -o sample.o
 ```
 
@@ -125,7 +103,7 @@ run delivered its object, and it is not a count of the lines gcache printed.
 The tool may precompile and use precompiled headers.
 The following line is used to mark the header as eligible to be precompiled.
 
-```
+```c++
 void __gcache_pragma_pch_preprocess();
 ```
 
@@ -205,7 +183,7 @@ so running `abt <target> -v -v` will show gcache output.
 
 For instance, to get a list of all cache files that participated in the compilation of a particular target, run
 
-```
+```bash
 abt <target> -force -v -v 2>&1 | ssimfilt -format:field report.gcache -field:cached_file
 ```
 
@@ -268,10 +246,3 @@ If you are concerned about privacy, use `gcache -install -dir ~/.gcache` to keep
 
 #### -force -- Force recompile and update cache
 <a href="#-force"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`gcache` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|

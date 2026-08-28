@@ -1,28 +1,9 @@
 ## orgfile - Organize and deduplicate files by timestamp and by contents
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Reading Output As Input](#reading-output-as-input)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Find files with identical contents (but don't do anything with them)](#find-files-with-identical-contents-but-don-t-do-anything-with-them-)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Same as above but with an additional filter](#same-as-above-but-with-an-additional-filter)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Delete files in secondary backup that already exist in primary backup](#delete-files-in-secondary-backup-that-already-exist-in-primary-backup)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Organize images by year and day](#organize-images-by-year-and-day)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [orgfile - Internals](/txt/gen/orgfile/orgfile.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 orgfile: Organize and deduplicate files by timestamp and by contents
 Usage: orgfile [options]
     OPTION      TYPE    DFLT    COMMENT
@@ -94,28 +75,28 @@ For some move operations, `-undo` will move files back to their original locatio
 ### Find files with identical contents (but don't do anything with them)
 <a href="#find-files-with-identical-contents-but-don-t-do-anything-with-them-"></a>
 
-```
+```bash
 find . | orgfile -dedup
 ```
 
 ### Same as above but with an additional filter
 <a href="#same-as-above-but-with-an-additional-filter"></a>
 
-```
+```bash
 find . | orgfile -dedup | grep <blah> | orgfile -commit
 ```
 
 ### Delete files in secondary backup that already exist in primary backup
 <a href="#delete-files-in-secondary-backup-that-already-exist-in-primary-backup"></a>
 
-```
+```bash
 find backup backup2 -type f | orgfile -dedup:"backup2/%" -commit
 ```
 
 ### Organize images by year and day
 <a href="#organize-images-by-year-and-day"></a>
 
-```
+```bash
 find . -name "*.jpg" | orgfile -move:image/%Y/%Y-%m-%d/ -commit
 ```
 
@@ -138,11 +119,3 @@ find . -name "*.jpg" | orgfile -move:image/%Y/%Y-%m-%d/ -commit
 
 #### -hash -- Hash command to use for deduplication
 <a href="#-hash"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`orgfile` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.timefmt](/txt/ssimdb/dev/timefmt.md)|Time formats supported by orgfile|

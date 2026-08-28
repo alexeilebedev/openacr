@@ -37,21 +37,25 @@ extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_arm64;    // 
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64;   // Darwin-clang++.coverage-x86_64    fconst:dev.Builddir.builddir/Darwin-clang++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_debug_arm64;       // Darwin-clang++.debug-arm64        fconst:dev.Builddir.builddir/Darwin-clang++.debug-arm64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_debug_x86_64;      // Darwin-clang++.debug-x86_64       fconst:dev.Builddir.builddir/Darwin-clang++.debug-x86_64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_memcheck_x86_64;   // Darwin-clang++.memcheck-x86_64    fconst:dev.Builddir.builddir/Darwin-clang++.memcheck-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_profile_arm64;     // Darwin-clang++.profile-arm64      fconst:dev.Builddir.builddir/Darwin-clang++.profile-arm64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_profile_x86_64;    // Darwin-clang++.profile-x86_64     fconst:dev.Builddir.builddir/Darwin-clang++.profile-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_release_arm64;     // Darwin-clang++.release-arm64      fconst:dev.Builddir.builddir/Darwin-clang++.release-arm64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_release_x86_64;    // Darwin-clang++.release-x86_64     fconst:dev.Builddir.builddir/Darwin-clang++.release-x86_64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64;   // FreeBSD-clang++.coverage-amd64    fconst:dev.Builddir.builddir/FreeBSD-clang++.coverage-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64;      // FreeBSD-clang++.debug-amd64       fconst:dev.Builddir.builddir/FreeBSD-clang++.debug-amd64
+extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_memcheck_amd64;   // FreeBSD-clang++.memcheck-amd64    fconst:dev.Builddir.builddir/FreeBSD-clang++.memcheck-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64;    // FreeBSD-clang++.profile-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.profile-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_release_amd64;    // FreeBSD-clang++.release-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.release-amd64
 extern const char *  dev_Builddir_builddir_Linux_gPP_coverage_x86_64;        // Linux-g++.coverage-x86_64         fconst:dev.Builddir.builddir/Linux-g++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_debug_x86_64;           // Linux-g++.debug-x86_64            fconst:dev.Builddir.builddir/Linux-g++.debug-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_memcheck_x86_64;        // Linux-g++.memcheck-x86_64         fconst:dev.Builddir.builddir/Linux-g++.memcheck-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_profile_x86_64;         // Linux-g++.profile-x86_64          fconst:dev.Builddir.builddir/Linux-g++.profile-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_release_x86_64;         // Linux-g++.release-x86_64          fconst:dev.Builddir.builddir/Linux-g++.release-x86_64
 extern const char *  dev_Cfg_cfg_;           //             fconst:dev.Cfg.cfg/
 extern const char *  dev_Cfg_cfg_coverage;   // coverage    fconst:dev.Cfg.cfg/coverage
 extern const char *  dev_Cfg_cfg_debug;      // debug       fconst:dev.Cfg.cfg/debug
+extern const char *  dev_Cfg_cfg_memcheck;   // memcheck    fconst:dev.Cfg.cfg/memcheck
 extern const char *  dev_Cfg_cfg_profile;    // profile     fconst:dev.Cfg.cfg/profile
 extern const char *  dev_Cfg_cfg_release;    // release     fconst:dev.Cfg.cfg/release
 extern const char *  dev_Compiler_compiler_;          //            fconst:dev.Compiler.compiler/
@@ -110,6 +114,10 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_dbgtarget
     ,dev_FieldId_args
     ,dev_FieldId_buildcmd
+    ,dev_FieldId_docpage
+    ,dev_FieldId_word
+    ,dev_FieldId_bare
+    ,dev_FieldId_bytable
     ,dev_FieldId_edaction
     ,dev_FieldId_edacttype
     ,dev_FieldId_name
@@ -119,6 +127,7 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_gitinfo
     ,dev_FieldId_package
     ,dev_FieldId_gitref
+    ,dev_FieldId_commitdate
     ,dev_FieldId_builddate
     ,dev_FieldId_hilite
     ,dev_FieldId_color
@@ -152,6 +161,7 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_pkgdep
     ,dev_FieldId_parent
     ,dev_FieldId_soft
+    ,dev_FieldId_pkgdeptype
     ,dev_FieldId_pkgkey
     ,dev_FieldId_key
     ,dev_FieldId_up
@@ -162,7 +172,6 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_inl
     ,dev_FieldId_sandbox
     ,dev_FieldId_filter
-    ,dev_FieldId_readmesort
     ,dev_FieldId_rpm
     ,dev_FieldId_cow
     ,dev_FieldId_sbpath
@@ -194,7 +203,7 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_value
 };
 
-enum { dev_FieldIdEnum_N = 118 };
+enum { dev_FieldIdEnum_N = 123 };
 
 extern const char *  dev_License_license_;       //         fconst:dev.License.license/
 extern const char *  dev_License_license_ARND;   // ARND    fconst:dev.License.license/ARND
@@ -227,6 +236,7 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 CopyrightPkey;
     typedef algo::cstring CovlinePkey;
     typedef algo::Smallstr50 DbgtargetPkey;
+    typedef algo::Smallstr50 DocpagePkey;
     typedef algo::Smallstr50 EdactionPkey;
     typedef algo::Smallstr50 EdacttypePkey;
     typedef algo::Smallstr200 GitfilePkey;
@@ -240,9 +250,9 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 OptTypePkey;
     typedef algo::Smallstr50 PackagePkey;
     typedef algo::Smallstr100 PkgdepPkey;
+    typedef algo::Smallstr50 PkgdeptypePkey;
     typedef algo::Smallstr150 PkgkeyPkey;
     typedef algo::Smallstr50 PrototransportPkey;
-    typedef algo::Smallstr250 ReadmesortPkey;
     typedef algo::Smallstr50 RpmPkey;
     typedef algo::Smallstr50 SandboxPkey;
     typedef algo::Smallstr50 SbpathPkey;
@@ -272,6 +282,7 @@ namespace dev { struct Covfile; }
 namespace dev { struct Covline; }
 namespace dev { struct Covtarget; }
 namespace dev { struct Dbgtarget; }
+namespace dev { struct Docpage; }
 namespace dev { struct Edaction; }
 namespace dev { struct Edacttype; }
 namespace dev { struct FieldId; }
@@ -289,11 +300,11 @@ namespace dev { struct Noindent; }
 namespace dev { struct OptType; }
 namespace dev { struct Package; }
 namespace dev { struct Pkgdep; }
+namespace dev { struct Pkgdeptype; }
 namespace dev { struct Pkggen; }
 namespace dev { struct Pkgkey; }
 namespace dev { struct Prototransport; }
 namespace dev { struct Readmefile; }
-namespace dev { struct Readmesort; }
 namespace dev { struct Rpm; }
 namespace dev { struct Sandbox; }
 namespace dev { struct Sbpath; }
@@ -600,6 +611,30 @@ bool                 Dbgtarget_ReadStrptrMaybe(dev::Dbgtarget &parent, algo::str
 // func:dev.Dbgtarget..Print
 void                 Dbgtarget_Print(dev::Dbgtarget& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Docpage
+struct Docpage { // dev.Docpage: A page doc generates rather than reads from a file
+    algo::Smallstr50   docpage;   // Name of the page, which is also the word that addresses it
+    bool               word;      //   false  A location names this page by this word and a colon
+    bool               bare;      //   false  A bare key naming this page addresses it
+    bool               bytable;   //   false  A pattern handed to this word is the query over the table its name expands to
+    algo::Comment      comment;   //
+    // func:dev.Docpage..Ctor
+    inline               Docpage() __attribute__((nothrow));
+};
+// func:dev.Docpage..ReadFieldMaybe
+bool                 Docpage_ReadFieldMaybe(dev::Docpage& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Docpage from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Docpage..ReadStrptrMaybe
+bool                 Docpage_ReadStrptrMaybe(dev::Docpage &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:dev.Docpage..Init
+inline void          Docpage_Init(dev::Docpage& parent);
+// print string representation of ROW to string STR
+// cfmt:dev.Docpage.String  printfmt:Tuple
+// func:dev.Docpage..Print
+void                 Docpage_Print(dev::Docpage& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Edaction
 struct Edaction { // dev.Edaction: acr_ed editing action (only one can exist at a time)
     algo::Smallstr50   edaction;   //
@@ -731,15 +766,16 @@ void                 Gitfile_Print(dev::Gitfile& row, algo::cstring& str) __attr
 
 // --- dev.Gitinfo
 struct Gitinfo { // dev.Gitinfo
-    algo::Smallstr40   gitinfo;     //
-    algo::Smallstr40   package;     //
-    algo::Smallstr50   gitref;      // Full git ref of the commit the build was made from
-    algo::UnTime       builddate;   // When the build ran
-    algo::Comment      comment;     //
+    algo::Smallstr40   gitinfo;      //
+    algo::Smallstr40   package;      //
+    algo::Smallstr50   gitref;       // Full git ref of the commit the build was made from
+    algo::UnTime       commitdate;   // When the commit the build was made from was committed
+    algo::UnTime       builddate;    // When the build ran
+    algo::Comment      comment;      //
     // func:dev.Gitinfo..Ctor
     inline               Gitinfo() __attribute__((nothrow));
     // func:dev.Gitinfo..FieldwiseCtor
-    explicit inline               Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_package, const algo::strptr& in_gitref, algo::UnTime in_builddate, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_package, const algo::strptr& in_gitref, algo::UnTime in_commitdate, algo::UnTime in_builddate, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 // func:dev.Gitinfo..ReadFieldMaybe
 bool                 Gitinfo_ReadFieldMaybe(dev::Gitinfo& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -1002,13 +1038,14 @@ void                 Package_Print(dev::Package& row, algo::cstring& str) __attr
 
 // --- dev.Pkgdep
 struct Pkgdep { // dev.Pkgdep: OpenACR Package dependency
-    algo::Smallstr100   pkgdep;    //
-    bool                soft;      //   false  Soft dependency: affects package ordering but not forced update
-    algo::Comment       comment;   //
+    algo::Smallstr100   pkgdep;       //
+    bool                soft;         //   false  Soft dependency: affects package ordering but not forced update
+    algo::Smallstr50    pkgdeptype;   //   "require"  How this package stands to its parent
+    algo::Comment       comment;      //
     // func:dev.Pkgdep..Ctor
     inline               Pkgdep() __attribute__((nothrow));
     // func:dev.Pkgdep..FieldwiseCtor
-    explicit inline               Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::strptr& in_pkgdeptype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 // func:dev.Pkgdep.package.Get
 algo::strptr         package_Get(dev::Pkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -1035,6 +1072,24 @@ inline void          Pkgdep_Init(dev::Pkgdep& parent);
 // cfmt:dev.Pkgdep.String  printfmt:Tuple
 // func:dev.Pkgdep..Print
 void                 Pkgdep_Print(dev::Pkgdep& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Pkgdeptype
+struct Pkgdeptype { // dev.Pkgdeptype: How a package stands in relation to its parent
+    algo::Smallstr50   pkgdeptype;   //
+    algo::Comment      comment;      //
+    // func:dev.Pkgdeptype..Ctor
+    inline               Pkgdeptype() __attribute__((nothrow));
+};
+// func:dev.Pkgdeptype..ReadFieldMaybe
+bool                 Pkgdeptype_ReadFieldMaybe(dev::Pkgdeptype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Pkgdeptype from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Pkgdeptype..ReadStrptrMaybe
+bool                 Pkgdeptype_ReadStrptrMaybe(dev::Pkgdeptype &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Pkgdeptype.String  printfmt:Tuple
+// func:dev.Pkgdeptype..Print
+void                 Pkgdeptype_Print(dev::Pkgdeptype& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Pkggen
 struct Pkggen { // dev.Pkggen
@@ -1147,24 +1202,6 @@ inline void          Readmefile_Init(dev::Readmefile& parent);
 // cfmt:dev.Readmefile.String  printfmt:Tuple
 // func:dev.Readmefile..Print
 void                 Readmefile_Print(dev::Readmefile& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- dev.Readmesort
-struct Readmesort { // dev.Readmesort: sorted categories of txt/ *.md files presented in dev.readme
-    algo::Smallstr250   readmesort;   //
-    algo::Comment       comment;      //
-    // func:dev.Readmesort..Ctor
-    inline               Readmesort() __attribute__((nothrow));
-};
-// func:dev.Readmesort..ReadFieldMaybe
-bool                 Readmesort_ReadFieldMaybe(dev::Readmesort& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Readmesort from an ascii string.
-// The format of the string is an ssim Tuple
-// func:dev.Readmesort..ReadStrptrMaybe
-bool                 Readmesort_ReadStrptrMaybe(dev::Readmesort &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:dev.Readmesort.String  printfmt:Tuple
-// func:dev.Readmesort..Print
-void                 Readmesort_Print(dev::Readmesort& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Rpm
 struct Rpm { // dev.Rpm
@@ -1667,6 +1704,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Covfile &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covline &row);// cfmt:dev.Covline.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covtarget &row);// cfmt:dev.Covtarget.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Dbgtarget &row);// cfmt:dev.Dbgtarget.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Docpage &row);// cfmt:dev.Docpage.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Edaction &row);// cfmt:dev.Edaction.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Edacttype &row);// cfmt:dev.Edacttype.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::FieldId &row);// cfmt:dev.FieldId.String
@@ -1682,11 +1720,11 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Netproto &row);
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Noindent &row);// cfmt:dev.Noindent.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Package &row);// cfmt:dev.Package.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdep &row);// cfmt:dev.Pkgdep.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdeptype &row);// cfmt:dev.Pkgdeptype.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkggen &row);// cfmt:dev.Pkggen.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkey &row);// cfmt:dev.Pkgkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Prototransport &row);// cfmt:dev.Prototransport.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmefile &row);// cfmt:dev.Readmefile.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmesort &row);// cfmt:dev.Readmesort.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Rpm &row);// cfmt:dev.Rpm.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sandbox &row);// cfmt:dev.Sandbox.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sbpath &row);// cfmt:dev.Sbpath.String

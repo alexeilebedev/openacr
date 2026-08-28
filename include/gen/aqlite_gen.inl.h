@@ -33,7 +33,6 @@ inline  aqlite::trace::trace() {
 
 // --- aqlite.FDb..Uninit
 inline void aqlite::FDb_Uninit() {
-    aqlite::FDb &row = _db; (void)row;
 }
 
 // --- aqlite.FieldId.value.GetEnum

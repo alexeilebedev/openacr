@@ -67,7 +67,7 @@ void atf_comp::comptest_gcache_CoverageRestoreFail() {
 // marked .gcno has to be gone, because the pair the compile leaves behind is
 // always a pair from one compile.
 void atf_comp::comptest_gcache_CoverageBlobMiss() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null && $$G -- g++ --coverage -c x.cpp -o x.o; BLOB=$$(find cache -mindepth 3 -type f); try(){ rm -f x.o; printf \"stalenotes\\n\" > x.gcno; $$G -report -- g++ --coverage -c x.cpp -o x.o > rep.txt; echo $$1_code:$$?; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_/\"; test -s x.o && echo $$1_o:present || echo $$1_o:empty; grep -q stalenotes x.gcno && echo $$1_gcno:stale || echo $$1_gcno:fresh; }; try whole; truncate -s -$$(stat -c%s x.gcno) $$BLOB; try nogcno; printf \"\\010\\000\\000\\000\\000\\000\\000\\000\" > $$BLOB; cat x.gcno >> $$BLOB; try noo; cp x.o $$BLOB; try legacy; printf \"abc\" > $$BLOB; try short; rm -f $$BLOB; mkdir $$BLOB; try dir; try again'");
+    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null && $$G -- g++ --coverage -c x.cpp -o x.o; BLOB=$$(find cache -mindepth 3 -type f); try(){ rm -f x.o; printf \"stalenotes\\n\" > x.gcno; $$G -report -- g++ --coverage -c x.cpp -o x.o > rep.txt; echo $$1_code:$$?; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_/\"; test -s x.o && echo $$1_o:present || echo $$1_o:empty; grep -q stalenotes x.gcno && echo $$1_gcno:stale || echo $$1_gcno:fresh; }; try whole; truncate -s -$$(( $$(wc -c < x.gcno) )) $$BLOB; try nogcno; printf \"\\010\\000\\000\\000\\000\\000\\000\\000\" > $$BLOB; cat x.gcno >> $$BLOB; try noo; cp x.o $$BLOB; try legacy; printf \"abc\" > $$BLOB; try short; rm -f $$BLOB; mkdir $$BLOB; try dir; try again'");
 }
 
 // Which compiler flags select the coverage cache format, over every spelling
@@ -129,7 +129,7 @@ void atf_comp::comptest_gcache_CoverageFlag() {
 // which the stage pins next to the time, since a publish that wrote different bytes
 // would freshen the entry whatever rule it used.
 void atf_comp::comptest_gcache_HitMtime() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null; stamp(){ if test ! -e $$2; then echo $$1:absent; elif test $$2 -nt marker; then echo $$1:fresh; else echo $$1:stale; fi; }; try(){ touch marker; $$G -report -- g++ $$2 -c x.cpp -o x.o > rep.txt; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_/\"; stamp $$1_o x.o; stamp $$1_gcno x.gcno; }; rm -f x.o x.gcno; $$G -- g++ -c x.cpp -o x.o; rm -f x.o; try bareabsent \"\"; touch -d 2020-01-01 x.o; try baresame \"\"; rm -f x.o x.gcno; $$G -- g++ --coverage -c x.cpp -o x.o; touch -d 2020-01-01 x.o; rm -f x.gcno; try covnonotes \"--coverage\"; touch -d 2020-01-01 x.o x.gcno; try covsame \"--coverage\"; printf \"int g(){return 2;}\\n\" > y.cpp; touch marker0; rm -f y.o y.gcno; $$G -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o; BLOB=$$(find cache -mindepth 3 -type f -newer marker0); cp $$BLOB before; touch -d 2020-01-01 $$BLOB; touch marker; $$G -report -force -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o > rep.txt; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/pubsame_/\"; cmp -s $$BLOB before && echo pubsame_bytes:same || echo pubsame_bytes:changed; stamp pubsame_entry $$BLOB'");
+    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null; stamp(){ if test ! -e $$2; then echo $$1:absent; elif test $$2 -nt marker; then echo $$1:fresh; else echo $$1:stale; fi; }; try(){ touch marker; $$G -report -- g++ $$2 -c x.cpp -o x.o > rep.txt; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_/\"; stamp $$1_o x.o; stamp $$1_gcno x.gcno; }; rm -f x.o x.gcno; $$G -- g++ -c x.cpp -o x.o; rm -f x.o; try bareabsent \"\"; touch -t 202001010000 x.o; try baresame \"\"; rm -f x.o x.gcno; $$G -- g++ --coverage -c x.cpp -o x.o; touch -t 202001010000 x.o; rm -f x.gcno; try covnonotes \"--coverage\"; touch -t 202001010000 x.o x.gcno; try covsame \"--coverage\"; printf \"int g(){return 2;}\\n\" > y.cpp; touch marker0; rm -f y.o y.gcno; $$G -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o; BLOB=$$(find cache -mindepth 3 -type f -newer marker0); cp $$BLOB before; touch -t 202001010000 $$BLOB; touch marker; $$G -report -force -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o > rep.txt; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/pubsame_/\"; cmp -s $$BLOB before && echo pubsame_bytes:same || echo pubsame_bytes:changed; stamp pubsame_entry $$BLOB'");
 }
 
 // A run's exit code sums what it has to report: the wrapped command's own exit
@@ -202,12 +202,12 @@ void atf_comp::comptest_gcache_EmptyEntry() {
                         " pub(){ rm -f x.o x.gcno; $$G -report -- g++ $$1 -c x.cpp -o x.o > rep.txt; };"
                         " pub \"\"; E=$$(ent); rm -f $$E; $$G -gc > /dev/null;"
                         " test -e $$E && echo recreate:present || echo recreate:absent;"
-                        " pub \"\"; E=$$(ent); touch -d 2020-01-01 $$E; touch marker; $$G -gc > /dev/null; stamp refresh $$E;"
+                        " pub \"\"; E=$$(ent); touch -t 202001010000 $$E; touch marker; $$G -gc > /dev/null; stamp refresh $$E;"
                         " printf \"void __gcache_pragma_pch_preprocess();\\ninline int g(){return 2;}\\n\" > h.h;"
                         " printf \"#include <h.h>\\nint f(){return 1;}\\n\" > p.cpp;"
                         " $$G -report -- g++ -I. -c p.cpp -o p.o > rep.txt;"
                         " P=$$(grep -o \"pch_file:[^ ]*\" rep.txt | sed \"s/pch_file://\");"
-                        " touch -d 2020-01-01 $$P; touch marker; $$G -gc > /dev/null; stamp pchrefresh $$P;"
+                        " touch -t 202001010000 $$P; touch marker; $$G -gc > /dev/null; stamp pchrefresh $$P;"
                         " pub \"\"; E=$$(ent); : > $$E; rm -f x.o;"
                         " $$G -report -- g++ -c x.cpp -o x.o > rep.txt; echo emptyhit_code:$$?;"
                         " grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/emptyhit_/\";"

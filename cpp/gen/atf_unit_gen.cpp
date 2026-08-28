@@ -35,8 +35,6 @@
 #include "include/gen/atfdb_gen.inl.h"
 #include "include/gen/lib_exec_gen.h"
 #include "include/gen/lib_exec_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -45,6 +43,8 @@
 #include "include/gen/lib_ams_gen.inl.h"
 #include "include/gen/lib_curl_gen.h"
 #include "include/gen/lib_curl_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_netio_gen.h"
 #include "include/gen/lib_netio_gen.inl.h"
 #include "include/gen/lib_sql_gen.h"
@@ -55,11 +55,11 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ams::FDb     lib_ams::_db;      // dependency found via dev.targdep
 lib_curl::FDb    lib_curl::_db;     // dependency found via dev.targdep
 lib_exec::FDb    lib_exec::_db;     // dependency found via dev.targdep
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 lib_netio::FDb   lib_netio::_db;    // dependency found via dev.targdep
 lib_sql::FDb     lib_sql::_db;      // dependency found via dev.targdep
 lib_ws::FDb      lib_ws::_db;       // dependency found via dev.targdep
@@ -83,7 +83,7 @@ namespace atf_unit { // gen:ns_print_proto
     // func:atf_unit.FDb.tr_number.Turn
     static void          tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber& to) __attribute__((nothrow));
     // func:atf_unit.FDb.tr_number.Connect
-    inline static void   tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) __attribute__((nothrow));
+    inline static void   tr_number_Connect(atf_unit::FNumber* up, atf_unit::FNumber* child, bool left) __attribute__((nothrow));
     // func:atf_unit.FDb.unittest.LoadStatic
     static void          unittest_LoadStatic() __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
@@ -687,6 +687,7 @@ void* atf_unit::number_AllocMem() {
     if (row) {
         _db.number_free = row->number_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(atf_unit::FNumber));
     return row;
 }
 
@@ -696,6 +697,7 @@ void atf_unit::number_FreeMem(atf_unit::FNumber &row) {
     if (UNLIKELY(row.number_next != (atf_unit::FNumber*)-1)) {
         FatalErrorExit("atf_unit.tpool_double_delete  pool:atf_unit.FDb.number  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(atf_unit::FNumber)); // before the free list threads through the element
     row.number_next = _db.number_free; // insert into free list
     _db.number_free  = &row;
 }
@@ -763,17 +765,17 @@ atf_unit::FNumber* atf_unit::tr_number_First() {
 
 // --- atf_unit.FDb.tr_number.InsertImpl
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_unit::tr_number_InsertImpl(atf_unit::FNumber* parent, atf_unit::FNumber& row) {
+void atf_unit::tr_number_InsertImpl(atf_unit::FNumber* up, atf_unit::FNumber& row) {
     bool left = false;
-    while(parent != NULL){
-        left = tr_number_ElemLt(row, *parent);
-        atf_unit::FNumber* side = left ? parent->tr_number_left : parent->tr_number_right;
+    while(up != NULL){
+        left = tr_number_ElemLt(row, *up);
+        atf_unit::FNumber* side = left ? up->tr_number_left : up->tr_number_right;
         if(side == NULL){
             break;
         }
-        parent = side;
+        up = side;
     }
-    tr_number_Connect(parent, &row, left);
+    tr_number_Connect(up, &row, left);
 }
 
 // --- atf_unit.FDb.tr_number.Insert
@@ -856,10 +858,10 @@ inline static atf_unit::FNumber* atf_unit::tr_number_TallerChild(atf_unit::FNumb
 // --- atf_unit.FDb.tr_number.Disconnect
 // Disconnects the subtree(branch) from the parent
 static void atf_unit::tr_number_Disconnect(atf_unit::FNumber& node) {
-    atf_unit::FNumber* parent = node.tr_number_up;
-    if(parent != NULL){
-        bool left = parent->tr_number_left == &node;
-        (left ? parent->tr_number_left : parent->tr_number_right) = NULL;
+    atf_unit::FNumber* up = node.tr_number_up;
+    if(up != NULL){
+        bool left = up->tr_number_left == &node;
+        (left ? up->tr_number_left : up->tr_number_right) = NULL;
     }
     node.tr_number_up = NULL;
 }
@@ -951,12 +953,12 @@ static void atf_unit::tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber&
 }
 
 // --- atf_unit.FDb.tr_number.Connect
-inline static void atf_unit::tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) {
-    if(parent){
-        (left ? parent->tr_number_left : parent->tr_number_right) = child;
+inline static void atf_unit::tr_number_Connect(atf_unit::FNumber* up, atf_unit::FNumber* child, bool left) {
+    if(up){
+        (left ? up->tr_number_left : up->tr_number_right) = child;
     }
     if(child){
-        child->tr_number_up = parent;
+        child->tr_number_up = up;
     }
 }
 
@@ -1943,7 +1945,6 @@ void atf_unit::FDb_Init() {
 
 // --- atf_unit.FDb..Uninit
 void atf_unit::FDb_Uninit() {
-    atf_unit::FDb &row = _db; (void)row;
 
     // atf_unit.FDb.ind_unittest.Uninit (Thash)  //
     // skip destruction of ind_unittest in global scope
@@ -1957,26 +1958,25 @@ void atf_unit::FDb_Uninit() {
 
 // --- atf_unit.FMsg.msg.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u8> atf_unit::msg_Getary(atf_unit::FMsg& msg) {
-    return algo::aryptr<u8>(msg_Addr(msg), msg_N(msg));
+algo::aryptr<u8> atf_unit::msg_Getary(atf_unit::FMsg& parent) {
+    return algo::aryptr<u8>(msg_Addr(parent), msg_N(parent));
 }
 
 // --- atf_unit.FMsg.msg.Addr
-u8* atf_unit::msg_Addr(atf_unit::FMsg& msg) {
-    return (u8*)((u8*)&msg + sizeof(atf_unit::FMsg)); // address of varlen portion
+u8* atf_unit::msg_Addr(atf_unit::FMsg& parent) {
+    return (u8*)((u8*)&parent + sizeof(atf_unit::FMsg)); // address of varlen portion
 }
 
 // --- atf_unit.FMsg.msg.Print
 // Convert msg to a string.
 // Array is printed as a regular string.
-void atf_unit::msg_Print(atf_unit::FMsg& msg, algo::cstring &rhs) {
-    rhs << algo::memptr_ToStrptr(msg_Getary(msg));
+void atf_unit::msg_Print(atf_unit::FMsg& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(msg_Getary(parent));
 }
 
 // --- atf_unit.FNumber..Uninit
-void atf_unit::FNumber_Uninit(atf_unit::FNumber& number) {
-    atf_unit::FNumber &row = number; (void)row;
-    tr_number_Remove(row); // remove number from index tr_number
+void atf_unit::FNumber_Uninit(atf_unit::FNumber& parent) {
+    tr_number_Remove(parent); // remove number from index tr_number
 }
 
 // --- atf_unit.FPerfSort.orig.Addary
@@ -2750,7 +2750,6 @@ void atf_unit::index_RemRegion(atf_unit::FPerfSort& parent, i64 beg, i64 n) {
 
 // --- atf_unit.FPerfSort..Uninit
 void atf_unit::FPerfSort_Uninit(atf_unit::FPerfSort& parent) {
-    atf_unit::FPerfSort &row = parent; (void)row;
 
     // atf_unit.FPerfSort.index.Uninit (Tary)  //
     // remove all elements from atf_unit.FPerfSort.index
@@ -2810,19 +2809,18 @@ void atf_unit::unittest_CopyIn(atf_unit::FUnittest &row, atfdb::Unittest &in) {
 }
 
 // --- atf_unit.FUnittest.ns.Get
-algo::strptr atf_unit::ns_Get(atf_unit::FUnittest& unittest) {
-    return algo::Pathcomp(unittest.unittest, ".RL");
+algo::strptr atf_unit::ns_Get(atf_unit::FUnittest& parent) {
+    return algo::Pathcomp(parent.unittest, ".RL");
 }
 
 // --- atf_unit.FUnittest.testname.Get
-algo::strptr atf_unit::testname_Get(atf_unit::FUnittest& unittest) {
-    return algo::Pathcomp(unittest.unittest, ".RR");
+algo::strptr atf_unit::testname_Get(atf_unit::FUnittest& parent) {
+    return algo::Pathcomp(parent.unittest, ".RR");
 }
 
 // --- atf_unit.FUnittest..Uninit
-void atf_unit::FUnittest_Uninit(atf_unit::FUnittest& unittest) {
-    atf_unit::FUnittest &row = unittest; (void)row;
-    ind_unittest_Remove(row); // remove unittest from index ind_unittest
+void atf_unit::FUnittest_Uninit(atf_unit::FUnittest& parent) {
+    ind_unittest_Remove(parent); // remove unittest from index ind_unittest
 }
 
 // --- atf_unit.FUnittest..Print
@@ -3010,7 +3008,6 @@ void atf_unit::JsonAry_Init(atf_unit::JsonAry& parent) {
 
 // --- atf_unit.JsonAry..Uninit
 void atf_unit::JsonAry_Uninit(atf_unit::JsonAry& parent) {
-    atf_unit::JsonAry &row = parent; (void)row;
 
     // atf_unit.JsonAry.name.Uninit (Inlary)  //elements print as strings: Smallstr20 has no Json cfmt
     name_RemoveAll(parent);
@@ -3253,7 +3250,6 @@ void atf_unit::TestJson_Init(atf_unit::TestJson& parent) {
 
 // --- atf_unit.TestJson..Uninit
 void atf_unit::TestJson_Uninit(atf_unit::TestJson& parent) {
-    atf_unit::TestJson &row = parent; (void)row;
 
     // atf_unit.TestJson.fld_ary_name.Uninit (Inlary)  //array of a type with no Json cfmt: elements are strings
     fld_ary_name_RemoveAll(parent);
@@ -3555,11 +3551,11 @@ void atf_unit::StaticCheck() {
 // --- atf_unit...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ams::FDb_Init();
         lib_curl::FDb_Init();
         lib_exec::FDb_Init();
+        lib_json::FDb_Init();
         lib_netio::FDb_Init();
         lib_sql::FDb_Init();
         lib_ws::FDb_Init();
@@ -3582,11 +3578,11 @@ int main(int argc, char **argv) {
         lib_ws::FDb_Uninit();
         lib_sql::FDb_Uninit();
         lib_netio::FDb_Uninit();
+        lib_json::FDb_Uninit();
         lib_exec::FDb_Uninit();
         lib_curl::FDb_Uninit();
         lib_ams::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -37,13 +37,10 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 src_func::FDb   src_func::_db;    // dependency found via dev.targdep
 
@@ -86,7 +83,7 @@ namespace src_func { // gen:ns_print_proto
     inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Extract next character from STR and advance IDX
     // func:src_func.FFunc.sortkey.Nextchar
-    inline static u64    sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) __attribute__((nothrow));
+    inline static u64    sortkey_Nextchar(const src_func::FFunc& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // func:src_func...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
@@ -112,9 +109,8 @@ void src_func::ctypelen_CopyIn(src_func::FCtypelen &row, dmmeta::Ctypelen &in) {
 }
 
 // --- src_func.FCtypelen..Uninit
-void src_func::FCtypelen_Uninit(src_func::FCtypelen& ctypelen) {
-    src_func::FCtypelen &row = ctypelen; (void)row;
-    ind_ctypelen_Remove(row); // remove ctypelen from index ind_ctypelen
+void src_func::FCtypelen_Uninit(src_func::FCtypelen& parent) {
+    ind_ctypelen_Remove(parent); // remove ctypelen from index ind_ctypelen
 }
 
 // --- src_func.trace..Print
@@ -2389,7 +2385,6 @@ void src_func::FDb_Init() {
 
 // --- src_func.FDb..Uninit
 void src_func::FDb_Uninit() {
-    src_func::FDb &row = _db; (void)row;
 
     // src_func.FDb.ind_gitfile.Uninit (Thash)  //
     // skip destruction of ind_gitfile in global scope
@@ -2439,8 +2434,8 @@ void src_func::FDb_Uninit() {
 
 // --- src_func.FFunc.sortkey.Nextchar
 // Extract next character from STR and advance IDX
-inline static u64 src_func::sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) {
-    (void)func;
+inline static u64 src_func::sortkey_Nextchar(const src_func::FFunc& parent, algo::strptr &str, int &idx) {
+    (void)parent;
     int i = idx;
     u64 ch = str.elems[i];
     i++;
@@ -2465,17 +2460,17 @@ inline static u64 src_func::sortkey_Nextchar(const src_func::FFunc& func, algo::
 // --- src_func.FFunc.sortkey.Cmp
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
-i32 src_func::sortkey_Cmp(src_func::FFunc& func, src_func::FFunc &rhs) {
+i32 src_func::sortkey_Cmp(src_func::FFunc& parent, src_func::FFunc &rhs) {
     i32 retval = 0;
     int idx_a = 0;
     int idx_b = 0;
-    algo::strptr str_a = ch_Getary(func.sortkey);
+    algo::strptr str_a = ch_Getary(parent.sortkey);
     algo::strptr str_b = ch_Getary(rhs.sortkey);
     int n_a   = elems_N(str_a);
     int n_b   = elems_N(str_b);
     retval    = i32_Cmp(n_a,n_b);
     while (idx_a < n_a && idx_b < n_b) {
-        u64 ch_a = sortkey_Nextchar(func, str_a, idx_a);
+        u64 ch_a = sortkey_Nextchar(parent, str_a, idx_a);
         u64 ch_b = sortkey_Nextchar(rhs, str_b, idx_b);
         if (ch_a != ch_b) {
             retval = (ch_a > ch_b)*2-1;
@@ -2487,45 +2482,43 @@ i32 src_func::sortkey_Cmp(src_func::FFunc& func, src_func::FFunc &rhs) {
 
 // --- src_func.FFunc..Init
 // Set all fields to initial values.
-void src_func::FFunc_Init(src_func::FFunc& func) {
-    func.p_targsrc = NULL;
-    func.line = i32(0);
-    func.isstatic = bool(false);
-    func.isinline = bool(false);
-    func.select = bool(false);
-    func.iffy = bool(false);
-    func.mystery = bool(false);
-    func.p_written_to = NULL;
-    func.p_userfunc = NULL;
-    func.endline = i32(0);
-    func.ind_func_next = (src_func::FFunc*)-1; // (src_func.FDb.ind_func) not-in-hash
-    func.ind_func_hashval = 0; // stored hash value
-    func.bh_func_idx = -1; // (src_func.FDb.bh_func) not-in-heap
-    func.targsrc_zd_func_next = (src_func::FFunc*)-1; // (src_func.FTargsrc.zd_func) not-in-list
-    func.targsrc_zd_func_prev = NULL; // (src_func.FTargsrc.zd_func)
-    func.userfunc_zd_func_next = (src_func::FFunc*)-1; // (src_func.FUserfunc.zd_func) not-in-list
-    func.userfunc_zd_func_prev = NULL; // (src_func.FUserfunc.zd_func)
+void src_func::FFunc_Init(src_func::FFunc& parent) {
+    parent.p_targsrc = NULL;
+    parent.line = i32(0);
+    parent.isstatic = bool(false);
+    parent.isinline = bool(false);
+    parent.select = bool(false);
+    parent.iffy = bool(false);
+    parent.mystery = bool(false);
+    parent.p_written_to = NULL;
+    parent.p_userfunc = NULL;
+    parent.endline = i32(0);
+    parent.ind_func_next = (src_func::FFunc*)-1; // (src_func.FDb.ind_func) not-in-hash
+    parent.ind_func_hashval = 0; // stored hash value
+    parent.bh_func_idx = -1; // (src_func.FDb.bh_func) not-in-heap
+    parent.targsrc_zd_func_next = (src_func::FFunc*)-1; // (src_func.FTargsrc.zd_func) not-in-list
+    parent.targsrc_zd_func_prev = NULL; // (src_func.FTargsrc.zd_func)
+    parent.userfunc_zd_func_next = (src_func::FFunc*)-1; // (src_func.FUserfunc.zd_func) not-in-list
+    parent.userfunc_zd_func_prev = NULL; // (src_func.FUserfunc.zd_func)
 }
 
 // --- src_func.FFunc..Uninit
-void src_func::FFunc_Uninit(src_func::FFunc& func) {
-    src_func::FFunc &row = func; (void)row;
-    bh_func_Remove(row); // remove func from index bh_func
-    ind_func_Remove(row); // remove func from index ind_func
-    src_func::FTargsrc* p_p_targsrc = row.p_targsrc;
+void src_func::FFunc_Uninit(src_func::FFunc& parent) {
+    bh_func_Remove(parent); // remove func from index bh_func
+    ind_func_Remove(parent); // remove func from index ind_func
+    src_func::FTargsrc* p_p_targsrc = parent.p_targsrc;
     if (p_p_targsrc)  {
-        zd_func_Remove(*p_p_targsrc, row);// remove func from index zd_func
+        zd_func_Remove(*p_p_targsrc, parent);// remove func from index zd_func
     }
-    src_func::FUserfunc* p_p_userfunc = row.p_userfunc;
+    src_func::FUserfunc* p_p_userfunc = parent.p_userfunc;
     if (p_p_userfunc)  {
-        zd_func_Remove(*p_p_userfunc, row);// remove func from index zd_func
+        zd_func_Remove(*p_p_userfunc, parent);// remove func from index zd_func
     }
 }
 
 // --- src_func.FGenaffix..Uninit
-void src_func::FGenaffix_Uninit(src_func::FGenaffix& genaffix) {
-    src_func::FGenaffix &row = genaffix; (void)row;
-    ind_genaffix_Remove(row); // remove genaffix from index ind_genaffix
+void src_func::FGenaffix_Uninit(src_func::FGenaffix& parent) {
+    ind_genaffix_Remove(parent); // remove genaffix from index ind_genaffix
 }
 
 // --- src_func.FGitfile.base.CopyOut
@@ -2541,14 +2534,13 @@ void src_func::gitfile_CopyIn(src_func::FGitfile &row, dev::Gitfile &in) {
 }
 
 // --- src_func.FGitfile.ext.Get
-algo::strptr src_func::ext_Get(src_func::FGitfile& gitfile) {
-    return algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR");
+algo::strptr src_func::ext_Get(src_func::FGitfile& parent) {
+    return algo::Pathcomp(parent.gitfile, "/RR.LR.RR");
 }
 
 // --- src_func.FGitfile..Uninit
-void src_func::FGitfile_Uninit(src_func::FGitfile& gitfile) {
-    src_func::FGitfile &row = gitfile; (void)row;
-    ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
+void src_func::FGitfile_Uninit(src_func::FGitfile& parent) {
+    ind_gitfile_Remove(parent); // remove gitfile from index ind_gitfile
 }
 
 // --- src_func.FTarget.base.CopyOut
@@ -2565,35 +2557,35 @@ void src_func::target_CopyIn(src_func::FTarget &row, dev::Target &in) {
 
 // --- src_func.FTarget.cd_targsrc.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void src_func::cd_targsrc_Insert(src_func::FTarget& target, src_func::FTargsrc& row) {
+void src_func::cd_targsrc_Insert(src_func::FTarget& parent, src_func::FTargsrc& row) {
     if (!target_cd_targsrc_InLlistQ(row)) {
-        if (target.cd_targsrc_head) {
-            row.target_cd_targsrc_next = target.cd_targsrc_head;
-            row.target_cd_targsrc_prev = target.cd_targsrc_head->target_cd_targsrc_prev;
+        if (parent.cd_targsrc_head) {
+            row.target_cd_targsrc_next = parent.cd_targsrc_head;
+            row.target_cd_targsrc_prev = parent.cd_targsrc_head->target_cd_targsrc_prev;
             row.target_cd_targsrc_prev->target_cd_targsrc_next = &row;
             row.target_cd_targsrc_next->target_cd_targsrc_prev = &row;
         } else {
             row.target_cd_targsrc_next = &row;
             row.target_cd_targsrc_prev = &row;
-            target.cd_targsrc_head = &row;
+            parent.cd_targsrc_head = &row;
         }
-        target.cd_targsrc_n++;
+        parent.cd_targsrc_n++;
     }
 }
 
 // --- src_func.FTarget.cd_targsrc.Remove
 // Remove element from index. If element is not in index, do nothing.
-void src_func::cd_targsrc_Remove(src_func::FTarget& target, src_func::FTargsrc& row) {
+void src_func::cd_targsrc_Remove(src_func::FTarget& parent, src_func::FTargsrc& row) {
     if (target_cd_targsrc_InLlistQ(row)) {
-        src_func::FTargsrc* old_head       = target.cd_targsrc_head;
+        src_func::FTargsrc* old_head       = parent.cd_targsrc_head;
         (void)old_head; // in case it's not used
         src_func::FTargsrc *oldnext = row.target_cd_targsrc_next;
         src_func::FTargsrc *oldprev = row.target_cd_targsrc_prev;
         oldnext->target_cd_targsrc_prev = oldprev; // remove element from list
         oldprev->target_cd_targsrc_next = oldnext;
-        target.cd_targsrc_n--;  // adjust count
-        if (&row == target.cd_targsrc_head) {
-            target.cd_targsrc_head = oldnext==&row ? NULL : oldnext; // adjust list head
+        parent.cd_targsrc_n--;  // adjust count
+        if (&row == parent.cd_targsrc_head) {
+            parent.cd_targsrc_head = oldnext==&row ? NULL : oldnext; // adjust list head
         }
         row.target_cd_targsrc_next = (src_func::FTargsrc*)-1; // mark element as not-in-list);
         row.target_cd_targsrc_prev = NULL; // clear back-pointer
@@ -2602,11 +2594,11 @@ void src_func::cd_targsrc_Remove(src_func::FTarget& target, src_func::FTargsrc& 
 
 // --- src_func.FTarget.cd_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
-void src_func::cd_targsrc_RemoveAll(src_func::FTarget& target) {
-    src_func::FTargsrc* row = target.cd_targsrc_head;
-    src_func::FTargsrc* head = target.cd_targsrc_head;
-    target.cd_targsrc_head = NULL;
-    target.cd_targsrc_n = 0;
+void src_func::cd_targsrc_RemoveAll(src_func::FTarget& parent) {
+    src_func::FTargsrc* row = parent.cd_targsrc_head;
+    src_func::FTargsrc* head = parent.cd_targsrc_head;
+    parent.cd_targsrc_head = NULL;
+    parent.cd_targsrc_n = 0;
     while (row) {
         src_func::FTargsrc* row_next = row->target_cd_targsrc_next;
         row->target_cd_targsrc_next  = (src_func::FTargsrc*)-1;
@@ -2617,16 +2609,16 @@ void src_func::cd_targsrc_RemoveAll(src_func::FTarget& target) {
 
 // --- src_func.FTarget.cd_targsrc.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-src_func::FTargsrc* src_func::cd_targsrc_RemoveFirst(src_func::FTarget& target) {
+src_func::FTargsrc* src_func::cd_targsrc_RemoveFirst(src_func::FTarget& parent) {
     src_func::FTargsrc *row = NULL;
-    row = target.cd_targsrc_head;
+    row = parent.cd_targsrc_head;
     if (row) {
         bool hasmore = row!=row->target_cd_targsrc_next;
-        target.cd_targsrc_head = hasmore ? row->target_cd_targsrc_next : NULL;
+        parent.cd_targsrc_head = hasmore ? row->target_cd_targsrc_next : NULL;
         row->target_cd_targsrc_next->target_cd_targsrc_prev = row->target_cd_targsrc_prev;
         row->target_cd_targsrc_prev->target_cd_targsrc_next = row->target_cd_targsrc_next;
         row->target_cd_targsrc_prev = NULL;
-        target.cd_targsrc_n--;
+        parent.cd_targsrc_n--;
         row->target_cd_targsrc_next = (src_func::FTargsrc*)-1; // mark as not-in-list
     }
     return row;
@@ -2635,19 +2627,18 @@ src_func::FTargsrc* src_func::cd_targsrc_RemoveFirst(src_func::FTarget& target) 
 // --- src_func.FTarget.cd_targsrc.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-src_func::FTargsrc* src_func::cd_targsrc_RotateFirst(src_func::FTarget& target) {
+src_func::FTargsrc* src_func::cd_targsrc_RotateFirst(src_func::FTarget& parent) {
     src_func::FTargsrc *row = NULL;
-    row = target.cd_targsrc_head;
+    row = parent.cd_targsrc_head;
     if (row) {
-        target.cd_targsrc_head = row->target_cd_targsrc_next;
+        parent.cd_targsrc_head = row->target_cd_targsrc_next;
     }
     return row;
 }
 
 // --- src_func.FTarget..Uninit
-void src_func::FTarget_Uninit(src_func::FTarget& target) {
-    src_func::FTarget &row = target; (void)row;
-    ind_target_Remove(row); // remove target from index ind_target
+void src_func::FTarget_Uninit(src_func::FTarget& parent) {
+    ind_target_Remove(parent); // remove target from index ind_target
 }
 
 // --- src_func.FTargsrc.base.CopyOut
@@ -2665,66 +2656,66 @@ void src_func::targsrc_CopyIn(src_func::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- src_func.FTargsrc.target.Get
-algo::strptr src_func::target_Get(src_func::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LL");
+algo::strptr src_func::target_Get(src_func::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LL");
 }
 
 // --- src_func.FTargsrc.src.Get
-algo::strptr src_func::src_Get(src_func::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, "/LR");
+algo::strptr src_func::src_Get(src_func::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LR");
 }
 
 // --- src_func.FTargsrc.ext.Get
-algo::strptr src_func::ext_Get(src_func::FTargsrc& targsrc) {
-    return algo::Pathcomp(targsrc.targsrc, ".RR");
+algo::strptr src_func::ext_Get(src_func::FTargsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, ".RR");
 }
 
 // --- src_func.FTargsrc.zd_func.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void src_func::zd_func_Insert(src_func::FTargsrc& targsrc, src_func::FFunc& row) {
+void src_func::zd_func_Insert(src_func::FTargsrc& parent, src_func::FFunc& row) {
     if (!targsrc_zd_func_InLlistQ(row)) {
-        src_func::FFunc* old_tail = targsrc.zd_func_tail;
+        src_func::FFunc* old_tail = parent.zd_func_tail;
         row.targsrc_zd_func_next = NULL;
         row.targsrc_zd_func_prev = old_tail;
-        targsrc.zd_func_tail = &row;
+        parent.zd_func_tail = &row;
         src_func::FFunc **new_row_a = &old_tail->targsrc_zd_func_next;
-        src_func::FFunc **new_row_b = &targsrc.zd_func_head;
+        src_func::FFunc **new_row_b = &parent.zd_func_head;
         src_func::FFunc **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        targsrc.zd_func_n++;
+        parent.zd_func_n++;
     }
 }
 
 // --- src_func.FTargsrc.zd_func.Remove
 // Remove element from index. If element is not in index, do nothing.
-void src_func::zd_func_Remove(src_func::FTargsrc& targsrc, src_func::FFunc& row) {
+void src_func::zd_func_Remove(src_func::FTargsrc& parent, src_func::FFunc& row) {
     if (targsrc_zd_func_InLlistQ(row)) {
-        src_func::FFunc* old_head       = targsrc.zd_func_head;
+        src_func::FFunc* old_head       = parent.zd_func_head;
         (void)old_head; // in case it's not used
         src_func::FFunc* prev = row.targsrc_zd_func_prev;
         src_func::FFunc* next = row.targsrc_zd_func_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         src_func::FFunc **new_next_a = &prev->targsrc_zd_func_next;
-        src_func::FFunc **new_next_b = &targsrc.zd_func_head;
+        src_func::FFunc **new_next_b = &parent.zd_func_head;
         src_func::FFunc **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         src_func::FFunc **new_prev_a = &next->targsrc_zd_func_prev;
-        src_func::FFunc **new_prev_b = &targsrc.zd_func_tail;
+        src_func::FFunc **new_prev_b = &parent.zd_func_tail;
         src_func::FFunc **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        targsrc.zd_func_n--;
+        parent.zd_func_n--;
         row.targsrc_zd_func_next=(src_func::FFunc*)-1; // not-in-list
     }
 }
 
 // --- src_func.FTargsrc.zd_func.RemoveAll
 // Empty the index. (The rows are not deleted)
-void src_func::zd_func_RemoveAll(src_func::FTargsrc& targsrc) {
-    src_func::FFunc* row = targsrc.zd_func_head;
-    targsrc.zd_func_head = NULL;
-    targsrc.zd_func_tail = NULL;
-    targsrc.zd_func_n = 0;
+void src_func::zd_func_RemoveAll(src_func::FTargsrc& parent) {
+    src_func::FFunc* row = parent.zd_func_head;
+    parent.zd_func_head = NULL;
+    parent.zd_func_tail = NULL;
+    parent.zd_func_n = 0;
     while (row) {
         src_func::FFunc* row_next = row->targsrc_zd_func_next;
         row->targsrc_zd_func_next  = (src_func::FFunc*)-1;
@@ -2735,17 +2726,17 @@ void src_func::zd_func_RemoveAll(src_func::FTargsrc& targsrc) {
 
 // --- src_func.FTargsrc.zd_func.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FTargsrc& targsrc) {
+src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FTargsrc& parent) {
     src_func::FFunc *row = NULL;
-    row = targsrc.zd_func_head;
+    row = parent.zd_func_head;
     if (row) {
         src_func::FFunc *next = row->targsrc_zd_func_next;
-        targsrc.zd_func_head = next;
+        parent.zd_func_head = next;
         src_func::FFunc **new_end_a = &next->targsrc_zd_func_prev;
-        src_func::FFunc **new_end_b = &targsrc.zd_func_tail;
+        src_func::FFunc **new_end_b = &parent.zd_func_tail;
         src_func::FFunc **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        targsrc.zd_func_n--;
+        parent.zd_func_n--;
         row->targsrc_zd_func_next = (src_func::FFunc*)-1; // mark as not-in-list
     }
     return row;
@@ -2753,28 +2744,27 @@ src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FTargsrc& targsrc) {
 
 // --- src_func.FTargsrc.zd_func.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void src_func::zd_func_InsertBefore(src_func::FTargsrc& targsrc, src_func::FFunc& row, src_func::FFunc* before) {
+void src_func::zd_func_InsertBefore(src_func::FTargsrc& parent, src_func::FFunc& row, src_func::FFunc* before) {
     if (!targsrc_zd_func_InLlistQ(row) && &row != before) {
         src_func::FFunc* next = before;
-        src_func::FFunc* prev = next ? next->targsrc_zd_func_prev : targsrc.zd_func_tail;
+        src_func::FFunc* prev = next ? next->targsrc_zd_func_prev : parent.zd_func_tail;
         row.targsrc_zd_func_next = next;
         row.targsrc_zd_func_prev = prev;
         src_func::FFunc **prev_link_a = &prev->targsrc_zd_func_next;
-        src_func::FFunc **prev_link_b = &targsrc.zd_func_head;
+        src_func::FFunc **prev_link_b = &parent.zd_func_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         src_func::FFunc **next_link_a = &next->targsrc_zd_func_prev;
-        src_func::FFunc **next_link_b = &targsrc.zd_func_tail;
+        src_func::FFunc **next_link_b = &parent.zd_func_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        targsrc.zd_func_n++;
+        parent.zd_func_n++;
     }
 }
 
 // --- src_func.FTargsrc..Uninit
-void src_func::FTargsrc_Uninit(src_func::FTargsrc& targsrc) {
-    src_func::FTargsrc &row = targsrc; (void)row;
-    src_func::FTarget* p_target = src_func::ind_target_Find(target_Get(row));
+void src_func::FTargsrc_Uninit(src_func::FTargsrc& parent) {
+    src_func::FTarget* p_target = src_func::ind_target_Find(target_Get(parent));
     if (p_target)  {
-        cd_targsrc_Remove(*p_target, row);// remove targsrc from index cd_targsrc
+        cd_targsrc_Remove(*p_target, parent);// remove targsrc from index cd_targsrc
     }
 }
 
@@ -2798,50 +2788,50 @@ void src_func::userfunc_CopyIn(src_func::FUserfunc &row, dmmeta::Userfunc &in) {
 
 // --- src_func.FUserfunc.zd_func.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void src_func::zd_func_Insert(src_func::FUserfunc& userfunc, src_func::FFunc& row) {
+void src_func::zd_func_Insert(src_func::FUserfunc& parent, src_func::FFunc& row) {
     if (!userfunc_zd_func_InLlistQ(row)) {
-        src_func::FFunc* old_tail = userfunc.zd_func_tail;
+        src_func::FFunc* old_tail = parent.zd_func_tail;
         row.userfunc_zd_func_next = NULL;
         row.userfunc_zd_func_prev = old_tail;
-        userfunc.zd_func_tail = &row;
+        parent.zd_func_tail = &row;
         src_func::FFunc **new_row_a = &old_tail->userfunc_zd_func_next;
-        src_func::FFunc **new_row_b = &userfunc.zd_func_head;
+        src_func::FFunc **new_row_b = &parent.zd_func_head;
         src_func::FFunc **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        userfunc.zd_func_n++;
+        parent.zd_func_n++;
     }
 }
 
 // --- src_func.FUserfunc.zd_func.Remove
 // Remove element from index. If element is not in index, do nothing.
-void src_func::zd_func_Remove(src_func::FUserfunc& userfunc, src_func::FFunc& row) {
+void src_func::zd_func_Remove(src_func::FUserfunc& parent, src_func::FFunc& row) {
     if (userfunc_zd_func_InLlistQ(row)) {
-        src_func::FFunc* old_head       = userfunc.zd_func_head;
+        src_func::FFunc* old_head       = parent.zd_func_head;
         (void)old_head; // in case it's not used
         src_func::FFunc* prev = row.userfunc_zd_func_prev;
         src_func::FFunc* next = row.userfunc_zd_func_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         src_func::FFunc **new_next_a = &prev->userfunc_zd_func_next;
-        src_func::FFunc **new_next_b = &userfunc.zd_func_head;
+        src_func::FFunc **new_next_b = &parent.zd_func_head;
         src_func::FFunc **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         src_func::FFunc **new_prev_a = &next->userfunc_zd_func_prev;
-        src_func::FFunc **new_prev_b = &userfunc.zd_func_tail;
+        src_func::FFunc **new_prev_b = &parent.zd_func_tail;
         src_func::FFunc **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        userfunc.zd_func_n--;
+        parent.zd_func_n--;
         row.userfunc_zd_func_next=(src_func::FFunc*)-1; // not-in-list
     }
 }
 
 // --- src_func.FUserfunc.zd_func.RemoveAll
 // Empty the index. (The rows are not deleted)
-void src_func::zd_func_RemoveAll(src_func::FUserfunc& userfunc) {
-    src_func::FFunc* row = userfunc.zd_func_head;
-    userfunc.zd_func_head = NULL;
-    userfunc.zd_func_tail = NULL;
-    userfunc.zd_func_n = 0;
+void src_func::zd_func_RemoveAll(src_func::FUserfunc& parent) {
+    src_func::FFunc* row = parent.zd_func_head;
+    parent.zd_func_head = NULL;
+    parent.zd_func_tail = NULL;
+    parent.zd_func_n = 0;
     while (row) {
         src_func::FFunc* row_next = row->userfunc_zd_func_next;
         row->userfunc_zd_func_next  = (src_func::FFunc*)-1;
@@ -2852,17 +2842,17 @@ void src_func::zd_func_RemoveAll(src_func::FUserfunc& userfunc) {
 
 // --- src_func.FUserfunc.zd_func.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FUserfunc& userfunc) {
+src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FUserfunc& parent) {
     src_func::FFunc *row = NULL;
-    row = userfunc.zd_func_head;
+    row = parent.zd_func_head;
     if (row) {
         src_func::FFunc *next = row->userfunc_zd_func_next;
-        userfunc.zd_func_head = next;
+        parent.zd_func_head = next;
         src_func::FFunc **new_end_a = &next->userfunc_zd_func_prev;
-        src_func::FFunc **new_end_b = &userfunc.zd_func_tail;
+        src_func::FFunc **new_end_b = &parent.zd_func_tail;
         src_func::FFunc **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        userfunc.zd_func_n--;
+        parent.zd_func_n--;
         row->userfunc_zd_func_next = (src_func::FFunc*)-1; // mark as not-in-list
     }
     return row;
@@ -2870,27 +2860,26 @@ src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FUserfunc& userfunc) {
 
 // --- src_func.FUserfunc.zd_func.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void src_func::zd_func_InsertBefore(src_func::FUserfunc& userfunc, src_func::FFunc& row, src_func::FFunc* before) {
+void src_func::zd_func_InsertBefore(src_func::FUserfunc& parent, src_func::FFunc& row, src_func::FFunc* before) {
     if (!userfunc_zd_func_InLlistQ(row) && &row != before) {
         src_func::FFunc* next = before;
-        src_func::FFunc* prev = next ? next->userfunc_zd_func_prev : userfunc.zd_func_tail;
+        src_func::FFunc* prev = next ? next->userfunc_zd_func_prev : parent.zd_func_tail;
         row.userfunc_zd_func_next = next;
         row.userfunc_zd_func_prev = prev;
         src_func::FFunc **prev_link_a = &prev->userfunc_zd_func_next;
-        src_func::FFunc **prev_link_b = &userfunc.zd_func_head;
+        src_func::FFunc **prev_link_b = &parent.zd_func_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         src_func::FFunc **next_link_a = &next->userfunc_zd_func_prev;
-        src_func::FFunc **next_link_b = &userfunc.zd_func_tail;
+        src_func::FFunc **next_link_b = &parent.zd_func_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        userfunc.zd_func_n++;
+        parent.zd_func_n++;
     }
 }
 
 // --- src_func.FUserfunc..Uninit
-void src_func::FUserfunc_Uninit(src_func::FUserfunc& userfunc) {
-    src_func::FUserfunc &row = userfunc; (void)row;
-    ind_userfunc_Remove(row); // remove userfunc from index ind_userfunc
-    ind_userfunc_cppname_Remove(row); // remove userfunc from index ind_userfunc_cppname
+void src_func::FUserfunc_Uninit(src_func::FUserfunc& parent) {
+    ind_userfunc_Remove(parent); // remove userfunc from index ind_userfunc
+    ind_userfunc_cppname_Remove(parent); // remove userfunc from index ind_userfunc_cppname
 }
 
 // --- src_func.FieldId.value.ToCstr
@@ -3108,7 +3097,6 @@ void src_func::StaticCheck() {
 // --- src_func...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         src_func::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -3127,7 +3115,6 @@ int main(int argc, char **argv) {
     try {
         src_func::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

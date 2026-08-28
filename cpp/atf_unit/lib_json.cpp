@@ -627,6 +627,7 @@ void atf_unit::unittest_lib_json_Typical() {
     static const char *secstr = "throw 'allowIllegalResourceCall is false.';";
     static const char *in = "{"
         "\"id\":1000,"
+        "\"id_str\":\"1000\","
         "\"name\":\"Object\","
         "\"methods\":[\"GET\",\"PUT\"],"
         "\"collections\":[],"
@@ -644,10 +645,16 @@ void atf_unit::unittest_lib_json_Typical() {
     TESTCMP(JsonParseOkQ(parser),true);
     // basically check what we get
     TESTCMP(strptr_Get(parser.root_node,"id"),"1000");
+    TESTCMP(i32_Get(parser.root_node,"id"), 1000);
+    TESTCMP(u32_Get(parser.root_node,"id"), 1000);
+    TESTCMP(i32_Get(parser.root_node,"id_str"), 1000);
+    TESTCMP(u32_Get(parser.root_node,"id_str"), 1000);
     TESTCMP(strptr_Get(parser.root_node,"name"),"Object");
     TESTCMP(strptr_Get(parser.root_node,"fields.field1"),"");
     TESTCMP(strptr_Get(parser.root_node,"fields.field2"),"0");
+    TESTCMP(i32_Get(parser.root_node,"fields.field2"), 0);
     TESTCMP(strptr_Get(parser.root_node,"fields.field3"),"1");
+    TESTCMP(i32_Get(parser.root_node,"fields.field3"), 1);
     lib_json::FNode *methods = node_GetArray(parser.root_node,"methods");
     bool ok = methods && c_child_N(*methods) == 2;
     TESTCMP(ok,true);

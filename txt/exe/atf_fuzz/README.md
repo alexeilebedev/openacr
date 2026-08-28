@@ -1,18 +1,26 @@
 ## atf_fuzz - Generator of bad inputs for targets
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [atf_fuzz - Internals](/txt/gen/atf_fuzz/atf_fuzz.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+atf_fuzz: Generator of bad inputs for targets
+Usage: atf_fuzz [[-target:]<string>] [[-args:]<string>] [options]
+    OPTION      TYPE    DFLT                   COMMENT
+    -reprofile  string  "temp/atf_fuzz.repro"  File where repros are stored
+    [target]    string  ""                     Target to fuzz
+    [args]      string  ""                     Additional arguments to target
+    -inputfile  string  ""                     File with input tuples.
+    -fuzzstrat  regx    "%"                    Strategy to choose
+    -in         string  "data"                 Input directory or filename, - for stdin
+    -seed       int     0                      Random seed
+    -testprob   double  1                      Run each case with this probability
+    -verbose    flag                           Verbosity level (0..255); alias -v; cumulative
+    -debug      flag                           Debug level (0..255); alias -d; cumulative
+    -help                                      Print help and exit; alias -h
+    -version                                   Print version and exit
+    -signature                                 Show signatures and exit; alias -sig
+```
 
 ### Description
 <a href="#description"></a>
@@ -24,7 +32,7 @@ modified inputs.
 
 The list of strategies supported by `atf_fuzz` is as follows:
 
-```
+```ssim
 inline-command: acr fuzzstrat
 atfdb.fuzzstrat  fuzzstrat:skip_inputs  comment:"Run target in sandbox with various missing inputs"
 report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
@@ -52,7 +60,7 @@ This is the target to run. Additional arguments can be passed via `-args`
 <a href="#-fuzzstrat"></a>
 
 The possible values are
-```
+```ssim
 inline-command: acr fuzzstrat -report:N | ssimfilt -t
 FUZZSTRAT    COMMENT
 skip_inputs  Run target in sandbox with various missing inputs
@@ -70,11 +78,3 @@ skip_inputs  Run target in sandbox with various missing inputs
 
 Each test is invoked with this probability. This can be adjusted to sparse out the space
 of inputs in case it is too big.
-
-### Inputs
-<a href="#inputs"></a>
-`atf_fuzz` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|

@@ -17,7 +17,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/trace.cpp -- Generate trace code
 //
 
@@ -105,7 +105,7 @@ void amc::gen_trace() {
         bool fbuf_trace_in = fbuf_trace && fbufdir_Get(*field.c_fbuf) == dmmeta_Fbufdir_fbufdir_in;
         bool fbuf_trace_out = fbuf_trace && fbufdir_Get(*field.c_fbuf) == dmmeta_Fbufdir_fbufdir_out;
         Set(R,"$ns"      , ns_Get(parent));
-        Set(R,"$partrace", Refname(*field.p_ctype));
+        Set(R,"$partrace", Varname(*field.p_ctype));
         Set(R,"$name"    , name_Get(field));
         if (regular_trace) {
             Main_Trace_Field(Subst(R,"$ns.trace.alloc_$partrace_$name"), field.p_arg->comment);

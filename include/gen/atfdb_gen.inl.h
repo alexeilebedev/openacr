@@ -175,6 +175,10 @@ inline  atfdb::Unittest::Unittest() {
 inline  atfdb::Unstableattr::Unstableattr() {
 }
 
+// --- atfdb.Unstableline..Ctor
+inline  atfdb::Unstableline::Unstableline() {
+}
+
 // --- atfdb.Var..Ctor
 inline  atfdb::Var::Var() {
 }
@@ -251,6 +255,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tifilt 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Unstableattr &row) {// cfmt:atfdb.Unstableattr.String
     atfdb::Unstableattr_Print(const_cast<atfdb::Unstableattr&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Unstableline &row) {// cfmt:atfdb.Unstableline.String
+    atfdb::Unstableline_Print(const_cast<atfdb::Unstableline&>(row), str);
     return str;
 }
 

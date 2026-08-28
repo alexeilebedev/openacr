@@ -1,0 +1,8 @@
+dev.docpage  docpage:accesspath  word:Y  bare:N  bytable:N  comment:"The access paths of the ctypes a regx names, drawn by amc_vis"
+dev.docpage  docpage:code  word:Y  bare:N  bytable:N  comment:"What amc generated for the ctypes a selection is about"
+dev.docpage  docpage:ctype  word:Y  bare:N  bytable:Y  comment:"One ctype: its declaration, the prose about its table, where it sits"
+dev.docpage  docpage:func  word:Y  bare:N  bytable:N  comment:"The functions a selection is about, or one function's source"
+dev.docpage  docpage:help  word:N  bare:Y  bytable:N  comment:"The keys the reader at the terminal has"
+dev.docpage  docpage:ns  word:Y  bare:N  bytable:Y  comment:"One namespace: its ctypes, sources, dependencies, inputs, tests"
+dev.docpage  docpage:query  word:N  bare:N  bytable:N  comment:"The records a query selects, under the tabs and the two sections"
+dev.docpage  docpage:msg  word:Y  bare:Y  bytable:N  comment:"The message roots, or one message: its definition, what it carries, where it is received"

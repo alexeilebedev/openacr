@@ -31,7 +31,6 @@ inline  lib_git::trace::trace() {
 
 // --- lib_git.FDb..Uninit
 inline void lib_git::FDb_Uninit() {
-    lib_git::FDb &row = _db; (void)row;
 }
 
 // --- lib_git.FieldId.value.GetEnum

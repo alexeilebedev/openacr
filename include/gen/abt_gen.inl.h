@@ -33,9 +33,9 @@
 
 // --- abt.FArch..Init
 // Set all fields to initial values.
-inline void abt::FArch_Init(abt::FArch& arch) {
-    arch.ind_arch_next = (abt::FArch*)-1; // (abt.FDb.ind_arch) not-in-hash
-    arch.ind_arch_hashval = 0; // stored hash value
+inline void abt::FArch_Init(abt::FArch& parent) {
+    parent.ind_arch_next = (abt::FArch*)-1; // (abt.FDb.ind_arch) not-in-hash
+    parent.ind_arch_hashval = 0; // stored hash value
 }
 
 // --- abt.FArch..Ctor
@@ -60,9 +60,9 @@ inline  abt::FBuilddir::~FBuilddir() {
 
 // --- abt.FCfg..Init
 // Set all fields to initial values.
-inline void abt::FCfg_Init(abt::FCfg& cfg) {
-    cfg.ind_cfg_next = (abt::FCfg*)-1; // (abt.FDb.ind_cfg) not-in-hash
-    cfg.ind_cfg_hashval = 0; // stored hash value
+inline void abt::FCfg_Init(abt::FCfg& parent) {
+    parent.ind_cfg_next = (abt::FCfg*)-1; // (abt.FDb.ind_cfg) not-in-hash
+    parent.ind_cfg_hashval = 0; // stored hash value
 }
 
 // --- abt.FCfg..Ctor
@@ -77,9 +77,9 @@ inline  abt::FCfg::~FCfg() {
 
 // --- abt.FCompiler..Init
 // Set all fields to initial values.
-inline void abt::FCompiler_Init(abt::FCompiler& compiler) {
-    compiler.ind_compiler_next = (abt::FCompiler*)-1; // (abt.FDb.ind_compiler) not-in-hash
-    compiler.ind_compiler_hashval = 0; // stored hash value
+inline void abt::FCompiler_Init(abt::FCompiler& parent) {
+    parent.ind_compiler_next = (abt::FCompiler*)-1; // (abt.FDb.ind_compiler) not-in-hash
+    parent.ind_compiler_hashval = 0; // stored hash value
 }
 
 // --- abt.FCompiler..Ctor
@@ -1833,12 +1833,12 @@ inline abt::FSrcfile& abt::_db_zd_inclstack_curs_Access(_db_zd_inclstack_curs &c
 
 // --- abt.FFilestat..Init
 // Set all fields to initial values.
-inline void abt::FFilestat_Init(abt::FFilestat& filestat) {
-    filestat.size = u64(0);
-    filestat.isdir = bool(false);
-    filestat.exists = bool(false);
-    filestat.ind_filestat_next = (abt::FFilestat*)-1; // (abt.FDb.ind_filestat) not-in-hash
-    filestat.ind_filestat_hashval = 0; // stored hash value
+inline void abt::FFilestat_Init(abt::FFilestat& parent) {
+    parent.size = u64(0);
+    parent.isdir = bool(false);
+    parent.exists = bool(false);
+    parent.ind_filestat_next = (abt::FFilestat*)-1; // (abt.FDb.ind_filestat) not-in-hash
+    parent.ind_filestat_hashval = 0; // stored hash value
 }
 
 // --- abt.FFilestat..Ctor
@@ -1853,14 +1853,14 @@ inline  abt::FFilestat::~FFilestat() {
 
 // --- abt.FInclude..Init
 // Set all fields to initial values.
-inline void abt::FInclude_Init(abt::FInclude& include) {
-    include.sys = bool(false);
-    include.p_header = NULL;
-    include.wantprint = bool(false);
-    include.ind_include_next = (abt::FInclude*)-1; // (abt.FDb.ind_include) not-in-hash
-    include.ind_include_hashval = 0; // stored hash value
-    include.srcfile_zd_include_next = (abt::FInclude*)-1; // (abt.FSrcfile.zd_include) not-in-list
-    include.srcfile_zd_include_prev = NULL; // (abt.FSrcfile.zd_include)
+inline void abt::FInclude_Init(abt::FInclude& parent) {
+    parent.sys = bool(false);
+    parent.p_header = NULL;
+    parent.wantprint = bool(false);
+    parent.ind_include_next = (abt::FInclude*)-1; // (abt.FDb.ind_include) not-in-hash
+    parent.ind_include_hashval = 0; // stored hash value
+    parent.srcfile_zd_include_next = (abt::FInclude*)-1; // (abt.FSrcfile.zd_include) not-in-list
+    parent.srcfile_zd_include_prev = NULL; // (abt.FSrcfile.zd_include)
 }
 
 // --- abt.FInclude..Ctor
@@ -1875,9 +1875,9 @@ inline  abt::FInclude::~FInclude() {
 
 // --- abt.FNs..Init
 // Set all fields to initial values.
-inline void abt::FNs_Init(abt::FNs& ns) {
-    ns.ind_ns_next = (abt::FNs*)-1; // (abt.FDb.ind_ns) not-in-hash
-    ns.ind_ns_hashval = 0; // stored hash value
+inline void abt::FNs_Init(abt::FNs& parent) {
+    parent.ind_ns_next = (abt::FNs*)-1; // (abt.FDb.ind_ns) not-in-hash
+    parent.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- abt.FNs..Ctor
@@ -1892,15 +1892,15 @@ inline  abt::FNs::~FNs() {
 
 // --- abt.FSrcfile.zd_include.EmptyQ
 // Return true if index is empty
-inline bool abt::zd_include_EmptyQ(abt::FSrcfile& srcfile) {
-    return srcfile.zd_include_head == NULL;
+inline bool abt::zd_include_EmptyQ(abt::FSrcfile& parent) {
+    return parent.zd_include_head == NULL;
 }
 
 // --- abt.FSrcfile.zd_include.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline abt::FInclude* abt::zd_include_First(abt::FSrcfile& srcfile) {
+inline abt::FInclude* abt::zd_include_First(abt::FSrcfile& parent) {
     abt::FInclude *row = NULL;
-    row = srcfile.zd_include_head;
+    row = parent.zd_include_head;
     return row;
 }
 
@@ -1914,16 +1914,16 @@ inline bool abt::srcfile_zd_include_InLlistQ(abt::FInclude& row) {
 
 // --- abt.FSrcfile.zd_include.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline abt::FInclude* abt::zd_include_Last(abt::FSrcfile& srcfile) {
+inline abt::FInclude* abt::zd_include_Last(abt::FSrcfile& parent) {
     abt::FInclude *row = NULL;
-    row = srcfile.zd_include_tail;
+    row = parent.zd_include_tail;
     return row;
 }
 
 // --- abt.FSrcfile.zd_include.N
 // Return number of items in the linked list
-inline i32 abt::zd_include_N(const abt::FSrcfile& srcfile) {
-    return srcfile.zd_include_n;
+inline i32 abt::zd_include_N(const abt::FSrcfile& parent) {
+    return parent.zd_include_n;
 }
 
 // --- abt.FSrcfile.zd_include.Next
@@ -1940,9 +1940,9 @@ inline abt::FInclude* abt::srcfile_zd_include_Prev(abt::FInclude &row) {
 
 // --- abt.FSrcfile.zd_include.qLast
 // Return reference to last element in the index. No bounds checking.
-inline abt::FInclude& abt::zd_include_qLast(abt::FSrcfile& srcfile) {
+inline abt::FInclude& abt::zd_include_qLast(abt::FSrcfile& parent) {
     abt::FInclude *row = NULL;
-    row = srcfile.zd_include_tail;
+    row = parent.zd_include_tail;
     return *row;
 }
 
@@ -1983,48 +1983,48 @@ inline  abt::FSrcfile::~FSrcfile() {
 
 // --- abt.FSyscmd.c_prior.EmptyQ
 // Return true if index is empty
-inline bool abt::c_prior_EmptyQ(abt::FSyscmd& syscmd) {
-    return syscmd.c_prior_n == 0;
+inline bool abt::c_prior_EmptyQ(abt::FSyscmd& parent) {
+    return parent.c_prior_n == 0;
 }
 
 // --- abt.FSyscmd.c_prior.Find
 // Look up row by row id. Return NULL if out of range
-inline abt::FSyscmddep* abt::c_prior_Find(abt::FSyscmd& syscmd, u64 t) {
+inline abt::FSyscmddep* abt::c_prior_Find(abt::FSyscmd& parent, u64 t) {
     abt::FSyscmddep *retval = NULL;
     u64 idx = t;
-    u64 lim = syscmd.c_prior_n;
+    u64 lim = parent.c_prior_n;
     if (idx < lim) {
-        retval = syscmd.c_prior_elems[idx];
+        retval = parent.c_prior_elems[idx];
     }
     return retval;
 }
 
 // --- abt.FSyscmd.c_prior.Getary
 // Return array of pointers
-inline algo::aryptr<abt::FSyscmddep*> abt::c_prior_Getary(abt::FSyscmd& syscmd) {
-    return algo::aryptr<abt::FSyscmddep*>(syscmd.c_prior_elems, syscmd.c_prior_n);
+inline algo::aryptr<abt::FSyscmddep*> abt::c_prior_Getary(abt::FSyscmd& parent) {
+    return algo::aryptr<abt::FSyscmddep*>(parent.c_prior_elems, parent.c_prior_n);
 }
 
 // --- abt.FSyscmd.c_prior.N
 // Return number of items in the pointer array
-inline i64 abt::c_prior_N(const abt::FSyscmd& syscmd) {
-    return syscmd.c_prior_n;
+inline i64 abt::c_prior_N(const abt::FSyscmd& parent) {
+    return parent.c_prior_n;
 }
 
 // --- abt.FSyscmd.c_prior.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt::c_prior_RemoveAll(abt::FSyscmd& syscmd) {
-    for (u64 i = 0; i < syscmd.c_prior_n; i++) {
+inline void abt::c_prior_RemoveAll(abt::FSyscmd& parent) {
+    for (u64 i = 0; i < parent.c_prior_n; i++) {
         // mark all elements as not-in-array
-        syscmd.c_prior_elems[i]->syscmd_c_prior_in_ary = false;
+        parent.c_prior_elems[i]->syscmd_c_prior_in_ary = false;
     }
-    syscmd.c_prior_n = 0;
+    parent.c_prior_n = 0;
 }
 
 // --- abt.FSyscmd.c_prior.qFind
 // Return reference without bounds checking
-inline abt::FSyscmddep& abt::c_prior_qFind(abt::FSyscmd& syscmd, u64 idx) {
-    return *syscmd.c_prior_elems[idx];
+inline abt::FSyscmddep& abt::c_prior_qFind(abt::FSyscmd& parent, u64 idx) {
+    return *parent.c_prior_elems[idx];
 }
 
 // --- abt.FSyscmd.c_prior.InAryQ
@@ -2035,54 +2035,54 @@ inline bool abt::syscmd_c_prior_InAryQ(abt::FSyscmddep& row) {
 
 // --- abt.FSyscmd.c_prior.qLast
 // Reference to last element without bounds checking
-inline abt::FSyscmddep& abt::c_prior_qLast(abt::FSyscmd& syscmd) {
-    return *syscmd.c_prior_elems[syscmd.c_prior_n-1];
+inline abt::FSyscmddep& abt::c_prior_qLast(abt::FSyscmd& parent) {
+    return *parent.c_prior_elems[parent.c_prior_n-1];
 }
 
 // --- abt.FSyscmd.c_next.EmptyQ
 // Return true if index is empty
-inline bool abt::c_next_EmptyQ(abt::FSyscmd& syscmd) {
-    return syscmd.c_next_n == 0;
+inline bool abt::c_next_EmptyQ(abt::FSyscmd& parent) {
+    return parent.c_next_n == 0;
 }
 
 // --- abt.FSyscmd.c_next.Find
 // Look up row by row id. Return NULL if out of range
-inline abt::FSyscmddep* abt::c_next_Find(abt::FSyscmd& syscmd, u64 t) {
+inline abt::FSyscmddep* abt::c_next_Find(abt::FSyscmd& parent, u64 t) {
     abt::FSyscmddep *retval = NULL;
     u64 idx = t;
-    u64 lim = syscmd.c_next_n;
+    u64 lim = parent.c_next_n;
     if (idx < lim) {
-        retval = syscmd.c_next_elems[idx];
+        retval = parent.c_next_elems[idx];
     }
     return retval;
 }
 
 // --- abt.FSyscmd.c_next.Getary
 // Return array of pointers
-inline algo::aryptr<abt::FSyscmddep*> abt::c_next_Getary(abt::FSyscmd& syscmd) {
-    return algo::aryptr<abt::FSyscmddep*>(syscmd.c_next_elems, syscmd.c_next_n);
+inline algo::aryptr<abt::FSyscmddep*> abt::c_next_Getary(abt::FSyscmd& parent) {
+    return algo::aryptr<abt::FSyscmddep*>(parent.c_next_elems, parent.c_next_n);
 }
 
 // --- abt.FSyscmd.c_next.N
 // Return number of items in the pointer array
-inline i64 abt::c_next_N(const abt::FSyscmd& syscmd) {
-    return syscmd.c_next_n;
+inline i64 abt::c_next_N(const abt::FSyscmd& parent) {
+    return parent.c_next_n;
 }
 
 // --- abt.FSyscmd.c_next.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt::c_next_RemoveAll(abt::FSyscmd& syscmd) {
-    for (u64 i = 0; i < syscmd.c_next_n; i++) {
+inline void abt::c_next_RemoveAll(abt::FSyscmd& parent) {
+    for (u64 i = 0; i < parent.c_next_n; i++) {
         // mark all elements as not-in-array
-        syscmd.c_next_elems[i]->syscmd_c_next_in_ary = false;
+        parent.c_next_elems[i]->syscmd_c_next_in_ary = false;
     }
-    syscmd.c_next_n = 0;
+    parent.c_next_n = 0;
 }
 
 // --- abt.FSyscmd.c_next.qFind
 // Return reference without bounds checking
-inline abt::FSyscmddep& abt::c_next_qFind(abt::FSyscmd& syscmd, u64 idx) {
-    return *syscmd.c_next_elems[idx];
+inline abt::FSyscmddep& abt::c_next_qFind(abt::FSyscmd& parent, u64 idx) {
+    return *parent.c_next_elems[idx];
 }
 
 // --- abt.FSyscmd.c_next.InAryQ
@@ -2093,8 +2093,8 @@ inline bool abt::syscmd_c_next_InAryQ(abt::FSyscmddep& row) {
 
 // --- abt.FSyscmd.c_next.qLast
 // Reference to last element without bounds checking
-inline abt::FSyscmddep& abt::c_next_qLast(abt::FSyscmd& syscmd) {
-    return *syscmd.c_next_elems[syscmd.c_next_n-1];
+inline abt::FSyscmddep& abt::c_next_qLast(abt::FSyscmd& parent) {
+    return *parent.c_next_elems[parent.c_next_n-1];
 }
 
 // --- abt.FSyscmd.c_prior_curs.Reset
@@ -2159,13 +2159,13 @@ inline  abt::FSyscmd::~FSyscmd() {
 
 // --- abt.FSyscmddep..Init
 // Set all fields to initial values.
-inline void abt::FSyscmddep_Init(abt::FSyscmddep& syscmddep) {
-    syscmddep.child = i64(0);
-    syscmddep.parent = i64(0);
-    syscmddep.p_child = NULL;
-    syscmddep.p_parent = NULL;
-    syscmddep.syscmd_c_next_in_ary = bool(false);
-    syscmddep.syscmd_c_prior_in_ary = bool(false);
+inline void abt::FSyscmddep_Init(abt::FSyscmddep& parent) {
+    parent.child = i64(0);
+    parent.parent = i64(0);
+    parent.p_child = NULL;
+    parent.p_parent = NULL;
+    parent.syscmd_c_next_in_ary = bool(false);
+    parent.syscmd_c_prior_in_ary = bool(false);
 }
 
 // --- abt.FSyscmddep..Ctor
@@ -2180,9 +2180,9 @@ inline  abt::FSyscmddep::~FSyscmddep() {
 
 // --- abt.FSyslib..Init
 // Set all fields to initial values.
-inline void abt::FSyslib_Init(abt::FSyslib& syslib) {
-    syslib.ind_syslib_next = (abt::FSyslib*)-1; // (abt.FDb.ind_syslib) not-in-hash
-    syslib.ind_syslib_hashval = 0; // stored hash value
+inline void abt::FSyslib_Init(abt::FSyslib& parent) {
+    parent.ind_syslib_next = (abt::FSyslib*)-1; // (abt.FDb.ind_syslib) not-in-hash
+    parent.ind_syslib_hashval = 0; // stored hash value
 }
 
 // --- abt.FSyslib..Ctor
@@ -2197,9 +2197,9 @@ inline  abt::FSyslib::~FSyslib() {
 
 // --- abt.FTargdep..Init
 // Set all fields to initial values.
-inline void abt::FTargdep_Init(abt::FTargdep& targdep) {
-    targdep.p_parent = NULL;
-    targdep.target_c_targdep_in_ary = bool(false);
+inline void abt::FTargdep_Init(abt::FTargdep& parent) {
+    parent.p_parent = NULL;
+    parent.target_c_targdep_in_ary = bool(false);
 }
 
 // --- abt.FTargdep..Ctor
@@ -2214,48 +2214,48 @@ inline  abt::FTargdep::~FTargdep() {
 
 // --- abt.FTarget.c_targsrc.EmptyQ
 // Return true if index is empty
-inline bool abt::c_targsrc_EmptyQ(abt::FTarget& target) {
-    return target.c_targsrc_n == 0;
+inline bool abt::c_targsrc_EmptyQ(abt::FTarget& parent) {
+    return parent.c_targsrc_n == 0;
 }
 
 // --- abt.FTarget.c_targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline abt::FTargsrc* abt::c_targsrc_Find(abt::FTarget& target, u64 t) {
+inline abt::FTargsrc* abt::c_targsrc_Find(abt::FTarget& parent, u64 t) {
     abt::FTargsrc *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_targsrc_n;
+    u64 lim = parent.c_targsrc_n;
     if (idx < lim) {
-        retval = target.c_targsrc_elems[idx];
+        retval = parent.c_targsrc_elems[idx];
     }
     return retval;
 }
 
 // --- abt.FTarget.c_targsrc.Getary
 // Return array of pointers
-inline algo::aryptr<abt::FTargsrc*> abt::c_targsrc_Getary(abt::FTarget& target) {
-    return algo::aryptr<abt::FTargsrc*>(target.c_targsrc_elems, target.c_targsrc_n);
+inline algo::aryptr<abt::FTargsrc*> abt::c_targsrc_Getary(abt::FTarget& parent) {
+    return algo::aryptr<abt::FTargsrc*>(parent.c_targsrc_elems, parent.c_targsrc_n);
 }
 
 // --- abt.FTarget.c_targsrc.N
 // Return number of items in the pointer array
-inline i64 abt::c_targsrc_N(const abt::FTarget& target) {
-    return target.c_targsrc_n;
+inline i64 abt::c_targsrc_N(const abt::FTarget& parent) {
+    return parent.c_targsrc_n;
 }
 
 // --- abt.FTarget.c_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt::c_targsrc_RemoveAll(abt::FTarget& target) {
-    for (u64 i = 0; i < target.c_targsrc_n; i++) {
+inline void abt::c_targsrc_RemoveAll(abt::FTarget& parent) {
+    for (u64 i = 0; i < parent.c_targsrc_n; i++) {
         // mark all elements as not-in-array
-        target.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
+        parent.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
     }
-    target.c_targsrc_n = 0;
+    parent.c_targsrc_n = 0;
 }
 
 // --- abt.FTarget.c_targsrc.qFind
 // Return reference without bounds checking
-inline abt::FTargsrc& abt::c_targsrc_qFind(abt::FTarget& target, u64 idx) {
-    return *target.c_targsrc_elems[idx];
+inline abt::FTargsrc& abt::c_targsrc_qFind(abt::FTarget& parent, u64 idx) {
+    return *parent.c_targsrc_elems[idx];
 }
 
 // --- abt.FTarget.c_targsrc.InAryQ
@@ -2266,102 +2266,102 @@ inline bool abt::target_c_targsrc_InAryQ(abt::FTargsrc& row) {
 
 // --- abt.FTarget.c_targsrc.qLast
 // Reference to last element without bounds checking
-inline abt::FTargsrc& abt::c_targsrc_qLast(abt::FTarget& target) {
-    return *target.c_targsrc_elems[target.c_targsrc_n-1];
+inline abt::FTargsrc& abt::c_targsrc_qLast(abt::FTarget& parent) {
+    return *parent.c_targsrc_elems[parent.c_targsrc_n-1];
 }
 
 // --- abt.FTarget.c_srcfile.EmptyQ
 // Return true if index is empty
-inline bool abt::c_srcfile_EmptyQ(abt::FTarget& target) {
-    return target.c_srcfile_n == 0;
+inline bool abt::c_srcfile_EmptyQ(abt::FTarget& parent) {
+    return parent.c_srcfile_n == 0;
 }
 
 // --- abt.FTarget.c_srcfile.Find
 // Look up row by row id. Return NULL if out of range
-inline abt::FSrcfile* abt::c_srcfile_Find(abt::FTarget& target, u64 t) {
+inline abt::FSrcfile* abt::c_srcfile_Find(abt::FTarget& parent, u64 t) {
     abt::FSrcfile *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_srcfile_n;
+    u64 lim = parent.c_srcfile_n;
     if (idx < lim) {
-        retval = target.c_srcfile_elems[idx];
+        retval = parent.c_srcfile_elems[idx];
     }
     return retval;
 }
 
 // --- abt.FTarget.c_srcfile.Getary
 // Return array of pointers
-inline algo::aryptr<abt::FSrcfile*> abt::c_srcfile_Getary(abt::FTarget& target) {
-    return algo::aryptr<abt::FSrcfile*>(target.c_srcfile_elems, target.c_srcfile_n);
+inline algo::aryptr<abt::FSrcfile*> abt::c_srcfile_Getary(abt::FTarget& parent) {
+    return algo::aryptr<abt::FSrcfile*>(parent.c_srcfile_elems, parent.c_srcfile_n);
 }
 
 // --- abt.FTarget.c_srcfile.N
 // Return number of items in the pointer array
-inline i64 abt::c_srcfile_N(const abt::FTarget& target) {
-    return target.c_srcfile_n;
+inline i64 abt::c_srcfile_N(const abt::FTarget& parent) {
+    return parent.c_srcfile_n;
 }
 
 // --- abt.FTarget.c_srcfile.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt::c_srcfile_RemoveAll(abt::FTarget& target) {
-    target.c_srcfile_n = 0;
+inline void abt::c_srcfile_RemoveAll(abt::FTarget& parent) {
+    parent.c_srcfile_n = 0;
 }
 
 // --- abt.FTarget.c_srcfile.qFind
 // Return reference without bounds checking
-inline abt::FSrcfile& abt::c_srcfile_qFind(abt::FTarget& target, u64 idx) {
-    return *target.c_srcfile_elems[idx];
+inline abt::FSrcfile& abt::c_srcfile_qFind(abt::FTarget& parent, u64 idx) {
+    return *parent.c_srcfile_elems[idx];
 }
 
 // --- abt.FTarget.c_srcfile.qLast
 // Reference to last element without bounds checking
-inline abt::FSrcfile& abt::c_srcfile_qLast(abt::FTarget& target) {
-    return *target.c_srcfile_elems[target.c_srcfile_n-1];
+inline abt::FSrcfile& abt::c_srcfile_qLast(abt::FTarget& parent) {
+    return *parent.c_srcfile_elems[parent.c_srcfile_n-1];
 }
 
 // --- abt.FTarget.c_targdep.EmptyQ
 // Return true if index is empty
-inline bool abt::c_targdep_EmptyQ(abt::FTarget& target) {
-    return target.c_targdep_n == 0;
+inline bool abt::c_targdep_EmptyQ(abt::FTarget& parent) {
+    return parent.c_targdep_n == 0;
 }
 
 // --- abt.FTarget.c_targdep.Find
 // Look up row by row id. Return NULL if out of range
-inline abt::FTargdep* abt::c_targdep_Find(abt::FTarget& target, u64 t) {
+inline abt::FTargdep* abt::c_targdep_Find(abt::FTarget& parent, u64 t) {
     abt::FTargdep *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_targdep_n;
+    u64 lim = parent.c_targdep_n;
     if (idx < lim) {
-        retval = target.c_targdep_elems[idx];
+        retval = parent.c_targdep_elems[idx];
     }
     return retval;
 }
 
 // --- abt.FTarget.c_targdep.Getary
 // Return array of pointers
-inline algo::aryptr<abt::FTargdep*> abt::c_targdep_Getary(abt::FTarget& target) {
-    return algo::aryptr<abt::FTargdep*>(target.c_targdep_elems, target.c_targdep_n);
+inline algo::aryptr<abt::FTargdep*> abt::c_targdep_Getary(abt::FTarget& parent) {
+    return algo::aryptr<abt::FTargdep*>(parent.c_targdep_elems, parent.c_targdep_n);
 }
 
 // --- abt.FTarget.c_targdep.N
 // Return number of items in the pointer array
-inline i64 abt::c_targdep_N(const abt::FTarget& target) {
-    return target.c_targdep_n;
+inline i64 abt::c_targdep_N(const abt::FTarget& parent) {
+    return parent.c_targdep_n;
 }
 
 // --- abt.FTarget.c_targdep.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt::c_targdep_RemoveAll(abt::FTarget& target) {
-    for (u64 i = 0; i < target.c_targdep_n; i++) {
+inline void abt::c_targdep_RemoveAll(abt::FTarget& parent) {
+    for (u64 i = 0; i < parent.c_targdep_n; i++) {
         // mark all elements as not-in-array
-        target.c_targdep_elems[i]->target_c_targdep_in_ary = false;
+        parent.c_targdep_elems[i]->target_c_targdep_in_ary = false;
     }
-    target.c_targdep_n = 0;
+    parent.c_targdep_n = 0;
 }
 
 // --- abt.FTarget.c_targdep.qFind
 // Return reference without bounds checking
-inline abt::FTargdep& abt::c_targdep_qFind(abt::FTarget& target, u64 idx) {
-    return *target.c_targdep_elems[idx];
+inline abt::FTargdep& abt::c_targdep_qFind(abt::FTarget& parent, u64 idx) {
+    return *parent.c_targdep_elems[idx];
 }
 
 // --- abt.FTarget.c_targdep.InAryQ
@@ -2372,54 +2372,54 @@ inline bool abt::target_c_targdep_InAryQ(abt::FTargdep& row) {
 
 // --- abt.FTarget.c_targdep.qLast
 // Reference to last element without bounds checking
-inline abt::FTargdep& abt::c_targdep_qLast(abt::FTarget& target) {
-    return *target.c_targdep_elems[target.c_targdep_n-1];
+inline abt::FTargdep& abt::c_targdep_qLast(abt::FTarget& parent) {
+    return *parent.c_targdep_elems[parent.c_targdep_n-1];
 }
 
 // --- abt.FTarget.c_targsyslib.EmptyQ
 // Return true if index is empty
-inline bool abt::c_targsyslib_EmptyQ(abt::FTarget& target) {
-    return target.c_targsyslib_n == 0;
+inline bool abt::c_targsyslib_EmptyQ(abt::FTarget& parent) {
+    return parent.c_targsyslib_n == 0;
 }
 
 // --- abt.FTarget.c_targsyslib.Find
 // Look up row by row id. Return NULL if out of range
-inline abt::FTargsyslib* abt::c_targsyslib_Find(abt::FTarget& target, u64 t) {
+inline abt::FTargsyslib* abt::c_targsyslib_Find(abt::FTarget& parent, u64 t) {
     abt::FTargsyslib *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_targsyslib_n;
+    u64 lim = parent.c_targsyslib_n;
     if (idx < lim) {
-        retval = target.c_targsyslib_elems[idx];
+        retval = parent.c_targsyslib_elems[idx];
     }
     return retval;
 }
 
 // --- abt.FTarget.c_targsyslib.Getary
 // Return array of pointers
-inline algo::aryptr<abt::FTargsyslib*> abt::c_targsyslib_Getary(abt::FTarget& target) {
-    return algo::aryptr<abt::FTargsyslib*>(target.c_targsyslib_elems, target.c_targsyslib_n);
+inline algo::aryptr<abt::FTargsyslib*> abt::c_targsyslib_Getary(abt::FTarget& parent) {
+    return algo::aryptr<abt::FTargsyslib*>(parent.c_targsyslib_elems, parent.c_targsyslib_n);
 }
 
 // --- abt.FTarget.c_targsyslib.N
 // Return number of items in the pointer array
-inline i64 abt::c_targsyslib_N(const abt::FTarget& target) {
-    return target.c_targsyslib_n;
+inline i64 abt::c_targsyslib_N(const abt::FTarget& parent) {
+    return parent.c_targsyslib_n;
 }
 
 // --- abt.FTarget.c_targsyslib.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt::c_targsyslib_RemoveAll(abt::FTarget& target) {
-    for (u64 i = 0; i < target.c_targsyslib_n; i++) {
+inline void abt::c_targsyslib_RemoveAll(abt::FTarget& parent) {
+    for (u64 i = 0; i < parent.c_targsyslib_n; i++) {
         // mark all elements as not-in-array
-        target.c_targsyslib_elems[i]->target_c_targsyslib_in_ary = false;
+        parent.c_targsyslib_elems[i]->target_c_targsyslib_in_ary = false;
     }
-    target.c_targsyslib_n = 0;
+    parent.c_targsyslib_n = 0;
 }
 
 // --- abt.FTarget.c_targsyslib.qFind
 // Return reference without bounds checking
-inline abt::FTargsyslib& abt::c_targsyslib_qFind(abt::FTarget& target, u64 idx) {
-    return *target.c_targsyslib_elems[idx];
+inline abt::FTargsyslib& abt::c_targsyslib_qFind(abt::FTarget& parent, u64 idx) {
+    return *parent.c_targsyslib_elems[idx];
 }
 
 // --- abt.FTarget.c_targsyslib.InAryQ
@@ -2430,56 +2430,56 @@ inline bool abt::target_c_targsyslib_InAryQ(abt::FTargsyslib& row) {
 
 // --- abt.FTarget.c_targsyslib.qLast
 // Reference to last element without bounds checking
-inline abt::FTargsyslib& abt::c_targsyslib_qLast(abt::FTarget& target) {
-    return *target.c_targsyslib_elems[target.c_targsyslib_n-1];
+inline abt::FTargsyslib& abt::c_targsyslib_qLast(abt::FTarget& parent) {
+    return *parent.c_targsyslib_elems[parent.c_targsyslib_n-1];
 }
 
 // --- abt.FTarget.c_alldep.EmptyQ
 // Return true if index is empty
-inline bool abt::c_alldep_EmptyQ(abt::FTarget& target) {
-    return target.c_alldep_n == 0;
+inline bool abt::c_alldep_EmptyQ(abt::FTarget& parent) {
+    return parent.c_alldep_n == 0;
 }
 
 // --- abt.FTarget.c_alldep.Find
 // Look up row by row id. Return NULL if out of range
-inline abt::FTarget* abt::c_alldep_Find(abt::FTarget& target, u64 t) {
+inline abt::FTarget* abt::c_alldep_Find(abt::FTarget& parent, u64 t) {
     abt::FTarget *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_alldep_n;
+    u64 lim = parent.c_alldep_n;
     if (idx < lim) {
-        retval = target.c_alldep_elems[idx];
+        retval = parent.c_alldep_elems[idx];
     }
     return retval;
 }
 
 // --- abt.FTarget.c_alldep.Getary
 // Return array of pointers
-inline algo::aryptr<abt::FTarget*> abt::c_alldep_Getary(abt::FTarget& target) {
-    return algo::aryptr<abt::FTarget*>(target.c_alldep_elems, target.c_alldep_n);
+inline algo::aryptr<abt::FTarget*> abt::c_alldep_Getary(abt::FTarget& parent) {
+    return algo::aryptr<abt::FTarget*>(parent.c_alldep_elems, parent.c_alldep_n);
 }
 
 // --- abt.FTarget.c_alldep.N
 // Return number of items in the pointer array
-inline i64 abt::c_alldep_N(const abt::FTarget& target) {
-    return target.c_alldep_n;
+inline i64 abt::c_alldep_N(const abt::FTarget& parent) {
+    return parent.c_alldep_n;
 }
 
 // --- abt.FTarget.c_alldep.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt::c_alldep_RemoveAll(abt::FTarget& target) {
-    target.c_alldep_n = 0;
+inline void abt::c_alldep_RemoveAll(abt::FTarget& parent) {
+    parent.c_alldep_n = 0;
 }
 
 // --- abt.FTarget.c_alldep.qFind
 // Return reference without bounds checking
-inline abt::FTarget& abt::c_alldep_qFind(abt::FTarget& target, u64 idx) {
-    return *target.c_alldep_elems[idx];
+inline abt::FTarget& abt::c_alldep_qFind(abt::FTarget& parent, u64 idx) {
+    return *parent.c_alldep_elems[idx];
 }
 
 // --- abt.FTarget.c_alldep.qLast
 // Reference to last element without bounds checking
-inline abt::FTarget& abt::c_alldep_qLast(abt::FTarget& target) {
-    return *target.c_alldep_elems[target.c_alldep_n-1];
+inline abt::FTarget& abt::c_alldep_qLast(abt::FTarget& parent) {
+    return *parent.c_alldep_elems[parent.c_alldep_n-1];
 }
 
 // --- abt.FTarget.c_targsrc_curs.Reset
@@ -2619,11 +2619,11 @@ inline  abt::FTarget::~FTarget() {
 
 // --- abt.FTargsrc..Init
 // Set all fields to initial values.
-inline void abt::FTargsrc_Init(abt::FTargsrc& targsrc) {
-    targsrc.p_target = NULL;
-    targsrc.target_c_targsrc_in_ary = bool(false);
-    targsrc.ind_targsrc_next = (abt::FTargsrc*)-1; // (abt.FDb.ind_targsrc) not-in-hash
-    targsrc.ind_targsrc_hashval = 0; // stored hash value
+inline void abt::FTargsrc_Init(abt::FTargsrc& parent) {
+    parent.p_target = NULL;
+    parent.target_c_targsrc_in_ary = bool(false);
+    parent.ind_targsrc_next = (abt::FTargsrc*)-1; // (abt.FDb.ind_targsrc) not-in-hash
+    parent.ind_targsrc_hashval = 0; // stored hash value
 }
 
 // --- abt.FTargsrc..Ctor
@@ -2638,9 +2638,9 @@ inline  abt::FTargsrc::~FTargsrc() {
 
 // --- abt.FTargsyslib..Init
 // Set all fields to initial values.
-inline void abt::FTargsyslib_Init(abt::FTargsyslib& targsyslib) {
-    targsyslib.p_syslib = NULL;
-    targsyslib.target_c_targsyslib_in_ary = bool(false);
+inline void abt::FTargsyslib_Init(abt::FTargsyslib& parent) {
+    parent.p_syslib = NULL;
+    parent.target_c_targsyslib_in_ary = bool(false);
 }
 
 // --- abt.FTargsyslib..Ctor
@@ -2659,9 +2659,9 @@ inline  abt::FToolOpt::FToolOpt() {
 
 // --- abt.FUname..Init
 // Set all fields to initial values.
-inline void abt::FUname_Init(abt::FUname& uname) {
-    uname.ind_uname_next = (abt::FUname*)-1; // (abt.FDb.ind_uname) not-in-hash
-    uname.ind_uname_hashval = 0; // stored hash value
+inline void abt::FUname_Init(abt::FUname& parent) {
+    parent.ind_uname_next = (abt::FUname*)-1; // (abt.FDb.ind_uname) not-in-hash
+    parent.ind_uname_hashval = 0; // stored hash value
 }
 
 // --- abt.FUname..Ctor

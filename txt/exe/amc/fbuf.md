@@ -8,7 +8,7 @@ Fbuf is a field reftype that implements a file i/o buffer.
 - Add dmmeta.fbuf record
 - Add one dmmeta.fcond record per condition the buffer reports
 
-```
+```ssim
 dmmeta.field  field:atf_amc.Msgbuf.in_buf  arg:atf_amc.MsgHeader  reftype:Fbuf  dflt:""  comment:"Message-based buffer"
   dmmeta.fbuf   field:atf_amc.Msgbuf.in_buf  max:64  fbuftype:Msgbuf  iotype:standard  comment:""
   dmmeta.fcond  fcond:atf_amc.Msgbuf.in_buf/ready  ins:atf_amc.FDb.cd_in_msg  via:""  rem:Y  comment:""
@@ -72,7 +72,7 @@ to the message (which is contained in the buffer)
 <a href="#custom-framing"></a>
 To override the `ScanMsg` function, declare `ffunc:<field>.ScanMsg  extrn:Y` (on a `Bytebuf`) and implement the `ScanMsg` function
 The function may set the following variables in the parent record (assuming field name `in_buf`):
-```
+```bash
 in_buf_msglen: length of detected message
 in_buf_msgvalid: true if message is found
 in_buf_eof: true if message cannot be read because it would exceed buffer size
@@ -182,7 +182,7 @@ no data.
 The two buffers are therefore declared as a pair, on the write buffer, naming
 the read buffer it shares the descriptor with:
 
-```
+```ssim
 dmmeta.fbuf  field:<ns>.FConn.out  ...  pair:<ns>.FConn.in
 ```
 
@@ -191,7 +191,7 @@ buffer has no `FIohook` field of its own, and `BeginWrite` is not generated for
 it; the pair is attached in one call, which subscribes to read and write
 together:
 
-```
+```c++
 in_BeginReadWrite(conn, fd);
 ```
 
@@ -231,17 +231,17 @@ to read more data.
 
 ### Generated Functions
 <a href="#generated-functions"></a>
-```
+```c++
 inline-command: src_func atf_amc.% -matchcomment:%atf_amc.Msgbuf.in_buf% -gen -showcomment
 // --- atf_amc.Msgbuf.in_buf.BeginRead
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by atf_amc::Msgbuf.in_buf via FIohook field.
-// Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
-void atf_amc::in_buf_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) 
+// Whenever the file descriptor becomes readable, insert parent into cd_in_msg.
+void atf_amc::in_buf_BeginRead(atf_amc::Msgbuf& parent, algo::Fildes fd) 
 // --- atf_amc.Msgbuf.in_buf.EndRead
 // Set EOF flag
-void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf) 
+void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& parent) 
 // --- atf_amc.Msgbuf.in_buf.GetMsg
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
@@ -249,47 +249,47 @@ void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf)
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field length field
 // 
-atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) 
+atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& parent) 
 // --- atf_amc.Msgbuf.in_buf.Realloc
 // Set buffer size.
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::in_buf_Realloc(atf_amc::Msgbuf& msgbuf, int new_max) 
+void atf_amc::in_buf_Realloc(atf_amc::Msgbuf& parent, int new_max) 
 // --- atf_amc.Msgbuf.in_buf.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& msgbuf) 
+bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& parent) 
 // --- atf_amc.Msgbuf.in_buf.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_buf_RemoveAll(atf_amc::Msgbuf& msgbuf) 
+void atf_amc::in_buf_RemoveAll(atf_amc::Msgbuf& parent) 
 // --- atf_amc.Msgbuf.in_buf.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) 
+static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& parent) 
 // --- atf_amc.Msgbuf.in_buf.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& msgbuf) 
+static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& parent) 
 // --- atf_amc.Msgbuf.in_buf.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) 
+void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& parent) 
 // --- atf_amc.Msgbuf.in_buf.WriteAll
 // Attempt to write buffer contents to fbuf, return success
 // Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) 
+bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) 
 // --- atf_amc.Msgbuf.in_buf.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void atf_amc::in_buf_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) 
+void atf_amc::in_buf_WriteReserve(atf_amc::Msgbuf& parent, u8 *in, i32 in_n) 
 // --- atf_amc.Msgbuf.in_buf.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::in_buf_Max(atf_amc::Msgbuf& msgbuf) 
+inline i32 atf_amc::in_buf_Max(atf_amc::Msgbuf& parent) 
 // --- atf_amc.Msgbuf.in_buf.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::in_buf_N(atf_amc::Msgbuf& msgbuf) 
+inline i32 atf_amc::in_buf_N(atf_amc::Msgbuf& parent) 
 ```

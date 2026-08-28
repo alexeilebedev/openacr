@@ -210,6 +210,15 @@ export const AtfdbSsimfile = {
       { field: "comment", type: "string", dflt: "", substr: null },
     ],
   },
+  // atfdb.Unstableline: Tuple head of a line the comptest capture drops, presence being host-dependent
+  "atfdb.unstableline": {
+    ssimfile: "atfdb.unstableline",
+    pkey: "unstableline",
+    fields: [
+      { field: "unstableline", type: "string", dflt: "", substr: null },
+      { field: "comment", type: "string", dflt: "", substr: null },
+    ],
+  },
   // atfdb.Var: 
   "atfdb.var": {
     ssimfile: "atfdb.var",

@@ -9,7 +9,7 @@ same names.  The result is binary-compatible with `B` for the
 prefix of its fields, which is exactly what wire protocols
 need.
 
-```
+```ssim
 dmmeta.ctype  ctype:prot.HeartbeatMsg
   dmmeta.field  field:prot.HeartbeatMsg.base  arg:prot.MsgHeader  reftype:Base
 ```
@@ -121,7 +121,7 @@ upcast.
 
 Two messages sharing a header:
 
-```
+```ssim
 dmmeta.ctype  ctype:prot.MsgHeader  comment:""
   dmmeta.field  field:prot.MsgHeader.type    arg:u8  reftype:Val
     dmmeta.typefld  field:prot.MsgHeader.type

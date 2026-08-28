@@ -32,29 +32,29 @@
 
 // --- atf_comp.FComptest.step.Call
 // Invoke function by pointer
-inline void atf_comp::step_Call(atf_comp::FComptest& comptest) {
-    if (comptest.step) {
-        comptest.step();
+inline void atf_comp::step_Call(atf_comp::FComptest& parent) {
+    if (parent.step) {
+        parent.step();
     }
 }
 
 // --- atf_comp.FComptest.c_tfilt.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool atf_comp::c_tfilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTfilt& row) {
-    atf_comp::FTfilt* ptr = comptest.c_tfilt;
+inline bool atf_comp::c_tfilt_InsertMaybe(atf_comp::FComptest& parent, atf_comp::FTfilt& row) {
+    atf_comp::FTfilt* ptr = parent.c_tfilt;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        comptest.c_tfilt = &row;
+        parent.c_tfilt = &row;
     }
     return retval;
 }
 
 // --- atf_comp.FComptest.c_tfilt.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void atf_comp::c_tfilt_Remove(atf_comp::FComptest& comptest, atf_comp::FTfilt& row) {
-    atf_comp::FTfilt *ptr = comptest.c_tfilt;
+inline void atf_comp::c_tfilt_Remove(atf_comp::FComptest& parent, atf_comp::FTfilt& row) {
+    atf_comp::FTfilt *ptr = parent.c_tfilt;
     if (LIKELY(ptr == &row)) {
-        comptest.c_tfilt = NULL;
+        parent.c_tfilt = NULL;
     }
 }
 
@@ -374,6 +374,60 @@ inline atf_comp::FTestenv& atf_comp::testenv_qFind(u64 t) {
     return _db.testenv_lary[bsr][index];
 }
 
+// --- atf_comp.FDb.unstableline.EmptyQ
+// Return true if index is empty
+inline bool atf_comp::unstableline_EmptyQ() {
+    return _db.unstableline_n == 0;
+}
+
+// --- atf_comp.FDb.unstableline.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_comp::FUnstableline* atf_comp::unstableline_Find(u64 t) {
+    atf_comp::FUnstableline *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.unstableline_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.unstableline_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.unstableline.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_comp::FUnstableline* atf_comp::unstableline_Last() {
+    return unstableline_Find(u64(_db.unstableline_n-1));
+}
+
+// --- atf_comp.FDb.unstableline.N
+// Return number of items in the pool
+inline i64 atf_comp::unstableline_N() {
+    return _db.unstableline_n;
+}
+
+// --- atf_comp.FDb.unstableline.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_comp::FUnstableline& atf_comp::unstableline_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.unstableline_lary[bsr][index];
+}
+
+// --- atf_comp.FDb.ind_unstableline.EmptyQ
+// Return true if hash is empty
+inline bool atf_comp::ind_unstableline_EmptyQ() {
+    return _db.ind_unstableline_n == 0;
+}
+
+// --- atf_comp.FDb.ind_unstableline.N
+// Return number of items in the hash
+inline i32 atf_comp::ind_unstableline_N() {
+    return _db.ind_unstableline_n;
+}
+
 // --- atf_comp.FDb.comptest_curs.Reset
 // cursor points to valid item
 inline void atf_comp::_db_comptest_curs_Reset(_db_comptest_curs &curs, atf_comp::FDb &parent) {
@@ -524,16 +578,41 @@ inline atf_comp::FTestenv& atf_comp::_db_testenv_curs_Access(_db_testenv_curs &c
     return testenv_qFind(u64(curs.index));
 }
 
+// --- atf_comp.FDb.unstableline_curs.Reset
+// cursor points to valid item
+inline void atf_comp::_db_unstableline_curs_Reset(_db_unstableline_curs &curs, atf_comp::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_comp.FDb.unstableline_curs.ValidQ
+// cursor points to valid item
+inline bool atf_comp::_db_unstableline_curs_ValidQ(_db_unstableline_curs &curs) {
+    return curs.index < _db.unstableline_n;
+}
+
+// --- atf_comp.FDb.unstableline_curs.Next
+// proceed to next item
+inline void atf_comp::_db_unstableline_curs_Next(_db_unstableline_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_comp.FDb.unstableline_curs.Access
+// item access
+inline atf_comp::FUnstableline& atf_comp::_db_unstableline_curs_Access(_db_unstableline_curs &curs) {
+    return unstableline_qFind(u64(curs.index));
+}
+
 // --- atf_comp.FProc.in.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_comp::in_Max(atf_comp::FProc& proc) {
-    return proc.in_max;
+inline i32 atf_comp::in_Max(atf_comp::FProc& parent) {
+    return parent.in_max;
 }
 
 // --- atf_comp.FProc.in.N
 // Return number of bytes in the buffer.
-inline i32 atf_comp::in_N(atf_comp::FProc& proc) {
-    return proc.in_end - proc.in_start;
+inline i32 atf_comp::in_N(atf_comp::FProc& parent) {
+    return parent.in_end - parent.in_start;
 }
 
 // --- atf_comp.FProc..Ctor
@@ -550,9 +629,9 @@ inline  atf_comp::FProc::~FProc() {
 
 // --- atf_comp.FTestenv..Init
 // Set all fields to initial values.
-inline void atf_comp::FTestenv_Init(atf_comp::FTestenv& testenv) {
-    testenv.slowonly = bool(false);
-    testenv.vardir = bool(false);
+inline void atf_comp::FTestenv_Init(atf_comp::FTestenv& parent) {
+    parent.slowonly = bool(false);
+    parent.vardir = bool(false);
 }
 
 // --- atf_comp.FTestenv..Ctor
@@ -571,9 +650,9 @@ inline  atf_comp::FTfilt::~FTfilt() {
 
 // --- atf_comp.FUnstableattr..Init
 // Set all fields to initial values.
-inline void atf_comp::FUnstableattr_Init(atf_comp::FUnstableattr& unstableattr) {
-    unstableattr.ind_unstableattr_next = (atf_comp::FUnstableattr*)-1; // (atf_comp.FDb.ind_unstableattr) not-in-hash
-    unstableattr.ind_unstableattr_hashval = 0; // stored hash value
+inline void atf_comp::FUnstableattr_Init(atf_comp::FUnstableattr& parent) {
+    parent.ind_unstableattr_next = (atf_comp::FUnstableattr*)-1; // (atf_comp.FDb.ind_unstableattr) not-in-hash
+    parent.ind_unstableattr_hashval = 0; // stored hash value
 }
 
 // --- atf_comp.FUnstableattr..Ctor
@@ -588,6 +667,23 @@ inline  atf_comp::FUnstableattr::~FUnstableattr() {
 
 // --- atf_comp.FUnstablefld..Ctor
 inline  atf_comp::FUnstablefld::FUnstablefld() {
+}
+
+// --- atf_comp.FUnstableline..Init
+// Set all fields to initial values.
+inline void atf_comp::FUnstableline_Init(atf_comp::FUnstableline& parent) {
+    parent.ind_unstableline_next = (atf_comp::FUnstableline*)-1; // (atf_comp.FDb.ind_unstableline) not-in-hash
+    parent.ind_unstableline_hashval = 0; // stored hash value
+}
+
+// --- atf_comp.FUnstableline..Ctor
+inline  atf_comp::FUnstableline::FUnstableline() {
+    atf_comp::FUnstableline_Init(*this);
+}
+
+// --- atf_comp.FUnstableline..Dtor
+inline  atf_comp::FUnstableline::~FUnstableline() {
+    atf_comp::FUnstableline_Uninit(*this);
 }
 
 // --- atf_comp.FieldId.value.GetEnum

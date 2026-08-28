@@ -712,6 +712,7 @@ lib_json::FNode* lib_json::node_GetArray(lib_json::FNode* parent, strptr path) {
 // Get node value as u32
 // If the path is not found, or the value is malformatted, DFLT is returned.
 // true/false is converted to 0/1
+// A string node holding digits reads as the number it spells.
 //
 // PARENT    node to start from
 // PATH      dot-separated list of field keys
@@ -726,6 +727,7 @@ u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path, int dflt DFLTVAL(0))
         case lib_json_FNode_type_false:
             ret = 0;
             break;
+        case lib_json_FNode_type_string:
         case lib_json_FNode_type_number:
             u32_ReadStrptrMaybe(ret,node->value);
             break;
@@ -735,13 +737,14 @@ u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path, int dflt DFLTVAL(0))
     return ret;
 }
 
-// Get node value as u32
+// Get node value as i32
 // If the path is not found, or the value is malformatted, DFLT is returned.
 // true/false is converted to 0/1
+// A string node holding digits reads as the number it spells.
 //
 // PARENT    node to start from
 // PATH      dot-separated list of field keys
-u32 lib_json::i32_Get(lib_json::FNode* parent, strptr path, int dflt DFLTVAL(0)) {
+i32 lib_json::i32_Get(lib_json::FNode* parent, strptr path, int dflt DFLTVAL(0)) {
     lib_json::FNode* node = lib_json::node_Find(parent,path);
     i32 ret=dflt;
     if (node) {
@@ -752,6 +755,7 @@ u32 lib_json::i32_Get(lib_json::FNode* parent, strptr path, int dflt DFLTVAL(0))
         case lib_json_FNode_type_false:
             ret = 0;
             break;
+        case lib_json_FNode_type_string:
         case lib_json_FNode_type_number:
             i32_ReadStrptrMaybe(ret,node->value);
             break;

@@ -35,7 +35,7 @@ This page covers the four together.
 
 The shape of a length-delimited message:
 
-```
+```text
 +----------------+-----------------+--------+--------+--------+
 |    Header      |  fixed fields   |  rec_0 |  rec_1 | …      |
 |  (length=N)    |                 |                          |
@@ -59,7 +59,7 @@ through `<varlen>_Getary` / `<opt>_Get`.
 declares a Val field on a ctype as the **length field**.  The
 total message length in bytes is computed as:
 
-```
+```bash
 total_bytes = (field.value * scale) + extra
 ```
 
@@ -148,7 +148,7 @@ recording the byte offset of the end of that field's region.
 `_Addr` for each subsequent Varlen uses the previous one's
 `_end`:
 
-```
+```text
 sizeof(parent) ──→ Varlen A ──→ A_end ──→ Varlen B ──→ B_end ──→ Varlen C
 ```
 

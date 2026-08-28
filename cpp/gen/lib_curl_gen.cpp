@@ -29,8 +29,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -142,7 +140,6 @@ void lib_curl::FRequest_Init(lib_curl::FRequest& parent) {
 
 // --- lib_curl.FRequest..Uninit
 void lib_curl::FRequest_Uninit(lib_curl::FRequest& parent) {
-    lib_curl::FRequest &row = parent; (void)row;
 
     // lib_curl.FRequest.headers.Uninit (Lary)  //Arbitrary headers: "Authorization: Bearer ...", "Content-Type: ..."
     // destroy lib_curl.FRequest.headers
@@ -242,7 +239,6 @@ void lib_curl::FResponse_Init(lib_curl::FResponse& parent) {
 
 // --- lib_curl.FResponse..Uninit
 void lib_curl::FResponse_Uninit(lib_curl::FResponse& parent) {
-    lib_curl::FResponse &row = parent; (void)row;
 
     // lib_curl.FResponse.headers.Uninit (Lary)  //raw header lines (trimmed)
     // destroy lib_curl.FResponse.headers
@@ -426,6 +422,7 @@ void* lib_curl::call_AllocMem() {
     if (row) {
         _db.call_free = row->call_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(lib_curl::FCall));
     return row;
 }
 
@@ -435,6 +432,7 @@ void lib_curl::call_FreeMem(lib_curl::FCall &row) {
     if (UNLIKELY(row.call_next != (lib_curl::FCall*)-1)) {
         FatalErrorExit("lib_curl.tpool_double_delete  pool:lib_curl.FDb.call  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(lib_curl::FCall)); // before the free list threads through the element
     row.call_next = _db.call_free; // insert into free list
     _db.call_free  = &row;
 }
@@ -521,6 +519,7 @@ void* lib_curl::sock_AllocMem() {
     if (row) {
         _db.sock_free = row->sock_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(lib_curl::FSock));
     return row;
 }
 
@@ -530,6 +529,7 @@ void lib_curl::sock_FreeMem(lib_curl::FSock &row) {
     if (UNLIKELY(row.sock_next != (lib_curl::FSock*)-1)) {
         FatalErrorExit("lib_curl.tpool_double_delete  pool:lib_curl.FDb.sock  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(lib_curl::FSock)); // before the free list threads through the element
     row.sock_next = _db.sock_free; // insert into free list
     _db.sock_free  = &row;
 }
@@ -701,9 +701,8 @@ void lib_curl::FDb_Init() {
 }
 
 // --- lib_curl.FSock..Uninit
-void lib_curl::FSock_Uninit(lib_curl::FSock& sock) {
-    lib_curl::FSock &row = sock; (void)row;
-    zd_sock_free_Remove(row); // remove sock from index zd_sock_free
+void lib_curl::FSock_Uninit(lib_curl::FSock& parent) {
+    zd_sock_free_Remove(parent); // remove sock from index zd_sock_free
 }
 
 // --- lib_curl.FieldId.value.ToCstr

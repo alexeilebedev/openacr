@@ -31,12 +31,12 @@
 
 // --- sv2ssim.FBltin..Init
 // Set all fields to initial values.
-inline void sv2ssim::FBltin_Init(sv2ssim::FBltin& bltin) {
-    bltin.likeu64 = bool(false);
-    bltin.bigendok = bool(false);
-    bltin.issigned = bool(false);
-    bltin.ind_bltin_next = (sv2ssim::FBltin*)-1; // (sv2ssim.FDb.ind_bltin) not-in-hash
-    bltin.ind_bltin_hashval = 0; // stored hash value
+inline void sv2ssim::FBltin_Init(sv2ssim::FBltin& parent) {
+    parent.likeu64 = bool(false);
+    parent.bigendok = bool(false);
+    parent.issigned = bool(false);
+    parent.ind_bltin_next = (sv2ssim::FBltin*)-1; // (sv2ssim.FDb.ind_bltin) not-in-hash
+    parent.ind_bltin_hashval = 0; // stored hash value
 }
 
 // --- sv2ssim.FBltin..Ctor
@@ -463,10 +463,10 @@ inline  sv2ssim::FField::~FField() {
 
 // --- sv2ssim.FSvtype..Init
 // Set all fields to initial values.
-inline void sv2ssim::FSvtype_Init(sv2ssim::FSvtype& svtype) {
-    svtype.maxwid = i32(0);
-    svtype.fixedwid1 = i32(0);
-    svtype.fixedwid2 = i32(0);
+inline void sv2ssim::FSvtype_Init(sv2ssim::FSvtype& parent) {
+    parent.maxwid = i32(0);
+    parent.fixedwid1 = i32(0);
+    parent.fixedwid2 = i32(0);
 }
 
 // --- sv2ssim.FSvtype..Ctor

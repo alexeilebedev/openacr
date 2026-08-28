@@ -33,7 +33,6 @@ inline  amc_gc::trace::trace() {
 
 // --- amc_gc.FDb..Uninit
 inline void amc_gc::FDb_Uninit() {
-    amc_gc::FDb &row = _db; (void)row;
 }
 
 // --- amc_gc.FieldId.value.GetEnum

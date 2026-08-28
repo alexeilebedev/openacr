@@ -149,6 +149,31 @@ static void Main_Print() {
 
 // -----------------------------------------------------------------------------
 
+// Give each ctype the width of the smallstr its single field leads to.
+// algo.Comment holds one algo.Smallstr150, which holds one 150-char field,
+// so the chain is followed until it reaches the smallstr or runs out.
+static void InitCtypeAttrLen() {
+    bool change = true;
+    while (change) {
+        change = false;
+        ind_beg(acr::_db_ctype_curs,ctype,acr::_db) {
+            if (!ctype.max_attr_len && c_field_N(ctype)==1) {
+                acr::FField &field = *c_field_Find(ctype,0);
+                u32 len = field.max_attr_len;
+                if (!len && field.p_arg) {
+                    len = field.p_arg->max_attr_len;
+                }
+                if (len) {
+                    ctype.max_attr_len = len;
+                    change = true;
+                }
+            }
+        }ind_end;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 static void InitFieldProps() {
     ind_beg(acr::_db_smallstr_curs,smallstr,acr::_db) {
         if (acr::FField *field=acr::ind_field_Find(smallstr.field)) {
@@ -174,6 +199,12 @@ static void InitFieldProps() {
     ind_beg(acr::_db_funique_curs,funique,acr::_db) {
         if (acr::FField *field=acr::ind_field_Find(funique.field)) {
             field->unique=!field->iscppfunc;
+        }
+    }ind_end;
+    InitCtypeAttrLen();
+    ind_beg(acr::_db_field_curs,field,acr::_db) {
+        if (!field.max_attr_len && field.p_arg) {
+            field.max_attr_len=field.p_arg->max_attr_len;
         }
     }ind_end;
 }

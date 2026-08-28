@@ -19,7 +19,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/io.cpp -- I/O functions
 //
 // AMC reflection.
@@ -121,7 +121,7 @@ void amc::tfunc_Io_SaveSsimfile() {
         algo_lib::_db.exit_code=1;
     }
     if (field.c_foutput && inst) {// field:jivecli.FDb.zs_sorted_space
-        Set(R, "$instname", name_Get(*inst)); // space
+        Set(R, "$Recname", Instname(*field.p_arg)); // names the record ctype in an identifier
         amc::FCtype *tgttype = field.p_arg;
         amc::FCtype *basetype = GetBaseType(*tgttype, tgttype);
         vrfy(basetype->c_ssimfile, tempstr()<<"No ssimfile associated with "<<field.field);
@@ -134,7 +134,7 @@ void amc::tfunc_Io_SaveSsimfile() {
         Ins(&R, save.body   , "cstring text;");
         Ins(&R, save.body   , "ind_beg($ns::_db_$name_curs, $name, $ns::_db) {");
         Ins(&R, save.body   , "    $Basetype out;");
-        Ins(&R, save.body   , "    $instname_CopyOut($name, out);");
+        Ins(&R, save.body   , "    $Recname_CopyOut($name, out);");
         Ins(&R, save.body   , "    $Basetype_Print(out, text);");
         Ins(&R, save.body   , "    text << eol;");
         Ins(&R, save.body   , "}ind_end;");
@@ -157,7 +157,7 @@ void amc::tclass_Io() {
 // or amc::tclass_Io_newfield (hook name 'newfield')
 tempstr amc::StaticHookName(amc::FField &field, strptr suffix) {
     tempstr ret;
-    ret<<ns_Get(field)<<"::"<<Refname(*field.p_ctype)<<"_"<<suffix;
+    ret<<ns_Get(field)<<"::"<<Instname(*field.p_ctype)<<"_"<<suffix;
     if (name_Get(field) != "step") {
         ret << "_"<<name_Get(field);
     }

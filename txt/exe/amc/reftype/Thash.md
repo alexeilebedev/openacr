@@ -9,7 +9,7 @@ collision-chain pointer that amc adds to the element type.
 Operations are amortized O(1); the bucket array is power-of-2
 sized and grows by doubling.
 
-```
+```ssim
 dmmeta.field  field:abt.FDb.ind_target  arg:abt.FTarget  reftype:Thash  dflt:""  comment:""
   dmmeta.thash  field:abt.FDb.ind_target  hashfld:abt.FTarget.target  unique:Y  comment:""
 ```
@@ -129,7 +129,7 @@ Request it with an
 [ffunc](/txt/exe/amc/backend/tclass-tfunc.md#ffunc) (`extrn:N` — amc
 generates the body):
 
-```
+```ssim
 dmmeta.ffunc  ffunc:<field>.FindRemove  extrn:N  comment:""
 ```
 

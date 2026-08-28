@@ -31,7 +31,6 @@ inline  lib_iconv::trace::trace() {
 
 // --- lib_iconv.FDb..Uninit
 inline void lib_iconv::FDb_Uninit() {
-    lib_iconv::FDb &row = _db; (void)row;
 }
 
 // --- lib_iconv.FieldId.value.GetEnum
@@ -75,14 +74,13 @@ inline  lib_iconv::FieldId::FieldId(lib_iconv_FieldIdEnum arg) {
 
 // --- lib_iconv.Icd..Init
 // Set all fields to initial values.
-inline void lib_iconv::Icd_Init(lib_iconv::Icd& icd) {
-    icd.icd = iconv_t(((iconv_t)-1));
+inline void lib_iconv::Icd_Init(lib_iconv::Icd& parent) {
+    parent.icd = iconv_t(((iconv_t)-1));
 }
 
 // --- lib_iconv.Icd..Uninit
-inline void lib_iconv::Icd_Uninit(lib_iconv::Icd& icd) {
-    lib_iconv::Icd &row = icd; (void)row;
-    icd_Cleanup(icd); // dmmeta.ffunc:lib_iconv.Icd.icd/Cleanup
+inline void lib_iconv::Icd_Uninit(lib_iconv::Icd& parent) {
+    icd_Cleanup(parent); // dmmeta.ffunc:lib_iconv.Icd.icd/Cleanup
 }
 
 // --- lib_iconv.Icd..Ctor

@@ -1,5 +1,6 @@
 dmmeta.jstype  ctype:algo.SchedTime  comment:""
 dmmeta.jstype  ctype:algo.SeqType  comment:""
+dmmeta.jstype  ctype:algo.Signature  comment:"Binary protocol types carry a signature as its 20 digest bytes"
 dmmeta.jstype  ctype:algo.UnDiff  comment:""
 dmmeta.jstype  ctype:algo.UnTime  comment:""
 dmmeta.jstype  ctype:algo.Uuid  comment:""

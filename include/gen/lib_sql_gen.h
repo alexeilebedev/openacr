@@ -73,9 +73,9 @@ private:
 };
 // Set all fields to initial values.
 // func:lib_sql.FAttr..Init
-inline void          FAttr_Init(lib_sql::FAttr& attr);
+inline void          FAttr_Init(lib_sql::FAttr& parent);
 // func:lib_sql.FAttr..Uninit
-void                 FAttr_Uninit(lib_sql::FAttr& attr) __attribute__((nothrow));
+void                 FAttr_Uninit(lib_sql::FAttr& parent) __attribute__((nothrow));
 
 // --- lib_sql.trace
 #pragma pack(push,1)

@@ -192,48 +192,48 @@ inline orgfile::FTimefmt& orgfile::_db_timefmt_curs_Access(_db_timefmt_curs &cur
 
 // --- orgfile.FFilehash.c_filename.EmptyQ
 // Return true if index is empty
-inline bool orgfile::c_filename_EmptyQ(orgfile::FFilehash& filehash) {
-    return filehash.c_filename_n == 0;
+inline bool orgfile::c_filename_EmptyQ(orgfile::FFilehash& parent) {
+    return parent.c_filename_n == 0;
 }
 
 // --- orgfile.FFilehash.c_filename.Find
 // Look up row by row id. Return NULL if out of range
-inline orgfile::FFilename* orgfile::c_filename_Find(orgfile::FFilehash& filehash, u64 t) {
+inline orgfile::FFilename* orgfile::c_filename_Find(orgfile::FFilehash& parent, u64 t) {
     orgfile::FFilename *retval = NULL;
     u64 idx = t;
-    u64 lim = filehash.c_filename_n;
+    u64 lim = parent.c_filename_n;
     if (idx < lim) {
-        retval = filehash.c_filename_elems[idx];
+        retval = parent.c_filename_elems[idx];
     }
     return retval;
 }
 
 // --- orgfile.FFilehash.c_filename.Getary
 // Return array of pointers
-inline algo::aryptr<orgfile::FFilename*> orgfile::c_filename_Getary(orgfile::FFilehash& filehash) {
-    return algo::aryptr<orgfile::FFilename*>(filehash.c_filename_elems, filehash.c_filename_n);
+inline algo::aryptr<orgfile::FFilename*> orgfile::c_filename_Getary(orgfile::FFilehash& parent) {
+    return algo::aryptr<orgfile::FFilename*>(parent.c_filename_elems, parent.c_filename_n);
 }
 
 // --- orgfile.FFilehash.c_filename.N
 // Return number of items in the pointer array
-inline i64 orgfile::c_filename_N(const orgfile::FFilehash& filehash) {
-    return filehash.c_filename_n;
+inline i64 orgfile::c_filename_N(const orgfile::FFilehash& parent) {
+    return parent.c_filename_n;
 }
 
 // --- orgfile.FFilehash.c_filename.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void orgfile::c_filename_RemoveAll(orgfile::FFilehash& filehash) {
-    for (u64 i = 0; i < filehash.c_filename_n; i++) {
+inline void orgfile::c_filename_RemoveAll(orgfile::FFilehash& parent) {
+    for (u64 i = 0; i < parent.c_filename_n; i++) {
         // mark all elements as not-in-array
-        filehash.c_filename_elems[i]->filehash_c_filename_in_ary = false;
+        parent.c_filename_elems[i]->filehash_c_filename_in_ary = false;
     }
-    filehash.c_filename_n = 0;
+    parent.c_filename_n = 0;
 }
 
 // --- orgfile.FFilehash.c_filename.qFind
 // Return reference without bounds checking
-inline orgfile::FFilename& orgfile::c_filename_qFind(orgfile::FFilehash& filehash, u64 idx) {
-    return *filehash.c_filename_elems[idx];
+inline orgfile::FFilename& orgfile::c_filename_qFind(orgfile::FFilehash& parent, u64 idx) {
+    return *parent.c_filename_elems[idx];
 }
 
 // --- orgfile.FFilehash.c_filename.InAryQ
@@ -244,18 +244,18 @@ inline bool orgfile::filehash_c_filename_InAryQ(orgfile::FFilename& row) {
 
 // --- orgfile.FFilehash.c_filename.qLast
 // Reference to last element without bounds checking
-inline orgfile::FFilename& orgfile::c_filename_qLast(orgfile::FFilehash& filehash) {
-    return *filehash.c_filename_elems[filehash.c_filename_n-1];
+inline orgfile::FFilename& orgfile::c_filename_qLast(orgfile::FFilehash& parent) {
+    return *parent.c_filename_elems[parent.c_filename_n-1];
 }
 
 // --- orgfile.FFilehash..Init
 // Set all fields to initial values.
-inline void orgfile::FFilehash_Init(orgfile::FFilehash& filehash) {
-    filehash.c_filename_elems = NULL; // (orgfile.FFilehash.c_filename)
-    filehash.c_filename_n = 0; // (orgfile.FFilehash.c_filename)
-    filehash.c_filename_max = 0; // (orgfile.FFilehash.c_filename)
-    filehash.ind_filehash_next = (orgfile::FFilehash*)-1; // (orgfile.FDb.ind_filehash) not-in-hash
-    filehash.ind_filehash_hashval = 0; // stored hash value
+inline void orgfile::FFilehash_Init(orgfile::FFilehash& parent) {
+    parent.c_filename_elems = NULL; // (orgfile.FFilehash.c_filename)
+    parent.c_filename_n = 0; // (orgfile.FFilehash.c_filename)
+    parent.c_filename_max = 0; // (orgfile.FFilehash.c_filename)
+    parent.ind_filehash_next = (orgfile::FFilehash*)-1; // (orgfile.FDb.ind_filehash) not-in-hash
+    parent.ind_filehash_hashval = 0; // stored hash value
 }
 
 // --- orgfile.FFilehash.c_filename_curs.Reset
@@ -295,12 +295,12 @@ inline  orgfile::FFilehash::~FFilehash() {
 
 // --- orgfile.FFilename..Init
 // Set all fields to initial values.
-inline void orgfile::FFilename_Init(orgfile::FFilename& filename) {
-    filename.p_filehash = NULL;
-    filename.filehash_c_filename_in_ary = bool(false);
-    filename.filename_next = (orgfile::FFilename*)-1; // (orgfile.FDb.filename) not-in-tpool's freelist
-    filename.ind_filename_next = (orgfile::FFilename*)-1; // (orgfile.FDb.ind_filename) not-in-hash
-    filename.ind_filename_hashval = 0; // stored hash value
+inline void orgfile::FFilename_Init(orgfile::FFilename& parent) {
+    parent.p_filehash = NULL;
+    parent.filehash_c_filename_in_ary = bool(false);
+    parent.filename_next = (orgfile::FFilename*)-1; // (orgfile.FDb.filename) not-in-tpool's freelist
+    parent.ind_filename_next = (orgfile::FFilename*)-1; // (orgfile.FDb.ind_filename) not-in-hash
+    parent.ind_filename_hashval = 0; // stored hash value
 }
 
 // --- orgfile.FFilename..Ctor
@@ -315,8 +315,8 @@ inline  orgfile::FFilename::~FFilename() {
 
 // --- orgfile.FTimefmt..Init
 // Set all fields to initial values.
-inline void orgfile::FTimefmt_Init(orgfile::FTimefmt& timefmt) {
-    timefmt.dirname = bool(false);
+inline void orgfile::FTimefmt_Init(orgfile::FTimefmt& parent) {
+    parent.dirname = bool(false);
 }
 
 // --- orgfile.FTimefmt..Ctor

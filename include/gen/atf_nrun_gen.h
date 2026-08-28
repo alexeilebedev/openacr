@@ -323,36 +323,36 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 // func:atf_nrun.FEntry.job.Start
-int                  job_Start(atf_nrun::FEntry& fentry) __attribute__((nothrow));
+int                  job_Start(atf_nrun::FEntry& parent) __attribute__((nothrow));
 // Kill subprocess and wait
 // func:atf_nrun.FEntry.job.Kill
-void                 job_Kill(atf_nrun::FEntry& fentry);
+void                 job_Kill(atf_nrun::FEntry& parent);
 // Wait for subprocess to return
 // func:atf_nrun.FEntry.job.Wait
-void                 job_Wait(atf_nrun::FEntry& fentry) __attribute__((nothrow));
+void                 job_Wait(atf_nrun::FEntry& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
 // func:atf_nrun.FEntry.job.Exec
-int                  job_Exec(atf_nrun::FEntry& fentry) __attribute__((nothrow));
+int                  job_Exec(atf_nrun::FEntry& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
 // func:atf_nrun.FEntry.job.ExecX
-void                 job_ExecX(atf_nrun::FEntry& fentry);
+void                 job_ExecX(atf_nrun::FEntry& parent);
 // Call execv()
 // Call execv with specified parameters
 // func:atf_nrun.FEntry.job.Execv
-int                  job_Execv(atf_nrun::FEntry& fentry) __attribute__((nothrow));
+int                  job_Execv(atf_nrun::FEntry& parent) __attribute__((nothrow));
 // func:atf_nrun.FEntry.job.ToCmdline
-algo::tempstr        job_ToCmdline(atf_nrun::FEntry& fentry) __attribute__((nothrow));
+algo::tempstr        job_ToCmdline(atf_nrun::FEntry& parent) __attribute__((nothrow));
 // Form array from the command line
 // func:atf_nrun.FEntry.job.ToArgv
-void                 job_ToArgv(atf_nrun::FEntry& fentry, algo::StringAry& args) __attribute__((nothrow));
+void                 job_ToArgv(atf_nrun::FEntry& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_nrun.FEntry..Init
-void                 FEntry_Init(atf_nrun::FEntry& fentry);
+void                 FEntry_Init(atf_nrun::FEntry& parent);
 // func:atf_nrun.FEntry..Uninit
-void                 FEntry_Uninit(atf_nrun::FEntry& fentry) __attribute__((nothrow));
+void                 FEntry_Uninit(atf_nrun::FEntry& parent) __attribute__((nothrow));
 
 // --- atf_nrun.FieldId
 #pragma pack(push,1)

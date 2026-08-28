@@ -134,7 +134,7 @@ must be set on the target type.
   `_offset_of(struct, field)` rather than the C `offsetof`
   to avoid macro name clashes in some clang environments.
 - **ctypelen is calculated, not declared by hand.**  Don't
-  edit `data/dmmeta/ctypelen.ssim` directly — `amc` rewrites
+  edit `ssimfile:dmmeta.ctypelen` directly — `amc` rewrites
   it on every run.
 - **Sub-byte layout (Bitfld) is not validated** by fldoffset.
   Use `csize` on the host integer and trust amc's bit
@@ -155,7 +155,7 @@ must be set on the target type.
 
 Pinning a foreign struct's size:
 
-```
+```ssim
 dmmeta.ctype  ctype:MYSQL_RES  comment:"mysql_res_struct"
   dmmeta.cextern  ctype:MYSQL_RES
   dmmeta.csize    ctype:MYSQL_RES  size:120  alignment:8
@@ -163,7 +163,7 @@ dmmeta.ctype  ctype:MYSQL_RES  comment:"mysql_res_struct"
 
 Pinning fields of a wire-format message:
 
-```
+```ssim
 dmmeta.ctype     ctype:prot.MsgHeader
   dmmeta.pack    ctype:prot.MsgHeader
   dmmeta.field   field:prot.MsgHeader.type   arg:u8  reftype:Val

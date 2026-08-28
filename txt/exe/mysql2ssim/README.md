@@ -1,22 +1,9 @@
 ## mysql2ssim - mysql -> ssim conversion tool
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [mysql2ssim - Internals](/txt/gen/mysql2ssim/mysql2ssim.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 mysql2ssim: mysql -> ssim conversion tool
 Usage: mysql2ssim [-url:]<string> [[-tables:]<string>] [options]
     OPTION          TYPE    DFLT    COMMENT
@@ -60,10 +47,3 @@ Usage: mysql2ssim [-url:]<string> [[-tables:]<string>] [options]
 
 #### -baddbok -- Don't claim if bad database
 <a href="#-baddbok"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`mysql2ssim` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|

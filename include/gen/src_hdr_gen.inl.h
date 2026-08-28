@@ -31,10 +31,10 @@
 
 // --- src_hdr.FCopyline..Init
 // Set all fields to initial values.
-inline void src_hdr::FCopyline_Init(src_hdr::FCopyline& fcopyline) {
-    fcopyline.fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.fcopyline) not-in-tpool's freelist
-    fcopyline.ind_fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.ind_fcopyline) not-in-hash
-    fcopyline.ind_fcopyline_hashval = 0; // stored hash value
+inline void src_hdr::FCopyline_Init(src_hdr::FCopyline& parent) {
+    parent.fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.fcopyline) not-in-tpool's freelist
+    parent.ind_fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.ind_fcopyline) not-in-hash
+    parent.ind_fcopyline_hashval = 0; // stored hash value
 }
 
 // --- src_hdr.FCopyline..Ctor
@@ -49,12 +49,12 @@ inline  src_hdr::FCopyline::~FCopyline() {
 
 // --- src_hdr.FCopyright..Init
 // Set all fields to initial values.
-inline void src_hdr::FCopyright_Init(src_hdr::FCopyright& copyright) {
-    copyright.dflt = bool(false);
-    copyright.sortkey = i32(0);
-    copyright.ind_copyright_next = (src_hdr::FCopyright*)-1; // (src_hdr.FDb.ind_copyright) not-in-hash
-    copyright.ind_copyright_hashval = 0; // stored hash value
-    copyright.bh_copyright_idx = -1; // (src_hdr.FDb.bh_copyright) not-in-heap
+inline void src_hdr::FCopyright_Init(src_hdr::FCopyright& parent) {
+    parent.dflt = bool(false);
+    parent.sortkey = i32(0);
+    parent.ind_copyright_next = (src_hdr::FCopyright*)-1; // (src_hdr.FDb.ind_copyright) not-in-hash
+    parent.ind_copyright_hashval = 0; // stored hash value
+    parent.bh_copyright_idx = -1; // (src_hdr.FDb.bh_copyright) not-in-heap
 }
 
 // --- src_hdr.FCopyright..Ctor
@@ -664,9 +664,9 @@ inline bool src_hdr::_db_bh_copyright_curs_ValidQ(_db_bh_copyright_curs &curs) {
 
 // --- src_hdr.FLicense..Init
 // Set all fields to initial values.
-inline void src_hdr::FLicense_Init(src_hdr::FLicense& license) {
-    license.ind_license_next = (src_hdr::FLicense*)-1; // (src_hdr.FDb.ind_license) not-in-hash
-    license.ind_license_hashval = 0; // stored hash value
+inline void src_hdr::FLicense_Init(src_hdr::FLicense& parent) {
+    parent.ind_license_next = (src_hdr::FLicense*)-1; // (src_hdr.FDb.ind_license) not-in-hash
+    parent.ind_license_hashval = 0; // stored hash value
 }
 
 // --- src_hdr.FLicense..Ctor
@@ -681,31 +681,31 @@ inline  src_hdr::FLicense::~FLicense() {
 
 // --- src_hdr.FNs.c_nsx.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool src_hdr::c_nsx_InsertMaybe(src_hdr::FNs& ns, src_hdr::FNsx& row) {
-    src_hdr::FNsx* ptr = ns.c_nsx;
+inline bool src_hdr::c_nsx_InsertMaybe(src_hdr::FNs& parent, src_hdr::FNsx& row) {
+    src_hdr::FNsx* ptr = parent.c_nsx;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
-        ns.c_nsx = &row;
+        parent.c_nsx = &row;
     }
     return retval;
 }
 
 // --- src_hdr.FNs.c_nsx.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void src_hdr::c_nsx_Remove(src_hdr::FNs& ns, src_hdr::FNsx& row) {
-    src_hdr::FNsx *ptr = ns.c_nsx;
+inline void src_hdr::c_nsx_Remove(src_hdr::FNs& parent, src_hdr::FNsx& row) {
+    src_hdr::FNsx *ptr = parent.c_nsx;
     if (LIKELY(ptr == &row)) {
-        ns.c_nsx = NULL;
+        parent.c_nsx = NULL;
     }
 }
 
 // --- src_hdr.FNs..Init
 // Set all fields to initial values.
-inline void src_hdr::FNs_Init(src_hdr::FNs& ns) {
-    ns.c_nsx = NULL;
-    ns.p_license = NULL;
-    ns.ind_ns_next = (src_hdr::FNs*)-1; // (src_hdr.FDb.ind_ns) not-in-hash
-    ns.ind_ns_hashval = 0; // stored hash value
+inline void src_hdr::FNs_Init(src_hdr::FNs& parent) {
+    parent.c_nsx = NULL;
+    parent.p_license = NULL;
+    parent.ind_ns_next = (src_hdr::FNs*)-1; // (src_hdr.FDb.ind_ns) not-in-hash
+    parent.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- src_hdr.FNs..Ctor
@@ -720,11 +720,11 @@ inline  src_hdr::FNs::~FNs() {
 
 // --- src_hdr.FNsx..Init
 // Set all fields to initial values.
-inline void src_hdr::FNsx_Init(src_hdr::FNsx& nsx) {
-    nsx.genthrow = bool(false);
-    nsx.correct_getorcreate = bool(false);
-    nsx.sortxref = bool(false);
-    nsx.pack = bool(false);
+inline void src_hdr::FNsx_Init(src_hdr::FNsx& parent) {
+    parent.genthrow = bool(false);
+    parent.correct_getorcreate = bool(false);
+    parent.sortxref = bool(false);
+    parent.pack = bool(false);
 }
 
 // --- src_hdr.FNsx..Ctor
@@ -739,8 +739,8 @@ inline  src_hdr::FNsx::~FNsx() {
 
 // --- src_hdr.FScriptfile..Init
 // Set all fields to initial values.
-inline void src_hdr::FScriptfile_Init(src_hdr::FScriptfile& scriptfile) {
-    scriptfile.p_license = NULL;
+inline void src_hdr::FScriptfile_Init(src_hdr::FScriptfile& parent) {
+    parent.p_license = NULL;
 }
 
 // --- src_hdr.FScriptfile..Ctor
@@ -755,48 +755,48 @@ inline  src_hdr::FSrc::FSrc() {
 
 // --- src_hdr.FTarget.c_targsrc.EmptyQ
 // Return true if index is empty
-inline bool src_hdr::c_targsrc_EmptyQ(src_hdr::FTarget& target) {
-    return target.c_targsrc_n == 0;
+inline bool src_hdr::c_targsrc_EmptyQ(src_hdr::FTarget& parent) {
+    return parent.c_targsrc_n == 0;
 }
 
 // --- src_hdr.FTarget.c_targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline src_hdr::FTargsrc* src_hdr::c_targsrc_Find(src_hdr::FTarget& target, u64 t) {
+inline src_hdr::FTargsrc* src_hdr::c_targsrc_Find(src_hdr::FTarget& parent, u64 t) {
     src_hdr::FTargsrc *retval = NULL;
     u64 idx = t;
-    u64 lim = target.c_targsrc_n;
+    u64 lim = parent.c_targsrc_n;
     if (idx < lim) {
-        retval = target.c_targsrc_elems[idx];
+        retval = parent.c_targsrc_elems[idx];
     }
     return retval;
 }
 
 // --- src_hdr.FTarget.c_targsrc.Getary
 // Return array of pointers
-inline algo::aryptr<src_hdr::FTargsrc*> src_hdr::c_targsrc_Getary(src_hdr::FTarget& target) {
-    return algo::aryptr<src_hdr::FTargsrc*>(target.c_targsrc_elems, target.c_targsrc_n);
+inline algo::aryptr<src_hdr::FTargsrc*> src_hdr::c_targsrc_Getary(src_hdr::FTarget& parent) {
+    return algo::aryptr<src_hdr::FTargsrc*>(parent.c_targsrc_elems, parent.c_targsrc_n);
 }
 
 // --- src_hdr.FTarget.c_targsrc.N
 // Return number of items in the pointer array
-inline i64 src_hdr::c_targsrc_N(const src_hdr::FTarget& target) {
-    return target.c_targsrc_n;
+inline i64 src_hdr::c_targsrc_N(const src_hdr::FTarget& parent) {
+    return parent.c_targsrc_n;
 }
 
 // --- src_hdr.FTarget.c_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void src_hdr::c_targsrc_RemoveAll(src_hdr::FTarget& target) {
-    for (u64 i = 0; i < target.c_targsrc_n; i++) {
+inline void src_hdr::c_targsrc_RemoveAll(src_hdr::FTarget& parent) {
+    for (u64 i = 0; i < parent.c_targsrc_n; i++) {
         // mark all elements as not-in-array
-        target.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
+        parent.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
     }
-    target.c_targsrc_n = 0;
+    parent.c_targsrc_n = 0;
 }
 
 // --- src_hdr.FTarget.c_targsrc.qFind
 // Return reference without bounds checking
-inline src_hdr::FTargsrc& src_hdr::c_targsrc_qFind(src_hdr::FTarget& target, u64 idx) {
-    return *target.c_targsrc_elems[idx];
+inline src_hdr::FTargsrc& src_hdr::c_targsrc_qFind(src_hdr::FTarget& parent, u64 idx) {
+    return *parent.c_targsrc_elems[idx];
 }
 
 // --- src_hdr.FTarget.c_targsrc.InAryQ
@@ -807,19 +807,19 @@ inline bool src_hdr::target_c_targsrc_InAryQ(src_hdr::FTargsrc& row) {
 
 // --- src_hdr.FTarget.c_targsrc.qLast
 // Reference to last element without bounds checking
-inline src_hdr::FTargsrc& src_hdr::c_targsrc_qLast(src_hdr::FTarget& target) {
-    return *target.c_targsrc_elems[target.c_targsrc_n-1];
+inline src_hdr::FTargsrc& src_hdr::c_targsrc_qLast(src_hdr::FTarget& parent) {
+    return *parent.c_targsrc_elems[parent.c_targsrc_n-1];
 }
 
 // --- src_hdr.FTarget..Init
 // Set all fields to initial values.
-inline void src_hdr::FTarget_Init(src_hdr::FTarget& target) {
-    target.c_targsrc_elems = NULL; // (src_hdr.FTarget.c_targsrc)
-    target.c_targsrc_n = 0; // (src_hdr.FTarget.c_targsrc)
-    target.c_targsrc_max = 0; // (src_hdr.FTarget.c_targsrc)
-    target.p_ns = NULL;
-    target.ind_target_next = (src_hdr::FTarget*)-1; // (src_hdr.FDb.ind_target) not-in-hash
-    target.ind_target_hashval = 0; // stored hash value
+inline void src_hdr::FTarget_Init(src_hdr::FTarget& parent) {
+    parent.c_targsrc_elems = NULL; // (src_hdr.FTarget.c_targsrc)
+    parent.c_targsrc_n = 0; // (src_hdr.FTarget.c_targsrc)
+    parent.c_targsrc_max = 0; // (src_hdr.FTarget.c_targsrc)
+    parent.p_ns = NULL;
+    parent.ind_target_next = (src_hdr::FTarget*)-1; // (src_hdr.FDb.ind_target) not-in-hash
+    parent.ind_target_hashval = 0; // stored hash value
 }
 
 // --- src_hdr.FTarget.c_targsrc_curs.Reset
@@ -859,10 +859,10 @@ inline  src_hdr::FTarget::~FTarget() {
 
 // --- src_hdr.FTargsrc..Init
 // Set all fields to initial values.
-inline void src_hdr::FTargsrc_Init(src_hdr::FTargsrc& targsrc) {
-    targsrc.select = bool(false);
-    targsrc.p_target = NULL;
-    targsrc.target_c_targsrc_in_ary = bool(false);
+inline void src_hdr::FTargsrc_Init(src_hdr::FTargsrc& parent) {
+    parent.select = bool(false);
+    parent.p_target = NULL;
+    parent.target_c_targsrc_in_ary = bool(false);
 }
 
 // --- src_hdr.FTargsrc..Ctor

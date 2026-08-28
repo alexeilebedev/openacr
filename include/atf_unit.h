@@ -381,8 +381,8 @@ namespace atf_unit { // update-hdr
     //
     // A host with no export has nothing to compare against, so the check is
     // announced as skipped rather than passing silently.  That host is exactly
-    // where an x2 process refuses to start unless the rate is stated, and where
-    // the file source /etc/x2.d/tscfreq_khz is exercised -- installing that file
+    // where a process that needs the rate refuses to start unless it is stated, and
+    // where the file source under /etc is exercised -- installing that file
     // needs root, so it is covered on such a host rather than here.  The second
     // half of the test covers the variable on either kind of host:
     // where the export exists it must be ignored, and where it does not it must be

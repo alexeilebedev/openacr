@@ -1090,9 +1090,9 @@ void                 anonfld_CopyIn(amc::FAnonfld &row, dmmeta::Anonfld &in) __a
 
 // Set all fields to initial values.
 // func:amc.FAnonfld..Init
-inline void          FAnonfld_Init(amc::FAnonfld& anonfld);
+inline void          FAnonfld_Init(amc::FAnonfld& parent);
 // func:amc.FAnonfld..Uninit
-void                 FAnonfld_Uninit(amc::FAnonfld& anonfld) __attribute__((nothrow));
+void                 FAnonfld_Uninit(amc::FAnonfld& parent) __attribute__((nothrow));
 
 // --- amc.FArgvtype
 // create: amc.FDb.argvtype (Lary)
@@ -1123,7 +1123,7 @@ void                 argvtype_CopyOut(amc::FArgvtype &row, dmmeta::Argvtype &out
 void                 argvtype_CopyIn(amc::FArgvtype &row, dmmeta::Argvtype &in) __attribute__((nothrow));
 
 // func:amc.FArgvtype..Uninit
-void                 FArgvtype_Uninit(amc::FArgvtype& argvtype) __attribute__((nothrow));
+void                 FArgvtype_Uninit(amc::FArgvtype& parent) __attribute__((nothrow));
 
 // --- amc.FBasepool
 // create: amc.FDb.basepool (Lary)
@@ -1160,9 +1160,9 @@ void                 basepool_CopyIn(amc::FBasepool &row, dmmeta::Basepool &in) 
 
 // Set all fields to initial values.
 // func:amc.FBasepool..Init
-inline void          FBasepool_Init(amc::FBasepool& basepool);
+inline void          FBasepool_Init(amc::FBasepool& parent);
 // func:amc.FBasepool..Uninit
-void                 FBasepool_Uninit(amc::FBasepool& basepool) __attribute__((nothrow));
+void                 FBasepool_Uninit(amc::FBasepool& parent) __attribute__((nothrow));
 
 // --- amc.FBitfld
 // create: amc.FDb.bitfld (Lary)
@@ -1203,13 +1203,13 @@ void                 bitfld_CopyOut(amc::FBitfld &row, dmmeta::Bitfld &out) __at
 void                 bitfld_CopyIn(amc::FBitfld &row, dmmeta::Bitfld &in) __attribute__((nothrow));
 
 // func:amc.FBitfld.name.Get
-algo::strptr         name_Get(amc::FBitfld& bitfld) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FBitfld& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FBitfld..Init
-inline void          FBitfld_Init(amc::FBitfld& bitfld);
+inline void          FBitfld_Init(amc::FBitfld& parent);
 // func:amc.FBitfld..Uninit
-void                 FBitfld_Uninit(amc::FBitfld& bitfld) __attribute__((nothrow));
+void                 FBitfld_Uninit(amc::FBitfld& parent) __attribute__((nothrow));
 
 // --- amc.FBlkhash
 // create: amc.FDb.blkhash (Lary)
@@ -1253,9 +1253,9 @@ void                 blkhash_CopyIn(amc::FBlkhash &row, dmmeta::Blkhash &in) __a
 
 // Set all fields to initial values.
 // func:amc.FBlkhash..Init
-inline void          FBlkhash_Init(amc::FBlkhash& blkhash);
+inline void          FBlkhash_Init(amc::FBlkhash& parent);
 // func:amc.FBlkhash..Uninit
-void                 FBlkhash_Uninit(amc::FBlkhash& blkhash) __attribute__((nothrow));
+void                 FBlkhash_Uninit(amc::FBlkhash& parent) __attribute__((nothrow));
 
 // --- amc.FBltin
 // create: amc.FDb.bltin (Lary)
@@ -1292,9 +1292,9 @@ void                 bltin_CopyIn(amc::FBltin &row, amcdb::Bltin &in) __attribut
 
 // Set all fields to initial values.
 // func:amc.FBltin..Init
-inline void          FBltin_Init(amc::FBltin& bltin);
+inline void          FBltin_Init(amc::FBltin& parent);
 // func:amc.FBltin..Uninit
-void                 FBltin_Uninit(amc::FBltin& bltin) __attribute__((nothrow));
+void                 FBltin_Uninit(amc::FBltin& parent) __attribute__((nothrow));
 
 // --- amc.FCafter
 // create: amc.FDb.cafter (Lary)
@@ -1329,16 +1329,16 @@ void                 cafter_CopyOut(amc::FCafter &row, dmmeta::Cafter &out) __at
 void                 cafter_CopyIn(amc::FCafter &row, dmmeta::Cafter &in) __attribute__((nothrow));
 
 // func:amc.FCafter.ctype.Get
-algo::strptr         ctype_Get(amc::FCafter& cafter) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FCafter& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FCafter.after.Get
-algo::strptr         after_Get(amc::FCafter& cafter) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         after_Get(amc::FCafter& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FCafter..Init
-inline void          FCafter_Init(amc::FCafter& cafter);
+inline void          FCafter_Init(amc::FCafter& parent);
 // func:amc.FCafter..Uninit
-void                 FCafter_Uninit(amc::FCafter& cafter) __attribute__((nothrow));
+void                 FCafter_Uninit(amc::FCafter& parent) __attribute__((nothrow));
 
 // --- amc.FCascdel
 // create: amc.FDb.cascdel (Lary)
@@ -1372,9 +1372,9 @@ void                 cascdel_CopyIn(amc::FCascdel &row, dmmeta::Cascdel &in) __a
 
 // Set all fields to initial values.
 // func:amc.FCascdel..Init
-inline void          FCascdel_Init(amc::FCascdel& cascdel);
+inline void          FCascdel_Init(amc::FCascdel& parent);
 // func:amc.FCascdel..Uninit
-void                 FCascdel_Uninit(amc::FCascdel& cascdel) __attribute__((nothrow));
+void                 FCascdel_Uninit(amc::FCascdel& parent) __attribute__((nothrow));
 
 // --- amc.FCcmdline
 // create: amc.FDb.ccmdline (Lary)
@@ -1414,9 +1414,9 @@ void                 ccmdline_CopyIn(amc::FCcmdline &row, dmmeta::Ccmdline &in) 
 
 // Set all fields to initial values.
 // func:amc.FCcmdline..Init
-inline void          FCcmdline_Init(amc::FCcmdline& ccmdline);
+inline void          FCcmdline_Init(amc::FCcmdline& parent);
 // func:amc.FCcmdline..Uninit
-void                 FCcmdline_Uninit(amc::FCcmdline& ccmdline) __attribute__((nothrow));
+void                 FCcmdline_Uninit(amc::FCcmdline& parent) __attribute__((nothrow));
 
 // --- amc.FCcmp
 // create: amc.FDb.ccmp (Lary)
@@ -1454,9 +1454,9 @@ void                 ccmp_CopyIn(amc::FCcmp &row, dmmeta::Ccmp &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FCcmp..Init
-inline void          FCcmp_Init(amc::FCcmp& ccmp);
+inline void          FCcmp_Init(amc::FCcmp& parent);
 // func:amc.FCcmp..Uninit
-void                 FCcmp_Uninit(amc::FCcmp& ccmp) __attribute__((nothrow));
+void                 FCcmp_Uninit(amc::FCcmp& parent) __attribute__((nothrow));
 
 // --- amc.FCdflt
 // create: amc.FDb.cdflt (Lary)
@@ -1489,7 +1489,7 @@ void                 cdflt_CopyOut(amc::FCdflt &row, dmmeta::Cdflt &out) __attri
 void                 cdflt_CopyIn(amc::FCdflt &row, dmmeta::Cdflt &in) __attribute__((nothrow));
 
 // func:amc.FCdflt..Uninit
-void                 FCdflt_Uninit(amc::FCdflt& cdflt) __attribute__((nothrow));
+void                 FCdflt_Uninit(amc::FCdflt& parent) __attribute__((nothrow));
 
 // --- amc.FCextern
 // create: amc.FDb.cextern (Lary)
@@ -1522,9 +1522,9 @@ void                 cextern_CopyIn(amc::FCextern &row, dmmeta::Cextern &in) __a
 
 // Set all fields to initial values.
 // func:amc.FCextern..Init
-inline void          FCextern_Init(amc::FCextern& cextern);
+inline void          FCextern_Init(amc::FCextern& parent);
 // func:amc.FCextern..Uninit
-void                 FCextern_Uninit(amc::FCextern& cextern) __attribute__((nothrow));
+void                 FCextern_Uninit(amc::FCextern& parent) __attribute__((nothrow));
 
 // --- amc.FCfast
 // create: amc.FDb.cfast (Lary)
@@ -1559,9 +1559,9 @@ void                 cfast_CopyIn(amc::FCfast &row, dmmeta::Cfast &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FCfast..Init
-inline void          FCfast_Init(amc::FCfast& cfast);
+inline void          FCfast_Init(amc::FCfast& parent);
 // func:amc.FCfast..Uninit
-void                 FCfast_Uninit(amc::FCfast& cfast) __attribute__((nothrow));
+void                 FCfast_Uninit(amc::FCfast& parent) __attribute__((nothrow));
 
 // --- amc.FCfmt
 // create: amc.FDb.cfmt (Lary)
@@ -1603,16 +1603,16 @@ void                 cfmt_CopyOut(amc::FCfmt &row, dmmeta::Cfmt &out) __attribut
 void                 cfmt_CopyIn(amc::FCfmt &row, dmmeta::Cfmt &in) __attribute__((nothrow));
 
 // func:amc.FCfmt.ctype.Get
-algo::strptr         ctype_Get(amc::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FCfmt& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FCfmt.strfmt.Get
-algo::strptr         strfmt_Get(amc::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         strfmt_Get(amc::FCfmt& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FCfmt..Init
-void                 FCfmt_Init(amc::FCfmt& cfmt);
+void                 FCfmt_Init(amc::FCfmt& parent);
 // func:amc.FCfmt..Uninit
-void                 FCfmt_Uninit(amc::FCfmt& cfmt) __attribute__((nothrow));
+void                 FCfmt_Uninit(amc::FCfmt& parent) __attribute__((nothrow));
 
 // --- amc.FCget
 // create: amc.FDb.cget (Lary)
@@ -1637,7 +1637,7 @@ void                 cget_CopyIn(amc::FCget &row, dmmeta::Cget &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FCget..Init
-inline void          FCget_Init(amc::FCget& cget);
+inline void          FCget_Init(amc::FCget& parent);
 
 // --- amc.FCharset
 // create: amc.FDb.charset (Lary)
@@ -1673,9 +1673,9 @@ void                 charset_CopyIn(amc::FCharset &row, dmmeta::Charset &in) __a
 
 // Set all fields to initial values.
 // func:amc.FCharset..Init
-inline void          FCharset_Init(amc::FCharset& charset);
+inline void          FCharset_Init(amc::FCharset& parent);
 // func:amc.FCharset..Uninit
-void                 FCharset_Uninit(amc::FCharset& charset) __attribute__((nothrow));
+void                 FCharset_Uninit(amc::FCharset& parent) __attribute__((nothrow));
 
 // --- amc.FChash
 // create: amc.FDb.chash (Lary)
@@ -1710,9 +1710,9 @@ void                 chash_CopyIn(amc::FChash &row, dmmeta::Chash &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FChash..Init
-inline void          FChash_Init(amc::FChash& chash);
+inline void          FChash_Init(amc::FChash& parent);
 // func:amc.FChash..Uninit
-void                 FChash_Uninit(amc::FChash& chash) __attribute__((nothrow));
+void                 FChash_Uninit(amc::FChash& parent) __attribute__((nothrow));
 
 // --- amc.FCjsbltin
 // create: amc.FDb.cjsbltin (Lary)
@@ -1748,9 +1748,9 @@ void                 cjsbltin_CopyIn(amc::FCjsbltin &row, dmmeta::Cjsbltin &in) 
 
 // Set all fields to initial values.
 // func:amc.FCjsbltin..Init
-inline void          FCjsbltin_Init(amc::FCjsbltin& cjsbltin);
+inline void          FCjsbltin_Init(amc::FCjsbltin& parent);
 // func:amc.FCjsbltin..Uninit
-void                 FCjsbltin_Uninit(amc::FCjsbltin& cjsbltin) __attribute__((nothrow));
+void                 FCjsbltin_Uninit(amc::FCjsbltin& parent) __attribute__((nothrow));
 
 // --- amc.FCjson
 // create: amc.FDb.cjson (Lary)
@@ -1786,9 +1786,9 @@ void                 cjson_CopyIn(amc::FCjson &row, dmmeta::Cjson &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FCjson..Init
-inline void          FCjson_Init(amc::FCjson& cjson);
+inline void          FCjson_Init(amc::FCjson& parent);
 // func:amc.FCjson..Uninit
-void                 FCjson_Uninit(amc::FCjson& cjson) __attribute__((nothrow));
+void                 FCjson_Uninit(amc::FCjson& parent) __attribute__((nothrow));
 
 // --- amc.FCkafka
 // create: amc.FDb.ckafka (Lary)
@@ -1823,7 +1823,7 @@ void                 ckafka_CopyOut(amc::FCkafka &row, dmmeta::Ckafka &out) __at
 void                 ckafka_CopyIn(amc::FCkafka &row, dmmeta::Ckafka &in) __attribute__((nothrow));
 
 // func:amc.FCkafka..Uninit
-void                 FCkafka_Uninit(amc::FCkafka& ckafka) __attribute__((nothrow));
+void                 FCkafka_Uninit(amc::FCkafka& parent) __attribute__((nothrow));
 
 // --- amc.FCpbuf
 // create: amc.FDb.cpbuf (Lary)
@@ -1855,7 +1855,7 @@ void                 cpbuf_CopyOut(amc::FCpbuf &row, dmmeta::Cpbuf &out) __attri
 void                 cpbuf_CopyIn(amc::FCpbuf &row, dmmeta::Cpbuf &in) __attribute__((nothrow));
 
 // func:amc.FCpbuf..Uninit
-void                 FCpbuf_Uninit(amc::FCpbuf& cpbuf) __attribute__((nothrow));
+void                 FCpbuf_Uninit(amc::FCpbuf& parent) __attribute__((nothrow));
 
 // --- amc.FCppfunc
 // create: amc.FDb.cppfunc (Lary)
@@ -1888,9 +1888,9 @@ void                 cppfunc_CopyIn(amc::FCppfunc &row, dmmeta::Cppfunc &in) __a
 
 // Set all fields to initial values.
 // func:amc.FCppfunc..Init
-inline void          FCppfunc_Init(amc::FCppfunc& cppfunc);
+inline void          FCppfunc_Init(amc::FCppfunc& parent);
 // func:amc.FCppfunc..Uninit
-void                 FCppfunc_Uninit(amc::FCppfunc& cppfunc) __attribute__((nothrow));
+void                 FCppfunc_Uninit(amc::FCppfunc& parent) __attribute__((nothrow));
 
 // --- amc.FCpptype
 // create: amc.FDb.cpptype (Lary)
@@ -1927,9 +1927,9 @@ void                 cpptype_CopyIn(amc::FCpptype &row, dmmeta::Cpptype &in) __a
 
 // Set all fields to initial values.
 // func:amc.FCpptype..Init
-inline void          FCpptype_Init(amc::FCpptype& cpptype);
+inline void          FCpptype_Init(amc::FCpptype& parent);
 // func:amc.FCpptype..Uninit
-void                 FCpptype_Uninit(amc::FCpptype& cpptype) __attribute__((nothrow));
+void                 FCpptype_Uninit(amc::FCpptype& parent) __attribute__((nothrow));
 
 // --- amc.FCsize
 // create: amc.FDb.csize (Lary)
@@ -1962,9 +1962,9 @@ void                 csize_CopyIn(amc::FCsize &row, dmmeta::Csize &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FCsize..Init
-inline void          FCsize_Init(amc::FCsize& csize);
+inline void          FCsize_Init(amc::FCsize& parent);
 // func:amc.FCsize..Uninit
-void                 FCsize_Uninit(amc::FCsize& csize) __attribute__((nothrow));
+void                 FCsize_Uninit(amc::FCsize& parent) __attribute__((nothrow));
 
 // --- amc.FCstr
 // create: amc.FDb.cstr (Lary)
@@ -1996,9 +1996,9 @@ void                 cstr_CopyIn(amc::FCstr &row, dmmeta::Cstr &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FCstr..Init
-inline void          FCstr_Init(amc::FCstr& cstr);
+inline void          FCstr_Init(amc::FCstr& parent);
 // func:amc.FCstr..Uninit
-void                 FCstr_Uninit(amc::FCstr& cstr) __attribute__((nothrow));
+void                 FCstr_Uninit(amc::FCstr& parent) __attribute__((nothrow));
 
 // --- amc.FCtype
 // create: amc.FDb.ctype (Lary)
@@ -2038,6 +2038,7 @@ struct FCtype { // amc.FCtype
     amc::FCfmt*           zs_cfmt_head;               // zero-terminated singly linked list
     amc::FCfmt*           zs_cfmt_tail;               // pointer to last element
     algo::cstring         cpp_type;                   // type name to use in c++
+    algo::cstring         instname;                   // Name of a record of this ctype, for composing identifiers
     algo::cstring         body;                       // Struct contents
     algo::cstring         sizecheck;                  // Size check assertions
     amc::FFunc*           c_init;                     // Pointer to constructor. optional pointer
@@ -2075,7 +2076,7 @@ struct FCtype { // amc.FCtype
     amc::FCcmp*           c_ccmp;                     // optional pointer
     amc::FCstr*           c_cstr;                     // optional pointer
     amc::FCextern*        c_cextern;                  // optional pointer
-    algo::Sha1sig         signature;                  //
+    algo::Signature       signature;                  //
     amc::FFunc**          c_ffunc_elems;              // array of pointers
     u64                   c_ffunc_n;                  // current size
     u64                   c_ffunc_max;                // capacity of allocated array
@@ -2251,325 +2252,325 @@ void                 ctype_CopyOut(amc::FCtype &row, dmmeta::Ctype &out) __attri
 void                 ctype_CopyIn(amc::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:amc.FCtype.ns.Get
-algo::strptr         ns_Get(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FCtype.name.Get
-algo::strptr         name_Get(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.zs_cfmt.EmptyQ
-inline bool          zs_cfmt_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zs_cfmt_EmptyQ(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FCtype.zs_cfmt.First
-inline amc::FCfmt*   zs_cfmt_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FCfmt*   zs_cfmt_First(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zs_cfmt.InLlistQ
 inline bool          ctype_zs_cfmt_InLlistQ(amc::FCfmt& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zs_cfmt.Insert
-void                 zs_cfmt_Insert(amc::FCtype& ctype, amc::FCfmt& row) __attribute__((nothrow));
+void                 zs_cfmt_Insert(amc::FCtype& parent, amc::FCfmt& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FCtype.zs_cfmt.Last
-inline amc::FCfmt*   zs_cfmt_Last(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FCfmt*   zs_cfmt_Last(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zs_cfmt.Next
 inline amc::FCfmt*   ctype_zs_cfmt_Next(amc::FCfmt &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:amc.FCtype.zs_cfmt.Remove
-void                 zs_cfmt_Remove(amc::FCtype& ctype, amc::FCfmt& row) __attribute__((nothrow));
+void                 zs_cfmt_Remove(amc::FCtype& parent, amc::FCfmt& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.zs_cfmt.RemoveAll
-void                 zs_cfmt_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+void                 zs_cfmt_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FCtype.zs_cfmt.RemoveFirst
-amc::FCfmt*          zs_cfmt_RemoveFirst(amc::FCtype& ctype) __attribute__((nothrow));
+amc::FCfmt*          zs_cfmt_RemoveFirst(amc::FCtype& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FCtype.zs_cfmt.qLast
-inline amc::FCfmt&   zs_cfmt_qLast(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FCfmt&   zs_cfmt_qLast(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_bltin.InsertMaybe
-inline bool          c_bltin_InsertMaybe(amc::FCtype& ctype, amc::FBltin& row) __attribute__((nothrow));
+inline bool          c_bltin_InsertMaybe(amc::FCtype& parent, amc::FBltin& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_bltin.Remove
-inline void          c_bltin_Remove(amc::FCtype& ctype, amc::FBltin& row) __attribute__((nothrow));
+inline void          c_bltin_Remove(amc::FCtype& parent, amc::FBltin& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_field.EmptyQ
-inline bool          c_field_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_field_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_field.Find
-inline amc::FField*  c_field_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FField*  c_field_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_field.Getary
-inline algo::aryptr<amc::FField*> c_field_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FField*> c_field_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_field.Insert
-void                 c_field_Insert(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 c_field_Insert(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_field.ScanInsertMaybe
-bool                 c_field_ScanInsertMaybe(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+bool                 c_field_ScanInsertMaybe(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_field.N
-inline i64           c_field_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_field.Remove
-void                 c_field_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 c_field_Remove(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_field.RemoveAll
-inline void          c_field_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_field_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_field.Reserve
-void                 c_field_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_field_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_field.qFind
-inline amc::FField&  c_field_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FField&  c_field_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_field.qLast
-inline amc::FField&  c_field_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FField&  c_field_qLast(amc::FCtype& parent) __attribute__((nothrow));
 // Verify whether array is sorted
 // func:amc.FCtype.c_field.SortedQ
-bool                 c_field_SortedQ(amc::FCtype& ctype) __attribute__((nothrow));
+bool                 c_field_SortedQ(amc::FCtype& parent) __attribute__((nothrow));
 // Insertion sort
 // func:amc.FCtype.c_field.InsertionSort
-void                 c_field_InsertionSort(amc::FCtype& ctype) __attribute__((nothrow));
+void                 c_field_InsertionSort(amc::FCtype& parent) __attribute__((nothrow));
 // Heap sort
 // func:amc.FCtype.c_field.HeapSort
-void                 c_field_HeapSort(amc::FCtype& ctype) __attribute__((nothrow));
+void                 c_field_HeapSort(amc::FCtype& parent) __attribute__((nothrow));
 // Quick sort
 // func:amc.FCtype.c_field.QuickSort
-void                 c_field_QuickSort(amc::FCtype& ctype) __attribute__((nothrow));
+void                 c_field_QuickSort(amc::FCtype& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_msgtype.InsertMaybe
-inline bool          c_msgtype_InsertMaybe(amc::FCtype& ctype, amc::FMsgtype& row) __attribute__((nothrow));
+inline bool          c_msgtype_InsertMaybe(amc::FCtype& parent, amc::FMsgtype& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_msgtype.Remove
-inline void          c_msgtype_Remove(amc::FCtype& ctype, amc::FMsgtype& row) __attribute__((nothrow));
+inline void          c_msgtype_Remove(amc::FCtype& parent, amc::FMsgtype& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_optfld.InsertMaybe
-inline bool          c_optfld_InsertMaybe(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+inline bool          c_optfld_InsertMaybe(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_optfld.Remove
-inline void          c_optfld_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+inline void          c_optfld_Remove(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_static.EmptyQ
-inline bool          c_static_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_static_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_static.Find
-inline amc::FStatictuple* c_static_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FStatictuple* c_static_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_static.Getary
-inline algo::aryptr<amc::FStatictuple*> c_static_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FStatictuple*> c_static_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_static.Insert
-void                 c_static_Insert(amc::FCtype& ctype, amc::FStatictuple& row) __attribute__((nothrow));
+void                 c_static_Insert(amc::FCtype& parent, amc::FStatictuple& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_static.InsertMaybe
-bool                 c_static_InsertMaybe(amc::FCtype& ctype, amc::FStatictuple& row) __attribute__((nothrow));
+bool                 c_static_InsertMaybe(amc::FCtype& parent, amc::FStatictuple& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_static.N
-inline i64           c_static_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_static_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_static.Remove
-void                 c_static_Remove(amc::FCtype& ctype, amc::FStatictuple& row) __attribute__((nothrow));
+void                 c_static_Remove(amc::FCtype& parent, amc::FStatictuple& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_static.RemoveAll
-inline void          c_static_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_static_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_static.Reserve
-void                 c_static_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_static_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_static.qFind
-inline amc::FStatictuple& c_static_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FStatictuple& c_static_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FCtype.c_static.InAryQ
 inline bool          ctype_c_static_InAryQ(amc::FStatictuple& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_static.qLast
-inline amc::FStatictuple& c_static_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FStatictuple& c_static_qLast(amc::FCtype& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_cpptype.InsertMaybe
-inline bool          c_cpptype_InsertMaybe(amc::FCtype& ctype, amc::FCpptype& row) __attribute__((nothrow));
+inline bool          c_cpptype_InsertMaybe(amc::FCtype& parent, amc::FCpptype& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_cpptype.Remove
-inline void          c_cpptype_Remove(amc::FCtype& ctype, amc::FCpptype& row) __attribute__((nothrow));
+inline void          c_cpptype_Remove(amc::FCtype& parent, amc::FCpptype& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_parent.EmptyQ
-inline bool          c_parent_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_parent_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_parent.Find
-inline amc::FCtype*  c_parent_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FCtype*  c_parent_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_parent.Getary
-inline algo::aryptr<amc::FCtype*> c_parent_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FCtype*> c_parent_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_parent.Insert
-void                 c_parent_Insert(amc::FCtype& ctype, amc::FCtype& row) __attribute__((nothrow));
+void                 c_parent_Insert(amc::FCtype& parent, amc::FCtype& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_parent.ScanInsertMaybe
-bool                 c_parent_ScanInsertMaybe(amc::FCtype& ctype, amc::FCtype& row) __attribute__((nothrow));
+bool                 c_parent_ScanInsertMaybe(amc::FCtype& parent, amc::FCtype& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_parent.N
-inline i64           c_parent_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_parent_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_parent.Remove
-void                 c_parent_Remove(amc::FCtype& ctype, amc::FCtype& row) __attribute__((nothrow));
+void                 c_parent_Remove(amc::FCtype& parent, amc::FCtype& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_parent.RemoveAll
-inline void          c_parent_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_parent_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_parent.Reserve
-void                 c_parent_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_parent_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_parent.qFind
-inline amc::FCtype&  c_parent_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FCtype&  c_parent_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_parent.qLast
-inline amc::FCtype&  c_parent_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FCtype&  c_parent_qLast(amc::FCtype& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_ssimfile.InsertMaybe
-inline bool          c_ssimfile_InsertMaybe(amc::FCtype& ctype, amc::FSsimfile& row) __attribute__((nothrow));
+inline bool          c_ssimfile_InsertMaybe(amc::FCtype& parent, amc::FSsimfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_ssimfile.Remove
-inline void          c_ssimfile_Remove(amc::FCtype& ctype, amc::FSsimfile& row) __attribute__((nothrow));
+inline void          c_ssimfile_Remove(amc::FCtype& parent, amc::FSsimfile& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_pack.InsertMaybe
-inline bool          c_pack_InsertMaybe(amc::FCtype& ctype, amc::FPack& row) __attribute__((nothrow));
+inline bool          c_pack_InsertMaybe(amc::FCtype& parent, amc::FPack& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_pack.Remove
-inline void          c_pack_Remove(amc::FCtype& ctype, amc::FPack& row) __attribute__((nothrow));
+inline void          c_pack_Remove(amc::FCtype& parent, amc::FPack& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_lenfld.InsertMaybe
-inline bool          c_lenfld_InsertMaybe(amc::FCtype& ctype, amc::FLenfld& row) __attribute__((nothrow));
+inline bool          c_lenfld_InsertMaybe(amc::FCtype& parent, amc::FLenfld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_lenfld.Remove
-inline void          c_lenfld_Remove(amc::FCtype& ctype, amc::FLenfld& row) __attribute__((nothrow));
+inline void          c_lenfld_Remove(amc::FCtype& parent, amc::FLenfld& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_pmaskfld.EmptyQ
-inline bool          c_pmaskfld_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_pmaskfld_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_pmaskfld.Find
-inline amc::FPmaskfld* c_pmaskfld_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FPmaskfld* c_pmaskfld_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_pmaskfld.Getary
-inline algo::aryptr<amc::FPmaskfld*> c_pmaskfld_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FPmaskfld*> c_pmaskfld_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_pmaskfld.Insert
-void                 c_pmaskfld_Insert(amc::FCtype& ctype, amc::FPmaskfld& row) __attribute__((nothrow));
+void                 c_pmaskfld_Insert(amc::FCtype& parent, amc::FPmaskfld& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_pmaskfld.InsertMaybe
-bool                 c_pmaskfld_InsertMaybe(amc::FCtype& ctype, amc::FPmaskfld& row) __attribute__((nothrow));
+bool                 c_pmaskfld_InsertMaybe(amc::FCtype& parent, amc::FPmaskfld& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_pmaskfld.N
-inline i64           c_pmaskfld_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_pmaskfld_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_pmaskfld.Remove
-void                 c_pmaskfld_Remove(amc::FCtype& ctype, amc::FPmaskfld& row) __attribute__((nothrow));
+void                 c_pmaskfld_Remove(amc::FCtype& parent, amc::FPmaskfld& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_pmaskfld.RemoveAll
-inline void          c_pmaskfld_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_pmaskfld_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_pmaskfld.Reserve
-void                 c_pmaskfld_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_pmaskfld_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_pmaskfld.qFind
-inline amc::FPmaskfld& c_pmaskfld_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FPmaskfld& c_pmaskfld_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FCtype.c_pmaskfld.InAryQ
 inline bool          ctype_c_pmaskfld_InAryQ(amc::FPmaskfld& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_pmaskfld.qLast
-inline amc::FPmaskfld& c_pmaskfld_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FPmaskfld& c_pmaskfld_qLast(amc::FCtype& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_typefld.InsertMaybe
-inline bool          c_typefld_InsertMaybe(amc::FCtype& ctype, amc::FTypefld& row) __attribute__((nothrow));
+inline bool          c_typefld_InsertMaybe(amc::FCtype& parent, amc::FTypefld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_typefld.Remove
-inline void          c_typefld_Remove(amc::FCtype& ctype, amc::FTypefld& row) __attribute__((nothrow));
+inline void          c_typefld_Remove(amc::FCtype& parent, amc::FTypefld& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_datafld.EmptyQ
-inline bool          c_datafld_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_datafld_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_datafld.Find
-inline amc::FField*  c_datafld_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FField*  c_datafld_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_datafld.Getary
-inline algo::aryptr<amc::FField*> c_datafld_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FField*> c_datafld_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_datafld.Insert
-void                 c_datafld_Insert(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 c_datafld_Insert(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_datafld.InsertMaybe
-bool                 c_datafld_InsertMaybe(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+bool                 c_datafld_InsertMaybe(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_datafld.N
-inline i64           c_datafld_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_datafld_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_datafld.Remove
-void                 c_datafld_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 c_datafld_Remove(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_datafld.RemoveAll
-inline void          c_datafld_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_datafld_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_datafld.Reserve
-void                 c_datafld_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_datafld_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_datafld.qFind
-inline amc::FField&  c_datafld_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FField&  c_datafld_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FCtype.c_datafld.InAryQ
 inline bool          ctype_c_datafld_InAryQ(amc::FField& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_datafld.qLast
-inline amc::FField&  c_datafld_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FField&  c_datafld_qLast(amc::FCtype& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.zd_inst.EmptyQ
-inline bool          zd_inst_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_inst_EmptyQ(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FCtype.zd_inst.First
-inline amc::FField*  zd_inst_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FField*  zd_inst_First(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zd_inst.InLlistQ
 inline bool          ctype_zd_inst_InLlistQ(amc::FField& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zd_inst.Insert
-void                 zd_inst_Insert(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 zd_inst_Insert(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FCtype.zd_inst.Last
-inline amc::FField*  zd_inst_Last(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FField*  zd_inst_Last(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:amc.FCtype.zd_inst.N
-inline i32           zd_inst_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_inst_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zd_inst.Next
 inline amc::FField*  ctype_zd_inst_Next(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
@@ -2578,139 +2579,139 @@ inline amc::FField*  ctype_zd_inst_Next(amc::FField &row) __attribute__((__warn_
 inline amc::FField*  ctype_zd_inst_Prev(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.zd_inst.Remove
-void                 zd_inst_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 zd_inst_Remove(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.zd_inst.RemoveAll
-void                 zd_inst_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+void                 zd_inst_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FCtype.zd_inst.RemoveFirst
-amc::FField*         zd_inst_RemoveFirst(amc::FCtype& ctype) __attribute__((nothrow));
+amc::FField*         zd_inst_RemoveFirst(amc::FCtype& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FCtype.zd_inst.qLast
-inline amc::FField&  zd_inst_qLast(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FField&  zd_inst_qLast(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc.FCtype.zd_inst.InsertBefore
-void                 zd_inst_InsertBefore(amc::FCtype& ctype, amc::FField& row, amc::FField* before) __attribute__((nothrow));
+void                 zd_inst_InsertBefore(amc::FCtype& parent, amc::FField& row, amc::FField* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.zs_xref.EmptyQ
-inline bool          zs_xref_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zs_xref_EmptyQ(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FCtype.zs_xref.First
-inline amc::FXref*   zs_xref_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FXref*   zs_xref_First(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zs_xref.InLlistQ
 inline bool          ctype_zs_xref_InLlistQ(amc::FXref& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zs_xref.Insert
-void                 zs_xref_Insert(amc::FCtype& ctype, amc::FXref& row) __attribute__((nothrow));
+void                 zs_xref_Insert(amc::FCtype& parent, amc::FXref& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FCtype.zs_xref.Last
-inline amc::FXref*   zs_xref_Last(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FXref*   zs_xref_Last(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:amc.FCtype.zs_xref.N
-inline i32           zs_xref_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zs_xref_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zs_xref.Next
 inline amc::FXref*   ctype_zs_xref_Next(amc::FXref &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:amc.FCtype.zs_xref.Remove
-void                 zs_xref_Remove(amc::FCtype& ctype, amc::FXref& row) __attribute__((nothrow));
+void                 zs_xref_Remove(amc::FCtype& parent, amc::FXref& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.zs_xref.RemoveAll
-void                 zs_xref_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+void                 zs_xref_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FCtype.zs_xref.RemoveFirst
-amc::FXref*          zs_xref_RemoveFirst(amc::FCtype& ctype) __attribute__((nothrow));
+amc::FXref*          zs_xref_RemoveFirst(amc::FCtype& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FCtype.zs_xref.qLast
-inline amc::FXref&   zs_xref_qLast(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FXref&   zs_xref_qLast(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_chash.InsertMaybe
-inline bool          c_chash_InsertMaybe(amc::FCtype& ctype, amc::FChash& row) __attribute__((nothrow));
+inline bool          c_chash_InsertMaybe(amc::FCtype& parent, amc::FChash& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_chash.Remove
-inline void          c_chash_Remove(amc::FCtype& ctype, amc::FChash& row) __attribute__((nothrow));
+inline void          c_chash_Remove(amc::FCtype& parent, amc::FChash& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_ccmp.InsertMaybe
-inline bool          c_ccmp_InsertMaybe(amc::FCtype& ctype, amc::FCcmp& row) __attribute__((nothrow));
+inline bool          c_ccmp_InsertMaybe(amc::FCtype& parent, amc::FCcmp& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_ccmp.Remove
-inline void          c_ccmp_Remove(amc::FCtype& ctype, amc::FCcmp& row) __attribute__((nothrow));
+inline void          c_ccmp_Remove(amc::FCtype& parent, amc::FCcmp& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_cstr.InsertMaybe
-inline bool          c_cstr_InsertMaybe(amc::FCtype& ctype, amc::FCstr& row) __attribute__((nothrow));
+inline bool          c_cstr_InsertMaybe(amc::FCtype& parent, amc::FCstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_cstr.Remove
-inline void          c_cstr_Remove(amc::FCtype& ctype, amc::FCstr& row) __attribute__((nothrow));
+inline void          c_cstr_Remove(amc::FCtype& parent, amc::FCstr& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_cextern.InsertMaybe
-inline bool          c_cextern_InsertMaybe(amc::FCtype& ctype, amc::FCextern& row) __attribute__((nothrow));
+inline bool          c_cextern_InsertMaybe(amc::FCtype& parent, amc::FCextern& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_cextern.Remove
-inline void          c_cextern_Remove(amc::FCtype& ctype, amc::FCextern& row) __attribute__((nothrow));
+inline void          c_cextern_Remove(amc::FCtype& parent, amc::FCextern& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_ffunc.EmptyQ
-inline bool          c_ffunc_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_ffunc_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_ffunc.Find
-inline amc::FFunc*   c_ffunc_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFunc*   c_ffunc_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_ffunc.Getary
-inline algo::aryptr<amc::FFunc*> c_ffunc_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FFunc*> c_ffunc_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_ffunc.Insert
-void                 c_ffunc_Insert(amc::FCtype& ctype, amc::FFunc& row) __attribute__((nothrow));
+void                 c_ffunc_Insert(amc::FCtype& parent, amc::FFunc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_ffunc.ScanInsertMaybe
-bool                 c_ffunc_ScanInsertMaybe(amc::FCtype& ctype, amc::FFunc& row) __attribute__((nothrow));
+bool                 c_ffunc_ScanInsertMaybe(amc::FCtype& parent, amc::FFunc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_ffunc.N
-inline i64           c_ffunc_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ffunc_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_ffunc.Remove
-void                 c_ffunc_Remove(amc::FCtype& ctype, amc::FFunc& row) __attribute__((nothrow));
+void                 c_ffunc_Remove(amc::FCtype& parent, amc::FFunc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_ffunc.RemoveAll
-inline void          c_ffunc_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_ffunc_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_ffunc.Reserve
-void                 c_ffunc_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_ffunc_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_ffunc.qFind
-inline amc::FFunc&   c_ffunc_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FFunc&   c_ffunc_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_ffunc.qLast
-inline amc::FFunc&   c_ffunc_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FFunc&   c_ffunc_qLast(amc::FCtype& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.zd_cafter.EmptyQ
-inline bool          zd_cafter_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_cafter_EmptyQ(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FCtype.zd_cafter.First
-inline amc::FCafter* zd_cafter_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FCafter* zd_cafter_First(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zd_cafter.InLlistQ
 inline bool          ctype_zd_cafter_InLlistQ(amc::FCafter& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zd_cafter.Insert
-void                 zd_cafter_Insert(amc::FCtype& ctype, amc::FCafter& row) __attribute__((nothrow));
+void                 zd_cafter_Insert(amc::FCtype& parent, amc::FCafter& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FCtype.zd_cafter.Last
-inline amc::FCafter* zd_cafter_Last(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FCafter* zd_cafter_Last(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:amc.FCtype.zd_cafter.N
-inline i32           zd_cafter_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_cafter_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zd_cafter.Next
 inline amc::FCafter* ctype_zd_cafter_Next(amc::FCafter &row) __attribute__((__warn_unused_result__, nothrow));
@@ -2719,45 +2720,45 @@ inline amc::FCafter* ctype_zd_cafter_Next(amc::FCafter &row) __attribute__((__wa
 inline amc::FCafter* ctype_zd_cafter_Prev(amc::FCafter &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.zd_cafter.Remove
-void                 zd_cafter_Remove(amc::FCtype& ctype, amc::FCafter& row) __attribute__((nothrow));
+void                 zd_cafter_Remove(amc::FCtype& parent, amc::FCafter& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.zd_cafter.RemoveAll
-void                 zd_cafter_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+void                 zd_cafter_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FCtype.zd_cafter.RemoveFirst
-amc::FCafter*        zd_cafter_RemoveFirst(amc::FCtype& ctype) __attribute__((nothrow));
+amc::FCafter*        zd_cafter_RemoveFirst(amc::FCtype& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FCtype.zd_cafter.qLast
-inline amc::FCafter& zd_cafter_qLast(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FCafter& zd_cafter_qLast(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc.FCtype.zd_cafter.InsertBefore
-void                 zd_cafter_InsertBefore(amc::FCtype& ctype, amc::FCafter& row, amc::FCafter* before) __attribute__((nothrow));
+void                 zd_cafter_InsertBefore(amc::FCtype& parent, amc::FCafter& row, amc::FCafter* before) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_csize.InsertMaybe
-inline bool          c_csize_InsertMaybe(amc::FCtype& ctype, amc::FCsize& row) __attribute__((nothrow));
+inline bool          c_csize_InsertMaybe(amc::FCtype& parent, amc::FCsize& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_csize.Remove
-inline void          c_csize_Remove(amc::FCtype& ctype, amc::FCsize& row) __attribute__((nothrow));
+inline void          c_csize_Remove(amc::FCtype& parent, amc::FCsize& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.zd_access.EmptyQ
-inline bool          zd_access_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_access_EmptyQ(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FCtype.zd_access.First
-inline amc::FField*  zd_access_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FField*  zd_access_First(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zd_access.InLlistQ
 inline bool          ctype_zd_access_InLlistQ(amc::FField& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zd_access.Insert
-void                 zd_access_Insert(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 zd_access_Insert(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FCtype.zd_access.Last
-inline amc::FField*  zd_access_Last(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FField*  zd_access_Last(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:amc.FCtype.zd_access.N
-inline i32           zd_access_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_access_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zd_access.Next
 inline amc::FField*  ctype_zd_access_Next(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
@@ -2766,205 +2767,205 @@ inline amc::FField*  ctype_zd_access_Next(amc::FField &row) __attribute__((__war
 inline amc::FField*  ctype_zd_access_Prev(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.zd_access.Remove
-void                 zd_access_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 zd_access_Remove(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.zd_access.RemoveAll
-void                 zd_access_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+void                 zd_access_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FCtype.zd_access.RemoveFirst
-amc::FField*         zd_access_RemoveFirst(amc::FCtype& ctype) __attribute__((nothrow));
+amc::FField*         zd_access_RemoveFirst(amc::FCtype& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FCtype.zd_access.qLast
-inline amc::FField&  zd_access_qLast(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FField&  zd_access_qLast(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc.FCtype.zd_access.InsertBefore
-void                 zd_access_InsertBefore(amc::FCtype& ctype, amc::FField& row, amc::FField* before) __attribute__((nothrow));
+void                 zd_access_InsertBefore(amc::FCtype& parent, amc::FField& row, amc::FField* before) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_cdflt.InsertMaybe
-inline bool          c_cdflt_InsertMaybe(amc::FCtype& ctype, amc::FCdflt& row) __attribute__((nothrow));
+inline bool          c_cdflt_InsertMaybe(amc::FCtype& parent, amc::FCdflt& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_cdflt.Remove
-inline void          c_cdflt_Remove(amc::FCtype& ctype, amc::FCdflt& row) __attribute__((nothrow));
+inline void          c_cdflt_Remove(amc::FCtype& parent, amc::FCdflt& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_argvtype.InsertMaybe
-inline bool          c_argvtype_InsertMaybe(amc::FCtype& ctype, amc::FArgvtype& row) __attribute__((nothrow));
+inline bool          c_argvtype_InsertMaybe(amc::FCtype& parent, amc::FArgvtype& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_argvtype.Remove
-inline void          c_argvtype_Remove(amc::FCtype& ctype, amc::FArgvtype& row) __attribute__((nothrow));
+inline void          c_argvtype_Remove(amc::FCtype& parent, amc::FArgvtype& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_floadtuples.EmptyQ
-inline bool          c_floadtuples_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_floadtuples_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_floadtuples.Find
-inline amc::FFloadtuples* c_floadtuples_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFloadtuples* c_floadtuples_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_floadtuples.Getary
-inline algo::aryptr<amc::FFloadtuples*> c_floadtuples_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FFloadtuples*> c_floadtuples_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_floadtuples.Insert
-void                 c_floadtuples_Insert(amc::FCtype& ctype, amc::FFloadtuples& row) __attribute__((nothrow));
+void                 c_floadtuples_Insert(amc::FCtype& parent, amc::FFloadtuples& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_floadtuples.InsertMaybe
-bool                 c_floadtuples_InsertMaybe(amc::FCtype& ctype, amc::FFloadtuples& row) __attribute__((nothrow));
+bool                 c_floadtuples_InsertMaybe(amc::FCtype& parent, amc::FFloadtuples& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_floadtuples.N
-inline i64           c_floadtuples_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_floadtuples_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_floadtuples.Remove
-void                 c_floadtuples_Remove(amc::FCtype& ctype, amc::FFloadtuples& row) __attribute__((nothrow));
+void                 c_floadtuples_Remove(amc::FCtype& parent, amc::FFloadtuples& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_floadtuples.RemoveAll
-inline void          c_floadtuples_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_floadtuples_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_floadtuples.Reserve
-void                 c_floadtuples_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_floadtuples_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_floadtuples.qFind
-inline amc::FFloadtuples& c_floadtuples_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FFloadtuples& c_floadtuples_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FCtype.c_floadtuples.InAryQ
 inline bool          ctype_c_floadtuples_InAryQ(amc::FFloadtuples& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_floadtuples.qLast
-inline amc::FFloadtuples& c_floadtuples_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FFloadtuples& c_floadtuples_qLast(amc::FCtype& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_fcurs.EmptyQ
-inline bool          c_fcurs_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_fcurs_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_fcurs.Find
-inline amc::FFcurs*  c_fcurs_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFcurs*  c_fcurs_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_fcurs.Getary
-inline algo::aryptr<amc::FFcurs*> c_fcurs_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FFcurs*> c_fcurs_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_fcurs.Insert
-void                 c_fcurs_Insert(amc::FCtype& ctype, amc::FFcurs& row) __attribute__((nothrow));
+void                 c_fcurs_Insert(amc::FCtype& parent, amc::FFcurs& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_fcurs.InsertMaybe
-bool                 c_fcurs_InsertMaybe(amc::FCtype& ctype, amc::FFcurs& row) __attribute__((nothrow));
+bool                 c_fcurs_InsertMaybe(amc::FCtype& parent, amc::FFcurs& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_fcurs.N
-inline i64           c_fcurs_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fcurs_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_fcurs.Remove
-void                 c_fcurs_Remove(amc::FCtype& ctype, amc::FFcurs& row) __attribute__((nothrow));
+void                 c_fcurs_Remove(amc::FCtype& parent, amc::FFcurs& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_fcurs.RemoveAll
-inline void          c_fcurs_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_fcurs_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_fcurs.Reserve
-void                 c_fcurs_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_fcurs_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_fcurs.qFind
-inline amc::FFcurs&  c_fcurs_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FFcurs&  c_fcurs_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FCtype.c_fcurs.InAryQ
 inline bool          ctype_c_fcurs_InAryQ(amc::FFcurs& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_fcurs.qLast
-inline amc::FFcurs&  c_fcurs_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FFcurs&  c_fcurs_qLast(amc::FCtype& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_ctypelen.InsertMaybe
-inline bool          c_ctypelen_InsertMaybe(amc::FCtype& ctype, amc::FCtypelen& row) __attribute__((nothrow));
+inline bool          c_ctypelen_InsertMaybe(amc::FCtype& parent, amc::FCtypelen& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_ctypelen.Remove
-inline void          c_ctypelen_Remove(amc::FCtype& ctype, amc::FCtypelen& row) __attribute__((nothrow));
+inline void          c_ctypelen_Remove(amc::FCtype& parent, amc::FCtypelen& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_nossimfile.InsertMaybe
-inline bool          c_nossimfile_InsertMaybe(amc::FCtype& ctype, amc::FNossimfile& row) __attribute__((nothrow));
+inline bool          c_nossimfile_InsertMaybe(amc::FCtype& parent, amc::FNossimfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_nossimfile.Remove
-inline void          c_nossimfile_Remove(amc::FCtype& ctype, amc::FNossimfile& row) __attribute__((nothrow));
+inline void          c_nossimfile_Remove(amc::FCtype& parent, amc::FNossimfile& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_cfast.InsertMaybe
-inline bool          c_cfast_InsertMaybe(amc::FCtype& ctype, amc::FCfast& row) __attribute__((nothrow));
+inline bool          c_cfast_InsertMaybe(amc::FCtype& parent, amc::FCfast& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_cfast.Remove
-inline void          c_cfast_Remove(amc::FCtype& ctype, amc::FCfast& row) __attribute__((nothrow));
+inline void          c_cfast_Remove(amc::FCtype& parent, amc::FCfast& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_ffast.EmptyQ
-inline bool          c_ffast_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_ffast_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_ffast.Find
-inline amc::FFfast*  c_ffast_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFfast*  c_ffast_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_ffast.Getary
-inline algo::aryptr<amc::FFfast*> c_ffast_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FFfast*> c_ffast_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_ffast.Insert
-void                 c_ffast_Insert(amc::FCtype& ctype, amc::FFfast& row) __attribute__((nothrow));
+void                 c_ffast_Insert(amc::FCtype& parent, amc::FFfast& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_ffast.InsertMaybe
-bool                 c_ffast_InsertMaybe(amc::FCtype& ctype, amc::FFfast& row) __attribute__((nothrow));
+bool                 c_ffast_InsertMaybe(amc::FCtype& parent, amc::FFfast& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_ffast.N
-inline i64           c_ffast_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ffast_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_ffast.Remove
-void                 c_ffast_Remove(amc::FCtype& ctype, amc::FFfast& row) __attribute__((nothrow));
+void                 c_ffast_Remove(amc::FCtype& parent, amc::FFfast& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_ffast.RemoveAll
-inline void          c_ffast_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_ffast_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_ffast.Reserve
-void                 c_ffast_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_ffast_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_ffast.qFind
-inline amc::FFfast&  c_ffast_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FFfast&  c_ffast_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FCtype.c_ffast.InAryQ
 inline bool          ctype_c_ffast_InAryQ(amc::FFfast& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_ffast.qLast
-inline amc::FFfast&  c_ffast_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FFfast&  c_ffast_qLast(amc::FCtype& parent) __attribute__((nothrow));
 // Verify whether array is sorted
 // func:amc.FCtype.c_ffast.SortedQ
-bool                 c_ffast_SortedQ(amc::FCtype& ctype) __attribute__((nothrow));
+bool                 c_ffast_SortedQ(amc::FCtype& parent) __attribute__((nothrow));
 // Insertion sort
 // func:amc.FCtype.c_ffast.InsertionSort
-void                 c_ffast_InsertionSort(amc::FCtype& ctype) __attribute__((nothrow));
+void                 c_ffast_InsertionSort(amc::FCtype& parent) __attribute__((nothrow));
 // Heap sort
 // func:amc.FCtype.c_ffast.HeapSort
-void                 c_ffast_HeapSort(amc::FCtype& ctype) __attribute__((nothrow));
+void                 c_ffast_HeapSort(amc::FCtype& parent) __attribute__((nothrow));
 // Quick sort
 // func:amc.FCtype.c_ffast.QuickSort
-void                 c_ffast_QuickSort(amc::FCtype& ctype) __attribute__((nothrow));
+void                 c_ffast_QuickSort(amc::FCtype& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.zd_varlenfld.EmptyQ
-inline bool          zd_varlenfld_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_varlenfld_EmptyQ(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FCtype.zd_varlenfld.First
-inline amc::FField*  zd_varlenfld_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FField*  zd_varlenfld_First(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zd_varlenfld.InLlistQ
 inline bool          ctype_zd_varlenfld_InLlistQ(amc::FField& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zd_varlenfld.Insert
-void                 zd_varlenfld_Insert(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 zd_varlenfld_Insert(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FCtype.zd_varlenfld.Last
-inline amc::FField*  zd_varlenfld_Last(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FField*  zd_varlenfld_Last(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:amc.FCtype.zd_varlenfld.N
-inline i32           zd_varlenfld_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_varlenfld_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zd_varlenfld.Next
 inline amc::FField*  ctype_zd_varlenfld_Next(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
@@ -2973,155 +2974,155 @@ inline amc::FField*  ctype_zd_varlenfld_Next(amc::FField &row) __attribute__((__
 inline amc::FField*  ctype_zd_varlenfld_Prev(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.zd_varlenfld.Remove
-void                 zd_varlenfld_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+void                 zd_varlenfld_Remove(amc::FCtype& parent, amc::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.zd_varlenfld.RemoveAll
-void                 zd_varlenfld_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+void                 zd_varlenfld_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FCtype.zd_varlenfld.RemoveFirst
-amc::FField*         zd_varlenfld_RemoveFirst(amc::FCtype& ctype) __attribute__((nothrow));
+amc::FField*         zd_varlenfld_RemoveFirst(amc::FCtype& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FCtype.zd_varlenfld.qLast
-inline amc::FField&  zd_varlenfld_qLast(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FField&  zd_varlenfld_qLast(amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc.FCtype.zd_varlenfld.InsertBefore
-void                 zd_varlenfld_InsertBefore(amc::FCtype& ctype, amc::FField& row, amc::FField* before) __attribute__((nothrow));
+void                 zd_varlenfld_InsertBefore(amc::FCtype& parent, amc::FField& row, amc::FField* before) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_jstype.InsertMaybe
-inline bool          c_jstype_InsertMaybe(amc::FCtype& ctype, amc::FJstype& row) __attribute__((nothrow));
+inline bool          c_jstype_InsertMaybe(amc::FCtype& parent, amc::FJstype& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_jstype.Remove
-inline void          c_jstype_Remove(amc::FCtype& ctype, amc::FJstype& row) __attribute__((nothrow));
+inline void          c_jstype_Remove(amc::FCtype& parent, amc::FJstype& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_ckafka.InsertMaybe
-inline bool          c_ckafka_InsertMaybe(amc::FCtype& ctype, amc::FCkafka& row) __attribute__((nothrow));
+inline bool          c_ckafka_InsertMaybe(amc::FCtype& parent, amc::FCkafka& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_ckafka.Remove
-inline void          c_ckafka_Remove(amc::FCtype& ctype, amc::FCkafka& row) __attribute__((nothrow));
+inline void          c_ckafka_Remove(amc::FCtype& parent, amc::FCkafka& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_cjsbltin.InsertMaybe
-inline bool          c_cjsbltin_InsertMaybe(amc::FCtype& ctype, amc::FCjsbltin& row) __attribute__((nothrow));
+inline bool          c_cjsbltin_InsertMaybe(amc::FCtype& parent, amc::FCjsbltin& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_cjsbltin.Remove
-inline void          c_cjsbltin_Remove(amc::FCtype& ctype, amc::FCjsbltin& row) __attribute__((nothrow));
+inline void          c_cjsbltin_Remove(amc::FCtype& parent, amc::FCjsbltin& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_cjson.InsertMaybe
-inline bool          c_cjson_InsertMaybe(amc::FCtype& ctype, amc::FCjson& row) __attribute__((nothrow));
+inline bool          c_cjson_InsertMaybe(amc::FCtype& parent, amc::FCjson& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_cjson.Remove
-inline void          c_cjson_Remove(amc::FCtype& ctype, amc::FCjson& row) __attribute__((nothrow));
+inline void          c_cjson_Remove(amc::FCtype& parent, amc::FCjson& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_ccmdline.InsertMaybe
-inline bool          c_ccmdline_InsertMaybe(amc::FCtype& ctype, amc::FCcmdline& row) __attribute__((nothrow));
+inline bool          c_ccmdline_InsertMaybe(amc::FCtype& parent, amc::FCcmdline& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_ccmdline.Remove
-inline void          c_ccmdline_Remove(amc::FCtype& ctype, amc::FCcmdline& row) __attribute__((nothrow));
+inline void          c_ccmdline_Remove(amc::FCtype& parent, amc::FCcmdline& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_cpbuf.InsertMaybe
-inline bool          c_cpbuf_InsertMaybe(amc::FCtype& ctype, amc::FCpbuf& row) __attribute__((nothrow));
+inline bool          c_cpbuf_InsertMaybe(amc::FCtype& parent, amc::FCpbuf& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_cpbuf.Remove
-inline void          c_cpbuf_Remove(amc::FCtype& ctype, amc::FCpbuf& row) __attribute__((nothrow));
+inline void          c_cpbuf_Remove(amc::FCtype& parent, amc::FCpbuf& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_fpbufcase.EmptyQ
-inline bool          c_fpbufcase_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_fpbufcase_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_fpbufcase.Find
-inline amc::FFpbufcase* c_fpbufcase_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFpbufcase* c_fpbufcase_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_fpbufcase.Getary
-inline algo::aryptr<amc::FFpbufcase*> c_fpbufcase_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FFpbufcase*> c_fpbufcase_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_fpbufcase.Insert
-void                 c_fpbufcase_Insert(amc::FCtype& ctype, amc::FFpbufcase& row) __attribute__((nothrow));
+void                 c_fpbufcase_Insert(amc::FCtype& parent, amc::FFpbufcase& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_fpbufcase.InsertMaybe
-bool                 c_fpbufcase_InsertMaybe(amc::FCtype& ctype, amc::FFpbufcase& row) __attribute__((nothrow));
+bool                 c_fpbufcase_InsertMaybe(amc::FCtype& parent, amc::FFpbufcase& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_fpbufcase.N
-inline i64           c_fpbufcase_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fpbufcase_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_fpbufcase.Remove
-void                 c_fpbufcase_Remove(amc::FCtype& ctype, amc::FFpbufcase& row) __attribute__((nothrow));
+void                 c_fpbufcase_Remove(amc::FCtype& parent, amc::FFpbufcase& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_fpbufcase.RemoveAll
-inline void          c_fpbufcase_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_fpbufcase_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_fpbufcase.Reserve
-void                 c_fpbufcase_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_fpbufcase_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_fpbufcase.qFind
-inline amc::FFpbufcase& c_fpbufcase_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FFpbufcase& c_fpbufcase_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FCtype.c_fpbufcase.InAryQ
 inline bool          ctype_c_fpbufcase_InAryQ(amc::FFpbufcase& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_fpbufcase.qLast
-inline amc::FFpbufcase& c_fpbufcase_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FFpbufcase& c_fpbufcase_qLast(amc::FCtype& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_payloadhdr.InsertMaybe
-inline bool          c_payloadhdr_InsertMaybe(amc::FCtype& ctype, amc::FPayloadhdr& row) __attribute__((nothrow));
+inline bool          c_payloadhdr_InsertMaybe(amc::FCtype& parent, amc::FPayloadhdr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_payloadhdr.Remove
-inline void          c_payloadhdr_Remove(amc::FCtype& ctype, amc::FPayloadhdr& row) __attribute__((nothrow));
+inline void          c_payloadhdr_Remove(amc::FCtype& parent, amc::FPayloadhdr& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_msg.InsertMaybe
-inline bool          c_msg_InsertMaybe(amc::FCtype& ctype, amc::FMsg& row) __attribute__((nothrow));
+inline bool          c_msg_InsertMaybe(amc::FCtype& parent, amc::FMsg& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_msg.Remove
-inline void          c_msg_Remove(amc::FCtype& ctype, amc::FMsg& row) __attribute__((nothrow));
+inline void          c_msg_Remove(amc::FCtype& parent, amc::FMsg& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FCtype.c_pnew.EmptyQ
-inline bool          c_pnew_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_pnew_EmptyQ(amc::FCtype& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FCtype.c_pnew.Find
-inline amc::FPnew*   c_pnew_Find(amc::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FPnew*   c_pnew_Find(amc::FCtype& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FCtype.c_pnew.Getary
-inline algo::aryptr<amc::FPnew*> c_pnew_Getary(amc::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<amc::FPnew*> c_pnew_Getary(amc::FCtype& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FCtype.c_pnew.Insert
-void                 c_pnew_Insert(amc::FCtype& ctype, amc::FPnew& row) __attribute__((nothrow));
+void                 c_pnew_Insert(amc::FCtype& parent, amc::FPnew& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FCtype.c_pnew.InsertMaybe
-bool                 c_pnew_InsertMaybe(amc::FCtype& ctype, amc::FPnew& row) __attribute__((nothrow));
+bool                 c_pnew_InsertMaybe(amc::FCtype& parent, amc::FPnew& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FCtype.c_pnew.N
-inline i64           c_pnew_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_pnew_N(const amc::FCtype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FCtype.c_pnew.Remove
-void                 c_pnew_Remove(amc::FCtype& ctype, amc::FPnew& row) __attribute__((nothrow));
+void                 c_pnew_Remove(amc::FCtype& parent, amc::FPnew& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FCtype.c_pnew.RemoveAll
-inline void          c_pnew_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+inline void          c_pnew_RemoveAll(amc::FCtype& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FCtype.c_pnew.Reserve
-void                 c_pnew_Reserve(amc::FCtype& ctype, u64 n) __attribute__((nothrow));
+void                 c_pnew_Reserve(amc::FCtype& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FCtype.c_pnew.qFind
-inline amc::FPnew&   c_pnew_qFind(amc::FCtype& ctype, u64 idx) __attribute__((nothrow));
+inline amc::FPnew&   c_pnew_qFind(amc::FCtype& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FCtype.c_pnew.InAryQ
 inline bool          ctype_c_pnew_InAryQ(amc::FPnew& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FCtype.c_pnew.qLast
-inline amc::FPnew&   c_pnew_qLast(amc::FCtype& ctype) __attribute__((nothrow));
+inline amc::FPnew&   c_pnew_qLast(amc::FCtype& parent) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:amc.FCtype.zs_cfmt_curs.Reset
@@ -3318,9 +3319,9 @@ inline void          ctype_c_pnew_curs_Next(ctype_c_pnew_curs &curs) __attribute
 inline amc::FPnew&   ctype_c_pnew_curs_Access(ctype_c_pnew_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.FCtype..Init
-void                 FCtype_Init(amc::FCtype& ctype);
+void                 FCtype_Init(amc::FCtype& parent);
 // func:amc.FCtype..Uninit
-void                 FCtype_Uninit(amc::FCtype& ctype) __attribute__((nothrow));
+void                 FCtype_Uninit(amc::FCtype& parent) __attribute__((nothrow));
 
 // --- amc.FCtypelen
 // create: amc.FDb.ctypelen (Lary)
@@ -3355,9 +3356,9 @@ void                 ctypelen_CopyIn(amc::FCtypelen &row, dmmeta::Ctypelen &in) 
 
 // Set all fields to initial values.
 // func:amc.FCtypelen..Init
-inline void          FCtypelen_Init(amc::FCtypelen& ctypelen);
+inline void          FCtypelen_Init(amc::FCtypelen& parent);
 // func:amc.FCtypelen..Uninit
-void                 FCtypelen_Uninit(amc::FCtypelen& ctypelen) __attribute__((nothrow));
+void                 FCtypelen_Uninit(amc::FCtypelen& parent) __attribute__((nothrow));
 
 // --- amc.FJsbltin
 // create: amc.FDb.jsbltin (Inlary)
@@ -3389,9 +3390,9 @@ void                 jsbltin_CopyIn(amc::FJsbltin &row, dmmeta::Jsbltin &in) __a
 
 // Set all fields to initial values.
 // func:amc.FJsbltin..Init
-inline void          FJsbltin_Init(amc::FJsbltin& jsbltin);
+inline void          FJsbltin_Init(amc::FJsbltin& parent);
 // func:amc.FJsbltin..Uninit
-void                 FJsbltin_Uninit(amc::FJsbltin& jsbltin) __attribute__((nothrow));
+void                 FJsbltin_Uninit(amc::FJsbltin& parent) __attribute__((nothrow));
 
 // --- amc.Genctx
 struct Genctx { // amc.Genctx
@@ -3447,87 +3448,87 @@ void                 tclass_CopyIn(amc::FTclass &row, amcdb::Tclass &in) __attri
 
 // Return true if index is empty
 // func:amc.FTclass.c_tfunc.EmptyQ
-inline bool          c_tfunc_EmptyQ(amc::FTclass& tclass) __attribute__((nothrow));
+inline bool          c_tfunc_EmptyQ(amc::FTclass& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FTclass.c_tfunc.Find
-inline amc::FTfunc*  c_tfunc_Find(amc::FTclass& tclass, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FTfunc*  c_tfunc_Find(amc::FTclass& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FTclass.c_tfunc.Getary
-inline algo::aryptr<amc::FTfunc*> c_tfunc_Getary(amc::FTclass& tclass) __attribute__((nothrow));
+inline algo::aryptr<amc::FTfunc*> c_tfunc_Getary(amc::FTclass& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FTclass.c_tfunc.Insert
-void                 c_tfunc_Insert(amc::FTclass& tclass, amc::FTfunc& row) __attribute__((nothrow));
+void                 c_tfunc_Insert(amc::FTclass& parent, amc::FTfunc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FTclass.c_tfunc.InsertMaybe
-bool                 c_tfunc_InsertMaybe(amc::FTclass& tclass, amc::FTfunc& row) __attribute__((nothrow));
+bool                 c_tfunc_InsertMaybe(amc::FTclass& parent, amc::FTfunc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FTclass.c_tfunc.N
-inline i64           c_tfunc_N(const amc::FTclass& tclass) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_tfunc_N(const amc::FTclass& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FTclass.c_tfunc.Remove
-void                 c_tfunc_Remove(amc::FTclass& tclass, amc::FTfunc& row) __attribute__((nothrow));
+void                 c_tfunc_Remove(amc::FTclass& parent, amc::FTfunc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FTclass.c_tfunc.RemoveAll
-inline void          c_tfunc_RemoveAll(amc::FTclass& tclass) __attribute__((nothrow));
+inline void          c_tfunc_RemoveAll(amc::FTclass& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FTclass.c_tfunc.Reserve
-void                 c_tfunc_Reserve(amc::FTclass& tclass, u64 n) __attribute__((nothrow));
+void                 c_tfunc_Reserve(amc::FTclass& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FTclass.c_tfunc.qFind
-inline amc::FTfunc&  c_tfunc_qFind(amc::FTclass& tclass, u64 idx) __attribute__((nothrow));
+inline amc::FTfunc&  c_tfunc_qFind(amc::FTclass& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FTclass.c_tfunc.InAryQ
 inline bool          tclass_c_tfunc_InAryQ(amc::FTfunc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FTclass.c_tfunc.qLast
-inline amc::FTfunc&  c_tfunc_qLast(amc::FTclass& tclass) __attribute__((nothrow));
+inline amc::FTfunc&  c_tfunc_qLast(amc::FTclass& parent) __attribute__((nothrow));
 
 // Invoke function by pointer
 // func:amc.FTclass.step.Call
-inline void          step_Call(amc::FTclass& tclass) __attribute__((nothrow));
+inline void          step_Call(amc::FTclass& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FTclass.c_tcond.EmptyQ
-inline bool          c_tcond_EmptyQ(amc::FTclass& tclass) __attribute__((nothrow));
+inline bool          c_tcond_EmptyQ(amc::FTclass& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FTclass.c_tcond.Find
-inline amc::FTcond*  c_tcond_Find(amc::FTclass& tclass, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FTcond*  c_tcond_Find(amc::FTclass& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FTclass.c_tcond.Getary
-inline algo::aryptr<amc::FTcond*> c_tcond_Getary(amc::FTclass& tclass) __attribute__((nothrow));
+inline algo::aryptr<amc::FTcond*> c_tcond_Getary(amc::FTclass& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FTclass.c_tcond.Insert
-void                 c_tcond_Insert(amc::FTclass& tclass, amc::FTcond& row) __attribute__((nothrow));
+void                 c_tcond_Insert(amc::FTclass& parent, amc::FTcond& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FTclass.c_tcond.InsertMaybe
-bool                 c_tcond_InsertMaybe(amc::FTclass& tclass, amc::FTcond& row) __attribute__((nothrow));
+bool                 c_tcond_InsertMaybe(amc::FTclass& parent, amc::FTcond& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FTclass.c_tcond.N
-inline i64           c_tcond_N(const amc::FTclass& tclass) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_tcond_N(const amc::FTclass& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FTclass.c_tcond.Remove
-void                 c_tcond_Remove(amc::FTclass& tclass, amc::FTcond& row) __attribute__((nothrow));
+void                 c_tcond_Remove(amc::FTclass& parent, amc::FTcond& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FTclass.c_tcond.RemoveAll
-inline void          c_tcond_RemoveAll(amc::FTclass& tclass) __attribute__((nothrow));
+inline void          c_tcond_RemoveAll(amc::FTclass& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FTclass.c_tcond.Reserve
-void                 c_tcond_Reserve(amc::FTclass& tclass, u64 n) __attribute__((nothrow));
+void                 c_tcond_Reserve(amc::FTclass& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FTclass.c_tcond.qFind
-inline amc::FTcond&  c_tcond_qFind(amc::FTclass& tclass, u64 idx) __attribute__((nothrow));
+inline amc::FTcond&  c_tcond_qFind(amc::FTclass& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FTclass.c_tcond.InAryQ
 inline bool          tclass_c_tcond_InAryQ(amc::FTcond& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FTclass.c_tcond.qLast
-inline amc::FTcond&  c_tcond_qLast(amc::FTclass& tclass) __attribute__((nothrow));
+inline amc::FTcond&  c_tcond_qLast(amc::FTclass& parent) __attribute__((nothrow));
 
 // func:amc.FTclass.c_tfunc_curs.Reset
 inline void          tclass_c_tfunc_curs_Reset(tclass_c_tfunc_curs &curs, amc::FTclass &parent) __attribute__((nothrow));
@@ -3542,7 +3543,7 @@ inline void          tclass_c_tfunc_curs_Next(tclass_c_tfunc_curs &curs) __attri
 inline amc::FTfunc&  tclass_c_tfunc_curs_Access(tclass_c_tfunc_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.FTclass..Init
-inline void          FTclass_Init(amc::FTclass& tclass);
+inline void          FTclass_Init(amc::FTclass& parent);
 // func:amc.FTclass.c_tcond_curs.Reset
 inline void          tclass_c_tcond_curs_Reset(tclass_c_tcond_curs &curs, amc::FTclass &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -3555,7 +3556,7 @@ inline void          tclass_c_tcond_curs_Next(tclass_c_tcond_curs &curs) __attri
 // func:amc.FTclass.c_tcond_curs.Access
 inline amc::FTcond&  tclass_c_tcond_curs_Access(tclass_c_tcond_curs &curs) __attribute__((nothrow));
 // func:amc.FTclass..Uninit
-void                 FTclass_Uninit(amc::FTclass& tclass) __attribute__((nothrow));
+void                 FTclass_Uninit(amc::FTclass& parent) __attribute__((nothrow));
 
 // --- amc.trace
 #pragma pack(push,1)
@@ -4141,6 +4142,9 @@ inline bool          ind_cfmt_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_cfmt.Find
 amc::FCfmt*          ind_cfmt_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_cfmt.FindX
+amc::FCfmt&          ind_cfmt_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_cfmt.GetOrCreate
 amc::FCfmt&          ind_cfmt_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5008,7 +5012,7 @@ void                 jsbltin_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:amc.FDb.jsbltin.RemoveLast
 void                 jsbltin_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:amc.FDb.jsbltin.qFind
 inline amc::FJsbltin& jsbltin_qFind(u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
@@ -5243,6 +5247,9 @@ inline bool          ind_bltin_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_bltin.Find
 amc::FBltin*         ind_bltin_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_bltin.FindX
+amc::FBltin&         ind_bltin_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_bltin.GetOrCreate
 amc::FBltin&         ind_bltin_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5268,6 +5275,9 @@ inline bool          ind_ctype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_ctype.Find
 amc::FCtype*         ind_ctype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_ctype.FindX
+amc::FCtype&         ind_ctype_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_ctype.GetOrCreate
 amc::FCtype&         ind_ctype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5293,6 +5303,9 @@ inline bool          ind_dispatch_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_dispatch.Find
 amc::FDispatch*      ind_dispatch_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_dispatch.FindX
+amc::FDispatch&      ind_dispatch_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_dispatch.GetOrCreate
 amc::FDispatch&      ind_dispatch_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5318,6 +5331,9 @@ inline bool          ind_func_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_func.Find
 amc::FFunc*          ind_func_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_func.FindX
+amc::FFunc&          ind_func_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_func.GetOrCreate
 amc::FFunc&          ind_func_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5343,6 +5359,9 @@ inline bool          ind_field_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_field.Find
 amc::FField*         ind_field_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_field.FindX
+amc::FField&         ind_field_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_field.GetOrCreate
 amc::FField*         ind_field_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5368,6 +5387,9 @@ inline bool          ind_ns_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_ns.Find
 amc::FNs*            ind_ns_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_ns.FindX
+amc::FNs&            ind_ns_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_ns.GetOrCreate
 amc::FNs&            ind_ns_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5393,6 +5415,9 @@ inline bool          ind_pnew_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_pnew.Find
 amc::FPnew*          ind_pnew_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_pnew.FindX
+amc::FPnew&          ind_pnew_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_pnew.GetOrCreate
 amc::FPnew&          ind_pnew_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5418,6 +5443,9 @@ inline bool          ind_xref_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_xref.Find
 amc::FXref*          ind_xref_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_xref.FindX
+amc::FXref&          ind_xref_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_xref.GetOrCreate
 amc::FXref&          ind_xref_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5480,6 +5508,9 @@ inline bool          ind_cpptype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_cpptype.Find
 amc::FCpptype*       ind_cpptype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_cpptype.FindX
+amc::FCpptype&       ind_cpptype_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_cpptype.GetOrCreate
 amc::FCpptype&       ind_cpptype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5542,6 +5573,9 @@ inline bool          ind_inlary_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_inlary.Find
 amc::FInlary*        ind_inlary_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_inlary.FindX
+amc::FInlary&        ind_inlary_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_inlary.GetOrCreate
 amc::FInlary&        ind_inlary_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5604,6 +5638,9 @@ inline bool          ind_tary_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_tary.Find
 amc::FTary*          ind_tary_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_tary.FindX
+amc::FTary&          ind_tary_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_tary.GetOrCreate
 amc::FTary&          ind_tary_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5703,6 +5740,9 @@ inline bool          ind_rowid_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_rowid.Find
 amc::FRowid*         ind_rowid_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_rowid.FindX
+amc::FRowid&         ind_rowid_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_rowid.GetOrCreate
 amc::FRowid&         ind_rowid_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5876,6 +5916,9 @@ inline bool          ind_ssimfile_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_ssimfile.Find
 amc::FSsimfile*      ind_ssimfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_ssimfile.FindX
+amc::FSsimfile&      ind_ssimfile_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_ssimfile.GetOrCreate
 amc::FSsimfile&      ind_ssimfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5938,6 +5981,9 @@ inline bool          ind_pack_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_pack.Find
 amc::FPack*          ind_pack_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_pack.FindX
+amc::FPack&          ind_pack_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_pack.GetOrCreate
 amc::FPack&          ind_pack_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -5963,6 +6009,9 @@ inline bool          ind_smallstr_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_smallstr.Find
 amc::FSmallstr*      ind_smallstr_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_smallstr.FindX
+amc::FSmallstr&      ind_smallstr_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_smallstr.GetOrCreate
 amc::FSmallstr&      ind_smallstr_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -6189,6 +6238,9 @@ inline bool          ind_enumstr_len_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_enumstr_len.Find
 amc::FEnumstrLen*    ind_enumstr_len_Find(i32 key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_enumstr_len.FindX
+amc::FEnumstrLen&    ind_enumstr_len_FindX(i32 key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_enumstr_len.GetOrCreate
 amc::FEnumstrLen&    ind_enumstr_len_GetOrCreate(i32 key) __attribute__((nothrow));
@@ -6214,6 +6266,9 @@ inline bool          ind_enumstr_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_enumstr.Find
 amc::FEnumstr*       ind_enumstr_Find(const amc::Enumstr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_enumstr.FindX
+amc::FEnumstr&       ind_enumstr_FindX(const amc::Enumstr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_enumstr.GetOrCreate
 amc::FEnumstr&       ind_enumstr_GetOrCreate(const amc::Enumstr& key) __attribute__((nothrow));
@@ -6276,6 +6331,9 @@ inline bool          ind_fbitset_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fbitset.Find
 amc::FFbitset*       ind_fbitset_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fbitset.FindX
+amc::FFbitset&       ind_fbitset_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fbitset.GetOrCreate
 amc::FFbitset&       ind_fbitset_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -6338,6 +6396,9 @@ inline bool          ind_fdec_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fdec.Find
 amc::FFdec*          ind_fdec_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fdec.FindX
+amc::FFdec&          ind_fdec_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fdec.GetOrCreate
 amc::FFdec&          ind_fdec_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -6363,6 +6424,9 @@ inline bool          ind_reftype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_reftype.Find
 amc::FReftype*       ind_reftype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_reftype.FindX
+amc::FReftype&       ind_reftype_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_reftype.GetOrCreate
 amc::FReftype&       ind_reftype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -6425,6 +6489,9 @@ inline bool          ind_fconst_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fconst.Find
 amc::FFconst*        ind_fconst_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fconst.FindX
+amc::FFconst&        ind_fconst_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fconst.GetOrCreate
 amc::FFconst&        ind_fconst_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -6599,6 +6666,9 @@ inline bool          ind_fbuf_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fbuf.Find
 amc::FFbuf*          ind_fbuf_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fbuf.FindX
+amc::FFbuf&          ind_fbuf_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fbuf.GetOrCreate
 amc::FFbuf&          ind_fbuf_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -6661,6 +6731,9 @@ inline bool          ind_chash_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_chash.Find
 amc::FChash*         ind_chash_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_chash.FindX
+amc::FChash&         ind_chash_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_chash.GetOrCreate
 amc::FChash&         ind_chash_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -6723,6 +6796,9 @@ inline bool          ind_ccmp_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_ccmp.Find
 amc::FCcmp*          ind_ccmp_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_ccmp.FindX
+amc::FCcmp&          ind_ccmp_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_ccmp.GetOrCreate
 amc::FCcmp&          ind_ccmp_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -6885,6 +6961,9 @@ inline bool          ind_listtype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_listtype.Find
 amc::FListtype*      ind_listtype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_listtype.FindX
+amc::FListtype&      ind_listtype_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_listtype.GetOrCreate
 amc::FListtype&      ind_listtype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -7058,6 +7137,9 @@ inline bool          ind_fstep_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fstep.Find
 amc::FFstep*         ind_fstep_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fstep.FindX
+amc::FFstep&         ind_fstep_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fstep.GetOrCreate
 amc::FFstep&         ind_fstep_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -7272,6 +7354,9 @@ inline bool          ind_target_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_target.Find
 amc::FTarget*        ind_target_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_target.FindX
+amc::FTarget&        ind_target_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_target.GetOrCreate
 amc::FTarget&        ind_target_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -7445,6 +7530,9 @@ inline bool          ind_fwddecl_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fwddecl.Find
 amc::FFwddecl*       ind_fwddecl_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fwddecl.FindX
+amc::FFwddecl&       ind_fwddecl_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fwddecl.GetOrCreate
 amc::FFwddecl&       ind_fwddecl_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -7510,6 +7598,9 @@ inline bool          ind_tfunc_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_tfunc.Find
 amc::FTfunc*         ind_tfunc_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_tfunc.FindX
+amc::FTfunc&         ind_tfunc_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_tfunc.GetOrCreate
 amc::FTfunc&         ind_tfunc_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -7641,7 +7732,7 @@ void                 tclass_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:amc.FDb.tclass.RemoveLast
 void                 tclass_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:amc.FDb.tclass.qFind
 inline amc::FTclass& tclass_qFind(u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
@@ -7658,6 +7749,9 @@ inline bool          ind_tclass_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_tclass.Find
 amc::FTclass*        ind_tclass_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_tclass.FindX
+amc::FTclass&        ind_tclass_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_tclass.GetOrCreate
 amc::FTclass&        ind_tclass_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -8053,6 +8147,9 @@ inline bool          ind_main_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_main.Find
 amc::FMain*          ind_main_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_main.FindX
+amc::FMain&          ind_main_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_main.GetOrCreate
 amc::FMain&          ind_main_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -8298,6 +8395,9 @@ inline bool          ind_fconst_int_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fconst_int.Find
 amc::FFconst*        ind_fconst_int_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fconst_int.FindX
+amc::FFconst&        ind_fconst_int_FindX(const algo::strptr& key);
 // Return number of items in the hash
 // func:amc.FDb.ind_fconst_int.N
 inline i32           ind_fconst_int_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -8523,6 +8623,9 @@ inline bool          ind_fcmap_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fcmap.Find
 amc::FFcmap*         ind_fcmap_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fcmap.FindX
+amc::FFcmap&         ind_fcmap_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fcmap.GetOrCreate
 amc::FFcmap&         ind_fcmap_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -8978,6 +9081,9 @@ inline bool          ind_fcurs_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fcurs.Find
 amc::FFcurs*         ind_fcurs_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fcurs.FindX
+amc::FFcurs&         ind_fcurs_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fcurs.GetOrCreate
 amc::FFcurs&         ind_fcurs_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -9123,6 +9229,9 @@ inline bool          ind_fflag_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fflag.Find
 amc::FFflag*         ind_fflag_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fflag.FindX
+amc::FFflag&         ind_fflag_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fflag.GetOrCreate
 amc::FFflag&         ind_fflag_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -9228,6 +9337,9 @@ inline bool          ind_license_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_license.Find
 amc::FLicense*       ind_license_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_license.FindX
+amc::FLicense&       ind_license_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_license.GetOrCreate
 amc::FLicense&       ind_license_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -9453,6 +9565,9 @@ inline bool          ind_pmaskfld_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_pmaskfld.Find
 amc::FPmaskfld*      ind_pmaskfld_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_pmaskfld.FindX
+amc::FPmaskfld&      ind_pmaskfld_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_pmaskfld.GetOrCreate
 amc::FPmaskfld&      ind_pmaskfld_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -9558,6 +9673,9 @@ inline bool          ind_fbuftype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_fbuftype.Find
 amc::FFbuftype*      ind_fbuftype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_fbuftype.FindX
+amc::FFbuftype&      ind_fbuftype_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_fbuftype.GetOrCreate
 amc::FFbuftype&      ind_fbuftype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -9823,6 +9941,9 @@ inline bool          ind_steptype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_steptype.Find
 amc::FSteptype*      ind_steptype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_steptype.FindX
+amc::FSteptype&      ind_steptype_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_steptype.GetOrCreate
 amc::FSteptype&      ind_steptype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -9928,6 +10049,9 @@ inline bool          ind_jsbltin_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_jsbltin.Find
 amc::FJsbltin*       ind_jsbltin_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_jsbltin.FindX
+amc::FJsbltin&       ind_jsbltin_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_jsbltin.GetOrCreate
 amc::FJsbltin&       ind_jsbltin_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -10153,6 +10277,9 @@ inline bool          ind_ffunc_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_ffunc.Find
 amc::FFfunc*         ind_ffunc_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_ffunc.FindX
+amc::FFfunc&         ind_ffunc_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_ffunc.GetOrCreate
 amc::FFfunc&         ind_ffunc_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -10298,6 +10425,9 @@ inline bool          ind_tcond_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_tcond.Find
 amc::FTcond*         ind_tcond_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_tcond.FindX
+amc::FTcond&         ind_tcond_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_tcond.GetOrCreate
 amc::FTcond&         ind_tcond_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -10443,6 +10573,9 @@ inline bool          ind_msg_typekey_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_msg_typekey.Find
 amc::FMsg*           ind_msg_typekey_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_msg_typekey.FindX
+amc::FMsg&           ind_msg_typekey_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_msg_typekey.GetOrCreate
 amc::FMsg&           ind_msg_typekey_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -10508,6 +10641,9 @@ inline bool          ind_pbtype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_pbtype.Find
 amc::FPbtype*        ind_pbtype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_pbtype.FindX
+amc::FPbtype&        ind_pbtype_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_pbtype.GetOrCreate
 amc::FPbtype&        ind_pbtype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -10573,6 +10709,9 @@ inline bool          ind_pbsyntax_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:amc.FDb.ind_pbsyntax.Find
 amc::FPbsyntax*      ind_pbsyntax_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_pbsyntax.FindX
+amc::FPbsyntax&      ind_pbsyntax_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
 // func:amc.FDb.ind_pbsyntax.GetOrCreate
 amc::FPbsyntax&      ind_pbsyntax_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
@@ -12292,7 +12431,7 @@ struct FDispatch { // amc.FDispatch
     u64                   c_dispatch_msg_n;       // current size
     u64                   c_dispatch_msg_max;     // capacity of allocated array
     amc::FDisptrace*      c_disptrace;            // optional pointer
-    algo::Sha1sig         signature;              //
+    algo::Signature       signature;              //
     amc::FDispctx*        c_dispctx;              // optional pointer
     bool                  ns_c_dispatch_in_ary;   //   false  membership flag
     // x-reference on amc.FDispatch.c_dispfilter prevents copy
@@ -12326,75 +12465,75 @@ void                 dispatch_CopyOut(amc::FDispatch &row, dmmeta::Dispatch &out
 void                 dispatch_CopyIn(amc::FDispatch &row, dmmeta::Dispatch &in) __attribute__((nothrow));
 
 // func:amc.FDispatch.ns.Get
-algo::strptr         ns_Get(amc::FDispatch& dispatch) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FDispatch& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FDispatch.name.Get
-algo::strptr         name_Get(amc::FDispatch& dispatch) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FDispatch& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FDispatch.c_dispfilter.InsertMaybe
-inline bool          c_dispfilter_InsertMaybe(amc::FDispatch& dispatch, amc::FDispfilter& row) __attribute__((nothrow));
+inline bool          c_dispfilter_InsertMaybe(amc::FDispatch& parent, amc::FDispfilter& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FDispatch.c_dispfilter.Remove
-inline void          c_dispfilter_Remove(amc::FDispatch& dispatch, amc::FDispfilter& row) __attribute__((nothrow));
+inline void          c_dispfilter_Remove(amc::FDispatch& parent, amc::FDispfilter& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FDispatch.c_dispatch_msg.EmptyQ
-inline bool          c_dispatch_msg_EmptyQ(amc::FDispatch& dispatch) __attribute__((nothrow));
+inline bool          c_dispatch_msg_EmptyQ(amc::FDispatch& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FDispatch.c_dispatch_msg.Find
-inline amc::FDispatchmsg* c_dispatch_msg_Find(amc::FDispatch& dispatch, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FDispatchmsg* c_dispatch_msg_Find(amc::FDispatch& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FDispatch.c_dispatch_msg.Getary
-inline algo::aryptr<amc::FDispatchmsg*> c_dispatch_msg_Getary(amc::FDispatch& dispatch) __attribute__((nothrow));
+inline algo::aryptr<amc::FDispatchmsg*> c_dispatch_msg_Getary(amc::FDispatch& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FDispatch.c_dispatch_msg.Insert
-void                 c_dispatch_msg_Insert(amc::FDispatch& dispatch, amc::FDispatchmsg& row) __attribute__((nothrow));
+void                 c_dispatch_msg_Insert(amc::FDispatch& parent, amc::FDispatchmsg& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FDispatch.c_dispatch_msg.InsertMaybe
-bool                 c_dispatch_msg_InsertMaybe(amc::FDispatch& dispatch, amc::FDispatchmsg& row) __attribute__((nothrow));
+bool                 c_dispatch_msg_InsertMaybe(amc::FDispatch& parent, amc::FDispatchmsg& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FDispatch.c_dispatch_msg.N
-inline i64           c_dispatch_msg_N(const amc::FDispatch& dispatch) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_dispatch_msg_N(const amc::FDispatch& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FDispatch.c_dispatch_msg.Remove
-void                 c_dispatch_msg_Remove(amc::FDispatch& dispatch, amc::FDispatchmsg& row) __attribute__((nothrow));
+void                 c_dispatch_msg_Remove(amc::FDispatch& parent, amc::FDispatchmsg& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FDispatch.c_dispatch_msg.RemoveAll
-inline void          c_dispatch_msg_RemoveAll(amc::FDispatch& dispatch) __attribute__((nothrow));
+inline void          c_dispatch_msg_RemoveAll(amc::FDispatch& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FDispatch.c_dispatch_msg.Reserve
-void                 c_dispatch_msg_Reserve(amc::FDispatch& dispatch, u64 n) __attribute__((nothrow));
+void                 c_dispatch_msg_Reserve(amc::FDispatch& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FDispatch.c_dispatch_msg.qFind
-inline amc::FDispatchmsg& c_dispatch_msg_qFind(amc::FDispatch& dispatch, u64 idx) __attribute__((nothrow));
+inline amc::FDispatchmsg& c_dispatch_msg_qFind(amc::FDispatch& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FDispatch.c_dispatch_msg.InAryQ
 inline bool          dispatch_c_dispatch_msg_InAryQ(amc::FDispatchmsg& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FDispatch.c_dispatch_msg.qLast
-inline amc::FDispatchmsg& c_dispatch_msg_qLast(amc::FDispatch& dispatch) __attribute__((nothrow));
+inline amc::FDispatchmsg& c_dispatch_msg_qLast(amc::FDispatch& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FDispatch.c_disptrace.InsertMaybe
-inline bool          c_disptrace_InsertMaybe(amc::FDispatch& dispatch, amc::FDisptrace& row) __attribute__((nothrow));
+inline bool          c_disptrace_InsertMaybe(amc::FDispatch& parent, amc::FDisptrace& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FDispatch.c_disptrace.Remove
-inline void          c_disptrace_Remove(amc::FDispatch& dispatch, amc::FDisptrace& row) __attribute__((nothrow));
+inline void          c_disptrace_Remove(amc::FDispatch& parent, amc::FDisptrace& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FDispatch.c_dispctx.InsertMaybe
-inline bool          c_dispctx_InsertMaybe(amc::FDispatch& dispatch, amc::FDispctx& row) __attribute__((nothrow));
+inline bool          c_dispctx_InsertMaybe(amc::FDispatch& parent, amc::FDispctx& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FDispatch.c_dispctx.Remove
-inline void          c_dispctx_Remove(amc::FDispatch& dispatch, amc::FDispctx& row) __attribute__((nothrow));
+inline void          c_dispctx_Remove(amc::FDispatch& parent, amc::FDispctx& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FDispatch..Init
-void                 FDispatch_Init(amc::FDispatch& dispatch);
+void                 FDispatch_Init(amc::FDispatch& parent);
 // func:amc.FDispatch.c_dispatch_msg_curs.Reset
 inline void          dispatch_c_dispatch_msg_curs_Reset(dispatch_c_dispatch_msg_curs &curs, amc::FDispatch &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -12407,7 +12546,7 @@ inline void          dispatch_c_dispatch_msg_curs_Next(dispatch_c_dispatch_msg_c
 // func:amc.FDispatch.c_dispatch_msg_curs.Access
 inline amc::FDispatchmsg& dispatch_c_dispatch_msg_curs_Access(dispatch_c_dispatch_msg_curs &curs) __attribute__((nothrow));
 // func:amc.FDispatch..Uninit
-void                 FDispatch_Uninit(amc::FDispatch& dispatch) __attribute__((nothrow));
+void                 FDispatch_Uninit(amc::FDispatch& parent) __attribute__((nothrow));
 
 // --- amc.FDispatchmsg
 // create: amc.FDb.dispatch_msg (Lary)
@@ -12439,22 +12578,22 @@ private:
 };
 // Copy fields out of row
 // func:amc.FDispatchmsg.msghdr.CopyOut
-void                 dispatch_msg_CopyOut(amc::FDispatchmsg &row, dmmeta::DispatchMsg &out) __attribute__((nothrow));
+void                 dispatchmsg_CopyOut(amc::FDispatchmsg &row, dmmeta::DispatchMsg &out) __attribute__((nothrow));
 // Copy fields in to row
 // func:amc.FDispatchmsg.msghdr.CopyIn
-void                 dispatch_msg_CopyIn(amc::FDispatchmsg &row, dmmeta::DispatchMsg &in) __attribute__((nothrow));
+void                 dispatchmsg_CopyIn(amc::FDispatchmsg &row, dmmeta::DispatchMsg &in) __attribute__((nothrow));
 
 // func:amc.FDispatchmsg.dispatch.Get
-algo::strptr         dispatch_Get(amc::FDispatchmsg& dispatch_msg) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         dispatch_Get(amc::FDispatchmsg& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FDispatchmsg.ctype.Get
-algo::strptr         ctype_Get(amc::FDispatchmsg& dispatch_msg) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FDispatchmsg& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FDispatchmsg..Init
-inline void          FDispatchmsg_Init(amc::FDispatchmsg& dispatch_msg);
+inline void          FDispatchmsg_Init(amc::FDispatchmsg& parent);
 // func:amc.FDispatchmsg..Uninit
-void                 FDispatchmsg_Uninit(amc::FDispatchmsg& dispatch_msg) __attribute__((nothrow));
+void                 FDispatchmsg_Uninit(amc::FDispatchmsg& parent) __attribute__((nothrow));
 
 // --- amc.FDispctx
 // create: amc.FDb.dispctx (Lary)
@@ -12489,9 +12628,9 @@ void                 dispctx_CopyIn(amc::FDispctx &row, dmmeta::Dispctx &in) __a
 
 // Set all fields to initial values.
 // func:amc.FDispctx..Init
-inline void          FDispctx_Init(amc::FDispctx& dispctx);
+inline void          FDispctx_Init(amc::FDispctx& parent);
 // func:amc.FDispctx..Uninit
-void                 FDispctx_Uninit(amc::FDispctx& dispctx) __attribute__((nothrow));
+void                 FDispctx_Uninit(amc::FDispctx& parent) __attribute__((nothrow));
 
 // --- amc.FDispfilter
 // create: amc.FDb.dispfilter (Lary)
@@ -12523,9 +12662,9 @@ void                 dispfilter_CopyIn(amc::FDispfilter &row, dmmeta::Dispfilter
 
 // Set all fields to initial values.
 // func:amc.FDispfilter..Init
-inline void          FDispfilter_Init(amc::FDispfilter& dispfilter);
+inline void          FDispfilter_Init(amc::FDispfilter& parent);
 // func:amc.FDispfilter..Uninit
-void                 FDispfilter_Uninit(amc::FDispfilter& dispfilter) __attribute__((nothrow));
+void                 FDispfilter_Uninit(amc::FDispfilter& parent) __attribute__((nothrow));
 
 // --- amc.FDispsig
 // create: amc.FDb.dispsig (Lary)
@@ -12533,7 +12672,7 @@ void                 FDispfilter_Uninit(amc::FDispfilter& dispfilter) __attribut
 // access: amc.FNs.c_dispsig (Ptrary)
 struct FDispsig { // amc.FDispsig
     algo::Smallstr50   dispsig;               //
-    algo::Sha1sig      signature;             //
+    algo::Signature    signature;             //
     bool               ns_c_dispsig_in_ary;   //   false  membership flag
     // func:amc.FDispsig..AssignOp
     inline amc::FDispsig& operator =(const amc::FDispsig &rhs) = delete;
@@ -12557,16 +12696,16 @@ void                 dispsig_CopyOut(amc::FDispsig &row, dmmeta::Dispsig &out) _
 void                 dispsig_CopyIn(amc::FDispsig &row, dmmeta::Dispsig &in) __attribute__((nothrow));
 
 // func:amc.FDispsig.ns.Get
-algo::strptr         ns_Get(amc::FDispsig& dispsig) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FDispsig& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FDispsig.name.Get
-algo::strptr         name_Get(amc::FDispsig& dispsig) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FDispsig& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FDispsig..Init
-inline void          FDispsig_Init(amc::FDispsig& dispsig);
+inline void          FDispsig_Init(amc::FDispsig& parent);
 // func:amc.FDispsig..Uninit
-void                 FDispsig_Uninit(amc::FDispsig& dispsig) __attribute__((nothrow));
+void                 FDispsig_Uninit(amc::FDispsig& parent) __attribute__((nothrow));
 
 // --- amc.FDisptrace
 // create: amc.FDb.disptrace (Lary)
@@ -12601,9 +12740,9 @@ void                 disptrace_CopyIn(amc::FDisptrace &row, dmmeta::Disptrace &i
 
 // Set all fields to initial values.
 // func:amc.FDisptrace..Init
-inline void          FDisptrace_Init(amc::FDisptrace& disptrace);
+inline void          FDisptrace_Init(amc::FDisptrace& parent);
 // func:amc.FDisptrace..Uninit
-void                 FDisptrace_Uninit(amc::FDisptrace& disptrace) __attribute__((nothrow));
+void                 FDisptrace_Uninit(amc::FDisptrace& parent) __attribute__((nothrow));
 
 // --- amc.FEnumstr
 // create: amc.FDb.enumstr (Lary)
@@ -12636,45 +12775,45 @@ private:
 };
 // Return true if index is empty
 // func:amc.FEnumstr.c_fconst.EmptyQ
-inline bool          c_fconst_EmptyQ(amc::FEnumstr& enumstr) __attribute__((nothrow));
+inline bool          c_fconst_EmptyQ(amc::FEnumstr& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FEnumstr.c_fconst.Find
-inline amc::FFconst* c_fconst_Find(amc::FEnumstr& enumstr, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFconst* c_fconst_Find(amc::FEnumstr& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FEnumstr.c_fconst.Getary
-inline algo::aryptr<amc::FFconst*> c_fconst_Getary(amc::FEnumstr& enumstr) __attribute__((nothrow));
+inline algo::aryptr<amc::FFconst*> c_fconst_Getary(amc::FEnumstr& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FEnumstr.c_fconst.Insert
-void                 c_fconst_Insert(amc::FEnumstr& enumstr, amc::FFconst& row) __attribute__((nothrow));
+void                 c_fconst_Insert(amc::FEnumstr& parent, amc::FFconst& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:amc.FEnumstr.c_fconst.ScanInsertMaybe
-bool                 c_fconst_ScanInsertMaybe(amc::FEnumstr& enumstr, amc::FFconst& row) __attribute__((nothrow));
+bool                 c_fconst_ScanInsertMaybe(amc::FEnumstr& parent, amc::FFconst& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FEnumstr.c_fconst.N
-inline i64           c_fconst_N(const amc::FEnumstr& enumstr) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fconst_N(const amc::FEnumstr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FEnumstr.c_fconst.Remove
-void                 c_fconst_Remove(amc::FEnumstr& enumstr, amc::FFconst& row) __attribute__((nothrow));
+void                 c_fconst_Remove(amc::FEnumstr& parent, amc::FFconst& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FEnumstr.c_fconst.RemoveAll
-inline void          c_fconst_RemoveAll(amc::FEnumstr& enumstr) __attribute__((nothrow));
+inline void          c_fconst_RemoveAll(amc::FEnumstr& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FEnumstr.c_fconst.Reserve
-void                 c_fconst_Reserve(amc::FEnumstr& enumstr, u64 n) __attribute__((nothrow));
+void                 c_fconst_Reserve(amc::FEnumstr& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FEnumstr.c_fconst.qFind
-inline amc::FFconst& c_fconst_qFind(amc::FEnumstr& enumstr, u64 idx) __attribute__((nothrow));
+inline amc::FFconst& c_fconst_qFind(amc::FEnumstr& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FEnumstr.c_fconst.qLast
-inline amc::FFconst& c_fconst_qLast(amc::FEnumstr& enumstr) __attribute__((nothrow));
+inline amc::FFconst& c_fconst_qLast(amc::FEnumstr& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FEnumstr..Init
-inline void          FEnumstr_Init(amc::FEnumstr& enumstr);
+inline void          FEnumstr_Init(amc::FEnumstr& parent);
 // func:amc.FEnumstr.c_fconst_curs.Reset
 inline void          enumstr_c_fconst_curs_Reset(enumstr_c_fconst_curs &curs, amc::FEnumstr &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -12687,7 +12826,7 @@ inline void          enumstr_c_fconst_curs_Next(enumstr_c_fconst_curs &curs) __a
 // func:amc.FEnumstr.c_fconst_curs.Access
 inline amc::FFconst& enumstr_c_fconst_curs_Access(enumstr_c_fconst_curs &curs) __attribute__((nothrow));
 // func:amc.FEnumstr..Uninit
-void                 FEnumstr_Uninit(amc::FEnumstr& enumstr) __attribute__((nothrow));
+void                 FEnumstr_Uninit(amc::FEnumstr& parent) __attribute__((nothrow));
 
 // --- amc.FEnumstrLen
 // create: amc.FDb.enumstr_len (Lary)
@@ -12720,49 +12859,49 @@ private:
 };
 // Remove all elements from heap and free memory used by the array.
 // func:amc.FEnumstrLen.bh_enumstr.Dealloc
-void                 bh_enumstr_Dealloc(amc::FEnumstrLen& enumstr_len) __attribute__((nothrow));
+void                 bh_enumstr_Dealloc(amc::FEnumstrLen& parent) __attribute__((nothrow));
 // Return true if index is empty
 // func:amc.FEnumstrLen.bh_enumstr.EmptyQ
-inline bool          bh_enumstr_EmptyQ(amc::FEnumstrLen& enumstr_len) __attribute__((nothrow));
+inline bool          bh_enumstr_EmptyQ(amc::FEnumstrLen& parent) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FEnumstrLen.bh_enumstr.First
-inline amc::FEnumstr* bh_enumstr_First(amc::FEnumstrLen& enumstr_len) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FEnumstr* bh_enumstr_First(amc::FEnumstrLen& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
 // func:amc.FEnumstrLen.bh_enumstr.InBheapQ
 inline bool          bh_enumstr_InBheapQ(amc::FEnumstr& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
 // func:amc.FEnumstrLen.bh_enumstr.Insert
-void                 bh_enumstr_Insert(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row) __attribute__((nothrow));
+void                 bh_enumstr_Insert(amc::FEnumstrLen& parent, amc::FEnumstr& row) __attribute__((nothrow));
 // Return number of items in the heap
 // func:amc.FEnumstrLen.bh_enumstr.N
-inline i32           bh_enumstr_N(const amc::FEnumstrLen& enumstr_len) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           bh_enumstr_N(const amc::FEnumstrLen& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
 // func:amc.FEnumstrLen.bh_enumstr.Reheap
-i32                  bh_enumstr_Reheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row) __attribute__((nothrow));
+i32                  bh_enumstr_Reheap(amc::FEnumstrLen& parent, amc::FEnumstr& row) __attribute__((nothrow));
 // Key of first element in the heap changed. Move it.
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
 // func:amc.FEnumstrLen.bh_enumstr.ReheapFirst
-i32                  bh_enumstr_ReheapFirst(amc::FEnumstrLen& enumstr_len) __attribute__((nothrow));
+i32                  bh_enumstr_ReheapFirst(amc::FEnumstrLen& parent) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FEnumstrLen.bh_enumstr.Remove
-void                 bh_enumstr_Remove(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row) __attribute__((nothrow));
+void                 bh_enumstr_Remove(amc::FEnumstrLen& parent, amc::FEnumstr& row) __attribute__((nothrow));
 // Remove all elements from binary heap
 // func:amc.FEnumstrLen.bh_enumstr.RemoveAll
-void                 bh_enumstr_RemoveAll(amc::FEnumstrLen& enumstr_len) __attribute__((nothrow));
+void                 bh_enumstr_RemoveAll(amc::FEnumstrLen& parent) __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
 // func:amc.FEnumstrLen.bh_enumstr.RemoveFirst
-amc::FEnumstr*       bh_enumstr_RemoveFirst(amc::FEnumstrLen& enumstr_len) __attribute__((nothrow));
+amc::FEnumstr*       bh_enumstr_RemoveFirst(amc::FEnumstrLen& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements
 // func:amc.FEnumstrLen.bh_enumstr.Reserve
-void                 bh_enumstr_Reserve(amc::FEnumstrLen& enumstr_len, int n) __attribute__((nothrow));
+void                 bh_enumstr_Reserve(amc::FEnumstrLen& parent, int n) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FEnumstrLen..Init
-inline void          FEnumstrLen_Init(amc::FEnumstrLen& enumstr_len);
+inline void          FEnumstrLen_Init(amc::FEnumstrLen& parent);
 // func:amc.FEnumstrLen.bh_enumstr_curs.Reserve
 void                 enumstr_len_bh_enumstr_curs_Reserve(enumstr_len_bh_enumstr_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -12778,7 +12917,7 @@ inline amc::FEnumstr& enumstr_len_bh_enumstr_curs_Access(enumstr_len_bh_enumstr_
 // func:amc.FEnumstrLen.bh_enumstr_curs.ValidQ
 inline bool          enumstr_len_bh_enumstr_curs_ValidQ(enumstr_len_bh_enumstr_curs &curs) __attribute__((nothrow));
 // func:amc.FEnumstrLen..Uninit
-void                 FEnumstrLen_Uninit(amc::FEnumstrLen& enumstr_len) __attribute__((nothrow));
+void                 FEnumstrLen_Uninit(amc::FEnumstrLen& parent) __attribute__((nothrow));
 
 // --- amc.FFalias
 // create: amc.FDb.falias (Lary)
@@ -12814,9 +12953,9 @@ void                 falias_CopyIn(amc::FFalias &row, dmmeta::Falias &in) __attr
 
 // Set all fields to initial values.
 // func:amc.FFalias..Init
-inline void          FFalias_Init(amc::FFalias& falias);
+inline void          FFalias_Init(amc::FFalias& parent);
 // func:amc.FFalias..Uninit
-void                 FFalias_Uninit(amc::FFalias& falias) __attribute__((nothrow));
+void                 FFalias_Uninit(amc::FFalias& parent) __attribute__((nothrow));
 
 // --- amc.FFbigend
 // create: amc.FDb.fbigend (Lary)
@@ -12850,9 +12989,9 @@ void                 fbigend_CopyIn(amc::FFbigend &row, dmmeta::Fbigend &in) __a
 
 // Set all fields to initial values.
 // func:amc.FFbigend..Init
-inline void          FFbigend_Init(amc::FFbigend& fbigend);
+inline void          FFbigend_Init(amc::FFbigend& parent);
 // func:amc.FFbigend..Uninit
-void                 FFbigend_Uninit(amc::FFbigend& fbigend) __attribute__((nothrow));
+void                 FFbigend_Uninit(amc::FFbigend& parent) __attribute__((nothrow));
 
 // --- amc.FFbitset
 // create: amc.FDb.fbitset (Lary)
@@ -12889,9 +13028,9 @@ void                 fbitset_CopyIn(amc::FFbitset &row, dmmeta::Fbitset &in) __a
 
 // Set all fields to initial values.
 // func:amc.FFbitset..Init
-inline void          FFbitset_Init(amc::FFbitset& fbitset);
+inline void          FFbitset_Init(amc::FFbitset& parent);
 // func:amc.FFbitset..Uninit
-void                 FFbitset_Uninit(amc::FFbitset& fbitset) __attribute__((nothrow));
+void                 FFbitset_Uninit(amc::FFbitset& parent) __attribute__((nothrow));
 
 // --- amc.FFbuf
 // create: amc.FDb.fbuf (Lary)
@@ -12934,13 +13073,13 @@ void                 fbuf_CopyOut(amc::FFbuf &row, dmmeta::Fbuf &out) __attribut
 void                 fbuf_CopyIn(amc::FFbuf &row, dmmeta::Fbuf &in) __attribute__((nothrow));
 
 // func:amc.FFbuf.fbufdir.Get
-algo::strptr         fbufdir_Get(amc::FFbuf& fbuf) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         fbufdir_Get(amc::FFbuf& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFbuf..Init
-inline void          FFbuf_Init(amc::FFbuf& fbuf);
+inline void          FFbuf_Init(amc::FFbuf& parent);
 // func:amc.FFbuf..Uninit
-void                 FFbuf_Uninit(amc::FFbuf& fbuf) __attribute__((nothrow));
+void                 FFbuf_Uninit(amc::FFbuf& parent) __attribute__((nothrow));
 
 // --- amc.FFbuftype
 // create: amc.FDb.fbuftype (Lary)
@@ -12976,9 +13115,9 @@ void                 fbuftype_CopyIn(amc::FFbuftype &row, dmmeta::Fbuftype &in) 
 
 // Set all fields to initial values.
 // func:amc.FFbuftype..Init
-inline void          FFbuftype_Init(amc::FFbuftype& fbuftype);
+inline void          FFbuftype_Init(amc::FFbuftype& parent);
 // func:amc.FFbuftype..Uninit
-void                 FFbuftype_Uninit(amc::FFbuftype& fbuftype) __attribute__((nothrow));
+void                 FFbuftype_Uninit(amc::FFbuftype& parent) __attribute__((nothrow));
 
 // --- amc.FFcast
 // create: amc.FDb.fcast (Lary)
@@ -13009,7 +13148,7 @@ void                 fcast_CopyOut(amc::FFcast &row, dmmeta::Fcast &out) __attri
 void                 fcast_CopyIn(amc::FFcast &row, dmmeta::Fcast &in) __attribute__((nothrow));
 
 // func:amc.FFcast..Uninit
-void                 FFcast_Uninit(amc::FFcast& fcast) __attribute__((nothrow));
+void                 FFcast_Uninit(amc::FFcast& parent) __attribute__((nothrow));
 
 // --- amc.FFcmap
 // create: amc.FDb.fcmap (Lary)
@@ -13051,22 +13190,22 @@ void                 fcmap_CopyOut(amc::FFcmap &row, dmmeta::Fcmap &out) __attri
 void                 fcmap_CopyIn(amc::FFcmap &row, dmmeta::Fcmap &in) __attribute__((nothrow));
 
 // func:amc.FFcmap.leftField.Get
-algo::strptr         leftField_Get(amc::FFcmap& fcmap) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         leftField_Get(amc::FFcmap& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFcmap.leftVal.Get
-algo::strptr         leftVal_Get(amc::FFcmap& fcmap) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         leftVal_Get(amc::FFcmap& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFcmap.rightVal.Get
-algo::strptr         rightVal_Get(amc::FFcmap& fcmap) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         rightVal_Get(amc::FFcmap& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFcmap.rightField.Get
-algo::strptr         rightField_Get(amc::FFcmap& fcmap) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         rightField_Get(amc::FFcmap& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFcmap..Init
-void                 FFcmap_Init(amc::FFcmap& fcmap);
+void                 FFcmap_Init(amc::FFcmap& parent);
 // func:amc.FFcmap..Uninit
-void                 FFcmap_Uninit(amc::FFcmap& fcmap) __attribute__((nothrow));
+void                 FFcmap_Uninit(amc::FFcmap& parent) __attribute__((nothrow));
 
 // --- amc.FFcmp
 // create: amc.FDb.fcmp (Lary)
@@ -13100,9 +13239,9 @@ void                 fcmp_CopyIn(amc::FFcmp &row, dmmeta::Fcmp &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FFcmp..Init
-inline void          FFcmp_Init(amc::FFcmp& fcmp);
+inline void          FFcmp_Init(amc::FFcmp& parent);
 // func:amc.FFcmp..Uninit
-void                 FFcmp_Uninit(amc::FFcmp& fcmp) __attribute__((nothrow));
+void                 FFcmp_Uninit(amc::FFcmp& parent) __attribute__((nothrow));
 
 // --- amc.FFcompact
 // create: amc.FDb.fcompact (Lary)
@@ -13132,7 +13271,7 @@ void                 fcompact_CopyOut(amc::FFcompact &row, dmmeta::Fcompact &out
 void                 fcompact_CopyIn(amc::FFcompact &row, dmmeta::Fcompact &in) __attribute__((nothrow));
 
 // func:amc.FFcompact..Uninit
-void                 FFcompact_Uninit(amc::FFcompact& fcompact) __attribute__((nothrow));
+void                 FFcompact_Uninit(amc::FFcompact& parent) __attribute__((nothrow));
 
 // --- amc.FFcond
 // create: amc.FDb.fcond (Lary)
@@ -13170,16 +13309,16 @@ void                 fcond_CopyOut(amc::FFcond &row, dmmeta::Fcond &out) __attri
 void                 fcond_CopyIn(amc::FFcond &row, dmmeta::Fcond &in) __attribute__((nothrow));
 
 // func:amc.FFcond.field.Get
-algo::strptr         field_Get(amc::FFcond& fcond) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(amc::FFcond& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFcond.value.Get
-algo::strptr         value_Get(amc::FFcond& fcond) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         value_Get(amc::FFcond& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFcond..Init
-inline void          FFcond_Init(amc::FFcond& fcond);
+inline void          FFcond_Init(amc::FFcond& parent);
 // func:amc.FFcond..Uninit
-void                 FFcond_Uninit(amc::FFcond& fcond) __attribute__((nothrow));
+void                 FFcond_Uninit(amc::FFcond& parent) __attribute__((nothrow));
 
 // --- amc.FFconst
 // create: amc.FDb.fconst (Lary)
@@ -13225,16 +13364,16 @@ void                 fconst_CopyOut(amc::FFconst &row, dmmeta::Fconst &out) __at
 void                 fconst_CopyIn(amc::FFconst &row, dmmeta::Fconst &in) __attribute__((nothrow));
 
 // func:amc.FFconst.field.Get
-algo::strptr         field_Get(amc::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(amc::FFconst& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFconst.name.Get
-algo::strptr         name_Get(amc::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FFconst& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFconst..Init
-void                 FFconst_Init(amc::FFconst& fconst);
+void                 FFconst_Init(amc::FFconst& parent);
 // func:amc.FFconst..Uninit
-void                 FFconst_Uninit(amc::FFconst& fconst) __attribute__((nothrow));
+void                 FFconst_Uninit(amc::FFconst& parent) __attribute__((nothrow));
 
 // --- amc.FFcurs
 // create: amc.FDb.fcurs (Lary)
@@ -13271,19 +13410,19 @@ void                 fcurs_CopyOut(amc::FFcurs &row, dmmeta::Fcurs &out) __attri
 void                 fcurs_CopyIn(amc::FFcurs &row, dmmeta::Fcurs &in) __attribute__((nothrow));
 
 // func:amc.FFcurs.field.Get
-algo::strptr         field_Get(amc::FFcurs& fcurs) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(amc::FFcurs& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFcurs.ctype.Get
-algo::strptr         ctype_Get(amc::FFcurs& fcurs) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FFcurs& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFcurs.curstype.Get
-algo::strptr         curstype_Get(amc::FFcurs& fcurs) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         curstype_Get(amc::FFcurs& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFcurs..Init
-inline void          FFcurs_Init(amc::FFcurs& fcurs);
+inline void          FFcurs_Init(amc::FFcurs& parent);
 // func:amc.FFcurs..Uninit
-void                 FFcurs_Uninit(amc::FFcurs& fcurs) __attribute__((nothrow));
+void                 FFcurs_Uninit(amc::FFcurs& parent) __attribute__((nothrow));
 
 // --- amc.FFdec
 // create: amc.FDb.fdec (Lary)
@@ -13325,9 +13464,9 @@ void                 fdec_CopyIn(amc::FFdec &row, dmmeta::Fdec &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FFdec..Init
-inline void          FFdec_Init(amc::FFdec& fdec);
+inline void          FFdec_Init(amc::FFdec& parent);
 // func:amc.FFdec..Uninit
-void                 FFdec_Uninit(amc::FFdec& fdec) __attribute__((nothrow));
+void                 FFdec_Uninit(amc::FFdec& parent) __attribute__((nothrow));
 
 // --- amc.FFdelay
 // create: amc.FDb.fdelay (Lary)
@@ -13360,9 +13499,9 @@ void                 fdelay_CopyIn(amc::FFdelay &row, dmmeta::Fdelay &in) __attr
 
 // Set all fields to initial values.
 // func:amc.FFdelay..Init
-inline void          FFdelay_Init(amc::FFdelay& fdelay);
+inline void          FFdelay_Init(amc::FFdelay& parent);
 // func:amc.FFdelay..Uninit
-void                 FFdelay_Uninit(amc::FFdelay& fdelay) __attribute__((nothrow));
+void                 FFdelay_Uninit(amc::FFdelay& parent) __attribute__((nothrow));
 
 // --- amc.FFfast
 // create: amc.FDb.ffast (Lary)
@@ -13409,19 +13548,19 @@ void                 ffast_CopyOut(amc::FFfast &row, dmmeta::Ffast &out) __attri
 void                 ffast_CopyIn(amc::FFfast &row, dmmeta::Ffast &in) __attribute__((nothrow));
 
 // func:amc.FFfast.field.Get
-algo::strptr         field_Get(amc::FFfast& ffast) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(amc::FFfast& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFfast.ctype.Get
-algo::strptr         ctype_Get(amc::FFfast& ffast) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FFfast& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFfast.fastinstr.Get
-algo::strptr         fastinstr_Get(amc::FFfast& ffast) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         fastinstr_Get(amc::FFfast& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFfast..Init
-void                 FFfast_Init(amc::FFfast& ffast);
+void                 FFfast_Init(amc::FFfast& parent);
 // func:amc.FFfast..Uninit
-void                 FFfast_Uninit(amc::FFfast& ffast) __attribute__((nothrow));
+void                 FFfast_Uninit(amc::FFfast& parent) __attribute__((nothrow));
 
 // --- amc.FFflag
 // create: amc.FDb.fflag (Lary)
@@ -13458,9 +13597,9 @@ void                 fflag_CopyIn(amc::FFflag &row, dmmeta::Fflag &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FFflag..Init
-inline void          FFflag_Init(amc::FFflag& fflag);
+inline void          FFflag_Init(amc::FFflag& parent);
 // func:amc.FFflag..Uninit
-void                 FFflag_Uninit(amc::FFflag& fflag) __attribute__((nothrow));
+void                 FFflag_Uninit(amc::FFflag& parent) __attribute__((nothrow));
 
 // --- amc.FFfunc
 // create: amc.FDb.ffunc (Lary)
@@ -13497,16 +13636,16 @@ void                 ffunc_CopyOut(amc::FFfunc &row, dmmeta::Ffunc &out) __attri
 void                 ffunc_CopyIn(amc::FFfunc &row, dmmeta::Ffunc &in) __attribute__((nothrow));
 
 // func:amc.FFfunc.field.Get
-algo::strptr         field_Get(amc::FFfunc& ffunc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(amc::FFfunc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFfunc.name.Get
-algo::strptr         name_Get(amc::FFfunc& ffunc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FFfunc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFfunc..Init
-inline void          FFfunc_Init(amc::FFfunc& ffunc);
+inline void          FFfunc_Init(amc::FFfunc& parent);
 // func:amc.FFfunc..Uninit
-void                 FFfunc_Uninit(amc::FFfunc& ffunc) __attribute__((nothrow));
+void                 FFfunc_Uninit(amc::FFfunc& parent) __attribute__((nothrow));
 
 // --- amc.FField
 // create: amc.FDb.field (Lary)
@@ -13815,327 +13954,327 @@ void                 field_CopyOut(amc::FField &row, dmmeta::Field &out) __attri
 void                 field_CopyIn(amc::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:amc.FField.ctype.Get
-algo::strptr         ctype_Get(amc::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FField.ns.Get
-algo::strptr         ns_Get(amc::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FField.name.Get
-algo::strptr         name_Get(amc::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fsort.InsertMaybe
-inline bool          c_fsort_InsertMaybe(amc::FField& field, amc::FFsort& row) __attribute__((nothrow));
+inline bool          c_fsort_InsertMaybe(amc::FField& parent, amc::FFsort& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fsort.Remove
-inline void          c_fsort_Remove(amc::FField& field, amc::FFsort& row) __attribute__((nothrow));
+inline void          c_fsort_Remove(amc::FField& parent, amc::FFsort& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fbitset.InsertMaybe
-inline bool          c_fbitset_InsertMaybe(amc::FField& field, amc::FFbitset& row) __attribute__((nothrow));
+inline bool          c_fbitset_InsertMaybe(amc::FField& parent, amc::FFbitset& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fbitset.Remove
-inline void          c_fbitset_Remove(amc::FField& field, amc::FFbitset& row) __attribute__((nothrow));
+inline void          c_fbitset_Remove(amc::FField& parent, amc::FFbitset& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_smallstr.InsertMaybe
-inline bool          c_smallstr_InsertMaybe(amc::FField& field, amc::FSmallstr& row) __attribute__((nothrow));
+inline bool          c_smallstr_InsertMaybe(amc::FField& parent, amc::FSmallstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_smallstr.Remove
-inline void          c_smallstr_Remove(amc::FField& field, amc::FSmallstr& row) __attribute__((nothrow));
+inline void          c_smallstr_Remove(amc::FField& parent, amc::FSmallstr& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FField.c_ffunc.EmptyQ
-inline bool          c_ffunc_EmptyQ(amc::FField& field) __attribute__((nothrow));
+inline bool          c_ffunc_EmptyQ(amc::FField& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FField.c_ffunc.Find
-inline amc::FFunc*   c_ffunc_Find(amc::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFunc*   c_ffunc_Find(amc::FField& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FField.c_ffunc.Getary
-inline algo::aryptr<amc::FFunc*> c_ffunc_Getary(amc::FField& field) __attribute__((nothrow));
+inline algo::aryptr<amc::FFunc*> c_ffunc_Getary(amc::FField& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FField.c_ffunc.Insert
-void                 c_ffunc_Insert(amc::FField& field, amc::FFunc& row) __attribute__((nothrow));
+void                 c_ffunc_Insert(amc::FField& parent, amc::FFunc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:amc.FField.c_ffunc.ScanInsertMaybe
-bool                 c_ffunc_ScanInsertMaybe(amc::FField& field, amc::FFunc& row) __attribute__((nothrow));
+bool                 c_ffunc_ScanInsertMaybe(amc::FField& parent, amc::FFunc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FField.c_ffunc.N
-inline i64           c_ffunc_N(const amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ffunc_N(const amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FField.c_ffunc.Remove
-void                 c_ffunc_Remove(amc::FField& field, amc::FFunc& row) __attribute__((nothrow));
+void                 c_ffunc_Remove(amc::FField& parent, amc::FFunc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FField.c_ffunc.RemoveAll
-inline void          c_ffunc_RemoveAll(amc::FField& field) __attribute__((nothrow));
+inline void          c_ffunc_RemoveAll(amc::FField& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FField.c_ffunc.Reserve
-void                 c_ffunc_Reserve(amc::FField& field, u64 n) __attribute__((nothrow));
+void                 c_ffunc_Reserve(amc::FField& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FField.c_ffunc.qFind
-inline amc::FFunc&   c_ffunc_qFind(amc::FField& field, u64 idx) __attribute__((nothrow));
+inline amc::FFunc&   c_ffunc_qFind(amc::FField& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FField.c_ffunc.qLast
-inline amc::FFunc&   c_ffunc_qLast(amc::FField& field) __attribute__((nothrow));
+inline amc::FFunc&   c_ffunc_qLast(amc::FField& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_xref.InsertMaybe
-inline bool          c_xref_InsertMaybe(amc::FField& field, amc::FXref& row) __attribute__((nothrow));
+inline bool          c_xref_InsertMaybe(amc::FField& parent, amc::FXref& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_xref.Remove
-inline void          c_xref_Remove(amc::FField& field, amc::FXref& row) __attribute__((nothrow));
+inline void          c_xref_Remove(amc::FField& parent, amc::FXref& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_anonfld.InsertMaybe
-inline bool          c_anonfld_InsertMaybe(amc::FField& field, amc::FAnonfld& row) __attribute__((nothrow));
+inline bool          c_anonfld_InsertMaybe(amc::FField& parent, amc::FAnonfld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_anonfld.Remove
-inline void          c_anonfld_Remove(amc::FField& field, amc::FAnonfld& row) __attribute__((nothrow));
+inline void          c_anonfld_Remove(amc::FField& parent, amc::FAnonfld& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fldoffset.InsertMaybe
-inline bool          c_fldoffset_InsertMaybe(amc::FField& field, amc::FFldoffset& row) __attribute__((nothrow));
+inline bool          c_fldoffset_InsertMaybe(amc::FField& parent, amc::FFldoffset& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fldoffset.Remove
-inline void          c_fldoffset_Remove(amc::FField& field, amc::FFldoffset& row) __attribute__((nothrow));
+inline void          c_fldoffset_Remove(amc::FField& parent, amc::FFldoffset& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_basepool.InsertMaybe
-inline bool          c_basepool_InsertMaybe(amc::FField& field, amc::FBasepool& row) __attribute__((nothrow));
+inline bool          c_basepool_InsertMaybe(amc::FField& parent, amc::FBasepool& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_basepool.Remove
-inline void          c_basepool_Remove(amc::FField& field, amc::FBasepool& row) __attribute__((nothrow));
+inline void          c_basepool_Remove(amc::FField& parent, amc::FBasepool& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_llist.InsertMaybe
-inline bool          c_llist_InsertMaybe(amc::FField& field, amc::FLlist& row) __attribute__((nothrow));
+inline bool          c_llist_InsertMaybe(amc::FField& parent, amc::FLlist& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_llist.Remove
-inline void          c_llist_Remove(amc::FField& field, amc::FLlist& row) __attribute__((nothrow));
+inline void          c_llist_Remove(amc::FField& parent, amc::FLlist& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_thash.InsertMaybe
-inline bool          c_thash_InsertMaybe(amc::FField& field, amc::FThash& row) __attribute__((nothrow));
+inline bool          c_thash_InsertMaybe(amc::FField& parent, amc::FThash& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_thash.Remove
-inline void          c_thash_Remove(amc::FField& field, amc::FThash& row) __attribute__((nothrow));
+inline void          c_thash_Remove(amc::FField& parent, amc::FThash& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_inlary.InsertMaybe
-inline bool          c_inlary_InsertMaybe(amc::FField& field, amc::FInlary& row) __attribute__((nothrow));
+inline bool          c_inlary_InsertMaybe(amc::FField& parent, amc::FInlary& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_inlary.Remove
-inline void          c_inlary_Remove(amc::FField& field, amc::FInlary& row) __attribute__((nothrow));
+inline void          c_inlary_Remove(amc::FField& parent, amc::FInlary& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_tary.InsertMaybe
-inline bool          c_tary_InsertMaybe(amc::FField& field, amc::FTary& row) __attribute__((nothrow));
+inline bool          c_tary_InsertMaybe(amc::FField& parent, amc::FTary& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_tary.Remove
-inline void          c_tary_Remove(amc::FField& field, amc::FTary& row) __attribute__((nothrow));
+inline void          c_tary_Remove(amc::FField& parent, amc::FTary& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_rowid.InsertMaybe
-inline bool          c_rowid_InsertMaybe(amc::FField& field, amc::FRowid& row) __attribute__((nothrow));
+inline bool          c_rowid_InsertMaybe(amc::FField& parent, amc::FRowid& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_rowid.Remove
-inline void          c_rowid_Remove(amc::FField& field, amc::FRowid& row) __attribute__((nothrow));
+inline void          c_rowid_Remove(amc::FField& parent, amc::FRowid& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_cascdel.InsertMaybe
-inline bool          c_cascdel_InsertMaybe(amc::FField& field, amc::FCascdel& row) __attribute__((nothrow));
+inline bool          c_cascdel_InsertMaybe(amc::FField& parent, amc::FCascdel& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_cascdel.Remove
-inline void          c_cascdel_Remove(amc::FField& field, amc::FCascdel& row) __attribute__((nothrow));
+inline void          c_cascdel_Remove(amc::FField& parent, amc::FCascdel& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_gstatic.InsertMaybe
-inline bool          c_gstatic_InsertMaybe(amc::FField& field, amc::FGstatic& row) __attribute__((nothrow));
+inline bool          c_gstatic_InsertMaybe(amc::FField& parent, amc::FGstatic& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_gstatic.Remove
-inline void          c_gstatic_Remove(amc::FField& field, amc::FGstatic& row) __attribute__((nothrow));
+inline void          c_gstatic_Remove(amc::FField& parent, amc::FGstatic& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_ptrary.InsertMaybe
-inline bool          c_ptrary_InsertMaybe(amc::FField& field, amc::FPtrary& row) __attribute__((nothrow));
+inline bool          c_ptrary_InsertMaybe(amc::FField& parent, amc::FPtrary& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_ptrary.Remove
-inline void          c_ptrary_Remove(amc::FField& field, amc::FPtrary& row) __attribute__((nothrow));
+inline void          c_ptrary_Remove(amc::FField& parent, amc::FPtrary& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_pmaskfld.InsertMaybe
-inline bool          c_pmaskfld_InsertMaybe(amc::FField& field, amc::FPmaskfld& row) __attribute__((nothrow));
+inline bool          c_pmaskfld_InsertMaybe(amc::FField& parent, amc::FPmaskfld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_pmaskfld.Remove
-inline void          c_pmaskfld_Remove(amc::FField& field, amc::FPmaskfld& row) __attribute__((nothrow));
+inline void          c_pmaskfld_Remove(amc::FField& parent, amc::FPmaskfld& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_typefld.InsertMaybe
-inline bool          c_typefld_InsertMaybe(amc::FField& field, amc::FTypefld& row) __attribute__((nothrow));
+inline bool          c_typefld_InsertMaybe(amc::FField& parent, amc::FTypefld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_typefld.Remove
-inline void          c_typefld_Remove(amc::FField& field, amc::FTypefld& row) __attribute__((nothrow));
+inline void          c_typefld_Remove(amc::FField& parent, amc::FTypefld& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fdec.InsertMaybe
-inline bool          c_fdec_InsertMaybe(amc::FField& field, amc::FFdec& row) __attribute__((nothrow));
+inline bool          c_fdec_InsertMaybe(amc::FField& parent, amc::FFdec& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fdec.Remove
-inline void          c_fdec_Remove(amc::FField& field, amc::FFdec& row) __attribute__((nothrow));
+inline void          c_fdec_Remove(amc::FField& parent, amc::FFdec& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FField.c_fconst.EmptyQ
-inline bool          c_fconst_EmptyQ(amc::FField& field) __attribute__((nothrow));
+inline bool          c_fconst_EmptyQ(amc::FField& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FField.c_fconst.Find
-inline amc::FFconst* c_fconst_Find(amc::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFconst* c_fconst_Find(amc::FField& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FField.c_fconst.Getary
-inline algo::aryptr<amc::FFconst*> c_fconst_Getary(amc::FField& field) __attribute__((nothrow));
+inline algo::aryptr<amc::FFconst*> c_fconst_Getary(amc::FField& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FField.c_fconst.Insert
-void                 c_fconst_Insert(amc::FField& field, amc::FFconst& row) __attribute__((nothrow));
+void                 c_fconst_Insert(amc::FField& parent, amc::FFconst& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FField.c_fconst.InsertMaybe
-bool                 c_fconst_InsertMaybe(amc::FField& field, amc::FFconst& row) __attribute__((nothrow));
+bool                 c_fconst_InsertMaybe(amc::FField& parent, amc::FFconst& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FField.c_fconst.N
-inline i64           c_fconst_N(const amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fconst_N(const amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FField.c_fconst.Remove
-void                 c_fconst_Remove(amc::FField& field, amc::FFconst& row) __attribute__((nothrow));
+void                 c_fconst_Remove(amc::FField& parent, amc::FFconst& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FField.c_fconst.RemoveAll
-inline void          c_fconst_RemoveAll(amc::FField& field) __attribute__((nothrow));
+inline void          c_fconst_RemoveAll(amc::FField& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FField.c_fconst.Reserve
-void                 c_fconst_Reserve(amc::FField& field, u64 n) __attribute__((nothrow));
+void                 c_fconst_Reserve(amc::FField& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FField.c_fconst.qFind
-inline amc::FFconst& c_fconst_qFind(amc::FField& field, u64 idx) __attribute__((nothrow));
+inline amc::FFconst& c_fconst_qFind(amc::FField& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FField.c_fconst.InAryQ
 inline bool          field_c_fconst_InAryQ(amc::FFconst& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FField.c_fconst.qLast
-inline amc::FFconst& c_fconst_qLast(amc::FField& field) __attribute__((nothrow));
+inline amc::FFconst& c_fconst_qLast(amc::FField& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_finput.InsertMaybe
-inline bool          c_finput_InsertMaybe(amc::FField& field, amc::FFinput& row) __attribute__((nothrow));
+inline bool          c_finput_InsertMaybe(amc::FField& parent, amc::FFinput& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_finput.Remove
-inline void          c_finput_Remove(amc::FField& field, amc::FFinput& row) __attribute__((nothrow));
+inline void          c_finput_Remove(amc::FField& parent, amc::FFinput& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_foutput.InsertMaybe
-inline bool          c_foutput_InsertMaybe(amc::FField& field, amc::FFoutput& row) __attribute__((nothrow));
+inline bool          c_foutput_InsertMaybe(amc::FField& parent, amc::FFoutput& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_foutput.Remove
-inline void          c_foutput_Remove(amc::FField& field, amc::FFoutput& row) __attribute__((nothrow));
+inline void          c_foutput_Remove(amc::FField& parent, amc::FFoutput& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fbuf.InsertMaybe
-inline bool          c_fbuf_InsertMaybe(amc::FField& field, amc::FFbuf& row) __attribute__((nothrow));
+inline bool          c_fbuf_InsertMaybe(amc::FField& parent, amc::FFbuf& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fbuf.Remove
-inline void          c_fbuf_Remove(amc::FField& field, amc::FFbuf& row) __attribute__((nothrow));
+inline void          c_fbuf_Remove(amc::FField& parent, amc::FFbuf& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fbigend.InsertMaybe
-inline bool          c_fbigend_InsertMaybe(amc::FField& field, amc::FFbigend& row) __attribute__((nothrow));
+inline bool          c_fbigend_InsertMaybe(amc::FField& parent, amc::FFbigend& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fbigend.Remove
-inline void          c_fbigend_Remove(amc::FField& field, amc::FFbigend& row) __attribute__((nothrow));
+inline void          c_fbigend_Remove(amc::FField& parent, amc::FFbigend& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fstep.InsertMaybe
-inline bool          c_fstep_InsertMaybe(amc::FField& field, amc::FFstep& row) __attribute__((nothrow));
+inline bool          c_fstep_InsertMaybe(amc::FField& parent, amc::FFstep& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fstep.Remove
-inline void          c_fstep_Remove(amc::FField& field, amc::FFstep& row) __attribute__((nothrow));
+inline void          c_fstep_Remove(amc::FField& parent, amc::FFstep& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fregx.InsertMaybe
-inline bool          c_fregx_InsertMaybe(amc::FField& field, amc::FFregx& row) __attribute__((nothrow));
+inline bool          c_fregx_InsertMaybe(amc::FField& parent, amc::FFregx& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fregx.Remove
-inline void          c_fregx_Remove(amc::FField& field, amc::FFregx& row) __attribute__((nothrow));
+inline void          c_fregx_Remove(amc::FField& parent, amc::FFregx& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fcmp.InsertMaybe
-inline bool          c_fcmp_InsertMaybe(amc::FField& field, amc::FFcmp& row) __attribute__((nothrow));
+inline bool          c_fcmp_InsertMaybe(amc::FField& parent, amc::FFcmp& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fcmp.Remove
-inline void          c_fcmp_Remove(amc::FField& field, amc::FFcmp& row) __attribute__((nothrow));
+inline void          c_fcmp_Remove(amc::FField& parent, amc::FFcmp& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fcast.InsertMaybe
-inline bool          c_fcast_InsertMaybe(amc::FField& field, amc::FFcast& row) __attribute__((nothrow));
+inline bool          c_fcast_InsertMaybe(amc::FField& parent, amc::FFcast& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fcast.Remove
-inline void          c_fcast_Remove(amc::FField& field, amc::FFcast& row) __attribute__((nothrow));
+inline void          c_fcast_Remove(amc::FField& parent, amc::FFcast& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_gconst.InsertMaybe
-inline bool          c_gconst_InsertMaybe(amc::FField& field, amc::FGconst& row) __attribute__((nothrow));
+inline bool          c_gconst_InsertMaybe(amc::FField& parent, amc::FGconst& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_gconst.Remove
-inline void          c_gconst_Remove(amc::FField& field, amc::FGconst& row) __attribute__((nothrow));
+inline void          c_gconst_Remove(amc::FField& parent, amc::FGconst& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_bitfld.InsertMaybe
-inline bool          c_bitfld_InsertMaybe(amc::FField& field, amc::FBitfld& row) __attribute__((nothrow));
+inline bool          c_bitfld_InsertMaybe(amc::FField& parent, amc::FBitfld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_bitfld.Remove
-inline void          c_bitfld_Remove(amc::FField& field, amc::FBitfld& row) __attribute__((nothrow));
+inline void          c_bitfld_Remove(amc::FField& parent, amc::FBitfld& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_cppfunc.InsertMaybe
-inline bool          c_cppfunc_InsertMaybe(amc::FField& field, amc::FCppfunc& row) __attribute__((nothrow));
+inline bool          c_cppfunc_InsertMaybe(amc::FField& parent, amc::FCppfunc& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_cppfunc.Remove
-inline void          c_cppfunc_Remove(amc::FField& field, amc::FCppfunc& row) __attribute__((nothrow));
+inline void          c_cppfunc_Remove(amc::FField& parent, amc::FCppfunc& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_substr.InsertMaybe
-inline bool          c_substr_InsertMaybe(amc::FField& field, amc::FSubstr& row) __attribute__((nothrow));
+inline bool          c_substr_InsertMaybe(amc::FField& parent, amc::FSubstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_substr.Remove
-inline void          c_substr_Remove(amc::FField& field, amc::FSubstr& row) __attribute__((nothrow));
+inline void          c_substr_Remove(amc::FField& parent, amc::FSubstr& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fcompact.InsertMaybe
-inline bool          c_fcompact_InsertMaybe(amc::FField& field, amc::FFcompact& row) __attribute__((nothrow));
+inline bool          c_fcompact_InsertMaybe(amc::FField& parent, amc::FFcompact& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fcompact.Remove
-inline void          c_fcompact_Remove(amc::FField& field, amc::FFcompact& row) __attribute__((nothrow));
+inline void          c_fcompact_Remove(amc::FField& parent, amc::FFcompact& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FField.zd_xref_keyfld.EmptyQ
-inline bool          zd_xref_keyfld_EmptyQ(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_xref_keyfld_EmptyQ(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FField.zd_xref_keyfld.First
-inline amc::FXref*   zd_xref_keyfld_First(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FXref*   zd_xref_keyfld_First(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FField.zd_xref_keyfld.InLlistQ
 inline bool          field_zd_xref_keyfld_InLlistQ(amc::FXref& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FField.zd_xref_keyfld.Insert
-void                 zd_xref_keyfld_Insert(amc::FField& field, amc::FXref& row) __attribute__((nothrow));
+void                 zd_xref_keyfld_Insert(amc::FField& parent, amc::FXref& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FField.zd_xref_keyfld.Last
-inline amc::FXref*   zd_xref_keyfld_Last(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FXref*   zd_xref_keyfld_Last(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:amc.FField.zd_xref_keyfld.N
-inline i32           zd_xref_keyfld_N(const amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_xref_keyfld_N(const amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FField.zd_xref_keyfld.Next
 inline amc::FXref*   field_zd_xref_keyfld_Next(amc::FXref &row) __attribute__((__warn_unused_result__, nothrow));
@@ -14144,361 +14283,361 @@ inline amc::FXref*   field_zd_xref_keyfld_Next(amc::FXref &row) __attribute__((_
 inline amc::FXref*   field_zd_xref_keyfld_Prev(amc::FXref &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.zd_xref_keyfld.Remove
-void                 zd_xref_keyfld_Remove(amc::FField& field, amc::FXref& row) __attribute__((nothrow));
+void                 zd_xref_keyfld_Remove(amc::FField& parent, amc::FXref& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FField.zd_xref_keyfld.RemoveAll
-void                 zd_xref_keyfld_RemoveAll(amc::FField& field) __attribute__((nothrow));
+void                 zd_xref_keyfld_RemoveAll(amc::FField& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FField.zd_xref_keyfld.RemoveFirst
-amc::FXref*          zd_xref_keyfld_RemoveFirst(amc::FField& field) __attribute__((nothrow));
+amc::FXref*          zd_xref_keyfld_RemoveFirst(amc::FField& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FField.zd_xref_keyfld.qLast
-inline amc::FXref&   zd_xref_keyfld_qLast(amc::FField& field) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FXref&   zd_xref_keyfld_qLast(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
 // func:amc.FField.zd_xref_keyfld.InsertBefore
-void                 zd_xref_keyfld_InsertBefore(amc::FField& field, amc::FXref& row, amc::FXref* before) __attribute__((nothrow));
+void                 zd_xref_keyfld_InsertBefore(amc::FField& parent, amc::FXref& row, amc::FXref* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FField.zs_fcmap.EmptyQ
-inline bool          zs_fcmap_EmptyQ(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zs_fcmap_EmptyQ(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FField.zs_fcmap.First
-inline amc::FFcmap*  zs_fcmap_First(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FFcmap*  zs_fcmap_First(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FField.zs_fcmap.InLlistQ
 inline bool          field_zs_fcmap_InLlistQ(amc::FFcmap& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FField.zs_fcmap.Insert
-void                 zs_fcmap_Insert(amc::FField& field, amc::FFcmap& row) __attribute__((nothrow));
+void                 zs_fcmap_Insert(amc::FField& parent, amc::FFcmap& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FField.zs_fcmap.Last
-inline amc::FFcmap*  zs_fcmap_Last(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FFcmap*  zs_fcmap_Last(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FField.zs_fcmap.Next
 inline amc::FFcmap*  field_zs_fcmap_Next(amc::FFcmap &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:amc.FField.zs_fcmap.Remove
-void                 zs_fcmap_Remove(amc::FField& field, amc::FFcmap& row) __attribute__((nothrow));
+void                 zs_fcmap_Remove(amc::FField& parent, amc::FFcmap& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FField.zs_fcmap.RemoveAll
-void                 zs_fcmap_RemoveAll(amc::FField& field) __attribute__((nothrow));
+void                 zs_fcmap_RemoveAll(amc::FField& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FField.zs_fcmap.RemoveFirst
-amc::FFcmap*         zs_fcmap_RemoveFirst(amc::FField& field) __attribute__((nothrow));
+amc::FFcmap*         zs_fcmap_RemoveFirst(amc::FField& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FField.zs_fcmap.qLast
-inline amc::FFcmap&  zs_fcmap_qLast(amc::FField& field) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFcmap&  zs_fcmap_qLast(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fnoremove.InsertMaybe
-inline bool          c_fnoremove_InsertMaybe(amc::FField& field, amc::FFnoremove& row) __attribute__((nothrow));
+inline bool          c_fnoremove_InsertMaybe(amc::FField& parent, amc::FFnoremove& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fnoremove.Remove
-inline void          c_fnoremove_Remove(amc::FField& field, amc::FFnoremove& row) __attribute__((nothrow));
+inline void          c_fnoremove_Remove(amc::FField& parent, amc::FFnoremove& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_sortfld.InsertMaybe
-inline bool          c_sortfld_InsertMaybe(amc::FField& field, amc::FSortfld& row) __attribute__((nothrow));
+inline bool          c_sortfld_InsertMaybe(amc::FField& parent, amc::FSortfld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_sortfld.Remove
-inline void          c_sortfld_Remove(amc::FField& field, amc::FSortfld& row) __attribute__((nothrow));
+inline void          c_sortfld_Remove(amc::FField& parent, amc::FSortfld& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_ftrace.InsertMaybe
-inline bool          c_ftrace_InsertMaybe(amc::FField& field, amc::FFtrace& row) __attribute__((nothrow));
+inline bool          c_ftrace_InsertMaybe(amc::FField& parent, amc::FFtrace& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_ftrace.Remove
-inline void          c_ftrace_Remove(amc::FField& field, amc::FFtrace& row) __attribute__((nothrow));
+inline void          c_ftrace_Remove(amc::FField& parent, amc::FFtrace& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_hook.InsertMaybe
-inline bool          c_hook_InsertMaybe(amc::FField& field, amc::FHook& row) __attribute__((nothrow));
+inline bool          c_hook_InsertMaybe(amc::FField& parent, amc::FHook& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_hook.Remove
-inline void          c_hook_Remove(amc::FField& field, amc::FHook& row) __attribute__((nothrow));
+inline void          c_hook_Remove(amc::FField& parent, amc::FHook& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_charset.InsertMaybe
-inline bool          c_charset_InsertMaybe(amc::FField& field, amc::FCharset& row) __attribute__((nothrow));
+inline bool          c_charset_InsertMaybe(amc::FField& parent, amc::FCharset& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_charset.Remove
-inline void          c_charset_Remove(amc::FField& field, amc::FCharset& row) __attribute__((nothrow));
+inline void          c_charset_Remove(amc::FField& parent, amc::FCharset& row) __attribute__((nothrow));
 
 // Remove all elements from heap and free memory used by the array.
 // func:amc.FField.bh_bitfld.Dealloc
-void                 bh_bitfld_Dealloc(amc::FField& field) __attribute__((nothrow));
+void                 bh_bitfld_Dealloc(amc::FField& parent) __attribute__((nothrow));
 // Return true if index is empty
 // func:amc.FField.bh_bitfld.EmptyQ
-inline bool          bh_bitfld_EmptyQ(amc::FField& field) __attribute__((nothrow));
+inline bool          bh_bitfld_EmptyQ(amc::FField& parent) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FField.bh_bitfld.First
-inline amc::FBitfld* bh_bitfld_First(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FBitfld* bh_bitfld_First(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
 // func:amc.FField.bh_bitfld.InBheapQ
 inline bool          bh_bitfld_InBheapQ(amc::FBitfld& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
 // func:amc.FField.bh_bitfld.Insert
-void                 bh_bitfld_Insert(amc::FField& field, amc::FBitfld& row) __attribute__((nothrow));
+void                 bh_bitfld_Insert(amc::FField& parent, amc::FBitfld& row) __attribute__((nothrow));
 // Return number of items in the heap
 // func:amc.FField.bh_bitfld.N
-inline i32           bh_bitfld_N(const amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           bh_bitfld_N(const amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
 // func:amc.FField.bh_bitfld.Reheap
-i32                  bh_bitfld_Reheap(amc::FField& field, amc::FBitfld& row) __attribute__((nothrow));
+i32                  bh_bitfld_Reheap(amc::FField& parent, amc::FBitfld& row) __attribute__((nothrow));
 // Key of first element in the heap changed. Move it.
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
 // func:amc.FField.bh_bitfld.ReheapFirst
-i32                  bh_bitfld_ReheapFirst(amc::FField& field) __attribute__((nothrow));
+i32                  bh_bitfld_ReheapFirst(amc::FField& parent) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.bh_bitfld.Remove
-void                 bh_bitfld_Remove(amc::FField& field, amc::FBitfld& row) __attribute__((nothrow));
+void                 bh_bitfld_Remove(amc::FField& parent, amc::FBitfld& row) __attribute__((nothrow));
 // Remove all elements from binary heap
 // func:amc.FField.bh_bitfld.RemoveAll
-void                 bh_bitfld_RemoveAll(amc::FField& field) __attribute__((nothrow));
+void                 bh_bitfld_RemoveAll(amc::FField& parent) __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
 // func:amc.FField.bh_bitfld.RemoveFirst
-amc::FBitfld*        bh_bitfld_RemoveFirst(amc::FField& field) __attribute__((nothrow));
+amc::FBitfld*        bh_bitfld_RemoveFirst(amc::FField& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements
 // func:amc.FField.bh_bitfld.Reserve
-void                 bh_bitfld_Reserve(amc::FField& field, int n) __attribute__((nothrow));
+void                 bh_bitfld_Reserve(amc::FField& parent, int n) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_funique.InsertMaybe
-inline bool          c_funique_InsertMaybe(amc::FField& field, amc::FFunique& row) __attribute__((nothrow));
+inline bool          c_funique_InsertMaybe(amc::FField& parent, amc::FFunique& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_funique.Remove
-inline void          c_funique_Remove(amc::FField& field, amc::FFunique& row) __attribute__((nothrow));
+inline void          c_funique_Remove(amc::FField& parent, amc::FFunique& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fflag.InsertMaybe
-inline bool          c_fflag_InsertMaybe(amc::FField& field, amc::FFflag& row) __attribute__((nothrow));
+inline bool          c_fflag_InsertMaybe(amc::FField& parent, amc::FFflag& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fflag.Remove
-inline void          c_fflag_Remove(amc::FField& field, amc::FFflag& row) __attribute__((nothrow));
+inline void          c_fflag_Remove(amc::FField& parent, amc::FFflag& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_falias.InsertMaybe
-inline bool          c_falias_InsertMaybe(amc::FField& field, amc::FFalias& row) __attribute__((nothrow));
+inline bool          c_falias_InsertMaybe(amc::FField& parent, amc::FFalias& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_falias.Remove
-inline void          c_falias_Remove(amc::FField& field, amc::FFalias& row) __attribute__((nothrow));
+inline void          c_falias_Remove(amc::FField& parent, amc::FFalias& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_ffast_field.InsertMaybe
-inline bool          c_ffast_field_InsertMaybe(amc::FField& field, amc::FFfast& row) __attribute__((nothrow));
+inline bool          c_ffast_field_InsertMaybe(amc::FField& parent, amc::FFfast& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_ffast_field.Remove
-inline void          c_ffast_field_Remove(amc::FField& field, amc::FFfast& row) __attribute__((nothrow));
+inline void          c_ffast_field_Remove(amc::FField& parent, amc::FFfast& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_ffast_length.InsertMaybe
-inline bool          c_ffast_length_InsertMaybe(amc::FField& field, amc::FFfast& row) __attribute__((nothrow));
+inline bool          c_ffast_length_InsertMaybe(amc::FField& parent, amc::FFfast& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_ffast_length.Remove
-inline void          c_ffast_length_Remove(amc::FField& field, amc::FFfast& row) __attribute__((nothrow));
+inline void          c_ffast_length_Remove(amc::FField& parent, amc::FFfast& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_ffast_mantissa.InsertMaybe
-inline bool          c_ffast_mantissa_InsertMaybe(amc::FField& field, amc::FFfast& row) __attribute__((nothrow));
+inline bool          c_ffast_mantissa_InsertMaybe(amc::FField& parent, amc::FFfast& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_ffast_mantissa.Remove
-inline void          c_ffast_mantissa_Remove(amc::FField& field, amc::FFfast& row) __attribute__((nothrow));
+inline void          c_ffast_mantissa_Remove(amc::FField& parent, amc::FFfast& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FField.c_ffast.EmptyQ
-inline bool          c_ffast_EmptyQ(amc::FField& field) __attribute__((nothrow));
+inline bool          c_ffast_EmptyQ(amc::FField& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FField.c_ffast.Find
-inline amc::FFfast*  c_ffast_Find(amc::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFfast*  c_ffast_Find(amc::FField& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FField.c_ffast.Getary
-inline algo::aryptr<amc::FFfast*> c_ffast_Getary(amc::FField& field) __attribute__((nothrow));
+inline algo::aryptr<amc::FFfast*> c_ffast_Getary(amc::FField& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FField.c_ffast.Insert
-void                 c_ffast_Insert(amc::FField& field, amc::FFfast& row) __attribute__((nothrow));
+void                 c_ffast_Insert(amc::FField& parent, amc::FFfast& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FField.c_ffast.InsertMaybe
-bool                 c_ffast_InsertMaybe(amc::FField& field, amc::FFfast& row) __attribute__((nothrow));
+bool                 c_ffast_InsertMaybe(amc::FField& parent, amc::FFfast& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FField.c_ffast.N
-inline i64           c_ffast_N(const amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ffast_N(const amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FField.c_ffast.Remove
-void                 c_ffast_Remove(amc::FField& field, amc::FFfast& row) __attribute__((nothrow));
+void                 c_ffast_Remove(amc::FField& parent, amc::FFfast& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FField.c_ffast.RemoveAll
-inline void          c_ffast_RemoveAll(amc::FField& field) __attribute__((nothrow));
+inline void          c_ffast_RemoveAll(amc::FField& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FField.c_ffast.Reserve
-void                 c_ffast_Reserve(amc::FField& field, u64 n) __attribute__((nothrow));
+void                 c_ffast_Reserve(amc::FField& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FField.c_ffast.qFind
-inline amc::FFfast&  c_ffast_qFind(amc::FField& field, u64 idx) __attribute__((nothrow));
+inline amc::FFfast&  c_ffast_qFind(amc::FField& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FField.c_ffast.InAryQ
 inline bool          field_c_ffast_InAryQ(amc::FFfast& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FField.c_ffast.qLast
-inline amc::FFfast&  c_ffast_qLast(amc::FField& field) __attribute__((nothrow));
+inline amc::FFfast&  c_ffast_qLast(amc::FField& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FField.c_pmaskfld_member.EmptyQ
-inline bool          c_pmaskfld_member_EmptyQ(amc::FField& field) __attribute__((nothrow));
+inline bool          c_pmaskfld_member_EmptyQ(amc::FField& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FField.c_pmaskfld_member.Find
-inline amc::FPmaskfldMember* c_pmaskfld_member_Find(amc::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FPmaskfldMember* c_pmaskfld_member_Find(amc::FField& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FField.c_pmaskfld_member.Getary
-inline algo::aryptr<amc::FPmaskfldMember*> c_pmaskfld_member_Getary(amc::FField& field) __attribute__((nothrow));
+inline algo::aryptr<amc::FPmaskfldMember*> c_pmaskfld_member_Getary(amc::FField& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FField.c_pmaskfld_member.Insert
-void                 c_pmaskfld_member_Insert(amc::FField& field, amc::FPmaskfldMember& row) __attribute__((nothrow));
+void                 c_pmaskfld_member_Insert(amc::FField& parent, amc::FPmaskfldMember& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FField.c_pmaskfld_member.InsertMaybe
-bool                 c_pmaskfld_member_InsertMaybe(amc::FField& field, amc::FPmaskfldMember& row) __attribute__((nothrow));
+bool                 c_pmaskfld_member_InsertMaybe(amc::FField& parent, amc::FPmaskfldMember& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FField.c_pmaskfld_member.N
-inline i64           c_pmaskfld_member_N(const amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_pmaskfld_member_N(const amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FField.c_pmaskfld_member.Remove
-void                 c_pmaskfld_member_Remove(amc::FField& field, amc::FPmaskfldMember& row) __attribute__((nothrow));
+void                 c_pmaskfld_member_Remove(amc::FField& parent, amc::FPmaskfldMember& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FField.c_pmaskfld_member.RemoveAll
-inline void          c_pmaskfld_member_RemoveAll(amc::FField& field) __attribute__((nothrow));
+inline void          c_pmaskfld_member_RemoveAll(amc::FField& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FField.c_pmaskfld_member.Reserve
-void                 c_pmaskfld_member_Reserve(amc::FField& field, u64 n) __attribute__((nothrow));
+void                 c_pmaskfld_member_Reserve(amc::FField& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FField.c_pmaskfld_member.qFind
-inline amc::FPmaskfldMember& c_pmaskfld_member_qFind(amc::FField& field, u64 idx) __attribute__((nothrow));
+inline amc::FPmaskfldMember& c_pmaskfld_member_qFind(amc::FField& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FField.c_pmaskfld_member.InAryQ
 inline bool          field_c_pmaskfld_member_InAryQ(amc::FPmaskfldMember& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FField.c_pmaskfld_member.qLast
-inline amc::FPmaskfldMember& c_pmaskfld_member_qLast(amc::FField& field) __attribute__((nothrow));
+inline amc::FPmaskfldMember& c_pmaskfld_member_qLast(amc::FField& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_lenfld.InsertMaybe
-inline bool          c_lenfld_InsertMaybe(amc::FField& field, amc::FLenfld& row) __attribute__((nothrow));
+inline bool          c_lenfld_InsertMaybe(amc::FField& parent, amc::FLenfld& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_lenfld.Remove
-inline void          c_lenfld_Remove(amc::FField& field, amc::FLenfld& row) __attribute__((nothrow));
+inline void          c_lenfld_Remove(amc::FField& parent, amc::FLenfld& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fkafka.InsertMaybe
-inline bool          c_fkafka_InsertMaybe(amc::FField& field, amc::FFkafka& row) __attribute__((nothrow));
+inline bool          c_fkafka_InsertMaybe(amc::FField& parent, amc::FFkafka& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fkafka.Remove
-inline void          c_fkafka_Remove(amc::FField& field, amc::FFkafka& row) __attribute__((nothrow));
+inline void          c_fkafka_Remove(amc::FField& parent, amc::FFkafka& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fpbuf.InsertMaybe
-inline bool          c_fpbuf_InsertMaybe(amc::FField& field, amc::FFpbuf& row) __attribute__((nothrow));
+inline bool          c_fpbuf_InsertMaybe(amc::FField& parent, amc::FFpbuf& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fpbuf.Remove
-inline void          c_fpbuf_Remove(amc::FField& field, amc::FFpbuf& row) __attribute__((nothrow));
+inline void          c_fpbuf_Remove(amc::FField& parent, amc::FFpbuf& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_fpbufcase.InsertMaybe
-inline bool          c_fpbufcase_InsertMaybe(amc::FField& field, amc::FFpbufcase& row) __attribute__((nothrow));
+inline bool          c_fpbufcase_InsertMaybe(amc::FField& parent, amc::FFpbufcase& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_fpbufcase.Remove
-inline void          c_fpbufcase_Remove(amc::FField& field, amc::FFpbufcase& row) __attribute__((nothrow));
+inline void          c_fpbufcase_Remove(amc::FField& parent, amc::FFpbufcase& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FField.zs_ffunc.EmptyQ
-inline bool          zs_ffunc_EmptyQ(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zs_ffunc_EmptyQ(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FField.zs_ffunc.First
-inline amc::FFfunc*  zs_ffunc_First(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FFfunc*  zs_ffunc_First(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FField.zs_ffunc.InLlistQ
 inline bool          field_zs_ffunc_InLlistQ(amc::FFfunc& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FField.zs_ffunc.Insert
-void                 zs_ffunc_Insert(amc::FField& field, amc::FFfunc& row) __attribute__((nothrow));
+void                 zs_ffunc_Insert(amc::FField& parent, amc::FFfunc& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FField.zs_ffunc.Last
-inline amc::FFfunc*  zs_ffunc_Last(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FFfunc*  zs_ffunc_Last(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FField.zs_ffunc.Next
 inline amc::FFfunc*  field_zs_ffunc_Next(amc::FFfunc &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:amc.FField.zs_ffunc.Remove
-void                 zs_ffunc_Remove(amc::FField& field, amc::FFfunc& row) __attribute__((nothrow));
+void                 zs_ffunc_Remove(amc::FField& parent, amc::FFfunc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FField.zs_ffunc.RemoveAll
-void                 zs_ffunc_RemoveAll(amc::FField& field) __attribute__((nothrow));
+void                 zs_ffunc_RemoveAll(amc::FField& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FField.zs_ffunc.RemoveFirst
-amc::FFfunc*         zs_ffunc_RemoveFirst(amc::FField& field) __attribute__((nothrow));
+amc::FFfunc*         zs_ffunc_RemoveFirst(amc::FField& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FField.zs_ffunc.qLast
-inline amc::FFfunc&  zs_ffunc_qLast(amc::FField& field) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFfunc&  zs_ffunc_qLast(amc::FField& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FField.c_blkhash.InsertMaybe
-inline bool          c_blkhash_InsertMaybe(amc::FField& field, amc::FBlkhash& row) __attribute__((nothrow));
+inline bool          c_blkhash_InsertMaybe(amc::FField& parent, amc::FBlkhash& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.c_blkhash.Remove
-inline void          c_blkhash_Remove(amc::FField& field, amc::FBlkhash& row) __attribute__((nothrow));
+inline void          c_blkhash_Remove(amc::FField& parent, amc::FBlkhash& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FField.c_fcond.EmptyQ
-inline bool          c_fcond_EmptyQ(amc::FField& field) __attribute__((nothrow));
+inline bool          c_fcond_EmptyQ(amc::FField& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FField.c_fcond.Find
-inline amc::FFcond*  c_fcond_Find(amc::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFcond*  c_fcond_Find(amc::FField& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FField.c_fcond.Getary
-inline algo::aryptr<amc::FFcond*> c_fcond_Getary(amc::FField& field) __attribute__((nothrow));
+inline algo::aryptr<amc::FFcond*> c_fcond_Getary(amc::FField& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FField.c_fcond.Insert
-void                 c_fcond_Insert(amc::FField& field, amc::FFcond& row) __attribute__((nothrow));
+void                 c_fcond_Insert(amc::FField& parent, amc::FFcond& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FField.c_fcond.InsertMaybe
-bool                 c_fcond_InsertMaybe(amc::FField& field, amc::FFcond& row) __attribute__((nothrow));
+bool                 c_fcond_InsertMaybe(amc::FField& parent, amc::FFcond& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FField.c_fcond.N
-inline i64           c_fcond_N(const amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fcond_N(const amc::FField& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FField.c_fcond.Remove
-void                 c_fcond_Remove(amc::FField& field, amc::FFcond& row) __attribute__((nothrow));
+void                 c_fcond_Remove(amc::FField& parent, amc::FFcond& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FField.c_fcond.RemoveAll
-inline void          c_fcond_RemoveAll(amc::FField& field) __attribute__((nothrow));
+inline void          c_fcond_RemoveAll(amc::FField& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FField.c_fcond.Reserve
-void                 c_fcond_Reserve(amc::FField& field, u64 n) __attribute__((nothrow));
+void                 c_fcond_Reserve(amc::FField& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FField.c_fcond.qFind
-inline amc::FFcond&  c_fcond_qFind(amc::FField& field, u64 idx) __attribute__((nothrow));
+inline amc::FFcond&  c_fcond_qFind(amc::FField& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FField.c_fcond.InAryQ
 inline bool          field_c_fcond_InAryQ(amc::FFcond& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FField.c_fcond.qLast
-inline amc::FFcond&  c_fcond_qLast(amc::FField& field) __attribute__((nothrow));
+inline amc::FFcond&  c_fcond_qLast(amc::FField& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FField..Init
-void                 FField_Init(amc::FField& field);
+void                 FField_Init(amc::FField& parent);
 // func:amc.FField.c_ffunc_curs.Reset
 inline void          field_c_ffunc_curs_Reset(field_c_ffunc_curs &curs, amc::FField &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -14605,7 +14744,7 @@ inline void          field_c_fcond_curs_Next(field_c_fcond_curs &curs) __attribu
 // func:amc.FField.c_fcond_curs.Access
 inline amc::FFcond&  field_c_fcond_curs_Access(field_c_fcond_curs &curs) __attribute__((nothrow));
 // func:amc.FField..Uninit
-void                 FField_Uninit(amc::FField& field) __attribute__((nothrow));
+void                 FField_Uninit(amc::FField& parent) __attribute__((nothrow));
 
 // --- amc.FFinput
 // create: amc.FDb.finput (Lary)
@@ -14640,13 +14779,13 @@ void                 finput_CopyOut(amc::FFinput &row, dmmeta::Finput &out) __at
 void                 finput_CopyIn(amc::FFinput &row, dmmeta::Finput &in) __attribute__((nothrow));
 
 // func:amc.FFinput.ns.Get
-algo::strptr         ns_Get(amc::FFinput& finput) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FFinput& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFinput..Init
-inline void          FFinput_Init(amc::FFinput& finput);
+inline void          FFinput_Init(amc::FFinput& parent);
 // func:amc.FFinput..Uninit
-void                 FFinput_Uninit(amc::FFinput& finput) __attribute__((nothrow));
+void                 FFinput_Uninit(amc::FFinput& parent) __attribute__((nothrow));
 
 // --- amc.FFkafka
 // create: amc.FDb.fkafka (Lary)
@@ -14682,9 +14821,9 @@ void                 fkafka_CopyIn(amc::FFkafka &row, dmmeta::Fkafka &in) __attr
 
 // Set all fields to initial values.
 // func:amc.FFkafka..Init
-inline void          FFkafka_Init(amc::FFkafka& fkafka);
+inline void          FFkafka_Init(amc::FFkafka& parent);
 // func:amc.FFkafka..Uninit
-void                 FFkafka_Uninit(amc::FFkafka& fkafka) __attribute__((nothrow));
+void                 FFkafka_Uninit(amc::FFkafka& parent) __attribute__((nothrow));
 
 // --- amc.FFldoffset
 // create: amc.FDb.fldoffset (Lary)
@@ -14718,9 +14857,9 @@ void                 fldoffset_CopyIn(amc::FFldoffset &row, dmmeta::Fldoffset &i
 
 // Set all fields to initial values.
 // func:amc.FFldoffset..Init
-inline void          FFldoffset_Init(amc::FFldoffset& fldoffset);
+inline void          FFldoffset_Init(amc::FFldoffset& parent);
 // func:amc.FFldoffset..Uninit
-void                 FFldoffset_Uninit(amc::FFldoffset& fldoffset) __attribute__((nothrow));
+void                 FFldoffset_Uninit(amc::FFldoffset& parent) __attribute__((nothrow));
 
 // --- amc.FFloadtuples
 // create: amc.FDb.floadtuples (Lary)
@@ -14756,13 +14895,13 @@ void                 floadtuples_CopyOut(amc::FFloadtuples &row, dmmeta::Floadtu
 void                 floadtuples_CopyIn(amc::FFloadtuples &row, dmmeta::Floadtuples &in) __attribute__((nothrow));
 
 // func:amc.FFloadtuples.ctype.Get
-algo::strptr         ctype_Get(amc::FFloadtuples& floadtuples) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FFloadtuples& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFloadtuples..Init
-inline void          FFloadtuples_Init(amc::FFloadtuples& floadtuples);
+inline void          FFloadtuples_Init(amc::FFloadtuples& parent);
 // func:amc.FFloadtuples..Uninit
-void                 FFloadtuples_Uninit(amc::FFloadtuples& floadtuples) __attribute__((nothrow));
+void                 FFloadtuples_Uninit(amc::FFloadtuples& parent) __attribute__((nothrow));
 
 // --- amc.FFnoremove
 // create: amc.FDb.fnoremove (Lary)
@@ -14792,7 +14931,7 @@ void                 fnoremove_CopyOut(amc::FFnoremove &row, dmmeta::Fnoremove &
 void                 fnoremove_CopyIn(amc::FFnoremove &row, dmmeta::Fnoremove &in) __attribute__((nothrow));
 
 // func:amc.FFnoremove..Uninit
-void                 FFnoremove_Uninit(amc::FFnoremove& fnoremove) __attribute__((nothrow));
+void                 FFnoremove_Uninit(amc::FFnoremove& parent) __attribute__((nothrow));
 
 // --- amc.FFoutput
 // create: amc.FDb.foutput (Lary)
@@ -14824,13 +14963,13 @@ void                 foutput_CopyOut(amc::FFoutput &row, dmmeta::Foutput &out) _
 void                 foutput_CopyIn(amc::FFoutput &row, dmmeta::Foutput &in) __attribute__((nothrow));
 
 // func:amc.FFoutput.ns.Get
-algo::strptr         ns_Get(amc::FFoutput& foutput) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FFoutput& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFoutput..Init
-inline void          FFoutput_Init(amc::FFoutput& foutput);
+inline void          FFoutput_Init(amc::FFoutput& parent);
 // func:amc.FFoutput..Uninit
-void                 FFoutput_Uninit(amc::FFoutput& foutput) __attribute__((nothrow));
+void                 FFoutput_Uninit(amc::FFoutput& parent) __attribute__((nothrow));
 
 // --- amc.FFpbuf
 // create: amc.FDb.fpbuf (Lary)
@@ -14865,9 +15004,9 @@ void                 fpbuf_CopyIn(amc::FFpbuf &row, dmmeta::Fpbuf &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FFpbuf..Init
-inline void          FFpbuf_Init(amc::FFpbuf& fpbuf);
+inline void          FFpbuf_Init(amc::FFpbuf& parent);
 // func:amc.FFpbuf..Uninit
-void                 FFpbuf_Uninit(amc::FFpbuf& fpbuf) __attribute__((nothrow));
+void                 FFpbuf_Uninit(amc::FFpbuf& parent) __attribute__((nothrow));
 
 // --- amc.FFpbufcase
 // create: amc.FDb.fpbufcase (Lary)
@@ -14903,19 +15042,19 @@ void                 fpbufcase_CopyOut(amc::FFpbufcase &row, dmmeta::Fpbufcase &
 void                 fpbufcase_CopyIn(amc::FFpbufcase &row, dmmeta::Fpbufcase &in) __attribute__((nothrow));
 
 // func:amc.FFpbufcase.fpbuf.Get
-algo::strptr         fpbuf_Get(amc::FFpbufcase& fpbufcase) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         fpbuf_Get(amc::FFpbufcase& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFpbufcase.oneof.Get
-algo::strptr         oneof_Get(amc::FFpbufcase& fpbufcase) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         oneof_Get(amc::FFpbufcase& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFpbufcase.ctype.Get
-algo::strptr         ctype_Get(amc::FFpbufcase& fpbufcase) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FFpbufcase& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFpbufcase..Init
-inline void          FFpbufcase_Init(amc::FFpbufcase& fpbufcase);
+inline void          FFpbufcase_Init(amc::FFpbufcase& parent);
 // func:amc.FFpbufcase..Uninit
-void                 FFpbufcase_Uninit(amc::FFpbufcase& fpbufcase) __attribute__((nothrow));
+void                 FFpbufcase_Uninit(amc::FFpbufcase& parent) __attribute__((nothrow));
 
 // --- amc.FFprefix
 // create: amc.FDb.fprefix (Lary)
@@ -14948,16 +15087,16 @@ void                 fprefix_CopyOut(amc::FFprefix &row, dmmeta::Fprefix &out) _
 void                 fprefix_CopyIn(amc::FFprefix &row, dmmeta::Fprefix &in) __attribute__((nothrow));
 
 // func:amc.FFprefix.prefix.Get
-algo::strptr         prefix_Get(amc::FFprefix& fprefix) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         prefix_Get(amc::FFprefix& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFprefix.reftype.Get
-algo::strptr         reftype_Get(amc::FFprefix& fprefix) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         reftype_Get(amc::FFprefix& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFprefix..Init
-inline void          FFprefix_Init(amc::FFprefix& fprefix);
+inline void          FFprefix_Init(amc::FFprefix& parent);
 // func:amc.FFprefix..Uninit
-void                 FFprefix_Uninit(amc::FFprefix& fprefix) __attribute__((nothrow));
+void                 FFprefix_Uninit(amc::FFprefix& parent) __attribute__((nothrow));
 
 // --- amc.FFregx
 // create: amc.FDb.fregx (Lary)
@@ -14990,9 +15129,9 @@ void                 fregx_CopyIn(amc::FFregx &row, dmmeta::Fregx &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FFregx..Init
-inline void          FFregx_Init(amc::FFregx& fregx);
+inline void          FFregx_Init(amc::FFregx& parent);
 // func:amc.FFregx..Uninit
-void                 FFregx_Uninit(amc::FFregx& fregx) __attribute__((nothrow));
+void                 FFregx_Uninit(amc::FFregx& parent) __attribute__((nothrow));
 
 // --- amc.FFsort
 // create: amc.FDb.fsort (Lary)
@@ -15031,9 +15170,9 @@ void                 fsort_CopyIn(amc::FFsort &row, dmmeta::Fsort &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FFsort..Init
-inline void          FFsort_Init(amc::FFsort& fsort);
+inline void          FFsort_Init(amc::FFsort& parent);
 // func:amc.FFsort..Uninit
-void                 FFsort_Uninit(amc::FFsort& fsort) __attribute__((nothrow));
+void                 FFsort_Uninit(amc::FFsort& parent) __attribute__((nothrow));
 
 // --- amc.FFstep
 // create: amc.FDb.fstep (Lary)
@@ -15078,26 +15217,26 @@ void                 fstep_CopyOut(amc::FFstep &row, dmmeta::Fstep &out) __attri
 void                 fstep_CopyIn(amc::FFstep &row, dmmeta::Fstep &in) __attribute__((nothrow));
 
 // func:amc.FFstep.field.Get
-algo::strptr         field_Get(amc::FFstep& fstep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(amc::FFstep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFstep.ns.Get
-algo::strptr         ns_Get(amc::FFstep& fstep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FFstep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFstep.name.Get
-algo::strptr         name_Get(amc::FFstep& fstep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FFstep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FFstep.c_fdelay.InsertMaybe
-inline bool          c_fdelay_InsertMaybe(amc::FFstep& fstep, amc::FFdelay& row) __attribute__((nothrow));
+inline bool          c_fdelay_InsertMaybe(amc::FFstep& parent, amc::FFdelay& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FFstep.c_fdelay.Remove
-inline void          c_fdelay_Remove(amc::FFstep& fstep, amc::FFdelay& row) __attribute__((nothrow));
+inline void          c_fdelay_Remove(amc::FFstep& parent, amc::FFdelay& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFstep..Init
-void                 FFstep_Init(amc::FFstep& fstep);
+void                 FFstep_Init(amc::FFstep& parent);
 // func:amc.FFstep..Uninit
-void                 FFstep_Uninit(amc::FFstep& fstep) __attribute__((nothrow));
+void                 FFstep_Uninit(amc::FFstep& parent) __attribute__((nothrow));
 
 // --- amc.FFtrace
 // create: amc.FDb.ftrace (Lary)
@@ -15127,7 +15266,7 @@ void                 ftrace_CopyOut(amc::FFtrace &row, dmmeta::Ftrace &out) __at
 void                 ftrace_CopyIn(amc::FFtrace &row, dmmeta::Ftrace &in) __attribute__((nothrow));
 
 // func:amc.FFtrace..Uninit
-void                 FFtrace_Uninit(amc::FFtrace& ftrace) __attribute__((nothrow));
+void                 FFtrace_Uninit(amc::FFtrace& parent) __attribute__((nothrow));
 
 // --- amc.FFunc
 // create: amc.FDb.func (Lary)
@@ -15203,103 +15342,103 @@ void                 func_CopyOut(amc::FFunc &row, dmmeta::Func &out) __attribut
 void                 func_CopyIn(amc::FFunc &row, dmmeta::Func &in) __attribute__((nothrow));
 
 // func:amc.FFunc.field.Get
-algo::strptr         field_Get(amc::FFunc& func) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(amc::FFunc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFunc.name.Get
-algo::strptr         name_Get(amc::FFunc& func) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FFunc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFunc.ctype.Get
-algo::strptr         ctype_Get(amc::FFunc& func) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FFunc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFunc.ns.Get
-algo::strptr         ns_Get(amc::FFunc& func) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FFunc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:amc.FFunc.funcarg.Addary
-algo::aryptr<amc::Funcarg> funcarg_Addary(amc::FFunc& func, algo::aryptr<amc::Funcarg> rhs) __attribute__((nothrow));
+algo::aryptr<amc::Funcarg> funcarg_Addary(amc::FFunc& parent, algo::aryptr<amc::Funcarg> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:amc.FFunc.funcarg.Alloc
-amc::Funcarg&        funcarg_Alloc(amc::FFunc& func) __attribute__((__warn_unused_result__, nothrow));
+amc::Funcarg&        funcarg_Alloc(amc::FFunc& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:amc.FFunc.funcarg.AllocAt
-amc::Funcarg&        funcarg_AllocAt(amc::FFunc& func, i64 at) __attribute__((__warn_unused_result__, nothrow));
+amc::Funcarg&        funcarg_AllocAt(amc::FFunc& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc.FFunc.funcarg.AllocN
-algo::aryptr<amc::Funcarg> funcarg_AllocN(amc::FFunc& func, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<amc::Funcarg> funcarg_AllocN(amc::FFunc& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:amc.FFunc.funcarg.AllocNAt
-algo::aryptr<amc::Funcarg> funcarg_AllocNAt(amc::FFunc& func, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<amc::Funcarg> funcarg_AllocNAt(amc::FFunc& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:amc.FFunc.funcarg.EmptyQ
-inline bool          funcarg_EmptyQ(amc::FFunc& func) __attribute__((nothrow));
+inline bool          funcarg_EmptyQ(amc::FFunc& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FFunc.funcarg.Find
-inline amc::Funcarg* funcarg_Find(amc::FFunc& func, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::Funcarg* funcarg_Find(amc::FFunc& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:amc.FFunc.funcarg.Getary
-inline algo::aryptr<amc::Funcarg> funcarg_Getary(const amc::FFunc& func) __attribute__((nothrow));
+inline algo::aryptr<amc::Funcarg> funcarg_Getary(const amc::FFunc& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:amc.FFunc.funcarg.Last
-inline amc::Funcarg* funcarg_Last(amc::FFunc& func) __attribute__((nothrow, pure));
+inline amc::Funcarg* funcarg_Last(amc::FFunc& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:amc.FFunc.funcarg.Max
-inline i64           funcarg_Max(amc::FFunc& func) __attribute__((nothrow));
+inline i64           funcarg_Max(amc::FFunc& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:amc.FFunc.funcarg.N
-inline i64           funcarg_N(const amc::FFunc& func) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           funcarg_N(const amc::FFunc& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:amc.FFunc.funcarg.Remove
-void                 funcarg_Remove(amc::FFunc& func, u64 i) __attribute__((nothrow));
+void                 funcarg_Remove(amc::FFunc& parent, u64 i) __attribute__((nothrow));
 // func:amc.FFunc.funcarg.RemoveAll
-void                 funcarg_RemoveAll(amc::FFunc& func) __attribute__((nothrow));
+void                 funcarg_RemoveAll(amc::FFunc& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:amc.FFunc.funcarg.RemoveLast
-void                 funcarg_RemoveLast(amc::FFunc& func) __attribute__((nothrow));
+void                 funcarg_RemoveLast(amc::FFunc& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:amc.FFunc.funcarg.Reserve
-inline void          funcarg_Reserve(amc::FFunc& func, i64 n) __attribute__((nothrow));
+inline void          funcarg_Reserve(amc::FFunc& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:amc.FFunc.funcarg.AbsReserve
-void                 funcarg_AbsReserve(amc::FFunc& func, i64 n) __attribute__((nothrow));
+void                 funcarg_AbsReserve(amc::FFunc& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:amc.FFunc.funcarg.Setary
-void                 funcarg_Setary(amc::FFunc& func, amc::FFunc &rhs) __attribute__((nothrow));
+void                 funcarg_Setary(amc::FFunc& parent, amc::FFunc &rhs) __attribute__((nothrow));
 // Copy specified array into funcarg, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
 // func:amc.FFunc.funcarg.Setary2
-void                 funcarg_Setary(amc::FFunc& func, const algo::aryptr<amc::Funcarg> &rhs) __attribute__((nothrow));
+void                 funcarg_Setary(amc::FFunc& parent, const algo::aryptr<amc::Funcarg> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:amc.FFunc.funcarg.qFind
-inline amc::Funcarg& funcarg_qFind(amc::FFunc& func, u64 t) __attribute__((nothrow));
+inline amc::Funcarg& funcarg_qFind(amc::FFunc& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:amc.FFunc.funcarg.qLast
-inline amc::Funcarg& funcarg_qLast(amc::FFunc& func) __attribute__((nothrow));
+inline amc::Funcarg& funcarg_qLast(amc::FFunc& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:amc.FFunc.funcarg.rowid_Get
-inline u64           funcarg_rowid_Get(amc::FFunc& func, amc::Funcarg &elem) __attribute__((nothrow));
+inline u64           funcarg_rowid_Get(amc::FFunc& parent, amc::Funcarg &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc.FFunc.funcarg.AllocNVal
-algo::aryptr<amc::Funcarg> funcarg_AllocNVal(amc::FFunc& func, i64 n_elems, const amc::Funcarg& val) __attribute__((nothrow));
+algo::aryptr<amc::Funcarg> funcarg_AllocNVal(amc::FFunc& parent, i64 n_elems, const amc::Funcarg& val) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:amc.FFunc.funcarg.Insary
-void                 funcarg_Insary(amc::FFunc& func, algo::aryptr<amc::Funcarg> rhs, i64 at) __attribute__((nothrow));
+void                 funcarg_Insary(amc::FFunc& parent, algo::aryptr<amc::Funcarg> rhs, i64 at) __attribute__((nothrow));
 // Delete a range of elements
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
 // func:amc.FFunc.funcarg.RemRegion
-void                 funcarg_RemRegion(amc::FFunc& func, i64 beg, i64 n) __attribute__((nothrow));
+void                 funcarg_RemRegion(amc::FFunc& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFunc..Init
-void                 FFunc_Init(amc::FFunc& func);
+void                 FFunc_Init(amc::FFunc& parent);
 // proceed to next item
 // func:amc.FFunc.funcarg_curs.Next
 inline void          func_funcarg_curs_Next(func_funcarg_curs &curs) __attribute__((nothrow));
@@ -15312,7 +15451,7 @@ inline bool          func_funcarg_curs_ValidQ(func_funcarg_curs &curs) __attribu
 // func:amc.FFunc.funcarg_curs.Access
 inline amc::Funcarg& func_funcarg_curs_Access(func_funcarg_curs &curs) __attribute__((nothrow));
 // func:amc.FFunc..Uninit
-void                 FFunc_Uninit(amc::FFunc& func) __attribute__((nothrow));
+void                 FFunc_Uninit(amc::FFunc& parent) __attribute__((nothrow));
 
 // --- amc.FFunique
 // create: amc.FDb.funique (Lary)
@@ -15343,7 +15482,7 @@ void                 funique_CopyOut(amc::FFunique &row, dmmeta::Funique &out) _
 void                 funique_CopyIn(amc::FFunique &row, dmmeta::Funique &in) __attribute__((nothrow));
 
 // func:amc.FFunique..Uninit
-void                 FFunique_Uninit(amc::FFunique& funique) __attribute__((nothrow));
+void                 FFunique_Uninit(amc::FFunique& parent) __attribute__((nothrow));
 
 // --- amc.FFwddecl
 // create: amc.FDb.fwddecl (Lary)
@@ -15377,16 +15516,16 @@ void                 fwddecl_CopyOut(amc::FFwddecl &row, dmmeta::Fwddecl &out) _
 void                 fwddecl_CopyIn(amc::FFwddecl &row, dmmeta::Fwddecl &in) __attribute__((nothrow));
 
 // func:amc.FFwddecl.ns.Get
-algo::strptr         ns_Get(amc::FFwddecl& fwddecl) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FFwddecl& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FFwddecl.ctype.Get
-algo::strptr         ctype_Get(amc::FFwddecl& fwddecl) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FFwddecl& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFwddecl..Init
-inline void          FFwddecl_Init(amc::FFwddecl& fwddecl);
+inline void          FFwddecl_Init(amc::FFwddecl& parent);
 // func:amc.FFwddecl..Uninit
-void                 FFwddecl_Uninit(amc::FFwddecl& fwddecl) __attribute__((nothrow));
+void                 FFwddecl_Uninit(amc::FFwddecl& parent) __attribute__((nothrow));
 
 // --- amc.FGconst
 // create: amc.FDb.gconst (Lary)
@@ -15424,13 +15563,13 @@ void                 gconst_CopyOut(amc::FGconst &row, dmmeta::Gconst &out) __at
 void                 gconst_CopyIn(amc::FGconst &row, dmmeta::Gconst &in) __attribute__((nothrow));
 
 // func:amc.FGconst.namefldctyp.Get
-algo::strptr         namefldctyp_Get(amc::FGconst& gconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         namefldctyp_Get(amc::FGconst& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FGconst..Init
-inline void          FGconst_Init(amc::FGconst& gconst);
+inline void          FGconst_Init(amc::FGconst& parent);
 // func:amc.FGconst..Uninit
-void                 FGconst_Uninit(amc::FGconst& gconst) __attribute__((nothrow));
+void                 FGconst_Uninit(amc::FGconst& parent) __attribute__((nothrow));
 
 // --- amc.FGen
 // create: amc.FDb.gen (Lary)
@@ -15468,13 +15607,13 @@ void                 gen_CopyIn(amc::FGen &row, amcdb::Gen &in) __attribute__((n
 
 // Invoke function by pointer
 // func:amc.FGen.step.Call
-inline void          step_Call(amc::FGen& gen) __attribute__((nothrow));
+inline void          step_Call(amc::FGen& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FGen..Init
-inline void          FGen_Init(amc::FGen& gen);
+inline void          FGen_Init(amc::FGen& parent);
 // func:amc.FGen..Uninit
-void                 FGen_Uninit(amc::FGen& gen) __attribute__((nothrow));
+void                 FGen_Uninit(amc::FGen& parent) __attribute__((nothrow));
 
 // --- amc.FGenXref
 struct FGenXref { // amc.FGenXref
@@ -15494,6 +15633,9 @@ inline bool          ind_seen_EmptyQ(amc::FGenXref& parent) __attribute__((nothr
 // Find row by key. Return NULL if not found.
 // func:amc.FGenXref.ind_seen.Find
 amc::FGenXrefSeen*   ind_seen_Find(amc::FGenXref& parent, const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FGenXref.ind_seen.FindX
+amc::FGenXrefSeen&   ind_seen_FindX(amc::FGenXref& parent, const algo::strptr& key);
 // Return number of items in the hash
 // func:amc.FGenXref.ind_seen.N
 inline i32           ind_seen_N(const amc::FGenXref& parent) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -15568,11 +15710,11 @@ void                 FGenXref_Uninit(amc::FGenXref& parent) __attribute__((nothr
 // create: amc.FGenXref.seen (Lary)
 // access: amc.FGenXref.ind_seen (Thash)
 struct FGenXrefSeen { // amc.FGenXrefSeen
-    amc::FGenXrefSeen*   parent_ind_seen_next;      // hash next
-    u32                  parent_ind_seen_hashval;   // hash value
-    algo::cstring        value;                     //
-    algo::Smallstr150    via;                       // Saved via
-    algo::Smallstr150    xreffld;                   // Saved xreffld
+    amc::FGenXrefSeen*   gen_xref_ind_seen_next;      // hash next
+    u32                  gen_xref_ind_seen_hashval;   // hash value
+    algo::cstring        value;                       //
+    algo::Smallstr150    via;                         // Saved via
+    algo::Smallstr150    xreffld;                     // Saved xreffld
 private:
     // func:amc.FGenXrefSeen..Ctor
     inline               FGenXrefSeen() __attribute__((nothrow));
@@ -15583,7 +15725,7 @@ private:
 };
 // Set all fields to initial values.
 // func:amc.FGenXrefSeen..Init
-inline void          FGenXrefSeen_Init(amc::FGenXrefSeen& seen);
+inline void          FGenXrefSeen_Init(amc::FGenXrefSeen& parent);
 
 // --- amc.FGstatic
 // create: amc.FDb.gstatic (Lary)
@@ -15619,13 +15761,13 @@ void                 gstatic_CopyOut(amc::FGstatic &row, dmmeta::Gstatic &out) _
 void                 gstatic_CopyIn(amc::FGstatic &row, dmmeta::Gstatic &in) __attribute__((nothrow));
 
 // func:amc.FGstatic.ns.Get
-algo::strptr         ns_Get(amc::FGstatic& gstatic) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FGstatic& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FGstatic..Init
-inline void          FGstatic_Init(amc::FGstatic& gstatic);
+inline void          FGstatic_Init(amc::FGstatic& parent);
 // func:amc.FGstatic..Uninit
-void                 FGstatic_Uninit(amc::FGstatic& gstatic) __attribute__((nothrow));
+void                 FGstatic_Uninit(amc::FGstatic& parent) __attribute__((nothrow));
 
 // --- amc.FGsymbol
 // create: amc.FDb.gsymbol (Lary)
@@ -15665,16 +15807,16 @@ void                 gsymbol_CopyOut(amc::FGsymbol &row, dmmeta::Gsymbol &out) _
 void                 gsymbol_CopyIn(amc::FGsymbol &row, dmmeta::Gsymbol &in) __attribute__((nothrow));
 
 // func:amc.FGsymbol.ns.Get
-algo::strptr         ns_Get(amc::FGsymbol& gsymbol) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FGsymbol& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FGsymbol.ssimfile.Get
-algo::strptr         ssimfile_Get(amc::FGsymbol& gsymbol) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimfile_Get(amc::FGsymbol& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FGsymbol..Init
-inline void          FGsymbol_Init(amc::FGsymbol& gsymbol);
+inline void          FGsymbol_Init(amc::FGsymbol& parent);
 // func:amc.FGsymbol..Uninit
-void                 FGsymbol_Uninit(amc::FGsymbol& gsymbol) __attribute__((nothrow));
+void                 FGsymbol_Uninit(amc::FGsymbol& parent) __attribute__((nothrow));
 
 // --- amc.FHook
 // create: amc.FDb.hook (Lary)
@@ -15709,9 +15851,9 @@ void                 hook_CopyIn(amc::FHook &row, dmmeta::Hook &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FHook..Init
-inline void          FHook_Init(amc::FHook& hook);
+inline void          FHook_Init(amc::FHook& parent);
 // func:amc.FHook..Uninit
-void                 FHook_Uninit(amc::FHook& hook) __attribute__((nothrow));
+void                 FHook_Uninit(amc::FHook& parent) __attribute__((nothrow));
 
 // --- amc.FInlary
 // create: amc.FDb.inlary (Lary)
@@ -15747,9 +15889,9 @@ void                 inlary_CopyIn(amc::FInlary &row, dmmeta::Inlary &in) __attr
 
 // Set all fields to initial values.
 // func:amc.FInlary..Init
-inline void          FInlary_Init(amc::FInlary& inlary);
+inline void          FInlary_Init(amc::FInlary& parent);
 // func:amc.FInlary..Uninit
-void                 FInlary_Uninit(amc::FInlary& inlary) __attribute__((nothrow));
+void                 FInlary_Uninit(amc::FInlary& parent) __attribute__((nothrow));
 
 // --- amc.FJstype
 // create: amc.FDb.jstype (Lary)
@@ -15784,7 +15926,7 @@ void                 jstype_CopyOut(amc::FJstype &row, dmmeta::Jstype &out) __at
 void                 jstype_CopyIn(amc::FJstype &row, dmmeta::Jstype &in) __attribute__((nothrow));
 
 // func:amc.FJstype..Uninit
-void                 FJstype_Uninit(amc::FJstype& jstype) __attribute__((nothrow));
+void                 FJstype_Uninit(amc::FJstype& parent) __attribute__((nothrow));
 
 // --- amc.FLenfld
 // create: amc.FDb.lenfld (Lary)
@@ -15819,13 +15961,13 @@ void                 lenfld_CopyOut(amc::FLenfld &row, dmmeta::Lenfld &out) __at
 void                 lenfld_CopyIn(amc::FLenfld &row, dmmeta::Lenfld &in) __attribute__((nothrow));
 
 // func:amc.FLenfld.ctype.Get
-algo::strptr         ctype_Get(amc::FLenfld& lenfld) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FLenfld& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FLenfld..Init
-inline void          FLenfld_Init(amc::FLenfld& lenfld);
+inline void          FLenfld_Init(amc::FLenfld& parent);
 // func:amc.FLenfld..Uninit
-void                 FLenfld_Uninit(amc::FLenfld& lenfld) __attribute__((nothrow));
+void                 FLenfld_Uninit(amc::FLenfld& parent) __attribute__((nothrow));
 
 // --- amc.FLicense
 // create: amc.FDb.license (Lary)
@@ -15861,9 +16003,9 @@ void                 license_CopyIn(amc::FLicense &row, dev::License &in) __attr
 
 // Set all fields to initial values.
 // func:amc.FLicense..Init
-inline void          FLicense_Init(amc::FLicense& license);
+inline void          FLicense_Init(amc::FLicense& parent);
 // func:amc.FLicense..Uninit
-void                 FLicense_Uninit(amc::FLicense& license) __attribute__((nothrow));
+void                 FLicense_Uninit(amc::FLicense& parent) __attribute__((nothrow));
 
 // --- amc.FListtype
 // create: amc.FDb.listtype (Lary)
@@ -15900,9 +16042,9 @@ void                 listtype_CopyIn(amc::FListtype &row, dmmeta::Listtype &in) 
 
 // Set all fields to initial values.
 // func:amc.FListtype..Init
-inline void          FListtype_Init(amc::FListtype& listtype);
+inline void          FListtype_Init(amc::FListtype& parent);
 // func:amc.FListtype..Uninit
-void                 FListtype_Uninit(amc::FListtype& listtype) __attribute__((nothrow));
+void                 FListtype_Uninit(amc::FListtype& parent) __attribute__((nothrow));
 
 // --- amc.FLlist
 // create: amc.FDb.llist (Lary)
@@ -15937,13 +16079,13 @@ void                 llist_CopyOut(amc::FLlist &row, dmmeta::Llist &out) __attri
 void                 llist_CopyIn(amc::FLlist &row, dmmeta::Llist &in) __attribute__((nothrow));
 
 // func:amc.FLlist.listtype.Get
-algo::strptr         listtype_Get(amc::FLlist& llist) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         listtype_Get(amc::FLlist& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FLlist..Init
-inline void          FLlist_Init(amc::FLlist& llist);
+inline void          FLlist_Init(amc::FLlist& parent);
 // func:amc.FLlist..Uninit
-void                 FLlist_Uninit(amc::FLlist& llist) __attribute__((nothrow));
+void                 FLlist_Uninit(amc::FLlist& parent) __attribute__((nothrow));
 
 // --- amc.FMain
 // create: amc.FDb.main (Lary)
@@ -15977,9 +16119,9 @@ void                 main_CopyIn(amc::FMain &row, dmmeta::Main &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FMain..Init
-inline void          FMain_Init(amc::FMain& main);
+inline void          FMain_Init(amc::FMain& parent);
 // func:amc.FMain..Uninit
-void                 FMain_Uninit(amc::FMain& main) __attribute__((nothrow));
+void                 FMain_Uninit(amc::FMain& parent) __attribute__((nothrow));
 
 // --- amc.FMsg
 // create: amc.FDb.msg (Lary)
@@ -16018,9 +16160,9 @@ void                 msg_CopyIn(amc::FMsg &row, dmmeta::Msg &in) __attribute__((
 
 // Set all fields to initial values.
 // func:amc.FMsg..Init
-inline void          FMsg_Init(amc::FMsg& msg);
+inline void          FMsg_Init(amc::FMsg& parent);
 // func:amc.FMsg..Uninit
-void                 FMsg_Uninit(amc::FMsg& msg) __attribute__((nothrow));
+void                 FMsg_Uninit(amc::FMsg& parent) __attribute__((nothrow));
 
 // --- amc.FMsgfield
 // create: amc.FDb.msgfield (Lary)
@@ -16032,6 +16174,8 @@ struct FMsgfield { // amc.FMsgfield: Derived leaf field layout row
     i32                 width;      //   0  Byte width; for a char array the array length
     bool                bigend;     //   false  Field is big-endian
     bool                varlen;     //   false  Varlen tail: extends to the end of the message
+    algo::Smallstr50    strtype;    // Inline-string format (dmmeta.strtype): rpascal, leftpad, rightpad; empty when the field is not an inline string
+    algo::Smallstr10    pad;        // Padding character of a padded inline string, as a byte value; empty when it has none
     algo::cstring       comment;    //
 private:
     // func:amc.FMsgfield..Ctor
@@ -16049,14 +16193,14 @@ void                 msgfield_CopyOut(amc::FMsgfield &row, dmmeta::Msgfield &out
 void                 msgfield_CopyIn(amc::FMsgfield &row, dmmeta::Msgfield &in) __attribute__((nothrow));
 
 // func:amc.FMsgfield.msg.Get
-algo::strptr         msg_Get(amc::FMsgfield& msgfield) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         msg_Get(amc::FMsgfield& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FMsgfield.name.Get
-algo::strptr         name_Get(amc::FMsgfield& msgfield) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FMsgfield& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FMsgfield..Init
-inline void          FMsgfield_Init(amc::FMsgfield& msgfield);
+void                 FMsgfield_Init(amc::FMsgfield& parent);
 
 // --- amc.FMsgtype
 // create: amc.FDb.msgtype (Lary)
@@ -16090,9 +16234,9 @@ void                 msgtype_CopyIn(amc::FMsgtype &row, dmmeta::Msgtype &in) __a
 
 // Set all fields to initial values.
 // func:amc.FMsgtype..Init
-inline void          FMsgtype_Init(amc::FMsgtype& msgtype);
+inline void          FMsgtype_Init(amc::FMsgtype& parent);
 // func:amc.FMsgtype..Uninit
-void                 FMsgtype_Uninit(amc::FMsgtype& msgtype) __attribute__((nothrow));
+void                 FMsgtype_Uninit(amc::FMsgtype& parent) __attribute__((nothrow));
 
 // --- amc.FNocascdel
 // create: amc.FDb.nocascdel (Lary)
@@ -16122,7 +16266,7 @@ void                 nocascdel_CopyOut(amc::FNocascdel &row, dmmeta::Nocascdel &
 void                 nocascdel_CopyIn(amc::FNocascdel &row, dmmeta::Nocascdel &in) __attribute__((nothrow));
 
 // func:amc.FNocascdel..Uninit
-void                 FNocascdel_Uninit(amc::FNocascdel& nocascdel) __attribute__((nothrow));
+void                 FNocascdel_Uninit(amc::FNocascdel& parent) __attribute__((nothrow));
 
 // --- amc.FNossimfile
 // create: amc.FDb.nossimfile (Lary)
@@ -16153,7 +16297,7 @@ void                 nossimfile_CopyOut(amc::FNossimfile &row, dmmeta::Nossimfil
 void                 nossimfile_CopyIn(amc::FNossimfile &row, dmmeta::Nossimfile &in) __attribute__((nothrow));
 
 // func:amc.FNossimfile..Uninit
-void                 FNossimfile_Uninit(amc::FNossimfile& nossimfile) __attribute__((nothrow));
+void                 FNossimfile_Uninit(amc::FNossimfile& parent) __attribute__((nothrow));
 
 // --- amc.FNs
 // create: amc.FDb.ns (Lary)
@@ -16201,8 +16345,8 @@ struct FNs { // amc.FNs
     algo::cstring*      include_elems;       // pointer to elements
     u64                 include_n;           // number of elements in array
     u64                 include_max;         // max. capacity of array before realloc
-    algo::Sha1sig       signature;           //
-    algo::Sha1sig       signature_input;     //
+    algo::Signature     signature;           //
+    algo::Signature     signature_input;     //
     amc::FDispsig**     c_dispsig_elems;     // array of pointers
     u64                 c_dispsig_n;         // current size
     u64                 c_dispsig_max;       // capacity of allocated array
@@ -16314,748 +16458,748 @@ void                 ns_CopyIn(amc::FNs &row, dmmeta::Ns &in) __attribute__((not
 
 // Return true if index is empty
 // func:amc.FNs.c_ctype.EmptyQ
-inline bool          c_ctype_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_ctype_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_ctype.Find
-inline amc::FCtype*  c_ctype_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FCtype*  c_ctype_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_ctype.Getary
-inline algo::aryptr<amc::FCtype*> c_ctype_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FCtype*> c_ctype_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_ctype.Insert
-void                 c_ctype_Insert(amc::FNs& ns, amc::FCtype& row) __attribute__((nothrow));
+void                 c_ctype_Insert(amc::FNs& parent, amc::FCtype& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_ctype.InsertMaybe
-bool                 c_ctype_InsertMaybe(amc::FNs& ns, amc::FCtype& row) __attribute__((nothrow));
+bool                 c_ctype_InsertMaybe(amc::FNs& parent, amc::FCtype& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_ctype.N
-inline i64           c_ctype_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ctype_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_ctype.Remove
-void                 c_ctype_Remove(amc::FNs& ns, amc::FCtype& row) __attribute__((nothrow));
+void                 c_ctype_Remove(amc::FNs& parent, amc::FCtype& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_ctype.RemoveAll
-inline void          c_ctype_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_ctype_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_ctype.Reserve
-void                 c_ctype_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_ctype_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_ctype.qFind
-inline amc::FCtype&  c_ctype_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FCtype&  c_ctype_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_ctype.InAryQ
 inline bool          ns_c_ctype_InAryQ(amc::FCtype& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_ctype.qLast
-inline amc::FCtype&  c_ctype_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FCtype&  c_ctype_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_func.EmptyQ
-inline bool          c_func_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_func_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_func.Find
-inline amc::FFunc*   c_func_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFunc*   c_func_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_func.Getary
-inline algo::aryptr<amc::FFunc*> c_func_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FFunc*> c_func_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_func.Insert
-void                 c_func_Insert(amc::FNs& ns, amc::FFunc& row) __attribute__((nothrow));
+void                 c_func_Insert(amc::FNs& parent, amc::FFunc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_func.InsertMaybe
-bool                 c_func_InsertMaybe(amc::FNs& ns, amc::FFunc& row) __attribute__((nothrow));
+bool                 c_func_InsertMaybe(amc::FNs& parent, amc::FFunc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_func.N
-inline i64           c_func_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_func_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_func.Remove
-void                 c_func_Remove(amc::FNs& ns, amc::FFunc& row) __attribute__((nothrow));
+void                 c_func_Remove(amc::FNs& parent, amc::FFunc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_func.RemoveAll
-inline void          c_func_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_func_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_func.Reserve
-void                 c_func_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_func_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_func.qFind
-inline amc::FFunc&   c_func_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FFunc&   c_func_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_func.InAryQ
 inline bool          ns_c_func_InAryQ(amc::FFunc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_func.qLast
-inline amc::FFunc&   c_func_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FFunc&   c_func_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_dispatch.EmptyQ
-inline bool          c_dispatch_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_dispatch_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_dispatch.Find
-inline amc::FDispatch* c_dispatch_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FDispatch* c_dispatch_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_dispatch.Getary
-inline algo::aryptr<amc::FDispatch*> c_dispatch_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FDispatch*> c_dispatch_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_dispatch.Insert
-void                 c_dispatch_Insert(amc::FNs& ns, amc::FDispatch& row) __attribute__((nothrow));
+void                 c_dispatch_Insert(amc::FNs& parent, amc::FDispatch& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_dispatch.InsertMaybe
-bool                 c_dispatch_InsertMaybe(amc::FNs& ns, amc::FDispatch& row) __attribute__((nothrow));
+bool                 c_dispatch_InsertMaybe(amc::FNs& parent, amc::FDispatch& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_dispatch.N
-inline i64           c_dispatch_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_dispatch_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_dispatch.Remove
-void                 c_dispatch_Remove(amc::FNs& ns, amc::FDispatch& row) __attribute__((nothrow));
+void                 c_dispatch_Remove(amc::FNs& parent, amc::FDispatch& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_dispatch.RemoveAll
-inline void          c_dispatch_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_dispatch_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_dispatch.Reserve
-void                 c_dispatch_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_dispatch_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_dispatch.qFind
-inline amc::FDispatch& c_dispatch_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FDispatch& c_dispatch_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_dispatch.InAryQ
 inline bool          ns_c_dispatch_InAryQ(amc::FDispatch& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_dispatch.qLast
-inline amc::FDispatch& c_dispatch_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FDispatch& c_dispatch_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FNs.c_globfld.InsertMaybe
-inline bool          c_globfld_InsertMaybe(amc::FNs& ns, amc::FField& row) __attribute__((nothrow));
+inline bool          c_globfld_InsertMaybe(amc::FNs& parent, amc::FField& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FNs.c_globfld.Remove
-inline void          c_globfld_Remove(amc::FNs& ns, amc::FField& row) __attribute__((nothrow));
+inline void          c_globfld_Remove(amc::FNs& parent, amc::FField& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_gstatic.EmptyQ
-inline bool          c_gstatic_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_gstatic_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_gstatic.Find
-inline amc::FGstatic* c_gstatic_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FGstatic* c_gstatic_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_gstatic.Getary
-inline algo::aryptr<amc::FGstatic*> c_gstatic_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FGstatic*> c_gstatic_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_gstatic.Insert
-void                 c_gstatic_Insert(amc::FNs& ns, amc::FGstatic& row) __attribute__((nothrow));
+void                 c_gstatic_Insert(amc::FNs& parent, amc::FGstatic& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_gstatic.InsertMaybe
-bool                 c_gstatic_InsertMaybe(amc::FNs& ns, amc::FGstatic& row) __attribute__((nothrow));
+bool                 c_gstatic_InsertMaybe(amc::FNs& parent, amc::FGstatic& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_gstatic.N
-inline i64           c_gstatic_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_gstatic_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_gstatic.Remove
-void                 c_gstatic_Remove(amc::FNs& ns, amc::FGstatic& row) __attribute__((nothrow));
+void                 c_gstatic_Remove(amc::FNs& parent, amc::FGstatic& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_gstatic.RemoveAll
-inline void          c_gstatic_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_gstatic_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_gstatic.Reserve
-void                 c_gstatic_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_gstatic_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_gstatic.qFind
-inline amc::FGstatic& c_gstatic_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FGstatic& c_gstatic_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_gstatic.InAryQ
 inline bool          ns_c_gstatic_InAryQ(amc::FGstatic& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_gstatic.qLast
-inline amc::FGstatic& c_gstatic_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FGstatic& c_gstatic_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FNs.c_main.InsertMaybe
-inline bool          c_main_InsertMaybe(amc::FNs& ns, amc::FMain& row) __attribute__((nothrow));
+inline bool          c_main_InsertMaybe(amc::FNs& parent, amc::FMain& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FNs.c_main.Remove
-inline void          c_main_Remove(amc::FNs& ns, amc::FMain& row) __attribute__((nothrow));
+inline void          c_main_Remove(amc::FNs& parent, amc::FMain& row) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:amc.FNs.include.Addary
-algo::aryptr<algo::cstring> include_Addary(amc::FNs& ns, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
+algo::aryptr<algo::cstring> include_Addary(amc::FNs& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:amc.FNs.include.Alloc
-algo::cstring&       include_Alloc(amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       include_Alloc(amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:amc.FNs.include.AllocAt
-algo::cstring&       include_AllocAt(amc::FNs& ns, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       include_AllocAt(amc::FNs& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc.FNs.include.AllocN
-algo::aryptr<algo::cstring> include_AllocN(amc::FNs& ns, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> include_AllocN(amc::FNs& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:amc.FNs.include.AllocNAt
-algo::aryptr<algo::cstring> include_AllocNAt(amc::FNs& ns, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> include_AllocNAt(amc::FNs& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:amc.FNs.include.EmptyQ
-inline bool          include_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          include_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.include.Find
-inline algo::cstring* include_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* include_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:amc.FNs.include.Getary
-inline algo::aryptr<algo::cstring> include_Getary(const amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> include_Getary(const amc::FNs& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:amc.FNs.include.Last
-inline algo::cstring* include_Last(amc::FNs& ns) __attribute__((nothrow, pure));
+inline algo::cstring* include_Last(amc::FNs& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:amc.FNs.include.Max
-inline i64           include_Max(amc::FNs& ns) __attribute__((nothrow));
+inline i64           include_Max(amc::FNs& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:amc.FNs.include.N
-inline i64           include_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           include_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:amc.FNs.include.Remove
-void                 include_Remove(amc::FNs& ns, u64 i) __attribute__((nothrow));
+void                 include_Remove(amc::FNs& parent, u64 i) __attribute__((nothrow));
 // func:amc.FNs.include.RemoveAll
-void                 include_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+void                 include_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:amc.FNs.include.RemoveLast
-void                 include_RemoveLast(amc::FNs& ns) __attribute__((nothrow));
+void                 include_RemoveLast(amc::FNs& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:amc.FNs.include.Reserve
-inline void          include_Reserve(amc::FNs& ns, i64 n) __attribute__((nothrow));
+inline void          include_Reserve(amc::FNs& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:amc.FNs.include.AbsReserve
-void                 include_AbsReserve(amc::FNs& ns, i64 n) __attribute__((nothrow));
+void                 include_AbsReserve(amc::FNs& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:amc.FNs.include.Setary
-void                 include_Setary(amc::FNs& ns, amc::FNs &rhs) __attribute__((nothrow));
+void                 include_Setary(amc::FNs& parent, amc::FNs &rhs) __attribute__((nothrow));
 // Copy specified array into include, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
 // func:amc.FNs.include.Setary2
-void                 include_Setary(amc::FNs& ns, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+void                 include_Setary(amc::FNs& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:amc.FNs.include.qFind
-inline algo::cstring& include_qFind(amc::FNs& ns, u64 t) __attribute__((nothrow));
+inline algo::cstring& include_qFind(amc::FNs& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:amc.FNs.include.qLast
-inline algo::cstring& include_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline algo::cstring& include_qLast(amc::FNs& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:amc.FNs.include.rowid_Get
-inline u64           include_rowid_Get(amc::FNs& ns, algo::cstring &elem) __attribute__((nothrow));
+inline u64           include_rowid_Get(amc::FNs& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc.FNs.include.AllocNVal
-algo::aryptr<algo::cstring> include_AllocNVal(amc::FNs& ns, i64 n_elems, const algo::cstring& val) __attribute__((nothrow));
+algo::aryptr<algo::cstring> include_AllocNVal(amc::FNs& parent, i64 n_elems, const algo::cstring& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
 // func:amc.FNs.include.ReadStrptrMaybe
-bool                 include_ReadStrptrMaybe(amc::FNs& ns, algo::strptr in_str) __attribute__((nothrow));
+bool                 include_ReadStrptrMaybe(amc::FNs& parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:amc.FNs.include.Insary
-void                 include_Insary(amc::FNs& ns, algo::aryptr<algo::cstring> rhs, i64 at) __attribute__((nothrow));
+void                 include_Insary(amc::FNs& parent, algo::aryptr<algo::cstring> rhs, i64 at) __attribute__((nothrow));
 // Delete a range of elements
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
 // func:amc.FNs.include.RemRegion
-void                 include_RemRegion(amc::FNs& ns, i64 beg, i64 n) __attribute__((nothrow));
+void                 include_RemRegion(amc::FNs& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_dispsig.EmptyQ
-inline bool          c_dispsig_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_dispsig_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_dispsig.Find
-inline amc::FDispsig* c_dispsig_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FDispsig* c_dispsig_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_dispsig.Getary
-inline algo::aryptr<amc::FDispsig*> c_dispsig_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FDispsig*> c_dispsig_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_dispsig.Insert
-void                 c_dispsig_Insert(amc::FNs& ns, amc::FDispsig& row) __attribute__((nothrow));
+void                 c_dispsig_Insert(amc::FNs& parent, amc::FDispsig& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_dispsig.InsertMaybe
-bool                 c_dispsig_InsertMaybe(amc::FNs& ns, amc::FDispsig& row) __attribute__((nothrow));
+bool                 c_dispsig_InsertMaybe(amc::FNs& parent, amc::FDispsig& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_dispsig.N
-inline i64           c_dispsig_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_dispsig_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_dispsig.Remove
-void                 c_dispsig_Remove(amc::FNs& ns, amc::FDispsig& row) __attribute__((nothrow));
+void                 c_dispsig_Remove(amc::FNs& parent, amc::FDispsig& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_dispsig.RemoveAll
-inline void          c_dispsig_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_dispsig_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_dispsig.Reserve
-void                 c_dispsig_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_dispsig_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_dispsig.qFind
-inline amc::FDispsig& c_dispsig_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FDispsig& c_dispsig_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_dispsig.InAryQ
 inline bool          ns_c_dispsig_InAryQ(amc::FDispsig& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_dispsig.qLast
-inline amc::FDispsig& c_dispsig_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FDispsig& c_dispsig_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_parentns.EmptyQ
-inline bool          c_parentns_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_parentns_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_parentns.Find
-inline amc::FNs*     c_parentns_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FNs*     c_parentns_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_parentns.Getary
-inline algo::aryptr<amc::FNs*> c_parentns_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FNs*> c_parentns_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_parentns.Insert
-void                 c_parentns_Insert(amc::FNs& ns, amc::FNs& row) __attribute__((nothrow));
+void                 c_parentns_Insert(amc::FNs& parent, amc::FNs& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_parentns.ScanInsertMaybe
-bool                 c_parentns_ScanInsertMaybe(amc::FNs& ns, amc::FNs& row) __attribute__((nothrow));
+bool                 c_parentns_ScanInsertMaybe(amc::FNs& parent, amc::FNs& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_parentns.N
-inline i64           c_parentns_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_parentns_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_parentns.Remove
-void                 c_parentns_Remove(amc::FNs& ns, amc::FNs& row) __attribute__((nothrow));
+void                 c_parentns_Remove(amc::FNs& parent, amc::FNs& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_parentns.RemoveAll
-inline void          c_parentns_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_parentns_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_parentns.Reserve
-void                 c_parentns_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_parentns_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_parentns.qFind
-inline amc::FNs&     c_parentns_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FNs&     c_parentns_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_parentns.qLast
-inline amc::FNs&     c_parentns_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FNs&     c_parentns_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_cppincl.EmptyQ
-inline bool          c_cppincl_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_cppincl_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_cppincl.Find
-inline amc::FNs*     c_cppincl_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FNs*     c_cppincl_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_cppincl.Getary
-inline algo::aryptr<amc::FNs*> c_cppincl_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FNs*> c_cppincl_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_cppincl.Insert
-void                 c_cppincl_Insert(amc::FNs& ns, amc::FNs& row) __attribute__((nothrow));
+void                 c_cppincl_Insert(amc::FNs& parent, amc::FNs& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_cppincl.ScanInsertMaybe
-bool                 c_cppincl_ScanInsertMaybe(amc::FNs& ns, amc::FNs& row) __attribute__((nothrow));
+bool                 c_cppincl_ScanInsertMaybe(amc::FNs& parent, amc::FNs& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_cppincl.N
-inline i64           c_cppincl_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_cppincl_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_cppincl.Remove
-void                 c_cppincl_Remove(amc::FNs& ns, amc::FNs& row) __attribute__((nothrow));
+void                 c_cppincl_Remove(amc::FNs& parent, amc::FNs& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_cppincl.RemoveAll
-inline void          c_cppincl_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_cppincl_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_cppincl.Reserve
-void                 c_cppincl_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_cppincl_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_cppincl.qFind
-inline amc::FNs&     c_cppincl_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FNs&     c_cppincl_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_cppincl.qLast
-inline amc::FNs&     c_cppincl_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FNs&     c_cppincl_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_hdrincl.EmptyQ
-inline bool          c_hdrincl_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_hdrincl_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_hdrincl.Find
-inline amc::FNs*     c_hdrincl_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FNs*     c_hdrincl_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_hdrincl.Getary
-inline algo::aryptr<amc::FNs*> c_hdrincl_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FNs*> c_hdrincl_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_hdrincl.Insert
-void                 c_hdrincl_Insert(amc::FNs& ns, amc::FNs& row) __attribute__((nothrow));
+void                 c_hdrincl_Insert(amc::FNs& parent, amc::FNs& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_hdrincl.ScanInsertMaybe
-bool                 c_hdrincl_ScanInsertMaybe(amc::FNs& ns, amc::FNs& row) __attribute__((nothrow));
+bool                 c_hdrincl_ScanInsertMaybe(amc::FNs& parent, amc::FNs& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_hdrincl.N
-inline i64           c_hdrincl_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_hdrincl_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_hdrincl.Remove
-void                 c_hdrincl_Remove(amc::FNs& ns, amc::FNs& row) __attribute__((nothrow));
+void                 c_hdrincl_Remove(amc::FNs& parent, amc::FNs& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_hdrincl.RemoveAll
-inline void          c_hdrincl_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_hdrincl_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_hdrincl.Reserve
-void                 c_hdrincl_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_hdrincl_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_hdrincl.qFind
-inline amc::FNs&     c_hdrincl_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FNs&     c_hdrincl_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_hdrincl.qLast
-inline amc::FNs&     c_hdrincl_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FNs&     c_hdrincl_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_fwddecl.EmptyQ
-inline bool          c_fwddecl_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_fwddecl_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_fwddecl.Find
-inline amc::FFwddecl* c_fwddecl_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFwddecl* c_fwddecl_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_fwddecl.Getary
-inline algo::aryptr<amc::FFwddecl*> c_fwddecl_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FFwddecl*> c_fwddecl_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_fwddecl.Insert
-void                 c_fwddecl_Insert(amc::FNs& ns, amc::FFwddecl& row) __attribute__((nothrow));
+void                 c_fwddecl_Insert(amc::FNs& parent, amc::FFwddecl& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_fwddecl.InsertMaybe
-bool                 c_fwddecl_InsertMaybe(amc::FNs& ns, amc::FFwddecl& row) __attribute__((nothrow));
+bool                 c_fwddecl_InsertMaybe(amc::FNs& parent, amc::FFwddecl& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_fwddecl.N
-inline i64           c_fwddecl_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fwddecl_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_fwddecl.Remove
-void                 c_fwddecl_Remove(amc::FNs& ns, amc::FFwddecl& row) __attribute__((nothrow));
+void                 c_fwddecl_Remove(amc::FNs& parent, amc::FFwddecl& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_fwddecl.RemoveAll
-inline void          c_fwddecl_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_fwddecl_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_fwddecl.Reserve
-void                 c_fwddecl_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_fwddecl_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_fwddecl.qFind
-inline amc::FFwddecl& c_fwddecl_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FFwddecl& c_fwddecl_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_fwddecl.InAryQ
 inline bool          ns_c_fwddecl_InAryQ(amc::FFwddecl& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_fwddecl.qLast
-inline amc::FFwddecl& c_fwddecl_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FFwddecl& c_fwddecl_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FNs.c_nsx.InsertMaybe
-inline bool          c_nsx_InsertMaybe(amc::FNs& ns, amc::FNsx& row) __attribute__((nothrow));
+inline bool          c_nsx_InsertMaybe(amc::FNs& parent, amc::FNsx& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FNs.c_nsx.Remove
-inline void          c_nsx_Remove(amc::FNs& ns, amc::FNsx& row) __attribute__((nothrow));
+inline void          c_nsx_Remove(amc::FNs& parent, amc::FNsx& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FNs.c_target.InsertMaybe
-inline bool          c_target_InsertMaybe(amc::FNs& ns, amc::FTarget& row) __attribute__((nothrow));
+inline bool          c_target_InsertMaybe(amc::FNs& parent, amc::FTarget& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FNs.c_target.Remove
-inline void          c_target_Remove(amc::FNs& ns, amc::FTarget& row) __attribute__((nothrow));
+inline void          c_target_Remove(amc::FNs& parent, amc::FTarget& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_pnew.EmptyQ
-inline bool          c_pnew_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_pnew_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_pnew.Find
-inline amc::FPnew*   c_pnew_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FPnew*   c_pnew_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_pnew.Getary
-inline algo::aryptr<amc::FPnew*> c_pnew_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FPnew*> c_pnew_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_pnew.Insert
-void                 c_pnew_Insert(amc::FNs& ns, amc::FPnew& row) __attribute__((nothrow));
+void                 c_pnew_Insert(amc::FNs& parent, amc::FPnew& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_pnew.InsertMaybe
-bool                 c_pnew_InsertMaybe(amc::FNs& ns, amc::FPnew& row) __attribute__((nothrow));
+bool                 c_pnew_InsertMaybe(amc::FNs& parent, amc::FPnew& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_pnew.N
-inline i64           c_pnew_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_pnew_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_pnew.Remove
-void                 c_pnew_Remove(amc::FNs& ns, amc::FPnew& row) __attribute__((nothrow));
+void                 c_pnew_Remove(amc::FNs& parent, amc::FPnew& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_pnew.RemoveAll
-inline void          c_pnew_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_pnew_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_pnew.Reserve
-void                 c_pnew_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_pnew_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_pnew.qFind
-inline amc::FPnew&   c_pnew_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FPnew&   c_pnew_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_pnew.InAryQ
 inline bool          ns_c_pnew_InAryQ(amc::FPnew& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_pnew.qLast
-inline amc::FPnew&   c_pnew_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FPnew&   c_pnew_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FNs.c_nsproto.InsertMaybe
-inline bool          c_nsproto_InsertMaybe(amc::FNs& ns, amc::FNsproto& row) __attribute__((nothrow));
+inline bool          c_nsproto_InsertMaybe(amc::FNs& parent, amc::FNsproto& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FNs.c_nsproto.Remove
-inline void          c_nsproto_Remove(amc::FNs& ns, amc::FNsproto& row) __attribute__((nothrow));
+inline void          c_nsproto_Remove(amc::FNs& parent, amc::FNsproto& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FNs.c_nsdb.InsertMaybe
-inline bool          c_nsdb_InsertMaybe(amc::FNs& ns, amc::FNsdb& row) __attribute__((nothrow));
+inline bool          c_nsdb_InsertMaybe(amc::FNs& parent, amc::FNsdb& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FNs.c_nsdb.Remove
-inline void          c_nsdb_Remove(amc::FNs& ns, amc::FNsdb& row) __attribute__((nothrow));
+inline void          c_nsdb_Remove(amc::FNs& parent, amc::FNsdb& row) __attribute__((nothrow));
 
 // Delete all elements pointed to by the index.
 // func:amc.FNs.c_outfile.Cascdel
-void                 c_outfile_Cascdel(amc::FNs& ns) __attribute__((nothrow));
+void                 c_outfile_Cascdel(amc::FNs& parent) __attribute__((nothrow));
 // Return true if index is empty
 // func:amc.FNs.c_outfile.EmptyQ
-inline bool          c_outfile_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_outfile_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_outfile.Find
-inline amc::FOutfile* c_outfile_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FOutfile* c_outfile_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_outfile.Getary
-inline algo::aryptr<amc::FOutfile*> c_outfile_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FOutfile*> c_outfile_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_outfile.Insert
-void                 c_outfile_Insert(amc::FNs& ns, amc::FOutfile& row) __attribute__((nothrow));
+void                 c_outfile_Insert(amc::FNs& parent, amc::FOutfile& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_outfile.InsertMaybe
-bool                 c_outfile_InsertMaybe(amc::FNs& ns, amc::FOutfile& row) __attribute__((nothrow));
+bool                 c_outfile_InsertMaybe(amc::FNs& parent, amc::FOutfile& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_outfile.N
-inline i64           c_outfile_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_outfile_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_outfile.Remove
-void                 c_outfile_Remove(amc::FNs& ns, amc::FOutfile& row) __attribute__((nothrow));
+void                 c_outfile_Remove(amc::FNs& parent, amc::FOutfile& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_outfile.RemoveAll
-inline void          c_outfile_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_outfile_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_outfile.Reserve
-void                 c_outfile_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_outfile_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_outfile.qFind
-inline amc::FOutfile& c_outfile_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FOutfile& c_outfile_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_outfile.InAryQ
 inline bool          ns_c_outfile_InAryQ(amc::FOutfile& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_outfile.qLast
-inline amc::FOutfile& c_outfile_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FOutfile& c_outfile_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_foutput.EmptyQ
-inline bool          c_foutput_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_foutput_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_foutput.Find
-inline amc::FFoutput* c_foutput_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFoutput* c_foutput_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_foutput.Getary
-inline algo::aryptr<amc::FFoutput*> c_foutput_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FFoutput*> c_foutput_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_foutput.Insert
-void                 c_foutput_Insert(amc::FNs& ns, amc::FFoutput& row) __attribute__((nothrow));
+void                 c_foutput_Insert(amc::FNs& parent, amc::FFoutput& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_foutput.InsertMaybe
-bool                 c_foutput_InsertMaybe(amc::FNs& ns, amc::FFoutput& row) __attribute__((nothrow));
+bool                 c_foutput_InsertMaybe(amc::FNs& parent, amc::FFoutput& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_foutput.N
-inline i64           c_foutput_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_foutput_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_foutput.Remove
-void                 c_foutput_Remove(amc::FNs& ns, amc::FFoutput& row) __attribute__((nothrow));
+void                 c_foutput_Remove(amc::FNs& parent, amc::FFoutput& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_foutput.RemoveAll
-inline void          c_foutput_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_foutput_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_foutput.Reserve
-void                 c_foutput_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_foutput_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_foutput.qFind
-inline amc::FFoutput& c_foutput_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FFoutput& c_foutput_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_foutput.InAryQ
 inline bool          ns_c_foutput_InAryQ(amc::FFoutput& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_foutput.qLast
-inline amc::FFoutput& c_foutput_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FFoutput& c_foutput_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_fstep.EmptyQ
-inline bool          c_fstep_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_fstep_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_fstep.Find
-inline amc::FFstep*  c_fstep_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFstep*  c_fstep_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_fstep.Getary
-inline algo::aryptr<amc::FFstep*> c_fstep_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FFstep*> c_fstep_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_fstep.Insert
-void                 c_fstep_Insert(amc::FNs& ns, amc::FFstep& row) __attribute__((nothrow));
+void                 c_fstep_Insert(amc::FNs& parent, amc::FFstep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_fstep.InsertMaybe
-bool                 c_fstep_InsertMaybe(amc::FNs& ns, amc::FFstep& row) __attribute__((nothrow));
+bool                 c_fstep_InsertMaybe(amc::FNs& parent, amc::FFstep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_fstep.N
-inline i64           c_fstep_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_fstep_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_fstep.Remove
-void                 c_fstep_Remove(amc::FNs& ns, amc::FFstep& row) __attribute__((nothrow));
+void                 c_fstep_Remove(amc::FNs& parent, amc::FFstep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_fstep.RemoveAll
-inline void          c_fstep_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_fstep_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_fstep.Reserve
-void                 c_fstep_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_fstep_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_fstep.qFind
-inline amc::FFstep&  c_fstep_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FFstep&  c_fstep_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_fstep.InAryQ
 inline bool          ns_c_fstep_InAryQ(amc::FFstep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_fstep.qLast
-inline amc::FFstep&  c_fstep_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FFstep&  c_fstep_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_gsymbol.EmptyQ
-inline bool          c_gsymbol_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_gsymbol_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_gsymbol.Find
-inline amc::FGsymbol* c_gsymbol_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FGsymbol* c_gsymbol_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_gsymbol.Getary
-inline algo::aryptr<amc::FGsymbol*> c_gsymbol_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FGsymbol*> c_gsymbol_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_gsymbol.Insert
-void                 c_gsymbol_Insert(amc::FNs& ns, amc::FGsymbol& row) __attribute__((nothrow));
+void                 c_gsymbol_Insert(amc::FNs& parent, amc::FGsymbol& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_gsymbol.InsertMaybe
-bool                 c_gsymbol_InsertMaybe(amc::FNs& ns, amc::FGsymbol& row) __attribute__((nothrow));
+bool                 c_gsymbol_InsertMaybe(amc::FNs& parent, amc::FGsymbol& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_gsymbol.N
-inline i64           c_gsymbol_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_gsymbol_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_gsymbol.Remove
-void                 c_gsymbol_Remove(amc::FNs& ns, amc::FGsymbol& row) __attribute__((nothrow));
+void                 c_gsymbol_Remove(amc::FNs& parent, amc::FGsymbol& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_gsymbol.RemoveAll
-inline void          c_gsymbol_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_gsymbol_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_gsymbol.Reserve
-void                 c_gsymbol_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_gsymbol_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_gsymbol.qFind
-inline amc::FGsymbol& c_gsymbol_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FGsymbol& c_gsymbol_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_gsymbol.InAryQ
 inline bool          ns_c_gsymbol_InAryQ(amc::FGsymbol& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_gsymbol.qLast
-inline amc::FGsymbol& c_gsymbol_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FGsymbol& c_gsymbol_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_nsinclude.EmptyQ
-inline bool          c_nsinclude_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+inline bool          c_nsinclude_EmptyQ(amc::FNs& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FNs.c_nsinclude.Find
-inline amc::FNsinclude* c_nsinclude_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FNsinclude* c_nsinclude_Find(amc::FNs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FNs.c_nsinclude.Getary
-inline algo::aryptr<amc::FNsinclude*> c_nsinclude_Getary(amc::FNs& ns) __attribute__((nothrow));
+inline algo::aryptr<amc::FNsinclude*> c_nsinclude_Getary(amc::FNs& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FNs.c_nsinclude.Insert
-void                 c_nsinclude_Insert(amc::FNs& ns, amc::FNsinclude& row) __attribute__((nothrow));
+void                 c_nsinclude_Insert(amc::FNs& parent, amc::FNsinclude& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FNs.c_nsinclude.InsertMaybe
-bool                 c_nsinclude_InsertMaybe(amc::FNs& ns, amc::FNsinclude& row) __attribute__((nothrow));
+bool                 c_nsinclude_InsertMaybe(amc::FNs& parent, amc::FNsinclude& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FNs.c_nsinclude.N
-inline i64           c_nsinclude_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_nsinclude_N(const amc::FNs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FNs.c_nsinclude.Remove
-void                 c_nsinclude_Remove(amc::FNs& ns, amc::FNsinclude& row) __attribute__((nothrow));
+void                 c_nsinclude_Remove(amc::FNs& parent, amc::FNsinclude& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FNs.c_nsinclude.RemoveAll
-inline void          c_nsinclude_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+inline void          c_nsinclude_RemoveAll(amc::FNs& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FNs.c_nsinclude.Reserve
-void                 c_nsinclude_Reserve(amc::FNs& ns, u64 n) __attribute__((nothrow));
+void                 c_nsinclude_Reserve(amc::FNs& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FNs.c_nsinclude.qFind
-inline amc::FNsinclude& c_nsinclude_qFind(amc::FNs& ns, u64 idx) __attribute__((nothrow));
+inline amc::FNsinclude& c_nsinclude_qFind(amc::FNs& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FNs.c_nsinclude.InAryQ
 inline bool          ns_c_nsinclude_InAryQ(amc::FNsinclude& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FNs.c_nsinclude.qLast
-inline amc::FNsinclude& c_nsinclude_qLast(amc::FNs& ns) __attribute__((nothrow));
+inline amc::FNsinclude& c_nsinclude_qLast(amc::FNs& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FNs.c_nscpp.InsertMaybe
-inline bool          c_nscpp_InsertMaybe(amc::FNs& ns, amc::FNscpp& row) __attribute__((nothrow));
+inline bool          c_nscpp_InsertMaybe(amc::FNs& parent, amc::FNscpp& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FNs.c_nscpp.Remove
-inline void          c_nscpp_Remove(amc::FNs& ns, amc::FNscpp& row) __attribute__((nothrow));
+inline void          c_nscpp_Remove(amc::FNs& parent, amc::FNscpp& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FNs.c_nsjs.InsertMaybe
-inline bool          c_nsjs_InsertMaybe(amc::FNs& ns, amc::FNsjs& row) __attribute__((nothrow));
+inline bool          c_nsjs_InsertMaybe(amc::FNs& parent, amc::FNsjs& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FNs.c_nsjs.Remove
-inline void          c_nsjs_Remove(amc::FNs& ns, amc::FNsjs& row) __attribute__((nothrow));
+inline void          c_nsjs_Remove(amc::FNs& parent, amc::FNsjs& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FNs..Init
-void                 FNs_Init(amc::FNs& ns);
+void                 FNs_Init(amc::FNs& parent);
 // func:amc.FNs.c_ctype_curs.Reset
 inline void          ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, amc::FNs &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -17233,7 +17377,7 @@ inline void          ns_c_nsinclude_curs_Next(ns_c_nsinclude_curs &curs) __attri
 // func:amc.FNs.c_nsinclude_curs.Access
 inline amc::FNsinclude& ns_c_nsinclude_curs_Access(ns_c_nsinclude_curs &curs) __attribute__((nothrow));
 // func:amc.FNs..Uninit
-void                 FNs_Uninit(amc::FNs& ns) __attribute__((nothrow));
+void                 FNs_Uninit(amc::FNs& parent) __attribute__((nothrow));
 
 // --- amc.FNscpp
 // create: amc.FDb.nscpp (Lary)
@@ -17264,7 +17408,7 @@ void                 nscpp_CopyOut(amc::FNscpp &row, dmmeta::Nscpp &out) __attri
 void                 nscpp_CopyIn(amc::FNscpp &row, dmmeta::Nscpp &in) __attribute__((nothrow));
 
 // func:amc.FNscpp..Uninit
-void                 FNscpp_Uninit(amc::FNscpp& nscpp) __attribute__((nothrow));
+void                 FNscpp_Uninit(amc::FNscpp& parent) __attribute__((nothrow));
 
 // --- amc.FNsdb
 // create: amc.FDb.nsdb (Lary)
@@ -17294,7 +17438,7 @@ void                 nsdb_CopyOut(amc::FNsdb &row, dmmeta::Nsdb &out) __attribut
 void                 nsdb_CopyIn(amc::FNsdb &row, dmmeta::Nsdb &in) __attribute__((nothrow));
 
 // func:amc.FNsdb..Uninit
-void                 FNsdb_Uninit(amc::FNsdb& nsdb) __attribute__((nothrow));
+void                 FNsdb_Uninit(amc::FNsdb& parent) __attribute__((nothrow));
 
 // --- amc.FNsinclude
 // create: amc.FDb.nsinclude (Lary)
@@ -17327,16 +17471,16 @@ void                 nsinclude_CopyOut(amc::FNsinclude &row, dmmeta::Nsinclude &
 void                 nsinclude_CopyIn(amc::FNsinclude &row, dmmeta::Nsinclude &in) __attribute__((nothrow));
 
 // func:amc.FNsinclude.ns.Get
-algo::strptr         ns_Get(amc::FNsinclude& nsinclude) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FNsinclude& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FNsinclude.name.Get
-algo::strptr         name_Get(amc::FNsinclude& nsinclude) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FNsinclude& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FNsinclude..Init
-inline void          FNsinclude_Init(amc::FNsinclude& nsinclude);
+inline void          FNsinclude_Init(amc::FNsinclude& parent);
 // func:amc.FNsinclude..Uninit
-void                 FNsinclude_Uninit(amc::FNsinclude& nsinclude) __attribute__((nothrow));
+void                 FNsinclude_Uninit(amc::FNsinclude& parent) __attribute__((nothrow));
 
 // --- amc.FNsjs
 // create: amc.FDb.nsjs (Lary)
@@ -17372,9 +17516,9 @@ void                 nsjs_CopyIn(amc::FNsjs &row, dmmeta::Nsjs &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FNsjs..Init
-inline void          FNsjs_Init(amc::FNsjs& nsjs);
+inline void          FNsjs_Init(amc::FNsjs& parent);
 // func:amc.FNsjs..Uninit
-void                 FNsjs_Uninit(amc::FNsjs& nsjs) __attribute__((nothrow));
+void                 FNsjs_Uninit(amc::FNsjs& parent) __attribute__((nothrow));
 
 // --- amc.FNsproto
 // create: amc.FDb.nsproto (Lary)
@@ -17404,7 +17548,7 @@ void                 nsproto_CopyOut(amc::FNsproto &row, dmmeta::Nsproto &out) _
 void                 nsproto_CopyIn(amc::FNsproto &row, dmmeta::Nsproto &in) __attribute__((nothrow));
 
 // func:amc.FNsproto..Uninit
-void                 FNsproto_Uninit(amc::FNsproto& nsproto) __attribute__((nothrow));
+void                 FNsproto_Uninit(amc::FNsproto& parent) __attribute__((nothrow));
 
 // --- amc.FNsx
 // create: amc.FDb.nsx (Lary)
@@ -17443,9 +17587,9 @@ void                 nsx_CopyIn(amc::FNsx &row, dmmeta::Nsx &in) __attribute__((
 
 // Set all fields to initial values.
 // func:amc.FNsx..Init
-inline void          FNsx_Init(amc::FNsx& nsx);
+inline void          FNsx_Init(amc::FNsx& parent);
 // func:amc.FNsx..Uninit
-void                 FNsx_Uninit(amc::FNsx& nsx) __attribute__((nothrow));
+void                 FNsx_Uninit(amc::FNsx& parent) __attribute__((nothrow));
 
 // --- amc.FNumstr
 // create: amc.FDb.numstr (Lary)
@@ -17484,9 +17628,9 @@ void                 numstr_CopyIn(amc::FNumstr &row, dmmeta::Numstr &in) __attr
 
 // Set all fields to initial values.
 // func:amc.FNumstr..Init
-inline void          FNumstr_Init(amc::FNumstr& numstr);
+inline void          FNumstr_Init(amc::FNumstr& parent);
 // func:amc.FNumstr..Uninit
-void                 FNumstr_Uninit(amc::FNumstr& numstr) __attribute__((nothrow));
+void                 FNumstr_Uninit(amc::FNumstr& parent) __attribute__((nothrow));
 
 // --- amc.FOutfile
 // create: amc.FDb.outfile (Tpool)
@@ -17515,13 +17659,13 @@ private:
     friend void                 outfile_Delete(amc::FOutfile &row) __attribute__((nothrow));
 };
 // func:amc.FOutfile.ns.Get
-algo::strptr         ns_Get(amc::FOutfile& outfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FOutfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FOutfile..Init
-inline void          FOutfile_Init(amc::FOutfile& outfile);
+inline void          FOutfile_Init(amc::FOutfile& parent);
 // func:amc.FOutfile..Uninit
-void                 FOutfile_Uninit(amc::FOutfile& outfile) __attribute__((nothrow));
+void                 FOutfile_Uninit(amc::FOutfile& parent) __attribute__((nothrow));
 
 // --- amc.FPack
 // create: amc.FDb.pack (Lary)
@@ -17558,9 +17702,9 @@ void                 pack_CopyIn(amc::FPack &row, dmmeta::Pack &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FPack..Init
-inline void          FPack_Init(amc::FPack& pack);
+inline void          FPack_Init(amc::FPack& parent);
 // func:amc.FPack..Uninit
-void                 FPack_Uninit(amc::FPack& pack) __attribute__((nothrow));
+void                 FPack_Uninit(amc::FPack& parent) __attribute__((nothrow));
 
 // --- amc.FPayloadhdr
 // create: amc.FDb.payloadhdr (Lary)
@@ -17601,9 +17745,9 @@ void                 payloadhdr_CopyIn(amc::FPayloadhdr &row, dmmeta::Payloadhdr
 
 // Set all fields to initial values.
 // func:amc.FPayloadhdr..Init
-void                 FPayloadhdr_Init(amc::FPayloadhdr& payloadhdr);
+void                 FPayloadhdr_Init(amc::FPayloadhdr& parent);
 // func:amc.FPayloadhdr..Uninit
-void                 FPayloadhdr_Uninit(amc::FPayloadhdr& payloadhdr) __attribute__((nothrow));
+void                 FPayloadhdr_Uninit(amc::FPayloadhdr& parent) __attribute__((nothrow));
 
 // --- amc.FPbsyntax
 // create: amc.FDb.pbsyntax (Lary)
@@ -17638,9 +17782,9 @@ void                 pbsyntax_CopyIn(amc::FPbsyntax &row, dmmeta::Pbsyntax &in) 
 
 // Set all fields to initial values.
 // func:amc.FPbsyntax..Init
-inline void          FPbsyntax_Init(amc::FPbsyntax& pbsyntax);
+inline void          FPbsyntax_Init(amc::FPbsyntax& parent);
 // func:amc.FPbsyntax..Uninit
-void                 FPbsyntax_Uninit(amc::FPbsyntax& pbsyntax) __attribute__((nothrow));
+void                 FPbsyntax_Uninit(amc::FPbsyntax& parent) __attribute__((nothrow));
 
 // --- amc.FPbtype
 // create: amc.FDb.pbtype (Lary)
@@ -17680,9 +17824,9 @@ void                 pbtype_CopyIn(amc::FPbtype &row, amcdb::Pbtype &in) __attri
 
 // Set all fields to initial values.
 // func:amc.FPbtype..Init
-inline void          FPbtype_Init(amc::FPbtype& pbtype);
+inline void          FPbtype_Init(amc::FPbtype& parent);
 // func:amc.FPbtype..Uninit
-void                 FPbtype_Uninit(amc::FPbtype& pbtype) __attribute__((nothrow));
+void                 FPbtype_Uninit(amc::FPbtype& parent) __attribute__((nothrow));
 
 // --- amc.FPmaskfld
 // create: amc.FDb.pmaskfld (Lary)
@@ -17729,51 +17873,51 @@ void                 pmaskfld_CopyOut(amc::FPmaskfld &row, dmmeta::Pmaskfld &out
 void                 pmaskfld_CopyIn(amc::FPmaskfld &row, dmmeta::Pmaskfld &in) __attribute__((nothrow));
 
 // func:amc.FPmaskfld.ctype.Get
-algo::strptr         ctype_Get(amc::FPmaskfld& pmaskfld) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FPmaskfld& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:amc.FPmaskfld.c_pmaskfld_member.EmptyQ
-inline bool          c_pmaskfld_member_EmptyQ(amc::FPmaskfld& pmaskfld) __attribute__((nothrow));
+inline bool          c_pmaskfld_member_EmptyQ(amc::FPmaskfld& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FPmaskfld.c_pmaskfld_member.Find
-inline amc::FPmaskfldMember* c_pmaskfld_member_Find(amc::FPmaskfld& pmaskfld, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FPmaskfldMember* c_pmaskfld_member_Find(amc::FPmaskfld& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FPmaskfld.c_pmaskfld_member.Getary
-inline algo::aryptr<amc::FPmaskfldMember*> c_pmaskfld_member_Getary(amc::FPmaskfld& pmaskfld) __attribute__((nothrow));
+inline algo::aryptr<amc::FPmaskfldMember*> c_pmaskfld_member_Getary(amc::FPmaskfld& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FPmaskfld.c_pmaskfld_member.Insert
-void                 c_pmaskfld_member_Insert(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMember& row) __attribute__((nothrow));
+void                 c_pmaskfld_member_Insert(amc::FPmaskfld& parent, amc::FPmaskfldMember& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FPmaskfld.c_pmaskfld_member.InsertMaybe
-bool                 c_pmaskfld_member_InsertMaybe(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMember& row) __attribute__((nothrow));
+bool                 c_pmaskfld_member_InsertMaybe(amc::FPmaskfld& parent, amc::FPmaskfldMember& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FPmaskfld.c_pmaskfld_member.N
-inline i64           c_pmaskfld_member_N(const amc::FPmaskfld& pmaskfld) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_pmaskfld_member_N(const amc::FPmaskfld& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FPmaskfld.c_pmaskfld_member.Remove
-void                 c_pmaskfld_member_Remove(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMember& row) __attribute__((nothrow));
+void                 c_pmaskfld_member_Remove(amc::FPmaskfld& parent, amc::FPmaskfldMember& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FPmaskfld.c_pmaskfld_member.RemoveAll
-inline void          c_pmaskfld_member_RemoveAll(amc::FPmaskfld& pmaskfld) __attribute__((nothrow));
+inline void          c_pmaskfld_member_RemoveAll(amc::FPmaskfld& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FPmaskfld.c_pmaskfld_member.Reserve
-void                 c_pmaskfld_member_Reserve(amc::FPmaskfld& pmaskfld, u64 n) __attribute__((nothrow));
+void                 c_pmaskfld_member_Reserve(amc::FPmaskfld& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FPmaskfld.c_pmaskfld_member.qFind
-inline amc::FPmaskfldMember& c_pmaskfld_member_qFind(amc::FPmaskfld& pmaskfld, u64 idx) __attribute__((nothrow));
+inline amc::FPmaskfldMember& c_pmaskfld_member_qFind(amc::FPmaskfld& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FPmaskfld.c_pmaskfld_member.InAryQ
 inline bool          pmaskfld_c_pmaskfld_member_InAryQ(amc::FPmaskfldMember& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FPmaskfld.c_pmaskfld_member.qLast
-inline amc::FPmaskfldMember& c_pmaskfld_member_qLast(amc::FPmaskfld& pmaskfld) __attribute__((nothrow));
+inline amc::FPmaskfldMember& c_pmaskfld_member_qLast(amc::FPmaskfld& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FPmaskfld..Init
-inline void          FPmaskfld_Init(amc::FPmaskfld& pmaskfld);
+inline void          FPmaskfld_Init(amc::FPmaskfld& parent);
 // func:amc.FPmaskfld.c_pmaskfld_member_curs.Reset
 inline void          pmaskfld_c_pmaskfld_member_curs_Reset(pmaskfld_c_pmaskfld_member_curs &curs, amc::FPmaskfld &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -17786,7 +17930,7 @@ inline void          pmaskfld_c_pmaskfld_member_curs_Next(pmaskfld_c_pmaskfld_me
 // func:amc.FPmaskfld.c_pmaskfld_member_curs.Access
 inline amc::FPmaskfldMember& pmaskfld_c_pmaskfld_member_curs_Access(pmaskfld_c_pmaskfld_member_curs &curs) __attribute__((nothrow));
 // func:amc.FPmaskfld..Uninit
-void                 FPmaskfld_Uninit(amc::FPmaskfld& pmaskfld) __attribute__((nothrow));
+void                 FPmaskfld_Uninit(amc::FPmaskfld& parent) __attribute__((nothrow));
 
 // --- amc.FPmaskfldMember
 // create: amc.FDb.pmaskfld_member (Lary)
@@ -17827,16 +17971,16 @@ void                 pmaskfld_member_CopyOut(amc::FPmaskfldMember &row, dmmeta::
 void                 pmaskfld_member_CopyIn(amc::FPmaskfldMember &row, dmmeta::PmaskfldMember &in) __attribute__((nothrow));
 
 // func:amc.FPmaskfldMember.pmaskfld.Get
-algo::strptr         pmaskfld_Get(amc::FPmaskfldMember& pmaskfld_member) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         pmaskfld_Get(amc::FPmaskfldMember& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FPmaskfldMember.field.Get
-algo::strptr         field_Get(amc::FPmaskfldMember& pmaskfld_member) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(amc::FPmaskfldMember& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FPmaskfldMember..Init
-inline void          FPmaskfldMember_Init(amc::FPmaskfldMember& pmaskfld_member);
+inline void          FPmaskfldMember_Init(amc::FPmaskfldMember& parent);
 // func:amc.FPmaskfldMember..Uninit
-void                 FPmaskfldMember_Uninit(amc::FPmaskfldMember& pmaskfld_member) __attribute__((nothrow));
+void                 FPmaskfldMember_Uninit(amc::FPmaskfldMember& parent) __attribute__((nothrow));
 
 // --- amc.FPnew
 // create: amc.FDb.pnew (Lary)
@@ -17878,19 +18022,19 @@ void                 pnew_CopyOut(amc::FPnew &row, dmmeta::Pnew &out) __attribut
 void                 pnew_CopyIn(amc::FPnew &row, dmmeta::Pnew &in) __attribute__((nothrow));
 
 // func:amc.FPnew.ns.Get
-algo::strptr         ns_Get(amc::FPnew& pnew) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FPnew& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FPnew.ctype.Get
-algo::strptr         ctype_Get(amc::FPnew& pnew) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FPnew& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FPnew.buftype.Get
-algo::strptr         buftype_Get(amc::FPnew& pnew) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         buftype_Get(amc::FPnew& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FPnew..Init
-inline void          FPnew_Init(amc::FPnew& pnew);
+inline void          FPnew_Init(amc::FPnew& parent);
 // func:amc.FPnew..Uninit
-void                 FPnew_Uninit(amc::FPnew& pnew) __attribute__((nothrow));
+void                 FPnew_Uninit(amc::FPnew& parent) __attribute__((nothrow));
 
 // --- amc.FPtrary
 // create: amc.FDb.ptrary (Lary)
@@ -17925,9 +18069,9 @@ void                 ptrary_CopyIn(amc::FPtrary &row, dmmeta::Ptrary &in) __attr
 
 // Set all fields to initial values.
 // func:amc.FPtrary..Init
-inline void          FPtrary_Init(amc::FPtrary& ptrary);
+inline void          FPtrary_Init(amc::FPtrary& parent);
 // func:amc.FPtrary..Uninit
-void                 FPtrary_Uninit(amc::FPtrary& ptrary) __attribute__((nothrow));
+void                 FPtrary_Uninit(amc::FPtrary& parent) __attribute__((nothrow));
 
 // --- amc.FReftype
 // create: amc.FDb.reftype (Lary)
@@ -17980,39 +18124,39 @@ void                 reftype_CopyIn(amc::FReftype &row, dmmeta::Reftype &in) __a
 
 // Return true if index is empty
 // func:amc.FReftype.zs_fprefix.EmptyQ
-inline bool          zs_fprefix_EmptyQ(amc::FReftype& reftype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zs_fprefix_EmptyQ(amc::FReftype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:amc.FReftype.zs_fprefix.First
-inline amc::FFprefix* zs_fprefix_First(amc::FReftype& reftype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FFprefix* zs_fprefix_First(amc::FReftype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FReftype.zs_fprefix.InLlistQ
 inline bool          reftype_zs_fprefix_InLlistQ(amc::FFprefix& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FReftype.zs_fprefix.Insert
-void                 zs_fprefix_Insert(amc::FReftype& reftype, amc::FFprefix& row) __attribute__((nothrow));
+void                 zs_fprefix_Insert(amc::FReftype& parent, amc::FFprefix& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:amc.FReftype.zs_fprefix.Last
-inline amc::FFprefix* zs_fprefix_Last(amc::FReftype& reftype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline amc::FFprefix* zs_fprefix_Last(amc::FReftype& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FReftype.zs_fprefix.Next
 inline amc::FFprefix* reftype_zs_fprefix_Next(amc::FFprefix &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:amc.FReftype.zs_fprefix.Remove
-void                 zs_fprefix_Remove(amc::FReftype& reftype, amc::FFprefix& row) __attribute__((nothrow));
+void                 zs_fprefix_Remove(amc::FReftype& parent, amc::FFprefix& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FReftype.zs_fprefix.RemoveAll
-void                 zs_fprefix_RemoveAll(amc::FReftype& reftype) __attribute__((nothrow));
+void                 zs_fprefix_RemoveAll(amc::FReftype& parent) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:amc.FReftype.zs_fprefix.RemoveFirst
-amc::FFprefix*       zs_fprefix_RemoveFirst(amc::FReftype& reftype) __attribute__((nothrow));
+amc::FFprefix*       zs_fprefix_RemoveFirst(amc::FReftype& parent) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:amc.FReftype.zs_fprefix.qLast
-inline amc::FFprefix& zs_fprefix_qLast(amc::FReftype& reftype) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFprefix& zs_fprefix_qLast(amc::FReftype& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FReftype..Init
-void                 FReftype_Init(amc::FReftype& reftype);
+void                 FReftype_Init(amc::FReftype& parent);
 // cursor points to valid item
 // func:amc.FReftype.zs_fprefix_curs.Reset
 inline void          reftype_zs_fprefix_curs_Reset(reftype_zs_fprefix_curs &curs, amc::FReftype &parent) __attribute__((nothrow));
@@ -18026,7 +18170,7 @@ inline void          reftype_zs_fprefix_curs_Next(reftype_zs_fprefix_curs &curs)
 // func:amc.FReftype.zs_fprefix_curs.Access
 inline amc::FFprefix& reftype_zs_fprefix_curs_Access(reftype_zs_fprefix_curs &curs) __attribute__((nothrow));
 // func:amc.FReftype..Uninit
-void                 FReftype_Uninit(amc::FReftype& reftype) __attribute__((nothrow));
+void                 FReftype_Uninit(amc::FReftype& parent) __attribute__((nothrow));
 
 // --- amc.FRowid
 // create: amc.FDb.rowid (Lary)
@@ -18060,9 +18204,9 @@ void                 rowid_CopyIn(amc::FRowid &row, dmmeta::Rowid &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FRowid..Init
-inline void          FRowid_Init(amc::FRowid& rowid);
+inline void          FRowid_Init(amc::FRowid& parent);
 // func:amc.FRowid..Uninit
-void                 FRowid_Uninit(amc::FRowid& rowid) __attribute__((nothrow));
+void                 FRowid_Uninit(amc::FRowid& parent) __attribute__((nothrow));
 
 // --- amc.FSmallstr
 // create: amc.FDb.smallstr (Lary)
@@ -18104,20 +18248,20 @@ void                 smallstr_CopyOut(amc::FSmallstr &row, dmmeta::Smallstr &out
 void                 smallstr_CopyIn(amc::FSmallstr &row, dmmeta::Smallstr &in) __attribute__((nothrow));
 
 // func:amc.FSmallstr.ctype.Get
-algo::strptr         ctype_Get(amc::FSmallstr& smallstr) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FSmallstr& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FSmallstr.c_numstr.InsertMaybe
-inline bool          c_numstr_InsertMaybe(amc::FSmallstr& smallstr, amc::FNumstr& row) __attribute__((nothrow));
+inline bool          c_numstr_InsertMaybe(amc::FSmallstr& parent, amc::FNumstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FSmallstr.c_numstr.Remove
-inline void          c_numstr_Remove(amc::FSmallstr& smallstr, amc::FNumstr& row) __attribute__((nothrow));
+inline void          c_numstr_Remove(amc::FSmallstr& parent, amc::FNumstr& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FSmallstr..Init
-inline void          FSmallstr_Init(amc::FSmallstr& smallstr);
+inline void          FSmallstr_Init(amc::FSmallstr& parent);
 // func:amc.FSmallstr..Uninit
-void                 FSmallstr_Uninit(amc::FSmallstr& smallstr) __attribute__((nothrow));
+void                 FSmallstr_Uninit(amc::FSmallstr& parent) __attribute__((nothrow));
 
 // --- amc.FSortfld
 // create: amc.FDb.sortfld (Lary)
@@ -18151,9 +18295,9 @@ void                 sortfld_CopyIn(amc::FSortfld &row, dmmeta::Sortfld &in) __a
 
 // Set all fields to initial values.
 // func:amc.FSortfld..Init
-inline void          FSortfld_Init(amc::FSortfld& sortfld);
+inline void          FSortfld_Init(amc::FSortfld& parent);
 // func:amc.FSortfld..Uninit
-void                 FSortfld_Uninit(amc::FSortfld& sortfld) __attribute__((nothrow));
+void                 FSortfld_Uninit(amc::FSortfld& parent) __attribute__((nothrow));
 
 // --- amc.FSsimfile
 // create: amc.FDb.ssimfile (Lary)
@@ -18203,26 +18347,26 @@ void                 ssimfile_CopyOut(amc::FSsimfile &row, dmmeta::Ssimfile &out
 void                 ssimfile_CopyIn(amc::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:amc.FSsimfile.ssimns.Get
-algo::strptr         ssimns_Get(amc::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(amc::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FSsimfile.ns.Get
-algo::strptr         ns_Get(amc::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FSsimfile.name.Get
-algo::strptr         name_Get(amc::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FSsimfile& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FSsimfile.c_ssimvolatile.InsertMaybe
-inline bool          c_ssimvolatile_InsertMaybe(amc::FSsimfile& ssimfile, amc::FSsimvolatile& row) __attribute__((nothrow));
+inline bool          c_ssimvolatile_InsertMaybe(amc::FSsimfile& parent, amc::FSsimvolatile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FSsimfile.c_ssimvolatile.Remove
-inline void          c_ssimvolatile_Remove(amc::FSsimfile& ssimfile, amc::FSsimvolatile& row) __attribute__((nothrow));
+inline void          c_ssimvolatile_Remove(amc::FSsimfile& parent, amc::FSsimvolatile& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FSsimfile..Init
-void                 FSsimfile_Init(amc::FSsimfile& ssimfile);
+void                 FSsimfile_Init(amc::FSsimfile& parent);
 // func:amc.FSsimfile..Uninit
-void                 FSsimfile_Uninit(amc::FSsimfile& ssimfile) __attribute__((nothrow));
+void                 FSsimfile_Uninit(amc::FSsimfile& parent) __attribute__((nothrow));
 
 // --- amc.FSsimsort
 // create: amc.FDb.ssimsort (Lary)
@@ -18250,7 +18394,7 @@ void                 ssimsort_CopyIn(amc::FSsimsort &row, dmmeta::Ssimsort &in) 
 
 // Set all fields to initial values.
 // func:amc.FSsimsort..Init
-inline void          FSsimsort_Init(amc::FSsimsort& ssimsort);
+inline void          FSsimsort_Init(amc::FSsimsort& parent);
 
 // --- amc.FSsimvolatile
 // create: amc.FDb.ssimvolatile (Lary)
@@ -18281,7 +18425,7 @@ void                 ssimvolatile_CopyOut(amc::FSsimvolatile &row, dmmeta::Ssimv
 void                 ssimvolatile_CopyIn(amc::FSsimvolatile &row, dmmeta::Ssimvolatile &in) __attribute__((nothrow));
 
 // func:amc.FSsimvolatile..Uninit
-void                 FSsimvolatile_Uninit(amc::FSsimvolatile& ssimvolatile) __attribute__((nothrow));
+void                 FSsimvolatile_Uninit(amc::FSsimvolatile& parent) __attribute__((nothrow));
 
 // --- amc.FStatictuple
 // create: amc.FDb.static_tuple (Lary)
@@ -18308,9 +18452,9 @@ private:
 };
 // Set all fields to initial values.
 // func:amc.FStatictuple..Init
-inline void          FStatictuple_Init(amc::FStatictuple& static_tuple);
+inline void          FStatictuple_Init(amc::FStatictuple& parent);
 // func:amc.FStatictuple..Uninit
-void                 FStatictuple_Uninit(amc::FStatictuple& static_tuple) __attribute__((nothrow));
+void                 FStatictuple_Uninit(amc::FStatictuple& parent) __attribute__((nothrow));
 
 // --- amc.FSteptype
 // create: amc.FDb.steptype (Lary)
@@ -18345,9 +18489,9 @@ void                 steptype_CopyIn(amc::FSteptype &row, dmmeta::Steptype &in) 
 
 // Set all fields to initial values.
 // func:amc.FSteptype..Init
-inline void          FSteptype_Init(amc::FSteptype& steptype);
+inline void          FSteptype_Init(amc::FSteptype& parent);
 // func:amc.FSteptype..Uninit
-void                 FSteptype_Uninit(amc::FSteptype& steptype) __attribute__((nothrow));
+void                 FSteptype_Uninit(amc::FSteptype& parent) __attribute__((nothrow));
 
 // --- amc.FSubstr
 // create: amc.FDb.substr (Lary)
@@ -18391,9 +18535,9 @@ void                 substr_CopyIn(amc::FSubstr &row, dmmeta::Substr &in) __attr
 
 // Set all fields to initial values.
 // func:amc.FSubstr..Init
-inline void          FSubstr_Init(amc::FSubstr& substr);
+inline void          FSubstr_Init(amc::FSubstr& parent);
 // func:amc.FSubstr..Uninit
-void                 FSubstr_Uninit(amc::FSubstr& substr) __attribute__((nothrow));
+void                 FSubstr_Uninit(amc::FSubstr& parent) __attribute__((nothrow));
 
 // --- amc.FTargdep
 // create: amc.FDb.targdep (Lary)
@@ -18430,16 +18574,16 @@ void                 targdep_CopyOut(amc::FTargdep &row, dev::Targdep &out) __at
 void                 targdep_CopyIn(amc::FTargdep &row, dev::Targdep &in) __attribute__((nothrow));
 
 // func:amc.FTargdep.target.Get
-algo::strptr         target_Get(amc::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(amc::FTargdep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FTargdep.parent.Get
-algo::strptr         parent_Get(amc::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         parent_Get(amc::FTargdep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FTargdep..Init
-inline void          FTargdep_Init(amc::FTargdep& targdep);
+inline void          FTargdep_Init(amc::FTargdep& parent);
 // func:amc.FTargdep..Uninit
-void                 FTargdep_Uninit(amc::FTargdep& targdep) __attribute__((nothrow));
+void                 FTargdep_Uninit(amc::FTargdep& parent) __attribute__((nothrow));
 
 // --- amc.FTarget
 // create: amc.FDb.target (Lary)
@@ -18482,47 +18626,47 @@ void                 target_CopyIn(amc::FTarget &row, dev::Target &in) __attribu
 
 // Return true if index is empty
 // func:amc.FTarget.c_targdep.EmptyQ
-inline bool          c_targdep_EmptyQ(amc::FTarget& target) __attribute__((nothrow));
+inline bool          c_targdep_EmptyQ(amc::FTarget& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:amc.FTarget.c_targdep.Find
-inline amc::FTargdep* c_targdep_Find(amc::FTarget& target, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FTargdep* c_targdep_Find(amc::FTarget& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:amc.FTarget.c_targdep.Getary
-inline algo::aryptr<amc::FTargdep*> c_targdep_Getary(amc::FTarget& target) __attribute__((nothrow));
+inline algo::aryptr<amc::FTargdep*> c_targdep_Getary(amc::FTarget& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:amc.FTarget.c_targdep.Insert
-void                 c_targdep_Insert(amc::FTarget& target, amc::FTargdep& row) __attribute__((nothrow));
+void                 c_targdep_Insert(amc::FTarget& parent, amc::FTargdep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:amc.FTarget.c_targdep.InsertMaybe
-bool                 c_targdep_InsertMaybe(amc::FTarget& target, amc::FTargdep& row) __attribute__((nothrow));
+bool                 c_targdep_InsertMaybe(amc::FTarget& parent, amc::FTargdep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:amc.FTarget.c_targdep.N
-inline i64           c_targdep_N(const amc::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_targdep_N(const amc::FTarget& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:amc.FTarget.c_targdep.Remove
-void                 c_targdep_Remove(amc::FTarget& target, amc::FTargdep& row) __attribute__((nothrow));
+void                 c_targdep_Remove(amc::FTarget& parent, amc::FTargdep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:amc.FTarget.c_targdep.RemoveAll
-inline void          c_targdep_RemoveAll(amc::FTarget& target) __attribute__((nothrow));
+inline void          c_targdep_RemoveAll(amc::FTarget& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:amc.FTarget.c_targdep.Reserve
-void                 c_targdep_Reserve(amc::FTarget& target, u64 n) __attribute__((nothrow));
+void                 c_targdep_Reserve(amc::FTarget& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:amc.FTarget.c_targdep.qFind
-inline amc::FTargdep& c_targdep_qFind(amc::FTarget& target, u64 idx) __attribute__((nothrow));
+inline amc::FTargdep& c_targdep_qFind(amc::FTarget& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:amc.FTarget.c_targdep.InAryQ
 inline bool          target_c_targdep_InAryQ(amc::FTargdep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:amc.FTarget.c_targdep.qLast
-inline amc::FTargdep& c_targdep_qLast(amc::FTarget& target) __attribute__((nothrow));
+inline amc::FTargdep& c_targdep_qLast(amc::FTarget& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FTarget..Init
-inline void          FTarget_Init(amc::FTarget& target);
+inline void          FTarget_Init(amc::FTarget& parent);
 // func:amc.FTarget.c_targdep_curs.Reset
 inline void          target_c_targdep_curs_Reset(target_c_targdep_curs &curs, amc::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -18535,7 +18679,7 @@ inline void          target_c_targdep_curs_Next(target_c_targdep_curs &curs) __a
 // func:amc.FTarget.c_targdep_curs.Access
 inline amc::FTargdep& target_c_targdep_curs_Access(target_c_targdep_curs &curs) __attribute__((nothrow));
 // func:amc.FTarget..Uninit
-void                 FTarget_Uninit(amc::FTarget& target) __attribute__((nothrow));
+void                 FTarget_Uninit(amc::FTarget& parent) __attribute__((nothrow));
 
 // --- amc.FTary
 // create: amc.FDb.tary (Lary)
@@ -18573,9 +18717,9 @@ void                 tary_CopyIn(amc::FTary &row, dmmeta::Tary &in) __attribute_
 
 // Set all fields to initial values.
 // func:amc.FTary..Init
-inline void          FTary_Init(amc::FTary& tary);
+inline void          FTary_Init(amc::FTary& parent);
 // func:amc.FTary..Uninit
-void                 FTary_Uninit(amc::FTary& tary) __attribute__((nothrow));
+void                 FTary_Uninit(amc::FTary& parent) __attribute__((nothrow));
 
 // --- amc.FTcond
 // create: amc.FDb.tcond (Lary)
@@ -18610,16 +18754,16 @@ void                 tcond_CopyOut(amc::FTcond &row, amcdb::Tcond &out) __attrib
 void                 tcond_CopyIn(amc::FTcond &row, amcdb::Tcond &in) __attribute__((nothrow));
 
 // func:amc.FTcond.tclass.Get
-algo::strptr         tclass_Get(amc::FTcond& tcond) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         tclass_Get(amc::FTcond& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FTcond.name.Get
-algo::strptr         name_Get(amc::FTcond& tcond) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FTcond& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FTcond..Init
-inline void          FTcond_Init(amc::FTcond& tcond);
+inline void          FTcond_Init(amc::FTcond& parent);
 // func:amc.FTcond..Uninit
-void                 FTcond_Uninit(amc::FTcond& tcond) __attribute__((nothrow));
+void                 FTcond_Uninit(amc::FTcond& parent) __attribute__((nothrow));
 
 // --- amc.FTcurs
 // create: amc.FDb.tcurs (Lary)
@@ -18651,13 +18795,13 @@ void                 tcurs_CopyOut(amc::FTcurs &row, amcdb::Tcurs &out) __attrib
 void                 tcurs_CopyIn(amc::FTcurs &row, amcdb::Tcurs &in) __attribute__((nothrow));
 
 // func:amc.FTcurs.curstype.Get
-algo::strptr         curstype_Get(amc::FTcurs& tcurs) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         curstype_Get(amc::FTcurs& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FTcurs..Init
-inline void          FTcurs_Init(amc::FTcurs& tcurs);
+inline void          FTcurs_Init(amc::FTcurs& parent);
 // func:amc.FTcurs..Uninit
-void                 FTcurs_Uninit(amc::FTcurs& tcurs) __attribute__((nothrow));
+void                 FTcurs_Uninit(amc::FTcurs& parent) __attribute__((nothrow));
 
 // --- amc.FTfunc
 // create: amc.FDb.tfunc (Lary)
@@ -18706,27 +18850,27 @@ void                 tfunc_CopyOut(amc::FTfunc &row, amcdb::Tfunc &out) __attrib
 void                 tfunc_CopyIn(amc::FTfunc &row, amcdb::Tfunc &in) __attribute__((nothrow));
 
 // func:amc.FTfunc.tclass.Get
-algo::strptr         tclass_Get(amc::FTfunc& tfunc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         tclass_Get(amc::FTfunc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FTfunc.name.Get
-algo::strptr         name_Get(amc::FTfunc& tfunc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FTfunc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Invoke function by pointer
 // func:amc.FTfunc.step.Call
-inline void          step_Call(amc::FTfunc& tfunc) __attribute__((nothrow));
+inline void          step_Call(amc::FTfunc& parent) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FTfunc.c_tcurs.InsertMaybe
-inline bool          c_tcurs_InsertMaybe(amc::FTfunc& tfunc, amc::FTcurs& row) __attribute__((nothrow));
+inline bool          c_tcurs_InsertMaybe(amc::FTfunc& parent, amc::FTcurs& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FTfunc.c_tcurs.Remove
-inline void          c_tcurs_Remove(amc::FTfunc& tfunc, amc::FTcurs& row) __attribute__((nothrow));
+inline void          c_tcurs_Remove(amc::FTfunc& parent, amc::FTcurs& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FTfunc..Init
-void                 FTfunc_Init(amc::FTfunc& tfunc);
+void                 FTfunc_Init(amc::FTfunc& parent);
 // func:amc.FTfunc..Uninit
-void                 FTfunc_Uninit(amc::FTfunc& tfunc) __attribute__((nothrow));
+void                 FTfunc_Uninit(amc::FTfunc& parent) __attribute__((nothrow));
 
 // --- amc.FThash
 // create: amc.FDb.thash (Lary)
@@ -18765,9 +18909,9 @@ void                 thash_CopyIn(amc::FThash &row, dmmeta::Thash &in) __attribu
 
 // Set all fields to initial values.
 // func:amc.FThash..Init
-inline void          FThash_Init(amc::FThash& thash);
+inline void          FThash_Init(amc::FThash& parent);
 // func:amc.FThash..Uninit
-void                 FThash_Uninit(amc::FThash& thash) __attribute__((nothrow));
+void                 FThash_Uninit(amc::FThash& parent) __attribute__((nothrow));
 
 // --- amc.FTracefld
 // create: amc.FDb.tracefld (Lary)
@@ -18791,10 +18935,10 @@ void                 tracefld_CopyOut(amc::FTracefld &row, dmmeta::Tracefld &out
 void                 tracefld_CopyIn(amc::FTracefld &row, dmmeta::Tracefld &in) __attribute__((nothrow));
 
 // func:amc.FTracefld.tracerec.Get
-algo::strptr         tracerec_Get(amc::FTracefld& tracefld) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         tracerec_Get(amc::FTracefld& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FTracefld.name.Get
-algo::strptr         name_Get(amc::FTracefld& tracefld) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FTracefld& parent) __attribute__((__warn_unused_result__, nothrow));
 
 
 // --- amc.FTracerec
@@ -18819,10 +18963,10 @@ void                 tracerec_CopyOut(amc::FTracerec &row, dmmeta::Tracerec &out
 void                 tracerec_CopyIn(amc::FTracerec &row, dmmeta::Tracerec &in) __attribute__((nothrow));
 
 // func:amc.FTracerec.name.Get
-algo::strptr         name_Get(amc::FTracerec& tracerec) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FTracerec& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FTracerec.ns.Get
-algo::strptr         ns_Get(amc::FTracerec& tracerec) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FTracerec& parent) __attribute__((__warn_unused_result__, nothrow));
 
 
 // --- amc.FTypefld
@@ -18860,13 +19004,13 @@ void                 typefld_CopyOut(amc::FTypefld &row, dmmeta::Typefld &out) _
 void                 typefld_CopyIn(amc::FTypefld &row, dmmeta::Typefld &in) __attribute__((nothrow));
 
 // func:amc.FTypefld.ctype.Get
-algo::strptr         ctype_Get(amc::FTypefld& typefld) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(amc::FTypefld& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:amc.FTypefld..Init
-inline void          FTypefld_Init(amc::FTypefld& typefld);
+inline void          FTypefld_Init(amc::FTypefld& parent);
 // func:amc.FTypefld..Uninit
-void                 FTypefld_Uninit(amc::FTypefld& typefld) __attribute__((nothrow));
+void                 FTypefld_Uninit(amc::FTypefld& parent) __attribute__((nothrow));
 
 // --- amc.FUserfunc
 // create: amc.FDb.userfunc (Lary)
@@ -18963,29 +19107,29 @@ void                 xref_CopyOut(amc::FXref &row, dmmeta::Xref &out) __attribut
 void                 xref_CopyIn(amc::FXref &row, dmmeta::Xref &in) __attribute__((nothrow));
 
 // func:amc.FXref.name.Get
-algo::strptr         name_Get(amc::FXref& xref) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amc::FXref& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FXref.ns.Get
-algo::strptr         ns_Get(amc::FXref& xref) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(amc::FXref& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FXref.viafld.Get
-algo::strptr         viafld_Get(amc::FXref& xref) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         viafld_Get(amc::FXref& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:amc.FXref.keyfld.Get
-algo::strptr         keyfld_Get(amc::FXref& xref) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         keyfld_Get(amc::FXref& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FXref.c_nocascdel.InsertMaybe
-inline bool          c_nocascdel_InsertMaybe(amc::FXref& xref, amc::FNocascdel& row) __attribute__((nothrow));
+inline bool          c_nocascdel_InsertMaybe(amc::FXref& parent, amc::FNocascdel& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FXref.c_nocascdel.Remove
-inline void          c_nocascdel_Remove(amc::FXref& xref, amc::FNocascdel& row) __attribute__((nothrow));
+inline void          c_nocascdel_Remove(amc::FXref& parent, amc::FNocascdel& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FXref..Init
-void                 FXref_Init(amc::FXref& xref);
+void                 FXref_Init(amc::FXref& parent);
 // func:amc.FXref..Uninit
-void                 FXref_Uninit(amc::FXref& xref) __attribute__((nothrow));
+void                 FXref_Uninit(amc::FXref& parent) __attribute__((nothrow));
 
 // --- amc.FieldId
 #pragma pack(push,1)

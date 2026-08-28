@@ -13,7 +13,7 @@ an active count.  Two modes:
   in use; `_Alloc` extends it up to `max`, after which
   `AllocMem` returns NULL.
 
-```
+```ssim
 dmmeta.field   field:net.Ipv6.octet  arg:u8  reftype:Inlary  dflt:""  comment:""
   dmmeta.inlary  field:net.Ipv6.octet  min:16  max:16  comment:"fixed 16-byte address"
 ```
@@ -145,7 +145,7 @@ chains via `GenTclass(amc_tclass_Pool)`.
 
 Fixed-size IPv6 address (16 bytes inline):
 
-```
+```ssim
 dmmeta.ctype  ctype:net.Ipv6  comment:""
   dmmeta.field  field:net.Ipv6.octet  arg:u8  reftype:Inlary  dflt:""
     dmmeta.inlary  field:net.Ipv6.octet  min:16  max:16
@@ -156,7 +156,7 @@ counter and no allocator — just the array.
 
 Variable-size example (up to 8 hooks per record):
 
-```
+```ssim
 dmmeta.field  field:atf_amc.FAction.hooks  arg:atf_amc.FHook  reftype:Inlary
   dmmeta.inlary  field:atf_amc.FAction.hooks  min:0  max:8
 ```

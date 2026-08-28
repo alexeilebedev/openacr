@@ -3,17 +3,22 @@
 
 Every field in a ctype has a **reftype** — a type constructor that
 decides what code amc generates for the field.  36 reftypes are
-defined in `data/dmmeta/reftype.ssim`.
+defined in `ssimfile:dmmeta.reftype`.
 
 A field is declared like this:
 
     dmmeta.field  field:amc.FDb.ind_ns        arg:amc.FNs           reftype:Thash   dflt:""  comment:""
     dmmeta.field  field:dmmeta.Field.field    arg:algo.Smallstr100  reftype:Val     dflt:""  comment:""
 
-The page for each reftype below gives the full template: flags from
-`dmmeta.reftype`, ssim inputs you need to define, variants and
-options, the table of generated functions, the memory model,
-cross-reference behaviour, and pitfalls.
+The tables below group the reftypes by what they are for, and each entry links to
+that reftype's own page.  A reftype page gives the full template: flags from
+`dmmeta.reftype`, ssim inputs you need to define, variants and options, the table
+of generated functions, the memory model, cross-reference behaviour, and
+pitfalls.
+
+A field of a protocol namespace has no reftype page to reach, because a protocol
+namespace has no in-memory state at all -- see
+[Protocols](/txt/exe/amc/proto.md).
 
 ### Table of Contents
 <a href="#table-of-contents"></a>
@@ -84,7 +89,7 @@ flag per cursor: `dflt:Y` means every field of that reftype gets the
 cursor, and `dflt:N` means the field must ask for it with a
 `dmmeta.fcurs` row naming the field and the curstype.
 
-```
+```ssim
 dmmeta.fcurs  fcurs:acr.FDb.zd_all_selrec/delcurs  comment:""
 ```
 
@@ -112,8 +117,8 @@ removal is the common case where that rule bites.
 The table above names what each cursor walks, which is the part that
 belongs to the reftype.  The authoritative list of which cursors are
 default and which are on demand is regenerated from the database in
-[dmmeta.fcurs](/txt/ssimdb/dmmeta/fcurs.md), and the cursor types
-themselves are [amcdb.curstype](/txt/ssimdb/amcdb/curstype.md).
+[dmmeta.fcurs](/txt/ssimdb/dmmeta/README.md#dmmeta-fcurs), and the cursor types
+themselves are [amcdb.curstype](/txt/ssimdb/amcdb/README.md).
 
 ### Roots and infrastructure
 <a href="#roots-and-infrastructure"></a>
@@ -122,14 +127,6 @@ themselves are [amcdb.curstype](/txt/ssimdb/amcdb/curstype.md).
 |---|---|
 |[Global](/txt/exe/amc/reftype/Global.md)|Global singleton — root of every access path in a process|
 |[Ctype](/txt/exe/amc/reftype/Ctype.md)|Embedded struct (composition); the field *is* a sub-record|
-
-#### Global - global singleton
-<a href="#global"></a>
-See [Global](/txt/exe/amc/reftype/Global.md) for variants, generated functions and pitfalls.
-
-#### Ctype - embedded struct
-<a href="#ctype"></a>
-See [Ctype](/txt/exe/amc/reftype/Ctype.md) for variants, generated functions and pitfalls.
 
 ### Allocators
 <a href="#allocators"></a>
@@ -149,34 +146,6 @@ the overall allocator model.
 |[Lary](/txt/exe/amc/reftype/Lary.md)|Level array (36 doubling blocks) — append-only with permanent pointers|
 |[Delptr](/txt/exe/amc/reftype/Delptr.md)|Lazy single-element allocator — like Val but starts NULL|
 
-#### Malloc - libc malloc/free
-<a href="#malloc"></a>
-See [Malloc](/txt/exe/amc/reftype/Malloc.md) for variants, generated functions and pitfalls.
-
-#### Sbrk - sbrk allocator
-<a href="#sbrk"></a>
-See [Sbrk](/txt/exe/amc/reftype/Sbrk.md) for variants, generated functions and pitfalls.
-
-#### Tpool - singly-linked freelist
-<a href="#tpool"></a>
-See [Tpool](/txt/exe/amc/reftype/Tpool.md) for variants, generated functions and pitfalls.
-
-#### Lpool - variable-size pool
-<a href="#lpool"></a>
-See [Lpool](/txt/exe/amc/reftype/Lpool.md) for variants, generated functions and pitfalls.
-
-#### Blkpool - block allocator
-<a href="#blkpool"></a>
-See [Blkpool](/txt/exe/amc/reftype/Blkpool.md) for variants, generated functions and pitfalls.
-
-#### Lary - level array
-<a href="#lary"></a>
-See [Lary](/txt/exe/amc/reftype/Lary.md) for variants, generated functions and pitfalls.
-
-#### Delptr - lazy allocator
-<a href="#delptr"></a>
-See [Delptr](/txt/exe/amc/reftype/Delptr.md) for variants, generated functions and pitfalls.
-
 ### Inline and embedded data
 <a href="#inline-and-embedded-data"></a>
 
@@ -188,22 +157,6 @@ Fields whose storage lives inside the parent struct.
 |[Tary](/txt/exe/amc/reftype/Tary.md)|Dynamic resizable array; one heap block, doubling growth, pointers invalidated on grow|
 |[Varlen](/txt/exe/amc/reftype/Varlen.md)|Variable-length array of fixed records appended to a parent — last field only|
 |[Opt](/txt/exe/amc/reftype/Opt.md)|Optional trailing struct occupying the rest of the allocated space|
-
-#### Inlary - inline array
-<a href="#inlary"></a>
-See [Inlary](/txt/exe/amc/reftype/Inlary.md) for variants, generated functions and pitfalls.
-
-#### Tary - resizable array
-<a href="#tary"></a>
-See [Tary](/txt/exe/amc/reftype/Tary.md) for variants, generated functions and pitfalls.
-
-#### Varlen - variable-length field
-<a href="#varlen"></a>
-See [Varlen](/txt/exe/amc/reftype/Varlen.md) for variants, generated functions and pitfalls.
-
-#### Opt - optional trailing field
-<a href="#opt"></a>
-See [Opt](/txt/exe/amc/reftype/Opt.md) for variants, generated functions and pitfalls.
 
 ### Cross-reference indexes
 <a href="#cross-reference-indexes"></a>
@@ -223,38 +176,6 @@ relational model.
 |[ZSListMT](/txt/exe/amc/reftype/ZSListMT.md)|Lock-free single-producer/multi-consumer zero-terminated queue|
 |[Count](/txt/exe/amc/reftype/Count.md)|Cross-reference that only keeps a child count|
 
-#### Thash - hash index
-<a href="#thash"></a>
-See [Thash](/txt/exe/amc/reftype/Thash.md) for variants, generated functions and pitfalls.
-
-#### Blkhash - block hash index
-<a href="#blkhash"></a>
-See [Blkhash](/txt/exe/amc/reftype/Blkhash.md) for variants, generated functions and pitfalls.
-
-#### Atree - AVL tree
-<a href="#atree"></a>
-See [Atree](/txt/exe/amc/reftype/Atree.md) for variants, generated functions and pitfalls.
-
-#### Bheap - binary heap
-<a href="#bheap"></a>
-See [Bheap](/txt/exe/amc/reftype/Bheap.md) for variants, generated functions and pitfalls.
-
-#### Ptrary - pointer array
-<a href="#ptrary"></a>
-See [Ptrary](/txt/exe/amc/reftype/Ptrary.md) for variants, generated functions and pitfalls.
-
-#### Llist - linked list
-<a href="#llist"></a>
-See [Llist](/txt/exe/amc/reftype/Llist.md) for variants, generated functions and pitfalls.
-
-#### ZSListMT - lock-free queue
-<a href="#zslistmt"></a>
-See [ZSListMT](/txt/exe/amc/reftype/ZSListMT.md) for variants, generated functions and pitfalls.
-
-#### Count - reference counter
-<a href="#count"></a>
-See [Count](/txt/exe/amc/reftype/Count.md) for variants, generated functions and pitfalls.
-
 ### References and pointers
 <a href="#references-and-pointers"></a>
 
@@ -264,22 +185,6 @@ See [Count](/txt/exe/amc/reftype/Count.md) for variants, generated functions and
 |[Upptr](/txt/exe/amc/reftype/Upptr.md)|Pointer to a pre-existing record (up-tree)|
 |[Pkey](/txt/exe/amc/reftype/Pkey.md)|Primary-key reference — text key resolved to a record at load time|
 |[Base](/txt/exe/amc/reftype/Base.md)|Single-inheritance "is-a" base — incorporates parent fields|
-
-#### Ptr - forward pointer
-<a href="#ptr"></a>
-See [Ptr](/txt/exe/amc/reftype/Ptr.md) for variants, generated functions and pitfalls.
-
-#### Upptr - parent pointer
-<a href="#upptr"></a>
-See [Upptr](/txt/exe/amc/reftype/Upptr.md) for variants, generated functions and pitfalls.
-
-#### Pkey - primary key reference
-<a href="#pkey"></a>
-See [Pkey](/txt/exe/amc/reftype/Pkey.md) for variants, generated functions and pitfalls.
-
-#### Base - base type
-<a href="#base"></a>
-See [Base](/txt/exe/amc/reftype/Base.md) for variants, generated functions and pitfalls.
 
 ### Value wrappers
 <a href="#value-wrappers"></a>
@@ -294,26 +199,6 @@ Reftypes that wrap a plain value with extra behaviour.
 |[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|Fixed-length padded or length-delimited string|
 |[Charset](/txt/exe/amc/reftype/Charset.md)|Set of characters, with `Match` accessor|
 
-#### Val - plain value
-<a href="#val"></a>
-See [Val](/txt/exe/amc/reftype/Val.md) for variants, generated functions and pitfalls.
-
-#### Alias - field alias
-<a href="#alias"></a>
-See [Alias](/txt/exe/amc/reftype/Alias.md) for variants, generated functions and pitfalls.
-
-#### Bitfld - bit field
-<a href="#bitfld"></a>
-See [Bitfld](/txt/exe/amc/reftype/Bitfld.md) for variants, generated functions and pitfalls.
-
-#### Smallstr - fixed-length string
-<a href="#smallstr"></a>
-See [Smallstr](/txt/exe/amc/reftype/Smallstr.md) for variants, generated functions and pitfalls.
-
-#### Charset - character set
-<a href="#charset"></a>
-See [Charset](/txt/exe/amc/reftype/Charset.md) for variants, generated functions and pitfalls.
-
 ### Specialised values
 <a href="#specialised-values"></a>
 
@@ -325,31 +210,3 @@ See [Charset](/txt/exe/amc/reftype/Charset.md) for variants, generated functions
 |[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|Pkey-style regex against a relational table (SQL form)|
 |[Exec](/txt/exe/amc/reftype/Exec.md)|Subprocess wrapper — exec/wait/kill on a child|
 |[Cppstack](/txt/exe/amc/reftype/Cppstack.md)|Stack-allocated pool — a name with no heap behind it|
-
-#### Hook - callback field
-<a href="#hook"></a>
-See [Hook](/txt/exe/amc/reftype/Hook.md) for variants, generated functions and pitfalls.
-
-#### Fbuf - file buffer
-<a href="#fbuf"></a>
-See [Fbuf](/txt/exe/amc/reftype/Fbuf.md) for variants, generated functions and pitfalls.
-
-#### Regx - compiled regex
-<a href="#regx"></a>
-See [Regx](/txt/exe/amc/reftype/Regx.md) for variants, generated functions and pitfalls.
-
-#### RegxSql - SQL-style regex
-<a href="#regxsql"></a>
-See [RegxSql](/txt/exe/amc/reftype/RegxSql.md) for variants, generated functions and pitfalls.
-
-#### Exec - subprocess
-<a href="#exec"></a>
-See [Exec](/txt/exe/amc/reftype/Exec.md) for variants, generated functions and pitfalls.
-
-#### Cppstack - stack pool
-<a href="#cppstack"></a>
-See [Cppstack](/txt/exe/amc/reftype/Cppstack.md) for variants, generated functions and pitfalls.
-
-#### Protocol - protocol namespace
-<a href="#protocol"></a>
-A protocol namespace has no in-memory state.  See [Protocols](/txt/exe/amc/proto.md).

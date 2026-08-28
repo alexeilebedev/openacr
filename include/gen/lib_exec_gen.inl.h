@@ -318,48 +318,48 @@ inline lib_exec::FSyscmd& lib_exec::_db_zd_started_curs_Access(_db_zd_started_cu
 
 // --- lib_exec.FSyscmd.c_prior.EmptyQ
 // Return true if index is empty
-inline bool lib_exec::c_prior_EmptyQ(lib_exec::FSyscmd& syscmd) {
-    return syscmd.c_prior_n == 0;
+inline bool lib_exec::c_prior_EmptyQ(lib_exec::FSyscmd& parent) {
+    return parent.c_prior_n == 0;
 }
 
 // --- lib_exec.FSyscmd.c_prior.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_exec::FSyscmddep* lib_exec::c_prior_Find(lib_exec::FSyscmd& syscmd, u64 t) {
+inline lib_exec::FSyscmddep* lib_exec::c_prior_Find(lib_exec::FSyscmd& parent, u64 t) {
     lib_exec::FSyscmddep *retval = NULL;
     u64 idx = t;
-    u64 lim = syscmd.c_prior_n;
+    u64 lim = parent.c_prior_n;
     if (idx < lim) {
-        retval = syscmd.c_prior_elems[idx];
+        retval = parent.c_prior_elems[idx];
     }
     return retval;
 }
 
 // --- lib_exec.FSyscmd.c_prior.Getary
 // Return array of pointers
-inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_prior_Getary(lib_exec::FSyscmd& syscmd) {
-    return algo::aryptr<lib_exec::FSyscmddep*>(syscmd.c_prior_elems, syscmd.c_prior_n);
+inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_prior_Getary(lib_exec::FSyscmd& parent) {
+    return algo::aryptr<lib_exec::FSyscmddep*>(parent.c_prior_elems, parent.c_prior_n);
 }
 
 // --- lib_exec.FSyscmd.c_prior.N
 // Return number of items in the pointer array
-inline i64 lib_exec::c_prior_N(const lib_exec::FSyscmd& syscmd) {
-    return syscmd.c_prior_n;
+inline i64 lib_exec::c_prior_N(const lib_exec::FSyscmd& parent) {
+    return parent.c_prior_n;
 }
 
 // --- lib_exec.FSyscmd.c_prior.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void lib_exec::c_prior_RemoveAll(lib_exec::FSyscmd& syscmd) {
-    for (u64 i = 0; i < syscmd.c_prior_n; i++) {
+inline void lib_exec::c_prior_RemoveAll(lib_exec::FSyscmd& parent) {
+    for (u64 i = 0; i < parent.c_prior_n; i++) {
         // mark all elements as not-in-array
-        syscmd.c_prior_elems[i]->syscmd_c_prior_in_ary = false;
+        parent.c_prior_elems[i]->syscmd_c_prior_in_ary = false;
     }
-    syscmd.c_prior_n = 0;
+    parent.c_prior_n = 0;
 }
 
 // --- lib_exec.FSyscmd.c_prior.qFind
 // Return reference without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_prior_qFind(lib_exec::FSyscmd& syscmd, u64 idx) {
-    return *syscmd.c_prior_elems[idx];
+inline lib_exec::FSyscmddep& lib_exec::c_prior_qFind(lib_exec::FSyscmd& parent, u64 idx) {
+    return *parent.c_prior_elems[idx];
 }
 
 // --- lib_exec.FSyscmd.c_prior.InAryQ
@@ -370,54 +370,54 @@ inline bool lib_exec::syscmd_c_prior_InAryQ(lib_exec::FSyscmddep& row) {
 
 // --- lib_exec.FSyscmd.c_prior.qLast
 // Reference to last element without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_prior_qLast(lib_exec::FSyscmd& syscmd) {
-    return *syscmd.c_prior_elems[syscmd.c_prior_n-1];
+inline lib_exec::FSyscmddep& lib_exec::c_prior_qLast(lib_exec::FSyscmd& parent) {
+    return *parent.c_prior_elems[parent.c_prior_n-1];
 }
 
 // --- lib_exec.FSyscmd.c_next.EmptyQ
 // Return true if index is empty
-inline bool lib_exec::c_next_EmptyQ(lib_exec::FSyscmd& syscmd) {
-    return syscmd.c_next_n == 0;
+inline bool lib_exec::c_next_EmptyQ(lib_exec::FSyscmd& parent) {
+    return parent.c_next_n == 0;
 }
 
 // --- lib_exec.FSyscmd.c_next.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_exec::FSyscmddep* lib_exec::c_next_Find(lib_exec::FSyscmd& syscmd, u64 t) {
+inline lib_exec::FSyscmddep* lib_exec::c_next_Find(lib_exec::FSyscmd& parent, u64 t) {
     lib_exec::FSyscmddep *retval = NULL;
     u64 idx = t;
-    u64 lim = syscmd.c_next_n;
+    u64 lim = parent.c_next_n;
     if (idx < lim) {
-        retval = syscmd.c_next_elems[idx];
+        retval = parent.c_next_elems[idx];
     }
     return retval;
 }
 
 // --- lib_exec.FSyscmd.c_next.Getary
 // Return array of pointers
-inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_next_Getary(lib_exec::FSyscmd& syscmd) {
-    return algo::aryptr<lib_exec::FSyscmddep*>(syscmd.c_next_elems, syscmd.c_next_n);
+inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_next_Getary(lib_exec::FSyscmd& parent) {
+    return algo::aryptr<lib_exec::FSyscmddep*>(parent.c_next_elems, parent.c_next_n);
 }
 
 // --- lib_exec.FSyscmd.c_next.N
 // Return number of items in the pointer array
-inline i64 lib_exec::c_next_N(const lib_exec::FSyscmd& syscmd) {
-    return syscmd.c_next_n;
+inline i64 lib_exec::c_next_N(const lib_exec::FSyscmd& parent) {
+    return parent.c_next_n;
 }
 
 // --- lib_exec.FSyscmd.c_next.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void lib_exec::c_next_RemoveAll(lib_exec::FSyscmd& syscmd) {
-    for (u64 i = 0; i < syscmd.c_next_n; i++) {
+inline void lib_exec::c_next_RemoveAll(lib_exec::FSyscmd& parent) {
+    for (u64 i = 0; i < parent.c_next_n; i++) {
         // mark all elements as not-in-array
-        syscmd.c_next_elems[i]->syscmd_c_next_in_ary = false;
+        parent.c_next_elems[i]->syscmd_c_next_in_ary = false;
     }
-    syscmd.c_next_n = 0;
+    parent.c_next_n = 0;
 }
 
 // --- lib_exec.FSyscmd.c_next.qFind
 // Return reference without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_next_qFind(lib_exec::FSyscmd& syscmd, u64 idx) {
-    return *syscmd.c_next_elems[idx];
+inline lib_exec::FSyscmddep& lib_exec::c_next_qFind(lib_exec::FSyscmd& parent, u64 idx) {
+    return *parent.c_next_elems[idx];
 }
 
 // --- lib_exec.FSyscmd.c_next.InAryQ
@@ -428,8 +428,8 @@ inline bool lib_exec::syscmd_c_next_InAryQ(lib_exec::FSyscmddep& row) {
 
 // --- lib_exec.FSyscmd.c_next.qLast
 // Reference to last element without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_next_qLast(lib_exec::FSyscmd& syscmd) {
-    return *syscmd.c_next_elems[syscmd.c_next_n-1];
+inline lib_exec::FSyscmddep& lib_exec::c_next_qLast(lib_exec::FSyscmd& parent) {
+    return *parent.c_next_elems[parent.c_next_n-1];
 }
 
 // --- lib_exec.FSyscmd.c_prior_curs.Reset
@@ -494,13 +494,13 @@ inline  lib_exec::FSyscmd::~FSyscmd() {
 
 // --- lib_exec.FSyscmddep..Init
 // Set all fields to initial values.
-inline void lib_exec::FSyscmddep_Init(lib_exec::FSyscmddep& syscmddep) {
-    syscmddep.child = i64(0);
-    syscmddep.parent = i64(0);
-    syscmddep.p_child = NULL;
-    syscmddep.p_parent = NULL;
-    syscmddep.syscmd_c_next_in_ary = bool(false);
-    syscmddep.syscmd_c_prior_in_ary = bool(false);
+inline void lib_exec::FSyscmddep_Init(lib_exec::FSyscmddep& parent) {
+    parent.child = i64(0);
+    parent.parent = i64(0);
+    parent.p_child = NULL;
+    parent.p_parent = NULL;
+    parent.syscmd_c_next_in_ary = bool(false);
+    parent.syscmd_c_prior_in_ary = bool(false);
 }
 
 // --- lib_exec.FSyscmddep..Ctor

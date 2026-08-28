@@ -9,14 +9,14 @@ will have the corresponding bits set (the rest of the fields will have default v
 When printing a struct to a tuple, only the fields that are marked `present` are written out.
 
 AMC pmask creation is controlled with record
-[pmaskfld](/txt/ssimdb/dmmeta/pmaskfld.md).
+[pmaskfld](/txt/ssimdb/dmmeta/README.md#dmmeta-pmaskfld).
 
-Optionally you can use [pmaskfld_member](/txt/ssimdb/dmmeta/pmaskfld_member.md)
+Optionally you can use [pmaskfld_member](/txt/ssimdb/dmmeta/README.md#dmmeta-pmaskfld_member)
 if you don't want the default behavior of including all fields in the presence mask.
 
 Let's start with an example:
 
-```
+```ssim
 dmmeta.ctype  ctype:atf_amc.PmaskU32  comment:"A field controlled by a bitmask."
   dmmeta.pack  ctype:atf_amc.PmaskU32  comment:""
   dmmeta.field  field:atf_amc.PmaskU32.pmask  arg:u32  reftype:Val  dflt:""  comment:""
@@ -32,7 +32,7 @@ dmmeta.ctype  ctype:atf_amc.PmaskU32  comment:"A field controlled by a bitmask."
 
 This creates a number of functions for each field in the struct, which look like this:
 
-```
+```c++
 // Return true if the field is marked in the presence mask
 // func:atf_amc.PmaskU32.value5.PresentQ
 bool                 value5_PresentQ(atf_amc::PmaskU32& parent) __attribute__((nothrow));
@@ -53,7 +53,7 @@ static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::str
 Using the example above, we could create an additional presence mask with only 3 fields
 as members:
 
-```
+```ssim
   dmmeta.field  field:atf_amc.PmaskU32.nullable  arg:u32  reftype:Val  dflt:""  comment:""
     dmmeta.pmaskfld  field:atf_amc.PmaskU32.nullable  filter_print:N  comment:""
     dmmeta.pmaskfld_member pmaskfld_member:atf_amc.PmaskU32.nullable/atf_amc.PmaskU32.value

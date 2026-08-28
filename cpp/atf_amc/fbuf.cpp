@@ -703,3 +703,45 @@ void atf_amc::amctest_fbuf_lpool_free() {
     atf_amc::lpool_FreeMem(rec8, 8192);
     atf_amc::lpool_FreeMem(blk32, sizeof(atf_amc::MsgHeader) * 8192);
 }
+
+// A datagram buffer walks the whole messages one datagram packed, in order.
+void atf_amc::amctest_dgrambuf_walk() {
+    atf_amc::Dgrambuf dgrambuf;
+    atf_amc::MsgHeader first(atf_amc::MsgType(1), atf_amc::MsgLength(4));
+    atf_amc::MsgHeader second(atf_amc::MsgType(2), atf_amc::MsgLength(4));
+    in_WriteAll(dgrambuf, (u8*)&first, first.length);
+    in_WriteAll(dgrambuf, (u8*)&second, second.length);
+    atf_amc::MsgHeader *msg = in_GetMsg(dgrambuf);
+    vrfy_(msg != NULL && msg->type == first.type);
+    in_SkipMsg(dgrambuf);
+    msg = in_GetMsg(dgrambuf);
+    vrfy_(msg != NULL && msg->type == second.type);
+    in_SkipMsg(dgrambuf);
+    vrfy_(in_GetMsg(dgrambuf) == NULL);
+}
+
+// A length the datagram cannot satisfy ends the datagram and raises no eof.
+//
+// This is the property the whole datagram framing exists for.  A stream framer
+// answers an unframeable length by setting eof, which for a datagram socket is
+// a lie -- there is no end of input -- and it strands the bad header at the
+// buffer's start, where it is re-scanned forever.  A datagram buffer reports no
+// message and leaves eof alone, so the next refill drops the bad bytes with the
+// datagram they came in and the interface keeps serving.
+void atf_amc::amctest_dgrambuf_badlen() {
+    atf_amc::Dgrambuf dgrambuf;
+    atf_amc::MsgHeader hdr(atf_amc::MsgType(1), atf_amc::MsgLength(3));
+    in_WriteAll(dgrambuf, (u8*)&hdr, ssizeof(hdr));
+    vrfy_(in_GetMsg(dgrambuf) == NULL);
+    vrfyeq_(dgrambuf.in_eof, false);
+}
+
+// A message whose declared length runs past the datagram is not returned, and
+// it too raises no eof: the bytes are a truncated tail, not an error.
+void atf_amc::amctest_dgrambuf_overrun() {
+    atf_amc::Dgrambuf dgrambuf;
+    atf_amc::MsgHeader hdr(atf_amc::MsgType(1), atf_amc::MsgLength(32));
+    in_WriteAll(dgrambuf, (u8*)&hdr, ssizeof(hdr));
+    vrfy_(in_GetMsg(dgrambuf) == NULL);
+    vrfyeq_(dgrambuf.in_eof, false);
+}

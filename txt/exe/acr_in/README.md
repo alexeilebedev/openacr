@@ -1,19 +1,29 @@
 ## acr_in - ACR Input - compute set of ssimfiles or tuples used by a specific target
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Quick reference](#quick-reference)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [acr_in - Internals](/txt/gen/acr_in/acr_in.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target
+Usage: acr_in [[-ns:]<regx>] [options]
+    OPTION        TYPE    DFLT    COMMENT
+    [ns]          regx    ""      Regx of matching namespace
+    -data                         List ssimfile contents
+    -sigcheck             Y       Output sigcheck records for schema version mismatch detection
+    -list                         List ssimfile names
+    -t                            (with -list) Tree mode
+    -data_dir     string  "data"  Directory with ssimfiles
+    -schema       string  "data"
+    -related      string  ""      Select only tuples related to specified acr key
+    -notssimfile  regx    ""      Exclude ssimfiles matching regx
+    -checkable                    Ensure output passes acr -check
+    -r            regx    ""      Reverse lookup of target by ssimfile
+    -verbose      flag            Verbosity level (0..255); alias -v; cumulative
+    -debug        flag            Debug level (0..255); alias -d; cumulative
+    -help                         Print help and exit; alias -h
+    -version                      Print version and exit
+    -signature                    Show signatures and exit; alias -sig
+```
 
 ### Description
 <a href="#description"></a>
@@ -155,19 +165,3 @@ To recursively include any dependent ssimfiles, specify `-checkable`:
 With the `-r` option, one can supply a regex of a ssimfile and get a list
 of all namespaces that require the ssimfile. This includes any dependent namespaces
 via the targdep table.
-
-### Inputs
-<a href="#inputs"></a>
-`acr_in` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.dispsig](/txt/ssimdb/dmmeta/dispsig.md)|Cryptographic signature of all dispatches|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|Describe input table of a program|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|

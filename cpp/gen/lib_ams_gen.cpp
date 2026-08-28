@@ -35,8 +35,6 @@
 #include "include/gen/amsdb_gen.inl.h"
 #include "include/gen/ietf_gen.h"
 #include "include/gen/ietf_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -121,11 +119,11 @@ namespace lib_ams { // gen:ns_print_proto
     // Internal function to scan for a message
     //
     // func:lib_ams.FFdin.in.ScanMsg
-    static void          in_ScanMsg(lib_ams::FFdin& fdin) __attribute__((nothrow));
+    static void          in_ScanMsg(lib_ams::FFdin& parent) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:lib_ams.FFdin.in.Shift
-    static void          in_Shift(lib_ams::FFdin& fdin) __attribute__((nothrow));
+    static void          in_Shift(lib_ams::FFdin& parent) __attribute__((nothrow));
     // func:lib_ams...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
@@ -134,61 +132,61 @@ namespace lib_ams { // gen:ns_print_proto
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<lib_ams::Boardent> lib_ams::boardent_Addary(lib_ams::FBoardq& boardq, algo::aryptr<lib_ams::Boardent> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= boardq.boardent_elems && rhs.elems < boardq.boardent_elems + boardq.boardent_max;
+algo::aryptr<lib_ams::Boardent> lib_ams::boardent_Addary(lib_ams::FBoardq& parent, algo::aryptr<lib_ams::Boardent> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.boardent_elems && rhs.elems < parent.boardent_elems + parent.boardent_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FBoardq.boardent  comment:'alias error: sub-array is being appended to the whole'");
     }
     i64 nnew = rhs.n_elems;
-    boardent_Reserve(boardq, nnew); // reserve space
-    i64 at = boardq.boardent_n;
+    boardent_Reserve(parent, nnew); // reserve space
+    i64 at = parent.boardent_n;
     for (i64 i = 0; i < nnew; i++) {
-        new (boardq.boardent_elems + at + i) lib_ams::Boardent(rhs[i]);
-        boardq.boardent_n++;
+        new (parent.boardent_elems + at + i) lib_ams::Boardent(rhs[i]);
+        parent.boardent_n++;
     }
-    return algo::aryptr<lib_ams::Boardent>(boardq.boardent_elems + at, nnew);
+    return algo::aryptr<lib_ams::Boardent>(parent.boardent_elems + at, nnew);
 }
 
 // --- lib_ams.FBoardq.boardent.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-lib_ams::Boardent& lib_ams::boardent_Alloc(lib_ams::FBoardq& boardq) {
-    boardent_Reserve(boardq, 1);
-    i64 n  = boardq.boardent_n;
+lib_ams::Boardent& lib_ams::boardent_Alloc(lib_ams::FBoardq& parent) {
+    boardent_Reserve(parent, 1);
+    i64 n  = parent.boardent_n;
     i64 at = n;
-    lib_ams::Boardent *elems = boardq.boardent_elems;
+    lib_ams::Boardent *elems = parent.boardent_elems;
     new (elems + at) lib_ams::Boardent(); // construct new element, default initializer
-    boardq.boardent_n = n+1;
+    parent.boardent_n = n+1;
     return elems[at];
 }
 
 // --- lib_ams.FBoardq.boardent.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-lib_ams::Boardent& lib_ams::boardent_AllocAt(lib_ams::FBoardq& boardq, i64 at) {
-    boardent_Reserve(boardq, 1);
-    i64 n  = boardq.boardent_n;
+lib_ams::Boardent& lib_ams::boardent_AllocAt(lib_ams::FBoardq& parent, i64 at) {
+    boardent_Reserve(parent, 1);
+    i64 n  = parent.boardent_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("lib_ams.bad_alloc_at  field:lib_ams.FBoardq.boardent  comment:'index out of range'");
     }
-    lib_ams::Boardent *elems = boardq.boardent_elems;
+    lib_ams::Boardent *elems = parent.boardent_elems;
     memmove(elems + at + 1, elems + at, (n - at) * sizeof(lib_ams::Boardent));
     new (elems + at) lib_ams::Boardent(); // construct element, default initializer
-    boardq.boardent_n = n+1;
+    parent.boardent_n = n+1;
     return elems[at];
 }
 
 // --- lib_ams.FBoardq.boardent.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<lib_ams::Boardent> lib_ams::boardent_AllocN(lib_ams::FBoardq& boardq, i64 n_elems) {
-    boardent_Reserve(boardq, n_elems);
-    i64 old_n  = boardq.boardent_n;
+algo::aryptr<lib_ams::Boardent> lib_ams::boardent_AllocN(lib_ams::FBoardq& parent, i64 n_elems) {
+    boardent_Reserve(parent, n_elems);
+    i64 old_n  = parent.boardent_n;
     i64 new_n = old_n + n_elems;
-    lib_ams::Boardent *elems = boardq.boardent_elems;
+    lib_ams::Boardent *elems = parent.boardent_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) lib_ams::Boardent(); // construct new element, default initialize
     }
-    boardq.boardent_n = new_n;
+    parent.boardent_n = new_n;
     return algo::aryptr<lib_ams::Boardent>(elems + old_n, n_elems);
 }
 
@@ -196,112 +194,112 @@ algo::aryptr<lib_ams::Boardent> lib_ams::boardent_AllocN(lib_ams::FBoardq& board
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<lib_ams::Boardent> lib_ams::boardent_AllocNAt(lib_ams::FBoardq& boardq, i64 n_elems, i64 at) {
-    boardent_Reserve(boardq, n_elems);
-    i64 n  = boardq.boardent_n;
+algo::aryptr<lib_ams::Boardent> lib_ams::boardent_AllocNAt(lib_ams::FBoardq& parent, i64 n_elems, i64 at) {
+    boardent_Reserve(parent, n_elems);
+    i64 n  = parent.boardent_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("lib_ams.bad_alloc_n_at  field:lib_ams.FBoardq.boardent  comment:'index out of range'");
     }
-    lib_ams::Boardent *elems = boardq.boardent_elems;
+    lib_ams::Boardent *elems = parent.boardent_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(lib_ams::Boardent));
     for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) lib_ams::Boardent(); // construct new element, default initialize
     }
-    boardq.boardent_n = n+n_elems;
+    parent.boardent_n = n+n_elems;
     return algo::aryptr<lib_ams::Boardent>(elems+at,n_elems);
 }
 
 // --- lib_ams.FBoardq.boardent.Remove
 // Remove item by index. If index outside of range, do nothing.
-void lib_ams::boardent_Remove(lib_ams::FBoardq& boardq, u64 i) {
-    u64 lim = boardq.boardent_n;
-    lib_ams::Boardent *elems = boardq.boardent_elems;
+void lib_ams::boardent_Remove(lib_ams::FBoardq& parent, u64 i) {
+    u64 lim = parent.boardent_n;
+    lib_ams::Boardent *elems = parent.boardent_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(lib_ams::Boardent) * (lim - (i + 1)));
-        boardq.boardent_n = lim - 1;
+        parent.boardent_n = lim - 1;
     }
 }
 
 // --- lib_ams.FBoardq.boardent.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ams::boardent_RemoveLast(lib_ams::FBoardq& boardq) {
-    u64 n = boardq.boardent_n;
+void lib_ams::boardent_RemoveLast(lib_ams::FBoardq& parent) {
+    u64 n = parent.boardent_n;
     if (n > 0) {
         n -= 1;
-        boardq.boardent_n = n;
+        parent.boardent_n = n;
     }
 }
 
 // --- lib_ams.FBoardq.boardent.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void lib_ams::boardent_AbsReserve(lib_ams::FBoardq& boardq, i64 n) {
-    u64 old_max  = boardq.boardent_max;
+void lib_ams::boardent_AbsReserve(lib_ams::FBoardq& parent, i64 n) {
+    u64 old_max  = parent.boardent_max;
     if (n > i64(old_max)) {
         u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::malloc_ReallocMem(boardq.boardent_elems, old_max * sizeof(lib_ams::Boardent), new_max * sizeof(lib_ams::Boardent));
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.boardent_elems, old_max * sizeof(lib_ams::Boardent), new_max * sizeof(lib_ams::Boardent));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ams.tary_nomem  field:lib_ams.FBoardq.boardent  comment:'out of memory'");
         }
-        boardq.boardent_elems = (lib_ams::Boardent*)new_mem;
-        boardq.boardent_max = new_max;
+        parent.boardent_elems = (lib_ams::Boardent*)new_mem;
+        parent.boardent_max = new_max;
     }
 }
 
 // --- lib_ams.FBoardq.boardent.Setary
 // Copy contents of RHS to PARENT.
-void lib_ams::boardent_Setary(lib_ams::FBoardq& boardq, lib_ams::FBoardq &rhs) {
-    boardent_RemoveAll(boardq);
+void lib_ams::boardent_Setary(lib_ams::FBoardq& parent, lib_ams::FBoardq &rhs) {
+    boardent_RemoveAll(parent);
     i64 nnew = rhs.boardent_n;
-    boardent_Reserve(boardq, nnew); // reserve space
+    boardent_Reserve(parent, nnew); // reserve space
     for (i64 i = 0; i < nnew; i++) { // copy elements over
-        new (boardq.boardent_elems + i) lib_ams::Boardent(boardent_qFind(rhs, i));
-        boardq.boardent_n = i + 1;
+        new (parent.boardent_elems + i) lib_ams::Boardent(boardent_qFind(rhs, i));
+        parent.boardent_n = i + 1;
     }
 }
 
 // --- lib_ams.FBoardq.boardent.Setary2
 // Copy specified array into boardent, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void lib_ams::boardent_Setary(lib_ams::FBoardq& boardq, const algo::aryptr<lib_ams::Boardent> &rhs) {
-    boardent_RemoveAll(boardq);
-    boardent_Addary(boardq, rhs);
+void lib_ams::boardent_Setary(lib_ams::FBoardq& parent, const algo::aryptr<lib_ams::Boardent> &rhs) {
+    boardent_RemoveAll(parent);
+    boardent_Addary(parent, rhs);
 }
 
 // --- lib_ams.FBoardq.boardent.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<lib_ams::Boardent> lib_ams::boardent_AllocNVal(lib_ams::FBoardq& boardq, i64 n_elems, const lib_ams::Boardent& val) {
-    boardent_Reserve(boardq, n_elems);
-    i64 old_n  = boardq.boardent_n;
+algo::aryptr<lib_ams::Boardent> lib_ams::boardent_AllocNVal(lib_ams::FBoardq& parent, i64 n_elems, const lib_ams::Boardent& val) {
+    boardent_Reserve(parent, n_elems);
+    i64 old_n  = parent.boardent_n;
     i64 new_n = old_n + n_elems;
-    lib_ams::Boardent *elems = boardq.boardent_elems;
+    lib_ams::Boardent *elems = parent.boardent_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) lib_ams::Boardent(val);
     }
-    boardq.boardent_n = new_n;
+    parent.boardent_n = new_n;
     return algo::aryptr<lib_ams::Boardent>(elems + old_n, n_elems);
 }
 
 // --- lib_ams.FBoardq.boardent.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void lib_ams::boardent_Insary(lib_ams::FBoardq& boardq, algo::aryptr<lib_ams::Boardent> rhs, i64 at) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= boardq.boardent_elems && rhs.elems < boardq.boardent_elems + boardq.boardent_max;
+void lib_ams::boardent_Insary(lib_ams::FBoardq& parent, algo::aryptr<lib_ams::Boardent> rhs, i64 at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.boardent_elems && rhs.elems < parent.boardent_elems + parent.boardent_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FBoardq.boardent  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(boardq.boardent_n+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.boardent_n+1))) {
         FatalErrorExit("lib_ams.bad_insary  field:lib_ams.FBoardq.boardent  comment:'index out of range'");
     }
     i64 nnew = rhs.n_elems;
-    i64 nmove = boardq.boardent_n - at;
-    boardent_Reserve(boardq, nnew); // reserve space
+    i64 nmove = parent.boardent_n - at;
+    boardent_Reserve(parent, nnew); // reserve space
     for (i64 i = nmove-1; i >=0 ; --i) {
-        new (boardq.boardent_elems + at + nnew + i) lib_ams::Boardent(boardq.boardent_elems[at + i]);
+        new (parent.boardent_elems + at + nnew + i) lib_ams::Boardent(parent.boardent_elems[at + i]);
     }
     for (i64 i = 0; i < nnew; ++i) {
-        new (boardq.boardent_elems + at + i) lib_ams::Boardent(rhs[i]);
+        new (parent.boardent_elems + at + i) lib_ams::Boardent(rhs[i]);
     }
-    boardq.boardent_n += nnew;
+    parent.boardent_n += nnew;
 }
 
 // --- lib_ams.FBoardq.boardent.RemRegion
@@ -309,29 +307,28 @@ void lib_ams::boardent_Insary(lib_ams::FBoardq& boardq, algo::aryptr<lib_ams::Bo
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
-void lib_ams::boardent_RemRegion(lib_ams::FBoardq& boardq, i64 beg, i64 n) {
-    i64 end = i64_Min(beg+n, boardq.boardent_n);
+void lib_ams::boardent_RemRegion(lib_ams::FBoardq& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.boardent_n);
     beg = i64_Max(beg,0);
     n = end-beg;
     if (n>0) {
-        memmove(boardq.boardent_elems+beg, boardq.boardent_elems+end, sizeof(lib_ams::Boardent) * (boardq.boardent_n-end));
-        boardq.boardent_n -= n;
+        memmove(parent.boardent_elems+beg, parent.boardent_elems+end, sizeof(lib_ams::Boardent) * (parent.boardent_n-end));
+        parent.boardent_n -= n;
     }
 }
 
 // --- lib_ams.FBoardq..Uninit
-void lib_ams::FBoardq_Uninit(lib_ams::FBoardq& boardq) {
-    lib_ams::FBoardq &row = boardq; (void)row;
-    lib_ams::FShm* p_p_shm = row.p_shm;
+void lib_ams::FBoardq_Uninit(lib_ams::FBoardq& parent) {
+    lib_ams::FShm* p_p_shm = parent.p_shm;
     if (p_p_shm)  {
-        c_boardq_Remove(*p_p_shm, row);// remove boardq from index c_boardq
+        c_boardq_Remove(*p_p_shm, parent);// remove boardq from index c_boardq
     }
 
     // lib_ams.FBoardq.boardent.Uninit (Tary)  //Fixed power-of-two ring of outstanding references
     // remove all elements from lib_ams.FBoardq.boardent
-    boardent_RemoveAll(boardq);
+    boardent_RemoveAll(parent);
     // free memory for Tary lib_ams.FBoardq.boardent
-    algo_lib::malloc_FreeMem(boardq.boardent_elems, sizeof(lib_ams::Boardent)*boardq.boardent_max); // (lib_ams.FBoardq.boardent)
+    algo_lib::malloc_FreeMem(parent.boardent_elems, sizeof(lib_ams::Boardent)*parent.boardent_max); // (lib_ams.FBoardq.boardent)
 }
 
 // --- lib_ams.trace..Init
@@ -477,6 +474,7 @@ void* lib_ams::fdin_AllocMem() {
     if (row) {
         _db.fdin_free = row->fdin_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(lib_ams::FFdin));
     return row;
 }
 
@@ -486,6 +484,7 @@ void lib_ams::fdin_FreeMem(lib_ams::FFdin &row) {
     if (UNLIKELY(row.fdin_next != (lib_ams::FFdin*)-1)) {
         FatalErrorExit("lib_ams.tpool_double_delete  pool:lib_ams.FDb.fdin  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(lib_ams::FFdin)); // before the free list threads through the element
     row.fdin_next = _db.fdin_free; // insert into free list
     _db.fdin_free  = &row;
 }
@@ -1284,6 +1283,7 @@ void* lib_ams::proc_AllocMem() {
     if (row) {
         _db.proc_free = row->proc_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(lib_ams::FProc));
     return row;
 }
 
@@ -1293,6 +1293,7 @@ void lib_ams::proc_FreeMem(lib_ams::FProc &row) {
     if (UNLIKELY(row.proc_next != (lib_ams::FProc*)-1)) {
         FatalErrorExit("lib_ams.tpool_double_delete  pool:lib_ams.FDb.proc  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(lib_ams::FProc)); // before the free list threads through the element
     row.proc_next = _db.proc_free; // insert into free list
     _db.proc_free  = &row;
 }
@@ -1982,11 +1983,11 @@ static void lib_ams::proctype_LoadStatic() {
     static struct _t {
         const char *s;
     } data[] = {
-        { "amsdb.proctype  proctype:\"\"  id:0  ns:\"\"  overheadmb:0  hugemb:0  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:\"No process\"  hbtimeout:30" }
-        ,{ "amsdb.proctype  proctype:ams_sendtest  id:5  ns:ams_sendtest  overheadmb:0  hugemb:4295  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:\"Ams testing\"  hbtimeout:30" }
-        ,{ "amsdb.proctype  proctype:ext  id:22  ns:\"\"  overheadmb:0  hugemb:4295  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:\"External client connection\"  hbtimeout:30" }
-        ,{ "amsdb.proctype  proctype:samp_meng  id:23  ns:samp_meng  overheadmb:0  hugemb:4295  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:\"Matching engine\"  hbtimeout:30" }
-        ,{ "amsdb.proctype  proctype:user  id:21  ns:\"\"  overheadmb:0  hugemb:4295  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:\"User process launched via userproc\"  hbtimeout:30" }
+        { "amsdb.proctype  proctype:\"\"  id:0  ns:\"\"  overheadmb:0  hugemb:0  hbtimeout:30  comment:\"No process\"" }
+        ,{ "amsdb.proctype  proctype:ams_sendtest  id:5  ns:ams_sendtest  overheadmb:0  hugemb:4295  hbtimeout:30  comment:\"Ams testing\"" }
+        ,{ "amsdb.proctype  proctype:ext  id:22  ns:\"\"  overheadmb:0  hugemb:4295  hbtimeout:30  comment:\"External client connection\"" }
+        ,{ "amsdb.proctype  proctype:samp_meng  id:23  ns:samp_meng  overheadmb:0  hugemb:4295  hbtimeout:30  comment:\"Matching engine\"" }
+        ,{ "amsdb.proctype  proctype:user  id:21  ns:\"\"  overheadmb:0  hugemb:4295  hbtimeout:30  comment:\"User process launched via userproc\"" }
         ,{NULL}
     };
     (void)data;
@@ -2411,6 +2412,7 @@ void* lib_ams::outmsg_AllocMem() {
     if (row) {
         _db.outmsg_free = row->outmsg_next;
     }
+    algo_lib::MemcheckAlloc(row, sizeof(lib_ams::FOutmsg));
     return row;
 }
 
@@ -2420,6 +2422,7 @@ void lib_ams::outmsg_FreeMem(lib_ams::FOutmsg &row) {
     if (UNLIKELY(row.outmsg_next != (lib_ams::FOutmsg*)-1)) {
         FatalErrorExit("lib_ams.tpool_double_delete  pool:lib_ams.FDb.outmsg  comment:'double deletion caught'");
     }
+    algo_lib::MemcheckFree(&row, sizeof(lib_ams::FOutmsg)); // before the free list threads through the element
     row.outmsg_next = _db.outmsg_free; // insert into free list
     _db.outmsg_free  = &row;
 }
@@ -2744,7 +2747,6 @@ void lib_ams::FDb_Init() {
 
 // --- lib_ams.FDb..Uninit
 void lib_ams::FDb_Uninit() {
-    lib_ams::FDb &row = _db; (void)row;
 
     // lib_ams.FDb.c_postlane.Uninit (Ptrary)  //Scratch: lanes the next board post reaches
     algo_lib::malloc_FreeMem(_db.c_postlane_elems, sizeof(lib_ams::FShm*)*_db.c_postlane_max); // (lib_ams.FDb.c_postlane)
@@ -2778,25 +2780,25 @@ void lib_ams::FDb_Uninit() {
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by lib_ams::FFdin.in via FIohook field.
-// Whenever the file descriptor becomes readable, insert fdin into cd_fdin_read.
-void lib_ams::in_BeginRead(lib_ams::FFdin& fdin, algo::Fildes fd) {
-    fdin.in_iohook.fildes = fd;
-    callback_Set1(fdin.in_iohook, fdin, lib_ams::cd_fdin_read_Insert);
+// Whenever the file descriptor becomes readable, insert parent into cd_fdin_read.
+void lib_ams::in_BeginRead(lib_ams::FFdin& parent, algo::Fildes fd) {
+    parent.in_iohook.fildes = fd;
+    callback_Set1(parent.in_iohook, parent, lib_ams::cd_fdin_read_Insert);
     IOEvtFlags flags;
     read_Set(flags, true);
-    if (fdin.in_epoll_enable) {
-        algo_lib::IohookAdd(fdin.in_iohook, flags);
+    if (parent.in_epoll_enable) {
+        algo_lib::IohookAdd(parent.in_iohook, flags);
     } else {
-        lib_ams::cd_fdin_read_Insert(fdin);
+        lib_ams::cd_fdin_read_Insert(parent);
     }
 }
 
 // --- lib_ams.FFdin.in.EndRead
 // Set EOF flag
-void lib_ams::in_EndRead(lib_ams::FFdin& fdin) {
-    if (ValidQ(fdin.in_iohook.fildes)) {
-        fdin.in_eof = true;
-        lib_ams::cd_fdin_read_Insert(fdin);
+void lib_ams::in_EndRead(lib_ams::FFdin& parent) {
+    if (ValidQ(parent.in_iohook.fildes)) {
+        parent.in_eof = true;
+        lib_ams::cd_fdin_read_Insert(parent);
     }
 }
 
@@ -2812,24 +2814,24 @@ void lib_ams::in_EndRead(lib_ams::FFdin& fdin) {
 // SkipMsg will skip both the line and the delimiter.
 // A partial line at the end of input is NOT returned.
 // 
-algo::aryptr<char> lib_ams::in_GetMsg(lib_ams::FFdin& fdin) {
+algo::aryptr<char> lib_ams::in_GetMsg(lib_ams::FFdin& parent) {
     algo::aryptr<char> ret;
-    if (!fdin.in_msgvalid) {
-        in_ScanMsg(fdin);
-        if (!fdin.in_msgvalid) {
-            bool readable = in_Refill(fdin);
+    if (!parent.in_msgvalid) {
+        in_ScanMsg(parent);
+        if (!parent.in_msgvalid) {
+            bool readable = in_Refill(parent);
             if (readable) {
-                in_ScanMsg(fdin);
+                in_ScanMsg(parent);
             }
         }
     }
-    char *hdr = (char*)(fdin.in_elems + fdin.in_start);
-    if (fdin.in_msgvalid) {
+    char *hdr = (char*)(parent.in_elems + parent.in_start);
+    if (parent.in_msgvalid) {
         ret.elems = hdr;
-        ret.n_elems = fdin.in_msglen;
+        ret.n_elems = parent.in_msglen;
     }
-    if (!fdin.in_msgvalid && fdin.in_eof) { // all messages processed
-        lib_ams::cd_fdin_eof_Insert(fdin);
+    if (!parent.in_msgvalid && parent.in_eof) { // all messages processed
+        lib_ams::cd_fdin_eof_Insert(parent);
     }
     return ret;
 }
@@ -2839,45 +2841,56 @@ algo::aryptr<char> lib_ams::in_GetMsg(lib_ams::FFdin& fdin) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void lib_ams::in_Realloc(lib_ams::FFdin& fdin, int new_max) {
-    new_max = i32_Max(new_max, fdin.in_end);
-    u8 *new_mem = fdin.in_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(fdin.in_elems, fdin.in_max, new_max)
+void lib_ams::in_Realloc(lib_ams::FFdin& parent, int new_max) {
+    new_max = i32_Max(new_max, parent.in_end);
+    u8 *new_mem = parent.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(parent.in_elems, parent.in_max, new_max)
     : (u8*)algo_lib::malloc_AllocMem(new_max);
     if (UNLIKELY(!new_mem)) {
         FatalErrorExit("lib_ams.fbuf_nomem  field:lib_ams.FFdin.in  comment:'out of memory'");
     }
-    fdin.in_elems = new_mem;
-    fdin.in_max = new_max;
+    parent.in_elems = new_mem;
+    parent.in_max = new_max;
 }
 
 // --- lib_ams.FFdin.in.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool lib_ams::in_Refill(lib_ams::FFdin& fdin) {
-    bool readable = ValidQ(fdin.in_iohook.fildes);
+bool lib_ams::in_Refill(lib_ams::FFdin& parent) {
+    bool readable = ValidQ(parent.in_iohook.fildes);
     if (readable) {
-        int fd     = fdin.in_iohook.fildes.value;
-        i32 max    = in_Max(fdin);
-        i32 end    = fdin.in_end;
-        i32 nbytes = end - fdin.in_start; // # bytes currently in buffer
+        int fd     = parent.in_iohook.fildes.value;
+        i32 max    = in_Max(parent);
+        i32 end    = parent.in_end;
+        i32 nbytes = end - parent.in_start; // # bytes currently in buffer
         i32 nfree  = max - end; // bytes available at the end of buffer
         if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
-            in_Shift(fdin);
-            end = fdin.in_end;
+            in_Shift(parent);
+            end = parent.in_end;
             nfree = max - end;
         }
-        ssize_t ret         = read(fd, fdin.in_elems + end, nfree);
-        readable            = !(ret < 0 && errno == EAGAIN);
-        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
-        bool eof            = error || (ret == 0 && nfree > 0);
-        fdin.in_end += i32_Max(ret,0); // new end of bytes
-        if (error) {
-            fdin.in_err = algo::FromErrno(errno); // fetch errno
+        if (nfree == 0) {
+            // The buffer is full and holds no complete message, so the framing
+            // asked for one larger than the buffer can ever hold and the connection
+            // cannot make progress.  A read into zero room returns zero without eof,
+            // which would pin the connection on the read list and spin the loop, so
+            // it is retired here instead.
+            parent.in_eof = true;
+            parent.in_err = algo::FromErrno(E2BIG);
+            readable = false;
+        } else {
+            ssize_t ret         = read(fd, parent.in_elems + end, nfree);
+            readable            = !(ret < 0 && errno == EAGAIN);
+            bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
+            bool eof            = error || ret == 0;
+            parent.in_end += i32_Max(ret,0); // new end of bytes
+            if (error) {
+                parent.in_err = algo::FromErrno(errno); // fetch errno
+            }
+            parent.in_eof |= eof;
         }
-        fdin.in_eof |= eof;
     }
-    if (!readable && fdin.in_epoll_enable) {
-        lib_ams::cd_fdin_read_Remove(fdin);
+    if (!readable && parent.in_epoll_enable) {
+        lib_ams::cd_fdin_read_Remove(parent);
     }
     return readable;
 }
@@ -2885,74 +2898,74 @@ bool lib_ams::in_Refill(lib_ams::FFdin& fdin) {
 // --- lib_ams.FFdin.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void lib_ams::in_RemoveAll(lib_ams::FFdin& fdin) {
-    fdin.in_start    = 0;
-    fdin.in_end      = 0;
-    fdin.in_msgvalid = false;
+void lib_ams::in_RemoveAll(lib_ams::FFdin& parent) {
+    parent.in_start    = 0;
+    parent.in_end      = 0;
+    parent.in_msgvalid = false;
 }
 
 // --- lib_ams.FFdin.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void lib_ams::in_ScanMsg(lib_ams::FFdin& fdin) {
-    char *hdr = (char*)(fdin.in_elems + fdin.in_start);
-    i32 avail = in_N(fdin);
+static void lib_ams::in_ScanMsg(lib_ams::FFdin& parent) {
+    char *hdr = (char*)(parent.in_elems + parent.in_start);
+    i32 avail = in_N(parent);
     i32 msglen;
     bool found = false;
     // scan for delimiter starting from the previous place where we left off.
-    // at the end, save offset back to fdin so we don't have to re-scan.
+    // at the end, save offset back to parent so we don't have to re-scan.
     // returned message length **does not include delimiter**.
     // a line that exceeds buffer length is not returned.
-    for (msglen = fdin.in_msglen; msglen < avail; msglen += sizeof(char)) {
+    for (msglen = parent.in_msglen; msglen < avail; msglen += sizeof(char)) {
         if (hdr[msglen] == '\n') { // delimiter?
             found = true;
             break;
         }
     }
-    if (!found && msglen >= in_Max(fdin)) {
-        fdin.in_eof = true; // cause user to detect eof
-        fdin.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    if (!found && msglen >= in_Max(parent)) {
+        parent.in_eof = true; // cause user to detect eof
+        parent.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
     }
-    fdin.in_msglen = msglen;
-    fdin.in_msgvalid = found;
+    parent.in_msglen = msglen;
+    parent.in_msgvalid = found;
 }
 
 // --- lib_ams.FFdin.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void lib_ams::in_Shift(lib_ams::FFdin& fdin) {
-    i32 start = fdin.in_start;
-    i32 bytes_n = fdin.in_end - start;
+static void lib_ams::in_Shift(lib_ams::FFdin& parent) {
+    i32 start = parent.in_start;
+    i32 bytes_n = parent.in_end - start;
     if (bytes_n > 0) {
-        memmove(fdin.in_elems, fdin.in_elems + start, bytes_n);
+        memmove(parent.in_elems, parent.in_elems + start, bytes_n);
     }
-    fdin.in_end = bytes_n;
-    fdin.in_start = 0;
+    parent.in_end = bytes_n;
+    parent.in_start = 0;
 }
 
 // --- lib_ams.FFdin.in.SkipBytes
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void lib_ams::in_SkipBytes(lib_ams::FFdin& fdin, int n) {
-    int avail = fdin.in_end - fdin.in_start;
+void lib_ams::in_SkipBytes(lib_ams::FFdin& parent, int n) {
+    int avail = parent.in_end - parent.in_start;
     n = i32_Min(n,avail);
-    fdin.in_start += n;
-    fdin.in_msgvalid = false;
+    parent.in_start += n;
+    parent.in_msgvalid = false;
 }
 
 // --- lib_ams.FFdin.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void lib_ams::in_SkipMsg(lib_ams::FFdin& fdin) {
-    if (fdin.in_msgvalid) {
-        int skip = fdin.in_msglen;
+void lib_ams::in_SkipMsg(lib_ams::FFdin& parent) {
+    if (parent.in_msgvalid) {
+        int skip = parent.in_msglen;
         skip += ssizeof(char); // delimiter
-        i32 start = fdin.in_start;
+        i32 start = parent.in_start;
         start += skip;
-        fdin.in_start = start;
-        fdin.in_msgvalid = false;
-        fdin.in_msglen   = 0; // reset message length -- important for delimited streams
+        parent.in_start = start;
+        parent.in_msgvalid = false;
+        parent.in_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
@@ -2962,19 +2975,19 @@ void lib_ams::in_SkipMsg(lib_ams::FFdin& fdin) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool lib_ams::in_WriteAll(lib_ams::FFdin& fdin, u8 *in, i32 in_n) {
-    int max = in_Max(fdin);
+bool lib_ams::in_WriteAll(lib_ams::FFdin& parent, u8 *in, i32 in_n) {
+    int max = in_Max(parent);
     // check if message doesn't fit. if so, shift bytes over.
-    if (fdin.in_end + in_n > max) {
-        in_Shift(fdin);
+    if (parent.in_end + in_n > max) {
+        in_Shift(parent);
     }
     // now try to write the message.
-    i32 end = fdin.in_end;
+    i32 end = parent.in_end;
     bool fits = end + in_n <= max;
     if (fits) {
         if (in_n > 0) {
-            memcpy(fdin.in_elems + end, in, in_n);
-            fdin.in_end = end + in_n;
+            memcpy(parent.in_elems + end, in, in_n);
+            parent.in_end = end + in_n;
         }
     }
     return fits;
@@ -2983,49 +2996,48 @@ bool lib_ams::in_WriteAll(lib_ams::FFdin& fdin, u8 *in, i32 in_n) {
 // --- lib_ams.FFdin.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
 // Write bytes to the buffer. The entire block is always written or the program exits.
-void lib_ams::in_WriteReserve(lib_ams::FFdin& fdin, u8 *in, i32 in_n) {
-    if (fdin.in_end - fdin.in_start + in_n > in_Max(fdin)) {
-        in_Realloc(fdin, fdin.in_max + i32_Max(fdin.in_max, in_n));
+void lib_ams::in_WriteReserve(lib_ams::FFdin& parent, u8 *in, i32 in_n) {
+    if (parent.in_end - parent.in_start + in_n > in_Max(parent)) {
+        in_Realloc(parent, parent.in_max + i32_Max(parent.in_max, in_n));
     }
-    if (!in_WriteAll(fdin, in, in_n)) {
+    if (!in_WriteAll(parent, in, in_n)) {
         FatalErrorExit("in: out of memory");
     }
 }
 
 // --- lib_ams.FFdin..Init
 // Set all fields to initial values.
-void lib_ams::FFdin_Init(lib_ams::FFdin& fdin) {
-    fdin.in_elems = NULL; // in: initialize
-    fdin.in_max = 0; // in: initialize
-    fdin.in_end = 0; // in: initialize
-    fdin.in_start = 0; // in: initialize
-    fdin.in_eof = false; // in: initialize
-    fdin.in_msgvalid = false; // in: initialize
-    fdin.in_msglen = 0; // in: initialize
-    fdin.in_epoll_enable = true; // in: initialize
-    in_Realloc(fdin, 8192);
-    fdin.fdin_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.fdin) not-in-tpool's freelist
-    fdin.cd_fdin_eof_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.cd_fdin_eof) not-in-list
-    fdin.cd_fdin_eof_prev = NULL; // (lib_ams.FDb.cd_fdin_eof)
-    fdin.cd_fdin_read_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.cd_fdin_read) not-in-list
-    fdin.cd_fdin_read_prev = NULL; // (lib_ams.FDb.cd_fdin_read)
-    fdin.zd_fdin_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.zd_fdin) not-in-list
-    fdin.zd_fdin_prev = NULL; // (lib_ams.FDb.zd_fdin)
+void lib_ams::FFdin_Init(lib_ams::FFdin& parent) {
+    parent.in_elems = NULL; // in: initialize
+    parent.in_max = 0; // in: initialize
+    parent.in_end = 0; // in: initialize
+    parent.in_start = 0; // in: initialize
+    parent.in_eof = false; // in: initialize
+    parent.in_msgvalid = false; // in: initialize
+    parent.in_msglen = 0; // in: initialize
+    parent.in_epoll_enable = true; // in: initialize
+    in_Realloc(parent, 8192);
+    parent.fdin_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.fdin) not-in-tpool's freelist
+    parent.cd_fdin_eof_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.cd_fdin_eof) not-in-list
+    parent.cd_fdin_eof_prev = NULL; // (lib_ams.FDb.cd_fdin_eof)
+    parent.cd_fdin_read_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.cd_fdin_read) not-in-list
+    parent.cd_fdin_read_prev = NULL; // (lib_ams.FDb.cd_fdin_read)
+    parent.zd_fdin_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.zd_fdin) not-in-list
+    parent.zd_fdin_prev = NULL; // (lib_ams.FDb.zd_fdin)
 }
 
 // --- lib_ams.FFdin..Uninit
-void lib_ams::FFdin_Uninit(lib_ams::FFdin& fdin) {
-    lib_ams::FFdin &row = fdin; (void)row;
-    cd_fdin_eof_Remove(row); // remove fdin from index cd_fdin_eof
-    cd_fdin_read_Remove(row); // remove fdin from index cd_fdin_read
-    zd_fdin_Remove(row); // remove fdin from index zd_fdin
+void lib_ams::FFdin_Uninit(lib_ams::FFdin& parent) {
+    cd_fdin_eof_Remove(parent); // remove fdin from index cd_fdin_eof
+    cd_fdin_read_Remove(parent); // remove fdin from index cd_fdin_read
+    zd_fdin_Remove(parent); // remove fdin from index zd_fdin
 
     // lib_ams.FFdin.in.Uninit (Fbuf)  //
-    if (fdin.in_elems) {
-        algo_lib::malloc_FreeMem(fdin.in_elems, fdin.in_max); // (lib_ams.FFdin.in) in_max is the byte size Realloc allocated
+    if (parent.in_elems) {
+        algo_lib::malloc_FreeMem(parent.in_elems, parent.in_max); // (lib_ams.FFdin.in) in_max is the byte size Realloc allocated
     }
-    fdin.in_elems = NULL;
-    fdin.in_max = 0;
+    parent.in_elems = NULL;
+    parent.in_max = 0;
 }
 
 // --- lib_ams.FGrptype.base.CopyOut
@@ -3045,28 +3057,26 @@ void lib_ams::grptype_CopyIn(lib_ams::FGrptype &row, amsdb::Grptype &in) {
 }
 
 // --- lib_ams.FGrptype..Uninit
-void lib_ams::FGrptype_Uninit(lib_ams::FGrptype& grptype) {
-    lib_ams::FGrptype &row = grptype; (void)row;
-    ind_grptype_Remove(row); // remove grptype from index ind_grptype
+void lib_ams::FGrptype_Uninit(lib_ams::FGrptype& parent) {
+    ind_grptype_Remove(parent); // remove grptype from index ind_grptype
 }
 
 // --- lib_ams.FOutmsg..Uninit
-void lib_ams::FOutmsg_Uninit(lib_ams::FOutmsg& outmsg) {
-    lib_ams::FOutmsg &row = outmsg; (void)row;
-    lib_ams::FShm* p_p_shm = row.p_shm;
+void lib_ams::FOutmsg_Uninit(lib_ams::FOutmsg& parent) {
+    lib_ams::FShm* p_p_shm = parent.p_shm;
     if (p_p_shm)  {
-        zd_outmsg_Remove(*p_p_shm, row);// remove outmsg from index zd_outmsg
+        zd_outmsg_Remove(*p_p_shm, parent);// remove outmsg from index zd_outmsg
     }
 }
 
 // --- lib_ams.FProc.c_shm.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void lib_ams::c_shm_Insert(lib_ams::FProc& proc, lib_ams::FShm& row) {
+void lib_ams::c_shm_Insert(lib_ams::FProc& parent, lib_ams::FShm& row) {
     if (row.proc_c_shm_idx == -1) {
-        c_shm_Reserve(proc, 1);
-        u64 n  = proc.c_shm_n++;
-        proc.c_shm_elems[n] = &row;
+        c_shm_Reserve(parent, 1);
+        u64 n  = parent.c_shm_n++;
+        parent.c_shm_elems[n] = &row;
         row.proc_c_shm_idx = n;
     }
 }
@@ -3075,55 +3085,55 @@ void lib_ams::c_shm_Insert(lib_ams::FProc& proc, lib_ams::FShm& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_ams::c_shm_InsertMaybe(lib_ams::FProc& proc, lib_ams::FShm& row) {
+bool lib_ams::c_shm_InsertMaybe(lib_ams::FProc& parent, lib_ams::FShm& row) {
     bool retval = !proc_c_shm_InAryQ(row);
-    c_shm_Insert(proc,row); // check is performed in _Insert again
+    c_shm_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- lib_ams.FProc.c_shm.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_ams::c_shm_Remove(lib_ams::FProc& proc, lib_ams::FShm& row) {
-    i64 n = proc.c_shm_n;
+void lib_ams::c_shm_Remove(lib_ams::FProc& parent, lib_ams::FShm& row) {
+    i64 n = parent.c_shm_n;
     i64 idx = row.proc_c_shm_idx;
     if (idx != -1) {
-        lib_ams::FShm *last = proc.c_shm_elems[n-1];
+        lib_ams::FShm *last = parent.c_shm_elems[n-1];
         last->proc_c_shm_idx = idx;
-        proc.c_shm_elems[idx] = last;
+        parent.c_shm_elems[idx] = last;
         row.proc_c_shm_idx = -1;
-        proc.c_shm_n = n - 1;
+        parent.c_shm_n = n - 1;
     }
 }
 
 // --- lib_ams.FProc.c_shm.Reserve
 // Reserve space in index for N more elements;
-void lib_ams::c_shm_Reserve(lib_ams::FProc& proc, u64 n) {
-    u64 old_max = proc.c_shm_max;
-    if (UNLIKELY(proc.c_shm_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, proc.c_shm_n + n), 4);
+void lib_ams::c_shm_Reserve(lib_ams::FProc& parent, u64 n) {
+    u64 old_max = parent.c_shm_max;
+    if (UNLIKELY(parent.c_shm_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_shm_n + n), 4);
         u64 old_size = old_max * sizeof(lib_ams::FShm*);
         u64 new_size = new_max * sizeof(lib_ams::FShm*);
-        void *new_mem = algo_lib::malloc_ReallocMem(proc.c_shm_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_shm_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FProc.c_shm");
         }
-        proc.c_shm_elems = (lib_ams::FShm**)new_mem;
-        proc.c_shm_max = new_max;
+        parent.c_shm_elems = (lib_ams::FShm**)new_mem;
+        parent.c_shm_max = new_max;
     }
 }
 
 // --- lib_ams.FProc.c_shm.RemoveFirst
 // Heap-like Ptrary: remove first element
 // If index is empty, return NULL. Otherwise remove and return first element in index.
-lib_ams::FShm* lib_ams::c_shm_RemoveFirst(lib_ams::FProc& proc) {
+lib_ams::FShm* lib_ams::c_shm_RemoveFirst(lib_ams::FProc& parent) {
     lib_ams::FShm *row = NULL;
-    i64 n = proc.c_shm_n;
+    i64 n = parent.c_shm_n;
     if (n > 0) {
-        row = proc.c_shm_elems[0];
-        proc.c_shm_elems[n-1]->proc_c_shm_idx=0;
+        row = parent.c_shm_elems[0];
+        parent.c_shm_elems[n-1]->proc_c_shm_idx=0;
         row->proc_c_shm_idx=-1;
-        proc.c_shm_elems[0]=proc.c_shm_elems[n-1];
-        proc.c_shm_n = n-1;
+        parent.c_shm_elems[0]=parent.c_shm_elems[n-1];
+        parent.c_shm_n = n-1;
     }
     return row;
 }
@@ -3131,25 +3141,24 @@ lib_ams::FShm* lib_ams::c_shm_RemoveFirst(lib_ams::FProc& proc) {
 // --- lib_ams.FProc.c_shm.RemoveLast
 // Ptrary: remove last element
 // If index is empty, return NULL. Otherwise remove and return last element in index.
-lib_ams::FShm* lib_ams::c_shm_RemoveLast(lib_ams::FProc& proc) {
+lib_ams::FShm* lib_ams::c_shm_RemoveLast(lib_ams::FProc& parent) {
     lib_ams::FShm *row = NULL;
-    i64 n = proc.c_shm_n;
+    i64 n = parent.c_shm_n;
     if (n > 0) {
-        row = proc.c_shm_elems[n-1];
+        row = parent.c_shm_elems[n-1];
         row->proc_c_shm_idx=-1;
-        proc.c_shm_n = n-1;
+        parent.c_shm_n = n-1;
     }
     return row;
 }
 
 // --- lib_ams.FProc..Uninit
-void lib_ams::FProc_Uninit(lib_ams::FProc& proc) {
-    lib_ams::FProc &row = proc; (void)row;
-    ind_proc_Remove(row); // remove proc from index ind_proc
-    zd_proc_Remove(row); // remove proc from index zd_proc
+void lib_ams::FProc_Uninit(lib_ams::FProc& parent) {
+    ind_proc_Remove(parent); // remove proc from index ind_proc
+    zd_proc_Remove(parent); // remove proc from index zd_proc
 
     // lib_ams.FProc.c_shm.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(proc.c_shm_elems, sizeof(lib_ams::FShm*)*proc.c_shm_max); // (lib_ams.FProc.c_shm)
+    algo_lib::malloc_FreeMem(parent.c_shm_elems, sizeof(lib_ams::FShm*)*parent.c_shm_max); // (lib_ams.FProc.c_shm)
 }
 
 // --- lib_ams.FProctype.base.CopyOut
@@ -3160,12 +3169,8 @@ void lib_ams::proctype_CopyOut(lib_ams::FProctype &row, amsdb::Proctype &out) {
     out.ns = row.ns;
     out.overheadmb = row.overheadmb;
     out.hugemb = row.hugemb;
-    out.pathbyte = row.pathbyte;
-    out.userbyte = row.userbyte;
-    out.openbyte = row.openbyte;
-    out.connbyte = row.connbyte;
-    out.comment = algo::Comment(row.comment);
     out.hbtimeout = row.hbtimeout;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ams.FProctype.base.CopyIn
@@ -3176,43 +3181,23 @@ void lib_ams::proctype_CopyIn(lib_ams::FProctype &row, amsdb::Proctype &in) {
     row.ns = in.ns;
     row.overheadmb = in.overheadmb;
     row.hugemb = in.hugemb;
-    row.pathbyte = in.pathbyte;
-    row.userbyte = in.userbyte;
-    row.openbyte = in.openbyte;
-    row.connbyte = in.connbyte;
-    row.comment = in.comment;
     row.hbtimeout = in.hbtimeout;
-}
-
-// --- lib_ams.FProctype..Init
-// Set all fields to initial values.
-void lib_ams::FProctype_Init(lib_ams::FProctype& proctype) {
-    proctype.id = u32(0);
-    proctype.overheadmb = u32(0);
-    proctype.hugemb = u32(0);
-    proctype.pathbyte = u32(0);
-    proctype.userbyte = u32(0);
-    proctype.openbyte = u32(0);
-    proctype.connbyte = u32(0);
-    proctype.hbtimeout = i32(30);
-    proctype.ind_proctype_next = (lib_ams::FProctype*)-1; // (lib_ams.FDb.ind_proctype) not-in-hash
-    proctype.ind_proctype_hashval = 0; // stored hash value
+    row.comment = in.comment;
 }
 
 // --- lib_ams.FProctype..Uninit
-void lib_ams::FProctype_Uninit(lib_ams::FProctype& proctype) {
-    lib_ams::FProctype &row = proctype; (void)row;
-    ind_proctype_Remove(row); // remove proctype from index ind_proctype
+void lib_ams::FProctype_Uninit(lib_ams::FProctype& parent) {
+    ind_proctype_Remove(parent); // remove proctype from index ind_proctype
 }
 
 // --- lib_ams.FShm.c_boardq.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void lib_ams::c_boardq_Insert(lib_ams::FShm& shm, lib_ams::FBoardq& row) {
+void lib_ams::c_boardq_Insert(lib_ams::FShm& parent, lib_ams::FBoardq& row) {
     if (!row.shm_c_boardq_in_ary) {
-        c_boardq_Reserve(shm, 1);
-        u64 n  = shm.c_boardq_n++;
-        shm.c_boardq_elems[n] = &row;
+        c_boardq_Reserve(parent, 1);
+        u64 n  = parent.c_boardq_n++;
+        parent.c_boardq_elems[n] = &row;
         row.shm_c_boardq_in_ary = true;
     }
 }
@@ -3221,18 +3206,18 @@ void lib_ams::c_boardq_Insert(lib_ams::FShm& shm, lib_ams::FBoardq& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_ams::c_boardq_InsertMaybe(lib_ams::FShm& shm, lib_ams::FBoardq& row) {
+bool lib_ams::c_boardq_InsertMaybe(lib_ams::FShm& parent, lib_ams::FBoardq& row) {
     bool retval = !shm_c_boardq_InAryQ(row);
-    c_boardq_Insert(shm,row); // check is performed in _Insert again
+    c_boardq_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- lib_ams.FShm.c_boardq.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_ams::c_boardq_Remove(lib_ams::FShm& shm, lib_ams::FBoardq& row) {
-    i64 n = shm.c_boardq_n;
+void lib_ams::c_boardq_Remove(lib_ams::FShm& parent, lib_ams::FBoardq& row) {
+    i64 n = parent.c_boardq_n;
     if (bool_Update(row.shm_c_boardq_in_ary,false)) {
-        lib_ams::FBoardq* *elems = shm.c_boardq_elems;
+        lib_ams::FBoardq* *elems = parent.c_boardq_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -3241,7 +3226,7 @@ void lib_ams::c_boardq_Remove(lib_ams::FShm& shm, lib_ams::FBoardq& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(lib_ams::FBoardq*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                shm.c_boardq_n = n - 1;
+                parent.c_boardq_n = n - 1;
                 break;
             }
         }
@@ -3250,18 +3235,18 @@ void lib_ams::c_boardq_Remove(lib_ams::FShm& shm, lib_ams::FBoardq& row) {
 
 // --- lib_ams.FShm.c_boardq.Reserve
 // Reserve space in index for N more elements;
-void lib_ams::c_boardq_Reserve(lib_ams::FShm& shm, u64 n) {
-    u64 old_max = shm.c_boardq_max;
-    if (UNLIKELY(shm.c_boardq_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, shm.c_boardq_n + n), 4);
+void lib_ams::c_boardq_Reserve(lib_ams::FShm& parent, u64 n) {
+    u64 old_max = parent.c_boardq_max;
+    if (UNLIKELY(parent.c_boardq_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_boardq_n + n), 4);
         u64 old_size = old_max * sizeof(lib_ams::FBoardq*);
         u64 new_size = new_max * sizeof(lib_ams::FBoardq*);
-        void *new_mem = algo_lib::malloc_ReallocMem(shm.c_boardq_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_boardq_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FShm.c_boardq");
         }
-        shm.c_boardq_elems = (lib_ams::FBoardq**)new_mem;
-        shm.c_boardq_max = new_max;
+        parent.c_boardq_elems = (lib_ams::FBoardq**)new_mem;
+        parent.c_boardq_max = new_max;
     }
 }
 
@@ -3269,59 +3254,59 @@ void lib_ams::c_boardq_Reserve(lib_ams::FShm& shm, u64 n) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<u32> lib_ams::free_slot_Addary(lib_ams::FShm& shm, algo::aryptr<u32> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= shm.free_slot_elems && rhs.elems < shm.free_slot_elems + shm.free_slot_max;
+algo::aryptr<u32> lib_ams::free_slot_Addary(lib_ams::FShm& parent, algo::aryptr<u32> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.free_slot_elems && rhs.elems < parent.free_slot_elems + parent.free_slot_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FShm.free_slot  comment:'alias error: sub-array is being appended to the whole'");
     }
     i64 nnew = rhs.n_elems;
-    free_slot_Reserve(shm, nnew); // reserve space
-    i64 at = shm.free_slot_n;
-    memcpy(shm.free_slot_elems + at, rhs.elems, nnew * sizeof(u32));
-    shm.free_slot_n += nnew;
-    return algo::aryptr<u32>(shm.free_slot_elems + at, nnew);
+    free_slot_Reserve(parent, nnew); // reserve space
+    i64 at = parent.free_slot_n;
+    memcpy(parent.free_slot_elems + at, rhs.elems, nnew * sizeof(u32));
+    parent.free_slot_n += nnew;
+    return algo::aryptr<u32>(parent.free_slot_elems + at, nnew);
 }
 
 // --- lib_ams.FShm.free_slot.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-u32& lib_ams::free_slot_Alloc(lib_ams::FShm& shm) {
-    free_slot_Reserve(shm, 1);
-    i64 n  = shm.free_slot_n;
+u32& lib_ams::free_slot_Alloc(lib_ams::FShm& parent) {
+    free_slot_Reserve(parent, 1);
+    i64 n  = parent.free_slot_n;
     i64 at = n;
-    u32 *elems = shm.free_slot_elems;
+    u32 *elems = parent.free_slot_elems;
     new (elems + at) u32(0); // construct new element, default initializer
-    shm.free_slot_n = n+1;
+    parent.free_slot_n = n+1;
     return elems[at];
 }
 
 // --- lib_ams.FShm.free_slot.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u32& lib_ams::free_slot_AllocAt(lib_ams::FShm& shm, i64 at) {
-    free_slot_Reserve(shm, 1);
-    i64 n  = shm.free_slot_n;
+u32& lib_ams::free_slot_AllocAt(lib_ams::FShm& parent, i64 at) {
+    free_slot_Reserve(parent, 1);
+    i64 n  = parent.free_slot_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("lib_ams.bad_alloc_at  field:lib_ams.FShm.free_slot  comment:'index out of range'");
     }
-    u32 *elems = shm.free_slot_elems;
+    u32 *elems = parent.free_slot_elems;
     memmove(elems + at + 1, elems + at, (n - at) * sizeof(u32));
     new (elems + at) u32(0); // construct element, default initializer
-    shm.free_slot_n = n+1;
+    parent.free_slot_n = n+1;
     return elems[at];
 }
 
 // --- lib_ams.FShm.free_slot.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32> lib_ams::free_slot_AllocN(lib_ams::FShm& shm, i64 n_elems) {
-    free_slot_Reserve(shm, n_elems);
-    i64 old_n  = shm.free_slot_n;
+algo::aryptr<u32> lib_ams::free_slot_AllocN(lib_ams::FShm& parent, i64 n_elems) {
+    free_slot_Reserve(parent, n_elems);
+    i64 old_n  = parent.free_slot_n;
     i64 new_n = old_n + n_elems;
-    u32 *elems = shm.free_slot_elems;
+    u32 *elems = parent.free_slot_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u32(0); // construct new element, default initialize
     }
-    shm.free_slot_n = new_n;
+    parent.free_slot_n = new_n;
     return algo::aryptr<u32>(elems + old_n, n_elems);
 }
 
@@ -3329,88 +3314,88 @@ algo::aryptr<u32> lib_ams::free_slot_AllocN(lib_ams::FShm& shm, i64 n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<u32> lib_ams::free_slot_AllocNAt(lib_ams::FShm& shm, i64 n_elems, i64 at) {
-    free_slot_Reserve(shm, n_elems);
-    i64 n  = shm.free_slot_n;
+algo::aryptr<u32> lib_ams::free_slot_AllocNAt(lib_ams::FShm& parent, i64 n_elems, i64 at) {
+    free_slot_Reserve(parent, n_elems);
+    i64 n  = parent.free_slot_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("lib_ams.bad_alloc_n_at  field:lib_ams.FShm.free_slot  comment:'index out of range'");
     }
-    u32 *elems = shm.free_slot_elems;
+    u32 *elems = parent.free_slot_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u32));
     for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) u32(0); // construct new element, default initialize
     }
-    shm.free_slot_n = n+n_elems;
+    parent.free_slot_n = n+n_elems;
     return algo::aryptr<u32>(elems+at,n_elems);
 }
 
 // --- lib_ams.FShm.free_slot.Remove
 // Remove item by index. If index outside of range, do nothing.
-void lib_ams::free_slot_Remove(lib_ams::FShm& shm, u64 i) {
-    u64 lim = shm.free_slot_n;
-    u32 *elems = shm.free_slot_elems;
+void lib_ams::free_slot_Remove(lib_ams::FShm& parent, u64 i) {
+    u64 lim = parent.free_slot_n;
+    u32 *elems = parent.free_slot_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(u32) * (lim - (i + 1)));
-        shm.free_slot_n = lim - 1;
+        parent.free_slot_n = lim - 1;
     }
 }
 
 // --- lib_ams.FShm.free_slot.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ams::free_slot_RemoveLast(lib_ams::FShm& shm) {
-    u64 n = shm.free_slot_n;
+void lib_ams::free_slot_RemoveLast(lib_ams::FShm& parent) {
+    u64 n = parent.free_slot_n;
     if (n > 0) {
         n -= 1;
-        shm.free_slot_n = n;
+        parent.free_slot_n = n;
     }
 }
 
 // --- lib_ams.FShm.free_slot.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void lib_ams::free_slot_AbsReserve(lib_ams::FShm& shm, i64 n) {
-    u64 old_max  = shm.free_slot_max;
+void lib_ams::free_slot_AbsReserve(lib_ams::FShm& parent, i64 n) {
+    u64 old_max  = parent.free_slot_max;
     if (n > i64(old_max)) {
         u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::malloc_ReallocMem(shm.free_slot_elems, old_max * sizeof(u32), new_max * sizeof(u32));
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.free_slot_elems, old_max * sizeof(u32), new_max * sizeof(u32));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ams.tary_nomem  field:lib_ams.FShm.free_slot  comment:'out of memory'");
         }
-        shm.free_slot_elems = (u32*)new_mem;
-        shm.free_slot_max = new_max;
+        parent.free_slot_elems = (u32*)new_mem;
+        parent.free_slot_max = new_max;
     }
 }
 
 // --- lib_ams.FShm.free_slot.Setary
 // Copy contents of RHS to PARENT.
-void lib_ams::free_slot_Setary(lib_ams::FShm& shm, lib_ams::FShm &rhs) {
-    free_slot_RemoveAll(shm);
+void lib_ams::free_slot_Setary(lib_ams::FShm& parent, lib_ams::FShm &rhs) {
+    free_slot_RemoveAll(parent);
     i64 nnew = rhs.free_slot_n;
-    free_slot_Reserve(shm, nnew); // reserve space
+    free_slot_Reserve(parent, nnew); // reserve space
     for (i64 i = 0; i < nnew; i++) { // copy elements over
-        new (shm.free_slot_elems + i) u32(free_slot_qFind(rhs, i));
-        shm.free_slot_n = i + 1;
+        new (parent.free_slot_elems + i) u32(free_slot_qFind(rhs, i));
+        parent.free_slot_n = i + 1;
     }
 }
 
 // --- lib_ams.FShm.free_slot.Setary2
 // Copy specified array into free_slot, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void lib_ams::free_slot_Setary(lib_ams::FShm& shm, const algo::aryptr<u32> &rhs) {
-    free_slot_RemoveAll(shm);
-    free_slot_Addary(shm, rhs);
+void lib_ams::free_slot_Setary(lib_ams::FShm& parent, const algo::aryptr<u32> &rhs) {
+    free_slot_RemoveAll(parent);
+    free_slot_Addary(parent, rhs);
 }
 
 // --- lib_ams.FShm.free_slot.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32> lib_ams::free_slot_AllocNVal(lib_ams::FShm& shm, i64 n_elems, const u32& val) {
-    free_slot_Reserve(shm, n_elems);
-    i64 old_n  = shm.free_slot_n;
+algo::aryptr<u32> lib_ams::free_slot_AllocNVal(lib_ams::FShm& parent, i64 n_elems, const u32& val) {
+    free_slot_Reserve(parent, n_elems);
+    i64 old_n  = parent.free_slot_n;
     i64 new_n = old_n + n_elems;
-    u32 *elems = shm.free_slot_elems;
+    u32 *elems = parent.free_slot_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u32(val);
     }
-    shm.free_slot_n = new_n;
+    parent.free_slot_n = new_n;
     return algo::aryptr<u32>(elems + old_n, n_elems);
 }
 
@@ -3418,12 +3403,12 @@ algo::aryptr<u32> lib_ams::free_slot_AllocNVal(lib_ams::FShm& shm, i64 n_elems, 
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool lib_ams::free_slot_ReadStrptrMaybe(lib_ams::FShm& shm, algo::strptr in_str) {
+bool lib_ams::free_slot_ReadStrptrMaybe(lib_ams::FShm& parent, algo::strptr in_str) {
     bool retval = true;
-    u32 &elem = free_slot_Alloc(shm);
+    u32 &elem = free_slot_Alloc(parent);
     retval = u32_ReadStrptrMaybe(elem, in_str);
     if (!retval) {
-        free_slot_RemoveLast(shm);
+        free_slot_RemoveLast(parent);
     }
     return retval;
 }
@@ -3431,20 +3416,20 @@ bool lib_ams::free_slot_ReadStrptrMaybe(lib_ams::FShm& shm, algo::strptr in_str)
 // --- lib_ams.FShm.free_slot.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void lib_ams::free_slot_Insary(lib_ams::FShm& shm, algo::aryptr<u32> rhs, i64 at) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= shm.free_slot_elems && rhs.elems < shm.free_slot_elems + shm.free_slot_max;
+void lib_ams::free_slot_Insary(lib_ams::FShm& parent, algo::aryptr<u32> rhs, i64 at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.free_slot_elems && rhs.elems < parent.free_slot_elems + parent.free_slot_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FShm.free_slot  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(shm.free_slot_n+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.free_slot_n+1))) {
         FatalErrorExit("lib_ams.bad_insary  field:lib_ams.FShm.free_slot  comment:'index out of range'");
     }
     i64 nnew = rhs.n_elems;
-    i64 nmove = shm.free_slot_n - at;
-    free_slot_Reserve(shm, nnew); // reserve space
-    memmove(shm.free_slot_elems + at + nnew, shm.free_slot_elems + at, nmove * sizeof(u32));
-    memcpy(shm.free_slot_elems + at, rhs.elems, nnew * sizeof(u32));
-    shm.free_slot_n += nnew;
+    i64 nmove = parent.free_slot_n - at;
+    free_slot_Reserve(parent, nnew); // reserve space
+    memmove(parent.free_slot_elems + at + nnew, parent.free_slot_elems + at, nmove * sizeof(u32));
+    memcpy(parent.free_slot_elems + at, rhs.elems, nnew * sizeof(u32));
+    parent.free_slot_n += nnew;
 }
 
 // --- lib_ams.FShm.free_slot.RemRegion
@@ -3452,13 +3437,13 @@ void lib_ams::free_slot_Insary(lib_ams::FShm& shm, algo::aryptr<u32> rhs, i64 at
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
-void lib_ams::free_slot_RemRegion(lib_ams::FShm& shm, i64 beg, i64 n) {
-    i64 end = i64_Min(beg+n, shm.free_slot_n);
+void lib_ams::free_slot_RemRegion(lib_ams::FShm& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.free_slot_n);
     beg = i64_Max(beg,0);
     n = end-beg;
     if (n>0) {
-        memmove(shm.free_slot_elems+beg, shm.free_slot_elems+end, sizeof(u32) * (shm.free_slot_n-end));
-        shm.free_slot_n -= n;
+        memmove(parent.free_slot_elems+beg, parent.free_slot_elems+end, sizeof(u32) * (parent.free_slot_n-end));
+        parent.free_slot_n -= n;
     }
 }
 
@@ -3466,59 +3451,59 @@ void lib_ams::free_slot_RemRegion(lib_ams::FShm& shm, i64 beg, i64 n) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<u32> lib_ams::slot_nref_Addary(lib_ams::FShm& shm, algo::aryptr<u32> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= shm.slot_nref_elems && rhs.elems < shm.slot_nref_elems + shm.slot_nref_max;
+algo::aryptr<u32> lib_ams::slot_nref_Addary(lib_ams::FShm& parent, algo::aryptr<u32> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.slot_nref_elems && rhs.elems < parent.slot_nref_elems + parent.slot_nref_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FShm.slot_nref  comment:'alias error: sub-array is being appended to the whole'");
     }
     i64 nnew = rhs.n_elems;
-    slot_nref_Reserve(shm, nnew); // reserve space
-    i64 at = shm.slot_nref_n;
-    memcpy(shm.slot_nref_elems + at, rhs.elems, nnew * sizeof(u32));
-    shm.slot_nref_n += nnew;
-    return algo::aryptr<u32>(shm.slot_nref_elems + at, nnew);
+    slot_nref_Reserve(parent, nnew); // reserve space
+    i64 at = parent.slot_nref_n;
+    memcpy(parent.slot_nref_elems + at, rhs.elems, nnew * sizeof(u32));
+    parent.slot_nref_n += nnew;
+    return algo::aryptr<u32>(parent.slot_nref_elems + at, nnew);
 }
 
 // --- lib_ams.FShm.slot_nref.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-u32& lib_ams::slot_nref_Alloc(lib_ams::FShm& shm) {
-    slot_nref_Reserve(shm, 1);
-    i64 n  = shm.slot_nref_n;
+u32& lib_ams::slot_nref_Alloc(lib_ams::FShm& parent) {
+    slot_nref_Reserve(parent, 1);
+    i64 n  = parent.slot_nref_n;
     i64 at = n;
-    u32 *elems = shm.slot_nref_elems;
+    u32 *elems = parent.slot_nref_elems;
     new (elems + at) u32(0); // construct new element, default initializer
-    shm.slot_nref_n = n+1;
+    parent.slot_nref_n = n+1;
     return elems[at];
 }
 
 // --- lib_ams.FShm.slot_nref.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u32& lib_ams::slot_nref_AllocAt(lib_ams::FShm& shm, i64 at) {
-    slot_nref_Reserve(shm, 1);
-    i64 n  = shm.slot_nref_n;
+u32& lib_ams::slot_nref_AllocAt(lib_ams::FShm& parent, i64 at) {
+    slot_nref_Reserve(parent, 1);
+    i64 n  = parent.slot_nref_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("lib_ams.bad_alloc_at  field:lib_ams.FShm.slot_nref  comment:'index out of range'");
     }
-    u32 *elems = shm.slot_nref_elems;
+    u32 *elems = parent.slot_nref_elems;
     memmove(elems + at + 1, elems + at, (n - at) * sizeof(u32));
     new (elems + at) u32(0); // construct element, default initializer
-    shm.slot_nref_n = n+1;
+    parent.slot_nref_n = n+1;
     return elems[at];
 }
 
 // --- lib_ams.FShm.slot_nref.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32> lib_ams::slot_nref_AllocN(lib_ams::FShm& shm, i64 n_elems) {
-    slot_nref_Reserve(shm, n_elems);
-    i64 old_n  = shm.slot_nref_n;
+algo::aryptr<u32> lib_ams::slot_nref_AllocN(lib_ams::FShm& parent, i64 n_elems) {
+    slot_nref_Reserve(parent, n_elems);
+    i64 old_n  = parent.slot_nref_n;
     i64 new_n = old_n + n_elems;
-    u32 *elems = shm.slot_nref_elems;
+    u32 *elems = parent.slot_nref_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u32(0); // construct new element, default initialize
     }
-    shm.slot_nref_n = new_n;
+    parent.slot_nref_n = new_n;
     return algo::aryptr<u32>(elems + old_n, n_elems);
 }
 
@@ -3526,88 +3511,88 @@ algo::aryptr<u32> lib_ams::slot_nref_AllocN(lib_ams::FShm& shm, i64 n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<u32> lib_ams::slot_nref_AllocNAt(lib_ams::FShm& shm, i64 n_elems, i64 at) {
-    slot_nref_Reserve(shm, n_elems);
-    i64 n  = shm.slot_nref_n;
+algo::aryptr<u32> lib_ams::slot_nref_AllocNAt(lib_ams::FShm& parent, i64 n_elems, i64 at) {
+    slot_nref_Reserve(parent, n_elems);
+    i64 n  = parent.slot_nref_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("lib_ams.bad_alloc_n_at  field:lib_ams.FShm.slot_nref  comment:'index out of range'");
     }
-    u32 *elems = shm.slot_nref_elems;
+    u32 *elems = parent.slot_nref_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u32));
     for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) u32(0); // construct new element, default initialize
     }
-    shm.slot_nref_n = n+n_elems;
+    parent.slot_nref_n = n+n_elems;
     return algo::aryptr<u32>(elems+at,n_elems);
 }
 
 // --- lib_ams.FShm.slot_nref.Remove
 // Remove item by index. If index outside of range, do nothing.
-void lib_ams::slot_nref_Remove(lib_ams::FShm& shm, u64 i) {
-    u64 lim = shm.slot_nref_n;
-    u32 *elems = shm.slot_nref_elems;
+void lib_ams::slot_nref_Remove(lib_ams::FShm& parent, u64 i) {
+    u64 lim = parent.slot_nref_n;
+    u32 *elems = parent.slot_nref_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(u32) * (lim - (i + 1)));
-        shm.slot_nref_n = lim - 1;
+        parent.slot_nref_n = lim - 1;
     }
 }
 
 // --- lib_ams.FShm.slot_nref.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ams::slot_nref_RemoveLast(lib_ams::FShm& shm) {
-    u64 n = shm.slot_nref_n;
+void lib_ams::slot_nref_RemoveLast(lib_ams::FShm& parent) {
+    u64 n = parent.slot_nref_n;
     if (n > 0) {
         n -= 1;
-        shm.slot_nref_n = n;
+        parent.slot_nref_n = n;
     }
 }
 
 // --- lib_ams.FShm.slot_nref.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void lib_ams::slot_nref_AbsReserve(lib_ams::FShm& shm, i64 n) {
-    u64 old_max  = shm.slot_nref_max;
+void lib_ams::slot_nref_AbsReserve(lib_ams::FShm& parent, i64 n) {
+    u64 old_max  = parent.slot_nref_max;
     if (n > i64(old_max)) {
         u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::malloc_ReallocMem(shm.slot_nref_elems, old_max * sizeof(u32), new_max * sizeof(u32));
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.slot_nref_elems, old_max * sizeof(u32), new_max * sizeof(u32));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ams.tary_nomem  field:lib_ams.FShm.slot_nref  comment:'out of memory'");
         }
-        shm.slot_nref_elems = (u32*)new_mem;
-        shm.slot_nref_max = new_max;
+        parent.slot_nref_elems = (u32*)new_mem;
+        parent.slot_nref_max = new_max;
     }
 }
 
 // --- lib_ams.FShm.slot_nref.Setary
 // Copy contents of RHS to PARENT.
-void lib_ams::slot_nref_Setary(lib_ams::FShm& shm, lib_ams::FShm &rhs) {
-    slot_nref_RemoveAll(shm);
+void lib_ams::slot_nref_Setary(lib_ams::FShm& parent, lib_ams::FShm &rhs) {
+    slot_nref_RemoveAll(parent);
     i64 nnew = rhs.slot_nref_n;
-    slot_nref_Reserve(shm, nnew); // reserve space
+    slot_nref_Reserve(parent, nnew); // reserve space
     for (i64 i = 0; i < nnew; i++) { // copy elements over
-        new (shm.slot_nref_elems + i) u32(slot_nref_qFind(rhs, i));
-        shm.slot_nref_n = i + 1;
+        new (parent.slot_nref_elems + i) u32(slot_nref_qFind(rhs, i));
+        parent.slot_nref_n = i + 1;
     }
 }
 
 // --- lib_ams.FShm.slot_nref.Setary2
 // Copy specified array into slot_nref, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void lib_ams::slot_nref_Setary(lib_ams::FShm& shm, const algo::aryptr<u32> &rhs) {
-    slot_nref_RemoveAll(shm);
-    slot_nref_Addary(shm, rhs);
+void lib_ams::slot_nref_Setary(lib_ams::FShm& parent, const algo::aryptr<u32> &rhs) {
+    slot_nref_RemoveAll(parent);
+    slot_nref_Addary(parent, rhs);
 }
 
 // --- lib_ams.FShm.slot_nref.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32> lib_ams::slot_nref_AllocNVal(lib_ams::FShm& shm, i64 n_elems, const u32& val) {
-    slot_nref_Reserve(shm, n_elems);
-    i64 old_n  = shm.slot_nref_n;
+algo::aryptr<u32> lib_ams::slot_nref_AllocNVal(lib_ams::FShm& parent, i64 n_elems, const u32& val) {
+    slot_nref_Reserve(parent, n_elems);
+    i64 old_n  = parent.slot_nref_n;
     i64 new_n = old_n + n_elems;
-    u32 *elems = shm.slot_nref_elems;
+    u32 *elems = parent.slot_nref_elems;
     for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u32(val);
     }
-    shm.slot_nref_n = new_n;
+    parent.slot_nref_n = new_n;
     return algo::aryptr<u32>(elems + old_n, n_elems);
 }
 
@@ -3615,12 +3600,12 @@ algo::aryptr<u32> lib_ams::slot_nref_AllocNVal(lib_ams::FShm& shm, i64 n_elems, 
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool lib_ams::slot_nref_ReadStrptrMaybe(lib_ams::FShm& shm, algo::strptr in_str) {
+bool lib_ams::slot_nref_ReadStrptrMaybe(lib_ams::FShm& parent, algo::strptr in_str) {
     bool retval = true;
-    u32 &elem = slot_nref_Alloc(shm);
+    u32 &elem = slot_nref_Alloc(parent);
     retval = u32_ReadStrptrMaybe(elem, in_str);
     if (!retval) {
-        slot_nref_RemoveLast(shm);
+        slot_nref_RemoveLast(parent);
     }
     return retval;
 }
@@ -3628,20 +3613,20 @@ bool lib_ams::slot_nref_ReadStrptrMaybe(lib_ams::FShm& shm, algo::strptr in_str)
 // --- lib_ams.FShm.slot_nref.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void lib_ams::slot_nref_Insary(lib_ams::FShm& shm, algo::aryptr<u32> rhs, i64 at) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= shm.slot_nref_elems && rhs.elems < shm.slot_nref_elems + shm.slot_nref_max;
+void lib_ams::slot_nref_Insary(lib_ams::FShm& parent, algo::aryptr<u32> rhs, i64 at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.slot_nref_elems && rhs.elems < parent.slot_nref_elems + parent.slot_nref_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FShm.slot_nref  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(shm.slot_nref_n+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.slot_nref_n+1))) {
         FatalErrorExit("lib_ams.bad_insary  field:lib_ams.FShm.slot_nref  comment:'index out of range'");
     }
     i64 nnew = rhs.n_elems;
-    i64 nmove = shm.slot_nref_n - at;
-    slot_nref_Reserve(shm, nnew); // reserve space
-    memmove(shm.slot_nref_elems + at + nnew, shm.slot_nref_elems + at, nmove * sizeof(u32));
-    memcpy(shm.slot_nref_elems + at, rhs.elems, nnew * sizeof(u32));
-    shm.slot_nref_n += nnew;
+    i64 nmove = parent.slot_nref_n - at;
+    slot_nref_Reserve(parent, nnew); // reserve space
+    memmove(parent.slot_nref_elems + at + nnew, parent.slot_nref_elems + at, nmove * sizeof(u32));
+    memcpy(parent.slot_nref_elems + at, rhs.elems, nnew * sizeof(u32));
+    parent.slot_nref_n += nnew;
 }
 
 // --- lib_ams.FShm.slot_nref.RemRegion
@@ -3649,62 +3634,62 @@ void lib_ams::slot_nref_Insary(lib_ams::FShm& shm, algo::aryptr<u32> rhs, i64 at
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
-void lib_ams::slot_nref_RemRegion(lib_ams::FShm& shm, i64 beg, i64 n) {
-    i64 end = i64_Min(beg+n, shm.slot_nref_n);
+void lib_ams::slot_nref_RemRegion(lib_ams::FShm& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.slot_nref_n);
     beg = i64_Max(beg,0);
     n = end-beg;
     if (n>0) {
-        memmove(shm.slot_nref_elems+beg, shm.slot_nref_elems+end, sizeof(u32) * (shm.slot_nref_n-end));
-        shm.slot_nref_n -= n;
+        memmove(parent.slot_nref_elems+beg, parent.slot_nref_elems+end, sizeof(u32) * (parent.slot_nref_n-end));
+        parent.slot_nref_n -= n;
     }
 }
 
 // --- lib_ams.FShm.zd_outmsg.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void lib_ams::zd_outmsg_Insert(lib_ams::FShm& shm, lib_ams::FOutmsg& row) {
+void lib_ams::zd_outmsg_Insert(lib_ams::FShm& parent, lib_ams::FOutmsg& row) {
     if (!shm_zd_outmsg_InLlistQ(row)) {
-        lib_ams::FOutmsg* old_tail = shm.zd_outmsg_tail;
+        lib_ams::FOutmsg* old_tail = parent.zd_outmsg_tail;
         row.shm_zd_outmsg_next = NULL;
         row.shm_zd_outmsg_prev = old_tail;
-        shm.zd_outmsg_tail = &row;
+        parent.zd_outmsg_tail = &row;
         lib_ams::FOutmsg **new_row_a = &old_tail->shm_zd_outmsg_next;
-        lib_ams::FOutmsg **new_row_b = &shm.zd_outmsg_head;
+        lib_ams::FOutmsg **new_row_b = &parent.zd_outmsg_head;
         lib_ams::FOutmsg **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
-        shm.zd_outmsg_n++;
+        parent.zd_outmsg_n++;
     }
 }
 
 // --- lib_ams.FShm.zd_outmsg.Remove
 // Remove element from index. If element is not in index, do nothing.
-void lib_ams::zd_outmsg_Remove(lib_ams::FShm& shm, lib_ams::FOutmsg& row) {
+void lib_ams::zd_outmsg_Remove(lib_ams::FShm& parent, lib_ams::FOutmsg& row) {
     if (shm_zd_outmsg_InLlistQ(row)) {
-        lib_ams::FOutmsg* old_head       = shm.zd_outmsg_head;
+        lib_ams::FOutmsg* old_head       = parent.zd_outmsg_head;
         (void)old_head; // in case it's not used
         lib_ams::FOutmsg* prev = row.shm_zd_outmsg_prev;
         lib_ams::FOutmsg* next = row.shm_zd_outmsg_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
         lib_ams::FOutmsg **new_next_a = &prev->shm_zd_outmsg_next;
-        lib_ams::FOutmsg **new_next_b = &shm.zd_outmsg_head;
+        lib_ams::FOutmsg **new_next_b = &parent.zd_outmsg_head;
         lib_ams::FOutmsg **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
         lib_ams::FOutmsg **new_prev_a = &next->shm_zd_outmsg_prev;
-        lib_ams::FOutmsg **new_prev_b = &shm.zd_outmsg_tail;
+        lib_ams::FOutmsg **new_prev_b = &parent.zd_outmsg_tail;
         lib_ams::FOutmsg **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
-        shm.zd_outmsg_n--;
+        parent.zd_outmsg_n--;
         row.shm_zd_outmsg_next=(lib_ams::FOutmsg*)-1; // not-in-list
     }
 }
 
 // --- lib_ams.FShm.zd_outmsg.RemoveAll
 // Empty the index. (The rows are not deleted)
-void lib_ams::zd_outmsg_RemoveAll(lib_ams::FShm& shm) {
-    lib_ams::FOutmsg* row = shm.zd_outmsg_head;
-    shm.zd_outmsg_head = NULL;
-    shm.zd_outmsg_tail = NULL;
-    shm.zd_outmsg_n = 0;
+void lib_ams::zd_outmsg_RemoveAll(lib_ams::FShm& parent) {
+    lib_ams::FOutmsg* row = parent.zd_outmsg_head;
+    parent.zd_outmsg_head = NULL;
+    parent.zd_outmsg_tail = NULL;
+    parent.zd_outmsg_n = 0;
     while (row) {
         lib_ams::FOutmsg* row_next = row->shm_zd_outmsg_next;
         row->shm_zd_outmsg_next  = (lib_ams::FOutmsg*)-1;
@@ -3715,17 +3700,17 @@ void lib_ams::zd_outmsg_RemoveAll(lib_ams::FShm& shm) {
 
 // --- lib_ams.FShm.zd_outmsg.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-lib_ams::FOutmsg* lib_ams::zd_outmsg_RemoveFirst(lib_ams::FShm& shm) {
+lib_ams::FOutmsg* lib_ams::zd_outmsg_RemoveFirst(lib_ams::FShm& parent) {
     lib_ams::FOutmsg *row = NULL;
-    row = shm.zd_outmsg_head;
+    row = parent.zd_outmsg_head;
     if (row) {
         lib_ams::FOutmsg *next = row->shm_zd_outmsg_next;
-        shm.zd_outmsg_head = next;
+        parent.zd_outmsg_head = next;
         lib_ams::FOutmsg **new_end_a = &next->shm_zd_outmsg_prev;
-        lib_ams::FOutmsg **new_end_b = &shm.zd_outmsg_tail;
+        lib_ams::FOutmsg **new_end_b = &parent.zd_outmsg_tail;
         lib_ams::FOutmsg **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
-        shm.zd_outmsg_n--;
+        parent.zd_outmsg_n--;
         row->shm_zd_outmsg_next = (lib_ams::FOutmsg*)-1; // mark as not-in-list
     }
     return row;
@@ -3733,100 +3718,99 @@ lib_ams::FOutmsg* lib_ams::zd_outmsg_RemoveFirst(lib_ams::FShm& shm) {
 
 // --- lib_ams.FShm.zd_outmsg.InsertBefore
 // Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
-void lib_ams::zd_outmsg_InsertBefore(lib_ams::FShm& shm, lib_ams::FOutmsg& row, lib_ams::FOutmsg* before) {
+void lib_ams::zd_outmsg_InsertBefore(lib_ams::FShm& parent, lib_ams::FOutmsg& row, lib_ams::FOutmsg* before) {
     if (!shm_zd_outmsg_InLlistQ(row) && &row != before) {
         lib_ams::FOutmsg* next = before;
-        lib_ams::FOutmsg* prev = next ? next->shm_zd_outmsg_prev : shm.zd_outmsg_tail;
+        lib_ams::FOutmsg* prev = next ? next->shm_zd_outmsg_prev : parent.zd_outmsg_tail;
         row.shm_zd_outmsg_next = next;
         row.shm_zd_outmsg_prev = prev;
         lib_ams::FOutmsg **prev_link_a = &prev->shm_zd_outmsg_next;
-        lib_ams::FOutmsg **prev_link_b = &shm.zd_outmsg_head;
+        lib_ams::FOutmsg **prev_link_b = &parent.zd_outmsg_head;
         *(prev ? prev_link_a : prev_link_b) = &row;
         lib_ams::FOutmsg **next_link_a = &next->shm_zd_outmsg_prev;
-        lib_ams::FOutmsg **next_link_b = &shm.zd_outmsg_tail;
+        lib_ams::FOutmsg **next_link_b = &parent.zd_outmsg_tail;
         *(next ? next_link_a : next_link_b) = &row;
-        shm.zd_outmsg_n++;
+        parent.zd_outmsg_n++;
     }
 }
 
 // --- lib_ams.FShm..Init
 // Set all fields to initial values.
-void lib_ams::FShm_Init(lib_ams::FShm& shm) {
-    shm.shm_handle = NULL;
-    shm.c_cur_msg = NULL;
-    shm.c_shmhdr = NULL;
-    shm.c_data = NULL;
-    shm.c_reader = NULL;
-    shm.writelimit = u64(0);
-    shm.cached_woff = u64(0);
-    shm.offset_mask = u64(0);
-    shm.p_grptype = NULL;
-    shm.error = bool(false);
-    shm.created = bool(false);
-    shm.locked = bool(false);
-    shm.n_unread = u64(0);
-    shm.burst = i32(10);
-    shm.lowbudget = i32(0);
-    shm.max_msg_size = i32(0);
-    shm.n_wlim_update = u64(0);
-    shm.size = i64(0);
-    shm.c_boardq_elems = NULL; // (lib_ams.FShm.c_boardq)
-    shm.c_boardq_n = 0; // (lib_ams.FShm.c_boardq)
-    shm.c_boardq_max = 0; // (lib_ams.FShm.c_boardq)
-    shm.p_board = NULL;
-    shm.free_slot_elems 	= 0; // (lib_ams.FShm.free_slot)
-    shm.free_slot_n     	= 0; // (lib_ams.FShm.free_slot)
-    shm.free_slot_max   	= 0; // (lib_ams.FShm.free_slot)
-    shm.slot_nref_elems 	= 0; // (lib_ams.FShm.slot_nref)
-    shm.slot_nref_n     	= 0; // (lib_ams.FShm.slot_nref)
-    shm.slot_nref_max   	= 0; // (lib_ams.FShm.slot_nref)
-    shm.zd_outmsg_head = NULL; // (lib_ams.FShm.zd_outmsg)
-    shm.zd_outmsg_n = 0; // (lib_ams.FShm.zd_outmsg)
-    shm.zd_outmsg_tail = NULL; // (lib_ams.FShm.zd_outmsg)
-    shm.proc_c_shm_idx = i32(-1);
-    shm.ind_shm_next = (lib_ams::FShm*)-1; // (lib_ams.FDb.ind_shm) not-in-hash
-    shm.ind_shm_hashval = 0; // stored hash value
-    shm.cd_poll_read_next = (lib_ams::FShm*)-1; // (lib_ams.FDb.cd_poll_read) not-in-list
-    shm.cd_poll_read_prev = NULL; // (lib_ams.FDb.cd_poll_read)
-    shm.zd_park_read_next = (lib_ams::FShm*)-1; // (lib_ams.FDb.zd_park_read) not-in-list
-    shm.zd_park_read_prev = NULL; // (lib_ams.FDb.zd_park_read)
-    shm.zd_outshm_next = (lib_ams::FShm*)-1; // (lib_ams.FDb.zd_outshm) not-in-list
-    shm.zd_outshm_prev = NULL; // (lib_ams.FDb.zd_outshm)
-    shm.h_amsmsg = NULL;
-    shm.h_amsmsg_ctx = 0;
+void lib_ams::FShm_Init(lib_ams::FShm& parent) {
+    parent.shm_handle = NULL;
+    parent.c_cur_msg = NULL;
+    parent.c_shmhdr = NULL;
+    parent.c_data = NULL;
+    parent.c_reader = NULL;
+    parent.writelimit = u64(0);
+    parent.cached_woff = u64(0);
+    parent.offset_mask = u64(0);
+    parent.p_grptype = NULL;
+    parent.error = bool(false);
+    parent.created = bool(false);
+    parent.locked = bool(false);
+    parent.n_unread = u64(0);
+    parent.burst = i32(10);
+    parent.lowbudget = i32(0);
+    parent.max_msg_size = i32(0);
+    parent.n_wlim_update = u64(0);
+    parent.size = i64(0);
+    parent.c_boardq_elems = NULL; // (lib_ams.FShm.c_boardq)
+    parent.c_boardq_n = 0; // (lib_ams.FShm.c_boardq)
+    parent.c_boardq_max = 0; // (lib_ams.FShm.c_boardq)
+    parent.p_board = NULL;
+    parent.free_slot_elems 	= 0; // (lib_ams.FShm.free_slot)
+    parent.free_slot_n     	= 0; // (lib_ams.FShm.free_slot)
+    parent.free_slot_max   	= 0; // (lib_ams.FShm.free_slot)
+    parent.slot_nref_elems 	= 0; // (lib_ams.FShm.slot_nref)
+    parent.slot_nref_n     	= 0; // (lib_ams.FShm.slot_nref)
+    parent.slot_nref_max   	= 0; // (lib_ams.FShm.slot_nref)
+    parent.zd_outmsg_head = NULL; // (lib_ams.FShm.zd_outmsg)
+    parent.zd_outmsg_n = 0; // (lib_ams.FShm.zd_outmsg)
+    parent.zd_outmsg_tail = NULL; // (lib_ams.FShm.zd_outmsg)
+    parent.proc_c_shm_idx = i32(-1);
+    parent.ind_shm_next = (lib_ams::FShm*)-1; // (lib_ams.FDb.ind_shm) not-in-hash
+    parent.ind_shm_hashval = 0; // stored hash value
+    parent.cd_poll_read_next = (lib_ams::FShm*)-1; // (lib_ams.FDb.cd_poll_read) not-in-list
+    parent.cd_poll_read_prev = NULL; // (lib_ams.FDb.cd_poll_read)
+    parent.zd_park_read_next = (lib_ams::FShm*)-1; // (lib_ams.FDb.zd_park_read) not-in-list
+    parent.zd_park_read_prev = NULL; // (lib_ams.FDb.zd_park_read)
+    parent.zd_outshm_next = (lib_ams::FShm*)-1; // (lib_ams.FDb.zd_outshm) not-in-list
+    parent.zd_outshm_prev = NULL; // (lib_ams.FDb.zd_outshm)
+    parent.h_amsmsg = NULL;
+    parent.h_amsmsg_ctx = 0;
 }
 
 // --- lib_ams.FShm..Uninit
-void lib_ams::FShm_Uninit(lib_ams::FShm& shm) {
-    lib_ams::FShm &row = shm; (void)row;
-    shm_file_Cleanup(shm); // dmmeta.ffunc:lib_ams.FShm.shm_file/Cleanup
-    c_shm_stdout_Remove(row); // remove shm from index c_shm_stdout
-    c_shm_stdin_Remove(row); // remove shm from index c_shm_stdin
-    ind_shm_Remove(row); // remove shm from index ind_shm
-    cd_poll_read_Remove(row); // remove shm from index cd_poll_read
-    lib_ams::FProc* p_proc_id = lib_ams::ind_proc_Find(row.grp_id.proc_id);
+void lib_ams::FShm_Uninit(lib_ams::FShm& parent) {
+    shm_file_Cleanup(parent); // dmmeta.ffunc:lib_ams.FShm.shm_file/Cleanup
+    c_shm_stdout_Remove(parent); // remove shm from index c_shm_stdout
+    c_shm_stdin_Remove(parent); // remove shm from index c_shm_stdin
+    ind_shm_Remove(parent); // remove shm from index ind_shm
+    cd_poll_read_Remove(parent); // remove shm from index cd_poll_read
+    lib_ams::FProc* p_proc_id = lib_ams::ind_proc_Find(parent.grp_id.proc_id);
     if (p_proc_id)  {
-        c_shm_Remove(*p_proc_id, row);// remove shm from index c_shm
+        c_shm_Remove(*p_proc_id, parent);// remove shm from index c_shm
     }
-    c_cur_shm_Remove(row); // remove shm from index c_cur_shm
-    zd_park_read_Remove(row); // remove shm from index zd_park_read
-    c_postlane_Remove(row); // remove shm from index c_postlane
-    zd_outshm_Remove(row); // remove shm from index zd_outshm
+    c_cur_shm_Remove(parent); // remove shm from index c_cur_shm
+    zd_park_read_Remove(parent); // remove shm from index zd_park_read
+    c_postlane_Remove(parent); // remove shm from index c_postlane
+    zd_outshm_Remove(parent); // remove shm from index zd_outshm
 
     // lib_ams.FShm.slot_nref.Uninit (Tary)  //Per-slot count of readers yet to release it, board only
     // remove all elements from lib_ams.FShm.slot_nref
-    slot_nref_RemoveAll(shm);
+    slot_nref_RemoveAll(parent);
     // free memory for Tary lib_ams.FShm.slot_nref
-    algo_lib::malloc_FreeMem(shm.slot_nref_elems, sizeof(u32)*shm.slot_nref_max); // (lib_ams.FShm.slot_nref)
+    algo_lib::malloc_FreeMem(parent.slot_nref_elems, sizeof(u32)*parent.slot_nref_max); // (lib_ams.FShm.slot_nref)
 
     // lib_ams.FShm.free_slot.Uninit (Tary)  //Stack of free board slot indices, board segment only
     // remove all elements from lib_ams.FShm.free_slot
-    free_slot_RemoveAll(shm);
+    free_slot_RemoveAll(parent);
     // free memory for Tary lib_ams.FShm.free_slot
-    algo_lib::malloc_FreeMem(shm.free_slot_elems, sizeof(u32)*shm.free_slot_max); // (lib_ams.FShm.free_slot)
+    algo_lib::malloc_FreeMem(parent.free_slot_elems, sizeof(u32)*parent.free_slot_max); // (lib_ams.FShm.free_slot)
 
     // lib_ams.FShm.c_boardq.Uninit (Ptrary)  //Per-reader board queues of this lane
-    algo_lib::malloc_FreeMem(shm.c_boardq_elems, sizeof(lib_ams::FBoardq*)*shm.c_boardq_max); // (lib_ams.FShm.c_boardq)
+    algo_lib::malloc_FreeMem(parent.c_boardq_elems, sizeof(lib_ams::FBoardq*)*parent.c_boardq_max); // (lib_ams.FShm.c_boardq)
 }
 
 // --- lib_ams.FieldId.value.ToCstr
@@ -3971,7 +3955,7 @@ inline static void lib_ams::SizeCheck() {
 void lib_ams::StaticCheck() {
     algo_assert(sizeof(lib_ams::_db_h_amsmsg_hook) == 8); // csize:lib_ams._db_h_amsmsg_hook
     algo_assert(sizeof(lib_ams::_db_h_terminate_hook) == 8); // csize:lib_ams._db_h_terminate_hook
-    algo_assert(sizeof(lib_ams::parent_h_convert_hook) == 8); // csize:lib_ams.parent_h_convert_hook
+    algo_assert(sizeof(lib_ams::msg_fmt_h_convert_hook) == 8); // csize:lib_ams.msg_fmt_h_convert_hook
     algo_assert(sizeof(lib_ams::shm_h_amsmsg_hook) == 8); // csize:lib_ams.shm_h_amsmsg_hook
     algo_assert(_offset_of(lib_ams::trace, del__db_proctype) + sizeof(((lib_ams::trace*)0)->del__db_proctype) == sizeof(lib_ams::trace));
     algo_assert(_offset_of(lib_ams::FieldId, value) + sizeof(((lib_ams::FieldId*)0)->value) == sizeof(lib_ams::FieldId));

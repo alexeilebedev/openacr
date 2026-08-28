@@ -1205,3 +1205,51 @@ inline u64 algo::BitReverse64(u64 x) {
 inline bool algo_lib::LogcatOnQ(algo_lib::FLogcat &logcat) {
     return logcat.enabled && !logcat.suppress;
 }
+
+// Tell the memory checker that a pool has just handed the program the SIZE bytes
+// at MEM, so that the checker accounts for that block from here on and reports it
+// if the program drops its last pointer to it.  MEM is the address the pool
+// returned and SIZE the size the caller asked for; a failed allocation passes
+// NULL, which the checker ignores.  In a build without the annotations the call
+// is nothing at all, so an allocator carries no trace of it.
+//
+// A pool takes one big block from its base pool and carves its records out of it,
+// so a checker that knows only about the big block sees a single live allocation
+// no matter which record leaked.  Marking each record moves the accounting to the
+// granularity the program allocates at, and the stack the checker then reports is
+// the one that asked for the record.
+//
+// The block is marked defined rather than undefined, which is the state pool
+// memory has anyway: a fresh block from the base pool is zeroed, and a recycled
+// record still holds whatever was last written into it.  Marking it undefined
+// would report a field read before anything wrote it, which is a real defect and
+// a different one from a leak, so it belongs to a change that goes looking for it.
+inline void algo_lib::MemcheckAlloc(void *mem, u64 size) {
+#ifdef ALGO_MEMCHECK
+    VALGRIND_MALLOCLIKE_BLOCK(mem, size, 0, true);
+#else
+    (void)mem;
+    (void)size;
+#endif
+}
+
+// Tell the memory checker that the block at MEM, SIZE bytes long, is no longer one
+// the program holds -- either the pool has taken it back, or the pool is about to
+// carve it into records of its own and will mark those instead.  MEM is the
+// address a matching MemcheckAlloc marked, SIZE the size it marked; NULL is
+// ignored.  Nothing at all in a build without the annotations.
+//
+// The block stays readable and writable afterwards, and that is what lets the pool
+// go on using it.  A pool threads its free list through the memory it is not
+// lending out, so a freed record holds the pointer to the next free one; a checker
+// told to treat the block as unmapped would report the pool's own bookkeeping as
+// an invalid write, once per free.
+inline void algo_lib::MemcheckFree(void *mem, u64 size) {
+#ifdef ALGO_MEMCHECK
+    VALGRIND_FREELIKE_BLOCK(mem, 0);
+    (void)VALGRIND_MAKE_MEM_DEFINED(mem, size);
+#else
+    (void)mem;
+    (void)size;
+#endif
+}

@@ -19,10 +19,17 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/amc/tpool.cpp -- Tpool refetype (fixed-length freelist)
 //
 // See tex/amc/amc_alloc.tex
+// A tpool reserves one block from its base pool and breaks it into 64-odd
+// elements, and it never gives the block back.  So a memory checker watching
+// only the base pool learns nothing about the elements: the block is live from
+// the first reservation to process exit whether every element is in use or none
+// is.  Each element is therefore marked as it is handed out and unmarked as it
+// comes back, and the reservation is unmarked where the base pool marks its own
+// handouts, so that no block the checker holds contains another.
 
 #include "include/amc.h"
 
@@ -61,6 +68,8 @@ void amc::tclass_Tpool() {
 
 void amc::tfunc_Tpool_ReserveMem() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField *basepool = GetBasepool(*amc::_db.genctx.p_field);
+    bool unmark = basepool && MemcheckedPoolQ(*basepool);
 
     amc::FFunc& reservemem = amc::CreateCurFunc();
     Ins(&R, reservemem.comment, "Allocate block of given size, break up into small elements and append to free list.");
@@ -70,6 +79,9 @@ void amc::tfunc_Tpool_ReserveMem() {
     Ins(&R, reservemem.body    , "u64 ret = 0;");
     Ins(&R, reservemem.body    , "if (size >= sizeof($Cpptype)) {");
     Ins(&R, reservemem.body    , "    $Cpptype *mem = ($Cpptype*)$basepool_AllocMem(size);");
+    if (unmark) {
+        Ins(&R, reservemem.body, "    algo_lib::MemcheckFree(mem, size); // the elements broken out below are what the checker accounts for");
+    }
     Ins(&R, reservemem.body    , "    ret = mem ? size / sizeof($Cpptype) : 0;");
     Ins(&R, reservemem.body    , "    // add newly allocated elements to the free list;");
     Ins(&R, reservemem.body    , "    for (u64 i=0; i < ret; i++) {");
@@ -124,6 +136,7 @@ void amc::tfunc_Tpool_AllocMem() {
     Ins(&R, allocmem.body    , "if (row) {");
     Ins(&R, allocmem.body    , "    $parname.$name_free = row->$name_next;");
     Ins(&R, allocmem.body    , "}");
+    Ins(&R, allocmem.body    , "algo_lib::MemcheckAlloc(row, sizeof($Cpptype));");
     Ins(&R, allocmem.body    , "return row;");
 }
 
@@ -139,6 +152,7 @@ void amc::tfunc_Tpool_FreeMem() {
     Ins(&R, freemem.body        , "if (UNLIKELY(row.$name_next != ($Cpptype*)-1)) {");
     Ins(&R, freemem.body        , "    FatalErrorExit(\"$ns.tpool_double_delete  pool:$field  comment:'double deletion caught'\");");
     Ins(&R, freemem.body        , "}");
+    Ins(&R, freemem.body        , "algo_lib::MemcheckFree(&row, sizeof($Cpptype)); // before the free list threads through the element");
     if (mtfree) {
         Ins(&R, freemem.body    , "// OK to free from another thread.");
         Ins(&R, freemem.body    , "$Cpptype* temp = $parname.$name_free_mt; // insert into thread-safe free list");

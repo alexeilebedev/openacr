@@ -99,6 +99,8 @@ dmmeta.ptrary  field:atf_amc.FDb.c_typem  unique:N  heaplike:N
 dmmeta.ptrary  field:atf_amc.FUnitSort.c_ptrary  unique:N  heaplike:N
 dmmeta.ptrary  field:atf_cov.FGitfile.c_covline  unique:Y  heaplike:N
 dmmeta.ptrary  field:atf_cov.FTarget.c_targsrc  unique:Y  heaplike:N
+dmmeta.ptrary  field:doc.FDb.c_match  unique:Y  heaplike:N
+dmmeta.ptrary  field:doc.FMsg.c_msgfield  unique:Y  heaplike:N
 dmmeta.ptrary  field:lib_ams.FDb.c_postlane  unique:N  heaplike:N
 dmmeta.ptrary  field:lib_ams.FProc.c_shm  unique:Y  heaplike:Y
 dmmeta.ptrary  field:lib_ams.FShm.c_boardq  unique:Y  heaplike:N

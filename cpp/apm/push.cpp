@@ -53,12 +53,16 @@ void apm::PushDiff(algo::strptr base_dir) {
     tempstr regx_package=SelPackageRegx();
     vrfy(CollectPkgrecFromDir(regx_package,_db.base_recfile,base_dir),// in sandbox
          "failed to collect package records from the sandbox");
-    // rewrite remote 'package' record to match local ORIGIN and BASEREF fields
+    // Rewrite the remote 'package' record so it reads as the publisher's.
+    // The origin of a push is where the package is published from, and a
+    // publisher describes its own package as living here, at whatever this
+    // repo's HEAD turns out to be.  Our origin and baseref are the opposite
+    // thing: a bookmark into a history the publisher does not have, private to
+    // this tree and meaningless in any other.  Copying them across leaves the
+    // publisher's table pointing at a commit nobody there can resolve.
     ind_beg(_db_zd_sel_package_curs,package,_db) {
-        cstring origin(_db.cmdline.origin == "" ? algo::strptr(package.origin) : algo::strptr(_db.cmdline.origin));
-        cstring baseref(_db.cmdline.ref == "" ? algo::strptr(package.baseref) : algo::strptr(_db.cmdline.ref));
-        apm::RewritePackageRecs(origin,baseref,package.package,_db.ours_recfile);
-        apm::RewritePackageRecs(origin,baseref,package.package,_db.base_recfile);
+        apm::RewritePackageRecs(".","HEAD",package.package,_db.ours_recfile);
+        apm::RewritePackageRecs(".","HEAD",package.package,_db.base_recfile);
     }ind_end;
 
     // delete any base records first

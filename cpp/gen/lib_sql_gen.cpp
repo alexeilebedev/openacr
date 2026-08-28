@@ -27,8 +27,6 @@
 #include "include/gen/lib_sql_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -47,9 +45,8 @@ namespace lib_sql { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- lib_sql.FAttr..Uninit
-void lib_sql::FAttr_Uninit(lib_sql::FAttr& attr) {
-    lib_sql::FAttr &row = attr; (void)row;
-    ind_attr_Remove(row); // remove attr from index ind_attr
+void lib_sql::FAttr_Uninit(lib_sql::FAttr& parent) {
+    ind_attr_Remove(parent); // remove attr from index ind_attr
 }
 
 // --- lib_sql.trace..Print
@@ -433,7 +430,6 @@ void lib_sql::FDb_Init() {
 
 // --- lib_sql.FDb..Uninit
 void lib_sql::FDb_Uninit() {
-    lib_sql::FDb &row = _db; (void)row;
 
     // lib_sql.FDb.ind_attr.Uninit (Thash)  //
     // skip destruction of ind_attr in global scope

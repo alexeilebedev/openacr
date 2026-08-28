@@ -42,8 +42,11 @@ tempstr lib_git::CurrentBranch() {
 // -----------------------------------------------------------------------------
 
 // Return date + gitref string describing most recent commit, e.g. 2017-05-24.21f8ce8
+// The date is the committer date: it says when the commit reached this branch,
+// which survives a rebase; the author date does not move with one, so a stamp
+// built from it reads days stale the moment a lived-on branch merges.
 tempstr lib_git::ShortRef() {
-    return tempstr(Trimmed(SysEval("git log --pretty=format:'%ad.%h' --date=short -1",FailokQ(false),1024)));
+    return tempstr(Trimmed(SysEval("git log --pretty=format:'%cd.%h' --date=short -1",FailokQ(false),1024)));
 }
 
 // -----------------------------------------------------------------------------

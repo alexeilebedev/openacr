@@ -16,7 +16,7 @@ plumbing**: `main`, `Main`, `MainLoop`, `Step`,
 the lookup table that lets `algo_lib` find and operate on
 every linked-in namespace at runtime.
 
-```
+```ssim
 dmmeta.ctype  ctype:abt.FDb
   dmmeta.field  field:abt.FDb._db  arg:abt.FDb  reftype:Global  dflt:""  comment:""
 ```
@@ -196,7 +196,7 @@ both with `"Finput and gstatic cannot be specified together"`.
 
 Minimal namespace skeleton:
 
-```
+```ssim
 dmmeta.ns         ns:myapp  nstype:exe
 dmmeta.ctype      ctype:myapp.FDb
 dmmeta.field      field:myapp.FDb._db  arg:myapp.FDb  reftype:Global

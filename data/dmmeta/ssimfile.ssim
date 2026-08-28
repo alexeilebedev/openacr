@@ -28,6 +28,7 @@ dmmeta.ssimfile  ssimfile:atfdb.tfilt  ctype:atfdb.Tfilt
 dmmeta.ssimfile  ssimfile:atfdb.tifilt  ctype:atfdb.Tifilt
 dmmeta.ssimfile  ssimfile:atfdb.unittest  ctype:atfdb.Unittest
 dmmeta.ssimfile  ssimfile:atfdb.unstableattr  ctype:atfdb.Unstableattr
+dmmeta.ssimfile  ssimfile:atfdb.unstableline  ctype:atfdb.Unstableline
 dmmeta.ssimfile  ssimfile:atfdb.var  ctype:atfdb.Var
 dmmeta.ssimfile  ssimfile:dev.arch  ctype:dev.Arch
 dmmeta.ssimfile  ssimfile:dev.badline  ctype:dev.Badline
@@ -39,6 +40,7 @@ dmmeta.ssimfile  ssimfile:dev.covfile  ctype:dev.Covfile
 dmmeta.ssimfile  ssimfile:dev.covline  ctype:dev.Covline
 dmmeta.ssimfile  ssimfile:dev.covtarget  ctype:dev.Covtarget
 dmmeta.ssimfile  ssimfile:dev.dbgtarget  ctype:dev.Dbgtarget
+dmmeta.ssimfile  ssimfile:dev.docpage  ctype:dev.Docpage
 dmmeta.ssimfile  ssimfile:dev.edaction  ctype:dev.Edaction
 dmmeta.ssimfile  ssimfile:dev.edacttype  ctype:dev.Edacttype
 dmmeta.ssimfile  ssimfile:dev.gitfile  ctype:dev.Gitfile
@@ -55,11 +57,11 @@ dmmeta.ssimfile  ssimfile:dev.noindent  ctype:dev.Noindent
 dmmeta.ssimfile  ssimfile:dev.opt_type  ctype:dev.OptType
 dmmeta.ssimfile  ssimfile:dev.package  ctype:dev.Package
 dmmeta.ssimfile  ssimfile:dev.pkgdep  ctype:dev.Pkgdep
+dmmeta.ssimfile  ssimfile:dev.pkgdeptype  ctype:dev.Pkgdeptype
 dmmeta.ssimfile  ssimfile:dev.pkggen  ctype:dev.Pkggen
 dmmeta.ssimfile  ssimfile:dev.pkgkey  ctype:dev.Pkgkey
 dmmeta.ssimfile  ssimfile:dev.prototransport  ctype:dev.Prototransport
 dmmeta.ssimfile  ssimfile:dev.readmefile  ctype:dev.Readmefile
-dmmeta.ssimfile  ssimfile:dev.readmesort  ctype:dev.Readmesort
 dmmeta.ssimfile  ssimfile:dev.rpm  ctype:dev.Rpm
 dmmeta.ssimfile  ssimfile:dev.sandbox  ctype:dev.Sandbox
 dmmeta.ssimfile  ssimfile:dev.sbpath  ctype:dev.Sbpath

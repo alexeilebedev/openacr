@@ -29,8 +29,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -41,7 +39,6 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_ams::FDb    lib_ams::_db;     // dependency found via dev.targdep
 amsspy::FDb     amsspy::_db;      // dependency found via dev.targdep
@@ -875,7 +872,6 @@ void amsspy::FDb_Init() {
 
 // --- amsspy.FDb..Uninit
 void amsspy::FDb_Uninit() {
-    amsspy::FDb &row = _db; (void)row;
 
     // amsspy.FDb.ind_shm.Uninit (Thash)  //
     // skip destruction of ind_shm in global scope
@@ -893,11 +889,11 @@ void amsspy::FDb_Uninit() {
 // --- amsspy.FSession.c_shm.Insert
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
-void amsspy::c_shm_Insert(amsspy::FSession& session, amsspy::FShm& row) {
+void amsspy::c_shm_Insert(amsspy::FSession& parent, amsspy::FShm& row) {
     if (!row.session_c_shm_in_ary) {
-        c_shm_Reserve(session, 1);
-        u64 n  = session.c_shm_n++;
-        session.c_shm_elems[n] = &row;
+        c_shm_Reserve(parent, 1);
+        u64 n  = parent.c_shm_n++;
+        parent.c_shm_elems[n] = &row;
         row.session_c_shm_in_ary = true;
     }
 }
@@ -906,18 +902,18 @@ void amsspy::c_shm_Insert(amsspy::FSession& session, amsspy::FShm& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amsspy::c_shm_InsertMaybe(amsspy::FSession& session, amsspy::FShm& row) {
+bool amsspy::c_shm_InsertMaybe(amsspy::FSession& parent, amsspy::FShm& row) {
     bool retval = !session_c_shm_InAryQ(row);
-    c_shm_Insert(session,row); // check is performed in _Insert again
+    c_shm_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
 
 // --- amsspy.FSession.c_shm.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amsspy::c_shm_Remove(amsspy::FSession& session, amsspy::FShm& row) {
-    i64 n = session.c_shm_n;
+void amsspy::c_shm_Remove(amsspy::FSession& parent, amsspy::FShm& row) {
+    i64 n = parent.c_shm_n;
     if (bool_Update(row.session_c_shm_in_ary,false)) {
-        amsspy::FShm* *elems = session.c_shm_elems;
+        amsspy::FShm* *elems = parent.c_shm_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
         for (i64 i = n-1; i>=0; i--) {
@@ -926,7 +922,7 @@ void amsspy::c_shm_Remove(amsspy::FSession& session, amsspy::FShm& row) {
                 i64 j = i + 1;
                 size_t nbytes = sizeof(amsspy::FShm*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                session.c_shm_n = n - 1;
+                parent.c_shm_n = n - 1;
                 break;
             }
         }
@@ -935,39 +931,37 @@ void amsspy::c_shm_Remove(amsspy::FSession& session, amsspy::FShm& row) {
 
 // --- amsspy.FSession.c_shm.Reserve
 // Reserve space in index for N more elements;
-void amsspy::c_shm_Reserve(amsspy::FSession& session, u64 n) {
-    u64 old_max = session.c_shm_max;
-    if (UNLIKELY(session.c_shm_n + n > old_max)) {
-        u64 new_max  = u64_Max(u64_Max(old_max * 2, session.c_shm_n + n), 4);
+void amsspy::c_shm_Reserve(amsspy::FSession& parent, u64 n) {
+    u64 old_max = parent.c_shm_max;
+    if (UNLIKELY(parent.c_shm_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_shm_n + n), 4);
         u64 old_size = old_max * sizeof(amsspy::FShm*);
         u64 new_size = new_max * sizeof(amsspy::FShm*);
-        void *new_mem = algo_lib::malloc_ReallocMem(session.c_shm_elems, old_size, new_size);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_shm_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("amsspy.out_of_memory  field:amsspy.FSession.c_shm");
         }
-        session.c_shm_elems = (amsspy::FShm**)new_mem;
-        session.c_shm_max = new_max;
+        parent.c_shm_elems = (amsspy::FShm**)new_mem;
+        parent.c_shm_max = new_max;
     }
 }
 
 // --- amsspy.FSession..Uninit
-void amsspy::FSession_Uninit(amsspy::FSession& session) {
-    amsspy::FSession &row = session; (void)row;
-    ind_session_Remove(row); // remove session from index ind_session
+void amsspy::FSession_Uninit(amsspy::FSession& parent) {
+    ind_session_Remove(parent); // remove session from index ind_session
 
     // amsspy.FSession.c_shm.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(session.c_shm_elems, sizeof(amsspy::FShm*)*session.c_shm_max); // (amsspy.FSession.c_shm)
+    algo_lib::malloc_FreeMem(parent.c_shm_elems, sizeof(amsspy::FShm*)*parent.c_shm_max); // (amsspy.FSession.c_shm)
 }
 
 // --- amsspy.FShm..Uninit
-void amsspy::FShm_Uninit(amsspy::FShm& shm) {
-    amsspy::FShm &row = shm; (void)row;
-    ind_shm_Remove(row); // remove shm from index ind_shm
-    amsspy::FSession* p_p_session = row.p_session;
+void amsspy::FShm_Uninit(amsspy::FShm& parent) {
+    ind_shm_Remove(parent); // remove shm from index ind_shm
+    amsspy::FSession* p_p_session = parent.p_session;
     if (p_p_session)  {
-        c_shm_Remove(*p_p_session, row);// remove shm from index c_shm
+        c_shm_Remove(*p_p_session, parent);// remove shm from index c_shm
     }
-    cd_shm_poll_Remove(row); // remove shm from index cd_shm_poll
+    cd_shm_poll_Remove(parent); // remove shm from index cd_shm_poll
 }
 
 // --- amsspy.FieldId.value.ToCstr
@@ -1058,7 +1052,6 @@ void amsspy::StaticCheck() {
 // --- amsspy...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ams::FDb_Init();
         amsspy::FDb_Init();
@@ -1079,7 +1072,6 @@ int main(int argc, char **argv) {
         amsspy::FDb_Uninit();
         lib_ams::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

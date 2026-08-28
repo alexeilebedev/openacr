@@ -9,7 +9,7 @@ amc-provided pool that talks to the kernel for memory, and it
 is almost always the base pool for an `Lpool`/`Lary`/`Blkpool`
 chain.
 
-```
+```ssim
 dmmeta.field  field:algo_lib.FDb.sbrk  arg:u8  reftype:Sbrk  dflt:""  comment:"Base allocator for everything"
 ```
 

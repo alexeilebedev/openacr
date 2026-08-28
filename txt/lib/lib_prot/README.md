@@ -3,14 +3,7 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [lib_prot - Internals](/txt/gen/lib_prot/lib_prot.md)<br/>
 
 ### Sources
 <a href="#sources"></a>

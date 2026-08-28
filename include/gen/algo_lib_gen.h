@@ -30,16 +30,19 @@
 
 // --- algo_lib_RegxFlagsEnum
 
-enum algo_lib_RegxFlagsEnum {                  // algo_lib.RegxFlags.value
-     algo_lib_RegxFlags_trace         = 0x1    // algo_lib.RegxFlags.trace
-    ,algo_lib_RegxFlags_capture       = 0x2    // algo_lib.RegxFlags.capture
-    ,algo_lib_RegxFlags_valid         = 0x4    // algo_lib.RegxFlags.valid
-    ,algo_lib_RegxFlags_literal       = 0x8    // algo_lib.RegxFlags.literal
-    ,algo_lib_RegxFlags_accepts_all   = 0x10   // algo_lib.RegxFlags.accepts_all
-    ,algo_lib_RegxFlags_fullmatch     = 0x20   // algo_lib.RegxFlags.fullmatch
+enum algo_lib_RegxFlagsEnum {                   // algo_lib.RegxFlags.value
+     algo_lib_RegxFlags_trace         = 0x1     // algo_lib.RegxFlags.trace
+    ,algo_lib_RegxFlags_capture       = 0x2     // algo_lib.RegxFlags.capture
+    ,algo_lib_RegxFlags_valid         = 0x4     // algo_lib.RegxFlags.valid
+    ,algo_lib_RegxFlags_literal       = 0x8     // algo_lib.RegxFlags.literal
+    ,algo_lib_RegxFlags_accepts_all   = 0x10    // algo_lib.RegxFlags.accepts_all
+    ,algo_lib_RegxFlags_fullmatch     = 0x20    // algo_lib.RegxFlags.fullmatch
+    ,algo_lib_RegxFlags_fixed         = 0x40    // algo_lib.RegxFlags.fixed
+    ,algo_lib_RegxFlags_anchorbeg     = 0x80    // algo_lib.RegxFlags.anchorbeg
+    ,algo_lib_RegxFlags_anchorend     = 0x100   // algo_lib.RegxFlags.anchorend
 };
 
-enum { algo_lib_RegxFlagsEnum_N = 6 };
+enum { algo_lib_RegxFlagsEnum_N = 9 };
 
 
 // --- algo_lib_RegxStyleEnum
@@ -76,6 +79,8 @@ enum algo_lib_FieldIdEnum {    // algo_lib.FieldId.value
     ,algo_lib_FieldId_state
     ,algo_lib_FieldId_flags
     ,algo_lib_FieldId_style
+    ,algo_lib_FieldId_lit
+    ,algo_lib_FieldId_ngroup
     ,algo_lib_FieldId_type
     ,algo_lib_FieldId_first
     ,algo_lib_FieldId_last
@@ -86,12 +91,15 @@ enum algo_lib_FieldIdEnum {    // algo_lib.FieldId.value
     ,algo_lib_FieldId_literal
     ,algo_lib_FieldId_accepts_all
     ,algo_lib_FieldId_fullmatch
+    ,algo_lib_FieldId_fixed
+    ,algo_lib_FieldId_anchorbeg
+    ,algo_lib_FieldId_anchorend
     ,algo_lib_FieldId_op
     ,algo_lib_FieldId_consume
     ,algo_lib_FieldId_imm
 };
 
-enum { algo_lib_FieldIdEnum_N = 31 };
+enum { algo_lib_FieldIdEnum_N = 36 };
 
 
 // --- algo_lib_RegxToken_type_Enum
@@ -154,7 +162,6 @@ struct lpool_Lpblk { // blk: block dedicated to one size class
 namespace dmmeta { struct Dispsigcheck; }
 namespace algo_lib { struct FIohook; }
 namespace dmmeta { struct Logcat; }
-namespace algo_lib { struct Replscope; }
 namespace algo_lib { struct FTimehook; }
 namespace algo_lib { struct FTxtrow; }
 namespace algo_lib { struct FTxttbl; }
@@ -162,10 +169,11 @@ namespace algo_lib { struct Regx; }
 namespace algo_lib { struct Bitset_ary_bitcurs; }
 namespace algo_lib { struct Bitset_ary_curs; }
 namespace algo_lib { struct csvparse_ary_tok_curs; }
+namespace algo_lib { struct RegxM_slot_curs; }
 namespace algo_lib { struct regx_state_curs; }
 namespace algo_lib { struct _db_temp_strings_curs; }
-namespace algo_lib { struct _db_imtable_curs; }
 namespace algo_lib { struct _db_bh_timehook_curs; }
+namespace algo_lib { struct _db_imtable_curs; }
 namespace algo_lib { struct _db_dispsigcheck_curs; }
 namespace algo_lib { struct _db_imdb_curs; }
 namespace algo_lib { struct _db_logcat_curs; }
@@ -176,7 +184,7 @@ namespace algo_lib { struct txtrow_c_txtcell_curs; }
 namespace algo_lib { struct txttbl_c_txtrow_curs; }
 namespace algo_lib { struct InTextFile_temp_buf_curs; }
 namespace algo_lib { struct regxparse_ary_expr_curs; }
-namespace algo_lib { struct replscope_ind_replvar_curs; }
+namespace algo_lib { struct replscope_node_curs; }
 namespace algo_lib { struct tabulate_width_curs; }
 namespace algo_lib { struct Bitset; }
 namespace algo_lib { struct Cmdline; }
@@ -195,7 +203,6 @@ namespace algo_lib { struct FDb; }
 namespace algo_lib { struct FDispsigcheck; }
 namespace algo_lib { struct FImtable; }
 namespace algo_lib { struct FProc; }
-namespace algo_lib { struct FReplvar; }
 namespace algo_lib { struct FTempfile; }
 namespace algo_lib { struct FTxtcell; }
 namespace algo_lib { struct FieldId; }
@@ -208,6 +215,8 @@ namespace algo_lib { struct RegxExpr; }
 namespace algo_lib { struct RegxOp; }
 namespace algo_lib { struct RegxParse; }
 namespace algo_lib { struct RegxState; }
+namespace algo_lib { struct Replnode; }
+namespace algo_lib { struct Replscope; }
 namespace algo_lib { struct ShHdr; }
 namespace algo_lib { struct Srng; }
 namespace algo_lib { struct TableId; }
@@ -515,89 +524,89 @@ struct CsvParse { // algo_lib.CsvParse
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:algo_lib.CsvParse.ary_tok.Addary
-algo::aryptr<algo::cstring> ary_tok_Addary(algo_lib::CsvParse& csvparse, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
+algo::aryptr<algo::cstring> ary_tok_Addary(algo_lib::CsvParse& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.CsvParse.ary_tok.Alloc
-algo::cstring&       ary_tok_Alloc(algo_lib::CsvParse& csvparse) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       ary_tok_Alloc(algo_lib::CsvParse& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:algo_lib.CsvParse.ary_tok.AllocAt
-algo::cstring&       ary_tok_AllocAt(algo_lib::CsvParse& csvparse, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       ary_tok_AllocAt(algo_lib::CsvParse& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.CsvParse.ary_tok.AllocN
-algo::aryptr<algo::cstring> ary_tok_AllocN(algo_lib::CsvParse& csvparse, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> ary_tok_AllocN(algo_lib::CsvParse& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:algo_lib.CsvParse.ary_tok.AllocNAt
-algo::aryptr<algo::cstring> ary_tok_AllocNAt(algo_lib::CsvParse& csvparse, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> ary_tok_AllocNAt(algo_lib::CsvParse& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:algo_lib.CsvParse.ary_tok.EmptyQ
-inline bool          ary_tok_EmptyQ(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
+inline bool          ary_tok_EmptyQ(algo_lib::CsvParse& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:algo_lib.CsvParse.ary_tok.Find
-inline algo::cstring* ary_tok_Find(algo_lib::CsvParse& csvparse, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* ary_tok_Find(algo_lib::CsvParse& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.CsvParse.ary_tok.Getary
-inline algo::aryptr<algo::cstring> ary_tok_Getary(const algo_lib::CsvParse& csvparse) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> ary_tok_Getary(const algo_lib::CsvParse& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.CsvParse.ary_tok.Last
-inline algo::cstring* ary_tok_Last(algo_lib::CsvParse& csvparse) __attribute__((nothrow, pure));
+inline algo::cstring* ary_tok_Last(algo_lib::CsvParse& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:algo_lib.CsvParse.ary_tok.Max
-inline i64           ary_tok_Max(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
+inline i64           ary_tok_Max(algo_lib::CsvParse& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:algo_lib.CsvParse.ary_tok.N
-inline i64           ary_tok_N(const algo_lib::CsvParse& csvparse) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ary_tok_N(const algo_lib::CsvParse& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:algo_lib.CsvParse.ary_tok.Remove
-void                 ary_tok_Remove(algo_lib::CsvParse& csvparse, u64 i) __attribute__((nothrow));
+void                 ary_tok_Remove(algo_lib::CsvParse& parent, u64 i) __attribute__((nothrow));
 // func:algo_lib.CsvParse.ary_tok.RemoveAll
-void                 ary_tok_RemoveAll(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
+void                 ary_tok_RemoveAll(algo_lib::CsvParse& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:algo_lib.CsvParse.ary_tok.RemoveLast
-void                 ary_tok_RemoveLast(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
+void                 ary_tok_RemoveLast(algo_lib::CsvParse& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:algo_lib.CsvParse.ary_tok.Reserve
-inline void          ary_tok_Reserve(algo_lib::CsvParse& csvparse, i64 n) __attribute__((nothrow));
+inline void          ary_tok_Reserve(algo_lib::CsvParse& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo_lib.CsvParse.ary_tok.AbsReserve
-void                 ary_tok_AbsReserve(algo_lib::CsvParse& csvparse, i64 n) __attribute__((nothrow));
+void                 ary_tok_AbsReserve(algo_lib::CsvParse& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:algo_lib.CsvParse.ary_tok.Setary
-void                 ary_tok_Setary(algo_lib::CsvParse& csvparse, algo_lib::CsvParse &rhs) __attribute__((nothrow));
+void                 ary_tok_Setary(algo_lib::CsvParse& parent, algo_lib::CsvParse &rhs) __attribute__((nothrow));
 // Copy specified array into ary_tok, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
 // func:algo_lib.CsvParse.ary_tok.Setary2
-void                 ary_tok_Setary(algo_lib::CsvParse& csvparse, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+void                 ary_tok_Setary(algo_lib::CsvParse& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.CsvParse.ary_tok.qFind
-inline algo::cstring& ary_tok_qFind(algo_lib::CsvParse& csvparse, u64 t) __attribute__((nothrow));
+inline algo::cstring& ary_tok_qFind(algo_lib::CsvParse& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:algo_lib.CsvParse.ary_tok.qLast
-inline algo::cstring& ary_tok_qLast(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
+inline algo::cstring& ary_tok_qLast(algo_lib::CsvParse& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:algo_lib.CsvParse.ary_tok.rowid_Get
-inline u64           ary_tok_rowid_Get(algo_lib::CsvParse& csvparse, algo::cstring &elem) __attribute__((nothrow));
+inline u64           ary_tok_rowid_Get(algo_lib::CsvParse& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.CsvParse.ary_tok.AllocNVal
-algo::aryptr<algo::cstring> ary_tok_AllocNVal(algo_lib::CsvParse& csvparse, i64 n_elems, const algo::cstring& val) __attribute__((nothrow));
+algo::aryptr<algo::cstring> ary_tok_AllocNVal(algo_lib::CsvParse& parent, i64 n_elems, const algo::cstring& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
 // func:algo_lib.CsvParse.ary_tok.ReadStrptrMaybe
-bool                 ary_tok_ReadStrptrMaybe(algo_lib::CsvParse& csvparse, algo::strptr in_str) __attribute__((nothrow));
+bool                 ary_tok_ReadStrptrMaybe(algo_lib::CsvParse& parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:algo_lib.CsvParse.ary_tok.Insary
-void                 ary_tok_Insary(algo_lib::CsvParse& csvparse, algo::aryptr<algo::cstring> rhs, i64 at) __attribute__((nothrow));
+void                 ary_tok_Insary(algo_lib::CsvParse& parent, algo::aryptr<algo::cstring> rhs, i64 at) __attribute__((nothrow));
 // Delete a range of elements
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
 // func:algo_lib.CsvParse.ary_tok.RemRegion
-void                 ary_tok_RemRegion(algo_lib::CsvParse& csvparse, i64 beg, i64 n) __attribute__((nothrow));
+void                 ary_tok_RemRegion(algo_lib::CsvParse& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo_lib.CsvParse.ary_tok_curs.Next
@@ -612,9 +621,9 @@ inline bool          csvparse_ary_tok_curs_ValidQ(csvparse_ary_tok_curs &curs) _
 inline algo::cstring& csvparse_ary_tok_curs_Access(csvparse_ary_tok_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.CsvParse..Init
-inline void          CsvParse_Init(algo_lib::CsvParse& csvparse);
+inline void          CsvParse_Init(algo_lib::CsvParse& parent);
 // func:algo_lib.CsvParse..Uninit
-void                 CsvParse_Uninit(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
+void                 CsvParse_Uninit(algo_lib::CsvParse& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo_lib.CsvParse.String  printfmt:Tuple
 // func:algo_lib.CsvParse..Print
@@ -642,9 +651,122 @@ struct RegxM { // algo_lib.RegxM: Matching context for regex
     algo_lib::Bitset    next_char;    // States to test on next char
     algo::I32RangeAry   matchrange;   // List of match char ranges
     algo_lib::Bitset    visited;      // States already closed for this char
+    i32*                slot_elems;   // pointer to elements
+    u64                 slot_n;       // number of elements in array
+    u64                 slot_max;     // max. capacity of array before realloc
+    // func:algo_lib.RegxM..AssignOp
+    algo_lib::RegxM&     operator =(const algo_lib::RegxM &rhs) __attribute__((nothrow));
     // func:algo_lib.RegxM..Ctor
     inline               RegxM() __attribute__((nothrow));
+    // func:algo_lib.RegxM..Dtor
+    inline               ~RegxM() __attribute__((nothrow));
+    // func:algo_lib.RegxM..CopyCtor
+    RegxM(const algo_lib::RegxM &rhs) __attribute__((nothrow));
 };
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.RegxM.slot.Addary
+algo::aryptr<i32>    slot_Addary(algo_lib::RegxM& parent, algo::aryptr<i32> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:algo_lib.RegxM.slot.Alloc
+i32&                 slot_Alloc(algo_lib::RegxM& parent) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:algo_lib.RegxM.slot.AllocAt
+i32&                 slot_AllocAt(algo_lib::RegxM& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:algo_lib.RegxM.slot.AllocN
+algo::aryptr<i32>    slot_AllocN(algo_lib::RegxM& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:algo_lib.RegxM.slot.AllocNAt
+algo::aryptr<i32>    slot_AllocNAt(algo_lib::RegxM& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:algo_lib.RegxM.slot.EmptyQ
+inline bool          slot_EmptyQ(algo_lib::RegxM& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:algo_lib.RegxM.slot.Find
+inline i32*          slot_Find(algo_lib::RegxM& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:algo_lib.RegxM.slot.Getary
+inline algo::aryptr<i32> slot_Getary(const algo_lib::RegxM& parent) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:algo_lib.RegxM.slot.Last
+inline i32*          slot_Last(algo_lib::RegxM& parent) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:algo_lib.RegxM.slot.Max
+inline i64           slot_Max(algo_lib::RegxM& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:algo_lib.RegxM.slot.N
+inline i64           slot_N(const algo_lib::RegxM& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:algo_lib.RegxM.slot.Remove
+void                 slot_Remove(algo_lib::RegxM& parent, u64 i) __attribute__((nothrow));
+// func:algo_lib.RegxM.slot.RemoveAll
+inline void          slot_RemoveAll(algo_lib::RegxM& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:algo_lib.RegxM.slot.RemoveLast
+void                 slot_RemoveLast(algo_lib::RegxM& parent) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:algo_lib.RegxM.slot.Reserve
+inline void          slot_Reserve(algo_lib::RegxM& parent, i64 n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:algo_lib.RegxM.slot.AbsReserve
+void                 slot_AbsReserve(algo_lib::RegxM& parent, i64 n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:algo_lib.RegxM.slot.Setary
+void                 slot_Setary(algo_lib::RegxM& parent, algo_lib::RegxM &rhs) __attribute__((nothrow));
+// Copy specified array into slot, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:algo_lib.RegxM.slot.Setary2
+void                 slot_Setary(algo_lib::RegxM& parent, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:algo_lib.RegxM.slot.qFind
+inline i32&          slot_qFind(algo_lib::RegxM& parent, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:algo_lib.RegxM.slot.qLast
+inline i32&          slot_qLast(algo_lib::RegxM& parent) __attribute__((nothrow));
+// Return row id of specified element
+// func:algo_lib.RegxM.slot.rowid_Get
+inline u64           slot_rowid_Get(algo_lib::RegxM& parent, i32 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:algo_lib.RegxM.slot.AllocNVal
+algo::aryptr<i32>    slot_AllocNVal(algo_lib::RegxM& parent, i64 n_elems, const i32& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo_lib.RegxM.slot.ReadStrptrMaybe
+bool                 slot_ReadStrptrMaybe(algo_lib::RegxM& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.RegxM.slot.Insary
+void                 slot_Insary(algo_lib::RegxM& parent, algo::aryptr<i32> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:algo_lib.RegxM.slot.RemRegion
+void                 slot_RemRegion(algo_lib::RegxM& parent, i64 beg, i64 n) __attribute__((nothrow));
+
+// proceed to next item
+// func:algo_lib.RegxM.slot_curs.Next
+inline void          RegxM_slot_curs_Next(RegxM_slot_curs &curs) __attribute__((nothrow));
+// func:algo_lib.RegxM.slot_curs.Reset
+inline void          RegxM_slot_curs_Reset(RegxM_slot_curs &curs, algo_lib::RegxM &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:algo_lib.RegxM.slot_curs.ValidQ
+inline bool          RegxM_slot_curs_ValidQ(RegxM_slot_curs &curs) __attribute__((nothrow));
+// item access
+// func:algo_lib.RegxM.slot_curs.Access
+inline i32&          RegxM_slot_curs_Access(RegxM_slot_curs &curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:algo_lib.RegxM..Init
+inline void          RegxM_Init(algo_lib::RegxM& parent);
+// func:algo_lib.RegxM..Uninit
+void                 RegxM_Uninit(algo_lib::RegxM& parent) __attribute__((nothrow));
 
 // --- algo_lib.FFildes
 // create: algo_lib.FDb.fildes (Cppstack)
@@ -659,10 +781,10 @@ struct FFildes { // algo_lib.FFildes: Wrapper for unix file descritor, call clos
 // User-defined cleanup function invoked for field fd of algo_lib::FFildes
 // func:algo_lib.FFildes.fd.Cleanup
 // this function is 'extrn' and implemented by user
-void                 fd_Cleanup(algo_lib::FFildes& fildes) __attribute__((nothrow));
+void                 fd_Cleanup(algo_lib::FFildes& parent) __attribute__((nothrow));
 
 // func:algo_lib.FFildes..Uninit
-inline void          FFildes_Uninit(algo_lib::FFildes& fildes) __attribute__((nothrow));
+inline void          FFildes_Uninit(algo_lib::FFildes& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo_lib.FFildes.String  printfmt:Raw
 // func:algo_lib.FFildes..Print
@@ -715,27 +837,27 @@ struct FTimehook { // algo_lib.FTimehook
 };
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:algo_lib.FTimehook.time.Lt
-inline bool          time_Lt(algo_lib::FTimehook& timehook, algo_lib::FTimehook &rhs) __attribute__((nothrow));
+inline bool          time_Lt(algo_lib::FTimehook& parent, algo_lib::FTimehook &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:algo_lib.FTimehook.time.Cmp
-inline i32           time_Cmp(algo_lib::FTimehook& timehook, algo_lib::FTimehook &rhs) __attribute__((nothrow));
+inline i32           time_Cmp(algo_lib::FTimehook& parent, algo_lib::FTimehook &rhs) __attribute__((nothrow));
 
 // Invoke function by pointer
 // func:algo_lib.FTimehook.hook.Call
-inline void          hook_Call(algo_lib::FTimehook& timehook, algo_lib::FTimehook& arg) __attribute__((nothrow));
+inline void          hook_Call(algo_lib::FTimehook& parent, algo_lib::FTimehook& arg) __attribute__((nothrow));
 // Assign 0-argument hook with no context pointer
 // func:algo_lib.FTimehook.hook.Set0
-inline void          hook_Set0(algo_lib::FTimehook& timehook, void (*fcn)() ) __attribute__((nothrow));
+inline void          hook_Set0(algo_lib::FTimehook& parent, void (*fcn)() ) __attribute__((nothrow));
 // Assign 1-argument hook with context pointer
 // func:algo_lib.FTimehook.hook.Set1
-template<class T> inline void hook_Set1(algo_lib::FTimehook& timehook, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
+template<class T> inline void hook_Set1(algo_lib::FTimehook& parent, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
 // Assign 2-argument hook with context pointer
 // func:algo_lib.FTimehook.hook.Set2
-template<class T> inline void hook_Set2(algo_lib::FTimehook& timehook, T& ctx, void (*fcn)(T&, algo_lib::FTimehook& arg) ) __attribute__((nothrow));
+template<class T> inline void hook_Set2(algo_lib::FTimehook& parent, T& ctx, void (*fcn)(T&, algo_lib::FTimehook& arg) ) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:algo_lib.FTimehook..Init
-inline void          FTimehook_Init(algo_lib::FTimehook& timehook);
+inline void          FTimehook_Init(algo_lib::FTimehook& parent);
 // func:algo_lib.FTimehook..ReadFieldMaybe
 bool                 FTimehook_ReadFieldMaybe(algo_lib::FTimehook& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of algo_lib::FTimehook from an ascii string.
@@ -743,7 +865,7 @@ bool                 FTimehook_ReadFieldMaybe(algo_lib::FTimehook& parent, algo:
 // func:algo_lib.FTimehook..ReadStrptrMaybe
 bool                 FTimehook_ReadStrptrMaybe(algo_lib::FTimehook &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo_lib.FTimehook..Uninit
-void                 FTimehook_Uninit(algo_lib::FTimehook& timehook) __attribute__((nothrow));
+void                 FTimehook_Uninit(algo_lib::FTimehook& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo_lib.FTimehook.String  printfmt:Tuple
 // func:algo_lib.FTimehook..Print
@@ -780,18 +902,18 @@ void                 imdb_CopyIn(algo_lib::FImdb &row, algo::Imdb &in) __attribu
 
 // Set all fields to initial values.
 // func:algo_lib.FImdb..Init
-inline void          FImdb_Init(algo_lib::FImdb& imdb);
+inline void          FImdb_Init(algo_lib::FImdb& parent);
 // func:algo_lib.FImdb..Uninit
-void                 FImdb_Uninit(algo_lib::FImdb& imdb) __attribute__((nothrow));
+void                 FImdb_Uninit(algo_lib::FImdb& parent) __attribute__((nothrow));
 
 // --- algo_lib.RegxFlags
 #pragma pack(push,1)
 struct RegxFlags { // algo_lib.RegxFlags
-    u8   value;   //   0
+    u16   value;   //   0
     // func:algo_lib.RegxFlags..Ctor
     inline               RegxFlags() __attribute__((nothrow));
     // func:algo_lib.RegxFlags..FieldwiseCtor
-    explicit inline               RegxFlags(u8 in_value) __attribute__((nothrow));
+    explicit inline               RegxFlags(u16 in_value) __attribute__((nothrow));
     // func:algo_lib.RegxFlags..EnumCtor
     inline               RegxFlags(algo_lib_RegxFlagsEnum arg) __attribute__((nothrow));
 };
@@ -850,6 +972,33 @@ inline bool          fullmatch_Get(const algo_lib::RegxFlags& parent) __attribut
 // func:algo_lib.RegxFlags.fullmatch.Set
 inline void          fullmatch_Set(algo_lib::RegxFlags& parent, bool rhs) __attribute__((nothrow));
 
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 6.
+// func:algo_lib.RegxFlags.fixed.Get
+inline bool          fixed_Get(const algo_lib::RegxFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 6.
+// func:algo_lib.RegxFlags.fixed.Set
+inline void          fixed_Set(algo_lib::RegxFlags& parent, bool rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 7.
+// func:algo_lib.RegxFlags.anchorbeg.Get
+inline bool          anchorbeg_Get(const algo_lib::RegxFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 7.
+// func:algo_lib.RegxFlags.anchorbeg.Set
+inline void          anchorbeg_Set(algo_lib::RegxFlags& parent, bool rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 8.
+// func:algo_lib.RegxFlags.anchorend.Get
+inline bool          anchorend_Get(const algo_lib::RegxFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 8.
+// func:algo_lib.RegxFlags.anchorend.Set
+inline void          anchorend_Set(algo_lib::RegxFlags& parent, bool rhs) __attribute__((nothrow));
+
 // func:algo_lib.RegxFlags..ReadFieldMaybe
 bool                 RegxFlags_ReadFieldMaybe(algo_lib::RegxFlags& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of algo_lib::RegxFlags from an ascii string.
@@ -857,7 +1006,7 @@ bool                 RegxFlags_ReadFieldMaybe(algo_lib::RegxFlags& parent, algo:
 bool                 RegxFlags_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.RegxFlags..Init
-inline void          RegxFlags_Init(algo_lib::RegxFlags& parent);
+void                 RegxFlags_Init(algo_lib::RegxFlags& parent);
 // print string representation of ROW to string STR
 // cfmt:algo_lib.RegxFlags.String  printfmt:Bitset
 // func:algo_lib.RegxFlags..Print
@@ -926,6 +1075,8 @@ struct Regx { // algo_lib.Regx: Parsed regular expression
     u64                    state_max;     // max. capacity of array before realloc
     algo_lib::RegxFlags    flags;         //
     algo_lib::RegxStyle    style;         // Regx style according to which EXPR was parsed
+    algo::cstring          lit;           // The fixed string the expression reduces to, when it does
+    i32                    ngroup;        //   0  Number of capture groups the expression opens
     // func:algo_lib.Regx..AssignOp
     algo_lib::Regx&      operator =(const algo_lib::Regx &rhs) __attribute__((nothrow));
     // func:algo_lib.Regx..Ctor
@@ -939,84 +1090,84 @@ struct Regx { // algo_lib.Regx: Parsed regular expression
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:algo_lib.Regx.state.Addary
-algo::aryptr<algo_lib::RegxState> state_Addary(algo_lib::Regx& regx, algo::aryptr<algo_lib::RegxState> rhs) __attribute__((nothrow));
+algo::aryptr<algo_lib::RegxState> state_Addary(algo_lib::Regx& parent, algo::aryptr<algo_lib::RegxState> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.Regx.state.Alloc
-algo_lib::RegxState& state_Alloc(algo_lib::Regx& regx) __attribute__((__warn_unused_result__, nothrow));
+algo_lib::RegxState& state_Alloc(algo_lib::Regx& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:algo_lib.Regx.state.AllocAt
-algo_lib::RegxState& state_AllocAt(algo_lib::Regx& regx, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo_lib::RegxState& state_AllocAt(algo_lib::Regx& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.Regx.state.AllocN
-algo::aryptr<algo_lib::RegxState> state_AllocN(algo_lib::Regx& regx, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo_lib::RegxState> state_AllocN(algo_lib::Regx& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:algo_lib.Regx.state.AllocNAt
-algo::aryptr<algo_lib::RegxState> state_AllocNAt(algo_lib::Regx& regx, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo_lib::RegxState> state_AllocNAt(algo_lib::Regx& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:algo_lib.Regx.state.EmptyQ
-inline bool          state_EmptyQ(algo_lib::Regx& regx) __attribute__((nothrow));
+inline bool          state_EmptyQ(algo_lib::Regx& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:algo_lib.Regx.state.Find
-inline algo_lib::RegxState* state_Find(algo_lib::Regx& regx, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo_lib::RegxState* state_Find(algo_lib::Regx& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.Regx.state.Getary
-inline algo::aryptr<algo_lib::RegxState> state_Getary(const algo_lib::Regx& regx) __attribute__((nothrow));
+inline algo::aryptr<algo_lib::RegxState> state_Getary(const algo_lib::Regx& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.Regx.state.Last
-inline algo_lib::RegxState* state_Last(algo_lib::Regx& regx) __attribute__((nothrow, pure));
+inline algo_lib::RegxState* state_Last(algo_lib::Regx& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:algo_lib.Regx.state.Max
-inline i64           state_Max(algo_lib::Regx& regx) __attribute__((nothrow));
+inline i64           state_Max(algo_lib::Regx& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:algo_lib.Regx.state.N
-inline i64           state_N(const algo_lib::Regx& regx) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           state_N(const algo_lib::Regx& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:algo_lib.Regx.state.Remove
-void                 state_Remove(algo_lib::Regx& regx, u64 i) __attribute__((nothrow));
+void                 state_Remove(algo_lib::Regx& parent, u64 i) __attribute__((nothrow));
 // func:algo_lib.Regx.state.RemoveAll
-void                 state_RemoveAll(algo_lib::Regx& regx) __attribute__((nothrow));
+void                 state_RemoveAll(algo_lib::Regx& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:algo_lib.Regx.state.RemoveLast
-void                 state_RemoveLast(algo_lib::Regx& regx) __attribute__((nothrow));
+void                 state_RemoveLast(algo_lib::Regx& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:algo_lib.Regx.state.Reserve
-inline void          state_Reserve(algo_lib::Regx& regx, i64 n) __attribute__((nothrow));
+inline void          state_Reserve(algo_lib::Regx& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo_lib.Regx.state.AbsReserve
-void                 state_AbsReserve(algo_lib::Regx& regx, i64 n) __attribute__((nothrow));
+void                 state_AbsReserve(algo_lib::Regx& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:algo_lib.Regx.state.Setary
-void                 state_Setary(algo_lib::Regx& regx, algo_lib::Regx &rhs) __attribute__((nothrow));
+void                 state_Setary(algo_lib::Regx& parent, algo_lib::Regx &rhs) __attribute__((nothrow));
 // Copy specified array into state, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
 // func:algo_lib.Regx.state.Setary2
-void                 state_Setary(algo_lib::Regx& regx, const algo::aryptr<algo_lib::RegxState> &rhs) __attribute__((nothrow));
+void                 state_Setary(algo_lib::Regx& parent, const algo::aryptr<algo_lib::RegxState> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.Regx.state.qFind
-inline algo_lib::RegxState& state_qFind(algo_lib::Regx& regx, u64 t) __attribute__((nothrow));
+inline algo_lib::RegxState& state_qFind(algo_lib::Regx& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:algo_lib.Regx.state.qLast
-inline algo_lib::RegxState& state_qLast(algo_lib::Regx& regx) __attribute__((nothrow));
+inline algo_lib::RegxState& state_qLast(algo_lib::Regx& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:algo_lib.Regx.state.rowid_Get
-inline u64           state_rowid_Get(algo_lib::Regx& regx, algo_lib::RegxState &elem) __attribute__((nothrow));
+inline u64           state_rowid_Get(algo_lib::Regx& parent, algo_lib::RegxState &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.Regx.state.AllocNVal
-algo::aryptr<algo_lib::RegxState> state_AllocNVal(algo_lib::Regx& regx, i64 n_elems, const algo_lib::RegxState& val) __attribute__((nothrow));
+algo::aryptr<algo_lib::RegxState> state_AllocNVal(algo_lib::Regx& parent, i64 n_elems, const algo_lib::RegxState& val) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:algo_lib.Regx.state.Insary
-void                 state_Insary(algo_lib::Regx& regx, algo::aryptr<algo_lib::RegxState> rhs, i64 at) __attribute__((nothrow));
+void                 state_Insary(algo_lib::Regx& parent, algo::aryptr<algo_lib::RegxState> rhs, i64 at) __attribute__((nothrow));
 // Delete a range of elements
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
 // func:algo_lib.Regx.state.RemRegion
-void                 state_RemRegion(algo_lib::Regx& regx, i64 beg, i64 n) __attribute__((nothrow));
+void                 state_RemRegion(algo_lib::Regx& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo_lib.Regx.state_curs.Next
@@ -1035,9 +1186,9 @@ inline algo_lib::RegxState& regx_state_curs_Access(regx_state_curs &curs) __attr
 bool                 Regx_ReadStrptrMaybe(algo_lib::Regx &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.Regx..Init
-inline void          Regx_Init(algo_lib::Regx& regx);
+inline void          Regx_Init(algo_lib::Regx& parent);
 // func:algo_lib.Regx..Uninit
-void                 Regx_Uninit(algo_lib::Regx& regx) __attribute__((nothrow));
+void                 Regx_Uninit(algo_lib::Regx& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo_lib.Regx.String  printfmt:Extern
 // func:algo_lib.Regx..Print
@@ -1084,9 +1235,9 @@ void                 logcat_CopyIn(algo_lib::FLogcat &row, dmmeta::Logcat &in) _
 
 // Set all fields to initial values.
 // func:algo_lib.FLogcat..Init
-void                 FLogcat_Init(algo_lib::FLogcat& logcat);
+void                 FLogcat_Init(algo_lib::FLogcat& parent);
 // func:algo_lib.FLogcat..Uninit
-void                 FLogcat_Uninit(algo_lib::FLogcat& logcat) __attribute__((nothrow));
+void                 FLogcat_Uninit(algo_lib::FLogcat& parent) __attribute__((nothrow));
 
 // --- algo_lib.FErrns
 // create: algo_lib.FDb.errns (Inlary)
@@ -1100,20 +1251,20 @@ struct FErrns { // algo_lib.FErrns
 };
 // Invoke function by pointer
 // func:algo_lib.FErrns.decode.Call
-inline void          decode_Call(algo_lib::FErrns& errns, i32& arg) __attribute__((nothrow));
+inline void          decode_Call(algo_lib::FErrns& parent, i32& arg) __attribute__((nothrow));
 // Assign 0-argument hook with no context pointer
 // func:algo_lib.FErrns.decode.Set0
-inline void          decode_Set0(algo_lib::FErrns& errns, void (*fcn)() ) __attribute__((nothrow));
+inline void          decode_Set0(algo_lib::FErrns& parent, void (*fcn)() ) __attribute__((nothrow));
 // Assign 1-argument hook with context pointer
 // func:algo_lib.FErrns.decode.Set1
-template<class T> inline void decode_Set1(algo_lib::FErrns& errns, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
+template<class T> inline void decode_Set1(algo_lib::FErrns& parent, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
 // Assign 2-argument hook with context pointer
 // func:algo_lib.FErrns.decode.Set2
-template<class T> inline void decode_Set2(algo_lib::FErrns& errns, T& ctx, void (*fcn)(T&, i32& arg) ) __attribute__((nothrow));
+template<class T> inline void decode_Set2(algo_lib::FErrns& parent, T& ctx, void (*fcn)(T&, i32& arg) ) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:algo_lib.FErrns..Init
-inline void          FErrns_Init(algo_lib::FErrns& errns);
+inline void          FErrns_Init(algo_lib::FErrns& parent);
 
 // --- algo_lib.trace
 #pragma pack(push,1)
@@ -1170,6 +1321,9 @@ struct FDb { // algo_lib.FDb: In-memory database for algo_lib
     algo::Charset                     SsimBreakName;                                 //
     algo::Charset                     SsimBreakValue;                                //
     algo::Charset                     SsimQuotesafe;                                 //
+    algo_lib::FTimehook**             bh_timehook_elems;                             // binary heap by time
+    i32                               bh_timehook_n;                                 // number of elements in the heap
+    i32                               bh_timehook_max;                               // max elements in bh_timehook_elems
     algo_lib::FImtable*               imtable_lary[36];                              // level array
     i64                               imtable_n;                                     // number of elements in array
     algo_lib::FImtable**              ind_imtable_buckets_elems;                     // pointer to bucket array
@@ -1177,9 +1331,6 @@ struct FDb { // algo_lib.FDb: In-memory database for algo_lib
     i32                               ind_imtable_n;                                 // number of elements in the hash table
     algo_lib::RegxM                   regxm;                                         // Context for Regx matching
     algo::cstring                     log_str;                                       //
-    algo_lib::FTimehook**             bh_timehook_elems;                             // binary heap by time
-    i32                               bh_timehook_n;                                 // number of elements in the heap
-    i32                               bh_timehook_max;                               // max elements in bh_timehook_elems
     i32                               epoll_fd;                                      //   -1
     algo_lib::FLockfile               lock_core;                                     //
     algo_lib::FTimehook*              c_timehook;                                    // TEMP: here only for dependency reasons. optional pointer
@@ -1204,8 +1355,6 @@ struct FDb { // algo_lib.FDb: In-memory database for algo_lib
     algo::cstring                     xref_error;                                    //
     algo::cstring                     errtext;                                       //
     algo::ByteAry*                    varlenbuf;                                     // optional pointer
-    u64                               replvar_blocksize;                             // # bytes per block
-    algo_lib::FReplvar*               replvar_free;                                  //
     algo_lib::Cmdline                 cmdline;                                       //
     algo_lib::_db_h_fatalerror_hook   h_fatalerror;                                  //   NULL  Pointer to a function
     u64                               h_fatalerror_ctx;                              //   0  Callback context
@@ -1306,7 +1455,7 @@ inline i32           temp_strings_N() __attribute__((__warn_unused_result__, not
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:algo_lib.FDb.temp_strings.Setary
 inline void          temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.FDb.temp_strings.qFind
 inline algo::cstring& temp_strings_qFind(u64 t) __attribute__((nothrow));
 // Read array from string
@@ -1331,6 +1480,56 @@ inline bool          SsimBreakValueQ(u32 ch) __attribute__((nothrow));
 
 // func:algo_lib.FDb.SsimQuotesafe.Match
 inline bool          SsimQuotesafeQ(u32 ch) __attribute__((nothrow));
+
+// Remove all elements from heap and free memory used by the array.
+// func:algo_lib.FDb.bh_timehook.Dealloc
+void                 bh_timehook_Dealloc() __attribute__((nothrow));
+// Return true if index is empty
+// func:algo_lib.FDb.bh_timehook.EmptyQ
+inline bool          bh_timehook_EmptyQ() __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:algo_lib.FDb.bh_timehook.First
+inline algo_lib::FTimehook* bh_timehook_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in index, false otherwise
+// func:algo_lib.FDb.bh_timehook.InBheapQ
+inline bool          bh_timehook_InBheapQ(algo_lib::FTimehook& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row. Row must not already be in index. If row is already in index, do nothing.
+// func:algo_lib.FDb.bh_timehook.Insert
+void                 bh_timehook_Insert(algo_lib::FTimehook& row) __attribute__((nothrow));
+// Return number of items in the heap
+// func:algo_lib.FDb.bh_timehook.N
+inline i32           bh_timehook_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// If row is in heap, update its position. If row is not in heap, insert it.
+// Return new position of item in the heap (0=top)
+// If first item of the is changed, update fstep:algo_lib.FDb.bh_timehook
+// func:algo_lib.FDb.bh_timehook.Reheap
+i32                  bh_timehook_Reheap(algo_lib::FTimehook& row) __attribute__((nothrow));
+// Key of first element in the heap changed. Move it.
+// This function does not check the insert condition.
+// Return new position of item in the heap (0=top).
+// Heap must be non-empty or behavior is undefined.
+// Update fstep:algo_lib.FDb.bh_timehook
+// func:algo_lib.FDb.bh_timehook.ReheapFirst
+i32                  bh_timehook_ReheapFirst() __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:algo_lib.FDb.bh_timehook.Remove
+void                 bh_timehook_Remove(algo_lib::FTimehook& row) __attribute__((nothrow));
+// Remove all elements from binary heap
+// func:algo_lib.FDb.bh_timehook.RemoveAll
+void                 bh_timehook_RemoveAll() __attribute__((nothrow));
+// If index is empty, return NULL. Otherwise remove and return first key in index.
+//  Call 'head changed' trigger.
+// func:algo_lib.FDb.bh_timehook.RemoveFirst
+algo_lib::FTimehook* bh_timehook_RemoveFirst() __attribute__((nothrow));
+// Reserve space in index for N more elements
+// func:algo_lib.FDb.bh_timehook.Reserve
+void                 bh_timehook_Reserve(int n) __attribute__((nothrow));
+// First element of index changed.
+// func:algo_lib.FDb.bh_timehook.FirstChanged
+void                 bh_timehook_FirstChanged() __attribute__((nothrow));
+// func:algo_lib.FDb.bh_timehook.Step
+// this function is 'extrn' and implemented by user
+void                 bh_timehook_Step() __attribute__((nothrow));
 
 // Declaration for user-defined init function
 // User-defined init function invoked for field _db of algo_lib::FDb
@@ -1478,56 +1677,6 @@ bool                 regx_XrefMaybe(algo_lib::Regx &row);
 // func:algo_lib.FDb.tabulate.XrefMaybe
 bool                 tabulate_XrefMaybe(algo_lib::Tabulate &row);
 
-// Remove all elements from heap and free memory used by the array.
-// func:algo_lib.FDb.bh_timehook.Dealloc
-void                 bh_timehook_Dealloc() __attribute__((nothrow));
-// Return true if index is empty
-// func:algo_lib.FDb.bh_timehook.EmptyQ
-inline bool          bh_timehook_EmptyQ() __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:algo_lib.FDb.bh_timehook.First
-inline algo_lib::FTimehook* bh_timehook_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in index, false otherwise
-// func:algo_lib.FDb.bh_timehook.InBheapQ
-inline bool          bh_timehook_InBheapQ(algo_lib::FTimehook& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row. Row must not already be in index. If row is already in index, do nothing.
-// func:algo_lib.FDb.bh_timehook.Insert
-void                 bh_timehook_Insert(algo_lib::FTimehook& row) __attribute__((nothrow));
-// Return number of items in the heap
-// func:algo_lib.FDb.bh_timehook.N
-inline i32           bh_timehook_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// If row is in heap, update its position. If row is not in heap, insert it.
-// Return new position of item in the heap (0=top)
-// If first item of the is changed, update fstep:algo_lib.FDb.bh_timehook
-// func:algo_lib.FDb.bh_timehook.Reheap
-i32                  bh_timehook_Reheap(algo_lib::FTimehook& row) __attribute__((nothrow));
-// Key of first element in the heap changed. Move it.
-// This function does not check the insert condition.
-// Return new position of item in the heap (0=top).
-// Heap must be non-empty or behavior is undefined.
-// Update fstep:algo_lib.FDb.bh_timehook
-// func:algo_lib.FDb.bh_timehook.ReheapFirst
-i32                  bh_timehook_ReheapFirst() __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:algo_lib.FDb.bh_timehook.Remove
-void                 bh_timehook_Remove(algo_lib::FTimehook& row) __attribute__((nothrow));
-// Remove all elements from binary heap
-// func:algo_lib.FDb.bh_timehook.RemoveAll
-void                 bh_timehook_RemoveAll() __attribute__((nothrow));
-// If index is empty, return NULL. Otherwise remove and return first key in index.
-//  Call 'head changed' trigger.
-// func:algo_lib.FDb.bh_timehook.RemoveFirst
-algo_lib::FTimehook* bh_timehook_RemoveFirst() __attribute__((nothrow));
-// Reserve space in index for N more elements
-// func:algo_lib.FDb.bh_timehook.Reserve
-void                 bh_timehook_Reserve(int n) __attribute__((nothrow));
-// First element of index changed.
-// func:algo_lib.FDb.bh_timehook.FirstChanged
-void                 bh_timehook_FirstChanged() __attribute__((nothrow));
-// func:algo_lib.FDb.bh_timehook.Step
-// this function is 'extrn' and implemented by user
-void                 bh_timehook_Step() __attribute__((nothrow));
-
 // Allocate memory for new default row.
 // If out of memory, process is killed.
 // func:algo_lib.FDb.dispsigcheck.Alloc
@@ -1628,7 +1777,7 @@ void                 imdb_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:algo_lib.FDb.imdb.RemoveLast
 void                 imdb_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.FDb.imdb.qFind
 inline algo_lib::FImdb& imdb_qFind(u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
@@ -1750,36 +1899,6 @@ bool                 txtrow_XrefMaybe(algo_lib::FTxtrow &row);
 // func:algo_lib.FDb.txttbl.XrefMaybe
 bool                 txttbl_XrefMaybe(algo_lib::FTxttbl &row);
 
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:algo_lib.FDb.replvar.Alloc
-algo_lib::FReplvar&  replvar_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:algo_lib.FDb.replvar.AllocMaybe
-algo_lib::FReplvar*  replvar_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Remove row from all global and cross indices, then deallocate row
-// func:algo_lib.FDb.replvar.Delete
-void                 replvar_Delete(algo_lib::FReplvar &row) __attribute__((nothrow));
-// Allocate space for one element
-// If no memory available, return NULL.
-// func:algo_lib.FDb.replvar.AllocMem
-void*                replvar_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Remove mem from all global and cross indices, then deallocate mem
-// func:algo_lib.FDb.replvar.FreeMem
-void                 replvar_FreeMem(algo_lib::FReplvar &row) __attribute__((nothrow));
-// Preallocate memory for N more elements
-// Return number of elements actually reserved.
-// func:algo_lib.FDb.replvar.Reserve
-u64                  replvar_Reserve(u64 n_elems) __attribute__((nothrow));
-// Allocate block of given size, break up into small elements and append to free list.
-// Return number of elements reserved.
-// func:algo_lib.FDb.replvar.ReserveMem
-u64                  replvar_ReserveMem(u64 size) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:algo_lib.FDb.replvar.XrefMaybe
-bool                 replvar_XrefMaybe(algo_lib::FReplvar &row);
-
 // Invoke function by pointer
 // func:algo_lib.FDb.h_fatalerror.Call
 inline void          h_fatalerror_Call() __attribute__((nothrow));
@@ -1870,7 +1989,7 @@ void                 logcat_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:algo_lib.FDb.logcat.RemoveLast
 void                 logcat_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.FDb.logcat.qFind
 inline algo_lib::FLogcat& logcat_qFind(u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
@@ -2085,7 +2204,7 @@ inline i32           errns_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:algo_lib.FDb.errns.N
 inline i32           errns_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.FDb.errns.qFind
 inline algo_lib::FErrns& errns_qFind(i32 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
@@ -2114,18 +2233,6 @@ inline void          _db_temp_strings_curs_Next(_db_temp_strings_curs &curs) __a
 // item access
 // func:algo_lib.FDb.temp_strings_curs.Access
 inline algo::cstring& _db_temp_strings_curs_Access(_db_temp_strings_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:algo_lib.FDb.imtable_curs.Reset
-inline void          _db_imtable_curs_Reset(_db_imtable_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:algo_lib.FDb.imtable_curs.ValidQ
-inline bool          _db_imtable_curs_ValidQ(_db_imtable_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:algo_lib.FDb.imtable_curs.Next
-inline void          _db_imtable_curs_Next(_db_imtable_curs &curs) __attribute__((nothrow));
-// item access
-// func:algo_lib.FDb.imtable_curs.Access
-inline algo_lib::FImtable& _db_imtable_curs_Access(_db_imtable_curs &curs) __attribute__((nothrow));
 // func:algo_lib.FDb.bh_timehook_curs.Reserve
 void                 _db_bh_timehook_curs_Reserve(_db_bh_timehook_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -2140,6 +2247,18 @@ inline algo_lib::FTimehook& _db_bh_timehook_curs_Access(_db_bh_timehook_curs &cu
 // Return true if Access() will return non-NULL.
 // func:algo_lib.FDb.bh_timehook_curs.ValidQ
 inline bool          _db_bh_timehook_curs_ValidQ(_db_bh_timehook_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:algo_lib.FDb.imtable_curs.Reset
+inline void          _db_imtable_curs_Reset(_db_imtable_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:algo_lib.FDb.imtable_curs.ValidQ
+inline bool          _db_imtable_curs_ValidQ(_db_imtable_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:algo_lib.FDb.imtable_curs.Next
+inline void          _db_imtable_curs_Next(_db_imtable_curs &curs) __attribute__((nothrow));
+// item access
+// func:algo_lib.FDb.imtable_curs.Access
+inline algo_lib::FImtable& _db_imtable_curs_Access(_db_imtable_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.dispsigcheck_curs.Reset
 inline void          _db_dispsigcheck_curs_Reset(_db_dispsigcheck_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
@@ -2224,7 +2343,7 @@ struct FDispsigcheck { // algo_lib.FDispsigcheck
     algo_lib::FDispsigcheck*   ind_dispsigcheck_next;      // hash next
     u32                        ind_dispsigcheck_hashval;   // hash value
     algo::Smallstr50           dispsig;                    //
-    algo::Sha1sig              signature;                  //
+    algo::Signature            signature;                  //
     // func:algo_lib.FDispsigcheck..AssignOp
     inline algo_lib::FDispsigcheck& operator =(const algo_lib::FDispsigcheck &rhs) = delete;
     // func:algo_lib.FDispsigcheck..CopyCtor
@@ -2247,9 +2366,9 @@ void                 dispsigcheck_CopyIn(algo_lib::FDispsigcheck &row, dmmeta::D
 
 // Set all fields to initial values.
 // func:algo_lib.FDispsigcheck..Init
-inline void          FDispsigcheck_Init(algo_lib::FDispsigcheck& dispsigcheck);
+inline void          FDispsigcheck_Init(algo_lib::FDispsigcheck& parent);
 // func:algo_lib.FDispsigcheck..Uninit
-void                 FDispsigcheck_Uninit(algo_lib::FDispsigcheck& dispsigcheck) __attribute__((nothrow));
+void                 FDispsigcheck_Uninit(algo_lib::FDispsigcheck& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo_lib.FDispsigcheck.String  printfmt:Tuple
 // func:algo_lib.FDispsigcheck..Print
@@ -2294,9 +2413,9 @@ void                 imtable_CopyIn(algo_lib::FImtable &row, algo::Imtable &in) 
 
 // Set all fields to initial values.
 // func:algo_lib.FImtable..Init
-inline void          FImtable_Init(algo_lib::FImtable& imtable);
+inline void          FImtable_Init(algo_lib::FImtable& parent);
 // func:algo_lib.FImtable..Uninit
-void                 FImtable_Uninit(algo_lib::FImtable& imtable) __attribute__((nothrow));
+void                 FImtable_Uninit(algo_lib::FImtable& parent) __attribute__((nothrow));
 
 // --- algo_lib.FIohook
 // create: algo_lib.FDb.iohook (Cppstack)
@@ -2316,28 +2435,28 @@ struct FIohook { // algo_lib.FIohook
 };
 // Invoke function by pointer
 // func:algo_lib.FIohook.callback.Call
-inline void          callback_Call(algo_lib::FIohook& iohook, algo_lib::FIohook& arg) __attribute__((nothrow));
+inline void          callback_Call(algo_lib::FIohook& parent, algo_lib::FIohook& arg) __attribute__((nothrow));
 // Assign 0-argument hook with no context pointer
 // func:algo_lib.FIohook.callback.Set0
-inline void          callback_Set0(algo_lib::FIohook& iohook, void (*fcn)() ) __attribute__((nothrow));
+inline void          callback_Set0(algo_lib::FIohook& parent, void (*fcn)() ) __attribute__((nothrow));
 // Assign 1-argument hook with context pointer
 // func:algo_lib.FIohook.callback.Set1
-template<class T> inline void callback_Set1(algo_lib::FIohook& iohook, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
+template<class T> inline void callback_Set1(algo_lib::FIohook& parent, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
 // Assign 2-argument hook with context pointer
 // func:algo_lib.FIohook.callback.Set2
-template<class T> inline void callback_Set2(algo_lib::FIohook& iohook, T& ctx, void (*fcn)(T&, algo_lib::FIohook& arg) ) __attribute__((nothrow));
+template<class T> inline void callback_Set2(algo_lib::FIohook& parent, T& ctx, void (*fcn)(T&, algo_lib::FIohook& arg) ) __attribute__((nothrow));
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field fildes of algo_lib::FIohook
 // func:algo_lib.FIohook.fildes.Cleanup
 // this function is 'extrn' and implemented by user
-void                 fildes_Cleanup(algo_lib::FIohook& iohook) __attribute__((nothrow));
+void                 fildes_Cleanup(algo_lib::FIohook& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:algo_lib.FIohook..Init
-inline void          FIohook_Init(algo_lib::FIohook& iohook);
+inline void          FIohook_Init(algo_lib::FIohook& parent);
 // func:algo_lib.FIohook..Uninit
-inline void          FIohook_Uninit(algo_lib::FIohook& iohook) __attribute__((nothrow));
+inline void          FIohook_Uninit(algo_lib::FIohook& parent) __attribute__((nothrow));
 
 // --- algo_lib.FProc
 struct FProc { // algo_lib.FProc
@@ -2369,37 +2488,6 @@ void                 pid_Cleanup(algo_lib::FProc& parent) __attribute__((nothrow
 void                 FProc_Init(algo_lib::FProc& parent);
 // func:algo_lib.FProc..Uninit
 void                 FProc_Uninit(algo_lib::FProc& parent) __attribute__((nothrow));
-
-// --- algo_lib.FReplvar
-// create: algo_lib.FDb.replvar (Tpool)
-// access: algo_lib.Replscope.ind_replvar (Thash)
-struct FReplvar { // algo_lib.FReplvar
-    algo_lib::FReplvar*    replvar_next;                    // Pointer to next free element int tpool
-    algo_lib::Replscope*   p_replscope;                     // reference to parent row
-    algo::cstring          key;                             // Key
-    algo::cstring          value;                           // Value
-    i32                    nsubst;                          //   0  Number of times variable accessed
-    bool                   partial;                         //   false  This is a partial match on another variable
-    algo_lib::FReplvar*    replscope_ind_replvar_next;      // hash next
-    u32                    replscope_ind_replvar_hashval;   // hash value
-    // func:algo_lib.FReplvar..AssignOp
-    inline algo_lib::FReplvar& operator =(const algo_lib::FReplvar &rhs) = delete;
-    // func:algo_lib.FReplvar..CopyCtor
-    inline               FReplvar(const algo_lib::FReplvar &rhs) = delete;
-private:
-    // func:algo_lib.FReplvar..Ctor
-    inline               FReplvar() __attribute__((nothrow));
-    // func:algo_lib.FReplvar..Dtor
-    inline               ~FReplvar() __attribute__((nothrow));
-    friend algo_lib::FReplvar&  replvar_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend algo_lib::FReplvar*  replvar_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 replvar_Delete(algo_lib::FReplvar &row) __attribute__((nothrow));
-};
-// Set all fields to initial values.
-// func:algo_lib.FReplvar..Init
-inline void          FReplvar_Init(algo_lib::FReplvar& replvar);
-// func:algo_lib.FReplvar..Uninit
-void                 FReplvar_Uninit(algo_lib::FReplvar& replvar) __attribute__((nothrow));
 
 // --- algo_lib.FTempfile
 struct FTempfile { // algo_lib.FTempfile
@@ -2449,9 +2537,9 @@ private:
 };
 // Set all fields to initial values.
 // func:algo_lib.FTxtcell..Init
-inline void          FTxtcell_Init(algo_lib::FTxtcell& txtcell);
+inline void          FTxtcell_Init(algo_lib::FTxtcell& parent);
 // func:algo_lib.FTxtcell..Uninit
-void                 FTxtcell_Uninit(algo_lib::FTxtcell& txtcell) __attribute__((nothrow));
+void                 FTxtcell_Uninit(algo_lib::FTxtcell& parent) __attribute__((nothrow));
 
 // --- algo_lib.FTxtrow
 // create: algo_lib.FDb.txtrow (Tpool)
@@ -2484,59 +2572,59 @@ private:
 };
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:algo_lib.FTxtrow.sortkey.Lt
-inline bool          sortkey_Lt(algo_lib::FTxtrow& txtrow, algo_lib::FTxtrow &rhs) __attribute__((nothrow));
+inline bool          sortkey_Lt(algo_lib::FTxtrow& parent, algo_lib::FTxtrow &rhs) __attribute__((nothrow));
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
 // Comparison is case-insensitive.
 // func:algo_lib.FTxtrow.sortkey.Cmp
-i32                  sortkey_Cmp(algo_lib::FTxtrow& txtrow, algo_lib::FTxtrow &rhs) __attribute__((nothrow));
+i32                  sortkey_Cmp(algo_lib::FTxtrow& parent, algo_lib::FTxtrow &rhs) __attribute__((nothrow));
 
 // Delete all elements pointed to by the index.
 // func:algo_lib.FTxtrow.c_txtcell.Cascdel
-void                 c_txtcell_Cascdel(algo_lib::FTxtrow& txtrow) __attribute__((nothrow));
+void                 c_txtcell_Cascdel(algo_lib::FTxtrow& parent) __attribute__((nothrow));
 // Return true if index is empty
 // func:algo_lib.FTxtrow.c_txtcell.EmptyQ
-inline bool          c_txtcell_EmptyQ(algo_lib::FTxtrow& txtrow) __attribute__((nothrow));
+inline bool          c_txtcell_EmptyQ(algo_lib::FTxtrow& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:algo_lib.FTxtrow.c_txtcell.Find
-inline algo_lib::FTxtcell* c_txtcell_Find(algo_lib::FTxtrow& txtrow, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo_lib::FTxtcell* c_txtcell_Find(algo_lib::FTxtrow& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:algo_lib.FTxtrow.c_txtcell.Getary
-inline algo::aryptr<algo_lib::FTxtcell*> c_txtcell_Getary(algo_lib::FTxtrow& txtrow) __attribute__((nothrow));
+inline algo::aryptr<algo_lib::FTxtcell*> c_txtcell_Getary(algo_lib::FTxtrow& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:algo_lib.FTxtrow.c_txtcell.Insert
-void                 c_txtcell_Insert(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& row) __attribute__((nothrow));
+void                 c_txtcell_Insert(algo_lib::FTxtrow& parent, algo_lib::FTxtcell& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:algo_lib.FTxtrow.c_txtcell.InsertMaybe
-bool                 c_txtcell_InsertMaybe(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& row) __attribute__((nothrow));
+bool                 c_txtcell_InsertMaybe(algo_lib::FTxtrow& parent, algo_lib::FTxtcell& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:algo_lib.FTxtrow.c_txtcell.N
-inline i64           c_txtcell_N(const algo_lib::FTxtrow& txtrow) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_txtcell_N(const algo_lib::FTxtrow& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:algo_lib.FTxtrow.c_txtcell.Remove
-void                 c_txtcell_Remove(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& row) __attribute__((nothrow));
+void                 c_txtcell_Remove(algo_lib::FTxtrow& parent, algo_lib::FTxtcell& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:algo_lib.FTxtrow.c_txtcell.RemoveAll
-inline void          c_txtcell_RemoveAll(algo_lib::FTxtrow& txtrow) __attribute__((nothrow));
+inline void          c_txtcell_RemoveAll(algo_lib::FTxtrow& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:algo_lib.FTxtrow.c_txtcell.Reserve
-void                 c_txtcell_Reserve(algo_lib::FTxtrow& txtrow, u64 n) __attribute__((nothrow));
+void                 c_txtcell_Reserve(algo_lib::FTxtrow& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:algo_lib.FTxtrow.c_txtcell.qFind
-inline algo_lib::FTxtcell& c_txtcell_qFind(algo_lib::FTxtrow& txtrow, u64 idx) __attribute__((nothrow));
+inline algo_lib::FTxtcell& c_txtcell_qFind(algo_lib::FTxtrow& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:algo_lib.FTxtrow.c_txtcell.InAryQ
 inline bool          txtrow_c_txtcell_InAryQ(algo_lib::FTxtcell& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:algo_lib.FTxtrow.c_txtcell.qLast
-inline algo_lib::FTxtcell& c_txtcell_qLast(algo_lib::FTxtrow& txtrow) __attribute__((nothrow));
+inline algo_lib::FTxtcell& c_txtcell_qLast(algo_lib::FTxtrow& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:algo_lib.FTxtrow..Init
-inline void          FTxtrow_Init(algo_lib::FTxtrow& txtrow);
+inline void          FTxtrow_Init(algo_lib::FTxtrow& parent);
 // func:algo_lib.FTxtrow.c_txtcell_curs.Reset
 inline void          txtrow_c_txtcell_curs_Reset(txtrow_c_txtcell_curs &curs, algo_lib::FTxtrow &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -2549,7 +2637,7 @@ inline void          txtrow_c_txtcell_curs_Next(txtrow_c_txtcell_curs &curs) __a
 // func:algo_lib.FTxtrow.c_txtcell_curs.Access
 inline algo_lib::FTxtcell& txtrow_c_txtcell_curs_Access(txtrow_c_txtcell_curs &curs) __attribute__((nothrow));
 // func:algo_lib.FTxtrow..Uninit
-void                 FTxtrow_Uninit(algo_lib::FTxtrow& txtrow) __attribute__((nothrow));
+void                 FTxtrow_Uninit(algo_lib::FTxtrow& parent) __attribute__((nothrow));
 
 // --- algo_lib.FTxttbl
 // create: algo_lib.FDb.txttbl (Cppstack)
@@ -2568,58 +2656,58 @@ struct FTxttbl { // algo_lib.FTxttbl: Table row. Todo: absolute index for cells?
 };
 // Delete all elements pointed to by the index.
 // func:algo_lib.FTxttbl.c_txtrow.Cascdel
-void                 c_txtrow_Cascdel(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+void                 c_txtrow_Cascdel(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 // Return true if index is empty
 // func:algo_lib.FTxttbl.c_txtrow.EmptyQ
-inline bool          c_txtrow_EmptyQ(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+inline bool          c_txtrow_EmptyQ(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:algo_lib.FTxttbl.c_txtrow.Find
-inline algo_lib::FTxtrow* c_txtrow_Find(algo_lib::FTxttbl& txttbl, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo_lib::FTxtrow* c_txtrow_Find(algo_lib::FTxttbl& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:algo_lib.FTxttbl.c_txtrow.Getary
-inline algo::aryptr<algo_lib::FTxtrow*> c_txtrow_Getary(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+inline algo::aryptr<algo_lib::FTxtrow*> c_txtrow_Getary(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array;
 // no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:algo_lib.FTxttbl.c_txtrow.Insert
-void                 c_txtrow_Insert(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row) __attribute__((nothrow));
+void                 c_txtrow_Insert(algo_lib::FTxttbl& parent, algo_lib::FTxtrow& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 // func:algo_lib.FTxttbl.c_txtrow.InsertMaybe
-bool                 c_txtrow_InsertMaybe(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row) __attribute__((nothrow));
+bool                 c_txtrow_InsertMaybe(algo_lib::FTxttbl& parent, algo_lib::FTxtrow& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:algo_lib.FTxttbl.c_txtrow.N
-inline i64           c_txtrow_N(const algo_lib::FTxttbl& txttbl) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_txtrow_N(const algo_lib::FTxttbl& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:algo_lib.FTxttbl.c_txtrow.Remove
-void                 c_txtrow_Remove(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row) __attribute__((nothrow));
+void                 c_txtrow_Remove(algo_lib::FTxttbl& parent, algo_lib::FTxtrow& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:algo_lib.FTxttbl.c_txtrow.RemoveAll
-inline void          c_txtrow_RemoveAll(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+inline void          c_txtrow_RemoveAll(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:algo_lib.FTxttbl.c_txtrow.Reserve
-void                 c_txtrow_Reserve(algo_lib::FTxttbl& txttbl, u64 n) __attribute__((nothrow));
+void                 c_txtrow_Reserve(algo_lib::FTxttbl& parent, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:algo_lib.FTxttbl.c_txtrow.qFind
-inline algo_lib::FTxtrow& c_txtrow_qFind(algo_lib::FTxttbl& txttbl, u64 idx) __attribute__((nothrow));
+inline algo_lib::FTxtrow& c_txtrow_qFind(algo_lib::FTxttbl& parent, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:algo_lib.FTxttbl.c_txtrow.InAryQ
 inline bool          txttbl_c_txtrow_InAryQ(algo_lib::FTxtrow& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:algo_lib.FTxttbl.c_txtrow.qLast
-inline algo_lib::FTxtrow& c_txtrow_qLast(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+inline algo_lib::FTxtrow& c_txtrow_qLast(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 // Verify whether array is sorted
 // func:algo_lib.FTxttbl.c_txtrow.SortedQ
-bool                 c_txtrow_SortedQ(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+bool                 c_txtrow_SortedQ(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 // Insertion sort
 // func:algo_lib.FTxttbl.c_txtrow.InsertionSort
-void                 c_txtrow_InsertionSort(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+void                 c_txtrow_InsertionSort(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 // Heap sort
 // func:algo_lib.FTxttbl.c_txtrow.HeapSort
-void                 c_txtrow_HeapSort(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+void                 c_txtrow_HeapSort(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 // Quick sort
 // func:algo_lib.FTxttbl.c_txtrow.QuickSort
-void                 c_txtrow_QuickSort(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+void                 c_txtrow_QuickSort(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 
 // func:algo_lib.FTxttbl.c_txtrow_curs.Reset
 inline void          txttbl_c_txtrow_curs_Reset(txttbl_c_txtrow_curs &curs, algo_lib::FTxttbl &parent) __attribute__((nothrow));
@@ -2634,9 +2722,9 @@ inline void          txttbl_c_txtrow_curs_Next(txttbl_c_txtrow_curs &curs) __att
 inline algo_lib::FTxtrow& txttbl_c_txtrow_curs_Access(txttbl_c_txtrow_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.FTxttbl..Init
-inline void          FTxttbl_Init(algo_lib::FTxttbl& txttbl);
+inline void          FTxttbl_Init(algo_lib::FTxttbl& parent);
 // func:algo_lib.FTxttbl..Uninit
-void                 FTxttbl_Uninit(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
+void                 FTxttbl_Uninit(algo_lib::FTxttbl& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo_lib.FTxttbl.String  printfmt:Extern
 // func:algo_lib.FTxttbl..Print
@@ -2753,7 +2841,7 @@ void                 temp_buf_RemoveLast(algo_lib::InTextFile& parent) __attribu
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:algo_lib.InTextFile.temp_buf.Setary
 inline void          temp_buf_Setary(algo_lib::InTextFile& parent, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking in release.
+// 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.InTextFile.temp_buf.qFind
 inline u8&           temp_buf_qFind(algo_lib::InTextFile& parent, u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
@@ -3001,89 +3089,89 @@ struct RegxParse { // algo_lib.RegxParse: Function to parse regx
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:algo_lib.RegxParse.ary_expr.Addary
-algo::aryptr<algo_lib::RegxExpr> ary_expr_Addary(algo_lib::RegxParse& regxparse, algo::aryptr<algo_lib::RegxExpr> rhs) __attribute__((nothrow));
+algo::aryptr<algo_lib::RegxExpr> ary_expr_Addary(algo_lib::RegxParse& parent, algo::aryptr<algo_lib::RegxExpr> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.RegxParse.ary_expr.Alloc
-algo_lib::RegxExpr&  ary_expr_Alloc(algo_lib::RegxParse& regxparse) __attribute__((__warn_unused_result__, nothrow));
+algo_lib::RegxExpr&  ary_expr_Alloc(algo_lib::RegxParse& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:algo_lib.RegxParse.ary_expr.AllocAt
-algo_lib::RegxExpr&  ary_expr_AllocAt(algo_lib::RegxParse& regxparse, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo_lib::RegxExpr&  ary_expr_AllocAt(algo_lib::RegxParse& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.RegxParse.ary_expr.AllocN
-algo::aryptr<algo_lib::RegxExpr> ary_expr_AllocN(algo_lib::RegxParse& regxparse, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo_lib::RegxExpr> ary_expr_AllocN(algo_lib::RegxParse& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:algo_lib.RegxParse.ary_expr.AllocNAt
-algo::aryptr<algo_lib::RegxExpr> ary_expr_AllocNAt(algo_lib::RegxParse& regxparse, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo_lib::RegxExpr> ary_expr_AllocNAt(algo_lib::RegxParse& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:algo_lib.RegxParse.ary_expr.EmptyQ
-inline bool          ary_expr_EmptyQ(algo_lib::RegxParse& regxparse) __attribute__((nothrow));
+inline bool          ary_expr_EmptyQ(algo_lib::RegxParse& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:algo_lib.RegxParse.ary_expr.Find
-inline algo_lib::RegxExpr* ary_expr_Find(algo_lib::RegxParse& regxparse, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo_lib::RegxExpr* ary_expr_Find(algo_lib::RegxParse& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.RegxParse.ary_expr.Getary
-inline algo::aryptr<algo_lib::RegxExpr> ary_expr_Getary(const algo_lib::RegxParse& regxparse) __attribute__((nothrow));
+inline algo::aryptr<algo_lib::RegxExpr> ary_expr_Getary(const algo_lib::RegxParse& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.RegxParse.ary_expr.Last
-inline algo_lib::RegxExpr* ary_expr_Last(algo_lib::RegxParse& regxparse) __attribute__((nothrow, pure));
+inline algo_lib::RegxExpr* ary_expr_Last(algo_lib::RegxParse& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:algo_lib.RegxParse.ary_expr.Max
-inline i64           ary_expr_Max(algo_lib::RegxParse& regxparse) __attribute__((nothrow));
+inline i64           ary_expr_Max(algo_lib::RegxParse& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:algo_lib.RegxParse.ary_expr.N
-inline i64           ary_expr_N(const algo_lib::RegxParse& regxparse) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ary_expr_N(const algo_lib::RegxParse& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:algo_lib.RegxParse.ary_expr.Remove
-void                 ary_expr_Remove(algo_lib::RegxParse& regxparse, u64 i) __attribute__((nothrow));
+void                 ary_expr_Remove(algo_lib::RegxParse& parent, u64 i) __attribute__((nothrow));
 // func:algo_lib.RegxParse.ary_expr.RemoveAll
-void                 ary_expr_RemoveAll(algo_lib::RegxParse& regxparse) __attribute__((nothrow));
+void                 ary_expr_RemoveAll(algo_lib::RegxParse& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:algo_lib.RegxParse.ary_expr.RemoveLast
-void                 ary_expr_RemoveLast(algo_lib::RegxParse& regxparse) __attribute__((nothrow));
+void                 ary_expr_RemoveLast(algo_lib::RegxParse& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:algo_lib.RegxParse.ary_expr.Reserve
-inline void          ary_expr_Reserve(algo_lib::RegxParse& regxparse, i64 n) __attribute__((nothrow));
+inline void          ary_expr_Reserve(algo_lib::RegxParse& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo_lib.RegxParse.ary_expr.AbsReserve
-void                 ary_expr_AbsReserve(algo_lib::RegxParse& regxparse, i64 n) __attribute__((nothrow));
+void                 ary_expr_AbsReserve(algo_lib::RegxParse& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:algo_lib.RegxParse.ary_expr.Setary
-void                 ary_expr_Setary(algo_lib::RegxParse& regxparse, algo_lib::RegxParse &rhs) __attribute__((nothrow));
+void                 ary_expr_Setary(algo_lib::RegxParse& parent, algo_lib::RegxParse &rhs) __attribute__((nothrow));
 // Copy specified array into ary_expr, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
 // func:algo_lib.RegxParse.ary_expr.Setary2
-void                 ary_expr_Setary(algo_lib::RegxParse& regxparse, const algo::aryptr<algo_lib::RegxExpr> &rhs) __attribute__((nothrow));
+void                 ary_expr_Setary(algo_lib::RegxParse& parent, const algo::aryptr<algo_lib::RegxExpr> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.RegxParse.ary_expr.qFind
-inline algo_lib::RegxExpr& ary_expr_qFind(algo_lib::RegxParse& regxparse, u64 t) __attribute__((nothrow));
+inline algo_lib::RegxExpr& ary_expr_qFind(algo_lib::RegxParse& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:algo_lib.RegxParse.ary_expr.qLast
-inline algo_lib::RegxExpr& ary_expr_qLast(algo_lib::RegxParse& regxparse) __attribute__((nothrow));
+inline algo_lib::RegxExpr& ary_expr_qLast(algo_lib::RegxParse& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:algo_lib.RegxParse.ary_expr.rowid_Get
-inline u64           ary_expr_rowid_Get(algo_lib::RegxParse& regxparse, algo_lib::RegxExpr &elem) __attribute__((nothrow));
+inline u64           ary_expr_rowid_Get(algo_lib::RegxParse& parent, algo_lib::RegxExpr &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.RegxParse.ary_expr.AllocNVal
-algo::aryptr<algo_lib::RegxExpr> ary_expr_AllocNVal(algo_lib::RegxParse& regxparse, i64 n_elems, const algo_lib::RegxExpr& val) __attribute__((nothrow));
+algo::aryptr<algo_lib::RegxExpr> ary_expr_AllocNVal(algo_lib::RegxParse& parent, i64 n_elems, const algo_lib::RegxExpr& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
 // func:algo_lib.RegxParse.ary_expr.ReadStrptrMaybe
-bool                 ary_expr_ReadStrptrMaybe(algo_lib::RegxParse& regxparse, algo::strptr in_str) __attribute__((nothrow));
+bool                 ary_expr_ReadStrptrMaybe(algo_lib::RegxParse& parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:algo_lib.RegxParse.ary_expr.Insary
-void                 ary_expr_Insary(algo_lib::RegxParse& regxparse, algo::aryptr<algo_lib::RegxExpr> rhs, i64 at) __attribute__((nothrow));
+void                 ary_expr_Insary(algo_lib::RegxParse& parent, algo::aryptr<algo_lib::RegxExpr> rhs, i64 at) __attribute__((nothrow));
 // Delete a range of elements
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
 // func:algo_lib.RegxParse.ary_expr.RemRegion
-void                 ary_expr_RemRegion(algo_lib::RegxParse& regxparse, i64 beg, i64 n) __attribute__((nothrow));
+void                 ary_expr_RemRegion(algo_lib::RegxParse& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo_lib.RegxParse.ary_expr_curs.Next
@@ -3098,9 +3186,9 @@ inline bool          regxparse_ary_expr_curs_ValidQ(regxparse_ary_expr_curs &cur
 inline algo_lib::RegxExpr& regxparse_ary_expr_curs_Access(regxparse_ary_expr_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.RegxParse..Init
-inline void          RegxParse_Init(algo_lib::RegxParse& regxparse);
+inline void          RegxParse_Init(algo_lib::RegxParse& parent);
 // func:algo_lib.RegxParse..Uninit
-void                 RegxParse_Uninit(algo_lib::RegxParse& regxparse) __attribute__((nothrow));
+void                 RegxParse_Uninit(algo_lib::RegxParse& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo_lib.RegxParse.String  printfmt:Tuple
 // func:algo_lib.RegxParse..Print
@@ -3109,83 +3197,156 @@ void                 RegxParse_Print(algo_lib::RegxParse& row, algo::cstring& st
 // --- algo_lib.RegxState
 // create: algo_lib.Regx.state (Tary)
 struct RegxState { // algo_lib.RegxState: Instruction + jumps
-    algo::U16Ary       ch_class;   // What to match
-    algo_lib::RegxOp   op;         // Operation to perform
-    i32                lparen;     //   0
-    algo_lib::Bitset   next;       // Where to go on a match
+    algo::U16Ary       ch_class;    // What to match
+    algo_lib::RegxOp   op;          // Operation to perform
+    algo_lib::Bitset   next;        // Where to go on a match
+    algo_lib::Bitset   nextgroup;   // Where to go on a match, keeping the states that only mark a group boundary
     // func:algo_lib.RegxState..Ctor
     inline               RegxState() __attribute__((nothrow));
 };
-// Set all fields to initial values.
-// func:algo_lib.RegxState..Init
-inline void          RegxState_Init(algo_lib::RegxState& parent);
 // print string representation of ROW to string STR
 // cfmt:algo_lib.RegxState.String  printfmt:Extern
 // func:algo_lib.RegxState..Print
 // this function is 'extrn' and implemented by user
 void                 RegxState_Print(algo_lib::RegxState& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- algo_lib.Replnode
+// create: algo_lib.Replscope.node (Tary)
+struct Replnode { // algo_lib.Replnode: One node of the substitution trie
+    algo::Smallstr10   key;     // Key fragment this node consumes; the trie is path-compressed, so it may be several characters
+    algo::i32_Range    value;   // Where this node's substitution sits inside Replscope.value; beg -1 when the node names no variable
+    i32                child;   //   -1  First child node, -1 for none
+    i32                next;    //   -1  Next sibling node, -1 for none
+    i32                up;      //   -1  Parent node, -1 at the root; a key is read back by walking up
+    // func:algo_lib.Replnode..Ctor
+    inline               Replnode() __attribute__((nothrow));
+};
+// Set all fields to initial values.
+// func:algo_lib.Replnode..Init
+inline void          Replnode_Init(algo_lib::Replnode& parent);
+
 // --- algo_lib.Replscope
 // create: algo_lib.FDb.replscope (Cppstack)
-// access: algo_lib.FReplvar.p_replscope (Upptr)
 struct Replscope { // algo_lib.Replscope
-    bool                   eatcomma;                    //   true  Delete comma+space after substitution
-    u8                     strict;                      //   0  1=warnings; 2=throw exception on error
-    algo_lib::FReplvar**   ind_replvar_buckets_elems;   // pointer to bucket array
-    i32                    ind_replvar_buckets_n;       // number of elements in bucket array
-    i32                    ind_replvar_n;               // number of elements in the hash table
+    bool                  eatcomma;     //   true  Delete comma+space after substitution
+    u8                    strict;       //   0  1=warnings; 2=throw exception on error
+    algo_lib::Replnode*   node_elems;   // pointer to elements
+    u64                   node_n;       // number of elements in array
+    u64                   node_max;     // max. capacity of array before realloc
+    algo::cstring         value;        // Every substitution value, concatenated; a node names its own with a range
+    i32                   dead;         //   0  Bytes of value no node names any more; the scope compacts when they outweigh the rest
+    // func:algo_lib.Replscope..AssignOp
+    algo_lib::Replscope& operator =(const algo_lib::Replscope &rhs) __attribute__((nothrow));
     // func:algo_lib.Replscope..Ctor
     inline               Replscope() __attribute__((nothrow));
     // func:algo_lib.Replscope..Dtor
     inline               ~Replscope() __attribute__((nothrow));
+    // func:algo_lib.Replscope..CopyCtor
+    Replscope(const algo_lib::Replscope &rhs) __attribute__((nothrow));
 };
-// Delete all rows reachable through the hash index
-// func:algo_lib.Replscope.ind_replvar.Cascdel
-void                 ind_replvar_Cascdel(algo_lib::Replscope& replscope) __attribute__((nothrow));
-// Return true if hash is empty
-// func:algo_lib.Replscope.ind_replvar.EmptyQ
-inline bool          ind_replvar_EmptyQ(algo_lib::Replscope& replscope) __attribute__((nothrow));
-// Find row by key. Return NULL if not found.
-// func:algo_lib.Replscope.ind_replvar.Find
-algo_lib::FReplvar*  ind_replvar_Find(algo_lib::Replscope& replscope, const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
-// Find row by key. If not found, create and x-reference a new row with with this key.
-// func:algo_lib.Replscope.ind_replvar.GetOrCreate
-algo_lib::FReplvar*  ind_replvar_GetOrCreate(algo_lib::Replscope& replscope, const algo::strptr& key) __attribute__((nothrow));
-// Return number of items in the hash
-// func:algo_lib.Replscope.ind_replvar.N
-inline i32           ind_replvar_N(const algo_lib::Replscope& replscope) __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-// func:algo_lib.Replscope.ind_replvar.InsertMaybe
-bool                 ind_replvar_InsertMaybe(algo_lib::Replscope& replscope, algo_lib::FReplvar& row) __attribute__((nothrow));
-// Remove reference to element from hash index. If element is not in hash, do nothing
-// func:algo_lib.Replscope.ind_replvar.Remove
-void                 ind_replvar_Remove(algo_lib::Replscope& replscope, algo_lib::FReplvar& row) __attribute__((nothrow));
-// Reserve enough room in the hash for N more elements. Return success code.
-// func:algo_lib.Replscope.ind_replvar.Reserve
-void                 ind_replvar_Reserve(algo_lib::Replscope& replscope, int n) __attribute__((nothrow));
-// Reserve enough room for exacty N elements. Return success code.
-// func:algo_lib.Replscope.ind_replvar.AbsReserve
-void                 ind_replvar_AbsReserve(algo_lib::Replscope& replscope, int n) __attribute__((nothrow));
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.Replscope.node.Addary
+algo::aryptr<algo_lib::Replnode> node_Addary(algo_lib::Replscope& parent, algo::aryptr<algo_lib::Replnode> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:algo_lib.Replscope.node.Alloc
+algo_lib::Replnode&  node_Alloc(algo_lib::Replscope& parent) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:algo_lib.Replscope.node.AllocAt
+algo_lib::Replnode&  node_AllocAt(algo_lib::Replscope& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:algo_lib.Replscope.node.AllocN
+algo::aryptr<algo_lib::Replnode> node_AllocN(algo_lib::Replscope& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:algo_lib.Replscope.node.AllocNAt
+algo::aryptr<algo_lib::Replnode> node_AllocNAt(algo_lib::Replscope& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:algo_lib.Replscope.node.EmptyQ
+inline bool          node_EmptyQ(algo_lib::Replscope& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:algo_lib.Replscope.node.Find
+inline algo_lib::Replnode* node_Find(algo_lib::Replscope& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:algo_lib.Replscope.node.Getary
+inline algo::aryptr<algo_lib::Replnode> node_Getary(const algo_lib::Replscope& parent) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:algo_lib.Replscope.node.Last
+inline algo_lib::Replnode* node_Last(algo_lib::Replscope& parent) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:algo_lib.Replscope.node.Max
+inline i64           node_Max(algo_lib::Replscope& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:algo_lib.Replscope.node.N
+inline i64           node_N(const algo_lib::Replscope& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:algo_lib.Replscope.node.Remove
+void                 node_Remove(algo_lib::Replscope& parent, u64 i) __attribute__((nothrow));
+// func:algo_lib.Replscope.node.RemoveAll
+inline void          node_RemoveAll(algo_lib::Replscope& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:algo_lib.Replscope.node.RemoveLast
+void                 node_RemoveLast(algo_lib::Replscope& parent) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:algo_lib.Replscope.node.Reserve
+inline void          node_Reserve(algo_lib::Replscope& parent, i64 n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:algo_lib.Replscope.node.AbsReserve
+void                 node_AbsReserve(algo_lib::Replscope& parent, i64 n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:algo_lib.Replscope.node.Setary
+void                 node_Setary(algo_lib::Replscope& parent, algo_lib::Replscope &rhs) __attribute__((nothrow));
+// Copy specified array into node, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:algo_lib.Replscope.node.Setary2
+void                 node_Setary(algo_lib::Replscope& parent, const algo::aryptr<algo_lib::Replnode> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:algo_lib.Replscope.node.qFind
+inline algo_lib::Replnode& node_qFind(algo_lib::Replscope& parent, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:algo_lib.Replscope.node.qLast
+inline algo_lib::Replnode& node_qLast(algo_lib::Replscope& parent) __attribute__((nothrow));
+// Return row id of specified element
+// func:algo_lib.Replscope.node.rowid_Get
+inline u64           node_rowid_Get(algo_lib::Replscope& parent, algo_lib::Replnode &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:algo_lib.Replscope.node.AllocNVal
+algo::aryptr<algo_lib::Replnode> node_AllocNVal(algo_lib::Replscope& parent, i64 n_elems, const algo_lib::Replnode& val) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.Replscope.node.Insary
+void                 node_Insary(algo_lib::Replscope& parent, algo::aryptr<algo_lib::Replnode> rhs, i64 at) __attribute__((nothrow));
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+// func:algo_lib.Replscope.node.RemRegion
+void                 node_RemRegion(algo_lib::Replscope& parent, i64 beg, i64 n) __attribute__((nothrow));
 
-// func:algo_lib.Replscope.ind_replvar_curs.Reset
-void                 replscope_ind_replvar_curs_Reset(replscope_ind_replvar_curs &curs, algo_lib::Replscope &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:algo_lib.Replscope.ind_replvar_curs.ValidQ
-inline bool          replscope_ind_replvar_curs_ValidQ(replscope_ind_replvar_curs &curs) __attribute__((nothrow));
 // proceed to next item
-// func:algo_lib.Replscope.ind_replvar_curs.Next
-inline void          replscope_ind_replvar_curs_Next(replscope_ind_replvar_curs &curs) __attribute__((nothrow));
+// func:algo_lib.Replscope.node_curs.Next
+inline void          replscope_node_curs_Next(replscope_node_curs &curs) __attribute__((nothrow));
+// func:algo_lib.Replscope.node_curs.Reset
+inline void          replscope_node_curs_Reset(replscope_node_curs &curs, algo_lib::Replscope &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:algo_lib.Replscope.node_curs.ValidQ
+inline bool          replscope_node_curs_ValidQ(replscope_node_curs &curs) __attribute__((nothrow));
 // item access
-// func:algo_lib.Replscope.ind_replvar_curs.Access
-inline algo_lib::FReplvar& replscope_ind_replvar_curs_Access(replscope_ind_replvar_curs &curs) __attribute__((nothrow));
+// func:algo_lib.Replscope.node_curs.Access
+inline algo_lib::Replnode& replscope_node_curs_Access(replscope_node_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.Replscope..Init
-void                 Replscope_Init(algo_lib::Replscope& replscope);
+inline void          Replscope_Init(algo_lib::Replscope& parent);
 // func:algo_lib.Replscope..Uninit
-void                 Replscope_Uninit(algo_lib::Replscope& replscope) __attribute__((nothrow));
+void                 Replscope_Uninit(algo_lib::Replscope& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
-// cfmt:algo_lib.Replscope.String  printfmt:Tuple
+// cfmt:algo_lib.Replscope.String  printfmt:Extern
 // func:algo_lib.Replscope..Print
+// this function is 'extrn' and implemented by user
 void                 Replscope_Print(algo_lib::Replscope& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo_lib.ShHdr
@@ -3286,89 +3447,89 @@ struct Tabulate { // algo_lib.Tabulate: Function to tabulate a string
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:algo_lib.Tabulate.width.Addary
-algo::aryptr<i32>    width_Addary(algo_lib::Tabulate& tabulate, algo::aryptr<i32> rhs) __attribute__((nothrow));
+algo::aryptr<i32>    width_Addary(algo_lib::Tabulate& parent, algo::aryptr<i32> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.Tabulate.width.Alloc
-i32&                 width_Alloc(algo_lib::Tabulate& tabulate) __attribute__((__warn_unused_result__, nothrow));
+i32&                 width_Alloc(algo_lib::Tabulate& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:algo_lib.Tabulate.width.AllocAt
-i32&                 width_AllocAt(algo_lib::Tabulate& tabulate, i64 at) __attribute__((__warn_unused_result__, nothrow));
+i32&                 width_AllocAt(algo_lib::Tabulate& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.Tabulate.width.AllocN
-algo::aryptr<i32>    width_AllocN(algo_lib::Tabulate& tabulate, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<i32>    width_AllocN(algo_lib::Tabulate& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:algo_lib.Tabulate.width.AllocNAt
-algo::aryptr<i32>    width_AllocNAt(algo_lib::Tabulate& tabulate, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<i32>    width_AllocNAt(algo_lib::Tabulate& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:algo_lib.Tabulate.width.EmptyQ
-inline bool          width_EmptyQ(algo_lib::Tabulate& tabulate) __attribute__((nothrow));
+inline bool          width_EmptyQ(algo_lib::Tabulate& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:algo_lib.Tabulate.width.Find
-inline i32*          width_Find(algo_lib::Tabulate& tabulate, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline i32*          width_Find(algo_lib::Tabulate& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.Tabulate.width.Getary
-inline algo::aryptr<i32> width_Getary(const algo_lib::Tabulate& tabulate) __attribute__((nothrow));
+inline algo::aryptr<i32> width_Getary(const algo_lib::Tabulate& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.Tabulate.width.Last
-inline i32*          width_Last(algo_lib::Tabulate& tabulate) __attribute__((nothrow, pure));
+inline i32*          width_Last(algo_lib::Tabulate& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:algo_lib.Tabulate.width.Max
-inline i64           width_Max(algo_lib::Tabulate& tabulate) __attribute__((nothrow));
+inline i64           width_Max(algo_lib::Tabulate& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:algo_lib.Tabulate.width.N
-inline i64           width_N(const algo_lib::Tabulate& tabulate) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           width_N(const algo_lib::Tabulate& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:algo_lib.Tabulate.width.Remove
-void                 width_Remove(algo_lib::Tabulate& tabulate, u64 i) __attribute__((nothrow));
+void                 width_Remove(algo_lib::Tabulate& parent, u64 i) __attribute__((nothrow));
 // func:algo_lib.Tabulate.width.RemoveAll
-inline void          width_RemoveAll(algo_lib::Tabulate& tabulate) __attribute__((nothrow));
+inline void          width_RemoveAll(algo_lib::Tabulate& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:algo_lib.Tabulate.width.RemoveLast
-void                 width_RemoveLast(algo_lib::Tabulate& tabulate) __attribute__((nothrow));
+void                 width_RemoveLast(algo_lib::Tabulate& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:algo_lib.Tabulate.width.Reserve
-inline void          width_Reserve(algo_lib::Tabulate& tabulate, i64 n) __attribute__((nothrow));
+inline void          width_Reserve(algo_lib::Tabulate& parent, i64 n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo_lib.Tabulate.width.AbsReserve
-void                 width_AbsReserve(algo_lib::Tabulate& tabulate, i64 n) __attribute__((nothrow));
+void                 width_AbsReserve(algo_lib::Tabulate& parent, i64 n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:algo_lib.Tabulate.width.Setary
-void                 width_Setary(algo_lib::Tabulate& tabulate, algo_lib::Tabulate &rhs) __attribute__((nothrow));
+void                 width_Setary(algo_lib::Tabulate& parent, algo_lib::Tabulate &rhs) __attribute__((nothrow));
 // Copy specified array into width, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
 // func:algo_lib.Tabulate.width.Setary2
-void                 width_Setary(algo_lib::Tabulate& tabulate, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
+void                 width_Setary(algo_lib::Tabulate& parent, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.Tabulate.width.qFind
-inline i32&          width_qFind(algo_lib::Tabulate& tabulate, u64 t) __attribute__((nothrow));
+inline i32&          width_qFind(algo_lib::Tabulate& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:algo_lib.Tabulate.width.qLast
-inline i32&          width_qLast(algo_lib::Tabulate& tabulate) __attribute__((nothrow));
+inline i32&          width_qLast(algo_lib::Tabulate& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:algo_lib.Tabulate.width.rowid_Get
-inline u64           width_rowid_Get(algo_lib::Tabulate& tabulate, i32 &elem) __attribute__((nothrow));
+inline u64           width_rowid_Get(algo_lib::Tabulate& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.Tabulate.width.AllocNVal
-algo::aryptr<i32>    width_AllocNVal(algo_lib::Tabulate& tabulate, i64 n_elems, const i32& val) __attribute__((nothrow));
+algo::aryptr<i32>    width_AllocNVal(algo_lib::Tabulate& parent, i64 n_elems, const i32& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
 // func:algo_lib.Tabulate.width.ReadStrptrMaybe
-bool                 width_ReadStrptrMaybe(algo_lib::Tabulate& tabulate, algo::strptr in_str) __attribute__((nothrow));
+bool                 width_ReadStrptrMaybe(algo_lib::Tabulate& parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:algo_lib.Tabulate.width.Insary
-void                 width_Insary(algo_lib::Tabulate& tabulate, algo::aryptr<i32> rhs, i64 at) __attribute__((nothrow));
+void                 width_Insary(algo_lib::Tabulate& parent, algo::aryptr<i32> rhs, i64 at) __attribute__((nothrow));
 // Delete a range of elements
 // Remove region from the middle of the array
 // The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
 // If N is negative, nothing is removed.
 // func:algo_lib.Tabulate.width.RemRegion
-void                 width_RemRegion(algo_lib::Tabulate& tabulate, i64 beg, i64 n) __attribute__((nothrow));
+void                 width_RemRegion(algo_lib::Tabulate& parent, i64 beg, i64 n) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo_lib.Tabulate.width_curs.Next
@@ -3383,9 +3544,9 @@ inline bool          tabulate_width_curs_ValidQ(tabulate_width_curs &curs) __att
 inline i32&          tabulate_width_curs_Access(tabulate_width_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.Tabulate..Init
-inline void          Tabulate_Init(algo_lib::Tabulate& tabulate);
+inline void          Tabulate_Init(algo_lib::Tabulate& parent);
 // func:algo_lib.Tabulate..Uninit
-void                 Tabulate_Uninit(algo_lib::Tabulate& tabulate) __attribute__((nothrow));
+void                 Tabulate_Uninit(algo_lib::Tabulate& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo_lib.Tabulate.String  printfmt:Tuple
 // func:algo_lib.Tabulate..Print
@@ -3420,6 +3581,15 @@ struct csvparse_ary_tok_curs {// cursor
 };
 
 
+struct RegxM_slot_curs {// cursor
+    typedef i32 ChildType;
+    i32* elems;
+    i64 n_elems;
+    i64 index;
+    RegxM_slot_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
 struct regx_state_curs {// cursor
     typedef algo_lib::RegxState ChildType;
     algo_lib::RegxState* elems;
@@ -3436,14 +3606,6 @@ struct _db_temp_strings_curs {// cursor
     _db_temp_strings_curs() { parent=NULL; index=0; }
 };
 
-
-struct _db_imtable_curs {// cursor
-    typedef algo_lib::FImtable ChildType;
-    algo_lib::FDb *parent;
-    i64 index;
-    _db_imtable_curs(){ parent=NULL; index=0; }
-};
-
 // Non-destructive heap cursor, returns heap elements in sorted order.
 // A running front of potential smallest entries is kept in the helper heap (curs.temp_%)
 struct _db_bh_timehook_curs {
@@ -3454,6 +3616,14 @@ struct _db_bh_timehook_curs {
     int            temp_max;      // max number of elements possible in the helper heap
     _db_bh_timehook_curs() : parent(NULL), temp_elems(NULL), temp_n(0), temp_max(0) {}
     ~_db_bh_timehook_curs();
+};
+
+
+struct _db_imtable_curs {// cursor
+    typedef algo_lib::FImtable ChildType;
+    algo_lib::FDb *parent;
+    i64 index;
+    _db_imtable_curs(){ parent=NULL; index=0; }
 };
 
 
@@ -3542,12 +3712,12 @@ struct regxparse_ary_expr_curs {// cursor
 };
 
 
-struct replscope_ind_replvar_curs {// cursor
-    typedef algo_lib::FReplvar ChildType;
-    algo_lib::Replscope *parent;
-    int bucket;
-    algo_lib::FReplvar **prow;
-    replscope_ind_replvar_curs() { parent=NULL; bucket=0; prow=NULL; }
+struct replscope_node_curs {// cursor
+    typedef algo_lib::Replnode ChildType;
+    algo_lib::Replnode* elems;
+    i64 n_elems;
+    i64 index;
+    replscope_node_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 

@@ -39,6 +39,21 @@ static algo::i32_Range RegxFind(strptr expr, algo::strptr str, int start = 0, al
     Regx_ReadStyle(regx,expr,style,false);
     return Regx_Find(regx,str,start);
 }
+// Match EXPR against STR with capture on, and return the group ranges as text,
+// so a test can state what every group of a nested expression came out as.
+static tempstr RegxCapture(strptr expr, strptr str) {
+    algo_lib::Regx regx;
+    Regx_ReadStyle(regx,expr,algo_lib_RegxStyle_default,true);
+    capture_Set(regx.flags,true);
+    tempstr ret;
+    if (Regx_Match(regx,str)) {
+        algo::ListSep ls(",");
+        ind_beg(algo::I32RangeAry_ary_curs,range,algo_lib::_db.regxm.matchrange) {
+            ret<<ls<<range.beg<<".."<<range.end;
+        }ind_end;
+    }
+    return ret;
+}
 static bool ValidRegxQ(strptr expr) {
     algo_lib::Regx regx;
     Regx_ReadDflt(regx,expr);
@@ -217,6 +232,44 @@ void atf_unit::unittest_algo_lib_Regx() {
     vrfyeq_(RegxMatch("()+", ""), true);
     vrfyeq_(RegxMatch("(())*", ""), true);
     vrfyeq_(RegxMatch("(^)*", ""), true);
+
+    // An expression that is a fixed string with an optional .* at either end
+    // is matched by searching for the string, and where the .* stands decides
+    // which search: a string pinned at one end has to sit there, and one
+    // pinned at neither may sit anywhere.
+    vrfyeq_(RegxMatch("%abc%","xxabcxx",algo_lib_RegxStyle_acr),true);
+    vrfyeq_(RegxMatch("%abc%","xxabxx",algo_lib_RegxStyle_acr),false);
+    vrfyeq_(RegxMatch("abc%","abcdef",algo_lib_RegxStyle_acr),true);
+    vrfyeq_(RegxMatch("abc%","xabcdef",algo_lib_RegxStyle_acr),false);
+    vrfyeq_(RegxMatch("%abc","xxabc",algo_lib_RegxStyle_acr),true);
+    vrfyeq_(RegxMatch("%abc","xxabcd",algo_lib_RegxStyle_acr),false);
+    vrfyeq_(RegxMatch("a.c","a.c",algo_lib_RegxStyle_acr),true);
+    vrfyeq_(RegxMatch("a.c","abc",algo_lib_RegxStyle_acr),false);// acr escapes the dot
+    vrfyeq_(RegxMatch("%","",algo_lib_RegxStyle_acr),true);
+    vrfyeq_(RegxMatch("%%","anything",algo_lib_RegxStyle_acr),true);
+
+    // A capture group's boundary states are spliced out of the arcs the
+    // matcher follows, and a bitset holds no bit past the words it has.  An
+    // expression with more than sixty-four states spans two words, so a splice
+    // that kept only the first would drop the alternatives numbered past it
+    // and match the earlier ones alone.
+    {
+        strptr wide = "algo_lib.Rec.(narrow|full|signed_full|flag|qos|sig|sig_edge|sig_full|dec|plain).Read";
+        vrfyeq_(RegxMatch(wide,"algo_lib.Rec.narrow.Read",algo_lib_RegxStyle_acr),true);
+        vrfyeq_(RegxMatch(wide,"algo_lib.Rec.dec.Read",algo_lib_RegxStyle_acr),true);
+        vrfyeq_(RegxMatch(wide,"algo_lib.Rec.plain.Read",algo_lib_RegxStyle_acr),true);
+        vrfyeq_(RegxMatch(wide,"algo_lib.Rec.other.Read",algo_lib_RegxStyle_acr),false);
+    }
+
+    // Where a group opened belongs to the path that reached a state, not to the
+    // state, so a state carries one position per group.  With a single position
+    // an outer group that opened before an inner one would report the inner
+    // one's start, and "(ab(cd)ef)" would come out as 2..6.
+    vrfyeq_(RegxCapture("(ab(cd)ef)","abcdef"), "0..6,2..4");
+    vrfyeq_(RegxCapture("(x(y))","xy"), "0..2,1..2");
+    vrfyeq_(RegxCapture("((a)b)","ab"), "0..2,0..1");
+    vrfyeq_(RegxCapture("(a)(b(c))","abc"), "0..1,1..3,2..3");
+    vrfyeq_(RegxCapture("(a)(b)","ab"), "0..1,1..2");
 
     vrfyeq_(RegxFind("ca","abracadabra"),algo::i32_Range(4,6));
     vrfyeq_(RegxFind("c.d.b","abracadabra"),algo::i32_Range(4,9));

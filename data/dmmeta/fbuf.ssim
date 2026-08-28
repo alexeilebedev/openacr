@@ -1,5 +1,6 @@
 dmmeta.fbuf  field:atf_amc.Bytebuf.in  max:64  fbuftype:Bytebuf  iotype:nofd  pair:""  comment:""
 dmmeta.fbuf  field:atf_amc.BytebufDyn.in  max:0  fbuftype:Bytebuf  iotype:nofd  pair:""  comment:""
+dmmeta.fbuf  field:atf_amc.Dgrambuf.in  max:64  fbuftype:Dgrambuf  iotype:nofd  pair:""  comment:""
 dmmeta.fbuf  field:atf_amc.FCondtest.out_buf  max:64  fbuftype:Bytebuf  iotype:nofd  pair:""  comment:""
 dmmeta.fbuf  field:atf_amc.FDb.in_fb  max:64  fbuftype:Bytebuf  iotype:nofd  pair:""  comment:""
 dmmeta.fbuf  field:atf_amc.FDb.out_fb  max:64  fbuftype:Bytebuf  iotype:standard  pair:""  comment:""

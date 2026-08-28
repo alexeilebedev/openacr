@@ -8,7 +8,7 @@ amc has built-in support for compiled regular expressions as
 flavor** based on `dmmeta.fregx.regxtype`.  Four flavors are
 supported — each tuned for a different use case.
 
-```
+```ssim
 dmmeta.field   field:command.abt.target  arg:dev.Target  reftype:RegxSql  dflt:""
   dmmeta.fregx  field:command.abt.target  regxtype:Sql  partial:N
 ```
@@ -82,7 +82,7 @@ universal entry point.
 `partial:N` (default for pkey-style fields) anchors the match
 to the entire input:
 
-```
+```bash
 target_ReadStrptrMaybe(cmd, "abt%");     // pattern
 Regx_Match(cmd.target, "abt_md");        // true
 Regx_Match(cmd.target, "atf_abt");        // false — anchored
@@ -90,7 +90,7 @@ Regx_Match(cmd.target, "atf_abt");        // false — anchored
 
 `partial:Y` allows the match anywhere in the input:
 
-```
+```c++
 target_ReadStrptrMaybe(cmd, "abt%");
 Regx_Match(cmd.target, "atf_abt_test");  // true
 ```
@@ -140,7 +140,7 @@ search inputs.
 
 A command-line flag that selects build targets:
 
-```
+```ssim
 dmmeta.field   field:command.abt.target  arg:dev.Target  reftype:RegxSql  dflt:""
   dmmeta.fregx  field:command.abt.target  regxtype:Sql  partial:N
 ```
@@ -157,7 +157,7 @@ CLI invocation: `abt -target:atf% -build`.
 
 A free-form search filter:
 
-```
+```ssim
 dmmeta.field   field:foo.Cfg.namepat  arg:algo.Regx  reftype:Regx
   dmmeta.fregx  field:foo.Cfg.namepat  regxtype:Normal  partial:Y
 ```

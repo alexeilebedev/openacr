@@ -211,20 +211,20 @@ private:
 };
 // Invoke function by pointer
 // func:lib_curl.FCall.done.Call
-inline void          done_Call(lib_curl::FCall& call, lib_curl::FCall& arg) __attribute__((nothrow));
+inline void          done_Call(lib_curl::FCall& parent, lib_curl::FCall& arg) __attribute__((nothrow));
 // Assign 0-argument hook with no context pointer
 // func:lib_curl.FCall.done.Set0
-inline void          done_Set0(lib_curl::FCall& call, void (*fcn)() ) __attribute__((nothrow));
+inline void          done_Set0(lib_curl::FCall& parent, void (*fcn)() ) __attribute__((nothrow));
 // Assign 1-argument hook with context pointer
 // func:lib_curl.FCall.done.Set1
-template<class T> inline void done_Set1(lib_curl::FCall& call, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
+template<class T> inline void done_Set1(lib_curl::FCall& parent, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
 // Assign 2-argument hook with context pointer
 // func:lib_curl.FCall.done.Set2
-template<class T> inline void done_Set2(lib_curl::FCall& call, T& ctx, void (*fcn)(T&, lib_curl::FCall& arg) ) __attribute__((nothrow));
+template<class T> inline void done_Set2(lib_curl::FCall& parent, T& ctx, void (*fcn)(T&, lib_curl::FCall& arg) ) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:lib_curl.FCall..Init
-inline void          FCall_Init(lib_curl::FCall& call);
+inline void          FCall_Init(lib_curl::FCall& parent);
 
 // --- lib_curl.trace
 #pragma pack(push,1)
@@ -429,9 +429,9 @@ private:
 };
 // Set all fields to initial values.
 // func:lib_curl.FSock..Init
-inline void          FSock_Init(lib_curl::FSock& sock);
+inline void          FSock_Init(lib_curl::FSock& parent);
 // func:lib_curl.FSock..Uninit
-void                 FSock_Uninit(lib_curl::FSock& sock) __attribute__((nothrow));
+void                 FSock_Uninit(lib_curl::FSock& parent) __attribute__((nothrow));
 
 // --- lib_curl.FieldId
 #pragma pack(push,1)
