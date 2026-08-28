@@ -114,6 +114,10 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_dbgtarget
     ,dev_FieldId_args
     ,dev_FieldId_buildcmd
+    ,dev_FieldId_docpage
+    ,dev_FieldId_word
+    ,dev_FieldId_bare
+    ,dev_FieldId_bytable
     ,dev_FieldId_edaction
     ,dev_FieldId_edacttype
     ,dev_FieldId_name
@@ -123,6 +127,7 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_gitinfo
     ,dev_FieldId_package
     ,dev_FieldId_gitref
+    ,dev_FieldId_commitdate
     ,dev_FieldId_builddate
     ,dev_FieldId_hilite
     ,dev_FieldId_color
@@ -167,7 +172,6 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_inl
     ,dev_FieldId_sandbox
     ,dev_FieldId_filter
-    ,dev_FieldId_readmesort
     ,dev_FieldId_rpm
     ,dev_FieldId_cow
     ,dev_FieldId_sbpath
@@ -199,7 +203,7 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_value
 };
 
-enum { dev_FieldIdEnum_N = 119 };
+enum { dev_FieldIdEnum_N = 123 };
 
 extern const char *  dev_License_license_;       //         fconst:dev.License.license/
 extern const char *  dev_License_license_ARND;   // ARND    fconst:dev.License.license/ARND
@@ -232,6 +236,7 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 CopyrightPkey;
     typedef algo::cstring CovlinePkey;
     typedef algo::Smallstr50 DbgtargetPkey;
+    typedef algo::Smallstr50 DocpagePkey;
     typedef algo::Smallstr50 EdactionPkey;
     typedef algo::Smallstr50 EdacttypePkey;
     typedef algo::Smallstr200 GitfilePkey;
@@ -248,7 +253,6 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 PkgdeptypePkey;
     typedef algo::Smallstr150 PkgkeyPkey;
     typedef algo::Smallstr50 PrototransportPkey;
-    typedef algo::Smallstr250 ReadmesortPkey;
     typedef algo::Smallstr50 RpmPkey;
     typedef algo::Smallstr50 SandboxPkey;
     typedef algo::Smallstr50 SbpathPkey;
@@ -278,6 +282,7 @@ namespace dev { struct Covfile; }
 namespace dev { struct Covline; }
 namespace dev { struct Covtarget; }
 namespace dev { struct Dbgtarget; }
+namespace dev { struct Docpage; }
 namespace dev { struct Edaction; }
 namespace dev { struct Edacttype; }
 namespace dev { struct FieldId; }
@@ -300,7 +305,6 @@ namespace dev { struct Pkggen; }
 namespace dev { struct Pkgkey; }
 namespace dev { struct Prototransport; }
 namespace dev { struct Readmefile; }
-namespace dev { struct Readmesort; }
 namespace dev { struct Rpm; }
 namespace dev { struct Sandbox; }
 namespace dev { struct Sbpath; }
@@ -607,6 +611,30 @@ bool                 Dbgtarget_ReadStrptrMaybe(dev::Dbgtarget &parent, algo::str
 // func:dev.Dbgtarget..Print
 void                 Dbgtarget_Print(dev::Dbgtarget& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Docpage
+struct Docpage { // dev.Docpage: A page doc generates rather than reads from a file
+    algo::Smallstr50   docpage;   // Name of the page, which is also the word that addresses it
+    bool               word;      //   false  A location names this page by this word and a colon
+    bool               bare;      //   false  A bare key naming this page addresses it
+    bool               bytable;   //   false  A pattern handed to this word is the query over the table its name expands to
+    algo::Comment      comment;   //
+    // func:dev.Docpage..Ctor
+    inline               Docpage() __attribute__((nothrow));
+};
+// func:dev.Docpage..ReadFieldMaybe
+bool                 Docpage_ReadFieldMaybe(dev::Docpage& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Docpage from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Docpage..ReadStrptrMaybe
+bool                 Docpage_ReadStrptrMaybe(dev::Docpage &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:dev.Docpage..Init
+inline void          Docpage_Init(dev::Docpage& parent);
+// print string representation of ROW to string STR
+// cfmt:dev.Docpage.String  printfmt:Tuple
+// func:dev.Docpage..Print
+void                 Docpage_Print(dev::Docpage& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Edaction
 struct Edaction { // dev.Edaction: acr_ed editing action (only one can exist at a time)
     algo::Smallstr50   edaction;   //
@@ -738,15 +766,16 @@ void                 Gitfile_Print(dev::Gitfile& row, algo::cstring& str) __attr
 
 // --- dev.Gitinfo
 struct Gitinfo { // dev.Gitinfo
-    algo::Smallstr40   gitinfo;     //
-    algo::Smallstr40   package;     //
-    algo::Smallstr50   gitref;      // Full git ref of the commit the build was made from
-    algo::UnTime       builddate;   // When the build ran
-    algo::Comment      comment;     //
+    algo::Smallstr40   gitinfo;      //
+    algo::Smallstr40   package;      //
+    algo::Smallstr50   gitref;       // Full git ref of the commit the build was made from
+    algo::UnTime       commitdate;   // When the commit the build was made from was committed
+    algo::UnTime       builddate;    // When the build ran
+    algo::Comment      comment;      //
     // func:dev.Gitinfo..Ctor
     inline               Gitinfo() __attribute__((nothrow));
     // func:dev.Gitinfo..FieldwiseCtor
-    explicit inline               Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_package, const algo::strptr& in_gitref, algo::UnTime in_builddate, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_package, const algo::strptr& in_gitref, algo::UnTime in_commitdate, algo::UnTime in_builddate, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 // func:dev.Gitinfo..ReadFieldMaybe
 bool                 Gitinfo_ReadFieldMaybe(dev::Gitinfo& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -1173,24 +1202,6 @@ inline void          Readmefile_Init(dev::Readmefile& parent);
 // cfmt:dev.Readmefile.String  printfmt:Tuple
 // func:dev.Readmefile..Print
 void                 Readmefile_Print(dev::Readmefile& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- dev.Readmesort
-struct Readmesort { // dev.Readmesort: sorted categories of txt/ *.md files presented in dev.readme
-    algo::Smallstr250   readmesort;   //
-    algo::Comment       comment;      //
-    // func:dev.Readmesort..Ctor
-    inline               Readmesort() __attribute__((nothrow));
-};
-// func:dev.Readmesort..ReadFieldMaybe
-bool                 Readmesort_ReadFieldMaybe(dev::Readmesort& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Readmesort from an ascii string.
-// The format of the string is an ssim Tuple
-// func:dev.Readmesort..ReadStrptrMaybe
-bool                 Readmesort_ReadStrptrMaybe(dev::Readmesort &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:dev.Readmesort.String  printfmt:Tuple
-// func:dev.Readmesort..Print
-void                 Readmesort_Print(dev::Readmesort& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Rpm
 struct Rpm { // dev.Rpm
@@ -1693,6 +1704,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Covfile &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covline &row);// cfmt:dev.Covline.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covtarget &row);// cfmt:dev.Covtarget.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Dbgtarget &row);// cfmt:dev.Dbgtarget.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Docpage &row);// cfmt:dev.Docpage.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Edaction &row);// cfmt:dev.Edaction.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Edacttype &row);// cfmt:dev.Edacttype.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::FieldId &row);// cfmt:dev.FieldId.String
@@ -1713,7 +1725,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkggen &row);//
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkey &row);// cfmt:dev.Pkgkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Prototransport &row);// cfmt:dev.Prototransport.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmefile &row);// cfmt:dev.Readmefile.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmesort &row);// cfmt:dev.Readmesort.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Rpm &row);// cfmt:dev.Rpm.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sandbox &row);// cfmt:dev.Sandbox.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sbpath &row);// cfmt:dev.Sbpath.String

@@ -4,4 +4,5 @@ acr_in -> acr_in.nsssimfile  ns:abt  ssimfile:dev.targdep
 acr_in -> acr_in.nsssimfile  ns:abt_md  ssimfile:dev.targdep
 acr_in -> acr_in.nsssimfile  ns:acr_in  ssimfile:dev.targdep
 acr_in -> acr_in.nsssimfile  ns:amc  ssimfile:dev.targdep
+acr_in -> acr_in.nsssimfile  ns:doc  ssimfile:dev.targdep
 # exit acr_in code:0

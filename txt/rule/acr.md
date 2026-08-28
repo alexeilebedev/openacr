@@ -1,5 +1,5 @@
-## acr: the rules
-<a href="#acr-the-rules"></a>
+## acr: Rules
+<a href="#acr-rules"></a>
 
 `acr` is the query and edit front end for the ssim database.  Every other tool
 that changes the schema does it by running `acr`, so the behavior described
@@ -45,7 +45,7 @@ ahead of the files that hold its data and nothing has to be rewritten in
 lockstep.
 
 The same tolerance means a dead attribute is invisible.  Delete
-`dmmeta.Ns.license` and `data/dmmeta/ns.ssim` still reads `dmmeta.ns  ns:abt
+`dmmeta.Ns.license` and `ssimfile:dmmeta.ns` still reads `dmmeta.ns  ns:abt
 nstype:exe  license:GPL  comment:"..."`.  `acr -check % -x` passes, `amc`
 passes, and `acr ns:abt` prints the row without the attribute -- every check
 agrees the edit is complete while the file still carries the values.
@@ -75,7 +75,7 @@ A doc file is renamed, so the two tables tracking it have to follow.
 the old path.  Deleting the `dev.readmefile` row for that same path is then the
 obvious next step, and the report reads `n_select:0  n_delete:0  n_file_mod:0`
 -- nothing matched, nothing was written -- while the row is plainly still in
-`data/dev/readmefile.ssim`.  Yet the next command that writes that ssimfile for
+`ssimfile:dev.readmefile`.  Yet the next command that writes that ssimfile for
 any reason emits it without the row, and the deletion has happened by accident.
 
 `dev.Readmefile.gitfile` is a `Pkey` into `dev.Gitfile`, and a `Pkey` is
@@ -122,7 +122,7 @@ objects: `amc`, `acr -check % -x` and `abt_md -check` all pass over a
 misordered file.  Only `bin/normalize` notices, as `normalize_acr` plus one
 failure per generated artifact that inherited the order.
 
-Row order inside `data/dmmeta/field.ssim` is the exception that is not a
+Row order inside `ssimfile:dmmeta.field` is the exception that is not a
 formatting matter at all: it is the member order of the generated struct, so
 `acr -insert` respecting it is what keeps layout stable, and
 `acr_ed -create -field ... -before <field>` is how a row is placed

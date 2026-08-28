@@ -56,7 +56,7 @@ automatically, that's static.
 
 Declaration:
 
-```
+```ssim
 dmmeta.ctype  ctype:net.FConn
   dmmeta.field  field:net.FConn.on_close  arg:net.FConn  reftype:Hook  dflt:""
     dmmeta.hook   field:net.FConn.on_close
@@ -89,9 +89,9 @@ at the call site.
 <a href="#static-hook-pattern-gstatic-backed-"></a>
 
 The amc gen pipeline itself is the canonical example.  Every
-row of `data/amcdb/gen.ssim` looks like:
+row of `ssimfile:amcdb.gen` looks like:
 
-```
+```ssim
 amcdb.gen  gen:prep_signature  perns:N  comment:"Prepare signatures"
 amcdb.gen  gen:select_ns       perns:N  comment:"Select namespaces"
 ...
@@ -182,7 +182,7 @@ A `dmmeta.cppfunc` field occupies no storage.  Its value is whatever the
 record's other fields say it is, and amc generates the accessor that
 computes it:
 
-```
+```ssim
 dmmeta.cppfunc  field:<ns>.Fnode.device  expr:"<ns>::Device_Concat_host_name(host_Get(parent), tempstr() << devtype_Get(parent) << '-' << name_Get(parent))"  print:N  set:N
 ```
 

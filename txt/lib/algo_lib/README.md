@@ -1,35 +1,18 @@
 ## algo_lib - Support library for all executables
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Printing / Process output](#printing-process-output)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Printing to stderr](#printing-to-stderr)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Log categories](#log-categories)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Verblog](#verblog)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Dbglog](#dbglog)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Environment variables](#environment-variables)<br/>
-&#128196; [algo_lib.FIohook -](/txt/lib/algo_lib/FIohook.md)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [algo_lib - Internals](/txt/gen/algo_lib/algo_lib.md)<br/>
-
 ### Printing / Process output
 <a href="#printing-process-output"></a>
 
 The standard way to print something to `stdout` is with the use of `prlog` macro.
 Example
-```
+```c++
 prlog("hello, world");
 ```
 
 Prlog uses a temporary string, so that convenient `<<` expressions are possible:
 
-```
+```c++
 prlog("hello, world, my name is "<< _db.cmdline.name);
 ```
 
@@ -53,13 +36,13 @@ prerr automatically appends a newline; to omit the newline, use the variant `pre
 Each log category has a name and an `enable` flag, which can be switched at runtime.
 Printing to a log category xyz is performed with
 
-```
+```c++
 prcat(xyz, "some output");
 ```
 
 And is equivalent to
 
-```
+```bash
 if (algo_lib_logcat.xyz.enable) {
    prlog("some output");
 }
@@ -68,7 +51,7 @@ if (algo_lib_logcat.xyz.enable) {
 Stdout and stderr are generalized as log categories.
 The table of log categories is given below:
 
-```
+```ssim
 inline-command: acr logcat:'(stdout|stderr|debug|verbose|verbose2)' -report:N | ssimfilt -t
 LOGCAT    ENABLED  BUILTIN  STDOUT  MAXMSG  WINDOW  SUPPRESS  COMMENT
 debug     N        N        N       0       0       N         Debug messages

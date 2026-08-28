@@ -46,7 +46,7 @@ Those two concepts refer to the same thing.
 
 To visualize xrefs, it may be useful to use [amc_vis](/txt/exe/amc_vis/README.md).
 To visualize the example above, we would use
-```
+```text
 inline-command: amc_vis amc.FTarget\|amc.FTargdep
                                       / amc.FTargdep  
                   / amc.FTarget       |               

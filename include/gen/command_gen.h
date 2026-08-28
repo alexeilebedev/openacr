@@ -262,6 +262,18 @@ enum command_FieldIdEnum {    // command.FieldId.value
     ,command_FieldId_pertest_timeout
     ,command_FieldId_check_untracked
     ,command_FieldId_test
+    ,command_FieldId_showcmd
+    ,command_FieldId_vis
+    ,command_FieldId_code
+    ,command_FieldId_width
+    ,command_FieldId_color
+    ,command_FieldId_force_color
+    ,command_FieldId_pager
+    ,command_FieldId_links
+    ,command_FieldId_follow
+    ,command_FieldId_html
+    ,command_FieldId_server
+    ,command_FieldId_bind
     ,command_FieldId_stats
     ,command_FieldId_enable
     ,command_FieldId_disable
@@ -350,7 +362,7 @@ enum command_FieldIdEnum {    // command.FieldId.value
     ,command_FieldId_value
 };
 
-enum { command_FieldIdEnum_N = 317 };
+enum { command_FieldIdEnum_N = 329 };
 
 
 // --- command_abt_cache_Enum
@@ -505,6 +517,8 @@ namespace command { struct bash; }
 namespace command { struct bash2html; }
 namespace command { struct bash2html_proc; }
 namespace command { struct bash_proc; }
+namespace command { struct doc; }
+namespace command { struct doc_proc; }
 namespace command { struct gcache; }
 namespace command { struct gcache_proc; }
 namespace command { struct generic; }
@@ -4233,6 +4247,116 @@ void                 bash_ToArgv(command::bash_proc& parent, algo::StringAry& ar
 void                 bash_proc_Init(command::bash_proc& parent);
 // func:command.bash_proc..Uninit
 void                 bash_proc_Uninit(command::bash_proc& parent) __attribute__((nothrow));
+
+// --- command.doc
+// access: command.doc_proc.doc (Exec)
+struct doc { // command.doc: Render a markdown document to the terminal
+    algo::cstring   in;            //   "data"  Input directory or filename, - for stdin
+    algo::cstring   key;           //   ""  Document to show: a shorthand key, a regx, or a path
+    bool            q;             //   false  Read the key as an ssim query, never as a page doc synthesizes
+    algo::cstring   section;       //   ""  Show only sections whose heading matches this regx
+    bool            meta;          //   false  Show the schema of the selection instead of its records (acr -meta)
+    bool            showcmd;       //   false  Show the command line behind every box, in place of what each one answered
+    bool            vis;           //   false  Show the access paths of the ctypes on the page (amc_vis)
+    bool            code;          //   false  Show the C++ amc generated for the ctypes on the page, and their functions
+    bool            data;          //   false  Show the rows of the table the page is about (acr <ssimfile>)
+    bool            list;          //   false  List matching documents instead of rendering one
+    u32             width;         //   0  Measure in columns; 0 takes it from the terminal
+    bool            color;         //   true  Style the output when stdout is a terminal
+    bool            force_color;   //   false  Style the output even when stdout is not a terminal
+    bool            pager;         //   true  Page the output when stdout is a terminal
+    bool            links;         //   false  List the page's followable links instead of showing it
+    u32             follow;        //   0  Show the document reached by following this link of the page
+    bool            html;          //   false  Render the page as HTML instead of for a terminal
+    algo::cstring   server;        //   ""  URL prefix every generated link carries
+    algo::cstring   bind;          //   ""  Serve HTTP at this ip:port instead of showing one page
+    // func:command.doc..Ctor
+    inline               doc() __attribute__((nothrow));
+};
+extern const char *doc_help;
+// func:command.doc..ReadFieldMaybe
+bool                 doc_ReadFieldMaybe(command::doc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.doc..Init
+void                 doc_Init(command::doc& parent);
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.doc..ToCmdline
+tempstr              doc_ToCmdline(command::doc& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.doc.Argv  printfmt:Tuple
+// func:command.doc..PrintArgv
+void                 doc_PrintArgv(command::doc& row, algo::cstring& str) __attribute__((nothrow));
+// Build argv from ROW into ARGS; args[0] is the command name
+// cfmt:command.doc.Argv  printfmt:Tuple
+// func:command.doc..ToArgv
+void                 doc_ToArgv(command::doc& row, algo::StringAry& args) __attribute__((nothrow));
+// func:command.doc..GetAnon
+algo::strptr         doc_GetAnon(command::doc &parent, i32 idx) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.doc..NArgs
+i32                  doc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+// Field-aware command-line reader over a word array
+// Read command-line ARGS (already split into words) into the fields of PARENT.
+// Field-aware: a value-taking option consumes the next word; errors go to ERR.
+// func:command.doc..ReadArgv
+bool                 doc_ReadArgv(command::doc &parent, algo::StringAry &args, algo::cstring &err) __attribute__((nothrow));
+
+// --- command.doc_proc
+struct doc_proc { // command.doc_proc: Subprocess: Render a markdown document to the terminal
+    algo::cstring   path;          //   "bin/doc"  path for executable
+    command::doc    cmd;           // command line for child process
+    algo::cstring   fstdin;        // redirect for stdin
+    algo::cstring   fstdout;       // redirect for stdout
+    algo::cstring   fstderr;       // redirect for stderr
+    algo::Fildes    to_stdin;      // write end of stdin pipe when fstdin=="|"; closed by _Wait
+    algo::Fildes    from_stdout;   // read end of stdout pipe when fstdout=="|"; closed by _Wait
+    algo::Fildes    from_stderr;   // read end of stderr pipe when fstderr=="|"; closed by _Wait
+    pid_t           pid;           //   0  pid of running child process
+    i32             timeout;       //   0  optional timeout for child process
+    u32             memlimitmb;    //   0  optional child memory ceiling MB (10^6): RLIMIT_AS before exec; 0 = leave inherited
+    i32             status;        //   0  last exit status of child process
+    bool            pgroup;        //   false  run child in its own process group; _Kill targets the group
+    // func:command.doc_proc..Ctor
+    inline               doc_proc() __attribute__((nothrow));
+    // func:command.doc_proc..Dtor
+    inline               ~doc_proc() __attribute__((nothrow));
+};
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.doc_proc.doc.Start
+int                  doc_Start(command::doc_proc& parent) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.doc_proc.doc.Kill
+void                 doc_Kill(command::doc_proc& parent);
+// Wait for subprocess to return
+// func:command.doc_proc.doc.Wait
+void                 doc_Wait(command::doc_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
+// func:command.doc_proc.doc.Exec
+int                  doc_Exec(command::doc_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.doc_proc.doc.ExecX
+void                 doc_ExecX(command::doc_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.doc_proc.doc.Execv
+int                  doc_Execv(command::doc_proc& parent) __attribute__((nothrow));
+// func:command.doc_proc.doc.ToCmdline
+algo::tempstr        doc_ToCmdline(command::doc_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.doc_proc.doc.ToArgv
+void                 doc_ToArgv(command::doc_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.doc_proc..Init
+void                 doc_proc_Init(command::doc_proc& parent);
+// func:command.doc_proc..Uninit
+void                 doc_proc_Uninit(command::doc_proc& parent) __attribute__((nothrow));
 
 // --- command.gcache
 // access: command.gcache_proc.gcache (Exec)

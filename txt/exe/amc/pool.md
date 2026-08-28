@@ -56,7 +56,7 @@ in program security and performance. They can be configured and tuned without to
 
 A default pool for a namespace is specified in the `nsx` record
 
-```
+```ssim
 dmmeta.nsx  ns:algo_lib   genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.lpool   sortxref:N  pack:N  fldoffset_asserts:N  comment:""
 ```
 

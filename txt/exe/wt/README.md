@@ -19,34 +19,9 @@ Every operation executes its commands directly, in order; `-verbose` echoes
 each command as it runs. The exit code of a command executed inside a
 sandbox becomes wt's exit code.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Copy-on-write sandboxes](#copy-on-write-sandboxes)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Tools that use wt:](#tools-that-use-wt)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: create a new sandbox](#example-create-a-new-sandbox)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: run command in sandbox](#example-run-command-in-sandbox)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: show difference from baseline](#example-show-difference-from-baseline)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: list sandboxes and their current state](#example-list-sandboxes-and-their-current-state)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: reset all sandboxes](#example-reset-all-sandboxes)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: test amc changes inside sandbox](#example-test-amc-changes-inside-sandbox)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: run interactive shell inside sandbox](#example-run-interactive-shell-inside-sandbox)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: run a command in a copy-on-write sandbox](#example-run-a-command-in-a-copy-on-write-sandbox)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: create a branch worktree](#example-create-a-branch-worktree)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [wt - Internals](/txt/gen/wt/wt.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 wt: Worktree manager - reset, run, diff, delete
 Usage: wt [-name:]<regx> [[-cmd:]<string>] [options]
     OPTION       TYPE    DFLT    COMMENT
@@ -166,7 +141,7 @@ the next reset
 ### Example: create a new sandbox
 <a href="#example-create-a-new-sandbox"></a>
 
-```
+```bash
 wt test -create
 ```
 
@@ -179,7 +154,7 @@ baseline state with `wt test -clean`.
 ### Example: run command in sandbox
 <a href="#example-run-command-in-sandbox"></a>
 
-```
+```bash
 $ wt test "acr sandbox:test"
 dev.sandbox  sandbox:test  comment:""
 ```
@@ -187,7 +162,7 @@ dev.sandbox  sandbox:test  comment:""
 ### Example: show difference from baseline
 <a href="#example-show-difference-from-baseline"></a>
 
-```
+```bash
 $ wt amc -reset "echo test >> cpp/wt/wt.cpp" -diff
 wt.reset  sandbox:amc  dir:wt/amc
 diff --git a/cpp/wt/wt.cpp b/cpp/wt/wt.cpp
@@ -204,7 +179,7 @@ index 0889b61..20d42ef 100644
 ### Example: list sandboxes and their current state
 <a href="#example-list-sandboxes-and-their-current-state"></a>
 
-```
+```bash
 $ wt % -list
 Sandbox   Size  Clean  Path         Comment
 acr_ed    656M  Y      wt/acr_ed    sandbox for testing acr_ed changes
@@ -217,7 +192,7 @@ atf_fuzz  1.3G  Y      wt/atf_fuzz  sandbox for fuzzing
 ### Example: reset all sandboxes
 <a href="#example-reset-all-sandboxes"></a>
 
-```
+```bash
 $ wt % -reset
 ```
 
@@ -227,7 +202,7 @@ $ wt % -reset
 This resets the sandbox to match current directory, runs amc in it, and rebuilds everything.
 It can be used to test changes that might break compilation and put you in a dead-end situation.
 
-```
+```bash
 $ wt amc -reset "amc && ai"
 ...
 ```
@@ -235,14 +210,14 @@ $ wt amc -reset "amc && ai"
 ### Example: run interactive shell inside sandbox
 <a href="#example-run-interactive-shell-inside-sandbox"></a>
 
-```
+```bash
 $ wt amc -reset "bash -l"
 ```
 
 ### Example: run a command in a copy-on-write sandbox
 <a href="#example-run-a-command-in-a-copy-on-write-sandbox"></a>
 
-```
+```bash
 $ wt test1 -cow 'acr_ed -create -ssimfile dev.zz -write && acr ssimfile:dev.zz'
 ```
 
@@ -253,7 +228,7 @@ accumulates state until the next `-reset`.
 ### Example: create a branch worktree
 <a href="#example-create-a-branch-worktree"></a>
 
-```
+```bash
 $ wt 2047-my-task -create -b
 wt.branch  branch:2047-my-task  dir:wt/2047-my-task
 ```
@@ -327,12 +302,3 @@ stall on a permission prompt.
 
 #### -pull -- Pull changes from sandbox to main repo
 <a href="#-pull"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`wt` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.sandbox](/txt/ssimdb/dev/sandbox.md)|Registered sandbox: a named, resettable copy of the checkout|
-|[dev.sbpath](/txt/ssimdb/dev/sbpath.md)|Extra files to copy into the sandbox|

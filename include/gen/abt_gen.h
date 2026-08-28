@@ -228,11 +228,9 @@ struct FBuilddir { // abt.FBuilddir
     abt::FCompiler*       p_compiler;             // reference to parent row
     abt::FBuilddir*       ind_builddir_next;      // hash next
     u32                   ind_builddir_hashval;   // hash value
-    // value field abt.FBuilddir.R is not copiable
     // x-reference on abt.FBuilddir.p_compiler prevents copy
     // func:abt.FBuilddir..AssignOp
     abt::FBuilddir&      operator =(const abt::FBuilddir &rhs) = delete;
-    // value field abt.FBuilddir.R is not copiable
     // x-reference on abt.FBuilddir.p_compiler prevents copy
     // func:abt.FBuilddir..CopyCtor
     FBuilddir(const abt::FBuilddir &rhs) = delete;

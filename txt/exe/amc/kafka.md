@@ -20,7 +20,7 @@ Once a Kafka spec drop is converted to ssim, amc generates
 a complete typed codec for every message — no per-message
 hand-coding.
 
-```
+```ssim
 dmmeta.ckafka  ctype:kafka2.AbortedTransaction1a  kind:field  root:FetchResponse
               valid_versions:4-17  flexible_versions:12+
 
@@ -191,7 +191,7 @@ request types — same machinery as any other amc dispatch.
 
 A truncated FetchResponse:
 
-```
+```ssim
 dmmeta.ckafka  ctype:kafka2.FetchResponse  kind:messageType  root:FetchResponse
               valid_versions:0-17  flexible_versions:12+
 

@@ -1,17 +1,21 @@
 ## atf_nrun - Run N subprocesses in parallel
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [atf_nrun - Internals](/txt/gen/atf_nrun/atf_nrun.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+atf_nrun: Run N subprocesses in parallel
+Usage: atf_nrun [[-ncmd:]<int>] [options]
+    OPTION      TYPE    DFLT    COMMENT
+    -in         string  "data"  Input directory or filename, - for stdin
+    -maxjobs    int     2       Number of simultaneous jobs
+    [ncmd]      int     6
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
+    -help                       Print help and exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
+```
 
 ### Options
 <a href="#options"></a>
@@ -23,10 +27,3 @@
 
 #### -ncmd -- 
 <a href="#-ncmd"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`atf_nrun` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|

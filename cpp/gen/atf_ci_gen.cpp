@@ -713,6 +713,7 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:tempcode  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check for temp code inserted for testing only\"", atf_ci::citest_tempcode }
         ,{ "atfdb.citest  citest:lineendings  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Correct windows-style line endings in known text files\"", atf_ci::citest_lineendings }
         ,{ "atfdb.citest  citest:update_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Update scriptfile table\"", atf_ci::citest_update_script }
+        ,{ "atfdb.citest  citest:install_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check that install scripts pin a version and verify what they fetch\"", atf_ci::citest_install_script }
         ,{ "atfdb.citest  citest:indent_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Indent any bash script file\"", atf_ci::citest_indent_script }
         ,{ "atfdb.citest  citest:normalize_acr_my  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Round trip ssim databases through MariaDB and back\"", atf_ci::citest_normalize_acr_my }
         ,{ "atfdb.citest  citest:cppcheck  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Cppcheck static code analysis\"", atf_ci::citest_cppcheck }
@@ -733,7 +734,7 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:acr_ed_target  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
         ,{ "atfdb.citest  citest:apm  cijob:comp  sandbox:Y  timeout:1200  failfast:N  comment:\"Test APM\"", atf_ci::citest_apm }
         ,{ "atfdb.citest  citest:apm_reinstall  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Check that packages are removable\"", atf_ci::citest_apm_reinstall }
-        ,{ "atfdb.citest  citest:abt_md_after_ssimfile_is_added  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Test that directory README.md is updated with all new .md files\"", atf_ci::citest_abt_md_after_ssimfile_is_added }
+        ,{ "atfdb.citest  citest:doc_after_ssimfile_is_added  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"A table created now is listed by its namespace page, with nothing regenerated\"", atf_ci::citest_doc_after_ssimfile_is_added }
         ,{ "atfdb.citest  citest:mem_prep  cijob:memcheck  sandbox:N  timeout:1200  failfast:Y  comment:\"Build the memcheck binaries (must run first)\"", atf_ci::citest_mem_prep }
         ,{ "atfdb.citest  citest:atf_comp_mem  cijob:memcheck  sandbox:N  timeout:2400  failfast:N  comment:\"Run component tests in memcheck mode against cfg:memcheck\"", atf_ci::citest_atf_comp_mem }
         ,{ "atfdb.citest  citest:check_citest  cijob:comp  sandbox:N  timeout:600  failfast:N  comment:\"Check whether citests are correctly placed\"", atf_ci::citest_check_citest }

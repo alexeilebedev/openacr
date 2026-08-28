@@ -19,13 +19,10 @@ Let's start with a couple of fresh tables
 and proceed interactively.
 We will choose the `dev` namespace; this choice is arbitrary.
 
-```
+```ssim
 inline-command: acr_ed -create -ssimfile dev.a -write
 report.acr_check  records:***  n_err:0
 acr.insert  dev.gitfile  gitfile:data/dev/a.ssim
-acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/a.md
-  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/a.md  inl:N  sandbox:N  filter:""  comment:""
-
 acr.insert  dmmeta.ctype  ctype:dev.A  comment:""
   acr.insert  dmmeta.field  field:dev.A.a        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
   acr.insert  dmmeta.field  field:dev.A.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
@@ -41,7 +38,7 @@ This will create a new empty table data/dev/a.ssim. The ctype for `a` has a sing
 named 'a'. The fact that this ssimfile was created was recorded in the dmmeta database.
 The dmmeta database holds acr's schema
 
-```
+```ssim
 inline-command: acr ssimfile:dev.a
 dmmeta.ssimfile  ssimfile:dev.a  ctype:dev.A
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -51,7 +48,7 @@ We can now populate this table with some data. `acr -insert -write` reads values
 input, inserts them into the database, and saves everything to disk when done. Duplicate keys
 will cause records to be ignored. If we need to ignore duplicates, we use `acr -replace -write`.
 
-```
+```bash
 inline-command: for X in {0..10}; do echo dev.a a:a$X; done | acr -insert -write
 acr.insert  dev.a  a:a0   comment:""
 acr.insert  dev.a  a:a1   comment:""
@@ -69,7 +66,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 Now let's query this table. Here, we use a SQL regex and ask for values a2, a3 and a4.
 
-```
+```ssim
 inline-command: acr a:a'(2|3|4)'
 dev.a  a:a2  comment:""
 dev.a  a:a3  comment:""
@@ -80,7 +77,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 If we wanted to use these values in a shell script, there are a few flags that help with that.
 First, the `-field` option:
 
-```
+```ssim
 inline-command: acr a:a'(2|3|4)' -field:a
 a2
 a3
@@ -90,7 +87,7 @@ a4
 Alternatively, we could ask for a regex of the values. This can be used to save the regex
 and use it in subsequent expressions
 
-```
+```ssim
 inline-command: acr a:a'(2|3|4)' -regxof:a
 (a2|a3|a4)
 ```
@@ -100,13 +97,10 @@ the same key.
 Any fields that aren't specified are assigned default values. Let's illustrate by first
 creating a temporary table:
 
-```
+```ssim
 inline-command: acr_ed -create -ssimfile dev.t -write
 report.acr_check  records:***  n_err:0
 acr.insert  dev.gitfile  gitfile:data/dev/t.ssim
-acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/t.md
-  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/t.md  inl:N  sandbox:N  filter:""  comment:""
-
 acr.insert  dmmeta.ctype  ctype:dev.T  comment:""
   acr.insert  dmmeta.field  field:dev.T.t        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
   acr.insert  dmmeta.field  field:dev.T.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
@@ -120,7 +114,7 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 
 Now we add an extra attribute to `t` called `val`, with integer type.
 
-```
+```ssim
 inline-command: acr_ed -create -field dev.T.val -arg u32 -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.field  field:dev.T.val  arg:u32  reftype:Val  dflt:""  comment:""
@@ -130,7 +124,7 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 
 Insert some data using a bash one-liner:
 
-```
+```bash
 inline-command: echo 'dev.t t:ggg val:3' | acr -insert -write
 acr.insert  dev.t  t:ggg  val:3  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -138,7 +132,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 Now let's try to insert another record with the value `ggg`:
 
-```
+```ssim
 inline-command: echo 'dev.t t:ggg' | acr -insert -write
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 ```
@@ -146,7 +140,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 That failed. Now let's replace instead. This will succeed, and the value `val`
 will go back to the default:
 
-```
+```bash
 inline-command: echo 'dev.t t:ggg' | acr -replace -write
 acr.update  dev.t  t:ggg  val:0   comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -160,7 +154,7 @@ in other systems.
 Let's illustrate using the same `t` table. We'll need another column, call it `val2`, and
 set `val` back to 3:
 
-```
+```ssim
 inline-command: acr_ed -create -field dev.T.val2 -arg u32 -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.field  field:dev.T.val2  arg:u32  reftype:Val  dflt:""  comment:""
@@ -168,7 +162,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
-```
+```bash
 inline-command: echo 'dev.t t:ggg val:3' | acr -replace -write
 acr.update  dev.t  t:ggg  val:3  val2:0   comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -176,7 +170,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 So far so good. Now let's use -merge:
 
-```
+```bash
 inline-command: echo 'dev.t t:ggg val2:4' | acr -merge -write
 acr.update  dev.t  t:ggg  val:3  val2:4  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -186,7 +180,7 @@ As as we can see, `val` has retained the value of 3, while `val2` was set to 4.
 
 With the `-trunc` option, when the first change is made to the table, the table is first wiped.
 
-```
+```bash
 inline-command: echo 'dev.t t:hhh' | acr -insert -trunc -write
 acr.delete  dev.t  t:ggg  val:3   val2:4   comment:""
 acr.insert  dev.t  t:hhh  val:0   val2:0   comment:""
@@ -201,7 +195,7 @@ shell script access to the values of all field attributes, the fldfuncs, the tup
 the type tag (`acr_head`) and the rowid (`acr_rowid`). The script can then use whatever 
 other Unix tools it needs to.
 
-```
+```ssim
 inline-command: acr a:a1 -cmd 'echo ==== $a ===='
 acr_tuple=$'dev.a  a:a1  comment:""'
 acr_head=dev.a
@@ -215,7 +209,7 @@ echo ==== $a ====
 
 Piping through bash produces the desired result:
 
-```
+```ssim
 inline-command: acr a:a1 -cmd 'echo ==== $a ====' | bash
 ==== a1 ====
 ```
@@ -227,7 +221,7 @@ One command per output row would have been much slower
 <a href="#inserting-a-column"></a>
 Let's illustrate adding a column to the `a` table:
 
-```
+```ssim
 inline-command: acr_ed -create -field dev.A.b -arg u32 -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.field  field:dev.A.b  arg:u32  reftype:Val  dflt:""  comment:""
@@ -237,7 +231,7 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 
 Let's update a few values with `acr -merge`:
 
-```
+```bash
 inline-command: echo 'dev.a a:a1 b:55' | acr -merge -write
 acr.update  dev.a  a:a1  b:55  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -245,7 +239,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 Let's check if the b column is there:
 
-```
+```ssim
 inline-command: acr a
 dev.a  a:a0   b:0   comment:""
 dev.a  a:a1   b:55  comment:""
@@ -263,7 +257,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 Yes, it is. What if we just look in the file itself?
 
-```
+```ssim
 inline-command: head -3 data/dev/a.ssim
 dev.a  a:a0  b:0  comment:""
 dev.a  a:a1  b:55  comment:""
@@ -278,13 +272,10 @@ acr flag `-pretty` is set to true, which aligns columns in groups of 25 records 
 Now let's create another table which will be a subset of the first, and populate it.
 When we specify the -subset parameter, we must include the ctype (not ssimfile).
 
-```
+```ssim
 inline-command: acr_ed -create -ssimfile:dev.b -subset dev.A -write
 report.acr_check  records:***  n_err:0
 acr.insert  dev.gitfile  gitfile:data/dev/b.ssim
-acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/b.md
-  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/b.md  inl:N  sandbox:N  filter:""  comment:""
-
 acr.insert  dmmeta.ctype  ctype:dev.B  comment:""
   acr.insert  dmmeta.field  field:dev.B.a        arg:dev.A         reftype:Pkey  dflt:""  comment:""
   acr.insert  dmmeta.field  field:dev.B.comment  arg:algo.Comment  reftype:Val   dflt:""  comment:""
@@ -298,7 +289,7 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 
 Let's quickly check how `B`'s fields were defined:
 
-```
+```ssim
 inline-command: acr field:dev.B.%
 dmmeta.field  field:dev.B.a        arg:dev.A         reftype:Pkey  dflt:""  comment:""
 dmmeta.field  field:dev.B.comment  arg:algo.Comment  reftype:Val   dflt:""  comment:""
@@ -313,7 +304,7 @@ Notice that the new table's primary key has the name `a`, not `b`. This
 is because of the convention that a foreign key reference uses the name of the target table.
 We'll use values a3 through a7.
 
-```
+```bash
 inline-command: for X in {3..7}; do echo dev.b a:a$X; done | acr -insert -write
 acr.insert  dev.b  a:a3  comment:""
 acr.insert  dev.b  a:a4  comment:""
@@ -329,7 +320,7 @@ Now let's see if acr recognizes that these tables are related. We'll use the `-n
 argument to ask acr the following: after locating all records that match the initial query,
 follow any of the pkey 1 level up, extending the selection. At the end, print the result.
 
-```
+```ssim
 inline-command: acr b:a3 -nup 1
 dev.a  a:a3  b:0  comment:""
 
@@ -339,7 +330,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 Yes! It worked. What if we try the same thing when querying a?
 
-```
+```ssim
 inline-command: acr a:a3 -nup 1
 dev.a  a:a3  b:0  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -351,7 +342,7 @@ Since `a` doesn't refer to anything, there is nothing to discover.
 <a href="#following-references-down"></a>
 But we *can* discover the b record by following from a:
 
-```
+```ssim
 inline-command: acr a:a4 -ndown  1
 dev.a  a:a4  b:0  comment:""
 
@@ -368,7 +359,7 @@ nearest parent, using indentation. For ssimfiles, indentation is irrelevant when
 Leading whitespace is ignored. So the leading whitespace is purely
 for human comprehension:
 
-```
+```ssim
 inline-command: acr b -xref -tree
 dev.a  a:a3  b:0  comment:""
   dev.b  a:a3  comment:""
@@ -389,7 +380,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 Since `-xref -tree` is very frequently used, command line option `-t` is an alias for it.
 
-```
+```ssim
 inline-command: acr b:a5 -t
 dev.a  a:a5  b:0  comment:""
   dev.b  a:a5  comment:""
@@ -400,7 +391,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 <a href="#deleting-records"></a>
 What about deleting records? Let's delete something.
 
-```
+```ssim
 inline-command: acr a:a4 -del -write
 acr.delete  dev.a  a:a4  b:0  comment:""
 
@@ -416,7 +407,7 @@ We could omit the `-write` option. Notice that acr prints the records that *woul
 be deleted, but in the final report, `n_file_mod:0` so we know that nothing was written back.
 Without -write, acr outputs a script that can be fed into acr to perform the specified actions.
 
-```
+```ssim
 inline-command: acr a:a5 -del
 acr.delete  dev.a  a:a5  b:0  comment:""
 
@@ -434,7 +425,7 @@ so that the deleted column disappears.
 <a href="#checking-referential-integrity"></a>
 Let's insert a record into the `b` table which has no corresponding record in the `a` table.
 
-```
+```bash
 inline-command: echo 'dev.b a:xyz' | acr -insert -write
 acr.insert  dev.b  a:xyz  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -448,7 +439,7 @@ one point or another. It's like if your editor disallowed syntactically incorrec
 you wouln't be able to even type up "hello world". Usually, it's applications that load
 and cross-reference records are the ones that care about constraint violation.
 
-```
+```ssim
 inline-command: acr -check b; true
 data/dev/b.ssim:5: Invalid value a:xyz
 dev.b  a:xyz  comment:""
@@ -477,7 +468,7 @@ to the specified value.
 
 Here is an example:
 
-```
+```ssim
 inline-command: acr a:a3 -rename a99 -write
 acr.delete  dev.a  a:a3
 acr.insert  dev.a  a:a99  b:0  comment:""
@@ -489,7 +480,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 We can check that the dependencies were followed during the rename.
 
-```
+```ssim
 inline-command: acr a:a99 -t
 dev.a  a:a99  b:0  comment:""
   dev.b  a:a99  comment:""
@@ -502,13 +493,10 @@ Now it's time to do something more interesting. We'll create a table `c`, which 
 an independent table; we will populate it with a few colors. Then,
 we'll let's create a table `d`, whose key is a cross product of `b` and `c`.
 
-```
+```ssim
 inline-command: acr_ed -create -ssimfile:dev.c -write
 report.acr_check  records:***  n_err:0
 acr.insert  dev.gitfile  gitfile:data/dev/c.ssim
-acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/c.md
-  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/c.md  inl:N  sandbox:N  filter:""  comment:""
-
 acr.insert  dmmeta.ctype  ctype:dev.C  comment:""
   acr.insert  dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
   acr.insert  dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
@@ -520,7 +508,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
-```
+```bash
 inline-command: for X in red green blue; do echo dev.c c:$X; done | acr -insert -write
 acr.insert  dev.c  c:blue   comment:""
 acr.insert  dev.c  c:green  comment:""
@@ -528,13 +516,10 @@ acr.insert  dev.c  c:red    comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 ```
 
-```
+```ssim
 inline-command: acr_ed -create -ssimfile dev.d -subset dev.B -subset2 dev.C -separator . -write
 report.acr_check  records:***  n_err:0
 acr.insert  dev.gitfile  gitfile:data/dev/d.ssim
-acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/d.md
-  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/d.md  inl:N  sandbox:N  filter:""  comment:""
-
 acr.insert  dmmeta.ctype  ctype:dev.D  comment:""
   acr.insert  dmmeta.field  field:dev.D.d  arg:algo.Smallstr50  reftype:Val   dflt:""  comment:""
   acr.insert  dmmeta.field  field:dev.D.b  arg:dev.B            reftype:Pkey  dflt:""  comment:""
@@ -552,7 +537,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
-```
+```bash
 inline-command: for B in a5 a6 a7; do for C in red green blue; do echo dev.d d:$B.$C; done; done | acr -insert -write
 acr.insert  dev.d  d:a5.blue   comment:""
 acr.insert  dev.d  d:a5.green  comment:""
@@ -572,7 +557,7 @@ grouping `d` under `b`, which groups under `a`. All the referenced colors from `
 included in the output, but didn't become part of the tree, because only the leftmost
 parent is the preferred one.
 
-```
+```ssim
 inline-command: acr d -t
 dev.c  c:blue   comment:""
 dev.c  c:green  comment:""
@@ -608,7 +593,7 @@ into some appropriate tables using `acr -insert -write`.
 So it would have been circular to start with them, and I had to hide them.
 Seemingly circular definitions occur all the time in acr.
 
-```
+```ssim
 inline-command: acr ctype:dev.D -t
 dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
@@ -638,7 +623,7 @@ and `.RR`. Such computed fields are called fldfuncs. Acr treats fldfunc fields i
 as all other fields, but doesn't display them by default unless `-fldfunc` has been specified.
 Let's ask acr to show us the fldfunc values:
 
-```
+```ssim
 inline-command: acr d -fldfunc
 dev.d  d:a5.blue   b:a5  c:blue   comment:""
 dev.d  d:a5.green  b:a5  c:green  comment:""
@@ -654,7 +639,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 We can also use `-regx` to quickly confirm which values are present:
 
-```
+```ssim
 inline-command: acr d -regxof:c
 (blue|green|red)
 ```
@@ -676,7 +661,7 @@ search is called algo::Pathcomp.
 
 The function that parses these expressions is called Pathcomp, and we can view its source code:
 
-```
+```c++
 inline-command: src_func -f algo.Pathcomp
 // S         source string
 // EXPR      string in the form (XYZ)*
@@ -731,14 +716,14 @@ strptr algo::Pathcomp(strptr s, strptr expr) {
 It is possible to ask acr to select by a non-primary column. For that, we have to include the full
 field name:
 
-```
+```ssim
 inline-command: acr dev.D.c:blue
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 ```
 
 Alternatively, we can use `-where`:
 
-```
+```ssim
 inline-command: acr d -where c:blue
 dev.d  d:a5.blue  comment:""
 dev.d  d:a6.blue  comment:""
@@ -749,7 +734,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 The query string you pass to acr is a regular expression that extends to the name of the ssimfile as well.
 So, if we wanted to search both `b` and `c` tables, we'd write:
 
-```
+```ssim
 inline-command: acr '(c|b)'
 dev.c  c:blue   comment:""
 dev.c  c:green  comment:""
@@ -774,7 +759,7 @@ including a fldfunc.
 
 Let's take another look at our color table `c`:
 
-```
+```ssim
 inline-command: acr c
 dev.c  c:blue   comment:""
 dev.c  c:green  comment:""
@@ -784,7 +769,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 The colors are sorted by name. Let's look at the ctype:
 
-```
+```ssim
 inline-command: acr ctype:dev.C -t
 dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
@@ -805,7 +790,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 
 Now let's delete the ssimsort line.
 
-```
+```ssim
 inline-command: acr ssimsort:dev.c -del -write
 acr.delete  dmmeta.ssimsort  ssimfile:dev.c  sortfld:dev.C.c  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -816,7 +801,7 @@ attribute called `acr.rowid`. This is attribute ensures that the line will be sa
 file in the same position. We can't invoke an interactive editor within a readme file,
 so we will manually use the `-rowid` option
 
-```
+```ssim
 inline-command: acr c -rowid
 dev.c  c:blue   acr.rowid:0       comment:""
 dev.c  c:green  acr.rowid:1       comment:""
@@ -848,7 +833,7 @@ We can work with tuples in any data set, and that data set can be either a direc
 To create a new directory-based data set, we just create an empty directory and then use the `-in`
 option:
 
-```
+```ssim
 inline-command: mkdir x; acr % | acr -in:x -insert -write -print:N
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 ```
@@ -860,7 +845,7 @@ As long as we specify the `-in` option, acr will read and write data from the sp
 <a href="#using-a-file-as-a-data-set"></a>
 We can do the same thing with a file
 
-```
+```bash
 inline-command: rm -r x; touch x; acr c -report:N | acr -in:x -insert -write 
 acr.insert  dev.c  c:blue   comment:""
 acr.insert  dev.c  c:green  comment:""
@@ -876,7 +861,7 @@ just like any other data set. Just by dumping some tuples in a file, we get a da
 By specifying `-in:-`, you can have acr read the input from stdin. This can be useful
 with bash pipelines. 
 
-```
+```ssim
 inline-command: echo 'dmmeta.ctype ctype:xyz' | acr -in:- ctype:%
 dmmeta.ctype  ctype:xyz  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -896,7 +881,7 @@ with `-schema`. By default, these tables are loaded from `"data"` directory.
 
 If we pass an empty data set as schema, we expect nothing to be printed:
 
-```
+```ssim
 inline-command: rm -r x; touch x; echo 'dmmeta.ctype ctype:xyz' | acr -in:- ctype:% -schema:x
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 ```
@@ -908,7 +893,7 @@ skipped.
 <a href="#the-meta-option"></a>
 Instead of writing `acr ctype:dev.C -t` we can write
 
-```
+```ssim
 inline-command: acr c -meta
 dmmeta.ctype  ctype:dev.C  comment:""
   dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
@@ -926,7 +911,7 @@ ctypes instead. `-meta` implies `-t`.
 The -cmt option displays any comments associated with the current selection, which includes comments attached to the displayed
 fields. Let's add a comment to the dev.C.c field:
 
-```
+```bash
 inline-command: echo 'dmmeta.field field:dev.C.c comment:"Name of the color (primary key)"' | acr -merge -write
 acr.update  dmmeta.field  field:dev.C.c  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Name of the color (primary key)"
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -935,7 +920,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 Now when we display the `c` table with the `-cmt` option, this comment shows up. `-cmt` is the default whenever
 `-e` is used -- it helps the user understand what they're looking at.
 
-```
+```ssim
 inline-command: acr c -cmt
 # Ctype            Comment
 # algo.Smallstr50  inline string with length field

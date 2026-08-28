@@ -1,5 +1,5 @@
-dmmeta.dispsig  dispsig:abt.Input  signature:45ae13dbd8e9b176a16a144e29c12d49f1dc6dea
-dmmeta.dispsig  dispsig:abt_md.Input  signature:e25d78a29a70087caba259ffefe810e24722671c
+dmmeta.dispsig  dispsig:abt.Input  signature:1b887c32ce2033f536835186a561fc8d39491183
+dmmeta.dispsig  dispsig:abt_md.Input  signature:933b5caee556d1f2c39fe5037f87247af67c08b4
 dmmeta.dispsig  dispsig:acr.Input  signature:9c593186e8e2ef26f413b6dd3c64bad78d05e80d
 dmmeta.dispsig  dispsig:acr_compl.Input  signature:01ef0d9911f9bad5e527ff119c1174f88a3559b0
 dmmeta.dispsig  dispsig:acr_ed.Input  signature:6f5cb6194a574b752a14c13fbac0ab2d962c27de
@@ -8,7 +8,7 @@ dmmeta.dispsig  dispsig:acr_my.Input  signature:4af1104b912fd0ce532858d685766efe
 dmmeta.dispsig  dispsig:algo_lib.Input  signature:89b900d86b5d52958a065dbbbcc42c1d99604395
 dmmeta.dispsig  dispsig:amc.Input  signature:7d20912a531fdae05562b949440b78d25595f0ca
 dmmeta.dispsig  dispsig:amc_vis.Input  signature:26977645615fc5990f8402112565332eb0b76112
-dmmeta.dispsig  dispsig:apm.Input  signature:94da450a9c64ce4992db6a1020c45885ed0f4312
+dmmeta.dispsig  dispsig:apm.Input  signature:8eea5356efc2f8db4ded3f6fc87700e77a6f97ac
 dmmeta.dispsig  dispsig:atf_amc.Disp  signature:d11df8e45dfabb45e515398cd71d30a184879014
 dmmeta.dispsig  dispsig:atf_amc.Disp2  signature:d11df8e45dfabb45e515398cd71d30a184879014
 dmmeta.dispsig  dispsig:atf_amc.Input  signature:034a4336d79796339c51bb5934d2f77cfa293b3f
@@ -18,6 +18,7 @@ dmmeta.dispsig  dispsig:atf_ci.Input  signature:7a7f34f7f2837d4decb48e6118d85c81
 dmmeta.dispsig  dispsig:atf_comp.Input  signature:6e7752a43041c3b41b4fc1ec8bbbbcc5c58c2b36
 dmmeta.dispsig  dispsig:atf_cov.Input  signature:cc424298114c04dd5721a2a0d3d9b2f901fffa62
 dmmeta.dispsig  dispsig:atf_fuzz.Input  signature:9ba6a4d39f12eb6e4056fa626a272e08de588888
+dmmeta.dispsig  dispsig:doc.Input  signature:f974acd8d76a709583b5a9c3a2c17f782673fdcb
 dmmeta.dispsig  dispsig:lib_ams.Msg  signature:3961c0847eefc0a097303a0cc76e50c7447fbbea
 dmmeta.dispsig  dispsig:lib_ctype.Input  signature:a7c24d3093aa4687d3aa44dcadf80809337999c3
 dmmeta.dispsig  dispsig:lib_prot.Client  signature:0000000000000000000000000000000000000000
@@ -30,7 +31,7 @@ dmmeta.dispsig  dispsig:samp_make.Input  signature:4e9da3ce15f985cf3fee1f5056495
 dmmeta.dispsig  dispsig:samp_meng.In  signature:fe9d423bb9b548b6c7476b1004e7786575bf4ebf
 dmmeta.dispsig  dispsig:src_func.Input  signature:cd4459bef855a26a6480a70d76e7c8268ad2b845
 dmmeta.dispsig  dispsig:src_hdr.Input  signature:eedf70958929d3625b0910fd6de7b646dce50d54
-dmmeta.dispsig  dispsig:src_lim.Input  signature:9e513c2367288902b5b540ab22363dcd67609c11
+dmmeta.dispsig  dispsig:src_lim.Input  signature:98614a6fba86b39470c7150acae9e52ff4c0f0ab
 dmmeta.dispsig  dispsig:ssim2mysql.Input  signature:906d764cfa013a17db141585d7de939510d81943
 dmmeta.dispsig  dispsig:ssimfilt.Input  signature:b976bb282360112c9b3d35b51259c1977faae6ff
 dmmeta.dispsig  dispsig:sv2ssim.Input  signature:af79eaf9b4ed5338f63e526d8cc7f32e470fe2ad

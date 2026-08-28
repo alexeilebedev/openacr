@@ -13,7 +13,7 @@ The companion reftype **`RegxSql`** is the same code generator
 with `regxtype` defaulted to `Sql` and an extra
 `fregx`-required check.
 
-```
+```ssim
 dmmeta.field   field:command.abt.target  arg:dev.Target  reftype:Regx  dflt:""  comment:"Sql Regx of dev::Target"
   dmmeta.fregx  field:command.abt.target  regxtype:Sql  partial:N
 ```
@@ -123,7 +123,7 @@ match takes a `strptr`, not a typed value.
 
 A command-line flag accepting a SQL-style pattern over targets:
 
-```
+```ssim
 dmmeta.field   field:command.abt.target  arg:dev.Target  reftype:Regx
   dmmeta.fregx  field:command.abt.target  regxtype:Sql  partial:N
 ```
@@ -142,7 +142,7 @@ ind_beg(_db_target_curs, target, _db) {
 
 Free-form regex over a string field:
 
-```
+```ssim
 dmmeta.field   field:foo.Cfg.namepat  arg:algo.Regx  reftype:Regx
   dmmeta.fregx  field:foo.Cfg.namepat  regxtype:Normal  partial:Y
 ```

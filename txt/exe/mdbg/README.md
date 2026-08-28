@@ -1,28 +1,9 @@
 ## mdbg - Gdb front-end
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Disambiguation](#disambiguation)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Specifying arguments](#specifying-arguments)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Edit-and-retry](#edit-and-retry)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Exceptions](#exceptions)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Bugs](#bugs)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [mdbg - Internals](/txt/gen/mdbg/mdbg.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 mdbg: Gdb front-end
 Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
     OPTION         TYPE    DFLT     COMMENT
@@ -218,13 +199,3 @@ Configure gdb to enable gdb python scriptability
 
 #### -nonstop -- Debug a process tree: keep every spawned process under gdb and let them run
 <a href="#-nonstop"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`mdbg` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.builddir](/txt/ssimdb/dev/builddir.md)|Directory where object files/executables go. Determines compile/link options|
-|[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
-|[dev.dbgtarget](/txt/ssimdb/dev/dbgtarget.md)||

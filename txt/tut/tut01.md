@@ -29,7 +29,7 @@ Step 1: create a new target.  `acr_ed -create -target` adds the
 target row, the namespace, an empty FDb ctype, and the
 boilerplate cpp/include scaffolding all in one shot:
 
-```
+```ssim
 inline-command: acr_ed -create -target samp_tut1 -write
 acr_ed.create_target  target:samp_tut1
 report.acr_check  records:***  n_err:0
@@ -41,9 +41,6 @@ acr.insert  dev.gitfile  gitfile:include/gen/samp_tut1_gen.inl.h
 acr.insert  dev.gitfile  gitfile:include/samp_tut1.h
 acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut1/README.md
   acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut1/README.md      inl:N  sandbox:N  filter:""  comment:""
-
-acr.insert  dev.gitfile  gitfile:txt/gen/samp_tut1/samp_tut1.md
-  acr.insert  dev.readmefile  gitfile:txt/gen/samp_tut1/samp_tut1.md  inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dmmeta.ns  ns:samp_tut1  nstype:exe  license:GPL  comment:""
   acr.insert  dev.target  target:samp_tut1
@@ -74,6 +71,8 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 please execute $(acr_compl -install) to add completions support for new target
+acr.update  dev.readmefile  gitfile:txt/exe/samp_tut1/README.md  inl:N  sandbox:N  filter:""  comment:"samp_tut1 -"
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
@@ -82,7 +81,7 @@ Step 2: declare the three data ctypes — `Proj`, `Part`, and
 from a Tpool; `Proj` and `Part` also get a hash index on their
 single string field.
 
-```
+```ssim
 inline-command: acr_ed -create -ctype samp_tut1.Proj -reftype Tpool -indexed -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.ctype  ctype:samp_tut1.Proj  comment:""
@@ -96,7 +95,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
-```
+```ssim
 inline-command: acr_ed -create -ctype samp_tut1.Part -reftype Tpool -indexed -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.ctype  ctype:samp_tut1.Part  comment:""
@@ -110,7 +109,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
-```
+```ssim
 inline-command: acr_ed -create -ctype samp_tut1.Partproj -reftype Tpool  -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.ctype  ctype:samp_tut1.Partproj  comment:""
@@ -126,7 +125,7 @@ reference is cleared.
 
 First, the pointer from Partproj to Part:
 
-```
+```ssim
 inline-command: acr_ed -create -field samp_tut1.Partproj.p_part -arg samp_tut1.Part -reftype Upptr -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.field  field:samp_tut1.Partproj.p_part  arg:samp_tut1.Part  reftype:Upptr  dflt:""  comment:""
@@ -136,7 +135,7 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 
 Then the pointer from Partproj to Proj:
 
-```
+```ssim
 inline-command: acr_ed -create -field samp_tut1.Partproj.p_proj -arg samp_tut1.Proj -reftype Upptr -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.field  field:samp_tut1.Partproj.p_proj  arg:samp_tut1.Proj  reftype:Upptr  dflt:""  comment:""
@@ -151,7 +150,7 @@ or deleted, every xref that references it is updated.
 First, two global linked lists so we can scan all projects and
 all parts:
 
-```
+```ssim
 inline-command: acr_ed -create -field samp_tut1.FDb.zd_part -write -comment "List of all parts"
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.field  field:samp_tut1.FDb.zd_part  arg:samp_tut1.Part  reftype:Llist  dflt:""  comment:"List of all parts"
@@ -161,7 +160,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
-```
+```ssim
 inline-command: acr_ed -create -field samp_tut1.FDb.zd_proj -write -comment "List of all projects"
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.field  field:samp_tut1.FDb.zd_proj  arg:samp_tut1.Proj  reftype:Llist  dflt:""  comment:"List of all projects"
@@ -176,7 +175,7 @@ Then the group-by indexes.  A `Ptr` from Part to Partproj
 used in one project).  `cascdel` means deleting the Partproj
 also deletes the Part.
 
-```
+```ssim
 inline-command: acr_ed -create -field samp_tut1.Part.c_partproj -reftype Ptr -cascdel -write -comment "List of projects by part"
 acr_ed.via_match1  child:samp_tut1.Partproj.p_part  comment:"This child field is a possible via key candidate"
 report.acr_check  records:***  n_err:0
@@ -191,7 +190,7 @@ A doubly-linked, zero-terminated list of Partprojs grouped
 by Proj — "all the parts assigned to a given project."  Same
 cascade rule: deleting the project deletes its partprojs.
 
-```
+```ssim
 inline-command: acr_ed -create -field samp_tut1.Proj.zd_partproj -cascdel -write -comment "List of parts by project"
 acr_ed.via_match1  child:samp_tut1.Partproj.p_proj  comment:"This child field is a possible via key candidate"
 report.acr_check  records:***  n_err:0
@@ -211,7 +210,7 @@ Step 5: drop in the program body.
 The source lives at `conf/samp_tut1.txt` (so we don't have to
 inline it here):
 
-```
+```c++
 inline-command: cat conf/samp_tut1.txt
 //
 // This program is free software: you can redistribute it and/or modify
@@ -304,13 +303,13 @@ void samp_tut1::Main() {
 
 Copy it into place:
 
-```
+```bash
 inline-command: cp conf/samp_tut1.txt cpp/samp_tut1/samp_tut1.cpp
 ```
 
 And build:
 
-```
+```ssim
 inline-command: amc && ai samp_tut1
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
@@ -324,7 +323,7 @@ report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_er
 
 Running `samp_tut1` produces:
 
-```
+```bash
 inline-command: samp_tut1
 initial setup
 list of projects and their parts
@@ -378,7 +377,7 @@ vertical bar; fields are horizontal arrows, left-pointing for
 references, right-pointing for cross-references (index
 fields):
 
-```
+```text
 inline-command: amc_vis samp_tut1.%
 / samp_tut1.FDb                                                              
 |Tpool proj------>/ samp_tut1.Proj                                           
@@ -426,7 +425,7 @@ We also (deliberately, for the demo) declared unused hash
 indexes `samp_tut1.FDb.ind_proj` and `samp_tut1.FDb.ind_part`.
 Removing them is one command each:
 
-```
+```ssim
 inline-command: acr_ed -del -field samp_tut1.FDb.ind_proj -write
 report.acr_check  records:***  n_err:0
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
@@ -439,7 +438,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
-```
+```ssim
 inline-command: acr_ed -del -field samp_tut1.FDb.ind_part -write
 report.acr_check  records:***  n_err:0
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0

@@ -7,33 +7,9 @@ integrity checks, and writes changes back to disk.  Every OpenACR tool
 reads its configuration from ssimfiles; `acr` is how those files are
 inspected and modified.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Quick reference](#quick-reference)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Querying](#querying)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Editing](#editing)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Validation](#validation)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [acr_in — Target inputs](#acr_in-target-inputs)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [acr_ed — Schema editor](#acr_ed-schema-editor)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Reading Stdin](#reading-stdin)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sorting & RowIDs](#sorting-rowids)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [See Also](#see-also)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [ACR release notes](/txt/exe/acr/relnotes.md)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [acr - Internals](/txt/gen/acr/acr.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 acr: Algo Cross-Reference - ssimfile database & update tool
 Usage: acr [[-query:]<string>] [options]
     OPTION      TYPE    DFLT    COMMENT
@@ -442,7 +418,7 @@ of stdin for a list of tuples.  Lines in the input stream can override
 the setting on the command line.  The following table shows the possible
 prefixes:
 
-```
+```ssim
 inline-command: acr fconst:acr.ReadMode.read_mode/% -field name,comment
 acr.insert	Insert new record only
 acr.replace	Replace record with input
@@ -453,7 +429,7 @@ acr.select	Select found record
 ```
 
 To illustrate, invoking `acr -insert` and then providing the lines
-```
+```bash
 acr.delete <tuple>
 acr.merge <tuple>
 ```
@@ -763,22 +739,3 @@ in the selected set.
 
 Deselect any selected records and select their meta-data instead.
 `-meta` implies `-t`.
-
-### Inputs
-<a href="#inputs"></a>
-`acr` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.anonfld](/txt/ssimdb/dmmeta/anonfld.md)|Omit field name where possible (command line, enums, constants)|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.funique](/txt/ssimdb/dmmeta/funique.md)|This field must be unique in the table. Not needed for primary key|
-|[dmmeta.smallstr](/txt/ssimdb/dmmeta/smallstr.md)|Generated fixed-length padded or length-delimited string field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
-|[dmmeta.ssimsort](/txt/ssimdb/dmmeta/ssimsort.md)|Define sort order for ssimfile|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|

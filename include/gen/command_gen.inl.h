@@ -1218,6 +1218,21 @@ inline  command::bash_proc::~bash_proc() {
     command::bash_proc_Uninit(*this);
 }
 
+// --- command.doc..Ctor
+inline  command::doc::doc() {
+    command::doc_Init(*this);
+}
+
+// --- command.doc_proc..Ctor
+inline  command::doc_proc::doc_proc() {
+    command::doc_proc_Init(*this);
+}
+
+// --- command.doc_proc..Dtor
+inline  command::doc_proc::~doc_proc() {
+    command::doc_proc_Uninit(*this);
+}
+
 // --- command.gcache.cmd.EmptyQ
 // Return true if index is empty
 inline bool command::cmd_EmptyQ(command::gcache& parent) {

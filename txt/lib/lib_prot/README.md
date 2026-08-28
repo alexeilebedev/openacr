@@ -3,10 +3,8 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
 &nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-<!-- abt_md.toc_end -->
 
 ### Internals
 <a href="#internals"></a>

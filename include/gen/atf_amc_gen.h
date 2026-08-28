@@ -1589,7 +1589,6 @@ inline bool          Cstr_Update(atf_amc::Cstr &lhs, atf_amc::Cstr& rhs) __attri
 lib_json::FNode *    Cstr_FmtJson(atf_amc::Cstr& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_amc.Cstring
-// access: atf_amc.FCstring.msghdr (Base)
 struct Cstring { // atf_amc.Cstring
     algo::cstring   str;   //
     // func:atf_amc.Cstring..Ctor
@@ -1906,17 +1905,6 @@ void                 MsgLength_Print(atf_amc::MsgLength row, algo::cstring& str)
 // create: atf_amc.Varlen2mMsg.m1 (Varlen)
 // create: atf_amc.Varlen2mMsg.m2 (Varlen)
 // create: atf_amc.Varlen2mMsg.m3 (Varlen)
-// access: atf_amc.OptBMsg.base (Base)
-// access: atf_amc.Seqmsg.msghdr (Base)
-// access: atf_amc.Text.msghdr (Base)
-// access: atf_amc.Varlen2Msg.base (Base)
-// access: atf_amc.Varlen2aMsg.base (Base)
-// access: atf_amc.Varlen2mMsg.base (Base)
-// access: atf_amc.Varlen2vMsg.base (Base)
-// access: atf_amc.VarlenBMsg.base (Base)
-// access: atf_amc.VarlenMsg.base (Base)
-// access: atf_amc.VarlenVMsg.base (Base)
-// access: atf_amc.VarlenWMsg.base (Base)
 // access: atf_amc.MsgHeader_curs.msg (Ptr)
 #pragma pack(push,1)
 struct MsgHeader { // atf_amc.MsgHeader
@@ -8139,7 +8127,6 @@ void                 FTypeU_Uninit(atf_amc::FTypeU& parent) __attribute__((nothr
 // --- atf_amc.TypeA
 // create: atf_amc.FUnitSort.tary (Tary)
 // create: atf_amc.FUnitSort.fixary (Inlary)
-// access: atf_amc.FTypeA.msghdr (Base)
 // access: atf_amc.FUnitSort.c_ptrary (Ptrary)
 struct TypeA { // atf_amc.TypeA
     i32   typea;   //   0
@@ -9150,10 +9137,6 @@ inline void          LspaceStr7_I32_Init(atf_amc::LspaceStr7_I32& parent);
 // create: atf_amc.MsgLTV.v (Varlen)
 // create: atf_amc.Msgbuf.out_extra (Fbuf)
 // create: atf_amc.Msgbuf.in_extra (Fbuf)
-// access: atf_amc.MsgLTA.base (Base)
-// access: atf_amc.MsgLTB.base (Base)
-// access: atf_amc.MsgLTO.base (Base)
-// access: atf_amc.MsgLTV.base (Base)
 // access: atf_amc.MsgHdrLT_curs.msg (Ptr)
 #pragma pack(push,1)
 struct MsgHdrLT { // atf_amc.MsgHdrLT: length-type header
@@ -9263,8 +9246,6 @@ inline void          MsgHdrLTMsgsCase_Init(atf_amc::MsgHdrLTMsgsCase& parent);
 
 // --- atf_amc.MsgHdrLTScale
 // create: atf_amc.FDb.msghdrltscale (Lpool)
-// access: atf_amc.MsgLTScaleA.base (Base)
-// access: atf_amc.MsgLTScaleV.base (Base)
 // access: atf_amc.MsgHdrLTScale_curs.msg (Ptr)
 #pragma pack(push,1)
 struct MsgHdrLTScale { // atf_amc.MsgHdrLTScale
@@ -10285,7 +10266,6 @@ inline void          NetFrame_Init(atf_amc::NetFrame& parent);
 void                 NetFrame_Print(atf_amc::NetFrame& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.NetFrameHdr
-// access: atf_amc.NetFrame.base (Base)
 // access: atf_amc.NetFrameHdr_curs.msg (Ptr)
 #pragma pack(push,1)
 struct NetFrameHdr { // atf_amc.NetFrameHdr: amc fixture: fbigend header word split into kind(enum bitfld) + len(lenfld bitfld)
@@ -10692,7 +10672,6 @@ void                 OptBMsg_Print(atf_amc::OptBMsg& row, algo::cstring& str) __
 
 // --- atf_amc.OptG
 // create: atf_amc.OptOptG.optg (Opt)
-// access: atf_amc.FOptG.optg (Base)
 // access: atf_amc.OptG_curs.msg (Ptr)
 #pragma pack(push,1)
 struct OptG { // atf_amc.OptG: An optional instance of atf_unit.A
@@ -10838,7 +10817,6 @@ inline void          OptOptG_curs_Next(atf_amc::OptOptG_curs& curs) __attribute_
 inline void          OptOptG_curs_Init(atf_amc::OptOptG_curs& parent);
 
 // --- atf_amc.OptSigned
-// access: atf_amc.FOptSigned.optsigned (Base)
 // access: atf_amc.OptSigned_curs.msg (Ptr)
 #pragma pack(push,1)
 struct OptSigned { // atf_amc.OptSigned: Optional TypeG behind a signed length word
@@ -10892,7 +10870,6 @@ inline void          OptSigned_curs_Next(atf_amc::OptSigned_curs& curs) __attrib
 inline void          OptSigned_curs_Init(atf_amc::OptSigned_curs& parent);
 
 // --- atf_amc.OptWide
-// access: atf_amc.FOptWide.optwide (Base)
 // access: atf_amc.OptWide_curs.msg (Ptr)
 #pragma pack(push,1)
 struct OptWide { // atf_amc.OptWide: Optional TypeG behind a length word wider than u32
@@ -13649,7 +13626,6 @@ inline void          Text_Init(atf_amc::Text& parent);
 void                 Text_Print(atf_amc::Text& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeB
-// access: atf_amc.FTypeB.msghdr (Base)
 struct TypeB { // atf_amc.TypeB
     i32   typea;   //   0
     i32   j;       //   0
@@ -13991,8 +13967,6 @@ inline void          bits10_0_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attrib
 inline void          TypeBE64sf_Init(atf_amc::TypeBE64sf& parent);
 
 // --- atf_amc.TypeC
-// access: atf_amc.FTypeC.msghdr (Base)
-// access: atf_amc.FTypeD.msghdr (Base)
 struct TypeC { // atf_amc.TypeC
     i32   typec;   //   0
     // func:atf_amc.TypeC..EqOp
@@ -14076,7 +14050,6 @@ inline bool          TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH rhs) __att
 void                 TypeH_Print(atf_amc::TypeH row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeS
-// access: atf_amc.FTypeS.msghdr (Base)
 struct TypeS { // atf_amc.TypeS
     i32             types;     //   0
     algo::Comment   comment;   //
@@ -14098,7 +14071,6 @@ inline void          TypeS_Init(atf_amc::TypeS& parent);
 void                 TypeS_Print(atf_amc::TypeS& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeT
-// access: atf_amc.FTypeT.msghdr (Base)
 struct TypeT { // atf_amc.TypeT: Refers to TypeS
     i32   types;   //   0
     i32   j;       //   0
@@ -14143,7 +14115,6 @@ inline void          TypeTVal_Init(atf_amc::TypeTVal& parent);
 void                 TypeTVal_Print(atf_amc::TypeTVal& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeU
-// access: atf_amc.FTypeU.base (Base)
 struct TypeU { // atf_amc.TypeU: Update target: a keyed row with a value and a second index over it
     i32   u;   //   0
     i32   v;   //   0

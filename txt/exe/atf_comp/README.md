@@ -7,20 +7,26 @@ a process API to spawn subprocesses, feed them input, and capture output
 into a log. The log is compared against a reference file stored in
 `test/atf_comp/<testname>`.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Process API](#process-api)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Output filtering](#output-filtering)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Modes](#modes)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [atf_comp - Internals](/txt/gen/atf_comp/atf_comp.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+atf_comp: Component test runner: spawn processes and diff the log against a reference
+Usage: atf_comp [[-comptest:]<regx>] [options]
+    OPTION      TYPE    DFLT       COMMENT
+    -in         string  "data"     Input directory or filename, - for stdin
+    [comptest]  regx    "%"        Select comptest (SQL regex)
+    -mode       enum    run        Test mode (run|capture|memcheck|valgrind|mdbg|edit|editsource|print|printinput|mdbgall|del)
+    -capture                       Alias for -mode:capture
+    -ee                            Alias for -mode:editsource
+    -e                             Alias for -mode:edit
+    -cfg        string  "release"  Configuration (determines bindir)
+    -maxerr     int     3          Exit after this many errors
+    -verbose    flag               Verbosity level (0..255); alias -v; cumulative
+    -debug      flag               Debug level (0..255); alias -d; cumulative
+    -help                          Print help and exit; alias -h
+    -version                       Print version and exit
+    -signature                     Show signatures and exit; alias -sig
+```
 
 ### Process API
 <a href="#process-api"></a>
@@ -102,14 +108,3 @@ names the tool or the subsystem its tests drive.
 
 #### -maxerr -- Exit after this many errors
 <a href="#-maxerr"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`atf_comp` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[atfdb.testenv](/txt/ssimdb/atfdb/testenv.md)||
-|[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)||
-|[atfdb.unstableattr](/txt/ssimdb/atfdb/unstableattr.md)||
-|[atfdb.unstableline](/txt/ssimdb/atfdb/unstableline.md)|Tuple head of a line the comptest capture drops, presence being host-dependent|

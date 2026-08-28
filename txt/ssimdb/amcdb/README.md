@@ -1,17 +1,28 @@
 ## amcdb - Algo Model Compiler support tables
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&#128196; [amcdb.bltin - Specify properties of a C built-in type](/txt/ssimdb/amcdb/bltin.md)<br/>
-&#128196; [amcdb.cbtype - Callback type: lifecycle event a user function may handle on a field](/txt/ssimdb/amcdb/cbtype.md)<br/>
-&#128196; [amcdb.curstype - Cursor type](/txt/ssimdb/amcdb/curstype.md)<br/>
-&#128196; [amcdb.gen -](/txt/ssimdb/amcdb/gen.md)<br/>
-&#128196; [amcdb.pbtype - Protobuf scalar type: wire type and lib_pb codec binding for the pbuf codec](/txt/ssimdb/amcdb/pbtype.md)<br/>
-&#128196; [amcdb.regxtype -](/txt/ssimdb/amcdb/regxtype.md)<br/>
-&#128196; [amcdb.tclass - AMC template class](/txt/ssimdb/amcdb/tclass.md)<br/>
-&#128196; [amcdb.tcond - Condition a tclass reports, which an fcond binds to an index](/txt/ssimdb/amcdb/tcond.md)<br/>
-&#128196; [amcdb.tcurs - Cursor template](/txt/ssimdb/amcdb/tcurs.md)<br/>
-&#128196; [amcdb.tfunc - AMC template function](/txt/ssimdb/amcdb/tfunc.md)<br/>
-<!-- abt_md.toc_end -->
+### amcdb.tcond
+<a href="#amcdb-tcond"></a>
+
+A tclass generates functions, and those functions know things no field
+assignment records: a socket became readable, an output buffer drained past
+its low-water mark, a peer hung up.  Each such moment is a condition, and a
+record waiting on it is registered by membership in an index.
+
+`amcdb.tcond` is the vocabulary of conditions one tclass can report, one row
+per condition, keyed `<tclass>.<name>`.  It is the condition analogue of
+[amcdb.tfunc](/txt/ssimdb/amcdb/README.md), which declares the functions a
+tclass generates.
+
+A row here only names the condition; it binds nothing.  A
+[dmmeta.fcond](/txt/ssimdb/dmmeta/README.md) record on a field of that
+reftype is what says which index the record enters while the condition
+holds.  A condition with no fcond record is not reported at all.
+
+```ssim
+amcdb.tcond   tcond:Fbuf.space  comment:"a congested out buffer drained past its low-water mark"
+dmmeta.fcond  fcond:<ns>.FConn.out/space  ins:<ns>.FDb.cd_session_space  via:<ns>.FConn.p_session  rem:N  comment:""
+```
+
+The full mechanism, and the division of responsibility between the tclass
+and the fcond record, is described in [amc fcond](/txt/exe/amc/fcond.md).

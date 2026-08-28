@@ -8,7 +8,7 @@ live in a single heap block; growth is by powers of two
 cross-referenced** because growing the array moves elements to a
 new buffer; amc enforces this at code-generation time.
 
-```
+```ssim
 dmmeta.field  field:algo.LineBuf.buf  arg:char  reftype:Tary  dflt:""  comment:""
   dmmeta.tary  field:algo.LineBuf.buf  aliased:Y  comment:""
 ```
@@ -80,7 +80,7 @@ abort amc with a clear message suggesting `Lary` instead — see
 Every tfunc whose tclass is `Tary`, with the prototype amc emits
 for a field declared as `T <name>` in parent `P`.  Function
 templates live in `cpp/amc/tary.cpp`; tfunc records live in
-`data/amcdb/tfunc.ssim`.
+`ssimfile:amcdb.tfunc`.
 
 #### Lifecycle
 <a href="#lifecycle"></a>

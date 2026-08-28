@@ -1,28 +1,9 @@
 ## abt - Algo Build Tool - build & link C++ targets
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Bootstrapping](#bootstrapping)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Target Definition](#target-definition)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Build Directory](#build-directory)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Build Identity](#build-identity)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Debugging the build](#debugging-the-build)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [abt - Internals](/txt/gen/abt/abt.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 abt: Algo Build Tool - build & link C++ targets
 Usage: abt [[-target:]<regx>] [options]
     OPTION      TYPE    DFLT    COMMENT
@@ -89,8 +70,8 @@ system to find a supported coniguration. Bootstrap files are prepared with `abt 
 <a href="#target-definition"></a>
 
 Build-related information for target X can be obtained with `acr target:X -t`.
-This includes the [target](/txt/ssimdb/dev/target.md), its [source files](/txt/ssimdb/dev/targsrc.md),
-and [dependencies](/txt/ssimdb/dev/targdep.md)
+This includes the [target](/txt/ssimdb/dev/README.md), its [source files](/txt/ssimdb/dev/README.md),
+and [dependencies](/txt/ssimdb/dev/README.md)
 
 ### Build Directory
 <a href="#build-directory"></a>
@@ -117,7 +98,7 @@ at the start of every run, as `build/gitinfo.h` and `build/gitinfo.ssim`, and
 `algo_lib` compiles the first of the two in.  Every executable then reports it
 under `-version`, as a `dev.gitinfo` tuple:
 
-```
+```ssim
 dev.gitinfo  gitinfo:2026-07-27.3867b78e3.abt  package:""  gitref:3867b78e3b54b0860a10a74672c381bd6e1c7a36  builddate:2026-07-27T11:09:49  comment:""
 ```
 
@@ -158,7 +139,7 @@ clean.
 <a href="#-cfg"></a>
 
 Possible values are
-```
+```ssim
 inline-command: acr cfg -report:N | ssimfilt -t
 CFG       SUFFIX  COMMENT
                   all
@@ -176,7 +157,7 @@ release   r       optimized, without symbols
 Specify compiler to use.
 The default is obtained by reading the soft link `build/$cfg`.
 Possible values are
-```
+```ssim
 inline-command: acr compiler -report:N | ssimfilt -t
 COMPILER  RANLIB  AR       LINK      LIBEXT  EXEEXT  PCHEXT  OBJEXT  RC      COMMENT
                                                                              all
@@ -196,7 +177,7 @@ in all configurations.
 Specify target uname
 The default is obtained by reading the soft link `build/$cfg`.
 Possible values are
-```
+```ssim
 inline-command: acr uname -report:N | ssimfilt -t
 UNAME    COMMENT
          default
@@ -213,7 +194,7 @@ SunOS    Tested on solaris 5.11
 Specify architecture.
 The default is obtained by reading the soft link `build/$cfg`.
 Possible values are
-```
+```ssim
 inline-command: acr arch -report:N | ssimfilt -t
 ARCH    COMMENT
         all
@@ -251,7 +232,7 @@ List include files belonging to selected targets.
 With `-srcfile`, narrow down the list to just the specified files.
 Example:
 
-```
+```ssim
 inline-command: abt -listincl abt -srcfile cpp/abt/%
 dev.include  include:cpp/abt/build.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/disas.cpp:include/abt.h  sys:N  comment:""
@@ -328,7 +309,7 @@ to the new executable. For instance, we may want to install a debug version of t
 The parameter is a regular expression that's matched against function names in the 
 compiler's assembler output.
 
-```
+```bash
     $ abt sample -disas Main | head -15
     abt.config  config:Linux-clang++.release-x86_64  cache:none  out_dir:build/Linux-clang++.release-x86_64
     abt.outofdate  pch:0  src:0  lib:0  exe:0
@@ -370,25 +351,3 @@ cache is used. See [gcache][/txt/exe/gcache/README.md] for more information.
 
 This option is used with `-printcmd` to make sure the installed binaries point to `../build/release`
 instead of `../build/Linux-g++.release-x86_64`.
-
-### Inputs
-<a href="#inputs"></a>
-`abt` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.arch](/txt/ssimdb/dev/arch.md)|System architecture|
-|[dev.builddir](/txt/ssimdb/dev/builddir.md)|Directory where object files/executables go. Determines compile/link options|
-|[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
-|[dev.compiler](/txt/ssimdb/dev/compiler.md)|One of the known compilers|
-|[dev.include](/txt/ssimdb/dev/include.md)|A site where one file includes another|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dev.syscmd](/txt/ssimdb/dev/syscmd.md)|System command to execute|
-|[dev.syscmddep](/txt/ssimdb/dev/syscmddep.md)|Dependency between two commands|
-|[dev.syslib](/txt/ssimdb/dev/syslib.md)|Registered system library|
-|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[dev.targsyslib](/txt/ssimdb/dev/targsyslib.md)|Use of system library by target|
-|[dev.tool_opt](/txt/ssimdb/dev/tool_opt.md)|Compiler/linker options to use|
-|[dev.uname](/txt/ssimdb/dev/uname.md)|List of known unames|

@@ -8,7 +8,7 @@ match the xref and rejects subsequent ones until the slot is
 cleared by `Remove`.  Use it for "this record optionally
 points at one other record" relationships.
 
-```
+```ssim
 dmmeta.field  field:atf_amc.FCascdel.p_parent  arg:atf_amc.FCascdel  reftype:Ptr  dflt:""  comment:""
 ```
 
@@ -99,7 +99,7 @@ Source: `cpp/amc/ptr.cpp`.
 A cascade-delete test — every child points at its parent, and
 deleting the parent cascades:
 
-```
+```ssim
 dmmeta.field  field:atf_amc.FCascdel.p_parent  arg:atf_amc.FCascdel  reftype:Ptr
   dmmeta.xref  field:atf_amc.FCascdel.p_parent  inscond:"row.parent != NULL"  via:atf_amc.FDb.ind_cascdel/atf_amc.FCascdel.parent
 ```

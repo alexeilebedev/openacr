@@ -42,7 +42,7 @@ cijob:
 …or just one citest from any cijob:
 
     $ atf_ci memcheck                   # exact name
-    $ atf_ci -citest:%spnx%             # SQL regex
+    $ atf_ci -citest:%readme%           # SQL regex
 
 `bin/normalize` is `atf_ci -cijob:normalize` plus syntax
 highlighting.  Every commit on the integration branch should
@@ -53,7 +53,7 @@ pass it.
 
 A citest is one row in `atfdb.citest` plus one C++ function:
 
-```
+```ssim
 atfdb.citest  citest:gitfile     cijob:normalize  sandbox:N  comment:"Update gitfile tables by scanning filesystem"
 atfdb.citest  citest:atf_unit    cijob:comp       sandbox:N  comment:"Run unit tests"
 atfdb.citest  citest:atf_comp    cijob:comp       sandbox:N  comment:"Run component tests"
@@ -134,7 +134,7 @@ with expected output captured against a reference file.  Each
 comptest is one row in `atfdb.comptest` plus one file at
 `test/atf_comp/<comptest>`.
 
-```
+```ssim
 atfdb.comptest  comptest:acr.Insert  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:"Insert a few records"
 ```
 
@@ -218,7 +218,7 @@ warnings that vary by compiler).  A `dmmeta.tfilt` row attaches
 a shell filter that's applied to the captured log before
 diffing:
 
-```
+```ssim
 atfdb.tfilt  comptest:acr.BadNs  filter:"sed -E 's/^Valid values.*$/Valid values ***/'"
 ```
 

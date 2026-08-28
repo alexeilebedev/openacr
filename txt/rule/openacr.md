@@ -1,5 +1,5 @@
-## OpenACR: the rules
-<a href="#openacr-the-rules"></a>
+## openacr: Rules
+<a href="#openacr-rules"></a>
 
 This file carries the rules the openacr tools obey.  Read it before changing `acr`, `acr_ed`, `amc`, `abt`, `abt_md`,
 `src_func`, `apm`, or any other namespace that belongs to the openacr
@@ -61,7 +61,7 @@ cannot drift from its source.
 
 The acr page used to explain what happens after a field is deleted, and it
 explained it like this: run `acr_ed -del -field amsdb.Proctype.hbtimeout
--write`, and afterwards `data/amsdb/proctype.ssim` still reads `amsdb.proctype
+-write`, and afterwards `ssimfile:amsdb.proctype` still reads `amsdb.proctype
 proctype:samp_meng  id:23  ns:samp_meng  ...  hbtimeout:30`.  A reader who came
 to learn what a field delete does now has to work out what a proctype is, what
 its `id` is for, and why one of them is called `samp_meng`.  None of that is
@@ -218,7 +218,7 @@ pool has to be cleared between iterations.
 Checking the attached dataset on its own reports hundreds of bad references, one
 per row, in the shape
 
-```
+```bash
 run/x2inv/awsdb/awspecacctkey.ssim:1: Invalid value awspec:aws1.ami-builder
 run/x2inv/omdb/omhost.ssim:1: Invalid value net:ext-0
 run/x2inv/x2rdb/nodeacct.ssim:1: Invalid value user:x2admin
@@ -268,7 +268,7 @@ form is what says the dataset is consistent.
 
 `acr -check` reports a `dmmeta.field` row, not a data row:
 
-```
+```bash
 data/dmmeta/field.ssim:5294: acr.bad_dflt  field:command.x2ca.certtype  dflt:nosuch-type-99  arg:x2certdb.Certtype  comment:"Default names a key that does not exist"
 ```
 
@@ -311,7 +311,7 @@ every level: `report.acr_check  records:13  n_err:0`, then
 
 Typing `atg:bool` for `arg:bool` on a new `dmmeta.field` row produced
 
-```
+```ssim
 dmmeta.field  field:report.x2aws_verify.success  arg:""  reftype:Val  dflt:""  ...
 ```
 
@@ -380,7 +380,7 @@ Moving a table means moving everything keyed on it, because each loader inserts
 parents first and resolves references as it goes — a child left behind whose parent
 arrives with a later layer cannot load, whatever the layer order:
 
-```
+```bash
 x2admin.bad_xref  index:x2admin.FDb.ind_device  key:awin1.ctrl-1
 data/x2rdb/devintf.ssim:1: x2rdb.devintf  devintf:awin1.ctrl-1/ctrl  subnet:awin1.ctrl  ip:""
 ```
@@ -493,7 +493,7 @@ does it, and so does a plain checkout or pull.  In each case `bin/amc` is a
 symlink into `build/release`, still holding the binary the previous tree built,
 and that binary knows the schema the previous tree had.  What it rewrites is not
 confined to `cpp/gen` and `include/gen` either: the amc-owned ssim tables go
-with it, so rows in `data/dmmeta/msgfield.ssim` come back with
+with it, so rows in `ssimfile:dmmeta.msgfield` come back with
 `strtype:rightpad  pad:0` flattened to `strtype:""  pad:""` — which reads as a
 schema edit nobody made.
 
@@ -501,7 +501,7 @@ Two symptoms, and the one that reaches you first is a build error in
 hand-written code that calls a generated accessor the old generator spelled
 differently:
 
-```
+```c++
 cpp/lib_x2net/sock.cpp: error: cannot convert 'algo::aryptr<ams::MsgHeader>' to 'ams::MsgHeader*' in initialization
 ```
 
@@ -633,7 +633,7 @@ pushing a doc edit that came out of a conflict resolution.
 
 A narrowed `-check` no longer pretends to check links at all -- it refuses:
 
-```
+```ssim
 abt_md.narrow_check  nselect:16  nreadmefile:1284  comment:"-check reads every readme; drop -readmefile and -ns, or use -update to regenerate a selection"
 ```
 
@@ -642,20 +642,15 @@ at once and a selection could only skip it.  Run `abt_md -check` with no selecti
 to check links, and `abt_md -ns:<ns>` to regenerate one namespace's documents,
 which checks no link and is not asked to.
 
-Two tools check the documents and they answer different questions.  `abt_md
--check` resolves a link against `dev.gitfile`, so a target that exists on disk but
-is not a file the repo tracks -- a build artifact, a gitignored path, anything
-reached through a symlinked directory such as `.claude/skills/` -- is reported as
-`target is not a file the repo tracks`.  `spnx -check` resolves the same way and
-adds what only the site knows: a page no toctree holds is rejected, since the
-generated website has no route to it.
+`abt_md -check` resolves a link against `dev.gitfile`, so a target that exists on
+disk but is not a file the repo tracks -- a build artifact, a gitignored path,
+anything reached through a symlinked directory such as `.claude/skills/` -- is
+reported as `target is not a file the repo tracks`.
 
-The gap to know is which gate runs when.  **`spnx` runs in the `comp` cijob, not
-in `normalize`.**  A green `bin/normalize` therefore says nothing about a new
-document's reachability from the site's toctree, and the local equivalent is
-`bin/spnx -check`, which renders nothing, needs no Sphinx installed, and answers
-in under a second.  Sphinx and its six pip packages are pulled in only by `spnx
--build`.
+Nothing checks that a document is reachable, which the site build used to do: it
+rejected a page no toctree held.  `doc` reaches every document through
+`dev.readmefile`, so an unreferenced one is still findable, and an unreachable
+document is no longer an error anyone is told about.
 
 A conflict in an ssimfile that a tool generates is resolved by regenerating the
 file, never by merging it.  Consider a branch that adds a derived column to
@@ -720,7 +715,7 @@ rebase across a schema change produces routinely.
 `bin/normalize` fails with `atf_ci.modified_files  during:pbapi_gen
 files:include/gen/command_gen.h`, and the diff the citest prints is one line:
 
-```
+```bash
 -enum { command_FieldIdEnum_N = 915 };
 +enum { command_FieldIdEnum_N = 917 };
 ```
@@ -778,7 +773,7 @@ declared elsewhere in the block.  After rebasing onto master, everything built
 and the only symptom was a `(resource)` option printed outside the resource
 listing in three regenerated docs.
 
-`data/dmmeta/field.ssim` is ordered by declaration rather than sorted, and that
+`ssimfile:dmmeta.field` is ordered by declaration rather than sorted, and that
 order is what the help text and the generated docs follow.  The `acr_dm` merge
 driver matches a row by its key and keeps the *incoming* side's position for it,
 so a row whose key existed on master lands where master had it, not where the
@@ -822,7 +817,7 @@ Row order inside a ctype block is help-text order, and no gate tests it.
 #### amc.varlen_last after a rebase, and the cascade that hides it
 <a href="#amc-varlen_last-after-a-rebase-and-the-cascade-that-hides-it"></a>
 
-```
+```ssim
 amc.varlen_last  field:<ns>.<Msg>.signature  varlen:<ns>.<Msg>.clustername  comment:"fixed field follows a varlen field; varlen fields must be last"
 amc.no_output  comment:"no files were modified"
 algo_lib.exec  cmd:"bin/amc  -query:'' -report:N"  comment:"exit code 2"
@@ -844,7 +839,7 @@ and looking for one there finds nothing — `bin/fast` was built and working the
 time.  Eight failures, one cause, and the cause names the only namespace whose
 report was a single quiet line.
 
-So read the `varlen_last` line and go to `data/dmmeta/field.ssim`.  Master had moved
+So read the `varlen_last` line and go to `ssimfile:dmmeta.field`.  Master had moved
 the varlen field last in one message ctype and moved two signature fields ahead of
 an id in another; the branch carried the older order for both ctypes, and the rebase
 kept the branch's while reporting no conflict at all.  Take master's order verbatim
@@ -881,7 +876,15 @@ why `abt_md` with the commands on is schema-mutating: the tutorials under
 concurrent runs blank each other's blocks, so never start one beside a comptest
 sweep or a normalize.  `abt_md -evalcmd:N` skips the evaluation.
 
-**`abt_md -check` never regenerates.**  It validates links and TOCs and exits
+**An option is explained in its own section, not in the prose above it.**  A tool
+README carries a `####` heading per command-line option, and that heading is where a
+reader looking up one flag lands.  The explanation goes under it: what the flag does,
+what it is for, what turning it the other way asks instead.  The prose sections above
+may name a flag while describing what the tool is for -- that is how a reader learns
+the flag exists -- but the depth belongs in the flag's own section, where it is found
+by anyone who arrives knowing only the flag's name.
+
+**`abt_md -check` never regenerates.**  It validates links and exits
 zero over a section that has drifted from its ssim rows, so the drift fails
 `quickreadme` under `bin/normalize` instead.  Run plain `bin/abt_md` first,
 then `-check`.
@@ -901,23 +904,17 @@ next person's `abt_md` produces and `checkclean` rejects.
 **An anchor under a heading is generated.**  Write the heading; `abt_md` writes
 the `<a href="#...">` line beneath it.
 
-**A rebase conflict under `txt/gen` is never resolved by hand.**  Take the
-upstream side of every conflicting file, finish the rebase, then run `abt_md`
-and commit what it regenerates.  Merging the two sides by eye means
+**A rebase conflict in a generated section is never resolved by hand.**  Take
+the upstream side of every conflicting file, finish the rebase, then run
+`abt_md` and commit what it regenerates.  Merging the two sides by eye means
 reproducing the generator's output by hand, which is slower and wrong.
 
-**A file under `txt/gen` is wholly derived, so deleting it is a clean way to
-force one.**  Every section it carries is generated -- the title, the table of
-contents, the description that points at the namespace's usage README, the
-sources, the dependencies, the in-memory db, the tests, and for a library its
-function list -- so `abt_md` rebuilds the file from the database and reproduces
-it byte for byte.  A README under `txt/exe` or `txt/lib` is the opposite case:
-its `Description` and its prose are somebody's writing, and `abt_md` refreshes
-only the sections the file already carries, never adding one.  Delete one of
-those and the prose does not come back.  `Functions` has its own way of going
-missing even under `txt/gen`, because it forks `src_func`: `-evalcmd:N` leaves
-whatever function list the file already held, which on a file just recreated is
-none.
+**`abt_md` refreshes the sections a file already carries and never adds one.**
+So a README's prose and its `Description` are somebody's writing, and deleting
+the file does not bring them back -- there is no wholly derived document left in
+`txt/` for that trick to work on.  `Functions` has a second way of going
+missing, because it forks `src_func`: `-evalcmd:N` leaves whatever function list
+the file already held.
 
 Prose in `txt/` is imperative and present tense: "update key; write file", not
 "updates key, writes file".  A new file is created with `acr_ed -create
@@ -965,7 +962,7 @@ So the sweep to run is for the *old* name, over code as well as docs, with
 `*/gen/*` and the gitignored `wt/` excluded.  What survives is the set of
 sites the rename missed:
 
-```
+```bash
 grep -rInE -- '-oldname' --include='*.cpp' --include='*.h' --include='*.ts' \
     --include='*.tsx' --include='*.md' --include='*.ssim' . \
   | grep -vE '/gen/|/node_modules/|^\./wt/'
@@ -976,41 +973,6 @@ is regenerated from ssim and needs no edit, and a hit in another namespace
 belongs to another tool — `command.atf_cmdline.exec` is the standing example,
 that tool's own `-exec` flag, which must keep its name while the x2cmd one
 changes.
-
-#### `Pygments lexer name 'mermaid' is not known` and a diagram published as text
-<a href="#-pygments-lexer-name-mermaid-is-not-known-and-a-diagram-published-as-text"></a>
-
-A mermaid fence in a `txt/%` document renders as a diagram on GitLab and as a
-plain grey code block on the generated docs site, and `spnx -build` says so:
-
-```
-txt/ts/architecture.md:51: WARNING: Pygments lexer name 'mermaid' is not known [misc.highlighting_failure]
-```
-
-The extension is not the missing piece.  `sphinxcontrib.mermaid` is in
-`spnxdb.siteattr default_doc/extensions.5` and `sphinxcontrib-mermaid` is in
-`spnxdb.pkgpip`, so Sphinx can render mermaid and the `{mermaid}` directive
-works.  What fails is the hand-off: MyST turns an unknown fence language into
-an ordinary code block and asks Pygments to highlight it, and only the
-`myst_fence_as_directive` setting makes it route the fence to a directive of
-that name instead.  Unset, the fence never reaches the extension, which is why
-the symptom is a *Pygments* complaint about a diagram tool.  Read the setting
-off the MyST banner that `spnx -build` prints near the top of every run — it
-reports `fence_as_directive=set()` when nothing is routed.
-
-The fix is a `myst_fence_as_directive` row in `spnxdb.userattr` plus a
-`default_doc/myst_fence_as_directive` row in `spnxdb.siteattr` naming
-`mermaid`, since `conf.py` is generated from those two tables and holds nothing
-hand-written.  Confirm it by grepping the built page for the class the
-extension emits, not by watching the warning disappear:
-
-```bash
-grep -c 'class="mermaid"' temp/algornd_page/build/html/txt/ts/architecture.html
-```
-
-The same trap waits for any other fence language whose renderer is a Sphinx
-directive rather than a Pygments lexer, so a new one is added to that
-`siteattr` list rather than debugged as a highlighting problem.
 
 ### The runtime a generated process runs
 <a href="#the-runtime-a-generated-process-runs"></a>
@@ -1104,8 +1066,8 @@ installs writes the real stamp on the next run.
 
 **A rebase leaves the built tools a version behind, and each of the two
 failures is mistaken for something else.**  The silent one comes from `amc`.
-Some of `amc`'s inputs are also its outputs -- `data/dmmeta/ctypelen.ssim`
-records every ctype's computed length, `data/dmmeta/dispsig.ssim` records every
+Some of `amc`'s inputs are also its outputs -- `ssimfile:dmmeta.ctypelen`
+records every ctype's computed length, `ssimfile:dmmeta.dispsig` records every
 dispatch's signature -- and a generator built before a new kind of row was
 declared does not know to emit it, so running it *deletes* that row along with
 the generated line that loaded it at boot.  The run exits zero and `acr -check
@@ -1153,7 +1115,7 @@ between `temp/atf_comp/<name>` and `test/atf_comp/<name>`.  A diff consistent
 across reruns is a regression and the code is what changes.  A diff that varies
 between runs, or names a timestamp, port, pid or generated id, is
 non-determinism, and it is fixed by adding the field to
-`data/atfdb/unstableattr.ssim` or by writing a `dmmeta.tfilt` rule -- never by
+`ssimfile:atfdb.unstableattr` or by writing a `dmmeta.tfilt` rule -- never by
 recapturing.
 
 Masking reaches ssim tuple output only: a line is parsed as a tuple and the
@@ -1171,6 +1133,14 @@ construction whatever the code does.  "A fresh `-mode:print` capture matches
 the committed baseline" therefore says nothing about whether the test passes,
 and it is not evidence that a failure was a flake.  Plain `atf_comp
 <ns>.<name>` is the question; it exits non-zero and prints the diff.
+
+**The command a comptest runs is in `cpp/atf_comp/<ns>.cpp`, not in the
+reference.**  The reference under `test/atf_comp/<name>` opens with a
+`# start bash cmd:` line that reads like the script, and it is captured output
+like every line beneath it.  Editing it changes what the test expects and not
+what it runs, so the run fails on line one and the next `-capture` writes the
+real command back over the edit.  Change the `ProcStart` call in the source,
+rebuild `atf_comp`, then recapture.
 
 **A test shortened for speed no longer covers what it was written for.**  A
 four-minute test is narrowed -- sixteen streams to one, three nodes to one,
@@ -1239,21 +1209,20 @@ neither is a function that is missing.
 #### A citest that reports success in eleven milliseconds
 <a href="#a-citest-that-reports-success-in-eleven-milliseconds"></a>
 
-`citest:spnx` sits in `atfdb.citest` under the `comp` cijob with a 600-second
-timeout, and its comment says it regenerates the sphinx website and checks
-every link.  Every `comp` job reports it green:
+A citest row carries a comment saying what it checks and a timeout saying how
+long that may take, and the job log reports it green:
 
-```
-atf_ci.citest  citest:spnx  runtime:00:00:00.011441083  success:Y  comment:"Re-generate sphinx website from readme - check all links"
+```ssim
+atf_ci.citest  citest:<name>  runtime:00:00:00.011441083  success:Y  comment:"...checks every link"
 ```
 
-Eleven milliseconds is the whole finding.  The handler
-`atf_ci::citest_spnx` in `cpp/atf_ci/comp_x2.cpp` wraps its body in `#if 0`
-under a `// #AL# TODO FIX`, so it builds nothing and returns.  A citest that
-does no work cannot fail, and a citest that cannot fail reports the same
+Eleven milliseconds against a six-hundred-second timeout is the whole finding.
+A handler whose body sits inside `#if 0` builds nothing and returns, and a
+citest that does no work cannot fail; one that cannot fail reports the same
 `success:Y` as one that ran, so the row in the table, the comment on the
-handler and the line in the job log all describe a gate that is not there.
-The docs site accumulated 144 Sphinx warnings behind this one (issue #690).
+handler and the line in the job log all describe a gate that is not there.  One
+such gate stood for long enough that the thing behind it accumulated 144
+warnings.
 
 The runtime column is what separates the two cases, and it is the only thing
 in the job log that does.  When a citest is meant to build, run a cluster or
@@ -1312,7 +1281,7 @@ comparison have to be pinned to the same one.
 
 A build that should take a minute returns at once, having printed one line:
 
-```
+```ssim
 abt.config  builddir:Linux-g++.release-x86_64  ood_src:1  ood_target:15  cache:gcache
 ```
 
@@ -1342,7 +1311,7 @@ has plenty for a normal build.  The kernel kills them, abt reports each as
 `status 9`, then `status 15` for the ones it terminates itself, and the run ends
 with a large `n_err` and no compiler error text:
 
-```
+```ssim
 report.abt  n_target:148  time:00:01:41  hitrate:0%  pch_hitrate:98%  n_warn:0  n_err:88  n_install:144
 ```
 
@@ -1366,7 +1335,7 @@ where the capped pass stopped.
 One of those leftovers can be a partial rewrite rather than a finished one, so
 "the fix already written for you" needs checking before it is committed.  A pass
 killed during `bin/normalize` left two `fast.FDb.fs_%` rows of
-`data/dmmeta/field.ssim` reordered against master, which reads exactly like
+`ssimfile:dmmeta.field` reordered against master, which reads exactly like
 ordinary sort drift and would have been committed as such; a later pass that ran
 to completion did not touch the file at all, and the reorder was the interrupted
 write and nothing more.  So revert the leftovers you cannot attribute to a citest
@@ -1450,3 +1419,16 @@ name`, `field reftype`, `target license`.
 | FDb | the singleton that holds every pool and every global index of a namespace |
 | package | a named subset of the tree that `apm` can evaluate and publish |
 | citest | one check of a cijob, driven by `atf_ci` |
+
+**A document names a table by its short name, and `abt_md -check` resolves it.**  A span
+`ssimfile:x2db.product` names that table; the qualified `dmmeta.ssimfile:x2db.product`
+names the row of the catalog holding it and reads sideways in a sentence.  Both are
+checked against the database, so a table that moves namespace stops being a silent
+staleness -- `x2rdb.product` was one until the spans were written this way.
+
+An unqualified span is otherwise not read as a key, because the bare leaf form is how an
+attribute appears inside a tuple: `cascdel:Y`, `cfmt:Argv` and `sandbox:Y` are values
+rather than keys, and reading them as keys reports every one of them.  What admits
+`ssimfile:` and refuses those is the leaf's own table -- a table keyed by a table name is
+a table about tables, so a span naming one is a reference to a table.  Nothing else in the
+tree is.

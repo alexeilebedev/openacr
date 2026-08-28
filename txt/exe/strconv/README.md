@@ -1,22 +1,9 @@
 ## strconv - A simple string utility
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [strconv - Internals](/txt/gen/strconv/strconv.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 strconv: A simple string utility
 Usage: strconv [-str:]<string> [options]
     OPTION         TYPE    DFLT    COMMENT
@@ -48,10 +35,3 @@ Usage: strconv [-str:]<string> [options]
 
 #### -pathcomp -- Extract path component from string
 <a href="#-pathcomp"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`strconv` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|

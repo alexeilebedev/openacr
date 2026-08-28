@@ -7,7 +7,7 @@ and string-parses go to the source field.  Alias is mostly used
 to give command-line flags a short alias for a long flag name
 (`-d` → `-debug`), but it works for any field-to-field rename.
 
-```
+```ssim
 dmmeta.field   field:algo_lib.Cmdline.v   arg:u8  reftype:Alias  dflt:""  comment:"Alias for verbose"
   dmmeta.falias  field:algo_lib.Cmdline.v   srcfield:algo_lib.Cmdline.verbose
 ```
@@ -77,7 +77,7 @@ alias is implemented by composition, not duplication.
 
 The short alias for `-verbose` in algo_lib:
 
-```
+```ssim
 dmmeta.field   field:algo_lib.Cmdline.v        arg:u8  reftype:Alias  dflt:""  comment:""
 dmmeta.field   field:algo_lib.Cmdline.verbose  arg:u8  reftype:Val    dflt:""  comment:""
 dmmeta.falias  field:algo_lib.Cmdline.v        srcfield:algo_lib.Cmdline.verbose

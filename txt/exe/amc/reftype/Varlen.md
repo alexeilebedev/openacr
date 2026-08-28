@@ -9,7 +9,7 @@ format pattern for length-prefixed messages: a fixed header
 plus an array of fixed-size payload entries whose count is
 derived from a length field.
 
-```
+```ssim
 dmmeta.ctype  ctype:prot.DataMsg
   dmmeta.field  field:prot.DataMsg.data  arg:u8  reftype:Varlen
 ```
@@ -131,7 +131,7 @@ Allocation of the parent + trailing bytes is done via the
 
 A protobuf-style data message:
 
-```
+```ssim
 dmmeta.ctype  ctype:prot.DataMsg
   dmmeta.field  field:prot.DataMsg.length  arg:u8  reftype:Val
     dmmeta.lenfld  field:prot.DataMsg.length  extra:0

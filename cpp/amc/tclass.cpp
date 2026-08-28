@@ -30,7 +30,7 @@ void amc::ResetVars(amc::Genctx &ctx) {
     amc::FNs &ns = *ctx.p_ns;
     amc::FCtype *parent = ctx.p_ctype;
     amc::FField *field = ctx.p_field;
-    ind_replvar_Cascdel(R);// clean out varsx
+    algo_lib::Reset(R);// clean out vars
     Set(R, "$ns", ns.ns);
 
     if (parent) {

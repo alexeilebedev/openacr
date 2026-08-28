@@ -8,7 +8,7 @@ most of understanding the codebase.
 ### The pipeline
 <a href="#the-pipeline"></a>
 
-```
+```text
 data/*.ssim  →  amc  →  cpp/gen/*.cpp, include/gen/*.h  →  abt  →  bin/
 ```
 

@@ -31,8 +31,6 @@ acr_ed -> dmmeta.field  field:command.xyz.in  arg:algo.cstring  reftype:Val  dfl
 acr_ed -> dmmeta.floadtuples  field:command.xyz.in  autoscan:Y  optional:N  comment:""
 acr_ed -> dev.gitfile  gitfile:txt/exe/xyz/README.md
 acr_ed -> dev.readmefile  gitfile:txt/exe/xyz/README.md  inl:N  sandbox:N  filter:""  comment:""
-acr_ed -> dev.gitfile  gitfile:txt/gen/xyz/xyz.md
-acr_ed -> dev.readmefile  gitfile:txt/gen/xyz/xyz.md  inl:N  sandbox:N  filter:""  comment:""
 acr_ed -> EOF
 acr_ed -> mkdir -p cpp/xyz/
 acr_ed -> touch cpp/xyz/xyz.cpp
@@ -71,9 +69,6 @@ acr_ed -> git add -f bin/xyz
 acr_ed -> mkdir -p txt/exe/xyz/
 acr_ed -> touch txt/exe/xyz/README.md
 acr_ed -> git add txt/exe/xyz/README.md
-acr_ed -> mkdir -p txt/gen/xyz/
-acr_ed -> touch txt/gen/xyz/xyz.md
-acr_ed -> git add txt/gen/xyz/xyz.md
 acr_ed -> bin/src_hdr  -targsrc:xyz/% -write:Y -update_copyright:Y
 acr_ed -> bin/abt  -target:xyz -install:Y
 acr_ed -> echo 'please execute $(acr_compl -install) to add completions support for new target'

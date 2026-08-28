@@ -6,7 +6,7 @@ amc has no special control flow.  At top level it walks the
 A few phases run once globally; most run once per selected
 namespace.  This page documents every phase.
 
-The table lives in `data/amcdb/gen.ssim`.  Each row binds a phase
+The table lives in `ssimfile:amcdb.gen`.  Each row binds a phase
 name (e.g. `amcdb.gen:ns_dispatch`) to a C++ function pointer
 (`amc::gen_ns_dispatch`).  See
 [backend/tclass-tfunc.md](/txt/exe/amc/backend/tclass-tfunc.md) for
@@ -43,5 +43,5 @@ failure short-circuits subsequent phases via `prev_err`.
 <a href="#phase-reference"></a>
 
 *To be written.*  Table of every phase: name, `perns` flag,
-one-paragraph "what it does" sourced from `data/amcdb/gen.ssim`
+one-paragraph "what it does" sourced from `ssimfile:amcdb.gen`
 comments and the matching `gen_*` function in `cpp/amc/`.

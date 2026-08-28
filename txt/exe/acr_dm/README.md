@@ -1,78 +1,65 @@
 ## acr_dm - ACR Diff/Merge
 <a href="#acr_dm"></a>
 
-ACR Diff/Merge is a tool for merging ssim files.
-It is typically installed as a "merge driver" for git, and called upon by git
-to merge changes made in ssimfiles. The main insight is that since ssimfile are
-sets, they can be merged more efficiently than source files. Changes in nearby
-lines are not conflicts, and even changes to different attributes of a record
-having the same key are not conflicts either. Only change to the same attribute
-are considered a conflict. Thus, the tool can easily merge changes where one version
-adds a column, another removes a column.
+Two branches edit `ssimfile:dmmeta.field`.  One adds a field to a ctype near the top
+of the file; the other changes the comment of a field near the bottom.  A line-based
+merge sees two regions of changed text, and where those regions come close it stops and
+asks a person which text is right.  The question is the wrong one, because a line of an
+ssimfile is not a line of text.  It is a record, identified by its key, and the two
+branches never touched the same record.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Limitations](#limitations)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [A delete and a change are not a conflict](#a-delete-and-a-change-are-not-a-conflict)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Where a row sits is part of what the file says](#where-a-row-sits-is-part-of-what-the-file-says)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [A line that names no row belongs to the row below it](#a-line-that-names-no-row-belongs-to-the-row-below-it)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [A failed merge leaves a file that says so](#a-failed-merge-leaves-a-file-that-says-so)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Algorithm](#algorithm)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Git integration](#git-integration)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
+`acr_dm` merges ssimfiles as the sets of records they are.  Two changes to different
+attributes of one record merge, and so do a branch that adds an attribute to a table and
+a branch that removes another one.  What is left for a person is the case where two files
+say different things about one thing: the same attribute of the same record changed to two
+values, or one row moved to two places.  That case gets the standard markers
+`<<<<<<<`, `=======` and `>>>>>>>`, whose length `-msize` sets.
 
-### Internals
-<a href="#internals"></a>
-&#128196; [acr_dm - Internals](/txt/gen/acr_dm/acr_dm.md)<br/>
+It is git's merge driver for `*.ssim` in this repo, which is how it is usually run --
+see [Git integration](#git-integration).  It merges and does not diff: nothing here
+prints the difference between two ssimfiles.
 
-### Limitations
-<a href="#limitations"></a>
-
-At the moment the following limitations exist:
-
-- No diff function, merge only;
-- A row that two files both add, and place differently, is placed where the
-first of those files put it.  Position is merged for the rows the base file
-has, which is where a struct's layout comes from; a row that no file the merge
-read first had is placed once, by the file that introduced it.
-
-### Operation
-<a href="#operation"></a>
-
-The tool accepts a list of files. These are the file names to merge.
-
-- The first argument is *older* (archived) version, from which all other
-versions are derived;
-- second argument is *ours* version, which contains our changes to
-integration stream;
-- third argument is *theirs* version, which is the head of integration
-stream.
-
-In case of rebase, *ours* and *theirs* swap their places: *ours* is the
-head of integration stream, and *theirs* is our changes.
-
-There is no fundamental difference between *ours*, and *theirs*, the
-only difference that git merge overwrites *ours* file.
-
-The tool loads all input files and merges *ours* and *theirs* input
-tuples, writes result to stdout or, if `-write_ours` is specified,
-to *ours* file overwriting it.
-
-The tool handles tuples and attribute addition and removal,
-detecting conflicts. Conflicts are marked by standard markers
-`<<<<<<<`,`=======`,`>>>>>>>`.  Marker size could be adjusted with
-`-msize` option.
-
-Here is the example.
-
-Given four files:
-
+### Syntax
+<a href="#syntax"></a>
+```usage
+acr_dm: ACR Diff/Merge
+Usage: acr_dm [[-arg:]<string>] [options]
+    OPTION       TYPE    DFLT    COMMENT
+    -in          string  "data"  Input directory or filename, - for stdin
+    [arg]...     string          Files to merge: older ours theirs...
+    -write_ours                  Write result to ours file
+    -msize       int     7       Conflict marker size
+    -anchor                      Print each row's anchor, the row it was placed after
+    -rowid                       Print acr.rowid, each row's position in the merged file
+    -verbose     flag            Verbosity level (0..255); alias -v; cumulative
+    -debug       flag            Debug level (0..255); alias -d; cumulative
+    -help                        Print help and exit; alias -h
+    -version                     Print version and exit
+    -signature                   Show signatures and exit; alias -sig
 ```
+
+### How it is called
+<a href="#how-it-is-called"></a>
+
+The arguments are files, in the order git hands them over:
+
+- the first is *older*, the common ancestor every other version is derived from;
+- the second is *ours*, which during a merge holds the changes on the current branch;
+- the third is *theirs*, the head of the integration stream.
+
+A rebase swaps the last two: *ours* is then upstream's content and *theirs* is the
+branch's own.  Nothing in the merge depends on which is which, since the only comparison
+it makes between two branches is a comparison of keys -- so a rebase produces the file
+the merge would have.  The one asymmetry is where the answer goes: the merged file is
+written to stdout, and `-write_ours` overwrites *ours* with it, which is the file git
+reads back.
+
+### A merge that settles, and one that does not
+<a href="#a-merge-that-settles-and-one-that-does-not"></a>
+
+Four files, of which the first is the common ancestor of the rest:
+
+```ssim
 inline-command: cat test/acr_dm/file1.ssim
 garden.flower  flower:rose  color:red  thorned:Y
 garden.flower  flower:dahlia  color:pink  thorned:N
@@ -83,7 +70,7 @@ garden.flower  flower:carnation color:red  thorned:N
 garden.flower  flower:iris  color:yellow  thorned:N
 ```
 
-```
+```ssim
 inline-command: cat test/acr_dm/file2.ssim
 garden.flower  flower:rose  color:yellow  language:romance
 garden.flower  flower:tulip  color:yellow  language:friendship
@@ -93,7 +80,7 @@ garden.flower  flower:lotus  color:pink  language:purity
 garden.flower  flower:iris  color:blue  language:luck
 ```
 
-```
+```ssim
 inline-command: cat test/acr_dm/file3.ssim
 garden.flower  flower:rose  color:red  leaf:compound
 garden.flower  flower:dahlia  color:pink  leaf:compound
@@ -104,7 +91,7 @@ garden.flower  flower:iris  color:yellow  leaf:sword
 garden.flower  flower:daisy  color:orange  leaf:spatula
 ```
 
-```
+```ssim
 inline-command: cat test/acr_dm/file4.ssim
 garden.flower  flower:rose  color:red  leaf:compound
 garden.flower  flower:dahlia  color:pink  leaf:compound
@@ -116,14 +103,12 @@ garden.flower  flower:daisy  color:orange  leaf:spatula
 garden.flower  flower:lily  color:pink    leaf:bowl
 ```
 
-**file1** is the common ancestor.
+Merging **file2** with **file3** settles without a marker.  Both files remove the
+`thorned` attribute, which agrees; file2 adds `language` and file3 adds `leaf`, which are
+different attributes of the same rows; and the colours each of them changed are colours
+the other left alone.
 
-Let's merge **file2** with **file3**.
-Both file2 anad file3 remove the column `thorned`. File2 adds a new column `language`
-and file3 adds a new column 'leaf', and there are some changes to the color attribute,
-but they don't conflict. The resulting changes can be merged without conflict.
-
-```
+```ssim
 inline-command: acr_dm test/acr_dm/file1.ssim test/acr_dm/file2.ssim test/acr_dm/file3.ssim
 garden.flower  flower:rose  color:yellow  language:romance  leaf:compound
 garden.flower  flower:tulip  color:red  language:friendship  leaf:strap
@@ -133,9 +118,11 @@ garden.flower  flower:iris  color:blue  language:luck  leaf:sword
 garden.flower  flower:daisy  color:orange  leaf:spatula
 ```
 
-Now let's merge **file2** with **file4**
+Merging **file2** with **file4** does not settle.  Both add the row `lily`, and they give
+it a different colour, so that row is the one thing the two files disagree about and the
+only one they are asked about.
 
-```
+```ssim
 inline-command: acr_dm test/acr_dm/file1.ssim test/acr_dm/file2.ssim test/acr_dm/file4.ssim; true
 garden.flower  flower:rose  color:yellow  language:romance  leaf:compound
 garden.flower  flower:tulip  color:red  language:friendship  leaf:strap
@@ -148,8 +135,6 @@ garden.flower  flower:lily  color:pink  leaf:bowl
 garden.flower  flower:iris  color:blue  language:luck  leaf:sword
 garden.flower  flower:daisy  color:orange  leaf:spatula
 ```
-
-Merge results in conflict.
 
 ### A delete and a change are not a conflict
 <a href="#a-delete-and-a-change-are-not-a-conflict"></a>
@@ -172,7 +157,7 @@ to hand back.
 ### Where a row sits is part of what the file says
 <a href="#where-a-row-sits-is-part-of-what-the-file-says"></a>
 
-`data/dmmeta/field.ssim` sorts by ctype and leaves the order inside a ctype to
+`ssimfile:dmmeta.field` sorts by ctype and leaves the order inside a ctype to
 the file, so the position of a `dmmeta.field` row is the position of a member in
 a generated struct.  Upstream moves `lib_x2net.FRecvWr.p_intfmc` from the top of
 its ctype to the bottom.  A branch that has never read that namespace rebases
@@ -211,7 +196,7 @@ is the one outcome worse than a conflict.
 A generated package manifest under `apm/gen/` carries a checksum above each of
 the files it names:
 
-```
+```ssim
 # SHA1 = DvDKOwBjfK6Qmm2EYNOrdLs63YA=
 dev.gitfile  gitfile:cpp/lib_ams/board.cpp
 ```
@@ -285,16 +270,15 @@ showed it, the row it follows, and the files that moved it.
 ### Git integration
 <a href="#git-integration"></a>
 
-The tool integrates with local git repository as custom merge driver.
+`gitconfig-setup` installs `acr_dm` as a merge driver in the local repository's git
+config.  The driver is a local setting, so a fresh clone that has never run that command
+merges ssimfiles as text, line by line, with no idea that a row's position is a member's
+position in a generated struct.  `git config --get merge.acr_dm.driver` prints the
+command line when the driver is there.
 
-To install, run:
-```
-gitconfig-setup
-```
+`.gitattributes` is what selects the driver for a file:
 
-To choose merge driver for ssim files, **.gitattributes** file is used:
-
-```
+```bash
 inline-command: grep acr_dm .gitattributes
 *.ssim merge=acr_dm
 ```
@@ -304,24 +288,45 @@ inline-command: grep acr_dm .gitattributes
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
+Where the ssim database this tool loads for itself comes from.  It is not the files being
+merged, which are the positional arguments; the database is what carries
+`dmmeta.dispsigcheck`, so that a merge refuses to run under a schema its executable was
+not built for.
+
 #### -arg -- Files to merge: older ours theirs...
 <a href="#-arg"></a>
+
+The files, in git's own order: the common ancestor, then this branch's version, then the
+other one.  More than three are accepted, and each file after the second is one more
+branch read against the same ancestor -- a conflict then carries a marker per side rather
+than two.
 
 #### -write_ours -- Write result to ours file
 <a href="#-write_ours"></a>
 
+Overwrite the second file with the merged result, which is what git reads back from a
+merge driver.  Without it the result goes to stdout, which is how a merge is inspected
+without touching either input -- and how every example above is run.
+
 #### -msize -- Conflict marker size
 <a href="#-msize"></a>
+
+How many characters long each conflict marker is.  Seven is what git writes and what
+every tool that reads a conflicted file expects; a longer marker is for a file whose own
+content carries a run of seven angle brackets.
 
 #### -anchor -- Print each row's anchor, the row it was placed after
 <a href="#-anchor"></a>
 
+Show, beside each row of the merged file, the row it was placed after.  That is the
+decision [the algorithm](#algorithm) makes about position, so this is what to read when a
+row comes out somewhere unexpected: the anchor says which row it was hung off, and the
+file that moved it is the file whose order put it there.
+
 #### -rowid -- Print acr.rowid, each row's position in the merged file
 <a href="#-rowid"></a>
 
-### Inputs
-<a href="#inputs"></a>
-`acr_dm` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+Number the rows of the merged file in the order they come out.  A position is a fact
+about the output rather than about any input, so this is how two runs are compared -- a
+rebase against the merge it swaps the arguments of, for instance, which must produce the
+same file.

@@ -757,3 +757,237 @@ void atf_ci::citest_apm_gen() {
         apm_ExecX(apm);
     }ind_end;
 }
+
+// -----------------------------------------------------------------------------
+
+// The word with any shell punctuation stripped off its front, so that curl is
+// still recognised inside $(curl ...) or "curl or api=$(curl.
+static strptr BareWord(strptr word) {
+    strptr ret = word;
+    for (int i = 0; i < word.n_elems; i++) {
+        char c = word[i];
+        if (c=='$' || c=='(' || c=='`' || c=='"' || c=='\'' || c==';' || c=='&' || c=='=' || c=='{') {
+            ret = strptr(word.elems + i + 1, word.n_elems - i - 1);
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the word names a shell, which is what makes handing it a fetch the
+// same thing as running whatever the endpoint served.
+static bool ShellNameQ(strptr word) {
+    return word == "sh" || word == "bash" || word == "/bin/sh" || word == "/bin/bash";
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the word names a fetch.
+static bool FetchWordQ(strptr word) {
+    strptr name = BareWord(word);
+    return name == "curl" || name == "wget";
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the word is a short option cluster carrying this letter, so that
+// curl -k and curl -sSLk read as the same request.  Every character after the
+// dash has to be a letter, which keeps an attached value such as -okernel.tgz
+// from being read as a cluster that carries k.
+static bool ShortFlagQ(strptr word, char flag) {
+    bool ret = false;
+    if (word.n_elems > 1 && word[0] == '-' && word[1] != '-') {
+        bool alpha = true;
+        bool found = false;
+        for (int i = 1; i < word.n_elems; i++) {
+            char c = word[i];
+            if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
+                alpha = false;
+            }
+            if (c == flag) {
+                found = true;
+            }
+        }
+        ret = alpha && found;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// The command a pipeline segment runs, with a sudo or env prefix and any
+// options or assignments ahead of it skipped, or empty when it runs nothing.
+static strptr SegmentCmd(strptr segment) {
+    strptr ret;
+    ind_beg(algo::Word_curs,word,segment) {
+        bool prefix = word == "sudo" || word == "env" || word == "command" || word == "exec";
+        bool option = StartsWithQ(word,"-") || algo::FindStr(word,"=") >= 0;
+        if (ch_N(ret) == 0 && !prefix && !option) {
+            ret = word;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the line fetches bytes over the network.  The name is matched as a
+// whole word, because a substring search for curl answers yes to grpcurl.
+static bool FetchQ(strptr line) {
+    bool ret = false;
+    ind_beg(algo::Word_curs,word,line) {
+        if (FetchWordQ(word)) {
+            ret = true;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the line hands a fetch to a shell, so that what runs is whatever
+// the endpoint served and nobody has read it.  The line is read as a pipeline:
+// a segment counts only when a fetch stands to its left and the segment's own
+// command is a shell, which tells "| sudo -E bash" apart from "| sha256sum -c -"
+// and from a pipe that has nothing to do with the fetch beside it.
+static bool PipeToShellQ(strptr line) {
+    bool ret = false;
+    bool fetch = false;
+    ind_beg(algo::Sep_curs,segment,line,'|') {
+        if (fetch && ShellNameQ(SegmentCmd(segment))) {
+            ret = true;
+        }
+        if (FetchQ(segment)) {
+            fetch = true;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the line switches off the check that decides whether the far end is
+// who it claims to be, which is what leaves a fetch open to anyone on its path.
+// Only the options standing after the fetch itself count, so another command's
+// flags on the same line are left alone.
+static bool UnverifiedTlsQ(strptr line) {
+    bool ret = false;
+    ind_beg(algo::Sep_curs,segment,line,'|') {
+        bool fetch = false;
+        ind_beg(algo::Word_curs,word,segment) {
+            bool off = word == "--insecure" || word == "--no-check-certificate" || ShortFlagQ(word,'k');
+            if (FetchWordQ(word)) {
+                fetch = true;
+            } else if (fetch && off) {
+                ret = true;
+            }
+        }ind_end;
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the line names a url that carries no version, so that what arrives
+// depends on the day rather than on anything this repository states.  The word
+// tested has to be the url itself, which keeps a sentence that merely uses the
+// word latest out of it.
+static bool LatestUrlQ(strptr line) {
+    bool ret = false;
+    ind_beg(algo::Word_curs,word,line) {
+        if (algo::FindStr(word,"//") >= 0 && algo::FindStr(word,"latest",false) >= 0) {
+            ret = true;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the line runs git with this subcommand.  Both words are matched
+// anywhere on the line rather than side by side, so that git -C <dir> clone is
+// seen as the clone it is.
+static bool GitWordQ(strptr line, strptr verb) {
+    bool git = false;
+    bool found = false;
+    ind_beg(algo::Word_curs,word,line) {
+        if (word == "git") {
+            git = true;
+        }
+        if (word == verb) {
+            found = true;
+        }
+    }ind_end;
+    return git && found;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the clone on this line already names the revision it wants, which
+// -b and --branch do on the clone's own command line.
+static bool ClonePinnedQ(strptr line) {
+    bool ret = false;
+    ind_beg(algo::Word_curs,word,line) {
+        if (word == "--branch" || ShortFlagQ(word,'b')) {
+            ret = true;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Report one defect found in an install script, and fail the citest.
+static void ReportInstallScript(strptr gitfile, int lineno, strptr comment) {
+    prlog("atf_ci.install_script"
+          <<Keyval("gitfile",gitfile)
+          <<Keyval("line",lineno)
+          <<Keyval("comment",comment));
+    algo_lib::_db.exit_code=1;
+}
+
+// -----------------------------------------------------------------------------
+
+// Refuse an install script that cannot say what it installs.
+// Each bin/install-% script is inlined verbatim into the generated image build
+// scripts, where it runs as root, so whoever answers for the endpoint it reads
+// from chooses what lands in the image.  Four defects make that unanswerable,
+// and none of them is ever needed: piping a fetch into a shell, turning the
+// certificate check off, naming latest in a url, and cloning a repository
+// without moving it to a named revision.
+// A clone is carried until a checkout or a reset moves it, so a file that
+// clones twice has to move each one, and a clone moved on its own line is
+// already satisfied.  A comment line is skipped whatever it is indented by,
+// because bash ignores it wherever the generator puts it.
+void atf_ci::citest_install_script() {
+    ind_beg(algo::Dir_curs,entry,"bin/install-*") if (ind_gitfile_Find(entry.pathname)) {
+        int clone_line = 0;
+        ind_beg(algo::FileLine_curs,line,entry.pathname) {
+            int lineno = ind_curs(line).i + 1;
+            if (!StartsWithQ(algo::Trimmed(line),"#")) {
+                bool moved = GitWordQ(line,"checkout") || GitWordQ(line,"reset");
+                if (PipeToShellQ(line)) {
+                    ReportInstallScript(entry.pathname, lineno, "fetch piped into a shell");
+                }
+                if (UnverifiedTlsQ(line)) {
+                    ReportInstallScript(entry.pathname, lineno, "certificate verification disabled");
+                }
+                if (LatestUrlQ(line)) {
+                    ReportInstallScript(entry.pathname, lineno, "url names latest instead of a version");
+                }
+                if (GitWordQ(line,"clone")) {
+                    if (clone_line > 0) {
+                        ReportInstallScript(entry.pathname, clone_line, "git clone is not moved to a named revision");
+                    }
+                    clone_line = moved || ClonePinnedQ(line) ? 0 : lineno;
+                } else if (moved) {
+                    clone_line = 0;
+                }
+            }
+        }ind_end;
+        if (clone_line > 0) {
+            ReportInstallScript(entry.pathname, clone_line, "git clone is not moved to a named revision");
+        }
+    }ind_end;
+}

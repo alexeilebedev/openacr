@@ -3,7 +3,7 @@
 
 Every field in a ctype has a **reftype** — a type constructor that
 decides what code amc generates for the field.  36 reftypes are
-defined in `data/dmmeta/reftype.ssim`.
+defined in `ssimfile:dmmeta.reftype`.
 
 A field is declared like this:
 
@@ -89,7 +89,7 @@ flag per cursor: `dflt:Y` means every field of that reftype gets the
 cursor, and `dflt:N` means the field must ask for it with a
 `dmmeta.fcurs` row naming the field and the curstype.
 
-```
+```ssim
 dmmeta.fcurs  fcurs:acr.FDb.zd_all_selrec/delcurs  comment:""
 ```
 
@@ -117,8 +117,8 @@ removal is the common case where that rule bites.
 The table above names what each cursor walks, which is the part that
 belongs to the reftype.  The authoritative list of which cursors are
 default and which are on demand is regenerated from the database in
-[dmmeta.fcurs](/txt/ssimdb/dmmeta/fcurs.md), and the cursor types
-themselves are [amcdb.curstype](/txt/ssimdb/amcdb/curstype.md).
+[dmmeta.fcurs](/txt/ssimdb/dmmeta/README.md#dmmeta-fcurs), and the cursor types
+themselves are [amcdb.curstype](/txt/ssimdb/amcdb/README.md).
 
 ### Roots and infrastructure
 <a href="#roots-and-infrastructure"></a>

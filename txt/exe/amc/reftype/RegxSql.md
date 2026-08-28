@@ -7,7 +7,7 @@ to `Sql` and a hard requirement that `dmmeta.fregx` be
 present.  In SQL-style regex, `%` is "any sequence" and `_` is
 "any single character"; everything else is literal.
 
-```
+```ssim
 dmmeta.field   field:abt.FDb.target  arg:abt.FTarget  reftype:RegxSql  dflt:""
   dmmeta.fregx  field:abt.FDb.target  regxtype:Sql  partial:N
 ```
@@ -86,7 +86,7 @@ flavor.
 Most amc CLI tools use RegxSql for their `-target`,
 `-readmefile`, etc.  flags:
 
-```
+```ssim
 dmmeta.field   field:command.abt.target  arg:dev.Target  reftype:RegxSql
   dmmeta.fregx  field:command.abt.target  regxtype:Sql  partial:N
 ```

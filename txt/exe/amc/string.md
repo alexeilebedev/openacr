@@ -62,7 +62,7 @@ Number cannot be negative, because left-padding with 0 prevents that.
 Use a field with `arg:char` and `reftype:Smallstr`, and provide a `smallstr` record to specify additional
 information:
 
-```
+```ssim
 dmmeta.field  field:algo.LspaceStr5.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
 dmmeta.smallstr  field:algo.LspaceStr5.ch  length:5  strtype:leftpad  pad:"' '"  strict:Y
 ```
@@ -70,7 +70,7 @@ dmmeta.smallstr  field:algo.LspaceStr5.ch  length:5  strtype:leftpad  pad:"' '" 
 In the example above, a field of 5 characters is specified, padded on the left with `' '`.
 The following functions are generated:
 
-```
+```c++
 inline-command: amc algo.LspaceStr5.ch% -proto -report:N
 // Access string as array of chars
 // func:algo.LspaceStr5.ch.Getary
@@ -105,7 +105,7 @@ inline               algo::LspaceStr5::operator algo::strptr() const __attribute
 For any small string field, you can also add `numstr` to generate functions for converting to/from a
 desired integer type:
 
-```
+```ssim
 dmmeta.field  field:algo.LspaceStr5_U16.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
 dmmeta.smallstr  field:algo.LspaceStr5_U16.ch  length:5  strtype:leftpad  pad:"' '"  strict:Y
 dmmeta.numstr  field:algo.LspaceStr5_U16.ch  numtype:u16  base:10  min_len:5
@@ -136,7 +136,7 @@ that way rather than naming each type.
 
 The following functions are generated for the example above:
 
-```
+```c++
 inline-command: amc algo.LspaceStr5_U16.ch% -proto -report:N
 // Access string as array of chars
 // func:algo.LspaceStr5_U16.ch.Getary
@@ -202,7 +202,7 @@ So they are not stored.  A `dmmeta.substr` record declares that a field's
 value is computed from another field's string, and amc generates the
 accessor instead of allocating storage:
 
-```
+```ssim
 dmmeta.field     field:dmmeta.Field.field  arg:algo.Smallstr150  reftype:Val   dflt:""  comment:"Primary key, as ctype.name"
 dmmeta.field     field:dmmeta.Field.ctype  arg:dmmeta.Ctype      reftype:Pkey  dflt:""  comment:"Parent structure"
   dmmeta.substr  field:dmmeta.Field.ctype  expr:.RL  srcfield:dmmeta.Field.field
@@ -237,7 +237,7 @@ information.
 Amc can generate conversion functions for mapping between each ctype and a variety of formats.
 Conversion code is requested with `cfmt` record:
 
-```
+```ssim
 dmmeta.cfmt  cfmt:atf.Testrun.String          printfmt:Tuple  read:Y  print:Y  sep:""   genop:Y  comment:""
 ```
 
@@ -260,7 +260,7 @@ The tuple format is the default format for amc/acr types, and is the format used
 Each line has a type tag, which is just the name of the ctype, followed by
 space-separated key-value pairs. For instance,
 
-```
+```ssim
 dmmeta.ctype  ctype:amc.FCtype  comment:""
 ```
 

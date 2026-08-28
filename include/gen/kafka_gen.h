@@ -894,7 +894,6 @@ inline void          Frame_curs_Next(kafka::Frame_curs& curs) __attribute__((not
 inline void          Frame_curs_Init(kafka::Frame_curs& parent);
 
 // --- kafka.GroupRecordKeyHeader
-// access: kafka.OffsetCommitKey.base (Base)
 struct GroupRecordKeyHeader { // kafka.GroupRecordKeyHeader
     i16   type;      //   0
     i16   version;   //   0
@@ -979,7 +978,6 @@ bool                 GroupRecordKeyHeaderMsgsCase_ReadStrptrMaybe(kafka::GroupRe
 inline void          GroupRecordKeyHeaderMsgsCase_Init(kafka::GroupRecordKeyHeaderMsgsCase& parent);
 
 // --- kafka.GroupRecordValueHeader
-// access: kafka.OffsetCommitValue.base (Base)
 struct GroupRecordValueHeader { // kafka.GroupRecordValueHeader
     i16   type;      //   0
     i16   version;   //   0

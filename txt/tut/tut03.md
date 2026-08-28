@@ -36,7 +36,7 @@ through building an engine-style program from scratch.
 <a href="#sample-app-with-main-loop"></a>
 Let's begin by creating a sample app and add a main loop to it.
 
-```
+```ssim
 inline-command: acr_ed -create -target samp_tut3 -write
 acr_ed.create_target  target:samp_tut3
 report.acr_check  records:***  n_err:0
@@ -48,9 +48,6 @@ acr.insert  dev.gitfile  gitfile:include/gen/samp_tut3_gen.inl.h
 acr.insert  dev.gitfile  gitfile:include/samp_tut3.h
 acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut3/README.md
   acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut3/README.md      inl:N  sandbox:N  filter:""  comment:""
-
-acr.insert  dev.gitfile  gitfile:txt/gen/samp_tut3/samp_tut3.md
-  acr.insert  dev.readmefile  gitfile:txt/gen/samp_tut3/samp_tut3.md  inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dmmeta.ns  ns:samp_tut3  nstype:exe  license:GPL  comment:""
   acr.insert  dev.target  target:samp_tut3
@@ -81,12 +78,14 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 please execute $(acr_compl -install) to add completions support for new target
+acr.update  dev.readmefile  gitfile:txt/exe/samp_tut3/README.md  inl:N  sandbox:N  filter:""  comment:"samp_tut3 -"
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Run:
 
-```
+```bash
 inline-command: samp_tut3
 Hello, World!
 ```
@@ -95,7 +94,7 @@ When you run the newly modified samp_tut3, you will notice that it exits right a
 because `samp_tut3::MainLoop` has detected that no actions are possible,
 and has exited. Let's take a closer look at the generated `samp_tut3::MainLoop`:
 
-```
+```c++
 inline-command: sed '/--- samp_tut3.FDb._db.MainLoop/,/^}/p;d' cpp/gen/samp_tut3_gen.cpp
 // --- samp_tut3.FDb._db.MainLoop
 // Main loop.
@@ -135,7 +134,7 @@ namespaces that comprise the app, the main loop automatically begins to poll it 
 Now let's modify our app so that it prints numbers `0..10`, asynchronously, then exits.
 There are many ways to do it, so we'll start with the most general one: a table.
 
-```
+```ssim
 inline-command: acr_ed -create -ctype samp_tut3.Value -subset i32 -reftype Tpool -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.ctype  ctype:samp_tut3.Value  comment:""
@@ -146,7 +145,7 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
-```
+```ssim
 inline-command: acr_ed -create -field samp_tut3.FDb.zd_value -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.field  field:samp_tut3.FDb.zd_value  arg:samp_tut3.Value  reftype:Llist  dflt:""  comment:""
@@ -158,7 +157,7 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 
 Add a step on the new field so amc generates a per-iteration scheduler:
 
-```
+```ssim
 inline-command: acr_ed -create -fstep samp_tut3.FDb.zd_value -steptype Inline -write
 report.acr_check  records:***  n_err:0
 acr.insert  dmmeta.fstep  fstep:samp_tut3.FDb.zd_value  steptype:Inline  comment:""
@@ -168,7 +167,7 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 
 The above commands, which are best practiced interactively, add the following records to our database:
 
-```
+```ssim
 inline-command: acr ctype:samp_tut3.Value -t
 dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:exe  comment:Executable
@@ -194,11 +193,11 @@ called `zd_value`.
 
 Now let's modify the samp_tut3 and run it:
 
-```
+```bash
 inline-command: cp conf/samp_tut3.txt cpp/samp_tut3/samp_tut3.cpp
 ```
 
-```
+```c++
 inline-command: sed '/zd_value_Step/,$p;d' cpp/samp_tut3/samp_tut3.cpp
 void samp_tut3::zd_value_Step() {
     Value &value = *zd_value_First();
@@ -216,7 +215,7 @@ void samp_tut3::Main() {
 }
 ```
 
-```
+```ssim
 inline-command: amc && ai samp_tut3
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
@@ -225,7 +224,7 @@ abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 ```
 
-```
+```bash
 inline-command: samp_tut3
 0
 1
@@ -246,7 +245,7 @@ of an asynchronous program written in engine style.
 Let's proceed slowly and understand what code got generated, and what we can do with it.
 First, let's check the new `MainLoop`;
 
-```
+```c++
 inline-command: src_func -gen -f samp_tut3.MainLoop
 // --- samp_tut3.FDb._db.MainLoop
 // Main loop.
@@ -264,7 +263,7 @@ void samp_tut3::MainLoop() {
 We see that `samp_tut3::Step` is now called. That's because we defined the `fstep` record on `zd_value`.
 Let's drill down to `Step`:
 
-```
+```c++
 inline-command: src_func -gen -f samp_tut3.Step
 // --- samp_tut3.FDb._db.Step
 // Main step
@@ -276,7 +275,7 @@ void samp_tut3::Step() {
 
 Almost nothing interesting here... Let's check `zd_value_Call`:
 
-```
+```bash
 inline-command: src_func -gen -f samp_tut3.zd_value_Call
 // --- samp_tut3.FDb.zd_value.Call
 inline static void samp_tut3::zd_value_Call() {

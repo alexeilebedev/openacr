@@ -64,7 +64,7 @@ ctype, and **inlines** every field of that ctype into the
 parent at the same offsets.  The result is binary-compatible
 with the base type for its entire prefix.
 
-```
+```ssim
 dmmeta.ctype  ctype:prot.HeartbeatMsg
   dmmeta.field  field:prot.HeartbeatMsg.base  arg:prot.MsgHeader  reftype:Base
 ```
@@ -120,7 +120,7 @@ resolves to).  But the **schema metadata still records the
 relationship**, so `acr -check` enforces referential integrity
 at load time.
 
-```
+```ssim
 dmmeta.field  field:my.Order.customer  arg:my.Customer  reftype:Pkey
 ```
 
@@ -144,7 +144,7 @@ level** foreign key; Upptr is the **pointer-level** companion.
 declares a plain pointer that is populated by an xref's
 `via:` path when the row is inserted:
 
-```
+```ssim
 dmmeta.ctype  ctype:abt.FTargdep
   dmmeta.field  field:abt.FTargdep.p_parent  arg:abt.FTarget  reftype:Upptr
 ```
@@ -171,7 +171,7 @@ amc supports chained Base — a ctype with a Base pointing at
 another ctype that itself has a Base, etc.  Each level
 inlines its predecessor's fields:
 
-```
+```ssim
 dmmeta.field  field:proto.MsgHeader.<base-fields>  ...
 
 dmmeta.ctype    ctype:proto.RequestMsg

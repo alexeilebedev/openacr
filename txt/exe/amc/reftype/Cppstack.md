@@ -10,7 +10,7 @@ auto-generated `_curs` variables, lambda captures, etc.) —
 but the reftype itself emits no functions and reserves no
 memory.
 
-```
+```ssim
 dmmeta.field  field:acr.FDb.print  arg:acr.FPrint  reftype:Cppstack  dflt:""  comment:"Provides default name for variables of this type"
 ```
 

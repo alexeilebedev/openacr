@@ -1,5 +1,5 @@
-## acr_ed: the rules
-<a href="#acr_ed-the-rules"></a>
+## acr_ed: Rules
+<a href="#acr_ed-rules"></a>
 
 `acr_ed` edits the schema.  Read
 [/txt/rule/openacr.md](/txt/rule/openacr.md) beside this file,
@@ -78,7 +78,7 @@ whose pkey is changing is a `dmmeta.field`, `ScheduleCascadeUpdate` in
 `cpp/acr/query.cpp` schedules a second pass over the ssimfile of the field's
 ctype which renames the matching attribute in every row, so the schema row, the
 data column and every Pkey reference to the field move in one `acr` run.
-Renaming `x2db.Gwproto.offset` to `portoffset` rewrites `data/x2db/gwproto.ssim`
+Renaming `x2db.Gwproto.offset` to `portoffset` rewrites `ssimfile:x2db.gwproto`
 alongside `field.ssim`, `funique.ssim` and `dispsig.ssim`, and leaves
 `acr -check % -x` at `n_err:0` with the file already in normal form -- a
 re-run of `acr 'x2db.gwproto:%' -write` reports `n_file_mod:0`.

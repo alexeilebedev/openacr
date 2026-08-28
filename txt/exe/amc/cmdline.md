@@ -36,7 +36,7 @@ is described in ssim and read for free by the generated code.
 
 For every executable namespace `<ns>`:
 
-```
+```ssim
 dmmeta.ctype       ctype:command.<ns>
 dmmeta.ccmdline    ctype:command.<ns>  read:Y  basecmdline:algo_lib.FDb.cmdline
 dmmeta.field       field:command.<ns>.<flag>  arg:<type>  reftype:Val  dflt:"…"  comment:"…"
@@ -76,7 +76,7 @@ An option can be specified as `-flag value`, `-flag:value`, or
 positional argument.  Anonymous fields are positional in
 declaration order:
 
-```
+```ssim
 dmmeta.field   field:command.foo.target  arg:dev.Target  reftype:RegxSql  dflt:""
   dmmeta.anonfld  field:command.foo.target
 ```
@@ -119,7 +119,7 @@ Boolean flags use `arg:bool` plus typically `emptyval:Y`, so
 The [Alias](/txt/exe/amc/reftype/Alias.md) reftype is the
 canonical way to declare short option names:
 
-```
+```ssim
 dmmeta.field   field:command.foo.v  arg:i32  reftype:Alias
   dmmeta.falias  field:command.foo.v  srcfield:command.foo.verbose
 ```
@@ -133,7 +133,7 @@ After this, the help string lists `-v` as an alias of
 When a field has `fconst` records, the help string lists every
 accepted value (and its comment) in a per-flag mini-table:
 
-```
+```bash
 -cfg          string  ""      Set config
     debug       (Debug build)
     release     (Release build, default)
@@ -166,7 +166,7 @@ Add a row for any new built-in to override.
 amc generates `<exename>_help` (a `const char *`) at code-gen
 time.  Its shape:
 
-```
+```text
 <exename>: <ctype-comment>
 Usage: <exename> [<positional1>] [<positional2>] [options]
     OPTION    TYPE   DFLT   COMMENT
@@ -250,7 +250,7 @@ agree on the wire format because they share the ssim source.
 
 Minimal exec namespace skeleton:
 
-```
+```ssim
 dmmeta.ns          ns:myapp   nstype:exe
 dmmeta.ctype       ctype:command.myapp  comment:"Hello-world demo"
 
@@ -272,7 +272,7 @@ dmmeta.cfmt        cfmt:command.myapp.Argv  printfmt:Auto  print:Y  read:Y  sep:
 
 The generated help string:
 
-```
+```text
 myapp: Hello-world demo
 Usage: myapp [[-target:]<target>] [options]
     OPTION    TYPE     DFLT       COMMENT

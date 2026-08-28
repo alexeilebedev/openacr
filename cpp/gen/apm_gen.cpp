@@ -403,7 +403,7 @@ static void apm::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'94da450a9c64ce4992db6a1020c45885ed0f4312'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'8eea5356efc2f8db4ded3f6fc87700e77a6f97ac'");
 }
 
 // --- apm.FDb._db.InsertStrptrMaybe

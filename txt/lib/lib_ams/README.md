@@ -24,7 +24,7 @@ A shm ID is a 32-bit entity consisting of four fields: process type, process id,
 
 Process types are registered in table `amsdb.proctype`. The standard types are:
 
-```
+```ssim
 inline-command: acr proctype | ssimfilt ^ -t
 PROCTYPE      ID  NS            OVERHEADMB  HUGEMB  HBTIMEOUT  COMMENT
               0                 0           0       30         No process
@@ -38,7 +38,7 @@ user          21                0           4295    30         User process laun
 Grptypes are registered in table `amsdb.grptype`. Grptype describes both a shared memory segment type and
 a multicast group type. The standard types are:
 
-```
+```ssim
 inline-command: acr grptype -report:N
 amsdb.grptype  grptype:board    id:24  comment:"Message board: large payloads referenced from lane rings"
 amsdb.grptype  grptype:log      id:9   comment:"Log messages"
@@ -66,28 +66,6 @@ Together, shm id is formatted like this: `proctype-nodeidx-procidx.grptype-grpid
 For instance, `proc1-0-0.md-0`.
 
 Proc types and grptypes can be extended for the given system being implemented.
-
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [AMS Library](#ams-library)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [In-memory shm format; Flow control](#in-memory-shm-format-flow-control)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Shmhdr](#shmhdr)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Writing](#writing)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Reading](#reading)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Flow control (budget)](#flow-control-budget-)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Message board](#message-board)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Two-tier polling](#two-tier-polling)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Heartbeats and liveness](#heartbeats-and-liveness)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Performance](#performance)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Message board performance](#message-board-performance)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [AMS Shm Tracing](#ams-shm-tracing)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [lib_ams - Internals](/txt/gen/lib_ams/lib_ams.md)<br/>
 
 ## AMS Library
 <a href="#ams-library"></a>
@@ -225,7 +203,7 @@ through a small (256KB) window is about 150 cycles (best case) and about 220 cyc
 With one reader and 8 writers, one-way latency is about 1,000-1,600 cycles. On a 3.3 GHz machine
 this means that one process can send a 64-byte message, and 160 nanoseconds later, 8 different processes can read it.
 
-```
+```bash
 $ sudo chrt -r 99 ./atf_unit -check_untracked:N -nofork lib_ams.SendData8
 Set dflt shmem size to 2101248
 Parent: writing messages...
@@ -251,7 +229,7 @@ lane every reader shares costs one write however many readers consume it, so a
 board saves nothing there. `ams_sendtest -uc` gives every reader a lane of its
 own, which is the shape a real fan-out has:
 
-```
+```bash
 bin/ams_sendtest -uc -nchild:<N> -nmsg:500000 -msgsize_min:65536 -msgsize_max:65537 [-board]
 ```
 

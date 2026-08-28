@@ -1,17 +1,36 @@
 ## ams_sendtest - Algo Messaging System test tool
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [ams_sendtest - Internals](/txt/gen/ams_sendtest/ams_sendtest.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+ams_sendtest: Algo Messaging System test tool
+Usage: ams_sendtest [options]
+    OPTION         TYPE    DFLT    COMMENT
+    -in            string  "data"  Input directory or filename, - for stdin
+    -id            int     0       Process index (0=parent)
+    -file_prefix   string  ""      Use file_prefix
+    -nchild        int     1       Number of stream readers
+    -blocking                      Use blocking send mode
+    -nmsg          int     100000  Number of messages to send/receive
+    -trace         regx    ""      Regx expression specifying what to trace
+    -timeout       int     30      Time limit for the send
+    -recvdelay_ns  int     0       Pause nanoseconds between messages
+    -senddelay_ns  int     0       Pause nanoseconds between messages
+    -msgsize_min   int     64      Minimum message length
+    -msgsize_max   int     256     Maximum message length
+    -bufsize       int     655360  Shared memory buffer size
+    -recvdelay     int     0       Pause nanoseconds between messages
+    -signaled                      Enable signaled mode
+    -board                         Carry messages too big for the ring on the message board
+    -board_pin     int     4       Board slots one reader may pin at once (board mode)
+    -uc                            Unicast: one lane per reader instead of one shared lane
+    -verbose       flag            Verbosity level (0..255); alias -v; cumulative
+    -debug         flag            Debug level (0..255); alias -d; cumulative
+    -help                          Print help and exit; alias -h
+    -version                       Print version and exit
+    -signature                     Show signatures and exit; alias -sig
+```
 
 ### Options
 <a href="#options"></a>
@@ -68,10 +87,3 @@
 
 #### -uc -- Unicast: one lane per reader instead of one shared lane
 <a href="#-uc"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`ams_sendtest` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|

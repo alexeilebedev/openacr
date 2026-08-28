@@ -8,7 +8,7 @@ argument).  Use it when you want amc-style allocation
 ergonomics (`_Alloc`, `_Delete`, `_AllocMaybe`) but the
 underlying memory should come straight from libc.
 
-```
+```ssim
 dmmeta.field  field:lib_kafka.FDb.heap  arg:u8  reftype:Malloc  dflt:""  comment:""
 ```
 
@@ -88,7 +88,7 @@ Delete, …).
 A Kafka client's working heap can use plain malloc to avoid
 fragmenting the namespace's primary Lpool:
 
-```
+```ssim
 dmmeta.field  field:lib_kafka.FDb.heap  arg:u8  reftype:Malloc
 ```
 

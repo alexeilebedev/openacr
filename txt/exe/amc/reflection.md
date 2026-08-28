@@ -46,7 +46,7 @@ Reflection state lives entirely on `algo_lib::_db`:
 
 The schema is in `data/dmmeta/`:
 
-```
+```ssim
 dmmeta.ctype  ctype:algo.Imdb  comment:"In-memory database descriptor (reflection)"
   field:algo.Imdb.imdb               arg:algo.Smallstr50                reftype:Val  // "<ns>"
   field:algo.Imdb.InsertStrptrMaybe  arg:algo.ImdbInsertStrptrMaybeFcn  reftype:Val  // tuple loader
@@ -56,7 +56,7 @@ dmmeta.ctype  ctype:algo.Imdb  comment:"In-memory database descriptor (reflectio
   field:algo.Imdb.GetTrace           arg:algo.ImdbGetTraceFcn           reftype:Val  // copy trace counters
 ```
 
-```
+```ssim
 dmmeta.ctype  ctype:algo.Imtable  comment:"In-memory table descriptor"
   field:algo.Imtable.imtable      arg:algo.Smallstr50         reftype:Val  // "<ns>.<field>"
   field:algo.Imtable.elem_type    arg:dmmeta.Ctype            reftype:Pkey // element ctype name

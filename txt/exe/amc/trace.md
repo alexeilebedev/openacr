@@ -18,7 +18,7 @@ The trace record's existence is what enables `acr -t
 <ns>.trace` to dump the live counters out of a running
 process via reflection.
 
-```
+```ssim
 dmmeta.field   field:abt.FDb.bh_syscmd  arg:abt.FSyscmd  reftype:Bheap
   dmmeta.ftrace  field:abt.FDb.bh_syscmd   # adds alloc/del counters
 ```
@@ -59,7 +59,7 @@ directly.
 ### ftrace on a step
 <a href="#ftrace-on-a-step"></a>
 
-```
+```ssim
 dmmeta.fstep   fstep:net.FDb.cd_recv  steptype:Inline
   dmmeta.ftrace  field:net.FDb.cd_recv
 ```
@@ -89,7 +89,7 @@ net::_db.trace.step_cd_recv_cycles += algo::get_cycles() - t0;
 
 For a pool field at the global level:
 
-```
+```ssim
 dmmeta.field   field:abt.FDb.target  arg:abt.FTarget  reftype:Lary
   dmmeta.ftrace  field:abt.FDb.target
 ```
@@ -113,7 +113,7 @@ pools get `FDb`).
 
 Direction-specific:
 
-```
+```ssim
 dmmeta.field   field:net.FConn.in_buf  arg:net.MsgHdr  reftype:Fbuf
   dmmeta.fbuf    field:net.FConn.in_buf  fbufdir:in  ...
   dmmeta.ftrace  field:net.FConn.in_buf
@@ -121,14 +121,14 @@ dmmeta.field   field:net.FConn.in_buf  arg:net.MsgHdr  reftype:Fbuf
 
 For an input fbuf, adds:
 
-```
+```bash
 n_read_byte    -- total bytes refilled
 n_read_msg     -- total messages dispatched
 ```
 
 For an output fbuf:
 
-```
+```bash
 n_write_byte
 n_write_msg
 n_eagain       -- count of EAGAIN/EINTR retries
@@ -140,7 +140,7 @@ runaway throughput at a glance.
 ### disptrace
 <a href="#disptrace"></a>
 
-```
+```ssim
 dmmeta.disptrace  dispatch:gate.In  cycle:Y
 ```
 
@@ -166,10 +166,10 @@ The dispatch's generated switch wraps each callback with
 
 For application-defined counters that aren't driven by amc:
 
-```
+```ssim
 dmmeta.tracefld     tracefld:gate.trace.connections
 dmmeta.usertracefld tracefld:gate.trace.connections  comment:"current open connections"
-```
+```bash
 
 amc adds a `u64 connections` field to `gate::trace`.  Your
 code updates it directly:

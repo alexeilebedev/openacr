@@ -370,6 +370,7 @@ extern const char *  dmmeta_Ns_ns_bash2html;      // bash2html       fconst:dmme
 extern const char *  dmmeta_Ns_ns_command;        // command         fconst:dmmeta.Ns.ns/command
 extern const char *  dmmeta_Ns_ns_dev;            // dev             fconst:dmmeta.Ns.ns/dev
 extern const char *  dmmeta_Ns_ns_dmmeta;         // dmmeta          fconst:dmmeta.Ns.ns/dmmeta
+extern const char *  dmmeta_Ns_ns_doc;            // doc             fconst:dmmeta.Ns.ns/doc
 extern const char *  dmmeta_Ns_ns_fm;             // fm              fconst:dmmeta.Ns.ns/fm
 extern const char *  dmmeta_Ns_ns_gcache;         // gcache          fconst:dmmeta.Ns.ns/gcache
 extern const char *  dmmeta_Ns_ns_http;           // http            fconst:dmmeta.Ns.ns/http
@@ -551,6 +552,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_covfile;                 // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_covline;                 // dev.covline                  fconst:dmmeta.Ssimfile.ssimfile/dev.covline
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_covtarget;               // dev.covtarget                fconst:dmmeta.Ssimfile.ssimfile/dev.covtarget
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_dbgtarget;               // dev.dbgtarget                fconst:dmmeta.Ssimfile.ssimfile/dev.dbgtarget
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_docpage;                 // dev.docpage                  fconst:dmmeta.Ssimfile.ssimfile/dev.docpage
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_edaction;                // dev.edaction                 fconst:dmmeta.Ssimfile.ssimfile/dev.edaction
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_edacttype;               // dev.edacttype                fconst:dmmeta.Ssimfile.ssimfile/dev.edacttype
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitfile;                 // dev.gitfile                  fconst:dmmeta.Ssimfile.ssimfile/dev.gitfile
@@ -572,7 +574,6 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkggen;                  // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgkey;                  // dev.pkgkey                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkgkey
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_prototransport;          // dev.prototransport           fconst:dmmeta.Ssimfile.ssimfile/dev.prototransport
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_readmefile;              // dev.readmefile               fconst:dmmeta.Ssimfile.ssimfile/dev.readmefile
-extern const char *  dmmeta_Ssimfile_ssimfile_dev_readmesort;              // dev.readmesort               fconst:dmmeta.Ssimfile.ssimfile/dev.readmesort
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_rpm;                     // dev.rpm                      fconst:dmmeta.Ssimfile.ssimfile/dev.rpm
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_sandbox;                 // dev.sandbox                  fconst:dmmeta.Ssimfile.ssimfile/dev.sandbox
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_sbpath;                  // dev.sbpath                   fconst:dmmeta.Ssimfile.ssimfile/dev.sbpath

@@ -18,7 +18,7 @@ full key exactly, so the index is inherently unique, needs no
 collision chain, and adds no intrusive fields to the element.
 Consecutive keys of one stream occupy consecutive slots of one block.
 
-```
+```ssim
 dmmeta.field  field:<ns>.FDb.ind_seqmsg_id  arg:<ns>.FSeqmsgId  reftype:Blkhash  dflt:""  comment:""
   dmmeta.blkhash  field:<ns>.FDb.ind_seqmsg_id  hashfld:<ns>.FSeqmsgId.seqmsg_id  linfld:<proto>.SeqmsgId.seq  linbits:12  comment:""
 ```
@@ -155,7 +155,7 @@ Source: `cpp/amc/blkhash.cpp`.
 - [Reftypes index](/txt/exe/amc/reftype.md)
 - [Thash](/txt/exe/amc/reftype/Thash.md) — general-purpose hash index for uncorrelated keys
 - [Cross-references](/txt/exe/amc/xref.md) — auto-insertion model
-- [dmmeta.blkhash](/txt/ssimdb/dmmeta/blkhash.md) — the declaring ssimfile
+- [dmmeta.blkhash](/txt/ssimdb/dmmeta/README.md#dmmeta-blkhash) — the declaring ssimfile
 - Source: `cpp/amc/blkhash.cpp`
 - Tfunc records: `acr 'tfunc:Blkhash.%'`
 

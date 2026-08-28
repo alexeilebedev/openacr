@@ -48,7 +48,7 @@ Embed an `FIohook` field in any ctype that owns an fd
 callback automatically — there is no per-cycle polling code to
 write.
 
-```
+```ssim
 dmmeta.field  field:gate.FGwport.iohook  arg:algo_lib.FIohook  reftype:Val
 ```
 
@@ -317,7 +317,7 @@ void sample::Main() {
 
 Running it:
 
-```
+```bash
 $ sample
 hello
 2025-04-12T16:26:52.95788 'h'

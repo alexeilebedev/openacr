@@ -1020,12 +1020,6 @@ inline void          Frame64_curs_Next(ws::Frame64_curs& curs) __attribute__((no
 inline void          Frame64_curs_Init(ws::Frame64_curs& parent);
 
 // --- ws.FrameHeader
-// access: ws.Frame.base (Base)
-// access: ws.Frame16.base (Base)
-// access: ws.Frame64.base (Base)
-// access: ws.FrameMasked.base (Base)
-// access: ws.FrameMasked16.base (Base)
-// access: ws.FrameMasked64.base (Base)
 #pragma pack(push,1)
 struct FrameHeader { // ws.FrameHeader
     u8   byte0;   //   0

@@ -262,7 +262,6 @@ inline bool          CtypeTopoKey_Update(acr::CtypeTopoKey &lhs, acr::CtypeTopoK
 void                 CtypeTopoKey_Print(acr::CtypeTopoKey row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr.Err
-// access: acr.FErr.base (Base)
 struct Err { // acr.Err
     acr::FCtype*    ctype;   // Parent ctype. optional pointer
     u32             id;      //   0  ID

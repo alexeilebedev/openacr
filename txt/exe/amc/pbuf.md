@@ -11,7 +11,7 @@ out-of-band converter (`pb2ssim` or similar) and committed
 alongside the regular schema.  Once they're in, the codec
 regenerates whenever any ctype or field changes.
 
-```
+```ssim
 dmmeta.cpbuf   ctype:pbtest.ScalarTypes  syntax:proto3
 
 dmmeta.field   field:pbtest.ScalarTypes.int32_val  arg:i32  reftype:Val
@@ -35,7 +35,7 @@ dmmeta.field   field:pbtest.ScalarTypes.int32_val  arg:i32  reftype:Val
 
 **`dmmeta.cpbuf  ctype:<T>  syntax:proto2|proto3`** — opt the
 ctype into protobuf codec generation.  `syntax` names a row of
-[dmmeta.pbsyntax](/txt/ssimdb/dmmeta/pbsyntax.md), the table of
+[dmmeta.pbsyntax](/txt/ssimdb/dmmeta/README.md#dmmeta-pbsyntax), the table of
 syntax variants, and that row's `implicit_presence` is what the
 encoder reads.  A value that is not one of them is rejected —
 by `acr -check` when the row goes through the database, and by
@@ -61,7 +61,7 @@ below.
 <a href="#pb_type-wire-type"></a>
 
 Each `pb_type` names a row of
-[amcdb.pbtype](/txt/ssimdb/amcdb/pbtype.md).  That table binds each
+[amcdb.pbtype](/txt/ssimdb/amcdb/README.md).  That table binds each
 protobuf type to its wire type and to the `lib_pb` encode/decode
 routine the codec calls for it:
 
@@ -206,7 +206,7 @@ A protobuf `oneof` is a union: at most one of its members may
 be set.  amc represents this with `dmmeta.fpbufcase` records, one
 per member, keyed by the member field and the group name:
 
-```
+```ssim
 dmmeta.fpbufcase  fpbufcase:mymsg.MyMsg.text/payload
 dmmeta.fpbufcase  fpbufcase:mymsg.MyMsg.blob/payload
 ```

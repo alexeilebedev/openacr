@@ -17,7 +17,7 @@ templates and field instructions in ssim, and amc emits the
 encoder, decoder, and a FIX-encoder fallback.  No hand-written
 codec.
 
-```
+```ssim
 dmmeta.ctype     ctype:emdi12.Beacon
   dmmeta.cfast   ctype:emdi12.Beacon  id:109  encoding:template  reset:N
 

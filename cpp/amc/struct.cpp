@@ -64,8 +64,14 @@ static tempstr ShowAccessPaths(amc::FCtype &ctype) {
             str_glob <<")"<<eol;
         }
     }ind_end;
+    // Base is left out.  This list is confined to one namespace, and a Base relation
+    // rarely is: every message of a protocol embeds the header, and they are written
+    // wherever their own namespace is.  So the header's list would name the handful of
+    // messages beside it and none of the hundred elsewhere, which reads as the whole
+    // answer and is not one.  `doc msg:<ctype>` is where that relation is answered.
     ind_beg(amc::ctype_zd_access_curs, inst, ctype) {
-        if (inst.p_ctype->p_ns == ctype.p_ns && !inst.p_reftype->isval && !GlobalQ(*inst.p_ctype)) {
+        bool base = inst.reftype == dmmeta_Reftype_reftype_Base;
+        if (inst.p_ctype->p_ns == ctype.p_ns && !base && !inst.p_reftype->isval && !GlobalQ(*inst.p_ctype)) {
             str_nonglob << "// access: "<< inst.field << " ("<< inst.reftype<<")"<<eol;
         }
     }ind_end;

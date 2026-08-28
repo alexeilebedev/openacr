@@ -24,7 +24,7 @@ This page covers the whole machinery:
 - **dispctx** for callback closures and **disptrace** for
   cycle / count instrumentation.
 
-```
+```ssim
 dmmeta.dispatch       dispatch:prot.In  unk:N  read:N  print:Y  haslen:Y  call:Y  strict:N
   dmmeta.dispatch_msg  dispatch_msg:prot.In/prot.HeartbeatMsg
   dmmeta.dispatch_msg  dispatch_msg:prot.In/prot.LoginMsg
@@ -85,7 +85,7 @@ Two related ssim concepts work together with Dispatch:
 
 A common pattern:
 
-```
+```ssim
 dmmeta.ctype    ctype:prot.MsgHeader
   dmmeta.field   field:prot.MsgHeader.type  arg:u8  reftype:Val
     dmmeta.typefld  field:prot.MsgHeader.type
@@ -163,7 +163,7 @@ context argument as the **first** parameter of every callback
 (and of the dispatch function itself).  Used to thread state
 through a stateless-by-default callback API:
 
-```
+```ssim
 dmmeta.dispctx  dispatch:omega.In  ctype:omega.Ctx
 ```
 
@@ -363,7 +363,7 @@ dumps its full signature table so other processes can verify.
 
 A protocol with a shared header and three messages:
 
-```
+```ssim
 dmmeta.ctype     ctype:prot.MsgHeader
   dmmeta.pack    ctype:prot.MsgHeader
   dmmeta.field   field:prot.MsgHeader.type    arg:u8  reftype:Val

@@ -14,23 +14,6 @@ systems, alerts and monitoring systems.  It was also used to build
 itself — over 95% of all the source code in the project is generated
 by OpenACR's code generator (amc) from ascii relational tables.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [How it fits together](#how-it-fits-together)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Key concepts](#key-concepts)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Tools](#tools)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Main ssimfiles](#main-ssimfiles)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Further reading](#further-reading)<br/>
-&#128196; [Acr — Querying and Editing the Ssim Database](/txt/openacr/acr.md)<br/>
-&#128196; [Build and Test](/txt/openacr/build.md)<br/>
-&#128196; [Code Generation](/txt/openacr/codegen.md)<br/>
-&#128196; [Recipes](/txt/openacr/recipes.md)<br/>
-&#128196; [Runtime Patterns](/txt/openacr/runtime.md)<br/>
-&#128196; [Setup And Installation](/txt/openacr/setup.md)<br/>
-&#128196; [Ssim Fundamentals](/txt/openacr/ssim.md)<br/>
-<!-- abt_md.toc_end -->
-
 ### How it fits together
 <a href="#how-it-fits-together"></a>
 
@@ -49,7 +32,7 @@ The core loop is:
 
 The typical development cycle:
 
-```
+```text
 edit data/*.ssim  →  amc  →  abt <target> -install  →  test
        ↑___________acr_ed (edit + amc in one step)___|
 ```

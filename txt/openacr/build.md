@@ -93,7 +93,7 @@ reference records that machine's absolute paths.  On a runner `OLDPWD` is the
 runner's home, and the symptom is a whole namespace of comptests failing at once
 with
 
-```
+```bash
 bash -> bash: line 1: /home/gitlab-runner/build/release/<tool>: No such file or directory
 ```
 

@@ -40,6 +40,7 @@ dmmeta.ssimfile  ssimfile:dev.covfile  ctype:dev.Covfile
 dmmeta.ssimfile  ssimfile:dev.covline  ctype:dev.Covline
 dmmeta.ssimfile  ssimfile:dev.covtarget  ctype:dev.Covtarget
 dmmeta.ssimfile  ssimfile:dev.dbgtarget  ctype:dev.Dbgtarget
+dmmeta.ssimfile  ssimfile:dev.docpage  ctype:dev.Docpage
 dmmeta.ssimfile  ssimfile:dev.edaction  ctype:dev.Edaction
 dmmeta.ssimfile  ssimfile:dev.edacttype  ctype:dev.Edacttype
 dmmeta.ssimfile  ssimfile:dev.gitfile  ctype:dev.Gitfile
@@ -61,7 +62,6 @@ dmmeta.ssimfile  ssimfile:dev.pkggen  ctype:dev.Pkggen
 dmmeta.ssimfile  ssimfile:dev.pkgkey  ctype:dev.Pkgkey
 dmmeta.ssimfile  ssimfile:dev.prototransport  ctype:dev.Prototransport
 dmmeta.ssimfile  ssimfile:dev.readmefile  ctype:dev.Readmefile
-dmmeta.ssimfile  ssimfile:dev.readmesort  ctype:dev.Readmesort
 dmmeta.ssimfile  ssimfile:dev.rpm  ctype:dev.Rpm
 dmmeta.ssimfile  ssimfile:dev.sandbox  ctype:dev.Sandbox
 dmmeta.ssimfile  ssimfile:dev.sbpath  ctype:dev.Sbpath

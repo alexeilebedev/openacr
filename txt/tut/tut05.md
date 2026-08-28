@@ -17,7 +17,7 @@ Everything is driven from steps, in the real-time domain.
 
 The program source lives in these files:
 
-```
+```ssim
 inline-command: acr targsrc:atf_nrun/% -report:N
 dev.targsrc  targsrc:atf_nrun/cpp/atf_nrun/atf_nrun.cpp       comment:""
 dev.targsrc  targsrc:atf_nrun/cpp/gen/atf_nrun_gen.cpp        comment:""
@@ -28,7 +28,7 @@ dev.targsrc  targsrc:atf_nrun/include/gen/atf_nrun_gen.inl.h  comment:""
 
 ### Syntax
 <a href="#syntax"></a>
-```
+```text
 inline-command: atf_nrun -h; true
 atf_nrun: Run N subprocesses in parallel
 Usage: atf_nrun [[-ncmd:]<int>] [options]
@@ -66,7 +66,7 @@ When both of these indexes are empty, we have no jobs left to spawn and no
 running children to wait for, so the program should exit.
 Here is the visualization of this structure:
 
-```
+```text
 inline-command: amc_vis atf_nrun.%
 / atf_nrun.FDb                        
 |Lary fentry-------->/ atf_nrun.FEntry
@@ -79,7 +79,7 @@ inline-command: amc_vis atf_nrun.%
 Since this is a sample, there are no inputs. We will creates all the `FEntry` records
 in Main, and then enter main loop.
 
-```
+```c++
 inline-command: src_func atf_nrun.Main -f
 void atf_nrun::Main() {
     struct sigaction sigact;
@@ -100,7 +100,7 @@ void atf_nrun::Main() {
 ```
 
 Let's look at the defined steps.
-```
+```ssim
 inline-command: acr fstep:atf_nrun.% -tree -report:N
 dmmeta.fstep  fstep:atf_nrun.FDb.ind_running  steptype:InlineRecur  comment:""
 dmmeta.fstep  fstep:atf_nrun.FDb.zd_todo      steptype:InlineRecur  comment:""
@@ -117,7 +117,7 @@ for it. If we have reached the maximum number of running jobs, we set the delay 
 (60 seconds) to avoid exiting main loop. Our program will never actually wait 60 seconds before
 spawning a child process.
 
-```
+```bash
 inline-command: src_func atf_nrun.zd_todo_Step -f
 // Attempted every minute until zd_todo is empty
 // Increases # of jobs
@@ -151,7 +151,7 @@ Here is the code. As you can see, we just call waitpid, and then schedule `zd_to
 to run immediately since it becomes possible to spawn more jobs after a child exits.
 The signal handler is installed in the `Main` function (see above).
 
-```
+```c++
 inline-command: src_func atf_nrun.'(%Signal%|ind_running_Step)' -f
 // trigger waitpid call
 static void SignalHandler(int sig) {
@@ -190,7 +190,7 @@ void atf_nrun::ind_running_Step() {
 For completeness, here are the ssim lines defining the `atf_nrun` process, minus
 some less useful ones:
 
-```
+```ssim
 inline-command: acr ns:atf_nrun -t -report:N | egrep -v '(dev.targsrc|dmmeta.ctypelen)'
 dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:exe  comment:Executable

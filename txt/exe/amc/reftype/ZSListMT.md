@@ -13,7 +13,7 @@ Use ZSListMT when one thread produces work items consumed by
 another (the canonical case: a worker thread offloading
 results onto an event-loop thread).
 
-```
+```ssim
 dmmeta.field  field:lib_kafka.FDb.zs_msg  arg:lib_kafka.FMsg  reftype:ZSListMT  dflt:""  comment:""
 ```
 
@@ -39,7 +39,7 @@ State in the **element** ctype:
 
 - **Insert (any thread)**: prepend the new element to `_mt`
   using a CAS loop:
-  ```
+  ```bash
   do {
       tmp = _mt;
       row.next = tmp;

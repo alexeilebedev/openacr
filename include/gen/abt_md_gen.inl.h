@@ -31,32 +31,14 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/amcdb_gen.inl.h"
 //#pragma endinclude
-static abt_md::FMdsection &abt_md_mdsection_Title           = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[0];
-static abt_md::FMdsection &abt_md_mdsection_Chapters        = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[1];
-static abt_md::FMdsection &abt_md_mdsection_Toc             = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[2];
-static abt_md::FMdsection &abt_md_mdsection_Internals       = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[3];
-static abt_md::FMdsection &abt_md_mdsection_Syntax          = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[4];
-static abt_md::FMdsection &abt_md_mdsection_Description     = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[5];
-static abt_md::FMdsection &abt_md_mdsection_Limitations     = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[6];
-static abt_md::FMdsection &abt_md_mdsection_Content         = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[7];
-static abt_md::FMdsection &abt_md_mdsection_Example         = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[8];
-static abt_md::FMdsection &abt_md_mdsection_Attributes      = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[9];
-static abt_md::FMdsection &abt_md_mdsection_Ctypes          = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[10];
-static abt_md::FMdsection &abt_md_mdsection_Functions       = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[11];
-static abt_md::FMdsection &abt_md_mdsection_Tables          = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[12];
-static abt_md::FMdsection &abt_md_mdsection_Subsets         = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[13];
-static abt_md::FMdsection &abt_md_mdsection_Related         = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[14];
-static abt_md::FMdsection &abt_md_mdsection_Constants       = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[15];
-static abt_md::FMdsection &abt_md_mdsection_CmdlineUses     = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[16];
-static abt_md::FMdsection &abt_md_mdsection_Options         = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[17];
-static abt_md::FMdsection &abt_md_mdsection_Inputs          = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[18];
-static abt_md::FMdsection &abt_md_mdsection_InputMessages   = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[19];
-static abt_md::FMdsection &abt_md_mdsection_Sources         = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[20];
-static abt_md::FMdsection &abt_md_mdsection_Dependencies    = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[21];
-static abt_md::FMdsection &abt_md_mdsection_Imdb            = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[22];
-static abt_md::FMdsection &abt_md_mdsection_ImdbUses        = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[23];
-static abt_md::FMdsection &abt_md_mdsection_Tests           = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[24];
-static abt_md::FMdsection &abt_md_mdsection_Copyright       = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[25];
+static abt_md::FMdsection &abt_md_mdsection_Title         = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[0];
+static abt_md::FMdsection &abt_md_mdsection_Syntax        = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[1];
+static abt_md::FMdsection &abt_md_mdsection_Description   = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[2];
+static abt_md::FMdsection &abt_md_mdsection_Limitations   = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[3];
+static abt_md::FMdsection &abt_md_mdsection_Content       = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[4];
+static abt_md::FMdsection &abt_md_mdsection_Example       = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[5];
+static abt_md::FMdsection &abt_md_mdsection_Options       = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[6];
+static abt_md::FMdsection &abt_md_mdsection_Copyright     = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[7];
 
 // --- abt_md.FAnchor..Init
 // Set all fields to initial values.
@@ -73,24 +55,6 @@ inline  abt_md::FAnchor::FAnchor() {
 // --- abt_md.FAnchor..Dtor
 inline  abt_md::FAnchor::~FAnchor() {
     abt_md::FAnchor_Uninit(*this);
-}
-
-// --- abt_md.FBadlevel..Init
-// Set all fields to initial values.
-inline void abt_md::FBadlevel_Init(abt_md::FBadlevel& parent) {
-    parent.badlevel_next = (abt_md::FBadlevel*)-1; // (abt_md.FDb.badlevel) not-in-tpool's freelist
-    parent.ind_badlevel_next = (abt_md::FBadlevel*)-1; // (abt_md.FDb.ind_badlevel) not-in-hash
-    parent.ind_badlevel_hashval = 0; // stored hash value
-}
-
-// --- abt_md.FBadlevel..Ctor
-inline  abt_md::FBadlevel::FBadlevel() {
-    abt_md::FBadlevel_Init(*this);
-}
-
-// --- abt_md.FBadlevel..Dtor
-inline  abt_md::FBadlevel::~FBadlevel() {
-    abt_md::FBadlevel_Uninit(*this);
 }
 
 // --- abt_md.FCheckKey..Init
@@ -517,7 +481,7 @@ inline i32 abt_md::ind_readmefile_N() {
 // Allocate space for one element. If no memory available, return NULL.
 inline void* abt_md::mdsection_AllocMem() {
     void *row = reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data) + _db.mdsection_n;
-    if (_db.mdsection_n == 26) row = NULL;
+    if (_db.mdsection_n == 8) row = NULL;
     if (row) _db.mdsection_n++;
     return row;
 }
@@ -543,9 +507,9 @@ inline algo::aryptr<abt_md::FMdsection> abt_md::mdsection_Getary() {
 }
 
 // --- abt_md.FDb.mdsection.Max
-// Return constant 26 -- max. number of items in the pool
+// Return constant 8 -- max. number of items in the pool
 inline i32 abt_md::mdsection_Max() {
-    return 26;
+    return 8;
 }
 
 // --- abt_md.FDb.mdsection.N
@@ -1378,60 +1342,6 @@ inline abt_md::FGconst& abt_md::gconst_qFind(u64 t) {
     return _db.gconst_lary[bsr][index];
 }
 
-// --- abt_md.FDb.readmesort.EmptyQ
-// Return true if index is empty
-inline bool abt_md::readmesort_EmptyQ() {
-    return _db.readmesort_n == 0;
-}
-
-// --- abt_md.FDb.readmesort.Find
-// Look up row by row id. Return NULL if out of range
-inline abt_md::FReadmesort* abt_md::readmesort_Find(u64 t) {
-    abt_md::FReadmesort *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.readmesort_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.readmesort_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- abt_md.FDb.readmesort.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FReadmesort* abt_md::readmesort_Last() {
-    return readmesort_Find(u64(_db.readmesort_n-1));
-}
-
-// --- abt_md.FDb.readmesort.N
-// Return number of items in the pool
-inline i64 abt_md::readmesort_N() {
-    return _db.readmesort_n;
-}
-
-// --- abt_md.FDb.readmesort.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline abt_md::FReadmesort& abt_md::readmesort_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.readmesort_lary[bsr][index];
-}
-
-// --- abt_md.FDb.ind_readmesort.EmptyQ
-// Return true if hash is empty
-inline bool abt_md::ind_readmesort_EmptyQ() {
-    return _db.ind_readmesort_n == 0;
-}
-
-// --- abt_md.FDb.ind_readmesort.N
-// Return number of items in the hash
-inline i32 abt_md::ind_readmesort_N() {
-    return _db.ind_readmesort_n;
-}
-
 // --- abt_md.FDb.gstatic.EmptyQ
 // Return true if index is empty
 inline bool abt_md::gstatic_EmptyQ() {
@@ -1624,62 +1534,6 @@ inline abt_md::FFinput& abt_md::finput_qFind(u64 t) {
     return _db.finput_lary[bsr][index];
 }
 
-// --- abt_md.FDb.zd_scanns.EmptyQ
-// Return true if index is empty
-inline bool abt_md::zd_scanns_EmptyQ() {
-    return _db.zd_scanns_head == NULL;
-}
-
-// --- abt_md.FDb.zd_scanns.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline abt_md::FNs* abt_md::zd_scanns_First() {
-    abt_md::FNs *row = NULL;
-    row = _db.zd_scanns_head;
-    return row;
-}
-
-// --- abt_md.FDb.zd_scanns.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool abt_md::zd_scanns_InLlistQ(abt_md::FNs& row) {
-    bool result = false;
-    result = !(row.zd_scanns_next == (abt_md::FNs*)-1);
-    return result;
-}
-
-// --- abt_md.FDb.zd_scanns.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline abt_md::FNs* abt_md::zd_scanns_Last() {
-    abt_md::FNs *row = NULL;
-    row = _db.zd_scanns_tail;
-    return row;
-}
-
-// --- abt_md.FDb.zd_scanns.N
-// Return number of items in the linked list
-inline i32 abt_md::zd_scanns_N() {
-    return _db.zd_scanns_n;
-}
-
-// --- abt_md.FDb.zd_scanns.Next
-// Return pointer to next element in the list
-inline abt_md::FNs* abt_md::zd_scanns_Next(abt_md::FNs &row) {
-    return row.zd_scanns_next;
-}
-
-// --- abt_md.FDb.zd_scanns.Prev
-// Return pointer to previous element in the list
-inline abt_md::FNs* abt_md::zd_scanns_Prev(abt_md::FNs &row) {
-    return row.zd_scanns_prev;
-}
-
-// --- abt_md.FDb.zd_scanns.qLast
-// Return reference to last element in the index. No bounds checking.
-inline abt_md::FNs& abt_md::zd_scanns_qLast() {
-    abt_md::FNs *row = NULL;
-    row = _db.zd_scanns_tail;
-    return *row;
-}
-
 // --- abt_md.FDb.dispatch.EmptyQ
 // Return true if index is empty
 inline bool abt_md::dispatch_EmptyQ() {
@@ -1828,18 +1682,6 @@ inline abt_md::FCheckReq& abt_md::checkreq_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.checkreq_lary[bsr][index];
-}
-
-// --- abt_md.FDb.ind_badlevel.EmptyQ
-// Return true if hash is empty
-inline bool abt_md::ind_badlevel_EmptyQ() {
-    return _db.ind_badlevel_n == 0;
-}
-
-// --- abt_md.FDb.ind_badlevel.N
-// Return number of items in the hash
-inline i32 abt_md::ind_badlevel_N() {
-    return _db.ind_badlevel_n;
 }
 
 // --- abt_md.FDb.checkkey.EmptyQ
@@ -2435,31 +2277,6 @@ inline abt_md::FGconst& abt_md::_db_gconst_curs_Access(_db_gconst_curs &curs) {
     return gconst_qFind(u64(curs.index));
 }
 
-// --- abt_md.FDb.readmesort_curs.Reset
-// cursor points to valid item
-inline void abt_md::_db_readmesort_curs_Reset(_db_readmesort_curs &curs, abt_md::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- abt_md.FDb.readmesort_curs.ValidQ
-// cursor points to valid item
-inline bool abt_md::_db_readmesort_curs_ValidQ(_db_readmesort_curs &curs) {
-    return curs.index < _db.readmesort_n;
-}
-
-// --- abt_md.FDb.readmesort_curs.Next
-// proceed to next item
-inline void abt_md::_db_readmesort_curs_Next(_db_readmesort_curs &curs) {
-    curs.index++;
-}
-
-// --- abt_md.FDb.readmesort_curs.Access
-// item access
-inline abt_md::FReadmesort& abt_md::_db_readmesort_curs_Access(_db_readmesort_curs &curs) {
-    return readmesort_qFind(u64(curs.index));
-}
-
 // --- abt_md.FDb.gstatic_curs.Reset
 // cursor points to valid item
 inline void abt_md::_db_gstatic_curs_Reset(_db_gstatic_curs &curs, abt_md::FDb &parent) {
@@ -2558,31 +2375,6 @@ inline void abt_md::_db_finput_curs_Next(_db_finput_curs &curs) {
 // item access
 inline abt_md::FFinput& abt_md::_db_finput_curs_Access(_db_finput_curs &curs) {
     return finput_qFind(u64(curs.index));
-}
-
-// --- abt_md.FDb.zd_scanns_curs.Reset
-// cursor points to valid item
-inline void abt_md::_db_zd_scanns_curs_Reset(_db_zd_scanns_curs &curs, abt_md::FDb &parent) {
-    curs.row = parent.zd_scanns_head;
-}
-
-// --- abt_md.FDb.zd_scanns_curs.ValidQ
-// cursor points to valid item
-inline bool abt_md::_db_zd_scanns_curs_ValidQ(_db_zd_scanns_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- abt_md.FDb.zd_scanns_curs.Next
-// proceed to next item
-inline void abt_md::_db_zd_scanns_curs_Next(_db_zd_scanns_curs &curs) {
-    abt_md::FNs *next = (*curs.row).zd_scanns_next;
-    curs.row = next;
-}
-
-// --- abt_md.FDb.zd_scanns_curs.Access
-// item access
-inline abt_md::FNs& abt_md::_db_zd_scanns_curs_Access(_db_zd_scanns_curs &curs) {
-    return *curs.row;
 }
 
 // --- abt_md.FDb.dispatch_curs.Reset
@@ -2710,158 +2502,6 @@ inline abt_md::FGitfile& abt_md::_db_gitfile_curs_Access(_db_gitfile_curs &curs)
     return gitfile_qFind(u64(curs.index));
 }
 
-// --- abt_md.FDirent.sortfld.Lt
-// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool abt_md::sortfld_Lt(abt_md::FDirent& parent, abt_md::FDirent &rhs) {
-    return algo::cstring_Lt(parent.sortfld,rhs.sortfld);
-}
-
-// --- abt_md.FDirent.sortfld.Cmp
-// Compare two fields.
-inline i32 abt_md::sortfld_Cmp(abt_md::FDirent& parent, abt_md::FDirent &rhs) {
-    i32 retval = 0;
-    retval = algo::cstring_Cmp(parent.sortfld, rhs.sortfld);
-    return retval;
-}
-
-// --- abt_md.FDirent..Init
-// Set all fields to initial values.
-inline void abt_md::FDirent_Init(abt_md::FDirent& parent) {
-    parent.is_dir = bool(false);
-    parent.p_dirscan = NULL;
-    parent.sorted = bool(false);
-    parent.dirscan_bh_dirent_idx = -1; // (abt_md.FDirscan.bh_dirent) not-in-heap
-}
-
-// --- abt_md.FDirent..Ctor
-inline  abt_md::FDirent::FDirent() {
-    abt_md::FDirent_Init(*this);
-}
-
-// --- abt_md.FDirent..Dtor
-inline  abt_md::FDirent::~FDirent() {
-    abt_md::FDirent_Uninit(*this);
-}
-
-// --- abt_md.FDirscan.bh_dirent.EmptyQ
-// Return true if index is empty
-inline bool abt_md::bh_dirent_EmptyQ(abt_md::FDirscan& parent) {
-    return parent.bh_dirent_n == 0;
-}
-
-// --- abt_md.FDirscan.bh_dirent.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline abt_md::FDirent* abt_md::bh_dirent_First(abt_md::FDirscan& parent) {
-    abt_md::FDirent *row = NULL;
-    if (parent.bh_dirent_n > 0) {
-        row = parent.bh_dirent_elems[0];
-    }
-    return row;
-}
-
-// --- abt_md.FDirscan.bh_dirent.InBheapQ
-// Return true if row is in index, false otherwise
-inline bool abt_md::bh_dirent_InBheapQ(abt_md::FDirent& row) {
-    bool result = false;
-    result = row.dirscan_bh_dirent_idx != -1;
-    return result;
-}
-
-// --- abt_md.FDirscan.bh_dirent.N
-// Return number of items in the heap
-inline i32 abt_md::bh_dirent_N(const abt_md::FDirscan& parent) {
-    return parent.bh_dirent_n;
-}
-
-// --- abt_md.FDirscan.dirent.EmptyQ
-// Return true if index is empty
-inline bool abt_md::dirent_EmptyQ(abt_md::FDirscan& parent) {
-    return parent.dirent_n == 0;
-}
-
-// --- abt_md.FDirscan.dirent.Find
-// Look up row by row id. Return NULL if out of range
-inline abt_md::FDirent* abt_md::dirent_Find(abt_md::FDirscan& parent, u64 t) {
-    abt_md::FDirent *retval = NULL;
-    if (LIKELY(u64(t) < u64(parent.dirent_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &parent.dirent_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- abt_md.FDirscan.dirent.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FDirent* abt_md::dirent_Last(abt_md::FDirscan& parent) {
-    return dirent_Find(parent, u64(parent.dirent_n-1));
-}
-
-// --- abt_md.FDirscan.dirent.N
-// Return number of items in the pool
-inline i64 abt_md::dirent_N(const abt_md::FDirscan& parent) {
-    return parent.dirent_n;
-}
-
-// --- abt_md.FDirscan.dirent.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline abt_md::FDirent& abt_md::dirent_qFind(abt_md::FDirscan& parent, u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return parent.dirent_lary[bsr][index];
-}
-
-// --- abt_md.FDirscan.bh_dirent_curs.Access
-// Access current element. If not more elements, return NULL
-inline abt_md::FDirent& abt_md::FDirscan_bh_dirent_curs_Access(FDirscan_bh_dirent_curs &curs) {
-    return *curs.temp_elems[0];
-}
-
-// --- abt_md.FDirscan.bh_dirent_curs.ValidQ
-// Return true if Access() will return non-NULL.
-inline bool abt_md::FDirscan_bh_dirent_curs_ValidQ(FDirscan_bh_dirent_curs &curs) {
-    return curs.temp_n > 0;
-}
-
-// --- abt_md.FDirscan.dirent_curs.Reset
-// cursor points to valid item
-inline void abt_md::FDirscan_dirent_curs_Reset(FDirscan_dirent_curs &curs, abt_md::FDirscan &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- abt_md.FDirscan.dirent_curs.ValidQ
-// cursor points to valid item
-inline bool abt_md::FDirscan_dirent_curs_ValidQ(FDirscan_dirent_curs &curs) {
-    return curs.index < (*curs.parent).dirent_n;
-}
-
-// --- abt_md.FDirscan.dirent_curs.Next
-// proceed to next item
-inline void abt_md::FDirscan_dirent_curs_Next(FDirscan_dirent_curs &curs) {
-    curs.index++;
-}
-
-// --- abt_md.FDirscan.dirent_curs.Access
-// item access
-inline abt_md::FDirent& abt_md::FDirscan_dirent_curs_Access(FDirscan_dirent_curs &curs) {
-    return dirent_qFind((*curs.parent), u64(curs.index));
-}
-
-// --- abt_md.FDirscan..Ctor
-inline  abt_md::FDirscan::FDirscan() {
-    abt_md::FDirscan_Init(*this);
-}
-
-// --- abt_md.FDirscan..Dtor
-inline  abt_md::FDirscan::~FDirscan() {
-    abt_md::FDirscan_Uninit(*this);
-}
-
 // --- abt_md.FDispatch.c_dispatch_msg.EmptyQ
 // Return true if index is empty
 inline bool abt_md::c_dispatch_msg_EmptyQ(abt_md::FDispatch& parent) {
@@ -2970,6 +2610,19 @@ inline  abt_md::FDispatchMsg::FDispatchMsg() {
 // --- abt_md.FDispatchMsg..Dtor
 inline  abt_md::FDispatchMsg::~FDispatchMsg() {
     abt_md::FDispatchMsg_Uninit(*this);
+}
+
+// --- abt_md.FDocpage..Init
+// Set all fields to initial values.
+inline void abt_md::FDocpage_Init(abt_md::FDocpage& parent) {
+    parent.word = bool(false);
+    parent.bare = bool(false);
+    parent.bytable = bool(false);
+}
+
+// --- abt_md.FDocpage..Ctor
+inline  abt_md::FDocpage::FDocpage() {
+    abt_md::FDocpage_Init(*this);
 }
 
 // --- abt_md.FFconst..Init
@@ -3706,23 +3359,6 @@ inline  abt_md::FReadmefile::~FReadmefile() {
     abt_md::FReadmefile_Uninit(*this);
 }
 
-// --- abt_md.FReadmesort..Init
-// Set all fields to initial values.
-inline void abt_md::FReadmesort_Init(abt_md::FReadmesort& parent) {
-    parent.ind_readmesort_next = (abt_md::FReadmesort*)-1; // (abt_md.FDb.ind_readmesort) not-in-hash
-    parent.ind_readmesort_hashval = 0; // stored hash value
-}
-
-// --- abt_md.FReadmesort..Ctor
-inline  abt_md::FReadmesort::FReadmesort() {
-    abt_md::FReadmesort_Init(*this);
-}
-
-// --- abt_md.FReadmesort..Dtor
-inline  abt_md::FReadmesort::~FReadmesort() {
-    abt_md::FReadmesort_Uninit(*this);
-}
-
 // --- abt_md.FReftype..Ctor
 inline  abt_md::FReftype::FReftype() {
     abt_md::FReftype_Init(*this);
@@ -3749,6 +3385,7 @@ inline  abt_md::FScriptfile::~FScriptfile() {
 // Set all fields to initial values.
 inline void abt_md::FSsimfile_Init(abt_md::FSsimfile& parent) {
     parent.p_ctype = NULL;
+    parent.prose = bool(false);
     parent.ind_ssimfile_next = (abt_md::FSsimfile*)-1; // (abt_md.FDb.ind_ssimfile) not-in-hash
     parent.ind_ssimfile_hashval = 0; // stored hash value
 }

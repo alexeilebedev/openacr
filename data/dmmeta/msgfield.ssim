@@ -64,6 +64,7 @@ dmmeta.msgfield  msgfield:atf_amc.MsgLTA/a  offset:2  arg:char  width:4  bigend:
 dmmeta.msgfield  msgfield:atf_amc.MsgLTB/b  offset:2  arg:char  width:6  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
 dmmeta.msgfield  msgfield:atf_amc.MsgLTO/o  offset:2  arg:atf_amc.MsgHdrLT  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
 dmmeta.msgfield  msgfield:atf_amc.MsgLTScaleV/v  offset:2  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
+dmmeta.msgfield  msgfield:atf_amc.MsgLTV/v  offset:2  arg:atf_amc.MsgHdrLT  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
 dmmeta.msgfield  msgfield:fm.AlarmMsg/clear_time.value  offset:156  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
 dmmeta.msgfield  msgfield:fm.AlarmMsg/code  offset:8  arg:char  width:32  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
 dmmeta.msgfield  msgfield:fm.AlarmMsg/description  offset:300  arg:char  width:128  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""

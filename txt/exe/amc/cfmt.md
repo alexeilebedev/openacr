@@ -15,7 +15,7 @@ Most ssim files in the repo are themselves
 your `dmmeta.field` ssim is what handles your application
 data.
 
-```
+```ssim
 dmmeta.cfmt  cfmt:algo.LineBuf.String   printfmt:Tuple        read:Y print:Y sep:""   genop:N
 dmmeta.cfmt  cfmt:net.TcpHdr.String     printfmt:Sep          read:Y print:Y sep:":"  genop:N
 dmmeta.cfmt  cfmt:net.MsgList.Json      printfmt:Auto         read:N print:Y sep:""   genop:N
@@ -80,7 +80,7 @@ carry `Auto`.
 The default and most-used combination: `strfmt:String  printfmt:Tuple`.
 Output looks like a ssim tuple:
 
-```
+```ssim
 dmmeta.field  field:dmmeta.Field.field  arg:dmmeta.Field  reftype:Pkey  dflt:""  comment:""
 ```
 
@@ -106,7 +106,7 @@ the ctype, then walks `key:value` pairs.
 `sep` attribute is a string of separator characters — one
 character between each pair of fields:
 
-```
+```ssim
 dmmeta.cfmt  cfmt:net.Ipport.String  printfmt:Sep  read:Y print:Y sep:":"
 ```
 
@@ -123,7 +123,7 @@ cfmt and the printfmt.
 ### Json
 <a href="#json"></a>
 
-```
+```ssim
 dmmeta.cfmt  cfmt:net.MsgList.Json  printfmt:Auto  read:N  print:Y  sep:""
 ```
 
@@ -203,7 +203,7 @@ beyond 2^53; see the [JS feature page](/txt/exe/amc/js.md).
 ### Argv and ArgvGnu
 <a href="#argv-and-argvgnu"></a>
 
-```
+```ssim
 dmmeta.cfmt  cfmt:command.abt.Argv  printfmt:Auto  read:Y  print:Y  sep:""
 ```
 

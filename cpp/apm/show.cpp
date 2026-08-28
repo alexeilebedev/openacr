@@ -186,7 +186,6 @@ static bool GenFileQ(strptr gitfile) {
     ret |= StartsWithQ(gitfile, "include/gen/");
     ret |= StartsWithQ(gitfile, "js/gen/");
     ret |= StartsWithQ(gitfile, "ts/gen/");
-    ret |= StartsWithQ(gitfile, "txt/gen/");
     ret |= StartsWithQ(gitfile, "txt/ssimdb/");
     return ret;
 }

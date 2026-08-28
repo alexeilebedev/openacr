@@ -236,19 +236,6 @@ inline  report::llmtool_model::llmtool_model() {
     report::llmtool_model_Init(*this);
 }
 
-// --- report.spnx_check..Init
-// Set all fields to initial values.
-inline void report::spnx_check_Init(report::spnx_check& parent) {
-    parent.n_page = u32(0);
-    parent.n_orphan = u32(0);
-    parent.n_badfence = u32(0);
-}
-
-// --- report.spnx_check..Ctor
-inline  report::spnx_check::spnx_check() {
-    report::spnx_check_Init(*this);
-}
-
 // --- report.src_func..Init
 // Set all fields to initial values.
 inline void report::src_func_Init(report::src_func& parent) {
@@ -318,11 +305,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const report::gcache
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const report::llmtool_model &row) {// cfmt:report.llmtool_model.String
     report::llmtool_model_Print(const_cast<report::llmtool_model&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const report::spnx_check &row) {// cfmt:report.spnx_check.String
-    report::spnx_check_Print(const_cast<report::spnx_check&>(row), str);
     return str;
 }
 

@@ -10,7 +10,7 @@ record that is the **target** of a cross-reference (`Ptr`,
 amc's go-to allocator for records that are not deleted
 individually.
 
-```
+```ssim
 dmmeta.field  field:ssim2mysql.FDb.ctype  arg:ssim2mysql.FCtype  reftype:Lary  dflt:""  comment:""
 ```
 
@@ -165,7 +165,7 @@ The amc compiler itself uses Lary for everything that other
 records point at — for instance, every C-type loaded by amc
 lives in a Lary in `amc::FDb`:
 
-```
+```ssim
 dmmeta.field  field:amc.FDb.ctype  arg:amc.FCtype  reftype:Lary  dflt:""  comment:""
 ```
 

@@ -7,23 +7,9 @@ before writing it back. With -r (reverse), the input is a list of key-values and
 output is JSON. A filename of "-" means stdin. With `-write`, the input file is updated in-place.
 Default output format can be overridden with `-output`.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [jkv - Internals](/txt/gen/jkv/jkv.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 jkv: JSON <-> key-value mapping tool
 Usage: jkv [-file:]<string> [[-kv:]<string>] [options]
     OPTION      TYPE    DFLT    COMMENT
@@ -46,39 +32,39 @@ Usage: jkv [-file:]<string> [[-kv:]<string>] [options]
 #### Update values in a JSON file
 <a href="#update-values-in-a-json-file"></a>
 
-```
+```bash
 jkv .vscode/launch.json -write configurations-0.program::myprog .args-0::-arg1 ::-arg2 ::-arg3 
 ```
 
 #### Rename fields in a JSON file
 <a href="#rename-fields-in-a-json-file"></a>
-```
+```bash
 jkv X.json | sed 's/^attr:/^attr2:/' | jkv -r > tempfile
 mv tempfile X.json
 ```
 
 #### Sort field names in a JSON file
 <a href="#sort-field-names-in-a-json-file"></a>
-```
+```bash
 jkv X.json | sort -t ':' -k1,1
 ```
 
 #### Merge two JSON files
 <a href="#merge-two-json-files"></a>
-```
+```text
 (jkv A.json; jkv B.json) | jkv -r -
 ```
 
 #### Select an object from a JSON file
 <a href="#select-an-object-from-a-json-file"></a>
-```
+```bash
 jkv X.json | grep '^a\.b\.c\.' | jkv -r -
 ```
 
 #### Construct JSON object from command line
 <a href="#construct-json-object-from-command-line"></a>
 
-```
+```bash
 inline-command: jkv /dev/null -r a:true b:false c:null d:[] :3 :{} $'f::line1\nline2' e.g::h
 {
     "a": true,
@@ -98,7 +84,7 @@ inline-command: jkv /dev/null -r a:true b:false c:null d:[] :3 :{} $'f::line1\nl
 #### Set array element by index
 <a href="#set-array-element-by-index"></a>
 
-```
+```bash
 inline-command: jkv /dev/null -r -pretty:0 -- a.b.c-0:true -10:false
 {"a":{"b":{"c":[true,null,null,null,null,null,null,null,null,null,false]}}}
 ```
@@ -149,10 +135,3 @@ depending on input.
 Default value (2) uses jq-style pretty printer.
 Value 0 means compact output with no newlines.
 Value 1 is algo-style pretty printer (comma at the beginning of the new line)
-
-### Inputs
-<a href="#inputs"></a>
-`jkv` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|

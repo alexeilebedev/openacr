@@ -1,20 +1,29 @@
 ## acr_my - ACR <-> MariaDB adaptor
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [See also](#see-also)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [acr_my - Internals](/txt/gen/acr_my/acr_my.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+acr_my: ACR <-> MariaDB adaptor
+Usage: acr_my [[-nsdb:]<regx>] [options]
+    OPTION      TYPE    DFLT    COMMENT
+    [nsdb]      regx    ""      Regx of ssim namespace (dmmeta.nsdb) to select
+    -in         string  "data"  Input directory or filename, - for stdin
+    -schema     string  "data"  Input directory or filename, - for stdin
+    -fldfunc                    Evaluate fldfunc when printing tuple
+    -fkey                       Enable foreign key constraints
+    -e                          Alias for -start -shell -stop
+    -start                      Start local mysql server
+    -stop                       Stop local mysql server, saving data
+    -abort                      Abort local mysql server, losing data
+    -shell                      Connect to local mysql server
+    -serv                       Start mysql with TCP/IP service enabled
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
+    -help                       Print help and exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
+```
 
 ### Description
 <a href="#description"></a>
@@ -36,7 +45,7 @@ it via a socket.
 
 Any SQL expression can be executed this way. Results are saved back to ssim files.
 
-```
+```bash
 echo "select * from xxx where yyy ='zzz'" | acr -my %.%
 ```
 
@@ -107,12 +116,3 @@ can be round tripped through MariaDB with no change.
 
 #### -serv -- Start mysql with TCP/IP service enabled
 <a href="#-serv"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`acr_my` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.nsdb](/txt/ssimdb/dmmeta/nsdb.md)|Annotate ssimdb namespaces|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|

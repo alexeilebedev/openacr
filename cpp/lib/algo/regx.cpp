@@ -153,29 +153,47 @@ static void CalcAcceptsAllQ(algo_lib::Regx &regx) {
 
 // -----------------------------------------------------------------------------
 
-// if state STATE leads to state OTHER
-// which is a TRUE op consuming zero chars, then
-// skip the OTHER state, splicing OTHER's own next states in its place.
-// A regex such as "a**" or "(a*)*" builds a cycle of zero-consume TRUE
-// states that point back at one another; without a guard the splice would
-// re-discover the same state forever and never terminate.  EXPANDED records
-// the zero-consume TRUE states already spliced for the current STATE, so
-// each is spliced at most once and a cycle collapses in a finite number of
-// passes.
-static void RemoveBranches(algo_lib::Regx &regx) {
+// True when OP only forwards the match: it consumes nothing and its test always
+// succeeds, so a matcher walking through it learns nothing about the subject.
+static bool BranchQ(const algo_lib::RegxOp &op) {
+    return op.op == algo_lib_RegxOp_true && op.consume == 0;
+}
+
+// True when OP marks where a capture group opened or closed.  It forwards the
+// match like a branch does, and differs only in that a caller asking for the
+// groups needs to see it.
+static bool GroupQ(const algo_lib::RegxOp &op) {
+    return op.op == algo_lib_RegxOp_lparen || op.op == algo_lib_RegxOp_rparen;
+}
+
+// -----------------------------------------------------------------------------
+
+// Take every state that TESTQ accepts out of the arcs, splicing each one's own
+// arcs into its place, so the matcher reaches the same states without stopping
+// at a state that tells it nothing.
+// A regex such as "a**" or "(a*)*" builds a cycle of such states pointing back
+// at one another; without a guard the splice would re-discover the same state
+// forever and never terminate.  EXPANDED records the states already spliced for
+// the state being rewritten, so each is spliced at most once and a cycle
+// collapses in a finite number of passes.
+// NEXT is re-expanded on every pass because copying a state's arcs into it also
+// copies their length, and a bitset holds no bit past the words it has: a set
+// whose bits all fall below 64 is one word long, and or-ing a two-word set into
+// it would drop every state numbered 64 or above without saying so.
+static void Splice(algo_lib::Regx &regx, bool (*testq)(const algo_lib::RegxOp&)) {
     algo_lib::Bitset next;
     algo_lib::Bitset expanded;
-    ary_ExpandBits(next,state_N(regx));
     ary_ExpandBits(expanded,state_N(regx));
     ind_beg(algo_lib::regx_state_curs,state,regx) {
         int nmatch=0;
         ary_ClearBitsAll(expanded);
         do {
             ary_Setary(next,state.next);
+            ary_ExpandBits(next,state_N(regx));
             nmatch=0;
             ind_beg(algo_lib::Bitset_ary_bitcurs,id,state.next) {
                 algo_lib::RegxState &other = state_qFind(regx, id);
-                if (other.op.op == algo_lib_RegxOp_true && other.op.consume == 0) {
+                if (testq(other.op)) {
                     ary_ClearBit(next, id);
                     if (!ary_GetBit(expanded, id)) {
                         ary_SetBit(expanded, id);
@@ -188,6 +206,27 @@ static void RemoveBranches(algo_lib::Regx &regx) {
                 ary_Setary(state.next,next);
             }
         }while(nmatch>0);
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Keep each state's arcs as they stand under NEXTGROUP, then splice the group
+// boundaries out of NEXT.
+// An lparen or rparen state consumes nothing and its test always succeeds, so
+// it exists only to record where a capture group opened or closed.  A match
+// that asks no question about groups still has to walk through it, and walking
+// through a state that consumes nothing costs the matcher an extra pass over
+// its whole front before the character advances -- so a single pair of
+// parentheses doubles the work of matching.  Every expression read with full:N
+// is wrapped in one, which makes this the common case rather than an unusual
+// one.
+// The matcher therefore follows NEXT, which reaches the same states without
+// stopping at the boundaries, and follows NEXTGROUP only when the caller asked
+// for the groups.
+static void KeepGroupArc(algo_lib::Regx &regx) {
+    ind_beg(algo_lib::regx_state_curs,state,regx) {
+        ary_Setary(state.nextgroup,ary_Getary(state.next));
     }ind_end;
 }
 
@@ -584,6 +623,86 @@ static bool Backslash(algo_lib::RegxParse &regxparse, int &i) {
 
 // -----------------------------------------------------------------------------
 
+// True when the escape \C stands for exactly one character, which is returned
+// through OUT.  The question is put to the macro reader itself rather than to a
+// second list of escapes kept beside it, so an escape that gains or loses a
+// meaning cannot answer differently in the two places.
+static bool SingleCharEscapeQ(char c, char &out) {
+    algo_lib::RegxState state;
+    bool ret = false;
+    RegxState_ReadMacro(state,c);
+    if (ary_N(state.ch_class) == 1) {
+        u16 R = ary_qFind(state.ch_class,0);
+        ret = ChRangeEnd(R) == ChRangeBeg(R)+1;
+        out = char(ChRangeBeg(R));
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when C is a character the default style reads as an operator rather than
+// as itself.
+static bool RegxMetaQ(char c) {
+    return c=='.' || c=='*' || c=='+' || c=='?' || c=='|'
+        || c=='(' || c==')' || c=='[' || c==']'
+        || c=='^' || c=='$' || c=='\\';
+}
+
+// -----------------------------------------------------------------------------
+
+// Read BODY -- an expression already translated to the default style -- as a
+// fixed string with an optional ".*" at either end, and return the string
+// through LIT.  BEG and END report whether a ".*" stood at that end.
+// Most expressions this codebase compiles have this shape: an acr or sql
+// pattern is a piece of text with % where anything may go, so "%Regx%" arrives
+// here as ".*Regx.*" and reduces to a search for four characters.  Recognizing
+// that is worth doing because the NFA's cost for the same answer is a test of
+// every state against every character of the subject, and a leading ".*" keeps
+// every state alive, so nothing ever drops out of the front.
+// Return false when BODY holds anything else, and the NFA does the matching.
+static bool FixedStringQ(algo::strptr body, algo::cstring &lit, bool &beg, bool &end) {
+    int n = body.n_elems;
+    bool ret = true;
+    ch_RemoveAll(lit);
+    beg = n >= 2 && body[0]=='.' && body[1]=='*';
+    end = false;
+    int i = beg ? 2 : 0;
+    while (i < n && ret) {
+        char c = body[i];
+        char single = 0;
+        if (c=='.' && i+2==n && body[i+1]=='*') {
+            end = true;
+            i = n;
+        } else if (c=='\\' && i+1 < n && SingleCharEscapeQ(body[i+1],single)) {
+            lit << single;
+            i += 2;
+        } else if (RegxMetaQ(c)) {
+            ret = false;
+        } else {
+            lit << c;
+            i++;
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Record on REGX that its expression reduces to a search for the fixed string
+// LIT, which BEG and END place: each says a ".*" stood at that end of the
+// expression, so the string may sit anywhere from there.  FULL says the
+// expression was read as a whole-subject match; a search instead lets the
+// string sit anywhere at both ends whatever the expression said.
+static void SetFixed(algo_lib::Regx &regx, algo::strptr lit, bool beg, bool end, bool full) {
+    fixed_Set(regx.flags,true);
+    anchorbeg_Set(regx.flags,full && !beg);
+    anchorend_Set(regx.flags,full && !end);
+    regx.lit = lit;
+}
+
+// -----------------------------------------------------------------------------
+
 // If BITSET has exactly one bit equal to 1,
 // return its index.
 // Otherwise, return -1.n
@@ -716,7 +835,10 @@ static void Parse(algo_lib::RegxParse &regxparse) {
     }ind_end;
     CalcLiteral(regx);
     CalcAcceptsAllQ(regx);
-    RemoveBranches(regx);
+    regx.ngroup = regxparse.nextgroup;
+    Splice(regx,BranchQ);
+    KeepGroupArc(regx);
+    Splice(regx,GroupQ);
     if (trace_Get(regx.flags)) {
         TraceParse(regxparse,0,1);
     }
@@ -739,8 +861,38 @@ void algo_lib::RegxState_Print(algo_lib::RegxState &state, algo::cstring &lhs) {
 
 // -----------------------------------------------------------------------------
 
+// -----------------------------------------------------------------------------
+
+// The positions at which each group opened, on the path that reached state IDX.
+// A group's opening position is a property of the path taken to a state, not of
+// the state, and one state stands on as many paths as the expression has ways
+// of reaching it.  A single position per state is therefore enough only while
+// no two groups are open at once: an outer group that opened before an inner
+// one has its position overwritten by the inner one, and closing it reports the
+// inner group's start.  One position per group per state is what an expression
+// with nested groups needs, and the room for it is taken only when the caller
+// asked for the groups.
+static i32 *SlotAry(algo_lib::RegxM &regxm, int ngroup, int idx) {
+    return &slot_qFind(regxm,idx*ngroup);
+}
+
+// -----------------------------------------------------------------------------
+
+// Carry the group positions of state FROM along an arc to state TO, so the
+// state at the far end of the arc remembers the path that reached it.
+static void CopySlot(algo_lib::RegxM &regxm, int ngroup, int from, int to) {
+    i32 *src = SlotAry(regxm,ngroup,from);
+    i32 *dst = SlotAry(regxm,ngroup,to);
+    frep_(k,ngroup) {
+        dst[k] = src[k];
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
     algo_lib::RegxM &regxm = algo_lib::_db.regxm;// temporary matching context
+    bool capture = capture_Get(regx.flags);
     ary_RemoveAll(regxm.matchrange);
     ary_RemoveAll(regxm.front);
     ary_RemoveAll(regxm.next_char);
@@ -750,6 +902,11 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
     ary_ExpandBits(regxm.next_char,regx.state_n);
     ary_ExpandBits(regxm.this_char,regx.state_n);
     ary_ExpandBits(regxm.visited,regx.state_n);
+    int ngroup = capture ? regx.ngroup : 0;
+    slot_RemoveAll(regxm);
+    if (ngroup > 0) {
+        slot_AllocNVal(regxm, i64(regx.state_n)*ngroup, -1);
+    }
     ary_qSetBit(regxm.front, 0);
     int ch_index=0;
     while (true) {
@@ -790,15 +947,17 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
             }break;
             case algo_lib_RegxOp_lparen: {
                 test = true;
-                state.lparen=ch_index;
+                if (ngroup > 0) {
+                    SlotAry(regxm,ngroup,idx)[state.op.imm]=ch_index;
+                }
             }break;
             case algo_lib_RegxOp_rparen: {
                 test = true;
-                if (capture_Get(regx.flags)) {
+                if (ngroup > 0) {
                     while (ary_N(regxm.matchrange)<=state.op.imm) {
                         ary_Alloc(regxm.matchrange)=algo::i32_Range();
                     }
-                    ary_qFind(regxm.matchrange,state.op.imm).beg=state.lparen;
+                    ary_qFind(regxm.matchrange,state.op.imm).beg=SlotAry(regxm,ngroup,idx)[state.op.imm];
                     ary_qFind(regxm.matchrange,state.op.imm).end=ch_index;
                 }
             }break;
@@ -815,24 +974,26 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
                       <<Keyval("test",test));
             }
             if (test) {
-                // carry lparen memory forward...
-                if (capture_Get(regx.flags)) {
-                    ind_beg(algo_lib::Bitset_ary_bitcurs,next,state.next) {
-                        state_qFind(regx,next).lparen=state.lparen;
+                algo_lib::Bitset &next = capture ? state.nextgroup : state.next;
+                // carry the group positions forward along every arc
+                if (ngroup > 0) {
+                    ind_beg(algo_lib::Bitset_ary_bitcurs,id,next) {
+                        CopySlot(regxm,ngroup,idx,id);
                     }ind_end;
                 }
                 if (state.op.consume) {
-                    ary_OrBits(regxm.next_char, state.next);
+                    ary_OrBits(regxm.next_char, next);
                 } else {
                     // Follow a zero-consume arc to states tested against the
                     // same char.  A group closed under repetition, such as
                     // "()*" or "(a*)*", forms a cycle of lparen/rparen/true
-                    // states that RemoveBranches cannot splice out because the
-                    // captures must survive; forwarding it unguarded would keep
-                    // re-adding the same states and never advance the char.
+                    // states that the splice leaves in place when the caller
+                    // asked for the captures; forwarding it unguarded would
+                    // keep re-adding the same states and never advance the
+                    // char.
                     // Only states not yet closed for this char count as
                     // progress, so a cycle drains after one pass.
-                    ind_beg(algo_lib::Bitset_ary_bitcurs,nx,state.next) {
+                    ind_beg(algo_lib::Bitset_ary_bitcurs,nx,next) {
                         if (!ary_GetBit(regxm.visited, nx)) {
                             ary_SetBit(regxm.this_char, nx);
                             nthis++;
@@ -869,11 +1030,52 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
 
 // -----------------------------------------------------------------------------
 
+// Locate in TEXT the fixed string REGX reduces to, and return the range it
+// occupies, or an empty range beginning at -1 when it is not there.
+// Which of the four searches runs is decided by where the string is anchored:
+// pinned at both ends the subject has to equal it, pinned at one end the
+// subject has to begin or end with it, and pinned at neither it may sit
+// anywhere.
+static algo::i32_Range FixedMatchQ(algo_lib::Regx &regx, algo::strptr text) {
+    algo::i32_Range ret(-1,-1);
+    algo::strptr lit = regx.lit;
+    bool beg = anchorbeg_Get(regx.flags);
+    bool end = anchorend_Get(regx.flags);
+    if (beg && end) {
+        if (lit == text) {
+            ret = algo::i32_Range(0,text.n_elems);
+        }
+    } else if (beg) {
+        if (StartsWithQ(text,lit)) {
+            ret = algo::i32_Range(0,lit.n_elems);
+        }
+    } else if (end) {
+        if (EndsWithQ(text,lit)) {
+            ret = algo::i32_Range(text.n_elems-lit.n_elems,text.n_elems);
+        }
+    } else if (lit.n_elems == 0) {
+        ret = algo::i32_Range(0,0);
+    } else {
+        i64 at = FindFrom(text,lit,0,true);
+        if (at != -1) {
+            ret = algo::i32_Range(int(at),int(at)+lit.n_elems);
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Check if REGX matches TEXT, return result
 bool algo_lib::Regx_Match(algo_lib::Regx &regx, algo::strptr text) {
     bool ret = false;
-    if (literal_Get(regx.flags)) {
-        ret = regx.expr == text;// matches literally
+    if (fixed_Get(regx.flags)) {
+        algo::i32_Range at = FixedMatchQ(regx,text);
+        ret = at.beg != -1;
+        if (ret && capture_Get(regx.flags)) {
+            ary_RemoveAll(_db.regxm.matchrange);
+            ary_Alloc(_db.regxm.matchrange) = at;
+        }
     } else if (accepts_all_Get(regx.flags)) {
         ret = true;
     } else if (regx.state_n==0) {
@@ -893,9 +1095,14 @@ algo::i32_Range algo_lib::Regx_Find(algo_lib::Regx &regx, algo::strptr text, int
     algo::i32_Range ret;
     capture_Set(regx.flags,true);
     algo::strptr suffix = RestFrom(text,start);
-    if (Regx_Match(regx,suffix)) {
-        // these flags skip regular scanning so add a match manually
-        if (literal_Get(regx.flags) || accepts_all_Get(regx.flags)) {
+    if (fixed_Get(regx.flags)) {
+        algo::i32_Range at = FixedMatchQ(regx,suffix);
+        if (at.beg != -1) {
+            ret = algo::i32_Range(at.beg+start, at.end+start);
+        }
+    } else if (Regx_Match(regx,suffix)) {
+        // accepts_all skips regular scanning so add a match manually
+        if (accepts_all_Get(regx.flags)) {
             ary_RemoveAll(_db.regxm.matchrange);
             ary_Alloc(_db.regxm.matchrange) = algo::i32_Range(0,suffix.n_elems);
         }
@@ -915,18 +1122,29 @@ void algo_lib::Regx_ReadStyle(algo_lib::Regx &regx, algo::strptr input, algo_lib
     valid_Set(regx.flags,true);
     literal_Set(regx.flags,false);
     accepts_all_Set(regx.flags,false);
+    fixed_Set(regx.flags,false);
     fullmatch_Set(regx.flags,full);
     state_RemoveAll(regx);
+    ch_RemoveAll(regx.lit);
     regx.style = style;
     regx.expr = input;
-    if (regx.style.value == algo_lib_RegxStyle_literal && full) {
-        literal_Set(regx.flags,true);
+    if (regx.style.value == algo_lib_RegxStyle_literal) {
+        literal_Set(regx.flags,full);
+        SetFixed(regx,input,false,false,full);
     } else {
+        tempstr body;
+        RewriteRegx(input,style,body);
+        tempstr lit;
+        bool beg = false;
+        bool end = false;
+        if (FixedStringQ(body,lit,beg,end)) {
+            SetFixed(regx,lit,beg,end,full);
+        }
         tempstr regx_str;
         if (!full) {
             regx_str << ".*(";
         }
-        RewriteRegx(input,style,regx_str);
+        regx_str << body;
         if (!full) {
             regx_str << ").*";
         }
@@ -1010,6 +1228,7 @@ algo::tempstr algo_lib::ToDbgString(algo_lib::RegxState &state, int index) {
     }
     out << Keyval("op",state.op);
     out << Keyval("next",ToDbgString(state.next));
+    out << Keyval("nextgroup",ToDbgString(state.nextgroup));
     return out;
 }
 
@@ -1019,7 +1238,9 @@ algo::tempstr algo_lib::ToDbgString(algo_lib::Regx &regx) {
         <<Keyval("style",regx.style)
         <<Keyval("expr",regx.expr)
         <<Keyval("n_state",state_N(regx))
-        <<Keyval("literal",literal_Get(regx.flags));
+        <<Keyval("literal",literal_Get(regx.flags))
+        <<Keyval("fixed",fixed_Get(regx.flags))
+        <<Keyval("lit",regx.lit);
 }
 
 tempstr algo_lib::ToDbgString(algo_lib::RegxExpr *expr) {

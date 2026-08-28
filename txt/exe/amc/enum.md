@@ -18,7 +18,7 @@ fails, amc will read the value as an integer.
 
 Here is an example defining an fconst:
 
-```
+```ssim
 inline-command: acr -report:N field:algo.Bool.% -t | grep Bool.
     dmmeta.ctype  ctype:algo.Bool  comment:"Bool type for converting booleans to string"
       dmmeta.field  field:algo.Bool.value  arg:u8  reftype:Val  dflt:false  comment:""
@@ -38,7 +38,7 @@ inline-command: acr -report:N field:algo.Bool.% -t | grep Bool.
 
 This translates to the following c++ code:
 
-```
+```c++
 inline-command: grep -A 15 'BoolEnum.*{' include/gen/algo_gen.h
 enum algo_BoolEnum {        // algo.Bool.value
      algo_Bool_N       = 0
@@ -60,7 +60,7 @@ enum { algo_BoolEnum_N = 10 };
 
 And here is the generated struct definition:
 
-```
+```c++
 // --- algo.Bool
 struct Bool { // algo.Bool
     u8   value;   //   false
@@ -79,7 +79,7 @@ to the symbol and to the numeric value.
 Here is an example. Let's consider a struct called `ws.StatusCode` (ws=WebSockets, an ad-hoc example)
 with a single numeric field `value`:
 
-```
+```ssim
 dmmeta.ctype  ctype:ws.StatusCode  comment:""
   dmmeta.field  field:ws.StatusCode.value  arg:u16  reftype:Val  dflt:""  comment:""
     dmmeta.anonfld  field:ws.StatusCode.value  comment:""
@@ -90,7 +90,7 @@ dmmeta.ctype  ctype:ws.StatusCode  comment:""
 Our status codes are in a table called `wsdb.Status`. Presumably this table was obtained
 from the specification:
 
-```
+```ssim
 $ acr wsdb.status
 wsdb.status  code:1000  reason:"Normal closure"                 local_only:N  comment:""
 wsdb.status  code:1001  reason:"Going away"                     local_only:N  comment:"Server going down or browser page close"
@@ -108,7 +108,7 @@ wsdb.status  code:1015  reason:"TLS Handshake"                  local_only:Y  co
 
 Here is what we get back from amc. First, the enum is defined:
 
-```
+```c++
 // --- ws_StatusCodeEnum
 enum ws_StatusCodeEnum {                                    // ws.StatusCode.value
     ws_StatusCode_Normal_closure                  = 1000
@@ -131,7 +131,7 @@ we get an additional `operator ws_StatusCodeEnum`. The constructor from `u16` be
 to prevent an unrelated numeric value from becoming `StatusCode`, and we get an additional
 constructor for obtaining `StatusCode` from the associated enum type:
 
-```
+```c++
 // --- ws.StatusCode
 #pragma pack(push,1)
 struct StatusCode { // ws.StatusCode
@@ -146,7 +146,7 @@ struct StatusCode { // ws.StatusCode
     
 Next, we get a number of functions for setting/accessing the value:
 
-```
+```c++
 // Get value of field as enum type
 // func:ws.StatusCode.value.GetEnum
 ws_StatusCodeEnum    value_GetEnum(const ws::StatusCode& parent) __attribute__((nothrow));

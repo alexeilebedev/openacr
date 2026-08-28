@@ -8,7 +8,7 @@ Fbuf is a field reftype that implements a file i/o buffer.
 - Add dmmeta.fbuf record
 - Add one dmmeta.fcond record per condition the buffer reports
 
-```
+```ssim
 dmmeta.field  field:atf_amc.Msgbuf.in_buf  arg:atf_amc.MsgHeader  reftype:Fbuf  dflt:""  comment:"Message-based buffer"
   dmmeta.fbuf   field:atf_amc.Msgbuf.in_buf  max:64  fbuftype:Msgbuf  iotype:standard  comment:""
   dmmeta.fcond  fcond:atf_amc.Msgbuf.in_buf/ready  ins:atf_amc.FDb.cd_in_msg  via:""  rem:Y  comment:""
@@ -72,7 +72,7 @@ to the message (which is contained in the buffer)
 <a href="#custom-framing"></a>
 To override the `ScanMsg` function, declare `ffunc:<field>.ScanMsg  extrn:Y` (on a `Bytebuf`) and implement the `ScanMsg` function
 The function may set the following variables in the parent record (assuming field name `in_buf`):
-```
+```bash
 in_buf_msglen: length of detected message
 in_buf_msgvalid: true if message is found
 in_buf_eof: true if message cannot be read because it would exceed buffer size
@@ -182,7 +182,7 @@ no data.
 The two buffers are therefore declared as a pair, on the write buffer, naming
 the read buffer it shares the descriptor with:
 
-```
+```ssim
 dmmeta.fbuf  field:<ns>.FConn.out  ...  pair:<ns>.FConn.in
 ```
 
@@ -191,7 +191,7 @@ buffer has no `FIohook` field of its own, and `BeginWrite` is not generated for
 it; the pair is attached in one call, which subscribes to read and write
 together:
 
-```
+```c++
 in_BeginReadWrite(conn, fd);
 ```
 
@@ -231,7 +231,7 @@ to read more data.
 
 ### Generated Functions
 <a href="#generated-functions"></a>
-```
+```c++
 inline-command: src_func atf_amc.% -matchcomment:%atf_amc.Msgbuf.in_buf% -gen -showcomment
 // --- atf_amc.Msgbuf.in_buf.BeginRead
 // Attach fbuf to Iohook for reading

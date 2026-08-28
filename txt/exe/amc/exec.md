@@ -7,7 +7,7 @@ for any target. A default one is already provided for each possible target T, ca
 
 Here is one such generated struct for `amc` itself:
 
-```
+```c++
 inline-command: amc command.amc_proc | grep -B 20 '};'
 
 // --- command.amc_proc
@@ -58,7 +58,7 @@ The generated functions are:
 * Pipe redirects: set `fstdin`, `fstdout`, or `fstderr` to `"|"` and `_Start` creates a pipe, exposing
 the parent end as `to_stdin` (write), `from_stdout` (read), or `from_stderr` (read). The fds are closed
 by `_Wait`. Reading a subprocess's output line-by-line:
-```
+```c++
     proc.fstdout = "|";
     proc_Start(proc);
     ind_beg(algo::FileLine_curs,line,proc.from_stdout) {
@@ -82,7 +82,7 @@ To merge stderr into the same pipe, also set `proc.fstderr = ">&1"`.
 
 Here is a full example of invoking a subprocess:
 
-```
+```bash
 // create json compile database
 command::abt_proc abt;
 Regx_ReadSql(abt.cmd.target,"%",true);

@@ -1502,7 +1502,7 @@ static void abt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'45ae13dbd8e9b176a16a144e29c12d49f1dc6dea'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'1b887c32ce2033f536835186a561fc8d39491183'");
 }
 
 // --- abt.FDb._db.InsertStrptrMaybe

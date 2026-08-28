@@ -21,7 +21,7 @@ Some common recipes are available in [Ssimfiles](/txt/openacr/recipes.md) and al
 <a href="#-ssim-tuples"></a>
 The **ssim** tuple format is:
 
-```
+```bash
 <namespace>.<table>   <primary_key>  [<key>:<value>  ...  <key>:<value>]
 ```
 
@@ -64,7 +64,7 @@ The papers live in their own repository, `algornd/paper`, rather than in this tr
 
 #### Examples of **ssim** tuples
 <a href="#examples-of-ssim-tuples"></a>
-```
+```ssim
 dmmeta.ns  ns:lib_amcdb    nstype:lib       license:GPL   comment:"Library used by amc"
 
 dev.target  target:lib_amcdb
@@ -101,7 +101,7 @@ A CLI tool [acr_my](/txt/exe/acr_my/README.md) allows **ssimfiles** to be loaded
 
 ssim tuple
 
-```
+```bash
 ...
 dmmeta.ns  ns:lib_amcdb    nstype:lib       license:GPL   comment:"Library used by amc"
 ...
@@ -109,7 +109,7 @@ dmmeta.ns  ns:lib_amcdb    nstype:lib       license:GPL   comment:"Library used 
 
 SQL record
 
-```
+```text
 
 MariaDB [dmmeta]> select * from ns where ns like "lib_amcdb%";
 +-----------+--------+---------+---------------------+
@@ -125,7 +125,7 @@ MariaDB [dmmeta]>
 
 ssim tuple
 
-```
+```ssim
 dmmeta.nstype  nstype:exe       comment:Executable
 dmmeta.nstype  nstype:lib       comment:Library
 dmmeta.nstype  nstype:none      comment:"Skip building"
@@ -136,7 +136,7 @@ dmmeta.nstype  nstype:ssimdb    comment:"Ssim database (not a target)"
 
 SQL record
 
-```
+```text
 MariaDB [dmmeta]> select * from nstype;
 +----------+-------------------------------------------------+
 | nstype   | comment                                         |
@@ -152,13 +152,13 @@ MariaDB [dmmeta]> select * from nstype;
 
 ssim tuple
 
-```
+```ssim
 dev.target  target:lib_amcdb
 ```
 
 SQL record
 
-```
+```text
 MariaDB [dev]> select * from target where target like "lib_amcdb";
 +-----------+----------------------------+
 | target    | extra_column_for_roundtrip |
@@ -181,13 +181,13 @@ The **value** string is subdivided into substrings, with the explicit separator 
 <a href="#substring-extraction-mechanism"></a>
 The substring extraction mechanism is defined by the expression
 
-```
+```bash
 <separator character><direction_1direction_2>[<separator character><direction_1direction_2>...]
 ```
 
 direction1 and direction2 are either L(eft) or R(ight), so an example of the expression would be
 
-```
+```bash
 new_field expr:.LL/RL
 ```
 
@@ -199,11 +199,11 @@ So if ``field:c1/c2c3.c4c5`` is the expression, first part of the algorithm, ``.
 <a href="#examples-of-fldfunc-fields-"></a>
 A CLI tool [acr](/txt/exe/acr/README.md) shows ssimfiles with and without **fldfunc fields**.
 
-First example would be this tuple, defined as [dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md).
+First example would be this tuple, defined as [dmmeta.ctype](/txt/ssimdb/dmmeta/README.md).
 
 A tuple kept in the **ssimfile** would be this:
 
-```
+```bash
 ...
 dmmeta.ctype  ctype:dev.Cfg  comment:"Compiler configuration"
 ...
@@ -211,7 +211,7 @@ dmmeta.ctype  ctype:dev.Cfg  comment:"Compiler configuration"
 
 an expanded tuple with **fldfunc** fields would be this
 
-```
+```bash
 ...
 dmmeta.ctype  ctype:dev.Cfg  ns:dev  name:Cfg  comment:"Compiler configuration"
 ...
@@ -223,20 +223,20 @@ the **value** separator in this case is dot "." and the``ns`` and ``name`` **key
 
 The description that defines the substrings is this:
 
-```
+```bash
 name  expr:.RR
 ns    expr:.RL
 ```
 
-A more involved example would be this tuple, defined as [dev.tool_opt - Compiler/linker options to use](/txt/ssimdb/dev/tool_opt.md).
+A more involved example would be this tuple, defined as [dev.tool_opt - Compiler/linker options to use](/txt/ssimdb/dev/README.md).
 
-```
+```ssim
 dev.tool_opt  tool_opt:"Linux-g++.%-%/mysql2ssim-LINK:-L /usr/lib64/mysql"  comment:""
 ```
 
 an expanded tuple with **fldfunc** fields would be this
 
-```
+```ssim
 dev.tool_opt  tool_opt:"Linux-g++.%-%/mysql2ssim-LINK:-L /usr/lib64/mysql"  uname:Linux  compiler:g++  cfg:%  arch:%  target:mysql2ssim  opt_type:LINK  opt:"-L /usr/lib64/mysql"  sortfld:Linux-g++  comment:""
 ```
 
@@ -245,7 +245,7 @@ here the value of
 
 The description that defines the substrings is this:
 
-```
+```bash
 arch      expr:/LL.LR-LR
 cfg       expr:/LL.LR-LL
 compiler  expr:/LL.LL-LR
@@ -280,13 +280,13 @@ Defined constraints allow a strong referential integrity checks for all **openac
 <a href="#examples-of-cross-referenced-records"></a>
 A CLI tool [acr](/txt/exe/acr/README.md) helps the display and the manipulation of the cross-referenced ssimfile records. Below a tuple
 
-```
+```ssim
 dmmeta.ctype  ctype:acr.Queryop  comment:"Operation to perform"
 ```
 
 is shown with all its cross-referenced relations
 
-```
+```ssim
 # Ctype            Comment
 # dmmeta.Ctype     Struct
 # dmmeta.Ns        Namespace (for in-memory database, protocol, etc)

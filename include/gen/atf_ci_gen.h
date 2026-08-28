@@ -2093,6 +2093,10 @@ void                 citest_lineendings();
 // this function is 'extrn' and implemented by user
 void                 citest_update_script();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_install_script
+// this function is 'extrn' and implemented by user
+void                 citest_install_script();
+// User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_indent_script
 // this function is 'extrn' and implemented by user
 void                 citest_indent_script();
@@ -2173,9 +2177,9 @@ void                 citest_apm();
 // this function is 'extrn' and implemented by user
 void                 citest_apm_reinstall();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_abt_md_after_ssimfile_is_added
+// func:atf_ci...citest_doc_after_ssimfile_is_added
 // this function is 'extrn' and implemented by user
-void                 citest_abt_md_after_ssimfile_is_added();
+void                 citest_doc_after_ssimfile_is_added();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_mem_prep
 // this function is 'extrn' and implemented by user

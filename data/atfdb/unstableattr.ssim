@@ -2,6 +2,7 @@ atfdb.unstableattr  unstableattr:%.builddate  comment:"When the build ran"
 atfdb.unstableattr  unstableattr:%.clear_time  comment:"Alarm clear time"
 atfdb.unstableattr  unstableattr:%.client  comment:"Client address contains ephemeral port"
 atfdb.unstableattr  unstableattr:%.cluster_id  comment:"Cluster UUID varies between runs"
+atfdb.unstableattr  unstableattr:%.commitdate  comment:"When the commit the build was made from was committed"
 atfdb.unstableattr  unstableattr:%.crc  comment:"CRC varies"
 atfdb.unstableattr  unstableattr:%.event_time  comment:Timestamp
 atfdb.unstableattr  unstableattr:%.filename  comment:"Shm backing file embeds the supervisor pid"

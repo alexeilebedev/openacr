@@ -1,24 +1,9 @@
 ## ssimfilt - Tuple utility
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [ssimfilt - Internals](/txt/gen/ssimfilt/ssimfilt.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 ssimfilt: Tuple utility
 Usage: ssimfilt [[-typetag:]<regx>] [[-match:]<string>] [options]
     OPTION      TYPE    DFLT    COMMENT
@@ -54,7 +39,7 @@ of ssimfilt through bash to execute arbitrary command for each tuple.
 #### Example: Format ssim input as table
 <a href="#example-format-ssim-input-as-table"></a>
 
-```
+```ssim
 inline-command: acr field:command.ssimfilt.% | head | ssimfilt ^ -t
 FIELD                     ARG           REFTYPE  DFLT    COMMENT
 command.ssimfilt.in       algo.cstring  Val      "data"  Input directory or filename, - for stdin
@@ -71,7 +56,7 @@ command.ssimfilt.f        algo.cstring  Val      ""      Alias for -field:<f> -f
 #### Example: Extract field
 <a href="#example-extract-field"></a>
 
-```
+```bash
 inline-command: echo $'blah a:b\nblah a:c' | ssimfilt -field a -format field
 b
 c
@@ -80,7 +65,7 @@ c
 #### Example: Convert ssim to Json
 <a href="#example-convert-ssim-to-json"></a>
 
-```
+```bash
 inline-command: echo $'blah a:b\nblah a:c' | ssimfilt  -format json
 {"@type":"blah","a":"b"}
 {"@type":"blah","a":"c"}
@@ -89,7 +74,7 @@ inline-command: echo $'blah a:b\nblah a:c' | ssimfilt  -format json
 #### Example: Convert ssim to Markdown table
 <a href="#example-convert-ssim-to-markdown-table"></a>
 
-```
+```text
 inline-command: echo $'blah a:b\nblah a:c' | ssimfilt  -format mdtable
 |A|
 |---|
@@ -101,7 +86,7 @@ inline-command: echo $'blah a:b\nblah a:c' | ssimfilt  -format mdtable
 #### Example: Find other uses in documentation
 <a href="#example-find-other-uses-in-documentation"></a>
 
-```
+```bash
 grep -R 'command.*ssimfilt' txt/
 ```
 
@@ -148,29 +133,9 @@ All field values are available to the command as bash variables
 <a href="#-cmd"></a>
 
 E.g.
-```
+```bash
 acr field | ssimfilt -cmd 'echo $field/$arg' | bash
 ```
 
 #### -f -- Alias for -field:<f> -format:field
 <a href="#-f"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`ssimfilt` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|

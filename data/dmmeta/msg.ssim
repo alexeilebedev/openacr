@@ -26,6 +26,7 @@ dmmeta.msg  ctype:atf_amc.MsgLTB  payloadhdr:atf_amc.MsgHdrLT  type:66  len:8  c
 dmmeta.msg  ctype:atf_amc.MsgLTO  payloadhdr:atf_amc.MsgHdrLT  type:79  len:2  comment:""
 dmmeta.msg  ctype:atf_amc.MsgLTScaleA  payloadhdr:atf_amc.MsgHdrLTScale  type:83  len:2  comment:""
 dmmeta.msg  ctype:atf_amc.MsgLTScaleV  payloadhdr:atf_amc.MsgHdrLTScale  type:86  len:2  comment:""
+dmmeta.msg  ctype:atf_amc.MsgLTV  payloadhdr:atf_amc.MsgHdrLT  type:86  len:2  comment:""
 dmmeta.msg  ctype:fm.AlarmMsg  payloadhdr:ams.MsgHeader  type:17  len:433  comment:""
 dmmeta.msg  ctype:ws.CloseMsg  payloadhdr:ams.MsgHeader  type:504  len:61  comment:""
 dmmeta.msg  ctype:ws.ConnectMsg  payloadhdr:ams.MsgHeader  type:502  len:59  comment:""

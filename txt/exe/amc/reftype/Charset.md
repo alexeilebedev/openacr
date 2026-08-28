@@ -9,7 +9,7 @@ cheaper.  Use Charset for tokenizers, command-line argument
 parsers, and any other place where "is this character one of
 those?" is in the hot path.
 
-```
+```ssim
 dmmeta.field    field:algo_lib.FDb.ArgvIdent  arg:algo.Charset  reftype:Charset  dflt:""  comment:""
   dmmeta.charset  field:algo_lib.FDb.ArgvIdent  expr:"[a-zA-Z0-9_]"  charrange:Y  calc:N
 ```
@@ -115,7 +115,7 @@ record — amc folds the initializer into the parent's own
 The argv-identifier charset (what's a valid command-line flag
 character):
 
-```
+```ssim
 dmmeta.field    field:algo_lib.FDb.ArgvIdent  arg:algo.Charset  reftype:Charset  dflt:""
   dmmeta.charset  field:algo_lib.FDb.ArgvIdent  expr:"[a-zA-Z0-9_]"  charrange:Y  calc:N
 ```
@@ -130,7 +130,7 @@ while (ArgvIdentQ(*p)) p++;        // skip identifier characters
 A compile-time-inline variant — e.g., recognising whitespace
 in a tight scanner loop:
 
-```
+```ssim
 dmmeta.field    field:lib_lex.FDb.Ws  arg:algo.Charset  reftype:Charset  dflt:""
   dmmeta.charset  field:lib_lex.FDb.Ws  expr:" \t\n\r"  charrange:N  calc:Y
 ```

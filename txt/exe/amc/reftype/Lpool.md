@@ -9,7 +9,7 @@ freelist is empty, Lpool requests a large block from its base
 pool and splits it into halves until it reaches the target
 size — buddy-style allocation.
 
-```
+```ssim
 dmmeta.field  field:algo_lib.FDb.lpool  arg:u8  reftype:Lpool  dflt:""  comment:"private memory pool"
   dmmeta.basepool  field:algo_lib.FDb.lpool  base:algo_lib.FDb.sbrk
 ```
@@ -145,7 +145,7 @@ namespaces' allocations.  Generated `_AllocMem` / `_FreeMem`
 are usually accessed through the `Pool.*` tfuncs of fields
 that name `lpool` as their basepool:
 
-```
+```ssim
 dmmeta.field      field:abt.FDb.target  arg:abt.FTarget  reftype:Lary
   dmmeta.basepool  field:abt.FDb.target  base:algo_lib.FDb.lpool
 ```

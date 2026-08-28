@@ -243,7 +243,6 @@ void                 Badness_Print(acr_compl::Badness& row, algo::cstring& str) 
 algo::strptr         Badness_GetAnon(acr_compl::Badness &parent, i32 idx) __attribute__((nothrow));
 
 // --- acr_compl.Completion
-// access: acr_compl.FCompletion.msghdr (Base)
 struct Completion { // acr_compl.Completion
     algo::cstring   value;     //
     bool            nospace;   //   false  do not add space after the value

@@ -74,13 +74,6 @@ tempstr abt_md::MdAnchor(algo::strptr str) {
     return ret;
 }
 
-algo::strptr abt_md::FileIcon() {
-    return "&#128196; ";
-}
-algo::strptr abt_md::FolderIcon() {
-    return "&#128193; ";
-}
-
 // Print anchor to OUT and add it to a global table
 void abt_md::AddAnchor(algo::strptr name, cstring &out) {
     out <<"<a href=\"#" << name << "\"></a>" << eol;
@@ -90,9 +83,9 @@ tempstr abt_md::Backticks(algo::strptr text) {
     return tempstr()<<"`"<<text<<"`";
 }
 
-tempstr abt_md::Preformatted(algo::strptr text) {
+tempstr abt_md::Preformatted(algo::strptr text, algo::strptr lang) {
     tempstr ret;
-    ret << "```\n"<<text;
+    ret << "```"<<lang<<"\n"<<text;
     if (!EndsWithQ(text,"\n")) {
         ret << "\n";
     }
@@ -124,54 +117,57 @@ tempstr abt_md::Link(algo::strptr name, algo::strptr url, algo::strptr anchor DF
     return ret;
 }
 
-// -----------------------------------------------------------------------------
-
-// Construct a link to file FNAME
-// using the first line of FNAME as the link text
-tempstr abt_md::LinkToMd(strptr fname) {
-    tempstr ret;
-    ind_beg(algo::FileLine_curs,line,fname) {// take first line
-        strptr rest=Trimmed(Pathcomp(line," LR"));// usually rest of the line
-        if (rest == "") {
-            rest=fname;// substitute filename if the file has no title yet
-        }
-        ret << "["<<rest<<"](/"<<fname<<")";
-        break;
-    }ind_end;
-    return ret;
-}
-
 // Link within repo to a given file
 // The URL is given as a relative pathname with respect to the root
 tempstr abt_md::LinkToFileAbs(algo::strptr name, algo::strptr url, algo::strptr anchor DFLTVAL("")) {
     return Link(name, tempstr()<<"/"<<url, anchor);
 }
 
-// Link to the md file for given ssimfile
+// Link to whatever documents SSIMFILE, with NAME as the link text.
+//
+// A namespace's tables are documented in one file, txt/ssimdb/<ns>/README.md, and a table
+// somebody wrote about has a section there under a heading naming it -- so the anchor of
+// that heading is the table's own name and the link carries it.  A table nobody wrote
+// about has no such heading, and the link then names the namespace's documentation
+// alone, which is where a reader of that link is going anyway.  Emitting the anchor
+// regardless would make `abt_md -check` right to complain: an anchor naming no heading is
+// a link that lands somewhere the writer did not mean.
+//
+// ANCHOR is not taken here, because the anchor is the ssimfile.
 tempstr abt_md::LinkToSsimfile(algo::strptr name, algo::strptr ssimfile, algo::strptr anchor DFLTVAL("")) {
-    return LinkToFileAbs(name, tempstr()<<"txt/ssimdb/"<<Pathcomp(ssimfile,".LL")<<"/"<<Pathcomp(ssimfile,".LR")<<".md", anchor);
+    (void)anchor;
+    abt_md::FSsimfile *file = abt_md::ind_ssimfile_Find(ssimfile);
+    tempstr path;
+    path << "txt/ssimdb/" << Pathcomp(ssimfile,".LL") << "/README.md";
+    return LinkToFileAbs(name, path, file && file->prose ? MdAnchor(ssimfile) : tempstr());
+}
+
+// Mark every ssimfile a namespace README carries a section about.
+//
+// The section's heading is the table's name, and that heading is what a link to the
+// table anchors on, so this walk is what decides whether such a link carries an anchor
+// at all.  It reads each ssimdb namespace's README once, before any document is
+// generated, since a link written into one document may name a table of another.
+void abt_md::Main_ScanSsimdoc() {
+    ind_beg(_db_ns_curs,ns,_db) if (ns.nstype == dmmeta_Nstype_nstype_ssimdb) {
+        tempstr path;
+        path << "txt/ssimdb/" << ns.ns << "/README.md";
+        if (FileQ(path)) {
+            ind_beg(algo::FileLine_curs,line,path) {
+                if (StartsWithQ(line,"### ")) {
+                    if (FSsimfile *file = ind_ssimfile_Find(Trimmed(RestFrom(line,4)))) {
+                        file->prose = true;
+                    }
+                }
+            }ind_end;
+        }
+    }ind_end;
 }
 
 // Link to documentation for given namespace (could be lib,protocol,exe,ssimdb)
 tempstr abt_md::LinkToNs(strptr ns, algo::strptr anchor DFLTVAL("")) {
     abt_md::FNs &fns = ind_ns_FindX(ns);
     return LinkToFileAbs(ns, tempstr()<<"txt/"<<fns.nstype<<"/"<<ns<<"/README.md", anchor);
-}
-
-// Link to gen documentation for given namespace (could be lib,protocol,exe,ssimdb)
-// The link text is NAME
-// the namespace is NS
-// Optional anchor is ANCHOR
-// For executables and libraries, a separate gen file is used
-tempstr abt_md::LinkToGen(algo::strptr name, abt_md::FNs &ns, algo::strptr anchor DFLTVAL("")) {
-    bool gen = ns.nstype == dmmeta_Nstype_nstype_exe || ns.nstype == dmmeta_Nstype_nstype_lib;
-    tempstr path;
-    if (gen) {
-        path << "txt/gen/" << ns.ns << "/" << ns.ns << ".md";
-    } else {
-        path << "txt/" << ns.nstype << "/" << ns.ns << "/README.md";
-    }
-    return LinkToFileAbs(name, path, anchor);
 }
 
 // Link to the page documenting REFTYPE.
@@ -186,35 +182,32 @@ tempstr abt_md::LinkToReftype(algo::strptr reftype) {
     return LinkToFileAbs(reftype, tempstr() << "txt/exe/amc/reftype/" << reftype << ".md");
 }
 
+// Link to whatever documents CTYPE, or name it as a code span when nothing does.
+//
+// A ctype that is a table has the ssimdb page of that table, and a ctype with a file of
+// its own is linked to that file.  Everything else is a type nothing in txt/ describes,
+// and what a reader wants of one is its declaration and the code amc made of it -- which
+// is the page `doc ctype:<name>` opens.
+//
+// A markdown link may name a path and a fragment and nothing else, so a file cannot spell
+// that page as a target.  What it can do is write the name as a code span, which doc reads
+// as the name of a ctype and turns into a link to that ctype's page; a browser looking at
+// the file on the server renders it as the name, which is what it is.
 tempstr abt_md::LinkToCtype(abt_md::FCtype &ctype) {
     abt_md::FNs &ns=*ctype.p_ns;
-    tempstr ret(ctype.ctype); // default - plain text
+    tempstr ret;
+    ret << "`" << ctype.ctype << "`";
     // global namespace doesn't have a readme yet
     if (ctype.c_ssimfile) {
         ret = LinkToSsimfile(ctype.ctype, ctype.c_ssimfile->ssimfile);
     } else if (ns.ns != "") {
-        // some types may be documented as separate files
-        // if they're not, they will be documented inside the main README file
         tempstr fname = tempstr()<<"txt/"<<ns.nstype<<"/"<<ns.ns<<"/"<<name_Get(ctype)<<".md";
         if (FileQ(fname)) {
             ret = LinkToFileAbs(ctype.ctype, fname);
-        } else {
-            ret = LinkToGen(ctype.ctype, ns, MdAnchor(ctype.ctype));
         }
     }
     return ret;
 }
-
-// -----------------------------------------------------------------------------
-
-tempstr abt_md::TypeComment(abt_md::FCtype &ctype) {
-    tempstr ret(ctype.comment);
-    if (ret =="") {
-        ret = GetBaseType(ctype)->comment;
-    }
-    return ret;
-}
-
 // -----------------------------------------------------------------------------
 
 // Compute base type, or return CTYPE if none
@@ -235,78 +228,7 @@ abt_md::FCtype *abt_md::GetBaseType(abt_md::FCtype &ctype) {
 tempstr abt_md::MdComment(algo::strptr str){
     return tempstr()<<"<!-- "<<str<<" -->";
 }
-
-// --------------------------------------------------------------------------------
-
-// Create table of contents link from string
-// The string should be a section heading for which markdown generates a link target;
-// We just repeat its algorithm and generate a link to that target
-tempstr abt_md::LinkToSection(strptr str) {
-    str = Trimmed(str);
-    return tempstr() << "[" << str << "](#" << MdAnchor(str) << ")";
-}
-
 // -----------------------------------------------------------------------------
-
-// Populate global table DIRENT with a directory listing
-// matching PATTERN, that can be read in sorted order
-// (Dir_curs does not provide sorted order)
-void abt_md::PopulateDirent(abt_md::FDirscan &dirscan, strptr pattern) {
-    dirent_RemoveAll(dirscan);
-    bool sorted_level(false);
-    bool unsorted_level(false);
-    ind_beg(algo::Dir_curs,ent,pattern) if (!EndsWithQ(ent.filename,"~")) {
-        abt_md::FDirent &dirent=dirent_Alloc(dirscan);
-        dirent.p_dirscan=&dirscan;
-        dirent.filename=ent.filename;
-        // support sorting by readmecat
-        if (FReadmesort *readmesort=ind_readmesort_Find(ent.pathname)){
-            dirent.sortfld=readmesort->sortfld;
-            dirent.sorted=true;
-            sorted_level=true;
-        }else{
-            dirent.sortfld=ent.filename;
-            if (ent.filename!="README.md"){
-                unsorted_level=true;
-            }
-        }
-        dirent.pathname=ent.pathname;
-        dirent.is_dir=ent.is_dir;
-        vrfy_(dirent_XrefMaybe(dirent));
-    }ind_end;
-    // a level mixing sorted and unsorted entries is a dev.readmesort data
-    // error; report it and count it, but keep the run alive -- aborting here
-    // would hide every remaining diagnostic (later readmes, the batched
-    // command validations, the link check) behind one data error.
-    // one report per scan pattern.  A readme may carry more than one
-    // table-of-contents section, and every one of them rescans its level with
-    // the same globs, so without a key the identical multi-line report is
-    // printed once per section and one data error is counted several times.
-    // The key is the pattern and not the directory because the two globs of one
-    // level list different entries: <dir>/*.md sees only files, while the
-    // mainfile's <dir>/* also sees subdirectories, so a directory missing from
-    // the table is named by the second scan alone.  Keyed by directory, the
-    // first scan would suppress the only report that mentions it, and the user
-    // would learn of it a run later, after fixing what the first report named.
-    // The price of keying on the pattern is that a level holding no
-    // subdirectory has two globs listing the same entries, and reports twice.
-    // Pinned by atf_comp abt_md.ReadmesortOnce, whose readme carries two
-    // table-of-contents sections.
-    if (sorted_level && unsorted_level && !ind_badlevel_Find(pattern)){
-        ind_badlevel_GetOrCreate(pattern);
-        // walk the sort-order heap, not the raw readdir order, so the
-        // report is deterministic across filesystems
-        ind_beg(abt_md::FDirscan_bh_dirent_curs,dirent,dirscan) if (dirent.sortfld!="README.md"){
-            prerr(Keyval("dir",dirent.pathname)
-                  <<Keyval("sort",dirent.sortfld)
-                  <<Keyval("comment",dirent.sorted ? "present" : "missing")
-                  );
-        }ind_end;
-        prerr("abt_md.readmesort"
-              <<Keyval("comment","readmesort table is missing entries for the level"));
-        algo_lib::_db.exit_code++;
-    }
-}
 
 // -----------------------------------------------------------------------------
 
@@ -334,6 +256,7 @@ int abt_md::GetHeaderLevel(strptr line) {
 // Update loaded readme file:
 // - generate missing sections
 // - evaluate all commands using sandbox (if specified)
+// - record the document's title on its dev.readmefile row
 // - save readme to disk
 void abt_md::UpdateReadme() {
     abt_md::FReadmefile &readmefile = *_db.c_readmefile;
@@ -359,15 +282,23 @@ void abt_md::UpdateReadme() {
         wt_ExecX(wt);
     }
 
-    // process sections in 2 passes
-    // process table of contents on the second pass only
-    for (int pass=0; pass<2; pass++) {
-        ind_beg(abt_md::_db_file_section_curs,file_section,_db) {
-            if (file_section.select && (TocQ(file_section) == pass)) {
-                UpdateSection(file_section);
-            }
-        }ind_end;
-    }
+    ind_beg(abt_md::_db_file_section_curs,file_section,_db) {
+        if (file_section.select) {
+            UpdateSection(file_section);
+        }
+    }ind_end;
+
+    // A listing names a document by its title rather than by its path, and finding that
+    // title otherwise means opening the file: sixty files in a directory is sixty opens
+    // for a string that moves only when the document's own title does.  So the title is
+    // recorded where the document is recorded, and anything listing documents reads the
+    // record.
+    ind_beg(abt_md::_db_file_section_curs,file_section,_db) {
+        if (TitleQ(file_section)) {
+            strptr line = file_section.title;
+            readmefile.comment = Trimmed(RestFrom(line,GetHeaderLevel(line)));
+        }
+    }ind_end;
 
     cstring out;
     PrintSections(out);
@@ -639,6 +570,46 @@ void abt_md::ProcessReadme(abt_md::FReadmefile& readmefile) {
 // line the subprocess writes passes through to stderr unchanged.
 // A subprocess that exits abnormally has emitted no checkerr line for the
 // validations it never ran, so its wait status fails the run too.
+// Write the recorded titles back into the database they were read from.
+//
+// Every processed row is sent, not only the ones whose title moved, because acr decides
+// whether the file changes: a run over a tree already up to date updates nothing and
+// writes nothing, and tracking which rows moved would be a second answer to a question
+// acr already answers.
+//
+// acr is told the same -in this run was given, so the rows land where they came from.
+// An -in naming one ssimfile, or stdin, is a fragment somebody assembled by hand rather
+// than a database this tool may edit, so such a run records nothing at all -- which is
+// also what keeps a comptest driving abt_md from a scratch directory out of data/.
+//
+// A dry run sends nothing, and neither does a check: the whole of what either promises
+// is that it leaves the tree alone.
+void abt_md::Main_SaveReadmetitle() {
+    cstring content;
+    int nrow = 0;
+    ind_beg(_db_readmefile_curs,readmefile,_db) {
+        if (readmefile.select) {
+            dev::Readmefile out;
+            readmefile_CopyOut(readmefile,out);
+            content << out << eol;
+            nrow++;
+        }
+    }ind_end;
+    if (nrow && _db.cmdline.update && !_db.cmdline.dry_run && DirectoryQ(_db.cmdline.in)) {
+        tempstr tmpfile;
+        tmpfile << "/tmp/abt_md.readmetitle." << getpid();
+        vrfy(SafeStringToFile(content, tmpfile),
+             tempstr() << "abt_md.tmpfile" << Keyval("path", tmpfile));
+        command::acr_proc proc;
+        proc.cmd.in = _db.cmdline.in;
+        proc.cmd.update = true;
+        proc.cmd.write = true;
+        proc.fstdin = tmpfile;
+        acr_ExecX(proc);
+        (void)unlink(Zeroterm(tmpfile));
+    }
+}
+
 void abt_md::Main_RunBatchCheck() {
     if (checkreq_N()) {
         tempstr tmpfile;
@@ -783,10 +754,15 @@ tempstr abt_md::AcrKeyTuple(algo::strptr key) {
     strptr ssimfile = Pathcomp(key, ":LL");
     strptr value    = Pathcomp(key, ":LR");
     abt_md::FSsimfile *p_ssimfile = ind_ssimfile_Find(ssimfile);
+    ind_beg(abt_md::_db_ssimfile_curs, cand, abt_md::_db) {
+        if (!p_ssimfile && Pathcomp(cand.ssimfile, ".RR") == ssimfile) {
+            p_ssimfile = &cand;
+        }
+    }ind_end;
     abt_md::FCtype *p_ctype = p_ssimfile ? p_ssimfile->p_ctype : NULL;
     abt_md::FField *p_field = p_ctype ? c_field_Find(*p_ctype, 0) : NULL;
     if (p_field && ch_N(value) > 0) {
-        ret << ssimfile
+        ret << p_ssimfile->ssimfile
             << "  "
             << Keyval(Pathcomp(p_field->field, ".RR"), value);
     }
@@ -829,8 +805,23 @@ void abt_md::Main_RunKeyCheck() {
             if (algo::Tuple_ReadStrptrMaybe(tup, line) && attrs_N(tup) > 0) {
                 tempstr key;
                 key << tup.head.value << ":" << attrs_qFind(tup, 0).value;
-                if (abt_md::FCheckKey *checkkey = ind_checkkey_Find(key)) {
-                    checkkey->found = true;
+                tempstr shortkey;
+                shortkey << Pathcomp(tup.head.value, ".RR")
+                         << ":" << attrs_qFind(tup, 0).value;
+                // acr answers with the table's full name whichever name the
+                // document used, so a key written as a table's short name is
+                // looked for under that name too. Both are marked rather than
+                // the first that hits, since one sentence may write the same
+                // key both ways -- doc's README says `ssimfile:dmmeta.ctype`
+                // and `dmmeta.ssimfile:dmmeta.ctype` are one page -- and the
+                // form left unmarked would read as missing.
+                abt_md::FCheckKey *full = ind_checkkey_Find(key);
+                abt_md::FCheckKey *shrt = ind_checkkey_Find(shortkey);
+                if (full) {
+                    full->found = true;
+                }
+                if (shrt) {
+                    shrt->found = true;
                 }
             }
         }ind_end;
@@ -868,12 +859,6 @@ void abt_md::Main() {
     if (_db.cmdline.check || _db.cmdline.print) {
         _db.cmdline.update=false;
     }
-    // initialize reademecat for sorting
-    u32 sort_n=0;
-    ind_beg(_db_readmesort_curs,readmesort,_db){
-        i64_PrintPadLeft(sort_n++,readmesort.sortfld,3);
-    }ind_end;
-
     // initialize regx for mdsection
     ind_beg(_db_mdsection_curs,mdsection,_db) {
         Regx_ReadSql(mdsection.regx_match,mdsection.match,true);
@@ -882,6 +867,9 @@ void abt_md::Main() {
 
     // x-reference readme and ns
     Main_XrefNs();
+
+    // which tables the ssimdb readmes write about, read before any document is generated
+    Main_ScanSsimdoc();
 
     // select md files by regex or by namespace
     ind_beg(_db_readmefile_curs,readmefile,_db) {
@@ -949,6 +937,8 @@ void abt_md::Main() {
             algo_lib::_db.exit_code++;
         }
     }
+    // carry the titles recorded above into data/dev/readmefile.ssim.
+    Main_SaveReadmetitle();
     // flush batched acr_compl validation requests collected during section
     // processing — one fork covers every queued command line.
     Main_RunBatchCheck();

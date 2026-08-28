@@ -1,5 +1,5 @@
-## acr_dm: the rules
-<a href="#acr_dm-the-rules"></a>
+## acr_dm: Rules
+<a href="#acr_dm-rules"></a>
 
 `acr_dm` merges ssimfiles.  Git runs it as the merge driver for `*.ssim`, which
 `.gitattributes` selects and `gitconfig-setup` installs, so it is what resolves

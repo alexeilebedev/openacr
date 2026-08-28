@@ -6,7 +6,7 @@ total of "how many rows of type `arg` are flagged as belonging
 to this index" without storing any pointers to them.  Use it
 when you need a fast count but don't need iteration or lookup.
 
-```
+```ssim
 dmmeta.field  field:abt.FDb.cnt_dirty  arg:abt.FTarget  reftype:Count  dflt:""  comment:"Number of dirty targets"
 ```
 
@@ -91,7 +91,7 @@ Source: `cpp/amc/count.cpp`.
 ### Example
 <a href="#example"></a>
 
-```
+```ssim
 dmmeta.field  field:abt.FDb.cnt_dirty  arg:abt.FTarget  reftype:Count
   dmmeta.xref   field:abt.FDb.cnt_dirty  inscond:"row.dirty"  via:...
 ```

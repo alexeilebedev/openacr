@@ -55,9 +55,6 @@ void acr_ed::edaction_Create_Ssimfile() {
         // register ssimfile
         acr_ed::RegisterFile(SsimFname("data", acr_ed::_db.cmdline.ssimfile), "");
 
-        // create readme
-        acr_ed::RegisterFile(tempstr()<<"txt/ssimdb/"<<ns_Get(ssimfile)<<"/"<<name_Get(ssimfile)<<".md", "");
-
         dmmeta::Cfmt cfmt(tempstr() << acr_ed::_db.cmdline.ctype << "." << dmmeta_Strfmt_strfmt_String
                           , dmmeta_Printfmt_printfmt_Tuple
                           , true
@@ -103,9 +100,8 @@ void acr_ed::edaction_Rename_Ssimfile() {
         _db.script << acr_ToCmdline(acr) << eol;
     }
 
-    // rename the ssimfile record, move the ssimfile,
-    // rename the readme, and move the md file
-    // -x -- renames md file & git file
+    // rename the ssimfile record and move the file its rows are kept in
+    // -x -- propagates the rename to the ssimreq records
     // -g -- adds 'git mv' command
     {
         command::acr acr;

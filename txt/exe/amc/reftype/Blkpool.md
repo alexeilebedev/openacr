@@ -10,7 +10,7 @@ have similar lifetimes (e.g., a parser/processor pipeline) and
 fatal for random-access workloads where one long-lived element
 can pin a multi-MB buffer indefinitely.
 
-```
+```ssim
 dmmeta.field  field:atf_unit.FDb.msg  arg:atf_unit.FMsg  reftype:Blkpool  dflt:""  comment:""
   dmmeta.basepool  field:atf_unit.FDb.msg  base:algo_lib.FDb.sbrk
 ```

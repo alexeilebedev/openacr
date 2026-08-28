@@ -559,7 +559,6 @@ void amc::tfunc_Global_MainLoop() {
         Ins(&R, mainloop.body   , "algo_lib::_db.clock          = time;");
         Ins(&R, mainloop.body   , "do {");
         Ins(&R, mainloop.body   , "    algo_lib::_db.next_loop.value = algo_lib::_db.limit;");
-        Set(R, "ns", ns.ns);
         Ins(&R, mainloop.body, "    $ns::Steps();");
         Ins(&R, mainloop.body   , "} while (algo_lib::_db.next_loop < algo_lib::_db.limit);");
     }

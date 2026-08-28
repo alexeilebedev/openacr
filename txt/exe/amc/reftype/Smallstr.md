@@ -9,7 +9,7 @@ backbone of every wire format (`algo.Smallstr50`,
 `algo.RspaceStr8`, `algo.LnumStr10_U64`) and every database
 pkey that has to fit in a fixed slot.
 
-```
+```ssim
 dmmeta.field   field:algo.LspaceStr5.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
   dmmeta.smallstr  field:algo.LspaceStr5.ch  length:5  strtype:leftpad  pad:"' '"  strict:Y
 ```
@@ -147,7 +147,7 @@ Source: `cpp/amc/smallstr.cpp`.
 
 Standard 50-char pascal string used in dmmeta tables:
 
-```
+```ssim
 dmmeta.ctype  ctype:algo.Smallstr50
   dmmeta.field  field:algo.Smallstr50.ch  arg:char  reftype:Smallstr
     dmmeta.smallstr  field:algo.Smallstr50.ch  length:50  strtype:rpascal  pad:""  strict:Y
@@ -155,7 +155,7 @@ dmmeta.ctype  ctype:algo.Smallstr50
 
 Wire-format-friendly right-padded string:
 
-```
+```ssim
 dmmeta.ctype  ctype:algo.RspaceStr8
   dmmeta.field  field:algo.RspaceStr8.ch  arg:char  reftype:Smallstr
     dmmeta.smallstr  field:algo.RspaceStr8.ch  length:8  strtype:rightpad  pad:"' '"  strict:Y
@@ -163,7 +163,7 @@ dmmeta.ctype  ctype:algo.RspaceStr8
 
 Numeric string with base-36 encoding:
 
-```
+```ssim
 dmmeta.ctype  ctype:algo.LnumStr11_U64_Base36
   dmmeta.field  field:....ch  arg:char  reftype:Smallstr
     dmmeta.smallstr  ...  length:11  strtype:leftpad  pad:"'0'"  strict:Y

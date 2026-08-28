@@ -10,7 +10,7 @@ fields (typically on `algo_lib.FDb`) and the names are part
 of the public algo_lib API used everywhere from `acr` to the
 amc command-line parser.
 
-```
+```ssim
 dmmeta.field      field:algo_lib.FDb.IdentChar  arg:algo.Charset  reftype:Charset  dflt:""
   dmmeta.charset  field:algo_lib.FDb.IdentChar  expr:a-zA-Z0-9_  charrange:Y  calc:Y
 ```
@@ -113,7 +113,7 @@ caller reaches `<name>Q`.
 <a href="#standard-charsets-in-algo_lib"></a>
 
 Every project gets these out of the box (defined in
-`data/dmmeta/charset.ssim`):
+`ssimfile:dmmeta.charset`):
 
 | Charset            | Members           | Mode | Use |
 |--------------------|-------------------|------|-----|
@@ -173,7 +173,7 @@ while (algo_lib::IdentCharQ(*p)) p++;
 
 A custom set for a new project:
 
-```
+```ssim
 dmmeta.field      field:foo.FDb.OperatorChar  arg:algo.Charset  reftype:Charset
   dmmeta.charset  field:foo.FDb.OperatorChar  expr:"+-*/%<>="  charrange:N  calc:Y
 ```

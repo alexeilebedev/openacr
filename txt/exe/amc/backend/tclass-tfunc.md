@@ -22,7 +22,7 @@ per field.
 ### Tclass
 <a href="#tclass"></a>
 
-Source: `data/amcdb/tclass.ssim`.  A tclass groups the functions that
+Source: `ssimfile:amcdb.tclass`.  A tclass groups the functions that
 amc can generate for one kind of field.  Each tclass record has a `step`
 hook (its C++ entry point, see [Binding to C++](#binding-to-c)) and a
 `c_tfunc` list of the tfuncs it owns.
@@ -61,7 +61,7 @@ besides `dmmeta.field`.  The record is the switch: no record, no tclass.
 |`Cmp`|`dmmeta.fcmp` on the field|[Sorting](/txt/exe/amc/sort.md#fcmp)|
 |`Cppfunc`|`dmmeta.cppfunc` on the field|[Hooks](/txt/exe/amc/hook.md#hook-vs-cppfunc-vs-fcb)|
 |`Dec`|`dmmeta.fdec` on the field|[Decimals](/txt/exe/amc/decimal.md)|
-|`Fcast`|`dmmeta.fcast` on the field|[dmmeta.fcast](/txt/ssimdb/dmmeta/fcast.md); example in [Enums](/txt/exe/amc/enum.md)|
+|`Fcast`|`dmmeta.fcast` on the field|[dmmeta.fcast](/txt/ssimdb/dmmeta/README.md#dmmeta-fcast); example in [Enums](/txt/exe/amc/enum.md)|
 |`Fconst`|`dmmeta.fconst` on the field|[Enums](/txt/exe/amc/enum.md)|
 |`Io`|`dmmeta.finput`, `dmmeta.foutput` or `dmmeta.gstatic` on the field|[I/O](/txt/exe/amc/io.md)|
 |`Numstr`|`dmmeta.numstr` on the field's `dmmeta.smallstr`|[Small strings](/txt/exe/amc/string.md#small-strings)|
@@ -85,7 +85,7 @@ practice it only ever runs per ctype.
 ### Tfunc
 <a href="#tfunc"></a>
 
-Source: `data/amcdb/tfunc.ssim`.  A tfunc is one function template owned
+Source: `ssimfile:amcdb.tfunc`.  A tfunc is one function template owned
 by a tclass; its pkey is `<Tclass>.<Name>` (e.g. `Thash.Find`,
 `Atree.Insert`, `Field.Cleanup`).  Each tfunc maps 1:1 to a C++
 generator function (see [Binding to C++](#binding-to-c)) which, when
@@ -107,7 +107,7 @@ Tfunc attributes set defaults on the function the generator produces:
 ### Ffunc
 <a href="#ffunc"></a>
 
-Source: `data/dmmeta/ffunc.ssim`.  Where a tfunc declares *what functions
+Source: `ssimfile:dmmeta.ffunc`.  Where a tfunc declares *what functions
 can exist* for a whole tclass, an **ffunc** is the per-field counterpart:
 it names, for one specific field, a function amc should treat specially.
 Its pkey is `<field>.<name>`, where `<name>` is a tfunc name — the same

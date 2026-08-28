@@ -1,18 +1,30 @@
 ## abt_md - Tool to generate markdown documentation
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [abt_md - Internals](/txt/gen/abt_md/abt_md.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+abt_md: Tool to generate markdown documentation
+Usage: abt_md [[-readmefile:]<regx>] [[-section:]<regx>] [options]
+    OPTION        TYPE    DFLT    COMMENT
+    -in           string  "data"  Input directory or filename, - for stdin
+    [readmefile]  regx    "%"     Regx of readme to process/show (empty=all)
+    -ns           regx    ""      (overrides -readme) Process readmes for this namespace
+    [section]     regx    "%"     Select specific section to process
+    -update               Y       (action) Update mode: Re-generate mdfiles
+    -check                        (action) Check mode: Check syntax and links
+    -link                         (with -print) Print links
+    -anchor                       (with -print) Print anchors
+    -print                        (action) Query mode: Print .md section without evaluating
+    -dry_run                      Do not write changes to disk
+    -external                     Check external links as well (may fail if no internet connection)
+    -evalcmd              Y       Execute inline-commands
+    -verbose      flag            Verbosity level (0..255); alias -v; cumulative
+    -debug        flag            Debug level (0..255); alias -d; cumulative
+    -help                         Print help and exit; alias -h
+    -version                      Print version and exit
+    -signature                    Show signatures and exit; alias -sig
+```
 
 ### Description
 <a href="#description"></a>
@@ -91,7 +103,7 @@ some other record (``a `dmmeta.field` with `reftype:Count` ``).
 <a href="#-check"></a>
 
 Example: resolve link errors in .md files:
-```
+```bash
 errlist abt_md -check
 ```
 
@@ -101,7 +113,7 @@ never read, and the anchor it names is one the run never saw.  `-check` therefor
 reads every readme, and it refuses a selection rather than skipping the part it
 was asked to do:
 
-```
+```ssim
 abt_md.narrow_check  nselect:16  nreadmefile:1284  comment:"-check reads every readme; drop -readmefile and -ns, or use -update to regenerate a selection"
 ```
 
@@ -112,9 +124,9 @@ is not a run that was asked to check anything.
 A link's target is good when the repo tracks it -- when `dev.gitfile` holds a row
 for it -- rather than when it happens to exist on disk.  The two differ for a
 build artifact, a gitignored path, and anything reached through a symlinked
-directory: all of them resolve in one checkout and none of them is a page the
-generated site can serve.  `spnx` resolves the same way when it builds the site,
-so a link that passes here is one the site can render.
+directory: all of them resolve in one checkout and none of them is a page anyone
+else can open.  `doc` answers by the same rule, so a link that passes here is one
+the reader can follow.
 
 #### -link -- (with -print) Print links
 <a href="#-link"></a>
@@ -141,32 +153,3 @@ proof that it has rotted.
 
 #### -evalcmd -- Execute inline-commands
 <a href="#-evalcmd"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`abt_md` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)|A component test|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.dispatch](/txt/ssimdb/dmmeta/dispatch.md)|Generate code for a multi-way branch|
-|[dmmeta.dispatch_msg](/txt/ssimdb/dmmeta/dispatch_msg.md)|Add message to a dispatch|
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|Describe input table of a program|
-|[dmmeta.gconst](/txt/ssimdb/dmmeta/gconst.md)|Import ssim table columns as fconst for a field|
-|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
-|[dmmeta.gstatic](/txt/ssimdb/dmmeta/gstatic.md)|Load entries for this table at startup time|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dmmeta.nstype](/txt/ssimdb/dmmeta/nstype.md)|Namespace type|
-|[dev.readmefile](/txt/ssimdb/dev/readmefile.md)|File containing documentation|
-|[dev.readmesort](/txt/ssimdb/dev/readmesort.md)|sorted categories of txt/ *.md files presented in dev.readme|
-|[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
-|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[amcdb.tclass](/txt/ssimdb/amcdb/tclass.md)|AMC template class|

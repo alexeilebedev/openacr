@@ -522,8 +522,120 @@ inline  algo_lib::ErrorX::ErrorX(const algo::strptr& in_str)
  {
 }
 
+// --- algo_lib.RegxM.slot.EmptyQ
+// Return true if index is empty
+inline bool algo_lib::slot_EmptyQ(algo_lib::RegxM& parent) {
+    return parent.slot_n == 0;
+}
+
+// --- algo_lib.RegxM.slot.Find
+// Look up row by row id. Return NULL if out of range
+inline i32* algo_lib::slot_Find(algo_lib::RegxM& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.slot_n;
+    if (idx >= lim) return NULL;
+    return parent.slot_elems + idx;
+}
+
+// --- algo_lib.RegxM.slot.Getary
+// Return array pointer by value
+inline algo::aryptr<i32> algo_lib::slot_Getary(const algo_lib::RegxM& parent) {
+    return algo::aryptr<i32>(parent.slot_elems, parent.slot_n);
+}
+
+// --- algo_lib.RegxM.slot.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline i32* algo_lib::slot_Last(algo_lib::RegxM& parent) {
+    return slot_Find(parent, u64(parent.slot_n-1));
+}
+
+// --- algo_lib.RegxM.slot.Max
+// Return max. number of items in the array
+inline i64 algo_lib::slot_Max(algo_lib::RegxM& parent) {
+    (void)parent;
+    return parent.slot_max;
+}
+
+// --- algo_lib.RegxM.slot.N
+// Return number of items in the array
+inline i64 algo_lib::slot_N(const algo_lib::RegxM& parent) {
+    return parent.slot_n;
+}
+
+// --- algo_lib.RegxM.slot.RemoveAll
+inline void algo_lib::slot_RemoveAll(algo_lib::RegxM& parent) {
+    parent.slot_n = 0;
+}
+
+// --- algo_lib.RegxM.slot.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo_lib::slot_Reserve(algo_lib::RegxM& parent, i64 n) {
+    u64 new_n = parent.slot_n + n;
+    if (UNLIKELY(new_n > parent.slot_max)) {
+        slot_AbsReserve(parent, new_n);
+    }
+}
+
+// --- algo_lib.RegxM.slot.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline i32& algo_lib::slot_qFind(algo_lib::RegxM& parent, u64 t) {
+    return parent.slot_elems[t];
+}
+
+// --- algo_lib.RegxM.slot.qLast
+// Return reference to last element of array. No bounds checking
+inline i32& algo_lib::slot_qLast(algo_lib::RegxM& parent) {
+    return slot_qFind(parent, u64(parent.slot_n-1));
+}
+
+// --- algo_lib.RegxM.slot.rowid_Get
+// Return row id of specified element
+inline u64 algo_lib::slot_rowid_Get(algo_lib::RegxM& parent, i32 &elem) {
+    u64 id = &elem - parent.slot_elems;
+    return u64(id);
+}
+
+// --- algo_lib.RegxM.slot_curs.Next
+// proceed to next item
+inline void algo_lib::RegxM_slot_curs_Next(RegxM_slot_curs &curs) {
+    curs.index++;
+}
+
+// --- algo_lib.RegxM.slot_curs.Reset
+inline void algo_lib::RegxM_slot_curs_Reset(RegxM_slot_curs &curs, algo_lib::RegxM &parent) {
+    curs.elems = parent.slot_elems;
+    curs.n_elems = parent.slot_n;
+    curs.index = 0;
+}
+
+// --- algo_lib.RegxM.slot_curs.ValidQ
+// cursor points to valid item
+inline bool algo_lib::RegxM_slot_curs_ValidQ(RegxM_slot_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo_lib.RegxM.slot_curs.Access
+// item access
+inline i32& algo_lib::RegxM_slot_curs_Access(RegxM_slot_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo_lib.RegxM..Init
+// Set all fields to initial values.
+inline void algo_lib::RegxM_Init(algo_lib::RegxM& parent) {
+    parent.slot_elems 	= 0; // (algo_lib.RegxM.slot)
+    parent.slot_n     	= 0; // (algo_lib.RegxM.slot)
+    parent.slot_max   	= 0; // (algo_lib.RegxM.slot)
+}
+
 // --- algo_lib.RegxM..Ctor
 inline  algo_lib::RegxM::RegxM() {
+    algo_lib::RegxM_Init(*this);
+}
+
+// --- algo_lib.RegxM..Dtor
+inline  algo_lib::RegxM::~RegxM() {
+    algo_lib::RegxM_Uninit(*this);
 }
 
 // --- algo_lib.FFildes..Uninit
@@ -656,9 +768,9 @@ inline bool algo_lib::trace_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 0.
 inline void algo_lib::trace_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 0;
-    u8 t2    = (u8(rhs) & 0x01) << 0;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 0;
+    u16 t2    = (u16(rhs) & 0x01) << 0;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.capture.Get
@@ -672,9 +784,9 @@ inline bool algo_lib::capture_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
 inline void algo_lib::capture_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 1;
-    u8 t2    = (u8(rhs) & 0x01) << 1;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 1;
+    u16 t2    = (u16(rhs) & 0x01) << 1;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.valid.Get
@@ -688,9 +800,9 @@ inline bool algo_lib::valid_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 2.
 inline void algo_lib::valid_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 2;
-    u8 t2    = (u8(rhs) & 0x01) << 2;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 2;
+    u16 t2    = (u16(rhs) & 0x01) << 2;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.literal.Get
@@ -704,9 +816,9 @@ inline bool algo_lib::literal_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 3.
 inline void algo_lib::literal_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 3;
-    u8 t2    = (u8(rhs) & 0x01) << 3;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 3;
+    u16 t2    = (u16(rhs) & 0x01) << 3;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.accepts_all.Get
@@ -720,9 +832,9 @@ inline bool algo_lib::accepts_all_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 4.
 inline void algo_lib::accepts_all_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 4;
-    u8 t2    = (u8(rhs) & 0x01) << 4;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 4;
+    u16 t2    = (u16(rhs) & 0x01) << 4;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags.fullmatch.Get
@@ -736,15 +848,57 @@ inline bool algo_lib::fullmatch_Get(const algo_lib::RegxFlags& parent) {
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 5.
 inline void algo_lib::fullmatch_Set(algo_lib::RegxFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 5;
-    u8 t2    = (u8(rhs) & 0x01) << 5;
-    parent.value = u8((parent.value & ~t1) | t2);
+    u16 t1    = u16(0x01) << 5;
+    u16 t2    = (u16(rhs) & 0x01) << 5;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
-// --- algo_lib.RegxFlags..Init
-// Set all fields to initial values.
-inline void algo_lib::RegxFlags_Init(algo_lib::RegxFlags& parent) {
-    parent.value = u8(0);
+// --- algo_lib.RegxFlags.fixed.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 6.
+inline bool algo_lib::fixed_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 6) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.fixed.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 6.
+inline void algo_lib::fixed_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u16 t1    = u16(0x01) << 6;
+    u16 t2    = (u16(rhs) & 0x01) << 6;
+    parent.value = u16((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags.anchorbeg.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 7.
+inline bool algo_lib::anchorbeg_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 7) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.anchorbeg.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 7.
+inline void algo_lib::anchorbeg_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u16 t1    = u16(0x01) << 7;
+    u16 t2    = (u16(rhs) & 0x01) << 7;
+    parent.value = u16((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags.anchorend.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 8.
+inline bool algo_lib::anchorend_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 8) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.anchorend.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 8.
+inline void algo_lib::anchorend_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u16 t1    = u16(0x01) << 8;
+    u16 t2    = (u16(rhs) & 0x01) << 8;
+    parent.value = u16((parent.value & ~t1) | t2);
 }
 
 // --- algo_lib.RegxFlags..Ctor
@@ -753,14 +907,14 @@ inline  algo_lib::RegxFlags::RegxFlags() {
 }
 
 // --- algo_lib.RegxFlags..FieldwiseCtor
-inline  algo_lib::RegxFlags::RegxFlags(u8 in_value)
+inline  algo_lib::RegxFlags::RegxFlags(u16 in_value)
     : value(in_value)
  {
 }
 
 // --- algo_lib.RegxFlags..EnumCtor
 inline  algo_lib::RegxFlags::RegxFlags(algo_lib_RegxFlagsEnum arg) {
-    this->value = u8(arg);
+    this->value = u16(arg);
 }
 
 // --- algo_lib.RegxStyle.value.GetEnum
@@ -901,6 +1055,7 @@ inline void algo_lib::Regx_Init(algo_lib::Regx& parent) {
     parent.state_elems 	= 0; // (algo_lib.Regx.state)
     parent.state_n     	= 0; // (algo_lib.Regx.state)
     parent.state_max   	= 0; // (algo_lib.Regx.state)
+    parent.ngroup = i32(0);
 }
 
 // --- algo_lib.Regx..Ctor
@@ -1969,27 +2124,6 @@ inline  algo_lib::FProc::~FProc() {
     algo_lib::FProc_Uninit(*this);
 }
 
-// --- algo_lib.FReplvar..Init
-// Set all fields to initial values.
-inline void algo_lib::FReplvar_Init(algo_lib::FReplvar& parent) {
-    parent.p_replscope = NULL;
-    parent.nsubst = i32(0);
-    parent.partial = bool(false);
-    parent.replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.FDb.replvar) not-in-tpool's freelist
-    parent.replscope_ind_replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.Replscope.ind_replvar) not-in-hash
-    parent.replscope_ind_replvar_hashval = 0; // stored hash value
-}
-
-// --- algo_lib.FReplvar..Ctor
-inline  algo_lib::FReplvar::FReplvar() {
-    algo_lib::FReplvar_Init(*this);
-}
-
-// --- algo_lib.FReplvar..Dtor
-inline  algo_lib::FReplvar::~FReplvar() {
-    algo_lib::FReplvar_Uninit(*this);
-}
-
 // --- algo_lib.FTempfile..Uninit
 inline void algo_lib::FTempfile_Uninit(algo_lib::FTempfile& parent) {
     fildes_Cleanup(parent); // dmmeta.ffunc:algo_lib.FTempfile.fildes/Cleanup
@@ -2693,50 +2827,130 @@ inline  algo_lib::RegxParse::~RegxParse() {
     algo_lib::RegxParse_Uninit(*this);
 }
 
-// --- algo_lib.RegxState..Init
-// Set all fields to initial values.
-inline void algo_lib::RegxState_Init(algo_lib::RegxState& parent) {
-    parent.lparen = i32(0);
-}
-
 // --- algo_lib.RegxState..Ctor
 inline  algo_lib::RegxState::RegxState() {
-    algo_lib::RegxState_Init(*this);
 }
 
-// --- algo_lib.Replscope.ind_replvar.EmptyQ
-// Return true if hash is empty
-inline bool algo_lib::ind_replvar_EmptyQ(algo_lib::Replscope& parent) {
-    return parent.ind_replvar_n == 0;
+// --- algo_lib.Replnode..Init
+// Set all fields to initial values.
+inline void algo_lib::Replnode_Init(algo_lib::Replnode& parent) {
+    parent.child = i32(-1);
+    parent.next = i32(-1);
+    parent.up = i32(-1);
 }
 
-// --- algo_lib.Replscope.ind_replvar.N
-// Return number of items in the hash
-inline i32 algo_lib::ind_replvar_N(const algo_lib::Replscope& parent) {
-    return parent.ind_replvar_n;
+// --- algo_lib.Replnode..Ctor
+inline  algo_lib::Replnode::Replnode() {
+    algo_lib::Replnode_Init(*this);
 }
 
-// --- algo_lib.Replscope.ind_replvar_curs.ValidQ
-// cursor points to valid item
-inline bool algo_lib::replscope_ind_replvar_curs_ValidQ(replscope_ind_replvar_curs &curs) {
-    return *curs.prow != NULL;
+// --- algo_lib.Replscope.node.EmptyQ
+// Return true if index is empty
+inline bool algo_lib::node_EmptyQ(algo_lib::Replscope& parent) {
+    return parent.node_n == 0;
 }
 
-// --- algo_lib.Replscope.ind_replvar_curs.Next
-// proceed to next item
-inline void algo_lib::replscope_ind_replvar_curs_Next(replscope_ind_replvar_curs &curs) {
-    curs.prow = &(*curs.prow)->replscope_ind_replvar_next;
-    while (!*curs.prow) {
-        curs.bucket += 1;
-        if (curs.bucket >= curs.parent->ind_replvar_buckets_n) break;
-        curs.prow = &curs.parent->ind_replvar_buckets_elems[curs.bucket];
+// --- algo_lib.Replscope.node.Find
+// Look up row by row id. Return NULL if out of range
+inline algo_lib::Replnode* algo_lib::node_Find(algo_lib::Replscope& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.node_n;
+    if (idx >= lim) return NULL;
+    return parent.node_elems + idx;
+}
+
+// --- algo_lib.Replscope.node.Getary
+// Return array pointer by value
+inline algo::aryptr<algo_lib::Replnode> algo_lib::node_Getary(const algo_lib::Replscope& parent) {
+    return algo::aryptr<algo_lib::Replnode>(parent.node_elems, parent.node_n);
+}
+
+// --- algo_lib.Replscope.node.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo_lib::Replnode* algo_lib::node_Last(algo_lib::Replscope& parent) {
+    return node_Find(parent, u64(parent.node_n-1));
+}
+
+// --- algo_lib.Replscope.node.Max
+// Return max. number of items in the array
+inline i64 algo_lib::node_Max(algo_lib::Replscope& parent) {
+    (void)parent;
+    return parent.node_max;
+}
+
+// --- algo_lib.Replscope.node.N
+// Return number of items in the array
+inline i64 algo_lib::node_N(const algo_lib::Replscope& parent) {
+    return parent.node_n;
+}
+
+// --- algo_lib.Replscope.node.RemoveAll
+inline void algo_lib::node_RemoveAll(algo_lib::Replscope& parent) {
+    parent.node_n = 0;
+}
+
+// --- algo_lib.Replscope.node.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo_lib::node_Reserve(algo_lib::Replscope& parent, i64 n) {
+    u64 new_n = parent.node_n + n;
+    if (UNLIKELY(new_n > parent.node_max)) {
+        node_AbsReserve(parent, new_n);
     }
 }
 
-// --- algo_lib.Replscope.ind_replvar_curs.Access
+// --- algo_lib.Replscope.node.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo_lib::Replnode& algo_lib::node_qFind(algo_lib::Replscope& parent, u64 t) {
+    return parent.node_elems[t];
+}
+
+// --- algo_lib.Replscope.node.qLast
+// Return reference to last element of array. No bounds checking
+inline algo_lib::Replnode& algo_lib::node_qLast(algo_lib::Replscope& parent) {
+    return node_qFind(parent, u64(parent.node_n-1));
+}
+
+// --- algo_lib.Replscope.node.rowid_Get
+// Return row id of specified element
+inline u64 algo_lib::node_rowid_Get(algo_lib::Replscope& parent, algo_lib::Replnode &elem) {
+    u64 id = &elem - parent.node_elems;
+    return u64(id);
+}
+
+// --- algo_lib.Replscope.node_curs.Next
+// proceed to next item
+inline void algo_lib::replscope_node_curs_Next(replscope_node_curs &curs) {
+    curs.index++;
+}
+
+// --- algo_lib.Replscope.node_curs.Reset
+inline void algo_lib::replscope_node_curs_Reset(replscope_node_curs &curs, algo_lib::Replscope &parent) {
+    curs.elems = parent.node_elems;
+    curs.n_elems = parent.node_n;
+    curs.index = 0;
+}
+
+// --- algo_lib.Replscope.node_curs.ValidQ
+// cursor points to valid item
+inline bool algo_lib::replscope_node_curs_ValidQ(replscope_node_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo_lib.Replscope.node_curs.Access
 // item access
-inline algo_lib::FReplvar& algo_lib::replscope_ind_replvar_curs_Access(replscope_ind_replvar_curs &curs) {
-    return **curs.prow;
+inline algo_lib::Replnode& algo_lib::replscope_node_curs_Access(replscope_node_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo_lib.Replscope..Init
+// Set all fields to initial values.
+inline void algo_lib::Replscope_Init(algo_lib::Replscope& parent) {
+    parent.eatcomma = bool(true);
+    parent.strict = u8(0);
+    parent.node_elems 	= 0; // (algo_lib.Replscope.node)
+    parent.node_n     	= 0; // (algo_lib.Replscope.node)
+    parent.node_max   	= 0; // (algo_lib.Replscope.node)
+    parent.dead = i32(0);
 }
 
 // --- algo_lib.Replscope..Ctor

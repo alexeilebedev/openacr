@@ -9,7 +9,7 @@ companion of [Varlen](/txt/exe/amc/reftype/Varlen.md) — same
 "data lives past the fixed header" pattern, but exactly zero
 or one element instead of many.
 
-```
+```ssim
 dmmeta.ctype  ctype:prot.LoginRsp
   dmmeta.field  field:prot.LoginRsp.length  arg:u8  reftype:Val
     dmmeta.lenfld  field:prot.LoginRsp.length  extra:0
@@ -132,7 +132,7 @@ Source: `cpp/amc/opt.cpp`.
 
 A login response that may include a reason string:
 
-```
+```ssim
 dmmeta.ctype  ctype:prot.LoginRsp
   dmmeta.field  field:prot.LoginRsp.length  arg:u16  reftype:Val
     dmmeta.lenfld  field:prot.LoginRsp.length  extra:0

@@ -613,7 +613,7 @@ void                 cstring_Print(algo::cstring& row, algo::cstring& str) __att
 
 // --- algo.Attr
 // create: algo.Tuple.attrs (Tary)
-struct Attr { // algo.Attr: Tuple attribute
+struct Attr { // algo.Attr: Key-value pair, a constituent of algo.Tuple
     algo::cstring   name;    // attribute name
     algo::cstring   value;   // attribute value
     // func:algo.Attr..EqOp
@@ -13079,7 +13079,7 @@ struct TstampCache { // algo.TstampCache: timestamp cache, for fast date to stri
 void                 TstampCache_Init(algo::TstampCache& parent);
 
 // --- algo.Tuple
-struct Tuple { // algo.Tuple: Describes a ssim tuple
+struct Tuple { // algo.Tuple: A ssim tuple: a type tag and an array of key-value pairs
     algo::Attr*   attrs_elems;   // pointer to elements
     u64           attrs_n;       // number of elements in array
     u64           attrs_max;     // max. capacity of array before realloc

@@ -12,7 +12,7 @@ Think of it as `std::unique_ptr<T>` with lazy construction —
 ideal for optional sub-objects that are usually absent and
 expensive to construct.
 
-```
+```ssim
 dmmeta.field  field:acr.FRec.oldpkey  arg:algo.cstring  reftype:Delptr  dflt:""  comment:"Old pkey (if renamed)"
 ```
 
@@ -103,7 +103,7 @@ Source: `cpp/amc/delptr.cpp`.
 `acr` keeps the old pkey of a renamed record only when a rename
 actually happens:
 
-```
+```ssim
 dmmeta.field  field:acr.FRec.oldpkey  arg:algo.cstring  reftype:Delptr  dflt:""
 ```
 

@@ -72,8 +72,12 @@ static bool ScalarArgQ(amc::FCtype &ctype) {
 }
 
 // Append one leaf field row of MSG: dotted NAME at byte OFFSET, read as
-// scalar ctype ARG of WIDTH bytes (for a fixed char array, the array length).
+// ctype ARG of WIDTH bytes (for a fixed char array, the array length).
 // The row is returned so a caller can describe what the columns above cannot.
+//
+// ARG is a leaf scalar for every field with a width, and the element ctype for a varlen
+// tail, which has none: a tail of char is text and a tail of a message ctype is a run of
+// framed messages, and a reader of the row wants to be told which.
 static amc::FMsgfield &AddMsgfield(amc::FMsg &msg, algo::strptr name, int offset, algo::strptr arg, int width, bool bigend, bool varlen) {
     amc::FMsgfield &row = amc::msgfield_Alloc();
     row.msgfield = tempstr() << msg.ctype << "/" << name;
@@ -127,12 +131,11 @@ static bool WalkMsgfield(amc::FCtype &ctype, amc::FMsg *msg, algo::strptr prefix
                 // an optional trailing message; it begins past the fixed
                 // layout this walk measures, and AddOpttail describes it
             } else if (field.reftype == dmmeta_Reftype_reftype_Varlen) {
-                if (arg.ctype == "char" || arg.ctype == "u8") {
-                    if (emit) {
-                        AddMsgfield(*msg, name, offset, arg.ctype, 0, false, true);
-                    }
-                } else {
-                    ok = false;
+                // a varlen is the last field of its message, so what it holds cannot
+                // shift anything after it: the row says where the tail begins and the
+                // arg says what it is made of, whether that is a byte or a message
+                if (emit) {
+                    AddMsgfield(*msg, name, offset, arg.ctype, 0, false, true);
                 }
             } else if (field.reftype == dmmeta_Reftype_reftype_Inlary) {
                 bool fixed_char = FixaryQ(field) && arg.ctype == "char" && field.c_inlary;

@@ -1,10 +1,28 @@
-## amc: the rules
-<a href="#amc-the-rules"></a>
+## amc: Rules
+<a href="#amc-rules"></a>
 
 `amc` reads the ssim database and writes C++ under `cpp/gen` and `include/gen`.
 Its output is committed, so a rebuilt `amc` regenerating the tree byte-for-byte
 is the check that closes over every rule below: any of them broken shows up as a
 diff.  What follows is the part of `amc`'s design that its source does not state.
+
+### Invariants
+<a href="#invariants"></a>
+
+**The access list above a struct names only same-namespace accesses, so Base is left out
+of it.**  A Base relation crosses namespaces as a matter of course: every message of a
+protocol embeds the header, and each is written in whichever namespace its own author
+worked in.  A header's list therefore named the handful of messages beside it and none of
+the hundred elsewhere, which reads as the whole answer and is not one.  `doc msg:<ctype>`
+answers that relation instead, from `dmmeta.typefld` and the Base fields.
+
+**A varlen tail is representable whatever it holds, so a message carrying one still gets
+its `dmmeta.msg` and `dmmeta.msgfield` rows.**  The walk that derives them refuses a field
+it cannot place, because a wrong offset decodes garbage -- but a varlen is the last field
+of its message, so nothing follows it to be misplaced.  What the row says is where the tail
+begins, and its arg says what the tail is made of: `char` for text, a message ctype for a
+run of framed messages.  Twenty-two messages under `ams.MsgHeader` were skipped entirely
+before this held, `x2.PubMsg` among them.
 
 ### Naming a record in generated code
 <a href="#naming-a-record-in-generated-code"></a>

@@ -1,5 +1,6 @@
 unknownMacro
 arrayIndexOutOfBounds:cpp/atf_amc/blkhash.cpp
 nullPointer:cpp/lib_x2/init.cpp
+nullPointer:cpp/lsttool/lsttest.cpp
 preprocessorErrorDirective:cpp/lib/algo/bin_encode.cpp
 preprocessorErrorDirective:cpp/lib/algo/bin_decode.cpp

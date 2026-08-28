@@ -59,26 +59,9 @@ different packages, as determined by `pkgkey` table.
 Apm doesn't require the two projects to have any common history; All that's required is the gitref
 in the package repo corresponding to the last synchronization point.
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Limitations](#limitations)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Package definition](#package-definition)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Merge conflicts](#merge-conflicts)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sandboxes](#sandboxes)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [apm - Internals](/txt/gen/apm/apm.md)<br/>
-
 ### Syntax
 <a href="#syntax"></a>
-```
+```usage
 apm: Algo Package Manager
 Usage: apm [[-package:]<regx>] [options]
     OPTION       TYPE    DFLT    COMMENT
@@ -136,7 +119,7 @@ x
 #### -install -- Install new package (specify -origin)
 <a href="#-install"></a>
 
-```
+```bash
 apm <packagename> -install
 git commit -m <message>
 ```
@@ -149,7 +132,7 @@ with `soft:Y`, meaning that updating given package should not entail updating al
 #### -update -- Update new package (-origin)
 <a href="#-update"></a>
 
-```
+```bash
 apm <packagename> -update
 git commit -m <message>
 ```
@@ -160,7 +143,7 @@ in `pkgdep` table.
 #### -diff -- Diff package with respect to installed version
 <a href="#-diff"></a>
 
-```
+```bash
 apm <packagename> -diff [-R]
 ```
 
@@ -171,7 +154,7 @@ The options `-showrec`, `-showfile` can be used to constrain the shown differenc
 #### -remove -- Remove specified package
 <a href="#-remove"></a>
 
-```
+```bash
 apm <packagename> -remove
 git commit -m <message>
 ```
@@ -186,7 +169,7 @@ Example:
 Print all records comprising the package. For files, `gitfile` record is printed.
 With `-t` option, any records from dependent packages are included as well.
 
-```
+```bash
 apm <packagename> -showrec
 ```
 
@@ -198,7 +181,7 @@ pointed at a different origin, or declared to match a different version of it.
 Use with caution: the baseref is what every later merge is computed against,
 and moving it declares a synchronization that may not have happened.
 
-```
+```bash
 apm <packagename> -reset [-origin <URL>] [-ref <baseref>]
 ```
 
@@ -207,7 +190,7 @@ resolves to is what lands in the record. So `-ref:HEAD` records the origin's
 current commit rather than the word `HEAD`, which is how the baseref is set
 after a push has been committed on the far side:
 
-```
+```bash
 apm <packagename> -push -origin:<dir>
 (cd <dir> && git commit -m "...")
 apm <packagename> -reset -ref:HEAD -origin:<URL>
@@ -238,7 +221,7 @@ Show `git diff --stat` -like output when used with `-diff`.
 Apm can read a file with ssim tuples and annotate each tuple with the names of packages to which
 this tuple belongs.
 Example:
-```
+```bash
 acr ctype:command.xyz -t | apm -annotate
 ...
 ```
@@ -318,7 +301,7 @@ to be a conflict.
 ### Sandboxes
 <a href="#sandboxes"></a>
 
-apm uses [sandboxes](/txt/ssimdb/dev/sandbox.md) to hold intermediate state.
+apm uses [sandboxes](/txt/ssimdb/dev/README.md) to hold intermediate state.
 The new package is always fetched into the `apm-theirs` sandbox, and the common ancestor is instantiated
 in `apm-base` sandbox.
 
@@ -438,7 +421,7 @@ before proceeding.
 This option is used for package definitions. With it, you can check packages any given ssim record
 belongs to. The argument is the file to read, `-` for stdin.
 
-```
+```bash
 $ acr gitfile:README.md | apm -annotate -
 dev.gitfile  gitfile:README.md  pkgkey:openacr/dev.%:%  pkgkey:openacr/dev.gitfile:README.md
 ```
@@ -454,33 +437,3 @@ To check files, simply use the `gitfile` table.
 
 #### -binpath -- (internal use)
 <a href="#-binpath"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`apm` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dev.package](/txt/ssimdb/dev/package.md)|OpenACR package|
-|[dev.pkgdep](/txt/ssimdb/dev/pkgdep.md)|OpenACR Package dependency|
-|[dev.pkgkey](/txt/ssimdb/dev/pkgkey.md)|Keys belonging to the OpenACR package|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
-|[dmmeta.ssimsort](/txt/ssimdb/dmmeta/ssimsort.md)|Define sort order for ssimfile|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|

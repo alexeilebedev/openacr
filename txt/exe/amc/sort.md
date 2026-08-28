@@ -11,7 +11,7 @@ the schema.  Two records put it there: `dmmeta.fsort` names an array field
 and the field to order it by, and `dmmeta.fcmp` overrides how one field
 compares.  amc generates the comparison and the sort from those.
 
-```
+```ssim
 dmmeta.field      field:algo_lib.FTxttbl.c_txtrow  arg:algo_lib.FTxtrow  reftype:Ptrary  dflt:""  comment:"Array of rows"
   dmmeta.fsort    field:algo_lib.FTxttbl.c_txtrow  sorttype:QuickSort  sortfld:algo_lib.FTxtrow.sortkey  comment:""
 dmmeta.field      field:algo_lib.FTxtrow.sortkey   arg:algo.cstring  reftype:Val  dflt:""  comment:"Sort key"
@@ -147,7 +147,7 @@ two *array elements* (`c_txtrow_Lt(elem_a, elem_b)`).
 by a string sort key that compares case-insensitively and treats embedded
 digits as numbers:
 
-```
+```ssim
 dmmeta.field      field:algo_lib.FTxttbl.c_txtrow  arg:algo_lib.FTxtrow  reftype:Ptrary
   dmmeta.fsort    field:algo_lib.FTxttbl.c_txtrow  sorttype:QuickSort  sortfld:algo_lib.FTxtrow.sortkey
 dmmeta.field      field:algo_lib.FTxtrow.sortkey   arg:algo.cstring  reftype:Val

@@ -1,18 +1,22 @@
 ## amc_gc - Garbage collector for in-memory databases
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- abt_md.toc_beg -->
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-<!-- abt_md.toc_end -->
-
-### Internals
-<a href="#internals"></a>
-&#128196; [amc_gc - Internals](/txt/gen/amc_gc/amc_gc.md)<br/>
+### Syntax
+<a href="#syntax"></a>
+```usage
+amc_gc: Garbage collector for in-memory databases
+Usage: amc_gc [options]
+    OPTION      TYPE    DFLT    COMMENT
+    -target     regx    "%"     Target to test-build
+    -key        regx    ""      ACR query selecting records to eliminate, e.g. dmmeta.ctype:amc.%
+    -include                    Garbage collect includes for specified target
+    -in         string  "data"  Input directory or filename, - for stdin
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
+    -help                       Print help and exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
+```
 
 ### Description
 <a href="#description"></a>
@@ -56,10 +60,3 @@ Let's finish by deleting the unused target
 
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
-
-### Inputs
-<a href="#inputs"></a>
-`amc_gc` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|

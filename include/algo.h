@@ -1601,6 +1601,14 @@ namespace algo { // update-hdr
     // SubstringIndex("a.b.c", '.', -2) -> "b.c"
     // SubstringIndex("a.b.c", '.', -3) -> "a.b.c"
     strptr SubstringIndex(strptr str, char c, i64 idx);
+
+    // Find the first occurrence of T in S at or after FROM, and return its index,
+    // or -1 when T is not there or is empty.
+    // The case-sensitive search steps position by position with memchr on T's
+    // first character, so the positions where T cannot begin are skipped by a
+    // vector instruction rather than visited by the loop.  That matters because a
+    // full comparison is only worth starting where the first character already
+    // agrees, and on ordinary text that is a small fraction of the positions.
     i64 FindFrom(strptr s, strptr t, i64 from, bool case_sensitive);
     i64 FindFrom(strptr s, strptr t, i64 from);
     i64 FindFrom(strptr s, char c, i64 from);
@@ -2679,6 +2687,11 @@ namespace algo_lib { // update-hdr
     // cpp/lib/algo/replscope.cpp
     //
 
+    // Print SCOPE as the variables it defines, since the trie holding them is a
+    // representation rather than a thing a reader wants to see.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Replscope_Print(algo_lib::Replscope &row, algo::cstring &str); // cfmt:algo_lib.Replscope.String
+
     // Set value of key KEY value VALUE
     // KEY        string to replace
     // VALUE      value to replace it with
@@ -2689,6 +2702,8 @@ namespace algo_lib { // update-hdr
     // This will trigger an error when field.comment contains a $ sign and the substitution fails.
     // Use
     // Set(R, "$var", field.comment, false);
+    // A value with no dollar sign in it substitutes to itself, so the expansion
+    // pass runs only when there is a dollar sign to expand.
     //
     void Set(algo_lib::Replscope &scope, strptr from, strptr to, bool subst = true);
 
@@ -2701,6 +2716,9 @@ namespace algo_lib { // update-hdr
 
     // Perform $-substitutions in TEXT and return new value.
     tempstr Subst(algo_lib::Replscope &scope, strptr text);
+
+    // Forget every variable SCOPE defines, and the storage their values occupy.
+    void Reset(algo_lib::Replscope &scope);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/string.cpp -- cstring functions

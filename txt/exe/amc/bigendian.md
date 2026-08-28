@@ -146,7 +146,7 @@ swap on every access.
 
 A TCP header excerpt with two big-endian fields:
 
-```
+```ssim
 dmmeta.ctype     ctype:net.TcpHdr
 dmmeta.pack      ctype:net.TcpHdr
 

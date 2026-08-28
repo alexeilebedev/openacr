@@ -43,19 +43,26 @@
 #include "include/algo.h"
 #include "include/abt.h"
 
-// Read the two git facts the stamp carries, in one invocation: the abbreviated
-// "<commit-date>.<short-hash>" label first, the full ref second.  Failure here
-// is ordinary rather than exceptional -- a release tree unpacked without .git,
-// or a machine with no git -- and leaves both empty, which is what makes the
-// resulting stamp read as unversioned.
-static void ReadGitfact(tempstr &shortref, tempstr &gitref) {
-    tempstr out = SysEval("git log -1 --date=short --format=%ad.%h%n%H 2>/dev/null", algo::FailokQ(true), 1024);
+// Read the three git facts the stamp carries, in one invocation: the abbreviated
+// "<commit-date>.<short-hash>" label first, the full ref second, and the moment of the
+// commit third.  Failure here is ordinary rather than exceptional -- a release tree
+// unpacked without .git, or a machine with no git -- and leaves all three empty, which is
+// what makes the resulting stamp read as unversioned.
+//
+// The commit moment comes back as a count of seconds rather than as a date, because a
+// format git renders is a format something here has to parse back, and the two would then
+// have to agree about the timezone as well.
+static void ReadGitfact(tempstr &shortref, tempstr &gitref, algo::UnTime &commitdate) {
+    tempstr out = SysEval("git log -1 --date=short --format=%ad.%h%n%H%n%ct 2>/dev/null", algo::FailokQ(true), 1024);
     int line_n = 0;
     ind_beg(algo::Line_curs,line,out) {
+        u64 secs = 0;
         if (line_n == 0) {
             shortref = line;
         } else if (line_n == 1) {
             gitref = line;
+        } else if (line_n == 2 && u64_ReadStrptrMaybe(secs, line)) {
+            commitdate = algo::UnTime(i64(secs) * algo::UNTIME_PER_SEC);
         }
         line_n++;
     }ind_end;
@@ -71,16 +78,19 @@ static void ReadGitfact(tempstr &shortref, tempstr &gitref) {
 // each other's builds.
 void abt::WriteGitinfo() {
     tempstr shortref, gitref;
-    ReadGitfact(shortref, gitref);
+    algo::UnTime commitdate;
+    ReadGitfact(shortref, gitref, commitdate);
     dev::Gitinfo gitinfo;
     gitinfo.gitinfo = ch_N(shortref) ? tempstr() << shortref << ".abt" : tempstr("unversioned");
     gitinfo.gitref  = gitref;
+    gitinfo.commitdate = commitdate;
     gitinfo.package = abt::_db.cmdline.package;
     tempstr ssimpath("build/gitinfo.ssim");
     dev::Gitinfo prev;
     bool same = dev::Gitinfo_ReadStrptrMaybe(prev, FileToString(ssimpath, algo::FileFlags()))
         && prev.gitinfo == gitinfo.gitinfo
         && prev.gitref == gitinfo.gitref
+        && prev.commitdate == gitinfo.commitdate
         && prev.package == gitinfo.package;
     if (!same) {
         // to the second: everything that shows this value shows it to a reader,

@@ -142,11 +142,11 @@ A step is a `dmmeta.fstep` row attached to a **global** field —
 that is, a field on `<ns>.FDb`.  Each step generates exactly one
 extern user-implemented function `<field>_Step()`.
 
-```
+```ssim
 dmmeta.ctype  ctype:atf_amc.FDb
   dmmeta.field  field:atf_amc.FDb.cd_in_msg  arg:atf_amc.Msgbuf  reftype:Llist
     dmmeta.fstep  fstep:atf_amc.FDb.cd_in_msg  steptype:Inline
-```
+```bash
 
 amc emits:
 
@@ -197,7 +197,7 @@ field with an `fstep` row gets the zero-test predicate and
 becomes a flag you set when you want the step to fire and clear
 when you're done:
 
-```
+```ssim
 dmmeta.field  field:net.FDb.do_compact  arg:bool  reftype:Val
   dmmeta.fstep  fstep:net.FDb.do_compact  steptype:Inline
 ```

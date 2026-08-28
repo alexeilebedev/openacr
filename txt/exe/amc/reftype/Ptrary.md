@@ -18,7 +18,7 @@ Ptrary has three variants, picked by flags on
 | Y | Y | `<xfname>_idx` i32 on the element (-1 = not in) | yes (Bheap requires this) |
 | N | Y | — | rejected: heaplike implies unique |
 
-```
+```ssim
 dmmeta.field  field:amc.FTarget.c_targdep  arg:amc.FTargdep  reftype:Ptrary  dflt:""  comment:""
   dmmeta.ptrary  field:amc.FTarget.c_targdep  unique:Y  heaplike:N
 ```
@@ -154,7 +154,7 @@ naming the field and `oncecurs`, see [cursors](/txt/exe/amc/reftype.md#cursors).
 
 A unique Ptrary of dependencies per target:
 
-```
+```ssim
 dmmeta.field  field:amc.FTarget.c_targdep  arg:amc.FTargdep  reftype:Ptrary
   dmmeta.ptrary  field:amc.FTarget.c_targdep  unique:Y  heaplike:N
   dmmeta.xref    field:amc.FTarget.c_targdep  ...
