@@ -514,19 +514,24 @@ static void QueueCommandLine(algo::strptr text, u32 lineno) {
 // `func:doc.NavText` is a location doc answers rather than a row of
 // `dmmeta.func`. Requiring the namespace, as the qualified form does, tells
 // none of those apart -- what does is that none of their leaves is a catalog.
+//
+// `only` holds the candidate while there is exactly one, and a second match clears
+// it, so the pointer is its own single-match test.
 static bool ShortkeyQ(algo::strptr ssimfile) {
     abt_md::FSsimfile *only = NULL;
     int nfound = 0;
     ind_beg(abt_md::_db_ssimfile_curs, cand, abt_md::_db) {
         if (Pathcomp(cand.ssimfile, ".RR") == ssimfile) {
-            only = &cand;
+            only = nfound == 0 ? &cand : NULL;
             nfound++;
         }
     }ind_end;
-    abt_md::FCtype *p_ctype = nfound == 1 ? only->p_ctype : NULL;
-    abt_md::FField *p_field = p_ctype ? c_field_Find(*p_ctype, 0) : NULL;
-    bool catalog = p_field
-        && (only->ssimfile == "dmmeta.ssimfile" || p_field->arg == "dmmeta.Ssimfile");
+    bool catalog = false;
+    if (only) {
+        abt_md::FField *p_field = only->p_ctype ? c_field_Find(*only->p_ctype, 0) : NULL;
+        catalog = p_field
+            && (only->ssimfile == "dmmeta.ssimfile" || p_field->arg == "dmmeta.Ssimfile");
+    }
     return catalog;
 }
 

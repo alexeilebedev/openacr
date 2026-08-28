@@ -1421,10 +1421,10 @@ name`, `field reftype`, `target license`.
 | citest | one check of a cijob, driven by `atf_ci` |
 
 **A document names a table by its short name, and `abt_md -check` resolves it.**  A span
-`ssimfile:x2db.product` names that table; the qualified `dmmeta.ssimfile:x2db.product`
+`ssimfile:dmmeta.ctype` names that table; the qualified `dmmeta.ssimfile:dmmeta.ctype`
 names the row of the catalog holding it and reads sideways in a sentence.  Both are
-checked against the database, so a table that moves namespace stops being a silent
-staleness -- `x2rdb.product` was one until the spans were written this way.
+checked against the database, so a table that moves to another namespace stops being a
+silent staleness and becomes a failing check.
 
 An unqualified span is otherwise not read as a key, because the bare leaf form is how an
 attribute appears inside a tuple: `cascdel:Y`, `cfmt:Argv` and `sandbox:Y` are values

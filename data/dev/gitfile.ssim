@@ -607,7 +607,6 @@ dev.gitfile  gitfile:data/dev/pkggen.ssim
 dev.gitfile  gitfile:data/dev/pkgkey.ssim
 dev.gitfile  gitfile:data/dev/prototransport.ssim
 dev.gitfile  gitfile:data/dev/readmefile.ssim
-dev.gitfile  gitfile:data/dev/readmesort.ssim
 dev.gitfile  gitfile:data/dev/rpm.ssim
 dev.gitfile  gitfile:data/dev/sandbox.ssim
 dev.gitfile  gitfile:data/dev/sbpath.ssim

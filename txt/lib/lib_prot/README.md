@@ -3,12 +3,7 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-
-### Internals
-<a href="#internals"></a>
-&#128196; [lib_prot - Internals](/txt/gen/lib_prot/lib_prot.md)<br/>
 
 ### Sources
 <a href="#sources"></a>

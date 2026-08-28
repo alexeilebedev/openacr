@@ -78,10 +78,10 @@ whose pkey is changing is a `dmmeta.field`, `ScheduleCascadeUpdate` in
 `cpp/acr/query.cpp` schedules a second pass over the ssimfile of the field's
 ctype which renames the matching attribute in every row, so the schema row, the
 data column and every Pkey reference to the field move in one `acr` run.
-Renaming `x2db.Gwproto.offset` to `portoffset` rewrites `ssimfile:x2db.gwproto`
-alongside `field.ssim`, `funique.ssim` and `dispsig.ssim`, and leaves
-`acr -check % -x` at `n_err:0` with the file already in normal form -- a
-re-run of `acr 'x2db.gwproto:%' -write` reports `n_file_mod:0`.
+Renaming `dev.Htmlentity.code` to `codepoint` rewrites `ssimfile:dev.htmlentity`
+alongside `field.ssim` and `funique.ssim`, and leaves `acr -check % -x` at
+`n_err:0` with the file already in normal form -- a re-run of
+`acr 'dev.htmlentity:%' -write` reports `n_file_mod:0`.
 
 The pass is skipped for a fldfunc, which has no presence in any ssimfile, and
 for a ctype with no ssimfile of its own.  It reaches one file only, the ssimfile
