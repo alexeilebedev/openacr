@@ -113,8 +113,8 @@ void apm::MergeFiles(apm::FPackage &package) {
             }
             // copy file
             // -p = preserve mode,ownership,timestamps
-            // -d = don't dereference (preseve symbolic link)
-            _db.script << "cp -p -d "<<strptr_ToBash(mergefile.theirs_file)<<" "<<strptr_ToBash(mergefile.mergefile) << eol;
+            // -P = don't dereference (preserve symbolic link)
+            _db.script << "cp -p -P "<<strptr_ToBash(mergefile.theirs_file)<<" "<<strptr_ToBash(mergefile.mergefile) << eol;
             _db.script << "git add -f "<<strptr_ToBash(mergefile.mergefile) << eol;
         }
         if (mergefile.ours_mode != 0 && mergefile.theirs_mode != 0) {

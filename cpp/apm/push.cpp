@@ -114,9 +114,9 @@ void apm::PushDiff(algo::strptr base_dir) {
     _db.script << cmd_mkdir << eol;// flush the rest
     ind_beg(_db_mergefile_curs,mergefile,_db) {
         if (mergefile.ours_mode != 0) {
-            // -d = preserve soft link
+            // -P = preserve soft link
             // -p = preserve mode/permissions
-            _db.script << "cp -d -p " << strptr_ToBash(mergefile.mergefile)
+            _db.script << "cp -P -p " << strptr_ToBash(mergefile.mergefile)
                        << " " << strptr_ToBash(DirFileJoin(base_dir,mergefile.mergefile))<< eol;
         }
     }ind_end;
