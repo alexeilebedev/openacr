@@ -2152,14 +2152,18 @@ namespace atf_comp { // update-hdr
     // names are compiled twice the way the flag shapes are, and the notes have to
     // come back for each.
     // An output named the way a precompiled header is named is the third name and the
-    // one that looks like an exception: gcc answers an output named h.h.gch with
-    // h.h.gcno under -c, and with h.h.gch-h.gcno without it. gcache caches only
+    // one that looks like an exception: gcc answers an output named h.hpp.gch with
+    // h.hpp.gcno under -c, and with h.hpp.gch-h.gcno without it. gcache caches only
     // compiles that carry -c, so the name it derives is the name gcc writes, and the
     // GCHNAME stage pins the notes coming back from a hit on such an output as well.
-    // What that stage leaves at h.h.gch is an object and not a precompiled header,
+    // What that stage leaves at h.hpp.gch is an object and not a precompiled header,
     // because gcache compiles the preprocessed text of the translation unit rather
     // than the header it was handed, so the stage pins the derivation from the name
     // and says nothing about how a precompiled header is cached.
+    // The cxx shell function translates gcc's two long-only aliases immediately
+    // before invoking the host compiler.  gcache still sees and classifies the
+    // original spellings, while clang -- which macOS exposes as g++ -- receives the
+    // canonical spellings it supports.
     // void comptest_gcache_CoverageFlag(); // gstatic/atfdb.comptest:gcache.CoverageFlag
 
     // The modification time of every file a cache hit writes, in both cache
@@ -2171,11 +2175,12 @@ namespace atf_comp { // update-hdr
     // a hit whose cached bytes equal the bytes already at the target -- a header
     // whose touch moved no preprocessed text, so the key still hits while the
     // build tool considers the object stale. Each stage backdates the target to
-    // 2020, records MARKER, and runs the compile: the report has to say hit:Y,
+    // 2020, records MARKER at 2021, and runs the compile: the report has to say hit:Y,
     // which is what makes the times meaningful, and each file the hit writes has to
-    // come out newer than MARKER. BAREABSENT is the control for a target that is
-    // not there at all, and BARESAME is the bare-object format's answer to the same
-    // identical-bytes case the coverage format faces in COVSAME.
+    // come out newer than MARKER. A fixed older marker also works with macOS's Bash
+    // 3, whose -nt comparison observes only whole seconds. BAREABSENT is the control
+    // for a target that is not there at all, and BARESAME is the bare-object format's
+    // answer to the same identical-bytes case the coverage format faces in COVSAME.
     // The cache entry the publish writes carries a modification time of its own, and
     // the cleanup reads it: an entry older than the retention window is deleted, and
     // the byte budget evicts in oldest-last-use order. A publish over an entry whose

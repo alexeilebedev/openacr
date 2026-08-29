@@ -22,6 +22,36 @@
 #include "include/lib_ams.h"
 #ifndef WIN32
 #include <sys/statvfs.h>
+#ifdef __APPLE__
+#include <sys/posix_shm.h>
+#endif
+#endif
+
+// -----------------------------------------------------------------------------
+
+#ifndef WIN32
+// Derive the POSIX shared-memory object name for GRP_ID.  Darwin limits these
+// names to PSHMNAMLEN (currently 31) characters, while a descriptive AMS name
+// can be longer.  Keep the readable spelling when it fits and compact only an
+// overlong name, using two different CRC polynomials so the full cluster and
+// group identity still has a 64-bit fingerprint.
+static tempstr ShmFilename(ams::GrpId grp_id) {
+    tempstr ret;
+    ret << lib_ams::_db.file_prefix
+        << (lib_ams::_db.file_prefix == "" ? "" : "-")
+        << grp_id << ".ams";
+#ifdef __APPLE__
+    if (ch_N(ret) > PSHMNAMLEN) {
+        algo::memptr bytes = strptr_ToMemptr(ret);
+        u64 hash = u64(algo::CRC32Step(0, bytes.elems, bytes.n_elems)) << 32
+            | algo::CRC32IEEE(0, bytes.elems, bytes.n_elems);
+        ret = "ams-";
+        algo::u64_PrintHex(hash, ret, 16, false);
+        ret << ".ams";
+    }
+#endif
+    return ret;
+}
 #endif
 
 // -----------------------------------------------------------------------------
@@ -63,8 +93,7 @@ i64 lib_ams::ShmExistingSize(ams::GrpId grp_id) {
     i64 ret = 0;
 #ifndef WIN32
     // the name ShmOpen gives the segment, which is the one on disk
-    tempstr filename;
-    filename << "/dev/shm/" << _db.file_prefix << (_db.file_prefix=="" ? "" : "-") << grp_id << ".ams";
+    tempstr filename = tempstr() << "/dev/shm/" << ShmFilename(grp_id);
     struct stat st;
     if (stat(Zeroterm(filename), &st) == 0) {
         ret = i64(st.st_blocks) * 512;
@@ -252,7 +281,7 @@ bool lib_ams::ShmCreate(lib_ams::FShm &shm, ams::ShmFlags flags) {
     int mode = S_IRUSR | S_IWUSR;
     // POSIX says / character in argument to shm_open is implementation-defined
     // Practically, shm_open fails on Linux if / is used.
-    shm.filename = tempstr() << _db.file_prefix  << (_db.file_prefix=="" ? "" : "-") << shm.grp_id << ".ams";
+    shm.filename = ShmFilename(shm.grp_id);
     if (_db.file_prefix == "") {
         size = lib_ams::_db.shmem_size;
         shm.shm_region = algo::memptr((u8*)algo_lib::lpool_AllocMem(lib_ams::_db.shmem_size),size);
@@ -377,6 +406,30 @@ bool lib_ams::ShmCreate(lib_ams::FShm &shm, ams::ShmFlags flags) {
 
 // -----------------------------------------------------------------------------
 
+// Claim this segment's one writer.  Linux shm descriptors are regular tmpfs
+// files and support flock.  Darwin's POSIX shm descriptors support neither
+// flock nor fcntl record locks, so claim the aligned writer pid in the shared
+// header atomically.  A dead owner may be replaced; a live one keeps the claim.
+static bool LockWriter(lib_ams::FShm &shm) {
+#ifdef __APPLE__
+    i32 pid = getpid();
+    i32 *owner = &shm.c_shmhdr->writer_pid;
+    i32 found = __sync_val_compare_and_swap(owner, 0, pid);
+    bool ok = found == 0 || found == pid;
+    if (!ok && kill(found, 0) == -1 && errno == ESRCH) {
+        ok = __sync_bool_compare_and_swap(owner, found, pid);
+    }
+    if (!ok) {
+        errno = EWOULDBLOCK;
+    }
+    return ok;
+#else
+    return flock(shm.shm_file.fd.value, LOCK_EX|LOCK_NB) == 0;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
 // Open shm for reading or writing (or both)
 // If the shm is being opened for writing and doesn't exist, it's created.
 // Otherwise it must have been created with ShmCreate.
@@ -441,7 +494,7 @@ bool lib_ams::ShmOpen(lib_ams::FShm &shm, ams::ShmFlags flags) {
     // attach write member
     if (ok && write_Get(flags) && !shm.locked) {
         if (ShmFdOpenQ(shm)) {
-            ok = flock(shm.shm_file.fd.value, LOCK_EX|LOCK_NB)==0;
+            ok = LockWriter(shm);
             if (!ok) {
                 step = "write";
                 err = errno;
@@ -647,14 +700,20 @@ bool lib_ams::WriteMsgBlock(lib_ams::FShm &shm, ams::MsgHeader &msg) {
 }
 
 void lib_ams::shm_file_Cleanup(lib_ams::FShm &shm) {// fcleanup:lib_ams.FShm.shm_file
+    if (shm.locked) {
+#ifdef __APPLE__
+        if (shm.c_shmhdr) {
+            (void)__sync_bool_compare_and_swap(&shm.c_shmhdr->writer_pid, i32(getpid()), 0);
+        }
+#else
+        (void)flock(shm.shm_file.fd.value, LOCK_UN);
+#endif
+        shm.locked=false;
+    }
     // unmap section from process address space for reader and writer as well
     if (shm.shm_region.elems) {
         munmap(shm.shm_region.elems, shm.shm_region.n_elems);
         Refurbish(shm.shm_region);
-    }
-    if (shm.locked) {
-        (void)flock(shm.shm_file.fd.value, LOCK_UN);
-        shm.locked=false;
     }
 #ifdef WIN32
     // close named section

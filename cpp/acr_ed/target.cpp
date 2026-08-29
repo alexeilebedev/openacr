@@ -270,7 +270,7 @@ void acr_ed::edaction_Rename_Target() {
         // rewrite #include's first
         if (header) {
             ind_beg(acr_ed::target_zd_targsrc_curs,thistargsrc,*target) {
-                Ins(&R, acr_ed::_db.script, tempstr()<<"sed -i "<<algo::strptr_ToBash("s!#include \"$src\"!#include \"$newsrc\"!g")<<" "<<src_Get(thistargsrc));
+                Ins(&R, acr_ed::_db.script, tempstr()<<"perl -pi -e "<<algo::strptr_ToBash("s!#include \"$src\"!#include \"$newsrc\"!g")<<" "<<src_Get(thistargsrc));
             }ind_end;
         }
         // this goes into a temporary variable and gets added to the main script later
@@ -278,8 +278,8 @@ void acr_ed::edaction_Rename_Target() {
         if (src != newsrc) {
             Ins(&R, script2, "git mv $src $newsrc");
         }
-        Ins(&R, script2, "sed -i 's/$oldtarg::/$newtarg::/g' $newsrc");
-        Ins(&R, script2, "sed -i 's/namespace $oldtarg/namespace $newtarg/g' $newsrc");
+        Ins(&R, script2, "perl -pi -e 's/$oldtarg::/$newtarg::/g' $newsrc");
+        Ins(&R, script2, "perl -pi -e 's/namespace $oldtarg/namespace $newtarg/g' $newsrc");
     }ind_end;
     acr_ed::_db.script << script2;
 
