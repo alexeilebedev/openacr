@@ -170,7 +170,6 @@ void acr_ed::edaction_Create_Target() {
     // sample source file
     if (is_exe || is_lib) {
         Ins(&R, acr_ed::_db.script, "cat > cpp/$target/$target.cpp << EOF");
-        Ins(&R, acr_ed::_db.script, "#include \"include/algo.h\"");
         InsertSrcfileInclude(R,false);
         if (is_exe) {
             Ins(&R, acr_ed::_db.script, "void $target::Main() {");
