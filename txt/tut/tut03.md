@@ -316,7 +316,7 @@ tutorial would be indistinguishable from the previous example.
 
     void samp_tut3::zd_value_Step() {
         Value &value = *zd_value_First();
-        prlog(CurrUnTime() << " "<< value.value);
+        prlog(algo::CurrUnTime() << " "<< value.value);
         value_Delete(value);
     }
     ...
