@@ -3,7 +3,7 @@
 acr_ed -> acr_ed.create_target  target:xyz
 acr_ed -> set -e
 acr_ed -> bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
-acr_ed -> dmmeta.ns  ns:xyz  nstype:exe  license:GPL  comment:""
+acr_ed -> dmmeta.ns  ns:xyz  nstype:exe  license:Apache  comment:""
 acr_ed -> dmmeta.nsx  ns:xyz  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 acr_ed -> dmmeta.main  ns:xyz  ismodule:N
 acr_ed -> dmmeta.nscpp  ns:xyz  comment:""
@@ -30,7 +30,7 @@ acr_ed -> dmmeta.ccmdline  ctype:command.xyz  read:Y  basecmdline:algo_lib.FDb.c
 acr_ed -> dmmeta.field  field:command.xyz.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"
 acr_ed -> dmmeta.floadtuples  field:command.xyz.in  autoscan:Y  optional:N  comment:""
 acr_ed -> dev.gitfile  gitfile:txt/exe/xyz/README.md
-acr_ed -> dev.readmefile  gitfile:txt/exe/xyz/README.md  inl:N  sandbox:N  filter:""  comment:""
+acr_ed -> dev.readmefile  gitfile:txt/exe/xyz/README.md  inl:N  sandbox:N  filter:""  publish:N  comment:""
 acr_ed -> EOF
 acr_ed -> mkdir -p cpp/xyz/
 acr_ed -> touch cpp/xyz/xyz.cpp

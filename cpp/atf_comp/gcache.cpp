@@ -1,30 +1,160 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_comp (exe) -- Component test runner: spawn processes and diff the log against a reference
 // Exceptions: yes
 // Source: cpp/atf_comp/gcache.cpp -- Comptests for gcache
 //
-// Comptests for gcache, the compiler cache. Each test builds its own cache
-// directory inside the test's tempdir and wraps a real g++ invocation, so the
-// .gcache link, the cache contents and the compiler's output files all stay
-// inside that directory.
+// Comptests for gcache, the compiler cache.  Each test builds its own cache
+// directory inside the test's tempdir and runs gcache there once per stage, so
+// the .gcache link, the cache contents and the compiler's output files all stay
+// inside that directory.  The fixture -- the source files, a backdated object, a
+// forged cache entry -- is made in C++, the report gcache prints is read with
+// its generated reader, and what a stage established is recorded with Check.
 
 #include "include/algo.h"
 #include "include/atf_comp.h"
+#include <string.h>
+#include <sys/time.h>
+#include <unistd.h>
+
+// Whether the bytes of NEEDLE occur in HAY, either of which may hold NUL bytes.
+static bool ContainsBytesQ(strptr hay, strptr needle) {
+    return memmem(hay.elems, hay.n_elems, needle.elems, needle.n_elems) != NULL;
+}
+
+// Write TEXT to FILE under the tempdir, creating or replacing it.
+static void WriteTemp(strptr file, strptr text) {
+    StringToFile(text, atf_comp::TempPath(file));
+}
+
+// Return every byte of FILE under the tempdir, NUL bytes included, since an
+// object file or a cache entry is what gets read here.
+static tempstr ReadTemp(strptr file) {
+    algo_lib::FFildes fd;
+    fd.fd = OpenRead(atf_comp::TempPath(file));
+    return algo::FdToString(fd.fd);
+}
+
+// Remove FILE under the tempdir, a file or a directory tree; a path that is
+// not there is left alone.
+static void RemoveTemp(strptr file) {
+    tempstr path = atf_comp::TempPath(file);
+    if (DirectoryQ(path)) {
+        RemDirRecurse(path, true);
+    } else {
+        DeleteFile(path);
+    }
+}
+
+// Create directory DIR under the tempdir, and the directories leading to it.
+static void MkdirTemp(strptr dir) {
+    CreateDirRecurse(atf_comp::TempPath(dir));
+}
+
+// Link NAME under the tempdir to the tree's data directory, which gcache reads
+// its tables from.
+static void LinkData(strptr name) {
+    errno_vrfy_(symlink(algo::Zeroterm(algo::GetFullPath("data")), algo::Zeroterm(atf_comp::TempPath(name))) == 0);
+}
+
+// Return the moment every backdated file is set to, the start of 2020: a
+// file a run wrote carries a later time, and one it left alone still carries this.
+static algo::UnTime Backdate() {
+    algo::UnixTime t;
+    t.value = 1577836800;
+    return algo::ToUnTime(t);
+}
+
+// Set the modification time of FILE under the tempdir to Backdate().
+static void BackdateTemp(strptr file) {
+    struct timeval tv[2];
+    tv[0].tv_sec = algo::ToUnixTime(Backdate()).value;
+    tv[0].tv_usec = 0;
+    tv[1] = tv[0];
+    (void)utimes(Zeroterm(atf_comp::TempPath(file)), tv);
+}
+
+// Record whether FILE under the tempdir was written since it was backdated, as
+// `# check NAME:fresh` when its time is past Backdate(), `stale` when it is not,
+// and `absent` when there is no such file.
+static void CheckFresh(strptr name, strptr file) {
+    tempstr path = atf_comp::TempPath(file);
+    strptr state = "absent";
+    if (FileQ(path)) {
+        state = ModTime(path) > Backdate() ? "fresh" : "stale";
+    }
+    atf_comp::Check(name, state);
+}
+
+// Run gcache with ARGS from directory DIR under the tempdir (the tempdir itself
+// when DIR is empty), as test stage STAGE, and wait for it to exit with code
+// EXPECTED.  REPORT receives the report.gcache line the run printed, and is
+// left blank when it printed none.
+static void RunGcache(strptr stage, strptr dir, strptr args, report::gcache &report, int expected = 0) {
+    atf_comp::Stage(stage);
+    tempstr cmd;
+    cmd << "cd $tempdir";
+    if (ch_N(dir)) {
+        cmd << "/" << dir;
+    }
+    cmd << " && $$OLDPWD/$bindir/gcache " << args;
+    atf_comp::FProc &proc = atf_comp::ProcStart(cmd);
+    tempstr out = atf_comp::ProcRead(proc, "");
+    atf_comp::ProcWait(proc, expected);
+    report = report::gcache();
+    ind_beg(algo::Line_curs, line, out) {
+        (void)report::gcache_ReadStrptrMaybe(report, line);
+    }ind_end;
+}
+
+// Return the gcache arguments compiling SOURCE to OBJECT with COMPILER under
+// FLAGS, the report requested.
+static tempstr CompileArgs(strptr compiler, strptr flags, strptr source, strptr object) {
+    tempstr args;
+    algo::ListSep ls(" ");
+    args << "-report -- " << compiler;
+    if (ch_N(flags)) {
+        args << " " << flags;
+    }
+    args << " -c " << source << " -o " << object;
+    return args;
+}
+
+// Set up the cache every test starts from: the data link and gcache -install
+// pointed at a directory named cache under the tempdir.
+static void InstallCache() {
+    LinkData("data");
+    report::gcache report;
+    RunGcache("install", "", "-install -dir:cache", report);
+}
+
+// Compile SOURCE to OBJECT twice with COMPILER under FLAGS, removing OBJECT and
+// NOTES in between, as stages STAGE_first and STAGE_second, then record the
+// state of both files.
+static void TryCompile(strptr stage, strptr compiler, strptr flags, strptr source, strptr object, strptr notes) {
+    report::gcache report;
+    RemoveTemp(object);
+    RemoveTemp(notes);
+    RunGcache(tempstr() << stage << "_first", "", CompileArgs(compiler, flags, source, object), report);
+    RemoveTemp(object);
+    RemoveTemp(notes);
+    RunGcache(tempstr() << stage << "_second", "", CompileArgs(compiler, flags, source, object), report);
+    atf_comp::CheckFile(tempstr() << stage << "_o", object);
+    atf_comp::CheckFile(tempstr() << stage << "_gcno", notes);
+}
 
 // gcache asked to enable a cache directory that does not exist, wrapping a
 // command that succeeds: the missing directory is reported and the run fails.
@@ -32,7 +162,9 @@
 // it, so a successful compile cannot mask the setup failure reported ahead of
 // it.
 void atf_comp::comptest_gcache_CacheDirFail() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && $$OLDPWD/$bindir/gcache -enable -dir:nosuchdir -- true'");
+    LinkData("data");
+    report::gcache report;
+    RunGcache("enable", "", "-enable -dir:nosuchdir -- true", report, 1);
 }
 
 // A coverage cache hit whose object file cannot be written, and the mirror
@@ -44,7 +176,40 @@ void atf_comp::comptest_gcache_CacheDirFail() {
 // either way. The last run is the control: with both paths free the pair
 // restores and the run succeeds.
 void atf_comp::comptest_gcache_CoverageRestoreFail() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && $$OLDPWD/$bindir/gcache -install -dir:cache > /dev/null && $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o && rm -f x.o x.gcno && mkdir x.o; $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o; echo ofail_code:$$?; test -e x.gcno && echo ofail_gcno:present || echo ofail_gcno:absent; rmdir x.o; rm -f x.gcno; mkdir x.gcno; $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o; echo gcnofail_code:$$?; test -e x.o && echo gcnofail_o:present || echo gcnofail_o:absent; rmdir x.gcno; rm -f x.o; $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o; echo hit_code:$$?; test -e x.o -a -e x.gcno && echo hit_pair:present || echo hit_pair:incomplete'");
+    InstallCache();
+    WriteTemp("x.cpp", "int f(){return 1;}\n");
+    report::gcache report;
+    strptr compile = "-- g++ --coverage -c x.cpp -o x.o";
+    RunGcache("publish", "", compile, report);
+    RemoveTemp("x.o");
+    RemoveTemp("x.gcno");
+    MkdirTemp("x.o");
+    RunGcache("ofail", "", compile, report, 1);
+    atf_comp::CheckFile("ofail_gcno", "x.gcno");
+    RemoveTemp("x.o");
+    RemoveTemp("x.gcno");
+    MkdirTemp("x.gcno");
+    RunGcache("gcnofail", "", compile, report, 1);
+    atf_comp::CheckFile("gcnofail_o", "x.o");
+    RemoveTemp("x.gcno");
+    RemoveTemp("x.o");
+    RunGcache("hit", "", compile, report);
+    atf_comp::CheckFile("hit_o", "x.o");
+    atf_comp::CheckFile("hit_gcno", "x.gcno");
+}
+
+// One stage of gcache.CoverageBlobMiss, named STAGE: the object is removed,
+// the notes are marked with a recognizable string, and the coverage compile
+// runs.  The object has to come out with bytes, and the marked notes have to be
+// gone, whatever the entry held.
+static void TryBlob(strptr stage) {
+    report::gcache report;
+    RemoveTemp("x.o");
+    WriteTemp("x.gcno", "stalenotes\n");
+    RunGcache(stage, "", "-report -- g++ --coverage -c x.cpp -o x.o", report);
+    atf_comp::CheckFile(tempstr() << stage << "_o", "x.o");
+    bool stale = ContainsBytesQ(ReadTemp("x.gcno"), "stalenotes");
+    atf_comp::Check(tempstr() << stage << "_gcno", stale ? "stale" : "fresh");
 }
 
 // A cache entry that is not a whole coverage blob counts as a miss, so the
@@ -67,25 +232,46 @@ void atf_comp::comptest_gcache_CoverageRestoreFail() {
 // marked .gcno has to be gone, because the pair the compile leaves behind is
 // always a pair from one compile.
 void atf_comp::comptest_gcache_CoverageBlobMiss() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null && $$G -- g++ --coverage -c x.cpp -o x.o; BLOB=$$(find cache -mindepth 3 -type f); try(){ rm -f x.o; printf \"stalenotes\\n\" > x.gcno; $$G -report -- g++ --coverage -c x.cpp -o x.o > rep.txt; echo $$1_code:$$?; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_/\"; test -s x.o && echo $$1_o:present || echo $$1_o:empty; grep -q stalenotes x.gcno && echo $$1_gcno:stale || echo $$1_gcno:fresh; }; try whole; truncate -s -$$(( $$(wc -c < x.gcno) )) $$BLOB; try nogcno; printf \"\\010\\000\\000\\000\\000\\000\\000\\000\" > $$BLOB; cat x.gcno >> $$BLOB; try noo; cp x.o $$BLOB; try legacy; printf \"abc\" > $$BLOB; try short; rm -f $$BLOB; mkdir $$BLOB; try dir; try again'");
+    InstallCache();
+    WriteTemp("x.cpp", "int f(){return 1;}\n");
+    report::gcache report;
+    RunGcache("publish", "", "-report -- g++ --coverage -c x.cpp -o x.o", report);
+    tempstr blob(report.cached_file);
+    TryBlob("whole");
+    tempstr whole = ReadTemp(blob);
+    WriteTemp(blob, ch_FirstN(whole, ch_N(whole) - GetFileSize(atf_comp::TempPath("x.gcno"))));
+    TryBlob("nogcno");
+    tempstr noo;
+    noo << strptr("\010\0\0\0\0\0\0\0", 8) << ReadTemp("x.gcno");
+    WriteTemp(blob, noo);
+    TryBlob("noo");
+    WriteTemp(blob, ReadTemp("x.o"));
+    TryBlob("legacy");
+    WriteTemp(blob, "abc");
+    TryBlob("short");
+    RemoveTemp(blob);
+    MkdirTemp(blob);
+    TryBlob("dir");
+    TryBlob("again");
 }
 
-// Which compiler flags select the coverage cache format, over every spelling
-// gcc accepts for them. A coverage entry is one blob holding the object and its
-// coverage notes, so the format fits exactly the compiles that write notes:
-// -ftest-coverage writes them, --test-coverage is the driver's long form of it,
-// --coverage asks for instrumentation and notes together and -coverage is that
-// flag with one dash, while -fprofile-arcs and its long form --profile-arcs
-// instrument the object and write no notes file at all. A compile that has no
-// notes to publish must still be cached as a bare object; asking it for a blob
-// leaves it with one half, unpublishable, and so uncached forever -- a
-// recompile, a warning, and the same miss on the next build. Each shape is
-// compiled twice with the object and any notes removed in between, so the first
-// run has to miss and the second has to hit, and the notes have to come back
-// exactly for the shapes that produce them. The plain compile with no coverage
-// flag is the control for the bare-object format, and the two spellings of
-// -fprofile-arcs are the controls that keep the rule from reading as a rule
-// about how many dashes a flag carries.
+// Which compiler flags select the coverage cache format, through a real
+// compile, over the spellings every driver the tree builds with accepts. A
+// coverage entry is one blob holding the object and its coverage notes, so the
+// format fits exactly the compiles that write notes: -ftest-coverage writes
+// them, --coverage asks for instrumentation and notes together and -coverage
+// is that flag with one dash, while -fprofile-arcs instruments the object and
+// writes no notes file at all. A compile that has no notes to publish must
+// still be cached as a bare object; asking it for a blob leaves it with one
+// half, unpublishable, and so uncached forever -- a recompile, a warning, and
+// the same miss on the next build. Each shape is compiled twice with the object
+// and any notes removed in between, so the first run has to miss and the second
+// has to hit, and the notes have to come back exactly for the shapes that
+// produce them. The plain compile with no coverage flag is the control for the
+// bare-object format, and -fprofile-arcs is the control that keeps the rule
+// from reading as a rule about how many dashes a flag carries. The long forms
+// gcc alone accepts, --test-coverage and --profile-arcs, are pinned by
+// gcache.CoverageSpelling through a driver that runs no compiler.
 // The name of the object is the format's other input, because the notes are the
 // object's own name with its extension replaced: an output named x.obj is
 // answered with x.gcno and one named foo with foo.gcno, so a compile whose object
@@ -101,43 +287,27 @@ void atf_comp::comptest_gcache_CoverageBlobMiss() {
 // because gcache compiles the preprocessed text of the translation unit rather
 // than the header it was handed, so the stage pins the derivation from the name
 // and says nothing about how a precompiled header is cached.
-// The cxx shell function translates gcc's two long-only aliases immediately
-// before invoking the host compiler.  gcache still sees and classifies the
-// original spellings, while clang -- which macOS exposes as g++ -- receives the
-// canonical spellings it supports.
 void atf_comp::comptest_gcache_CoverageFlag() {
-    atf_comp::ProcStart(
-        "bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache"
-        " && printf \"int f(){return 1;}\\n\" > x.cpp"
-        " && printf \"inline int g(){return 2;}\\n\" > h.hpp"
-        " && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null;"
-        " cxx(){ local arg; local -a args=(); for arg in \"$$@\"; do"
-        " case \"$$arg\" in --test-coverage) arg=-ftest-coverage;; --profile-arcs) arg=-fprofile-arcs;; esac;"
-        " args+=(\"$$arg\"); done; command g++ \"$${args[@]}\"; }; export -f cxx;"
-        " try(){ rm -f x.o x.gcno; $$G -report -- cxx $$2 -c x.cpp -o x.o > rep.txt;"
-        " echo $$1_first:$$?; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_first_/\";"
-        " rm -f x.o x.gcno; $$G -report -- cxx $$2 -c x.cpp -o x.o > rep.txt;"
-        " echo $$1_second:$$?; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_second_/\";"
-        " test -s x.o && echo $$1_o:present || echo $$1_o:empty;"
-        " test -e x.gcno && echo $$1_gcno:present || echo $$1_gcno:absent; };"
-        " tryname(){ rm -f $$2 $$3; $$G -report -- cxx --coverage -c x.cpp -o $$2 > rep.txt;"
-        " echo $$1_first:$$?; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_first_/\";"
-        " rm -f $$2 $$3; $$G -report -- cxx --coverage -c x.cpp -o $$2 > rep.txt;"
-        " echo $$1_second:$$?; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_second_/\";"
-        " test -s $$2 && echo $$1_o:present || echo $$1_o:empty;"
-        " test -e $$3 && echo $$1_gcno:present || echo $$1_gcno:absent; };"
-        " trygchname(){ rm -f h.hpp.gch h.hpp.gcno;"
-        " $$G -report -- cxx --coverage -c h.hpp -o h.hpp.gch > rep.txt;"
-        " echo $$1_first:$$?; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_first_/\";"
-        " rm -f h.hpp.gch h.hpp.gcno;"
-        " $$G -report -- cxx --coverage -c h.hpp -o h.hpp.gch > rep.txt;"
-        " echo $$1_second:$$?; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_second_/\";"
-        " test -s h.hpp.gch && echo $$1_o:present || echo $$1_o:empty;"
-        " test -e h.hpp.gcno && echo $$1_gcno:present || echo $$1_gcno:absent; };"
-        " try both \"--coverage\"; try dashboth \"-coverage\";"
-        " try notesonly \"-ftest-coverage\"; try dashnotesonly \"--test-coverage\";"
-        " try arcsonly \"-fprofile-arcs\"; try dasharcsonly \"--profile-arcs\"; try plain \"\";"
-        " tryname obj x.obj x.gcno; tryname noext foo foo.gcno; trygchname gchname'");
+    InstallCache();
+    WriteTemp("x.cpp", "int f(){return 1;}\n");
+    WriteTemp("h.hpp", "inline int g(){return 2;}\n");
+    TryCompile("both", "g++", "--coverage", "x.cpp", "x.o", "x.gcno");
+    TryCompile("dashboth", "g++", "-coverage", "x.cpp", "x.o", "x.gcno");
+    TryCompile("notesonly", "g++", "-ftest-coverage", "x.cpp", "x.o", "x.gcno");
+    TryCompile("arcsonly", "g++", "-fprofile-arcs", "x.cpp", "x.o", "x.gcno");
+    TryCompile("plain", "g++", "", "x.cpp", "x.o", "x.gcno");
+    TryCompile("obj", "g++", "--coverage", "x.cpp", "x.obj", "x.gcno");
+    TryCompile("noext", "g++", "--coverage", "x.cpp", "foo", "foo.gcno");
+    TryCompile("gchname", "g++", "--coverage", "h.hpp", "h.hpp.gch", "h.hpp.gcno");
+}
+
+// One stage of gcache.HitMtime, named STAGE: compile x.cpp under FLAGS and
+// record whether the object and the notes were written since their backdate.
+static void TryMtime(strptr stage, strptr flags) {
+    report::gcache report;
+    RunGcache(stage, "", CompileArgs("g++", flags, "x.cpp", "x.o"), report);
+    CheckFresh(tempstr() << stage << "_o", "x.o");
+    CheckFresh(tempstr() << stage << "_gcno", "x.gcno");
 }
 
 // The modification time of every file a cache hit writes, in both cache
@@ -149,12 +319,11 @@ void atf_comp::comptest_gcache_CoverageFlag() {
 // a hit whose cached bytes equal the bytes already at the target -- a header
 // whose touch moved no preprocessed text, so the key still hits while the
 // build tool considers the object stale. Each stage backdates the target to
-// 2020, records MARKER at 2021, and runs the compile: the report has to say hit:Y,
-// which is what makes the times meaningful, and each file the hit writes has to
-// come out newer than MARKER. A fixed older marker also works with macOS's Bash
-// 3, whose -nt comparison observes only whole seconds. BAREABSENT is the control
-// for a target that is not there at all, and BARESAME is the bare-object format's
-// answer to the same identical-bytes case the coverage format faces in COVSAME.
+// 2020 and runs the compile: the report has to say hit:Y, which is what makes
+// the times meaningful, and each file the hit writes has to come out newer
+// than the backdate. BAREABSENT is the control for a target that is not there
+// at all, and BARESAME is the bare-object format's answer to the same
+// identical-bytes case the coverage format faces in COVSAME.
 // The cache entry the publish writes carries a modification time of its own, and
 // the cleanup reads it: an entry older than the retention window is deleted, and
 // the byte budget evicts in oldest-last-use order. A publish over an entry whose
@@ -165,7 +334,31 @@ void atf_comp::comptest_gcache_CoverageFlag() {
 // which the stage pins next to the time, since a publish that wrote different bytes
 // would freshen the entry whatever rule it used.
 void atf_comp::comptest_gcache_HitMtime() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null; stamp(){ if test ! -e $$2; then echo $$1:absent; elif test $$2 -nt marker; then echo $$1:fresh; else echo $$1:stale; fi; }; try(){ touch -t 202101010000 marker; $$G -report -- g++ $$2 -c x.cpp -o x.o > rep.txt; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/$$1_/\"; stamp $$1_o x.o; stamp $$1_gcno x.gcno; }; rm -f x.o x.gcno; $$G -- g++ -c x.cpp -o x.o; rm -f x.o; try bareabsent \"\"; touch -t 202001010000 x.o; try baresame \"\"; rm -f x.o x.gcno; $$G -- g++ --coverage -c x.cpp -o x.o; touch -t 202001010000 x.o; rm -f x.gcno; try covnonotes \"--coverage\"; touch -t 202001010000 x.o x.gcno; try covsame \"--coverage\"; printf \"int g(){return 2;}\\n\" > y.cpp; touch marker0; rm -f y.o y.gcno; $$G -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o; BLOB=$$(find cache -mindepth 3 -type f -newer marker0); cp $$BLOB before; touch -t 202001010000 $$BLOB; touch -t 202101010000 marker; $$G -report -force -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o > rep.txt; grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/pubsame_/\"; cmp -s $$BLOB before && echo pubsame_bytes:same || echo pubsame_bytes:changed; stamp pubsame_entry $$BLOB'");
+    InstallCache();
+    WriteTemp("x.cpp", "int f(){return 1;}\n");
+    report::gcache report;
+    RunGcache("publish_bare", "", "-- g++ -c x.cpp -o x.o", report);
+    RemoveTemp("x.o");
+    TryMtime("bareabsent", "");
+    BackdateTemp("x.o");
+    TryMtime("baresame", "");
+    RemoveTemp("x.o");
+    RemoveTemp("x.gcno");
+    RunGcache("publish_cov", "", "-- g++ --coverage -c x.cpp -o x.o", report);
+    BackdateTemp("x.o");
+    RemoveTemp("x.gcno");
+    TryMtime("covnonotes", "--coverage");
+    BackdateTemp("x.o");
+    BackdateTemp("x.gcno");
+    TryMtime("covsame", "--coverage");
+    WriteTemp("y.cpp", "int g(){return 2;}\n");
+    RunGcache("publish_seeded", "", "-report -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o", report);
+    tempstr blob(report.cached_file);
+    tempstr before = ReadTemp(blob);
+    BackdateTemp(blob);
+    RunGcache("pubsame", "", "-report -force -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o", report);
+    atf_comp::Check("pubsame_bytes", ReadTemp(blob) == before ? "same" : "changed");
+    CheckFresh("pubsame_entry", blob);
 }
 
 // A run's exit code sums what it has to report: the wrapped command's own exit
@@ -176,17 +369,61 @@ void atf_comp::comptest_gcache_HitMtime() {
 // leaves the code where the compile left it.
 // The failures combined here are independent: the -install marker write, the
 // wrapped command's own status, and a cache hit that cannot write its object
-// file. Each is first shown alone (MARKER_CODE, CMD_CODE, and the object-file
-// case of gcache.CoverageRestoreFail), then paired with the marker failure. The
+// file. Each is first shown alone (MARKER, CMD, and the object-file case of
+// gcache.CoverageRestoreFail), then paired with the marker failure. The
 // wrapped command in the paired cases is `false`, whose status is 1, so those
 // codes have to reach 2; a command exiting 5 beside the same marker failure
 // exits 6. The marker path is the one setup failure that
 // leaves the cache usable, which is what lets a second, independent failure
 // happen in the same run: the marker is a directory, so writing it fails while
-// the cache directory around it still serves hits. HIT_CODE and CLEAN_CODE are
+// the cache directory around it still serves hits. HIT and CLEAN are
 // the controls -- a run with nothing to report exits 0.
 void atf_comp::comptest_gcache_ExitCodeCount() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && $$OLDPWD/$bindir/gcache -install -dir:cache > /dev/null && $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o; echo clean_code:$$?; rm -f cache/.keep; mkdir cache/.keep; $$OLDPWD/$bindir/gcache -install -dir:cache -- true > /dev/null; echo marker_code:$$?; $$OLDPWD/$bindir/gcache -install -dir:cache -- false > /dev/null; echo marker_cmd_code:$$?; rm -f x.o x.gcno; mkdir x.o; $$OLDPWD/$bindir/gcache -install -dir:cache -- g++ --coverage -c x.cpp -o x.o > /dev/null; echo marker_restore_code:$$?; rmdir x.o; rmdir cache/.keep; $$OLDPWD/$bindir/gcache -install -dir:cache -- false > /dev/null; echo cmd_code:$$?; rm -f x.o x.gcno; $$OLDPWD/$bindir/gcache -install -dir:cache -- g++ --coverage -c x.cpp -o x.o > /dev/null; echo hit_code:$$?'");
+    InstallCache();
+    WriteTemp("x.cpp", "int f(){return 1;}\n");
+    report::gcache report;
+    RunGcache("clean", "", "-- g++ --coverage -c x.cpp -o x.o", report);
+    RemoveTemp("cache/.keep");
+    MkdirTemp("cache/.keep");
+    RunGcache("marker", "", "-install -dir:cache -- true", report, 1);
+    RunGcache("marker_cmd", "", "-install -dir:cache -- false", report, 2);
+    RemoveTemp("x.o");
+    RemoveTemp("x.gcno");
+    MkdirTemp("x.o");
+    RunGcache("marker_restore", "", "-install -dir:cache -- g++ --coverage -c x.cpp -o x.o", report, 2);
+    RemoveTemp("x.o");
+    RemoveTemp("cache/.keep");
+    RunGcache("cmd", "", "-install -dir:cache -- false", report, 1);
+    RemoveTemp("x.o");
+    RemoveTemp("x.gcno");
+    RunGcache("hit", "", "-install -dir:cache -- g++ --coverage -c x.cpp -o x.o", report);
+}
+
+// Publish x.cpp under FLAGS as stage STAGE, with the object and notes removed
+// first so the compile runs, and return the path of the entry it wrote.
+static tempstr Publish(strptr stage, strptr flags) {
+    report::gcache report;
+    RemoveTemp("x.o");
+    RemoveTemp("x.gcno");
+    RunGcache(stage, "", CompileArgs("g++", flags, "x.cpp", "x.o"), report);
+    return tempstr(report.cached_file);
+}
+
+// Rewrite the cache log under the tempdir so every line names PCH_FILE as the
+// precompiled header the compile used.
+static void ForgePchLog(strptr pch_file) {
+    tempstr log = atf_comp::TempPath("cache/log.ssim");
+    tempstr out;
+    ind_beg(algo::FileLine_curs, line, log) {
+        report::gcache report;
+        if (report::gcache_ReadStrptrMaybe(report, line)) {
+            report.pch_file = pch_file;
+            out << report << eol;
+        } else {
+            out << line << eol;
+        }
+    }ind_end;
+    StringToFile(out, log);
 }
 
 // An entry no compile can be served from -- one of no bytes, or a directory
@@ -218,8 +455,11 @@ void atf_comp::comptest_gcache_ExitCodeCount() {
 // PCHREFRESH is the refresh reaching the other entry a log line can name: a compile
 // that used a precompiled header names the header beside its object, and nothing
 // else moves that header's time, since the compiles that hit it only read it. The
-// stage backdates a freshly built precompiled header past the retention window and
-// runs the cleanup, which must keep it;
+// stage plants a file where a precompiled header would sit, rewrites the log so
+// its lines name that file, backdates it past the retention window and runs the
+// cleanup, which must keep it. The log is rewritten rather than earned through a
+// compile because the cleanup reads the log and nothing else, so what built the
+// header is not its concern; gcache.Pch is where the header gets built.
 // EMPTYCOV is the same case in the coverage format, which reads the same entry as
 // a blob whose offset leaves no bytes on either side of itself and has always
 // counted it a miss; DIRBARE puts a directory at a bare entry's path and pins that
@@ -230,47 +470,225 @@ void atf_comp::comptest_gcache_ExitCodeCount() {
 // and pins that nothing is published for it. The
 // last stage is the control, an ordinary hit off an entry that has bytes.
 void atf_comp::comptest_gcache_EmptyEntry() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache"
-                        " && printf \"int f(){return 1;}\\n\" > x.cpp"
-                        " && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null;"
-                        " ent(){ grep -o \"cached_file:[^ ]*\" rep.txt | sed \"s/cached_file://\"; };"
-                        " stamp(){ if test ! -e $$2; then echo $$1:absent; elif test $$2 -nt marker; then echo $$1:fresh; else echo $$1:stale; fi; };"
-                        " pub(){ rm -f x.o x.gcno; $$G -report -- g++ $$1 -c x.cpp -o x.o > rep.txt; };"
-                        " pub \"\"; E=$$(ent); rm -f $$E; $$G -gc > /dev/null;"
-                        " test -e $$E && echo recreate:present || echo recreate:absent;"
-                        " pub \"\"; E=$$(ent); touch -t 202001010000 $$E; touch -t 202101010000 marker; $$G -gc > /dev/null; stamp refresh $$E;"
-                        " printf \"void __gcache_pragma_pch_preprocess();\\ninline int g(){return 2;}\\n\" > h.h;"
-                        " printf \"#include <h.h>\\nint f(){return 1;}\\n\" > p.cpp;"
-                        " $$G -report -- g++ -Wno-unused-command-line-argument -I. -c p.cpp -o p.o > rep.txt;"
-                        " P=$$(grep -o \"pch_file:[^ ]*\" rep.txt | sed \"s/pch_file://\");"
-                        " touch -t 202001010000 $$P; touch -t 202101010000 marker; $$G -gc > /dev/null; stamp pchrefresh $$P;"
-                        " pub \"\"; E=$$(ent); : > $$E; rm -f x.o;"
-                        " $$G -report -- g++ -c x.cpp -o x.o > rep.txt; echo emptyhit_code:$$?;"
-                        " grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/emptyhit_/\";"
-                        " test -s x.o && echo emptyhit_o:present || echo emptyhit_o:empty;"
-                        " test -s $$E && echo emptyhit_entry:present || echo emptyhit_entry:empty;"
-                        " pub \"--coverage\"; E=$$(ent); : > $$E; rm -f x.o x.gcno;"
-                        " $$G -report -- g++ --coverage -c x.cpp -o x.o > rep.txt; echo emptycov_code:$$?;"
-                        " grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/emptycov_/\";"
-                        " test -s x.o && echo emptycov_o:present || echo emptycov_o:empty;"
-                        " test -s x.gcno && echo emptycov_gcno:present || echo emptycov_gcno:empty;"
-                        " pub \"\"; E=$$(ent); rm -f $$E; mkdir $$E; rm -f x.o;"
-                        " $$G -report -- g++ -c x.cpp -o x.o > rep.txt; echo dirbare_code:$$?;"
-                        " grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/dirbare_/\";"
-                        " test -s x.o && echo dirbare_o:present || echo dirbare_o:empty;"
-                        " test -f $$E && echo dirbare_entry:file || echo dirbare_entry:dir;"
-                        " rm -f x.o; $$G -report -- g++ -c x.cpp -o x.o > rep.txt;"
-                        " grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/dirbare2_/\";"
-                        " pub \"--coverage\"; E=$$(ent); rm -f $$E; mkdir $$E; rm -f x.o x.gcno;"
-                        " $$G -report -- g++ --coverage -c x.cpp -o x.o > rep.txt; echo dircov_code:$$?;"
-                        " grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/dircov_/\";"
-                        " test -s x.gcno && echo dircov_gcno:present || echo dircov_gcno:empty;"
-                        " test -f $$E && echo dircov_entry:file || echo dircov_entry:dir;"
-                        " rm -f e.o; ln -s /dev/null e.o;"
-                        " $$G -report -- g++ -c x.cpp -o e.o > rep.txt; echo nopublish_code:$$?;"
-                        " test -e $$(ent) && echo nopublish_entry:present || echo nopublish_entry:absent;"
-                        " pub \"\"; rm -f x.o;"
-                        " $$G -report -- g++ -c x.cpp -o x.o > rep.txt; echo control_code:$$?;"
-                        " grep -o \"\\bhit:[YN]\" rep.txt | sed \"s/^/control_/\";"
-                        " test -s x.o && echo control_o:present || echo control_o:empty'");
+    InstallCache();
+    WriteTemp("x.cpp", "int f(){return 1;}\n");
+    report::gcache report;
+    tempstr entry = Publish("recreate_publish", "");
+    RemoveTemp(entry);
+    RunGcache("recreate_gc", "", "-gc", report);
+    atf_comp::CheckFile("recreate", entry);
+    entry = Publish("refresh_publish", "");
+    BackdateTemp(entry);
+    RunGcache("refresh_gc", "", "-gc", report);
+    CheckFresh("refresh", entry);
+    strptr pch = "cache/ab/cd/abcd.gch";
+    MkdirTemp("cache/ab/cd");
+    WriteTemp(pch, "header\n");
+    ForgePchLog(pch);
+    BackdateTemp(pch);
+    RunGcache("pchrefresh_gc", "", "-gc", report);
+    CheckFresh("pchrefresh", pch);
+    entry = Publish("emptyhit_publish", "");
+    WriteTemp(entry, "");
+    RemoveTemp("x.o");
+    RunGcache("emptyhit", "", "-report -- g++ -c x.cpp -o x.o", report);
+    atf_comp::CheckFile("emptyhit_o", "x.o");
+    atf_comp::CheckFile("emptyhit_entry", entry);
+    entry = Publish("emptycov_publish", "--coverage");
+    WriteTemp(entry, "");
+    RemoveTemp("x.o");
+    RemoveTemp("x.gcno");
+    RunGcache("emptycov", "", "-report -- g++ --coverage -c x.cpp -o x.o", report);
+    atf_comp::CheckFile("emptycov_o", "x.o");
+    atf_comp::CheckFile("emptycov_gcno", "x.gcno");
+    entry = Publish("dirbare_publish", "");
+    RemoveTemp(entry);
+    MkdirTemp(entry);
+    RemoveTemp("x.o");
+    RunGcache("dirbare", "", "-report -- g++ -c x.cpp -o x.o", report);
+    atf_comp::CheckFile("dirbare_o", "x.o");
+    atf_comp::CheckFile("dirbare_entry", entry);
+    RemoveTemp("x.o");
+    RunGcache("dirbare_again", "", "-report -- g++ -c x.cpp -o x.o", report);
+    entry = Publish("dircov_publish", "--coverage");
+    RemoveTemp(entry);
+    MkdirTemp(entry);
+    RemoveTemp("x.o");
+    RemoveTemp("x.gcno");
+    RunGcache("dircov", "", "-report -- g++ --coverage -c x.cpp -o x.o", report);
+    atf_comp::CheckFile("dircov_gcno", "x.gcno");
+    atf_comp::CheckFile("dircov_entry", entry);
+    RemoveTemp("e.o");
+    errno_vrfy_(symlink("/dev/null", Zeroterm(atf_comp::TempPath("e.o"))) == 0);
+    RunGcache("nopublish", "", "-report -- g++ -c x.cpp -o e.o", report);
+    atf_comp::CheckFile("nopublish_entry", report.cached_file);
+    entry = Publish("control_publish", "");
+    RemoveTemp("x.o");
+    RunGcache("control", "", "-report -- g++ -c x.cpp -o x.o", report);
+    atf_comp::CheckFile("control_o", "x.o");
+}
+
+// Which compiler flags select the coverage cache format, over every spelling
+// gcache recognizes, through a driver that runs no compiler.
+// gcache.CoverageFlag pins the rule against what a real compiler writes, and
+// so can use only the spellings every driver accepts. The two remaining ones,
+// --test-coverage and --profile-arcs, are gcc's long forms of -ftest-coverage
+// and -fprofile-arcs, and clang refuses them, so this test reads the
+// classification through test/gcache/cc, which takes any flag, writes an
+// object of a few bytes and writes notes beside it every time. The notes then
+// come back from a hit exactly when gcache filed the entry as a blob, which is
+// the classification and nothing else. Each spelling is compiled twice with the
+// object and notes removed in between: the first run misses, the second hits,
+// and the notes are present after the hit for the four spellings that write
+// notes and absent for the two spellings of -fprofile-arcs and for the plain
+// compile.
+void atf_comp::comptest_gcache_CoverageSpelling() {
+    InstallCache();
+    WriteTemp("x.cpp", "int f(){return 1;}\n");
+    strptr cc = "$$OLDPWD/test/gcache/cc";
+    TryCompile("both", cc, "--coverage", "x.cpp", "x.o", "x.gcno");
+    TryCompile("dashboth", cc, "-coverage", "x.cpp", "x.o", "x.gcno");
+    TryCompile("notesonly", cc, "-ftest-coverage", "x.cpp", "x.o", "x.gcno");
+    TryCompile("dashnotesonly", cc, "--test-coverage", "x.cpp", "x.o", "x.gcno");
+    TryCompile("arcsonly", cc, "-fprofile-arcs", "x.cpp", "x.o", "x.gcno");
+    TryCompile("dasharcsonly", cc, "--profile-arcs", "x.cpp", "x.o", "x.gcno");
+    TryCompile("plain", cc, "", "x.cpp", "x.o", "x.gcno");
+}
+
+// One stage of gcache.CoverageCwd, named STAGE: compile x.cpp under FLAGS in
+// directory DIR, with its object and notes removed first.
+static void TryCwd(strptr stage, strptr dir, strptr flags) {
+    report::gcache report;
+    RemoveTemp(tempstr() << dir << "/x.o");
+    RemoveTemp(tempstr() << dir << "/x.gcno");
+    RunGcache(stage, dir, CompileArgs("g++", flags, "x.cpp", "x.o"), report);
+}
+
+// A coverage entry serves the directory that wrote it, and a bare entry serves
+// every directory.
+// An object compiled for coverage carries the name of the profile file it
+// writes at run time, and gcc anchors that name at the directory the compile
+// runs in. The key of a cache entry is the preprocessing command and the
+// preprocessed text, and both hold only the paths the command line spelled, so
+// the same source compiled in two directories with a shared cache computes the
+// same key. Served across directories, the second directory's object writes its
+// profile under the first directory's path and gcov finds nothing to measure
+// for it. So the key of a coverage compile carries the directory. The stages
+// compile one source in directory A, then in B, then in A again, sharing one
+// cache: without a coverage flag B hits off A's entry, and with --coverage B
+// misses while A's second compile hits. The object B compiled names B's own
+// directory in its profile name, which is the fact the miss exists to keep.
+void atf_comp::comptest_gcache_CoverageCwd() {
+    report::gcache report;
+    MkdirTemp("a");
+    MkdirTemp("b");
+    WriteTemp("a/x.cpp", "int f(){return 1;}\n");
+    WriteTemp("b/x.cpp", "int f(){return 1;}\n");
+    LinkData("a/data");
+    LinkData("b/data");
+    RunGcache("install_a", "a", "-install -dir:../cache", report);
+    RunGcache("install_b", "b", "-install -dir:../cache", report);
+    TryCwd("bare_a", "a", "");
+    TryCwd("bare_b", "b", "");
+    TryCwd("cov_a", "a", "--coverage");
+    TryCwd("cov_b", "b", "--coverage");
+    bool own = ContainsBytesQ(ReadTemp("b/x.o"), "b/x.gcda");
+    atf_comp::Check("cov_b_name", own ? "own" : "foreign");
+    TryCwd("cov_a2", "a", "--coverage");
+}
+
+// Record whether the .gcache link under the tempdir is there, as `# check NAME:present|absent`.
+static void CheckLink(strptr name) {
+    tempstr path = atf_comp::TempPath(".gcache");
+    bool present = ch_N(ReadLink(path)) > 0 || DirectoryQ(path) || FileQ(path);
+    atf_comp::Check(name, present ? "present" : "absent");
+}
+
+// The setup steps of -install, -enable and -disable, each with its status
+// read, `done` printed only after all of them, and the link left as it was by
+// a request that cannot be honored.
+// One cache is shared per machine, so a cache that -install left disabled shows
+// up only as build wall clock nobody attributes to gcache; the run has to say
+// so and exit non-zero, and it must not say `done` first. NODIR asks for a
+// cache directory under a path that is a regular file, so the directory cannot
+// be created: the marker write reports it, nothing else reports it a second
+// time, and the run exits 1. LINKDIR puts a directory where the .gcache link
+// goes, so the directory is set up but the link cannot be created: the link
+// failure is reported with its errno and the run exits 1. DISABLEDIR asks
+// -disable to remove that directory, which unlink cannot: one gcache.error is
+// reported and the run exits 1. The errno differs by platform, EISDIR on Linux
+// and EPERM on macOS, and the golden masks it.
+// CONTROL is the same install with the way clear, which says `done`, exits 0
+// and leaves the link. BADDIR then asks -enable for a directory that does not
+// exist: the run exits 1 and the working link is still there. DISABLE removes
+// the link and exits 0, and REDISABLE on the link already gone is the state
+// asked for, so it exits 0.
+void atf_comp::comptest_gcache_InstallFail() {
+    LinkData("data");
+    report::gcache report;
+    WriteTemp("nofile", "");
+    RunGcache("nodir", "", "-install -dir:nofile/cache", report, 1);
+    MkdirTemp(".gcache");
+    RunGcache("linkdir", "", "-install -dir:cache", report, 1);
+    RunGcache("disabledir", "", "-disable", report, 1);
+    RemoveTemp(".gcache");
+    RunGcache("control", "", "-install -dir:cache", report);
+    CheckLink("control_link");
+    RunGcache("baddir", "", "-enable -dir:missing", report, 1);
+    CheckLink("baddir_link");
+    RunGcache("disable", "", "-disable", report);
+    CheckLink("disable_link");
+    RunGcache("redisable", "", "-disable", report);
+}
+
+// One stage of gcache.Pch, named STAGE: compile UNIT.cpp through the driver
+// that runs no compiler, with EXTRA gcache options ahead of the report, and
+// record the state of the precompiled header the report names and of the
+// object.  Return the header's path, blank when the run named none.
+static tempstr TryPch(strptr stage, strptr unit, strptr extra) {
+    report::gcache report;
+    tempstr object;
+    object << unit << ".o";
+    RemoveTemp(object);
+    RemoveTemp(tempstr() << unit << ".gcno");
+    tempstr args;
+    if (ch_N(extra)) {
+        args << extra << " ";
+    }
+    args << CompileArgs("$$OLDPWD/test/gcache/cc", "", tempstr() << unit << ".cpp", object);
+    RunGcache(stage, "", args, report);
+    if (ch_N(report.pch_file)) {
+        atf_comp::CheckFile(tempstr() << stage << "_gch", report.pch_file);
+    } else {
+        atf_comp::Check(tempstr() << stage << "_gch", "none");
+    }
+    atf_comp::CheckFile(tempstr() << stage << "_o", object);
+    return tempstr(report.pch_file);
+}
+
+// A header marked with __gcache_pragma_pch_preprocess is precompiled once and
+// reused by every translation unit that includes it first.
+// gcache walks the preprocessed text for gcc's line markers, cuts the marked
+// header out, compiles it to a .gch keyed on its text, and rewrites the unit
+// to read that .gch through a pch_preprocess pragma. gcc alone builds such a
+// header, so the test reads the walk through test/gcache/cc, which expands one
+// level of #include with the same markers under -E and writes a .gch when the
+// output is named for one. BUILD compiles p.cpp on an empty cache: the object
+// misses, the header is built (pch_hit:N), pch_source names it and the .gch
+// the report names is present. REUSE compiles q.cpp, a different unit with
+// the same header first: the object misses and the header hits. HIT compiles
+// p.cpp again and is served the object, so no header is consulted. FORCE
+// compiles p.cpp under -force, which rebuilds the header and reads it back as
+// built rather than hit, into the same entry BUILD wrote, since every build of
+// the same header text lands on the same entry.
+void atf_comp::comptest_gcache_Pch() {
+    InstallCache();
+    WriteTemp("h.h", "void __gcache_pragma_pch_preprocess();\ninline int g(){return 2;}\n");
+    WriteTemp("p.cpp", "#include <h.h>\nint f(){return 1;}\n");
+    WriteTemp("q.cpp", "#include <h.h>\nint k(){return 3;}\n");
+    tempstr built = TryPch("build", "p", "");
+    TryPch("reuse", "q", "");
+    TryPch("hit", "p", "");
+    tempstr forced = TryPch("force", "p", "-force");
+    atf_comp::Check("force_entry", forced == built ? "same" : "other");
 }

@@ -80,19 +80,7 @@ WebSocket Status is defined on `wsdb.status` table.
 
 ```ssim
 inline-command: acr wsdb.status
-wsdb.status  code:1000  reason:"Normal closure"                 local_only:N  comment:""
-wsdb.status  code:1001  reason:"Going away"                     local_only:N  comment:"Server going down or browser page close"
-wsdb.status  code:1002  reason:"Protocol error"                 local_only:N  comment:""
-wsdb.status  code:1003  reason:"Unsupported message data type"  local_only:N  comment:"Text message while expecting binary and vice-versa"
-wsdb.status  code:1005  reason:"No status code"                 local_only:Y  comment:"No status code received in remote close message"
-wsdb.status  code:1006  reason:"Abnormal closure"               local_only:Y  comment:"Lower layer failure"
-wsdb.status  code:1007  reason:"Invalid message data"           local_only:N  comment:"E.g. non-UTF-8 within text message"
-wsdb.status  code:1008  reason:"Policy violation"               local_only:N  comment:""
-wsdb.status  code:1009  reason:"Message too big"                local_only:N  comment:""
-wsdb.status  code:1010  reason:"Missing extension"              local_only:N  comment:""
-wsdb.status  code:1011  reason:"Internal error"                 local_only:N  comment:""
-wsdb.status  code:1015  reason:"TLS Handshake"                  local_only:Y  comment:""
-report.acr  n_select:12  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
 If necessary, one may add private codes in range 4000-4999 as per RFC 6455.

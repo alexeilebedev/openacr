@@ -133,8 +133,6 @@ generates the body):
 dmmeta.ffunc  ffunc:<field>.FindRemove  extrn:N  comment:""
 ```
 
-(This replaced the former `dmmeta.findrem` table.)
-
 ### Memory model
 <a href="#memory-model"></a>
 

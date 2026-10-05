@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -224,7 +224,7 @@ inline u32 algo::cstring_Hash(u32 prev, const algo::strptr &val) {
 #ifdef AOS_SSE42
 
 // Use hardware CRC32C intrinsics on supported x86 and Apple Silicon builds.
-// Otherwise, the function is defined in crc32.cpp and uses a software implementation.
+// Otherwise, forward to CRC32StepSw in crc32.cpp, the same CRC-32C from a table.
 inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     u64 h = old;
     while (len>=8) { h = _mm_crc32_u64(h,*(u64 T_MAY_ALIAS*)x); x = (u8*)x + 8; len -= 8; }
@@ -245,6 +245,12 @@ inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     if    (len >= 2) { memcpy(&val16, x, sizeof(val16)); old = __crc32ch(old, val16); x += 2; len -= 2; }
     if    (len >= 1) {                                      old = __crc32cb(old, *x);                         }
     return old;
+}
+
+#else
+
+inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
+    return algo::CRC32StepSw(old, x, len);
 }
 
 #endif
@@ -1095,6 +1101,15 @@ inline algo::Line_curs::Line_curs() : eof(true),i(-1){
 }
 
 inline algo::Word_curs::Word_curs() : index(0){
+}
+
+inline algo::retry_curs::retry_curs() : mute(false){
+}
+
+// A body that throws leaves the loop without reaching retry_curs_Next, so the
+// cursor turns verbose back on as it goes out of scope.
+inline algo::retry_curs::~retry_curs() {
+    algo::retry_curs_Unmute(*this);
 }
 
 inline bool algo::Sep_curs_ValidQ(algo::Sep_curs &curs) {

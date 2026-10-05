@@ -1,0 +1,19 @@
+# ────────────────────────────────────────────────
+# Spark environment
+export SPARK_HOME=/opt/spark
+export PATH="$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin"
+export PYSPARK_PYTHON=python3
+# Bundled OpenJDK in apache/spark image
+export JAVA_HOME=/opt/java/openjdk
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# Start in home directory
+cd ~
+
+# Helpful aliases
+alias pyspark='pyspark --master local[*]'
+alias spark-shell='spark-shell --master local[*]'
+
+# Nice prompt
+export PS1='\[\e[1;32m\][spark@\h \w]\$\[\e[0m\] '
+

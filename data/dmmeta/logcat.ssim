@@ -1,6 +1,7 @@
 dmmeta.logcat  logcat:amsread  enabled:N  builtin:N  stdout:Y  maxmsg:1000  window:1  suppress:N  comment:"Trace ams bus reads"
 dmmeta.logcat  logcat:amswrite  enabled:N  builtin:N  stdout:Y  maxmsg:1000  window:1  suppress:N  comment:"Trace ams bus writes"
 dmmeta.logcat  logcat:debug  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  suppress:N  comment:"Debug messages"
+dmmeta.logcat  logcat:getorcreate  enabled:N  builtin:N  stdout:Y  maxmsg:0  window:0  suppress:N  comment:"amc: GetOrCreate xref decisions per ctype"
 dmmeta.logcat  logcat:inserr  enabled:N  builtin:Y  stdout:N  maxmsg:100  window:1  suppress:N  comment:"In-memory db insert error"
 dmmeta.logcat  logcat:plain  enabled:Y  builtin:Y  stdout:Y  maxmsg:0  window:0  suppress:N  comment:"Plain text bypass for rendering"
 dmmeta.logcat  logcat:slowness  enabled:N  builtin:N  stdout:Y  maxmsg:100  window:5  suppress:N  comment:"Debug slowness"

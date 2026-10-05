@@ -3,6 +3,6 @@
 
 ### Sources
 <a href="#sources"></a>
-The source code license is GPL
+The source code license is Apache
 
 Source file: [bin/git-rebase-origin](/bin/git-rebase-origin)

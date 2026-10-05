@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: src_func (exe) -- Access / edit functions
@@ -42,13 +42,13 @@ void src_func::Main_EditFunc() {
 }
 
 void src_func::Main_CreateMissing() {
-    ind_beg(_db_userfunc_curs,userfunc,_db) {
-        src_func::FUserfunc *alias = ind_userfunc_cppname_Find(userfunc.cppname);
-        src_func::FTarget *target = ind_target_Find(Pathcomp(userfunc.userfunc,".LL"));
+    ind_beg(_db_cppsym_curs,cppsym,_db) if (cppsym.extrn) {
+        src_func::FCppsym *alias = ind_cppname_Find(cppname_Get(cppsym));
+        src_func::FTarget *target = ind_target_Find(Pathcomp(cppname_Get(cppsym),".LL"));
         // Only a target whose sources were actually scanned (selected by
         // -targsrc) can tell us a function is missing.  Outside the scan
         // scope the absent instance is meaningless -- without this a scoped
-        // run (e.g. -targsrc:amc/%) would stub every userfunc in the tree
+        // run (e.g. -targsrc:amc/%) would stub every user function in the tree
         // whose definition merely wasn't scanned.
         bool scanned = false;
         if (target) {
@@ -56,9 +56,9 @@ void src_func::Main_CreateMissing() {
                 scanned = scanned || targsrc.select;
             }ind_end;
         }
-        if (!zd_func_EmptyQ(userfunc)) {
+        if (!zd_func_EmptyQ(cppsym)) {
             // instances exist
-        } else if (alias && alias!=&userfunc) {
+        } else if (alias && alias!=&cppsym) {
             // instances don't exist...
             // but another function with the same cpp name exists.
             // this means we can't reliably determine if the function is missing
@@ -67,7 +67,7 @@ void src_func::Main_CreateMissing() {
             // target out of scan scope -- can't tell whether it is missing
         } else {
             // step 1: determine prefix
-            src_func::FGenaffix *affix=FindAffix(userfunc.cppname);
+            src_func::FGenaffix *affix=FindAffix(cppname_Get(cppsym));
             // step 2: scan source files and count which files have the most functions with the same prefix
             src_func::FTargsrc *bestsrc=NULL;
             ind_beg(target_cd_targsrc_curs,targsrc,*target) if (!StartsWithQ(src_Get(targsrc),"cpp/gen")) {
@@ -87,7 +87,7 @@ void src_func::Main_CreateMissing() {
             }
             // step 3: write missing function to the file
             if (bestsrc) {
-                tempstr text = tempstr() << eol << Trimmed(SysEval(tempstr()<<"amc -showcomment:N -report:N "<<userfunc.userfunc,FailokQ(true),102400));
+                tempstr text = tempstr() << eol << Trimmed(SysEval(tempstr()<<"amc -showcomment:N -report:N "<<cppname_Get(cppsym),FailokQ(true),102400));
                 Replace(text,";"," {\n}\n");
                 int nline=0;
                 ind_beg(algo::FileLine_curs,line,src_Get(*bestsrc)) {
@@ -95,7 +95,7 @@ void src_func::Main_CreateMissing() {
                     nline++;
                 }ind_end;
                 _db.editloc << src_Get(*bestsrc)<<":"<<nline+2<<":"<<eol;
-                prlog("# adding "<<userfunc.userfunc<<" to "<<src_Get(*bestsrc));
+                prlog("# adding "<<cppname_Get(cppsym)<<" to "<<src_Get(*bestsrc));
                 prlog(text);
                 StringToFile(text, src_Get(*bestsrc), algo_FileFlags_append);
             }

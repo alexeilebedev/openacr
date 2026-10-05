@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_ci (exe) -- Normalization tests (see citest table)
 // Exceptions: yes
@@ -39,6 +38,29 @@ void atf_ci::citest_cov_prep() {
     abt.cmd.cfg.expr = "coverage";
     abt.cmd.install = false;
     abt_ExecX(abt);
+    // An instrumented object is half of a measurement: it counts the lines it
+    // executes, and the program graph the compiler wrote beside it says which
+    // lines those are.  gcov needs both, and it reports an object whose graph
+    // is missing the way it reports one that never ran -- as no data.  A
+    // machine that cannot produce the graphs therefore spends an hour running
+    // the suite and fails at the end, naming coverage targets rather than
+    // itself.  The graphs are countable the moment the build ends, so this is
+    // where a build that cannot be measured says so.
+    u32 n_obj = 0;
+    u32 n_gcno = 0;
+    ind_beg(algo::Dir_curs,ent,"build/coverage/*.o") {
+        n_obj += 1;
+        n_gcno += FileQ(ReplaceExt(ent.pathname,".gcno"));
+    }ind_end;
+    bool success = n_gcno == n_obj;
+    prlog("atf_ci.cov_prep"
+          <<Keyval("n_obj",n_obj)
+          <<Keyval("n_gcno",n_gcno)
+          <<Keyval("success",success ? "Y" : "N")
+          <<Keyval("comment",success ? "" : "coverage build wrote no program graph for these objects; gcov can measure nothing from them"));
+    if (!success) {
+        algo_lib::_db.exit_code = 1;
+    }
 }
 
 // Run the C++ unit-test suite against the coverage build so unit-tested

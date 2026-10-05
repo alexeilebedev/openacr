@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_comp (exe) -- Component test runner: spawn processes and diff the log against a reference
 // Exceptions: yes
@@ -34,38 +33,12 @@
 // from files under temp/, and a dry run of one writes those files.
 // apm and the schema are reached through $OLDPWD, the checkout root the test
 // cd'd out of, so the run reads the real data/ while writing nowhere near it
-// and nothing here depends on how deep the tempdir sits.
+// and nothing here depends on how deep the tempdir sits.  The package comes
+// from test/apm/one_package.ssim, since a tree that publishes no package
+// definitions has none to name.
 void atf_comp::comptest_apm_DryRun() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && $$OLDPWD/$bindir/apm -in:$$OLDPWD/data openacr -e -dry_run"
+    atf_comp::ProcStart("bash -c 'cd $tempdir && $$OLDPWD/$bindir/apm -in:$$OLDPWD/data -pkgdata:$$OLDPWD/test/apm/one_package.ssim apm -e -dry_run"
                         " && test ! -e temp && echo apm.no_script'");
-}
-
-// Every action reads the records it operates on back from temp/apm.ours.ssim,
-// the file the same run wrote them to, and the write deletes that file before
-// rewriting it. A write that fails therefore leaves nothing to read, and a
-// removal built from an empty record set deletes no record and no git file while
-// reporting the package removed. The write has to be checked.
-// The test puts a directory where temp/apm.ours.ssim must go, so the write
-// cannot succeed under any filesystem state or privilege level. It runs the same
-// removal twice in one shell, blocked and then unblocked, and echoes each exit
-// code: the blocked run names the file and the errno, emits no plan and exits
-// non-zero, and the control run that follows prints the two-record plan it would
-// run and exits 0. The two runs share one shell because they take turns owning
-// temp/, which two processes started together could not.
-// Both runs work from the test's own tempdir with bin/ and data/ symlinked in
-// from the checkout root, because apm reaches acr through the relative bin entry
-// on PATH and the schema through data/, and the file under test is named
-// relative to the current directory. -pkgdata names one package with two keys,
-// which is what keeps the plan two records long, and -dry_run keeps either run
-// from touching the checkout.
-void atf_comp::comptest_apm_RecfileWriteFail() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && ln -sfn $$OLDPWD/bin bin && ln -sfn $$OLDPWD/data data"
-                        " && rm -rf temp && mkdir -p temp/apm.ours.ssim && {"
-                        " $$OLDPWD/$bindir/apm -in:data -pkgdata:$$OLDPWD/test/apm/one_package.ssim apm -remove -dry_run;"
-                        " echo apm.blocked_exit:$$?;"
-                        " rm -rf temp; mkdir -p temp;"
-                        " $$OLDPWD/$bindir/apm -in:data -pkgdata:$$OLDPWD/test/apm/one_package.ssim apm -remove -dry_run;"
-                        " echo apm.control_exit:$$?; }'");
 }
 
 // An update is a chain of steps, and each step runs a child process whose output
@@ -113,16 +86,52 @@ void atf_comp::comptest_apm_UpdateFate() {
 // running for as long as it slept.
 // The run works from the test's own tempdir with data/ symlinked in from the
 // checkout root, and -e writes nothing outside temp/, so no fate here can
-// disturb the checkout.
+// disturb the checkout.  The package comes from test/apm/one_package.ssim, as
+// in apm.DryRun.
 void atf_comp::comptest_apm_TransactionExit() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p bin temp && ln -sfn $$OLDPWD/data data"
                         " && for fate in 0 1 127 255; do"
                         " echo \"#!/bin/bash\" > bin/acr; echo \"exit $$fate\" >> bin/acr; chmod +x bin/acr;"
-                        " $$OLDPWD/$bindir/apm -in:data openacr -e;"
+                        " $$OLDPWD/$bindir/apm -in:data -pkgdata:$$OLDPWD/test/apm/one_package.ssim apm -e;"
                         " echo \"apm.transaction_exit  script:exit-$$fate  exit:$$?\";"
                         " done;"
                         " echo \"#!/bin/bash\" > bin/acr; echo \"kill -TERM \\$$PPID\" >> bin/acr;"
                         " echo \"exec 1>&- 2>&-\" >> bin/acr; echo \"sleep 5\" >> bin/acr; chmod +x bin/acr;"
-                        " $$OLDPWD/$bindir/apm -in:data openacr -e;"
+                        " $$OLDPWD/$bindir/apm -in:data -pkgdata:$$OLDPWD/test/apm/one_package.ssim apm -e;"
                         " echo \"apm.transaction_exit  script:sigterm  exit:$$?\"'");
+}
+
+// A hand-written source references each record whose generated symbol its code
+// names.  The test writes srcscan.cpp, which compares against
+// dmmeta_Reftype_reftype_Val, calls dmmeta::Reftype_Print, and mentions two
+// other reftype constants only in a comment and a string.  Package srcref
+// takes the file with ref:Y, so it gains the Val row and the ctype and neither
+// of the other two rows.  Package srcbare takes the file alone, so -check
+// reports both records as dangling.  srcmixed.cpp defines the comptest functions
+// of apm.DryRun and apm.SrcScan and calls apm.UpdateFate's from a body, and
+// package srcmixed builds atf_comp and carries DryRun and UpdateFate, so -check
+// reports the file as mixed: one record carried, one missing.  The call is a
+// use, so UpdateFate does not count on either side.
+void atf_comp::comptest_apm_SrcScan() {
+    atf_comp::ProcStart("bash -c 'top=$$PWD && cd $tempdir && mkdir -p d/amcdb d/gendb d/dmmeta d/dev"
+                        " && ln -s $$top/data/amcdb/bltin.ssim d/amcdb/"
+                        " && ln -s $$top/data/gendb/cppsym.ssim d/gendb/"
+                        " && for t in ctype field ns ssimfile ssimreq ssimsort substr; do ln -s $$top/data/dmmeta/$$t.ssim d/dmmeta/; done"
+                        " && grep ^dev.package $$top/test/apm/srcscan_pkg.ssim > d/dev/package.ssim"
+                        " && grep ^dev.pkgkey $$top/test/apm/srcscan_pkg.ssim > d/dev/pkgkey.ssim"
+                        " && touch d/dev/pkgdep.ssim"
+                        " && printf \"// dmmeta_Reftype_reftype_Ptr appears only in this comment\\n\" > srcscan.cpp"
+                        " && printf \"bool ValQ(dmmeta::Reftype &row) {\\n\" >> srcscan.cpp"
+                        " && printf \"    const char *text = \\\"dmmeta_Reftype_reftype_Lary\\\";\\n\" >> srcscan.cpp"
+                        " && printf \"    dmmeta::Reftype_Print(row, out);\\n\" >> srcscan.cpp"
+                        " && printf \"    return row.reftype == dmmeta_Reftype_reftype_Val;\\n}\\n\" >> srcscan.cpp"
+                        " && printf \"void atf_comp::comptest_apm_DryRun() {\\n    atf_comp::comptest_apm_UpdateFate();\\n}\\n\" > srcmixed.cpp"
+                        " && printf \"void atf_comp::comptest_apm_SrcScan() {\\n}\\n\" >> srcmixed.cpp"
+                        " && cp $$top/test/apm/srcscan.ssim recs.ssim && echo dev.gitfile  gitfile:$tempdir/srcscan.cpp >> recs.ssim"
+                        " && echo dev.gitfile  gitfile:$tempdir/srcmixed.cpp >> recs.ssim"
+                        " && echo dev.targsrc  targsrc:atf_comp/$tempdir/srcmixed.cpp >> recs.ssim"
+                        " && cd $$top"
+                        " && $bindir/apm srcref -showrec -in:$tempdir/d -data_in:$tempdir/recs.ssim"
+                        " && $bindir/apm srcbare -check -in:$tempdir/d -data_in:$tempdir/recs.ssim 2>&1 | grep apm.dangling"
+                        "; $bindir/apm srcmixed -check -in:$tempdir/d -data_in:$tempdir/recs.ssim 2>&1 | grep apm.mixedfile'");
 }

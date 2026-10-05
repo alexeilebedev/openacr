@@ -1,9 +1,17 @@
-// Copyright (C) 2024,2026 AlgoRND
+// Copyright (C) 2024,2026 AlgoX2 Corp
 //
-// License: ARND
-// This source code constitutes confidential information and trade secrets
-// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
-// via any medium, is strictly prohibited.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: lib_http (lib) -- Library for HTTP support
 // Exceptions: yes
@@ -46,7 +54,10 @@ bool lib_http::ListContainsQ(strptr list, strptr token) {
     return ret;
 }
 
-// Get single line of HTTP ptotocol
+// Get a single line of the HTTP head, ending at the next LF.  A bare LF is
+// accepted as a line terminator with any preceding CR ignored, which RFC 7230
+// 3.5 permits a recipient to do; TrimmedRight strips the CR so a CRLF and a bare
+// LF decode to the same line.
 bool lib_http::DecodeLine(strptr &buf, strptr &result) {
     i32 ind = FindChar(buf,'\n');
     bool ok = ind >= 0;
@@ -77,15 +88,32 @@ bool lib_http::DecodeRequest(strptr &buf, http::Request &request) {
     ok = ok && (request.version == "HTTP/1.0" || request.version == "HTTP/1.1");
     while ((ok = ok && DecodeLine(buf,line)) && ch_N(line)) {
         i32 ind = FindChar(line,':');
-        ok = ind > 0;
+        strptr rawname = ind > 0 ? FirstN(line,ind) : strptr();
+        strptr name = Trimmed(rawname);
+        // No whitespace is allowed around a header field name (RFC 7230 3.2.4):
+        // a leading space is an obs-fold continuation and a trailing space is a
+        // space before the colon, and either makes a folding proxy and the
+        // gateway parse a different set of headers.  The value keeps its
+        // surrounding OWS trimmed, which the grammar does allow.
+        ok = ch_N(name) > 0 && ch_N(name) == ch_N(rawname);
         if (ok) {
-            strptr name = Trimmed(FirstN(line,ind));
             strptr value = Trimmed(RestFrom(line,ind+1));
             ok = SetRequestHeader(request,name,value);
         }
     }
     ok = ok && !ch_N(buf);
     return ok;
+}
+
+// Whether STR is a non-empty run of ASCII decimal digits and nothing else.
+static bool AllDigitsQ(strptr str) {
+    bool ret = ch_N(str) > 0;
+    frep_(i,str.n_elems) {
+        if (str.elems[i] < '0' || str.elems[i] > '9') {
+            ret = false;
+        }
+    }
+    return ret;
 }
 
 // Add request header
@@ -130,7 +158,7 @@ bool lib_http::SetRequestHeader(http::Request &request, strptr name, strptr valu
         case http_HeaderType_allow: request.allow = value; break;
         case http_HeaderType_content_encoding: request.content_encoding = value; break;
         case http_HeaderType_content_language: request.content_language = value; break;
-        case http_HeaderType_content_length: ok = i32_ReadStrptrMaybe(request.content_length,value); break;
+        case http_HeaderType_content_length: ok = AllDigitsQ(value) && i32_ReadStrptrMaybe(request.content_length,value); break;
         case http_HeaderType_content_location: request.content_location = value; break;
         case http_HeaderType_content_md5: request.content_md5 = value; break;
         case http_HeaderType_content_range: request.content_range = value; break;
@@ -233,7 +261,9 @@ void lib_http::EncodeResponse(cstring &buf, http::Response &response) {
     if (ch_N(response.content_language)) {
         buf << "Content-Language: " << response.content_language << "\r\n";
     }
-    if (!no_body) {
+    // A body sent with a Transfer-Encoding states its own length as it goes, and
+    // RFC 7230 3.3.2 forbids a Content-Length beside it.
+    if (!no_body && !ch_N(response.transfer_encoding)) {
         if (response.content_length) {
             buf << "Content-Length: " << response.content_length << "\r\n";
         } else {

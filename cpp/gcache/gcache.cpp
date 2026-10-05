@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: gcache (exe) -- Compiler cache
 // Exceptions: yes
@@ -37,43 +37,86 @@ static void ShowStats(algo::strptr dir) {
 }
 //------------------------------------------------------------------------------
 
-// get fill path of cache dir if exists
+// Set the cache directory up as the command line asks, and resolve _db.dir to
+// the directory the .gcache link names, or to nothing when there is no cache.
+// -install creates the directory named by -dir, writes its marker, makes it
+// group writable with the group inherited below, and implies -enable; -enable
+// links .gcache to the directory; -disable removes the link.
+// The user asked for each of these, and a failure in any of them leaves the
+// cache disabled, or unwritable for the group that shares it, and shows up
+// later only as build wall clock nobody attributes to gcache.  So every step
+// has its status read, a failure is reported once as a gcache.error and reaches
+// the exit code, and `done` is printed only once every step of the install
+// has succeeded.  A request that cannot be honored leaves the link as it was:
+// -enable replaces the link only once the directory it names exists, so a
+// mistyped -dir does not disable a working cache on its way to the error.
+// gcache.InstallFail pins the marker, link and removal failures.
 void gcache::ManageCacheDir() {
-    strptr linkfile(".gcache");
-    if (_db.cmdline.disable || _db.cmdline.install) {
-        DeleteFile(linkfile);// remove the soft link
+    tempstr linkfile(".gcache");
+    bool ok = true;
+    if (_db.cmdline.disable) {
+        // A link that is already gone is the state -disable asks for; anything
+        // else left in place keeps the cache enabled, or makes a directory of
+        // that name the cache, so it is reported.
+        if (!DeleteFile(linkfile) && errno != ENOENT) {
+            algo::PrerrFileFail("gcache.error",linkfile,"cache link could not be removed");
+            ok = false;
+        }
     }
     if (_db.cmdline.install) {
         _db.cmdline.enable=true;
         prlog("setting up gcache...");
         algo::CreateDirRecurse(_db.cmdline.dir, false, 0775);
-        if (!algo::SaveFile(".",DirFileJoin(_db.cmdline.dir,".keep"),"gcache.error","cache directory marker could not be written")) {
-            algo_lib::_db.exit_code += 1;
+        ok = algo::SaveFile(".",DirFileJoin(_db.cmdline.dir,".keep"),"gcache.error","cache directory marker could not be written");
+        if (ok) {
+            // Group writable, and every directory below inherits the group, over
+            // the files this user owns: a shared cache holds another user's
+            // entries as well, and those are that user's to set.  The status
+            // read is chmod's, through xargs, rather than find's: a directory
+            // another user made under a restrictive umask cannot be entered,
+            // and it holds nothing of this user's to set, so find's failure to
+            // descend into it is not a failure of this step.
+            tempstr dir = algo::strptr_ToBash(_db.cmdline.dir);
+            tempstr mode_cmd;
+            mode_cmd << "find " << dir << " -user $(id -u) -type d -print0 2>/dev/null | xargs -0 -r chmod 2775"
+                     << " && find " << dir << " -user $(id -u) ! -type d -print0 2>/dev/null | xargs -0 -r chmod 0775";
+            ok = SysCmd(mode_cmd) == 0;
+            if (!ok) {
+                prerr("gcache.error"
+                      <<Keyval("dir",_db.cmdline.dir)
+                      <<Keyval("comment","cache directory mode could not be set"));
+            }
         }
-        // inherit group writable flag
-        SysCmd(tempstr()<<"chmod -R 0775 "<<_db.cmdline.dir);
-        SysCmd(tempstr()<<"find "<<_db.cmdline.dir<<" -type d | xargs chmod g+s");
-        prlog("done");
     }
     if (_db.cmdline.enable) {
         if (DirectoryQ(_db.cmdline.dir)) {
-            SysCmd(tempstr()<<"ln -fsn "<<_db.cmdline.dir<<" .gcache");
-        } else {
+            DeleteFile(linkfile);// replace the soft link; a failure here is reported by the symlink that follows
+            if (symlink(Zeroterm(_db.cmdline.dir),Zeroterm(linkfile)) != 0) {
+                algo::PrerrFileFail("gcache.error",linkfile,"cache link could not be created");
+                ok = false;
+            }
+        } else if (!_db.cmdline.install) {
+            // under -install, the marker write has already reported the
+            // directory that could not be created
             prlog("cache directory "<<_db.cmdline.dir<<" doesn't exist. try with -install option");
-            algo_lib::_db.exit_code += 1;
+            ok = false;
         }
     }
-    tempstr symlink = ReadLink(linkfile);
+    if (_db.cmdline.install && ok) {
+        prlog("done");
+    }
+    algo_lib::_db.exit_code += !ok;
+    tempstr linktarget = ReadLink(linkfile);
     if (_db.cmdline.stats) {
         // display stats for the enabled cache
-        if (DirectoryQ(symlink)) {
+        if (DirectoryQ(linktarget)) {
             ShowStats(tempstr()<<linkfile<<"/");
         } else if (DirectoryQ(_db.cmdline.dir)) {
             prlog("gcache is not enabled. displaying stats for "<<_db.cmdline.dir);
             ShowStats(_db.cmdline.dir);
         }
     }
-    _db.dir = GetFullPath(ch_N(symlink)?symlink:linkfile);
+    _db.dir = GetFullPath(ch_N(linktarget)?linktarget:linkfile);
     if (!DirectoryQ(_db.dir)) {
         ch_RemoveAll(_db.dir);
     }
@@ -155,9 +198,10 @@ void gcache::CleanLog(algo::UnTime thresh) {
         }
     }ind_end;
     if (rename(Zeroterm(temp),Zeroterm(_db.logfname)) != 0) {
-        verblog("gcache.notice"
-                <<Keyval("fname",_db.logfname)
-                <<Keyval("comment","failed to rewrite log file"));
+        // The old log stands, so what is lost is one pruning, and the next
+        // cleanup repeats it.  The cache directory refusing a write is still
+        // worth a line, since the same directory holds every entry.
+        algo::PrerrFileFail("gcache.warning",_db.logfname,"log file could not be rewritten; the old log stands");
         DeleteFile(temp);
     }
 }
@@ -433,8 +477,9 @@ static bool UsableEntryQ(algo::Fildes fd) {
 // -fprofile-arcs -- and --profile-arcs, its long form -- instruments the object
 // and writes no notes file, so the long forms are not a rule about the number of
 // dashes: the two spellings of -fprofile-arcs sit on the other side of it.
-// gcache.CoverageFlag compiles each of these spellings twice and pins whether
-// the notes come back.
+// gcache.CoverageSpelling pins every spelling through test/gcache/cc, a driver
+// that runs no compiler, and gcache.CoverageFlag compiles the ones every
+// driver accepts.
 static bool CoverageQ() {
     bool ret = false;
     ind_beg(command::gcache_cmd_curs, arg, gcache::_db.cmdline) {
@@ -444,6 +489,23 @@ static bool CoverageQ() {
             || arg == "-ftest-coverage"
             || arg == "--test-coverage";
     }ind_end;
+    return ret;
+}
+
+//------------------------------------------------------------------------------
+
+// True when the compiler on the command line is clang, read from the macros
+// the compiler predefines.  macOS installs clang under the name g++, so the
+// name of the binary says nothing.  The answer is wanted only where the two
+// compilers need different words for the same thing, and asking costs one run
+// of the compiler.
+static bool ClangQ() {
+    bool ret = false;
+    if (cmd_N(gcache::_db.cmdline) >= 1) {
+        tempstr probe;
+        probe << algo::strptr_ToBash(cmd_qFind(gcache::_db.cmdline, 0)) << " -dM -E -x c++ /dev/null 2>/dev/null";
+        ret = algo::FindStr(algo::SysEval(probe, algo::FailokQ(true), 1024*1024), "__clang__") != -1;
+    }
     return ret;
 }
 
@@ -622,19 +684,12 @@ bool gcache::FdToFile(algo::Fildes from, algo::cstring &to_fname) {
             // this may fail if target directory is deleted while the
             // function is executing
             ret = rename(Zeroterm(temp),Zeroterm(to_fname))==0;
-            if (!ret) {
-                verblog("gcache.notice"
-                        <<Keyval("from",to_fname)
-                        <<Keyval("to",to_fname)
-                        <<Keyval("comment","rename FROM->TO failed"));
-            }
         }
     } else {
-        verblog("gcache.notice"
-                <<Keyval("fname",to_fname)
-                <<Keyval("comment","create replacement file for fname failed"));
         ret=false;
     }
+    // A failure is reported by the caller, which knows what it costs: the
+    // restore reports an error, the publish a warning.
     // clean up temporary file if we didn't end up moving it into place
     if (!ret) {
         DeleteFile(temp);
@@ -710,11 +765,11 @@ void gcache::Report() {
 // However, it is possible to put the directive in multiple files.
 // As result, the latest file  having no any meaningful source line before is taken.
 //
-// Returns false when the precompiled header's own compile failed: the caller
-// must not go on to the compile that would include it, and the failure is
-// already counted in the run's exit code.
-bool gcache::Pch() {
-    bool ret = true;
+// Rewrite _db.preproc_file so that the compile which follows reads the
+// precompiled header instead of the text it was built from.  A header that
+// does not build leaves the file as it was: it is an optimization, and the
+// compile proceeds without it.
+void gcache::Pch() {
     FHeader &root = header_Alloc(); // entire preproc_file
     FHeader *cur = &root;
     FHeader *pch = NULL;
@@ -769,6 +824,10 @@ bool gcache::Pch() {
     }
     if (pch && pch != &root) {
         strptr  text   = ch_GetRegion(_db.preproc_text,pch->begin,pch->inner_end-pch->begin);
+        // The key carries no directory, unlike a coverage object's: a header
+        // compiles to no object and names no profile file, so under the
+        // coverage flags the .gch holds no .gcda name and the object compiled
+        // against it is what carries the name, and the directory.
         cstring sha1   = Sha1(MakeCmd(pch->name,tempstr()<<pch->name<<".gch"),text);
         cstring base   = CachedFile(sha1);
         // .hpp rather than .h, because a driver reads the language off the
@@ -786,7 +845,11 @@ bool gcache::Pch() {
         bool build = (!FileQ(gch) || _db.cmdline.force) && Flock(_db.lockfd.fd,LOCK_EX|LOCK_NB);
         if (build) {
             StringToFile(text,h);
-            int rc = RunCmd(MakeCmd(h,tmp));
+            // The text is preprocessed, line markers included.  gcc reads it as
+            // such only under -fpreprocessed; without the flag every marker is
+            // a GCC extension, and -Wpedantic -Werror fails the header.  clang
+            // refuses the flag, and reads the markers in a header unasked.
+            int rc = RunCmd(MakeCmd(h,tmp,ClangQ() ? "" : "-fpreprocessed"));
             DeleteFile(h);
             if (rc) {
                 // A precompiled header is an optimization, so failing to build
@@ -831,7 +894,6 @@ bool gcache::Pch() {
         // this is annoying in compilation log, move to gcache log
         // prerr(_db.preproc_file<<": gcache notice: Could not determine header to precompile");
     }
-    return ret;
 }
 
 //------------------------------------------------------------------------------
@@ -859,9 +921,28 @@ void gcache::Main() {
             ch_Reserve(_db.preproc_text,GetFileSize(_db.preproc_file));
             _db.preproc_text = FileToString(_db.preproc_file);
             _db.report.preproc_size = ch_N(_db.preproc_text);
+            bool coverage = CoverageQ();
+            // The key is the preprocessing command and the preprocessed text.
             // '#pragma GCC pch_preprocess' does not exist in preprocessed files;
-            // full text of prepocessed header is included
-            cstring sha1 = Sha1(preproc_cmd,_db.preproc_text);
+            // full text of prepocessed header is included.
+            // A coverage compile adds the directory it runs in.  An object
+            // compiled for coverage carries the name of the profile file it
+            // writes at run time, and gcc anchors that name at the compile's
+            // working directory: the object's absolute path with .gcda for .o,
+            // or that path mangled into one component under -fprofile-dir.
+            // The notes file records the directory as well.  Two checkouts of
+            // one commit preprocess to the same text under the same relative
+            // command line, so a key of those two alone serves the second
+            // checkout an object that writes its profile under the first
+            // checkout's path, and gcov then finds nothing to measure for it.
+            // With the directory in the key a coverage entry serves the
+            // checkout that wrote it.  gcache.CoverageCwd pins this.
+            cstring key;
+            key << preproc_cmd;
+            if (coverage) {
+                key << eol << algo::GetCurDir();
+            }
+            cstring sha1 = Sha1(key,_db.preproc_text);
             _db.cached = CachedFile(sha1);
             _db.report.cached_file=_db.cached;
             // A --coverage compile emits a .gcno notes file next to the .o, and
@@ -872,7 +953,6 @@ void gcache::Main() {
             // concurrent build sharing the cache can never pair a fresh .o with
             // a stale .gcno.  Non-coverage entries stay a bare .o.
             tempstr gcno_target = GcnoSibling(_db.target);
-            bool coverage = CoverageQ();
             // hold the cached fd open so its contents stay readable even if the
             // file is deleted while this function runs
             algo_lib::FFildes from;
@@ -897,11 +977,9 @@ void gcache::Main() {
             if (hit) {
                 _db.report.hit=true; // cache hit
             } else {
-                int compile_rc = 1;// a precompiled header that failed to build fails the compile
-                if (Pch()) { // rewrites _db.preproc_file
-                    compile_rc = RunCmd(MakeCmd(_db.preproc_file));
-                    algo_lib::_db.exit_code += compile_rc;
-                }
+                Pch();
+                int compile_rc = RunCmd(MakeCmd(_db.preproc_file));
+                algo_lib::_db.exit_code += compile_rc;
                 if (!compile_rc && coverage) {
                     FilesToBlob(_db.target, gcno_target, _db.cached);
                 } else if (!compile_rc) {

@@ -1,0 +1,17 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir -p d/dev && printf "dev.license  license:MIT  proprietary:N  copyleft:N  comment:\\"\\"\\n" > d/dev/license.ssim && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data license:% -report:N && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data license:% -meta -report:N && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data % -meta -report:N > all.txt && grep -c "ctype:dev.License " all.txt && grep -c "ctype:dmmeta.Ctype " all.txt && mkdir s && cp -r $$OLDPWD/data/dmmeta s/dmmeta && $$OLDPWD/$bindir/acr -in:d -schema:s license:% -meta -write -print:N | grep -o "n_file_mod:[0-9]*" && find d -type f | wc -l | tr -d " " && diff -rq $$OLDPWD/data/dmmeta s/dmmeta | wc -l | tr -d " "\''
+# eof bash
+bash -> dev.license  license:MIT  proprietary:N  copyleft:N  comment:""
+bash -> dmmeta.ctype  ctype:dev.License  comment:"Source code license"
+bash ->   dmmeta.field  field:dev.License.license  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+bash ->     dmmeta.gconst  field:dev.License.license  namefld:dev.License.license  idfld:""  wantenum:N
+bash ->   dmmeta.field  field:dev.License.proprietary  arg:bool          reftype:Val  dflt:""  comment:"Not for distribution outside the company"
+bash ->   dmmeta.field  field:dev.License.copyleft  arg:bool          reftype:Val  dflt:""  comment:"Linking a program to code under this license puts the program under it"
+bash ->   dmmeta.field  field:dev.License.comment   arg:algo.Comment  reftype:Val  dflt:""  comment:""
+bash ->   dmmeta.cfmt  cfmt:dev.License.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+bash ->   gendb.ctypelen  ctype:dev.License  len:206  alignment:1  padbytes:0  plaindata:Y
+bash -> 2
+bash -> 3
+bash -> n_file_mod:0
+bash -> 1
+bash -> 0
+# exit bash code:0

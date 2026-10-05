@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -216,8 +216,14 @@
 #undef max
 #endif
 
-// compiler instructions for reordering
-// not processor instructions!!!
+// Memory barriers for a ring shared between processes.  lfence orders a load
+// before later loads, sfence orders a store before later stores, and mfence
+// orders a store before a later load.  x86 keeps ordinary loads in order with
+// each other and ordinary stores in order with each other, so there lfence and
+// sfence only stop the compiler from reordering, and mfence is the one barrier
+// that emits an instruction.  The tree issues no non-temporal stores or loads
+// around these barriers; one that does needs the processor's sfence or lfence.
+// aarch64 reorders all four pairs, so each barrier there is a dmb.
 #if WIN32
 #define sfence() __faststorefence()
 #define lfence()
@@ -227,8 +233,8 @@
 #define lfence() asm volatile("dmb ishld" ::: "memory")
 #define mfence() asm volatile("dmb ish" ::: "memory")
 #else
-#define sfence() asm volatile("sfence" ::: "memory")
-#define lfence() asm volatile("lfence" ::: "memory")
+#define sfence() asm volatile("" ::: "memory")
+#define lfence() asm volatile("" ::: "memory")
 #define mfence() asm volatile("mfence" ::: "memory")
 #endif
 

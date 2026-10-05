@@ -1,0 +1,19 @@
+{
+  "_units": "USD per million tokens",
+  "_note": "Claude Sonnet 5 carries introductory pricing of 2.00 input / 10.00 output through 2026-08-31; the standard rates are listed here. Cache read is 0.1x input, 5-minute cache write 1.25x, 1-hour cache write 2x.",
+  "_unlisted": "A model with no row here is reported by token count but not priced, and is named in the report with priced:N. Rates are never borrowed from another model: a wrong price is worse than a missing one. Claude Code names some models with a release date appended, so a model can need a row under both spellings.",
+  "cache_write_default": "1h",
+  "model": {
+    "claude-fable-5":   { "input": 10.00, "output": 50.00, "cache_read": 1.00, "cache_write_5m": 12.50, "cache_write_1h": 20.00 },
+    "claude-fable-5-1": { "input": 10.00, "output": 50.00, "cache_read": 1.00, "cache_write_5m": 12.50, "cache_write_1h": 20.00 },
+    "claude-mythos-5":  { "input": 10.00, "output": 50.00, "cache_read": 1.00, "cache_write_5m": 12.50, "cache_write_1h": 20.00 },
+    "claude-opus-5":    { "input":  5.00, "output": 25.00, "cache_read": 0.50, "cache_write_5m":  6.25, "cache_write_1h": 10.00 },
+    "claude-opus-4-8":  { "input":  5.00, "output": 25.00, "cache_read": 0.50, "cache_write_5m":  6.25, "cache_write_1h": 10.00 },
+    "claude-opus-4-7":  { "input":  5.00, "output": 25.00, "cache_read": 0.50, "cache_write_5m":  6.25, "cache_write_1h": 10.00 },
+    "claude-opus-4-6":  { "input":  5.00, "output": 25.00, "cache_read": 0.50, "cache_write_5m":  6.25, "cache_write_1h": 10.00 },
+    "claude-sonnet-5":  { "input":  3.00, "output": 15.00, "cache_read": 0.30, "cache_write_5m":  3.75, "cache_write_1h":  6.00 },
+    "claude-sonnet-4-6":{ "input":  3.00, "output": 15.00, "cache_read": 0.30, "cache_write_5m":  3.75, "cache_write_1h":  6.00 },
+    "claude-haiku-4-5": { "input":  1.00, "output":  5.00, "cache_read": 0.10, "cache_write_5m":  1.25, "cache_write_1h":  2.00 },
+    "claude-haiku-4-5-20251001": { "input":  1.00, "output":  5.00, "cache_read": 0.10, "cache_write_5m":  1.25, "cache_write_1h":  2.00 }
+  }
+}

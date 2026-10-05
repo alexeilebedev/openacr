@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -24,7 +24,10 @@
 
 #include "include/algo.h"
 
-static int ReadInt(algo::StringIter &parser, int width) {
+// Read a decimal integer of at most WIDTH digits at PARSER, behind an optional
+// sign, and return it; NFIELD grows by the number of digits read, so a caller
+// can tell a zero that was written from a zero that stands for no digits.
+static int ReadInt(algo::StringIter &parser, int width, int &nfield) {
     if (width<=0) {
         width=0x7fffffff;
     }
@@ -39,6 +42,7 @@ static int ReadInt(algo::StringIter &parser, int width) {
         number_so_far = number_so_far*10+(int(c)-'0');
         parser.GetChar();
         chars_read++;
+        nfield++;
         if (prev>number_so_far) {
             return 0;
         }
@@ -46,9 +50,11 @@ static int ReadInt(algo::StringIter &parser, int width) {
     return algo::i32_NegateIf(number_so_far,isneg);
 }
 
-static int ReadNS(algo::StringIter &parser, int width) {
+// Read a fraction of a second of at most WIDTH digits at PARSER and return it in
+// nanoseconds; NFIELD grows by the number of digits read.
+static int ReadNS(algo::StringIter &parser, int width, int &nfield) {
     int start = parser.index;
-    int ns = ReadInt(parser,width);
+    int ns = ReadInt(parser,width,nfield);
     int chars_read = parser.index - start;
     u32 mul = 1;
     switch(9 - chars_read) {
@@ -69,11 +75,57 @@ static int ReadNS(algo::StringIter &parser, int width) {
 
 // -----------------------------------------------------------------------------
 
+// Read an ISO 8601 zone designator at ITER and return whether one stood
+// there.  The designator is a Z, or a sign followed by hours and then
+// minutes, with or without a colon between them, as in +02:00, -0400 or
+// -07.  GMTOFF receives the zone's offset east of UTC in seconds, zero for
+// a Z, and ITER advances past the designator.  With no designator at ITER
+// the function returns false and leaves both ITER and GMTOFF as they were.
+bool algo::ReadZoneOffset(algo::StringIter &iter, i64 &gmtoff) {
+    bool ret   = false;
+    int  start = iter.index;
+    char sign  = iter.Peek();
+    if (sign == 'Z') {
+        iter.GetChar();
+        gmtoff = 0;
+        ret    = true;
+    } else if (sign == '+' || sign == '-') {
+        int ndigit = 0;
+        iter.GetChar();
+        int hour = ReadInt(iter, 2, ndigit);
+        if (ndigit > 0) {
+            (void)SkipChar(iter, ':');
+            int min = ReadInt(iter, 2, ndigit);
+            gmtoff  = i64_NegateIf(i64(hour)*SECS_PER_HOUR + i64(min)*SECS_PER_MIN, sign == '-');
+            ret     = true;
+        } else {
+            iter.index = start;
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Read the text at ITER according to the strftime-style format SPEC, fill the
+// fields of OUT that SPEC names, and return whether the text matched SPEC.
+// ITER advances past what was read.  A format that names a field matches only
+// by reading one, where a field is a digit or a month or weekday name: every
+// numeric field of SPEC reads as zero when no digit stands under it, so
+// without this rule a format with no literal separators, such as %Y%m%d,
+// matches an empty string, and an empty string is what an absent json field,
+// an unset ssim attr and a blank column all reduce to.  A format of literals
+// alone matches by its literals.
 bool algo::TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr& spec) {
     int    field_width  = 10;
     bool   percent      = false;
+    bool   hasfield     = false;// SPEC names a field
+    int    nfield       = 0;// digits and names read
     for (int i=0; i<elems_N(spec); i++) {
         if (percent) {
+            if (spec[i] != '%' && spec[i] != '-') {
+                hasfield = true;
+            }
             switch (spec[i]) {
             case '%':
                 if (!SkipChar(iter, '%')) {
@@ -92,6 +144,7 @@ bool algo::TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr
                     if (out.tm_mon==-1) {
                         return 0;
                     }
+                    nfield++;
                 }
                 break;
             case 'B':
@@ -103,6 +156,7 @@ bool algo::TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr
                         return 0;
                     }
                     iter.index += elems_N(GetMonthNameZeroBased(out.tm_mon));
+                    nfield++;
                 }
                 break;
             case 'a':
@@ -117,38 +171,39 @@ bool algo::TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr
                     if (out.tm_wday==-1) {
                         return 0;
                     }
+                    nfield++;
                 }
                 break;
             case 'm':
                 field_width = i32_Min(field_width,2);
-                out.tm_mon = i32_Max(ReadInt(iter,field_width)-1, 0);
+                out.tm_mon = i32_Max(ReadInt(iter,field_width,nfield)-1, 0);
                 break;
             case 'T':
                 {
-                    out.tm_sec = ReadInt(iter,10);
+                    out.tm_sec = ReadInt(iter,10,nfield);
                     if (SkipChar(iter, ':')) {
                         out.tm_min = out.tm_sec;
-                        out.tm_sec = ReadInt(iter,10);
+                        out.tm_sec = ReadInt(iter,10,nfield);
                         if (SkipChar(iter, ':')) {
                             out.tm_hour = out.tm_min;
                             out.tm_min = out.tm_sec;
-                            out.tm_sec=ReadInt(iter,10);
+                            out.tm_sec=ReadInt(iter,10,nfield);
                         }
                     }
                     if (SkipChar(iter, '.')) {
-                        out.tm_nsec = ReadNS(iter, field_width);
+                        out.tm_nsec = ReadNS(iter, field_width,nfield);
                     }
                 }
                 break;
             case 'd':
                 field_width = i32_Min(field_width,2);
-                out.tm_mday = ReadInt(iter,field_width);
+                out.tm_mday = ReadInt(iter,field_width,nfield);
                 if (out.tm_mday == -1) {
                     return 0;
                 }
                 break;
             case 'y':
-                out.tm_year = ReadInt(iter,field_width);
+                out.tm_year = ReadInt(iter,field_width,nfield);
                 if (out.tm_year == -1) {
                     return 0;
                 }
@@ -163,23 +218,23 @@ bool algo::TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr
                 break;
             case 'Y':
                 field_width = i32_Min(field_width,4);
-                out.tm_year = ReadInt(iter,field_width);
+                out.tm_year = ReadInt(iter,field_width,nfield);
                 out.tm_year -= 1900;
                 break;
             case 'H':
                 field_width = i32_Min(field_width,2);
-                out.tm_hour = ReadInt(iter,field_width);
+                out.tm_hour = ReadInt(iter,field_width,nfield);
                 break;
             case 'M':
                 field_width = i32_Min(field_width,2);
-                out.tm_min = ReadInt(iter,field_width);
+                out.tm_min = ReadInt(iter,field_width,nfield);
                 break;
             case 'S':
                 field_width = i32_Min(field_width,2);
-                out.tm_sec = ReadInt(iter,field_width);
+                out.tm_sec = ReadInt(iter,field_width,nfield);
                 break;
             case 'X':
-                out.tm_nsec = ReadNS(iter, field_width);
+                out.tm_nsec = ReadNS(iter, field_width,nfield);
                 break;
             case '-':
                 out.tm_neg = SkipChar(iter, '-');
@@ -223,7 +278,7 @@ bool algo::TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr
             }
         }
     }
-    return true;
+    return !hasfield || nfield > 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -449,10 +504,10 @@ algo::UnTime algo::ParseUnTime(const algo::strptr& s, const algo::strptr spec) {
 // and notify C runtime lib of the change
 void algo::SetTz(strptr zone) {
 #ifdef WIN32
-    putenv(Zeroterm(tempstr() << "TZ=" << zone));
+    putenv(Zeroterm(tempstr() << algo_lib::dev_envvar_TZ << "=" << zone));
     _tzset();
 #else
-    setenv("TZ",Zeroterm(tempstr() << zone),1);
+    setenv(algo_lib::dev_envvar_TZ,Zeroterm(tempstr() << zone),1);
     tzset();
 #endif
 }

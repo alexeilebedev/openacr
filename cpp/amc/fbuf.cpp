@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -891,7 +891,10 @@ void amc::tfunc_Fbuf_PairReady() {
         Ins(&R, func.proto, "$name_PairReady($Parent)",false);
         Ins(&R, func.ret  , "void",false);
         if (ready) {
-            Ins(&R, func.body, "if (read_Get($parname.$iohook.flags)) {");
+            Ins(&R, func.body, "// A hangup or an error arrives with the bytes the peer sent before it,");
+            Ins(&R, func.body, "// and those bytes are input like any other: the read reaches the end of");
+            Ins(&R, func.body, "// the stream after them, and the last message read queues the end.");
+            Ins(&R, func.body, "if (read_Get($parname.$iohook.flags) || eof_Get($parname.$iohook.flags) || err_Get($parname.$iohook.flags)) {");
             amc::AddFcondOp(func.body, *ready, "Insert");
             Ins(&R, func.body, "}");
         }
@@ -900,7 +903,7 @@ void amc::tfunc_Fbuf_PairReady() {
             amc::AddFcondOp(func.body, *writeready, "Insert");
             Ins(&R, func.body, "}");
         }
-        if (eof) {
+        if (eof && !ready) {
             Ins(&R, func.body, "// A descriptor error or hangup reaches neither read nor write, so the");
             Ins(&R, func.body, "// connection would sit unarmed with nothing left to wake it; end it here.");
             Ins(&R, func.body, "if (eof_Get($parname.$iohook.flags) || err_Get($parname.$iohook.flags)) {");
@@ -1172,6 +1175,17 @@ void amc::tfunc_Fbuf_BeginAlloc() {
             amc::AddFcondOp(func.body, *ready, "Insert");
         }
         Ins(&R, func.body    , "}");
+        if (amc::FindFcond(field, amc::amcdb_tcond_Fbuf_space)) {
+            Ins(&R, func.body, "// A refused block is a refused write, and the producer that formats");
+            Ins(&R, func.body, "// into the buffer waits for the same drain as one that copies into");
+            Ins(&R, func.body, "// it, so the latch is the one $name_WriteAll sets, on the same two facts.");
+            Ins(&R, func.body, "int cong_max = $name_Max($pararg);");
+            Ins(&R, func.body, "bool cong_hi = cong_max > 0 && $name_N($pararg) * 4 >= cong_max * 3;");
+            Ins(&R, func.body, "bool cong_refused = !ret && in_n <= cong_max;");
+            Ins(&R, func.body, "if (cong_hi || cong_refused) {");
+            Ins(&R, func.body, "    $parname.$name_congested = true;");
+            Ins(&R, func.body, "}");
+        }
     }
 }
 

@@ -37,5 +37,7 @@ export TERM=xterm-256color
 if [ -n "$AUTOSTART_DIR" ]; then
     cd "$AUTOSTART_DIR"
     eval $(acr_compl -install)
+    credd -start
+    export SSH_AUTH_SOCK=$HOME/.ssh/ssh_auth_sock
     unset AUTOSTART_DIR
 fi

@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_ci (exe) -- Normalization tests (see citest table)
 // Exceptions: yes
@@ -50,16 +49,34 @@ void atf_ci::citest_cleantemp() {
 
 // -----------------------------------------------------------------------------
 
+// Regenerate dev.gitfile from the git index, then check each tracked file against the
+// filesystem and against the dev.gitpath patterns.
+//
+// The patterns state where each kind of file lives: cpp/%.cpp, include/%.h, bin/%.  A
+// script committed as cpp/ctxledger/run.sh matches none of them, so it is reported and
+// the citest fails.  A pattern may match no file at all: the openacr package carries
+// every pattern into a tree that holds only part of this one.
 void atf_ci::citest_gitfile() {
     SysCmd("bin/update-gitfile >/dev/null",FailokQ(false));
+    ind_beg(atf_ci::_db_gitpath_curs,gitpath,atf_ci::_db) {
+        Regx_ReadSql(gitpath.regx,gitpath.gitpath,true);
+    }ind_end;
     ind_beg(algo::FileLine_curs,line,SsimFname(atf_ci::_db.cmdline.in,dmmeta_Ssimfile_ssimfile_dev_gitfile)) {
         dev::Gitfile gitfile;
         if (Gitfile_ReadStrptrMaybe(gitfile,line)) {
-            if (!FileObjectExistsQ(gitfile.gitfile)) {
-                prlog("atf_ci.missing_file"
+            bool placed=false;
+            ind_beg(atf_ci::_db_gitpath_curs,gitpath,atf_ci::_db) {
+                if (Regx_Match(gitpath.regx,gitfile.gitfile)) {
+                    placed=true;
+                    break;// search loop, no mutation
+                }
+            }ind_end;
+            bool exist=FileObjectExistsQ(gitfile.gitfile);
+            if (!exist || !placed) {
+                prlog((!exist ? "atf_ci.missing_file" : "atf_ci.stray_file")
                       <<Keyval("success","N")
                       <<Keyval("gitfile",gitfile.gitfile)
-                      <<Keyval("comment","File missing from filesystem"));
+                      <<Keyval("comment",!exist ? "File missing from filesystem" : "No dev.gitpath pattern matches this file"));
                 algo_lib::_db.exit_code=1;
             }
         }
@@ -130,9 +147,6 @@ void atf_ci::citest_normalize_acr() {
 void atf_ci::citest_src_lim() {
     command::src_lim src_lim;
     src_lim.strayfile=true;
-    // #AL# disabling line limit check
-    // because nobody is using it
-    src_lim.linelim=false;
     src_lim.badline.expr="%";
     SysCmd(src_lim_ToCmdline(src_lim), FailokQ(false));
 }
@@ -308,8 +322,10 @@ void atf_ci::citest_file_header() {
 
 // -----------------------------------------------------------------------------
 
+// Fail when a script or a hand-written source carries no copyright notice.
+// The check does not add a year: a holder's year stands for a change the
+// holder made, and a run of normalize changes nothing.
 void atf_ci::citest_non_copyrighted() {
-    SysCmd("bin/src_hdr -update_copyright -scriptfile bin/%");
     tempstr bad;
     ind_beg(atf_ci::_db_scriptfile_curs, sf, atf_ci::_db) {
         tempstr contents(algo::FileToString(sf.gitfile));
@@ -462,6 +478,8 @@ void atf_ci::citest_indent_script() {
 
 // -----------------------------------------------------------------------------
 
+// -----------------------------------------------------------------------------
+
 static void Cppcheck(strptr uname, strptr compiler, strptr platform) {
     cstring builddir = tempstr()<<"temp/cppcheck."<<uname<<"."<<compiler;
     cstring project  = tempstr()<<builddir<<"/project.json";
@@ -479,9 +497,15 @@ static void Cppcheck(strptr uname, strptr compiler, strptr platform) {
 
     // run cppcheck
     // interesting results with addons, but execution time greatly increases
+    // The build dir caches each file's result under a hash of its preprocessed
+    // tokens, so a warm run re-analyzes only what changed.  A cold run analyzes
+    // every file, and one thread takes a minute over the tree where the cores
+    // the process may use take a quarter of that.  -j turns off only
+    // unusedFunction, which no --enable asks for.
     SysCmd(tempstr()
            << "cppcheck --error-exitcode=1"
            << " --quiet" // suppress too verbose progress
+           << " -j" << algo::GetNcore()
            //<< " --addon=cert"
            //<< " --addon=threadsafety"
            << " --std=c++03"
@@ -572,6 +596,13 @@ static bool GeneratedHdrQ(strptr fname) {
     return ngen > 0 && nhand == 0 && !inblock;
 }
 
+// Indent each hand-written C++ file the last commit changed, one emacs per
+// file and as many at once as the host has CPUs.
+//
+// The indenter costs about half a second a file, so a commit touching a thousand
+// files takes ten minutes in a row and overruns the citest's budget.  The files
+// are independent, so they run side by side.  One file per run keeps
+// bin/cpp-indent's bound per file, so a file it cannot finish is skipped alone.
 static void IndentCPP() {
     algo_lib::FProc proc;
     ary_Alloc(proc.args) = "git";
@@ -585,24 +616,35 @@ static void IndentCPP() {
     proc.fstdin = "</dev/null";// disable any prompting
     proc.fstdout = "|";
     algo_lib::ProcStart(proc);
+    tempstr list;
     ind_beg(algo::FileLine_curs,fname,proc.from_stdout)  {
         atf_ci::FGitfile *gitfile = atf_ci::ind_gitfile_Find(fname);
         bool noindent = gitfile && gitfile->c_noindent;
         bool ourfile = FindStr(fname,"/gen/") == -1 && FindStr(fname,"extern/") == -1;
         if  (FileQ(fname) && ourfile && !noindent && !GeneratedHdrQ(fname)) {
-            // the citest's verdict is the set of files the pass modified, and
-            // an indenter that never ran modifies nothing, which reads exactly
-            // like a tree that was already indented.  bin/cpp-indent runs the
-            // indentation through emacs, and exits nonzero when emacs is
-            // missing or its elisp fails, so that status is the only evidence
-            // the file was checked at all: the run stops on it instead of
-            // reporting a pass it did not compute.  The output goes to the log
-            // the script pass writes, out of the citest's own output.
-            SysCmd(tempstr()<<"bin/cpp-indent "<<fname
-                   <<" >> temp/atf_ci_indent.log 2>&1",FailokQ(false));
+            list << fname << eol;
             prlog_("*");
         }
     }ind_end;
+    // the citest's verdict is the set of files the pass modified, and an
+    // indenter that never ran modifies nothing, which reads exactly like a tree
+    // that was already indented.  bin/cpp-indent runs the indentation through
+    // emacs, and exits nonzero when emacs is missing or its elisp fails; xargs
+    // passes a failure on as its own status, which is the only evidence the
+    // files were checked at all, so the run stops on it instead of reporting a
+    // pass it did not compute.  The output goes to the log the script pass
+    // writes, out of the citest's own output.
+    //
+    // A commit can leave the list empty: it touches no C++, or the checkout is
+    // shallow, as GitHub's is, and HEAD then has no parent to diff against.  GNU
+    // xargs runs its command once even on empty input, so the indenter would
+    // start with no file and fail on a host without emacs.  So an empty list
+    // runs nothing.
+    StringToFile(list, "temp/atf_ci_indent.lst");
+    if (list != "") {
+        SysCmd("xargs -P $(getconf _NPROCESSORS_ONLN) -n 1 bin/cpp-indent < temp/atf_ci_indent.lst"
+               " >> temp/atf_ci_indent.log 2>&1",FailokQ(false));
+    }
 }
 #endif
 
@@ -615,6 +657,79 @@ void atf_ci::citest_indent_srcfile() {
     IndentCPP();
     prlog(" done");
 #endif
+}
+
+// -----------------------------------------------------------------------------
+
+// Return true if LINE of a source file is copyright or license boilerplate: a
+// blank line, a Copyright line, a header field that src_hdr writes, or a whole
+// line of one of the license texts.  LICENSETEXT holds those lines, trimmed,
+// each between two newlines.
+static bool BoilerplateQ(algo::strptr line, algo::strptr licensetext) {
+    algo::strptr text = Trimmed(line);
+    text = StartsWithQ(text,"//") ? Trimmed(RestFrom(text,2))
+        : StartsWithQ(text,"#") ? Trimmed(RestFrom(text,1))
+        : text;
+    return text == ""
+        || StartsWithQ(text,"Copyright (C)")
+        || StartsWithQ(text,"License:")
+        || StartsWithQ(text,"Target:")
+        || StartsWithQ(text,"Exceptions:")
+        || StartsWithQ(text,"Source:")
+        || StartsWithQ(text,"Header:")
+        || StartsWithQ(text,"Contacting ICE")
+        || FindStr(licensetext,tempstr() << eol << text << eol) != -1;
+}
+
+// Return true if DIFF, a whitespace-blind git diff of one file, adds or removes
+// a line that is not boilerplate (see BoilerplateQ, given LICENSETEXT).
+static bool RealChangeQ(algo::strptr diff, algo::strptr licensetext) {
+    bool ret = false;
+    ind_beg(algo::Line_curs,line,diff) {
+        bool changed = (StartsWithQ(line,"+") && !StartsWithQ(line,"+++"))
+            || (StartsWithQ(line,"-") && !StartsWithQ(line,"---"));
+        ret = ret || (changed && !BoilerplateQ(RestFrom(line,1),licensetext));
+    }ind_end;
+    return ret;
+}
+
+// Give the current copyright holder this year on every hand-written source and
+// script the last commit changed.
+// A holder's year in a notice stands for a change the holder made to the file.
+// Adding the year to every file once a year claims changes nobody made, so the
+// year goes on at the moment of the change, to the files the commit touched.  A
+// change that only reindents the file or rewrites its license header adds
+// nothing of the holder's, so it adds no year either.
+void atf_ci::citest_copyright_srcfile() {
+    cstring licensetext;
+    licensetext << eol;
+    ind_beg(algo::Dir_curs,file,"conf/*.license.txt") {
+        ind_beg(algo::FileLine_curs,line,file.pathname) {
+            licensetext << Trimmed(line) << eol;
+        }ind_end;
+    }ind_end;
+    tempstr modfiles(SysEval("git diff-tree --name-only HEAD -r --no-commit-id",FailokQ(true),1024*1024*10));
+    ind_beg(algo::Line_curs,fname,modfiles) {
+        atf_ci::FGitfile *gitfile = atf_ci::ind_gitfile_Find(fname);
+        atf_ci::FTargsrc *targsrc = gitfile ? gitfile->c_targsrc : NULL;
+        atf_ci::FScriptfile *scriptfile = gitfile ? gitfile->c_scriptfile : NULL;
+        bool ourfile = FindStr(fname,"/gen/") == -1 && FindStr(fname,"extern/") == -1;
+        if (FileQ(fname) && ourfile && (targsrc || scriptfile)) {
+            tempstr diff(SysEval(tempstr()<<"git diff-tree -p -w --no-commit-id HEAD -- "<<strptr_ToBash(fname)
+                                 ,FailokQ(true),1024*1024*64));
+            if (RealChangeQ(diff,licensetext)) {
+                command::src_hdr src_hdr;
+                src_hdr.update_copyright = true;
+                src_hdr.write = true;
+                if (targsrc) {
+                    src_hdr.targsrc.expr = targsrc->targsrc;
+                } else {
+                    src_hdr.scriptfile.expr = fname;
+                }
+                SysCmd(src_hdr_ToCmdline(src_hdr),FailokQ(false));
+            }
+        }
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
@@ -652,110 +767,15 @@ void atf_ci::citest_normalize_acr_my() {
 
 // -----------------------------------------------------------------------------
 
+// Run apm -check over every package, so a key that matches nothing, a record
+// that references what its package does not carry, proprietary content in an
+// open-source package, a file split between two packages, a sync pair that
+// disagrees, or a word a package must not carry fails the normalize job.
 void atf_ci::citest_apm_check() {
     command::apm_proc apm;
+    apm.cmd.package.expr="%";
     apm.cmd.check=true;
     apm_ExecX(apm);
-}
-
-// TRUE when LINE carries a word REGX matches.
-//
-// The test is per word rather than per line because the words that must not
-// appear are prefixes -- a namespace, a tool -- and a substring search on a
-// prefix answers yes to any word that merely contains it: a forbidden prefix of
-// two characters is held by any identifier and by half the hex constants in the
-// tree without being that prefix.  A word here is what a name is made of,
-// letters, digits and underscore, and every other character ends one.
-static bool MentionQ(algo_lib::Regx &regx, strptr line) {
-    bool ret = false;
-    int beg = 0;
-    for (int i = 0; i <= line.n_elems; i++) {
-        char c = i < line.n_elems ? line[i] : ' ';
-        bool wordchar = (c>='a'&&c<='z') || (c>='A'&&c<='Z') || (c>='0'&&c<='9') || c=='_';
-        if (!wordchar) {
-            if (i > beg && Regx_Match(regx, strptr(line.elems + beg, i - beg))) {
-                ret = true;
-            }
-            beg = i + 1;
-        }
-    }
-    return ret;
-}
-
-// Check that no package which forbids a word carries one.
-//
-// A package published downstream is read by people who have never seen the tree
-// it was published from, so a name belonging to that tree -- a namespace, a
-// tool, a host path -- is at best noise and at worst a dangling reference to
-// something they cannot look up.  Which words a package forbids is the
-// package's own statement, in dev.package.nomention, because the upstream tree
-// is the only one that knows what it is called; a downstream repository cannot
-// be asked to know about the trees that publish into it, and there may be
-// several.
-//
-// The package's evaluation is what gets checked, records and files alike, since
-// that is exactly what a push carries.  A row that must name a forbidden word
-// to do its job -- an exclusion naming the very namespace it excludes -- is
-// kept out of the package for that reason, so its absence here is the check
-// working rather than a hole in it.  The package's own dev.package row is the
-// one exception the check has to make for itself: it carries the list of
-// forbidden words, so it names every one of them by construction.
-void atf_ci::citest_apm_nodownstream() {
-    ind_beg(atf_ci::_db_package_curs,package,atf_ci::_db) if (ch_N(package.nomention)) {
-        algo_lib::Regx regx;
-        vrfy(Regx_ReadStrptrMaybe(regx, package.nomention), tempstr()<<"atf_ci.bad_nomention"
-             <<Keyval("package",package.package)
-             <<Keyval("nomention",package.nomention));
-        int nbad = 0;
-        int nline = 0;
-        // apm takes one action per run, so the records and the files are two
-        for (int showfile = 0; showfile <= 1; showfile++) {
-            command::apm_proc apm;
-            apm.cmd.package.expr = package.package;
-            apm.cmd.l            = true;
-            apm.cmd.showrec      = showfile == 0;
-            apm.cmd.showfile     = showfile == 1;
-            apm.fstdout          = "|";
-            apm_Start(apm);
-            tempstr self;
-            self << "dev.package  package:" << package.package << "  ";
-            ind_beg(algo::FileLine_curs,line,apm.from_stdout) {
-                nline++;
-                if (!StartsWithQ(line, self) && MentionQ(regx, line) && nbad < 10) {
-                    prerr("atf_ci.package_mentions"
-                          <<Keyval("package",package.package)
-                          <<Keyval("nomention",package.nomention)
-                          <<Keyval("record",line));
-                    nbad++;
-                }
-            }ind_end;
-            apm_Wait(apm);
-            vrfy(apm.status == 0, tempstr()<<"atf_ci.package_eval"
-                 <<Keyval("package",package.package)
-                 <<Keyval("status",algo::DescribeWaitStatus(apm.status))
-                 <<Keyval("comment","the package could not be evaluated"));
-        }
-        // an evaluation that produced nothing would pass this check whatever
-        // the package carried, so the emptiness is the failure, not the pass
-        vrfy(nline > 0, tempstr()<<"atf_ci.package_empty"
-             <<Keyval("package",package.package)
-             <<Keyval("comment","the package evaluated to no records and no files"));
-        if (nbad > 0) {
-            prerr("atf_ci.package_nomention"
-                  <<Keyval("package",package.package)
-                  <<Keyval("comment","the package carries words it forbids; exclude the keys above from it"));
-            algo_lib::_db.exit_code++;
-        }
-    }ind_end;
-}
-
-void atf_ci::citest_apm_gen() {
-    ind_beg(atf_ci::_db_pkggen_curs, pkggen, atf_ci::_db) {
-        command::apm_proc apm;
-        apm.cmd.package.expr = pkggen.package;
-        apm.cmd.generate     = true;
-        apm_ExecX(apm);
-    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
@@ -938,10 +958,60 @@ static bool ClonePinnedQ(strptr line) {
 
 // -----------------------------------------------------------------------------
 
+// Check that each installation function is alone in the file named after its row.
+// A reader who knows the installation knows which file to open, and an
+// installation whose steps are spread over two files has no such file.  The
+// pairing is not something the compiler can hold: amc binds a row to a function
+// by name wherever that function is written.
+void atf_ci::citest_check_ainst() {
+    command::src_func_proc src_func;
+    src_func.cmd.func.expr = "ainst.pkg_%";
+    src_func.cmd.showloc = true;
+    src_func.fstdout = "|";
+    src_func_Start(src_func);
+    strptr prefix = "ainst::extpkg_";
+    int n_err = 0;
+    ind_beg(algo::FileLine_curs, line, src_func.from_stdout) {
+        strptr trimmed = Trimmed(line);
+        strptr file = Pathcomp(trimmed, ":LL");
+        strptr func = Pathcomp(trimmed, "(RL RR");
+        if (StartsWithQ(func, prefix)) {
+            strptr name = RestFrom(func, prefix.n_elems);
+            tempstr expected = tempstr() << "cpp/ainst/" << name << ".cpp";
+            if (file != expected) {
+                prlog("atf_ci.badloc"
+                      <<Keyval("pkg",name)
+                      <<Keyval("actual",file)
+                      <<Keyval("expected",expected));
+                n_err++;
+            }
+        }
+    }ind_end;
+    src_func_Wait(src_func);
+    vrfy(src_func.status == 0, tempstr()<<"atf_ci.src_func_fail"
+         <<Keyval("status",src_func.status)
+         <<Keyval("comment","src_func could not list the package functions, so nothing was checked"));
+    // Every package pins a release, and a missing dev.extpkgver row is how that
+    // stops being true with nothing objecting: the version reads as 0, the
+    // install still works because each url carries its version literally, and
+    // the only place it shows is the Version tag of an rpm built months later.
+    ind_beg(atf_ci::_db_extpkg_curs,pkg,atf_ci::_db) {
+        if (!atf_ci::ind_extpkgver_Find(pkg.extpkg)) {
+            prlog("atf_ci.nopkgver"
+                  <<Keyval("pkg",pkg.extpkg)
+                  <<Keyval("comment","package pins no release; add an dev.extpkgver row"));
+            n_err++;
+        }
+    }ind_end;
+    vrfy(n_err == 0, tempstr() << n_err << " package(s) misplaced or unpinned");
+}
+
+// -----------------------------------------------------------------------------
+
 // Report one defect found in an install script, and fail the citest.
-static void ReportInstallScript(strptr gitfile, int lineno, strptr comment) {
+static void ReportInstallScript(strptr inst, int lineno, strptr comment) {
     prlog("atf_ci.install_script"
-          <<Keyval("gitfile",gitfile)
+          <<Keyval("inst",inst)
           <<Keyval("line",lineno)
           <<Keyval("comment",comment));
     algo_lib::_db.exit_code=1;
@@ -949,45 +1019,70 @@ static void ReportInstallScript(strptr gitfile, int lineno, strptr comment) {
 
 // -----------------------------------------------------------------------------
 
-// Refuse an install script that cannot say what it installs.
-// Each bin/install-% script is inlined verbatim into the generated image build
-// scripts, where it runs as root, so whoever answers for the endpoint it reads
-// from chooses what lands in the image.  Four defects make that unanswerable,
-// and none of them is ever needed: piping a fetch into a shell, turning the
-// certificate check off, naming latest in a url, and cloning a repository
-// without moving it to a named revision.
-// A clone is carried until a checkout or a reset moves it, so a file that
+// Refuse a generated install script that cannot say what it installs.
+// ainst -script is inlined into the image builds, where it runs as root, so
+// whoever answers for the endpoint it reads from chooses what lands in the
+// image.  Four defects make that unanswerable, and none of them is ever needed:
+// piping a fetch into a shell, turning the certificate check off, naming latest
+// in a url, and cloning a repository without moving it to a named revision.
+// A clone is carried until a checkout or a reset moves it, so a script that
 // clones twice has to move each one, and a clone moved on its own line is
-// already satisfied.  A comment line is skipped whatever it is indented by,
+// already satisfied.  A clone is carried no further than the installation it
+// stands in: the next one's stage function is where an unmoved clone is
+// reported, since nothing after that boundary can be the checkout it wanted.  A comment line is skipped whatever it is indented by,
 // because bash ignores it wherever the generator puts it.
+// The whole of what ainst can emit is read here, which is why this reads one
+// program rather than a directory: an installation reaches the network through
+// the generated fetch step and nowhere else, so the four checks have exactly
+// one text to cover.
 void atf_ci::citest_install_script() {
-    ind_beg(algo::Dir_curs,entry,"bin/install-*") if (ind_gitfile_Find(entry.pathname)) {
-        int clone_line = 0;
-        ind_beg(algo::FileLine_curs,line,entry.pathname) {
-            int lineno = ind_curs(line).i + 1;
-            if (!StartsWithQ(algo::Trimmed(line),"#")) {
-                bool moved = GitWordQ(line,"checkout") || GitWordQ(line,"reset");
-                if (PipeToShellQ(line)) {
-                    ReportInstallScript(entry.pathname, lineno, "fetch piped into a shell");
-                }
-                if (UnverifiedTlsQ(line)) {
-                    ReportInstallScript(entry.pathname, lineno, "certificate verification disabled");
-                }
-                if (LatestUrlQ(line)) {
-                    ReportInstallScript(entry.pathname, lineno, "url names latest instead of a version");
-                }
-                if (GitWordQ(line,"clone")) {
-                    if (clone_line > 0) {
-                        ReportInstallScript(entry.pathname, clone_line, "git clone is not moved to a named revision");
-                    }
-                    clone_line = moved || ClonePinnedQ(line) ? 0 : lineno;
-                } else if (moved) {
-                    clone_line = 0;
-                }
+    command::ainst_proc ainst;
+    ainst.cmd.script = true;
+    ainst.fstdout = "|";
+    ainst_Start(ainst);
+    tempstr inst("preamble");
+    int clone_line = 0;
+    ind_beg(algo::FileLine_curs,line,ainst.from_stdout) {
+        int lineno = ind_curs(line).i + 1;
+        strptr trimmed = algo::Trimmed(line);
+        if (StartsWithQ(trimmed,"inst_") && EndsWithQ(trimmed,"_stage() {")) {
+            if (clone_line > 0) {
+                ReportInstallScript(inst, clone_line, "git clone is not moved to a named revision");
             }
-        }ind_end;
-        if (clone_line > 0) {
-            ReportInstallScript(entry.pathname, clone_line, "git clone is not moved to a named revision");
+            // Pathcomp reads its expression in groups of three characters, so
+            // "_stage() {LL" is four searches rather than one separator and the
+            // name loses everything from its first "a" on.  Both ends are known
+            // from the test above, so the name is what lies between them.
+            strptr body = algo::RestFrom(trimmed,5);
+            inst = algo::qGetRegion(body,0,body.n_elems-10);
+            clone_line = 0;
+        }
+        if (!StartsWithQ(trimmed,"#")) {
+            bool moved = GitWordQ(line,"checkout") || GitWordQ(line,"reset");
+            if (PipeToShellQ(line)) {
+                ReportInstallScript(inst, lineno, "fetch piped into a shell");
+            }
+            if (UnverifiedTlsQ(line)) {
+                ReportInstallScript(inst, lineno, "certificate verification disabled");
+            }
+            if (LatestUrlQ(line)) {
+                ReportInstallScript(inst, lineno, "url names latest instead of a version");
+            }
+            if (GitWordQ(line,"clone")) {
+                if (clone_line > 0) {
+                    ReportInstallScript(inst, clone_line, "git clone is not moved to a named revision");
+                }
+                clone_line = moved || ClonePinnedQ(line) ? 0 : lineno;
+            } else if (moved) {
+                clone_line = 0;
+            }
         }
     }ind_end;
+    if (clone_line > 0) {
+        ReportInstallScript(inst, clone_line, "git clone is not moved to a named revision");
+    }
+    ainst_Wait(ainst);
+    vrfy(ainst.status == 0, tempstr()<<"atf_ci.ainst_fail"
+         <<Keyval("status",ainst.status)
+         <<Keyval("comment","ainst could not produce the install script"));
 }

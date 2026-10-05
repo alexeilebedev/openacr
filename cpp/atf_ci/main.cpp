@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_ci (exe) -- Normalization tests (see citest table)
@@ -120,9 +120,15 @@ algo::UnTime atf_ci::DirAtime(algo::strptr dirname) {
 // in-process step cannot be unwound to continue, so name the offending citest
 // and exit 124.  Mirrors algo's fatal-signal handler: compose into _db.fatalerr
 // and emit with a single write(), never prerr.
+//
+// The budget goes in the line because a killed citest and a hung one both leave
+// exit 124 behind, and the number is what tells a reader which they are looking
+// at: a citest that ran its budget to the second was stopped by this handler,
+// and the row to raise is the one the line names.
 static void CitestTimeout(int) {
     algo_lib::_db.fatalerr << "atf_ci.timeout"
                            <<Keyval("citest", CurCitest())
+                           <<Keyval("timeout", atf_ci::_db.c_citest ? atf_ci::_db.c_citest->timeout : 0)
                            <<Keyval("comment", "citest exceeded its timeout budget") << eol;
     algo::strptr msg = algo_lib::_db.fatalerr;
     ssize_t n = write(2, msg.elems, msg.n_elems);
@@ -158,7 +164,7 @@ static bool RunCiTest(atf_ci::FCitest &citest) {
         tempstr covdir = tempstr() << "temp/cov/" << citest.citest << ".d";
         algo::RemDirRecurse(covdir, true);
         algo::CreateDirRecurse(covdir);
-        setenv("GCC_PROFILE_DIR", Zeroterm(GetFullPath(covdir)), 1);
+        setenv(algo_lib::dev_envvar_GCC_PROFILE_DIR, Zeroterm(GetFullPath(covdir)), 1);
     }
     // Cap the step at the citest's timeout: alarm() arms SIGALRM, whose handler
     // (CitestTimeout, installed in Main) reports the offending citest and exits.
@@ -180,7 +186,7 @@ static bool RunCiTest(atf_ci::FCitest &citest) {
     }
     alarm(0);
     if (cov) {
-        unsetenv("GCC_PROFILE_DIR");
+        unsetenv(algo_lib::dev_envvar_GCC_PROFILE_DIR);
     }
     // for sandboxed tests, do not check for modified files;
     // for regular tests, compare the post-test git-modified set with

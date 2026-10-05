@@ -1,18 +1,17 @@
-// Copyright (C) 2025-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: lib_curl (lib) -- covers curl_easy
 // Exceptions: yes
@@ -127,6 +126,12 @@ static struct curl_slist *CurlSetopt(CURL *curl, lib_curl::FRequest &req, lib_cu
         curl_vrfy_rc(curl_easy_setopt(curl, CURLOPT_AWS_SIGV4,Zeroterm(req.aws_sigv4)),"aws-sigv4",req.aws_sigv4,out_resp.curlrc);
         curl_vrfy_(curl_easy_setopt(curl, CURLOPT_USERNAME,Zeroterm(req.username)));
         curl_vrfy_(curl_easy_setopt(curl, CURLOPT_PASSWORD,Zeroterm(req.password)));
+    }
+
+    // Content coding: libcurl adds the Accept-Encoding header and inflates the
+    // reply, so the body the caller reads is plain text whatever the server chose
+    if (req.accept_encoding != ""){
+        curl_vrfy_rc(curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING,Zeroterm(req.accept_encoding)),"compressed",req.accept_encoding,out_resp.curlrc);
     }
 
     // Timeouts

@@ -152,7 +152,7 @@ Plus the full set of `Pool.*` tfuncs (`Alloc`, `AllocMaybe`,
 <a href="#see-also"></a>
 
 - [Reftypes index](/txt/exe/amc/reftype.md)
-- [Memory pools](/txt/exe/amc/pool.md) — allocator catalog
+- [Memory pools](/txt/exe/amc/pool.md) — allocator list
 - [Lpool](/txt/exe/amc/reftype/Lpool.md) — varlen pool with per-size-class freelists (better random-access fit)
 - [Tpool](/txt/exe/amc/reftype/Tpool.md) — fixed-size freelist
 - Source: `cpp/amc/blkpool.cpp`

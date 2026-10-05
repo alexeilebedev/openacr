@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: src_func (exe) -- Access / edit functions
@@ -64,14 +64,14 @@ static void PrintGlobalProtos_Decl(src_func::FFunc &func, cstring &out, strptr n
     }
     PrintPrecomment(func,result);
     src_func::FGenaffix *genaffix=src_func::FindAffix(func.name);
-    if (func.p_userfunc || genaffix) {
-        // we found a userfunc matching this function -- don't print the prototype.
+    if (func.p_cppsym || genaffix) {
+        // we found a user function matching this function -- don't print the prototype.
         // amc has generated the prototype in some include/gen/* file.
         if (bool_Update(src_func::_db.printed_user_impl_notice, true)) {
             // avoid several of these notices in a row -- looks bad
             result << "//     (user-implemented function, prototype is in amc-generated header)\n";
         }
-        if (genaffix && !func.p_userfunc) {
+        if (genaffix && !func.p_cppsym) {
             result << "// matches known generated affix "<<genaffix->genaffix<<eol;
         }
         result << "// "; // comment out subsequent prototype
@@ -79,8 +79,8 @@ static void PrintGlobalProtos_Decl(src_func::FFunc &func, cstring &out, strptr n
         src_func::_db.printed_user_impl_notice = false;
     }
     result << FirstLineWithoutNs(func,ns)<< ";";
-    if (func.p_userfunc && func.p_userfunc->acrkey != "") {
-        result << " // "<<func.p_userfunc->acrkey;
+    if (func.p_cppsym && acrkey_Get(*func.p_cppsym) != "") {
+        result << " // "<<acrkey_Get(*func.p_cppsym);
     }
     result << eol;
     // see define.h for meaning of this
@@ -150,7 +150,7 @@ void src_func::Main_ListFunc() {
                       <<Keyval("args",func.args)
                       <<Keyval("isstatic",func.isstatic)
                       <<Keyval("isinline",func.isinline)
-                      <<Keyval("acrkey",func.p_userfunc ? strptr(func.p_userfunc->acrkey) : strptr())
+                      <<Keyval("acrkey",func.p_cppsym ? acrkey_Get(*func.p_cppsym) : strptr())
                       <<Keyval("iffy",func.iffy)
                       <<Keyval("mystery",func.mystery)
                       <<Keyval("sortkey",func.sortkey)

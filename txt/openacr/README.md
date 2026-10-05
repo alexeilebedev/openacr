@@ -103,6 +103,7 @@ The schema for OpenACR itself lives in a handful of tables under
 | `dev.targdep` | Per-target dependencies |
 | `dev.targsrc` | Source files attached to a target |
 | `dev.gitfile` | Every file tracked in git |
+| `dev.gitpath` | Patterns naming where a tracked file may live |
 
 A complete list of ssim tables: `acr ssimfile`.  Per-table column
 docs: `acr field:<ns>.<Ctype>.%`.  Schema dump: `acr %`.  All

@@ -1,23 +1,10 @@
 ## wt - Worktree manager - reset, run, diff, delete
 <a href="#wt"></a>
 
-The wt tool creates and manages named copies of the checkout under the
-top-level `wt/` directory:
-
-* A **sandbox** is registered in the `dev.sandbox` table and can be reset to
-  a baseline that matches the current directory, including any currently
-  modified files. Tools (`atf_ci`, `amc_gc`, `atf_fuzz`, `apm`, `acr_ed`,
-  `abt_md`) reference sandboxes by name, so the names are checked-in data.
-  The row's `cow` flag selects the sandbox's materialization: a git worktree
-  (the default), or a copy-on-write farm — see
-  [Copy-on-write sandboxes](#copy-on-write-sandboxes).
-* A **branch worktree** (`-b`) is a durable checkout of its own branch, used
-  for working on a task in isolation. It is registered only in git
-  (`wt -list -b` shows all of them) and is never auto-reset.
-
-Every operation executes its commands directly, in order; `-verbose` echoes
-each command as it runs. The exit code of a command executed inside a
-sandbox becomes wt's exit code.
+wt makes and manages named copies of the checkout under the top-level `wt/`
+directory.  Use a sandbox to run a command against a throwaway copy of your
+tree, and use a branch worktree to work on a task on its own branch.  wt runs
+its commands one after another, and `-verbose` echoes each as it runs.
 
 ### Syntax
 <a href="#syntax"></a>
@@ -36,6 +23,7 @@ Usage: wt [-name:]<regx> [[-cmd:]<string>] [options]
     -clean                       Remove sandbox contents to save space
     -shell                       Open interactive shell inside sandbox
     -del                         Permanently delete sandbox
+    -i                           Read the command script from stdin, one command per line
     [cmd]...     string          Command to execute in sandbox
     -diff                        Show diff after running command
     -files...    string          Shell regx to diff
@@ -44,261 +32,266 @@ Usage: wt [-name:]<regx> [[-cmd:]<string>] [options]
     -pull                        Pull changes from sandbox to main repo
     -verbose     flag            Verbosity level (0..255); alias -v; cumulative
     -debug       flag            Debug level (0..255); alias -d; cumulative
+    -trace       string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                        Print help and exit; alias -h
     -version                     Print version and exit
     -signature                   Show signatures and exit; alias -sig
 ```
 
-### Operation
-<a href="#operation"></a>
+### Description
+<a href="#description"></a>
 
-With `-create`, a new entry is added to `dev.sandbox` table and this implies `-reset`.
-`-reset` brings the sandbox in correspondence with the current directory:
-the worktree is checked out (detached) at `-ref` (default `HEAD`), modified
-files from the current directory are copied in, and the result is committed
-as a `baseline` commit, so `git diff` inside the sandbox shows only what
-changed since the reset. Files listed in the `dev.sbpath` table (the
-`build/` directory, the build cache link `.gcache`) are also copied in, so
-the sandbox starts with working executables.
+wt knows two kinds of copy, and both live at `wt/<name>`.
 
-Actions are performed in the following order: `-create`, `-reset`,
-`-claudesess`, `-clean`, execute command in sandbox, `-diff`, `-del`. This
-means you can create a sandbox, run a command inside it, show the
-difference, and delete the sandbox in one line.
+A **sandbox** is a copy you can reset to your current tree at any time.  Its
+name is a row of `dev.sandbox`, and tools such as `atf_ci`, `amc_gc`,
+`atf_fuzz`, `apm`, `acr_ed` and `abt_md` find their sandboxes by those names.
+A name that matches no row makes an anonymous sandbox, which behaves the same
+and leaves no row behind.
 
-A single command argument is a shell command line and runs via `bash -c`;
-multiple arguments form the argv of the command directly.
+A **branch worktree** (`-b`) is a durable checkout of its own branch.  git is
+its only registry, and wt never resets it.
 
-### Copy-on-write sandboxes
+#### Resetting a sandbox to the current tree
+<a href="#resetting-a-sandbox-to-the-current-tree"></a>
+
+A reset checks the sandbox out, detached, at `-ref`.  It then copies in every
+file you have modified and the paths listed in `dev.sbpath`, among them
+`build/` and `.gcache`, so the sandbox starts with working executables.  The
+result is committed as `baseline`, and `git diff` inside the sandbox shows what
+changed since the reset.  A sandbox resets on `-reset`, on `-create`, and on
+first use when its directory does not exist yet; any other command runs on the
+state the last one left.
+
+#### Running a command in a sandbox
+<a href="#running-a-command-in-a-sandbox"></a>
+
+Give one command argument and wt runs it as a shell line under `bash -c`.
+Give several and they are the argv of the command.  The command's exit code
+becomes wt's exit code.
+
+wt performs the actions of one invocation in this order: `-create`, `-reset`,
+`-claudesess`, `-clean`, the command, `-diff`, `-pull`, `-del`.  So one line
+can make a sandbox, run a command in it, show the diff and delete it.
+
+#### Copy-on-write sandboxes
 <a href="#copy-on-write-sandboxes"></a>
 
-Some sandbox uses need no git history: `abt_md` evaluates the inline
-commands of a tutorial in a sandbox, and the commands only need a directory
-that looks exactly like the checkout and absorbs writes.  Materializing
-such a sandbox as a git worktree costs a checkout of the whole tree plus a
-copy of the build directory — over ten seconds per reset.  A sandbox whose
-`dev.sandbox` row says `cow:Y` (or an unregistered name used with `-cow`)
-is materialized instead as a *farm*: a hardlink copy of the current
-directory that costs well under a second to reset.
+A sandbox whose `dev.sandbox` row says `cow:Y`, or an anonymous one named with
+`-cow`, is a *farm*: a hardlink copy of the current directory that resets in
+well under a second.  A worktree reset takes over ten seconds.  `abt_md` uses
+the `abt_md` farm to evaluate the inline commands of a readme marked
+`sandbox:Y`.  It resets once per readme and runs each command in its own
+invocation, so state accumulates within a tutorial and dies at the next reset.
 
-The farm is built by `rsync --link-dest`: every file is a hardlink to the
-corresponding file of the checkout, so the copy consumes directory entries
-but no data blocks.  A hardlink alone does not isolate writes: opening the
-shared inode for writing would modify the checkout's copy of the content.
-A command therefore runs with `libcowdancer` (from the `cowdancer`
-package) preloaded; the library copies a protected file before any
-in-place write, breaking the hardlink.  The list of protected inodes,
-`.ilist`, is computed at reset, since resets are the only operation that
-creates hardlinks.  Files created by the command are ordinary files of the
-farm and need no protection.  An overlayfs mount would give the same
-isolation without preloading, but mounting one requires privileges that
-the containers development happens in do not grant; the
-hardlink-plus-preload scheme needs none.
+A command in a farm runs with `libcowdancer`, from the `cowdancer` package,
+preloaded.  The library copies a shared file before anything writes to it in
+place, so the checkout's copy stays untouched.  Three parts of the tree are
+left out of a farm.  `wt/` holds the farm itself, `.git` is replaced by an
+empty repository of its own, and `temp/` starts empty.
 
-On a host without the cowdancer package a `cow:Y` sandbox is materialized
-as an ordinary git worktree: the same name, the same directory, the same
-behavior for the caller, only a slower reset.  A full physical copy of the
-checkout would also isolate writes, but copying every data block takes
-over half a minute on a CI runner, while a worktree reset finishes in a
-few seconds.  The `.ilist` file marks a hardlink farm, so wt refuses to
-run a command in one when libcowdancer is missing (the preload is what
-keeps such a farm safe); `-reset` then rebuilds the sandbox as a worktree.
+On a host without `cowdancer`, a `cow:Y` sandbox is an ordinary worktree at
+the same path, and only the reset is slower.
 
-Three parts of the checkout are not copied into a farm.  `wt/` is excluded
-because it contains the farm itself, along with the other worktrees.
-`.git` is excluded and replaced by a fresh empty repository, so a command
-that stages files (for example `acr_ed -create -target`, which runs
-`git add`) operates on a private index and can never touch the real repo.
-`temp/` is recreated empty.  Because the farm's git repo has no baseline
-commit, `-diff` and `-clean` behave differently: `-diff` is not supported,
-and `-clean` removes the farm contents (the next use rebuilds it).
+#### Branch worktrees
+<a href="#branch-worktrees"></a>
 
-The protection mechanism is `LD_PRELOAD`, which sets its limits: only
-dynamically linked programs that write through libc are intercepted.
-Every tool in this repo qualifies, as do the compilers and linkers; a
-static binary would bypass the protection and write through the hardlink.
-The links are shared with the checkout, but only commands inside the farm
-run with the preload: in practice writers on the checkout side replace
-files rather than rewriting them in place — the repo's tools write a temp
-file and rename it, and the build toolchain gives each output a new inode
-— which breaks the link and leaves the farm holding the old version.  The
-farm therefore goes stale as the checkout changes, never corrupt, and the
-next `-reset` re-syncs it.
+`wt <name> -create -b` creates `wt/<name>` on a new branch `<name>`, starting
+at `-ref`.  It plants a `.branch` symlink to the shared branch-control
+directory when the checkout has one.  It gives the worktree its own empty
+`build/<cfg>` directories, with `abt`, `gcache` and `llmtool` linked from the
+checkout, and enables the shared compiler cache, so the first build is served
+from the cache.  The `llmtool` link gives a session started in the worktree a
+status line before anything is built there.  It copies the cppcheck build directories under `temp/`, so the first
+`bin/normalize` there analyzes only what the branch changes.  And when the
+checkout has an inventory attached under `run/`, the worktree gets a symlink
+to the same dataset.
 
-### Tools that use wt:
-<a href="#tools-that-use-wt"></a>
+`wt <name> -del -b` removes the directory and prunes git's registration.  The
+branch stays.
 
-* `amc_gc` uses a sandbox to test changes to process in-memory database composition, and to clean up
-includes
-* `acr_ed` uses a sandbox when invoked with `-sandbox` option
-* `atf_fuzz` uses a sandbox to test crash behavior of corrupted inputs
-* `atf_ci` uses a sandbox to run tests marked `sandbox:Y`
-* `abt_md` evaluates readmes marked `sandbox:Y` inside the cow sandbox
-`abt_md`: one reset per readme file, then one invocation per inline
-command, so state accumulates within a tutorial and side effects die at
-the next reset
-
-### Example: create a new sandbox
-<a href="#example-create-a-new-sandbox"></a>
+### Examples
+<a href="#examples"></a>
 
 ```bash
-wt test -create
+wt % -list                              # every sandbox, its size and whether it is clean
+wt % -list -b                           # every git worktree of this checkout
+wt test -create                         # register sandbox test and reset it to this tree
+wt test "acr sandbox:test"              # run a command in sandbox test
+wt amc -reset "amc && ai"               # try amc and a full build on a copy of this tree
+wt amc -reset -shell                    # a login shell in a fresh sandbox
+wt % -reset                             # reset every sandbox
+wt scratch -cow 'acr_ed -create -ssimfile dev.zz -write'  # a schema edit in an anonymous farm
+wt 2047-my-task -create -b -ref:origin/master             # a branch worktree for a task
+wt 2047-my-task -create -b -claudesess -ref:origin/master # the same, with a claude session in it
+wt 2047-my-task -del -b                 # remove the worktree and keep the branch
 ```
 
-This initializes a new sandbox. The sandbox directory is `wt/test`
-and includes any files that are modified in the current directory,
-committed with the comment 'baseline'. The sandbox can be reset to match
-the current directory with `wt test -reset`, and brought back to the
-baseline state with `wt test -clean`.
+The listing is tab-separated, and `wt 'abt_md|amc' -list` prints:
 
-### Example: run command in sandbox
-<a href="#example-run-command-in-sandbox"></a>
-
-```bash
-$ wt test "acr sandbox:test"
-dev.sandbox  sandbox:test  comment:""
+```
+Sandbox  Cow  Size  Clean  Path       Comment
+abt_md   Y    390M  N      wt/abt_md  Sandbox for compiling readmes
+amc      N    N/A   Y      wt/amc     sandbox for running amc commands
 ```
 
-### Example: show difference from baseline
-<a href="#example-show-difference-from-baseline"></a>
+`N/A` is a sandbox whose directory does not exist yet.
+
+`-diff` shows what a command changed since the reset:
 
 ```bash
 $ wt amc -reset "echo test >> cpp/wt/wt.cpp" -diff
 wt.reset  sandbox:amc  dir:wt/amc
 diff --git a/cpp/wt/wt.cpp b/cpp/wt/wt.cpp
-index 0889b61..20d42ef 100644
---- a/cpp/wt/wt.cpp
-+++ b/cpp/wt/wt.cpp
-@@ -173,3 +173,4 @@ void wt::Main() {
-         }ind_end;
-    }
-}
+...
 +test
 ```
 
-### Example: list sandboxes and their current state
-<a href="#example-list-sandboxes-and-their-current-state"></a>
+A farm keeps what a command wrote until its next reset, so a later `wt scratch
+...` sees the ssimfile the example above created, and the checkout never does.
 
-```bash
-$ wt % -list
-Sandbox   Size  Clean  Path         Comment
-acr_ed    656M  Y      wt/acr_ed    sandbox for testing acr_ed changes
-amc       659M  Y      wt/amc       sandbox for running amc commands
-amc_gc    664M  N      wt/amc_gc    sandbox for garbage collection tool
-atf_ci    664M  N      wt/atf_ci    sandbox for CI testing
-atf_fuzz  1.3G  Y      wt/atf_fuzz  sandbox for fuzzing
-```
+### Caveats
+<a href="#caveats"></a>
 
-### Example: reset all sandboxes
-<a href="#example-reset-all-sandboxes"></a>
-
-```bash
-$ wt % -reset
-```
-
-### Example: test amc changes inside sandbox
-<a href="#example-test-amc-changes-inside-sandbox"></a>
-
-This resets the sandbox to match current directory, runs amc in it, and rebuilds everything.
-It can be used to test changes that might break compilation and put you in a dead-end situation.
-
-```bash
-$ wt amc -reset "amc && ai"
-...
-```
-
-### Example: run interactive shell inside sandbox
-<a href="#example-run-interactive-shell-inside-sandbox"></a>
-
-```bash
-$ wt amc -reset "bash -l"
-```
-
-### Example: run a command in a copy-on-write sandbox
-<a href="#example-run-a-command-in-a-copy-on-write-sandbox"></a>
-
-```bash
-$ wt test1 -cow 'acr_ed -create -ssimfile dev.zz -write && acr ssimfile:dev.zz'
-```
-
-The schema edit happens in the farm; the checkout is unchanged.  A
-subsequent `wt test1 ...` command sees the new ssimfile, because the farm
-accumulates state until the next `-reset`.
-
-### Example: create a branch worktree
-<a href="#example-create-a-branch-worktree"></a>
-
-```bash
-$ wt 2047-my-task -create -b
-wt.branch  branch:2047-my-task  dir:wt/2047-my-task
-```
-
-This creates `wt/2047-my-task` on new branch `2047-my-task` at `-ref`
-(default `HEAD`), plants a `.branch` symlink to the shared branch-control
-directory, gives the worktree local empty `build/<cfg>` directories with
-`abt` and `gcache` seeded from the main checkout, and enables the shared
-compiler cache, so the first build inside the worktree is cache-served.
-No `dev.sandbox` row is written; git is the registry. `wt <name> -del -b`
-removes the directory and prunes the registration, leaving the branch.
-
-With `-claudesess`, wt additionally starts a background claude session
-inside the worktree, named after it. The session boots by reading
-`CLAUDE.md` and the branch control file `.branch/<name>.md`, then stands
-by; it registers as a background agent, so `claude agents` lists it and
-`claude --resume <name>` (or `claude attach`) opens it. The resolved
-branch-control directory is passed with `--add-dir`, since the `.branch`
-symlink points outside the worktree and the boot read would otherwise
-stall on a permission prompt.
+- `-create` and `-del` on a sandbox write `data/dev/sandbox.ssim`, which is
+  checked in.  For a throwaway copy, use a name no row has and skip `-create`.
+- `-create -b` and `-claudesess` refuse to run inside a worktree, with `wt:
+  refusing to nest a worktree inside a worktree`.  Run them from the main
+  checkout.  Sandboxes work from anywhere.
+- The branch starts at `-ref`, which defaults to `HEAD`.  In the main checkout
+  that is often a local `master` behind `origin/master`, so pass
+  `-ref:origin/master` for fresh work.
+- When the branch named already exists, `-create -b` checks it out as it is
+  and ignores `-ref`.
+- `-clean` on a branch worktree discards its uncommitted changes.
+- A farm goes stale as the checkout changes, and `-reset` brings it up to
+  date.  A farm has no baseline commit, so `-diff` prints `wt.diff` and shows
+  nothing.
+- A farm is safe only under the preload.  A static binary run inside it would
+  write through the hardlinks into the checkout.  wt refuses to run a command
+  in a farm when `libcowdancer` is missing, with `wt.nocowdancer`, and
+  `-reset` then rebuilds the sandbox as a worktree.
+- wt reads stdin only under `-i`.
 
 ### Options
 <a href="#options"></a>
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
+The directory wt reads `dev.sandbox` and `dev.sbpath` from.  Leave it at `data`
+unless you are testing wt against another data set.
+
 #### -name -- Sandbox name
 <a href="#-name"></a>
+
+A regx over sandbox names, so `%` selects every sandbox and `'abt_md|amc'`
+selects two.  A name that matches no `dev.sandbox` row makes an anonymous
+sandbox of that name, and wt prints `wt.anon`.  With `-b` the name is also the
+branch name.
 
 #### -create -- Create new sandbox and register in dev.sandbox
 <a href="#-create"></a>
 
+Register a new sandbox in `dev.sandbox` and reset it, which writes
+`data/dev/sandbox.ssim`.  With `-b` it creates a branch worktree and writes no
+row.
+
 #### -b -- Branch worktree: create on new branch NAME; git-registered, no dev.sandbox row
 <a href="#-b"></a>
+
+Work on a branch worktree.  With `-create` it makes `wt/<name>` on a new branch
+`<name>`; with `-del` it removes the worktree and keeps the branch; with `-list`
+it prints `git worktree list`.
 
 #### -cow -- Sandbox is a copy-on-write farm (with -create/anon name)
 <a href="#-cow"></a>
 
+Make the sandbox a copy-on-write farm.  With `-create` it sets `cow:Y` on the
+new row, and on an anonymous name it applies to that run.  A registered sandbox
+takes its `cow` flag from its row.
+
 #### -list -- List existing sandboxes
 <a href="#-list"></a>
+
+Print the selected sandboxes after every other action has run: name, cow flag,
+size, whether `git diff` is empty, path and comment.  With `-b` it prints every
+git worktree of the checkout, whatever the name.
 
 #### -reset -- Reset sandbox to match current directory
 <a href="#-reset"></a>
 
+Reset the sandbox to match the current directory at `-ref`, discarding whatever
+it held.  `-create` implies it, and a sandbox with no directory resets on first
+use without it.
+
 #### -claudesess -- Start a background claude session named after the worktree
 <a href="#-claudesess"></a>
+
+Start a background claude session in the worktree, named after it.  The session
+reads `CLAUDE.md` and `.branch/<name>.md` and stands by, and `claude agents`
+lists it.  Combine it with `-create -b` to hand a task to a helper session; it
+refuses to run from inside a worktree.
 
 #### -clean -- Remove sandbox contents to save space
 <a href="#-clean"></a>
 
+Return a worktree sandbox to its baseline by discarding every change since the
+reset.  A farm has no baseline, so its directory is removed and the next use
+rebuilds it.  On a branch worktree it discards uncommitted work.
+
 #### -shell -- Open interactive shell inside sandbox
 <a href="#-shell"></a>
+
+Open an interactive login shell inside the sandbox in place of a command.  It
+runs after any `-reset` given on the same line.
 
 #### -del -- Permanently delete sandbox
 <a href="#-del"></a>
 
+Delete the sandbox directory and prune git's worktree list.  On a registered
+sandbox it also removes the `dev.sandbox` row; with `-b` it keeps the branch.
+
+#### -i -- Read the command script from stdin, one command per line
+<a href="#-i"></a>
+
+Read the command script from stdin, one command per line, and run it in the
+sandbox as one `bash -c` script.  wt reads stdin under this flag alone.
+
 #### -cmd -- Command to execute in sandbox
 <a href="#-cmd"></a>
+
+The command to run in the sandbox.  One argument is a shell line run by `bash
+-c`, and several arguments are the argv of the command.  Its exit code becomes
+wt's.
 
 #### -diff -- Show diff after running command
 <a href="#-diff"></a>
 
+Print `git diff` of the sandbox after the command runs, which is every change
+since the reset.  A farm has no baseline, so it prints `wt.diff` there and shows
+nothing.
+
 #### -files -- Shell regx to diff
 <a href="#-files"></a>
+
+wt accepts this flag and does nothing with it today, so `-diff` always covers
+the whole sandbox.  To narrow a diff, run `git diff -- <paths>` as the command.
 
 #### -ref -- Reset to this ref
 <a href="#-ref"></a>
 
+The commit a reset checks the sandbox out at, and the commit a new branch
+worktree starts from.  Any git ref works, and `-ref:origin/master` is the usual
+one for fresh work.
+
 #### -q -- Quiet mode
 <a href="#-q"></a>
 
+Suppress wt's own progress lines, `wt.reset`, `wt.branch`, `wt.claudesess` and
+`wt.anon`.  The command's output is unaffected.
+
 #### -pull -- Pull changes from sandbox to main repo
 <a href="#-pull"></a>
+
+Run `git pull` of the sandbox's `HEAD` into the current checkout after the
+command.  Use it to bring back commits a command made inside the sandbox.

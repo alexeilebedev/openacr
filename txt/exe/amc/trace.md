@@ -167,7 +167,7 @@ The dispatch's generated switch wraps each callback with
 For application-defined counters that aren't driven by amc:
 
 ```ssim
-dmmeta.tracefld     tracefld:gate.trace.connections
+gendb.tracefld     tracefld:gate.trace.connections
 dmmeta.usertracefld tracefld:gate.trace.connections  comment:"current open connections"
 ```bash
 
@@ -230,4 +230,4 @@ counters.
 - [Runtime / steps](/txt/exe/amc/runtime.md)
 - [Reflection](/txt/exe/amc/reflection.md) — runtime read of trace state
 - Source: `cpp/amc/trace.cpp`
-- Spec tables: `acr 'dmmeta.ftrace:%'`, `acr 'dmmeta.usertracefld:%'`, `acr 'dmmeta.tracefld:%'`
+- Spec tables: `acr 'dmmeta.ftrace:%'`, `acr 'dmmeta.usertracefld:%'`, `acr 'gendb.tracefld:%'`

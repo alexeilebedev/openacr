@@ -1,18 +1,54 @@
-# start bash cmd:'bash -c \'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf "int f(){return 1;}\\n" > x.cpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null; stamp(){ if test ! -e $$2; then echo $$1:absent; elif test $$2 -nt marker; then echo $$1:fresh; else echo $$1:stale; fi; }; try(){ touch -t 202101010000 marker; $$G -report -- g++ $$2 -c x.cpp -o x.o > rep.txt; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/$$1_/"; stamp $$1_o x.o; stamp $$1_gcno x.gcno; }; rm -f x.o x.gcno; $$G -- g++ -c x.cpp -o x.o; rm -f x.o; try bareabsent ""; touch -t 202001010000 x.o; try baresame ""; rm -f x.o x.gcno; $$G -- g++ --coverage -c x.cpp -o x.o; touch -t 202001010000 x.o; rm -f x.gcno; try covnonotes "--coverage"; touch -t 202001010000 x.o x.gcno; try covsame "--coverage"; printf "int g(){return 2;}\\n" > y.cpp; touch marker0; rm -f y.o y.gcno; $$G -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o; BLOB=$$(find cache -mindepth 3 -type f -newer marker0); cp $$BLOB before; touch -t 202001010000 $$BLOB; touch -t 202101010000 marker; $$G -report -force -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o > rep.txt; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/pubsame_/"; cmp -s $$BLOB before && echo pubsame_bytes:same || echo pubsame_bytes:changed; stamp pubsame_entry $$BLOB\''
-# eof bash
-bash -> bareabsent_hit:Y
-bash -> bareabsent_o:fresh
-bash -> bareabsent_gcno:absent
-bash -> baresame_hit:Y
-bash -> baresame_o:fresh
-bash -> baresame_gcno:absent
-bash -> covnonotes_hit:Y
-bash -> covnonotes_o:fresh
-bash -> covnonotes_gcno:fresh
-bash -> covsame_hit:Y
-bash -> covsame_o:fresh
-bash -> covsame_gcno:fresh
-bash -> pubsame_hit:N
-bash -> pubsame_bytes:same
-bash -> pubsame_entry:fresh
-# exit bash code:0
+# stage install
+# start gcache cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -install -dir:cache"
+gcache -> setting up gcache...
+gcache -> done
+# eof gcache
+# exit gcache code:0
+# stage publish_bare
+# start gcache-2 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -- g++ -c x.cpp -o x.o"
+# eof gcache-2
+# exit gcache-2 code:0
+# stage bareabsent
+# start gcache-3 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -c x.cpp -o x.o"
+gcache-3 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-3
+# exit gcache-3 code:0
+# check bareabsent_o:fresh
+# check bareabsent_gcno:absent
+# stage baresame
+# start gcache-4 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -c x.cpp -o x.o"
+gcache-4 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-4
+# exit gcache-4 code:0
+# check baresame_o:fresh
+# check baresame_gcno:absent
+# stage publish_cov
+# start gcache-5 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o"
+# eof gcache-5
+# exit gcache-5 code:0
+# stage covnonotes
+# start gcache-6 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-6 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-6
+# exit gcache-6 code:0
+# check covnonotes_o:fresh
+# check covnonotes_gcno:fresh
+# stage covsame
+# start gcache-7 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-7 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-7
+# exit gcache-7 code:0
+# check covsame_o:fresh
+# check covsame_gcno:fresh
+# stage publish_seeded
+# start gcache-8 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o"
+gcache-8 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:y.cpp  pch_source:""
+# eof gcache-8
+# exit gcache-8 code:0
+# stage pubsame
+# start gcache-9 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -force -- g++ --coverage -frandom-seed=t -c y.cpp -o y.o"
+gcache-9 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:y.cpp  pch_source:""
+# eof gcache-9
+# exit gcache-9 code:0
+# check pubsame_bytes:same
+# check pubsame_entry:fresh

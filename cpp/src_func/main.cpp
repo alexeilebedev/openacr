@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: src_func (exe) -- Access / edit functions
@@ -168,12 +168,7 @@ tempstr src_func::GetFuncNs(strptr funcline) {
 }
 
 static strptr GetAcrkey(src_func::FFunc &func) {
-    algo::strptr ret;
-    if (func.p_userfunc) {
-        // for keys like X/Y, leave only the Y
-        ret = Pathcomp(func.p_userfunc->acrkey,"/RR");
-    }
-    return ret;
+    return func.p_cppsym ? acrkey_Get(*func.p_cppsym) : algo::strptr();
 }
 
 // -----------------------------------------------------------------------------
@@ -268,34 +263,40 @@ void src_func::RewriteOpts() {
 // which "look like generated code"
 // We will not generate prototypes for functions that look like generated code
 //   (this is a heuristic, not a hard rule, but it saves hours of debugging when it works)
-// The reason is that if something changes in the underlying table where the userfunc
+// The reason is that if something changes in the underlying table where the user function
 // no longer gets generated (and thus expected) by amc, the user function should trigger
 // a compile error from lack of prototype.
 // Also, for each prototype that we refused to generate because a function matched
 // a known gen affix, we add a comment to the include file.
 void src_func::CalcGenaffix() {
-    ind_beg(_db_userfunc_curs,userfunc,_db) {
+    ind_beg(_db_cppsym_curs,cppsym,_db) if (cppsym.extrn) {
         tempstr affix;
-        strptr ns = Pathcomp(userfunc.userfunc,".LL");
-        if (StartsWithQ(userfunc.acrkey,"gstatic/")) {
-            // e.g. userfunc:ns...tuneparam_hugepages
-            //      acrkey:gstatic/<ns>.tuneparam:hugepages
-            //   -> affix ns_tuneparam_
-            // this is the most important class
-            affix << ns << "."<<Pathcomp(userfunc.acrkey,":LL.RR") << "_";
-        } else if (StartsWithQ(userfunc.acrkey,"dispatch_msg:")) {
-            // acrkey:dispatch_msg:<ns>.In/<proto>.AuthMsg
+        strptr cppname = cppname_Get(cppsym);
+        strptr acrkey = acrkey_Get(cppsym);
+        strptr ns = Pathcomp(cppname,".LL");
+        strptr table = Pathcomp(acrkey,":LL");
+        tempstr table_affix = tempstr() << ns << "." << Pathcomp(table,".RR") << "_";
+        if (table == "dmmeta.dispatch_msg") {
+            // acrkey:dmmeta.dispatch_msg:<ns>.In/<proto>.AuthMsg
             //   -> affix <ns>.In_
-            affix << Pathcomp(userfunc.acrkey,":LR/LL") << "_";
-        } else if (StartsWithQ(userfunc.acrkey,"fstep:") || StartsWithQ(userfunc.acrkey,"fbuf:")) {
-            // acrkey:fstep:%
-            // userfunc:ns.FDb.cd_intfmc_read.Step
+            affix << Pathcomp(acrkey,":LR/LL") << "_";
+        } else if (table == "dmmeta.fstep" || table == "dmmeta.fbuf") {
+            // acrkey:dmmeta.fstep:%
+            // cppname:ns.cd_intfmc_read_Step
             //   -> affix ns._Step
             // or
-            // acrkey:fbuf:ns.Msgbuf.in_custom
-            // userfunc:ns.Msgbuf.in_custom.ScanMsg
+            // acrkey:dmmeta.fbuf:ns.Msgbuf.in_custom
+            // cppname:ns.in_custom_ScanMsg
             //   -> affix ns._ScanMsg
-            affix << ns << "._" << Pathcomp(userfunc.userfunc,".RR");
+            affix << ns << "._" << Pathcomp(cppname,"_RR");
+        } else if (StartsWithQ(cppname, table_affix)) {
+            // a function named after the table that binds it, as a gstatic
+            // table binds one function per row:
+            // cppname:ns.tuneparam_hugepages
+            // acrkey:<ns>db.tuneparam:hugepages
+            //   -> affix ns.tuneparam_
+            // this is the most important class
+            affix << table_affix;
         }
         if (affix != "") {
             src_func::ind_genaffix_GetOrCreate(affix);

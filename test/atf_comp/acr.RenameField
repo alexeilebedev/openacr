@@ -1,8 +1,8 @@
 # start acr cmd:"$bindir/acr -in:- field:dmmeta.Ns.nstype -rename dmmeta.Ns.blah"
-acr <- dmmeta.field  field:dmmeta.Ns.nstype  arg:dmmeta.Nstype  reftype:Pkey  dflt:""  comment:"Namespace type"
-acr <- dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:""
-acr <- dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:""
-acr <- dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:""
+acr <- dmmeta.field  field:dmmeta.Ns.nstype  arg:dmmeta.Nstype  reftype:Pkey  dflt:''  comment:"Namespace type"
+acr <- dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:''
+acr <- dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:''
+acr <- dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:''
 # eof acr
 acr -> acr.update  dmmeta.ns  ns:ns1  blah:exe       license:GPL  comment:""
 acr -> acr.update  dmmeta.ns  ns:ns2  blah:ssimdb    license:GPL  comment:""

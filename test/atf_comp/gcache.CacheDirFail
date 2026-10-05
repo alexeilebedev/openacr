@@ -1,4 +1,5 @@
-# start bash cmd:"bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && $$OLDPWD/$bindir/gcache -enable -dir:nosuchdir -- true'"
-# eof bash
-bash -> cache directory nosuchdir doesn't exist. try with -install option
-# exit bash code:1
+# stage enable
+# start gcache cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -enable -dir:nosuchdir -- true"
+gcache -> cache directory nosuchdir doesn't exist. try with -install option
+# eof gcache
+# exit gcache code:1

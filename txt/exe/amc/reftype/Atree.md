@@ -29,6 +29,8 @@ State in the **parent** ctype (see `tclass_Atree` in
 |------------------|--------|------------------------------------|
 | `<name>_root`    | `T*`   | root of the AVL tree; NULL if empty |
 | `<name>_n`       | `i32`  | number of elements in the tree     |
+| `<name>_first`   | `T*`   | smallest element; NULL if empty    |
+| `<name>_last`    | `T*`   | largest element; NULL if empty     |
 
 State in the **element** ctype (per indexed field; an element
 can be in multiple Atrees at once):
@@ -38,7 +40,7 @@ can be in multiple Atrees at once):
 | `<xfname>_up`      | `T*`   | parent; `(T*)-1` means "not in tree"; NULL = root |
 | `<xfname>_left`    | `T*`   | left child (smaller keys)                        |
 | `<xfname>_right`   | `T*`   | right child (larger keys)                        |
-| `<xfname>_depth`   | `i32`  | subtree height; used by AVL rebalance            |
+| `<xfname>_depth`   | `i32`  | height of the subtree, 1 for a leaf              |
 
 The element's `Init` is augmented to set
 `up = (T*)-1, left=NULL, right=NULL, depth=0`.
@@ -51,10 +53,16 @@ Standard AVL tree (Adelson-Velsky & Landis):
 - Tree is a binary search tree ordered by the `sortfld`'s `<`.
   Duplicates are allowed (a row can be inserted multiple times
   only by sharing keys; identity is checked separately).
-- After every insert and remove, amc walks up to the root via
-  `<xfname>_up`, refreshing each node's depth and rotating
-  whenever the balance factor exceeds ±1 (`Rebalance`,
-  `Turn` — single and double rotations).
+- After an insert or a remove, `Rebalance` walks up from the
+  lowest changed node, refreshing heights and rotating where the
+  balance factor exceeds ±1.  It stops at the first node whose
+  height comes out unchanged, so an insert costs at most one
+  single or double rotation.
+- The parent caches the first and last elements: Insert updates
+  them during its descent, and Remove moves them to the row's
+  neighbor before unlinking it, so `First` and `Last` read one
+  pointer.
+- An element equal to existing ones is inserted after them.
 - The `_up` back-pointer makes traversal stateless: `Next(row)`
   finds the successor by going right-then-leftmost, or upward
   until it comes from a left child — no stack needed.
@@ -109,9 +117,9 @@ Source: `cpp/amc/avl.cpp`.
 
 | Tfunc            | Generated function                          | Effect |
 |------------------|---------------------------------------------|--------|
-| `Atree.Init`     | `<name>_Init(P&)` (macro)                   | Set `_root=NULL`, `_n=0`.  No allocation. |
-| `Atree.RemoveAll`| `void <name>_RemoveAll(P&)`                 | Walk every element, clear its `up`/`left`/`right`, mark not-in-tree; reset `_root` and `_n`.  Rows themselves are not deleted. |
-| `Atree.Cascdel`  | (private)                                   | Pop and `Delete` every element. Emitted when xref has `cascdel:Y`. |
+| `Atree.Init`     | `<name>_Init(P&)` (macro)                   | Set `_root`, `_first` and `_last` to NULL and `_n` to 0.  No allocation. |
+| `Atree.RemoveAll`| `void <name>_RemoveAll(P&)`                 | Unlink every element without recursion and mark it not-in-tree; reset the parent's fields.  Rows themselves are not deleted. |
+| `Atree.Cascdel`  | (private)                                   | Unlink and `Delete` every element without recursion. Emitted when xref has `cascdel:Y`. |
 
 #### Membership & access
 <a href="#membership-access"></a>
@@ -120,12 +128,12 @@ Source: `cpp/amc/avl.cpp`.
 |------------------|---------------------------------------------|--------|
 | `Atree.EmptyQ`   | `bool <name>_EmptyQ(P&)`                    | `_root == NULL`. |
 | `Atree.InTreeQ`  | `bool <xfname>_InTreeQ(T& row)`             | `row.<xfname>_up != (T*)-1`. |
-| `Atree.First`    | `T* <name>_First(P&)`                       | Smallest element; NULL if empty. |
-| `Atree.Last`     | `T* <name>_Last(P&)`                        | Largest element; NULL if empty. |
+| `Atree.First`    | `T* <name>_First(P&)`                       | Smallest element, read from `_first`; NULL if empty. |
+| `Atree.Last`     | `T* <name>_Last(P&)`                        | Largest element, read from `_last`; NULL if empty. |
 | `Atree.Next`     | `T* <xfname>_Next(T& row)`                  | In-order successor (or NULL). |
 | `Atree.Prev`     | `T* <xfname>_Prev(T& row)`                  | In-order predecessor (or NULL). |
 | `Atree.FirstGe`  | `T* <name>_FirstGe(P&, const K& key)`       | Smallest element with `sortfld ≥ key`; NULL if none.  Useful for ranged scans. |
-| `Atree.LastLt`   | `T* <name>_LastLt(P&, const K& key)`        | Largest element with `sortfld ≤ key` (note: the comment says "smaller or equal"). |
+| `Atree.LastLt`   | `T* <name>_LastLt(P&, const K& key)`        | Largest element with `sortfld < key`; NULL if none. |
 
 #### Mutation
 <a href="#mutation"></a>
@@ -133,9 +141,8 @@ Source: `cpp/amc/avl.cpp`.
 | Tfunc              | Generated function                          | Effect |
 |--------------------|---------------------------------------------|--------|
 | `Atree.Insert`     | `void <name>_Insert(P&, T& row)`            | Insert `row` at the position dictated by its current sortfld.  No-op if already in this tree.  O(log N). |
-| `Atree.InsertImpl` | (private)                                   | The body of Insert — descends to a leaf, sets `_up`/`_left`/`_right`, then propagates depth + rebalance. |
 | `Atree.Remove`     | `void <name>_Remove(P&, T& row)`            | Remove `row`; rebalances the parent chain.  No-op if not in tree. |
-| `Atree.RemoveFirst`| `T* <name>_RemoveFirst(P&)`                 | Unlink and return the smallest element. |
+| `Atree.RemoveFirst`| `void <name>_RemoveFirst(P&)`               | Remove the smallest element, if any.  Read it with `First` first. |
 | `Atree.Reinsert`   | `void <name>_Reinsert(P&, T& row)`          | When the sortfld of `row` has changed in place: Remove then Insert (semantics of `Reheap` in [Bheap](/txt/exe/amc/reftype/Bheap.md)). |
 
 #### Internal helpers (private)
@@ -147,15 +154,8 @@ machinery.  You shouldn't call them directly.
 | Tfunc                | Effect |
 |----------------------|--------|
 | `Atree.ElemLt`       | Comparator (`a < b` by sortfld). |
-| `Atree.FirstImpl` / `LastImpl` | Walk leftmost / rightmost of a subtree. |
-| `Atree.Connect` / `Disconnect` | Wire a child into / out of a parent. |
-| `Atree.Turn`         | Rotate (left or right). |
-| `Atree.UpdateDepth`  | Recompute a node's `depth` from its children. |
-| `Atree.TallerChild`  | Return the deeper child (NULL if equal). |
-| `Atree.Balance`      | Balance factor of a node. |
-| `Atree.Rebalance`    | Apply rotations if balance > ±1. |
-| `Atree.Propagate`    | After insert/remove, walk up rebalancing every ancestor. |
-| `Atree.RemoveAllImpl`| Recursive helper for `RemoveAll`. |
+| `Atree.RotateLeft` / `RotateRight` | Lift the right / left child into a node's place, recomputing the two moved heights. |
+| `Atree.Rebalance`    | Walk up from a changed node, rotating where needed, until a height is unchanged. |
 
 #### Iteration
 <a href="#iteration"></a>

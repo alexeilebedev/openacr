@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
@@ -178,8 +178,9 @@ static tempstr JoinArgv(algo::StringAry &args) {
 // Verify amc-generated _ToArgv picks -name:value vs -name value based on whether
 // the wrapped command has a ccmdline. acr_ed has one (amc-built; its ReadArgv
 // parses colon syntax); bash does not (external tool; needs two-token form).
+// Both argv forms also pass this process's -trace on to acr_ed and not to bash.
 // Source of truth: the branch on cmdtype.c_ccmdline in amc::tfunc_Exec_ToArgv
-// in cpp/amc/exec.cpp.
+// and amc::GenArgvInherit in cpp/amc/exec.cpp.
 void atf_unit::unittest_lib_exec_ExecToArgvSyntax() {
     command::acr_ed_proc acr_ed;
     acr_ed.cmd.in = "other";
@@ -213,6 +214,23 @@ void atf_unit::unittest_lib_exec_ExecToArgvSyntax() {
     algo::StringAry bash_ctype_args;
     command::bash_ToArgv(bash_cmd, bash_ctype_args);
     TESTCMP(JoinArgv(bash_ctype_args), tempstr("bash -c echo hi"));
+
+    // a trace given to this process reaches a child that reads it, in both forms
+    cstring saved_trace(algo_lib::_db.cmdline.trace);
+    algo_lib::_db.cmdline.trace = "slowness";
+    command::acr_ed_ToArgv(acr_ed, acr_ed_args);
+    command::acr_ed_ToArgv(acr_ed_cmd, ctype_args);
+    command::bash_ToArgv(bash, bash_args);
+    command::bash_ToArgv(bash_cmd, bash_ctype_args);
+    tempstr acr_ed_traced(JoinArgv(acr_ed_args));
+    tempstr ctype_traced(JoinArgv(ctype_args));
+    tempstr bash_traced(JoinArgv(bash_args));
+    tempstr bash_ctype_traced(JoinArgv(bash_ctype_args));
+    algo_lib::_db.cmdline.trace = saved_trace;
+    TESTCMP(acr_ed_traced, tempstr("bin/acr_ed -in:other -create:Y -target:foo -trace:slowness"));
+    TESTCMP(ctype_traced, tempstr("bin/acr_ed -in:other -create:Y -target:foo -trace:slowness"));
+    TESTCMP(bash_traced, tempstr("bash -c echo hi"));
+    TESTCMP(bash_ctype_traced, tempstr("bash -c echo hi"));
 }
 // --------------------------------------------------------------------------------
 

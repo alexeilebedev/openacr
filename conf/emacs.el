@@ -281,7 +281,7 @@
 ;; to split the windows even more
 ;;
 (fset 'compile-show-output
-      "\C-x1\C-x2\C-xo\C-xb*comp\C-i\C-m\C-[>\C-xo")
+      "\C-x1\C-x2\C-xo\C-xb*comp\C-i\C-m\C-[>\C-xo") ; ignore:pkgkeyword
 
 ;;------------------------------------------------------------------------------
 

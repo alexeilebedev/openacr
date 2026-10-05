@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: lib_mysql (lib) -- Mysql adaptor
@@ -59,6 +59,6 @@ namespace lib_mysql { // update-hdr
     // error
     void MQuery(MYSQL *conn, strptr query, lib_mysql::Res &res);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void mysql_Cleanup(); // ffunc:lib_mysql.FDb.mysql.Cleanup
-    // void res_Cleanup(lib_mysql::Res &res); // ffunc:lib_mysql.Res.res.Cleanup
+    // void mysql_Cleanup(); // dmmeta.ffunc:lib_mysql.FDb.mysql.Cleanup
+    // void res_Cleanup(lib_mysql::Res &res); // dmmeta.ffunc:lib_mysql.Res.res.Cleanup
 }

@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
 // Exceptions: yes
@@ -290,4 +289,107 @@ void atf_amc::amctest_PerfBlkhashRolling() {
           << Keyval("thash_sec", double(cycles_thash)/hz)
           << Keyval("blkhash_sec", double(cycles_blkhash)/hz)
           << Keyval("speedup", double(cycles_thash)/double(cycles_blkhash)));
+}
+
+// -----------------------------------------------------------------------------
+
+// Growth by bucket splits: 5000 streams, one row each, take the index from 4
+// buckets to 5000, across ten 512-bucket segments and four directory doublings.
+// Every row stays reachable, the cursor visits each one once, and the index
+// holds as many buckets as blocks.
+void atf_amc::amctest_BlkhashSplit() {
+    i32 n0 = ind_blkhash_elem_N();
+    i32 nblk0 = _db.ind_blkhash_elem_nblk;
+    const i32 nstream = 5000;
+    frep_(i, nstream) {
+        atf_amc::FBlkhashElem &elem = blkhash_elem_Alloc();
+        elem.key = Key(1000 + i, 3);
+        elem.val = i;
+        vrfy_(ind_blkhash_elem_InsertMaybe(elem));
+    }
+    vrfyeq_(_db.ind_blkhash_elem_nblk, nblk0 + nstream);
+    vrfy_(_db.ind_blkhash_elem_buckets_n >= _db.ind_blkhash_elem_nblk);
+    vrfy_(_db.ind_blkhash_elem_dir_max >= 16);
+    u64 sum = 0;
+    frep_(i, nstream) {
+        atf_amc::FBlkhashElem *elem = ind_blkhash_elem_Find(Key(1000 + i, 3));
+        vrfy_(elem && elem->val == u64(i));
+        sum += elem->val;
+    }
+    u64 visited = 0;
+    i32 nvisit = 0;
+    ind_beg(_db_ind_blkhash_elem_curs, elem, _db) {
+        if (elem.key.id >= 1000) {
+            visited += elem.val;
+            nvisit++;
+        }
+    }ind_end;
+    vrfyeq_(nvisit, nstream);
+    vrfyeq_(visited, sum);
+    frep_(i, nstream) {
+        blkhash_elem_Delete(*ind_blkhash_elem_Find(Key(1000 + i, 3)));
+    }
+    vrfyeq_(ind_blkhash_elem_N(), n0);
+    vrfyeq_(_db.ind_blkhash_elem_nblk, nblk0);
+}
+
+// -----------------------------------------------------------------------------
+
+// Growth benchmark: 2M streams, one row each, so every insert makes a block,
+// and the slowest single insert is reported beside the mean.  The index has
+// 2-slot blocks, so 2M blocks fit in memory.  A bucket array that doubles
+// re-chains every block at each power of two, and the slowest insert is that
+// re-chain.
+void atf_amc::amctest_PerfBlkhashGrow() {
+    const i32 nstream = 2000000;
+    u64 worst = 0;
+    u64 t0 = algo::get_cycles();
+    frep_(i, nstream) {
+        atf_amc::FBlkhashElem &elem = blkhash_elem_Alloc();
+        elem.key = Key(10000000 + i, 5);
+        elem.val = i;
+        u64 t = algo::get_cycles();
+        ind_blkhash_elem_narrow_InsertMaybe(elem);
+        worst = u64_Max(worst, algo::get_cycles() - t);
+    }
+    u64 t1 = algo::get_cycles();
+    frep_(i, nstream) {
+        blkhash_elem_Delete(*ind_blkhash_elem_narrow_Find(Key(10000000 + i, 5)));
+    }
+    vrfyeq_(ind_blkhash_elem_narrow_N(), 0);
+    double hz = algo::get_cpu_hz_int();
+    prlog("atf_amc.PerfBlkhashGrow"
+          << Keyval("nstream", nstream)
+          << Keyval("mean_ns", double(t1 - t0) / nstream / hz * 1e9)
+          << Keyval("worst_us", double(worst) / hz * 1e6));
+}
+
+// -----------------------------------------------------------------------------
+
+// Thash growth benchmark: 2M rows inserted one at a time, each insert that
+// grows the bucket array timed and reported with the row count it grew at.  A
+// Thash grows by rehashing every row in one call, so the cost of one growth is
+// what a rule file quotes for a table of that size.
+void atf_amc::amctest_PerfThashGrow() {
+    const i32 nrow = 2000000;
+    double hz = algo::get_cpu_hz_int();
+    frep_(i, nrow) {
+        atf_amc::FBlkhashElem &elem = blkhash_elem_Alloc();
+        elem.key = Key(20000000 + i, 1);
+        elem.val = i;
+        i32 nbucket = _db.ind_blkhash_elem_thash_buckets_n;
+        u64 t = algo::get_cycles();
+        ind_blkhash_elem_thash_InsertMaybe(elem);
+        u64 dt = algo::get_cycles() - t;
+        if (_db.ind_blkhash_elem_thash_buckets_n != nbucket && i >= 60000) {
+            prlog("atf_amc.PerfThashGrow"
+                  << Keyval("nrow", i)
+                  << Keyval("nbucket", _db.ind_blkhash_elem_thash_buckets_n)
+                  << Keyval("grow_ms", double(dt) / hz * 1e3));
+        }
+    }
+    frep_(i, nrow) {
+        blkhash_elem_Delete(*ind_blkhash_elem_thash_Find(Key(20000000 + i, 1)));
+    }
+    vrfyeq_(ind_blkhash_elem_thash_N(), 0);
 }

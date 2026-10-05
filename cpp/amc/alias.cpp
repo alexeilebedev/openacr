@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: yes
@@ -21,45 +21,57 @@
 
 #include "include/amc.h"
 
+// True if FIELD is an alias of a field of another ctype: a global field
+// naming another namespace's list so that a step can be declared on it.
+// Such an alias has no value to get, set or read.
+bool amc::ListAliasQ(amc::FField &field) {
+    return field.c_falias && field.c_falias->p_srcfield->p_ctype != field.p_ctype;
+}
+
 void amc::tclass_Alias() {
 }
 
 void amc::tfunc_Alias_Get() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    amc::FFunc& func = amc::CreateCurFunc();
-    Set(R, "$basename", name_Get(*field.c_falias->p_srcfield));
-    Ins(&R, func.comment, "Alias: value is retrieved from $basename");
-    Ins(&R, func.ret  , "$Cpptype", false);
-    Ins(&R, func.proto, "$name_Get($Cparent)", false);
-    Set(R, "$FieldExpr", FieldvalExpr(field.p_ctype,*field.c_falias->p_srcfield,"parent"));
-    func.inl = true;
-    Ins(&R, func.body, "return $FieldExpr;");
+    if (!ListAliasQ(field)) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        Set(R, "$basename", name_Get(*field.c_falias->p_srcfield));
+        Ins(&R, func.comment, "Alias: value is retrieved from $basename");
+        Ins(&R, func.ret  , "$Cpptype", false);
+        Ins(&R, func.proto, "$name_Get($Cparent)", false);
+        Set(R, "$FieldExpr", FieldvalExpr(field.p_ctype,*field.c_falias->p_srcfield,"parent"));
+        func.inl = true;
+        Ins(&R, func.body, "return $FieldExpr;");
+    }
 }
 
 void amc::tfunc_Alias_Set() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField &srcfield = *field.c_falias->p_srcfield;
-    amc::FFunc& func = amc::CreateCurFunc();
-
-    Set(R, "$Fldargtype", Argtype(field));
-    Set(R, "$basename", name_Get(srcfield));
-    Ins(&R, func.comment, "Alias: value is assigned to $basename");
-    AddRetval(func,"void","","");
-    Ins(&R, func.proto, "$name_Set($Parent, $Fldargtype rhs)", false);
-    Ins(&R, func.body, tempstr()<<AssignExpr(srcfield, Subst(R,"parent"), "rhs", false)<<";");
+    if (!ListAliasQ(field)) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        Set(R, "$Fldargtype", Argtype(field));
+        Set(R, "$basename", name_Get(srcfield));
+        Ins(&R, func.comment, "Alias: value is assigned to $basename");
+        AddRetval(func,"void","","");
+        Ins(&R, func.proto, "$name_Set($Parent, $Fldargtype rhs)", false);
+        Ins(&R, func.body, tempstr()<<AssignExpr(srcfield, Subst(R,"parent"), "rhs", false)<<";");
+    }
 }
 
 void amc::tfunc_Alias_ReadStrptrMaybe() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField &srcfield = *field.c_falias->p_srcfield;
-    amc::FFunc& func = amc::CreateCurFunc();
-    Ins(&R, func.comment, "Alias: value is read into $basename");
-    Ins(&R, func.proto  , "$name_ReadStrptrMaybe()",false);
-    AddProtoArg(func, Subst(R,"$Partype&"), "parent", true);
-    AddProtoArg(func, "algo::strptr", "in_str", true);
-    Set(R,"$ReadExpr",ReadFieldExpr(srcfield,"$parname","in_str"));
-    AddRetval(func,"bool","retval",Subst(R,"$ReadExpr"));
+    if (!ListAliasQ(field)) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        Ins(&R, func.comment, "Alias: value is read into $basename");
+        Ins(&R, func.proto  , "$name_ReadStrptrMaybe()",false);
+        AddProtoArg(func, Subst(R,"$Partype&"), "parent", true);
+        AddProtoArg(func, "algo::strptr", "in_str", true);
+        Set(R,"$ReadExpr",ReadFieldExpr(srcfield,"$parname","in_str"));
+        AddRetval(func,"bool","retval",Subst(R,"$ReadExpr"));
+    }
 }

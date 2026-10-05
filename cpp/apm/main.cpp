@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: apm (exe) -- Algo Package Manager
 // Exceptions: yes
@@ -25,7 +25,6 @@
 
 // Initialize zd_sel_package list based on the command line regex
 // For -update, -install -- select parent packages as well
-// For -remove -- select dependent packages
 // For parents, dependencies marked as 'soft' are not followed.
 // These dependencies are used to establish proper package order for the purposes
 // of determining which file/record belongs to which package (i.e. everything depends
@@ -44,21 +43,11 @@ void apm::Main_SelectPackage() {
     // remote side that determines what dependencies to add in that case.
     // when installing, there are no dependencies because the package record has
     // just been created
-    bool sel_parent=_db.cmdline.t;
-    bool sel_child=_db.cmdline.remove;
-    if (sel_parent) {
+    if (_db.cmdline.t) {
         ind_beg(_db_zd_sel_package_curs,package,_db) {
             ind_beg(package_c_pkgdep_curs,pkgdep,package) if (!pkgdep.soft) {
                 // newly selected package will be visited by enclosing iteration
                 zd_sel_package_Insert(*pkgdep.p_parent);
-            }ind_end;
-        }ind_end;
-    }
-    if (sel_child) {
-        ind_beg(_db_zd_sel_package_curs,package,_db) {
-            ind_beg(package_c_pkgdep_parent_curs,pkgdep,package) {
-                // newly selected package will be visited by enclosing iteration
-                zd_sel_package_Insert(*pkgdep.p_package);
             }ind_end;
         }ind_end;
     }
@@ -124,7 +113,40 @@ tempstr apm::RevParseMaybe(algo::strptr rev) {
 
 // -----------------------------------------------------------------------------
 
-// Bring PACKAGE's origin into this repo and resolve REF to a commit id there.
+// Return the destination of PACKAGE that this run acts on, or NULL when the
+// package has none, which is a package that lives in this tree.  A package syncs
+// with each of its dev.pkgupstream rows separately, and -dest names the row by
+// its dest.  Without -dest the package's only row is the one; a package with
+// several rows refuses, since picking one would merge or publish against an
+// origin nobody named.
+apm::FPkgupstream *apm::GetPkgupstream(apm::FPackage &package) {
+    apm::FPkgupstream *ret = NULL;
+    int nmatch = 0;
+    ind_beg(apm::package_c_pkgupstream_curs, pkgupstream, package) {
+        if (_db.cmdline.dest == "" || dest_Get(pkgupstream) == _db.cmdline.dest) {
+            ret = &pkgupstream;
+            nmatch++;
+        }
+    }ind_end;
+    vrfy(nmatch <= 1, tempstr() << "apm.ambiguous_dest"
+         << Keyval("package", package.package)
+         << Keyval("ndest", nmatch)
+         << Keyval("comment", "the package has several destinations; name one with -dest"));
+    return ret;
+}
+
+// Return the namespace under refs/apm/ into which PACKAGE's origin is fetched:
+// <package>/<dest> for a package with a destination, so that two origins of one
+// package never overwrite each other's refs, and the package name otherwise.
+tempstr apm::GetRefns(apm::FPackage &package) {
+    apm::FPkgupstream *pkgupstream = GetPkgupstream(package);
+    return tempstr() << (pkgupstream ? algo::strptr(pkgupstream->pkgupstream) : algo::strptr(package.package));
+}
+
+// -----------------------------------------------------------------------------
+
+// Bring ORIGIN into this repo under refs/apm/REFNAME and resolve REF to a commit
+// id there.
 // Return the commit, or the empty string when the origin cannot be reached or
 // REF names nothing in it.
 //
@@ -135,13 +157,13 @@ tempstr apm::RevParseMaybe(algo::strptr rev) {
 // baseref directly therefore dies with "couldn't find remote ref" on the one
 // value the field is supposed to hold.
 //
-// The origin's heads come across as a set instead, into a ref namespace of this
-// package's own, and REF is resolved locally afterwards.  Any commit an origin
+// The origin's heads come across as a set instead, into the ref namespace
+// REFNAME, and REF is resolved locally afterwards.  Any commit an origin
 // branch reaches is then in this repo's object store and rev-parse finds it, so
 // a commit id, a branch name and HEAD all resolve through one path.  The
 // namespace is consulted before the repo, because REF names something in the
 // origin and a local branch of the same spelling is a different commit.
-tempstr apm::FetchPackageOrigin(algo::strptr pkgname, algo::strptr origin, algo::strptr ref) {
+tempstr apm::FetchPackageOrigin(algo::strptr refname, algo::strptr origin, algo::strptr ref) {
     tempstr gitref;
     if (origin == ".") {
         if (ref == "HEAD") {
@@ -150,7 +172,7 @@ tempstr apm::FetchPackageOrigin(algo::strptr pkgname, algo::strptr origin, algo:
             gitref=Trimmed(SysEval(tempstr()<<"git rev-parse "<<ref,FailokQ(true),1024));
         }
     } else {
-        tempstr refns(tempstr()<<"refs/apm/"<<pkgname);
+        tempstr refns(tempstr()<<"refs/apm/"<<refname);
         tempstr fetch(tempstr()<<"git fetch -q --prune "<<strptr_ToBash(origin));
         fetch << " " << strptr_ToBash(tempstr()<<"+refs/heads/*:"<<refns<<"/*");
         fetch << " " << strptr_ToBash(tempstr()<<"+HEAD:"<<refns<<"/HEAD");
@@ -232,11 +254,14 @@ tempstr apm::GetApmPath(algo::strptr dir) {
     return (_db.cmdline.l || !FileQ(theirs)) ? ours : theirs;
 }
 
-// Return the mode bits of FILENAME, which are zero when it cannot be stat'ed.
+// Return the mode bits of FILENAME, which are zero when it does not exist.  A
+// symbolic link reports its own mode, because git tracks the link: a link whose
+// target is not built yet still exists, and one whose target is a binary is
+// still a link.
 int apm::GetFileMode(algo::strptr filename) {
     struct stat struct_stat;
     algo::ZeroBytes(struct_stat);
-    int rc=stat(Zeroterm(tempstr()<<filename),&struct_stat);
+    int rc=lstat(Zeroterm(tempstr()<<filename),&struct_stat);
     (void)rc;
     return struct_stat.st_mode;
 }
@@ -302,8 +327,6 @@ void apm::DefPackages() {
             if (Regx_Match(_db.cmdline.ns,ns.ns)) {
                 dev::Package package;
                 package.package=ns.ns;
-                package.baseref="HEAD";
-                package.origin=".";
                 package.comment.value=tempstr()<<"package for namespace "<<ns.ns;
                 if (package_InsertMaybe(package)) {
                     dev::Pkgdep pkgdep;
@@ -348,6 +371,11 @@ void apm::Main() {
     DefPackages();
     // topologically sort packages
     SortPackages();
+    // a push makes the origin one projection: the package with the packages it
+    // builds on, on the record side and the file side alike
+    if (_db.cmdline.push) {
+        _db.cmdline.t=true;
+    }
     Main_SelectPackage();
     ind_beg(_db_ssimreq_curs,ssimreq,_db) {
         Regx_ReadAcr(ssimreq.regx_value,value_Get(ssimreq),true);
@@ -366,28 +394,40 @@ void apm::Main() {
     ind_beg(_db_ssimreq_curs,ssimreq,_db) {
         ssimreq.exclude=StartsWithQ(ssimreq.ssimreq,"dev.gitfile:data/");
     }ind_end;
-    vrfy(!((_db.cmdline.install || _db.cmdline.update) && _db.cmdline.remove),
-         "-install/-update is incompatible with -remove, please select just one option");
     vrfy(_db.cmdline.install + _db.cmdline.update + _db.cmdline.push + _db.cmdline.diff + _db.cmdline.showrec
-         + _db.cmdline.showfile + _db.cmdline.generate + _db.cmdline.e + _db.cmdline.remove + _db.cmdline.reset <= 1,
+         + _db.cmdline.showfile + _db.cmdline.generate + _db.cmdline.e + _db.cmdline.reset + _db.cmdline.publish <= 1,
          "more than one action selected");
     if (_db.cmdline.annotate != "" || _db.cmdline.check || _db.cmdline.diff || _db.cmdline.showrec || _db.cmdline.push
-        || _db.cmdline.showfile || _db.cmdline.generate || _db.cmdline.update || _db.cmdline.remove || _db.cmdline.install) {
+        || _db.cmdline.showfile || _db.cmdline.generate || _db.cmdline.update || _db.cmdline.install) {
         LoadRecs();
     }
-    bool needlock=_db.cmdline.update || _db.cmdline.remove || _db.cmdline.install;
+    bool needlock=_db.cmdline.update || _db.cmdline.install;
     algo_lib::FLockfile lockfile;
     if (needlock) {
         LockFileInit(lockfile, "temp/apm.lock");
     }
+    // An update deletes every base record and then re-inserts the merged ones.
+    // If the re-insert fails and the script runs on, the gitfile refresh after
+    // it succeeds, and the script's status is the status of that last command:
+    // apm reports a package updated whose rows are gone.  So every plan stops at
+    // its first failing command, and apm exits with that command's status.
+    _db.script << "set -e" << eol;
     if (algo_lib::_db.cmdline.verbose) {
         _db.script << "set -x" << eol;
     }
-    int actions=0;
-    // check package definition before removing
-    if (_db.cmdline.remove) {
-        _db.cmdline.check=true;
+    // A -dest that names no row would leave the package looking as though it
+    // lived here, and an update would then merge against this tree itself.  So
+    // every package the command names must have the destination, except where
+    // -reset or -install creates it.
+    if (_db.cmdline.dest != "" && !_db.cmdline.reset && !_db.cmdline.install) {
+        ind_beg(_db_zd_sel_package_curs,package,_db) if (Regx_Match(_db.cmdline.package,package.package)) {
+            vrfy(GetPkgupstream(package), tempstr() << "apm.nodest"
+                 << Keyval("package",package.package)
+                 << Keyval("dest",_db.cmdline.dest)
+                 << Keyval("comment","the package has no such destination; -reset creates one"));
+        }ind_end;
     }
+    int actions=0;
     // -t evaluates package recursively on the remote side
     // for -install
     if (_db.cmdline.install) {
@@ -432,11 +472,11 @@ void apm::Main() {
     } else if (_db.cmdline.e) {
         Main_Edit();
         actions++;
-    } else if (_db.cmdline.remove) {
-        Main_Remove();
-        actions++;
     } else if (_db.cmdline.reset) {
         Main_Reset();
+        actions++;
+    } else if (_db.cmdline.publish) {
+        Main_Publish();
         actions++;
     }
     if (actions==0 && _db.cmdline.package.expr != "" && zd_sel_package_N()==0) {

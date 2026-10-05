@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -103,14 +103,19 @@ void amc::tfunc_Field_Userinit() {
     }
 }
 
-// Find an ffunc of the given name declared on FIELD (via dmmeta.ffunc).
-// Returns NULL if none.  Pkey is '<field>.<name>'; build it via the
-// amc-generated concat helper and look up in the unique ind_ffunc hash.
-// If mark_used is true and the ffunc is found, set ffunc.used so gen_check_ffunc
+// Find the ffunc named NAME that dmmeta.ffunc declares on FIELD; NULL if none.
+// The field's zs_ffunc list holds every ffunc declared on it, and for almost
+// every field the list is empty.
+// If MARK_USED is true and the ffunc is found, set ffunc.used so gen_check_ffunc
 // does not warn about it.  Pass true at emission sites, false at
 // classification-only queries (e.g. PlaindataVisit).
 amc::FFfunc *amc::FindFfunc(amc::FField &field, algo::strptr name, bool mark_used DFLTVAL(false)) {
-    amc::FFfunc *ffunc = amc::ind_ffunc_Find(dmmeta::Ffunc_Concat_field_name(field.field, name));
+    amc::FFfunc *ffunc = NULL;
+    ind_beg(amc::field_zs_ffunc_curs, cand, field) {
+        if (!ffunc && name_Get(cand) == name) {
+            ffunc = &cand;
+        }
+    }ind_end;
     if (ffunc && mark_used) {
         ffunc->used = true;
     }

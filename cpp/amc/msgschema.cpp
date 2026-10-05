@@ -1,34 +1,33 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: yes
 // Source: cpp/amc/msgschema.cpp
 //
-// Derive the message-layout tables dmmeta.payloadhdr, dmmeta.msg and
-// dmmeta.msgfield from the schema.  A runtime consumer (the web console's
+// Derive the message-layout tables gendb.payloadhdr, gendb.msg and
+// gendb.msgfield from the schema.  A runtime consumer (the web console's
 // schema-driven decoder) reads these tables to decode a message it was not
-// compiled against: dmmeta.payloadhdr gives the type/length layout of each
-// message header ctype, dmmeta.msg maps (payload header, msgtype) to a
-// message ctype, and dmmeta.msgfield lists each message's leaf scalar
+// compiled against: gendb.payloadhdr gives the type/length layout of each
+// message header ctype, gendb.msg maps (payload header, msgtype) to a
+// message ctype, and gendb.msgfield lists each message's leaf scalar
 // fields with resolved byte offsets.  The tables are written back to the
-// database by gen_table_write, alongside ctypelen and userfunc.
+// database by gen_table_write, alongside ctypelen and cppsym.
 // Uniqueness of the msgtype number within one payload header is enforced
 // here: a collision is an amc error, so a merged database (platform +
 // customer namespaces) cannot silently shadow a message.
@@ -111,7 +110,7 @@ static void StrtypeSet(amc::FMsgfield &row, amc::FCtype &arg) {
 // classify every field as a leaf scalar, a fixed string, a nested struct
 // (recursed into with a dotted PREFIX), a varlen tail, or framing (the
 // typefld/lenfld the payload header already describes).  With EMIT set,
-// append a dmmeta.msgfield row per leaf under MSG; without it, only
+// append a gendb.msgfield row per leaf under MSG; without it, only
 // classify.  Returns false when some field cannot be represented — the
 // caller then derives no rows for the message at all, because a partial
 // layout would place later fields at wrong offsets and decode garbage.
@@ -242,7 +241,7 @@ static void AddOpttail(amc::FMsg &msg, amc::FCtype &ctype) {
     }ind_end;
 }
 
-// Derive dmmeta.payloadhdr, dmmeta.msg and dmmeta.msgfield rows for every
+// Derive gendb.payloadhdr, gendb.msg and gendb.msgfield rows for every
 // message ctype whose ultimate base is a header with typefld and lenfld,
 // and enforce that msgtype numbers are unique within one payload header.
 // Packing is not required: the layout walk inserts the same alignment

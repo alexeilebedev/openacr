@@ -1,0 +1,4 @@
+amcdb.lang  lang:go  linecomment://  nblank:1  comment:"A package per namespace under go/gen"
+amcdb.lang  lang:py  linecomment:"#"  nblank:2  comment:"A module per namespace under py/gen"
+amcdb.lang  lang:rs  linecomment://  nblank:1  comment:"A module per namespace in the crate under rs/gen"
+amcdb.lang  lang:ts  linecomment://  nblank:2  comment:"A module per namespace under ts/gen"

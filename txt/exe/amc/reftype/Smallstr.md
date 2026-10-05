@@ -117,7 +117,7 @@ Source: `cpp/amc/smallstr.cpp`.
   onto a wire frame copies them too.  The padded strtypes fill
   their whole storage, on Init and on each assignment.
 - **`strict:Y` is opinionated.**  Mis-prefix or mis-suffix a
-  ctype name and amc rejects it.  Stick to the catalog or
+  ctype name and amc rejects it.  Stick to the table or
   use `strict:N`.
 - **`rpascal` is limited to 255 chars** (the trailing length
   byte is `u8`).

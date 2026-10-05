@@ -159,7 +159,7 @@ To run the checks, build the configuration and drive the comptests against it,
 which is what the `memcheck` cijob does:
 
 ```bash
-atf_ci -cijob:memcheck        # mem_prep builds -cfg:memcheck, then atf_comp_mem runs
+atf_ci -cijob:'memcheck%'     # each shard's mem_prep builds -cfg:memcheck, then atf_comp_mem runs its tests
 atf_comp -mode:memcheck -cfg:memcheck <comptest regx>    # one test, by hand
 ```
 

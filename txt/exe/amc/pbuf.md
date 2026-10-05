@@ -1,7 +1,7 @@
 ## amc Feature: pbuf codec (protobuf)
 <a href="#amc-feature-pbuf-codec-protobuf-"></a>
 
-Many systems X2 needs to talk to use Google Protobuf as their
+Many systems a program needs to talk to use Google Protobuf as their
 wire format.  Rather than depend on `protoc` and the upstream
 C++ library, amc reads protobuf field metadata from ssim and
 generates a small, self-contained codec.

@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: lib_ams (lib) -- Library for AMS middleware, supporting file format & messaging
 // Exceptions: NO
@@ -105,22 +104,20 @@ bool lib_ams::CreateBridgeShms(ams::ProcId child_proc_id, int grpidx, ams::ProcI
     return ok;
 }
 
-// Format the value of a `-proc:` argument that initializes a bridged
-// child with CHILD_PROC_ID at GRPIDX.  Format:
-//   <child_proc_id>,<prefix>,<in_grp>,<out_grp>[,<nickname>]
-// where the child's perspective is encoded:
-//   in_grp  = parent's BridgeOutGrp (parent writes, child reads),
-//   out_grp = parent's BridgeInGrp (child writes, parent reads).
-// NICKNAME is the child's human-facing name (the userproc name); the
-// child prefixes its published metrics with it in place of the proc id.
+
+// Format the value of a `-proc:` argument that initializes a bridged child with
+// CHILD_PROC_ID at GRPIDX, and return it.  The child's rings are named from its
+// own side: it reads `in`, the parent's BridgeOutGrp, and writes `out`, the
+// parent's BridgeInGrp.  NICKNAME, the child's human-facing name (the userproc
+// name), prefixes its published metrics in place of the proc id.
 tempstr lib_ams::ChildProcStr(ams::ProcId child_proc_id, int grpidx, algo::strptr nickname DFLTVAL(algo::strptr())) {
+    ams::Procspec spec;
+    spec.id << child_proc_id;
+    spec.prefix = _db.file_prefix;
+    spec.in = BridgeOutGrp(child_proc_id, grpidx);
+    spec.out = BridgeInGrp(child_proc_id, grpidx);
+    spec.nick = nickname;
     tempstr ret;
-    ret << child_proc_id
-        << "," << _db.file_prefix
-        << "," << BridgeOutGrp(child_proc_id, grpidx)
-        << "," << BridgeInGrp(child_proc_id, grpidx);
-    if (ch_N(nickname)) {
-        ret << "," << nickname;
-    }
+    ret << spec;
     return ret;
 }

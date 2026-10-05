@@ -1,18 +1,18 @@
-// Copyright (C) 2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: apm (exe) -- Algo Package Manager
 // Exceptions: yes
@@ -88,6 +88,33 @@ bool apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, alg
     return ok;
 }
 
+// Merge MERGEFILE when one of its sides is a symbolic link.  A link holds no
+// lines to merge: its value is its target, and git merge-file would read the
+// file the link points to.  So the side that differs from the base wins, and a
+// link that both sides changed, to different values, is a conflict that keeps
+// ours.  BASE_FILE and THEIRS_FILE are the copies in the two sandboxes.
+static void MergeLink(apm::FMergefile &mergefile, algo::strptr base_file, algo::strptr theirs_file) {
+    tempstr ours(S_ISLNK(mergefile.ours_mode) ? algo::ReadLink(mergefile.mergefile) : tempstr());
+    tempstr base(S_ISLNK(mergefile.base_mode) ? algo::ReadLink(base_file) : tempstr());
+    tempstr theirs(S_ISLNK(mergefile.theirs_mode) ? algo::ReadLink(theirs_file) : tempstr());
+    bool same_ours = mergefile.ours_mode == mergefile.base_mode && ours == base;
+    bool same_theirs = mergefile.theirs_mode == mergefile.base_mode && theirs == base;
+    bool agree = mergefile.ours_mode == mergefile.theirs_mode && ours == theirs;
+    if (same_ours && !same_theirs) {
+        apm::_db.script << "rm -f "<<strptr_ToBash(mergefile.mergefile) << eol;
+        apm::_db.script << "cp -p -P "<<strptr_ToBash(theirs_file)<<" "<<strptr_ToBash(mergefile.mergefile) << eol;
+        apm::_db.script << "git add -f "<<strptr_ToBash(mergefile.mergefile) << eol;
+    } else if (!same_ours && !same_theirs && !agree) {
+        prerr("apm.linkconflict"
+              <<Keyval("file",mergefile.mergefile)
+              <<Keyval("ours",ours)
+              <<Keyval("theirs",theirs)
+              <<Keyval("comment","both sides changed this link; ours is kept"));
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 // Scan mergefile table and perform per-file 3-way non-history-aware merge
 // each file may be existent or non-existent; each file has a mode
 // BASE        OURS       THEIRS      RESULT
@@ -117,38 +144,30 @@ void apm::MergeFiles(apm::FPackage &package) {
             _db.script << "cp -p -P "<<strptr_ToBash(mergefile.theirs_file)<<" "<<strptr_ToBash(mergefile.mergefile) << eol;
             _db.script << "git add -f "<<strptr_ToBash(mergefile.mergefile) << eol;
         }
-        if (mergefile.ours_mode != 0 && mergefile.theirs_mode != 0) {
-            // merge
+        bool link = S_ISLNK(mergefile.ours_mode) || S_ISLNK(mergefile.theirs_mode) || S_ISLNK(mergefile.base_mode);
+        if (link && mergefile.ours_mode != 0 && mergefile.theirs_mode != 0) {
+            MergeLink(mergefile, base_file, theirs_file);
+        } else if (mergefile.ours_mode != 0 && mergefile.theirs_mode != 0) {
+            // merge.  git merge-file exits with the number of conflicts it left
+            // as markers, capped at 127, and with 255 on an error.  A conflict
+            // is a result the user resolves after the update, so the plan goes
+            // on past it and names the file, and only an error stops the script.
+            // git merge-file prints nothing for a conflict, so without that line
+            // an update ends silent with markers in the tree.
             _db.script << "git merge-file --no-diff3"
                        <<" -L "<<strptr_ToBash(mergefile.mergefile)
                        <<" -L base"
                        <<" -L package"
                        <<" "<<strptr_ToBash(mergefile.mergefile)
                        <<" "<<(mergefile.base_mode == 0 ? tempstr("/dev/null") : strptr_ToBash(base_file))
-                       <<" "<<strptr_ToBash(theirs_file)<<eol;
+                       <<" "<<strptr_ToBash(theirs_file)
+                       <<" || { rc=$?; echo \"apm.conflict  file:"<<strptr_ToBash(mergefile.mergefile)<<"  nconflict:$rc\" >&2; [ $rc -lt 128 ]; }"<<eol;
         }
         if (mergefile.ours_mode != 0 && mergefile.base_mode != 0 && mergefile.theirs_mode == 0) {
             // delete
             _db.script << "git rm -f -q "<<strptr_ToBash(mergefile.mergefile)<<eol;
         }
     }ind_end;
-}
-
-// Rewrite dev.package files matching PACKAGE in FILENAME so that ORIGIN,BASEREF match those
-// specified in the function arguments
-void apm::RewritePackageRecs(algo::strptr origin, algo::strptr baseref, algo::strptr pkgname, algo::strptr filename) {
-    tempstr out;
-    ind_beg(algo::FileLine_curs,line,filename) {
-        dev::Package package;
-        if (Package_ReadStrptrMaybe(package,line) && package.package == pkgname) {
-            package.origin = origin;
-            package.baseref = baseref;
-            out<<package<<eol;
-        } else {
-            out<<line<<eol;
-        }
-    }ind_end;
-    StringToFile(out,filename);
 }
 
 // Update selected packages to the latest version,
@@ -166,7 +185,7 @@ void apm::RewritePackageRecs(algo::strptr origin, algo::strptr baseref, algo::st
 // apply changes that can be applied to ssimfiles,
 // insert conflicts into ssimfiles in appropriate places
 // user continues with `git add ...`, `git commit` or `git reset --hard` to abort
-// This function handles installation as well (the case where package.baseref = empty string)
+// This function handles installation as well (the case where the baseref is an empty string)
 //
 // Each step below produces one of the inputs the next steps read: a sandbox
 // directory, one of the three sides of the record merge, the merged records, or
@@ -189,7 +208,7 @@ void apm::Main_Update() {
     bool ok=true;
     ind_beg(_db_zd_sel_package_curs,package,_db) {
         // fetch updated version of package
-        tempstr new_package_gitref = FetchPackageOrigin(package.package,package.origin,"HEAD");
+        tempstr new_package_gitref = FetchPackageOrigin(GetRefns(package),GetOrigin(package),"HEAD");
         vrfy(new_package_gitref!="",tempstr()<<"failed to fetch "<<package.package);
         verblog("apm.update"
                 <<Keyval("package",package.package)
@@ -199,16 +218,14 @@ void apm::Main_Update() {
         // current directory: there is no earlier version of the package here to
         // fetch, so the merge takes this tree as its base.  Any other baseref
         // names a commit in the origin and has to resolve to one.
-        tempstr base_gitref(package.baseref);
-        if (package.baseref != "") {
-            base_gitref = FetchPackageOrigin(package.package,package.origin,package.baseref);
-            vrfy(base_gitref!="",tempstr()<<"failed to resolve base version "<<package.baseref<<" of package "<<package.package);
+        tempstr base_gitref(GetBaseref(package));
+        if (base_gitref != "") {
+            base_gitref = FetchPackageOrigin(GetRefns(package),GetOrigin(package),GetBaseref(package));
+            vrfy(base_gitref!="",tempstr()<<"failed to resolve base version "<<GetBaseref(package)<<" of package "<<package.package);
         }
         // create sandbox for original package version
         ok = CreatePackageSandbox(_db.base_sandbox,base_gitref)==0;
         if (ok) {
-            // update package baseref to the version being fetched
-            package.baseref=new_package_gitref;
             // create file with original package records
             ok = apm::CollectPkgrecFromDir(package.package,_db.base_recfile,algo_lib::WtDir(_db.base_sandbox));
         }
@@ -224,13 +241,6 @@ void apm::Main_Update() {
             ok = apm::CollectPkgrecFromDir(package.package,_db.theirs_recfile,algo_lib::WtDir(_db.theirs_sandbox));
         }
         if (ok) {
-            // update any dev.package records found in the records files
-            // to match ORIGIN and BASEREF of the package being updated
-            // because they will be inserted back into the acr database in this tree
-            apm::RewritePackageRecs(package.origin,package.baseref,package.package,_db.base_recfile);
-            apm::RewritePackageRecs(package.origin,package.baseref,package.package,_db.ours_recfile);
-            apm::RewritePackageRecs(package.origin,package.baseref,package.package,_db.theirs_recfile);
-
             // merge records
             command::acr_dm_proc acr_dm;
             arg_Alloc(acr_dm.cmd)=_db.base_recfile;
@@ -260,6 +270,16 @@ void apm::Main_Update() {
                     has_conflict=true;
                 }
             }ind_end;
+            // A package installed from an origin now sits at the version just
+            // fetched.  A merge leaves no commit of this tree whose projection
+            // the origin is, so localref is cleared until the next sync sets it.
+            if (apm::FPkgupstream *row = GetPkgupstream(package)) {
+                dev::Pkgupstream pkgupstream;
+                pkgupstream_CopyOut(*row,pkgupstream);
+                pkgupstream.baseref = new_package_gitref;
+                pkgupstream.localref = "";
+                acrtxn << "acr.replace "<<pkgupstream << eol;
+            }
 
             ok = CreateMergeFiles(package.package,algo_lib::WtDir(_db.base_sandbox),algo_lib::WtDir(_db.theirs_sandbox));
         }

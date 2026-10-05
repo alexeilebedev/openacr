@@ -18,7 +18,11 @@ A namespace's runtime surface is a small fixed cast:
   `<ns>::MainLoop()`.
 - **`<ns>::MainLoop()`** — amc-emitted scheduling loop.  Repeats
   one `Steps()` call after another until `next_loop ≥ limit`.
-- **`<ns>::Steps()`** — amc-emitted sequence of step calls.
+- **`<ns>::Steps()`** — amc-emitted sequence of step calls, emitted
+  for an executable only.  It calls every step of every namespace
+  the executable links, the executable's own first and then each
+  library in `dev.targdep` order.  A library emits no step function
+  of its own.
 - **`<ns>::<field>_Step()`** — *user-implemented* work function,
   one per `fstep` record.
 
@@ -164,10 +168,13 @@ inline static void atf_amc::cd_in_msg_Call() {
 }
 
 // amc-generated Steps() invocation list:
-void atf_amc::Step() {
+void atf_amc::Steps() {
     // ...
-    cd_in_msg_Call();
+    atf_amc::cd_in_msg_Call(); // fstep:atf_amc.FDb.cd_in_msg  stepband:work
     // ...
+    algo_lib::bh_timehook_Call(); // fstep:algo_lib.FDb.bh_timehook  stepband:work
+    algo_lib::bh_timehook_idle_Call(); // fstep:algo_lib.FDb.bh_timehook_idle  stepband:idle
+    algo_lib::giveup_time_Call(); // fstep:algo_lib.FDb.giveup_time  stepband:yield
 }
 ```
 
@@ -216,7 +223,7 @@ process cleanly after.
 ### Step types
 <a href="#step-types"></a>
 
-The `dmmeta.steptype` table catalogs every supported variant:
+The `dmmeta.steptype` table lists every supported variant:
 
 | `steptype`     | Comment                                                                 |
 |----------------|-------------------------------------------------------------------------|
@@ -413,6 +420,119 @@ cover.
   section).  amc emits no scheduling logic — the user wires it
   themselves.  Use for unusual fields (e.g. a field whose state
   depends on an external counter).
+
+### A step on another namespace's list
+<a href="#a-step-on-another-namespace-s-list"></a>
+
+A library can put rows on a list that an executable drains, and
+an executable can replace a step a library declares.  Declare an
+`Alias` field on the executable's `FDb` that names the library's
+list, and put the `fstep` on the alias:
+
+```
+dmmeta.field   field:<exe>.FDb.cs_<list>  arg:<lib>.F<Row>  reftype:Alias
+  dmmeta.falias  field:<exe>.FDb.cs_<list>  srcfield:<lib>.FDb.cs_<list>
+dmmeta.fstep   fstep:<exe>.FDb.cs_<list>  steptype:Inline
+```
+
+The alias step tests the library's list for pending work and
+calls `<exe>::cs_<list>_Step()`, which takes rows off the
+list with the library's own accessors.  The alias has no storage
+and no accessors of its own.
+
+When the list has an `fstep` of its own, the alias step overrides
+it.  `Steps()` calls the alias step in the slot the library's
+step held, and never calls the library's.  The overriding step
+may call `lib_x2::cs_eof_changed_Step()` itself when it wants the
+library's behavior too.  A process whose executable declares no
+alias step runs the library's step.  When the list has no step of
+its own, the alias step is an ordinary step of the namespace that
+declares it.
+
+amc refuses four shapes: a source list that is not a global of
+another namespace; a steptype other than `Inline`, `InlineRecur`
+or `Callback`, since a time hook is armed by the list's
+`_FirstChanged`, which lives in the list's own namespace; an
+override of a library step that runs from a time hook, which
+never enters `Steps()`; and two alias steps on one list inside
+one executable's closure, which would race for its rows.
+
+### Step bands — the order of the pass
+<a href="#step-bands-the-order-of-the-pass"></a>
+
+Take a process whose shm read step sits in a library that comes last
+in `dev.targdep` order.  A message it reads reaches the module's list
+in this pass, and the module's step already ran, so the reaction waits
+for the next pass.  Every hop along a chain of steps can cost a pass
+that way.
+
+Each `fstep` names a band, a row of `amcdb.stepband`, and `Steps()`
+runs the bands in rank order: `input` (reads from fds, shm rings and
+the fabric), `work` (the default), `output`
+(outflow of conns, fabric interfaces and shm rings), `idle`, and
+`yield`, which holds only `algo_lib`'s `giveup_time`.  Within a band
+the order is the dependency order of the namespaces, the executable's
+own first, and each namespace's steps in declaration order.  So a read
+in any library runs before the module's work in the same pass, and the
+bytes that work wrote leave the process at the end of it.  A step that
+composes a message, a heartbeat or a serve, is work: it writes into a
+buffer, and the output band flushes that buffer in the same pass.
+
+Background steps whose latency no reader waits on sit in `idle`:
+metric and alarm publishing, volume readings, and the retries of an archive
+upload or fetch.  An idle step that drains a queue empties it in one call, so its
+rate governs how often the queue is visited and not how fast it moves.
+
+```
+dmmeta.fstep  fstep:lib_ams.FDb.cd_poll_read  steptype:Inline  stepband:input
+```
+
+The order is a latency hint and nothing more.  Each step is a
+transaction that leaves the database consistent, so no step may rely
+on another having run earlier in the same pass.
+
+### Step rates — a fractional for-loop
+<a href="#step-rates-a-fractional-for-loop"></a>
+
+A step that loops over its list inside one call trades fairness for a
+warm cache: it runs up to N entries while it has them.  Now take a
+step that should run *less* than once a pass, a background task that
+must not take a share of a busy loop.  The same for-loop with a limit
+below one would run once for every several calls.
+
+A `dmmeta.fsteprate` row gives an `Inline` step that rate: up to
+`ncall` calls every `npass` passes.  Each pass earns the step `ncall`
+credit, and each call spends `npass`.  The credit is capped at
+`ncall+npass-1`, which is the most a pass can hold after spending what it
+could, so a step with work never loses credit it earned, and an empty
+stretch banks less than one call.  With no row the rate is one call per
+pass, or one call in eight passes for a step in the `idle` band.  `3/2`
+calls the step three times over two passes, `2/3` twice over three, and
+`1/10` once in ten.
+
+```
+dmmeta.fsteprate  fstep:yyy.FDb.zd_bg  ncall:1  npass:10
+```
+
+A step in the `idle` band also runs once in any pass that earned it no
+call, when that pass has time to give up (`next_loop` stands past the
+clock at the step's slot).  So an idle step at `1/10` runs at once when
+the process has nothing else to do, and once every ten passes when it
+is busy, and an idle step with no row does the same at `1/8`.  A rate applies to `Inline` steps only; the other steptypes
+keep their own clocks, and in the idle band they run late in the pass.
+
+A `TimeHookOnce` or `TimeHookRecur` step never appears in `Steps()`: it
+fires from a heap of time hooks in `algo_lib`.  There is one heap per
+band a hook may fire in.  `bh_timehook` holds the hooks of `work`
+steps and runs in the work band, and `bh_timehook_idle` holds the hooks
+of `idle` steps and runs after the output band.  A step's band picks the
+heap its hook is armed on, and amc refuses a time hook step in any
+other band.  So a metric poll or a retry backoff that comes due fires
+after the pass has flushed its work.
+
+```
+dmmeta.fstep  fstep:lib_ams.FDb.bh_metric_poll  steptype:TimeHookOnce  stepband:idle
+```
 
 ### `_FirstChanged` — index-state notification
 <a href="#-_firstchanged-index-state-notification"></a>

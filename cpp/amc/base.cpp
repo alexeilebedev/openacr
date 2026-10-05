@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -174,8 +174,12 @@ void amc::tfunc_Base_Castdown() {
         amc::FFunc& castdown = amc::CreateCurFunc();
         Ins(&R, castdown.comment, "Check if $Cpptype is an instance of $Parname by checking the type field");
         Ins(&R, castdown.comment, "If it is, return the pointer of target type.");
+        tempstr bound = amc::VarlenBoundExpr(ctype, Subst(R,"reinterpret_cast<$Partype&>(hdr)"), amc::LengthExpr(*field.p_arg, "hdr"));
         if (ctype.c_lenfld) {
             Ins(&R, castdown.comment, "Additionally, check if the length field permits valid instance of $Parname.");
+        }
+        if (bound != "true") {
+            Ins(&R, castdown.comment, "A varlen end offset past the message, or behind the one before it, is refused too.");
         }
         Ins(&R, castdown.comment , "If not successful, quietly return NULL.");
         Ins(&R, castdown.ret  , "$Partype*", false);
@@ -184,6 +188,10 @@ void amc::tfunc_Base_Castdown() {
         if (ctype.c_lenfld) {
             Set(R, "$lenexpr", amc::LengthExpr(*field.p_arg, "hdr"));
             Ins(&R, castdown.body, "cond &= $lenexpr >= ssizeof($Partype);");
+            if (bound != "true") {
+                Set(R, "$bound", bound);
+                Ins(&R, castdown.body, "cond = cond && ($bound);");
+            }
         }
         Ins(&R, castdown.body    , "return cond ? reinterpret_cast<$Partype*>(&hdr) : NULL;");
     }

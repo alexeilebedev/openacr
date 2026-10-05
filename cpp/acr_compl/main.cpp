@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr_compl (exe) -- ACR shell auto-complete for all targets
@@ -925,7 +925,12 @@ void acr_compl::Main_Check() {
 void acr_compl::Main_CheckBatch() {
     ind_beg(algo::FileLine_curs, line, algo::Fildes(0)) {
         acr_compl::checkreq req;
-        if (acr_compl::checkreq_ReadStrptrMaybe(req, line)) {
+        // a request this build cannot read fails the run, since silence on
+        // stdout means every request validated clean
+        algo_lib::_db.strict_attr = true;
+        bool ok = acr_compl::checkreq_ReadStrptrMaybe(req, line);
+        algo_lib::_db.strict_attr = false;
+        if (ok) {
             tempstr err = RunOneCheck(req.line);
             if (ch_N(err)) {
                 acr_compl::checkerr resp;
@@ -957,7 +962,7 @@ void acr_compl::Main_CheckBatch() {
 void acr_compl::Main() {
     // debug log
     if (!ch_N(_db.cmdline.debug_log)) {
-        _db.cmdline.debug_log = getenv("ACR_COMPL_DEBUG_LOG");
+        _db.cmdline.debug_log = getenv(algo_lib::dev_envvar_ACR_COMPL_DEBUG_LOG);
     }
     if (ch_N(_db.cmdline.debug_log)) {
         algo_lib::_db.cmdline.debug = true;
@@ -980,15 +985,15 @@ void acr_compl::Main() {
     // deliberate command line begins with an option instead.  So an argument
     // list that starts with an option is parsed as one, and COMP_LINE is
     // honored only for the handler shape, where nothing else says what to do.
-    strptr comp_line = getenv("COMP_LINE");
+    strptr comp_line = getenv(algo_lib::dev_envvar_COMP_LINE);
     bool argv_option = algo_lib::_db.argc > 1 && algo::StartsWithQ(algo_lib::_db.argv[1],"-");
     if (elems_N(comp_line) && !argv_option) {
         // bash completion entrypoint: COMP_LINE/POINT/TYPE carry the line to
         // complete; ReadArgv is skipped because the handler's positional words
         // are not options of this tool.
         _db.cmdline.line  = comp_line;
-        _db.cmdline.point = getenv("COMP_POINT");
-        _db.cmdline.type  = getenv("COMP_TYPE");
+        _db.cmdline.point = getenv(algo_lib::dev_envvar_COMP_POINT);
+        _db.cmdline.type  = getenv(algo_lib::dev_envvar_COMP_TYPE);
     } else {
         ReadArgv();
         if (!ch_N(_db.cmdline.point)) {

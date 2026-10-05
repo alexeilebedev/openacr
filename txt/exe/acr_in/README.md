@@ -1,5 +1,9 @@
 ## acr_in - ACR Input - compute set of ssimfiles or tuples used by a specific target
-
+<a href="#acr_in"></a>
+`acr_in` answers which ssimfiles a target reads at startup, and in what order.
+It can also print the rows of those files, which gives you a self-contained
+input for the target.  Use it to see what a program depends on, to find the
+programs that read a table, and to cut a small dataset for a test.
 
 ### Syntax
 <a href="#syntax"></a>
@@ -12,7 +16,7 @@ Usage: acr_in [[-ns:]<regx>] [options]
     -sigcheck             Y       Output sigcheck records for schema version mismatch detection
     -list                         List ssimfile names
     -t                            (with -list) Tree mode
-    -data_dir     string  "data"  Directory with ssimfiles
+    -data_dir...  string          Directory with ssimfiles; repeat to layer, empty means data
     -schema       string  "data"
     -related      string  ""      Select only tuples related to specified acr key
     -notssimfile  regx    ""      Exclude ssimfiles matching regx
@@ -20,6 +24,7 @@ Usage: acr_in [[-ns:]<regx>] [options]
     -r            regx    ""      Reverse lookup of target by ssimfile
     -verbose      flag            Verbosity level (0..255); alias -v; cumulative
     -debug        flag            Debug level (0..255); alias -d; cumulative
+    -trace        string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                         Print help and exit; alias -h
     -version                      Print version and exit
     -signature                    Show signatures and exit; alias -sig
@@ -28,140 +33,177 @@ Usage: acr_in [[-ns:]<regx>] [options]
 ### Description
 <a href="#description"></a>
 
-acr_in computes the names and the order of ssimfiles
-which constitute target's declared input.
+A target reads a table because its schema has a `dmmeta.finput` row for it.
+[acr_ed](/txt/exe/acr_ed/README.md) `-create -finput` adds such a row.
+`acr_in` reads the `dmmeta.finput` rows of the selected targets and of every
+library they link through `dev.targdep`, and prints one `dmmeta.ssimfile` row
+per table.
 
-To illustrate, let's create a new program and make it read a table.
-
-    $ acr_ed -create -target sample -write
-    ...
-    $ acr_ed -create -finput -target sample -ssimfile dmmeta.ctype -write
-    ...
-    $ acr finput:sample.%
-    dmmeta.finput  field:sample.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
-    ...
-    
-For this target, finput is `dmmeta.ctype`. Let's see if acr_in knows that:
-
-    $ acr_in sample
-    dmmeta.Dispsigcheck  dispsig:sample.Input  signature:f162f70f9895c41909c2192722172e6d21fe5679
-    dmmeta.Dispsigcheck  dispsig:algo_lib.Input  signature:ddc07e859e7056e1a824df1ad0e6d08e12e89849
-    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
-
-The output is the list of ssimfiles needed by the target, plus any signatures
-used by the target. We can ignore the signatures for now, but they can be used 
-to detect schema changes between the compiled version of a program and the version 
-of data set on which `acr_in` operates. The `-sigcheck` option can be used to omit these.
-
-Let's now add, as an `finput` for `sample`, the `dmmeta.ns` table, which is lexicographically
-after `dmmeta.ctype`, but logically before (since ctype depends on ns).
-
-    $ acr_ed -create -finput -target sample -ssimfile dmmeta.ns -write
-    
-    $ acr_in sample -sigcheck:N
-    dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
-    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
-    
-We see that `acr_in` has printed ns and ctype in the order of Pkey dependencies between them.
-`acr_in` operates recursively over all libraries that are target uses.
-
-The order of ssimfiles is determined as a transitive closure on Pkey
-references, and is independent of the target itself. This means that
-`acr_in` can be called with an regex of target names (e.g. %), and the
-resulting input can be fed into any one of the targets implied by the
-regex, without error.
-
-### Quick reference
-<a href="#quick-reference"></a>
-
-```bash
-acr_in <target>                        # list ssimfiles a target reads
-acr_in <target> -data                  # print the actual tuples loaded
-acr_in -r <ssimfile>                   # reverse: which targets read this file
-acr_in <target> -data > temp/in.ssim   # capture a snapshot for offline use
-<target> -in temp/in.ssim              # run target against the snapshot
+```
+$ acr_in acr_in -sigcheck:N
+dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
+dmmeta.ssimfile  ssimfile:gendb.dispsig  ctype:gendb.Dispsig
+dmmeta.ssimfile  ssimfile:dmmeta.dispsigcheck  ctype:dmmeta.Dispsigcheck
+dmmeta.ssimfile  ssimfile:dev.target  ctype:dev.Target
+...
 ```
 
-`acr` itself has no dependency on `acr_in`.  `acr_in` is a separate query
-tool that reads the `dmmeta.finput` and `dev.targdep` tables to figure out
-which ssimfiles a program loads at startup.
+`acr_in` orders the tables by their `Pkey` references, so each table comes after
+the tables it refers to.  `dmmeta.ns` comes before `dmmeta.ctype`, although it
+sorts later by name, because a ctype refers to its namespace.  The order depends
+only on the schema, so the input computed for a pattern of targets, such as
+`%`, loads into any one of those targets without error.
+
+#### Signature checks
+<a href="#signature-checks"></a>
+
+By default the output starts with a `dmmeta.dispsigcheck` row for each selected
+namespace.  The row carries the signature of the schema the input was cut from.
+A program that loads a row whose signature differs from the one it was compiled
+with prints `algo_lib.dispsigcheck` and exits.  This catches a stale binary run
+against newer data.  `-sigcheck:N` leaves the rows out.
+
+#### Printing the data
+<a href="#printing-the-data"></a>
+
+`-data` prints the rows of every listed table in the same order.  The result is
+a complete input for the target, and any tool whose `-in` or `-schema` accepts a
+file reads it exactly as it reads `data/`.  `-related` narrows the rows to those
+reachable from one record, and `-checkable` adds the tables the inputs refer to,
+so the result passes `acr -check`.
+
+`-data_dir` names the directory the rows come from.  Repeat it to stack
+directories, and `acr_in` searches each one for every table.  A key that two
+directories both carry stops the run with `acr_in.duplicate_key`.
+
+#### Reverse lookup
+<a href="#reverse-lookup"></a>
+
+`-r` takes a pattern of ssimfiles and prints an `acr_in.nsssimfile` row for each
+namespace that reads a matching table, directly or through a library it links.
+
+```
+$ acr_in -r dev.gitfile
+acr_in.nsssimfile  ns:abt_md  ssimfile:dev.gitfile
+acr_in.nsssimfile  ns:acr_ed  ssimfile:dev.gitfile
+...
+```
+
+### See also
+<a href="#see-also"></a>
+
+* [acr](/txt/exe/acr/README.md): query and edit the ssim dataset
+* [acr_ed](/txt/exe/acr_ed/README.md): add a `dmmeta.finput` row with `-create -finput`
+
+### Examples
+<a href="#examples"></a>
+
+```bash
+acr_in acr_in                               # the ssimfiles acr_in reads, in load order
+acr_in acr_in -sigcheck:N                   # the same, without the signature rows
+acr_in acr_in -t                            # grouped by the namespace that reads each file
+acr_in acr_in -checkable -sigcheck:N        # add the tables the inputs refer to
+acr_in -r dev.gitfile                       # which namespaces read dev.gitfile
+acr_in acr_in -data > temp/acr_in.ssim      # snapshot the rows acr_in loads
+acr_in acr_in -schema:temp/acr_in.ssim      # run acr_in against that snapshot
+acr_in acr_in -data -related:dmmeta.ns:acr_in   # only the rows reachable from one namespace
+acr_in acr_in -notssimfile:dev.%            # leave out the dev tables
+```
+
+A snapshot of the whole input is large, and `-related` cuts it down:
+
+```
+$ acr_in acr_in -data | wc -l
+29891
+$ acr_in acr_in -data -related:dmmeta.ns:acr_in -sigcheck:N | head -4
+dmmeta.ns  ns:acr_in  nstype:exe  license:Apache  comment:"ACR Input - compute set of ssimfiles or tuples used by a specific target"
+gendb.dispsig  dispsig:acr_in.Input  signature:f28ed5579652210d4867ee60ba9d3ae83adf5bd6
+dev.target  target:acr_in
+dmmeta.ctype  ctype:acr_in.FCtype  comment:""
+```
+
+### Caveats
+<a href="#caveats"></a>
+
+- The positional argument is a namespace pattern, and an empty one selects
+  nothing, so `acr_in` alone prints nothing.  Pass `%` for every target.
+- `-r` and a namespace pattern exclude each other, and `acr_in` refuses a
+  command line that gives both.
+- The plain list names only the tables a target declares.  Its rows can still
+  refer to tables outside the list, so `acr -check` fails on the `-data` output
+  unless you add `-checkable`.
 
 ### Options
 <a href="#options"></a>
 #### -ns -- Regx of matching namespace
 <a href="#-ns"></a>
 
+Select the targets whose inputs to compute, as a pattern of namespace names.
+`acr_in` adds every library the selected targets link.  An empty pattern
+selects nothing.
+
 #### -data -- List ssimfile contents
 <a href="#-data"></a>
-With -data argument, acr_in also loads the specified ssimfiles in memory
-and prints out their contents.
 
-This can be used to create canned input files:
-
-    acr_in sample -data > tempfile
-    sample -in:tempfile
-    # this is exactly the same as running sample -in:data
+Print the rows of each input table, in load order.  The output is a complete
+input for the target, which you can save to a file and pass to its `-in` or
+`-schema`.  Without `-list`, `-data` prints only the rows.
 
 #### -sigcheck -- Output sigcheck records for schema version mismatch detection
 <a href="#-sigcheck"></a>
 
+Print a `dmmeta.dispsigcheck` row with the schema signature of each selected
+namespace, which is the default.  A program that loads the output with a
+different compiled signature exits with `algo_lib.dispsigcheck`.  `-r` turns the
+rows off.
+
 #### -list -- List ssimfile names
 <a href="#-list"></a>
+
+Print one `dmmeta.ssimfile` row per input table.  It is the default when
+`-data` is absent, and you pass it with `-data` to get both.
 
 #### -t -- (with -list) Tree mode
 <a href="#-t"></a>
 
-This option outputs a tree, grouped by namespace first.
-A ssimfile can appear in the output multiple times, once for each
-namespace that requires it
+Group the list by namespace, under a `<ns>:` line each.  A table appears once
+for every selected namespace that reads it.
 
-#### -data_dir -- Directory with ssimfiles
+#### -data_dir -- Directory with ssimfiles; repeat to layer, empty means data
 <a href="#-data_dir"></a>
+
+Name the directory `-data` reads rows from, `data` by default.  Repeat it to
+stack directories: `acr_in` reads each table from every directory that holds
+it, and a key found in two of them stops the run.
 
 #### -schema -- 
 <a href="#-schema"></a>
 
+Name the directory or file `acr_in` reads its own inputs from: the namespaces,
+targets, ctypes, fields and `dmmeta.finput` rows.  It defaults to `data`.
+
 #### -related -- Select only tuples related to specified acr key
 <a href="#-related"></a>
 
-`acr_in` can optionally include only those tuples which are transitively
-reachable from a certain set. For this, specify `-related`.
-Here is an example where we constrain `sample`'s input to the `sample` namespace itself.
-
-    $ acr_in sample -data -related:dmmeta.ns:sample -sigcheck:N
-    dmmeta.ns  ns:sample  nstype:exe  comment:""
-    dmmeta.ctype  ctype:sample.FCtype  comment:""
-    dmmeta.ctype  ctype:sample.FDb  comment:""
-    dmmeta.ctype  ctype:sample.FGitfile  comment:""
-    dmmeta.ctype  ctype:sample.FNs  comment:""
-
-In contrast, if we didn't specify `-related`, `-data` would fetch all records:
-
-    $ acr_in sample -data | wc -l
-    864
+With `-data`, print only the rows reachable from the records whose key matches,
+written as `<ssimfile>:<key>` such as `dmmeta.ns:acr_in`.  Tables unrelated to
+that record stay whole.
 
 #### -notssimfile -- Exclude ssimfiles matching regx
 <a href="#-notssimfile"></a>
 
+Leave out the tables whose name matches the pattern, such as `dev.%`.
+
 #### -checkable -- Ensure output passes acr -check
 <a href="#-checkable"></a>
 
-If we take the data from ssmifiles `ns` and `ctype`, they are now sufficient
-to serve as inputs to the newly created `sample`. However, `acr -check` will fail on
-this resulting dataset, because `ns` also depends on `nstype`, and in general there
-may be unresolved Pkey references in the resulting output.
-
-To recursively include any dependent ssimfiles, specify `-checkable`:
-
-    $ acr_in sample -checkable -sigcheck:N
-    dmmeta.ssimfile  ssimfile:dmmeta.nstype  ctype:dmmeta.Nstype
-    dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
-    dmmeta.ssimfile  ssimfile:dmmeta.dispsig  ctype:dmmeta.Dispsig
-    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
+Add every table the inputs refer to, recursively, so the output passes
+`acr -check`.  `dmmeta.ns` refers to `dmmeta.nstype`, for example, so a target
+that reads namespaces gets the nstype table too.
 
 #### -r -- Reverse lookup of target by ssimfile
 <a href="#-r"></a>
 
-With the `-r` option, one can supply a regex of a ssimfile and get a list
-of all namespaces that require the ssimfile. This includes any dependent namespaces
-via the targdep table.
+Take a pattern of ssimfiles and print the namespaces that read a matching
+table, including those that read it through a library they link.  It cannot be
+combined with a namespace pattern.

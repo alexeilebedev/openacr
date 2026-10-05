@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: doc (exe) -- Render a markdown document to the terminal
 // Exceptions: yes
@@ -223,14 +222,30 @@ static void PutNstest(algo::cstring &out, algo::strptr ns) {
     }
 }
 
+// Append to OUT a link to the rule file of the namespace NS, when the tree holds one.
+//
+// The rule file carries what the source cannot say about the namespace -- the behavior
+// that was intended, the invariants, the designs that were tried -- and it is read
+// before the namespace is changed.  A reader of this page is looking at the machinery
+// of the namespace, which is where a change begins, so the link sits first under the
+// title.  Whether a rule file exists is read off dev.readmefile, the tree's own list of
+// its documents: txt/rule/<ns>.md is a row of it or there is no such file.
+static void PutNsrule(algo::cstring &out, algo::strptr ns) {
+    tempstr gitfile;
+    gitfile << "txt/rule/" << ns << ".md";
+    if (doc::ind_readmefile_Find(gitfile)) {
+        out << "[" << doc::Doctitle(gitfile) << "](/" << gitfile << ")" << eol << eol;
+    }
+}
+
 // Return the page about the namespace NS, as markdown.
 //
-// It opens with what the namespace is for, in its own words from dmmeta.ns, and with
-// the three answers that are pages of their own rather than sections here -- its
-// records, its functions, its access paths.  Then the sections, each one a table, and
-// each absent when the namespace has none of that kind: a library has no comptests, a
-// ssimdb namespace has no sources, and a heading over an empty table says only that the
-// generator did not check.
+// It opens with what the namespace is for, in its own words from dmmeta.ns, then the
+// link to its rule file, and with the three answers that are pages of their own rather
+// than sections here -- its records, its functions, its access paths.  Then the
+// sections, each one a table, and each absent when the namespace has none of that kind:
+// a library has no comptests, a ssimdb namespace has no sources, and a heading over an
+// empty table says only that the generator did not check.
 tempstr doc::NsText(algo::strptr ns) {
     doc::FNs *nsrec = doc::ind_ns_Find(ns);
     tempstr ret;
@@ -240,6 +255,7 @@ tempstr doc::NsText(algo::strptr ns) {
             ret << ": " << nsrec->comment;
         }
         ret << eol << "<a href=\"#" << ns << "\"></a>" << eol << eol;
+        PutNsrule(ret, ns);
         PutNsctype(ret, ns);
         PutNssrc(ret, ns);
         PutNsdep(ret, ns);
@@ -398,7 +414,7 @@ static void PutDirchild(algo::cstring &out, algo::strptr dir, algo::strptr skip)
 //
 // A key that resolves to nothing has still been half looked for.  The documents whose path
 // carries it are one answer and the tables and ctypes whose name carries it are another,
-// and a key is often genuinely both -- `x2test` names two tables of this tree, and choosing
+// and a key is often genuinely both -- `target` names two tables of this tree, and choosing
 // between them is the reader's business rather than this tool's.
 //
 // The second list is headed Disambiguation, since that is the question the page is asking.
@@ -852,14 +868,24 @@ static void PutNavsect(algo::cstring &out, int depth, bool title) {
 // the triangle still pointing the other way and nothing underneath it.  The sections that
 // never close name no option, and their entries stay plain anchors.
 static void PutNavfold(algo::cstring &out, algo::strptr loc) {
-    if (doc::SectionQ(loc)) {
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
+    if (site && doc::SectionQ(loc)) {
+        PutNaventry(out, "#access-paths", "Access Paths", 0);
+        if (ch_N(doc::Sectionns(loc)) > 0) {
+            PutNaventry(out, "#code", "Functions", 0);
+            ind_beg(algo::Line_curs, name, doc::_db.navfunc) {
+                PutNaventry(out, tempstr() << "#fn-" << name, name, 1);
+            }ind_end;
+        }
+    }
+    if (!site && doc::SectionQ(loc)) {
         PutNaventry(out, "-vis#access-paths", "Access Paths", 0);
         PutNaventry(out, "-code#code", ch_N(doc::Sectionns(loc)) > 0 ? "Functions" : "Code", 0);
         ind_beg(algo::Line_curs, name, doc::_db.navfunc) {
             PutNaventry(out, tempstr() << "#fn-" << name, name, 1);
         }ind_end;
     }
-    if (ch_N(doc::Datassimfile(loc)) > 0) {
+    if (!site && ch_N(doc::Datassimfile(loc)) > 0) {
         PutNaventry(out, "-data#data", "Data", 0);
     }
     if (ch_N(doc::Rectranscript(loc)) > 0) {

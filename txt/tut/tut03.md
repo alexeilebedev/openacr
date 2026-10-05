@@ -47,9 +47,9 @@ acr.insert  dev.gitfile  gitfile:include/gen/samp_tut3_gen.h
 acr.insert  dev.gitfile  gitfile:include/gen/samp_tut3_gen.inl.h
 acr.insert  dev.gitfile  gitfile:include/samp_tut3.h
 acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut3/README.md
-  acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut3/README.md      inl:N  sandbox:N  filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut3/README.md      inl:N  sandbox:N  filter:""  publish:N  comment:""
 
-acr.insert  dmmeta.ns  ns:samp_tut3  nstype:exe  license:GPL  comment:""
+acr.insert  dmmeta.ns  ns:samp_tut3  nstype:exe  license:Apache  comment:""
   acr.insert  dev.target  target:samp_tut3
     acr.insert  dev.targdep  targdep:samp_tut3.algo_lib  comment:""
     acr.insert  dev.targdep  targdep:samp_tut3.lib_prot  comment:""
@@ -78,7 +78,7 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 please execute $(acr_compl -install) to add completions support for new target
-acr.update  dev.readmefile  gitfile:txt/exe/samp_tut3/README.md  inl:N  sandbox:N  filter:""  comment:"samp_tut3 -"
+acr.update  dev.readmefile  gitfile:txt/exe/samp_tut3/README.md  inl:N  sandbox:N  filter:""  publish:N  comment:"samp_tut3 -"
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
@@ -113,12 +113,12 @@ The main loop algorithm is controlled by the following three main variables:
 * `algo_lib::_db.clock`: Current value of the clock. Updated on every scheduling cycle from CPU time source (get_cycles())
 * `algo_lib::_db.limit`: When `clock` reaches `limit`, the loop exits. This makes it possible to run `MainLoop` for short amounts
 of time if necessary by adjusting `limit`. By default, limit is set to the max possible u64 value.
-* `algo_lib::_db.next_loop`: At the top of each each main loop cycle, this variable is set to limit. Then, some number
-of `Steps` are performed, one per namespace.
-Each namespace's step calls zero or more of its `fsteps` (field-level steps), which are just functions.
+* `algo_lib::_db.next_loop`: At the top of each each main loop cycle, this variable is set to limit. Then `Steps`
+calls every `fstep` (field-level step) of the executable and of each library it links, namespace by namespace;
+the steps are just functions, and a library emits no step function of its own.
 Each `fstep` is allowed to revise `next_loop` to the value
 when this step needs to be revisited. Thus, we compute the soonest time we are going to next need some CPU time.
-At the bottom of the loop, inside `algo_lib::Step`, we have
+At the bottom of the loop, among the algo_lib steps, we have
 `giveup_time_Step()`, which yields the unneeded time to the OS, either by calling a direct sleep function, or,
 if some `Iohooks` are defined, calling `kevent` (BSD systems) or `evoll_wait` (Linux systems) with a timeout.
 If `next_loop` is found to be equal to `limit` at the end of the cycle, this proves that there is no possible
@@ -160,7 +160,7 @@ Add a step on the new field so amc generates a per-iteration scheduler:
 ```ssim
 inline-command: acr_ed -create -fstep samp_tut3.FDb.zd_value -steptype Inline -write
 report.acr_check  records:***  n_err:0
-acr.insert  dmmeta.fstep  fstep:samp_tut3.FDb.zd_value  steptype:Inline  comment:""
+acr.insert  dmmeta.fstep  fstep:samp_tut3.FDb.zd_value  steptype:Inline  stepband:work  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
@@ -169,18 +169,18 @@ The above commands, which are best practiced interactively, add the following re
 
 ```ssim
 inline-command: acr ctype:samp_tut3.Value -t
-dev.license  license:GPL  comment:""
+dev.license  license:Apache  proprietary:N  copyleft:N  comment:"Apache License 2.0"
 dmmeta.nstype  nstype:exe  comment:Executable
-  dmmeta.ns  ns:samp_tut3  nstype:exe  license:GPL  comment:""
+  dmmeta.ns  ns:samp_tut3  nstype:exe  license:Apache  comment:""
     dmmeta.ctype  ctype:samp_tut3.Value  comment:""
       dmmeta.field  field:samp_tut3.Value.value  arg:i32  reftype:Val  dflt:""  comment:""
-      dmmeta.ctypelen  ctype:samp_tut3.Value  len:32  alignment:8  padbytes:4  plaindata:N
+      gendb.ctypelen  ctype:samp_tut3.Value  len:32  alignment:8  padbytes:4  plaindata:N
 
 dmmeta.field  field:samp_tut3.FDb.value     arg:samp_tut3.Value  reftype:Tpool  dflt:""  comment:""
 dmmeta.field  field:samp_tut3.FDb.zd_value  arg:samp_tut3.Value  reftype:Llist  dflt:""  comment:""
   dmmeta.llist  field:samp_tut3.FDb.zd_value  havetail:Y  havecount:Y  comment:""
-  dmmeta.fstep  fstep:samp_tut3.FDb.zd_value  steptype:Inline  comment:""
   dmmeta.xref  field:samp_tut3.FDb.zd_value  inscond:true  via:""
+  dmmeta.fstep  fstep:samp_tut3.FDb.zd_value  steptype:Inline  stepband:work  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 ```
 
@@ -260,20 +260,23 @@ void samp_tut3::MainLoop() {
 
 ```
 
-We see that `samp_tut3::Step` is now called. That's because we defined the `fstep` record on `zd_value`.
-Let's drill down to `Step`:
+We see that `samp_tut3::Steps` now calls a step of this namespace. That's because we defined the `fstep` record on `zd_value`.
+Let's drill down to `Steps`:
 
 ```c++
-inline-command: src_func -gen -f samp_tut3.Step
-// --- samp_tut3.FDb._db.Step
-// Main step
-void samp_tut3::Step() {
-    zd_value_Call();
+inline-command: src_func -gen -f samp_tut3.Steps
+// --- samp_tut3.FDb._db.Steps
+// Call every step of this process, band by band, each band in dependency order
+void samp_tut3::Steps() {
+    samp_tut3::zd_value_Call(); // fstep:samp_tut3.FDb.zd_value  stepband:work
+    algo_lib::bh_timehook_Call(); // fstep:algo_lib.FDb.bh_timehook  stepband:work
+    algo_lib::bh_timehook_idle_Call(); // fstep:algo_lib.FDb.bh_timehook_idle  stepband:idle
+    algo_lib::giveup_time_Call(); // fstep:algo_lib.FDb.giveup_time  stepband:yield
 }
 
 ```
 
-Almost nothing interesting here... Let's check `zd_value_Call`:
+The whole loop of the process is here: the one step of `samp_tut3`, then the three of `algo_lib`, each call commented with its fstep and band. Let's check `zd_value_Call`:
 
 ```bash
 inline-command: src_func -gen -f samp_tut3.zd_value_Call

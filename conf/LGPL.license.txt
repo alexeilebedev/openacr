@@ -1,0 +1,2 @@
+Licensed under the GNU Lesser General Public License, version 2.1 or later.
+See https://www.gnu.org/licenses/lgpl-2.1.html

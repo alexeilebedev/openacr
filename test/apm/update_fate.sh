@@ -73,7 +73,7 @@ case " $* " in
         n=$(( $(cat "$fatedir/n_showrec" 2>/dev/null || echo 0) + 1 ))
         echo $n > "$fatedir/n_showrec"
         if [ "$apm_fate" = "showrec$n" ]; then exit 1; fi
-        echo 'dev.package  package:apm  baseref:HEAD  origin:.  comment:""'
+        echo 'dmmeta.ctype  ctype:apm.FDb  comment:""'
         echo 'dmmeta.ns  ns:apm  nstype:exe  license:GPL  comment:""'
         ;;
     *" -showfile"*)

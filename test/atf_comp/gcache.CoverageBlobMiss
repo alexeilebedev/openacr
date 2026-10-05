@@ -1,31 +1,60 @@
-# start bash cmd:'bash -c \'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf "int f(){return 1;}\\n" > x.cpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null && $$G -- g++ --coverage -c x.cpp -o x.o; BLOB=$$(find cache -mindepth 3 -type f); try(){ rm -f x.o; printf "stalenotes\\n" > x.gcno; $$G -report -- g++ --coverage -c x.cpp -o x.o > rep.txt; echo $$1_code:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/$$1_/"; test -s x.o && echo $$1_o:present || echo $$1_o:empty; grep -q stalenotes x.gcno && echo $$1_gcno:stale || echo $$1_gcno:fresh; }; try whole; truncate -s -$$(( $$(wc -c < x.gcno) )) $$BLOB; try nogcno; printf "\\010\\000\\000\\000\\000\\000\\000\\000" > $$BLOB; cat x.gcno >> $$BLOB; try noo; cp x.o $$BLOB; try legacy; printf "abc" > $$BLOB; try short; rm -f $$BLOB; mkdir $$BLOB; try dir; try again\''
-# eof bash
-bash -> whole_code:0
-bash -> whole_hit:Y
-bash -> whole_o:present
-bash -> whole_gcno:fresh
-bash -> nogcno_code:0
-bash -> nogcno_hit:N
-bash -> nogcno_o:present
-bash -> nogcno_gcno:fresh
-bash -> noo_code:0
-bash -> noo_hit:N
-bash -> noo_o:present
-bash -> noo_gcno:fresh
-bash -> legacy_code:0
-bash -> legacy_hit:N
-bash -> legacy_o:present
-bash -> legacy_gcno:fresh
-bash -> short_code:0
-bash -> short_hit:N
-bash -> short_o:present
-bash -> short_gcno:fresh
-bash -> dir_code:0
-bash -> dir_hit:N
-bash -> dir_o:present
-bash -> dir_gcno:fresh
-bash -> again_code:0
-bash -> again_hit:Y
-bash -> again_o:present
-bash -> again_gcno:fresh
-# exit bash code:0
+# stage install
+# start gcache cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -install -dir:cache"
+gcache -> setting up gcache...
+gcache -> done
+# eof gcache
+# exit gcache code:0
+# stage publish
+# start gcache-2 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-2 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-2
+# exit gcache-2 code:0
+# stage whole
+# start gcache-3 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-3 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-3
+# exit gcache-3 code:0
+# check whole_o:present
+# check whole_gcno:fresh
+# stage nogcno
+# start gcache-4 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-4 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-4
+# exit gcache-4 code:0
+# check nogcno_o:present
+# check nogcno_gcno:fresh
+# stage noo
+# start gcache-5 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-5 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-5
+# exit gcache-5 code:0
+# check noo_o:present
+# check noo_gcno:fresh
+# stage legacy
+# start gcache-6 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-6 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-6
+# exit gcache-6 code:0
+# check legacy_o:present
+# check legacy_gcno:fresh
+# stage short
+# start gcache-7 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-7 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-7
+# exit gcache-7 code:0
+# check short_o:present
+# check short_gcno:fresh
+# stage dir
+# start gcache-8 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-8 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-8
+# exit gcache-8 code:0
+# check dir_o:present
+# check dir_gcno:fresh
+# stage again
+# start gcache-9 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-9 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-9
+# exit gcache-9 code:0
+# check again_o:present
+# check again_gcno:fresh

@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
 // Exceptions: yes
@@ -100,7 +99,7 @@ void atf_amc::amctest_SbrkMmapTrace() {
 //
 // A runtime arms each process with the ceiling its proctype declares -- four
 // gigabytes for every module -- and a module's largest single request is bigger
-// than that: a receive cache provisioned for twelve gigabytes asks for it in one
+// than that: a txn cache provisioned for twelve gigabytes asks for it in one
 // block.  That block is served on ordinary pages, which is the ceiling doing its
 // job.  What must not follow is the process losing huge pages for everything
 // else it allocates, because the pool blocks that follow are two megabytes each
@@ -125,4 +124,41 @@ void atf_amc::amctest_SbrkHugeCeiling() {
     vrfy_(algo_lib::_db.sbrk_huge_alloc == 0);
     algo_lib::sbrk_FreeMem(mem, size);
     algo_lib::_db.sbrk_huge_limit = 0;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the kilobytes of this process's anonymous memory held in transparent
+// huge pages, from /proc/self/smaps_rollup; zero where the file is absent.
+static u64 AnonHugeKb() {
+    u64 ret = 0;
+    ind_beg(algo::FileLine_curs, line, "/proc/self/smaps_rollup") {
+        if (StartsWithQ(line, "AnonHugePages:")) {
+            ret = strtoull(Trimmed(Pathcomp(line, ":LR")).elems, NULL, 10);
+        }
+    }ind_end;
+    return ret;
+}
+
+// Big-block benchmark: map one 256 MB block on the ordinary route, the one a
+// process past its huge-page ceiling takes, and report how long the map took
+// and how much of the block transparent huge pages back.  The block is
+// populated before the call returns either way; on a host whose THP mode is
+// madvise, only an advised block gets huge pages, and each huge page is one
+// fault where 4K pages are 512.
+void atf_amc::amctest_PerfSbrkBig() {
+    u64 size = 256ULL << 20;
+    algo_lib::_db.sbrk_zeromem = false;
+    algo_lib::_db.sbrk_huge_limit = 0;
+    u64 thp0 = AnonHugeKb();
+    u64 t0 = algo::get_cycles();
+    void *mem = algo_lib::sbrk_AllocMem(size);
+    u64 t1 = algo::get_cycles();
+    vrfy_(mem != NULL);
+    u64 thp1 = AnonHugeKb();
+    algo_lib::sbrk_FreeMem(mem, size);
+    prlog("atf_amc.PerfSbrkBig"
+          << Keyval("mb", size >> 20)
+          << Keyval("map_ms", double(t1 - t0) / algo::get_cpu_hz_int() * 1e3)
+          << Keyval("thp_mb", (thp1 - u64_Min(thp0, thp1)) >> 10));
 }

@@ -1,0 +1,7 @@
+dmmeta.bheap  field:atf_amc.FDb.bh_condtest_heaped  nhead:32  comment:""
+dmmeta.bheap  field:atf_amc.FDb.bh_heap_elem_head  nhead:32  comment:""
+dmmeta.bheap  field:atf_amc.FDb.bh_time_entry_head  nhead:32  comment:""
+dmmeta.bheap  field:atf_amc.FDb.bh_time_entry_once  nhead:32  comment:""
+dmmeta.bheap  field:atf_amc.FDb.bh_time_entry_recur  nhead:32  comment:""
+dmmeta.bheap  field:atf_amc.FDb.bh_typeu  nhead:32  comment:""
+dmmeta.bheap  field:atf_amc.FHeadGroup.bh_heap_elem  nhead:32  comment:""

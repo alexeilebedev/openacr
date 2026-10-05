@@ -1,0 +1,38 @@
+# stage install_a
+# start gcache cmd:"cd $tempdir/a && $$OLDPWD/$bindir/gcache -install -dir:../cache"
+gcache -> setting up gcache...
+gcache -> done
+# eof gcache
+# exit gcache code:0
+# stage install_b
+# start gcache-2 cmd:"cd $tempdir/b && $$OLDPWD/$bindir/gcache -install -dir:../cache"
+gcache-2 -> setting up gcache...
+gcache-2 -> done
+# eof gcache-2
+# exit gcache-2 code:0
+# stage bare_a
+# start gcache-3 cmd:"cd $tempdir/a && $$OLDPWD/$bindir/gcache -report -- g++ -c x.cpp -o x.o"
+gcache-3 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-3
+# exit gcache-3 code:0
+# stage bare_b
+# start gcache-4 cmd:"cd $tempdir/b && $$OLDPWD/$bindir/gcache -report -- g++ -c x.cpp -o x.o"
+gcache-4 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-4
+# exit gcache-4 code:0
+# stage cov_a
+# start gcache-5 cmd:"cd $tempdir/a && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-5 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-5
+# exit gcache-5 code:0
+# stage cov_b
+# start gcache-6 cmd:"cd $tempdir/b && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-6 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-6
+# exit gcache-6 code:0
+# check cov_b_name:own
+# stage cov_a2
+# start gcache-7 cmd:"cd $tempdir/a && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-7 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-7
+# exit gcache-7 code:0

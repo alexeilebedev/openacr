@@ -1,3 +1,3 @@
 atfdb.tfilt  comptest:aqlite.CompileOptions  filter:"grep -v COMPILER"  comment:""
 atfdb.tfilt  comptest:aqlite.Smoke  filter:"ssimfilt -t"  comment:""
-atfdb.tfilt  comptest:atf_cmdline.Sig  filter:"sed -E -f test/filt.sed"  comment:""
+atfdb.tfilt  comptest:credd.Daemon  filter:"sed /credd.peergone/d"  comment:"the early-closing peer races the daemon reply write: the line appears only when the close lands first"

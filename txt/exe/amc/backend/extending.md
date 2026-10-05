@@ -29,7 +29,7 @@ How to add a new reftype or a new gen-pipeline phase.  This is the
 *To be written.*  Step list:
 1. Add a row to `ssimfile:amcdb.gen` with the desired position
 2. Add the `gen_<name>` function in `cpp/amc/<name>.cpp`
-3. Add the matching userfunc record
+3. Run `amc`, which declares the function in `gendb.cppsym`
 
 ### Adding a tfunc
 <a href="#adding-a-tfunc"></a>

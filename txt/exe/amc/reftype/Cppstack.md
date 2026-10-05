@@ -73,7 +73,7 @@ None.
 
 - [Reftypes index](/txt/exe/amc/reftype.md)
 - [Val](/txt/exe/amc/reftype/Val.md) — plain embedded value
-- [Memory pools](/txt/exe/amc/pool.md) — the allocator catalog
+- [Memory pools](/txt/exe/amc/pool.md) — the allocator list
 - Source: `cpp/amc/main.cpp` (search for `tclass_Cppstack`)
 
 ### Example

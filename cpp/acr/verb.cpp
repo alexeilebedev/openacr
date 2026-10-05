@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
@@ -148,11 +148,24 @@ void acr::ScheduleSelectCtype(acr::FCtype &ctype_ctype, acr::FCtype &ctype) {
 
 // -----------------------------------------------------------------------------
 
-// Select ctypes of selected records, deselect records themselves
+// Select ctypes of selected records, deselect records themselves.
+// The ctype and field rows selected here come from -schema, the directory
+// the schema was read from, so a dataset queried through -in answers -meta
+// from the schema it was checked against.
 void acr::Main_SelectMeta() {
+    _db.metaload = true;
     // Find data record of 'ctype'
     acr::FCtype *ctype_ctype = acr::ind_ctype_Find("dmmeta.Ctype");
     vrfy(ctype_ctype, "acr.broken_metadata");
+    // The ctype table is bound here to answer with.  Whether the query had
+    // already bound it decides, below, whether its being empty means anything:
+    // a table the query bound and found empty shows its ctype, and one this
+    // selection bound for itself does not, or every -meta over a dataset would
+    // answer with dmmeta.Ctype beside the ctypes asked for.  A % over a dataset
+    // binds it like every other table, and then every table the dataset leaves
+    // empty is treated alike, dmmeta.ctype included.
+    acr::FSsimfile *ctype_ssimfile = ctype_ctype->c_ssimfile;
+    bool ctype_bound = ctype_ssimfile && ctype_ssimfile->c_file;
     LoadRecords(*ctype_ctype);
     // mark selected records for metaselection and deselect them
     ind_beg(acr::_db_zd_all_selrec_curs,rec,acr::_db) {
@@ -167,9 +180,10 @@ void acr::Main_SelectMeta() {
             }
         }ind_end;
     }ind_end;
-    // add ctypes of empty ssimfiles to the selected list
+    // add ctypes of empty ssimfiles the query bound to the selected list
     ind_beg(acr::_db_ssimfile_curs, ssimfile, acr::_db) {
-        if (ssimfile.c_file && zd_frec_EmptyQ(*ssimfile.c_file)) {
+        bool own = &ssimfile == ctype_ssimfile && !ctype_bound;
+        if (ssimfile.c_file && zd_frec_EmptyQ(*ssimfile.c_file) && !own) {
             ScheduleSelectCtype(*ctype_ctype, *ssimfile.p_ctype);
         }
     }ind_end;
@@ -182,6 +196,7 @@ void acr::Main_SelectMeta() {
     RunAllQueries();
     while (Main_SelectDown(false)) {// recursive
     }
+    _db.metaload = false;
 }
 
 // -----------------------------------------------------------------------------
@@ -332,7 +347,7 @@ void acr::Main_AcrEdit() {
     print.loose    = acr::_db.cmdline.loose;
     print.showstatus=true;// annotate records as del,insert,update
     PrintToFd(print, fd);
-    strptr editor = getenv("EDITOR");
+    strptr editor = getenv(algo_lib::dev_envvar_EDITOR);
     vrfy(elems_N(editor), "EDITOR environment variable not set");
     tempstr cmd;
     cmd << editor << " " << fname;

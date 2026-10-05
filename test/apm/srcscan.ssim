@@ -1,0 +1,8 @@
+dmmeta.reftype  reftype:Lary  comment:""
+dmmeta.reftype  reftype:Ptr  comment:""
+dmmeta.reftype  reftype:Val  comment:""
+dmmeta.ctype  ctype:dmmeta.Reftype  comment:""
+atfdb.comptest  comptest:apm.DryRun  comment:""
+atfdb.comptest  comptest:apm.SrcScan  comment:""
+atfdb.comptest  comptest:apm.UpdateFate  comment:""
+dmmeta.ns  ns:atf_comp  comment:""

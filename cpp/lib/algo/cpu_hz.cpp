@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -45,7 +45,15 @@ static double GetCpuHzCpuinfo(strptr cpuinfo) {
 
 // -----------------------------------------------------------------------------
 
-static void CheckConstantTsc(strptr cpuinfo) {
+// Whether CPUINFO declares the counter fixed-rate.  A counter whose rate
+// follows the core's P-state is worthless to a process that schedules on it,
+// and the flags line is where the CPU says which kind it has.  The claim is
+// the CPU's own, though, and a guest often makes no claim at all: Linux sets
+// X86_FEATURE_CONSTANT_TSC for an Intel part only at family 6 model 0x0e or
+// later, so QEMU's default qemu64 model reports no constant_tsc however its
+// counter behaves.  A cpuinfo with no flags line at all -- every non-Linux
+// host -- says nothing against the counter and so passes.
+bool algo_lib::ConstantTscQ(strptr cpuinfo) {
     bool constant_tsc= true;
     ind_beg(Line_curs,line,cpuinfo) {
         if (StartsWithQ(line,"flags")) {
@@ -55,10 +63,7 @@ static void CheckConstantTsc(strptr cpuinfo) {
             }
         }
     }ind_end;
-    // without constant TSC, the tsc clock is worthless.
-    if (!constant_tsc) {
-        FatalErrorExit("CPU does not support constant_tsc.");
-    }
+    return constant_tsc;
 }
 
 // -----------------------------------------------------------------------------
@@ -124,10 +129,20 @@ static double GetCpuHzHost(strptr path) {
 // Install HZ as the process's cycles<->seconds calibration: refuse an
 // implausible value, set the conversion constants, and re-anchor the
 // scheduler clock so elapsed time counts from the calibration point.
+//
+// The refusal states the range it applied, because the rate that lands here
+// came from somewhere an operator can go and change -- a kernel export, a
+// host file, an environment variable -- and the figure alone does not say
+// which end of the range it missed.  An emulated guest is where this bites:
+// Bochs presents a 40 MHz processor, four times the floor, and a slower one
+// would put every process of a cluster out on a line that named no bound.
 void algo_lib::ApplyCpuHz(double hz) {
     if (!(hz>10000000 && hz<10000000000ULL)) {
         FatalErrorExit(Zeroterm(tempstr()<<"algo_lib.bad_hz"
-                                <<Keyval("hz",hz)));
+                                <<Keyval("hz",hz)
+                                <<Keyval("min_hz",u64(10000000))
+                                <<Keyval("max_hz",u64(10000000000ULL))
+                                <<Keyval("comment","the counter's stated rate is outside the range this process schedules on")));
     }
     algo_lib::_db.hz = hz;//double
     algo_lib::_db.cpu_hz = hz;//int
@@ -140,7 +155,6 @@ void algo_lib::ApplyCpuHz(double hz) {
 // -----------------------------------------------------------------------------
 
 void algo_lib::InitCpuHz() {
-    (void)&CheckConstantTsc;
     (void)&GetCpuHzCpuinfo;
     (void)&GetCpuHzSysdev;
     double hz = 0;
@@ -183,20 +197,18 @@ void algo_lib::InitCpuHz() {
         RegCloseKey(hkey);
     }
 #else
-    // linux: refuse to run without a fixed-rate counter, then take the
-    // kernel's calibrated rate when the kernel exports it.  When it does
-    // not, settle for the P-state figures -- the boost ceiling, else cpu0's
-    // reported frequency.  Both describe core P-states rather than the
-    // counter, which on constant_tsc hardware ticks at a fixed nominal rate
-    // regardless of P-state: an EPYC 7702P reports a 2.18GHz boost ceiling
+    // linux: take the kernel's calibrated rate when the kernel exports it.
+    // When it does not, settle for the P-state figures -- the boost ceiling,
+    // else cpu0's reported frequency.  Both describe core P-states rather
+    // than the counter, which on constant_tsc hardware ticks at a fixed
+    // nominal rate regardless of P-state: an EPYC 7702P reports a 2.18GHz boost ceiling
     // while its counter ticks at 2.0GHz, and /proc/cpuinfo's "cpu MHz" is
     // the load-varying effective frequency, up to 1.5x below nominal on an
     // idle host.  That is tool-grade accuracy, adequate for printing
     // elapsed times and for nothing else.  A process that schedules on the
-    // counter demands the kernel figure instead (RequireKernelCpuHz) and
-    // does not start on a machine that exports none.
+    // counter demands the kernel figure instead (RequireKernelCpuHz), and it
+    // is there that a counter no source vouches for is refused.
     tempstr cpuinfo(FileToString("/proc/cpuinfo", algo::FileFlags()));
-    CheckConstantTsc(cpuinfo);
     hz = GetCpuHzKernel();
     if (hz == 0) {
         hz = GetCpuHzSysdev();
@@ -235,8 +247,7 @@ void algo_lib::InitCpuHz() {
 // P-state file.
 //
 // Two further sources exist because some kernels cannot carry the export at
-// all.  A WSL2 guest is the case in hand: its kernel calibrates the counter
-// exactly, having been told the rate by the hypervisor, but ships no header
+// all.  Such a kernel calibrates the counter exactly, but ships no header
 // package to build the tsc_freq_khz module against and no /lib/modules to
 // install it into, and it publishes the figure through no other interface --
 // not cpufreq, not CPUID, not the MSR device.  The rate on such a host is
@@ -260,6 +271,17 @@ void algo_lib::InitCpuHz() {
 // deployment states its rate through is that deployment's convention and not
 // this library's.
 //
+// The counter also has to tick at a fixed rate, and two things vouch for
+// that: the constant_tsc flag in /proc/cpuinfo, and a rate an operator states.
+// A stated rate is the operator saying the counter ticks at that rate, which is
+// the claim the flag carries, from a stronger source.  Either one is enough,
+// whichever source the rate itself comes from.  A guest is where the two part
+// company: QEMU's default CPU model advertises no constant_tsc whatever its
+// counter does, and loading the export module there gives the kernel's figure
+// without the flag.  So a process with no statement and no flag is refused,
+// and the refusal names the statement as the remedy, which is the one that
+// works on such a guest.
+//
 // Taking the rate from either is reported as a verbose line rather than as
 // plain output.  Every process of a cluster reads the rate, so on such a host
 // the plain form would announce it once per process, and a comptest compares a
@@ -268,21 +290,29 @@ void algo_lib::InitCpuHz() {
 // `atf_tsc` reports the calibration sources unconditionally, which is where an
 // operator confirms which one a process would take.
 void algo_lib::RequireKernelCpuHz(strptr tscfreq_path, strptr tscfreq_env) {
-    if (GetCpuHzKernel() == 0) {
-        double env_hz = GetCpuHzEnv(tscfreq_env);
-        double host_hz = GetCpuHzHost(tscfreq_path);
-        double hz = env_hz != 0 ? env_hz : host_hz;
-        strptr source = env_hz != 0 ? tscfreq_env : tscfreq_path;
-        if (hz == 0) {
-            FatalErrorExit(Zeroterm(tempstr()<<"algo_lib.no_tsc_freq"
-                                    <<Keyval("path","/sys/devices/system/cpu/cpu0/tsc_freq_khz")
-                                    <<Keyval("remedy",tempstr()<<"load the tsc_freq_khz module: bin/install-tsc-freq-khz, or state the rate in kHz in "<<tscfreq_path)));
-        } else {
-            ApplyCpuHz(hz);
-            verblog("algo_lib.tsc_freq_stated"
-                    <<Keyval("source",source)
-                    <<Keyval("hz",u64(hz))
-                    <<Keyval("comment","kernel exports no tsc rate; this source states it"));
+    double kernel_hz = GetCpuHzKernel();
+    double env_hz = GetCpuHzEnv(tscfreq_env);
+    double host_hz = GetCpuHzHost(tscfreq_path);
+    double stated_hz = env_hz != 0 ? env_hz : host_hz;
+    strptr source = env_hz != 0 ? tscfreq_env : tscfreq_path;
+    bool constant_tsc = ConstantTscQ(FileToString("/proc/cpuinfo", algo::FileFlags()));
+    if (kernel_hz == 0 && stated_hz == 0) {
+        tempstr remedy;
+        if (constant_tsc) {
+            remedy << "load the tsc_freq_khz module: ainst tsc_freq_khz -install, or ";
         }
+        remedy << "state the rate in kHz in " << tscfreq_path;
+        FatalErrorExit(Zeroterm(tempstr()<<"algo_lib.no_tsc_freq"
+                                <<Keyval("path","/sys/devices/system/cpu/cpu0/tsc_freq_khz")
+                                <<Keyval("remedy",remedy)));
+    } else if (stated_hz == 0 && !constant_tsc) {
+        FatalErrorExit(Zeroterm(tempstr()<<"algo_lib.no_constant_tsc"
+                                <<Keyval("comment",tempstr()<<"the CPU claims no constant_tsc; state the rate in kHz in "<<tscfreq_path<<" to vouch for the counter")));
+    } else if (kernel_hz == 0) {
+        ApplyCpuHz(stated_hz);
+        verblog("algo_lib.tsc_freq_stated"
+                <<Keyval("source",source)
+                <<Keyval("hz",u64(stated_hz))
+                <<Keyval("comment","kernel exports no tsc rate; this source states it"));
     }
 }

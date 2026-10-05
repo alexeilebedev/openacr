@@ -32,7 +32,7 @@ prerr automatically appends a newline; to omit the newline, use the variant `pre
 ### Log categories
 <a href="#log-categories"></a>
 
-`algo_lib` has a convenient notion of `log category`, controlled by table `dev.logcat`.
+`algo_lib` has a convenient notion of `log category`, controlled by table `dmmeta.logcat`.
 Each log category has a name and an `enable` flag, which can be switched at runtime.
 Printing to a log category xyz is performed with
 

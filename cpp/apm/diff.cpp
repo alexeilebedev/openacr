@@ -1,18 +1,18 @@
-// Copyright (C) 2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: apm (exe) -- Algo Package Manager
 // Exceptions: yes
@@ -34,8 +34,8 @@ void apm::Main_Diff() {
          <<" selected, or use -origin to diff all packages against one source)");
     ind_beg(_db_zd_sel_package_curs,package,_db) {
         // allow overriding origin from command line
-        cstring origin(_db.cmdline.origin == "" ? algo::strptr(package.origin) : algo::strptr(_db.cmdline.origin));
-        cstring baseref(_db.cmdline.ref == "" ? algo::strptr(package.baseref) : algo::strptr(_db.cmdline.ref));
+        cstring origin(_db.cmdline.origin == "" ? GetOrigin(package) : algo::strptr(_db.cmdline.origin));
+        cstring baseref(_db.cmdline.ref == "" ? GetBaseref(package) : algo::strptr(_db.cmdline.ref));
         // check out the package into sandbox directory.
         // evaluate symbolic value of baseref into actual git commit
         // An origin that cannot be reached resolves to nothing, and nothing is
@@ -52,9 +52,9 @@ void apm::Main_Diff() {
     cstring base_dir(algo_lib::WtDir(_db.base_sandbox));
     PushDiff(base_dir);
 
-    _db.script << "wt "<<_db.base_sandbox<<" -- git diff "
-               <<(_db.cmdline.R ? "-R" : "")
-               <<(_db.cmdline.stat ? "--stat" : "")
+    _db.script << "wt "<<_db.base_sandbox<<" -- git diff"
+               <<(_db.cmdline.R ? " -R" : "")
+               <<(_db.cmdline.stat ? " --stat" : "")
                << eol;
 
     _db.script << "echo "<<algo::strptr_ToBash("use 'wt apm-base -shell' to examine changes") << eol;

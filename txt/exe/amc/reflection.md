@@ -195,7 +195,7 @@ gate.InsertStrptrMaybe(strptr(
 This is what `acr -insert` does when poking data into an
 embedded namespace and what
 [Dispsigcheck](#dispsigcheck-piggybacks-on-reflection) uses to
-load its signature catalog at startup.  `RemoveStrptrMaybe` is
+load its signature table at startup.  `RemoveStrptrMaybe` is
 the mirror — pkey-only.
 
 ### Driving the main loop through reflection
@@ -250,7 +250,7 @@ namespaces can do with strings (load, remove, step).  The OpenACR
 codebase prefers the alternative most of the time:
 
 - Need to know what tables some *other* process loads?  Use
-  `acr_in <target> -list` or load `dev.finput` for that target —
+  `acr_in <target> -list` or load `dmmeta.finput` for that target —
   no need to interrogate a running binary.
 - Need the schema of a ctype anywhere in the system?  Read
   `dmmeta.ctype` / `dmmeta.field` directly.

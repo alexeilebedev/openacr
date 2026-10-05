@@ -18,6 +18,13 @@ under it" -- and it selects `acr_compl`, `acr_dm`, `acr_ed`, `acr_in` and
 `acr_my` as well.  Paired with `-del -write` that is five namespaces the
 command never named, removed alongside the one it did.
 
+An alternation cannot span the dot.  acr splits the query at its dots before it
+reads either half as a pattern, so `acr 'dev.(target|targdep)'` selects both
+files' rows while `acr '(dev.target|dev.targdep)'` selects nothing: the pieces
+between the dots name no namespace and no ssimfile.  A `-check` over such a
+query passes with `records:0` whatever the rows reference.  Write the alternation
+inside one half, or run acr once per file when the files span namespaces.
+
 Two rules follow.  A delete is written against the rows it means to remove,
 never against a prefix that happens to cover them.  And when a program has
 already computed the set -- a list of tuples rather than a pattern -- `-sel`
@@ -109,7 +116,7 @@ insert matters, grep the file for the key afterwards.
 One caveat keeps `-check` honest.  When the referenced key is itself generated
 *from* the row being inserted, the check reports a bad ref until `amc` has run.
 `dmmeta.usertracefld` is the standing case: its `tracefld` is a Pkey into the
-amc-owned `dmmeta.tracefld`, so a new counter reads as a bad ref until `amc`
+amc-owned `gendb.tracefld`, so a new counter reads as a bad ref until `amc`
 emits the target row.  Insert, run `amc`, then re-check.
 
 ### Insert through `-insert`, never by editing the file

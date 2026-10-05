@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: wt (exe) -- Worktree manager - reset, run, diff, delete
 // Exceptions: yes
@@ -50,7 +50,7 @@ static tempstr RefSha() {
 
 // Return the path of the libcowdancer preload library (COWDANCER_SO overrides)
 static tempstr FarmSo() {
-    const char *env = getenv("COWDANCER_SO");
+    const char *env = getenv(algo_lib::dev_envvar_COWDANCER_SO);
     return tempstr() << (env ? strptr(env) : strptr("/usr/lib/cowdancer/libcowdancer.so"));
 }
 
@@ -156,18 +156,31 @@ static bool Reset(wt::FSandbox &sandbox) {
 
 // -----------------------------------------------------------------------------
 
-// Seed DIR's build directories: local empty build/<cfg> with abt and gcache
-// linked from the main checkout, and the compiler cache enabled, so the
-// first build inside the worktree is cache-served
+// Seed DIR's build directories: local empty build/<cfg> with abt, gcache and
+// llmtool linked from the main checkout, and the compiler cache enabled, so
+// the first build inside the worktree is cache-served.  The llmtool link gives
+// the session wt starts in DIR a status line from its first refresh.  The
+// status line runs bin/llmtool -status, which prints only what the json Claude
+// Code writes to its stdin says; the binary also loads its own checkout's
+// price list, and -status prints nothing from it.  A build inside DIR replaces
+// a link with a file of its own and leaves the main checkout's binary alone.  The cppcheck build dirs
+// under temp/ are copied too, so the first normalize re-analyzes only what
+// the branch changes.  A copy, since cppcheck writes into its build dir on
+// every run and two worktrees may run it at once.
 static bool WireBuild(strptr dir) {
     tempstr script;
     script << "dir=" << algo::strptr_ToBash(dir) << "\n";
-    script << R"BASH(for cfg in release coverage debug profile; do
+    script << R"BASH(for cc in temp/cppcheck.*; do
+  [ -d "$cc" ] || continue
+  mkdir -p "$dir/temp"
+  cp -r "$cc" "$dir/temp/"
+done
+for cfg in release coverage debug profile; do
   link=$(readlink "build/$cfg" 2>/dev/null) || continue
   name=$(basename "$link")
   [ -d "build/$name" ] || continue
   mkdir -p "$dir/build/$name"
-  for tool in abt gcache; do
+  for tool in abt gcache llmtool; do
     [ -x "build/$name/$tool" ] && ln -sfn "$(pwd)/build/$name/$tool" "$dir/build/$name/$tool"
   done
   ln -sfn "$name" "$dir/build/$cfg"
@@ -183,8 +196,44 @@ fi)BASH";
 
 // -----------------------------------------------------------------------------
 
+// Give DIR a link to each dataset the checkout it was cut from has attached
+// under run/, so the worktree reads the same rows.  Answers true whether or not
+// there was one to reproduce: a checkout with nothing attached leaves the
+// worktree with nothing, and that is the state the tools already explain.
+//
+// The problem, by example.  A tool that reads a dataset layer reads it from a
+// directory under run/, and run/ is gitignored, so the checkout carries the
+// attachment and a fresh worktree does not.  Every query of that layer in the
+// worktree then answers with no rows, and the first deploy refuses as
+// unattached -- after the build, at the moment the work is ready to ship, and
+// for want of one command the worktree could have run for itself, since the
+// checkout it was cut from already knows where the dataset is.
+//
+// The worktree gets a symlink to each entry of the parent's run/, whichever
+// shape the attachment has: a symlink to a checkout the user keeps, or a clone
+// of a git url.  Both leave a directory of rows, so `readlink -f` resolves
+// either shape to it and one symlink serves both.  Resolved rather than copied,
+// since a relative target would name a different directory two levels down.
+// run/ holds attachments and nothing else, so the walk names no dataset and a
+// second one needs no change here.
+static bool WireRun(strptr dir) {
+    tempstr script;
+    script << "dir=" << algo::strptr_ToBash(dir) << "\n";
+    script << R"BASH(for entry in run/*; do
+  target=$(readlink -f "$entry")
+  if [ -n "$target" ] && [ -e "$target" ]; then
+    mkdir -p "$dir/run"
+    ln -sfn "$target" "$dir/run/$(basename "$entry")"
+  fi
+done)BASH";
+    return Run(script);
+}
+
+// -----------------------------------------------------------------------------
+
 // Create SANDBOX's branch worktree at DIR: new branch named after it, .branch
-// symlink to the shared branch-control directory, isolated cache-backed build
+// symlink to the shared branch-control directory, isolated cache-backed build,
+// and the inventory the parent checkout reads
 static bool AddBranch(wt::FSandbox &sandbox) {
     if (!wt::_db.cmdline.q) {
         prlog("wt.branch"<<Keyval("branch",sandbox.sandbox)<<Keyval("dir",sandbox.dir));
@@ -196,6 +245,7 @@ static bool AddBranch(wt::FSandbox &sandbox) {
                    <<" || git worktree add -q "<<dirq<<" "<<nameq);
     ok = ok && Run(tempstr()<<"[ ! -e .branch ] || ln -sfn ../../.branch "<<dirq<<"/.branch");
     ok = ok && WireBuild(sandbox.dir);
+    ok = ok && WireRun(sandbox.dir);
     return ok;
 }
 
@@ -356,17 +406,19 @@ static bool DoSandbox(wt::FSandbox &sandbox) {
 // Select sandboxes by the name regex and perform the requested actions on
 // each; -list prints the surviving state afterwards
 void wt::Main() {
-    // If no cmd and stdin is not tty, read stdin as script
-    if (cmd_N(_db.cmdline) == 0 && !_db.cmdline.shell) {
-        if (!isatty(0)) {
-            algo::ListSep sep("\n");
-            tempstr script;
-            ind_beg(algo::FileLine_curs, line, algo::Fildes(0)) {
-                script << sep << line;
-            }ind_end;
-            if (ch_N(script)) {
-                cmd_Alloc(_db.cmdline) = script;
-            }
+    // The script to run comes from stdin only when -i asks for it.  Reading
+    // stdin on a guess -- no command given, stdin not a terminal -- hung every
+    // caller that forked wt for an action while holding a stdin that never
+    // closes, abt_md resetting its doc sandbox among them; the read waited for
+    // a script that was not coming, for as long as the caller's timeout allowed.
+    if (_db.cmdline.i) {
+        algo::ListSep sep("\n");
+        tempstr script;
+        ind_beg(algo::FileLine_curs, line, algo::Fildes(0)) {
+            script << sep << line;
+        }ind_end;
+        if (ch_N(script)) {
+            cmd_Alloc(_db.cmdline) = script;
         }
     }
     // A branch worktree and its claude session are provisioned from the

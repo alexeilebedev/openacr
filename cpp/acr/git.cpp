@@ -1,18 +1,18 @@
-// Copyright (C) 2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
@@ -24,7 +24,9 @@
 
 // Emit the git commands that make the worktree match the selected dev.gitfile
 // rows: a deleted row's file is removed, a renamed row's file is moved, and a
-// new row's file is created and staged. WRITE_OK says the ssimfile write-back
+// new row's file is created and staged. A file moved or created gets its
+// directory first: an ssimfile renamed into a new namespace lands under a
+// data directory that does not exist yet. WRITE_OK says the ssimfile write-back
 // went through, and the script then runs; otherwise the script is printed.
 // A nonzero script status fails the run. acr_ed's rename arrives here as an acr
 // run that renames the source file's dev.gitfile row under -write and -g, and by
@@ -40,11 +42,16 @@ void acr::Main_GitTriggers(bool write_ok) {
     algo::cstring script;
     if (gitfile) {
         ind_beg(acr::ctype_zd_selrec_curs,selrec,*gitfile->p_ctype) {
+            bool move = !selrec.del && selrec.oldpkey && *selrec.oldpkey != selrec.pkey;
+            bool create = !selrec.del && !move && selrec.isnew;
+            if (move || create) {
+                script << "mkdir -p "<<strptr_ToBash(tempstr()<<"./"<<algo::GetDirName(selrec.pkey))<<eol;
+            }
             if (selrec.del) {
                 script << "git rm --force "<<strptr_ToBash(selrec.pkey)<<eol;
-            } else if (selrec.oldpkey && *selrec.oldpkey != selrec.pkey) {
+            } else if (move) {
                 script << "git mv "<<strptr_ToBash(*selrec.oldpkey)<<" "<<strptr_ToBash(selrec.pkey)<<eol;
-            } else if (selrec.isnew) {
+            } else if (create) {
                 script << "touch "<<strptr_ToBash(selrec.pkey)<<eol;
                 script << "git add "<<strptr_ToBash(selrec.pkey)<<eol;
             }

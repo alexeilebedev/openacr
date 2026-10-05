@@ -1,0 +1,7 @@
+# start atf_cov cmd:"PATH=$tempdir/bin:$$PATH $bindir/atf_cov -covdir:$tempdir/cov -logfile:$tempdir/atf_cov.log -mergepath:$tempdir/bad.d -gcov:Y -summary:N 2> $tempdir/stderr.txt"
+# eof atf_cov
+# exit atf_cov code:1
+# check gcov_fail_exit:Y
+# check gcov_fail_names_gcda:Y
+# check gcov_fail_names_gcno:Y
+# check merge_lost:Y

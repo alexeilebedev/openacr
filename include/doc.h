@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: doc (exe) -- Render a markdown document to the terminal
 // Exceptions: yes
@@ -149,7 +148,7 @@ namespace doc { // update-hdr
     //
     // Where a word of the vocabulary and a table answer to the same name, the word wins, as it
     // does in a location a reader types.  `msg` is both -- doc's page about the protocols and
-    // the short name of `dmmeta.msg` -- and a span expanded to the table led to the row rather
+    // the short name of `gendb.msg` -- and a span expanded to the table led to the row rather
     // than to the page the same text opens at the command line.
     tempstr Codeloc(algo::strptr text);
 
@@ -549,7 +548,28 @@ namespace doc { // update-hdr
     // The cap is one size for every caller.  The largest answer any page asks for is a
     // namespace's generated code, and a caller-by-caller guess at a smaller one buys nothing
     // but a page silently cut off.
+    //
+    // An answer already fetched is handed over and dropped.  A reader opens one page at a time
+    // and nothing is ever waiting for them; a site runs thousands, knows which command lines
+    // are coming, and fetches them ahead in parallel -- and holding each answer only until the
+    // page that asked for it is drawn is what keeps a run of ten thousand pages from holding
+    // ten thousand answers.
     tempstr ToolOut(algo::strptr cmd);
+
+    // Hold OUT as the answer to CMD, for the page that is about to ask.
+    //
+    // A site runs the same command lines its pages would have run, only earlier and several at
+    // a time, so the answers arrive before they are wanted.  Nothing else changes: the page
+    // asks ToolOut for a command line exactly as it always did, and whether the answer was
+    // waiting is invisible to it.
+    //
+    // A stash that missed costs one wasted subprocess and nothing else, which is what makes the
+    // whole arrangement safe to be approximate about: guessing that a page will ask for
+    // something it does not is a fork spent, never a page drawn wrong.
+    void ToolStash(algo::strptr cmd, algo::strptr out);
+
+    // Return true when the answer to CMD is already held.
+    bool ToolstashQ(algo::strptr cmd);
 
     // Return the command line that selects QUERY and nothing around it.
     //
@@ -835,7 +855,7 @@ namespace doc { // update-hdr
     //
     // A key of three dots is an amc key naming one function, and it opens that function's
     // source.  amc keys a ctype by a namespace and a name and a field by a ctype and a name,
-    // so the count of dots is what tells the three apart, and `x2ui.FCtype.c_cstr.Remove`
+    // so the count of dots is what tells the three apart, and `amc.FCtype.c_field.Remove`
     // needs no word in front of it to say which it is.
     //
     // A word whose argument is a pattern is the query over that word's own table.  `ns:acr`
@@ -918,7 +938,7 @@ namespace doc { // update-hdr
     // page of keys the reader's ? opens.  It is a location like the others, so it can
     // be written out at a pipe as well as read on the screen.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Main(); // main:doc
+    // void Main(); // dmmeta.main:doc
 
     // -------------------------------------------------------------------
     // cpp/doc/docpage.cpp
@@ -926,28 +946,28 @@ namespace doc { // update-hdr
 
     // Lay the access paths of the ctypes the location names onto the page.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void docpage_accesspath(); // gstatic/dev.docpage:accesspath
+    // void docpage_accesspath(); // dev.docpage:accesspath
 
     // Lay what amc generated for the ctypes of a selection onto the page.
-    // void docpage_code(); // gstatic/dev.docpage:code
+    // void docpage_code(); // dev.docpage:code
 
     // Lay one ctype onto the page: its declaration, the prose about its table, where it sits.
-    // void docpage_ctype(); // gstatic/dev.docpage:ctype
+    // void docpage_ctype(); // dev.docpage:ctype
 
     // Lay the functions a selection is about, or one function's source, onto the page.
-    // void docpage_func(); // gstatic/dev.docpage:func
+    // void docpage_func(); // dev.docpage:func
 
     // Lay the page of keys onto the page.
-    // void docpage_help(); // gstatic/dev.docpage:help
+    // void docpage_help(); // dev.docpage:help
 
     // Lay one namespace onto the page: its ctypes, sources, dependencies, inputs, tests.
-    // void docpage_ns(); // gstatic/dev.docpage:ns
+    // void docpage_ns(); // dev.docpage:ns
 
     // Lay the message roots, or one message, onto the page.
-    // void docpage_msg(); // gstatic/dev.docpage:msg
+    // void docpage_msg(); // dev.docpage:msg
 
     // Lay the records a query selects onto the page.
-    // void docpage_query(); // gstatic/dev.docpage:query
+    // void docpage_query(); // dev.docpage:query
 
     // Return the page the location LOC asks for, or NULL when no generated page answers for it.
     //
@@ -1209,10 +1229,7 @@ namespace doc { // update-hdr
 
     // Return the URL of location LOC.
     //
-    // A markdown document is spelled .html, which is what a browser expects of a page
-    // and what makes the home button README.html.  Every other location goes through
-    // unchanged: a path to a source file is already what it is, and a query, a view of
-    // a query and help carry no character a URL path cannot.
+    // UrlLeaf spells the path, so what is added here is the flags in force and the fragment.
     //
     // A fragment stays last, after the flags.  It names a heading inside the page rather
     // than part of what is being asked for, which is also why the server never sees one --
@@ -1361,6 +1378,108 @@ namespace doc { // update-hdr
     // candidate list and can be nothing else, and its breadcrumb is the key as text.
     tempstr HtmlFind(algo::strptr key);
 
+    // Admit location LOC into the site being written.
+    //
+    // Every link on every page reaches this, so what a site holds is what its pages actually
+    // cite rather than a list kept beside them and drifting from them.  A location already
+    // admitted is left alone, which is what makes the walk terminate: each page is read once,
+    // and the set only grows.
+    //
+    // A leaf's citations are refused here rather than at the leaf, because this is the one
+    // place that knows which page the link was written on -- which is the same reason the link
+    // itself is refused here.
+    void SiteRef(algo::strptr loc);
+
+    // Put location LOC into the site whether the closure rule would have admitted it or not.
+    //
+    // What a site reaches is decided by SiteAdmitQ, and what it starts from is decided by
+    // whoever ran the command: `doc dmmeta.ctype:doc.FSitepage -site:<dir>` asks for that page,
+    // and answering with an empty directory because a site does not publish rows would be
+    // refusing the request rather than honoring it.  So a seed is taken as given and the rule
+    // governs only what the seed leads to.
+    void SiteSeed(algo::strptr loc);
+
+    // Return true when a page of the site may link to location LOC.
+    //
+    // The site is written as the walk goes, so a page written early cites locations the walk
+    // has not reached yet.  Asking whether the set holds one would therefore refuse a link to
+    // a page that is about to exist, which is why the test is the predicate and not the set:
+    // a location the site admits will be written before the run ends, whenever the walk gets
+    // to it, and a location it does not admit never will be.
+    //
+    // The page the link is written on decides too.  A page of records admits nothing, so every
+    // location it names goes unwritten and none of them may be a link.
+    //
+    // Which page that is comes from a field the writer sets rather than from the location being
+    // drawn, because a page can draw another location inside itself: a comptest's page ends
+    // with the source of the function that drives it, and while that section is being written
+    // the location in hand is the function's.  Read from there, a leaf would stop being one
+    // halfway down its own page.
+    bool SiteciteQ(algo::strptr loc);
+
+    // Draw every location named in the file LIST, and print the locations they link.
+    //
+    // A site is thousands of pages and each of them runs acr, src_func or amc_vis -- a
+    // subprocess that starts, reads what it needs and exits, while the process that asked sits
+    // waiting and nineteen cores sit idle.  A reader opens one page at a time and sees that as
+    // the pause before the page appears, which is the cost the design was weighed against; a
+    // run of ten thousand pages is a different question with the same answer, and the answer is
+    // to draw several at once.
+    //
+    // Drawing a page in a child rather than guessing which tools it will run is what makes this
+    // exact.  A page's tools are its own business -- a ctype's page runs acr for the records and
+    // src_func for the functions, and neither is derivable from the location without repeating
+    // the page generator here.  So the child is doc, drawing the page the ordinary way, and what
+    // it owes the parent is the one thing the parent cannot see: which locations the pages named.
+    //
+    // A child is given many locations rather than one because starting doc means reading the
+    // tables it resolves keys against, and a run of thousands of pages should pay for that once
+    // per process rather than once per page.
+    void WriteSitelist(algo::strptr dir, algo::strptr list);
+
+    // Write the site rooted at DIR, seeded from SEED, or from every document of the tree when
+    // SEED is empty, along with the two stylesheets its pages link.
+    //
+    // A static host answers a request with a file and resolves no keys, so a site has to be a
+    // closed set -- every link on every page naming a file that is also here.  Which set that
+    // is cannot be listed in advance, because it is whatever the documents cite; but it can be
+    // found, by reading a page and admitting the locations it links, until nothing new turns
+    // up.
+    //
+    // A page is read once and written as it is read.  Nothing has to wait for the walk to
+    // finish, because whether a page may link to a location is a property of that location
+    // rather than of how far the walk has got -- SiteciteQ is the test, and a location it
+    // admits is written before the run ends however late the walk reaches it.
+    //
+    // It is a walk and not a recursion, so a citation chain of any length costs a list entry
+    // rather than a stack frame.
+    //
+    // Seeding from one document is what a reader wants when they are looking at what a page
+    // pulls in, and it is the only affordable way to test the walk: the whole documentation is
+    // thousands of pages, most of which fork acr, and one document is a handful.
+    //
+    // The page a server answers a missing location with is written as 404.html at the root,
+    // which is the file a static host serves for a path it has no file for.  A reader who
+    // types a key the site holds no page for -- a tool's bare name, which only a server can
+    // resolve -- then lands on this tool's own page with the box still in front of them
+    // rather than on the host's error.
+    void WriteSite(algo::strptr dir, algo::strptr seed);
+
+    // Write every published document, rendered, as the TypeScript module at PATH.
+    //
+    // The interface shows the same documents this tool does, and rendering them twice
+    // is what made them differ: markdown parsed a second time by a second parser gave
+    // the reader a plainer page than the one doc draws, missing the frame, the line
+    // numbers and the stripes.  So the rendering happens once, here, and what the
+    // interface imports is the result.  What it supplies is the colour: the markup
+    // carries doc's class names and the stylesheet on that side answers them, which is
+    // how one document reads as part of two products.
+    //
+    // Which documents go is dev.readmefile.publish, so the module carries a chosen set
+    // rather than a copy of the tree -- the schema references and the rule files are
+    // documents too, and an operator has no use for them.
+    void WriteCatalog(algo::strptr path);
+
     // -------------------------------------------------------------------
     // cpp/doc/msg.cpp
     //
@@ -1411,12 +1530,12 @@ namespace doc { // update-hdr
 
     // Return the page about the namespace NS, as markdown.
     //
-    // It opens with what the namespace is for, in its own words from dmmeta.ns, and with
-    // the three answers that are pages of their own rather than sections here -- its
-    // records, its functions, its access paths.  Then the sections, each one a table, and
-    // each absent when the namespace has none of that kind: a library has no comptests, a
-    // ssimdb namespace has no sources, and a heading over an empty table says only that the
-    // generator did not check.
+    // It opens with what the namespace is for, in its own words from dmmeta.ns, then the
+    // link to its rule file, and with the three answers that are pages of their own rather
+    // than sections here -- its records, its functions, its access paths.  Then the
+    // sections, each one a table, and each absent when the namespace has none of that kind:
+    // a library has no comptests, a ssimdb namespace has no sources, and a heading over an
+    // empty table says only that the generator did not check.
     tempstr NsText(algo::strptr ns);
 
     // Lay the page about the namespace NS onto the page.
@@ -1435,7 +1554,7 @@ namespace doc { // update-hdr
     //
     // A key that resolves to nothing has still been half looked for.  The documents whose path
     // carries it are one answer and the tables and ctypes whose name carries it are another,
-    // and a key is often genuinely both -- `x2test` names two tables of this tree, and choosing
+    // and a key is often genuinely both -- `target` names two tables of this tree, and choosing
     // between them is the reader's business rather than this tool's.
     //
     // The second list is headed Disambiguation, since that is the question the page is asking.

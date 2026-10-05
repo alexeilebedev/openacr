@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -58,8 +58,86 @@
 // Other (auxiliary) step types are Callback and Extern:
 // Callback: the function is simply called on every scheduler cycle. This doesn't cause hot polling, next_loop is not updated.
 // Extern: the _FirstChanged function is marked extern and also implemented by the user
+// A library emits no step function of its own.  An executable's Steps() calls every direct step of
+// every namespace it links, in dependency order, so the whole main loop is written out in one place.
+// A step may also be declared on another namespace's list.  The step field is then an Alias on the
+// stepping namespace's FDb whose srcfield is the other namespace's global list, and the generated step
+// tests that list for pending work and calls the stepping namespace's own $name_Step.  When the list
+// has a step of its own, the alias step overrides it: Steps() calls the alias step in the library
+// step's slot and never calls the library's; the overriding step may call lib::$name_Step() itself.
+// Only Inline, InlineRecur and Callback apply to an alias step, because a TimeHook step is armed by
+// the list's FirstChanged, which is generated in the list's own namespace, and for the same reason a
+// TimeHook step cannot be overridden.  At most one alias step per list may share a process.
 
 #include "include/amc.h"
+
+// True if FSTEP sits in the idle band: it runs in a pass that has time to give
+// up, as well as when its rate allows.
+static bool IdleStepQ(amc::FFstep &fstep) {
+    return fstep.stepband == amc::amcdb_stepband_idle;
+}
+
+// True if the calls of FSTEP are counted against a rate: it has an fsteprate
+// row, or it is an idle Inline step, whose rate defaults to one call in eight
+// passes.
+static bool RatedStepQ(amc::FFstep &fstep) {
+    return fstep.c_fsteprate != NULL || (IdleStepQ(fstep) && fstep.steptype == dmmeta_Steptype_steptype_Inline);
+}
+
+// True if FSTEP is called from a time hook rather than from Steps().
+static bool TimehookStepQ(amc::FFstep &fstep) {
+    return fstep.steptype == dmmeta_Steptype_steptype_TimeHookRecur
+        || fstep.steptype == dmmeta_Steptype_steptype_TimeHookOnce;
+}
+
+// Name of the algo_lib heap that holds the time hook of FSTEP.  algo_lib
+// keeps one heap per band a time hook may fire in: bh_timehook, stepped in
+// the work band, and bh_timehook_idle, stepped in the idle band.
+static tempstr TimehookHeap(amc::FFstep &fstep) {
+    return tempstr() << (IdleStepQ(fstep) ? "bh_timehook_idle" : "bh_timehook");
+}
+
+// Check the fstep on alias FIELD, which steps another namespace's list: the
+// list is a global field of another namespace, a step of its own that this
+// one overrides runs from Steps() and shares the override's band, and the
+// steptype needs nothing from the list's namespace.  Two alias steps on one list within one process are
+// refused where the process's Steps() is generated.  Each defect is reported
+// as a generation error
+static void CheckAliasStep(amc::FField &field) {
+    amc::FFstep &fstep = *field.c_fstep;
+    amc::FField &list = *field.c_falias->p_srcfield;
+    if (!amc::GlobalQ(*list.p_ctype) || list.p_ctype->p_ns == field.p_ctype->p_ns) {
+        prerr("amc.fstep_alias_list"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("srcfield",list.field)
+              <<Keyval("comment","an alias step names a global field of another namespace"));
+        algo_lib::_db.exit_code++;
+    }
+    if (list.c_fstep && !amc::DirectStepQ(*list.c_fstep)) {
+        prerr("amc.fstep_alias_timehook"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("srcfield",list.field)
+              <<Keyval("comment","the list's own step runs from a time hook, not from Steps(), so it cannot be overridden"));
+        algo_lib::_db.exit_code++;
+    }
+    if (list.c_fstep && fstep.p_stepband != list.c_fstep->p_stepband) {
+        prerr("amc.fstep_alias_band"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("stepband",fstep.stepband)
+              <<Keyval("slot",list.c_fstep->stepband)
+              <<Keyval("comment","an override runs in the slot of the step it replaces, so it declares that step's band"));
+        algo_lib::_db.exit_code++;
+    }
+    if (fstep.steptype != dmmeta_Steptype_steptype_Inline
+        && fstep.steptype != dmmeta_Steptype_steptype_InlineRecur
+        && fstep.steptype != dmmeta_Steptype_steptype_Callback) {
+        prerr("amc.fstep_alias_steptype"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("steptype",fstep.steptype)
+              <<Keyval("comment","an alias step is Inline, InlineRecur or Callback"));
+        algo_lib::_db.exit_code++;
+    }
+}
 
 // Validate the fstep against the contract stated at the top of this file
 // and add the step's state fields (next/delay for InlineRecur, the time
@@ -81,6 +159,12 @@ void amc::tclass_Step() {
               <<Keyval("comment","fstep requires a global field (a field of the namespace FDb)"));
         algo_lib::_db.exit_code++;
     }
+    // An alias step tests another namespace's list; every check below that
+    // reads the step field's shape reads the list's
+    amc::FField &list = ListAliasQ(field) ? *field.c_falias->p_srcfield : field;
+    if (ListAliasQ(field)) {
+        CheckAliasStep(field);
+    }
     // The step's loop condition tests the field for pending work
     // (GetStepCond): an index is tested with its EmptyQ, a Val/Ptr/Upptr
     // with its value, ZSListMT with DestructiveFirst. A reftype outside
@@ -89,24 +173,24 @@ void amc::tclass_Step() {
     // exist; reject the schema instead of shipping the compile error.
     // An Inlary counts only when variable: a fixed Inlary always holds
     // max elements and generates no EmptyQ.
-    bool steppable = field.reftype == dmmeta_Reftype_reftype_Val
-        || field.reftype == dmmeta_Reftype_reftype_Ptr
-        || field.reftype == dmmeta_Reftype_reftype_Upptr
-        || field.reftype == dmmeta_Reftype_reftype_Global
-        || field.reftype == dmmeta_Reftype_reftype_ZSListMT
-        || (field.reftype == dmmeta_Reftype_reftype_Inlary && !amc::FixaryQ(field))
-        || field.reftype == dmmeta_Reftype_reftype_Atree
-        || field.reftype == dmmeta_Reftype_reftype_Bheap
-        || field.reftype == dmmeta_Reftype_reftype_Blkhash
-        || field.reftype == dmmeta_Reftype_reftype_Lary
-        || field.reftype == dmmeta_Reftype_reftype_Llist
-        || field.reftype == dmmeta_Reftype_reftype_Ptrary
-        || field.reftype == dmmeta_Reftype_reftype_Tary
-        || field.reftype == dmmeta_Reftype_reftype_Thash;
+    bool steppable = list.reftype == dmmeta_Reftype_reftype_Val
+        || list.reftype == dmmeta_Reftype_reftype_Ptr
+        || list.reftype == dmmeta_Reftype_reftype_Upptr
+        || list.reftype == dmmeta_Reftype_reftype_Global
+        || list.reftype == dmmeta_Reftype_reftype_ZSListMT
+        || (list.reftype == dmmeta_Reftype_reftype_Inlary && !amc::FixaryQ(list))
+        || list.reftype == dmmeta_Reftype_reftype_Atree
+        || list.reftype == dmmeta_Reftype_reftype_Bheap
+        || list.reftype == dmmeta_Reftype_reftype_Blkhash
+        || list.reftype == dmmeta_Reftype_reftype_Lary
+        || list.reftype == dmmeta_Reftype_reftype_Llist
+        || list.reftype == dmmeta_Reftype_reftype_Ptrary
+        || list.reftype == dmmeta_Reftype_reftype_Tary
+        || list.reftype == dmmeta_Reftype_reftype_Thash;
     if (!steppable) {
         prerr("amc.fstep_reftype"
               <<Keyval("fstep",fstep.fstep)
-              <<Keyval("reftype",field.reftype)
+              <<Keyval("reftype",list.reftype)
               <<Keyval("comment","fstep needs an emptiness test for the loop condition; use an index with EmptyQ (for Inlary: min<max), a Val/Ptr/Upptr, or ZSListMT"));
         algo_lib::_db.exit_code++;
     }
@@ -114,11 +198,11 @@ void amc::tclass_Step() {
     // sort field, which only a Bheap step field provides; checked here in the tclass
     // function so the rejection precedes every Step tfunc
     vrfy(!(fstep.steptype == dmmeta_Steptype_steptype_InlineOnce || fstep.steptype == dmmeta_Steptype_steptype_TimeHookOnce)
-         || field.reftype == dmmeta_Reftype_reftype_Bheap
+         || list.reftype == dmmeta_Reftype_reftype_Bheap
          , tempstr()<<"amc.fstep_bheap"
          <<Keyval("fstep",fstep.fstep)
          <<Keyval("steptype",fstep.steptype)
-         <<Keyval("reftype",field.reftype)
+         <<Keyval("reftype",list.reftype)
          <<Keyval("comment","steptype InlineOnce/TimeHookOnce requires the step field to be a Bheap"));
     // TimeHookRecur arms and disarms its time hook from the index's first row:
     // $name_FirstChanged reheaps or removes the hook, and only the Llist and
@@ -126,19 +210,19 @@ void amc::tclass_Step() {
     // On a step field of any other shape nothing ever arms the hook, and the
     // step compiles but never fires
     if (fstep.steptype == dmmeta_Steptype_steptype_TimeHookRecur
-        && field.reftype != dmmeta_Reftype_reftype_Llist
-        && field.reftype != dmmeta_Reftype_reftype_Bheap) {
+        && list.reftype != dmmeta_Reftype_reftype_Llist
+        && list.reftype != dmmeta_Reftype_reftype_Bheap) {
         prerr("amc.fstep_first"
               <<Keyval("fstep",fstep.fstep)
               <<Keyval("steptype",fstep.steptype)
-              <<Keyval("reftype",field.reftype)
+              <<Keyval("reftype",list.reftype)
               <<Keyval("comment","steptype TimeHookRecur requires an Llist or Bheap step field"));
         algo_lib::_db.exit_code++;
     }
     // ZSListMT has no EmptyQ (the list is concurrent); its loop condition
     // tests DestructiveFirst, which only the Inline and InlineRecur call
     // shapes embed
-    if (field.reftype == dmmeta_Reftype_reftype_ZSListMT
+    if (list.reftype == dmmeta_Reftype_reftype_ZSListMT
         && fstep.steptype != dmmeta_Steptype_steptype_Inline
         && fstep.steptype != dmmeta_Steptype_steptype_InlineRecur) {
         prerr("amc.fstep_zslistmt"
@@ -166,28 +250,57 @@ void amc::tclass_Step() {
     // not exist. The countable set is every step-field reftype whose N
     // function amc generates unconditionally, plus Llist, whose N exists
     // only with havecount.
-    bool countable = field.reftype == dmmeta_Reftype_reftype_Bheap
-        || field.reftype == dmmeta_Reftype_reftype_Blkhash
-        || field.reftype == dmmeta_Reftype_reftype_Thash
-        || field.reftype == dmmeta_Reftype_reftype_Tary
-        || field.reftype == dmmeta_Reftype_reftype_Lary
-        || field.reftype == dmmeta_Reftype_reftype_Ptrary
-        || field.reftype == dmmeta_Reftype_reftype_Inlary
-        || (field.reftype == dmmeta_Reftype_reftype_Llist && field.c_llist && field.c_llist->havecount);
+    bool countable = list.reftype == dmmeta_Reftype_reftype_Bheap
+        || list.reftype == dmmeta_Reftype_reftype_Blkhash
+        || list.reftype == dmmeta_Reftype_reftype_Thash
+        || list.reftype == dmmeta_Reftype_reftype_Tary
+        || list.reftype == dmmeta_Reftype_reftype_Lary
+        || list.reftype == dmmeta_Reftype_reftype_Ptrary
+        || list.reftype == dmmeta_Reftype_reftype_Inlary
+        || (list.reftype == dmmeta_Reftype_reftype_Llist && list.c_llist && list.c_llist->havecount);
     if (fstep.c_fdelay && fstep.c_fdelay->scale
         && !(fstep.steptype == dmmeta_Steptype_steptype_InlineRecur && countable)) {
         prerr("amc.fstep_scale"
               <<Keyval("fstep",fstep.fstep)
               <<Keyval("steptype",fstep.steptype)
-              <<Keyval("reftype",field.reftype)
+              <<Keyval("reftype",list.reftype)
               <<Keyval("comment","fdelay scale:Y requires steptype InlineRecur and a counted step field (Bheap, Blkhash, Thash, Tary, Lary, Ptrary, Inlary, or Llist with havecount)"));
         algo_lib::_db.exit_code++;
+    }
+    // A rate counts calls per pass, which belongs to a step called on every
+    // pass it has work: the Inline shape.  The other steptypes keep their own
+    // clocks, and in the idle band they only run late in the pass.
+    if (fstep.c_fsteprate && fstep.steptype != dmmeta_Steptype_steptype_Inline) {
+        prerr("amc.fstep_rate_steptype"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("steptype",fstep.steptype)
+              <<Keyval("comment","an fsteprate row applies to steptype Inline"));
+        algo_lib::_db.exit_code++;
+    }
+    // A time hook step fires from the algo_lib heap of its band, and algo_lib
+    // has a heap for the work band and one for the idle band.
+    if (TimehookStepQ(fstep) && !(fstep.stepband == amc::amcdb_stepband_work) && !IdleStepQ(fstep)) {
+        prerr("amc.fstep_timehook_band"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("steptype",fstep.steptype)
+              <<Keyval("stepband",fstep.stepband)
+              <<Keyval("comment","a time hook step fires in stepband work or idle"));
+        algo_lib::_db.exit_code++;
+    }
+    if (fstep.c_fsteprate && (fstep.c_fsteprate->ncall == 0 || fstep.c_fsteprate->npass == 0)) {
+        prerr("amc.fstep_rate_zero"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("comment","an fsteprate names at least one call over at least one pass"));
+        algo_lib::_db.exit_code++;
+    }
+    if (RatedStepQ(fstep)) {
+        InsVar(R, field.p_ctype, "u32", "$name_credit", "", "$field \tCalls the step's rate has earned and not spent");
     }
     if (fstep.steptype == dmmeta_Steptype_steptype_InlineRecur) {
         InsVar(R, field.p_ctype, "algo::SchedTime", "$name_next", "", "$field \tNext invocation time");
         InsVar(R, field.p_ctype, "algo::SchedTime", "$name_delay", "", "$field \tDelay between invocations");
     }
-    if (fstep.steptype == dmmeta_Steptype_steptype_TimeHookRecur || fstep.steptype == dmmeta_Steptype_steptype_TimeHookOnce) {
+    if (TimehookStepQ(fstep)) {
         InsVar(R, field.p_ctype, "algo_lib::FTimehook", "th_$name", "", "$field \tfstep time hook for $field");
     }
 }
@@ -197,8 +310,10 @@ void amc::tfunc_Step_UpdateCycles() {
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFstep &fstep = *field.c_fstep;
     amc::FFunc& func = amc::CreateCurFunc();
-    func.priv        = !amc::ExternStepQ(fstep);
-    func.inl = amc::DirectStepQ(fstep) && func.priv;
+    // an executable's Steps() calls a library's steps, so a library's are public
+    bool exe = amc::ExeQ(*field.p_ctype->p_ns);
+    func.priv        = !amc::ExternStepQ(fstep) && exe;
+    func.inl = amc::DirectStepQ(fstep) && !amc::ExternStepQ(fstep);
     Ins(&R, func.comment, "Update cycles count from previous clock capture");
     Ins(&R, func.ret     , "void",false);
     Ins(&R, func.proto   , "$name_UpdateCycles()",false);
@@ -256,21 +371,26 @@ void amc::tfunc_Step_Init() {
 
 // -----------------------------------------------------------------------------
 
+// Return the loop condition of the step on FIELD: the expression that is
+// true while the stepped list holds pending work.  For an alias step the
+// expression tests the other namespace's list
 static tempstr GetStepCond(amc::FField &field) {
+    amc::FField &list = amc::ListAliasQ(field) ? *field.c_falias->p_srcfield : field;
+    tempstr ref = tempstr() << list.p_ctype->p_ns->ns << "::" << name_Get(list);
     tempstr ret;
     // special work-around for ZSListMT -- EmptyQ  cannot be defined, DestructiveFirst must be used.
-    if (field.reftype == dmmeta_Reftype_reftype_ZSListMT) {
-        ret="$ns::$name_DestructiveFirst() != NULL";
-    } else if (field.reftype == dmmeta_Reftype_reftype_Inlary) {
-        ret= "!$ns::$name_EmptyQ()";
-    } else if (ValQ(field)
-               || field.reftype == dmmeta_Reftype_reftype_Ptr
-               || field.reftype == dmmeta_Reftype_reftype_Upptr) {
-        ret= "$ns::_db.$name";
-    } else if (field.reftype == dmmeta_Reftype_reftype_Global) {
+    if (list.reftype == dmmeta_Reftype_reftype_ZSListMT) {
+        ret = tempstr() << ref << "_DestructiveFirst() != NULL";
+    } else if (list.reftype == dmmeta_Reftype_reftype_Inlary) {
+        ret = tempstr() << "!" << ref << "_EmptyQ()";
+    } else if (ValQ(list)
+               || list.reftype == dmmeta_Reftype_reftype_Ptr
+               || list.reftype == dmmeta_Reftype_reftype_Upptr) {
+        ret = tempstr() << list.p_ctype->p_ns->ns << "::_db." << name_Get(list);
+    } else if (list.reftype == dmmeta_Reftype_reftype_Global) {
         ret= "true";
     } else {
-        ret= "!$ns::$name_EmptyQ()";
+        ret = tempstr() << "!" << ref << "_EmptyQ()";
     }
     return ret;
 }
@@ -289,8 +409,10 @@ void amc::tfunc_Step_Call() {
     amc::FFunc& call = amc::CreateCurFunc();
     Ins(&R, call.proto  , "$name_Call()",false);
     Ins(&R, call.ret  , "void",false);
-    call.inl = amc::DirectStepQ(fstep);
-    call.priv = !amc::ExternStepQ(fstep);
+    // an alias step tests another namespace's list, whose header a library's
+    // inline header may not see, so its call wrapper stays out of line
+    call.inl = amc::DirectStepQ(fstep) && !ListAliasQ(field);
+    call.priv = !amc::ExternStepQ(fstep) && amc::ExeQ(*field.p_ctype->p_ns);
     Set(R, "$LoopCond", GetStepCond(field));
 
     if (fstep.steptype == dmmeta_Steptype_steptype_InlineRecur) {
@@ -301,7 +423,9 @@ void amc::tfunc_Step_Call() {
         Ins(&R, call.body, "if ($LoopCond) { // fstep:$field");
         Ins(&R, call.body, "    if ($ns::_db.$name_next < algo_lib::_db.clock) {");
         if (fstep.c_fdelay && fstep.c_fdelay->scale) {
-            Ins(&R, call.body, "        u64 effective_delay = $ns::_db.$name_delay / u64_Max(1,$ns::$name_N());");
+            amc::FField &list = ListAliasQ(field) ? *field.c_falias->p_srcfield : field;
+            Set(R, "$listN", tempstr() << list.p_ctype->p_ns->ns << "::" << name_Get(list) << "_N()");
+            Ins(&R, call.body, "        u64 effective_delay = $ns::_db.$name_delay / u64_Max(1,$listN);");
             Ins(&R, call.body, "        $ns::_db.$name_next = algo_lib::_db.clock + algo::SchedTime(effective_delay);");
         } else {
             Ins(&R, call.body, "        $ns::_db.$name_next = algo_lib::_db.clock + $ns::_db.$name_delay;");
@@ -332,6 +456,41 @@ void amc::tfunc_Step_Call() {
         }
         Ins(&R, call.body, "        break;");
         Ins(&R, call.body, "    }");
+        Ins(&R, call.body, "}");
+    } else if (fstep.steptype == dmmeta_Steptype_steptype_Inline && RatedStepQ(fstep)) {
+        // A rate NCALL/NPASS is a for-loop whose limit may be a fraction: each
+        // pass earns NCALL credit and each call spends NPASS.  A pass that has
+        // spent what it could keeps less than NPASS, so it holds at most
+        // NCALL+NPASS-1 after earning; capping there loses no earned credit
+        // while the step has work, and an empty stretch banks less than one
+        // call.  A cap below that drops credit at 3/2 or 2/3.  An idle step is
+        // also called once in a pass that earned it no call, when the pass has
+        // time to give up.  With no fsteprate row the step is idle, and its
+        // rate is 1/8: a busy loop gives background work an eighth of its
+        // passes, and an idle one gives it every pass.
+        u32 ncall = fstep.c_fsteprate ? fstep.c_fsteprate->ncall : 1;
+        u32 npass = fstep.c_fsteprate ? fstep.c_fsteprate->npass : 8;
+        Set(R, "$ncall", tempstr() << ncall);
+        Set(R, "$npass", tempstr() << npass);
+        Set(R, "$ncap", tempstr() << (ncall + npass - 1));
+        Ins(&R, call.body, "$ns::_db.$name_credit = u32_Min($ns::_db.$name_credit + $ncall, $ncap); // fstep:$field  rate:$ncall/$npass");
+        Ins(&R, call.body, "bool called = false;");
+        Ins(&R, call.body, "while ($LoopCond && $ns::_db.$name_credit >= $npass) {");
+        Ins(&R, call.body, "    $ns::_db.$name_credit -= $npass;");
+        Ins(&R, call.body, "    $ns::$name_Step();");
+        Ins(&R, call.body, "    $name_UpdateCycles();");
+        Ins(&R, call.body, "    called = true;");
+        Ins(&R, call.body, "}");
+        if (IdleStepQ(fstep)) {
+            Ins(&R, call.body, "if (!called && $LoopCond && algo_lib::_db.next_loop > algo_lib::_db.clock) {");
+            Ins(&R, call.body, "    $ns::$name_Step(); // stepband:idle: the pass has time to give up");
+            Ins(&R, call.body, "    $name_UpdateCycles();");
+            Ins(&R, call.body, "}");
+        } else {
+            Ins(&R, call.body, "(void)called;");
+        }
+        Ins(&R, call.body, "if ($LoopCond) {");
+        Ins(&R, call.body, "    algo_lib::_db.next_loop = algo_lib::_db.clock;");
         Ins(&R, call.body, "}");
     } else if (fstep.steptype == dmmeta_Steptype_steptype_Inline) {
         Ins(&R, call.body, "if ($LoopCond) { // fstep:$field");
@@ -367,6 +526,7 @@ void amc::tfunc_Step_FirstChanged() {
         if (!is_extern && !GlobalQ(*field.p_ctype)) {
             Ins(&R, chg.body, "(void)$pararg;");
         }
+        Set(R, "$heap", TimehookHeap(fstep));
         if (fstep.steptype == dmmeta_Steptype_steptype_TimeHookRecur) {
             chg.priv = true;
             Ins(&R, chg.body, "$Ctype* row = $name_First($pararg);");
@@ -375,9 +535,9 @@ void amc::tfunc_Step_FirstChanged() {
             Ins(&R, chg.comment, "    schedule it after $parname.th_$name.delay clocks.");
             Ins(&R, chg.comment, "If index is non-empty, and time hook is already scheduled, do nothing");
             Ins(&R, chg.body, "if (row) {");
-            Ins(&R, chg.body, "    bh_timehook_Reheap($parname.th_$name); // ($field) TimeHookRecur");
+            Ins(&R, chg.body, "    $heap_Reheap($parname.th_$name); // ($field) TimeHookRecur");
             Ins(&R, chg.body, "} else {");
-            Ins(&R, chg.body, "    bh_timehook_Remove($parname.th_$name);");
+            Ins(&R, chg.body, "    $heap_Remove($parname.th_$name);");
             Ins(&R, chg.body, "}");
         } else if (fstep.steptype == dmmeta_Steptype_steptype_TimeHookOnce) {
             chg.priv = true;
@@ -386,9 +546,9 @@ void amc::tfunc_Step_FirstChanged() {
             Ins(&R, chg.comment, "If index is non-empty, update time hook to fire at specified time.");
             Ins(&R, chg.body, "if (row) {");
             Ins(&R, chg.body, "    $parname.th_$name.time = row->$sortfld;");
-            Ins(&R, chg.body, "    bh_timehook_Reheap($parname.th_$name); // ($field) TimeHookOnce");
+            Ins(&R, chg.body, "    $heap_Reheap($parname.th_$name); // ($field) TimeHookOnce");
             Ins(&R, chg.body, "} else {");
-            Ins(&R, chg.body, "    bh_timehook_Remove($parname.th_$name);");
+            Ins(&R, chg.body, "    $heap_Remove($parname.th_$name);");
             Ins(&R, chg.body, "}");
         } else if (is_extern) {
             Ins(&R, chg.comment, "Forward-declaration for user-provided function.");

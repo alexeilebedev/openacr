@@ -1,0 +1,39 @@
+# stage nodir
+# start gcache cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -install -dir:nofile/cache"
+gcache -> setting up gcache...
+gcache -> gcache.error  file:nofile/cache/.keep  err:***  comment:"cache directory marker could not be written"
+# eof gcache
+# exit gcache code:1
+# stage linkdir
+# start gcache-2 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -install -dir:cache"
+gcache-2 -> setting up gcache...
+gcache-2 -> gcache.error  file:.gcache  err:***  comment:"cache link could not be created"
+# eof gcache-2
+# exit gcache-2 code:1
+# stage disabledir
+# start gcache-3 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -disable"
+gcache-3 -> gcache.error  file:.gcache  err:***  comment:"cache link could not be removed"
+# eof gcache-3
+# exit gcache-3 code:1
+# stage control
+# start gcache-4 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -install -dir:cache"
+gcache-4 -> setting up gcache...
+gcache-4 -> done
+# eof gcache-4
+# exit gcache-4 code:0
+# check control_link:present
+# stage baddir
+# start gcache-5 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -enable -dir:missing"
+gcache-5 -> cache directory missing doesn't exist. try with -install option
+# eof gcache-5
+# exit gcache-5 code:1
+# check baddir_link:present
+# stage disable
+# start gcache-6 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -disable"
+# eof gcache-6
+# exit gcache-6 code:0
+# check disable_link:absent
+# stage redisable
+# start gcache-7 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -disable"
+# eof gcache-7
+# exit gcache-7 code:0

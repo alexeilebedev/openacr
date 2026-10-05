@@ -26,6 +26,7 @@ Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
     -nonstop                        Debug a process tree: keep every spawned process under gdb and let them run
     -verbose       flag             Verbosity level (0..255); alias -v; cumulative
     -debug         flag             Debug level (0..255); alias -d; cumulative
+    -trace         string  ""       Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig

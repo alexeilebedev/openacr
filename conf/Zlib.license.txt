@@ -1,0 +1,2 @@
+Licensed under the zlib License.
+See https://opensource.org/license/zlib

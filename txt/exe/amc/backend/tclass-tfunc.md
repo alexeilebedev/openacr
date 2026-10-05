@@ -138,8 +138,7 @@ follows from generation itself: every emission site marks the ffunc
 *used*, and `gen_check_ffunc` reports any ffunc left unused at the end of
 the run.  An unused ffunc names a function no generator produced for that
 field — a typo, or a name not applicable to the field's reftype (e.g.
-`FindRemove` on a `Val`).  This **MarkUsed** check replaced the former
-`amcdb.tcb` table (which had enumerated valid reftype × callback pairs).
+`FindRemove` on a `Val`).  This is the **MarkUsed** check.
 
 ### Binding to C
 <a href="#binding-to-c"></a>

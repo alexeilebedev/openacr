@@ -2,7 +2,8 @@
 <a href="#amc-reftype-bheap"></a>
 
 `Bheap` is a **binary heap** cross-reference — a priority queue
-of pointers ordered by a designated `sortfld`.  `First()` is
+of pointers ordered by a designated `sortfld`, optionally with a
+[sorted head](#a-sorted-head).  `First()` is
 O(1); `Insert` / `Remove` / `Reheap` are O(log N).  The binding
 to a specific sort field is what makes it a heap rather than a
 plain array of pointers: amc generates the comparator from
@@ -27,7 +28,7 @@ State in the **parent** ctype (see `tclass_Bheap` in
 | Field (parent)       | Type   | Meaning                                                |
 |----------------------|--------|--------------------------------------------------------|
 | `<name>_elems`       | `T**`  | array of pointers ordered as a binary heap by `sortfld` |
-| `<name>_n`           | `i32`  | number of elements in the heap                          |
+| `<name>_n`           | `i32`  | number of elements in the heap; with a head, `_nrun` and `_nheap` |
 | `<name>_max`         | `i32`  | capacity in pointers before realloc                     |
 
 State in the **element** ctype:
@@ -64,6 +65,74 @@ The comparator is generated as `<name>_ElemLt(a,b)` — calls
 `sortfld_Lt(a,b)` if a custom `dmmeta.fcmp` exists, otherwise
 falls back to `a.sortfld < b.sortfld`.
 
+### A sorted head
+<a href="#a-sorted-head"></a>
+
+Take an order book kept as a heap of price levels.  Nearly all of its traffic is at the
+best few levels: the best level fills and goes away, a new level appears one tick away, a
+level two ticks back is canceled.  A plain binary heap pays a full sift for each of these.
+A pop moves the last row into the root and walks it down, and a cancel near the top does
+the same from the canceled slot.  A market-data snapshot that walks the best ten levels
+builds a helper heap and sorts them again every time.
+
+The heap order only needs the head to be cheap.  So a Bheap can keep its smallest rows as
+a sorted run, and the run's largest row is the root of an ordinary heap below it.  A
+`dmmeta.bheap` row sets the run's capacity:
+
+```ssim
+dmmeta.bheap  field:atf_amc.FDb.bh_heap_elem_head  nhead:32  comment:""
+```
+
+Without the row, `nhead` is 1: the run is the root alone, and amc generates the plain heap
+described above, with the parent fields `_elems`, `_n` and `_max`.  With `nhead` of 2 or
+more, the parent holds `_elems`, `_nrun` (rows in the run), `_nheap` (rows below the root)
+and `_max`.  The run is right-aligned in slots 0 to nhead-1, so it ends at the root in
+slot R = nhead-1, and the root's heap gives slot J the children 2J-R+1 and 2J-R+2.  Every
+run row is at most the root, and the root is at most every heap row.
+
+While the run holds two or more rows, a pop takes its first row and moves nothing else.
+An insert or a cancel among the best rows shifts a few pointers inside the run.  Inserting
+into a full run demotes the root into the heap, and removing the root while the run holds
+other rows lets the next largest run row take its place.  Only rows that enter or leave
+through the root pay a full sift.
+
+The run refills only through inserts below the root and through `fillcurs` walks.  Once pops
+have drained it down to the root, each pop sifts the last heap row into the root slot, as
+a heap without a head does, so a queue that drains more than it inserts near its front
+gets plain heap pops.
+
+The sorted cursor walks the run in place, so a walk of the best rows reads them in order
+with no allocation.  Past the root it continues through a helper heap, as a heap without
+a head does, and it never writes to the Bheap.
+
+Once pops have drained the run, every walk past the root builds that helper heap.  Ask
+for `fillcurs` with a `dmmeta.fcurs` row to refill the run as you walk:
+
+```ssim
+dmmeta.fcurs  fcurs:atf_amc.FDb.bh_heap_elem_head/fillcurs  comment:""
+```
+
+When `fillcurs` reaches the root while the run has room, it promotes the root's smaller
+child into the run, so a walk of K rows leaves up to K rows sorted in the run for the
+pops and walks that follow.  On a 16-row heap whose run the pops keep draining, a walk of
+the best 10 rows costs about 75 ns with `fillcurs` and about 225 ns with `curs`.  A
+`fillcurs` walk changes the layout, so nothing else may walk the Bheap while one is
+active.  amc refuses `fillcurs` on a Bheap without a head.
+
+`atf_amc -amctest:PerfBheapHead` runs one scenario against a Bheap, a Bheap with a head of
+32 rows, and an Atree.  With four million rows, on an AMD EPYC 7702P:
+
+|Workload|nhead 1|nhead 32|
+|---|---|---|
+|book: 16 levels below all others, churned by pops and cancels|~125 ns|~45 ns|
+|depth: the book workload plus a walk of the best 10 rows|~275 ns|~75 ns|
+|pop the first row, push it back with a later key|~1.1 µs|~1.1 µs|
+|change a random row's key, Reheap|~290 ns|~290 ns|
+
+A head helps when the traffic concentrates on a band of the best rows that fits in it, as
+in an order book or a deadline queue whose near deadlines keep moving, so pick an `nhead`
+larger than that band.  On other traffic a Bheap with a head costs about what one without costs.
+
 ### Sort field
 <a href="#sort-field"></a>
 
@@ -98,6 +167,8 @@ Optional:
   versionsort, case-insensitive, multi-field).
 - `dmmeta.fstep` on the field if you want a step function to
   fire whenever the heap top changes (`FirstChanged` hook).
+- `dmmeta.bheap` to give the heap a [sorted head](#a-sorted-head)
+  of `nhead` rows.
 
 ### Generated functions
 <a href="#generated-functions"></a>
@@ -106,7 +177,7 @@ Source: `cpp/amc/bheap.cpp`.
 
 | Tfunc                  | Generated function                                       | Effect |
 |------------------------|----------------------------------------------------------|--------|
-| `Bheap.Init`           | `<name>_Init(P&)` (macro)                                | Zero `_elems`/`_n`/`_max`.  No initial allocation. |
+| `Bheap.Init`           | `<name>_Init(P&)` (macro)                                | Zero `_elems`, the counts and `_max`.  No initial allocation. |
 | `Bheap.Uninit`         | `<name>_Uninit(P&)` (macro)                              | Free the pointer array (no-op for global FDb). |
 | `Bheap.N`              | `i32 <name>_N(const P&)`                                 | Count. |
 | `Bheap.EmptyQ`         | `bool <name>_EmptyQ(P&)`                                 | `_n == 0`. |
@@ -122,14 +193,16 @@ Source: `cpp/amc/bheap.cpp`.
 | `Bheap.SetIfBetter`    | `void <sortfld>_SetIfBetter(P&, T& row, K new_key)`      | Same as Set, but only writes when `new_key` is strictly better than the current key. |
 | `Bheap.Cascdel`        | (private)                                                | Pop from the back and `Delete` each row.  Emitted when xref has `cascdel:Y`. |
 | `Bheap.Reserve`        | `void <name>_Reserve(P&, i32 n)`                         | Grow the pointer array so that `n` *more* elements would fit; doubling growth. |
-| `Bheap.Compact`        | `void <name>_Compact(P&)`                                | Shrink the pointer array down to `_n`, returning unused memory to the base pool. |
+| `Bheap.Compact`        | `void <name>_Compact(P&)`                                | Halve the pointer array while the rows fill less than a quarter of it, returning memory to the base pool. |
 | `Bheap.Dealloc`        | (private)                                                | Free the pointer array unconditionally. |
 | `Bheap.Upheap`         | (private) `<name>_Upheap(P&, T&, i32)`                   | Sift-up helper. |
 | `Bheap.Downheap`       | (private) `<name>_Downheap(P&, T&, i32)`                 | Sift-down helper. |
 | `Bheap.ElemLt`         | (private) `<name>_ElemLt(P&, T&, T&)`                    | Comparator: `a < b` by sortfld. |
 | `Bheap.ElemLtval`      | (private) `<name>_ElemLtval(P&, T&, const K&)`           | Compare row's key against a raw value (used by SetIfBetter). |
-| `Bheap.curs`           | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access`       | Cursor that pops the heap in sorted order — destructive! |
+| `Bheap.curs`           | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access`       | Cursor that returns the heap in sorted order through a helper heap; the heap is unchanged.  With a head, it walks the run in place first. |
 | `Bheap.unordcurs`      | `<P>_<name>_unordcurs` + accessors *(opt-in)*            | Cursor that iterates the underlying array in arbitrary order — does **not** modify the heap.  Request it with a `dmmeta.fcurs` row, see [cursors](/txt/exe/amc/reftype.md#cursors). |
+| `Bheap.fillcurs`       | `<P>_<name>_fillcurs` + accessors *(opt-in, head only)*  | Sorted cursor that promotes heap rows into the run as it walks; nothing else may walk the heap meanwhile. |
+| `Bheap.RunInsert`, `RunRemove`, `RemoveRoot`, `Demote`, `InsertImpl`, `RemoveImpl` | (private) | The run's helpers; generated only with a head.  `Promote` exists only beside a `fillcurs`. |
 
 ### Memory model
 <a href="#memory-model"></a>
@@ -155,9 +228,9 @@ Source: `cpp/amc/bheap.cpp`.
   wrong slot.  Use `<sortfld>_Set` (or `<sortfld>_SetIfBetter`).
 - **`ReheapFirst` requires non-empty heap.**  Calling it on an
   empty heap is undefined behavior.
-- **`curs` is destructive.**  The forward cursor pops elements
-  off the heap to yield them in order.  Use `unordcurs` if you
-  want to iterate without modifying.
+- **`curs` allocates.**  The sorted cursor keeps a helper heap
+  that grows with the walk's frontier.  Use `unordcurs` when order
+  does not matter.
 - **No `Maybe`-flavored Insert.**  OOM on the pointer array is
   fatal — `Reserve` calls `FatalErrorExit`.
 - **Element's `_Init` must run** (sets `idx=-1`).  Bypassing
@@ -193,8 +266,8 @@ starttime_Set(cmd, new_time); // writes field + Reheap
 abt::FSyscmd *next = bh_syscmd_RemoveFirst();
 ```
 
-Iteration without mutating the heap (for printing, etc.) uses
-the **unordered** cursor:
+Iteration in arbitrary order (for printing, etc.) uses the
+**unordered** cursor, which allocates nothing:
 
 ```c++
 ind_beg(abt::_db_bh_syscmd_unordcurs, cmd, abt::_db) {
@@ -202,5 +275,5 @@ ind_beg(abt::_db_bh_syscmd_unordcurs, cmd, abt::_db) {
 } ind_end;
 ```
 
-The default `curs` pops elements one at a time — useful when
-you really want to drain the heap in order.
+The default `curs` returns the rows in key order and leaves the
+heap as it was.  To drain the heap, loop on `RemoveFirst`.

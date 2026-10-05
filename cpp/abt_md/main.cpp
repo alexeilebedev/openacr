@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: abt_md (exe) -- Tool to generate markdown documentation
 // Exceptions: yes
@@ -274,7 +274,7 @@ void abt_md::UpdateReadme() {
         }
     }ind_end;
 
-    if (readmefile.sandbox && _db.cmdline.evalcmd) {
+    if (readmefile.sandbox && readmefile.evalcmd) {
         command::wt_proc wt;
         wt.cmd.name.expr = dev_Sandbox_sandbox_abt_md;
         wt.cmd.reset = true;
@@ -388,10 +388,17 @@ void abt_md::Main_XrefNs() {
                 if (filename == "README") {
                     readmefile.p_ns = ns;
                     ns->c_readmefile=&readmefile;
-                } else if (abt_md::FCtype *ctype =ind_ctype_Find(ctype_key)) {
-                    readmefile.p_ctype=ctype;
                 } else {
-                    stray_error<<Keyval("no such ctype",ctype_key);
+                    // A page under a protocol namespace documents the ctype its filename
+                    // names.  An extension may recognize the page as documenting a subject
+                    // of its own, and then the page already has a title from that subject
+                    // when it loads.  Such a subject may have no ctype -- a ctype named
+                    // after a command called `help` would declare a member with the name
+                    // of its own class -- so only a page with neither is a stray.
+                    readmefile.p_ctype=ind_ctype_Find(ctype_key);
+                    if (!readmefile.p_ctype && !ch_N(readmefile.title)) {
+                        stray_error<<Keyval("no such ctype",ctype_key);
+                    }
                 }
             } else {
                 // other file such as txt/exe/amc/xyz.md
@@ -745,7 +752,7 @@ void abt_md::Main_CheckMdsection() {
 // A key is written `<ssimfile>:<pkey>`, and `acr -sel` reads tuples, so the
 // key has to be turned into `<ssimfile>  <attr>:<pkey>`. The attribute is the
 // name of the ctype's first field, which is not always the ssimfile's own last
-// component: `x2db.gwproto` is keyed by `netproto`, so composing the attribute
+// component: `dev.readmefile` is keyed by `gitfile`, so composing the attribute
 // from the ssimfile name sends a tuple with no primary key and acr answers
 // with nothing -- which reads as "no record has this key" and reports a
 // correct reference as broken.
@@ -876,6 +883,11 @@ void abt_md::Main() {
         readmefile.select = _db.cmdline.ns.expr != ""
             ? (readmefile.p_ns && Regx_Match(_db.cmdline.ns,readmefile.p_ns->ns))
             : Regx_Match(_db.cmdline.readmefile,readmefile.gitfile);
+        // A tutorial under txt/tut builds a sample program with acr_ed -write, and
+        // evaluating the tutorials takes most of a whole-tree pass, so a plain run
+        // regenerates their sections and leaves their output blocks as they are.
+        readmefile.evalcmd = _db.cmdline.evalcmd
+            && (_db.cmdline.tut || !StartsWithQ(readmefile.gitfile,"txt/tut/"));
 
         if (readmefile.select) {
             verblog("abt_md: select "<<readmefile.gitfile);

@@ -1,63 +1,102 @@
-# start bash cmd:'bash -c \'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf "int f(){return 1;}\\n" > x.cpp && printf "inline int g(){return 2;}\\n" > h.hpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null; cxx(){ local arg; local -a args=(); for arg in "$$@"; do case "$$arg" in --test-coverage) arg=-ftest-coverage;; --profile-arcs) arg=-fprofile-arcs;; esac; args+=("$$arg"); done; command g++ "$${args[@]}"; }; export -f cxx; try(){ rm -f x.o x.gcno; $$G -report -- cxx $$2 -c x.cpp -o x.o > rep.txt; echo $$1_first:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/$$1_first_/"; rm -f x.o x.gcno; $$G -report -- cxx $$2 -c x.cpp -o x.o > rep.txt; echo $$1_second:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/$$1_second_/"; test -s x.o && echo $$1_o:present || echo $$1_o:empty; test -e x.gcno && echo $$1_gcno:present || echo $$1_gcno:absent; }; tryname(){ rm -f $$2 $$3; $$G -report -- cxx --coverage -c x.cpp -o $$2 > rep.txt; echo $$1_first:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/$$1_first_/"; rm -f $$2 $$3; $$G -report -- cxx --coverage -c x.cpp -o $$2 > rep.txt; echo $$1_second:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/$$1_second_/"; test -s $$2 && echo $$1_o:present || echo $$1_o:empty; test -e $$3 && echo $$1_gcno:present || echo $$1_gcno:absent; }; trygchname(){ rm -f h.hpp.gch h.hpp.gcno; $$G -report -- cxx --coverage -c h.hpp -o h.hpp.gch > rep.txt; echo $$1_first:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/$$1_first_/"; rm -f h.hpp.gch h.hpp.gcno; $$G -report -- cxx --coverage -c h.hpp -o h.hpp.gch > rep.txt; echo $$1_second:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/$$1_second_/"; test -s h.hpp.gch && echo $$1_o:present || echo $$1_o:empty; test -e h.hpp.gcno && echo $$1_gcno:present || echo $$1_gcno:absent; }; try both "--coverage"; try dashboth "-coverage"; try notesonly "-ftest-coverage"; try dashnotesonly "--test-coverage"; try arcsonly "-fprofile-arcs"; try dasharcsonly "--profile-arcs"; try plain ""; tryname obj x.obj x.gcno; tryname noext foo foo.gcno; trygchname gchname\''
-# eof bash
-bash -> both_first:0
-bash -> both_first_hit:N
-bash -> both_second:0
-bash -> both_second_hit:Y
-bash -> both_o:present
-bash -> both_gcno:present
-bash -> dashboth_first:0
-bash -> dashboth_first_hit:N
-bash -> dashboth_second:0
-bash -> dashboth_second_hit:Y
-bash -> dashboth_o:present
-bash -> dashboth_gcno:present
-bash -> notesonly_first:0
-bash -> notesonly_first_hit:N
-bash -> notesonly_second:0
-bash -> notesonly_second_hit:Y
-bash -> notesonly_o:present
-bash -> notesonly_gcno:present
-bash -> dashnotesonly_first:0
-bash -> dashnotesonly_first_hit:N
-bash -> dashnotesonly_second:0
-bash -> dashnotesonly_second_hit:Y
-bash -> dashnotesonly_o:present
-bash -> dashnotesonly_gcno:present
-bash -> arcsonly_first:0
-bash -> arcsonly_first_hit:N
-bash -> arcsonly_second:0
-bash -> arcsonly_second_hit:Y
-bash -> arcsonly_o:present
-bash -> arcsonly_gcno:absent
-bash -> dasharcsonly_first:0
-bash -> dasharcsonly_first_hit:N
-bash -> dasharcsonly_second:0
-bash -> dasharcsonly_second_hit:Y
-bash -> dasharcsonly_o:present
-bash -> dasharcsonly_gcno:absent
-bash -> plain_first:0
-bash -> plain_first_hit:N
-bash -> plain_second:0
-bash -> plain_second_hit:Y
-bash -> plain_o:present
-bash -> plain_gcno:absent
-bash -> obj_first:0
-bash -> obj_first_hit:N
-bash -> obj_second:0
-bash -> obj_second_hit:Y
-bash -> obj_o:present
-bash -> obj_gcno:present
-bash -> noext_first:0
-bash -> noext_first_hit:N
-bash -> noext_second:0
-bash -> noext_second_hit:Y
-bash -> noext_o:present
-bash -> noext_gcno:present
-bash -> gchname_first:0
-bash -> gchname_first_hit:N
-bash -> gchname_second:0
-bash -> gchname_second_hit:Y
-bash -> gchname_o:present
-bash -> gchname_gcno:present
-# exit bash code:0
+# stage install
+# start gcache cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -install -dir:cache"
+gcache -> setting up gcache...
+gcache -> done
+# eof gcache
+# exit gcache code:0
+# stage both_first
+# start gcache-2 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-2 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-2
+# exit gcache-2 code:0
+# stage both_second
+# start gcache-3 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.o"
+gcache-3 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-3
+# exit gcache-3 code:0
+# check both_o:present
+# check both_gcno:present
+# stage dashboth_first
+# start gcache-4 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -coverage -c x.cpp -o x.o"
+gcache-4 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-4
+# exit gcache-4 code:0
+# stage dashboth_second
+# start gcache-5 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -coverage -c x.cpp -o x.o"
+gcache-5 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-5
+# exit gcache-5 code:0
+# check dashboth_o:present
+# check dashboth_gcno:present
+# stage notesonly_first
+# start gcache-6 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -ftest-coverage -c x.cpp -o x.o"
+gcache-6 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-6
+# exit gcache-6 code:0
+# stage notesonly_second
+# start gcache-7 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -ftest-coverage -c x.cpp -o x.o"
+gcache-7 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-7
+# exit gcache-7 code:0
+# check notesonly_o:present
+# check notesonly_gcno:present
+# stage arcsonly_first
+# start gcache-8 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -fprofile-arcs -c x.cpp -o x.o"
+gcache-8 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-8
+# exit gcache-8 code:0
+# stage arcsonly_second
+# start gcache-9 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -fprofile-arcs -c x.cpp -o x.o"
+gcache-9 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-9
+# exit gcache-9 code:0
+# check arcsonly_o:present
+# check arcsonly_gcno:absent
+# stage plain_first
+# start gcache-10 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -c x.cpp -o x.o"
+gcache-10 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-10
+# exit gcache-10 code:0
+# stage plain_second
+# start gcache-11 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ -c x.cpp -o x.o"
+gcache-11 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-11
+# exit gcache-11 code:0
+# check plain_o:present
+# check plain_gcno:absent
+# stage obj_first
+# start gcache-12 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.obj"
+gcache-12 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-12
+# exit gcache-12 code:0
+# stage obj_second
+# start gcache-13 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o x.obj"
+gcache-13 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-13
+# exit gcache-13 code:0
+# check obj_o:present
+# check obj_gcno:present
+# stage noext_first
+# start gcache-14 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o foo"
+gcache-14 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-14
+# exit gcache-14 code:0
+# stage noext_second
+# start gcache-15 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c x.cpp -o foo"
+gcache-15 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-15
+# exit gcache-15 code:0
+# check noext_o:present
+# check noext_gcno:present
+# stage gchname_first
+# start gcache-16 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c h.hpp -o h.hpp.gch"
+gcache-16 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:h.hpp  pch_source:""
+# eof gcache-16
+# exit gcache-16 code:0
+# stage gchname_second
+# start gcache-17 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- g++ --coverage -c h.hpp -o h.hpp.gch"
+gcache-17 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:h.hpp  pch_source:""
+# eof gcache-17
+# exit gcache-17 code:0
+# check gchname_o:present
+# check gchname_gcno:present

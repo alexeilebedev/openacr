@@ -5,7 +5,7 @@ acr_ed -> bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
 acr_ed -> dmmeta.ctype  ctype:ams.AbcMsg  comment:""
 acr_ed -> dmmeta.field  field:ams.AbcMsg.base  arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
 acr_ed -> dmmeta.pack  ctype:ams.AbcMsg  comment:""
-acr_ed -> dmmeta.msgtype  ctype:ams.AbcMsg  type:***
+acr_ed -> dmmeta.msgtype  ctype:ams.AbcMsg  type:***  strip:N  heartbeat:N
 acr_ed -> dmmeta.cfmt  cfmt:ams.AbcMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 acr_ed -> EOF
 acr_ed -> bin/amc

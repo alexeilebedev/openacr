@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
@@ -59,6 +59,32 @@ void atf_amc::amctest_ReadTuple2() {
     Tuple_ReadStrptr(tuple, out, false);
     vrfy_(Ctype2Attr_ReadTupleMaybe(in_ctype, tuple));
     vrfyeq_(in_ctype, out_ctype);
+}
+
+// -----------------------------------------------------------------------------
+
+// An attribute naming no field is extra information: the read succeeds and the
+// fields the tuple does name land.  With algo_lib::_db.strict_attr set the
+// attribute is an error naming itself, and acr.rowid is never one.  A positional
+// past the last anonymous field is refused under either setting.
+void atf_amc::amctest_ReadTupleUnknownAttr() {
+    atf_amc::Ctype2AttrAnon anon;
+    vrfy_(Ctype2AttrAnon_ReadStrptrMaybe(anon, "atf_amc.Ctype2AttrAnon  1  2"));
+    vrfy_(!Ctype2AttrAnon_ReadStrptrMaybe(anon, "atf_amc.Ctype2AttrAnon  1  2  3"));
+    atf_amc::Ctype2Attr in_ctype;
+    vrfy_(Ctype2Attr_ReadStrptrMaybe(in_ctype, "atf_amc.Ctype2Attr  attr1:33  zzz:1  attr2:44"));
+    vrfyeq_(in_ctype.attr1, 33u);
+    vrfyeq_(in_ctype.attr2, 44u);
+    algo_lib::_db.strict_attr = true;
+    bool ok = Ctype2Attr_ReadStrptrMaybe(in_ctype, "atf_amc.Ctype2Attr  attr1:1  zzz:1");
+    tempstr err = algo_lib::DetachBadTags();
+    bool ok_rowid = Ctype2Attr_ReadStrptrMaybe(in_ctype, "atf_amc.Ctype2Attr  attr1:2  acr.rowid:7");
+    algo_lib::_db.strict_attr = false;
+    vrfy_(!ok);
+    vrfy_(algo::FindStr(err, "unrecognized attr") != -1);
+    vrfy_(algo::FindStr(err, "attr:zzz") != -1);
+    vrfy_(ok_rowid);
+    vrfyeq_(in_ctype.attr1, 2u);
 }
 
 // -----------------------------------------------------------------------------

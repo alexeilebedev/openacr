@@ -11,7 +11,7 @@ time:
 |-------------------|--------------------------------------------------|
 | `dmmeta.csize`    | The total size of a ctype in bytes.              |
 | `dmmeta.fldoffset`| The offset of a named field within a ctype.     |
-| `dmmeta.ctypelen` | The calculated length / alignment / pad-byte count of a ctype.  Auto-populated by amc, used by `Opt`/`Varlen` sizing. |
+| `gendb.ctypelen` | The calculated length / alignment / pad-byte count of a ctype.  Auto-populated by amc, used by `Opt`/`Varlen` sizing. |
 
 amc emits a `StaticCheck()` function per namespace that
 materializes each of these assertions as an `algo_assert` —
@@ -66,7 +66,7 @@ and fail the build.
 ### ctypelen
 <a href="#ctypelen"></a>
 
-`dmmeta.ctypelen` is **calculated by amc**, not handwritten:
+`gendb.ctypelen` is **calculated by amc**, not handwritten:
 
 | Attribute   | Source |
 |-------------|--------|
@@ -75,7 +75,7 @@ and fail the build.
 | `padbytes`  | Total bytes of padding inserted. |
 | `plaindata` | True iff the struct's value is its bytes, so a copy may be a memcpy. |
 
-amc inserts a `dmmeta.ctypelen` row for every ctype it sees;
+amc inserts a `gendb.ctypelen` row for every ctype it sees;
 downstream consumers (`Opt`, `Varlen`, the wire-format
 codecs) use it to compute message sizes without including the
 ctype's header.
@@ -134,7 +134,7 @@ must be set on the target type.
   `_offset_of(struct, field)` rather than the C `offsetof`
   to avoid macro name clashes in some clang environments.
 - **ctypelen is calculated, not declared by hand.**  Don't
-  edit `ssimfile:dmmeta.ctypelen` directly — `amc` rewrites
+  edit `ssimfile:gendb.ctypelen` directly — `amc` rewrites
   it on every run.
 - **Sub-byte layout (Bitfld) is not validated** by fldoffset.
   Use `csize` on the host integer and trust amc's bit
@@ -148,7 +148,7 @@ must be set on the target type.
 - [Opt](/txt/exe/amc/reftype/Opt.md) / [Varlen](/txt/exe/amc/reftype/Varlen.md) — consumers of ctypelen
 - [Backend / pipeline](/txt/exe/amc/backend/pipeline.md) — `gen_compute_size`, `gen_ns_size_enums`
 - Source: `cpp/amc/size.cpp`, `cpp/amc/protocol.cpp`
-- Spec tables: `acr 'dmmeta.csize:%'`, `acr 'dmmeta.fldoffset:%'`, `acr 'dmmeta.ctypelen:%'`
+- Spec tables: `acr 'dmmeta.csize:%'`, `acr 'dmmeta.fldoffset:%'`, `acr 'gendb.ctypelen:%'`
 
 ### Example
 <a href="#example"></a>

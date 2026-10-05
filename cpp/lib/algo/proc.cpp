@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
@@ -210,6 +209,33 @@ void algo_lib::ProcWait(algo_lib::FProc &proc) {
     }
     algo_lib::Close(proc.from_stdout);
     algo_lib::Close(proc.from_stderr);
+}
+
+// Reap the subprocess if it has already exited, without waiting for it: TRUE
+// when it is no longer running, and then its status is stored and its pid
+// cleared, so ProcExitCode answers for it.  FALSE while it still runs.
+//
+// This is what a step calls, since a step may not block and ProcWait does.  A
+// proc that was never started reads as not running, so a caller that wants a
+// spawn failure told apart from an exit reads proc.status, which ProcStart sets
+// to -1 when the fork or exec failed.  Pipes are the caller's to drain: this
+// closes none, because a child that wrote more than a pipe holds has not exited
+// and there would be nothing to reap.
+bool algo_lib::ProcReapQ(algo_lib::FProc &proc) {
+    bool ret = proc.pid == 0;
+    if (proc.pid > 0) {
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            rc = waitpid(proc.pid,&wait_status,WNOHANG);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == proc.pid) {
+            proc.status = wait_status;
+            proc.pid    = 0;
+            ret         = true;
+        }
+    }
+    return ret;
 }
 
 // Kill the subprocess with SIGKILL and reap it. No-op when not running.

@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 // Copyright (C) 2024 Astra
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr_ed (exe) -- Script generator for common dev tasks
@@ -60,13 +60,13 @@ namespace acr_ed { // update-hdr
     // Example 2:
     // acr_ed -create -ctype atf_tmsg.FOrder -reftype Tpool -indexed
     //     (user-implemented function, prototype is in amc-generated header)
-    // void edaction_Create_Ctype(); // gstatic/dev.edaction:Create_Ctype
+    // void edaction_Create_Ctype(); // dev.edaction:Create_Ctype
 
     // acr_ed -ctype:X -del -write
-    // void edaction_Delete_Ctype(); // gstatic/dev.edaction:Delete_Ctype
+    // void edaction_Delete_Ctype(); // dev.edaction:Delete_Ctype
 
     // acr_ed -ctype:X -rename:Y -write
-    // void edaction_Rename_Ctype(); // gstatic/dev.edaction:Rename_Ctype
+    // void edaction_Rename_Ctype(); // dev.edaction:Rename_Ctype
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/dispatch_msg.cpp -- Create dispatch_msg record
@@ -75,7 +75,7 @@ namespace acr_ed { // update-hdr
     // Add a dmmeta.dispatch_msg record routing a message ctype to a dispatch.
     // Pkey form: "<dispatch>/<msgtype-ctype>", e.g. "lib_prot.Client/ams.LogMsg".
     //     (user-implemented function, prototype is in amc-generated header)
-    // void edaction_Create_DispatchMsg(); // gstatic/dev.edaction:Create_DispatchMsg
+    // void edaction_Create_DispatchMsg(); // dev.edaction:Create_DispatchMsg
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/field.cpp -- Create, delete, rename field
@@ -94,7 +94,7 @@ namespace acr_ed { // update-hdr
     // attribute, so each ssimfile holding rows of the edited ctype is rewritten
     // once the schema row is gone.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void edaction_Delete_Field(); // gstatic/dev.edaction:Delete_Field
+    // void edaction_Delete_Field(); // dev.edaction:Delete_Field
 
     // Rename a field within its ctype, refusing the spellings of -rename that
     // cannot mean what they look like.
@@ -115,8 +115,8 @@ namespace acr_ed { // update-hdr
     // field delete was taught to avoid.  The move is refused whenever either side is
     // ssim-backed, and it is a delete and a create rather than a rename.  Between
     // two in-memory ctypes there is no column to strand, so it goes through.
-    // void edaction_Rename_Field(); // gstatic/dev.edaction:Rename_Field
-    // void edaction_Create_Field(); // gstatic/dev.edaction:Create_Field
+    // void edaction_Rename_Field(); // dev.edaction:Rename_Field
+    // void edaction_Create_Field(); // dev.edaction:Create_Field
 
     // Look at field FIELD, which is of reftype acr_ed::_db.cmdline.reftype.
     // Create any required record for it:
@@ -135,11 +135,11 @@ namespace acr_ed { // update-hdr
     // Add a dmmeta.fstep record on an existing field with the chosen steptype
     // (default Inline).
     //     (user-implemented function, prototype is in amc-generated header)
-    // void edaction_Create_Fstep(); // gstatic/dev.edaction:Create_Fstep
+    // void edaction_Create_Fstep(); // dev.edaction:Create_Fstep
 
     // Add a dmmeta.fcurs record for a custom cursor on an existing field.
     // The fcurs pkey is "<field>/<curstype-name>", e.g. "ns.FDb.ind_x/curs".
-    // void edaction_Create_Fcurs(); // gstatic/dev.edaction:Create_Fcurs
+    // void edaction_Create_Fcurs(); // dev.edaction:Create_Fcurs
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/finput.cpp
@@ -147,7 +147,7 @@ namespace acr_ed { // update-hdr
 
     // #AL# todo: merge this with -create -ctype
     //     (user-implemented function, prototype is in amc-generated header)
-    // void edaction_Create_Finput(); // gstatic/dev.edaction:Create_Finput
+    // void edaction_Create_Finput(); // dev.edaction:Create_Finput
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/main.cpp
@@ -173,7 +173,7 @@ namespace acr_ed { // update-hdr
     void ScriptEditFile(algo_lib::Replscope &R, strptr fname);
     void ProcessAction();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Main(); // main:acr_ed
+    // void Main(); // dmmeta.main:acr_ed
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/srcfile.cpp -- Create, delete, rename source file
@@ -181,36 +181,36 @@ namespace acr_ed { // update-hdr
 
     // Create cpp, script, h or readme file
     //     (user-implemented function, prototype is in amc-generated header)
-    // void edaction_Create_Srcfile(); // gstatic/dev.edaction:Create_Srcfile
+    // void edaction_Create_Srcfile(); // dev.edaction:Create_Srcfile
 
     // Rename cpp, h, or readme file
-    // void edaction_Rename_Srcfile(); // gstatic/dev.edaction:Rename_Srcfile
+    // void edaction_Rename_Srcfile(); // dev.edaction:Rename_Srcfile
 
     // Delete cpp,h, or readme file
-    // void edaction_Delete_Srcfile(); // gstatic/dev.edaction:Delete_Srcfile
+    // void edaction_Delete_Srcfile(); // dev.edaction:Delete_Srcfile
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/ssimfile.cpp -- Create, delete, rename ssim file
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void edaction_Create_Ssimfile(); // gstatic/dev.edaction:Create_Ssimfile
-    // void edaction_Rename_Ssimfile(); // gstatic/dev.edaction:Rename_Ssimfile
-    // void edaction_Delete_Ssimfile(); // gstatic/dev.edaction:Delete_Ssimfile
+    // void edaction_Create_Ssimfile(); // dev.edaction:Create_Ssimfile
+    // void edaction_Rename_Ssimfile(); // dev.edaction:Rename_Ssimfile
+    // void edaction_Delete_Ssimfile(); // dev.edaction:Delete_Ssimfile
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/target.cpp -- Create, delete, rename target
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void edaction_Create_Target(); // gstatic/dev.edaction:Create_Target
-    // void edaction_Rename_Target(); // gstatic/dev.edaction:Rename_Target
-    // void edaction_Delete_Target(); // gstatic/dev.edaction:Delete_Target
+    // void edaction_Create_Target(); // dev.edaction:Create_Target
+    // void edaction_Rename_Target(); // dev.edaction:Rename_Target
+    // void edaction_Delete_Target(); // dev.edaction:Delete_Target
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/unittest.cpp -- Create, delete, rename unit test
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void edaction_Create_Unittest(); // gstatic/dev.edaction:Create_Unittest
+    // void edaction_Create_Unittest(); // dev.edaction:Create_Unittest
 
     // Create a new normalization check
-    // void edaction_Create_Citest(); // gstatic/dev.edaction:Create_Citest
+    // void edaction_Create_Citest(); // dev.edaction:Create_Citest
 }

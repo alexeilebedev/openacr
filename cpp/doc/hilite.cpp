@@ -1,30 +1,29 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: doc (exe) -- Render a markdown document to the terminal
 // Exceptions: yes
 // Source: cpp/doc/hilite.cpp
 //
 // Colour the contents of a fenced code block.
-// Two languages are worth a lexer here, and the corpus says which: of the
-// fenced blocks under txt/, two thousand are c++ and three hundred and fifty
-// are bash, with a handful of everything else.  A block in any other language
-// prints uncoloured, which is the honest result -- a wrong colour reads as a
-// claim about the code, and a shell line mistaken for c++ makes that claim on
-// every line.
+// Three languages are worth a lexer here, and the corpus says which: of the
+// fenced blocks under txt/, two thousand are c++, three hundred and fifty are
+// bash and four hundred are ssim, with a handful of everything else.  A block in any
+// other language prints uncoloured, which is the honest result -- a wrong
+// colour reads as a claim about the code, and a shell line mistaken for c++
+// makes that claim on every line.
 // The lexers are deliberately shallow.  They find comments, strings, numbers,
 // keywords and command flags, and they do not attempt to parse anything.  A
 // documentation listing is read, not compiled, and those five categories are
@@ -229,6 +228,68 @@ static void HighlightBash(algo::strptr text, doc::FRun &run) {
     }
 }
 
+// Color one attribute of a tuple, TEXT, into RUN: its name in sky blue, the colon
+// uncolored, its value in amber, and a quoted value in pale green.  These are the
+// colors a page of records paints an attribute with, so a record reads the same in a
+// quotation as it does in acr's answer.
+static void SsimAttr(algo::strptr text, doc::FRun &run) {
+    int colon = algo::FindChar(text, ':');
+    algo::strptr name = colon >= 0 ? algo::strptr(text.elems, colon) : text;
+    algo::strptr shown = colon >= 0 ? doc::RestFrom(text, colon + 1) : algo::strptr();
+    bool quoted = ch_N(shown) > ch_N(doc::Unquote(shown));
+    doc::Attr none(doc_Attr_plain);
+    doc::Color keycolor(colon >= 0 ? doc_Color_skyblue : doc_Color_default);
+    doc::Color valcolor(quoted ? doc_Color_palegreen : doc_Color_amber);
+    Run(name, 0, ch_N(name), none, keycolor, run);
+    if (colon >= 0) {
+        Run(text, colon, colon + 1, none, doc::Color(doc_Color_default), run);
+        Run(shown, 0, ch_N(shown), none, valcolor, run);
+    }
+}
+
+// Color the ssim tuples TEXT into RUN, one line per tuple.
+//
+// A tutorial quotes tuples that acr printed or that the reader is about to type, and a
+// reader who has learned to read a record on a page of records should read the block
+// without learning anything new.  So the block takes the colors of that page: the name
+// of the table in pale blue when the tree has such a table, and each attribute as
+// SsimAttr paints it.  A quotation is not a question put to the database, so the tokens
+// are colored and not linked.
+//
+// The walk is the one a page of records makes, a line at a time, because a token runs to
+// the next space and a quoted value may carry spaces of its own.
+static void HighlightSsim(algo::strptr text, doc::FRun &run) {
+    doc::Attr none(doc_Attr_plain);
+    doc::Color plain(doc_Color_default);
+    doc::Color paleblue(doc_Color_paleblue);
+    int i = 0;
+    while (i < ch_N(text)) {
+        int nl = algo::FindChar(doc::RestFrom(text, i), '\n');
+        int lineend = nl < 0 ? ch_N(text) : i + nl;
+        algo::strptr line(text.elems + i, lineend - i);
+        int j = 0;
+        int itok = 0;
+        while (j < ch_N(line)) {
+            bool space = line.elems[j] == ' ';
+            int end = space ? j + 1 : doc::TokenEnd(line, j);
+            algo::strptr token(line.elems + j, end - j);
+            if (space) {
+                Run(line, j, end, none, plain, run);
+            } else if (itok == 0) {
+                Run(line, j, end, none, doc::ind_ssimfile_Find(token) ? paleblue : plain, run);
+            } else {
+                SsimAttr(token, run);
+            }
+            itok += space ? 0 : 1;
+            j = end;
+        }
+        if (nl >= 0) {
+            Run(text, lineend, lineend + 1, none, plain, run);
+        }
+        i = nl < 0 ? ch_N(text) : lineend + 1;
+    }
+}
+
 // Colour the fenced block TEXT, whose fence named the language LANG, into RUN.
 // A language with no lexer here prints uncoloured, so nothing is claimed about
 // code the tool cannot read.
@@ -239,11 +300,14 @@ static void HighlightBash(algo::strptr text, doc::FRun &run) {
 void doc::Highlight(algo::strptr lang, algo::strptr text, doc::FRun &run) {
     bool cpp = lang == "c++" || lang == "cpp" || lang == "c";
     bool bash = lang == "bash" || lang == "sh" || lang == "shell" || lang == "usage" || lang == "";
+    bool ssim = lang == "ssim";
     doc::Attr plain(doc_Attr_plain);
     if (cpp) {
         HighlightCpp(text, run);
     } else if (bash) {
         HighlightBash(text, run);
+    } else if (ssim) {
+        HighlightSsim(text, run);
     } else {
         doc::PutRunText(run, text, plain, doc::Color(doc_Color_default), 0);
     }

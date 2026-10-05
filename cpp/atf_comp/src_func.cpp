@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_comp (exe) -- Component test runner: spawn processes and diff the log against a reference
 // Exceptions: yes
@@ -153,22 +152,21 @@ void atf_comp::comptest_src_func_UpdateprotoScanFail() {
                         " test $$? = 1 && cmp hdr/x.h orig && echo header_unchanged'");
 }
 
-// The dmmeta.userfunc primary key holds the amc function key it is copied
-// from, which is a hundred characters wide. When the key was narrower, amc
-// clipped every longer name on the way out and two functions whose names
-// agreed up to the cut wrote the same row, so one registration disappeared.
-// The accepting universe pins the whole width: a short key, two keys that
-// agree for their first fifty characters and differ past it, and a key at
-// the hundred-character limit -- all four load as distinct rows and each
-// binds to its own scanned function, printed with its own acrkey. The
-// second universe carries a key one character over the limit and must be
-// rejected naming the limit, with the run exiting 1.
-void atf_comp::comptest_src_func_UserfuncKeyWidth() {
+// A gendb.cppsym key is a C++ name and a record key, <cppname>/<acrkey>, and
+// it is 250 characters wide.  Two user functions whose names agree for a long
+// stretch must stay two rows, or one registration disappears and its function
+// loses the record it binds to.  The accepting universe pins the whole width:
+// a short key, two keys that agree for their first fifty characters and differ
+// past it, and a key at the 250-character limit -- all four load as distinct
+// rows and each binds to its own scanned function, printed with its own
+// acrkey.  The second universe carries a key one character over the limit and
+// must be rejected naming the limit, with the run exiting 1.
+void atf_comp::comptest_src_func_CppsymKeyWidth() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir src"
-                        " && printf \"void xx::ShortName() {\\n}\\nvoid xx::NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenAlpha() {\\n}\\nvoid xx::NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenBravo() {\\n}\\nvoid xx::UserfuncKeyExactlyAtTheHundredCharacterLimitOfTheWidenedPrimaryKeyPaddedOutWithExtraWordsToHere() {\\n}\\n\" > src/y.cpp"
-                        " && cp $$OLDPWD/test/src_func/userfunc_width.ssim $$OLDPWD/test/src_func/userfunc_toolong.ssim ."
-                        " && $$OLDPWD/$bindir/src_func -in:userfunc_width.ssim % -printssim"
-                        " && $$OLDPWD/$bindir/src_func -in:userfunc_toolong.ssim % -printssim;"
+                        " && printf \"void xx::ShortName() {\\n}\\nvoid xx::NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenAlpha() {\\n}\\nvoid xx::NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenBravo() {\\n}\\nvoid xx::CppsymKeyExactlyAtTheLimitPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadP() {\\n}\\n\" > src/y.cpp"
+                        " && cp $$OLDPWD/test/src_func/cppsym_width.ssim $$OLDPWD/test/src_func/cppsym_toolong.ssim ."
+                        " && $$OLDPWD/$bindir/src_func -in:cppsym_width.ssim % -printssim"
+                        " && $$OLDPWD/$bindir/src_func -in:cppsym_toolong.ssim % -printssim;"
                         " test $$? = 1 && echo over_limit_rejected'");
 }
 

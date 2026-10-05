@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_comp (exe) -- Component test runner: spawn processes and diff the log against a reference
 // Exceptions: yes
@@ -22,20 +21,145 @@
 #include "include/algo.h"
 #include "include/atf_comp.h"
 
+// True when A sorts before B.  Any total order will do, since its only job is to
+// bring two permutations of the same run to the same sequence.
+static bool LineLtQ(strptr a, strptr b) {
+    int n = i32_Min(a.n_elems, b.n_elems);
+    int cmp = n > 0 ? memcmp(a.elems, b.elems, size_t(n)) : 0;
+    return cmp < 0 || (cmp == 0 && a.n_elems < b.n_elems);
+}
+
+// Return the tuple head LINE carries, or empty when it carries none.  A captured
+// line names the process that emitted it ahead of the tuple, as "acr -> ", so
+// the head is the first word after that.
+static strptr LineHead(strptr line) {
+    strptr rest = line;
+    int arrow = algo::FindStr(line, " -> ");
+    if (arrow >= 0) {
+        rest = strptr(line.elems + arrow + 4, line.n_elems - arrow - 4);
+    }
+    int n = 0;
+    while (n < rest.n_elems && rest.elems[n] != ' ') {
+        n++;
+    }
+    return strptr(rest.elems, n);
+}
+
+// Append RUN's lines to OUT in sorted order and empty RUN.  A run is the exits of
+// one node's modules, so it is a handful of lines and the selection scan costs
+// nothing worth a container.
+static void FlushSorted(tempstr &run, algo::cstring &out) {
+    int nleft = 0;
+    ind_beg(algo::Line_curs, line, run) {
+        (void)line;
+        nleft++;
+    }ind_end;
+    tempstr prev;
+    bool have_prev = false;
+    while (nleft > 0) {
+        tempstr best;
+        bool found = false;
+        ind_beg(algo::Line_curs, line, run) {
+            bool eligible = !have_prev || LineLtQ(prev, line);
+            if (eligible && (!found || LineLtQ(line, best))) {
+                best = line;
+                found = true;
+            }
+        }ind_end;
+        if (found) {
+            ind_beg(algo::Line_curs, line, run) {
+                if (algo::StrEqual(line, best, true)) {
+                    out << line << "\n";
+                    nleft--;
+                }
+            }ind_end;
+            prev = best;
+            have_prev = true;
+        } else {
+            nleft = 0;
+        }
+    }
+    ch_RemoveAll(run);
+}
+
+// Return TEXT with each run of adjacent lines sorted whose head atfdb.sortline
+// names, and every other line left where it is.
+//
+// Some lines report events observed in an order nothing promises.  The drain is
+// the standing example: it asks a whole stoprank level at once, its members die
+// together, and the kernel reaps them in whatever order it likes.  A golden
+// captured from one run encodes one permutation of that, and the next run then
+// fails against it having done nothing wrong.
+//
+// The sort is applied to the reference as well as to the capture, so the file on
+// disk keeps the order it was captured in and stays readable.  Only adjacent
+// lines form a run, so a line of another kind between two of them ends the run
+// and its own position is still compared.
+//
+// That placement is the reason this sits at the comparison rather than beside
+// atfdb.unstableattr and atfdb.unstableline, which normalize as the line is
+// logged.  Normalizing at capture would leave both sides sorted by construction
+// and the comparison none the wiser, which is the tidier seam -- and it would
+// also rewrite every golden that carries such a run into sort order, spending a
+// hundred and thirty-nine files to buy nothing a reader wants.  Moving it there
+// is a deliberate trade, not a cleanup.
+//
+// What this gives up is the order inside a run, which is the order that was never
+// promised.  An order a program does promise wants a test that reads it against
+// the rule, asserting the property itself, rather than a golden that cannot tell
+// a permitted swap from a broken walk.
+static tempstr SortUnorderedRun(strptr text) {
+    tempstr ret;
+    tempstr run;
+    tempstr runhead;
+    ind_beg(algo::Line_curs, line, text) {
+        strptr head = LineHead(line);
+        bool sorted = ch_N(head) > 0 && atf_comp::ind_sortline_Find(head);
+        if (!sorted || !algo::StrEqual(head, runhead, true)) {
+            FlushSorted(run, ret);
+            ch_RemoveAll(runhead);
+            if (sorted) {
+                runhead << head;
+            }
+        }
+        if (sorted) {
+            run << line << "\n";
+        } else {
+            ret << line << "\n";
+        }
+    }ind_end;
+    FlushSorted(run, ret);
+    return ret;
+}
+
 // Diff filtered output against reference file, print the colored diff,
 // and return true if the files differ.  The single producer/consumer of
 // the `diff` shell invocation in this file.
 static bool ShowRefDiff(strptr refpath, strptr filtered, strptr comptest_name) {
     tempstr tmppath;
     tmppath << "temp/atf_comp." << comptest_name << ".diff";
-    algo::StringToFile(filtered, tmppath);
+    algo::StringToFile(SortUnorderedRun(filtered), tmppath);
+    tempstr refsorted;
+    refsorted << "temp/atf_comp." << comptest_name << ".ref";
+    algo::StringToFile(SortUnorderedRun(algo::FileToString(refpath, algo::FileFlags())), refsorted);
     tempstr diffcmd;
-    diffcmd << "diff --color=always " << strptr_ToBash(refpath) << " " << strptr_ToBash(tmppath);
-    tempstr diff = SysEval(diffcmd, FailokQ(true), 1024*1024);
-    DeleteFile(tmppath);
+    diffcmd << "diff --color=always " << strptr_ToBash(refsorted) << " " << strptr_ToBash(tmppath);
+    int status = 0;
+    tempstr diff = SysEval(diffcmd, FailokQ(true), 1024*1024, false, &status);
     bool changed = ch_N(diff) > 0;
-    if (changed) {
-        prlog(diff);
+    bool complete = (status == 0) || (changed && WIFEXITED(status) && WEXITSTATUS(status) == 1);
+    if (!complete) {
+        prlog("atf_comp.diff_error"
+              <<Keyval("comptest", comptest_name)
+              <<Keyval("cmd", diffcmd)
+              <<Keyval("status", algo::DescribeWaitStatus(status)));
+        changed = true;
+    } else {
+        DeleteFile(tmppath);
+        DeleteFile(refsorted);
+        if (changed) {
+            prlog(diff);
+        }
     }
     return changed;
 }
@@ -162,8 +286,10 @@ void atf_comp::Main() {
     // select matching comptests
     ind_beg(_db_comptest_curs, comptest, _db) {
         bool match = Regx_Match(_db.cmdline.comptest, comptest.comptest);
+        // comptest.memcheck names the cijob that runs the test under
+        // valgrind, or none; -cijob picks the shard (default % selects all)
         if (mode == command_atf_comp_mode_memcheck) {
-            match = match && comptest.memcheck;
+            match = match && algo::strptr(comptest.memcheck) != atfdb_cijob_none && Regx_Match(_db.cmdline.cijob, comptest.memcheck);
         }
         if (coverage) {
             match = match && comptest.coverage;
@@ -271,10 +397,13 @@ void atf_comp::Main() {
         } else if (_db.cmdline.cfg == dev_Cfg_cfg_debug || _db.cmdline.cfg == dev_Cfg_cfg_coverage) {
             timeout_scale = 4;
         }
+        algo::UnTime start = algo::CurrUnTime();
         ind_beg(_db_zd_select_curs, comptest, _db) {
             nrun++;
+            algo::PrlogTestProgress(nrun, zd_select_N(), start);
             _db.c_cur_comptest = &comptest;
             proc_RemoveAll();
+            _db.part_nproc = -1;
             algo::Refurbish(_db.R);
             ch_RemoveAll(_db.log);
             SweepShm();
@@ -297,6 +426,7 @@ void atf_comp::Main() {
             // than a slow one.  So the bound scales with the configuration, exactly as
             // the comptest budget above it does.
             SetVar("replytimeout", tempstr() << i32(2 * timeout_scale));
+            SetVar("holdtimeout", tempstr() << i32(8 * timeout_scale));
             Set(_db.R, "$$", "$", false);
             _db.t0 = algo::CurrSchedTime();
             algo::SchedTime t0 = _db.t0;
@@ -312,6 +442,10 @@ void atf_comp::Main() {
                 fail_reason = x.str;
                 ok = false;
             }
+            // The harness's own work from here on -- the wait, the comparison,
+            // the capture and update-gitfile after the loop -- runs in the
+            // harness's environment, whatever the test set or failed to undo.
+            ClearEnv();
             ProcWaitAll();
             if (ok) {
                 fail_reason = CheckOutput(comptest);
@@ -338,6 +472,7 @@ void atf_comp::Main() {
                   <<Keyval("success", Bool(ok))
                   <<Keyval("nlines", nlines)
                   <<Keyval("duration", dur));
+            algo::PrlogTestSeparator();
             if (nerr >= _db.cmdline.maxerr) {
                 prlog("atf_comp.maxerr"<<Keyval("nerr", nerr)<<Keyval("maxerr", _db.cmdline.maxerr));
                 break;

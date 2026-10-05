@@ -1,0 +1,133 @@
+# setenv HOME:$HOMEDIR
+# setenv CREDD_PASSWORD:pw
+# start credd cmd:"$bindir/credd -add:gl -kind:gitlab -server:https://gitlab.example.com -account:me -perm:api -src:@$tempdir/tok"
+# eof credd
+credd -> credd.newstore  dir:temp/atf_comp/credd.Daemon/home/.ssh/credd  comment:"no master password yet; choose one"
+credd -> credd.master  dir:temp/atf_comp/credd.Daemon/home/.ssh/credd  comment:"master password set"
+credd -> credd.add  cred:gl  kind:gitlab  linkto:""  perm:api
+# exit credd code:0
+# start credd-2 cmd:"$bindir/credd -daemon"
+# unsetenv CREDD_PASSWORD
+# start credd-3 cmd:"$bindir/credd -status"
+# eof credd-3
+credd-3 -> lib_cred.Status  dir:temp/atf_comp/credd.Daemon/home/.ssh/credd  agent:temp/atf_comp/credd.Daemon/home/.ssh/ssh_auth_sock  n_cred:1  build:***
+# exit credd-3 code:0
+# start credd-4 cmd:"$bindir/credd -show:gl"
+# eof credd-4
+credd-4 -> glpat-atfcomp-token
+# exit credd-4 code:0
+# start credd-5 cmd:"$bindir/credd -show:nope"
+# eof credd-5
+credd-5 -> lib_cred.refused  name:nope  msg:"no such credential"
+# exit credd-5 code:1
+# start bash cmd:"bash -c $'perl $tempdir/peer.pl $STORE/credd.sock'"
+# eof bash
+bash -> peer left before the reply
+# exit bash code:0
+# start credd-6 cmd:"$bindir/credd -status"
+# eof credd-6
+credd-6 -> lib_cred.Status  dir:temp/atf_comp/credd.Daemon/home/.ssh/credd  agent:temp/atf_comp/credd.Daemon/home/.ssh/ssh_auth_sock  n_cred:1  build:***
+# exit credd-6 code:0
+# setenv CREDD_PASSWORD:pw
+# start bash-2 cmd:"bash -c $'$bindir/credd -keygen:k1 -comment:\\'made here\\' | cut -d\\' \\' -f1,3-'"
+# eof bash-2
+bash-2 -> credd.add cred:k1  kind:sshkey  linkto:""  perm:""
+bash-2 -> ssh-ed25519 made here
+# exit bash-2 code:0
+# start credd-7 cmd:"$bindir/credd -add:k2 -kind:sshkey -src:@$tempdir/imp -comment:'brought in'"
+# eof credd-7
+credd-7 -> credd.add  cred:k2  kind:sshkey  linkto:""  perm:""
+# exit credd-7 code:0
+# unsetenv CREDD_PASSWORD
+# start credd-8 cmd:"$bindir/credd -status"
+# eof credd-8
+credd-8 -> lib_cred.Status  dir:temp/atf_comp/credd.Daemon/home/.ssh/credd  agent:temp/atf_comp/credd.Daemon/home/.ssh/ssh_auth_sock  n_cred:3  build:***
+# exit credd-8 code:0
+# start bash-3 cmd:"bash -c $'SSH_AUTH_SOCK=$AGENT ssh-add -L | cut -d\\' \\' -f1,3- | sort'"
+# eof bash-3
+bash-3 -> ssh-ed25519 imported
+bash-3 -> ssh-ed25519 made here
+# exit bash-3 code:0
+# setenv CREDD_PASSWORD:pw
+# start credd-9 cmd:"$bindir/credd -remove:k1"
+# eof credd-9
+credd-9 -> credd.remove  name:k1
+# exit credd-9 code:0
+# start bash-4 cmd:"bash -c $'SSH_AUTH_SOCK=$AGENT ssh-add -L | cut -d\\' \\' -f1,3-'"
+# eof bash-4
+bash-4 -> ssh-ed25519 imported
+# exit bash-4 code:0
+# start credd-10 cmd:"$bindir/credd -add:gli-mr -linkto:gl -comment:'what the review bot asks for'"
+# eof credd-10
+credd-10 -> credd.add  cred:gli-mr  kind:link  linkto:gl  perm:""
+# exit credd-10 code:0
+# start credd-11 cmd:"$bindir/credd -add:chain -linkto:gli-mr"
+# eof credd-11
+credd-11 -> credd.error  credd.linkchain  name:gli-mr  linkto:gl  comment:"that is itself a link; link to what it stands for"
+# exit credd-11 code:1
+# start credd-12 cmd:"$bindir/credd -add:nowhere -linkto:absent"
+# eof credd-12
+credd-12 -> credd.error  credd.notfound  name:absent  comment:"-linkto names a credential that is not in the store"
+# exit credd-12 code:1
+# unsetenv CREDD_PASSWORD
+# start credd-13 cmd:"$bindir/credd -show:gli-mr"
+# eof credd-13
+credd-13 -> glpat-atfcomp-token
+# exit credd-13 code:0
+# setenv CREDD_PASSWORD:pw
+# start credd-14 cmd:"$bindir/credd -remove:gl"
+# eof credd-14
+credd-14 -> credd.error  credd.haslink  name:gl  link:gli-mr  comment:"links stand for this credential; -remove them first"
+# exit credd-14 code:1
+# start credd-15 cmd:"$bindir/credd -list"
+# eof credd-15
+credd-15 -> cred    kind    server                      comment
+credd-15 -> gl      gitlab  https://gitlab.example.com
+credd-15 -> k2      sshkey                              brought in
+credd-15 -> gli-mr  link                                what the review bot asks for
+# exit credd-15 code:0
+# start credd-16 cmd:"$bindir/credd -renew:k2 -src:@$tempdir/tok"
+# eof credd-16
+credd-16 -> credd.error  credd.notoken  cred:k2  comment:"an ssh key is not renewed; -keygen a new one and -remove this"
+# exit credd-16 code:1
+# start credd-17 cmd:"$bindir/credd -renew:gli-mr -expires:2027-01-31"
+credd-17 <- glpat-renewed
+# eof credd-17
+credd-17 -> gli-mr is a link to gl, so that is the token renewed.
+credd-17 -> Renewing gl, a gitlab token for me at https://gitlab.example.com.
+credd-17 -> The links gli-mr stand for it and follow along.
+credd-17 -> It was issued with these permissions, which the new token needs too:
+credd-17 ->   api: Full read and write access to the API, including all groups and projects, the registry and package registry
+credd-17 -> Sign in to https://gitlab.example.com as me and open https://gitlab.example.com/-/user_settings/personal_access_tokens?name=gl&scopes=api, which is the access-tokens page with the name gl and the scopes api filled in. Set an expiration, then Create personal access token. Copy the token; GitLab shows it once. Paste it below. Revoke the old token on the same page once the new one works.
+credd-17 -> The new value replaces the old one in the store once you paste it and give the master password; the running daemon serves it at once.
+credd-17 -> credd.renewed  cred:gl  expires:2027-01-31
+# exit credd-17 code:0
+# unsetenv CREDD_PASSWORD
+# start credd-18 cmd:"$bindir/credd -show:gl"
+# eof credd-18
+credd-18 -> glpat-renewed
+# exit credd-18 code:0
+# setenv CREDD_PASSWORD:pw
+# start credd-19 cmd:"$bindir/credd -remove:gli-mr"
+# eof credd-19
+credd-19 -> credd.remove  name:gli-mr
+# exit credd-19 code:0
+# start credd-20 cmd:"$bindir/credd -remove:gl"
+# eof credd-20
+credd-20 -> credd.remove  name:gl
+# exit credd-20 code:0
+# unsetenv CREDD_PASSWORD
+# start credd-21 cmd:"$bindir/credd -stop"
+# eof credd-21
+credd-21 -> lib_cred.Done  req:lib_cred.StopReq
+# exit credd-21 code:0
+# eof credd-2
+credd-2 -> credd.listen  sock:temp/atf_comp/credd.Daemon/home/.ssh/credd/credd.sock  agent:temp/atf_comp/credd.Daemon/home/.ssh/ssh_auth_sock  n_cred:1
+credd-2 -> credd.exit  sock:temp/atf_comp/credd.Daemon/home/.ssh/credd/credd.sock
+# exit credd-2 code:0
+# start bash-5 cmd:"bash -c $'test -e $AGENT || echo agent socket gone; test -e $STORE/credd.sock || echo daemon socket gone'"
+# eof bash-5
+bash-5 -> agent socket gone
+bash-5 -> daemon socket gone
+# exit bash-5 code:0
+# clearenv

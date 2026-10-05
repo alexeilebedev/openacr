@@ -1,19 +1,19 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2024,2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2023 Astra
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_cov (exe) -- Line coverage
 // Exceptions: yes
@@ -36,6 +36,24 @@ static void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str)
     } else {
         WriteFileX(atf_cov::_db.logfd.fd,strptr_ToMemptr(str));
     }
+}
+
+// The lines of gcov OUTPUT that name a profile file gcov could not use --
+// `x.gcda:not a gcov data file`, `x.gcno:cannot open notes file` -- which is
+// how gcov reports the file that fails a batch.  Returns at most twenty of
+// them, one per line.
+static tempstr GcovDiagnostic(strptr output) {
+    tempstr ret;
+    algo::ListSep ls("\n");
+    int n = 0;
+    ind_beg(algo::Line_curs,line,output) {
+        strptr file = Pathcomp(line,":LL");
+        if (n < 20 && (EndsWithQ(file,".gcda") || EndsWithQ(file,".gcno"))) {
+            ret << ls << line;
+            n++;
+        }
+    }ind_end;
+    return ret;
 }
 
 static tempstr GetGcovDstDir(strptr covdir, strptr name) {
@@ -73,9 +91,27 @@ void atf_cov::MergeCovline(dev::Covline &covline_in) {
     }
 }
 
+// List the files matching PATTERN, one pathname per line.
+//
+// A directory is walked by asking the kernel for its entries a batch at a
+// time, and the walk has no way to learn that an entry it has not reached yet
+// has moved.  Creating, renaming or deleting files in a directory while
+// walking it therefore drops entries -- how many depends on the order the
+// filesystem happens to keep them in, so the same code reads every file on one
+// machine and half of them on another.  A caller that mutates a directory
+// takes this list first and walks the list.
+static tempstr ListFile(strptr pattern) {
+    tempstr ret;
+    ind_beg(algo::Dir_curs,ent,pattern) {
+        ret << ent.pathname << eol;
+    }ind_end;
+    return ret;
+}
+
 static void DeleteFiles(strptr dir, strptr pattern) {
-    ind_beg(algo::Dir_curs,ent,DirFileJoin(dir,pattern)) {
-        DeleteFile(ent.pathname);
+    tempstr filelist = ListFile(DirFileJoin(dir,pattern));
+    ind_beg(algo::Line_curs,path,filelist) {
+        DeleteFile(path);
     }ind_end;
 }
 
@@ -112,40 +148,86 @@ void atf_cov::RunGcov(strptr covdir) {
         (void)rc;
     }
     // cleanup current dir from .gcov files
-    ind_beg(algo::Dir_curs,ent,"*.gcov") {
-        cstring dst_dir = GetGcovDstDir(covdir, ent.filename);
+    tempstr gcovlist = ListFile("*.gcov");
+    ind_beg(algo::Line_curs,path,gcovlist) {
+        cstring dst_dir = GetGcovDstDir(covdir, Pathcomp(path,"/RR"));
         cstring dst_dir_full = GetFullPath(dst_dir);
         if (dst_dir_full == covdir_full) {
-            DeleteFile(ent.filename);
+            DeleteFile(path);
         }
     }ind_end;
-    // walk .gcda, prepare .gcno symlinks
-    cstring gcov_cmd;
-    gcov_cmd << "gcov -p -l";
-    ind_beg(algo::Dir_curs,ent,DirFileJoin(covdir,"*.gcda")) {
-        cstring gcno_dst_path = ReplaceExt(ent.pathname,".gcno");
-        cstring gcno_src_path = ReplaceExt(ent.filename,".gcno"); // mangled
+    // Walk the profile data, link each file to the program graph it was written
+    // from, and group the pathnames into gcov command lines.
+    //
+    // The command carries one pathname per object file, and a full run of the
+    // suite leaves about a thousand of them in a directory.  A shell command is
+    // handed to the kernel as a single argument, and the kernel refuses one
+    // longer than 128K: a single command naming every file sits close enough to
+    // that ceiling that it crosses it on a machine whose checkout path is a few
+    // characters longer, and the exec then fails for a reason no coverage
+    // figure can express.  Cutting the work into commands of bounded length
+    // puts the ceiling out of reach whatever the paths look like.
+    tempstr gcdalist = ListFile(DirFileJoin(covdir,"*.gcda"));
+    cstring gcov_cmdlist;
+    u32 n_gcda = 0;
+    i32 cmd_beg = 0;
+    ind_beg(algo::Line_curs,path,gcdalist) {
+        cstring gcno_dst_path = ReplaceExt(path,".gcno");
+        cstring gcno_src_path = ReplaceExt(Pathcomp(path,"/RR"),".gcno"); // mangled
         Translate(gcno_src_path,"#","/"); // demangle
         errno_vrfy_(symlink(Zeroterm(gcno_src_path),Zeroterm(gcno_dst_path))==0);
-        gcov_cmd << " " << ent.pathname;
+        n_gcda += 1;
+        if (ch_N(gcov_cmdlist) == cmd_beg) {
+            gcov_cmdlist << "gcov -p -l";
+        }
+        gcov_cmdlist << " " << path;
+        if (ch_N(gcov_cmdlist) - cmd_beg > 65536) {
+            gcov_cmdlist << eol;
+            cmd_beg = ch_N(gcov_cmdlist);
+        }
     }ind_end;
-    // run gcov once with all gcda files
-    if (ValidQ(_db.logfd.fd)) {
-        gcov_cmd << " >&" << _db.logfd.fd.value << " 2>&" << _db.logfd.fd.value;
+    if (ch_N(gcov_cmdlist) > cmd_beg) {
+        gcov_cmdlist << eol;
     }
-    SysCmd(gcov_cmd);
+    // run gcov over the profile data.  gcov reports a profile it cannot read
+    // as `<file>:<message>`, goes on to the next file in the command, and exits
+    // non-zero at the end, so one unreadable .gcda fails a batch whose every
+    // other file still produced its .gcov.  A failed command is named here with
+    // those lines, since the full output goes to the logfile, which a CI job
+    // keeps as an artifact and the job log does not show.
+    u32 n_fail = 0;
+    ind_beg(algo::Line_curs,gcov_cmd,gcov_cmdlist) {
+        int status = 0;
+        tempstr output = SysEval(tempstr() << gcov_cmd << " 2>&1", FailokQ(true), 1<<24, false, &status);
+        if (ValidQ(_db.logfd.fd)) {
+            WriteFileX(_db.logfd.fd,strptr_ToMemptr(output));
+        }
+        if (status != 0) {
+            n_fail++;
+            prerr("atf_cov.gcov_fail"
+                  <<Keyval("covdir",covdir)
+                  <<Keyval("exit",algo::WaitStatusToExitCode(status))
+                  <<Keyval("output",GcovDiagnostic(output)));
+        }
+    }ind_end;
     // walk .ccov in current directory, move relevant to covdir
-    ind_beg(algo::Dir_curs,ent,"*.gcov") {
-        cstring dst_dir = GetGcovDstDir(covdir, ent.filename);
+    tempstr outlist = ListFile("*.gcov");
+    ind_beg(algo::Line_curs,line,outlist) {
+        cstring src_path;
+        src_path << line;
+        tempstr filename(Pathcomp(src_path,"/RR"));
+        cstring dst_dir = GetGcovDstDir(covdir, filename);
         cstring dst_dir_full = GetFullPath(dst_dir);
-        cstring dst_path = DirFileJoin(covdir,ent.filename);
+        cstring dst_path = DirFileJoin(covdir,filename);
         if (dst_dir_full == covdir_full && dst_dir_full != algo::GetCurDir()) {
-            errno_vrfy_(rename(Zeroterm(ent.pathname),Zeroterm(dst_path))==0);
+            errno_vrfy_(rename(Zeroterm(src_path),Zeroterm(dst_path))==0);
         }
     }ind_end;
     // walk gcov files in covdir, parse and fill in database, merge lines if needed
+    u32 n_gcov = 0;
     ind_beg(algo::Dir_curs,ent,DirFileJoin(covdir,"*.gcov")) {
         cstring src;
+        n_gcov += 1;
         ind_beg(algo::FileLine_curs,gcov_line,ent.pathname) if (!StartsWithQ(gcov_line,"-")) {
             algo::StringIter line_it(gcov_line);
             strptr col1 = Trimmed(GetTokenChar(line_it,':'));
@@ -179,6 +261,29 @@ void atf_cov::RunGcov(strptr covdir) {
             }
         }ind_end;
     }ind_end;
+    // Say what this directory contributed, on stderr, where a CI job log keeps
+    // it.  The directory is the unit of loss: each citest of the coverage cijob
+    // writes its profile data into a directory of its own, so a directory that
+    // gives nothing back takes with it every target only its citest exercises,
+    // and the run ends reporting those targets as uncovered code.  A directory
+    // holding profile data that yields no coverage is therefore an error here,
+    // named where the cause is still visible.  A gcov command that failed over
+    // a directory that still yielded coverage is reported above and counted
+    // here, and what its failure cost is judged where every measurement is:
+    // by each target against its floor.
+    bool success = n_gcda == 0 || n_gcov > 0;
+    _db.report.n_covdir += 1;
+    _db.report.n_covdir_empty += !success;
+    prerr("atf_cov.merge"
+          <<Keyval("covdir",covdir)
+          <<Keyval("n_gcda",n_gcda)
+          <<Keyval("n_gcov",n_gcov)
+          <<Keyval("n_fail",n_fail)
+          <<Keyval("success",success ? "Y" : "N")
+          <<Keyval("comment",success ? "" : "gcov read nothing here; every target this citest alone exercises is lost"));
+    if (!success) {
+        algo_lib::_db.exit_code=1;
+    }
 }
 
 void atf_cov::WriteCovSsim() {
@@ -198,6 +303,20 @@ void atf_cov::WriteCovSsim() {
         }ind_end;
         prlog("Written "<<ssim_pathname);
     }ind_end;
+}
+
+// A target carries a floor above zero because some test exercises it, so a run
+// that found no data for it did not measure it.  A floor of zero says the
+// opposite -- nothing exercises this target today -- and such a target produces
+// no data in a perfectly good run.
+static bool UnmeasuredQ(atf_cov::FTarget &target) {
+    return target.c_tgtcov && target.c_tgtcov->cov_min > algo::U32Dec2(0) && !target.c_covtarget;
+}
+
+// The run lost coverage data, in one of the two ways it can: a merge directory
+// gave nothing back, or a target that some test exercises produced no data.
+static bool LostDataQ() {
+    return atf_cov::_db.report.n_covdir_empty > 0 || atf_cov::_db.report.n_unmeasured > 0;
 }
 
 void atf_cov::ComputeCoverage() {
@@ -245,6 +364,7 @@ void atf_cov::ComputeCoverage() {
     ind_beg(_db_target_curs,target,_db) {
         _db.report.n_covtarget += target.c_covtarget ? 1 : 0;
         _db.report.n_tgtcov += target.c_tgtcov ? 1 : 0;
+        _db.report.n_unmeasured += UnmeasuredQ(target);
     }ind_end;
     _db.report.exe = _db.total.exe;
     _db.report.hit = _db.total.hit;
@@ -427,51 +547,87 @@ void atf_cov::GenerateCoberturaReport() {
     prlog("Generated "<<cobertura_xml);
 }
 
-// Judge every target that carries a coverage floor, and name which of the two
-// things that can go wrong did.  A target whose measurement came in under its
-// floor is a regression, and the diff under test is where to look for it.  A
-// target that produced no data at all did not regress: the run never measured
-// it, and scoring that as zero coverage sends the reader hunting for a code
-// cause that does not exist.  The two need opposite responses, so they are
-// reported as different facts.
+// Judge the run first, and its targets only if the run is whole.
+//
+// A run that lost data measures the targets it did reach at less than their
+// real coverage, because the tests whose data went missing are the same tests
+// that exercise the rest of the tree.  Judging such a run target by target
+// prints one floor breach per target -- fifty of them on a bad day -- and every
+// line of that names a target of the branch under test, so the author reads a
+// lost merge directory as fifty regressions they caused.  So a run that lost
+// data fails once, as one fact about the run, naming what went missing; the
+// answer to it is to run the job again, not to read the diff.
+//
+// A whole run judges each target against its floor, and a measurement that came
+// in under one is a regression the diff under test explains.
 void atf_cov::Main_Check() {
-    ind_beg(_db_target_curs,target,_db) if (target.c_tgtcov) {
-        algo::U32Dec2 cov = target.c_covtarget ? target.c_covtarget->cov : algo::U32Dec2(0);
-        algo::U32Dec2 maxerr(500);// tolerable error: 5%, scale 1e2
-        algo::U32Dec2 cov_plus_maxerr(cov + maxerr);
-        bool below = cov_plus_maxerr < target.c_tgtcov->cov_min;
-        if (below && !target.c_covtarget) {
-            prerr("atf_cov.coverage_unmeasured"
-                  <<Keyval("target",target.target)
-                  <<Keyval("success","N")
-                  <<Keyval("cov_min",target.c_tgtcov->cov_min)
-                  <<Keyval("comment","target produced no coverage data"));
-        } else if (below) {
-            prerr("atf_cov.coverage_lowered"
-                  <<Keyval("target",target.target)
-                  <<Keyval("success","N")
-                  <<Keyval("cov_min",target.c_tgtcov->cov_min)
-                  <<Keyval("maxerr",maxerr)
-                  <<Keyval("cov_measured",cov)
-                  <<Keyval("comment",""));
-        }
-        if (below) {
-            algo_lib::_db.exit_code=1;
-        }
+    cstring unmeasured;
+    algo::ListSep ls(" ");
+    ind_beg(_db_target_curs,target,_db) if (UnmeasuredQ(target)) {
+        unmeasured << ls << target.target;
     }ind_end;
+    if (LostDataQ()) {
+        prerr("atf_cov.coverage_lost"
+              <<Keyval("n_covdir_empty",_db.report.n_covdir_empty)
+              <<Keyval("n_covtarget",_db.report.n_covtarget)
+              <<Keyval("n_unmeasured",_db.report.n_unmeasured)
+              <<Keyval("success","N")
+              <<Keyval("target",unmeasured)
+              <<Keyval("comment","run lost coverage data; no target is judged against its floor"));
+        algo_lib::_db.exit_code=1;
+    } else {
+        ind_beg(_db_target_curs,target,_db) if (target.c_tgtcov && target.c_covtarget) {
+            algo::U32Dec2 cov = target.c_covtarget->cov;
+            algo::U32Dec2 maxerr(500);// tolerable error: 5%, scale 1e2
+            algo::U32Dec2 cov_plus_maxerr(cov + maxerr);
+            if (cov_plus_maxerr < target.c_tgtcov->cov_min) {
+                prerr("atf_cov.coverage_lowered"
+                      <<Keyval("target",target.target)
+                      <<Keyval("success","N")
+                      <<Keyval("cov_min",target.c_tgtcov->cov_min)
+                      <<Keyval("maxerr",maxerr)
+                      <<Keyval("cov_measured",cov)
+                      <<Keyval("comment",""));
+                algo_lib::_db.exit_code=1;
+            }
+        }ind_end;
+    }
 }
 
+// Write each target's measurement into dev.tgtcov as its new floor, and the
+// functions no test reached into dev.uncovfunc.
+//
+// A capture is worth no more than the run beneath it.  A run that lost a merge
+// directory measures every target that directory exercised at a fraction of its
+// real coverage, and capturing those figures writes the loss into the floors:
+// the gate comes down by exactly the amount that went missing, nothing in the
+// output says so, and the next run passes against the lowered bar.  A capture
+// is also the one operation here with no undo short of a revert.  So a run
+// showing any sign of loss is refused, and the floors keep the values an
+// earlier whole run put there.
 void atf_cov::Main_Capture() {
-    ind_beg(_db_target_curs,target,_db) {
-        if (!target.c_tgtcov) {
-            atf_cov::FTgtcov &tgtcov  =tgtcov_Alloc();
-            tgtcov.target=target.target;
-            tgtcov_XrefMaybe(tgtcov);
-        }
-        if (target.c_covtarget) {
-            target.c_tgtcov->cov_min = target.c_covtarget->cov;
-        }
-    }ind_end;
+    if (LostDataQ()) {
+        prerr("atf_cov.capture_refused"
+              <<Keyval("n_covdir_empty",_db.report.n_covdir_empty)
+              <<Keyval("n_covtarget",_db.report.n_covtarget)
+              <<Keyval("n_unmeasured",_db.report.n_unmeasured)
+              <<Keyval("success","N")
+              <<Keyval("comment","run lost coverage data; capturing it would write the loss into the floors"));
+        algo_lib::_db.exit_code=1;
+    } else {
+        ind_beg(_db_target_curs,target,_db) {
+            if (!target.c_tgtcov) {
+                atf_cov::FTgtcov &tgtcov  =tgtcov_Alloc();
+                tgtcov.target=target.target;
+                tgtcov_XrefMaybe(tgtcov);
+            }
+            if (target.c_covtarget) {
+                target.c_tgtcov->cov_min = target.c_covtarget->cov;
+            }
+        }ind_end;
+        SaveCov();
+        SaveUncovfunc();
+    }
 }
 
 void atf_cov::SaveCov() {
@@ -572,7 +728,7 @@ void atf_cov::Main() {
     // run command
     if (_db.cmdline.runcmd != "") {
         CleanupDirPhase(_db.cmdline.covdir,atf_cov_Phase_value_runcmd);
-        setenv("GCC_PROFILE_DIR",Zeroterm(_db.cmdline.covdir),1);
+        setenv(algo_lib::dev_envvar_GCC_PROFILE_DIR,Zeroterm(_db.cmdline.covdir),1);
         _db.bash.cmd.c = _db.cmdline.runcmd;
         bash_ExecX(_db.bash);
     }
@@ -637,7 +793,5 @@ void atf_cov::Main() {
     }
     if (_db.cmdline.capture) {
         Main_Capture();
-        SaveCov();
-        SaveUncovfunc();
     }
 }

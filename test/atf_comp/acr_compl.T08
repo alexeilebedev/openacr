@@ -21,6 +21,7 @@ acr_compl -> -mnum
 acr_compl -> -mstr 
 acr_compl -> -sig 
 acr_compl -> -signature 
+acr_compl -> -trace 
 acr_compl -> -v 
 acr_compl -> -verbose 
 acr_compl -> -version 

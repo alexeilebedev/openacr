@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2023 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -70,7 +70,6 @@ void amc::gen_prep_signature() {
     // hash fields only those impact binary compatibility
     // signature change is more predictable vs. hashing whole ssim line
     ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
-        ctype.original = true;
         Sha1Ctx signature;
         // ctype name
         Update(signature, strptr_ToMemptr(name_Get(ctype)));
@@ -126,7 +125,7 @@ void amc::gen_prep_signature() {
         }ind_end;
         amc::zs_sig_visit_RemoveAll();
         // add to dispsig
-        dmmeta::Dispsig dispsig;
+        gendb::Dispsig dispsig;
         dispsig.dispsig = dispatch.dispatch;
         dispsig.signature = dispatch.signature;
         amc::dispsig_InsertMaybe(dispsig);
@@ -148,7 +147,7 @@ void amc::gen_prep_signature() {
                 SignatureVisit(ctype);
             }
         }ind_end;
-        dmmeta::Dispsig dispsig;
+        gendb::Dispsig dispsig;
         dispsig.dispsig = "lib_ams.Msg";
         ind_beg(amc::_db_zs_sig_visit_curs,dep_ctype,amc::_db) {
             CombineSignaturesUnordered(dispsig.signature,dep_ctype.signature);
@@ -173,7 +172,7 @@ void amc::gen_prep_signature() {
         }ind_end;
         // add to dispsig
         if (has_input) {
-            dmmeta::Dispsig dispsig;
+            gendb::Dispsig dispsig;
             dispsig.dispsig = tempstr()<<ns.ns<<".Input";
             dispsig.signature = ns.signature_input;
             amc::dispsig_InsertMaybe(dispsig);

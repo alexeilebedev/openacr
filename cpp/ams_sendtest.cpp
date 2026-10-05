@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: ams_sendtest (exe) -- Algo Messaging System test tool
 // Exceptions: yes
@@ -45,7 +45,9 @@ lib_ams::FShm &ams_sendtest::GetOrCreateShm(ams::GrpId grp_id) {
 // child reads parent messsage
 void ams_sendtest::ReadParentMsg(lib_ams::FShm &shm, ams::MsgHeader &msg) {
     (void)shm;
-    if (ams_sendtest::_db.cmdline.recvdelay_ns>0) {
+    // -slowreader confines the delay to the first child, so one reader lags
+    // while the others keep up.
+    if (ams_sendtest::_db.cmdline.recvdelay_ns>0 && (!_db.cmdline.slowreader || _db.cmdline.id == 1)) {
         u64 clock=algo::get_cycles();
         u64 limit=clock + ams_sendtest::_db.cmdline.recvdelay_ns / algo_lib::_db.clocks_to_ns;
         while (clock < limit) {
@@ -56,15 +58,21 @@ void ams_sendtest::ReadParentMsg(lib_ams::FShm &shm, ams::MsgHeader &msg) {
     }
     ams_sendtest::_db.test.n_msg_recv++;
     ams_sendtest::_db.test.off_recv = lib_ams::AddOffset(_db.test.off_recv, lib_ams::cd_poll_read_First()->c_cur_msg->length);
+    // In channel mode message n belongs to child n % nchild + 1, and that child
+    // counts it on its channel, whose limit follows the count by the window.
+    ams::LogMsg *owned = _db.c_channel ? ams::LogMsg_Castdown(msg) : NULL;
+    if (owned && i32((_db.test.n_msg_recv - 1) % u64(_db.cmdline.nchild)) + 1 == _db.cmdline.id) {
+        lib_ams::ChannelRead(*_db.c_channel, u64(msg.length));
+    }
     // zero out first message latency
     if (ams::LogMsg *logmsg = ams::LogMsg_Castdown(msg)) {
         // Check the contents, not just the count.  The parent numbers every
         // message and pads it with one repeated character, and messages arrive
         // in order, so the n-th message read says which one it is.  In board
-        // mode the bytes come from a slot the ring never held: a reference
-        // resolved to the wrong slot, or to one already reused, would deliver a
-        // well-formed message carrying another message's contents, and a count
-        // would report that as a clean run.
+        // mode the bytes come from a chunk the ring never held: a reference
+        // resolved to the wrong place, or to a chunk already reused, would
+        // deliver a well-formed message carrying another message's contents,
+        // and a count would report that as a clean run.
         tempstr expect;
         expect << "parent message #" << (_db.test.n_msg_recv - 1) << " ";
         algo::strptr text = ams::text_Getary(*logmsg);
@@ -86,46 +94,191 @@ void ams_sendtest::ReadParentMsg(lib_ams::FShm &shm, ams::MsgHeader &msg) {
     }
 }
 
+// Return the room the next message needs on a lane: a reference in board mode,
+// and otherwise the largest message plus its header's rounding.
+static u32 GetMsgNeed() {
+    return ams_sendtest::_db.cmdline.board ? u32(sizeof(ams::BoardrefMsg)) : u32(ams_sendtest::_db.cmdline.msgsize_max) + 64;
+}
+
+// TRUE when CHILD's lane is one the parent writes: every child's with one lane
+// per reader, and the first child's, which is the shared lane, otherwise.
+static bool LaneQ(ams_sendtest::FChild &child) {
+    return ams_sendtest::_db.cmdline.uc || &child == ams_sendtest::child_Find(0);
+}
+
+// TRUE when every lane the next message goes to has ring room for it.  Asked
+// before the message is built, so a send refused for lack of room costs neither
+// the padding nor the format; in board mode the lane needs room for a reference,
+// and whether it may reference the chunk is known only once the message has a
+// chunk, so BoardSendAll asks that half.
+bool ams_sendtest::RoomQ() {
+    bool ret = true;
+    u32 need = GetMsgNeed();
+    if (ams_sendtest::_db.cmdline.channel) {
+        // The message's budget on each lane is its channel's: the lane's own
+        // budget, and on its child's lane the channel's room as well.
+        ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
+            if (LaneQ(child)) {
+                ret = ret && lib_ams::HasBudgetQ(ams_sendtest::LaneChannel(child), need);
+            }
+        }ind_end;
+    } else if (ams_sendtest::_db.cmdline.uc) {
+        ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
+            ret = ret && lib_ams::HasBudgetQ(*child.p_shm, need);
+        }ind_end;
+    } else {
+        ret = lib_ams::HasBudgetQ(*ams_sendtest::_db.c_out, need);
+    }
+    return ret;
+}
+
+// TRUE when the next message is refused by its owner's channel limit alone:
+// every lane it goes to has ring room for it, and the owner's channel has no room
+// for it under the write limit.  A send the ring refuses is not the limit's.
+bool ams_sendtest::LimitRefusedQ() {
+    bool ring = true;
+    u32 need = GetMsgNeed();
+    ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
+        if (LaneQ(child)) {
+            ring = ring && lib_ams::HasBudgetQ(*child.p_shm, need);
+        }
+    }ind_end;
+    ams_sendtest::FChild &owner = ams_sendtest::MsgChild();
+    return ring && !lib_ams::SlotRoomQ(owner.c_channel->c_slot, need);
+}
+
+// Send MSG, formatted into the board, to every lane the run delivers on; TRUE
+// when every lane took a reference.  Every lane is asked for room first,
+// because a reader that missed one message of a numbered stream has a gap it
+// cannot ask to have filled, so a message reaches every lane or none.  A
+// refused message stays in the board for the caller to give back.
+bool ams_sendtest::BoardSendAll(ams::MsgHeader &msg) {
+    lib_ams::FShm &board = *lib_ams::BoardOf(*ams_sendtest::_db.c_out);
+    lib_ams::FChunk *chunk = lib_ams::ChunkOf(board, &msg);
+    bool ret = chunk != NULL;
+    // children are registered in order and share a lane only when all of them
+    // do, so a child whose lane differs from the previous child's names a new lane
+    lib_ams::FShm *prev = NULL;
+    ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
+        if (child.p_shm != prev) {
+            ret = ret && lib_ams::BoardMakeRoom(*child.p_shm, *chunk);
+        }
+        prev = child.p_shm;
+    }ind_end;
+    prev = NULL;
+    ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
+        if (ret && child.p_shm != prev) {
+            ret = lib_ams::BoardSend(*child.p_shm, msg);
+        }
+        prev = child.p_shm;
+    }ind_end;
+    return ret;
+}
+
 // Compose TEXT as a LogMsg and deliver it to every reader; TRUE when all of them
 // got it.  Delivery is all or nothing, because a reader that missed one message
-// of a numbered stream has a gap it cannot ask to have filled.
+// of a numbered stream has a gap it cannot ask to have filled; RoomQ has said
+// the lanes have room, so a refusal here is a race with a reader, or the board
+// out of chunks, and is retried.
 //
 // Two independent choices decide the shape.  The message goes to one ring every
 // reader shares, or to a ring per reader; and it travels inline in those rings
-// or as a reference to a board slot.  Inline delivery to N rings is N copies of
-// the payload -- that is the cost the board exists to remove, and the only
-// arrangement in which the two paths can be told apart, since a shared ring is
-// one write however many readers consume it.
+// or as a reference to a payload formatted once into the board.  Inline
+// delivery to N rings is N copies of the payload -- that is the cost the board
+// exists to remove, and the only arrangement in which the two paths can be told
+// apart, since a shared ring is one write however many readers consume it.
 bool ams_sendtest::SendText(algo::strptr text) {
     bool ret = false;
     algo::SchedTime now = algo::CurrSchedTime();
-    if (ams_sendtest::_db.cmdline.board) {
-        ams::LogMsg *msg = ams::LogMsg_FmtByteAry(ams_sendtest::_db.msgbuf, lib_ams::_db.proc_id, now, "", text);
-        if (msg) {
-            lib_ams::c_postlane_RemoveAll();
-            if (ams_sendtest::_db.cmdline.uc) {
-                ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
-                    lib_ams::BoardPostLane(*child.p_shm);
-                }ind_end;
-            } else {
-                lib_ams::BoardPostLane(*ams_sendtest::_db.c_out);
+    if (ams_sendtest::_db.cmdline.channel) {
+        ret = true;
+        ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
+            if (LaneQ(child)) {
+                lib_ams::FChannel &channel = ams_sendtest::LaneChannel(child);
+                ret = ret && lib_ams::LogMsg_FmtAlloc(lib_ams::GetAlloc(channel), lib_ams::_db.proc_id, now, "", text) != NULL;
             }
-            ret = lib_ams::BoardPostSet(ams::Castbase(*msg));
+        }ind_end;
+    } else if (ams_sendtest::_db.cmdline.board) {
+        lib_ams::FShm &board = *lib_ams::BoardOf(*ams_sendtest::_db.c_out);
+        ams::LogMsg *msg = lib_ams::LogMsg_FmtAlloc(lib_ams::BoardGetAlloc(board), lib_ams::_db.proc_id, now, "", text);
+        if (msg) {
+            ret = ams_sendtest::BoardSendAll(ams::Castbase(*msg));
+            if (!ret) {
+                lib_ams::BoardTrim(board, msg, 0);
+            }
         }
     } else if (ams_sendtest::_db.cmdline.uc) {
         ret = true;
         ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
-            ret = ret && lib_ams::HasBudgetQ(*child.p_shm, u32(ch_N(text)) + 64);
+            ret = ret && lib_ams::LogMsg_FmtShm(*child.p_shm, lib_ams::_db.proc_id, now, "", text) != NULL;
         }ind_end;
-        if (ret) {
-            ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
-                ret = ret && lib_ams::LogMsg_FmtShm(*child.p_shm, lib_ams::_db.proc_id, now, "", text) != NULL;
-            }ind_end;
-        }
     } else {
         ret = lib_ams::LogMsg_FmtShm(*ams_sendtest::_db.c_out, lib_ams::_db.proc_id, now, "", text) != NULL;
     }
     return ret;
+}
+
+// Return the child the next message belongs to in channel mode: message n goes
+// to child n % nchild + 1, whose channel paces it.
+ams_sendtest::FChild &ams_sendtest::MsgChild() {
+    return ams_sendtest::child_qFind(u64(ams_sendtest::_db.test.n_msg_send % u64(ams_sendtest::child_N())));
+}
+
+// Return the channel the next message goes on in the lane of CHILD, in channel
+// mode: the channel of the child it belongs to on that child's lane, and the
+// lane's base channel on any other lane, since a message belongs to one channel.
+lib_ams::FChannel &ams_sendtest::LaneChannel(ams_sendtest::FChild &child) {
+    ams_sendtest::FChild &owner = ams_sendtest::MsgChild();
+    lib_ams::FChannel *ret = owner.c_channel->p_shm == child.p_shm ? owner.c_channel : child.c_base;
+    return *ret;
+}
+
+// Park the writer on every target the next message has no room on, and return
+// true when one of them had room after all, so the next pass should try again.
+// The targets are the ones RoomQ asks: the message's channel on each lane in
+// channel mode, each child's lane with one lane per reader, and the shared lane
+// otherwise.  A park raises the ring's writer_sleeping flag and re-checks under a
+// barrier, so a reader freeing room either sees the flag and signals, or the
+// re-check sees the room.
+bool ams_sendtest::ParkRefused() {
+    bool ret = false;
+    u32 need = GetMsgNeed();
+    ind_beg(ams_sendtest::_db_child_curs, child, ams_sendtest::_db) {
+        bool lane = LaneQ(child);
+        if (lane && ams_sendtest::_db.cmdline.channel) {
+            lib_ams::FChannel &channel = ams_sendtest::LaneChannel(child);
+            if (!lib_ams::HasBudgetQ(channel, need)) {
+                ret = lib_ams::ParkWriter(channel, need) || ret;
+            }
+        } else if (lane && !lib_ams::HasBudgetQ(*child.p_shm, need)) {
+            ret = lib_ams::ParkWriter(*child.p_shm, need) || ret;
+        }
+    }ind_end;
+    return ret;
+}
+
+// Send messages until one is refused, in park mode.  A pass that sent something,
+// or is still waiting for the children to start, keeps the loop awake.  A pass
+// refused for room parks the writer on what refused it and lets the loop sleep,
+// so the next pass runs only when a reader's wake signal arrives: a wake that is
+// never sent leaves the parent asleep until its time limit, and the run fails.
+void ams_sendtest::send_Step() {
+    u64 nsend = _db.test.n_msg_send;
+    u64 nwait = _db.test.n_write_wait;
+    for (int i = 0; i < 64 && _db.send && _db.test.n_write_wait == nwait; i++) {
+        ams_sendtest::SendMsg();
+    }
+    bool syncing = _db.test.n_msg_send == 1 && i32(_db.nsync) < child_N();
+    bool refused = _db.test.n_write_wait != nwait;
+    bool again = _db.test.n_msg_send != nsend || syncing;
+    if (refused && !again) {
+        again = ams_sendtest::ParkRefused();
+        _db.test.n_writer_park += !again;
+    }
+    if (again) {
+        algo_lib::_db.next_loop = algo_lib::_db.clock;
+    }
+    ams_sendtest::send_UpdateCycles();
 }
 
 void ams_sendtest::SendMsg() {
@@ -141,13 +294,27 @@ void ams_sendtest::SendMsg() {
             }ind_end;
             if (i32(_db.nsync) == child_N()) {
                 prlog("all children started up");
+                // The rate is measured from here, so a child's startup is not
+                // charged to the send.
+                _db.test.send_begin_tsc = algo::get_cycles();
+            }
+        } else if (!(_db.cmdline.blocking || ams_sendtest::RoomQ())) {
+            // no room on a lane: the message is not built, and the next pass asks again
+            _db.test.n_write_wait++;
+            if (_db.cmdline.channel && ams_sendtest::LimitRefusedQ()) {
+                _db.test.n_limit_wait++;
             }
         } else {
             tempstr text;
             text << "parent message #"<<_db.test.n_msg_send<<" ";
-            // compose random length message
-            int msglen = ams_sendtest::_db.cmdline.msgsize_min
-                + i32_WeakRandom(ams_sendtest::_db.cmdline.msgsize_max - ams_sendtest::_db.cmdline.msgsize_min);
+            // The length is a hash of the message number, so a refused send
+            // retries the same message.  A fresh draw on each try would let the
+            // lane's length-dependent room test admit short messages and refuse
+            // long ones, and a run under backpressure would then move shorter
+            // messages than a run with room and report the smaller byte rate as
+            // the transport's.
+            int range = ams_sendtest::_db.cmdline.msgsize_max - ams_sendtest::_db.cmdline.msgsize_min;
+            int msglen = ams_sendtest::_db.cmdline.msgsize_min + i32((_db.test.n_msg_send * u64(2654435761u)) % u64(range));
             // Pad in one allocation rather than a character at a time.  At the
             // sizes the board exists for, a per-character append is the most
             // expensive thing in the loop -- an 8KB message is 8192 appends --
@@ -167,8 +334,11 @@ void ams_sendtest::SendMsg() {
             bool sent = ams_sendtest::SendText(text);
             if (sent) {
                 _db.test.n_msg_send++;
+                _db.test.n_byte_send += u64(msglen);
                 if (_db.test.n_msg_send == _db.test.n_msg_limit) {
+                    _db.test.send_end_tsc = algo::get_cycles();
                     bh_timehook_Remove(_db.test.h_write);
+                    _db.send = false;
                     // The parent's work ends with its last message, so it says so
                     // rather than leaving the loop to notice that nothing is left
                     // to do.  Signaled mode keeps a signalfd armed for the life of
@@ -217,12 +387,22 @@ static void FillReport(lib_ams::FShm &shm, bool isparent, bool child_ok) {
     report.n_msg_send = test.n_msg_send;
     report.n_msg_recv = test.n_msg_recv;
     report.n_write_wait = test.n_write_wait;
+    report.n_limit_wait = test.n_limit_wait;
+    report.n_writer_park = test.n_writer_park;
     report.woff = shm.c_shmhdr ? shm.c_shmhdr->woff : 0;
     report.roff = shm.c_reader ? shm.c_reader->offset : 0;
     double avg_clock = double(test.sum_recv_latency) / double(u64_Max(test.n_msg_recv,1));
     report.latency_ns = avg_clock * algo_lib::_db.clocks_to_ns;
     if (isparent) {
         report.success = child_ok && test.n_msg_send == test.n_msg_limit;
+        // The send rate, measured from the moment every child had consumed the
+        // first message to the last send.  One copy of each payload is counted,
+        // whatever the lane shape did with it.
+        report.send_s = double(test.send_end_tsc - test.send_begin_tsc) * algo_lib::_db.clocks_to_ns / 1e9;
+        if (report.send_s > 0) {
+            report.msg_per_s = double(test.n_msg_send) / report.send_s;
+            report.mb_per_s = double(test.n_byte_send) / report.send_s / 1e6;
+        }
     } else {
         report.success = test.n_msg_recv == test.n_msg_limit && report.roff == test.off_recv;
     }
@@ -237,15 +417,27 @@ void ams_sendtest::Main() {
     i32_UpdateMax(_db.cmdline.msgsize_max, _db.cmdline.msgsize_min+1);
     // In board mode the ring is deliberately too small for the traffic it
     // carries: the payloads go to the board and the ring carries references to
-    // them.  A reader may pin board_pin slots, and the board is built to hold
-    // that many for every child at once -- the sizing that keeps a placement
-    // from ever failing, and with it one child's slowness from reaching
-    // another.  The allowance is what a ring's write budget is on the other
-    // path, so setting the two alike is what makes the paths comparable.
-    lib_ams::_db.board_slot_size = _db.cmdline.msgsize_max + 64;
-    lib_ams::_db.board_max_pin = i64(lib_ams::_db.board_slot_size) * _db.cmdline.board_pin;
+    // them.  The board's body is the lag its readers may build before the
+    // writer waits, which is what a ring's write budget is on the other path,
+    // so -board_bufsize and -bufsize play the same part; -board_chunkref bounds
+    // what one stopped reader can hold of it.
+    lib_ams::_db.board_max_chunkref = _db.cmdline.board_chunkref;
     lib_ams::_db.max_msg_size = _db.cmdline.board ? 4096 : _db.cmdline.msgsize_max + 64;
     _db.test.n_msg_limit = _db.cmdline.nmsg;
+    // A board message travels as a reference sent by the board's own path, which
+    // writes on no channel, so the two modes do not combine.
+    vrfy(!(_db.cmdline.channel && _db.cmdline.board), "ams_sendtest: -channel does not combine with -board");
+    // A window no larger than a message would refuse that message forever, so
+    // the run is refused before any process starts.
+    vrfy(!_db.cmdline.channel || u64(_db.cmdline.channel_window) > u64(lib_ams::_db.max_msg_size)
+         , tempstr() << "ams_sendtest.badwindow"
+         << Keyval("channel_window", _db.cmdline.channel_window)
+         << Keyval("max_msg_size", lib_ams::_db.max_msg_size)
+         << Keyval("comment", "a channel window must exceed the ring's largest message"));
+    // A parked writer is woken by a signal, and in polling mode nothing sends one;
+    // a blocking send waits in place and never parks.
+    vrfy(!_db.cmdline.parkwrite || (_db.cmdline.signaled && !_db.cmdline.blocking && !_db.cmdline.board)
+         , "ams_sendtest: -parkwrite needs -signaled, and does not combine with -blocking or -board");
     bool isparent = procidx_Get(my_id) == 0;
     if (isparent) {// parent
         if (ams_sendtest::_db.cmdline.file_prefix == "") {
@@ -256,9 +448,10 @@ void ams_sendtest::Main() {
     }
     lib_ams::SetDfltShmSize(_db.cmdline.bufsize);
 
-    tempstr proc_str;
-    proc_str << my_id << "," << ams_sendtest::_db.cmdline.file_prefix;
-    lib_ams::Init(proc_str);
+    ams::Procspec spec;
+    spec.id << my_id;
+    spec.prefix = ams_sendtest::_db.cmdline.file_prefix;
+    lib_ams::InitProcspec(spec);
     if (_db.cmdline.signaled) {
         lib_ams::SetSignaledMode(true);
     }
@@ -277,11 +470,10 @@ void ams_sendtest::Main() {
         ams_sendtest::_db.c_out=&log0;
 
         vrfy_(lib_ams::ShmOpen(log0,ams_ShmFlags_write));
-        algo_lib::ApplyTrace(_db.cmdline.trace.expr);
 
         // The board exists before the first child is spawned, so a child never
         // races to open a segment its parent has not made yet.
-        lib_ams::FShm *board = _db.cmdline.board ? lib_ams::BoardCreate(u32(_db.cmdline.nchild) * u32(_db.cmdline.board_pin)) : NULL;
+        lib_ams::FShm *board = _db.cmdline.board ? lib_ams::BoardCreate(u64(_db.cmdline.board_bufsize), u32(_db.cmdline.chunk_size)) : NULL;
         vrfy(board || !_db.cmdline.board, "ams_sendtest: cannot create the message board");
 
         // add readers
@@ -297,6 +489,13 @@ void ams_sendtest::Main() {
                 vrfy_(lib_ams::ShmOpen(*child.p_shm, ams_ShmFlags_write));
             }
             lib_ams::AddReadShmember(*child.p_shm,child.proc_id);
+            // The parent opens each child's channel before the child exists, and
+            // the child finds the same slot by its key when it starts.
+            if (_db.cmdline.channel) {
+                child.c_channel = lib_ams::ChannelOpen(*child.p_shm, u64(procidx_Get(child.proc_id)));
+                child.c_base = lib_ams::ChannelOpen(*child.p_shm, 0);
+                vrfy(child.c_channel, tempstr() << "ams_sendtest: no free channel slot" << Keyval("shm", child.p_shm->grp_id));
+            }
 
             vrfy_(algo_lib::_db.argc);
             vrfy_(algo_lib::_db.argv[0]);
@@ -304,7 +503,6 @@ void ams_sendtest::Main() {
             child.child_cmd.file_prefix = ams_sendtest::_db.cmdline.file_prefix;
             child.child_cmd.id = procidx_Get(child.proc_id);
             child.child_cmd.nmsg = _db.cmdline.nmsg;
-            child.child_cmd.trace.expr = _db.cmdline.trace.expr;
             child.child_cmd.recvdelay_ns = _db.cmdline.recvdelay_ns;
             child.child_cmd.senddelay_ns = _db.cmdline.senddelay_ns;
             child.child_cmd.timeout = _db.cmdline.timeout;
@@ -313,8 +511,15 @@ void ams_sendtest::Main() {
             child.child_cmd.msgsize_min = _db.cmdline.msgsize_min;
             child.child_cmd.signaled = _db.cmdline.signaled;
             child.child_cmd.board = _db.cmdline.board;
-            child.child_cmd.board_pin = _db.cmdline.board_pin;
+            child.child_cmd.board_chunkref = _db.cmdline.board_chunkref;
+            child.child_cmd.board_bufsize = _db.cmdline.board_bufsize;
+            child.child_cmd.chunk_size = _db.cmdline.chunk_size;
+            child.child_cmd.slowreader = _db.cmdline.slowreader;
             child.child_cmd.uc = _db.cmdline.uc;
+            child.child_cmd.nchild = _db.cmdline.nchild;
+            child.child_cmd.channel = _db.cmdline.channel;
+            child.child_cmd.channel_window = _db.cmdline.channel_window;
+            child.child_cmd.parkwrite = _db.cmdline.parkwrite;
             prlog("spawning child "<<i+1);
             vrfy_(child_Start(child)==0);
         }
@@ -327,14 +532,29 @@ void ams_sendtest::Main() {
             vrfy(lib_ams::BoardOpen(parent_proc), "ams_sendtest: cannot open the parent's message board");
         }
         log0.burst=50;
+        // A child sets its channel's window before it reads anything, so the
+        // parent's first message on the channel has room to go, and from then
+        // on the limit follows what the child has read.
+        if (_db.cmdline.channel) {
+            _db.c_channel = lib_ams::ChannelOpen(log0, u64(_db.cmdline.id));
+            vrfy(_db.c_channel, tempstr() << "ams_sendtest: cannot open channel" << Keyval("key", _db.cmdline.id));
+            vrfy(lib_ams::ChannelSetWindow(*_db.c_channel, u64(_db.cmdline.channel_window))
+                 , tempstr() << "ams_sendtest.badwindow"
+                 << Keyval("channel_window", _db.cmdline.channel_window)
+                 << Keyval("max_msg_size", log0.max_msg_size)
+                 << Keyval("comment", "a channel window must exceed the ring's largest message"));
+        }
         h_amsmsg_Set2(log0,log0,ReadParentMsg);
-        algo_lib::ApplyTrace(_db.cmdline.trace.expr);
         vrfy(read_Get(log0.flags), "can't open log0 for reading");
     }
     // set time limit
     algo_lib::_db.limit = algo_lib::_db.clock + algo::ToSchedTime(_db.cmdline.timeout);
     // separate creation of shm file from
-    if (isparent) {
+    // In park mode the parent sends from its step and nothing else wakes its
+    // loop; otherwise a recurring timer sends one message per firing.
+    if (isparent && _db.cmdline.parkwrite) {
+        _db.send = true;
+    } else if (isparent) {
         hook_Set0(_db.test.h_write, SendMsg);
         ThScheduleRecur(_db.test.h_write, algo::SchedTime(ams_sendtest::_db.cmdline.senddelay_ns / algo_lib::_db.clocks_to_ns));
     }
@@ -344,7 +564,7 @@ void ams_sendtest::Main() {
     if (algo_lib::_db.cmdline.verbose) {
         algo_lib::Regx regx;
         Regx_ReadSql(regx,"%",true);
-        lib_ams::DumpShmTableVisual(regx);
+        lib_ams::DumpGrpTableVisual(regx);
     }
     // A child that fails its own payload or offset checks exits non-zero, and
     // the parent's verdict is the whole run's: without reading the status here
@@ -359,15 +579,35 @@ void ams_sendtest::Main() {
         prlog("waiting for child "<<ind_curs(child).index+1
               <<": done"<<Keyval("status",child.child_status));
     }ind_end;
+    // Every channel must end with what the parent wrote on it read by its child,
+    // and never with more written than its child granted.
+    ind_beg(_db_child_curs,child,_db) {
+        if (child.c_channel) {
+            ams::Shmchannel &channel = *child.c_channel->c_slot;
+            bool channel_ok = channel.nwrite == channel.nread && channel.nwrite <= channel.wlim
+                && channel.reader == child.proc_id;
+            if (!channel_ok) {
+                prerr("ams_sendtest.channel_mismatch" << Keyval("channel", channel));
+            }
+            child_ok = child_ok && channel_ok;
+        }
+    }ind_end;
+    if (isparent && _db.cmdline.channel) {
+        algo_lib::Regx regx;
+        Regx_ReadSql(regx,"%",true);
+        lib_ams::PrintChannelTable(regx);
+    }
     FillReport(log0,isparent,child_ok);
     if (!_db.report.success) {
         algo_lib::Regx regx;
         Regx_ReadSql(regx,"%",true);
-        lib_ams::DumpShmTableVisual(regx);
+        lib_ams::DumpGrpTableVisual(regx);
         algo_lib::_db.exit_code=1;
     }
     prlog(_db.report);
+    // the parent created every segment of the run, the board and a lane per
+    // child included, and unlinks them all; a child closes only its mapping
     if (isparent) {
-        lib_ams::ShmClose(log0);
+        lib_ams::CloseAllShms();
     }
 }

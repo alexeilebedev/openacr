@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_ci (exe) -- Normalization tests (see citest table)
 // Exceptions: yes
@@ -67,7 +66,9 @@ static void SetupMemcheckLink() {
 //
 // No -install, so bin/ keeps pointing at the release build; the run reaches the
 // annotated binaries through atf_comp's -cfg:memcheck instead.
-void atf_ci::citest_mem_prep() {
+// Each memcheck shard's first citest calls this, so every shard builds its own
+// annotated tree; the build cache makes that a few seconds on a warm runner.
+void atf_ci::BuildMemcheck() {
     SetupMemcheckLink();
     command::abt_proc abt;
     Regx_ReadSql(abt.cmd.target, "%", true);
@@ -78,12 +79,19 @@ void atf_ci::citest_mem_prep() {
 
 // -----------------------------------------------------------------------------
 
-// Run every comptest under valgrind memcheck against the annotated build that
-// mem_prep produced.
-void atf_ci::citest_atf_comp_mem() {
+// Run one shard of the comptests under valgrind memcheck against the annotated
+// build that BuildMemcheck produced.  CIJOB names the shard: atf_comp runs the
+// comptests whose memcheck field carries it.
+//
+// One job running every comptest under valgrind took 47 minutes on a CI runner
+// while every other job of the pipeline finished inside 20, so the suite is cut
+// by target into three jobs of about 15 minutes each, and each comptest's
+// memcheck attribute names the shard that runs it.
+void atf_ci::RunMemcheckShard(strptr cijob) {
     command::atf_comp_proc atf_comp;
     atf_comp.cmd.maxerr = 3;
     atf_comp.cmd.cfg = dev_Cfg_cfg_memcheck;
     atf_comp.cmd.mode = command_atf_comp_mode_memcheck;
+    Regx_ReadSql(atf_comp.cmd.cijob, cijob, true);
     atf_comp_ExecX(atf_comp);
 }

@@ -1,19 +1,19 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -83,7 +83,7 @@ static void Query_Func(algo_lib::Regx &regx, cstring &out) {
     ind_beg(amc::_db_func_curs, func, amc::_db) {
         if (ch_N(func.proto) > 0 && !func.disable) {
             amc::FNs& ns = *func.p_ns;
-            if (Regx_Match(regx, func.func)) {
+            if (Regx_Match(regx, func.func) || (func.extrn && Regx_Match(regx, amc::GetCppname(func)))) {
                 if (!ns.c_nscpp) {
                     ReportQueryNocpp(ns, "func", func.func);
                 } else {
@@ -143,9 +143,7 @@ void amc::Main_Querymode() {
     if (Regx_Match(regx_key, "func")) {
         Query_Func(regx_value,out);
     }
-    frep_(i,ch_N(out)) {
-        amc::_db.report.n_cppline += ch_qFind(out, i) == '\n';
-    }
+    amc::_db.report.n_cppline += amc::CountLines(out);
     prlog(out);
 }
 

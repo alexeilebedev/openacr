@@ -12,6 +12,10 @@ dmmeta.substr  field:atfdb.Comptest.target  expr:.LL  srcfield:atfdb.Comptest.co
 dmmeta.substr  field:atfdb.Comptest.testname  expr:.LR  srcfield:atfdb.Comptest.comptest
 dmmeta.substr  field:atfdb.Unittest.ns  expr:.RL  srcfield:atfdb.Unittest.unittest
 dmmeta.substr  field:atfdb.Unittest.testname  expr:.RR  srcfield:atfdb.Unittest.unittest
+dmmeta.substr  field:creddb.Credperm.cred  expr:/RL  srcfield:creddb.Credperm.credperm
+dmmeta.substr  field:creddb.Credperm.name  expr:/RR  srcfield:creddb.Credperm.credperm
+dmmeta.substr  field:creddb.Perm.kind  expr:/RL  srcfield:creddb.Perm.perm
+dmmeta.substr  field:creddb.Perm.name  expr:/RR  srcfield:creddb.Perm.perm
 dmmeta.substr  field:dev.Builddir.arch  expr:.LR-LR  srcfield:dev.Builddir.builddir
 dmmeta.substr  field:dev.Builddir.cfg  expr:.LR-LL  srcfield:dev.Builddir.builddir
 dmmeta.substr  field:dev.Builddir.compiler  expr:.LL-LR  srcfield:dev.Builddir.builddir
@@ -20,6 +24,8 @@ dmmeta.substr  field:dev.Covline.line  expr::RR  srcfield:dev.Covline.covline
 dmmeta.substr  field:dev.Covline.src  expr::RL  srcfield:dev.Covline.covline
 dmmeta.substr  field:dev.Edaction.edacttype  expr:_LL  srcfield:dev.Edaction.edaction
 dmmeta.substr  field:dev.Edaction.name  expr:_LR  srcfield:dev.Edaction.edaction
+dmmeta.substr  field:dev.Extpkgsrc.extpkg  expr:/RL  srcfield:dev.Extpkgsrc.extpkgsrc
+dmmeta.substr  field:dev.Extpkgsrc.name  expr:/RR  srcfield:dev.Extpkgsrc.extpkgsrc
 dmmeta.substr  field:dev.Gitfile.ext  expr:/RR.LR.RR  srcfield:dev.Gitfile.gitfile
 dmmeta.substr  field:dev.Include.filename  expr::LR  srcfield:dev.Include.include
 dmmeta.substr  field:dev.Include.srcfile  expr::LL  srcfield:dev.Include.include
@@ -27,6 +33,10 @@ dmmeta.substr  field:dev.Pkgdep.package  expr:.RL  srcfield:dev.Pkgdep.pkgdep
 dmmeta.substr  field:dev.Pkgdep.parent  expr:.RR  srcfield:dev.Pkgdep.pkgdep
 dmmeta.substr  field:dev.Pkgkey.key  expr:/LR  srcfield:dev.Pkgkey.pkgkey
 dmmeta.substr  field:dev.Pkgkey.package  expr:/LL  srcfield:dev.Pkgkey.pkgkey
+dmmeta.substr  field:dev.Pkgkeyword.keyword  expr:/LR  srcfield:dev.Pkgkeyword.pkgkeyword
+dmmeta.substr  field:dev.Pkgkeyword.package  expr:/LL  srcfield:dev.Pkgkeyword.pkgkeyword
+dmmeta.substr  field:dev.Pkgupstream.dest  expr:/LR  srcfield:dev.Pkgupstream.pkgupstream
+dmmeta.substr  field:dev.Pkgupstream.package  expr:/LL  srcfield:dev.Pkgupstream.pkgupstream
 dmmeta.substr  field:dev.Prototransport.netproto  expr:/RL  srcfield:dev.Prototransport.prototransport
 dmmeta.substr  field:dev.Prototransport.transport  expr:/RR  srcfield:dev.Prototransport.prototransport
 dmmeta.substr  field:dev.Scriptfile.name  expr:/RR  srcfield:dev.Scriptfile.gitfile
@@ -56,12 +66,14 @@ dmmeta.substr  field:dmmeta.Cfmt.ctype  expr:.RL  srcfield:dmmeta.Cfmt.cfmt
 dmmeta.substr  field:dmmeta.Cfmt.strfmt  expr:.RR  srcfield:dmmeta.Cfmt.cfmt
 dmmeta.substr  field:dmmeta.Ctype.name  expr:.RR  srcfield:dmmeta.Ctype.ctype
 dmmeta.substr  field:dmmeta.Ctype.ns  expr:.RL  srcfield:dmmeta.Ctype.ctype
+dmmeta.substr  field:dmmeta.Ctypelang.ctype  expr:/RL  srcfield:dmmeta.Ctypelang.ctypelang
+dmmeta.substr  field:dmmeta.Ctypelang.lang  expr:/RR  srcfield:dmmeta.Ctypelang.ctypelang
 dmmeta.substr  field:dmmeta.Dispatch.name  expr:.RR  srcfield:dmmeta.Dispatch.dispatch
 dmmeta.substr  field:dmmeta.Dispatch.ns  expr:.RL  srcfield:dmmeta.Dispatch.dispatch
 dmmeta.substr  field:dmmeta.DispatchMsg.ctype  expr:/RR  srcfield:dmmeta.DispatchMsg.dispatch_msg
 dmmeta.substr  field:dmmeta.DispatchMsg.dispatch  expr:/RL  srcfield:dmmeta.DispatchMsg.dispatch_msg
-dmmeta.substr  field:dmmeta.Dispsig.name  expr:.RR  srcfield:dmmeta.Dispsig.dispsig
-dmmeta.substr  field:dmmeta.Dispsig.ns  expr:.RL  srcfield:dmmeta.Dispsig.dispsig
+dmmeta.substr  field:dmmeta.Displang.dispatch  expr:/RL  srcfield:dmmeta.Displang.displang
+dmmeta.substr  field:dmmeta.Displang.lang  expr:/RR  srcfield:dmmeta.Displang.displang
 dmmeta.substr  field:dmmeta.Fbuf.fbufdir  expr:.RR_LL  srcfield:dmmeta.Fbuf.field
 dmmeta.substr  field:dmmeta.Fcmap.leftField  expr:"=LL/LL"  srcfield:dmmeta.Fcmap.fcmap
 dmmeta.substr  field:dmmeta.Fcmap.leftVal  expr:"=LL/LR"  srcfield:dmmeta.Fcmap.fcmap
@@ -105,10 +117,10 @@ dmmeta.substr  field:dmmeta.Gsymbol.ns  expr:/RL  srcfield:dmmeta.Gsymbol.gsymbo
 dmmeta.substr  field:dmmeta.Gsymbol.ssimfile  expr:/RR  srcfield:dmmeta.Gsymbol.gsymbol
 dmmeta.substr  field:dmmeta.Lenfld.ctype  expr:.RL  srcfield:dmmeta.Lenfld.field
 dmmeta.substr  field:dmmeta.Llist.listtype  expr:.RR_LL  srcfield:dmmeta.Llist.field
-dmmeta.substr  field:dmmeta.Msgfield.msg  expr:/RL  srcfield:dmmeta.Msgfield.msgfield
-dmmeta.substr  field:dmmeta.Msgfield.name  expr:/RR  srcfield:dmmeta.Msgfield.msgfield
 dmmeta.substr  field:dmmeta.Nsinclude.name  expr:/LR  srcfield:dmmeta.Nsinclude.nsinclude
 dmmeta.substr  field:dmmeta.Nsinclude.ns  expr:/LL  srcfield:dmmeta.Nsinclude.nsinclude
+dmmeta.substr  field:dmmeta.Nslang.lang  expr:/RR  srcfield:dmmeta.Nslang.nslang
+dmmeta.substr  field:dmmeta.Nslang.ns  expr:/RL  srcfield:dmmeta.Nslang.nslang
 dmmeta.substr  field:dmmeta.Pmaskfld.ctype  expr:.RL  srcfield:dmmeta.Pmaskfld.field
 dmmeta.substr  field:dmmeta.PmaskfldMember.field  expr:/RR  srcfield:dmmeta.PmaskfldMember.pmaskfld_member
 dmmeta.substr  field:dmmeta.PmaskfldMember.pmaskfld  expr:/RL  srcfield:dmmeta.PmaskfldMember.pmaskfld_member
@@ -124,15 +136,21 @@ dmmeta.substr  field:dmmeta.Ssimreq.child_ssimfile  expr::LL  srcfield:dmmeta.Ss
 dmmeta.substr  field:dmmeta.Ssimreq.parent_ctype  expr::LL.RL  srcfield:dmmeta.Ssimreq.parent
 dmmeta.substr  field:dmmeta.Ssimreq.parent_field  expr::LL  srcfield:dmmeta.Ssimreq.parent
 dmmeta.substr  field:dmmeta.Ssimreq.value  expr::LR  srcfield:dmmeta.Ssimreq.parent
-dmmeta.substr  field:dmmeta.Tracefld.name  expr:.RR  srcfield:dmmeta.Tracefld.tracefld
-dmmeta.substr  field:dmmeta.Tracefld.tracerec  expr:.RL  srcfield:dmmeta.Tracefld.tracefld
-dmmeta.substr  field:dmmeta.Tracerec.name  expr:.LR  srcfield:dmmeta.Tracerec.tracerec
-dmmeta.substr  field:dmmeta.Tracerec.ns  expr:.LL  srcfield:dmmeta.Tracerec.tracerec
 dmmeta.substr  field:dmmeta.Typefld.ctype  expr:.RL  srcfield:dmmeta.Typefld.field
 dmmeta.substr  field:dmmeta.Xref.keyfld  expr:/RR  srcfield:dmmeta.Xref.via
 dmmeta.substr  field:dmmeta.Xref.name  expr:.RR  srcfield:dmmeta.Xref.field
 dmmeta.substr  field:dmmeta.Xref.ns  expr:.LL  srcfield:dmmeta.Xref.field
 dmmeta.substr  field:dmmeta.Xref.viafld  expr:/LL  srcfield:dmmeta.Xref.via
+dmmeta.substr  field:gendb.Cppsym.acrkey  expr:/LR  srcfield:gendb.Cppsym.cppsym
+dmmeta.substr  field:gendb.Cppsym.cppname  expr:/LL  srcfield:gendb.Cppsym.cppsym
+dmmeta.substr  field:gendb.Dispsig.name  expr:.RR  srcfield:gendb.Dispsig.dispsig
+dmmeta.substr  field:gendb.Dispsig.ns  expr:.RL  srcfield:gendb.Dispsig.dispsig
+dmmeta.substr  field:gendb.Msgfield.msg  expr:/RL  srcfield:gendb.Msgfield.msgfield
+dmmeta.substr  field:gendb.Msgfield.name  expr:/RR  srcfield:gendb.Msgfield.msgfield
+dmmeta.substr  field:gendb.Tracefld.name  expr:.RR  srcfield:gendb.Tracefld.tracefld
+dmmeta.substr  field:gendb.Tracefld.tracerec  expr:.RL  srcfield:gendb.Tracefld.tracefld
+dmmeta.substr  field:gendb.Tracerec.name  expr:.LR  srcfield:gendb.Tracerec.tracerec
+dmmeta.substr  field:gendb.Tracerec.ns  expr:.LL  srcfield:gendb.Tracerec.tracerec
 dmmeta.substr  field:httpdb.Status.code  expr:" LL"  srcfield:httpdb.Status.status
 dmmeta.substr  field:httpdb.Status.reason  expr:" LR"  srcfield:httpdb.Status.status
 dmmeta.substr  field:sampdb.Targdep.parent  expr:.LR  srcfield:sampdb.Targdep.targdep

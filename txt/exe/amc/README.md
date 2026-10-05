@@ -1,31 +1,10 @@
 ## amc - Algo Model Compiler: generate code under include/gen and cpp/gen
 <a href="#amc"></a>
 
-`amc` reads ssim relational tables and emits C++ headers and source
-files under `cpp/gen/` and `include/gen/`.  Every other tool in the
-repo is built from `amc` output, including `amc` itself.
-
-This document is the entry point of the amc manual.  It is
-organized in four sections:
-
-1. **Tool & CLI** — invocation, options, companion tools, the
-   `inputs` reference table.
-2. **Generated features** — one page per kind of code amc
-   produces (enums, presence masks, protocols, dispatches, cross-
-   references, strings, runtime steps, …).  Read these to learn
-   *what amc can build for you*.
-3. **Reftypes reference** — one page per reftype, including every
-   option, every variant, and every generated function.  Read
-   these to learn *how to spell what you want in ssim*.
-4. **The amc backend** — the gen table, the tclass/tfunc dispatch
-   model, output-file layout, how to extend amc with a new reftype
-   or a new gen phase.  Read these to *modify amc itself*.
-
-Release notes are at the bottom.
-
-For the philosophy behind the generative approach see
-[Intro](/txt/exe/amc/intro.md).
-For a map of amc's own source modules run `doc ns:amc`.
+`amc` reads the ssim tables under `data/` and writes the C++ that implements
+them under `cpp/gen/` and `include/gen/`.  Every executable in the repo is built
+from that output, `amc` included.  Run it with no arguments after any change to
+the schema, and it brings the generated tree back in line with the tables.
 
 ### Syntax
 <a href="#syntax"></a>
@@ -40,193 +19,202 @@ Usage: amc [[-query:]<string>] [options]
     -showcomment          Y       Show generated comments
     -report               Y       Final report
     -e                            Open matching records in editor
-    -trace        regx    ""      Regx of something to trace code generation
     -derive                       Derive and write the amc-owned tables; generate no source
     -verbose      flag            Verbosity level (0..255); alias -v; cumulative
     -debug        flag            Debug level (0..255); alias -d; cumulative
+    -trace        string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                         Print help and exit; alias -h
     -version                      Print version and exit
     -signature                    Show signatures and exit; alias -sig
 ```
 
-### 1. Tool & CLI
-<a href="#1-tool-cli"></a>
+### Description
+<a href="#description"></a>
 
-&#128196; [Intro — philosophy & motivation](/txt/exe/amc/intro.md)<br/>
+#### Regenerating the tree
+<a href="#regenerating-the-tree"></a>
 
-The `Syntax`, `Options`, and `Inputs` sections below are
-auto-generated from the ssim schema by `abt_md`.
+A plain `amc` loads every ssimfile under `data/` and generates code for every
+namespace.  Each namespace gets three files: `cpp/gen/<ns>_gen.cpp` holds the
+function bodies, `include/gen/<ns>_gen.h` the declarations, and
+`include/gen/<ns>_gen.inl.h` the inline bodies.  A namespace that holds a
+projected ctype also gets a file in each language it is projected into, such as
+`ts/gen/<ns>_gen.ts` (see [foreign-language projection](/txt/exe/amc/lang.md)).  `amc` writes a file only
+when its contents changed, so an up-to-date tree comes out of a run untouched.
 
-#### Companion tools
-<a href="#companion-tools"></a>
+The same run rewrites a set of tables that `amc` owns: `gendb.ctypelen`,
+`gendb.dispsig`, `gendb.payloadhdr`, `gendb.msg`, `gendb.msgfield`,
+`gendb.tracefld`, `gendb.tracerec` and `gendb.cppsym`.  `amc` computes
+their rows from the rest of the schema and writes them through `acr`.  Never
+edit these tables by hand, since the next run puts them back.
 
-**amc_gc — garbage-collect unused records and includes.**
-Rebuilds a specified target while sequentially dropping records
-that match `-key`.  Records that can be removed without breaking
-the build are reported as dead.  With `-include`, the same logic
-applies to `#include` lines instead of ssim records.
+The run ends with a `report.amc` line that counts what it generated and wrote.
+A full run over this tree generates ~2M lines in ~630 files, and
+`n_filemod:0` means the tree was already current.  The generated output is
+committed, so `git diff` after a run shows what a schema change did to the code.
+[acr_ed](/txt/exe/acr_ed/README.md) runs `amc` itself after every `-write`, so a
+schema edit made through it needs no separate run.
 
-**amc_vis — access-path diagrams.**  Walks the field graph and
-renders an ASCII or Graphviz `.dot` diagram of the pointer chains
-rooted at each global FDb.  `-check` runs dependency consistency
-checks without rendering.
+#### Printing the code for one ctype or function
+<a href="#printing-the-code-for-one-ctype-or-function"></a>
 
-**toamc — extract amc schema from C++ source.**  `bin/toamc`
-reads a hand-written C++ file and emits the ssim records that
-would generate it.  See [/txt/script/toamc.md](/txt/script/toamc.md).
+Give `amc` a query and it prints generated code to stdout and writes nothing.
+The query is `ctype:<regx>`, `func:<regx>`, or a bare regx that searches both.
+A ctype prints as its struct declaration, with its constants when it has any.
+A function prints as its body, or as its prototype under `-proto`.  A regx with
+no dot in it names a namespace, so `amc algo_lib` means `amc algo_lib.%`.
 
-The default invocation prints a one-line report:
+A generated function's key is `<ctype>.<field>.<name>` for a field's function
+and `<ctype>..<name>` for the ctype's own.  The `// func:` comment above each
+function prints its key, so a broad query shows the keys a narrow one can ask for.
 
-    $ amc
-    report.amc  n_cppfile:123  n_cppline:258301  n_ctype:970  n_func:22524  n_xref:460  n_filemod:0
+#### Editing the records before a run
+<a href="#editing-the-records-before-a-run"></a>
 
-`amc` runs at roughly 1M generated LOC per second.  Generated
-outputs are versioned in git, so changes can be traced with
-`git annotate`.
+`amc -e <query>` opens the records the query names in `$EDITOR`, through
+`acr -e`, together with their whole cross-reference tree.  A bare regx
+selects the `ns`, `ctype`, `field` and `dispatch` records it matches.  When you
+save and quit, `amc` runs a normal regeneration over the edited tables.  A
+failed edit stops `amc` before it generates anything.
 
-To experiment with amc itself, run it inside a sandbox so that a
-broken generator phase cannot prevent its own recovery:
+#### Deriving the amc-owned tables only
+<a href="#deriving-the-amc-owned-tables-only"></a>
+
+`amc -derive` rewrites the tables listed above and generates no source.  A
+namespace that compiles one of those tables into its code, as a `gstatic`, reads
+the table's file at the start of the run.  A run whose derivation changes the
+table therefore generates that namespace from the old rows.  Run `amc -derive`
+first and a plain `amc` after it, and the second run reads the new rows.
+
+### See also
+<a href="#see-also"></a>
+
+- [Code generation](/txt/openacr/codegen.md) sets `amc` in the pipeline from
+  ssim to binary, and [the amc intro](/txt/exe/amc/intro.md) explains why the
+  generator exists.
+- [The reftype index](/txt/exe/amc/reftype.md) lists every reftype a field can
+  have, with one page each for its options and the functions it generates.
+- The feature pages describe each kind of code `amc` produces:
+  [pools](/txt/exe/amc/pool.md), [xrefs](/txt/exe/amc/xref.md),
+  [inheritance](/txt/exe/amc/inheritance.md), [I/O](/txt/exe/amc/io.md),
+  [runtime](/txt/exe/amc/runtime.md), [reflection](/txt/exe/amc/reflection.md),
+  [command lines](/txt/exe/amc/cmdline.md), [strings](/txt/exe/amc/string.md),
+  [enums](/txt/exe/amc/enum.md), [decimals](/txt/exe/amc/decimal.md),
+  [bitsets](/txt/exe/amc/bitset.md), [charsets](/txt/exe/amc/charset.md),
+  [regular expressions](/txt/exe/amc/regx.md),
+  [big-endian fields](/txt/exe/amc/bigendian.md),
+  [size assertions](/txt/exe/amc/csize.md), [protocols](/txt/exe/amc/proto.md),
+  [dispatches](/txt/exe/amc/dispatch.md), [presence masks](/txt/exe/amc/pmask.md),
+  [varlen fields](/txt/exe/amc/varlen.md), [FAST](/txt/exe/amc/fast.md),
+  [protobuf](/txt/exe/amc/pbuf.md), [Kafka](/txt/exe/amc/kafka.md),
+  [subprocesses](/txt/exe/amc/exec.md), [byte buffers](/txt/exe/amc/fbuf.md),
+  [hooks](/txt/exe/amc/hook.md), [trace counters](/txt/exe/amc/trace.md),
+  [TypeScript](/txt/exe/amc/js.md) and
+  [foreign-language projection](/txt/exe/amc/lang.md).
+- The backend pages cover `amc`'s own internals: the
+  [pipeline](/txt/exe/amc/backend/pipeline.md), the
+  [tclass and tfunc model](/txt/exe/amc/backend/tclass-tfunc.md), the
+  [output layout](/txt/exe/amc/backend/output.md),
+  [extending amc](/txt/exe/amc/backend/extending.md) and the
+  [data model](/txt/exe/amc/backend/data-model.md).
+- [amc_vis](/txt/exe/amc_vis/README.md) draws the access paths `amc` generates,
+  [amc_gc](/txt/exe/amc_gc/README.md) finds records a target can do without,
+  [atf_amc](/txt/exe/atf_amc/README.md) tests the generated code, and
+  [toamc](/txt/script/toamc.md) turns hand-written C++ into ssim records.
+
+### Examples
+<a href="#examples"></a>
 
 ```bash
-wt amc -reset -diff -- amc
+amc                                     # regenerate everything that changed
+amc dmmeta.Ctype                        # print the generated struct for dmmeta.Ctype
+amc dmmeta.Ns..Print                    # print the body of one generated function
+amc 'amc.FDb.ind_ctype.%' -proto        # list the functions of one index, with comments
+amc 'func:dmmeta.Ctype..%' -proto -showcomment:N   # bare prototypes, one per line
+amc -e ctype:dmmeta.Ns                  # edit a ctype and its fields, then regenerate
+amc -out_dir:                           # load and generate without writing, to check the schema
+wt amc -reset -diff -- amc              # run amc in the amc sandbox and show the diff
 ```
 
-### 2. Generated features
-<a href="#2-generated-features"></a>
+A query prints the code and then the report line:
 
-What amc generates, organized by feature.  Each page describes a
-single capability: what ssim you write, what C++ comes out, the
-options and variants, an example, and pitfalls.
+```
+$ amc 'amc.FDb.ind_ctype.%' -proto -showcomment:N
+inline bool amc::ind_ctype_EmptyQ() __attribute__((nothrow));
+amc::FCtype* amc::ind_ctype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+amc::FCtype& amc::ind_ctype_FindX(const algo::strptr& key);
+amc::FCtype& amc::ind_ctype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+...
+report.amc  n_cppfile:0  n_cppline:9  n_ctype:5135  n_func:165827  n_xref:2547  n_filemod:0
+```
 
-#### Core in-memory database
-<a href="#core-in-memory-database"></a>
-&#128196; [Memory pools — allocators overview](/txt/exe/amc/pool.md)<br/>
-&#128196; [Cross-references (xrefs) — group-by / partitioned indexes](/txt/exe/amc/xref.md)<br/>
-&#128196; [Inheritance — Base, Castbase/Castdown, Pkey, Upptr](/txt/exe/amc/inheritance.md)<br/>
-&#128196; [I/O — LoadTuples, SaveTuples, gstatic](/txt/exe/amc/io.md)<br/>
-&#128196; [Runtime — main loops, steps, scheduling](/txt/exe/amc/runtime.md)<br/>
-&#128196; [Reflection — imdb, table metadata, FieldId](/txt/exe/amc/reflection.md)<br/>
-&#128196; [Command-line parsing — command.X tables](/txt/exe/amc/cmdline.md)<br/>
+### Caveats
+<a href="#caveats"></a>
 
-#### Values, strings, numbers
-<a href="#values-strings-numbers"></a>
-&#128196; [Strings — strptr, cstring, tempstr, Smallstr, Numstr](/txt/exe/amc/string.md)<br/>
-&#128196; [Enums — fconst, gconst, conversion functions](/txt/exe/amc/enum.md)<br/>
-&#128196; [Decimals — Dec / fdec fixed-point](/txt/exe/amc/decimal.md)<br/>
-&#128196; [Bitsets — fbitset over integers or arrays](/txt/exe/amc/bitset.md)<br/>
-&#128196; [Charsets — Charset reftype, Match](/txt/exe/amc/charset.md)<br/>
-&#128196; [Regular expressions — Regx, RegxSql](/txt/exe/amc/regx.md)<br/>
-&#128196; [Big-endian fields — fbigend get/set](/txt/exe/amc/bigendian.md)<br/>
-&#128196; [Compile-time size & offset assertions](/txt/exe/amc/csize.md)<br/>
-
-#### Wire protocols & codecs
-<a href="#wire-protocols-codecs"></a>
-&#128196; [Protocols — TLV / TV messages, packing, varlen](/txt/exe/amc/proto.md)<br/>
-&#128196; [Dispatches — dispatch, dispsig, dispctx, disptrace](/txt/exe/amc/dispatch.md)<br/>
-&#128196; [Presence masks — pmask, pmaskfld](/txt/exe/amc/pmask.md)<br/>
-&#128196; [Varlen trailing fields — Varlen / Opt / lenfld](/txt/exe/amc/varlen.md)<br/>
-&#128196; [FAST presence codec](/txt/exe/amc/fast.md)<br/>
-&#128196; [pbuf codec (protobuf)](/txt/exe/amc/pbuf.md)<br/>
-&#128196; [Kafka codec](/txt/exe/amc/kafka.md)<br/>
-
-#### I/O & process glue
-<a href="#i-o-process-glue"></a>
-&#128196; [Subprocess invocation — Exec](/txt/exe/amc/exec.md)<br/>
-&#128196; [Fbuf — byte buffer with epoll integration](/txt/exe/amc/fbuf.md)<br/>
-&#128196; [Hooks — callback fields](/txt/exe/amc/hook.md)<br/>
-&#128196; [Trace counters — ftrace, disptrace, usertracefld](/txt/exe/amc/trace.md)<br/>
-
-#### Frontend bindings
-<a href="#frontend-bindings"></a>
-&#128196; [JavaScript / TypeScript emission](/txt/exe/amc/js.md)<br/>
-
-### 3. Reftypes reference
-<a href="#3-reftypes-reference"></a>
-
-&#128196; [Reftypes index — one-line per reftype](/txt/exe/amc/reftype.md)<br/>
-
-Every reftype has its own page under
-`/txt/exe/amc/reftype/` with the full template: flags, ssim
-inputs, variants, generated-function table, memory model,
-cross-reference behaviour, pitfalls.  See the
-[reftypes index](/txt/exe/amc/reftype.md) for navigation.
-
-### 4. The amc backend
-<a href="#4-the-amc-backend"></a>
-
-How amc itself is built.  Read these if you are modifying amc or
-adding a new reftype.
-
-&#128196; [Pipeline — the gen table, phase by phase](/txt/exe/amc/backend/pipeline.md)<br/>
-&#128196; [Tclass / tfunc dispatch model](/txt/exe/amc/backend/tclass-tfunc.md)<br/>
-&#128196; [Output layout — per-namespace files, report schema](/txt/exe/amc/backend/output.md)<br/>
-&#128196; [Extending amc — add a reftype or a gen phase](/txt/exe/amc/backend/extending.md)<br/>
-&#128196; [Internal data model — FCtype, FField, FNs, genctx](/txt/exe/amc/backend/data-model.md)<br/>
-
-### 5. Release notes
-<a href="#5-release-notes"></a>
-
-&#128196; [amc release notes](/txt/exe/amc/relnotes.md)<br/>
+- Nothing under `cpp/gen`, `include/gen` or `ts/gen` survives the next run, so
+  change the record the code came from, or change `amc`.
+- `amc` reads `data/` strictly.  An attribute that names no field of its ctype
+  stops the run with `unrecognized attr` and the file and line that carry it.
+- A generation error suppresses all output, so a failed run leaves the tree as
+  it was.  The run then prints `amc.no_output` and exits non-zero.
+- When you change `amc` itself, run the new binary in the `amc` sandbox with
+  `wt amc -reset -diff -- amc`.  A broken generator run in the main tree
+  overwrites its own generated source, and it can then no longer rebuild
+  itself.
 
 ### Options
 <a href="#options"></a>
 #### -in_dir -- Root of input ssim dir
 <a href="#-in_dir"></a>
 
-Directory containing the ssim input tree.  Defaults to `data`.
+The directory `amc` loads the ssim tables from, `data` by default.  Point it at
+another dataset to generate from that schema.
 
 #### -query -- Query mode: generate code for specified object
 <a href="#-query"></a>
 
-When amc receives a positional argument it runs in **query mode**.
-No files are touched: amc simply prints to stdout the generated
-code section whose key matches the regex (usually a ctype or
-function name).  This is the fastest way to inspect how a single
-function is generated.
-
-Example: dump every function generated for amc itself
-
-```bash
-amc amc.%
-```
+Print the generated code for the ctypes and functions the query names, and
+write no files.  The query is `ctype:<regx>`, `func:<regx>` or a bare regx; see
+[Printing the code](#printing-the-code-for-one-ctype-or-function).
 
 #### -out_dir -- Root of output cpp dir
 <a href="#-out_dir"></a>
 
-Directory where `cpp/gen/` and `include/gen/` will be written.
+The root the generated files and the amc-owned tables are written under, the
+current directory by default.  An empty value, `-out_dir:`, writes nothing at
+all, which makes a full run a check that the schema generates cleanly.
 
 #### -proto -- Print prototype
 <a href="#-proto"></a>
 
-Used with `-query`; restricts the output to function prototypes.
+With a query, print each matching function's prototype and leave out its body.
+Add `-showcomment:N` for one bare prototype per line.
 
 #### -showcomment -- Show generated comments
 <a href="#-showcomment"></a>
 
-Print the generator's comment trail interleaved with the C++.
+With a query, print the comment above each function along with its `// func:`
+key.  It is on by default, and `-showcomment:N` strips the comments from the
+output.
 
 #### -report -- Final report
 <a href="#-report"></a>
 
-Emit the one-line stats report after generation.  See
-[backend/output.md](/txt/exe/amc/backend/output.md) for the report
-schema.
+Print the `report.amc` line at the end of the run, on by default.  It counts the
+C++ files and lines written, the ctypes, functions and xrefs in the model, and
+`n_filemod`, the files the run changed.  `-report:N` leaves it out.
 
 #### -e -- Open matching records in editor
 <a href="#-e"></a>
 
-When combined with a query, open the matching ssim records in
-`$EDITOR` (via `acr -e`).  When the edit is applied, amc proceeds with
-a normal code generation run; if the edit fails, amc aborts without
-regenerating anything.
-
-#### -trace -- Regx of something to trace code generation
-<a href="#-trace"></a>
-
-Match a regex against generator phase / function names; matching
-runs emit detailed diagnostics.  See
-[backend/pipeline.md](/txt/exe/amc/backend/pipeline.md) for the
-phase list.
+Open the records the query names in `$EDITOR`, then regenerate.  A failed edit
+stops the run before any code is generated; see
+[Editing the records](#editing-the-records-before-a-run).
 
 #### -derive -- Derive and write the amc-owned tables; generate no source
 <a href="#-derive"></a>
+
+Rewrite `gendb.ctypelen`, `gendb.dispsig` and the other amc-owned tables, and
+write no source.  Run it before a plain `amc` when a namespace compiles one of
+those tables into its code; see
+[Deriving the tables](#deriving-the-amc-owned-tables-only).

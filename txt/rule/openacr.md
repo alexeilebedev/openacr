@@ -68,15 +68,14 @@ its `id` is for, and why one of them is called `samp_meng`.  None of that is
 about `acr`.  Worse, there is no proctype in the openacr distribution at all,
 so the reader cannot look the table up even if they want to.
 
-The openacr namespaces ship as a package -- `dev.package:openacr` -- and that
+The openacr namespaces ship as a package, `openacr`, and that
 package is read by people who have never seen the tree it was published from.
 A name belonging to a downstream project is noise to them at best, and a
 dangling reference at worst.
 
-The rule therefore binds every document the package carries, which is
-`txt/openacr`, `txt/exe`, `txt/ssimdb` and `txt/tut`; ask `apm
--package:openacr -l -showfile` for the list.  This file is not among them, so
-it illustrates with whatever example is clearest, downstream tables included.
+The rule therefore binds every document the package carries, this one
+included, and every source file and test as well; ask `apm -package:openacr -l
+-showfile` for the list.
 
 A published document about an openacr tool illustrates with a table that same
 package carries.  `dmmeta.ns`, `dmmeta.ctype`, `dmmeta.field`, `dev.target` and
@@ -84,12 +83,29 @@ package carries.  `dmmeta.ns`, `dmmeta.ctype`, `dmmeta.field`, `dev.target` and
 already has them.  `apm -package:openacr -l -showrec` answers what else the
 package holds.
 
-One check enforces part of this and it is worth knowing its limit.  The
-`apm_nodownstream` citest evaluates each package that declares a
-`dev.package.nomention` regx and refuses the package if a *record key* or a
-*file name* in it matches.  It does not read the contents of the files.  A
-downstream table named in the prose of an openacr document therefore passes
-every gate in the tree, which is why this rule is on the writer.
+`apm -check` enforces it, as the `apm.keyword` finding.  It takes each package and gathers
+the words the package must not contain: the `dev.pkgkeyword` words of every
+package that extends or requires it, and the `forbid:Y` words of the package and
+of every package that carries it.  Each package declares its own words, so the
+list ships with the package it identifies and never with the one it must stay
+out of.  The words are matched against every record, every file name, and every
+line of every file the package publishes, so a downstream table named in an
+openacr document fails `normalize` in the commit that writes it.
+
+A record is checked whole, so a forbidden word in a `comment:`, a path regx or
+any other attribute fails the package exactly as one in the key does.  A line
+the destination regenerates from its own data is skipped: a copyright notice, a
+header's `update-hdr` block, a README's usage block, and the fenced output of an
+inline command.  A line that has to keep a word, such as an editor key sequence,
+carries `ignore:pkgkeyword`.
+
+Two consequences for a change that gives an openacr tool a new input.  Its
+`dev.pkgkey` rows belong in the same commit, since a row that lands in the
+openacr package by default and names the downstream tree fails the check.  And a row openacr must
+keep is written without the word: the `Syntax` mdsection's path is
+`(txt/exe/%/README.md|txt/protocol/%.md)` for that reason, which stays precise
+because the generator gates on whether the page has a command or an executable
+behind it.
 
 The rule reaches examples in code as well as in prose.  A comptest of an
 openacr tool, a tutorial under `txt/tut`, a sample invocation in a function
@@ -120,6 +136,37 @@ principle that made them worth knowing.
 
 These govern hand-editing or extending the ssim schema and the in-memory
 database `amc` generates from it.
+
+**A structured key carries only components that vary independently.**  A key
+names an element of a set, so it must carry exactly those components whose
+variation reaches another element of that set.  Run the test by holding every
+other component fixed and varying one: if that direction cannot reach an element
+the set is allowed to contain, the component is functionally determined by the
+rest, which makes it an attribute of the row.  Call this cardinality
+analysis, and do it when the key is designed, because nothing downstream catches
+the failure.  Too few components collide on insert and announce themselves; too
+many are silent, since every extra spelling is a well-formed string that
+`acr -check` accepts.
+
+`dev.targsrc` is the standing example of getting it wrong, and it is in the tree.
+Its key is `target/src`, but a source file belongs to exactly one target, so
+`src` alone identifies the row -- every one of its ~1700 rows carries a distinct
+source path.  The declared key is a superkey and not a candidate key: it admits
+the product of ~150 targets and ~5500 tracked files, for a set that cannot
+exceed the files alone.  Every extra spelling is a source assigned to two
+targets.  The key should have been `src` alone, making the table a subset of
+`dev.gitfile` with `target` as an attribute.  Do not copy its shape.
+
+`dev.targdep` is the same construction done right: `target.parent`, both
+components `dev.Target` keys, and neither determined by the other, since a target
+has many parents and a parent serves many targets.  `dmmeta.ctype` is the other
+correct shape, a parent key and a name unique within it, which is the commonest
+key in the schema.
+
+A composite key shows its arity in the column list, where a reviewer asks whether
+it is minimal.  A structured key shows one column and keeps its arity in
+`dmmeta.substr` one table away, so the question never gets asked on its own.
+Ask it deliberately.
 
 **String defaults need inner quotes.**  A `dmmeta.field` `dflt` for a string is
 `'""'` for empty and `'"release"'` for a value.
@@ -206,62 +253,97 @@ record, the fields are filled, and `pool_XrefMaybe(rec)` is what inserts it
 into every index.  The one exception is a record deleted again immediately
 without being used.
 
+**A deadline heap's xref is `inscond:false`.**  A `Bheap` whose `fstep` is
+`TimeHookOnce` fires its step when the heap head's sort field passes the clock,
+and an xref with `inscond:true` puts every new row on the heap at `XrefMaybe`,
+with the sort field still at its zero default.  A deadline of zero is already
+past, so the step fires on the next pass for a row that was meant to wait for an
+event -- a lost-fill backstop escalating the moment its conversation was created,
+before the first ask had gone out.  Declare the xref `inscond:false` and let the
+code that stamps the deadline be the one that inserts.
+
 **Tpool recycles memory and has no `RemoveAll`.**  Use `Lary` when the whole
 pool has to be cleared between iterations.
+
+**An environment variable is a row of `dev.envvar`, and a credential name a row
+of `dev.cred`.**  Both tables hold names and never values: `dev.envvar` carries
+the variable's name and whether it is this tree's own, and `dev.cred` carries a
+credential's name, the `creddb.kind` it is stored under, and the variable that
+delivers it when one does.  A secret's value lives in credd, in a protected CI
+variable, or in the person's own store, and in none of these rows.
+
+Both are projected to symbols in `algo_lib`, so code spells a name once:
+`getenv(algo_lib::dev_envvar_CREDD_PASSWORD)` rather than a string literal, and
+`algo_lib::dev_cred_gli_mr` for a credential a tool asks credd for.  A typo is
+then a compile error where it used to be a variable that silently read empty.
+The symbol reaches everywhere C++ names a variable -- `getenv`, `setenv`,
+`unsetenv` and `putenv`, `atf_comp::SetEnv` in a test, and the `NAME=` that
+prefixes an assignment this tree writes into a file it parses back.  The one
+place a literal stays is shell program text emitted for bash to run, where the
+name belongs to the program being written.
+
+A variable a packaged library reads is named for that library, not for the tree
+the library happens to be used by.  `apm -check` forbids the openacr
+package any record naming the tree it is published from, so a variable named
+after that tree and read by `algo_lib` can neither ride in the package nor be spelled as
+a symbol there -- the row is excluded and the symbol does not exist, and the
+packaged library stops compiling.  The name is what is wrong in that situation,
+so `ALGOFATALDIR` is what `algo_lib` reads.
+
+So a change that introduces an environment variable adds its row to
+`data/dev/envvar.ssim` in the same commit, and one that introduces a credential
+name adds its row to `data/dev/cred.ssim`.  The names form one global set --
+two programs that each pick `PORT` do not collide until one execs the other --
+and a table is what makes the set visible and lets `acr` cross-reference it:
+`acr dev.envvar` lists the variables a tree reads today.
+
+**acr orders a file by a sort key of four parts, compared in order: the ctype,
+a number, a string and an arrival counter.**  The string is the table's
+`dmmeta.ssimsort` sort field evaluated on the record, and it is empty for a
+table that declares no `ssimsort` row.  When that field's type is a builtin
+numeric, acr reads the value into the number and clears the string, so `10`
+follows `9` in such a table and precedes it in one whose sort field is a string.
+The arrival counter is issued per distinct key, so rows with equal sort fields
+keep the order they were read in.  Two consequences follow.  A table with no
+`ssimsort` row sorts by arrival alone, so its file order is its read order and a
+new row lands at the end, which reads as acr not sorting it.  And a query prints
+in the ctype's rank, then this key, which is the order `bin/normalize` holds a
+file to; `amc`, `acr -check % -x` and `abt_md -check` never look at it.
 
 ### Reading and editing the database
 <a href="#reading-and-editing-the-database"></a>
 
-#### acr -in:run/x2inv -check reports Invalid value on rows that are fine
-<a href="#acr-inrun-x2inv-check-reports-invalid-value-on-rows-that-are-fine"></a>
+#### A query joining ssimfile names with `|` selects nothing and exits 0
+<a href="#a-query-joining-ssimfile-names-with-selects-nothing-and-exits-0"></a>
 
-Checking the attached dataset on its own reports hundreds of bad references, one
-per row, in the shape
-
-```bash
-run/x2inv/awsdb/awspecacctkey.ssim:1: Invalid value awspec:aws1.ami-builder
-run/x2inv/omdb/omhost.ssim:1: Invalid value net:ext-0
-run/x2inv/x2rdb/nodeacct.ssim:1: Invalid value user:x2admin
-```
-
-Nothing is wrong with the dataset.  `acr` resolves exactly one input root and has
-no `-invdir`, so `-in:run/x2inv` makes the dataset the whole database and every
-foreign key whose parent stayed in `data/` then points outside the world acr can
-see.  The straddling keys are the ones the split cut across: `omdb.omhost` to
-`x2rdb.net` and `x2rdb.env`, `x2rdb.nodeacct` to `x2rdb.user`, `x2rdb.nodecname`
-to `x2rdb.intfname`, `x2rdb.nodehost` to `x2rdb.devintf`, and
-`awsdb.awspecacctkey` to `awsdb.awspec`.  This is why omcli's own sort of
-`omdb.omhost` runs without `-check`.
-
-Check both layers by handing acr one stream that holds them:
+One table checks, and the two of them together check nothing:
 
 ```bash
-(acr %; acr % -in:run/x2inv) | acr -in:- -check %      # report.acr_check  n_err:0
+acr -check 'dev.target'                  # report.acr_check  records:171  n_err:0
+acr -check 'dev.target|dev.targdep'      # report.acr_check  records:0    n_err:0
+acr -check '(dev.target|dev.targdep)'    # report.acr_check  records:0    n_err:0
 ```
 
-Each root is dumped by acr and the two dumps are read back as a single stream, so
-the check sees one database and the straddling keys resolve.  A `cat` of
-`data/*/*.ssim run/x2inv/*/*.ssim` into a temp file answers identically today and
-is the older form of this recipe.  The pipeline needs no temp file, and it asks
-acr for each root's rows rather than a shell glob, which assumes every ssimfile
-sits exactly two directories down — true now, and a property of the names rather
-than a rule.
+A query names one ssimfile, and an alternation has to sit inside the namespace or
+inside the file name.  Spanning the dot names no table at all, and acr reports
+that as an empty selection rather than as an error, so the exit code is 0.
 
-Run it against `run/x2inv` alone before trusting a clean answer, since that is the
-form that must fail: it reports `n_err:6154` and exits 1, while the union reports
-0 and the two record counts sum to the union's.
+| could be | discriminant |
+|---|---|
+| the alternation spans the dot | run one of the branches alone -- a count where the joined form gave 0 is this case |
+| the tables really hold nothing | `acr '<ns>.%' -in:<root>` counts the namespace, and 0 there means the root is empty |
 
-`acr` will not grow a flag for the second root.  A layer here is the *inventory*,
-which is a concept of the tree that carries one, and acr is domain-neutral — it
-knows ssimfiles, roots and ctypes, and nothing about what the rows describe.  The
-two dozen tools carrying `-invdir` are that tree's own, and the flag means
-something to each of them.  Widening acr's `-in`
-to a list was tried instead and abandoned: `-in` names both where rows are read
-and where they are written, so a second root reopens where an inserted row lands,
-for a gain the pipeline above already delivers.
+Write the alternation inside a component:
 
-A per-layer check cannot be made to pass, so a clean answer from the concatenated
-form is what says the dataset is consistent.
+```bash
+acr -check 'dev.(target|targdep)'        # report.acr_check  records:692  n_err:0
+acr -check '(dev|dmmeta).%'              # two namespaces whole
+```
+
+A script that builds its selection by pasting table names is the shape to look
+for, because it passes on every tree it has ever run against.  One query per
+namespace is the form that keeps the selection exact -- group the names by their
+namespace, then loop, and fail the run if any query does.
 
 #### acr.bad_dflt Default names a key that does not exist
 <a href="#acr-bad_dflt-default-names-a-key-that-does-not-exist"></a>
@@ -269,7 +351,7 @@ form is what says the dataset is consistent.
 `acr -check` reports a `dmmeta.field` row, not a data row:
 
 ```bash
-data/dmmeta/field.ssim:5294: acr.bad_dflt  field:command.x2ca.certtype  dflt:nosuch-type-99  arg:x2certdb.Certtype  comment:"Default names a key that does not exist"
+data/dmmeta/field.ssim:<line>: acr.bad_dflt  field:command.atf_comp.cfg  dflt:nosuch-cfg  arg:dev.Cfg  comment:"Default names a key that does not exist"
 ```
 
 The field declares `reftype:Pkey` with an `arg` naming an ssimdb ctype, so its
@@ -277,8 +359,8 @@ The field declares `reftype:Pkey` with an `arg` naming an ssimdb ctype, so its
 a foreign key and it names no row.  Fix the default, or create the row it names:
 
 ```bash
-acr certtype:%                                   # what the table actually holds
-echo 'dmmeta.field  field:command.x2ca.certtype  dflt:'"'"'"serverClient"'"'"'' | acr -update -write
+acr cfg:%                                        # what the table actually holds
+echo 'dmmeta.field  field:command.atf_comp.cfg  dflt:'"'"'"release"'"'"'' | acr -update -write
 ```
 
 Read `n_file_mod:1` to know the write landed.  `acr -update -write -check` on a row
@@ -289,15 +371,13 @@ the write is refused, and the `acr.update` line still echoes the row you meant �
 Two defaults will not report even when they name nothing.  A default that is not a
 string literal is not a key: `dflt:0` initializes a pointer and `dflt:'""'` says the
 operator must supply the value.  And a target table that loaded zero rows is skipped,
-because the inventory tables are tracked here as empty files whose rows arrive from
-the x2inv dataset, and a checkout with nothing attached cannot tell a key that was
-never created from one it was not given.  Four live defaults sit in that state —
-`command.x2ca.certcanode`, `command.omcli.x2cert_certcanode`,
-`command.x2dist.vtpath` and `x2rdb.K8host.k8cluster`.  Check them by handing acr both
-layers as one stream, the form the recipe above gives:
+because a tree can track a table as an empty file whose rows arrive from a dataset
+layer, and a checkout with nothing attached cannot tell a key that was never created
+from one it was not given.  Check such a default by handing acr both layers as one
+stream:
 
 ```bash
-(acr %; acr % -in:run/x2inv) | acr -in:- -check %
+(acr %; acr % -in:<dataset>) | acr -in:- -check %
 ```
 
 #### acr -insert drops a misspelled attribute and reports n_err:0
@@ -312,7 +392,7 @@ every level: `report.acr_check  records:13  n_err:0`, then
 Typing `atg:bool` for `arg:bool` on a new `dmmeta.field` row produced
 
 ```ssim
-dmmeta.field  field:report.x2aws_verify.success  arg:""  reftype:Val  dflt:""  ...
+dmmeta.field  field:report.acr.n_skip  arg:""  reftype:Val  dflt:""  ...
 ```
 
 which is a field with no type.  Nothing objects until `amc` generates against
@@ -329,94 +409,82 @@ So grep the file for the key after any insert that matters, and read the
 attributes rather than the report line:
 
 ```bash
-grep -n 'field:report.x2aws_verify' data/dmmeta/field.ssim
+grep -n 'field:report.acr.n_skip' data/dmmeta/field.ssim
 ```
 
 Repair with `acr -replace -check -write`, passing the whole corrected tuple;
 `-replace` updates the row in place and reports `n_update:1`.
 
-#### A moved ssim table arrives missing a field, and the default hides it
-<a href="#a-moved-ssim-table-arrives-missing-a-field-and-the-default-hides-it"></a>
+#### A data row carrying `'""'` holds two characters, and the program reading it never matches empty
+<a href="#a-data-row-carrying-holds-two-characters-and-the-program-reading-it-never-matches-empty"></a>
 
-Rows exported to the x2inv dataset by a binary built against an older schema
-arrive without the fields that binary did not know about.  Nothing reports it.
-The load succeeds, `acr -check % -x` passes at `n_err:0`, and every absent
-field reads as its declared default, so the tables look complete and the
-database is quietly wrong.
+`dflt:'""'` on a `dmmeta.field` row is a C++ initializer and the right spelling
+there.  Copied into a *data* row it is no longer an initializer, it is a value,
+and acr stores the two characters `""`.  A program that tests the field for
+empty then never matches, and nothing reports anything.
 
-`x2rdb.nodecname` is the case that showed it.  All 86 rows reached x2inv with
-no `sshalias` field.  That field says a cname is also an ssh entrance to its
-node, and it defaults to false, so 85 rows holding `sshalias:N` lost nothing.
-One row held `sshalias:Y`, and its loss took that cname off the Host line in the
-generated script for the node it named.
+acr's own quoting is what tells the two apart:
 
-The symptom is therefore not an error but a diff: regenerating a committed
-artifact stops reproducing the committed bytes.  That makes byte-identical
-regeneration the check that a migration is honest, and the reason to run it
-before believing any table has moved:
-
-```bash
-bin/x2admin -generate
-git -C ~/x2inv status --short -- x2admin/gen/script   # silence means identical
+```
+jsonattr:""      the empty string
+jsonattr:'""'    the two-character string ""
 ```
 
-To find the loss directly, diff each moved file against the revision that
-still holds its rows — the field set is what matters, not the row count, since
-a row with a field missing is still one row:
+`omdb.ommetric` carried the quoted form on all seventeen of its log-parsed rows.
+omparse admits a metric to its token index when `jsonattr` is empty, so the index
+was built with zero entries, every metric in every benchmark log was read and
+discarded, and the tool exited 0 while printing a table of dashes.  Put the
+literal back on a single row and only that row's column goes to `-`, which is
+the discriminant when one column is empty and its neighbours are not.
+
+Find the shape across the database.  It belongs in `dmmeta.field.dflt`, and in a
+data row it is nearly always the mistake:
 
 ```bash
-for f in ~/x2inv/x2rdb/*.ssim; do b=$(basename $f)
-  diff <(git show master:data/x2rdb/$b | sort) <(sort $f) | grep -q . && echo "DRIFT $b"
-done
+grep -rn ":'\"\"'" data/ | grep -v '^data/dmmeta/field.ssim'
 ```
 
-Repair by re-exporting from the revision that still carries the rows, with a
-binary built from the current schema.
-
-#### The closure of a table to move is wider than dmmeta.field shows
-<a href="#the-closure-of-a-table-to-move-is-wider-than-dmmeta-field-shows"></a>
-
-Moving a table means moving everything keyed on it, because each loader inserts
-parents first and resolves references as it goes — a child left behind whose parent
-arrives with a later layer cannot load, whatever the layer order:
+`acr -insert` will not clear such a value, and it reports nothing to say so.
+`-insert` ignores any tuple whose key already exists, whatever its attributes:
+passing `jsonattr:""` explicitly is ignored, and so is an insert that rewrites
+the comment as well.  Each reports `n_ignore:1` and `n_file_mod:0` while the
+literal stays in the file.  Repair it with `-replace`, as the section above
+prescribes, passing the whole corrected tuple:
 
 ```bash
-x2admin.bad_xref  index:x2admin.FDb.ind_device  key:awin1.ctrl-1
-data/x2rdb/devintf.ssim:1: x2rdb.devintf  devintf:awin1.ctrl-1/ctrl  subnet:awin1.ctrl  ip:""
+echo 'omdb.ommetric  ommetric:pb_msg  parsenum:2  jsonattr:""  comment:"Pub rate msg/s"' \
+  | acr -replace -write      # acr.update ... n_update:1  n_file_mod:1
 ```
 
-The obvious way to enumerate that closure is to grep the field graph:
+The canonical form is `jsonattr:""` rather than an omitted attribute, because a
+field whose `dflt` is `'""'` has a default that the empty string differs from.
+Deleting the attribute by hand parses correctly and is undone by the next
+rewrite, so let acr spell it.
 
-```bash
-grep -n "arg:x2rdb.Device" data/dmmeta/field.ssim     # names 7 of 14 tables
+#### ssim2mysql.error Incorrect integer value for a u8 fconst column
+<a href="#ssim2mysql-error-incorrect-integer-value-for-a-u8-fconst-column"></a>
+
+`normalize_acr_my` fails with a MySQL error naming an enum's symbol, not its number:
+
+```
+ssim2mysql.error  Incorrect integer value: 'steady' for column `atfdb`.`benchprofile`.`shape` at row 1
 ```
 
-It is wrong, and quietly.  A key can be computed rather than declared:
-`awsdb.Awnlb.device` is a cppfunc returning `algo.Smallstr50`, so its `dmmeta.field`
-row records no reference to a device at all, and the edge exists only as a
-`dmmeta.xref`.  Four more tables hang below `awnlb` and never appear.
+A `u8` field with a matching `dmmeta.fconst` table is an enum, and `acr` and `amc`
+both accept either form of it — the generated `_SetStrptr`/`_ToCstr` accessors exist
+so code and ssim data can carry the symbol (`shape:steady`) instead of the number,
+and `acr -check` passes a data row written either way.  `ssim2mysql` does not resolve
+that symbol: it copies the field's raw ssim text into the `INSERT` it sends to
+MySQL, so a `u8` column declared `TINYINT` gets the literal word `steady`, which a
+strict-mode server refuses to parse as an integer.  No existing table hit this
+before, because every other persisted `u8`+`fconst` field already stores its value
+as the plain number the column expects.
 
-Read the closure off the xref table instead, which resolves computed keys and
-declared ones the same way:
-
-```bash
-grep -n "ind_device/" data/dmmeta/xref.ssim | sed 's|.*via:||'
-```
-
-Confirm it by measurement rather than by reading, since a tool indexes only some of
-what it loads.  Copy `data/` aside, empty the table there, hand the rows back as the
-layer, and re-run each reader until it loads clean — every file the loader names on
-the way is one more table in the closure:
-
-```bash
-J=temp/split; rm -rf $J; cp -r data $J/base; mkdir -p $J/layer/x2rdb
-cp data/x2rdb/device.ssim $J/layer/x2rdb/; : > $J/base/x2rdb/device.ssim
-bin/x2aws -in:$J/base -invdir:$J/layer -device:nosuchdevice-zz
-```
-
-The mirror case is worth knowing so a clean run is not over-read: a declared Pkey
-that no tool hash-indexes is never checked at load, so its table moves alone without
-complaint.  `awsdb.Awspec.user` is one.  Enforcement follows the xref, not the schema.
+Store the enum numerically in the ssim data (`shape:0`, matching the `fconst`
+table's `value:`), not symbolically, and let the comment on each `fconst` row carry
+the name for a reader.  This is also the convention `dflt` already follows on this
+class of field — `algo_lib.RegxOp.op` and `atfdb.Benchprofile.shape` both declare
+`dflt:0`, never a symbol.
 
 ### The generated tree goes stale in ways that read as success
 <a href="#the-generated-tree-goes-stale-in-ways-that-read-as-success"></a>
@@ -445,19 +513,41 @@ is not one.  Confirm the ssim inputs match upstream with `git diff
 origin/master -- data/`, rebuild `amc`, and rerun.
 
 **`amc` reaching `n_filemod:0` is not evidence the generated tree is
-current.**  Several artifacts are derived by citests rather than by `amc`, and
-`apm/gen/<package>.ssim` is the one that catches people out: the `apm_gen`
-citest owns it, runs near the end of `normalize`, and rewrites an input that
-`pbapi_gen` has already read and passed against.  Drive the generation to a
-fixpoint before committing, then check the gates as a group:
+current.**  Several artifacts are derived by citests rather than by `amc`:
+`pbapi_gen`, `fast_gen` and `doc_catalog` each regenerate their files and fail when
+the tree differs, and a tree that extends openacr adds generators of its own.  Drive `amc` to a fixpoint before
+committing, then check the gates as a group:
 
 ```bash
-atf_ci -citest:'pbapi_gen|apm_gen|apm_check|fast_gen|normalize_acr|checkclean'
+atf_ci -citest:'pbapi_gen|fast_gen|doc_catalog|apm_check|normalize_acr|checkclean'
 ```
 
 A citest reporting `atf_ci.modified_files` is naming a file it regenerated, so
 the answer is always to commit that file.  And `atf_ci -check_clean` refuses to
 run on a dirty tree, so the commit has to come before the gate can confirm it.
+
+**A mixed cached build can parse one command schema and execute another.**  The
+process then reports `algo_lib.signal text:Segmentation fault`, and its backtrace
+may end in a generated command destructor or `algo_lib::lpool_FreeMem`.  Compare
+the installed program's `-h` output with the fields in
+`include/gen/command_gen.h`.  A field present in the header and absent from help
+means the executable contains stale objects, even when `abt` reports
+`ood_src:0`.  Rebuild the affected targets without the cache:
+
+```bash
+abt '<target-regx>' -build -install -force -cache:none
+```
+
+Matching help output sends the diagnosis elsewhere.  In the stale-object case,
+repeat the exact command after the uncached build before investigating its
+runtime code.
+
+**Taking a generated tree from another ref can leave objects built from it.**
+After `git checkout origin/master -- cpp/gen include/gen` and an `amc` run that
+rewrote those files, `abt` and `ai` can report a clean build, and touching the
+files still gets a full cache hit, while an object holds the checked-out text.
+Check a constant the change moved in the object itself, with `objdump -dr
+build/release/cpp.gen.<ns>_gen.o`.  The uncached build above repairs it.
 
 **Renaming a doc file moves its hash in the package manifest.**  Regenerate
 with `apm -package:<package> -generate`, which is exactly what `apm_gen`
@@ -468,6 +558,34 @@ artifact, from a renamed citest function through a `dmmeta.ns` comment to a
 deleted `dev.gitfile` row.  The order that converges is the same in every case:
 make every edit first, then run `amc`, `update-hdr` and `abt_md` as a group,
 then commit, then `bin/normalize`.
+
+### A cross-commit A/B disagrees with the same commit built elsewhere
+<a href="#a-cross-commit-a-b-disagrees-with-the-same-commit-built-elsewhere"></a>
+
+The generated tree is not the only thing that goes stale reading as success: so
+can the compiled libraries a build reused rather than rebuilt.  `abt <exe>
+-build` builds the executable's whole dependency closure, so naming the
+executable is safe.  The trap is the timestamp heuristic underneath: `abt`
+rebuilds a dependency only when its own sources are out of date against the build
+directory's timestamps, and a `git checkout` of another commit sets source mtimes
+that need not trip that test.  A shared library like `algo_lib` can then be left
+as the build directory last built it -- not the checked-out commit's.  An A/B
+that steps across commits this way can compare mismatched libraries, and the
+result is not merely noisy, it is fabricated: a runtime bug appears to bisect to a
+commit whose own diff cannot explain it.
+
+| symptom | discriminant |
+|---|---|
+| the same commit behaves differently built here than in another checkout | build the executable's whole dependency closure: `abt <exe> -build -install -force`, and compare again |
+| a bisect lands on a commit whose diff cannot explain the behavior | re-run each point with `-force`; a result that moves is a stale-link artifact, not a real bisect |
+
+`-force` treats every file in the closure as out of date, so `algo_lib` and every
+other dependency relink from their own commit's sources; with gcache warm this
+costs seconds, not a full rebuild.  For a cross-commit A/B, build the executable
+by name (`abt ams_sendtest -build -install -force`), never a target list that
+stops at the library you happened to edit.  And confirm the baseline is
+`origin/master`, not the local `master` ref, which trails it after a fetch of
+other branches only — `git rev-list --count master..origin/master`.
 
 ### Rebasing and regenerating
 <a href="#rebasing-and-regenerating"></a>
@@ -492,8 +610,8 @@ that touched `cpp/amc`, so a `git reset --hard` onto a diverged remote branch
 does it, and so does a plain checkout or pull.  In each case `bin/amc` is a
 symlink into `build/release`, still holding the binary the previous tree built,
 and that binary knows the schema the previous tree had.  What it rewrites is not
-confined to `cpp/gen` and `include/gen` either: the amc-owned ssim tables go
-with it, so rows in `ssimfile:dmmeta.msgfield` come back with
+confined to `cpp/gen` and `include/gen` either: the tables under `data/gendb`
+go with it, so rows in `ssimfile:gendb.msgfield` come back with
 `strtype:rightpad  pad:0` flattened to `strtype:""  pad:""` — which reads as a
 schema edit nobody made.
 
@@ -506,15 +624,15 @@ cpp/lib_x2net/sock.cpp: error: cannot convert 'algo::aryptr<ams::MsgHeader>' to 
 ```
 
 The tell is that it names a file the change never opened.  The second symptom is
-`git status` listing generated files and amc-owned tables modified in namespaces
+`git status` listing generated files and `data/gendb` tables modified in namespaces
 the work has nothing to do with — easy to skim past, because a regen is expected
 to touch generated files.
 
-Recovering costs one rebuild.  Put the generated tree and the amc-owned tables
+Recovering costs one rebuild.  Put the generated tree and `data/gendb`
 back, build the generator, then regenerate:
 
 ```bash
-git checkout HEAD -- cpp/gen include/gen data/dmmeta/msgfield.ssim data/dmmeta/ctypelen.ssim
+git checkout HEAD -- cpp/gen include/gen data/gendb
 abt amc -build -install
 amc
 ```
@@ -523,6 +641,24 @@ A second `amc` then reports `n_filemod:0`, and what it did modify is scoped to
 the change.  Rebuild the whole tree afterwards with `abt % -build -install`: the
 objects from the bad generation are still in `build/`, and the targets that
 failed to compile were never installed.
+
+Then run the citest-derived generators, because this is the one place the
+generated tree arrives from somewhere other than `amc`.  Taking `ts/gen` from
+upstream brings back upstream's catalogs, such as `doc_cat.ts`, and `amc` writes
+none of them, so a field the branch added is missing from each while `amc` sits at
+its fixpoint reporting nothing.
+The gate group above is what catches it, and a rebase repair ends with that
+group rather than with the fixpoint.
+
+A rebase across a commit that moved a directory leaves the files your branch
+created behind, and nothing objects.  Git's rename detection carries your edits
+into the moved file, so a change to `ts/<old>/empty.tsx` arrives in
+`ts/<new>/empty.tsx` intact and never conflicts.  A file your branch
+added has no counterpart on master to be renamed from, so its imports still name
+the old directory, and a path that resolves to nothing is a compile error rather
+than a conflict.  `tsc --noEmit` is what finds them, which is `abt_ts -normalize`
+for the `ts/` tree; a TypeScript branch rebased across a move is not resolved
+until that has run.
 
 A branch that adds a unit test conflicts, when rebased across a master commit
 that also added one, in the rows that register the test and in the two
@@ -542,9 +678,8 @@ markers, so an unresolved path looks like a resolved one.  The driver runs with
 working file while git marks the path `UU`.  During a rebase "ours" is master,
 so what lands is master's copy without any of the rows the branch adds, and
 searching the file for `<<<<<<<` finds nothing.  Staging it therefore drops
-those rows without saying so, and the loss surfaces much later as a generation
-citest — `apm_gen`, for the file under `apm/gen/` that a `dev.pkggen` row names —
-reporting that the file no longer matches what the generator produces.
+those rows without saying so, and the loss surfaces much later, as a build
+that misses a row's generated code or a test that misses its fixture.
 
 Two changes to `acr_dm` mean a current binary does not do this.  A line it
 cannot key — a generated package file carries dozens of them, each a
@@ -583,6 +718,19 @@ building it first: run `ai`, which bootstraps `abt` and then builds every
 target, and redo the rebase with the driver present.  Twelve unmarked
 conflicts became four real ones — all of them `dispsig` hashes amc recomputes —
 once it was.
+
+A third cause gives the same unmarked `UU` and the cure above does nothing for it.
+`.gitattributes` names `merge=acr_dm`, but what that name resolves to is local git
+config that `gitconfig-setup` installs, not something the repo carries.  A clone
+that never ran it has the attribute and no driver, so git falls back to its own
+text merge: ssim files merge as lines, no conflict is reported for a row order it
+silently picks, and order inside a ctype's group in `dmmeta.field` is struct member
+layout.  One query separates this from a missing binary, and it is worth running
+before trusting any ssim merge:
+
+```bash
+git config --get merge.acr_dm.driver   # empty means every .ssim merged as text
+```
 
 A merge can also move a row while announcing nothing, and an order-dependent
 table is where that matters.  `dmmeta.ssimsort` sorts `dmmeta.field` by
@@ -628,7 +776,7 @@ for one.  A rebase produces exactly that shape, because resolving a conflict
 by deleting the `=======` marker removes the line that had been separating the
 previous section from the next heading: the file reads correctly to a human,
 passes the narrowed check, and then fails `quickreadme` on a one-line
-whitespace diff.  Run `abt_md -evalcmd:N` and commit what it rewrites before
+whitespace diff.  Run `abt_md` and commit what it rewrites before
 pushing a doc edit that came out of a conflict resolution.
 
 A narrowed `-check` no longer pretends to check links at all -- it refuses:
@@ -653,38 +801,35 @@ rejected a page no toctree held.  `doc` reaches every document through
 document is no longer an error anyone is told about.
 
 A conflict in an ssimfile that a tool generates is resolved by regenerating the
-file, never by merging it.  Consider a branch that adds a derived column to
-`x2db.x2node` while master adds a topology.  `acr` aligns the columns of every
-file it writes, so the new column reformats all of the rows, and master's new
-topology inserts rows of its own; git reports the whole file as a single
-conflict whose two arms differ on every line.  That reads like a far larger
-divergence than the one column and one row set that actually changed.  The
-insight is that the row set is not the authority — the `x2db.topo` specs are,
-and they merged cleanly — so the file has no content of its own to lose.  Take
-either arm, then run `x2topo -topo:% -rebuild -write`, which rewrites the file
-from every spec including the one master just added.  A tree-wide rebuild is
-safe to reach for: over all topologies it changes only what the specs derive,
-leaving proc, core, shm, grp, gwport, storage, nodeintf and mcgrp untouched.
-The tell that a file is in this class is that both arms carry the same keys.
+file, never by merging it.  Consider a branch that widens a ctype while master
+adds new ones, and both touch `gendb.ctypelen`, which `amc` writes.  `acr` aligns
+the columns of every file it writes, so a wider value reformats all of the rows,
+and master's ctypes insert rows of their own; git reports the whole file as a
+single conflict whose two arms differ on every line.  That reads like a far
+larger divergence than the one row and one row set that actually changed.  The
+insight is that the row set is not the authority — the schema is, and it merged
+cleanly — so the file has no content of its own to lose.  Take either arm, then
+run the generator, which rewrites the file from the schema including what master
+just added.  The tell that a file is in this class is that both arms carry the
+same keys.
 
 The same "ours drops your rows" trap has a worse form in hand-written C++,
 because there the compiler can stay silent about it.  Consider a branch that
-added two functions to `lib_x2net` and one line elsewhere in the same file that
-sets the pointer they read.  Master meanwhile refactored that file, so both arms
+added two functions to a library file and one line elsewhere in the same file
+that sets the pointer they read.  Master meanwhile refactored that file, so both arms
 differ heavily and taking master's arm is the tempting resolution.  It drops all
 three additions.  The two functions have callers in other targets, so the build
 names them at once — but the assignment has no caller: the pointer keeps its
 generated `NULL` initializer, the branch's own reader compiles and runs, and it
-silently takes its fallback path forever.  Here that meant every gapfill fill
-addressed to the wrong receive role, which the build, `amc`, `acr -check` and
-`abt_md` all passed and only `x2test:refill` caught.
+silently takes its fallback path forever.  The build, `amc`, `acr -check` and
+`abt_md` all pass such a tree, and only a test of the behavior catches it.
 
 So a resolution is not finished when the tree builds.  Check it against the
 branch's own pre-rebase delta, which is still reachable by sha in the reflog:
 
 ```bash
 git merge-base <old-tip> origin/master              # the branch's original base
-git diff <base> <old-tip> -- cpp/x2rxn/foo.cpp      # every line the branch added
+git diff <base> <old-tip> -- cpp/<ns>/foo.cpp       # every line the branch added
 ```
 
 Read the added lines and confirm each is either present in the rebased tree or
@@ -708,6 +853,162 @@ health under every narrowed form, and only the bare tree-wide run names it, with
 reads as a passing one whenever its complaint scrolled past the last few lines —
 and the complaint it hides is often that the binary itself is stale, which a
 rebase across a schema change produces routinely.
+
+A rebase across a commit that deletes a source file leaves that file's residue in
+the two artifacts amc does not own.  `update-hdr` maintains the block inside a
+hand-written header and `quickreadme` maintains the usage block inside a tool's
+readme, and the merge driver keeps the branch's arm of each while taking master's
+deletion of the `.cpp`.  The header goes on declaring functions nothing defines,
+the readme goes on documenting options the tool no longer has, and nothing
+objects: an unused declaration links, and `amc` reporting `n_filemod:0` says only
+that amc's own files are current.  So run `update-hdr` and `abt_md` after the
+rebase as well, and read what they rewrite — a hunk that removes a verb the
+branch never worked on is master's deletion arriving late.
+
+#### abt reports nothing out of date, and the binary lacks a field the generated source carries
+<a href="#abt-reports-nothing-out-of-date-and-the-binary-lacks-a-field-the-generated-source-carries"></a>
+
+After a rebase that replaced the generated tree wholesale -- `git checkout
+origin/master -- cpp/gen include/gen ts/gen`, then a fresh `amc` -- the tree
+builds clean and `abt % -build -install` ends with `n_err:0`, and the installed
+binaries are still the ones the previous generated tree produced: a command
+refuses an option its own help text in `cpp/gen/command_gen.cpp` lists, and a
+client crashes on a message layout it was not compiled for.
+
+```
+acr: unknown option value:-newopt
+echo -> algo_lib.signal  text:Segmentation fault
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:0  ood_target:0  cache:gcache
+```
+
+| could be | discriminant |
+|---|---|
+| the object cache answered the regenerated sources from before the checkout | `strings build/release/<tool> \| grep "<a comment from the regenerated header>"` finds nothing while `include/gen` carries it; `abt <tool> -build -install` says `ood_src:0` |
+
+`abt % -build -install -force -cache:none` rebuilds every object from the
+sources as they stand, and the binaries then match the generated tree.
+
+#### abt reports ood_src:0 after a dev.tool_opt change
+<a href="#abt-reports-ood_src0-after-a-dev-tool_opt-change"></a>
+
+A row added to `dev.tool_opt` changes the command line of every compile it
+matches, and the next `abt` run reports nothing to do:
+
+```
+abt.config  builddir:Linux-g++.profile-x86_64  ood_src:0  ood_target:0  cache:gcache
+```
+
+| could be | discriminant |
+|---|---|
+| abt dates an object against its sources and not against the flags that produced it | `abt <target> -cfg:<cfg> -printcmd` shows the new flag while the object predates the row |
+
+`abt <target> -cfg:<cfg> -build -force` recompiles with the flags as they stand.
+
+#### The readme_tut citest rewrites txt/tut/tut01.md with gcache.warning lines in a captured build
+<a href="#the-readme_tut-citest-rewrites-txt-tut-tut01-md-with-gcache-warning-lines-in-a-captured-build"></a>
+
+The `comp` job on a CI runner fails with `atf_ci.modified_files  during:readme_tut
+files:txt/tut/tut01.md`, and the diff it prints adds lines of this shape to the
+tutorial's captured `amc && ai samp_tut1` output:
+
+```
++abt.exec  gcache  -- g++ -x c++ -Wno-invalid-offsetof ... -c cpp/gen/dev_gen.cpp -o build/release/cpp.gen.dev_gen.o ...
++gcache.warning  from:build/release/cpp.gen.dev_gen.o  to:/tmp/gcache/cd/00/cd00d74a2f9884d93b789cf613272ba7bceb5d99  comment:"cache entry could not be published"
+```
+
+| could be | discriminant |
+|---|---|
+| the runner's compiler cache disk is full, so gcache builds the object and cannot store it, and says so on the build's stdout | `df` of the `to:` path's filesystem on that runner reads full; the same job retried on another runner passes with no diff |
+
+The tree is clean and the tutorial is right: the lines are the runner's, and the
+fix is its disk.  Retry the job so it lands elsewhere, and free the cache on the
+runner that printed them.
+
+#### A job fails in get_sources with `Directory not empty` on temp/cov
+<a href="#a-job-fails-in-get_sources-with-directory-not-empty-on-temp-cov"></a>
+
+A merge-request job on a CI runner ends before its script starts: the
+`get_sources` section prints its `Removing temp/...` lines and closes with
+
+```
+warning: failed to remove temp/cov/atf_x2_cov.d: Directory not empty
+ERROR: Job failed: exit status 1
+```
+
+| could be | discriminant |
+|---|---|
+| a coverage job the reaper canceled on that runner left instrumented processes alive, and they write `.gcda` files into the checkout while `git clean` empties it, so the clean fails and the runner stops there | the `Removing` lines name `temp/cov/atf_x2_cov.d/...gcda` files; `ps` on the runner shows processes of the canceled job; the same job retried lands elsewhere and runs |
+
+Nothing of the branch ran, so the commit is not in question.  Retry the job.
+
+#### amc run before the toolchain is rebuilt rewrites every generated file in the tree
+<a href="#amc-run-before-the-toolchain-is-rebuilt-rewrites-every-generated-file-in-the-tree"></a>
+
+One schema row was added, `amc` reports a filemod count in the dozens or
+hundreds, and `git status` names every `cpp/gen/%_gen.cpp` in the tree:
+
+```bash
+report.amc  n_cppfile:611  n_ctype:4922  n_filemod:74
+```
+
+A second `amc` run then reports `n_filemod:0`, which reads as a fixpoint and is
+not one -- it is the stale generator agreeing with its own output.  The damage
+surfaces at the commit, where a branch that touches twenty files produces a diff
+touching a hundred and the extra ones are generated files nobody edited.
+
+| could be | discriminant |
+|---|---|
+| `bin/amc` is built from a different commit than the schema it is reading | `git diff --stat origin/master HEAD` right after the commit -- a file count far above what the branch touched, made up of `%_gen.cpp`, is this |
+| the schema change genuinely reaches that many targets | read one of the surprising diffs: a hunk adding or removing a line unrelated to the change (an `ApplyTrace` call, a field the branch never named) is the stale generator |
+
+The cause is that `amc` is itself built from the tree, so every rebase and every
+pull can move it.  Running it before the build regenerates the whole tree in the
+older generator's format, and the result compiles and passes its checks, because
+the tree is internally consistent with the generator that wrote it.
+
+Rebuild the generator, restore the generated files, and regenerate:
+
+```bash
+abt amc -build -install
+git checkout origin/master -- cpp/gen include/gen
+amc
+```
+
+The filemod count is then the handful the change actually reaches.  The order in
+the pre-push sequence exists for this reason: `ai` comes before anything that
+regenerates, so a rebase never leaves a generator behind its input.
+
+#### amc.error unrecognized attr, naming a field you just added to a table amc reads
+<a href="#amc-error-unrecognized-attr-naming-a-field-you-just-added-to-a-table-amc-reads"></a>
+
+A field was added with `acr_ed` to a table `amc` itself loads, such as
+`dmmeta.msgtype`, and a row was given a value for it.  Every later `amc` run
+stops before writing anything:
+
+```
+amc.error    comment:"unrecognized attr"  attr:heartbeat
+```
+
+`amc` reads its input strictly, and the installed binary was compiled before the
+field existed.  Rebuilding it needs the generated code that knows the field, and
+producing that code needs a working `amc`.  The cycle only exists while some row
+carries a value for the new field.
+
+| could be | discriminant |
+|---|---|
+| the installed `amc` predates the field | `grep <field> include/gen/dmmeta_gen.h` -- no hit is this |
+| the attribute is misspelled | `acr dmmeta.field:<ns>.<Ctype>.%` -- the field is not listed under that name |
+
+Run the installed `amc` once on a copy of the data with the field's values
+removed, which keeps the field's own definition, then rebuild it and regenerate:
+
+```bash
+cp -r data /tmp/bootdata
+sed -i 's/  heartbeat:[YN]//' /tmp/bootdata/dmmeta/msgtype.ssim
+amc -in_dir:/tmp/bootdata
+abt amc -build -install
+amc
+```
 
 #### A rebase leaves an amc count constant stale when both sides added the same number of rows
 <a href="#a-rebase-leaves-an-amc-count-constant-stale-when-both-sides-added-the-same-number-of-rows"></a>
@@ -853,7 +1154,7 @@ that are legitimately yours:
 
 ```bash
 git diff origin/master HEAD -- data/dmmeta/field.ssim | grep '^[+-]dmmeta' \
-  | grep -v 'field:awsdb\.\|field:x2aws\.'      # your branch's own namespaces
+  | grep -v 'field:<ns>\.'                      # your branch's own namespaces
 ```
 
 A permutation shows up as a matched `+`/`-` pair carrying identical text, which is
@@ -871,10 +1172,23 @@ A generated section is one whose heading matches a pattern in `acr mdsection`.
 `abt_md <mdfile regx>` regenerates it; `abt_md -ns:<ns regx>` refreshes a whole
 namespace.  An inline command appears as `inline-command: ...` inside a
 preformatted block, and its output replaces the rest of that block, which is
-why `abt_md` with the commands on is schema-mutating: the tutorials under
-`txt/tut` run `acr_ed -create ... -write` to produce their output.  Two
-concurrent runs blank each other's blocks, so never start one beside a comptest
-sweep or a normalize.  `abt_md -evalcmd:N` skips the evaluation.
+why `abt_md -tut` is schema-mutating: the tutorials under `txt/tut` run
+`acr_ed -create ... -write` to produce their output, and a plain run leaves
+their blocks alone.  Two concurrent runs blank each other's blocks, so never
+start one beside a comptest sweep or a normalize.  `abt_md -evalcmd:N` skips
+every evaluation.
+
+**An inline command captures whatever the database held when it ran.**  Its
+output reads as a fact about the tree and is a fact about one session.
+A command that reports whether a record already existed answers one way where
+the record exists and another where it does not, so a full `abt_md` on a tree
+somebody had created the record in writes that answer into the readme and
+commits it.
+Local checks stay quiet about that: `-evalcmd:N` never runs the command and
+`-check` only validates links, so the `readme` citest under `bin/normalize` is
+the first thing to regenerate the line, and it fails on the dirty tree it just
+made.  An inline-command hunk in a diff you did not set out to produce is that,
+and the fix is to revert it rather than to commit what the run emitted.
 
 **An option is explained in its own section, not in the prose above it.**  A tool
 README carries a `####` heading per command-line option, and that heading is where a
@@ -889,12 +1203,9 @@ zero over a section that has drifted from its ssim rows, so the drift fails
 `quickreadme` under `bin/normalize` instead.  Run plain `bin/abt_md` first,
 then `-check`.
 
-**Plain `abt_md` does not refresh every generated section.**  The cmdline field
-tables under `txt/protocol/command/README.md`, and the `Syntax` block of each
-`txt/exe/<tool>/README.md`, are regenerated by the `quickreadme` citest.  So a
-`dmmeta.field` row you added still reads as the old value after both `abt_md`
-and `abt_md -check` pass.  This bites hardest after a rebase whose conflicts
-were resolved by taking the upstream side of those files.
+**Plain `abt_md` refreshes every generated section, the `Syntax` block included.**
+The `quickreadme` citest under `bin/normalize` is `abt_md -evalcmd:N`, so a tree
+on which plain `abt_md` leaves no diff passes it.
 
 **Run `abt_md` twice after inserting a command-line field.**  The first run
 emits the new `#### -<flag>` block without the blank line every other block
@@ -909,12 +1220,10 @@ the upstream side of every conflicting file, finish the rebase, then run
 `abt_md` and commit what it regenerates.  Merging the two sides by eye means
 reproducing the generator's output by hand, which is slower and wrong.
 
-**`abt_md` refreshes the sections a file already carries and never adds one.**
-So a README's prose and its `Description` are somebody's writing, and deleting
-the file does not bring them back -- there is no wholly derived document left in
-`txt/` for that trick to work on.  `Functions` has a second way of going
-missing, because it forks `src_func`: `-evalcmd:N` leaves whatever function list
-the file already held.
+**`abt_md` adds a missing generated section, and never restores prose.**  When
+a page lacks a section that a `dev.mdsection` row generates for its path,
+`abt_md` writes the heading and what the row generates.  A README's prose and its
+`Description` text are somebody's writing, so deleting the file loses them.
 
 Prose in `txt/` is imperative and present tense: "update key; write file", not
 "updates key, writes file".  A new file is created with `acr_ed -create
@@ -944,19 +1253,18 @@ reports `tail`'s status, so a run that printed those errors still reads as
 `0`.  Redirect to a file and check the status of `abt_md` itself.
 
 `abt_md -check` reads markdown, so it is blind to a command line assembled as
-a string in code.  Renaming `userproc -exec` to `-cmd` left
-`ts/x2ui/src/db/tty.ts` composing the retired spelling into the line that spawns
-the pty bridge, and the x2ui tests mock `RunCommand` rather than inspecting
-the line, so nothing failed: the Console terminal and the bench launcher were
-broken features on an otherwise green tree.  A doc that keeps the old spelling
+a string in code.  Renaming a command's `-exec` to `-cmd` left a TypeScript
+file composing the retired spelling into the line that spawns a pty bridge, and
+the web UI's tests mock the command runner rather than inspecting the line, so
+nothing failed: two features were broken on an otherwise green tree.  A doc that keeps the old spelling
 is cosmetic, and code that keeps it is not.
 
 The scope that misses it is the natural one.  A sweep over `cpp/ txt/ test/
 data/` covers where command options are declared and documented, and that is
 the scope the `-exec` rename used; `ts/` holds no ssim and no handler, so there
-is no obvious reason to include it.  The reason is that the SPA composes x2cli
-command lines as strings and sends them over the gateway, which makes `ts/` a
-caller of the option catalog exactly as `cpp/` is.  Sweep it too.
+is no obvious reason to include it.  The reason is that a single-page app
+composes command lines as strings and sends them to a server, which makes `ts/` a
+caller of the option table exactly as `cpp/` is.  Sweep it too.
 
 So the sweep to run is for the *old* name, over code as well as docs, with
 `*/gen/*` and the gitignored `wt/` excluded.  What survives is the set of
@@ -971,8 +1279,27 @@ grep -rInE -- '-oldname' --include='*.cpp' --include='*.h' --include='*.ts' \
 Read every survivor instead of substituting over it.  A hit under `cpp/gen/`
 is regenerated from ssim and needs no edit, and a hit in another namespace
 belongs to another tool — `command.atf_cmdline.exec` is the standing example,
-that tool's own `-exec` flag, which must keep its name while the x2cmd one
+that tool's own `-exec` flag, which must keep its name while the renamed one
 changes.
+
+#### quickreadme rewrites a README that abt_md just regenerated
+<a href="#quickreadme-rewrites-a-readme-that-abt_md-just-regenerated"></a>
+
+A command gained an option, `abt_md` ran, the README was committed, and
+`bin/normalize` stops at `quickreadme`:
+
+```
+atf_ci.modified_files  during:quickreadme  files:txt/exe/samp_agg/README.md  success:N  comment:"Please resolve modified files and try again"
+```
+
+| could be | discriminant |
+|---|---|
+| the first `abt_md` pass after a new option does not reach its fixpoint | `git diff` shows one added blank line after the new option's `<a href>` anchor, and a second `abt_md` leaves the file unchanged |
+
+The first pass writes the new option's section without the blank line that
+separates it from the next one, and the second pass adds it.  Run `abt_md`
+twice after adding a `command.<tool>` field, and commit what the second pass
+leaves.
 
 ### The runtime a generated process runs
 <a href="#the-runtime-a-generated-process-runs"></a>
@@ -1066,11 +1393,11 @@ installs writes the real stamp on the next run.
 
 **A rebase leaves the built tools a version behind, and each of the two
 failures is mistaken for something else.**  The silent one comes from `amc`.
-Some of `amc`'s inputs are also its outputs -- `ssimfile:dmmeta.ctypelen`
-records every ctype's computed length, `ssimfile:dmmeta.dispsig` records every
-dispatch's signature -- and a generator built before a new kind of row was
-declared does not know to emit it, so running it *deletes* that row along with
-the generated line that loaded it at boot.  The run exits zero and `acr -check
+amc writes tables as well as code -- `ssimfile:gendb.ctypelen` records every
+ctype's computed length, `ssimfile:gendb.dispsig` records every dispatch's
+signature -- and a generator built before a new kind of row was declared does
+not know to emit it, so running it *deletes* that row along with the generated
+line that loaded it at boot.  The run exits zero and `acr -check
 % -x` passes, because a missing row is not an inconsistency but a smaller
 database.  The only tell is the diff: a generated row that disappears right
 after a rebase means the generator is older than the schema.  Rebuild and
@@ -1110,12 +1437,21 @@ byte-identical.  Such a change can therefore reach `n_filemod:0`, build, pass
 and `coverage` jobs on a golden diff -- `bin/normalize` does not run
 `atf_comp`.  Run `atf_comp -comptest:'amc.%'` before pushing.
 
+**A new ctype field drifts every comptest golden that prints that ctype's
+rows.**  Add a field to `dev.Target` and any golden that dumped a target row now
+shows the new column and its comptest fails.  The change touches no line of that test's source, so it
+reaches `n_filemod:0`, builds, and passes `bin/normalize` in full while the
+`comp` and `coverage` jobs go red, exactly as a name-derivation change does.
+After adding a field, grep the goldens for a row of the ctype
+(`grep -rl "<ns>.<ctype>  <key>:" test/atf_comp`) and recapture each, or run the
+`comp` cijob, before pushing.
+
 **A comptest diff is read, not blessed.**  `atf_comp` prints a coloured diff
 between `temp/atf_comp/<name>` and `test/atf_comp/<name>`.  A diff consistent
 across reruns is a regression and the code is what changes.  A diff that varies
 between runs, or names a timestamp, port, pid or generated id, is
 non-determinism, and it is fixed by adding the field to
-`ssimfile:atfdb.unstableattr` or by writing a `dmmeta.tfilt` rule -- never by
+`ssimfile:atfdb.unstableattr` or by writing an `atfdb.tfilt` rule -- never by
 recapturing.
 
 Masking reaches ssim tuple output only: a line is parsed as a tuple and the
@@ -1177,22 +1513,22 @@ gate failing and the rest passing.  Run `bin/normalize` again.  To tell this
 apart from a gate that is genuinely stuck, watch the sandbox's build directory
 -- a cold first run fills it steadily and a stuck gate does not.
 
-**The `apm_gen` diff is accepted, not reviewed.**  The gate regenerates
-`apm/gen/<package>.ssim` for every `dev.pkggen` entry, and that file restates
-the package's whole ssim schema in one place, so any branch that adds a field
-or gives a command a new flag leaves it out of date.  The diff carries nothing
-the branch's own ssim diff does not, and reading it is the same review twice.
-Run `apm -package:<pkg> -generate`, `git add`, amend.  Do not re-run
-`bin/normalize` afterwards: the regeneration is confined to `apm/gen`, no other
-gate reads that directory, and the gates that already reported `success:Y` in
-that run still hold.
-
 **A missing `node_modules` is a missing build.**  `abt_ts` is to `ts/` what
 `ai` and `abt` are to `cpp/`, and it is run on demand rather than once per
 machine.  `abt_ts -normalize` installs and typechecks, `-build` implies that
 and then bundles, `-clean` drops the caches.  A test that shells out to a
 package-local binary fails with `No such file or directory` and `exit ... code:127`,
 which is the build step having been skipped and never an environment fault.
+
+**`abt -jcdb` writes a `compile_commands.json` for editor tooling.**  This
+project has no `cmake` or `make`, so `clangd` finds no compilation database on
+its own and falls back to guessed flags.  `abt "%" -cfg:release
+-jcdb:compile_commands.json` writes the exact command line `abt` would run for
+every selected source, without building anything.  The file lands at the repo
+root and is already listed in `.gitignore`, because it holds one checkout's
+own paths and configuration.  Regenerate it after a target's source list or
+its flags change, because `clangd` reads whatever is on disk and gives no
+signal that it has gone stale.
 
 **macOS keeps its adaptation layer in one file.**  A call that Linux provides and
 macOS does not needs a function with a Darwin body, and those bodies belong in
@@ -1203,8 +1539,68 @@ what leaves this one empty on Linux.  A conditional that picks between two bodie
 of the same function stays where it is, and so does one in a header, since
 neither is a function that is missing.
 
+**`atf_comp -capture` rewrites `dev.gitfile` from `git ls-files`, and a row for
+a file git does not track yet goes with it.**  The capture ends by running
+`update-gitfile`, which replaces the table with one row per tracked file.  A new
+test fixture, a new comptest driver source and the `dev.targsrc` row that named
+that source are all inserted before the first capture, and none of them is in
+git yet, so the capture deletes the gitfile rows and the targsrc row that
+referenced one of them.  The report line says so -- `n_delete:9` on a run that
+should delete nothing -- and the next `abt atf_comp` fails to link the drivers
+whose source has no targsrc row.  `git add` the new files before the capture, or
+re-insert the rows after it and read the capture's `report.acr` line either way.
+
 ### Gates that pass without checking anything
 <a href="#gates-that-pass-without-checking-anything"></a>
+
+#### A gate's printout is a sample, not an inventory
+<a href="#a-gate-s-printout-is-a-sample-not-an-inventory"></a>
+
+A check that names what it objects to usually names only the first few, and it
+need not say so.  Ten of ten and ten of a hundred read identically, so a package
+carrying twenty-four forbidden rows reports ten, and a fix addressing exactly
+those ten leaves fourteen that surface next run looking like a fresh failure.
+The shape that produces this is one counter serving two purposes: the variable
+that caps the printout is the variable the summary reports, so it stops counting
+at the cap.  `apm.keyword` keeps them apart -- `n_bad` counts every hit and
+`n_shown` caps the printout, and its summary line carries both -- and a gate that
+prints only one number has not been separated yet.
+
+There is no signal in the printout to be suspicious of, so the habit has to be
+unconditional: reproduce the gate's own query and count, before writing the fix.
+Every such check is a command with a filter over it, and running that command
+directly is what turns the sample into the list:
+
+```bash
+apm -package:openacr -l -showrec | grep -iE '<word>|<word>'
+```
+
+This is the companion to proving a grep can report a hit before believing its
+silence.  That rule says an empty result is not evidence of absence; this one
+says a bounded result is not evidence of extent, and neither failure announces
+itself.
+
+#### A test reports on code the tree no longer holds
+<a href="#a-test-reports-on-code-the-tree-no-longer-holds"></a>
+
+Proving that a new test can fail means stubbing the thing it tests, building,
+watching it go red, then restoring the file and building again.  The last build
+is the one to distrust.  Restoring a file by copying a backup over it can leave
+`abt` believing the target is current, so it installs nothing, and the test then
+reports the behavior of the stub while the source on disk reads correctly.  What
+you see is a test that fails with the message you wrote for the stub, against a
+function that is plainly right in the editor.
+
+```
+report.abt  n_target:22  time:00:00:00.036165061  hitrate:0%  pch_hitrate:0%  n_warn:0  n_err:0  n_install:22
+```
+
+The runtime is the discriminant, the same as in the section below: a build that
+recompiled a translation unit does not finish in thirty milliseconds.  `touch`
+the source and build again, and the test agrees with the source.  The habit that
+avoids it is to restore the file with `git checkout -- <path>` or an edit rather
+than a copy, and to read the build's runtime before believing the test that
+follows it.
 
 #### A citest that reports success in eleven milliseconds
 <a href="#a-citest-that-reports-success-in-eleven-milliseconds"></a>
@@ -1238,6 +1634,57 @@ The general shape is the one AGENTS.md states for greps: a check that finds
 nothing has not passed until you know it can fail.  A disabled test is that
 rule's worst case, because the harness reports it as a pass rather than as an
 empty result, and nobody re-reads a green line.
+
+#### A comp job that names three failing goldens has stopped counting
+<a href="#a-comp-job-that-names-three-failing-goldens-has-stopped-counting"></a>
+
+The `comp` job runs `atf_comp` at its default `-maxerr:3`, so its log names the
+first three goldens that differ and ends there:
+
+```
+atf_comp.end  comptest:samp_exch.Addorder  success:N  nlines:52  duration:0.71
+atf_comp.end  comptest:acr_ed.CreateCtype  success:N  nlines:147  duration:0.75
+atf_comp.end  comptest:acr_in.Reverse  success:N  nlines:78  duration:0.70
+atf_ci.citest  citest:atf_comp  runtime:00:04:51  success:N
+```
+
+Three is the cap, not the count.  A change that moves one table's layout moves
+every golden holding that table, and a formatting row is such a change: a tool
+that right-aligns a column only when its field has a format entry re-spaces every
+golden that lists the table the moment one field gets one, nineteen of them in
+the case that taught this.  Recapturing the three the log named and pushing found the next
+three a pipeline later, and the sixteen after that a pipeline after that.
+
+Run the whole sweep locally with the cap lifted before the push, and read the
+count it reports:
+
+```bash
+atf_comp % -maxerr:200 2>&1 | grep -E 'success:N|report.atf_comp'
+```
+
+A recapture of a table whose values did not move is whitespace, so check it
+with `git diff -w -- test/atf_comp` before amending: a line that survives that
+diff is the capture picking up something else, most often the exit lines of
+the processes a test spawned changing order, and belongs restored from the old golden.
+
+#### A comptest golden passes locally and reorders its sorted lines on CI
+<a href="#a-comptest-golden-passes-locally-and-reorders-its-sorted-lines-on-ci"></a>
+
+```
+14,15d13
+< acr -> dmmeta.ctype  ctype:amc.FCtype  comment:""
+18a17,18
+> acr -> dmmeta.ctype  ctype:amc.FCtype  comment:""
+```
+
+| could be | discriminant |
+|---|---|
+| a `sort` in the comptest's command follows the locale | the command sorts without `LC_ALL=C`, and `LC_ALL=C atf_comp <test>` fails locally the way CI does |
+
+A locale collation such as `en_US.UTF-8` skips spaces and punctuation, so an
+indented `  "dmmeta.field` line sorts after `dmmeta.ctype` on a
+developer box.  A runner that sorts byte-wise puts it first.  Pin every `sort`,
+`uniq` and `comm` a comptest runs to `LC_ALL=C sort`, then recapture.
 
 #### A set difference computed with grep -v fails open
 <a href="#a-set-difference-computed-with-grep-v-fails-open"></a>
@@ -1326,11 +1773,12 @@ clean.
 leaves its partial output in the working tree instead of rolling it back.  The
 next pass then tests nothing: its `checkclean` step refuses to run on a dirty
 tree, and the run exits at once with `atf_ci.dirty_tree` naming the leftovers
-rather than anything about the branch.  Read those modified files as the
-previous pass's product — most often a regenerated table or an indent fix,
-which is the fix already written for you — commit or amend them, and only then
-rerun.  The builds inside are incremental, so a rerun from a clean tree resumes
-where the capped pass stopped.
+rather than anything about the branch.  That refusal exits zero, so anything
+reading the status code alone records the skipped run as a pass.  Read those
+modified files as the previous pass's product — most often a regenerated table
+or an indent fix, which is the fix already written for you — commit or amend
+them, and only then rerun.  The builds inside are incremental, so a rerun from
+a clean tree resumes where the capped pass stopped.
 
 One of those leftovers can be a partial rewrite rather than a finished one, so
 "the fix already written for you" needs checking before it is committed.  A pass
@@ -1343,6 +1791,23 @@ that finished, and let a complete pass say what the tree actually owes.  What th
 capped pass produced is a hypothesis; only a pass that reached the end of that
 citest is evidence.
 
+#### Every array of the algo namespace is backed by algo_lib's lpool
+<a href="#every-array-of-the-algo-namespace-is-backed-by-algo_lib-s-lpool"></a>
+
+`dmmeta.basepool` names the pool a `Tary` grows from, and every `Tary` under
+`algo` -- `cstring`, `ByteAry`, `Tuple.attrs`, `StringAry`, the numeric arrays,
+`LineBuf` -- names `algo_lib.FDb.lpool`, as do the header arrays of the `http`
+protocol namespace, which has no pool of its own.  An array with no base pool grows
+through `algo_lib.FDb.malloc`, and its first growth is one counted malloc per
+instance, so a temporary built on a hot path costs a system allocation each
+time.  A gateway REST request parses its URL into a `Tuple` and formats through
+a few arrays, and cost a dozen mallocs a request until the arrays joined the
+lpool; a WebSocket frame built in a `ByteAry` cost one per frame.  A new `Tary`
+in `algo` gets its basepool row in the same change.  One consequence for code
+that appends to an array: the lpool moves a block that outgrows its size class,
+where the system realloc often grew it in place, so a pointer taken into an
+array before an append is not the array afterwards.
+
 #### Leaks a leak check does not report (pool memory)
 <a href="#leaks-a-leak-check-does-not-report-pool-memory-"></a>
 
@@ -1352,6 +1817,28 @@ stack that allocated it.  Without the marks the checker sees only the 2MB
 mapping the lpool took from `algo_lib.FDb.sbrk`, and nothing about the rows
 carved out of it.
 
+The marks are sound only over a base valgrind does not track.  A `Tpool` whose
+base resolves to `algo_lib.FDb.malloc` takes each block from the real malloc, so
+the checker already holds that block as a heap chunk, and the records the pool
+marks inside it share its address range.  Nothing goes wrong until a block is
+used up: the record at offset 0 has the block's own address, and its free reads
+
+```
+Mismatched free() / delete / delete []
+   at MemcheckFree (algo.inl.h)
+   by pdep_FreeMem (acr_gen.cpp)
+```
+
+because the chunk valgrind finds at that address is the malloc'd block.  The
+records that block still holds then report as `definitely lost`.  Which pools
+reach that state depends on how many records a run allocates, so a comptest
+that passed for a year fails when a few more rows land in the table it prints.
+The base a `Tpool` uses is the field's `dmmeta.basepool` row, else the
+namespace's `nsx.pool`, else malloc, and every namespace whose records matter
+under memcheck names an `Lpool` over `algo_lib.FDb.sbrk` there, as `amc`, `abt`,
+`acr` and `lib_x2` do: the lpool marks the block, the tpool unmarks it before
+carving, and only the records stay marked.
+
 The marks live in `cfg:memcheck` only, because a valgrind client request costs
 its instructions whether or not a checker is attached.  A memcheck run against
 any other configuration therefore reports invalid reads and writes and reports
@@ -1360,11 +1847,22 @@ a clean run.  `atf_comp` prints `atf_comp.memcheck_cfg` when it notices, and the
 fix is `-cfg:memcheck`:
 
 ```bash
-atf_ci -cijob:memcheck                                    # mem_prep builds it, then runs
+atf_ci -cijob:'memcheck%'                                 # each shard's mem_prep builds it, then runs
 abt % -cfg:memcheck -build                                # by hand: build it
 atf_comp -mode:memcheck -cfg:memcheck <comptest regx>     # then drive it
 grep -l "definitely lost" temp/atf_comp/*/*.memcheck.*.log
 ```
+
+In a worktree the same command answers `abt.builddir builddir:-.memcheck-`,
+because `wt` plants `build/release`, `debug`, `coverage` and `profile` and no
+`build/memcheck`; create the `Linux-g++.memcheck-x86_64` directory beside them
+and the `memcheck` symlink to it, then build `%`, since a test that starts a
+supervisor spawns every binary from its bindir, and a partial build ends the
+cluster before readiness (`atf_comp.not_ready`).  `atf_comp -mode:memcheck` on a comptest
+whose row was just switched to `memcheck:Y` answers `atf_comp.nomatch` until
+`amc` and a rebuild of `atf_comp` carry the row into the driver.  The install
+repoints `bin/` at the memcheck builds; `git checkout -- bin` puts release
+back.
 
 That configuration is release plus the client requests and `-g`, nothing else,
 so it costs 20% under valgrind where `cfg:debug` costs 190% -- debug is
@@ -1387,6 +1885,116 @@ reports.
 `Blkpool` is the exception worth knowing.  It returns memory a buffer at a
 time, so a leaked element pins its buffer and the report names the buffer's
 `ReserveBuffers` stack rather than the element's own.
+
+#### The coverage cijob fails with atf_cov.coverage_lost
+<a href="#the-coverage-cijob-fails-with-atf_cov-coverage_lost"></a>
+
+Every citest before `cov_finalize` reports success, and then the merge says the
+run lost data:
+
+```ssim
+atf_cov.merge  covdir:temp/cov/atf_comp_cov.d  n_gcda:812  n_gcov:0  n_fail:0  success:N  comment:"gcov read nothing here; every target this citest alone exercises is lost"
+atf_cov.coverage_lost  n_covdir_empty:1  n_covtarget:18  n_unmeasured:56  success:N  target:"abt_md acr acr_compl amc ..."  comment:"run lost coverage data; no target is judged against its floor"
+```
+
+The verdict is about the run, so the named targets are evidence rather than
+findings: they are the targets the missing data would have measured, and the
+diff under test has nothing to do with which ones they are.  Read the
+`atf_cov.merge` line above it -- it names the directory, and the directory names
+the citest whose data went missing.
+
+| could be | discriminant |
+|---|---|
+| the instrumented binary died instead of exiting | a binary writes its coverage database as it exits, so a crash or a SIGKILL leaves nothing behind; read the citest's own output for the process that ended badly |
+| the coverage build produced no program graphs | `atf_ci.cov_prep` reports `n_obj` and `n_gcno` at the end of the build, and fails there when they differ; a passing `cov_prep` rules this out |
+| gcov could not read one of the profiles | an `atf_cov.gcov_fail` line above the merge line names the `.gcda` or `.gcno` gcov refused and why, in gcov's own words; `n_fail` on the merge line counts such commands, and a directory whose other files still yielded coverage is kept and judged per target |
+| the covdir was cleared under the run | `cov_prep` empties `temp/cov`, so a second pipeline sharing the checkout removes a directory the first one is still filling; compare job start times on the runner |
+
+`n_gcda:0` says the citest wrote no coverage database at all, and a non-zero
+`n_gcda` with `n_gcov:0` says gcov could not read what it wrote.  The two have
+different causes: the first is about the binary that ran, the second about the
+program graphs beside its objects.  A non-zero `n_fail` with a non-zero
+`n_gcov` is neither: gcov read the directory and refused one file in it, the
+`atf_cov.gcov_fail` line says which, and the run goes on to judge each target
+against its floor.
+
+The whole class stays diagnosable only because the merge reports per directory.
+A run that reported nothing but per-target floor breaches sent its reader into
+the diff, which is the one place the cause has never been.
+
+#### gli refuses to load with lib_gli.duplicate_key after a rename
+<a href="#gli-refuses-to-load-with-lib_gli-duplicate_key-after-a-rename"></a>
+
+```
+gli.load_input  lib_gli.duplicate_key  xref:lib_gli.FDb.ind_label
+data/glidb/label.ssim:<line>: glidb.label  label:<new>  ...
+```
+
+| could be | discriminant |
+|---|---|
+| a `sed` rename turned one row into a copy of another | `awk '{print $2}' data/<ns>/<file>.ssim \| sort \| uniq -d` names the repeated key; the earlier copy sits where the old name sorted |
+| the file held the pair before the rename | the same pipe over `git show origin/master:<path>` names it too |
+
+`acr -check % -x` reports `n_err:0` with two rows under one key, so a clean check
+proves nothing here.  The tool that indexes the table, `gli` for `glidb.label`, is
+the one that objects.  Renaming a namespace by `sed` to a name that already had
+a row duplicated rows in both `glidb.label` and `dev.pkgkey`.  Run the pipe over every ssimfile after a
+rename, then drop the repeats and let `acr '<ssimfile>:%' -write` restore the
+order.
+
+#### A wait loop on pgrep -f never ends
+<a href="#a-wait-loop-on-pgrep-f-never-ends"></a>
+
+```
+until ! pgrep -f "atf_x2 stress_msgsize" >/dev/null; do sleep 20; done
+```
+
+`pgrep -f` matches whole command lines, and the loop's own `bash -c` carries
+the pattern, so the loop always finds itself.  One such loop outlived its test by
+nineteen hours.  Manage the pid explicitly instead: run the command in the
+foreground under `timeout`, or keep `$!` when it starts and wait on that pid
+(`while kill -0 <pid>`).
+
+#### A regex-scoped comptest run is not the comptest gate
+<a href="#a-regex-scoped-comptest-run-is-not-the-comptest-gate"></a>
+
+Adding a field to a ctype whose rows a test prints changes every golden that
+prints one, and the count is larger than it looks: one field on a response
+ctype moved nine comptest goldens, an inline command's output in the command's
+protocol page, and the TypeScript interface, whose typecheck then rejected three
+test fixtures that build the ctype by hand.
+
+The trap is in how the change is checked.  `atf_comp '<pattern>'` runs the tests
+the pattern names, and a pattern is written from the tests the author has in
+mind, so the ones they did not think of pass by not running.  Four of those nine
+goldens were recaptured that way and the run reported 16 of 16; `comp` then
+failed on three more, and two rounds of `atf_ci -citest:atf_comp` -- the citest
+the job actually runs -- turned up the rest, two or three at a time, because a
+loaded box flakes a different pair of timing-sensitive tests on every pass.
+
+So the gate is the citest, never a pattern:
+
+```bash
+atf_ci -citest:atf_comp        # what the comp job runs
+```
+
+And for this class of change there is a check that does not run a test at all,
+which is what makes it complete.  The goldens are text, so the field's absence
+is greppable:
+
+```bash
+# an ssim-form row of the ctype that predates the new field
+grep -l '<ns>.<Ctype>' test/atf_comp/* | while read f; do
+  grep -H '<ns>.<Ctype>' "$f" | grep '<oldfield>:' | grep -v '<newfield>:'
+done
+# a table-form header without the new column
+grep -H '<column>  *<column>' test/atf_comp/* | grep -v '<newfield>'
+```
+
+Run both against `origin/master`'s goldens before believing an empty result: they
+report 22 rows and 13 headers there, which is what says the greps can fail.  An
+empty result on a tree where the pre-change copy answers is a complete pass over
+a class a test run samples.
 
 ### Glossary
 <a href="#glossary"></a>
@@ -1422,7 +2030,7 @@ name`, `field reftype`, `target license`.
 
 **A document names a table by its short name, and `abt_md -check` resolves it.**  A span
 `ssimfile:dmmeta.ctype` names that table; the qualified `dmmeta.ssimfile:dmmeta.ctype`
-names the row of the catalog holding it and reads sideways in a sentence.  Both are
+names the row of the table holding it and reads sideways in a sentence.  Both are
 checked against the database, so a table that moves to another namespace stops being a
 silent staleness and becomes a failing check.
 

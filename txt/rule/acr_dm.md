@@ -5,7 +5,7 @@
 `.gitattributes` selects and `gitconfig-setup` installs, so it is what resolves
 `data/` on every merge and every rebase in this repo.  `apm` runs it as a
 subprocess to merge the records of a package it is installing or updating.  Its
-usage, its algorithm and its worked examples are in
+usage and its worked examples are in
 [txt/exe/acr_dm/README.md](/txt/exe/acr_dm/README.md); what follows is the part
 of its design that neither the source nor that document states.
 
@@ -114,6 +114,32 @@ The output is the file's own order either way, since the flagged rows are placed
 in that order; what the imprecision costs is a slightly wider surface for a
 contested-move conflict, and what it buys is that inserting rows never looks like
 moving anything.
+
+### How the rows that share an anchor are ordered
+<a href="#how-the-rows-that-share-an-anchor-are-ordered"></a>
+
+As `acr_dm` reads a file it remembers the last row that file had in common with
+what the merge already knew, and a run of new or moved rows hangs off that row.
+In the base file every row is new, so the whole base file is one run hanging off
+the virtual start row.  The output prints the runs hanging off the start row, in
+order, and each row is followed by the runs hanging off it.
+
+Rows that share an anchor are ordered by three rules:
+
+- Rows a branch added come before the row the base file had there, which is how
+an insertion lands between the two rows it was written between.
+- Two runs from different branches are ordered by the key of the first row of
+each run.
+- Within one run, rows keep the order the branch wrote them in.
+
+So a branch's run prints without interruption, because it is placed as a unit and
+another branch's run cannot be threaded through it.  And since the second rule
+compares keys, it cannot tell which branch was passed second, which is what keeps
+a rebase and a merge producing the same file.
+
+A contested move still has to leave the row somewhere.  The row keeps the
+position whose anchor has the smaller key, again a comparison that does not depend
+on argument order, and the rows go into the output between markers.
 
 ### What is deliberately not merged
 <a href="#what-is-deliberately-not-merged"></a>

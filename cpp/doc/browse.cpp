@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: doc (exe) -- Render a markdown document to the terminal
 // Exceptions: yes
@@ -685,9 +684,9 @@ tempstr doc::HelpText() {
     ret << "# doc -- the keys" << eol << eol;
     ret << "## Moving" << eol << eol;
     ret << "| key | effect |" << eol << "|---|---|" << eol;
-    ret << "| `j` `k` | scroll a line |" << eol;
+    ret << "| `j` `k` `Ctrl-N` `Ctrl-P` | scroll a line |" << eol;
     ret << "| `Space` `b` `PgDn` `PgUp` | scroll a screen |" << eol;
-    ret << "| `Ctrl-F` `Ctrl-B` `Ctrl-V` `Meta-V` `Ctrl-N` `Ctrl-P` | scroll a screen |" << eol;
+    ret << "| `Ctrl-F` `Ctrl-B` `Ctrl-V` `Meta-V` | scroll a screen |" << eol;
     ret << "| `g` `^` `Home` | first row |" << eol;
     ret << "| `G` `End` | last row |" << eol;
     ret << "| `Ctrl-L` | put the selection halfway down the screen, and repaint it |" << eol << eol;
@@ -732,9 +731,9 @@ void doc::RenderHelp() {
 //
 // A screen moves under five spellings, because a reader arrives with the habits
 // of whichever pager taught them: space and b as less has them, Ctrl-F and
-// Ctrl-B likewise, Ctrl-V and Meta-V for the emacs hand along with Ctrl-N and
-// Ctrl-P, and the Page keys for everyone else.  The file's two ends are g and G, Home and End, and ^ for the
-// top.  A line at a time is j and k.  Ctrl-L puts the selection halfway down the
+// Ctrl-B likewise, Ctrl-V and Meta-V for the emacs hand, and the Page keys for
+// everyone else.  The file's two ends are g and G, Home and End, and ^ for the
+// top.  A line at a time is j and k, or Ctrl-N and Ctrl-P as in emacs.  Ctrl-L puts the selection halfway down the
 // screen and paints the whole of it again.
 //
 // The four arrows move the selection rather than the page, and the page follows
@@ -782,17 +781,17 @@ static void PageKey(int key) {
         Reload();
     } else if (key == 'q') {
         doc::_db.quit = true;
-    } else if (key == 'j') {
+    } else if (key == 'j' || key == doc_Key_ctrln) {
         ScrollTo(doc::_db.top + 1);
-    } else if (key == 'k') {
+    } else if (key == 'k' || key == doc_Key_ctrlp) {
         ScrollTo(doc::_db.top - 1);
     } else if (key == doc_Key_down) {
         SelectRow(1);
     } else if (key == doc_Key_up) {
         SelectRow(-1);
-    } else if (key == ' ' || key == doc_Key_ctrlf || key == doc_Key_ctrln || key == doc_Key_ctrlv || key == doc_Key_pgdn) {
+    } else if (key == ' ' || key == doc_Key_ctrlf || key == doc_Key_ctrlv || key == doc_Key_pgdn) {
         ScrollTo(doc::_db.top + PageRows());
-    } else if (key == 'b' || key == doc_Key_ctrlb || key == doc_Key_ctrlp || key == doc_Key_pgup) {
+    } else if (key == 'b' || key == doc_Key_ctrlb || key == doc_Key_pgup) {
         ScrollTo(doc::_db.top - PageRows());
     } else if (key == doc_Key_ctrll) {
         Recenter();
@@ -841,8 +840,8 @@ static void EditPage() {
     if (doc::QueryQ(doc::_db.page)) {
         cmd << doc::AcrCmdline(doc::LocQuery(doc::_db.page), true);
     } else {
-        tempstr editor(getenv("VISUAL") ? strptr(getenv("VISUAL"))
-                       : getenv("EDITOR") ? strptr(getenv("EDITOR")) : strptr("vi"));
+        tempstr editor(getenv(algo_lib::dev_envvar_VISUAL) ? strptr(getenv(algo_lib::dev_envvar_VISUAL))
+                       : getenv(algo_lib::dev_envvar_EDITOR) ? strptr(getenv(algo_lib::dev_envvar_EDITOR)) : strptr("vi"));
         cmd << editor << " " << strptr_ToBash(doc::_db.page);
     }
     SysCmd(cmd, FailokQ(true));

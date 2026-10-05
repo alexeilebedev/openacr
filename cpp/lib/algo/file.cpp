@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -30,6 +30,7 @@
 #include <fnmatch.h>
 #include <sys/mman.h>
 #include <sys/resource.h>
+#include <sys/statvfs.h>
 #include <sys/syscall.h>
 #include <sched.h>
 #endif
@@ -140,11 +141,53 @@ bool algo::DirSearchableQ(strptr path) NOTHROW {
 // so PATH's device id differs from its parent directory's.  A directory that
 // merely exists with nothing mounted on it (e.g. a drive that failed to mount or
 // is bound to a userspace driver) is NOT a mount point and reads as unmounted.
+// PATH may end in a separator: /mnt/data-1/ names the same directory as
+// /mnt/data-1, and its parent is /mnt/ either way.  Left on, the separator
+// makes GetDirName return PATH itself, and every directory then compares equal
+// to its own parent.
 bool algo::MountpointQ(strptr path) NOTHROW {
     StatStruct fst;
     StatStruct pst;
-    strptr parent = GetDirName(path);
+    strptr dir = path;
+    while (elems_N(dir) > 1 && algo_lib::DirSepQ(dir[elems_N(dir)-1])) {
+        dir = FirstN(dir, elems_N(dir)-1);
+    }
+    strptr parent = GetDirName(dir);
     bool ret = 0==stat(TOCSTR(path), &fst) && 0==stat(TOCSTR(parent), &pst) && fst.st_dev != pst.st_dev;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Read the filesystem PATH resolves on: fill TOTAL with its size in bytes, USED
+// with the bytes it holds and AVAIL with the bytes an unprivileged writer may
+// still take, and return the errno of the call, 0 when it answered.  TOTAL is
+// left at zero for a filesystem reporting no blocks, which is a reading no
+// caller can divide by and the one refusal this reports without an errno.
+//
+// Whether anything is mounted on PATH is a separate question, and MountpointQ
+// asks it: this reads whichever filesystem the path resolves on, which for an
+// unmounted mount point is the one underneath it.  A caller that must tell a
+// failed disk from a full one therefore asks both.
+//
+// The call waits for the device, and on one that has begun to fail it waits for
+// the device's own timeout -- tens of seconds.  So no caller whose pass is
+// bounded may make it: a module asks its volume's waiter or a sensor process instead, and
+// both of those are processes nothing judges for liveness.
+int algo::ReadVolSpace(strptr path, u64 &total, u64 &used, u64 &avail) NOTHROW {
+    int ret = ENOSYS;
+#ifndef WIN32
+    struct statvfs vfs;
+    memset(&vfs, 0, sizeof(vfs));
+    ret = statvfs(TOCSTR(path), &vfs) == 0 ? 0 : errno;
+    if (ret == 0 && vfs.f_blocks > 0) {
+        // f_blocks, f_bfree and f_bavail are counted in f_frsize (fragment)
+        // units, not f_bsize
+        total = u64(vfs.f_blocks) * vfs.f_frsize;
+        used = u64(vfs.f_blocks - vfs.f_bfree) * vfs.f_frsize;
+        avail = u64(vfs.f_bavail) * vfs.f_frsize;
+    }
+#endif
     return ret;
 }
 
@@ -590,12 +633,12 @@ static void WinChmod644(char *filename) {
 // write   -> open file for writing, create file if missing
 //  if write is specified, and append is not, then file is truncated upon opening
 // append  -> open file in append mode (automatically sets 'write' flag)
-//  in append mode, seek to end of file after opening
+//  in append mode the file is opened O_APPEND, so every write lands at its end
+//  whatever the file offset, and the offset is moved to the end after opening
 // read    -> open flag in read-only mode
 // _throw  -> throw exception if an error occurs
-// NOTE: this function doesn't set O_APPEND flag, because it doesn't work'
-//   on NFS mounted filesystems.
-//   Without O_APPEND, two processes cannot reliably append to the same file.
+// NOTE: on NFS, O_APPEND is not atomic between clients, so two hosts appending to
+//   one file can overwrite each other.
 algo::Fildes algo::OpenFile(const strptr& filename, algo::FileFlags flags) {
     tempstr fn;
     fn<<filename;
@@ -1087,7 +1130,7 @@ static tempstr PathSearch(strptr fname) {
     path_rest  = ";LR";
 #endif
     tempstr ret(fname);
-    for (strptr path=getenv("PATH"); path != ""; path = Pathcomp(path,path_rest)) {
+    for (strptr path=getenv(algo_lib::dev_envvar_PATH); path != ""; path = Pathcomp(path,path_rest)) {
         strptr left = Pathcomp(path,path_first);
         tempstr candidate(DirFileJoin(left,fname));
         if (algo_lib::TryExeSuffix(candidate)) {

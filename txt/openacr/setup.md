@@ -25,7 +25,7 @@ Readline provides interactive command-line editing.
 ### Pre-requisites: Ubuntu/Debian
 <a href="#pre-requisites-ubuntu-debian"></a>
     apt install -y mariadb-server mariadb-client libmariadb-dev libmariadbd-dev \
-        libssl-dev libcurl4-openssl-dev liblz4-dev libpq-dev cppcheck
+        libssl-dev libcurl4-openssl-dev liblz4-dev libzstd-dev libpq-dev cppcheck
     apt install llvm llvm-dev  # to enable abt -compiler llvm
 
 ### Prerequisites: macOS (Apple Silicon)
@@ -33,7 +33,7 @@ Readline provides interactive command-line editing.
 Install [Homebrew](https://brew.sh/). Then install the dependencies and make
 their headers and libraries visible to the compiler:
 
-    brew install mariadb openssl readline
+    brew install mariadb openssl readline lz4 zstd
     mkdir -p temp/homebrew-include
     ln -sfn /opt/homebrew/opt/mariadb/include/mysql temp/homebrew-include/mariadb
     export CPATH="$PWD/temp/homebrew-include:/opt/homebrew/include${CPATH:+:$CPATH}"

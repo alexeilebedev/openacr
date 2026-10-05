@@ -35,6 +35,6 @@ whenever abt subsequently runs.
 
 ### Sources
 <a href="#sources"></a>
-The source code license is GPL
+The source code license is Apache
 
 Source file: [bin/ai](/bin/ai)

@@ -1,19 +1,19 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2023 Astra
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_cov (exe) -- Line coverage
 // Exceptions: yes
@@ -44,14 +44,32 @@ namespace atf_cov { // update-hdr
     void XmlIndent(algo::cstring &out, strptr text, int indent);
     void GenerateCoberturaReport();
 
-    // Judge every target that carries a coverage floor, and name which of the two
-    // things that can go wrong did.  A target whose measurement came in under its
-    // floor is a regression, and the diff under test is where to look for it.  A
-    // target that produced no data at all did not regress: the run never measured
-    // it, and scoring that as zero coverage sends the reader hunting for a code
-    // cause that does not exist.  The two need opposite responses, so they are
-    // reported as different facts.
+    // Judge the run first, and its targets only if the run is whole.
+    //
+    // A run that lost data measures the targets it did reach at less than their
+    // real coverage, because the tests whose data went missing are the same tests
+    // that exercise the rest of the tree.  Judging such a run target by target
+    // prints one floor breach per target -- fifty of them on a bad day -- and every
+    // line of that names a target of the branch under test, so the author reads a
+    // lost merge directory as fifty regressions they caused.  So a run that lost
+    // data fails once, as one fact about the run, naming what went missing; the
+    // answer to it is to run the job again, not to read the diff.
+    //
+    // A whole run judges each target against its floor, and a measurement that came
+    // in under one is a regression the diff under test explains.
     void Main_Check();
+
+    // Write each target's measurement into dev.tgtcov as its new floor, and the
+    // functions no test reached into dev.uncovfunc.
+    //
+    // A capture is worth no more than the run beneath it.  A run that lost a merge
+    // directory measures every target that directory exercised at a fraction of its
+    // real coverage, and capturing those figures writes the loss into the floors:
+    // the gate comes down by exactly the amount that went missing, nothing in the
+    // output says so, and the next run passes against the lowered bar.  A capture
+    // is also the one operation here with no undo short of a revert.  So a run
+    // showing any sign of loss is refused, and the floors keep the values an
+    // earlier whole run put there.
     void Main_Capture();
     void SaveCov();
 
@@ -70,5 +88,5 @@ namespace atf_cov { // update-hdr
     // contents -- the same acr -replace -trunc path SaveCov uses for tgtcov.
     void SaveUncovfunc();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Main(); // main:atf_cov
+    // void Main(); // dmmeta.main:atf_cov
 }

@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -107,6 +107,10 @@ static void CountStructField(amc::FCtype &ctype, strptr name, amc::FCtype *ftype
         PadToAlignment(ctype, ctype.c_pack ? 1 : alignment);
         // do we really want offsetof?? too voluminous
         ctype.sizecheck << "algo_assert(_offset_of("<<ctype.cpp_type<<","<<name<<") == "<<ctype.totsize_byte<<");\n";
+        // the offset the assert above holds C++ to is the one a projected layout states
+        if (amc::FField *field = amc::ind_field_Find(tempstr() << ctype.ctype << "." << name)) {
+            field->offset = ctype.totsize_byte;
+        }
         // zero-size fields not allowed because addresses of any 2
         // fields must be different.
         // so we gain a byte for every empty field
@@ -435,14 +439,18 @@ void amc::gen_compute_size() {
         ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
             if (ctype.original) {
                 if (ComputeCtypeSize(&ctype)!=-1 && ctype.totsize_byte>0 && !ctype.size_unknown) {
-                    dmmeta::Ctypelen ctypelen;
+                    gendb::Ctypelen ctypelen;
                     ctypelen.ctype = ctype.ctype;
                     ctypelen.len = ctype.totsize_byte;
                     ctypelen.alignment = ctype.alignment;
                     ctypelen.padbytes = ctype.n_padbytes;
                     ctypelen.plaindata = ctype.plaindata;// save this, useful
                     amc::ctypelen_InsertMaybe(ctypelen);// create it
-                    if (ctype.p_ns->c_nsx && ctype.p_ns->c_nsx->pack) {
+                    // a projected layout states these offsets to Go, Python and
+                    // Rust, so the C++ build holds the struct to them whatever
+                    // its namespace packs
+                    bool layout = amc::ProjWireLangQ(ctype) && amc::ProjLayoutQ(ctype);
+                    if ((ctype.p_ns->c_nsx && ctype.p_ns->c_nsx->pack) || layout) {
                         check->body << ctype.sizecheck;
                         check->body << "    algo_assert(sizeof("<<ctype.cpp_type<<") == "<<ctype.totsize_byte<<");\n";
                         Refurbish(ctype.sizecheck);
