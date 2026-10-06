@@ -126,6 +126,15 @@ static double GetCpuHzHost(strptr path) {
 
 // -----------------------------------------------------------------------------
 
+// True when HZ is a rate this process can schedule on: above 10MHz, which an
+// emulated guest's slowest processor still clears, and below 10GHz, which no
+// counter reaches.
+static bool CpuHzRangeQ(double hz) {
+    return hz > 10000000 && hz < 10000000000ULL;
+}
+
+// -----------------------------------------------------------------------------
+
 // Install HZ as the process's cycles<->seconds calibration: refuse an
 // implausible value, set the conversion constants, and re-anchor the
 // scheduler clock so elapsed time counts from the calibration point.
@@ -137,7 +146,7 @@ static double GetCpuHzHost(strptr path) {
 // Bochs presents a 40 MHz processor, four times the floor, and a slower one
 // would put every process of a cluster out on a line that named no bound.
 void algo_lib::ApplyCpuHz(double hz) {
-    if (!(hz>10000000 && hz<10000000000ULL)) {
+    if (!CpuHzRangeQ(hz)) {
         FatalErrorExit(Zeroterm(tempstr()<<"algo_lib.bad_hz"
                                 <<Keyval("hz",hz)
                                 <<Keyval("min_hz",u64(10000000))
@@ -208,12 +217,17 @@ void algo_lib::InitCpuHz() {
     // elapsed times and for nothing else.  A process that schedules on the
     // counter demands the kernel figure instead (RequireKernelCpuHz), and it
     // is there that a counter no source vouches for is refused.
+    //
+    // The first source whose figure is a rate in range is taken.  A guest can
+    // report a boost ceiling no processor reaches -- a GitHub runner stated
+    // 10.5GHz -- and a figure that describes P-states is no reason to refuse to
+    // start, when the next source may state a plausible one.
     tempstr cpuinfo(FileToString("/proc/cpuinfo", algo::FileFlags()));
     hz = GetCpuHzKernel();
-    if (hz == 0) {
+    if (!CpuHzRangeQ(hz)) {
         hz = GetCpuHzSysdev();
     }
-    if (hz == 0) {
+    if (!CpuHzRangeQ(hz)) {
         hz = GetCpuHzCpuinfo(cpuinfo);
     }
 #endif
