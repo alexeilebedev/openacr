@@ -85,4 +85,4 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           export PATH=bin:$PATH
-          bin/atf_ci -cijob:memcheck
+          bin/atf_ci -cijob:'memcheck%'
