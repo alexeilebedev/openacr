@@ -136,7 +136,19 @@ void atf_comp::WaitCredd() {
             usleep(20000);
         }
     }
-    vrfy(up, tempstr() << "atf_comp: credd never answered on its socket" << Keyval("status", Trimmed(last)));
+    // a daemon that never answers is probed once by hand, which tells a socket
+    // nothing listens on from a connection the daemon closes unanswered
+    tempstr probe;
+    if (!up) {
+        StringToFile("use IO::Socket::UNIX;\n"
+                     "my $s = IO::Socket::UNIX->new(Peer => shift) or die \"connect: $!\\n\";\n"
+                     "print $s \"lib_cred.StatusReq  client:probe\\n\";\n"
+                     "my $r = <$s>;\n"
+                     "print defined $r ? \"reply: $r\" : \"noreply: $!\\n\";\n", CreddVal("$tempdir/probe.pl"));
+        probe = SysEval(CreddVal("perl $tempdir/probe.pl $STORE/credd.sock 2>&1; ls -la $STORE 2>&1"),FailokQ(true),8192);
+    }
+    vrfy(up, tempstr() << "atf_comp: credd never answered on its socket" << Keyval("status", Trimmed(last))
+         << Keyval("probe", Trimmed(probe)));
 }
 
 // -----------------------------------------------------------------------------
