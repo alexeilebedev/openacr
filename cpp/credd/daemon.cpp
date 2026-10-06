@@ -137,13 +137,30 @@ static bool LoadAgent(algo::strptr want, algo::cstring &why) {
             reason << "the private key does not open under the master key; record damaged";
             prerr("credd.badkey" << Keyval("cred", cred.cred) << Keyval("comment", reason));
         } else {
+            // ssh-add says why it refused a key in words that vary with the
+            // OpenSSH release, so its message is read here and reported as a
+            // credd.sshadd line of its own, beside the verdict
             command::bash_proc bash;
-            bash.cmd.c = "ssh-add -q -";
+            bash.cmd.c = "ssh-add -q - 2>&1";
             bash.fstdin = "|";
+            bash.fstdout = "|";
             int rc = command::bash_Start(bash);
             ssize_t nwrite = rc == 0 ? write(bash.to_stdin.value, key.ch_elems, key.ch_n) : -1;
+            if (rc == 0) {
+                close(bash.to_stdin.value);
+                bash.to_stdin = algo::Fildes();
+            }
+            algo::cstring said;
+            if (rc == 0) {
+                ind_beg(algo::FileLine_curs, line, bash.from_stdout) {
+                    said << line << eol;
+                }ind_end;
+            }
             command::bash_Wait(bash);
             ok = rc == 0 && nwrite == ssize_t(key.ch_n) && algo::WaitStatusToExitCode(bash.status) == 0;
+            ind_beg(algo::Line_curs, line, said) if (!ok && ch_N(line) > 0) {
+                prerr("credd.sshadd" << Keyval("cred", cred.cred) << Keyval("text", line));
+            }ind_end;
             if (!ok) {
                 reason << "ssh-add refused the key, exiting " << algo::WaitStatusToExitCode(bash.status);
                 prerr("credd.addfail" << Keyval("cred", cred.cred) << Keyval("status", bash.status)

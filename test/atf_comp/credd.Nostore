@@ -72,9 +72,7 @@ credd-11 -> lib_cred.Done  req:lib_cred.StopReq
 credd -> credd.listen  sock:temp/atf_comp/credd.Nostore/home/.ssh/credd/credd.sock  agent:temp/atf_comp/credd.Nostore/home/.ssh/ssh_auth_sock  n_cred:0
 credd -> credd.seed  client:***  name:ci  kind:sshkey  n_cred:1
 credd -> credd.seed  client:***  name:ci  kind:sshkey  n_cred:1
-credd -> Error loading key "(stdin)": error in libcrypto
 credd -> credd.addfail  cred:bogus  status:256  comment:"ssh-add refused the key, exiting 1"
-credd -> Error loading key "(stdin)": error in libcrypto
 credd -> credd.addfail  cred:bogus  status:256  comment:"ssh-add refused the key, exiting 1"
 credd -> credd.seed  client:***  name:frag  kind:openai  n_cred:3
 credd -> credd.exit  sock:temp/atf_comp/credd.Nostore/home/.ssh/credd/credd.sock
