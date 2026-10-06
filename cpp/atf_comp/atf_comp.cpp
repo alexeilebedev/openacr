@@ -283,9 +283,14 @@ void atf_comp::Main() {
     if (mode == command_atf_comp_mode_mdbg || mode == command_atf_comp_mode_mdbgall) {
         _db.cmdline.cfg = dev_Cfg_cfg_debug;
     }
-    // select matching comptests
+    // select matching comptests.  A name pattern that matches no comptest is a
+    // mistake and is refused; a memcheck shard or the coverage subset that holds
+    // none of the named tests is empty, as a package that carries none of that
+    // shard's tests legitimately is, and runs nothing.
+    int nname = 0;
     ind_beg(_db_comptest_curs, comptest, _db) {
         bool match = Regx_Match(_db.cmdline.comptest, comptest.comptest);
+        nname += match;
         // comptest.memcheck names the cijob that runs the test under
         // valgrind, or none; -cijob picks the shard (default % selects all)
         if (mode == command_atf_comp_mode_memcheck) {
@@ -298,7 +303,7 @@ void atf_comp::Main() {
             zd_select_Insert(comptest);
         }
     }ind_end;
-    vrfy(zd_select_N() > 0, tempstr() << "atf_comp.nomatch"
+    vrfy(nname > 0, tempstr() << "atf_comp.nomatch"
          << Keyval("comptest", _db.cmdline.comptest)
          << Keyval("comment", "no matching comptests"));
     if (mode == command_atf_comp_mode_edit) {

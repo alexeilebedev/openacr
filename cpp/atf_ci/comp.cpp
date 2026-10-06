@@ -253,8 +253,15 @@ void atf_ci::citest_ams_sendtest() {
     // writer runs out of room many times, on the lane's space or on a channel's
     // limit, so every lost wake would leave it asleep until the tool's time
     // limit, and the run would fail.  The run must park, and must still deliver
-    // every message.
-    for (int shape = 0; shape < 4; shape++) {
+    // every message.  The wake is a real-time signal read through a signalfd,
+    // which only Linux has; elsewhere signaled mode keeps busy-polling and a
+    // parked writer has nothing to wake it, so the shapes run on Linux alone.
+#ifdef __linux__
+    int nshape = 4;
+#else
+    int nshape = 0;
+#endif
+    for (int shape = 0; shape < nshape; shape++) {
         command::ams_sendtest_proc ams_sendtest;
         ams_sendtest.cmd.uc = (shape & 1) != 0;
         ams_sendtest.cmd.channel = (shape & 2) != 0;
