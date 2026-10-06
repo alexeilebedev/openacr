@@ -137,7 +137,8 @@ void atf_comp::WaitCredd() {
         }
     }
     // a daemon that never answers is probed once by hand, which tells a socket
-    // nothing listens on from a connection the daemon closes unanswered
+    // nothing listens on from a connection the daemon closes unanswered, and the
+    // daemon's state and descriptors say whether it spins or waits, and on what
     tempstr probe;
     if (!up) {
         StringToFile("use IO::Socket::UNIX;\n"
@@ -145,7 +146,8 @@ void atf_comp::WaitCredd() {
                      "print $s \"lib_cred.StatusReq  client:probe\\n\";\n"
                      "my $r = <$s>;\n"
                      "print defined $r ? \"reply: $r\" : \"noreply: $!\\n\";\n", CreddVal("$tempdir/probe.pl"));
-        probe = SysEval(CreddVal("perl $tempdir/probe.pl $STORE/credd.sock 2>&1; ls -la $STORE 2>&1"),FailokQ(true),8192);
+        probe = SysEval(CreddVal("perl $tempdir/probe.pl $STORE/credd.sock 2>&1; ls -la $STORE 2>&1;"
+                                 " ps -axo pid,stat,time,command 2>&1 | grep '[c]redd -'; lsof -a -c credd 2>&1 | head -40"),FailokQ(true),16384);
     }
     vrfy(up, tempstr() << "atf_comp: credd never answered on its socket" << Keyval("status", Trimmed(last))
          << Keyval("probe", Trimmed(probe)));
